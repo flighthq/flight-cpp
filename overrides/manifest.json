@@ -725,7 +725,7 @@
       "supplies": "packages/animation/src/animationTrack.ts",
       "derivedFrom": "c430df9e8e6dffa85ca75a81939585cbc05cae043fb9dd0963b3ce9818b9b52c",
       "reason": "After the localized initializer patch, the emitter still refuses cloneNumberBuffer because SequenceView erases the Array versus Float32Array carrier, cloneAnimationTrack, trimAnimationTrack, and validateAnimationTrack on nullable segment-easing tests, and sampleAnimationTrack on optional indexed easing projection. The retained helpers compile, but five public behaviors remain absent and five direct angle consumers call clone or sample.",
-      "change": "Completes the emitted module with explicit optional handling for segment easings, source-equivalent keyframe cloning, trimming, validation, linear/step/cubic sampling, and quaternion normalization. SequenceView retains one additional observable fact—whether its erased numeric input was a Float32Array—so cloneNumberBuffer can allocate the backing type the source promises without exposing or copying the original buffer.",
+      "change": "Completes the emitted module with explicit optional handling for segment easings, source-equivalent keyframe cloning, trimming, validation, linear/step/cubic sampling, and quaternion normalization. SequenceView retains one additional observable fact\u2014whether its erased numeric input was a Float32Array\u2014so cloneNumberBuffer can allocate the backing type the source promises without exposing or copying the original buffer.",
       "equivalence": "Clones allocate independent time, value, and segment-easing storage while retaining easing callable identity and Float32Array versus Array backing. Sampling preserves boundary clamping, segment-first easing fallback, step, linear, Hermite cubic, shortest-arc quaternion slerp, and normalization. Trimming retains only in-range keyframes in source order, rebases time, slices the matching easing range, and always writes fresh Array buffers. Validation preserves diagnostic order, codes, indices, and the null-versus-array result. The retained initializer and helper bodies are unchanged.",
       "whyNotAPatchOrRepair": "A repair cannot add five behavioral functions. Local annotations can recover the initializer and might recover the optional easing expression, but ordinary TypeScript cannot restore the Array-versus-Float32Array carrier after the target has erased both into SequenceView; always cloning to one backing would change a documented public behavior. The runtime query is deliberately narrow and was checked against requires-based duck typing before addition.",
       "unblocks": "All five previously absent declarations compile. The partial generated animation_track.hpp already compiled by omitting them, so the direct compiled-header gain is +0. Across its five direct angle consumers in the current generated tree, animation_clip.hpp and animation_root_motion.hpp move from failing on the missing clone/sample declarations to compiling: +2 downstream headers, measured with unlimited diagnostics.",
@@ -972,22 +972,6 @@
       "remaining": "The C++ options boundary names CreateTexture2DOptions because the refused Partial<TextureLike> carrier has no native representation; it retains every option that can affect the forced 2D result and deliberately omits irrelevant array/cube-only sources.",
       "expires": "when TextureLike common-member access dispatches through its value variant, nullable VideoResource.element presence lowers faithfully, and named Partial<TextureLike> object spreads emit with a stable native carrier.",
       "authoredOn": "2026-10-11"
-    },
-    {
-      "id": "effects-render-effect-padding-variant-cast",
-      "path": "flight/effects/render_effect_padding.hpp",
-      "package": "@flighthq/effects",
-      "status": "complete",
-      "supplies": "packages/effects/src/renderEffectPadding.ts",
-      "derivedFrom": "06d0ad44a5efb9bd94a436867128ceba7b5ba4ce00739b437c5a35a459d7db00",
-      "reason": "The mixed-pin generated module still names removed RenderEffect and RenderEffectPadding headers and targets the old keyed-table registry shape, while the current Types package represents the same contracts as Effect, EffectPadding, and an immutable ReadonlyMap replacement lane. The stale override therefore no longer compiled and its two-cast fix no longer described the boundary.",
-      "change": "Bridges the retained public names to the current Effect owners, implements Gaussian and directional padding, clones the resolver Map on add, replace, and remove, aggregates ordered single or list inputs, suppresses duplicate missing-kind reports, sanitizes every resolver result, preserves caller output identity, and emits registry misses only through the opt-in runtime seam.",
-      "equivalence": "Each resolver receives a StructuralRef that retains the input effect's exact native owner; this module never casts or copies it. Resolver-table snapshots remain unchanged across registration, missing kinds retain first-seen order, explain never emits, compute emits once per missing kind, all four output fields commit only after successful traversal, and an optional caller output is returned by identity.",
-      "whyNotAPatchOrRepair": "A declaration repair cannot replace removed ambient owners or implement the three refused functions. A source patch cannot make the old Effects pin emit against the newer Types registry representation; the override is the narrow compatibility boundary and relies only on existing checked StructuralRef ownership.",
-      "unblocks": "render_effect_padding.hpp compiles independently and supplies the complete padding aggregation and resolver-registration module to native callers.",
-      "remaining": "None in the supplied module at this pin.",
-      "expires": "when the Effects package is regenerated against the current Effect names and Map-based RenderRegistries contract with all declarations emitted.",
-      "authoredOn": "2026-10-13"
     },
     {
       "id": "capture-baseline-imported-record-alias",
@@ -1419,7 +1403,7 @@
       "status": "partial",
       "supplies": "packages/preferences/src/storage.ts",
       "derivedFrom": "cfe78f9741a50ec2adc3929e2498d17de53acd1b3ef11a4daada5788c7045ca2",
-      "reason": "Re-read against this module's a627849 emission, which has advanced: the emitter now emits 642 lines of the module itself and refuses ELEVEN declarations under one rule, `contextual union value type … is not a represented runtime domain` (filed as contextual-union-value-arm-member-shape.md) — the JSON readers, the batch setters and removers, the namespace entries and clear, the two backend item helpers and migrateStorage. The defect this entry recorded earlier (reference-backed outcome variants treated as records throughout) no longer fires. The copy is RETAINED rather than re-derived in this pass: re-deriving would trade a working copy for another copy of the same eleven declarations carrying the same declared gap, because that gap is a runtime representation limit around the same rule.",
+      "reason": "Re-read against this module's a627849 emission, which has advanced: the emitter now emits 642 lines of the module itself and refuses ELEVEN declarations under one rule, `contextual union value type \u2026 is not a represented runtime domain` (filed as contextual-union-value-arm-member-shape.md) \u2014 the JSON readers, the batch setters and removers, the namespace entries and clear, the two backend item helpers and migrateStorage. The defect this entry recorded earlier (reference-backed outcome variants treated as records throughout) no longer fires. The copy is RETAINED rather than re-derived in this pass: re-deriving would trade a working copy for another copy of the same eleven declarations carrying the same declared gap, because that gap is a runtime representation limit around the same rule.",
       "change": "Provides typed outcome factories and accessors, JSON conversion for represented JSON values, exact optional failed-key states, signal ownership, namespace operations and migrations over the generated carriers.",
       "equivalence": "Every backend reason, value, completed count and failed key follows the source branch, including absent failed keys before enumeration. Namespacing, byte counts, JSON fallbacks, change signals, migration ordering and checkpoint failures preserve the source behavior.",
       "whyNotAPatchOrRepair": "The invalid variant accesses and constructions occur throughout behavioral code. Source changes would have to encode C++ alternative indices and reference wrappers; declaration repairs cannot replace those expressions.",
@@ -1520,22 +1504,6 @@
       "unblocks": "reference_physics3_dabi.hpp and the three package aggregators compile with callable world lifecycle, body and collider commands, collider-free stepping, readback, and point/ray/region queries.",
       "remaining": "SetJoint encoding and construction remain unavailable until joint interfaces retain checked concrete ownership; execution reports UnsupportedJoint without mutation. Worlds containing colliders, contacts or joints report Declined from step until core collision and joint stepping compile. queryShapeCast remains an empty callback until the refused core collider sweep is available; no no-hit result is fabricated.",
       "expires": "when shared mutable self-capture lowers with initial storage, collider unions narrow to exact owners, decoded structural configs retain their destination owner, and core joint, collision-step and shape-cast dependencies compile.",
-      "authoredOn": "2026-10-13"
-    },
-    {
-      "id": "effects-render-effect-field-role-record",
-      "path": "flight/effects/render_effect_interpolation.hpp",
-      "package": "@flighthq/effects",
-      "status": "partial",
-      "supplies": "packages/effects/src/renderEffectInterpolation.ts",
-      "derivedFrom": "03ae7aa5ebe4a16602764d0c1e910386b0ab51cf1a8dac1f607b0e594780a03c",
-      "reason": "The mixed-pin generated module still names the removed RenderEffect and RenderEffectFieldRoles headers, constructs a nested Record through unrelated anonymous owners, and refuses lerpRenderEffect because its dynamic write had no represented value. The previous table-only override omitted that function while claiming complete parity.",
-      "change": "Bridges the retained public names to the equivalent current Effect role Records, preserves all ten ordered packed-color declarations, and uses the runtime's checked NamedProperties view to snapshot and interpolate numeric, boolean, string, absent, and packed-color fields on one exact native effect owner. Kind mismatch returns before mutation; a same-kind call across different native owners stops at an explicit error.",
-      "equivalence": "For one retained exact effect owner, the implementation preserves output identity, clamps time, writes endpoint absence without inventing a value, snaps booleans and strings at one half, applies caller-provided roles, interpolates packed colors per channel, and snapshots both inputs before aliasing writes. The kind table preserves every source key, value, insertion order, and shared Record identity.",
-      "whyNotAPatchOrRepair": "A declaration repair cannot recreate the removed ambient owners or implement dynamic reads and writes. A source patch cannot make independently flattened effect structs share an erased base owner; using NamedProperties is faithful only while the concrete native owner remains known, so the override exposes that boundary instead of casting, copying, or adding side storage.",
-      "unblocks": "render_effect_interpolation.hpp compiles independently and exact-owner effect interpolation is available to native callers.",
-      "remaining": "The erased RenderEffect/Effect base owner still cannot recover a concrete effect, and open vendor effects with the same kind but different native owner types cannot share dynamic property storage. Same-kind cross-owner interpolation therefore fails loudly rather than reinterpreting or partially copying an owner.",
-      "expires": "when the generated module targets the current Effect names and retained base references can validate and recover one exact concrete owner for dynamic property interpolation.",
       "authoredOn": "2026-10-13"
     },
     {
@@ -2314,6 +2282,22 @@
       "remaining": "loadTextureAtlasFromBlob and loadTextureAtlasFromBytes remain absent at the browser URL/location architecture boundary.",
       "expires": "when overloaded object literals materialize their contextual owner and the image module's browser URL/location binding plan emits its loader declarations.",
       "authoredOn": "2026-10-13"
+    },
+    {
+      "id": "effects-effect-field-role-record",
+      "path": "flight/effects/effect_interpolation.hpp",
+      "package": "@flighthq/effects",
+      "status": "partial",
+      "supplies": "packages/effects/src/effectInterpolation.ts",
+      "derivedFrom": "59efbd85e29e8d7fb6cdcb7af9b90951b15b6149073197961be94a975c0c4916",
+      "reason": "The a627849 emitter still refuses both of this module's public declarations, and for one reason it states itself: `imported type EffectFieldRoles names an ambient type this runtime profile does not bind, so the target has no representation for it`. That refusal is why the previous 7e2fc7d copy of this override existed; what changes at a627849 is that the generated module now spells every name it keeps, so the override no longer has to bridge removed RenderEffect* owners and carries only the two refusals.",
+      "change": "Reproduces the generated module's own surface (its includes, its seven using-declarations and can_lerp_effects verbatim) and supplies the two refused declarations: EFFECT_FIELD_ROLES as effect_field_roles, with every source key, value and insertion order preserved, and lerpEffect as lerp_effect with the retained-exact-owner form.",
+      "equivalence": "For one retained exact effect owner, the implementation preserves output identity, clamps time, writes endpoint absence without inventing a value, snaps booleans and strings at one half, applies caller-provided roles, interpolates packed colors per channel through lerpColor, and snapshots both endpoints before the first aliasing write. The kind table preserves every source key, value, insertion order and shared Record identity.",
+      "whyNotAPatchOrRepair": "A declaration repair cannot recreate a removed ambient owner or implement dynamic reads and writes, and the refusal is on an imported type name rather than on a lowering this module could respell. A source patch cannot make independently flattened effect structs share an erased base owner; using the runtime's NamedProperties is faithful only while the concrete native owner remains known, so the override exposes that boundary instead of casting, copying, or adding side storage.",
+      "unblocks": "effect_interpolation.hpp compiles independently and exact-owner effect interpolation is available to native callers.",
+      "remaining": "The erased Effect base owner still cannot recover a concrete effect, and two effects that share a kind but have different native owner types cannot share dynamic property storage. Same-kind cross-owner interpolation therefore fails loudly rather than reinterpreting or partially copying an owner.",
+      "expires": "when the emitter represents EffectFieldRoles for this profile, so that EFFECT_FIELD_ROLES and lerpEffect both emit.",
+      "authoredOn": "2026-10-14"
     }
   ]
 }

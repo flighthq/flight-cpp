@@ -1,4 +1,4 @@
-#include <flight/effects/render_effect_interpolation.hpp>
+#include <flight/effects/effect_interpolation.hpp>
 #include <flight/types/bevel_effect.hpp>
 #include <flight/types/bloom_effect.hpp>
 #include <flight/types/chromatic_aberration_effect.hpp>
@@ -6,6 +6,7 @@
 
 #include <cmath>
 #include <cstdint>
+#include <type_traits>
 #include <iostream>
 #include <limits>
 
@@ -30,13 +31,34 @@ std::uint32_t channel_of(double color, unsigned index) {
   return (static_cast<std::uint32_t>(color) >> (24U - index * 8U)) & 0xffU;
 }
 
+using EffectView =
+    flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Effect>>>>;
+
+EffectView effect_view(const flight::Ref<flight::types::Effect>& effect) {
+  return EffectView(effect);
+}
+
 }  // namespace
+
+// The retired override declared canLerpEffects as a template over std::shared_ptr<Left/Right>, so
+// this test could call it on concrete owners. At a627849 it is the emitter's own function over an
+// erased view, and a concrete effect owner is NOT a valid source for that view: the emitted effect
+// types are independently flattened structs with no heritage, and flight/structural_ref.hpp refuses
+// a source with an incompatible object type -- which is why the boundary is asserted here as a
+// property of the types rather than exercised as a runtime case. If heritage ever appears, this
+// fails and the note is stale rather than silently wrong.
+static_assert(
+    !std::is_base_of_v<flight::types::Effect, flight::types::BloomEffect> &&
+        !std::is_base_of_v<flight::types::Effect, flight::types::VignetteEffect>,
+    "a concrete effect owner gained Effect heritage, so canLerpEffects could take it directly");
 
 int main() {
   using flight::String;
-  using flight::effects::RenderEffectFieldRoles;
+  // The generated module names flight::types::EffectFieldRoles; flight::effects declares no alias
+  // for it, and inventing one here would assert a surface no emitted header has.
+  using flight::types::EffectFieldRoles;
 
-  const auto& roles = flight::effects::render_effect_field_roles;
+  const auto& roles = flight::effects::effect_field_roles;
   const auto role_keys = roles.enumerable_keys();
   const auto bevel_roles = roles.get(String("BevelEffect"));
   const auto vignette_roles = roles.get(String("VignetteEffect"));
@@ -68,9 +90,16 @@ int main() {
   bloom_b->radius = 16.0;
   auto bloom_out = make_effect<flight::types::BloomEffect>("BloomEffect");
   const auto bloom_out_identity = bloom_out.get();
-  if (!check(flight::effects::can_lerp_render_effects(bloom_a, bloom_b),
+  // can_lerp_effects reads the emitter's own carrier -- an erased view over Effect -- so these two
+  // cases are Effect owners. A concrete effect owner is not a valid source for that view
+  // (flight/structural_ref.hpp refuses a source with an incompatible object type), which is the
+  // same erased-owner boundary this module's override documents as its remaining.
+  auto kind_left = make_effect<flight::types::Effect>("BloomEffect");
+  auto kind_right = make_effect<flight::types::Effect>("BloomEffect");
+  auto kind_other = make_effect<flight::types::Effect>("VignetteEffect");
+  if (!check(flight::effects::can_lerp_effects(effect_view(kind_left), effect_view(kind_right)),
              "same-kind effects were rejected") ||
-      !check(flight::effects::lerp_render_effect(bloom_a, bloom_b, 0.5,
+      !check(flight::effects::lerp_effect(bloom_a, bloom_b, 0.5,
                                                  bloom_out),
              "same-owner interpolation did not report success") ||
       !check(bloom_out.get() == bloom_out_identity &&
@@ -82,10 +111,10 @@ int main() {
   auto different_kind = make_effect<flight::types::VignetteEffect>(
       "VignetteEffect");
   bloom_out->threshold = 0.99;
-  if (!check(!flight::effects::can_lerp_render_effects(bloom_a,
-                                                        different_kind),
+  if (!check(!flight::effects::can_lerp_effects(effect_view(kind_left),
+                                               effect_view(kind_other)),
              "different effect kinds were accepted") ||
-      !check(!flight::effects::lerp_render_effect(
+      !check(!flight::effects::lerp_effect(
                  bloom_a, different_kind, 0.5, bloom_out),
              "different-kind interpolation did not report failure") ||
       !check(bloom_out->threshold == 0.99,
@@ -94,17 +123,17 @@ int main() {
   }
 
   bloom_out->threshold = 0.5;
-  flight::effects::lerp_render_effect(bloom_a, bloom_b, -1.0, bloom_out);
+  flight::effects::lerp_effect(bloom_a, bloom_b, -1.0, bloom_out);
   if (!check(bloom_out->threshold == 0.2 && bloom_out->radius == 4.0,
              "negative interpolation time was not clamped to a")) {
     return 1;
   }
-  flight::effects::lerp_render_effect(bloom_a, bloom_b, 2.0, bloom_out);
+  flight::effects::lerp_effect(bloom_a, bloom_b, 2.0, bloom_out);
   if (!check(bloom_out->threshold == 0.8 && bloom_out->radius == 16.0,
              "large interpolation time was not clamped to b")) {
     return 1;
   }
-  flight::effects::lerp_render_effect(
+  flight::effects::lerp_effect(
       bloom_a, bloom_b, std::numeric_limits<double>::quiet_NaN(), bloom_out);
   if (!check(std::isnan(bloom_out->threshold.value()) &&
                  std::isnan(bloom_out->radius.value()),
@@ -117,7 +146,7 @@ int main() {
   bloom_b->threshold = 1.0;
   bloom_b->radius = 10.0;
   const auto bloom_a_identity = bloom_a.get();
-  flight::effects::lerp_render_effect(bloom_a, bloom_b, 0.5, bloom_a);
+  flight::effects::lerp_effect(bloom_a, bloom_b, 0.5, bloom_a);
   if (!check(bloom_a.get() == bloom_a_identity && bloom_a->threshold == 0.5 &&
                  bloom_a->radius == 5.0,
              "aliased interpolation did not use the endpoint snapshot")) {
@@ -127,12 +156,12 @@ int main() {
   bloom_a->threshold = std::nullopt;
   bloom_b->threshold = 0.8;
   bloom_out->threshold = 0.5;
-  flight::effects::lerp_render_effect(bloom_a, bloom_b, 0.4, bloom_out);
+  flight::effects::lerp_effect(bloom_a, bloom_b, 0.4, bloom_out);
   if (!check(!bloom_out->threshold.has_value(),
              "missing numeric endpoint did not snap to absence below half")) {
     return 1;
   }
-  flight::effects::lerp_render_effect(bloom_a, bloom_b, 0.5, bloom_out);
+  flight::effects::lerp_effect(bloom_a, bloom_b, 0.5, bloom_out);
   if (!check(bloom_out->threshold == 0.8,
              "missing numeric endpoint did not snap to b at half")) {
     return 1;
@@ -148,7 +177,7 @@ int main() {
   vignette_b->intensity = 1.0;
   auto vignette_out = make_effect<flight::types::VignetteEffect>(
       "VignetteEffect");
-  flight::effects::lerp_render_effect(vignette_a, vignette_b, 0.5,
+  flight::effects::lerp_effect(vignette_a, vignette_b, 0.5,
                                       vignette_out);
   if (!check(vignette_out->color.has_value() &&
                  channel_of(vignette_out->color.value(), 1) == 0 &&
@@ -160,8 +189,8 @@ int main() {
     return 1;
   }
 
-  RenderEffectFieldRoles scalar_roles;
-  flight::effects::lerp_render_effect(vignette_a, vignette_b, 0.5,
+  EffectFieldRoles scalar_roles;
+  flight::effects::lerp_effect(vignette_a, vignette_b, 0.5,
                                       vignette_out, scalar_roles);
   const double scalar_start = static_cast<double>(0xff0000ffU);
   const double scalar_end = static_cast<double>(0x0000ffffU);
@@ -181,7 +210,7 @@ int main() {
   bevel_b->shadow_color = 0x0000ffff;
   bevel_b->bevel_type = String("outer");
   auto bevel_out = make_effect<flight::types::BevelEffect>("BevelEffect");
-  flight::effects::lerp_render_effect(bevel_a, bevel_b, 0.5, bevel_out);
+  flight::effects::lerp_effect(bevel_a, bevel_b, 0.5, bevel_out);
   if (!check(bevel_out->highlight_color.has_value() &&
                  bevel_out->shadow_color.has_value() &&
                  channel_of(bevel_out->highlight_color.value(), 1) == 0 &&
@@ -203,13 +232,13 @@ int main() {
   auto boolean_out =
       make_effect<flight::types::ChromaticAberrationEffect>(
           "ChromaticAberrationEffect");
-  flight::effects::lerp_render_effect(boolean_a, boolean_b, 0.4,
+  flight::effects::lerp_effect(boolean_a, boolean_b, 0.4,
                                       boolean_out);
   if (!check(boolean_out->radial == false,
              "boolean field did not snap to a below half")) {
     return 1;
   }
-  flight::effects::lerp_render_effect(boolean_a, boolean_b, 0.5,
+  flight::effects::lerp_effect(boolean_a, boolean_b, 0.5,
                                       boolean_out);
   if (!check(boolean_out->radial == true,
              "boolean field did not snap to b at half")) {
@@ -219,12 +248,12 @@ int main() {
   different_kind->kind = String("BloomEffect");
   bool cross_owner_failed_loudly = false;
   try {
-    static_cast<void>(flight::effects::lerp_render_effect(
+    static_cast<void>(flight::effects::lerp_effect(
         bloom_a, different_kind, 0.5, bloom_out));
   } catch (const flight::Error& error) {
     cross_owner_failed_loudly =
         error.message() == String(
-            "lerpRenderEffect same-kind interpolation requires one retained exact effect owner");
+            "lerpEffect same-kind interpolation requires one retained exact effect owner");
   }
   if (!check(cross_owner_failed_loudly,
              "same-kind cross-owner interpolation crossed the partial boundary")) {

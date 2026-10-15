@@ -1,4 +1,4 @@
-#include <flight/effects/render_effect_padding.hpp>
+#include <flight/effects/effect_padding.hpp>
 #include <flight/types/blur_effect.hpp>
 
 #include <cmath>
@@ -14,12 +14,15 @@
 
 namespace {
 
-using Effect = flight::effects::RenderEffect;
-using EffectInput = flight::effects::RenderEffectInput;
-using EffectView = flight::effects::RenderEffectView;
-using Padding = flight::effects::RenderEffectPadding;
-using PaddingResolver = flight::effects::RenderEffectPaddingResolver;
-using PaddingView = flight::effects::RenderEffectPaddingView;
+// The emitted module names the current owners directly, so these are local spellings of the same
+// types rather than the retired flight::effects aliases the old override defined. Keeping them in
+// flight::effects would assert a surface no emitted header declares.
+using Effect = flight::types::Effect;
+using EffectView = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Effect>>>>;
+using EffectInput = std::variant<flight::Array<EffectView>, EffectView>;
+using Padding = flight::types::EffectPadding;
+using PaddingResolver = flight::types::EffectPaddingResolver;
+using PaddingView = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::EffectPadding>>>>;
 using RenderState = flight::types::RenderState;
 using RenderStateRuntime = flight::types::RenderStateRuntime;
 
@@ -107,18 +110,18 @@ void install_miss_emitter(
 
 int main() {
   using flight::String;
-  using flight::effects::compute_render_effect_padding;
-  using flight::effects::explain_render_effect_padding;
-  using flight::effects::get_directional_render_effect_padding;
-  using flight::effects::get_gaussian_render_effect_padding;
-  using flight::effects::register_render_effect_padding_resolver;
+  using flight::effects::compute_effect_padding;
+  using flight::effects::explain_effect_padding;
+  using flight::effects::get_directional_effect_padding;
+  using flight::effects::get_gaussian_effect_padding;
+  using flight::effects::register_effect_padding_resolver;
 
-  const auto gaussian = get_gaussian_render_effect_padding(2.1, -4.0);
+  const auto gaussian = get_gaussian_effect_padding(2.1, -4.0);
   const auto positive_direction =
-      get_directional_render_effect_padding(2.0, 3.0, 4.25, 5.5);
+      get_directional_effect_padding(2.0, 3.0, 4.25, 5.5);
   const auto negative_direction =
-      get_directional_render_effect_padding(1.0, 1.0, -2.5, -4.25);
-  const auto nan_gaussian = get_gaussian_render_effect_padding(
+      get_directional_effect_padding(1.0, 1.0, -2.5, -4.25);
+  const auto nan_gaussian = get_gaussian_effect_padding(
       std::numeric_limits<double>::quiet_NaN(), 1.0);
   if (!check(padding_is(gaussian, 0.0, 7.0, 7.0, 0.0),
              "Gaussian padding did not use sanitized three-sigma extents") ||
@@ -137,11 +140,11 @@ int main() {
   const auto sample = make_effect("acme.Effect");
   const PaddingResolver first = constant_padding(1.0, 2.0, 3.0, 4.0);
   const PaddingResolver replacement = constant_padding(4.0, 3.0, 2.0, 1.0);
-  register_render_effect_padding_resolver(
+  register_effect_padding_resolver(
       state, String("acme.Effect"), std::optional<PaddingResolver>{first});
   const auto before =
       state->entity_runtime_key.value()->registries->effect_padding_resolvers;
-  register_render_effect_padding_resolver(
+  register_effect_padding_resolver(
       state, String("acme.Effect"),
       std::optional<PaddingResolver>{replacement});
   const auto after =
@@ -160,7 +163,7 @@ int main() {
     return 1;
   }
 
-  register_render_effect_padding_resolver(state, String("acme.Effect"),
+  register_effect_padding_resolver(state, String("acme.Effect"),
                                           std::nullopt);
   const auto removed =
       state->entity_runtime_key.value()->registries->effect_padding_resolvers;
@@ -181,14 +184,14 @@ int main() {
     seen_effects.push_back(effect.identity());
     return PaddingView(make_padding(1.0, 2.0, 3.0, 4.0));
   };
-  register_render_effect_padding_resolver(
+  register_effect_padding_resolver(
       chain_state, String("acme.Spatial"),
       std::optional<PaddingResolver>{spatial_resolver});
-  register_render_effect_padding_resolver(
+  register_effect_padding_resolver(
       chain_state, String("acme.Pointwise"),
       std::optional<PaddingResolver>{constant_padding(0.0, 0.0, 0.0, 0.0)});
   const auto chain = list({spatial_a, pointwise, spatial_b});
-  const auto chain_padding = compute_render_effect_padding(chain_state, chain);
+  const auto chain_padding = compute_effect_padding(chain_state, chain);
   if (!check(padding_is(chain_padding, 2.0, 4.0, 6.0, 8.0),
              "sequential padding did not add every side") ||
       !check(seen_effects.size() == 2 &&
@@ -201,7 +204,7 @@ int main() {
   const auto caller_out = make_padding(-1.0, -1.0, -1.0, -1.0);
   const auto caller_identity = caller_out.get();
   const auto returned =
-      compute_render_effect_padding(chain_state, chain, caller_out);
+      compute_effect_padding(chain_state, chain, caller_out);
   if (!check(returned.get() == caller_identity &&
                  padding_is(caller_out, 2.0, 4.0, 6.0, 8.0),
              "caller-owned output lost identity or final values")) {
@@ -224,10 +227,10 @@ int main() {
         recovered_exact_blur = recovered.get() == concrete_blur.get();
         return PaddingView(make_padding(9.0, 6.0, 6.0, 9.0));
       };
-  register_render_effect_padding_resolver(
+  register_effect_padding_resolver(
       concrete_state, String("BlurEffect"),
       std::optional<PaddingResolver>{concrete_resolver});
-  const auto concrete_padding = compute_render_effect_padding(
+  const auto concrete_padding = compute_effect_padding(
       concrete_state,
       EffectInput{std::in_place_type<EffectView>, widened_blur});
   if (!check(recovered_exact_blur &&
@@ -241,11 +244,11 @@ int main() {
   const auto known = make_effect("acme.Known");
   const auto missing_a_again = make_effect("acme.MissingA");
   const auto missing_b = make_effect("acme.MissingB");
-  register_render_effect_padding_resolver(
+  register_effect_padding_resolver(
       explain_state, String("acme.Known"),
       std::optional<PaddingResolver>{constant_padding(3.0, 4.0, 5.0, 6.0)});
   const auto mixed = list({missing_a, known, missing_a_again, missing_b});
-  const auto explanation = explain_render_effect_padding(explain_state, mixed);
+  const auto explanation = explain_effect_padding(explain_state, mixed);
   if (!check(explanation->missing_kinds.size() == 2 &&
                  explanation->missing_kinds.element(0.0) ==
                      String("acme.MissingA") &&
@@ -261,7 +264,7 @@ int main() {
   std::vector<std::pair<flight::types::RenderRegistryTable, String>> misses;
   install_miss_emitter(explain_state, misses);
   const auto emitted_padding =
-      compute_render_effect_padding(explain_state, mixed);
+      compute_effect_padding(explain_state, mixed);
   if (!check(padding_is(emitted_padding, 3.0, 4.0, 5.0, 6.0),
              "miss emission changed resolved padding") ||
       !check(misses.size() == 2 &&
@@ -271,14 +274,14 @@ int main() {
              "compute did not emit one ordered shared miss per kind")) {
     return 1;
   }
-  static_cast<void>(explain_render_effect_padding(explain_state, mixed));
+  static_cast<void>(explain_effect_padding(explain_state, mixed));
   if (!check(misses.size() == 2,
              "explain unexpectedly emitted through the shared miss seam")) {
     return 1;
   }
 
   const auto emitted_out = make_padding(9.0, 9.0, 9.0, 9.0);
-  compute_render_effect_padding(explain_state, mixed, emitted_out);
+  compute_effect_padding(explain_state, mixed, emitted_out);
   if (!check(misses.size() == 4 &&
                  misses[2].second == String("acme.MissingA") &&
                  misses[3].second == String("acme.MissingB"),
@@ -286,7 +289,7 @@ int main() {
     return 1;
   }
 
-  const auto empty_explanation = explain_render_effect_padding(
+  const auto empty_explanation = explain_effect_padding(
       explain_state,
       EffectInput{std::in_place_type<flight::Array<EffectView>>,
                   flight::Array<EffectView>{}});
@@ -299,12 +302,12 @@ int main() {
 
   const auto sanitize_state = make_state();
   const auto dirty = make_effect("acme.Dirty");
-  register_render_effect_padding_resolver(
+  register_effect_padding_resolver(
       sanitize_state, String("acme.Dirty"),
       std::optional<PaddingResolver>{constant_padding(
           -1.0, std::numeric_limits<double>::infinity(),
           std::numeric_limits<double>::quiet_NaN(), 7.0)});
-  if (!check(padding_is(compute_render_effect_padding(sanitize_state,
+  if (!check(padding_is(compute_effect_padding(sanitize_state,
                                                        single(dirty)),
                         0.0, 0.0, 0.0, 7.0),
              "non-finite or negative resolver padding was not sanitized")) {
@@ -315,23 +318,23 @@ int main() {
   const auto mutator = make_effect("acme.Mutator");
   const auto target = make_effect("acme.Target");
   PaddingResolver mutate_registry = [snapshot_state](EffectView) {
-    register_render_effect_padding_resolver(
+    register_effect_padding_resolver(
         snapshot_state, String("acme.Target"),
         std::optional<PaddingResolver>{constant_padding(50.0, 50.0, 50.0,
                                                         50.0)});
     return PaddingView(make_padding(1.0, 1.0, 1.0, 1.0));
   };
-  register_render_effect_padding_resolver(
+  register_effect_padding_resolver(
       snapshot_state, String("acme.Mutator"),
       std::optional<PaddingResolver>{mutate_registry});
-  register_render_effect_padding_resolver(
+  register_effect_padding_resolver(
       snapshot_state, String("acme.Target"),
       std::optional<PaddingResolver>{constant_padding(2.0, 2.0, 2.0, 2.0)});
-  if (!check(padding_is(compute_render_effect_padding(
+  if (!check(padding_is(compute_effect_padding(
                             snapshot_state, list({mutator, target})),
                         3.0, 3.0, 3.0, 3.0),
              "mid-chain registration mutated the resolver snapshot") ||
-      !check(padding_is(compute_render_effect_padding(snapshot_state,
+      !check(padding_is(compute_effect_padding(snapshot_state,
                                                        single(target)),
                         50.0, 50.0, 50.0, 50.0),
              "mid-chain replacement was not visible to a later compute")) {
@@ -343,13 +346,13 @@ int main() {
   PaddingResolver throwing_resolver = [](EffectView) -> PaddingView {
     throw flight::Error(String("resolver failed"));
   };
-  register_render_effect_padding_resolver(
+  register_effect_padding_resolver(
       throwing_state, String("acme.Throw"),
       std::optional<PaddingResolver>{throwing_resolver});
   const auto unchanged = make_padding(9.0, 8.0, 7.0, 6.0);
   bool threw = false;
   try {
-    static_cast<void>(compute_render_effect_padding(
+    static_cast<void>(compute_effect_padding(
         throwing_state, single(throwing_effect), unchanged));
   } catch (const flight::Error& error) {
     threw = error.message() == String("resolver failed");

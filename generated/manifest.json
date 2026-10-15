@@ -1393,27 +1393,7 @@
       "id": "dialog-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/effects/bevel_effect.hpp",
-        "flight/effects/bitmap_displacement_effect.hpp",
-        "flight/effects/bloom_effect.hpp",
-        "flight/effects/blur_effect.hpp",
-        "flight/effects/bokeh_depth_of_field_effect.hpp",
-        "flight/effects/contact_shadows_effect.hpp",
-        "flight/effects/convolution_effect.hpp",
-        "flight/effects/directional_blur_effect.hpp",
-        "flight/effects/displacement_effect.hpp",
-        "flight/effects/drop_shadow_effect.hpp",
-        "flight/effects/glitch_effect.hpp",
-        "flight/effects/gradient_bevel_effect.hpp",
-        "flight/effects/gradient_glow_effect.hpp",
-        "flight/effects/inner_glow_effect.hpp",
-        "flight/effects/inner_shadow_effect.hpp",
-        "flight/effects/median_effect.hpp",
-        "flight/effects/outer_glow_effect.hpp",
-        "flight/effects/outline_effect.hpp",
-        "flight/effects/tilt_shift_effect.hpp"
-      ],
+      "files": [],
       "id": "effects-unqualified-entity-names"
     },
     {
@@ -2396,6 +2376,11 @@
         "flight/effects/displacement_effect.hpp",
         "flight/effects/drop_shadow_effect.hpp",
         "flight/effects/edge_detect_math.hpp",
+        "flight/effects/effect_capture_geometry.hpp",
+        "flight/effects/effect_defaults.hpp",
+        "flight/effects/effect_inputs.hpp",
+        "flight/effects/effect_interpolation.hpp",
+        "flight/effects/effect_padding.hpp",
         "flight/effects/glitch_effect.hpp",
         "flight/effects/gradient_bevel_effect.hpp",
         "flight/effects/gradient_glow_effect.hpp",
@@ -2404,13 +2389,6 @@
         "flight/effects/median_effect.hpp",
         "flight/effects/outer_glow_effect.hpp",
         "flight/effects/outline_effect.hpp",
-        "flight/effects/render_effect.hpp",
-        "flight/effects/render_effect_capture_geometry.hpp",
-        "flight/effects/render_effect_defaults.hpp",
-        "flight/effects/render_effect_inputs.hpp",
-        "flight/effects/render_effect_interpolation.hpp",
-        "flight/effects/render_effect_padding.hpp",
-        "flight/effects/render_effect_validation.hpp",
         "flight/effects/tilt_shift_effect.hpp"
       ],
       "id": "effects-unqualified-types-names"
@@ -2858,9 +2836,7 @@
       "id": "shape-unqualified-path-names"
     },
     {
-      "files": [
-        "flight/effects/render_effect_capture_geometry.hpp"
-      ],
+      "files": [],
       "id": "effects-unqualified-geometry-names"
     },
     {
@@ -4590,6 +4566,12 @@
         "flight/texture/cube_texture.hpp"
       ],
       "id": "texture-cube-null-face-array-optional-storage"
+    },
+    {
+      "files": [
+        "flight/effects/effect_defaults.hpp"
+      ],
+      "id": "effects-membership-test-defaults"
     }
   ],
   "sourcePatches": [
@@ -5908,7 +5890,7 @@
       "flight/collision/raycast_collision_shape2_d.hpp",
       "flight/collision/test_collision2_d.hpp",
       "flight/collision/test_collision3_d.hpp",
-      "flight/effects/render_effect_interpolation.hpp",
+      "flight/effects/effect_capture_geometry.hpp",
       "flight/effects_canvas/canvas_effect_state.hpp",
       "flight/effects_gl/gl_contact_shadows_effect.hpp",
       "flight/effects_gl/gl_effect_state.hpp",
@@ -6010,7 +5992,6 @@
       "character_id_script_7fe7df2e7341fc1a",
       "class_name_cue_ca53ee8b35497d37",
       "codec_id_deblocking_frame_count_height_smoothing_width_e646285bb518325f",
-      "color_de12e9ee597cac6a",
       "colors_timeline_79cefceb3eed9427",
       "end_start_97b3a2515eda198d",
       "end_start_b3d703e568b779f1",
@@ -6065,26 +6046,6 @@
   "canonicalPackageLocalIncludes": {
     "files": [
       "flight/bitmaptext/update_bitmap_text.hpp",
-      "flight/effects/bevel_effect.hpp",
-      "flight/effects/bitmap_displacement_effect.hpp",
-      "flight/effects/bloom_effect.hpp",
-      "flight/effects/blur_effect.hpp",
-      "flight/effects/bokeh_depth_of_field_effect.hpp",
-      "flight/effects/contact_shadows_effect.hpp",
-      "flight/effects/convolution_effect.hpp",
-      "flight/effects/directional_blur_effect.hpp",
-      "flight/effects/displacement_effect.hpp",
-      "flight/effects/drop_shadow_effect.hpp",
-      "flight/effects/glitch_effect.hpp",
-      "flight/effects/gradient_bevel_effect.hpp",
-      "flight/effects/gradient_glow_effect.hpp",
-      "flight/effects/inner_glow_effect.hpp",
-      "flight/effects/inner_shadow_effect.hpp",
-      "flight/effects/median_effect.hpp",
-      "flight/effects/outer_glow_effect.hpp",
-      "flight/effects/outline_effect.hpp",
-      "flight/effects/render_effect_capture_geometry.hpp",
-      "flight/effects/tilt_shift_effect.hpp",
       "flight/effects_wgpu/wgpu_bevel_effect.hpp",
       "flight/effects_wgpu/wgpu_bitmap_displacement_effect.hpp",
       "flight/effects_wgpu/wgpu_blend_effect.hpp",
@@ -6276,7 +6237,7 @@
       "flight/tilemap_formats/tiled_xml_parse.hpp",
       "flight/tokens/substitute_flight_document_scene_tokens.hpp"
     ],
-    "includes": 836
+    "includes": 797
   },
   "packages": [
     {
@@ -6631,14 +6592,14 @@
       "sourceModules": 23
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/effects",
       "cppNamespace": "flight::effects",
-      "emittedModules": 55,
+      "emittedModules": 57,
       "package": "@flighthq/effects",
-      "refusedModules": 22,
+      "refusedModules": 20,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 77
@@ -8282,8 +8243,8 @@
   },
   "summary": {
     "packages": 153,
-    "emittedModules": 2470,
-    "refusedModules": 606,
+    "emittedModules": 2472,
+    "refusedModules": 604,
     "sourceModules": 3076
   }
 }

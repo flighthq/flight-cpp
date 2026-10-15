@@ -1061,6 +1061,31 @@
       "source": "packages/effects/src/edgeDetectMath.ts"
     },
     {
+      "name": "Effect",
+      "packageName": "@flighthq/effects",
+      "source": "packages/effects/src/effect.ts"
+    },
+    {
+      "name": "EffectDefaults",
+      "packageName": "@flighthq/effects",
+      "source": "packages/effects/src/effectDefaults.ts"
+    },
+    {
+      "name": "EffectInputs",
+      "packageName": "@flighthq/effects",
+      "source": "packages/effects/src/effectInputs.ts"
+    },
+    {
+      "name": "EffectPadding",
+      "packageName": "@flighthq/effects",
+      "source": "packages/effects/src/effectPadding.ts"
+    },
+    {
+      "name": "EffectValidation",
+      "packageName": "@flighthq/effects",
+      "source": "packages/effects/src/effectValidation.ts"
+    },
+    {
       "name": "FilmEmulationEffect",
       "packageName": "@flighthq/effects",
       "source": "packages/effects/src/filmEmulationEffect.ts"
@@ -1154,26 +1179,6 @@
       "name": "RadialBlurEffect",
       "packageName": "@flighthq/effects",
       "source": "packages/effects/src/radialBlurEffect.ts"
-    },
-    {
-      "name": "RenderEffect",
-      "packageName": "@flighthq/effects",
-      "source": "packages/effects/src/renderEffect.ts"
-    },
-    {
-      "name": "RenderEffectDefaults",
-      "packageName": "@flighthq/effects",
-      "source": "packages/effects/src/renderEffectDefaults.ts"
-    },
-    {
-      "name": "RenderEffectInputs",
-      "packageName": "@flighthq/effects",
-      "source": "packages/effects/src/renderEffectInputs.ts"
-    },
-    {
-      "name": "RenderEffectValidation",
-      "packageName": "@flighthq/effects",
-      "source": "packages/effects/src/renderEffectValidation.ts"
     },
     {
       "name": "ScanlinesEffect",
@@ -22071,9 +22076,9 @@
       "cyclic": false,
       "modules": [
         {
-          "name": "RenderEffect",
+          "name": "Effect",
           "packageName": "@flighthq/effects",
-          "source": "packages/effects/src/renderEffect.ts"
+          "source": "packages/effects/src/effect.ts"
         }
       ]
     },
@@ -22234,6 +22239,66 @@
           "name": "EdgeDetectMath",
           "packageName": "@flighthq/effects",
           "source": "packages/effects/src/edgeDetectMath.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "EffectDefaults",
+          "packageName": "@flighthq/effects",
+          "source": "packages/effects/src/effectDefaults.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "EffectInputs",
+          "packageName": "@flighthq/effects",
+          "source": "packages/effects/src/effectInputs.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "RegistryTable",
+          "packageName": "@flighthq/registry",
+          "source": "packages/registry/src/registryTable.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "RenderState",
+          "packageName": "@flighthq/render",
+          "source": "packages/render/src/renderState.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "EffectPadding",
+          "packageName": "@flighthq/effects",
+          "source": "packages/effects/src/effectPadding.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "EffectValidation",
+          "packageName": "@flighthq/effects",
+          "source": "packages/effects/src/effectValidation.ts"
         }
       ]
     },
@@ -22424,36 +22489,6 @@
           "name": "RadialBlurEffect",
           "packageName": "@flighthq/effects",
           "source": "packages/effects/src/radialBlurEffect.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "RenderEffectDefaults",
-          "packageName": "@flighthq/effects",
-          "source": "packages/effects/src/renderEffectDefaults.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "RenderEffectInputs",
-          "packageName": "@flighthq/effects",
-          "source": "packages/effects/src/renderEffectInputs.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "RenderEffectValidation",
-          "packageName": "@flighthq/effects",
-          "source": "packages/effects/src/renderEffectValidation.ts"
         }
       ]
     },
@@ -25451,16 +25486,6 @@
       "cyclic": false,
       "modules": [
         {
-          "name": "RegistryTable",
-          "packageName": "@flighthq/registry",
-          "source": "packages/registry/src/registryTable.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
           "name": "Contract",
           "packageName": "@flighthq/registry",
           "source": "packages/registry/src/contract.ts"
@@ -25474,16 +25499,6 @@
           "name": "Index",
           "packageName": "@flighthq/registry",
           "source": "packages/registry/src/index.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "RenderState",
-          "packageName": "@flighthq/render",
-          "source": "packages/render/src/renderState.ts"
         }
       ]
     },
@@ -42698,23 +42713,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/autoExposureEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/autoExposureEffect.ts\",194]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -42728,7 +42743,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/autoExposureEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/autoExposureEffect.ts\",259]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/autoExposureEffect.ts\",250]",
             "kind": "function",
             "name": "createAutoExposureEffect",
             "scope": "module",
@@ -42749,7 +42764,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/autoExposureEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/autoExposureEffect.ts\",536]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/autoExposureEffect.ts\",527]",
             "kind": "function",
             "name": "initializeAutoExposureEffect",
             "scope": "module",
@@ -42771,11 +42786,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/autoExposureEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -47359,23 +47374,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/barrelDistortionEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/barrelDistortionEffect.ts\",198]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -47389,7 +47404,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/barrelDistortionEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/barrelDistortionEffect.ts\",263]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/barrelDistortionEffect.ts\",254]",
             "kind": "function",
             "name": "createBarrelDistortionEffect",
             "scope": "module",
@@ -47410,7 +47425,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/barrelDistortionEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/barrelDistortionEffect.ts\",560]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/barrelDistortionEffect.ts\",551]",
             "kind": "function",
             "name": "initializeBarrelDistortionEffect",
             "scope": "module",
@@ -47432,11 +47447,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/barrelDistortionEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -66117,23 +66132,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 9,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/blendEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/blendEffect.ts\",215]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -66147,7 +66162,7 @@
             "line": 18,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/blendEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/blendEffect.ts\",906]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/blendEffect.ts\",897]",
             "kind": "function",
             "name": "createBlendEffect",
             "scope": "module",
@@ -66168,7 +66183,7 @@
             "line": 27,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/blendEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/blendEffect.ts\",1190]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/blendEffect.ts\",1181]",
             "kind": "function",
             "name": "initializeBlendEffect",
             "scope": "module",
@@ -66190,11 +66205,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/blendEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -72566,23 +72581,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/cameraMotionBlurEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/cameraMotionBlurEffect.ts\",198]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -72596,7 +72611,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/cameraMotionBlurEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/cameraMotionBlurEffect.ts\",263]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/cameraMotionBlurEffect.ts\",254]",
             "kind": "function",
             "name": "createCameraMotionBlurEffect",
             "scope": "module",
@@ -72617,7 +72632,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/cameraMotionBlurEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/cameraMotionBlurEffect.ts\",560]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/cameraMotionBlurEffect.ts\",551]",
             "kind": "function",
             "name": "initializeCameraMotionBlurEffect",
             "scope": "module",
@@ -72639,11 +72654,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/cameraMotionBlurEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -80785,23 +80800,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/chromaticAberrationEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/chromaticAberrationEffect.ts\",201]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -80815,7 +80830,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/chromaticAberrationEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/chromaticAberrationEffect.ts\",266]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/chromaticAberrationEffect.ts\",257]",
             "kind": "function",
             "name": "createChromaticAberrationEffect",
             "scope": "module",
@@ -80836,7 +80851,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/chromaticAberrationEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/chromaticAberrationEffect.ts\",578]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/chromaticAberrationEffect.ts\",569]",
             "kind": "function",
             "name": "initializeChromaticAberrationEffect",
             "scope": "module",
@@ -80858,11 +80873,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/chromaticAberrationEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -93544,23 +93559,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 9,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/compositeEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/compositeEffect.ts\",219]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -93574,7 +93589,7 @@
             "line": 17,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/compositeEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/compositeEffect.ts\",842]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/compositeEffect.ts\",833]",
             "kind": "function",
             "name": "createCompositeEffect",
             "scope": "module",
@@ -93595,7 +93610,7 @@
             "line": 26,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/compositeEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/compositeEffect.ts\",1158]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/compositeEffect.ts\",1149]",
             "kind": "function",
             "name": "initializeCompositeEffect",
             "scope": "module",
@@ -93617,11 +93632,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/compositeEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -117300,23 +117315,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/crtEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/crtEffect.ts\",185]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -117330,7 +117345,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/crtEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/crtEffect.ts\",250]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/crtEffect.ts\",241]",
             "kind": "function",
             "name": "createCrtEffect",
             "scope": "module",
@@ -117351,7 +117366,7 @@
             "line": 12,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/crtEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/crtEffect.ts\",477]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/crtEffect.ts\",468]",
             "kind": "function",
             "name": "initializeCrtEffect",
             "scope": "module",
@@ -117373,11 +117388,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/crtEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -118904,23 +118919,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/customShaderEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/customShaderEffect.ts\",194]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -118934,7 +118949,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/customShaderEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/customShaderEffect.ts\",259]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/customShaderEffect.ts\",250]",
             "kind": "function",
             "name": "createCustomShaderEffect",
             "scope": "module",
@@ -118955,7 +118970,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/customShaderEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/customShaderEffect.ts\",531]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/customShaderEffect.ts\",522]",
             "kind": "function",
             "name": "initializeCustomShaderEffect",
             "scope": "module",
@@ -118977,11 +118992,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/customShaderEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -124304,23 +124319,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/ditherEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/ditherEffect.ts\",188]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -124334,7 +124349,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/ditherEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/ditherEffect.ts\",253]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/ditherEffect.ts\",244]",
             "kind": "function",
             "name": "createDitherEffect",
             "scope": "module",
@@ -124355,7 +124370,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/ditherEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/ditherEffect.ts\",500]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/ditherEffect.ts\",491]",
             "kind": "function",
             "name": "initializeDitherEffect",
             "scope": "module",
@@ -124377,11 +124392,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/ditherEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -129431,6 +129446,75 @@
       "steps": []
     },
     {
+      "bindings": [
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
+            "line": 3,
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effect.ts",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effect.ts\",99]",
+            "kind": "function",
+            "name": "initializeEffect",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Effect",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effect.ts"
+          },
+          "importedNames": [
+            "Effect"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Effect",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Effect.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Effect",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effect.ts"
+          },
+          "importedNames": [
+            "Entity",
+            "EntityConstruction",
+            "Kind"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Entity.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Effect",
+        "packageName": "@flighthq/effects",
+        "source": "packages/effects/src/effect.ts"
+      },
+      "steps": []
+    },
+    {
       "bindings": [],
       "dependencies": [
         {
@@ -129509,6 +129593,139 @@
       "steps": []
     },
     {
+      "bindings": [
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:82b2b97f2ee043e7e41020a8fc532f2fcb19cb13d61d7eb68a12f9875eef5bb1",
+            "line": 12,
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectDefaults.ts",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effectDefaults.ts\",812]",
+            "kind": "function",
+            "name": "getEffectDefaults",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:c8806e9bba764a169063618be876e8c32bb2e69208a582cf1d0af286f01990f6",
+            "line": 25,
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectDefaults.ts",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effectDefaults.ts\",1514]",
+            "kind": "function",
+            "name": "normalizeEffect",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:9d810e5fde284c3051f26648bbb00fa9610a3fab53713a059f88f7186c23a79c",
+            "line": 45,
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectDefaults.ts",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effectDefaults.ts\",2326]",
+            "kind": "variable",
+            "name": "DEFAULTS",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "EffectDefaults",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectDefaults.ts"
+          },
+          "importedNames": [
+            "Effect"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Effect",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Effect.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "EffectDefaults",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectDefaults.ts"
+          },
+          "importedNames": [
+            "Kind"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Entity.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "EffectDefaults",
+        "packageName": "@flighthq/effects",
+        "source": "packages/effects/src/effectDefaults.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:9d810e5fde284c3051f26648bbb00fa9610a3fab53713a059f88f7186c23a79c",
+              "line": 45,
+              "packageName": "@flighthq/effects",
+              "source": "packages/effects/src/effectDefaults.ts",
+              "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effectDefaults.ts\",2326]",
+              "kind": "variable",
+              "name": "DEFAULTS",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            2
+          ]
+        }
+      ]
+    },
+    {
       "bindings": [],
       "dependencies": [],
       "module": {
@@ -129525,6 +129742,759 @@
         "name": "EffectInput",
         "packageName": "@flighthq/types",
         "source": "packages/types/src/EffectInput.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:58a25ef616fc0fff9ab3451d4b78789e890101dcadeb0c5d0bb582f7d81b14cb",
+            "line": 6,
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectInputs.ts",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effectInputs.ts\",346]",
+            "kind": "function",
+            "name": "getEffectInputs",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:8a1a3c952121e5800635cf67dbcfb4c6283cd4f45e330d8b92254c65e47c4166",
+            "line": 12,
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectInputs.ts",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effectInputs.ts\",663]",
+            "kind": "function",
+            "name": "getEffectKinds",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:6cacbf71ae72a8f2f9c0b666b2f259eb9a00c8ad05a7dba5ace06a843b3812aa",
+            "line": 20,
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectInputs.ts",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effectInputs.ts\",1103]",
+            "kind": "variable",
+            "name": "EFFECT_INPUTS",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:f7bb4f7acee157831f473470defb492b06b5c2ccbe9e070b4f2ba9beccb2e446",
+            "line": 38,
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectInputs.ts",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effectInputs.ts\",1766]",
+            "kind": "variable",
+            "name": "EFFECT_KINDS",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 1
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "EffectInputs",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectInputs.ts"
+          },
+          "importedNames": [
+            "Effect"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Effect",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Effect.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "EffectInputs",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectInputs.ts"
+          },
+          "importedNames": [
+            "EffectInput"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "EffectInput",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/EffectInput.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "EffectInputs",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectInputs.ts"
+          },
+          "importedNames": [
+            "Kind"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Entity.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "EffectInputs",
+        "packageName": "@flighthq/effects",
+        "source": "packages/effects/src/effectInputs.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:6cacbf71ae72a8f2f9c0b666b2f259eb9a00c8ad05a7dba5ace06a843b3812aa",
+              "line": 20,
+              "packageName": "@flighthq/effects",
+              "source": "packages/effects/src/effectInputs.ts",
+              "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effectInputs.ts\",1103]",
+              "kind": "variable",
+              "name": "EFFECT_INPUTS",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            2
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:f7bb4f7acee157831f473470defb492b06b5c2ccbe9e070b4f2ba9beccb2e446",
+              "line": 38,
+              "packageName": "@flighthq/effects",
+              "source": "packages/effects/src/effectInputs.ts",
+              "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effectInputs.ts\",1766]",
+              "kind": "variable",
+              "name": "EFFECT_KINDS",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:8d15dfc3665389615c603e25d0c6036ad17c9fd4046299c8ff65ee96858b646a",
+            "line": 1,
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effectPadding.ts\",9]",
+            "kind": "import",
+            "name": "withKindMapEntry",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "withKindMapEntry",
+            "kind": "dependency",
+            "module": {
+              "name": "RegistryTable",
+              "packageName": "@flighthq/registry",
+              "source": "packages/registry/src/registryTable.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 28,
+            "fingerprint": "sha256:5aaa97ae4fc5e0215fb18c8e67399d0307bc6e0b4c80bf2050322f861c15c074",
+            "line": 1,
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effectPadding.ts\",27]",
+            "kind": "import",
+            "name": "withoutKindMapEntry",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "withoutKindMapEntry",
+            "kind": "dependency",
+            "module": {
+              "name": "RegistryTable",
+              "packageName": "@flighthq/registry",
+              "source": "packages/registry/src/registryTable.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:eeca9234cc6b57efae158bd0c7a582050cdc21ae0bab9fb988c84adfd17bf838",
+            "line": 2,
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effectPadding.ts\",94]",
+            "kind": "import",
+            "name": "getRenderStateRuntime",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "getRenderStateRuntime",
+            "kind": "dependency",
+            "module": {
+              "name": "RenderState",
+              "packageName": "@flighthq/render",
+              "source": "packages/render/src/renderState.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e31ff774270322c36ebe747fa1722d812055d0b206a676dff884c0ffe61e6658",
+            "line": 11,
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effectPadding.ts\",313]",
+            "kind": "import",
+            "name": "RenderRegistryTable",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "RenderRegistryTable",
+            "kind": "dependency",
+            "module": {
+              "name": "RenderRegistrySignals",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/RenderRegistrySignals.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:1d8903af01933169905e4b868e228e6186c49bc2f0e86a29685199f167e70c75",
+            "line": 16,
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effectPadding.ts\",687]",
+            "kind": "function",
+            "name": "computeEffectPadding",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:543eb48bb32d455d1b66aa05661baf14234de3ea415d4f1c14ad18919894f08b",
+            "line": 33,
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effectPadding.ts\",1339]",
+            "kind": "function",
+            "name": "explainEffectPadding",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:9923b039314107c3e759bb842963faa89a69ea48f227a3c21fd5f8d764d76db5",
+            "line": 48,
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effectPadding.ts\",1889]",
+            "kind": "function",
+            "name": "getDirectionalEffectPadding",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:845194d3646e73b6e3d2bd4ec11626b8f8669d59d74bd509cd510f7c8960ff38",
+            "line": 66,
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effectPadding.ts\",2532]",
+            "kind": "function",
+            "name": "getGaussianEffectPadding",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:3c18207943ee6430a455c494e209035cb6b2060e50bfb631db242456e186730c",
+            "line": 72,
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effectPadding.ts\",2816]",
+            "kind": "function",
+            "name": "registerEffectPaddingResolver",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:0cabf420a6b60a34fa99ac4dc21ef378b8eecbfd40ffc5578e0f25f64064deff",
+            "line": 86,
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effectPadding.ts\",3304]",
+            "kind": "function",
+            "name": "writeEffectPadding",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:5e003109db970432b72c59e8a8a245f6c45d2e4f9cdfd2b5673fdd5e22e6d53a",
+            "line": 122,
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effectPadding.ts\",4512]",
+            "kind": "function",
+            "name": "hasEarlierKind",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:ccc5de1c4b52ab0484d400fdb78b14740e4a1080142d1a8df848d9eb4dcbd4f1",
+            "line": 130,
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effectPadding.ts\",4780]",
+            "kind": "function",
+            "name": "sanitizePadding",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "EffectPadding",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts"
+          },
+          "specifier": "@flighthq/registry/contract",
+          "target": {
+            "name": "RegistryTable",
+            "packageName": "@flighthq/registry",
+            "source": "packages/registry/src/registryTable.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "EffectPadding",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts"
+          },
+          "specifier": "@flighthq/render/contract",
+          "target": {
+            "name": "RenderState",
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/renderState.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "EffectPadding",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts"
+          },
+          "importedNames": [
+            "CanvasShapeCommand"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "CanvasShapeRegistry",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/CanvasShapeRegistry.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "EffectPadding",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts"
+          },
+          "importedNames": [
+            "Effect"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Effect",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Effect.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "EffectPadding",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts"
+          },
+          "importedNames": [
+            "EffectPadding",
+            "EffectPaddingExplanation",
+            "EffectPaddingResolver",
+            "EffectPaddingStatus"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "EffectPadding",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/EffectPadding.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "EffectPadding",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts"
+          },
+          "importedNames": [
+            "Kind"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Entity.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "EffectPadding",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts"
+          },
+          "importedNames": [
+            "NodeAny"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Node",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Node.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "EffectPadding",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts"
+          },
+          "importedNames": [
+            "NodeRenderer"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "NodeRenderer",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/NodeRenderer.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "EffectPadding",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts"
+          },
+          "importedNames": [
+            "Path"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Path",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Path.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "EffectPadding",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts"
+          },
+          "importedNames": [
+            "PathMesh"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "PathMesh",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/PathMesh.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "EffectPadding",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts"
+          },
+          "importedNames": [
+            "RenderProxy"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "RenderProxy",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/RenderProxy.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "EffectPadding",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts"
+          },
+          "importedNames": [
+            "RenderProxy2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "RenderProxy2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/RenderProxy2D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "EffectPadding",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts"
+          },
+          "importedNames": [
+            "RenderProxyAdapter"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "RenderProxyAdapter",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/RenderProxyAdapter.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "EffectPadding",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts"
+          },
+          "importedNames": [
+            "RenderRegistrySignals",
+            "RenderRegistryTable"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "RenderRegistrySignals",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/RenderRegistrySignals.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "EffectPadding",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts"
+          },
+          "importedNames": [
+            "ColorAdjustmentUnsupportedGuard",
+            "RenderRegistries",
+            "RenderRootGuard",
+            "RenderState",
+            "RenderStateRuntime",
+            "StrokeTessellator"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "RenderState",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/RenderState.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "EffectPadding",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectPadding.ts"
+          },
+          "importedNames": [
+            "StrokeStyle"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "StrokeStyle",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/StrokeStyle.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "EffectPadding",
+        "packageName": "@flighthq/effects",
+        "source": "packages/effects/src/effectPadding.ts"
       },
       "steps": []
     },
@@ -129574,6 +130544,113 @@
         "name": "EffectSourceMode",
         "packageName": "@flighthq/types",
         "source": "packages/types/src/EffectSourceMode.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:58a25ef616fc0fff9ab3451d4b78789e890101dcadeb0c5d0bb582f7d81b14cb",
+            "line": 3,
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectValidation.ts",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effectValidation.ts\",79]",
+            "kind": "import",
+            "name": "getEffectInputs",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "getEffectInputs",
+            "kind": "dependency",
+            "module": {
+              "name": "EffectInputs",
+              "packageName": "@flighthq/effects",
+              "source": "packages/effects/src/effectInputs.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:b962e5200c3aed0dd20931fad2450882d2b0207a33819489f53cef816f905024",
+            "line": 11,
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectValidation.ts",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/effectValidation.ts\",543]",
+            "kind": "function",
+            "name": "validateEffectList",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "EffectValidation",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectValidation.ts"
+          },
+          "specifier": "./effectInputs.ts",
+          "target": {
+            "name": "EffectInputs",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectInputs.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "EffectValidation",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectValidation.ts"
+          },
+          "importedNames": [
+            "Effect"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Effect",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Effect.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "EffectValidation",
+            "packageName": "@flighthq/effects",
+            "source": "packages/effects/src/effectValidation.ts"
+          },
+          "importedNames": [
+            "EffectInput"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "EffectInput",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/EffectInput.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "EffectValidation",
+        "packageName": "@flighthq/effects",
+        "source": "packages/effects/src/effectValidation.ts"
       },
       "steps": []
     },
@@ -137143,23 +138220,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/filmEmulationEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/filmEmulationEffect.ts\",195]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -137173,7 +138250,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/filmEmulationEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/filmEmulationEffect.ts\",260]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/filmEmulationEffect.ts\",251]",
             "kind": "function",
             "name": "createFilmEmulationEffect",
             "scope": "module",
@@ -137194,7 +138271,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/filmEmulationEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/filmEmulationEffect.ts\",542]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/filmEmulationEffect.ts\",533]",
             "kind": "function",
             "name": "initializeFilmEmulationEffect",
             "scope": "module",
@@ -137216,11 +138293,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/filmEmulationEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -137379,23 +138456,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/filmGrainEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/filmGrainEffect.ts\",191]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -137409,7 +138486,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/filmGrainEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/filmGrainEffect.ts\",256]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/filmGrainEffect.ts\",247]",
             "kind": "function",
             "name": "createFilmGrainEffect",
             "scope": "module",
@@ -137430,7 +138507,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/filmGrainEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/filmGrainEffect.ts\",518]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/filmGrainEffect.ts\",509]",
             "kind": "function",
             "name": "initializeFilmGrainEffect",
             "scope": "module",
@@ -137452,11 +138529,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/filmGrainEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -142381,23 +143458,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/fxaaEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/fxaaEffect.ts\",186]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -142411,7 +143488,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/fxaaEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/fxaaEffect.ts\",251]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/fxaaEffect.ts\",242]",
             "kind": "function",
             "name": "createFxaaEffect",
             "scope": "module",
@@ -142432,7 +143509,7 @@
             "line": 12,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/fxaaEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/fxaaEffect.ts\",483]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/fxaaEffect.ts\",474]",
             "kind": "function",
             "name": "initializeFxaaEffect",
             "scope": "module",
@@ -142454,11 +143531,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/fxaaEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -153380,23 +154457,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/godRaysEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/godRaysEffect.ts\",189]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -153410,7 +154487,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/godRaysEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/godRaysEffect.ts\",254]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/godRaysEffect.ts\",245]",
             "kind": "function",
             "name": "createGodRaysEffect",
             "scope": "module",
@@ -153431,7 +154508,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/godRaysEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/godRaysEffect.ts\",506]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/godRaysEffect.ts\",497]",
             "kind": "function",
             "name": "initializeGodRaysEffect",
             "scope": "module",
@@ -153453,11 +154530,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/godRaysEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -154575,23 +155652,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/halftoneEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/halftoneEffect.ts\",190]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -154605,7 +155682,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/halftoneEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/halftoneEffect.ts\",255]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/halftoneEffect.ts\",246]",
             "kind": "function",
             "name": "createHalftoneEffect",
             "scope": "module",
@@ -154626,7 +155703,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/halftoneEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/halftoneEffect.ts\",512]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/halftoneEffect.ts\",503]",
             "kind": "function",
             "name": "initializeHalftoneEffect",
             "scope": "module",
@@ -154648,11 +155725,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/halftoneEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -193560,23 +194637,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/kuwaharaEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/kuwaharaEffect.ts\",190]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -193590,7 +194667,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/kuwaharaEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/kuwaharaEffect.ts\",255]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/kuwaharaEffect.ts\",246]",
             "kind": "function",
             "name": "createKuwaharaEffect",
             "scope": "module",
@@ -193611,7 +194688,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/kuwaharaEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/kuwaharaEffect.ts\",512]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/kuwaharaEffect.ts\",503]",
             "kind": "function",
             "name": "initializeKuwaharaEffect",
             "scope": "module",
@@ -193633,11 +194710,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/kuwaharaEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -194461,23 +195538,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/lensDirtEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/lensDirtEffect.ts\",190]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -194491,7 +195568,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/lensDirtEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/lensDirtEffect.ts\",255]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/lensDirtEffect.ts\",246]",
             "kind": "function",
             "name": "createLensDirtEffect",
             "scope": "module",
@@ -194512,7 +195589,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/lensDirtEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/lensDirtEffect.ts\",512]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/lensDirtEffect.ts\",503]",
             "kind": "function",
             "name": "initializeLensDirtEffect",
             "scope": "module",
@@ -194534,11 +195611,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/lensDirtEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -194697,23 +195774,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/lensDistortionEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/lensDistortionEffect.ts\",196]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -194727,7 +195804,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/lensDistortionEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/lensDistortionEffect.ts\",261]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/lensDistortionEffect.ts\",252]",
             "kind": "function",
             "name": "createLensDistortionEffect",
             "scope": "module",
@@ -194748,7 +195825,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/lensDistortionEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/lensDistortionEffect.ts\",548]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/lensDistortionEffect.ts\",539]",
             "kind": "function",
             "name": "initializeLensDistortionEffect",
             "scope": "module",
@@ -194770,11 +195847,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/lensDistortionEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -194933,23 +196010,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/lensFlareEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/lensFlareEffect.ts\",191]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -194963,7 +196040,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/lensFlareEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/lensFlareEffect.ts\",256]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/lensFlareEffect.ts\",247]",
             "kind": "function",
             "name": "createLensFlareEffect",
             "scope": "module",
@@ -194984,7 +196061,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/lensFlareEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/lensFlareEffect.ts\",518]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/lensFlareEffect.ts\",509]",
             "kind": "function",
             "name": "initializeLensFlareEffect",
             "scope": "module",
@@ -195006,11 +196083,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/lensFlareEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -197965,7 +199042,7 @@
             "line": 25,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/linearSampledGaussian.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/linearSampledGaussian.ts\",1657]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/linearSampledGaussian.ts\",1660]",
             "kind": "function",
             "name": "computeLinearSampledGaussian",
             "scope": "module",
@@ -197986,7 +199063,7 @@
             "line": 54,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/linearSampledGaussian.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/linearSampledGaussian.ts\",2815]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/linearSampledGaussian.ts\",2818]",
             "kind": "function",
             "name": "getLinearSampledGaussianTapCount",
             "scope": "module",
@@ -198007,7 +199084,7 @@
             "line": 58,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/linearSampledGaussian.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/linearSampledGaussian.ts\",2936]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/linearSampledGaussian.ts\",2939]",
             "kind": "variable",
             "name": "scratchWeights",
             "scope": "module",
@@ -198029,7 +199106,7 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/linearSampledGaussian.ts"
           },
-          "specifier": "./gaussianKernel",
+          "specifier": "./gaussianKernel.ts",
           "target": {
             "name": "GaussianKernel",
             "packageName": "@flighthq/effects",
@@ -198052,7 +199129,7 @@
               "line": 58,
               "packageName": "@flighthq/effects",
               "source": "packages/effects/src/linearSampledGaussian.ts",
-              "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/linearSampledGaussian.ts\",2936]",
+              "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/linearSampledGaussian.ts\",2939]",
               "kind": "variable",
               "name": "scratchWeights",
               "scope": "module",
@@ -223504,23 +224581,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/motionBlurEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/motionBlurEffect.ts\",192]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -223534,7 +224611,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/motionBlurEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/motionBlurEffect.ts\",257]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/motionBlurEffect.ts\",248]",
             "kind": "function",
             "name": "createMotionBlurEffect",
             "scope": "module",
@@ -223555,7 +224632,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/motionBlurEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/motionBlurEffect.ts\",524]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/motionBlurEffect.ts\",515]",
             "kind": "function",
             "name": "initializeMotionBlurEffect",
             "scope": "module",
@@ -223577,11 +224654,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/motionBlurEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -235851,23 +236928,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/panniniProjectionEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/panniniProjectionEffect.ts\",199]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -235881,7 +236958,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/panniniProjectionEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/panniniProjectionEffect.ts\",264]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/panniniProjectionEffect.ts\",255]",
             "kind": "function",
             "name": "createPanniniProjectionEffect",
             "scope": "module",
@@ -235902,7 +236979,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/panniniProjectionEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/panniniProjectionEffect.ts\",566]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/panniniProjectionEffect.ts\",557]",
             "kind": "function",
             "name": "initializePanniniProjectionEffect",
             "scope": "module",
@@ -235924,11 +237001,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/panniniProjectionEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -251941,23 +253018,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/pixelateEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/pixelateEffect.ts\",190]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -251971,7 +253048,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/pixelateEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/pixelateEffect.ts\",255]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/pixelateEffect.ts\",246]",
             "kind": "function",
             "name": "createPixelateEffect",
             "scope": "module",
@@ -251992,7 +253069,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/pixelateEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/pixelateEffect.ts\",512]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/pixelateEffect.ts\",503]",
             "kind": "function",
             "name": "initializePixelateEffect",
             "scope": "module",
@@ -252014,11 +253091,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/pixelateEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -254739,23 +255816,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/posterizeEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/posterizeEffect.ts\",191]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -254769,7 +255846,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/posterizeEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/posterizeEffect.ts\",256]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/posterizeEffect.ts\",247]",
             "kind": "function",
             "name": "createPosterizeEffect",
             "scope": "module",
@@ -254790,7 +255867,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/posterizeEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/posterizeEffect.ts\",518]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/posterizeEffect.ts\",509]",
             "kind": "function",
             "name": "initializePosterizeEffect",
             "scope": "module",
@@ -254812,11 +255889,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/posterizeEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -258853,23 +259930,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/radialBlurEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/radialBlurEffect.ts\",192]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -258883,7 +259960,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/radialBlurEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/radialBlurEffect.ts\",257]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/radialBlurEffect.ts\",248]",
             "kind": "function",
             "name": "createRadialBlurEffect",
             "scope": "module",
@@ -258904,7 +259981,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/radialBlurEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/radialBlurEffect.ts\",524]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/radialBlurEffect.ts\",515]",
             "kind": "function",
             "name": "initializeRadialBlurEffect",
             "scope": "module",
@@ -258926,11 +260003,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/radialBlurEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -263804,509 +264881,6 @@
         "name": "RenderDrawContext",
         "packageName": "@flighthq/types",
         "source": "packages/types/src/RenderDrawContext.ts"
-      },
-      "steps": []
-    },
-    {
-      "bindings": [
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
-            "line": 3,
-            "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/renderEffect.ts\",105]",
-            "kind": "function",
-            "name": "initializeRenderEffect",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        }
-      ],
-      "dependencies": [
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "RenderEffect",
-            "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
-          },
-          "importedNames": [
-            "Entity",
-            "EntityConstruction",
-            "Kind"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Entity",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Entity.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "RenderEffect",
-            "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
-          },
-          "importedNames": [
-            "RenderEffect"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "RenderEffect",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/RenderEffect.ts"
-          }
-        }
-      ],
-      "module": {
-        "name": "RenderEffect",
-        "packageName": "@flighthq/effects",
-        "source": "packages/effects/src/renderEffect.ts"
-      },
-      "steps": []
-    },
-    {
-      "bindings": [
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:897e2e3478157112ef08d344001b2bf78ceb4e69a0f33d9f998eaa60246ebf87",
-            "line": 12,
-            "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffectDefaults.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/renderEffectDefaults.ts\",830]",
-            "kind": "function",
-            "name": "getRenderEffectDefaults",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:c2a71ba9fde8fc80f8de56f86a6c60524e270790b628a162420b39aea1d3380d",
-            "line": 25,
-            "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffectDefaults.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/renderEffectDefaults.ts\",1538]",
-            "kind": "function",
-            "name": "normalizeRenderEffect",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "temporal-until-evaluation",
-          "binding": {
-            "column": 7,
-            "fingerprint": "sha256:9d810e5fde284c3051f26648bbb00fa9610a3fab53713a059f88f7186c23a79c",
-            "line": 45,
-            "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffectDefaults.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/renderEffectDefaults.ts\",2368]",
-            "kind": "variable",
-            "name": "DEFAULTS",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "evaluation",
-            "step": 0
-          },
-          "kind": "local",
-          "mutation": "immutable"
-        }
-      ],
-      "dependencies": [
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "RenderEffectDefaults",
-            "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffectDefaults.ts"
-          },
-          "importedNames": [
-            "Kind"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Entity",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Entity.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "RenderEffectDefaults",
-            "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffectDefaults.ts"
-          },
-          "importedNames": [
-            "RenderEffect"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "RenderEffect",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/RenderEffect.ts"
-          }
-        }
-      ],
-      "module": {
-        "name": "RenderEffectDefaults",
-        "packageName": "@flighthq/effects",
-        "source": "packages/effects/src/renderEffectDefaults.ts"
-      },
-      "steps": [
-        {
-          "action": "initialize",
-          "bindings": [
-            {
-              "column": 7,
-              "fingerprint": "sha256:9d810e5fde284c3051f26648bbb00fa9610a3fab53713a059f88f7186c23a79c",
-              "line": 45,
-              "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffectDefaults.ts",
-              "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/renderEffectDefaults.ts\",2368]",
-              "kind": "variable",
-              "name": "DEFAULTS",
-              "scope": "module",
-              "space": "value"
-            }
-          ],
-          "completion": "abrupt-stops-module-evaluation",
-          "declaration": "variable",
-          "path": [
-            "declarations",
-            2
-          ]
-        }
-      ]
-    },
-    {
-      "bindings": [
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:0bdb1398d00b5b6080cdbc4de9857aad566e8ffeb79665d2519d46a0dc15184b",
-            "line": 6,
-            "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffectInputs.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/renderEffectInputs.ts\",358]",
-            "kind": "function",
-            "name": "getRenderEffectInputs",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:c194e7d05ce2131281dc5b5e955636bdd272ba05fc5052e14b39b798f234f015",
-            "line": 12,
-            "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffectInputs.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/renderEffectInputs.ts\",700]",
-            "kind": "function",
-            "name": "getRenderEffectKinds",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "temporal-until-evaluation",
-          "binding": {
-            "column": 7,
-            "fingerprint": "sha256:3df7efb954ae7fb121af50129afc3cb69955bfda4910e7f90819f885a0b0c24f",
-            "line": 20,
-            "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffectInputs.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/renderEffectInputs.ts\",1159]",
-            "kind": "variable",
-            "name": "RENDER_EFFECT_INPUTS",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "evaluation",
-            "step": 0
-          },
-          "kind": "local",
-          "mutation": "immutable"
-        },
-        {
-          "access": "temporal-until-evaluation",
-          "binding": {
-            "column": 14,
-            "fingerprint": "sha256:aa284e493914db4a47f91caffd0cf9bb61b3bb838ec99ffe30d3343e95bb8842",
-            "line": 38,
-            "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffectInputs.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/renderEffectInputs.ts\",1835]",
-            "kind": "variable",
-            "name": "RENDER_EFFECT_KINDS",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "evaluation",
-            "step": 1
-          },
-          "kind": "local",
-          "mutation": "immutable"
-        }
-      ],
-      "dependencies": [
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "RenderEffectInputs",
-            "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffectInputs.ts"
-          },
-          "importedNames": [
-            "Kind"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Entity",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Entity.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "RenderEffectInputs",
-            "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffectInputs.ts"
-          },
-          "importedNames": [
-            "RenderEffect"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "RenderEffect",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/RenderEffect.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "RenderEffectInputs",
-            "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffectInputs.ts"
-          },
-          "importedNames": [
-            "RenderEffectInput"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "RenderEffectInput",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/RenderEffectInput.ts"
-          }
-        }
-      ],
-      "module": {
-        "name": "RenderEffectInputs",
-        "packageName": "@flighthq/effects",
-        "source": "packages/effects/src/renderEffectInputs.ts"
-      },
-      "steps": [
-        {
-          "action": "initialize",
-          "bindings": [
-            {
-              "column": 7,
-              "fingerprint": "sha256:3df7efb954ae7fb121af50129afc3cb69955bfda4910e7f90819f885a0b0c24f",
-              "line": 20,
-              "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffectInputs.ts",
-              "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/renderEffectInputs.ts\",1159]",
-              "kind": "variable",
-              "name": "RENDER_EFFECT_INPUTS",
-              "scope": "module",
-              "space": "value"
-            }
-          ],
-          "completion": "abrupt-stops-module-evaluation",
-          "declaration": "variable",
-          "path": [
-            "declarations",
-            2
-          ]
-        },
-        {
-          "action": "initialize",
-          "bindings": [
-            {
-              "column": 14,
-              "fingerprint": "sha256:aa284e493914db4a47f91caffd0cf9bb61b3bb838ec99ffe30d3343e95bb8842",
-              "line": 38,
-              "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffectInputs.ts",
-              "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/renderEffectInputs.ts\",1835]",
-              "kind": "variable",
-              "name": "RENDER_EFFECT_KINDS",
-              "scope": "module",
-              "space": "value"
-            }
-          ],
-          "completion": "abrupt-stops-module-evaluation",
-          "declaration": "variable",
-          "path": [
-            "declarations",
-            3
-          ]
-        }
-      ]
-    },
-    {
-      "bindings": [
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:0bdb1398d00b5b6080cdbc4de9857aad566e8ffeb79665d2519d46a0dc15184b",
-            "line": 3,
-            "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffectValidation.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/renderEffectValidation.ts\",91]",
-            "kind": "import",
-            "name": "getRenderEffectInputs",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "getRenderEffectInputs",
-            "kind": "dependency",
-            "module": {
-              "name": "RenderEffectInputs",
-              "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffectInputs.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:c02366586e1fbd0899716f0c84ae3cc781262c12a9ae1d2bbf3f92437ca4cc00",
-            "line": 11,
-            "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffectValidation.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/renderEffectValidation.ts\",570]",
-            "kind": "function",
-            "name": "validateRenderEffectList",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        }
-      ],
-      "dependencies": [
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "RenderEffectValidation",
-            "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffectValidation.ts"
-          },
-          "specifier": "./renderEffectInputs",
-          "target": {
-            "name": "RenderEffectInputs",
-            "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffectInputs.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "RenderEffectValidation",
-            "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffectValidation.ts"
-          },
-          "importedNames": [
-            "RenderEffect"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "RenderEffect",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/RenderEffect.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "RenderEffectValidation",
-            "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffectValidation.ts"
-          },
-          "importedNames": [
-            "RenderEffectInput"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "RenderEffectInput",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/RenderEffectInput.ts"
-          }
-        }
-      ],
-      "module": {
-        "name": "RenderEffectValidation",
-        "packageName": "@flighthq/effects",
-        "source": "packages/effects/src/renderEffectValidation.ts"
       },
       "steps": []
     },
@@ -275724,23 +276298,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/scanlinesEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/scanlinesEffect.ts\",191]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -275754,7 +276328,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/scanlinesEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/scanlinesEffect.ts\",256]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/scanlinesEffect.ts\",247]",
             "kind": "function",
             "name": "createScanlinesEffect",
             "scope": "module",
@@ -275775,7 +276349,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/scanlinesEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/scanlinesEffect.ts\",518]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/scanlinesEffect.ts\",509]",
             "kind": "function",
             "name": "initializeScanlinesEffect",
             "scope": "module",
@@ -275797,11 +276371,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/scanlinesEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -285580,23 +286154,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/screenSpaceFogEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/screenSpaceFogEffect.ts\",196]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -285610,7 +286184,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/screenSpaceFogEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/screenSpaceFogEffect.ts\",261]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/screenSpaceFogEffect.ts\",252]",
             "kind": "function",
             "name": "createScreenSpaceFogEffect",
             "scope": "module",
@@ -285631,7 +286205,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/screenSpaceFogEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/screenSpaceFogEffect.ts\",548]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/screenSpaceFogEffect.ts\",539]",
             "kind": "function",
             "name": "initializeScreenSpaceFogEffect",
             "scope": "module",
@@ -285653,11 +286227,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/screenSpaceFogEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -295327,23 +295901,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/sharpenEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/sharpenEffect.ts\",189]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -295357,7 +295931,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/sharpenEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/sharpenEffect.ts\",254]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/sharpenEffect.ts\",245]",
             "kind": "function",
             "name": "createSharpenEffect",
             "scope": "module",
@@ -295378,7 +295952,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/sharpenEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/sharpenEffect.ts\",506]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/sharpenEffect.ts\",497]",
             "kind": "function",
             "name": "initializeSharpenEffect",
             "scope": "module",
@@ -295400,11 +295974,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/sharpenEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -299899,23 +300473,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/sketchEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/sketchEffect.ts\",188]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -299929,7 +300503,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/sketchEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/sketchEffect.ts\",253]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/sketchEffect.ts\",244]",
             "kind": "function",
             "name": "createSketchEffect",
             "scope": "module",
@@ -299950,7 +300524,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/sketchEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/sketchEffect.ts\",500]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/sketchEffect.ts\",491]",
             "kind": "function",
             "name": "initializeSketchEffect",
             "scope": "module",
@@ -299972,11 +300546,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/sketchEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -301453,23 +302027,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/smaaEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/smaaEffect.ts\",186]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -301483,7 +302057,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/smaaEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/smaaEffect.ts\",251]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/smaaEffect.ts\",242]",
             "kind": "function",
             "name": "createSmaaEffect",
             "scope": "module",
@@ -301504,7 +302078,7 @@
             "line": 12,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/smaaEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/smaaEffect.ts\",483]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/smaaEffect.ts\",474]",
             "kind": "function",
             "name": "initializeSmaaEffect",
             "scope": "module",
@@ -301526,11 +302100,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/smaaEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -319242,23 +319816,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/ssaoEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/ssaoEffect.ts\",186]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -319272,7 +319846,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/ssaoEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/ssaoEffect.ts\",251]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/ssaoEffect.ts\",242]",
             "kind": "function",
             "name": "createSsaoEffect",
             "scope": "module",
@@ -319293,7 +319867,7 @@
             "line": 12,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/ssaoEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/ssaoEffect.ts\",483]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/ssaoEffect.ts\",474]",
             "kind": "function",
             "name": "initializeSsaoEffect",
             "scope": "module",
@@ -319315,11 +319889,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/ssaoEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -319478,23 +320052,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/ssrEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/ssrEffect.ts\",185]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -319508,7 +320082,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/ssrEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/ssrEffect.ts\",250]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/ssrEffect.ts\",241]",
             "kind": "function",
             "name": "createSsrEffect",
             "scope": "module",
@@ -319529,7 +320103,7 @@
             "line": 12,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/ssrEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/ssrEffect.ts\",477]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/ssrEffect.ts\",468]",
             "kind": "function",
             "name": "initializeSsrEffect",
             "scope": "module",
@@ -319551,11 +320125,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/ssrEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -334599,23 +335173,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/taaEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/taaEffect.ts\",185]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -334629,7 +335203,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/taaEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/taaEffect.ts\",250]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/taaEffect.ts\",241]",
             "kind": "function",
             "name": "createTaaEffect",
             "scope": "module",
@@ -334650,7 +335224,7 @@
             "line": 12,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/taaEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/taaEffect.ts\",477]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/taaEffect.ts\",468]",
             "kind": "function",
             "name": "initializeTaaEffect",
             "scope": "module",
@@ -334672,11 +335246,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/taaEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -354982,23 +355556,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/toneMapEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/toneMapEffect.ts\",189]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -355012,7 +355586,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/toneMapEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/toneMapEffect.ts\",254]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/toneMapEffect.ts\",245]",
             "kind": "function",
             "name": "createToneMapEffect",
             "scope": "module",
@@ -355033,7 +355607,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/toneMapEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/toneMapEffect.ts\",506]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/toneMapEffect.ts\",497]",
             "kind": "function",
             "name": "initializeToneMapEffect",
             "scope": "module",
@@ -355055,11 +355629,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/toneMapEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -369173,23 +369747,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/vignetteEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/vignetteEffect.ts\",190]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -369203,7 +369777,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/vignetteEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/vignetteEffect.ts\",255]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/vignetteEffect.ts\",246]",
             "kind": "function",
             "name": "createVignetteEffect",
             "scope": "module",
@@ -369224,7 +369798,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/vignetteEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/vignetteEffect.ts\",512]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/vignetteEffect.ts\",503]",
             "kind": "function",
             "name": "initializeVignetteEffect",
             "scope": "module",
@@ -369246,11 +369820,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/vignetteEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -369887,23 +370461,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/volumetricLightEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/volumetricLightEffect.ts\",197]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -369917,7 +370491,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/volumetricLightEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/volumetricLightEffect.ts\",262]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/volumetricLightEffect.ts\",253]",
             "kind": "function",
             "name": "createVolumetricLightEffect",
             "scope": "module",
@@ -369938,7 +370512,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/volumetricLightEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/volumetricLightEffect.ts\",554]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/volumetricLightEffect.ts\",545]",
             "kind": "function",
             "name": "initializeVolumetricLightEffect",
             "scope": "module",
@@ -369960,11 +370534,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/volumetricLightEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {
@@ -374744,23 +375318,23 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:564c2d4e76b8cb01ac9d53acfd73b8c9e90259990026f110192277cde1be3cda",
+            "fingerprint": "sha256:1d4ff3abd142c42891f39e3e9df96b8ef0537d534dbe36437b188fd7c9fad57f",
             "line": 4,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/whiteBalanceEffect.ts",
             "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/whiteBalanceEffect.ts\",194]",
             "kind": "import",
-            "name": "initializeRenderEffect",
+            "name": "initializeEffect",
             "scope": "module",
             "space": "value"
           },
           "initialization": {
-            "imported": "initializeRenderEffect",
+            "imported": "initializeEffect",
             "kind": "dependency",
             "module": {
-              "name": "RenderEffect",
+              "name": "Effect",
               "packageName": "@flighthq/effects",
-              "source": "packages/effects/src/renderEffect.ts"
+              "source": "packages/effects/src/effect.ts"
             }
           },
           "kind": "import",
@@ -374774,7 +375348,7 @@
             "line": 6,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/whiteBalanceEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/whiteBalanceEffect.ts\",259]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/whiteBalanceEffect.ts\",250]",
             "kind": "function",
             "name": "createWhiteBalanceEffect",
             "scope": "module",
@@ -374795,7 +375369,7 @@
             "line": 14,
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/whiteBalanceEffect.ts",
-            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/whiteBalanceEffect.ts\",536]",
+            "id": "binding:[\"@flighthq/effects\",\"packages/effects/src/whiteBalanceEffect.ts\",527]",
             "kind": "function",
             "name": "initializeWhiteBalanceEffect",
             "scope": "module",
@@ -374817,11 +375391,11 @@
             "packageName": "@flighthq/effects",
             "source": "packages/effects/src/whiteBalanceEffect.ts"
           },
-          "specifier": "./renderEffect",
+          "specifier": "./effect.ts",
           "target": {
-            "name": "RenderEffect",
+            "name": "Effect",
             "packageName": "@flighthq/effects",
-            "source": "packages/effects/src/renderEffect.ts"
+            "source": "packages/effects/src/effect.ts"
           }
         },
         {

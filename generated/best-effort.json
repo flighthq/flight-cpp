@@ -3652,7 +3652,7 @@
     {
       "consumers": [
         "@flighthq/color/packages/color/src/contract.ts",
-        "@flighthq/effects/packages/effects/src/renderEffectInterpolation.ts"
+        "@flighthq/effects/packages/effects/src/effectInterpolation.ts"
       ],
       "module": {
         "name": "LerpColor",
@@ -4642,11 +4642,11 @@
         "@flighthq/swf/packages/swf/src/swfFilter.ts"
       ],
       "declarationFingerprints": [
-        "sha256:02e9a2bf3eb897532cba178228ab39a3bb76f61581f0bd4ac3f75798977e3a99",
-        "sha256:a312b7402e5d9df16dce072ac2396c12e06a8405de1cfe5cf010f5ea78ecbb61",
-        "sha256:b7ee36e1027d7c4cbcc088647f9237fa3f5c19a9928a751e9f78514f1089722b",
-        "sha256:badcb546f9bff323f81f5b96597ef7457962753e5a2fa34c9eacb60b76537e3d",
-        "sha256:d2f8f0f50e21d1d9fc292066b844a11029a65ee10ad4dd3a7702abfd07a9e43a"
+        "sha256:6e6beb7c949d8e71ff7381d8a400798baff30b65538a0ef178c061a7babe0de2",
+        "sha256:7377e85c96866694e3fdaee1f5b616cf199a50e047b48dba1a392fb0c7eda5e5",
+        "sha256:b3273728c79b57da24464881d5887a6e11d18b43321b5423dfacfbefad001a0a",
+        "sha256:d2f8f0f50e21d1d9fc292066b844a11029a65ee10ad4dd3a7702abfd07a9e43a",
+        "sha256:db9efe5179f2e7e92936baef54226533f433ec12311eb13c303c0d13170f34a2"
       ],
       "module": {
         "name": "BevelEffect",
@@ -4663,11 +4663,11 @@
         "@flighthq/effects/packages/effects/src/contract.ts"
       ],
       "declarationFingerprints": [
-        "sha256:3e9aed13a6554131a022e3b492d10ca5a526fdb637e45d19ed9f17c1acf72f43",
-        "sha256:a8ddea273e8e60e582aec39877cdf9bc09072ac0842dfe1c73c4ae9c6f1034a9",
+        "sha256:30db71683dcb64e0cf74237bb1520d76db18c2921731de719ddadb461ca4642f",
+        "sha256:39f13d035b97e37cdcacf98e24b749269b8b32c294e17cd983583e29dffb0dc2",
+        "sha256:89f9b239774eecc057acaba79fe922506145568b3a6ba05c61f52c7882e38b72",
         "sha256:af27f35b65dc076425487a0402a628c44ffdf15fbae918ec8751f6f4e1133733",
-        "sha256:da4e43c9697041dfdfd74dd8463260f7a5fbb2b0fd5c0e10403c01b4df95d7a1",
-        "sha256:f7751f9ff9861db32a926d5a4712115b05467784791b99fc39e1372fda2b3708"
+        "sha256:c147809db5fc74a146d31cb7842eeb2f2c4ff20c52b9c35cb041f6b4ef06e3d6"
       ],
       "module": {
         "name": "BitmapDisplacementEffect",
@@ -4711,13 +4711,13 @@
         "@flighthq/effects/packages/effects/src/contract.ts"
       ],
       "declarationFingerprints": [
-        "sha256:3f67ee9e487788314b46243f06f7c8be04cc9c0642d6f194aa6ba0a2f136305a",
         "sha256:56e96f48da5037be517b8b849a30e55fcbcb070699a48ae38be0a84ea34c641f",
         "sha256:7c0356315ba202edde7c648b6e7631520b2c9f26ccd0f41533a0b7f792a1211f",
-        "sha256:9956ef08778d79a90a150959c8193b0ef2bf585e8358e8f2f79b14bede1e8dff",
-        "sha256:ad3b91f2d334f77032dafee33176e8ec451fa6d5d3f628bc2b7dced662274bc7",
+        "sha256:7c5f68401595860ad1755f3827c06270c762f071b5893669b897a58e5e4ce091",
+        "sha256:b78c6b9969019536f7859c11ca7d682f99d32a1e308cfea315f7ed5eec494c45",
+        "sha256:b8097401ea8a0abff35898783c3ca5d4ffaa1c3ac14b67e5a19a23ade9821dce",
         "sha256:c6567062d7c9cf806d6ec2177df82309ce7e80503b546375207ecceff39bd454",
-        "sha256:dee6747eeefc067cb1aca3b713f793356447221246147b3a3ca73b2c5fea211b",
+        "sha256:eedc59c73af0126348e7b58cf2571b6948835d18ed43feb9975f67f601b50edc",
         "sha256:efd72f5e09588b43c74aa5ea2ce2bddc1b266ac6bcb997b9106d520dfbcb44a6"
       ],
       "module": {
@@ -4748,11 +4748,11 @@
         "@flighthq/swf/packages/swf/src/swfFilter.ts"
       ],
       "declarationFingerprints": [
-        "sha256:0004c035cb154f9368fa129f6cc0e0a9dc1e3d527160017e8e384ef808e1254b",
         "sha256:2dc7dbf06054032fa8e62f203b2e9bc28e8ba4d1eeff3f184dd461dad7dec0a8",
-        "sha256:6a6639a697af8e7e008939cc7a2cba113f9823ce6415aee9717ca8313165e3d8",
-        "sha256:c62fd1cf2ce46959ee997ab67b39405c50b62077c4e3bedd26f71dd02e97dc78",
-        "sha256:c7374139a24d54e19f87d3fb68b265eabb8e00212c47c3f1447f24b079515d15"
+        "sha256:3568a26f5fc3ee1c0d6e5c299a1b6af4a666dbe8ac03667d4c21b54bb72ae129",
+        "sha256:62c42a9252137ce1ea5fdd776d55f546b3295c445206901831cf6553f7351401",
+        "sha256:b8c5b526fc1529c74d0bbeddcd90d75dbb3e25777e26bbc5d336e6410ce71684",
+        "sha256:d3c473ff6a1cebe47caa509c89ce3d6ec87f6b1d2f3d25514f83d5ad0de16612"
       ],
       "module": {
         "name": "BlurEffect",
@@ -4769,11 +4769,11 @@
         "@flighthq/effects/packages/effects/src/contract.ts"
       ],
       "declarationFingerprints": [
+        "sha256:068f0a661f0c2be34fd9812654619d00416601ac95d00ea2cc385463534bac92",
+        "sha256:25bc05daa0e6504d1d2d65471853dfdf1292afbb92247afd351620fed1d04e13",
+        "sha256:3ca2bee52ae02638e68410f70c7490d62646aeda7022addb1ad33a3723315a64",
         "sha256:5f260f8cce86be4e9fe0d5a57d9bb41be7debf101a3130329d5b1ae7e0b09ecb",
-        "sha256:82a94a92436a2f75e40880939fc56673c2ce2e26a12f1f62fd1ee98feb16e53f",
-        "sha256:b5865006b0f0adfb02f687b768e6a0e114b85416df48c718250732b870418ee7",
-        "sha256:b75c7b57bf17ad87d34280c36297be4d1d927a8bac6ccd0949717cc2834dd585",
-        "sha256:ebf7a26a7768cf8e7e0ade840f6bedd897ae4313fdbc8845781222a6e46f132f"
+        "sha256:8e908b130d3833ad5ea3e43abffce5517390b0aea15965d8289d9862a41cf631"
       ],
       "module": {
         "name": "BokehDepthOfFieldEffect",
@@ -4864,10 +4864,10 @@
         "@flighthq/effects/packages/effects/src/contract.ts"
       ],
       "declarationFingerprints": [
-        "sha256:0c69728d8e0377ac92291c41403a75de69a77043c7844413020ab373d914b1bc",
-        "sha256:298fdf41173f2cf1bea5f9eab81c5f79f1620ed5a7125bad349e130facd96101",
-        "sha256:54565e3c61e41067191a2daf825363e925e0e7c86388a627f0ba1f0b42799d73",
-        "sha256:c94ba438bb4a61417406881c1bb8d4b6afa4acb9d21887f8dd53883f32ffd95d",
+        "sha256:51c6571ab54fdd8764779240900ed509b55a948d797fcbd23ddd7dd17af48d58",
+        "sha256:d301c238a8db6b91585da662e3d723826b17c4299044895f1237137cb09513e1",
+        "sha256:d6e5099cbbb8bfd92b22e654aea831548ccb63bd3f982e0d73c820b3afb01776",
+        "sha256:ec2e843bb28624035e29533fb4e708224513b9997509db741753909528986762",
         "sha256:fe2e1079345eeb2b5b5a9b60620b1f8165de69a915405c5fbf69d5386bfcd832"
       ],
       "module": {
@@ -4900,6 +4900,8 @@
         "@flighthq/effects/packages/effects/src/directionalBlurEffect.ts",
         "@flighthq/effects/packages/effects/src/displacementEffect.ts",
         "@flighthq/effects/packages/effects/src/dropShadowEffect.ts",
+        "@flighthq/effects/packages/effects/src/effectCaptureGeometry.ts",
+        "@flighthq/effects/packages/effects/src/effectInterpolation.ts",
         "@flighthq/effects/packages/effects/src/glitchEffect.ts",
         "@flighthq/effects/packages/effects/src/gradientBevelEffect.ts",
         "@flighthq/effects/packages/effects/src/gradientGlowEffect.ts",
@@ -4908,9 +4910,6 @@
         "@flighthq/effects/packages/effects/src/medianEffect.ts",
         "@flighthq/effects/packages/effects/src/outerGlowEffect.ts",
         "@flighthq/effects/packages/effects/src/outlineEffect.ts",
-        "@flighthq/effects/packages/effects/src/renderEffectCaptureGeometry.ts",
-        "@flighthq/effects/packages/effects/src/renderEffectInterpolation.ts",
-        "@flighthq/effects/packages/effects/src/renderEffectPadding.ts",
         "@flighthq/effects/packages/effects/src/tiltShiftEffect.ts"
       ],
       "status": "dependency-incomplete"
@@ -4922,11 +4921,11 @@
         "@flighthq/swf/packages/swf/src/swfFilter.ts"
       ],
       "declarationFingerprints": [
-        "sha256:83d2c9aa56510bca77d9e19cb881dc008a8bdbf8471d8d052cc6097d42cd1026",
-        "sha256:a42b9fb79d86be7d50ffcfbbbfc47b8087060bfa24d5e6fe32bf9c45a5866bc2",
-        "sha256:d2cb1b713b325d7034f339d37ab467b57e0e56d424fc427ebbd928593aa67aca",
-        "sha256:effc6b237f9cb82a656d07862dab5014924850018b5be3c363503879e369549b",
-        "sha256:f84fcc725622378d8b45efe6bb08c252f5819874a385c2f013710ebf9a86a65d"
+        "sha256:04a2e8490f0143eaa19086358919284099e6c80c5724884528b551a70fc0effa",
+        "sha256:1c3827b0c6e94646ab6547eaad62e1d7d6bfb4575701ffa43bad4f066e84010e",
+        "sha256:3b70d014e26a5fcc97fc83f512f833351dcbe2884ed74ca6b53451b547fa537b",
+        "sha256:d21d2993aa4ad0d2a1453ab6cd5576a28c94b6d9600b24803ec5d496753e89fb",
+        "sha256:d2cb1b713b325d7034f339d37ab467b57e0e56d424fc427ebbd928593aa67aca"
       ],
       "module": {
         "name": "ConvolutionEffect",
@@ -4979,11 +4978,11 @@
         "@flighthq/effects/packages/effects/src/contract.ts"
       ],
       "declarationFingerprints": [
-        "sha256:21ea637c4180c92606ed26946883a9dc469391b21cfa9b998b4269415a283edf",
-        "sha256:49800590700a7c71b61c6db73ed1ac8694a3ac2c85559c336bbc48aff12ae6fb",
+        "sha256:30619d64712030c782581be7d18f028dcc58e0e4272fd3a1bc2aeaa405831bd6",
+        "sha256:36daa7df85376eeb5947dc4be21128ecdf9b810d889f3235cdf9c562c14a622c",
+        "sha256:7ef0e80e5f6288f9266e0d7891664fe1db5a1e49646d80b6c1b8a402f5a22335",
         "sha256:8eb8776df048594f300e8169d7a810c8a9ffdec4d230fa933521861790251ea9",
-        "sha256:de10ca23bb6e108fa32fda89fafc261a5a4477793164e94b30f8b625bebada2a",
-        "sha256:f504b06271987b0db902d3b8477c1e27cccbf56bf2f66c16f9f4bce1b86b843d"
+        "sha256:b78293a1b0b5e84157968241735ff8bfaa4a81351a8facf656ea07d59f3dbce1"
       ],
       "module": {
         "name": "DirectionalBlurEffect",
@@ -5000,11 +4999,11 @@
         "@flighthq/effects/packages/effects/src/contract.ts"
       ],
       "declarationFingerprints": [
-        "sha256:2433f08a7e5f1dff592523af6b1716ccec4802f7d4d0b8fdcf4a98bb98546fd8",
-        "sha256:77d48a0f41b466d631cab0a5a10e340c0a2be6f476edd5fb3321078cb707a257",
-        "sha256:a44847dafb618ea49473d359ca886e0b9837bd32840f519cc211f2b3f3d68033",
-        "sha256:c4a5b46716b7da81eec6055b2adb90a09244b9547299cbba99d2de968f53d90c",
-        "sha256:cbb0e42725801ff547d203128f3d056bfe21fffc29d1054b5d366d0d8cf86eab"
+        "sha256:147d1acb8f083bdcbac3029602a9576bf160ca66d397e31a0e2b3a64dacf5437",
+        "sha256:4ba1abf9aa92a33faf08f04724c6d5940778a932d54d3b76068b4166f14026b4",
+        "sha256:5c6de059c1f5a423d8efd86ea9b01aed608f585ce4be7bf4341a3157b50e01d9",
+        "sha256:652000b2bdaafe706f878682fdfa17493bece70f3aa76f8b5464297f3af7171e",
+        "sha256:c4a5b46716b7da81eec6055b2adb90a09244b9547299cbba99d2de968f53d90c"
       ],
       "module": {
         "name": "DisplacementEffect",
@@ -5035,10 +5034,10 @@
       ],
       "declarationFingerprints": [
         "sha256:0285bac6fd926c43381ba9a29cd81397d523fe0651a4492845b975cd5a8ece0d",
-        "sha256:482219a618ca6baa327bbeb8c9cbb9280317ec989d5a9dd24273a11dadd37b70",
-        "sha256:6f431c361b4f136e701f46da14ffcb06fa0edbde2ecc3797adf9508c4bb8ddcd",
-        "sha256:98a5b10e8d325f1d4cf71edaefd05fe3586515fdc2937fcc8515419055ba13aa",
-        "sha256:b1201543c82050f091c1646b3f7bddc74fe80c87eb614ef3dd78ed9c1c97a086"
+        "sha256:3a50b9a089677ed94f996256135615587e835882a8bb53b8d5605383d4be87c3",
+        "sha256:854c3e20c0adc71c9f3eb2b50d59efb2cfdb0c2c47dd351197a56e1b4acc51e6",
+        "sha256:9e71f87d631c854dcb0c1cbc9dbd1b3fb77eaa5475d796df7a9d813fcc44cbe3",
+        "sha256:ebf000828178bf8aa9a5deaf30406afe6a6fe7e4b1bfec12aff7b130b7a05fff"
       ],
       "module": {
         "name": "DropShadowEffect",
@@ -5059,6 +5058,175 @@
         "source": "packages/effects/src/edgeDetectMath.ts"
       },
       "path": "flight/effects/edge_detect_math.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/effects/packages/effects/src/autoExposureEffect.ts",
+        "@flighthq/effects/packages/effects/src/barrelDistortionEffect.ts",
+        "@flighthq/effects/packages/effects/src/bevelEffect.ts",
+        "@flighthq/effects/packages/effects/src/bitmapDisplacementEffect.ts",
+        "@flighthq/effects/packages/effects/src/blendEffect.ts",
+        "@flighthq/effects/packages/effects/src/bloomEffect.ts",
+        "@flighthq/effects/packages/effects/src/blurEffect.ts",
+        "@flighthq/effects/packages/effects/src/bokehDepthOfFieldEffect.ts",
+        "@flighthq/effects/packages/effects/src/cameraMotionBlurEffect.ts",
+        "@flighthq/effects/packages/effects/src/chromaticAberrationEffect.ts",
+        "@flighthq/effects/packages/effects/src/compositeEffect.ts",
+        "@flighthq/effects/packages/effects/src/contactShadowsEffect.ts",
+        "@flighthq/effects/packages/effects/src/contract.ts",
+        "@flighthq/effects/packages/effects/src/convolutionEffect.ts",
+        "@flighthq/effects/packages/effects/src/crtEffect.ts",
+        "@flighthq/effects/packages/effects/src/customShaderEffect.ts",
+        "@flighthq/effects/packages/effects/src/directionalBlurEffect.ts",
+        "@flighthq/effects/packages/effects/src/displacementEffect.ts",
+        "@flighthq/effects/packages/effects/src/ditherEffect.ts",
+        "@flighthq/effects/packages/effects/src/dropShadowEffect.ts",
+        "@flighthq/effects/packages/effects/src/filmEmulationEffect.ts",
+        "@flighthq/effects/packages/effects/src/filmGrainEffect.ts",
+        "@flighthq/effects/packages/effects/src/fxaaEffect.ts",
+        "@flighthq/effects/packages/effects/src/glitchEffect.ts",
+        "@flighthq/effects/packages/effects/src/godRaysEffect.ts",
+        "@flighthq/effects/packages/effects/src/gradientBevelEffect.ts",
+        "@flighthq/effects/packages/effects/src/gradientGlowEffect.ts",
+        "@flighthq/effects/packages/effects/src/halftoneEffect.ts",
+        "@flighthq/effects/packages/effects/src/innerGlowEffect.ts",
+        "@flighthq/effects/packages/effects/src/innerShadowEffect.ts",
+        "@flighthq/effects/packages/effects/src/kuwaharaEffect.ts",
+        "@flighthq/effects/packages/effects/src/lensDirtEffect.ts",
+        "@flighthq/effects/packages/effects/src/lensDistortionEffect.ts",
+        "@flighthq/effects/packages/effects/src/lensFlareEffect.ts",
+        "@flighthq/effects/packages/effects/src/medianEffect.ts",
+        "@flighthq/effects/packages/effects/src/motionBlurEffect.ts",
+        "@flighthq/effects/packages/effects/src/outerGlowEffect.ts",
+        "@flighthq/effects/packages/effects/src/outlineEffect.ts",
+        "@flighthq/effects/packages/effects/src/panniniProjectionEffect.ts",
+        "@flighthq/effects/packages/effects/src/pixelateEffect.ts",
+        "@flighthq/effects/packages/effects/src/posterizeEffect.ts",
+        "@flighthq/effects/packages/effects/src/radialBlurEffect.ts",
+        "@flighthq/effects/packages/effects/src/scanlinesEffect.ts",
+        "@flighthq/effects/packages/effects/src/screenSpaceFogEffect.ts",
+        "@flighthq/effects/packages/effects/src/sharpenEffect.ts",
+        "@flighthq/effects/packages/effects/src/sketchEffect.ts",
+        "@flighthq/effects/packages/effects/src/smaaEffect.ts",
+        "@flighthq/effects/packages/effects/src/ssaoEffect.ts",
+        "@flighthq/effects/packages/effects/src/ssrEffect.ts",
+        "@flighthq/effects/packages/effects/src/taaEffect.ts",
+        "@flighthq/effects/packages/effects/src/tiltShiftEffect.ts",
+        "@flighthq/effects/packages/effects/src/toneMapEffect.ts",
+        "@flighthq/effects/packages/effects/src/vignetteEffect.ts",
+        "@flighthq/effects/packages/effects/src/volumetricLightEffect.ts",
+        "@flighthq/effects/packages/effects/src/whiteBalanceEffect.ts"
+      ],
+      "module": {
+        "name": "Effect",
+        "packageName": "@flighthq/effects",
+        "source": "packages/effects/src/effect.ts"
+      },
+      "path": "flight/effects/effect.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/effects/packages/effects/src/contract.ts"
+      ],
+      "module": {
+        "name": "EffectCaptureGeometry",
+        "packageName": "@flighthq/effects",
+        "source": "packages/effects/src/effectCaptureGeometry.ts"
+      },
+      "path": "flight/effects/effect_capture_geometry.hpp",
+      "refusedDependencies": [
+        "@flighthq/render/packages/render/src/renderTarget.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/effects/packages/effects/src/contract.ts"
+      ],
+      "module": {
+        "name": "EffectDefaults",
+        "packageName": "@flighthq/effects",
+        "source": "packages/effects/src/effectDefaults.ts"
+      },
+      "path": "flight/effects/effect_defaults.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/effects/packages/effects/src/contract.ts",
+        "@flighthq/effects/packages/effects/src/effectValidation.ts"
+      ],
+      "module": {
+        "name": "EffectInputs",
+        "packageName": "@flighthq/effects",
+        "source": "packages/effects/src/effectInputs.ts"
+      },
+      "path": "flight/effects/effect_inputs.hpp",
+      "status": "emitted"
+    },
+    {
+      "classification": "target-runtime",
+      "consumers": [
+        "@flighthq/effects/packages/effects/src/contract.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:127d573d6d436ac1040a9913a513bbb488b0f7e6996bad9156c71f58d7f90c5c",
+        "sha256:4fc3f313da189febf807598682c28c19ade840f574f930b3dc3b5caa889089b2",
+        "sha256:6b43dbd6590e7bb2b52b95588efcc6e1d3ad23a226282206e42077650637522b"
+      ],
+      "module": {
+        "name": "EffectInterpolation",
+        "packageName": "@flighthq/effects",
+        "source": "packages/effects/src/effectInterpolation.ts"
+      },
+      "path": "flight/effects/effect_interpolation.hpp",
+      "rule": "cpp-imported-type-unsupported:unsupportedAmbientReference",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/effects/packages/effects/src/bevelEffect.ts",
+        "@flighthq/effects/packages/effects/src/bitmapDisplacementEffect.ts",
+        "@flighthq/effects/packages/effects/src/bloomEffect.ts",
+        "@flighthq/effects/packages/effects/src/blurEffect.ts",
+        "@flighthq/effects/packages/effects/src/bokehDepthOfFieldEffect.ts",
+        "@flighthq/effects/packages/effects/src/contactShadowsEffect.ts",
+        "@flighthq/effects/packages/effects/src/contract.ts",
+        "@flighthq/effects/packages/effects/src/convolutionEffect.ts",
+        "@flighthq/effects/packages/effects/src/directionalBlurEffect.ts",
+        "@flighthq/effects/packages/effects/src/displacementEffect.ts",
+        "@flighthq/effects/packages/effects/src/dropShadowEffect.ts",
+        "@flighthq/effects/packages/effects/src/effectCaptureGeometry.ts",
+        "@flighthq/effects/packages/effects/src/glitchEffect.ts",
+        "@flighthq/effects/packages/effects/src/gradientBevelEffect.ts",
+        "@flighthq/effects/packages/effects/src/gradientGlowEffect.ts",
+        "@flighthq/effects/packages/effects/src/innerGlowEffect.ts",
+        "@flighthq/effects/packages/effects/src/innerShadowEffect.ts",
+        "@flighthq/effects/packages/effects/src/medianEffect.ts",
+        "@flighthq/effects/packages/effects/src/outerGlowEffect.ts",
+        "@flighthq/effects/packages/effects/src/outlineEffect.ts",
+        "@flighthq/effects/packages/effects/src/tiltShiftEffect.ts"
+      ],
+      "module": {
+        "name": "EffectPadding",
+        "packageName": "@flighthq/effects",
+        "source": "packages/effects/src/effectPadding.ts"
+      },
+      "path": "flight/effects/effect_padding.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/effects/packages/effects/src/contract.ts"
+      ],
+      "module": {
+        "name": "EffectValidation",
+        "packageName": "@flighthq/effects",
+        "source": "packages/effects/src/effectValidation.ts"
+      },
+      "path": "flight/effects/effect_validation.hpp",
       "status": "emitted"
     },
     {
@@ -5128,11 +5296,11 @@
         "@flighthq/effects/packages/effects/src/contract.ts"
       ],
       "declarationFingerprints": [
+        "sha256:02e4a8b6ce8dc41151b0f903bdf47020b64a8e99c677440fef337a9db7fb90be",
         "sha256:09106daa5cf865d91e6b2f95e5a70941b6f77317ccd6427fcb4de078529ed856",
-        "sha256:8671122fb7e6de424202625b873d690ad784729645de25fce9e5c424487de6c8",
-        "sha256:87e077e4ef697107cf9dd0515940914a3c11d3b4ce2da415309359d35f698094",
-        "sha256:caef53183621b1acf845e9d9fcf6a930db0f4e770e5d362333812f6d07126b21",
-        "sha256:fe91df1a3eeea56a08c782b22c1788746933edd9ae0c0f720c1def2716ed47b6"
+        "sha256:29474232ae02a40d4290137705e15645f2c0f27d1e066eab5a9ef8cf00907720",
+        "sha256:31ede6e39eb7f885a1ea3156f59dc8d38fe115fdb10485bc864072c97cfccb0b",
+        "sha256:4839d4a582eb3725ee57e61a68f95d2b3d1193f8d9cc335582c96ccb4e19c6af"
       ],
       "module": {
         "name": "GlitchEffect",
@@ -5174,11 +5342,11 @@
         "@flighthq/swf/packages/swf/src/swfFilter.ts"
       ],
       "declarationFingerprints": [
-        "sha256:324b6250ee7f86b4ae01f8d8307dc4ab17daa9dc98375312cb82cbb2ef490861",
-        "sha256:4e61d791cc2b85a6ce9de4b2d2bb246b20a86d5ff71e5f6aa35a29ba5fc52924",
-        "sha256:65cc6f152443206342d859327353fe9455641930b9285eb5a7970e54b254cd51",
+        "sha256:4c24441d18657c6dd85f57ac0991635456eeb0639e4ef96c04493b2eb2decbbc",
+        "sha256:bb60e6f9aa59739b7d0b2cc24a0a1098fea57c9ad0f79c64fcc175f5bed920b1",
+        "sha256:d1ad4b54051010d018f468ba5f33e505f702d89206dc63307f039bf6707c9f36",
         "sha256:deddfadb884f0d977d3a62699e15a7eb3ceb06c0293d477735a2e5e1b9ffef38",
-        "sha256:e35d7bea53790171dd8d03c99c09e2e8f5d2fcb17abd546997a5578f4590eed9"
+        "sha256:fe6d8a5e9ac7aa4aee98af330015a181e05fb9f21b070fdc7a1470f7c5c2b841"
       ],
       "module": {
         "name": "GradientBevelEffect",
@@ -5196,10 +5364,10 @@
         "@flighthq/swf/packages/swf/src/swfFilter.ts"
       ],
       "declarationFingerprints": [
-        "sha256:0b383bf68e8e719b8bc62365c97704d9ea84188048ea30130e4481fee6513410",
-        "sha256:6d6adbf2e466967efbbd81819cf9dbdcfb398785f64f1401c017df37b7b2a550",
-        "sha256:6fb0560914b2ad5505f4a0b9d08b7ecbf5c95fd2b3fbb3d07f6932df247e14b1",
-        "sha256:88e2ff492aed156ca3e97bba8d98bc79241fef6e3015dfcfdc87932750f8025b",
+        "sha256:0fbc8b94000e1ed62d5e60afdf5420fbf453731a1d3b79745858b9d123a80ea9",
+        "sha256:2283443ccca0a59bcff84d262690db4e08498c4ef369fdd8ebc07012ac592307",
+        "sha256:538b640ad1c58237e25c87b2de849103748c262b74703fe980feec1d084f8de7",
+        "sha256:86c182cb0575be2c417c7586c1750ea9d399b9251669b95d96d12abc0d99aab6",
         "sha256:f7a48dc8b2ce8b856a83884a4f465db36634a85bb0665e41466359761242780d"
       ],
       "module": {
@@ -5243,11 +5411,11 @@
         "@flighthq/swf/packages/swf/src/swfFilter.ts"
       ],
       "declarationFingerprints": [
-        "sha256:2e445ce5a2c63b72f570b6a36d7937d80faaf7d4d9e2afb13764339f8dbc2560",
+        "sha256:02762d71617e3ff8e6919b154a372dede3d6f74e84d0740fee8f01f45678f35d",
+        "sha256:1dfb46d08b5ca25bbe41985241dbec40db9f153ad310ae09eb3a66fe2229522a",
+        "sha256:31f0012a3403fdf72de7df2564d1e004ce322c510a39149dab4616a090f4f632",
         "sha256:3b943c5d5ab2493160e6a044c631d04c673ddef06981cc4bf3c8479b459a5ca5",
-        "sha256:8d59f649662c9cd366247d4e1e08d5fd2c2a5ed4c3e1397c6c1c880a6f2721eb",
-        "sha256:db5f8093f80452e2076f8ee9c8f4d00ddd5eefbc1abdb7170a53a8000d43acf1",
-        "sha256:f5a63f49d420d34026b39222d9c77da9f0ad88e5fe15223ffb662b3b31b905aa"
+        "sha256:650d25e13732a83c5725819ac6b1842c07d0a9dc44b4553b13a5270b62dcd35e"
       ],
       "module": {
         "name": "InnerGlowEffect",
@@ -5266,10 +5434,10 @@
       ],
       "declarationFingerprints": [
         "sha256:077eb4dcf5979ae2d33ba53ca7441cd94d8cce7e30088f8e885c9143436a9a6d",
-        "sha256:31a9be5bb27296859e5b5a9cced52d79fc30ba9ae4842e8785e5de67e6821d09",
-        "sha256:920c64aede7135f2bd1139782c3da924b4a295f047fd2636efbf6a6d4683a92d",
-        "sha256:cddce659587270857d6a78bd0895b61153be17f5b8ebcbcb95d4c1627b2cda84",
-        "sha256:e44eb376fcbb1d9ed8a3a35f406fb01ca66b2cda58d19e93efab959689aacb41"
+        "sha256:160e9ea616a83842ddc477131921b73754c91aae49d584e34f263dbfbe4f4a74",
+        "sha256:9d09197abadd9d7990e264b15e97982ab96d4ac53d934adf0038369f0e47e4fb",
+        "sha256:bca88359e7c59fcb0e95b758e8ce7c2f40343d36263fc4d7449e73ffae189262",
+        "sha256:c00791459a896dac0bb9656422b6e58c226a63d21733a9909cc4b649249a29e7"
       ],
       "module": {
         "name": "InnerShadowEffect",
@@ -5358,10 +5526,10 @@
         "@flighthq/effects/packages/effects/src/contract.ts"
       ],
       "declarationFingerprints": [
-        "sha256:19644667cc59c2f5d75df1c16e103ac48f896dec923402a2495559f99529a6d0",
-        "sha256:4ba2eb2baaad3967cab643093bfcebc2b6f28b83bc5b90a16759a4ab71d32ac4",
-        "sha256:c38f6f91561fd824a5af2639ef6bcfcf02c3432444bcb72bcdd0a1c5852c9ea8",
-        "sha256:c9ec5ce84fa58b2e2a9186ffbccd5b47b6cf43e13abf3909861c686f1a337d9a",
+        "sha256:279dc78f9b689859724c965eabd2bcf68b3cdac870ed078d0f47414b3b061226",
+        "sha256:8ac14feea113898f6b8ddd330efb5d02f2cd1a97f46f1ac03c5ebc8b4e886134",
+        "sha256:bfe4467e79251d6b466d5e5648c37c7fbbdfe042130f04ba6c9b894acf503239",
+        "sha256:d1631e2c224d18a6748daa3d5eef4c97a15e4fe9391c5fa65dcfb32882360723",
         "sha256:d7482ee6317adbf85664490156ae0dc29003877d4ded19f5b9469fe62eaf3939"
       ],
       "module": {
@@ -5392,11 +5560,11 @@
         "@flighthq/swf/packages/swf/src/swfFilter.ts"
       ],
       "declarationFingerprints": [
-        "sha256:4b164cda88c98e7441645ac43d0d25cdd2685bc50b0aeb0879c6752f203b7be2",
-        "sha256:5f9ef3aa91f07361354f01a7a75786fbe9fe6e76f3a59d053777fd7624e40865",
-        "sha256:d3b7c0f927ccf51e7fd31d1bd4aca54f28df525a9e82e0e9bdbaf38b505e74ab",
-        "sha256:e348ccdb1c929de2b2e00513d80e8bd91f28bdbe58d01c20be52a7d9a19f492b",
-        "sha256:eab39b5744e3cb8ef6939d62cc77711d37fca584a26c5b0333c76a7350466c88"
+        "sha256:197846f0464bca6abc900afbcdd8fd13153c87d5008d8220065ba29054d9a96c",
+        "sha256:2850422aa968e660cdcebb06a405cf9a41a72ed926b0d47b89892f065de705ae",
+        "sha256:88848f8bd7ee816089800e71eb72305d481510d69316117481537551a4f07835",
+        "sha256:be319732b64c170f2815a1b3bae7b23b9b0e984313f2412cef8bd2d3b92d32ab",
+        "sha256:e348ccdb1c929de2b2e00513d80e8bd91f28bdbe58d01c20be52a7d9a19f492b"
       ],
       "module": {
         "name": "OuterGlowEffect",
@@ -5413,11 +5581,11 @@
         "@flighthq/effects/packages/effects/src/contract.ts"
       ],
       "declarationFingerprints": [
-        "sha256:362ac792186dd085125d5c6a97ebc9c35d58db196591d655c4f8919fa0fa0ad0",
+        "sha256:0608070586edc9dedd06dffa49c5659ba32717d4a2ce2124331feb2ede7e8c4f",
+        "sha256:3c154f36f41f519f9c5fc4bf5a8c8ca2532960991a7fb4ad2e4465a0e590a3b4",
         "sha256:532c1f95c077b48203f04c22cf4d89daf06a2546fb3a1903d629a3bd5e999f78",
-        "sha256:79cd01db5feb9b514baeb00314a731ef0a96df68244dfc8d8fba6360922f7b8a",
-        "sha256:ba74e4acbd2046ec406eb7b4c7753ea1f7e97f743b4c24c33b7fef39603cef97",
-        "sha256:dc936c3197dd752c9acf2a8d43e6360ba2f53309e53605d545cf09e2ceeb5ece"
+        "sha256:6a4ccec36c3f3e1575e494a59b199ff50531ab617f12709d5b1271a1e75a861f",
+        "sha256:a16741b8e2283a19f65b7ef748d29cee122596a46b44eb5423391410833bd8a9"
       ],
       "module": {
         "name": "OutlineEffect",
@@ -5474,194 +5642,6 @@
         "source": "packages/effects/src/radialBlurEffect.ts"
       },
       "path": "flight/effects/radial_blur_effect.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [
-        "@flighthq/effects/packages/effects/src/autoExposureEffect.ts",
-        "@flighthq/effects/packages/effects/src/barrelDistortionEffect.ts",
-        "@flighthq/effects/packages/effects/src/bevelEffect.ts",
-        "@flighthq/effects/packages/effects/src/bitmapDisplacementEffect.ts",
-        "@flighthq/effects/packages/effects/src/blendEffect.ts",
-        "@flighthq/effects/packages/effects/src/bloomEffect.ts",
-        "@flighthq/effects/packages/effects/src/blurEffect.ts",
-        "@flighthq/effects/packages/effects/src/bokehDepthOfFieldEffect.ts",
-        "@flighthq/effects/packages/effects/src/cameraMotionBlurEffect.ts",
-        "@flighthq/effects/packages/effects/src/chromaticAberrationEffect.ts",
-        "@flighthq/effects/packages/effects/src/compositeEffect.ts",
-        "@flighthq/effects/packages/effects/src/contactShadowsEffect.ts",
-        "@flighthq/effects/packages/effects/src/contract.ts",
-        "@flighthq/effects/packages/effects/src/convolutionEffect.ts",
-        "@flighthq/effects/packages/effects/src/crtEffect.ts",
-        "@flighthq/effects/packages/effects/src/customShaderEffect.ts",
-        "@flighthq/effects/packages/effects/src/directionalBlurEffect.ts",
-        "@flighthq/effects/packages/effects/src/displacementEffect.ts",
-        "@flighthq/effects/packages/effects/src/ditherEffect.ts",
-        "@flighthq/effects/packages/effects/src/dropShadowEffect.ts",
-        "@flighthq/effects/packages/effects/src/filmEmulationEffect.ts",
-        "@flighthq/effects/packages/effects/src/filmGrainEffect.ts",
-        "@flighthq/effects/packages/effects/src/fxaaEffect.ts",
-        "@flighthq/effects/packages/effects/src/glitchEffect.ts",
-        "@flighthq/effects/packages/effects/src/godRaysEffect.ts",
-        "@flighthq/effects/packages/effects/src/gradientBevelEffect.ts",
-        "@flighthq/effects/packages/effects/src/gradientGlowEffect.ts",
-        "@flighthq/effects/packages/effects/src/halftoneEffect.ts",
-        "@flighthq/effects/packages/effects/src/innerGlowEffect.ts",
-        "@flighthq/effects/packages/effects/src/innerShadowEffect.ts",
-        "@flighthq/effects/packages/effects/src/kuwaharaEffect.ts",
-        "@flighthq/effects/packages/effects/src/lensDirtEffect.ts",
-        "@flighthq/effects/packages/effects/src/lensDistortionEffect.ts",
-        "@flighthq/effects/packages/effects/src/lensFlareEffect.ts",
-        "@flighthq/effects/packages/effects/src/medianEffect.ts",
-        "@flighthq/effects/packages/effects/src/motionBlurEffect.ts",
-        "@flighthq/effects/packages/effects/src/outerGlowEffect.ts",
-        "@flighthq/effects/packages/effects/src/outlineEffect.ts",
-        "@flighthq/effects/packages/effects/src/panniniProjectionEffect.ts",
-        "@flighthq/effects/packages/effects/src/pixelateEffect.ts",
-        "@flighthq/effects/packages/effects/src/posterizeEffect.ts",
-        "@flighthq/effects/packages/effects/src/radialBlurEffect.ts",
-        "@flighthq/effects/packages/effects/src/scanlinesEffect.ts",
-        "@flighthq/effects/packages/effects/src/screenSpaceFogEffect.ts",
-        "@flighthq/effects/packages/effects/src/sharpenEffect.ts",
-        "@flighthq/effects/packages/effects/src/sketchEffect.ts",
-        "@flighthq/effects/packages/effects/src/smaaEffect.ts",
-        "@flighthq/effects/packages/effects/src/ssaoEffect.ts",
-        "@flighthq/effects/packages/effects/src/ssrEffect.ts",
-        "@flighthq/effects/packages/effects/src/taaEffect.ts",
-        "@flighthq/effects/packages/effects/src/tiltShiftEffect.ts",
-        "@flighthq/effects/packages/effects/src/toneMapEffect.ts",
-        "@flighthq/effects/packages/effects/src/vignetteEffect.ts",
-        "@flighthq/effects/packages/effects/src/volumetricLightEffect.ts",
-        "@flighthq/effects/packages/effects/src/whiteBalanceEffect.ts"
-      ],
-      "module": {
-        "name": "RenderEffect",
-        "packageName": "@flighthq/effects",
-        "source": "packages/effects/src/renderEffect.ts"
-      },
-      "path": "flight/effects/render_effect.hpp",
-      "status": "emitted"
-    },
-    {
-      "classification": "source-portability",
-      "consumers": [
-        "@flighthq/effects/packages/effects/src/contract.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:0a659e62167a59470af7cec368e733c63b86e96bde0959ec25e72359fa203179",
-        "sha256:14baffc8ada324bfb5af2d7c92622214e8013874674967fd3e6777690845e1af",
-        "sha256:3128051886cf9ca870dacf4ea35df2f787234312f3e593add4d233bff92af663",
-        "sha256:de0b5f1f4c2401d1dcc779c41b6a233bcd2461339c997b4b2949c1877793e7a3",
-        "sha256:decca61f357751107b55082dd73ad8b91f2af761134e1b89e156cc35ec4f3f89",
-        "sha256:fd5fe54dc56d3786dd827b87de3d444534a260a7dac15a13d30c99d8f61a5659"
-      ],
-      "module": {
-        "name": "RenderEffectCaptureGeometry",
-        "packageName": "@flighthq/effects",
-        "source": "packages/effects/src/renderEffectCaptureGeometry.ts"
-      },
-      "path": "flight/effects/render_effect_capture_geometry.hpp",
-      "rule": "cpp-structural-assertion-owner-unproven",
-      "status": "refused-placeholder"
-    },
-    {
-      "consumers": [
-        "@flighthq/effects/packages/effects/src/contract.ts"
-      ],
-      "module": {
-        "name": "RenderEffectDefaults",
-        "packageName": "@flighthq/effects",
-        "source": "packages/effects/src/renderEffectDefaults.ts"
-      },
-      "path": "flight/effects/render_effect_defaults.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [
-        "@flighthq/effects/packages/effects/src/contract.ts",
-        "@flighthq/effects/packages/effects/src/renderEffectValidation.ts"
-      ],
-      "module": {
-        "name": "RenderEffectInputs",
-        "packageName": "@flighthq/effects",
-        "source": "packages/effects/src/renderEffectInputs.ts"
-      },
-      "path": "flight/effects/render_effect_inputs.hpp",
-      "status": "emitted"
-    },
-    {
-      "classification": "target-runtime",
-      "consumers": [
-        "@flighthq/effects/packages/effects/src/contract.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:027cb7a8e2355817ed05c19c6564bd55f2e9e736433b34559957ac18392742b8",
-        "sha256:2df63da7df7dec0dd3398fbc4c14b7cf64b2d9e4d8e157d4c4a08e11d2d48d6b",
-        "sha256:51dc2323d4983f218a5a29656c9e7b79fa24ab2128aa584df3eb09c4d15fe577"
-      ],
-      "module": {
-        "name": "RenderEffectInterpolation",
-        "packageName": "@flighthq/effects",
-        "source": "packages/effects/src/renderEffectInterpolation.ts"
-      },
-      "path": "flight/effects/render_effect_interpolation.hpp",
-      "rule": "cpp-imported-type-unsupported:unsupportedAmbientReference",
-      "status": "refused-placeholder"
-    },
-    {
-      "classification": "compiler-restriction",
-      "consumers": [
-        "@flighthq/effects/packages/effects/src/bevelEffect.ts",
-        "@flighthq/effects/packages/effects/src/bitmapDisplacementEffect.ts",
-        "@flighthq/effects/packages/effects/src/bloomEffect.ts",
-        "@flighthq/effects/packages/effects/src/blurEffect.ts",
-        "@flighthq/effects/packages/effects/src/bokehDepthOfFieldEffect.ts",
-        "@flighthq/effects/packages/effects/src/contactShadowsEffect.ts",
-        "@flighthq/effects/packages/effects/src/contract.ts",
-        "@flighthq/effects/packages/effects/src/convolutionEffect.ts",
-        "@flighthq/effects/packages/effects/src/directionalBlurEffect.ts",
-        "@flighthq/effects/packages/effects/src/displacementEffect.ts",
-        "@flighthq/effects/packages/effects/src/dropShadowEffect.ts",
-        "@flighthq/effects/packages/effects/src/glitchEffect.ts",
-        "@flighthq/effects/packages/effects/src/gradientBevelEffect.ts",
-        "@flighthq/effects/packages/effects/src/gradientGlowEffect.ts",
-        "@flighthq/effects/packages/effects/src/innerGlowEffect.ts",
-        "@flighthq/effects/packages/effects/src/innerShadowEffect.ts",
-        "@flighthq/effects/packages/effects/src/medianEffect.ts",
-        "@flighthq/effects/packages/effects/src/outerGlowEffect.ts",
-        "@flighthq/effects/packages/effects/src/outlineEffect.ts",
-        "@flighthq/effects/packages/effects/src/renderEffectCaptureGeometry.ts",
-        "@flighthq/effects/packages/effects/src/tiltShiftEffect.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:0b6a4e675633abd597add802b6faf9a792b73a18ad03d54e6bae60bbe1468004",
-        "sha256:14e8ea50723e1226679aa94acf17f890028586179f9af80d038a4e6be80caa8f",
-        "sha256:1aac7ce68853de1b2e3e2b9c4f4f1434045b6cc3ed3b756d2f4a06fc4ad0f75b",
-        "sha256:4de00d0c4cd87ab11c794803e36b9276dffed5cf2744c3b3a52708135a077ecb",
-        "sha256:72ee558db1e5f3cf79285f1ce3ada09f41589fdd36bbb3ecf2799c08f53c244d",
-        "sha256:8d10fa245a38b070a49d074991ed6fa7fd332f163272e1d08c00f5496ef61da9",
-        "sha256:acb9bd1cb4a394fc02c32e70b8f17e04b0bb909e7723597f197239e8a6ee6bc7",
-        "sha256:d52080c7cf9899687d1639f7d009f2ebbbd3045d395920ee4d370a3d10770963"
-      ],
-      "module": {
-        "name": "RenderEffectPadding",
-        "packageName": "@flighthq/effects",
-        "source": "packages/effects/src/renderEffectPadding.ts"
-      },
-      "path": "flight/effects/render_effect_padding.hpp",
-      "rule": "cpp-contextual-union-missing-expression-type:optionalSingle",
-      "status": "refused-placeholder"
-    },
-    {
-      "consumers": [
-        "@flighthq/effects/packages/effects/src/contract.ts"
-      ],
-      "module": {
-        "name": "RenderEffectValidation",
-        "packageName": "@flighthq/effects",
-        "source": "packages/effects/src/renderEffectValidation.ts"
-      },
-      "path": "flight/effects/render_effect_validation.hpp",
       "status": "emitted"
     },
     {
@@ -5781,10 +5761,10 @@
       ],
       "declarationFingerprints": [
         "sha256:2c6c6d0e417935003fab9e75a0fa5fdeeddde9e9406a41a5634b632b8c4c4e29",
-        "sha256:2e0d7f596f8e6398acb9965c4b60457b216d65bc53d10b8b1f5ae313dc83aa79",
-        "sha256:892b1da5c2f4cb6f564e13a27fbd6609d0b7373ae89731ea4e1bd39e873b0ecb",
-        "sha256:be9d61eee5e44a743cdd0b9e96c9fe8684473bd772ee64986ab4b8633cddcffc",
-        "sha256:d10aba9f9cf80c5c9590e6771a623bff44c2b2fa3d1618dbe12091bf522298c3"
+        "sha256:acd6223ed9858a86004230907579533f220a47b8a1fd3180a1cddb3ffe97f0d7",
+        "sha256:ba944b8250e9c080813e404ad350c9acb0f18b3dbf636a14ad8633333612cbca",
+        "sha256:d0e17c8a7753b47603acedb0a9c9666660cb510a284afffd9ed000a3e3e85611",
+        "sha256:e4e995dd97c3b79686cfd6e417f79d1dbf623699e9b7e3ae1f2631b5ff571977"
       ],
       "module": {
         "name": "TiltShiftEffect",
@@ -10828,7 +10808,7 @@
         "@flighthq/camera/packages/camera/src/viewMatrix.ts",
         "@flighthq/camera/packages/camera/src/visibleBounds.ts",
         "@flighthq/clip/packages/clip/src/clipRegion.ts",
-        "@flighthq/effects/packages/effects/src/renderEffectCaptureGeometry.ts",
+        "@flighthq/effects/packages/effects/src/effectCaptureGeometry.ts",
         "@flighthq/geometry/packages/geometry/src/contract.ts",
         "@flighthq/geometry/packages/geometry/src/index.ts",
         "@flighthq/geometry/packages/geometry/src/matrixPool.ts",
@@ -11087,7 +11067,7 @@
         "@flighthq/bitmaptext/packages/bitmaptext/src/updateBitmapText.ts",
         "@flighthq/camera-controls/packages/camera-controls/src/follow.ts",
         "@flighthq/clip/packages/clip/src/clipRegion.ts",
-        "@flighthq/effects/packages/effects/src/renderEffectCaptureGeometry.ts",
+        "@flighthq/effects/packages/effects/src/effectCaptureGeometry.ts",
         "@flighthq/geometry/packages/geometry/src/contract.ts",
         "@flighthq/geometry/packages/geometry/src/index.ts",
         "@flighthq/geometry/packages/geometry/src/rectanglePool.ts",
@@ -15414,7 +15394,7 @@
     },
     {
       "consumers": [
-        "@flighthq/effects/packages/effects/src/renderEffectCaptureGeometry.ts",
+        "@flighthq/effects/packages/effects/src/effectCaptureGeometry.ts",
         "@flighthq/gizmo/packages/gizmo/src/node2dGizmoFeatures.ts",
         "@flighthq/gui/packages/gui/src/guiController.ts",
         "@flighthq/gui/packages/gui/src/scrollViewController.ts",
@@ -15637,7 +15617,6 @@
     },
     {
       "consumers": [
-        "@flighthq/effects/packages/effects/src/renderEffectCaptureGeometry.ts",
         "@flighthq/gui/packages/gui/src/guiTestHelper.ts",
         "@flighthq/interaction/packages/interaction/src/enableInteractionGuards.ts",
         "@flighthq/interaction/packages/interaction/src/focusManager.ts",
@@ -45919,6 +45898,7 @@
     },
     {
       "consumers": [
+        "@flighthq/effects/packages/effects/src/effectPadding.ts",
         "@flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
         "@flighthq/render/packages/render/src/mergeRenderOptions.ts",
         "@flighthq/render/packages/render/src/renderRegistrySignals.ts",
@@ -47577,6 +47557,31 @@
     },
     {
       "consumers": [
+        "@flighthq/effects/packages/effects/src/bevelEffect.ts",
+        "@flighthq/effects/packages/effects/src/bloomEffect.ts",
+        "@flighthq/effects/packages/effects/src/blurEffect.ts",
+        "@flighthq/effects/packages/effects/src/bokehDepthOfFieldEffect.ts",
+        "@flighthq/effects/packages/effects/src/contactShadowsEffect.ts",
+        "@flighthq/effects/packages/effects/src/convolutionEffect.ts",
+        "@flighthq/effects/packages/effects/src/directionalBlurEffect.ts",
+        "@flighthq/effects/packages/effects/src/displacementEffect.ts",
+        "@flighthq/effects/packages/effects/src/dropShadowEffect.ts",
+        "@flighthq/effects/packages/effects/src/effect.ts",
+        "@flighthq/effects/packages/effects/src/effectCaptureGeometry.ts",
+        "@flighthq/effects/packages/effects/src/effectDefaults.ts",
+        "@flighthq/effects/packages/effects/src/effectInputs.ts",
+        "@flighthq/effects/packages/effects/src/effectInterpolation.ts",
+        "@flighthq/effects/packages/effects/src/effectPadding.ts",
+        "@flighthq/effects/packages/effects/src/effectValidation.ts",
+        "@flighthq/effects/packages/effects/src/glitchEffect.ts",
+        "@flighthq/effects/packages/effects/src/gradientBevelEffect.ts",
+        "@flighthq/effects/packages/effects/src/gradientGlowEffect.ts",
+        "@flighthq/effects/packages/effects/src/innerGlowEffect.ts",
+        "@flighthq/effects/packages/effects/src/innerShadowEffect.ts",
+        "@flighthq/effects/packages/effects/src/medianEffect.ts",
+        "@flighthq/effects/packages/effects/src/outerGlowEffect.ts",
+        "@flighthq/effects/packages/effects/src/outlineEffect.ts",
+        "@flighthq/effects/packages/effects/src/tiltShiftEffect.ts",
         "@flighthq/types/packages/types/src/AutoExposureEffect.ts",
         "@flighthq/types/packages/types/src/BarrelDistortionEffect.ts",
         "@flighthq/types/packages/types/src/BevelEffect.ts",
@@ -47650,6 +47655,7 @@
     },
     {
       "consumers": [
+        "@flighthq/effects/packages/effects/src/effectCaptureGeometry.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -47663,6 +47669,7 @@
     },
     {
       "consumers": [
+        "@flighthq/effects/packages/effects/src/effectInterpolation.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -47676,6 +47683,8 @@
     },
     {
       "consumers": [
+        "@flighthq/effects/packages/effects/src/effectInputs.ts",
+        "@flighthq/effects/packages/effects/src/effectValidation.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -47689,6 +47698,26 @@
     },
     {
       "consumers": [
+        "@flighthq/effects/packages/effects/src/bevelEffect.ts",
+        "@flighthq/effects/packages/effects/src/bloomEffect.ts",
+        "@flighthq/effects/packages/effects/src/blurEffect.ts",
+        "@flighthq/effects/packages/effects/src/bokehDepthOfFieldEffect.ts",
+        "@flighthq/effects/packages/effects/src/contactShadowsEffect.ts",
+        "@flighthq/effects/packages/effects/src/convolutionEffect.ts",
+        "@flighthq/effects/packages/effects/src/directionalBlurEffect.ts",
+        "@flighthq/effects/packages/effects/src/displacementEffect.ts",
+        "@flighthq/effects/packages/effects/src/dropShadowEffect.ts",
+        "@flighthq/effects/packages/effects/src/effectCaptureGeometry.ts",
+        "@flighthq/effects/packages/effects/src/effectPadding.ts",
+        "@flighthq/effects/packages/effects/src/glitchEffect.ts",
+        "@flighthq/effects/packages/effects/src/gradientBevelEffect.ts",
+        "@flighthq/effects/packages/effects/src/gradientGlowEffect.ts",
+        "@flighthq/effects/packages/effects/src/innerGlowEffect.ts",
+        "@flighthq/effects/packages/effects/src/innerShadowEffect.ts",
+        "@flighthq/effects/packages/effects/src/medianEffect.ts",
+        "@flighthq/effects/packages/effects/src/outerGlowEffect.ts",
+        "@flighthq/effects/packages/effects/src/outlineEffect.ts",
+        "@flighthq/effects/packages/effects/src/tiltShiftEffect.ts",
         "@flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
         "@flighthq/render/packages/render/src/mergeRenderOptions.ts",
         "@flighthq/render/packages/render/src/renderRegistrySignals.ts",
@@ -48088,6 +48117,11 @@
         "@flighthq/effects/packages/effects/src/ditherEffect.ts",
         "@flighthq/effects/packages/effects/src/dropShadowEffect.ts",
         "@flighthq/effects/packages/effects/src/edgeDetectMath.ts",
+        "@flighthq/effects/packages/effects/src/effect.ts",
+        "@flighthq/effects/packages/effects/src/effectDefaults.ts",
+        "@flighthq/effects/packages/effects/src/effectInputs.ts",
+        "@flighthq/effects/packages/effects/src/effectInterpolation.ts",
+        "@flighthq/effects/packages/effects/src/effectPadding.ts",
         "@flighthq/effects/packages/effects/src/filmEmulationEffect.ts",
         "@flighthq/effects/packages/effects/src/filmGrainEffect.ts",
         "@flighthq/effects/packages/effects/src/fxaaEffect.ts",
@@ -48112,10 +48146,6 @@
         "@flighthq/effects/packages/effects/src/pixelateEffect.ts",
         "@flighthq/effects/packages/effects/src/posterizeEffect.ts",
         "@flighthq/effects/packages/effects/src/radialBlurEffect.ts",
-        "@flighthq/effects/packages/effects/src/renderEffect.ts",
-        "@flighthq/effects/packages/effects/src/renderEffectDefaults.ts",
-        "@flighthq/effects/packages/effects/src/renderEffectInputs.ts",
-        "@flighthq/effects/packages/effects/src/renderEffectInterpolation.ts",
         "@flighthq/effects/packages/effects/src/scanlinesEffect.ts",
         "@flighthq/effects/packages/effects/src/screenSpaceFogEffect.ts",
         "@flighthq/effects/packages/effects/src/sharpenEffect.ts",
@@ -51130,6 +51160,7 @@
     },
     {
       "consumers": [
+        "@flighthq/effects/packages/effects/src/effectCaptureGeometry.ts",
         "@flighthq/gizmo/packages/gizmo/src/node2dGizmoFeatures.ts",
         "@flighthq/gui/packages/gui/src/guiController.ts",
         "@flighthq/gui/packages/gui/src/scrollViewController.ts",
@@ -51197,6 +51228,7 @@
     },
     {
       "consumers": [
+        "@flighthq/effects/packages/effects/src/effectCaptureGeometry.ts",
         "@flighthq/gizmo/packages/gizmo/src/node2dGizmoFeatures.ts",
         "@flighthq/gui/packages/gui/src/guiController.ts",
         "@flighthq/gui/packages/gui/src/scrollViewController.ts",
@@ -53425,6 +53457,7 @@
         "@flighthq/effects-canvas/packages/effects-canvas/src/canvasEffectState.ts",
         "@flighthq/effects-canvas/packages/effects-canvas/src/canvasEffectTestSupport.ts",
         "@flighthq/effects-wgpu/packages/effects-wgpu/src/wgpuEffectTexelScale.ts",
+        "@flighthq/effects/packages/effects/src/effectCaptureGeometry.ts",
         "@flighthq/geometry/packages/geometry/src/matrix.ts",
         "@flighthq/geometry/packages/geometry/src/matrix3.ts",
         "@flighthq/geometry/packages/geometry/src/matrix4.ts",
@@ -54317,6 +54350,8 @@
       "consumers": [
         "@flighthq/command/packages/command/src/command.ts",
         "@flighthq/command/packages/command/src/commandBinding.ts",
+        "@flighthq/effects/packages/effects/src/effectCaptureGeometry.ts",
+        "@flighthq/effects/packages/effects/src/effectPadding.ts",
         "@flighthq/gizmo/packages/gizmo/src/gizmoState.ts",
         "@flighthq/gizmo/packages/gizmo/src/node2dGizmoFeatures.ts",
         "@flighthq/gui/packages/gui/src/buttonController.ts",
@@ -54434,6 +54469,7 @@
     },
     {
       "consumers": [
+        "@flighthq/effects/packages/effects/src/effectCaptureGeometry.ts",
         "@flighthq/gizmo/packages/gizmo/src/gizmoState.ts",
         "@flighthq/gizmo/packages/gizmo/src/node2dGizmoFeatures.ts",
         "@flighthq/gui/packages/gui/src/buttonController.ts",
@@ -54727,6 +54763,7 @@
     },
     {
       "consumers": [
+        "@flighthq/effects/packages/effects/src/effectPadding.ts",
         "@flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
         "@flighthq/render/packages/render/src/mergeRenderOptions.ts",
         "@flighthq/render/packages/render/src/renderRegistrySignals.ts",
@@ -55363,6 +55400,7 @@
     {
       "consumers": [
         "@flighthq/clip/packages/clip/src/clipRegion.ts",
+        "@flighthq/effects/packages/effects/src/effectPadding.ts",
         "@flighthq/font/packages/font/src/glyphOutlineSource.ts",
         "@flighthq/gui/packages/gui/src/guiController.ts",
         "@flighthq/motionpath/packages/motionpath/src/motionPath.ts",
@@ -55544,6 +55582,7 @@
     },
     {
       "consumers": [
+        "@flighthq/effects/packages/effects/src/effectPadding.ts",
         "@flighthq/path/packages/path/src/pathMeshPool.ts",
         "@flighthq/path/packages/path/src/tessellatePath.ts",
         "@flighthq/path/packages/path/src/tessellatePathTyped.ts",
@@ -56465,6 +56504,7 @@
         "@flighthq/camera-controls/packages/camera-controls/src/follow.ts",
         "@flighthq/camera/packages/camera/src/visibleBounds.ts",
         "@flighthq/clip/packages/clip/src/clipRegion.ts",
+        "@flighthq/effects/packages/effects/src/effectCaptureGeometry.ts",
         "@flighthq/font/packages/font/src/glyphOutlineSource.ts",
         "@flighthq/geometry/packages/geometry/src/matrix.ts",
         "@flighthq/geometry/packages/geometry/src/rectangle.ts",
@@ -56646,6 +56686,7 @@
     },
     {
       "consumers": [
+        "@flighthq/effects/packages/effects/src/effectPadding.ts",
         "@flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
         "@flighthq/render/packages/render/src/mergeRenderOptions.ts",
         "@flighthq/render/packages/render/src/renderRegistrySignals.ts",
@@ -56679,6 +56720,7 @@
     },
     {
       "consumers": [
+        "@flighthq/effects/packages/effects/src/effectPadding.ts",
         "@flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
         "@flighthq/render/packages/render/src/renderRegistrySignals.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts",
@@ -56710,6 +56752,7 @@
     },
     {
       "consumers": [
+        "@flighthq/effects/packages/effects/src/effectPadding.ts",
         "@flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
         "@flighthq/render/packages/render/src/renderRegistrySignals.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts",
@@ -56768,6 +56811,7 @@
     },
     {
       "consumers": [
+        "@flighthq/effects/packages/effects/src/effectPadding.ts",
         "@flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
         "@flighthq/render/packages/render/src/renderRegistryGuards.ts",
         "@flighthq/render/packages/render/src/renderRegistrySignals.ts",
@@ -56805,6 +56849,8 @@
         "@flighthq/effects/packages/effects/src/directionalBlurEffect.ts",
         "@flighthq/effects/packages/effects/src/displacementEffect.ts",
         "@flighthq/effects/packages/effects/src/dropShadowEffect.ts",
+        "@flighthq/effects/packages/effects/src/effectCaptureGeometry.ts",
+        "@flighthq/effects/packages/effects/src/effectPadding.ts",
         "@flighthq/effects/packages/effects/src/glitchEffect.ts",
         "@flighthq/effects/packages/effects/src/gradientBevelEffect.ts",
         "@flighthq/effects/packages/effects/src/gradientGlowEffect.ts",
@@ -60239,6 +60285,7 @@
     },
     {
       "consumers": [
+        "@flighthq/effects/packages/effects/src/effectPadding.ts",
         "@flighthq/path/packages/path/src/strokePathGeometry.ts",
         "@flighthq/path/packages/path/src/tessellateStrokePath.ts",
         "@flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
@@ -64021,8 +64068,6 @@
         "@flighthq/effects/packages/effects/src/blendModeMath.ts",
         "@flighthq/effects/packages/effects/src/compositeEffect.ts",
         "@flighthq/effects/packages/effects/src/compositeOperatorMath.ts",
-        "@flighthq/effects/packages/effects/src/renderEffectCaptureGeometry.ts",
-        "@flighthq/effects/packages/effects/src/renderEffectPadding.ts",
         "@flighthq/font-formats/packages/font-formats/src/cffCharstring.ts",
         "@flighthq/font-formats/packages/font-formats/src/openTypeGlyf.ts",
         "@flighthq/font-formats/packages/font-formats/src/openTypeGlyphOutlineSource.ts",
