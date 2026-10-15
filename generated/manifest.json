@@ -1514,9 +1514,7 @@
       "id": "physics2d-abi-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/physics3d/world.hpp"
-      ],
+      "files": [],
       "id": "physics3d-unqualified-entity-names"
     },
     {
@@ -2855,9 +2853,7 @@
       "id": "physics3d-unqualified-log-names"
     },
     {
-      "files": [
-        "flight/physics3d/world.hpp"
-      ],
+      "files": [],
       "id": "physics3d-unqualified-spatial-names"
     },
     {
@@ -5973,7 +5969,10 @@
       "flight/physics2d/world_queries.hpp",
       "flight/physics2d_abi/physics2_dabi_command.hpp",
       "flight/physics2d_abi/reference_physics2_dabi.hpp",
+      "flight/physics3d/collider_collision.hpp",
       "flight/physics3d/explain_physics3_dcollision.hpp",
+      "flight/physics3d/step_validation.hpp",
+      "flight/physics3d/world.hpp",
       "flight/physics3d_abi/physics3_dabi_command.hpp",
       "flight/physics3d_abi/reference_physics3_dabi.hpp",
       "flight/picking/scene_hit_attributes.hpp",
@@ -6183,8 +6182,6 @@
       "flight/materials/material_presets.hpp",
       "flight/media/audio_mixer.hpp",
       "flight/media/video_channel.hpp",
-      "flight/physics3d/joints.hpp",
-      "flight/physics3d/world.hpp",
       "flight/scene2d_formats/lottie_document.hpp",
       "flight/scene2d_formats/lottie_ellipse_shape_item.hpp",
       "flight/scene2d_formats/lottie_fill_shape_item.hpp",
@@ -7283,14 +7280,14 @@
       "sourceModules": 8
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/physics3d",
       "cppNamespace": "flight::physics3d",
       "emittedModules": 32,
       "package": "@flighthq/physics3d",
       "refusedModules": 4,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 36
