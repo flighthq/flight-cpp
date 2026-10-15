@@ -859,6 +859,7 @@
         "flight/particles_formats/libgdx_parse.hpp",
         "flight/path_boolean/martinez_kernel.hpp",
         "flight/permissions/permission.hpp",
+        "flight/physics2d_abi/reference_physics2_dabi.hpp",
         "flight/render/render_cache.hpp",
         "flight/render_gl/gl_compressed_texture.hpp",
         "flight/render_wgpu/wgpu_external_texture.hpp",
@@ -1458,9 +1459,7 @@
       "id": "physics2d-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/physics2d_abi/reference_physics2_dabi.hpp"
-      ],
+      "files": [],
       "id": "physics2d-abi-unqualified-entity-names"
     },
     {
@@ -3113,9 +3112,7 @@
       "id": "interaction-unqualified-geometry-names"
     },
     {
-      "files": [
-        "flight/physics2d_abi/reference_physics2_dabi.hpp"
-      ],
+      "files": [],
       "id": "physics2d-abi-unqualified-physics2d-names"
     },
     {
@@ -3533,70 +3530,43 @@
       "id": "tilemap-nested-data-member-access"
     },
     {
-      "files": [
-        "flight/physics2d_abi/physics2_dabi_command.hpp",
-        "flight/physics2d_abi/reference_physics2_dabi.hpp"
-      ],
+      "files": [],
       "id": "physics2d-abi-body-type-member-access"
     },
     {
-      "files": [
-        "flight/physics2d_abi/physics2_dabi_command.hpp",
-        "flight/physics2d_abi/reference_physics2_dabi.hpp"
-      ],
+      "files": [],
       "id": "physics2d-abi-body-flag-member-access"
     },
     {
-      "files": [
-        "flight/physics2d_abi/physics2_dabi_command.hpp"
-      ],
+      "files": [],
       "id": "physics2d-abi-collider-filter-member-access"
     },
     {
-      "files": [
-        "flight/physics2d_abi/physics2_dabi_command.hpp"
-      ],
+      "files": [],
       "id": "physics2d-abi-collider-material-member-access"
     },
     {
-      "files": [
-        "flight/physics2d_abi/physics2_dabi_command.hpp",
-        "flight/physics2d_abi/reference_physics2_dabi.hpp"
-      ],
+      "files": [],
       "id": "physics2d-abi-command-byte-length-member-access"
     },
     {
-      "files": [
-        "flight/physics2d_abi/physics2_dabi_command.hpp",
-        "flight/physics2d_abi/reference_physics2_dabi.hpp"
-      ],
+      "files": [],
       "id": "physics2d-abi-command-kind-member-access"
     },
     {
-      "files": [
-        "flight/physics2d_abi/physics2_dabi_command.hpp",
-        "flight/physics2d_abi/reference_physics2_dabi.hpp"
-      ],
+      "files": [],
       "id": "physics2d-abi-joint-kind-member-access"
     },
     {
-      "files": [
-        "flight/physics2d_abi/physics2_dabi_command.hpp",
-        "flight/physics2d_abi/reference_physics2_dabi.hpp"
-      ],
+      "files": [],
       "id": "physics2d-abi-set-collider-offset-member-access"
     },
     {
-      "files": [
-        "flight/physics2d_abi/physics2_dabi_command.hpp",
-        "flight/physics2d_abi/reference_physics2_dabi.hpp"
-      ],
+      "files": [],
       "id": "physics2d-abi-set-joint-offset-member-access"
     },
     {
-      "files": [
-        "flight/physics2d_abi/physics2_dabi_command.hpp"
-      ],
+      "files": [],
       "id": "physics2d-abi-solver-flag-member-access"
     },
     {
@@ -5927,6 +5897,8 @@
       "flight/physics2d/explain_physics2_dcollision.hpp",
       "flight/physics2d/step.hpp",
       "flight/physics2d/world_queries.hpp",
+      "flight/physics2d_abi/physics2_dabi_command.hpp",
+      "flight/physics2d_abi/reference_physics2_dabi.hpp",
       "flight/physics3d/explain_physics3_dcollision.hpp",
       "flight/picking/scene_hit_attributes.hpp",
       "flight/render/render_cache.hpp",
@@ -6132,8 +6104,6 @@
       "flight/physics2d/joints.hpp",
       "flight/physics2d/step.hpp",
       "flight/physics2d/world.hpp",
-      "flight/physics2d_abi/physics2_dabi_command.hpp",
-      "flight/physics2d_abi/reference_physics2_dabi.hpp",
       "flight/physics3d/joints.hpp",
       "flight/physics3d/world.hpp",
       "flight/physics3d_abi/physics3_dabi_command.hpp",
@@ -7250,14 +7220,14 @@
       "sourceModules": 26
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/physics2d_abi",
       "cppNamespace": "flight::physics2d_abi",
       "emittedModules": 6,
       "package": "@flighthq/physics2d-abi",
       "refusedModules": 2,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 8
