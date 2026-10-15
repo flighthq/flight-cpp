@@ -158,7 +158,7 @@ inline std::optional<flight::String> reference_id(std::optional<flight::String> 
 }
 
 inline void report_missing_reference(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics, flight::Set<flight::String> reported, flight::String element, flight::String reference, flight::String owner) {
-  const flight::String key = flight::String("") + flight::to_string(element) + flight::String("\u0000") + flight::to_string(reference) + flight::String("\u0000") + flight::to_string(owner) + flight::String("");
+  const flight::String key = flight::String("") + flight::to_string(element) + flight::String(std::string_view("\u0000", sizeof("\u0000") - 1)) + flight::to_string(reference) + flight::String(std::string_view("\u0000", sizeof("\u0000") - 1)) + flight::to_string(owner) + flight::String("");
   if (reported.has(key)) {
     return;
   }

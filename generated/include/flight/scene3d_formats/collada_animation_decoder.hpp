@@ -134,15 +134,7 @@ inline flight::Ref<flight::types::Matrix4> scratch_flight_value_variable__u00005
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_TIMES_VALUES_COMPONENTS_INTERPOLATION_QUATERNION_EASING_SEGMENT_EASINGS_9B0EADFED5E06042
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_TIMES_VALUES_COMPONENTS_INTERPOLATION_QUATERNION_EASING_SEGMENT_EASINGS_9B0EADFED5E06042
-struct times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042 : public flight::ReferenceEnabled {
-  flight::SequenceView<double> times;
-  flight::SequenceView<double> values;
-  std::optional<double> components;
-  std::optional<flight::types::AnimationInterpolation> interpolation;
-  std::optional<bool> quaternion;
-  std::variant<std::function<double(double)>, flight::Null, flight::Undefined> easing = std::variant<std::function<double(double)>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<flight::Array<std::optional<std::function<double(double)>>>, flight::Null, flight::Undefined> segment_easings = std::variant<flight::Array<std::optional<std::function<double(double)>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-};
+using times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042 = flight::animation::times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_TIMES_VALUES_COMPONENTS_INTERPOLATION_QUATERNION_EASING_SEGMENT_EASINGS_9B0EADFED5E06042
 
 inline void resolve_collada_animations(flight::Ref<flight::types::Scene3DDocument> document, flight::Array<flight::Ref<flight::types::ColladaDecodedAnimationChannel>> channels, flight::Map<flight::String, double> node_id_map, flight::Array<flight::Ref<flight::types::ImportDiagnostic>> diagnostics) {

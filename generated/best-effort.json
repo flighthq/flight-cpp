@@ -457,7 +457,6 @@
         "@flighthq/animation/packages/animation/src/index.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAnimation.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5AnimParse.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneDocument.ts",
         "@flighthq/shape/packages/shape/src/morphShapeAnimation.ts",
@@ -585,10 +584,10 @@
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAnimation.ts",
         "@flighthq/scene2d/packages/scene2d/src/displayObjectAnimation.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2SkeletonHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaAnimationDecoder.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfAnimations.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2Parse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2AnimationHandler.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5AnimParse.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneAnimation.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesParse.ts",
@@ -2331,10 +2330,10 @@
         "@flighthq/camera/packages/camera/src/shadowCamera.ts",
         "@flighthq/render/packages/render/src/sceneRender.ts",
         "@flighthq/scene-document/packages/scene-document/src/flightDocumentText.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2CameraHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaCameraDecoder.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfCameras.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsCameraHandler.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/glEnvironmentCapture.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/glShadowMap.ts",
         "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuShadowMap.ts"
@@ -3721,8 +3720,8 @@
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuRichText.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuTextInput.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuTextLabel.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaLightDecoder.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaMaterial.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaParse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfParse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfPunctualLights.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSheen.ts",
@@ -9519,7 +9518,10 @@
         "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontDetect.ts",
         "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontFormatKind.ts",
         "@flighthq/encoding/packages/encoding/src/contract.ts",
-        "@flighthq/encoding/packages/encoding/src/index.ts"
+        "@flighthq/encoding/packages/encoding/src/index.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/stlFeatures.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/stlParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/stlTestHelper.ts"
       ],
       "module": {
         "name": "Utf8",
@@ -9874,6 +9876,7 @@
         "@flighthq/scene2d/packages/scene2d/src/scene2d.ts",
         "@flighthq/scene2d/packages/scene2d/src/sceneKindUsage.ts",
         "@flighthq/scene2d/packages/scene2d/src/sprite.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2BlockDispatch.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/resolveScene3DResources.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/sceneMaterialTextureRegistry.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/sceneResourceResolver.ts",
@@ -10926,11 +10929,14 @@
         "@flighthq/picking/packages/picking/src/sceneHitAttributes.ts",
         "@flighthq/render/packages/render/src/sceneRender.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentScene3DMaterialization.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Reader.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2SkeletonHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaAnimationDecoder.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaSceneShared.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfParse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5Parse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5SkeletonHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsMeshHandler.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/glMeshProgram.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/glShadowMap.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/renderGlScene3D.ts",
@@ -11018,9 +11024,10 @@
         "@flighthq/geometry/packages/geometry/src/transform3d.ts",
         "@flighthq/node/packages/node/src/hasTransform3d.ts",
         "@flighthq/node/packages/node/src/nodeTransform3d.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5Parse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2LightingHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5SkeletonHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsCameraHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsLightHandler.ts",
         "@flighthq/scene3d/packages/scene3d/src/billboardCamera.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneAnimation.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneDocument.ts",
@@ -11133,13 +11140,23 @@
         "@flighthq/geometry/packages/geometry/src/index.ts",
         "@flighthq/scene-document/packages/scene-document/src/flightDocumentText.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentScene3DMaterialization.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2LightingHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Reader.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2SceneStructureHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2SkeletonHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaAnimationDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaCameraDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaLightDecoder.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaSceneShared.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfParse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2Parse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5Parse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5SkeletonHandler.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/objParse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsParse.ts"
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsCameraHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsLightHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsMeshHandler.ts"
       ],
       "module": {
         "name": "Transform3d",
@@ -11223,9 +11240,11 @@
         "@flighthq/node/packages/node/src/nodeTransform3d.ts",
         "@flighthq/picking/packages/picking/src/pickScene3D.ts",
         "@flighthq/picking/packages/picking/src/sceneHitAttributes.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5Parse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2LightingHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5SkeletonHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsCameraHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsLightHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsMeshHandler.ts",
         "@flighthq/scene3d/packages/scene3d/src/billboardCamera.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneAnimation.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneDocument.ts"
@@ -12224,7 +12243,7 @@
         "@flighthq/image-codec/packages/image-codec/src/contract.ts",
         "@flighthq/image-codec/packages/image-codec/src/decodeImage.ts",
         "@flighthq/image/packages/image/src/imageResourceFrom.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2MaterialHandler.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfParse.ts"
       ],
       "module": {
@@ -12300,17 +12319,32 @@
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveStateMachine.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveText.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2CameraHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2GeometryHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2LightingHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2MaterialHandler.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2SceneStructureHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2SkeletonHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaAnimationDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaCameraDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaControllerDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaGeometryDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaLightDecoder.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaMaterial.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaParse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfEmissiveStrength.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfParse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfPunctualLights.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2Parse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2SkinHandler.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5AnimParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5Document.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5Parse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/mtlParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objBlinnPhongMaterialHandler.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/objParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objStandardPbrMaterialHandler.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsParse.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesParse.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryParse.ts",
@@ -13388,8 +13422,8 @@
     {
       "consumers": [
         "@flighthq/lighting/packages/lighting/src/contract.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2LightingHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaLightDecoder.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneDocumentLights.ts"
       ],
       "module": {
@@ -13431,8 +13465,8 @@
     {
       "consumers": [
         "@flighthq/lighting/packages/lighting/src/contract.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2LightingHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaLightDecoder.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfPunctualLights.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneDocumentLights.ts"
       ],
@@ -13533,10 +13567,10 @@
     {
       "consumers": [
         "@flighthq/lighting/packages/lighting/src/contract.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2LightingHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaLightDecoder.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfPunctualLights.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsLightHandler.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneDocumentLights.ts"
       ],
       "module": {
@@ -13580,9 +13614,9 @@
     {
       "consumers": [
         "@flighthq/lighting/packages/lighting/src/contract.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaLightDecoder.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfPunctualLights.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsLightHandler.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneDocumentLights.ts"
       ],
       "module": {
@@ -13903,10 +13937,10 @@
     {
       "consumers": [
         "@flighthq/materials/packages/materials/src/contract.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2Parse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5Parse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objParse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsParse.ts"
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2SkinHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5MaterialHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objBlinnPhongMaterialHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsMeshHandler.ts"
       ],
       "module": {
         "name": "ClassicMaterials",
@@ -14146,7 +14180,7 @@
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfMaterialExtension.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfParse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSpecularGlossiness.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objParse.ts"
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objStandardPbrMaterialHandler.ts"
       ],
       "module": {
         "name": "PbrMaterials",
@@ -14322,9 +14356,9 @@
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2D.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveShapePath.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveSkeleton.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaParse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2CameraHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaCameraDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsCameraHandler.ts",
         "@flighthq/sensors/packages/sensors/src/sensors.ts",
         "@flighthq/shape/packages/shape/src/shapeCommands.ts",
         "@flighthq/shape/packages/shape/src/shapeFill.ts",
@@ -14812,13 +14846,14 @@
         "@flighthq/mesh/packages/mesh/src/meshGeometryLayout.ts",
         "@flighthq/mesh/packages/mesh/src/meshGeometryOperations.ts",
         "@flighthq/mesh/packages/mesh/src/updateMeshMorph.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2GeometryHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaGeometryDecoder.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfParse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2Parse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5Parse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/objParse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/stlParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsMeshHandler.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/enableGlScene3DDeformGuards.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/glMeshUpload.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/glShadowMap.ts",
@@ -14877,7 +14912,7 @@
         "@flighthq/mesh/packages/mesh/src/meshGeometryOperations.ts",
         "@flighthq/mesh/packages/mesh/src/meshGeometryTransforms.ts",
         "@flighthq/render/packages/render/src/sceneRender.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2GeometryHandler.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfParse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5Parse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/objParse.ts",
@@ -14926,7 +14961,7 @@
         "@flighthq/mesh/packages/mesh/src/contract.ts",
         "@flighthq/mesh/packages/mesh/src/index.ts",
         "@flighthq/mesh/packages/mesh/src/meshGeometryOperations.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2GeometryHandler.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfParse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5Parse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/shared.ts"
@@ -22366,6 +22401,15 @@
         "@flighthq/requirement/packages/requirement/src/contract.ts",
         "@flighthq/requirement/packages/requirement/src/index.ts",
         "@flighthq/requirement/packages/requirement/src/requirementCollector.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Requirements.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaFeatures.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfRequirements.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2Requirements.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5AnimRequirements.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5MeshRequirements.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objRequirements.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/stlRequirements.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsRequirements.ts",
         "@flighthq/swf/packages/swf/src/swfRequirements.ts"
       ],
       "module": {
@@ -29070,11 +29114,12 @@
       "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfImport.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfParse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2Parse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5Parse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objParse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2Document.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5Document.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objDocument.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsDocument.ts",
         "@flighthq/scene3d/packages/scene3d/src/contract.ts",
         "@flighthq/scene3d/packages/scene3d/src/index.ts"
       ],
@@ -31319,7 +31364,8 @@
       },
       "path": "flight/scene3d_formats/shared.hpp",
       "refusedDependencies": [
-        "@flighthq/image/packages/image/src/imageResourceReference.ts"
+        "@flighthq/image/packages/image/src/imageResourceReference.ts",
+        "@flighthq/mesh/packages/mesh/src/meshGeometryLayout.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -35455,7 +35501,7 @@
     },
     {
       "consumers": [
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2MaterialHandler.ts",
         "@flighthq/shading/packages/shading/src/contract.ts"
       ],
       "module": {
@@ -43957,6 +44003,7 @@
         "@flighthq/animation/packages/animation/src/animationRootMotion.ts",
         "@flighthq/animation/packages/animation/src/animationStateMachine.ts",
         "@flighthq/animation/packages/animation/src/animationTrack.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2AnimationHandler.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/explainSkeleton2DChannel.ts",
         "@flighthq/types/packages/types/src/AnimationTrack.ts",
         "@flighthq/types/packages/types/src/contract.ts",
@@ -44085,6 +44132,10 @@
         "@flighthq/animation/packages/animation/src/animationStateMachine.ts",
         "@flighthq/animation/packages/animation/src/animationTrack.ts",
         "@flighthq/scene2d/packages/scene2d/src/displayObjectAnimation.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaMaterialDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaSceneShared.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2AnimationHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialHelpers.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneDocumentLights.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/explainSkeleton2DChannel.ts",
         "@flighthq/types/packages/types/src/AnimationChannel.ts",
@@ -44468,6 +44519,9 @@
     },
     {
       "consumers": [
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2BlockDispatch.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2BlockRegistry.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/mergeAwd2ParseOptions.ts",
         "@flighthq/types/packages/types/src/Awd2ParseOptions.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
@@ -44482,6 +44536,8 @@
     },
     {
       "consumers": [
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2BlockCensus.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Header.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -44495,6 +44551,7 @@
     },
     {
       "consumers": [
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/mergeAwd2ParseOptions.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -45565,6 +45622,10 @@
         "@flighthq/camera/packages/camera/src/projection.ts",
         "@flighthq/camera/packages/camera/src/reflection.ts",
         "@flighthq/camera/packages/camera/src/shadowCamera.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaMaterialDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaSceneShared.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2AnimationHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialHelpers.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/presentGlScene3D.ts",
         "@flighthq/scene3d/packages/scene3d/src/enableScene3DGuards.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneDocumentLights.ts",
@@ -46417,6 +46478,9 @@
     },
     {
       "consumers": [
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaDecoderFamily.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaDocument.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaMaterialDecoder.ts",
         "@flighthq/types/packages/types/src/ColladaParse.ts",
         "@flighthq/types/packages/types/src/contract.ts"
       ],
@@ -46430,6 +46494,7 @@
     },
     {
       "consumers": [
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaDocument.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -46863,6 +46928,9 @@
     },
     {
       "consumers": [
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2BlockCensus.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Header.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/mergeAwd2ParseOptions.ts",
         "@flighthq/swf/packages/swf/src/mergeSwfParseOptions.ts",
         "@flighthq/swf/packages/swf/src/swfContentCapabilities.ts",
         "@flighthq/swf/packages/swf/src/swfHeader.ts",
@@ -47537,6 +47605,7 @@
         "@flighthq/easing/packages/easing/src/easeSmoothstep.ts",
         "@flighthq/easing/packages/easing/src/easeSteps.ts",
         "@flighthq/easing/packages/easing/src/getEasingDerivative.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2AnimationHandler.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/explainSkeleton2DChannel.ts",
         "@flighthq/tween/packages/tween/src/colorTween.ts",
         "@flighthq/tween/packages/tween/src/internal.ts",
@@ -48352,12 +48421,17 @@
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuRendererData.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuScale9Mapper.ts",
         "@flighthq/scene2d/packages/scene2d/src/scale9Sprite.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2BlockDispatch.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaMaterialDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaSceneShared.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfAnisotropy.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfClearcoat.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfIridescence.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSheen.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSpecular.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfTransmissionVolume.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2AnimationHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialHelpers.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/anisotropyPbrGlExtension.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/clearcoatPbrGlExtension.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/enableGlPbrExtensionGuards.ts",
@@ -50831,6 +50905,7 @@
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfAnisotropy.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfClearcoat.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfExtensionHandlerRegistry.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfImport.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfIridescence.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSheen.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSpecular.ts",
@@ -50859,6 +50934,8 @@
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfAnisotropy.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfClearcoat.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfExtensionHandlerRegistry.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfFeatures.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfImport.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfIridescence.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSheen.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSpecular.ts",
@@ -52239,6 +52316,10 @@
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/resolveScene2DResources.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/scene2DDocument.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaMaterialDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaSceneShared.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2AnimationHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialHelpers.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/scene3DFormatsTestHelper.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/shared.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/sceneResourceRecovery.ts",
@@ -52278,13 +52359,23 @@
         "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontXml.ts",
         "@flighthq/particles-formats/packages/particles-formats/src/registerBuiltInParticleFormats.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2BlockDispatch.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaMaterialDecoder.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfAnisotropy.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfClearcoat.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfExtensionHandlerRegistry.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfImport.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfIridescence.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSheen.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSpecular.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfTransmissionVolume.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2AnimationHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2Document.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objDocument.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsChunkDispatch.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsDocument.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsKeyframeHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsMaterialHandler.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoad.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/skeletonDetect.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryFull.ts",
@@ -53004,6 +53095,10 @@
     },
     {
       "consumers": [
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaMaterialDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaSceneShared.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2AnimationHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialHelpers.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneDocumentLights.ts",
         "@flighthq/types/packages/types/src/Scene3DDocument.ts",
         "@flighthq/types/packages/types/src/contract.ts",
@@ -53344,6 +53439,11 @@
       "consumers": [
         "@flighthq/materials/packages/materials/src/material.ts",
         "@flighthq/node/packages/node/src/hasMaterial.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaMaterialDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaSceneShared.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2AnimationHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objDocument.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialHelpers.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/sceneResourceResolver.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/sceneResourceSignals.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneDocumentLights.ts",
@@ -53578,6 +53678,11 @@
         "@flighthq/geometry/packages/geometry/src/transform3d.ts",
         "@flighthq/mesh/packages/mesh/src/meshGeometryTransforms.ts",
         "@flighthq/node/packages/node/src/hasTransform3d.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Reader.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaMaterialDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaSceneShared.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2AnimationHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialHelpers.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/enableGlPbrExtensionGuards.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/enableGlScene3DColorSpaceGuards.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/enableGlScene3DForwardLightSelectionGuards.ts",
@@ -53613,6 +53718,9 @@
     },
     {
       "consumers": [
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2AnimationHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2Document.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2SectionRegistry.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -53640,6 +53748,7 @@
     },
     {
       "consumers": [
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5SectionRegistry.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -53856,7 +53965,13 @@
         "@flighthq/mesh/packages/mesh/src/meshGeometryUvs.ts",
         "@flighthq/mesh/packages/mesh/src/morphMeshGeometry.ts",
         "@flighthq/mesh/packages/mesh/src/vertexFormat.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2BlockDispatch.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaMaterialDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaSceneShared.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2AnimationHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialHelpers.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/shared.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/stlParse.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/enableGlPbrExtensionGuards.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/enableGlScene3DColorSpaceGuards.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/enableGlScene3DForwardLightSelectionGuards.ts",
@@ -53910,6 +54025,7 @@
         "@flighthq/mesh/packages/mesh/src/meshGeometryBuilders.ts",
         "@flighthq/mesh/packages/mesh/src/meshGeometryLayout.ts",
         "@flighthq/mesh/packages/mesh/src/meshGeometryOperations.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/stlParse.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -54222,6 +54338,11 @@
     {
       "consumers": [
         "@flighthq/mesh/packages/mesh/src/morphMeshGeometry.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaMaterialDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaSceneShared.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2AnimationHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2Document.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialHelpers.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneDocumentLights.ts",
         "@flighthq/types/packages/types/src/Md2SectionHandler.ts",
         "@flighthq/types/packages/types/src/Mesh.ts",
@@ -54922,6 +55043,9 @@
     },
     {
       "consumers": [
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objDocument.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialModel.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialRegistry.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -54935,6 +55059,8 @@
     },
     {
       "consumers": [
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objDocument.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialModel.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/objLoad.ts",
         "@flighthq/types/packages/types/src/ObjMaterialHandler.ts",
         "@flighthq/types/packages/types/src/contract.ts",
@@ -57821,6 +57947,10 @@
     },
     {
       "consumers": [
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfImport.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2Document.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objDocument.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsDocument.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/sceneResourceRecovery.ts",
         "@flighthq/scene3d/packages/scene3d/src/scene.ts",
         "@flighthq/types/packages/types/src/FlightDocument.ts",
@@ -57838,6 +57968,10 @@
     },
     {
       "consumers": [
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaMaterialDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaSceneShared.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2AnimationHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialHelpers.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneDocumentLights.ts",
         "@flighthq/types/packages/types/src/Scene3DAnimationTarget.ts",
         "@flighthq/types/packages/types/src/Scene3DDocument.ts",
@@ -57868,13 +58002,25 @@
     {
       "consumers": [
         "@flighthq/scene-document/packages/scene-document/src/flightDocumentResourceDependencies.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2BlockDispatch.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaMaterialDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaSceneShared.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfAnisotropy.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfClearcoat.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfExtensionHandlerRegistry.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfImport.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfIridescence.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSheen.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSpecular.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfTransmissionVolume.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2AnimationHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2Document.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objDocument.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialHelpers.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsChunkDispatch.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsDocument.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsKeyframeHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsMaterialHandler.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/awd2Load.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoad.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/md2Load.ts",
@@ -58023,6 +58169,10 @@
     },
     {
       "consumers": [
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaMaterialDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaSceneShared.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2AnimationHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialHelpers.ts",
         "@flighthq/scene3d/packages/scene3d/src/scene.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneDocumentLights.ts",
         "@flighthq/types/packages/types/src/Scene3D.ts",
@@ -60236,6 +60386,7 @@
     },
     {
       "consumers": [
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/stlFeatures.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -60249,6 +60400,7 @@
     },
     {
       "consumers": [
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/stlParse.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -61176,6 +61328,7 @@
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSheen.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSpecular.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfTransmissionVolume.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialHelpers.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/scene3DFormatsTestHelper.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/shared.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/anisotropyPbrGlExtension.ts",
@@ -61848,6 +62001,11 @@
     },
     {
       "consumers": [
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsChunkDispatch.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsChunkRegistry.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsDocument.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsKeyframeHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsMaterialHandler.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -61861,6 +62019,11 @@
     },
     {
       "consumers": [
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsChunkCensus.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsChunkDispatch.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsDocument.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsKeyframeHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsMaterialHandler.ts",
         "@flighthq/types/packages/types/src/ThreeDsChunkHandler.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
@@ -62345,6 +62508,9 @@
     {
       "consumers": [
         "@flighthq/geometry/packages/geometry/src/transform3d.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Reader.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaMaterialDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaSceneShared.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfAnisotropy.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfClearcoat.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfExtensionHandlerRegistry.ts",
@@ -62352,6 +62518,8 @@
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSheen.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSpecular.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfTransmissionVolume.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2AnimationHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialHelpers.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoad.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneDocumentLights.ts",
         "@flighthq/types/packages/types/src/GltfExtension.ts",
@@ -64074,6 +64242,9 @@
     {
       "consumers": [
         "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontXml.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaMaterialDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaSceneShared.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaXml.ts",
         "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasStarlingParse.ts",
         "@flighthq/types/packages/types/src/ColladaDecoding.ts",
         "@flighthq/types/packages/types/src/SvgRegistry.ts",
@@ -64432,26 +64603,62 @@
         "@flighthq/scene2d/packages/scene2d/src/scene2d.ts",
         "@flighthq/scene2d/packages/scene2d/src/sceneKindUsage.ts",
         "@flighthq/scene2d/packages/scene2d/src/sprite.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2BlockRequirements.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2CameraHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2GeometryHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2LightingHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2MaterialHandler.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Requirements.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2SceneStructureHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2SkeletonHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaAnimationDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaCameraDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaControllerDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaFeatureRequirements.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaFeatures.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaGeometryDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaLightDecoder.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaMaterial.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaParse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfAnimations.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfCameras.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfCoreFeatureRegistry.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfEmissiveStrength.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfFeatureRequirements.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfMaterialExtension.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfParse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfPunctualLights.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfRequirements.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSkins.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSpecularGlossiness.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfUnlit.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2FeatureRequirements.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2Parse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2Requirements.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2SkinHandler.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5AnimParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5AnimRequirements.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5Document.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5MaterialHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5MeshFeatureRequirements.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5MeshRequirements.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5Parse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5SkeletonHandler.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/mtlParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objBlinnPhongMaterialHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objFeatureRequirements.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/objParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objRequirements.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objStandardPbrMaterialHandler.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/sceneSkeleton.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/stlRequirements.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsCameraHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsChunkRequirements.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsLightHandler.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsMeshHandler.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsRequirements.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/blinnPhongGlMeshMaterialRenderer.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/customShaderGlMeshMaterialRenderer.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/depthGlMeshMaterialRenderer.ts",
@@ -64978,6 +65185,9 @@
       "consumers": [
         "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontXml.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaAnimationDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaControllerDecoder.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaFeatures.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/colladaParse.ts",
         "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/cocosPlistParse.ts",
         "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasStarlingParse.ts",

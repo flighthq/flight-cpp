@@ -21,7 +21,7 @@ namespace flight::scene3d_formats {
 
 inline flight::Ref<flight::types::RequirementSet> parse_obj_requirements(flight::String source, std::optional<flight::Array<flight::String>> material_libraries = std::nullopt) {
   material_libraries = material_libraries.value_or(flight::Array<flight::String>{});
-  flight::Set<flight::String> features = flight::Set<flight::String>(flight::scene3d_formats::collect_obj_features(source));
+  flight::Set<flight::String> features = flight::Set<flight::String>(flight::scene3d_formats::collect_obj_features(source)).clone();
   if (features.erase(flight::scene3d_formats::obj_material_feature)) {
     auto models = flight::Set<flight::String>();
     for (auto library : material_libraries.value()) {

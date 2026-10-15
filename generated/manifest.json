@@ -931,6 +931,8 @@
         "flight/render_gl/gl_compressed_texture.hpp",
         "flight/render_wgpu/wgpu_compressed_texture.hpp",
         "flight/scene3d_formats/mtl_parse.hpp",
+        "flight/scene3d_formats/three_ds_keyframe_handler.hpp",
+        "flight/scene3d_formats/three_ds_light_handler.hpp",
         "flight/scene3d_formats/three_ds_parse.hpp",
         "flight/skeleton2d_formats/spine_binary_bone_timeline_handler.hpp",
         "flight/skeleton2d_formats/spine_parse_helpers.hpp",
@@ -1189,9 +1191,28 @@
     {
       "files": [
         "flight/scene3d_formats/_internal_scene3_dformats_test_helper.hpp",
+        "flight/scene3d_formats/awd2_block_census.hpp",
+        "flight/scene3d_formats/awd2_block_dispatch.hpp",
+        "flight/scene3d_formats/awd2_camera_handler.hpp",
+        "flight/scene3d_formats/awd2_geometry_handler.hpp",
+        "flight/scene3d_formats/awd2_header.hpp",
+        "flight/scene3d_formats/awd2_lighting_handler.hpp",
+        "flight/scene3d_formats/awd2_material_handler.hpp",
         "flight/scene3d_formats/awd2_parse.hpp",
+        "flight/scene3d_formats/awd2_reader.hpp",
+        "flight/scene3d_formats/awd2_scene_structure_handler.hpp",
+        "flight/scene3d_formats/awd2_skeleton_handler.hpp",
+        "flight/scene3d_formats/collada_animation_decoder.hpp",
+        "flight/scene3d_formats/collada_camera_decoder.hpp",
+        "flight/scene3d_formats/collada_controller_decoder.hpp",
+        "flight/scene3d_formats/collada_features.hpp",
+        "flight/scene3d_formats/collada_geometry_decoder.hpp",
+        "flight/scene3d_formats/collada_light_decoder.hpp",
         "flight/scene3d_formats/collada_material.hpp",
+        "flight/scene3d_formats/collada_material_decoder.hpp",
         "flight/scene3d_formats/collada_parse.hpp",
+        "flight/scene3d_formats/collada_scene_shared.hpp",
+        "flight/scene3d_formats/collada_xml.hpp",
         "flight/scene3d_formats/gltf_animations.hpp",
         "flight/scene3d_formats/gltf_anisotropy.hpp",
         "flight/scene3d_formats/gltf_cameras.hpp",
@@ -1200,21 +1221,35 @@
         "flight/scene3d_formats/gltf_draco.hpp",
         "flight/scene3d_formats/gltf_emissive_strength.hpp",
         "flight/scene3d_formats/gltf_extension_handler_registry.hpp",
+        "flight/scene3d_formats/gltf_features.hpp",
+        "flight/scene3d_formats/gltf_import.hpp",
         "flight/scene3d_formats/gltf_iridescence.hpp",
         "flight/scene3d_formats/gltf_material_extension.hpp",
         "flight/scene3d_formats/gltf_parse.hpp",
         "flight/scene3d_formats/gltf_punctual_lights.hpp",
+        "flight/scene3d_formats/gltf_requirements.hpp",
         "flight/scene3d_formats/gltf_sheen.hpp",
         "flight/scene3d_formats/gltf_skins.hpp",
         "flight/scene3d_formats/gltf_specular.hpp",
         "flight/scene3d_formats/gltf_specular_glossiness.hpp",
         "flight/scene3d_formats/gltf_transmission_volume.hpp",
         "flight/scene3d_formats/gltf_unlit.hpp",
+        "flight/scene3d_formats/md2_animation_handler.hpp",
+        "flight/scene3d_formats/md2_document.hpp",
         "flight/scene3d_formats/md2_parse.hpp",
+        "flight/scene3d_formats/md2_skin_handler.hpp",
         "flight/scene3d_formats/md5_anim_parse.hpp",
+        "flight/scene3d_formats/md5_document.hpp",
+        "flight/scene3d_formats/md5_material_handler.hpp",
         "flight/scene3d_formats/md5_parse.hpp",
+        "flight/scene3d_formats/md5_skeleton_handler.hpp",
         "flight/scene3d_formats/mtl_parse.hpp",
+        "flight/scene3d_formats/obj_blinn_phong_material_handler.hpp",
+        "flight/scene3d_formats/obj_document.hpp",
+        "flight/scene3d_formats/obj_material_helpers.hpp",
+        "flight/scene3d_formats/obj_material_model.hpp",
         "flight/scene3d_formats/obj_parse.hpp",
+        "flight/scene3d_formats/obj_standard_pbr_material_handler.hpp",
         "flight/scene3d_formats/register_all_gltf_handlers.hpp",
         "flight/scene3d_formats/register_gltf_animation_handlers.hpp",
         "flight/scene3d_formats/register_gltf_camera_handlers.hpp",
@@ -1223,6 +1258,15 @@
         "flight/scene3d_formats/register_gltf_skin_handlers.hpp",
         "flight/scene3d_formats/scene_skeleton.hpp",
         "flight/scene3d_formats/shared.hpp",
+        "flight/scene3d_formats/stl_parse.hpp",
+        "flight/scene3d_formats/three_ds_camera_handler.hpp",
+        "flight/scene3d_formats/three_ds_chunk_census.hpp",
+        "flight/scene3d_formats/three_ds_chunk_dispatch.hpp",
+        "flight/scene3d_formats/three_ds_document.hpp",
+        "flight/scene3d_formats/three_ds_keyframe_handler.hpp",
+        "flight/scene3d_formats/three_ds_light_handler.hpp",
+        "flight/scene3d_formats/three_ds_material_handler.hpp",
+        "flight/scene3d_formats/three_ds_mesh_handler.hpp",
         "flight/scene3d_formats/three_ds_parse.hpp"
       ],
       "id": "scene3d-formats-unqualified-types-names"
@@ -2853,85 +2897,46 @@
       "id": "scene2d-canvas-unqualified-shape-names"
     },
     {
-      "files": [
-        "flight/scene3d_formats/awd2_parse.hpp",
-        "flight/scene3d_formats/collada_parse.hpp",
-        "flight/scene3d_formats/three_ds_parse.hpp"
-      ],
+      "files": [],
       "id": "scene3d-formats-unqualified-camera-names"
     },
     {
-      "files": [
-        "flight/scene3d_formats/collada_material.hpp",
-        "flight/scene3d_formats/gltf_parse.hpp",
-        "flight/scene3d_formats/gltf_transmission_volume.hpp"
-      ],
+      "files": [],
       "id": "scene3d-formats-unqualified-color-names"
     },
     {
-      "files": [
-        "flight/scene3d_formats/awd2_parse.hpp",
-        "flight/scene3d_formats/collada_parse.hpp",
-        "flight/scene3d_formats/gltf_parse.hpp",
-        "flight/scene3d_formats/md5_parse.hpp",
-        "flight/scene3d_formats/three_ds_parse.hpp"
-      ],
+      "files": [],
       "id": "scene3d-formats-unqualified-geometry-names"
     },
     {
       "files": [
-        "flight/scene3d_formats/awd2_parse.hpp"
+        "flight/scene3d_formats/awd2_material_handler.hpp",
+        "flight/scene3d_formats/gltf_parse.hpp"
       ],
       "id": "scene3d-formats-unqualified-image-codec-names"
     },
     {
-      "files": [
-        "flight/scene3d_formats/awd2_parse.hpp",
-        "flight/scene3d_formats/collada_material.hpp",
-        "flight/scene3d_formats/collada_parse.hpp",
-        "flight/scene3d_formats/gltf_parse.hpp",
-        "flight/scene3d_formats/gltf_punctual_lights.hpp",
-        "flight/scene3d_formats/md2_parse.hpp",
-        "flight/scene3d_formats/md5_parse.hpp",
-        "flight/scene3d_formats/three_ds_parse.hpp"
-      ],
+      "files": [],
       "id": "scene3d-formats-unqualified-importdiagnostics-names"
     },
     {
-      "files": [
-        "flight/scene3d_formats/awd2_parse.hpp",
-        "flight/scene3d_formats/collada_parse.hpp"
-      ],
+      "files": [],
       "id": "scene3d-formats-unqualified-lighting-names"
     },
     {
-      "files": [
-        "flight/scene3d_formats/collada_material.hpp"
-      ],
+      "files": [],
       "id": "scene3d-formats-unqualified-materials-names"
     },
     {
-      "files": [
-        "flight/scene3d_formats/gltf_parse.hpp",
-        "flight/scene3d_formats/md5_parse.hpp"
-      ],
+      "files": [],
       "id": "scene3d-formats-unqualified-mesh-names"
     },
     {
-      "files": [
-        "flight/scene3d_formats/awd2_parse.hpp",
-        "flight/scene3d_formats/gltf_parse.hpp",
-        "flight/scene3d_formats/md2_parse.hpp",
-        "flight/scene3d_formats/md5_parse.hpp",
-        "flight/scene3d_formats/obj_parse.hpp",
-        "flight/scene3d_formats/three_ds_parse.hpp"
-      ],
+      "files": [],
       "id": "scene3d-formats-unqualified-scene3d-names"
     },
     {
-      "files": [
-        "flight/scene3d_formats/collada_parse.hpp"
-      ],
+      "files": [],
       "id": "scene3d-formats-unqualified-xml-names"
     },
     {
@@ -3238,9 +3243,7 @@
       "id": "scene-document-unqualified-registry-names"
     },
     {
-      "files": [
-        "flight/scene3d_formats/collada_parse.hpp"
-      ],
+      "files": [],
       "id": "scene3d-formats-unqualified-animation-names"
     },
     {
@@ -5955,9 +5958,18 @@
       "flight/scene2d_wgpu/wgpu_color_adjustment_material_feature.hpp",
       "flight/scene2d_wgpu/wgpu_particle_emitter2_d.hpp",
       "flight/scene2d_wgpu/wgpu_quad_batch_writer.hpp",
+      "flight/scene3d_formats/awd2_skeleton_handler.hpp",
+      "flight/scene3d_formats/collada_animation_decoder.hpp",
+      "flight/scene3d_formats/gltf_anisotropy.hpp",
+      "flight/scene3d_formats/gltf_clearcoat.hpp",
+      "flight/scene3d_formats/gltf_features.hpp",
+      "flight/scene3d_formats/gltf_iridescence.hpp",
       "flight/scene3d_formats/gltf_parse.hpp",
       "flight/scene3d_formats/gltf_punctual_lights.hpp",
-      "flight/scene3d_formats/md5_parse.hpp",
+      "flight/scene3d_formats/gltf_sheen.hpp",
+      "flight/scene3d_formats/gltf_specular.hpp",
+      "flight/scene3d_formats/gltf_transmission_volume.hpp",
+      "flight/scene3d_formats/md2_animation_handler.hpp",
       "flight/scene3d_wgpu/render_wgpu_scene3_d.hpp",
       "flight/scene3d_wgpu/wgpu_classic_prelude.hpp",
       "flight/scene3d_wgpu/wgpu_debug_prelude.hpp",
@@ -6009,13 +6021,17 @@
       "codec_id_deblocking_frame_count_height_smoothing_width_e646285bb518325f",
       "colors_timeline_79cefceb3eed9427",
       "config_diagnostics_c75f552162a3a41d",
+      "duration_pose_block_id_0b4526dd9b4a6799",
       "end_start_97b3a2515eda198d",
       "end_start_b3d703e568b779f1",
       "entity_runtime_key_2a5696294f4ba375",
       "failures_reason_f82a2518cf67b45c",
       "height_width_86f909d1d50ed705",
+      "khr_draco_mesh_compression_332a1e80702266ac",
       "khr_lights_punctual_57088e9c45e874e0",
+      "khr_materials_anisotropy_khr_materials_clearcoat_khr_materials_emissive_strength_khr_materials_ior_khr_materials_iridescence_khr_materials_pbr_specular_glossiness_khr_materials_sheen_khr_materials_unlit_khr_materials_specular_khr_materials_transmission_khr_materials_volume_591a8a98ddbcaffc",
       "khr_texture_basisu_e59745e8c15a4024",
+      "khr_texture_transform_f8da05e9a4f875a5",
       "kind_0a56b0507a0dbb94",
       "kind_6fea82d7aa842443",
       "kind_control_x1_control_y1_control_x2_control_y2_x_y_c8058da1393995b5",
@@ -6164,16 +6180,6 @@
       "flight/scene2d_formats/svg_use_element.hpp",
       "flight/scene2d_resources/load_scene2_daudio_resources.hpp",
       "flight/scene2d_resources/load_scene2_dimage_resources.hpp",
-      "flight/scene3d_formats/awd2_parse.hpp",
-      "flight/scene3d_formats/collada_material.hpp",
-      "flight/scene3d_formats/collada_parse.hpp",
-      "flight/scene3d_formats/gltf_parse.hpp",
-      "flight/scene3d_formats/gltf_transmission_volume.hpp",
-      "flight/scene3d_formats/md2_parse.hpp",
-      "flight/scene3d_formats/md5_anim_parse.hpp",
-      "flight/scene3d_formats/md5_parse.hpp",
-      "flight/scene3d_formats/obj_parse.hpp",
-      "flight/scene3d_formats/three_ds_parse.hpp",
       "flight/scene3d_resources/anisotropy_pbr_scene3_dmaterial_textures.hpp",
       "flight/scene3d_resources/clearcoat_pbr_scene3_dmaterial_textures.hpp",
       "flight/scene3d_resources/enable_scene3_dresource_failure_guards.hpp",
@@ -6239,7 +6245,7 @@
       "flight/textshaper/text_shaper_cache.hpp",
       "flight/tokens/substitute_flight_document_scene_tokens.hpp"
     ],
-    "includes": 788
+    "includes": 787
   },
   "packages": [
     {
@@ -7572,17 +7578,17 @@
       "sourceModules": 21
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/scene3d_formats",
       "cppNamespace": "flight::scene3d_formats",
-      "emittedModules": 20,
+      "emittedModules": 73,
       "package": "@flighthq/scene3d-formats",
-      "refusedModules": 20,
+      "refusedModules": 38,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
-      "sourceModules": 40
+      "sourceModules": 111
     },
     {
       "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
@@ -8245,8 +8251,8 @@
   },
   "summary": {
     "packages": 153,
-    "emittedModules": 2483,
-    "refusedModules": 596,
-    "sourceModules": 3079
+    "emittedModules": 2536,
+    "refusedModules": 614,
+    "sourceModules": 3150
   }
 }

@@ -18,12 +18,19 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/material.hpp>
 
+namespace flight::types { struct AnisotropyPbrExtension; }
+namespace flight::types { struct ClearcoatPbrExtension; }
 namespace flight::types { struct ExtendedPbrMaterial; }
+namespace flight::types { struct IridescencePbrExtension; }
 namespace flight::types { struct Material; }
 namespace flight::types { struct PbrExtension; }
 namespace flight::types { struct Scene3DDocument; }
+namespace flight::types { struct SheenPbrExtension; }
+namespace flight::types { struct SpecularPbrExtension; }
 namespace flight::types { struct StandardPbrMaterial; }
 namespace flight::types { struct StandardPbrMaterialProperties; }
+namespace flight::types { struct TransmissionVolumePbrExtension; }
+namespace flight::types { struct WrappedDiffusePbrExtension; }
 
 namespace flight::scene3d_formats {
 
