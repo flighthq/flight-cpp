@@ -943,6 +943,22 @@
       "authoredOn": "2026-10-12"
     },
     {
+      "id": "texture-cube-width-and-completeness",
+      "path": "flight/texture/cube_texture.hpp",
+      "package": "@flighthq/texture",
+      "status": "partial",
+      "supplies": "packages/texture/src/cubeTexture.ts",
+      "derivedFrom": "d464505024d2bc2ba6516fbb3713e10aba0f9596fdd062f30e87df05c0d51b42",
+      "reason": "The emitter reads width directly on a TextureSourceValue variant and tests the bounds optional instead of each nullable face. The fixed-index source workaround also loses the pinned Array.every behavior for shorter or longer face arrays.",
+      "change": "Re-derives the current cube header, visits the retained source alternative for its width, and restores the upstream Array.every completeness predicate using the actual optional element carrier. Retains the constructor and the four explicit refused-function markers unchanged.",
+      "equivalence": "Width reads the first non-null face in the same order and reads width on that identical selected owner. Completeness visits existing array elements in order and stops at the first null, preserving empty and short array behavior and observing any extra element just as pinned TypeScript every does. An empty face optional is null; an out-of-range Array.get remains a distinct outer absence and is never read by every. No source owner is copied, retyped or fabricated.",
+      "whyNotAPatchOrRepair": "These are executable union dispatch and nullable-element semantics. A declaration repair cannot supply them. The source patch removed a callback carrier mismatch by using fixed indices, while the compiler still loses the tuple element sentinel; a derived override restores the original every operation without another source algorithm rewrite.",
+      "unblocks": "The cube header and both texture barrels compile once the independent sampler/null-array repairs and readonly cube-options boundary are present. Focused tests cover cube construction, all seven width owners, nullable completeness and pinned array-length edge behavior.",
+      "remaining": "cloneCubeTexture, copyCubeTexture, equalsCubeTexture and setCubeTextureFace remain explicitly refused and have no implementation. The existing all-surface generated_texture test still requires those separate APIs; this partial override does not claim full cube-module or package completion.",
+      "expires": "when common-property reads dispatch through the retained union owner and cube completeness uses the correct nullable element state with canonical callback carriers; any generated cube-header change first invalidates derivedFrom.",
+      "authoredOn": "2026-10-14"
+    },
+    {
       "id": "texture-video-variant-and-construction",
       "path": "flight/texture/video_texture.hpp",
       "package": "@flighthq/texture",

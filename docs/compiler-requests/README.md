@@ -184,6 +184,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [Null literals in an array of nullable variants must use the element's absence carrier](null-literal-array-optional-variant.md) —
   cube Texture already has the correct optional-variant element type but emits six ambiguous
   `nullptr` initializers instead of six empty elements.
+- [Cube texture property reads and nullable face completeness](cube-texture-width-and-completeness.md) —
+  the cube header reads width on a variant and tests bounds instead of nullable face elements;
+  a derived partial override restores selected-owner reads and the original every semantics.
 - [A numeric enum value is widened to a `number` union in flow](numeric-enum-flow-widened-to-number-union.md) —
   refuses `@flighthq/debug` `debug.ts` (`enableDebug`); no workaround.
 - [Nullable storage of an imported alias is spelled by its expansion](nullable-alias-storage-spelled-by-expansion.md) —
