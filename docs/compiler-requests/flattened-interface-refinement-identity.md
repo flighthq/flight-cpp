@@ -104,10 +104,31 @@ Also blocks `@flighthq/swf` at a627849: `swf_appearance.hpp` builds `colorAdjust
 `createColorScaleBiasAdjustment(...)`. `ColorScaleBiasAdjustment` extends `ColorMatrixAdjustment` extends
 `Adjustment` in TypeScript, but the emitted structs are independent, so a `Ref<ColorScaleBiasAdjustment>`
 cannot enter `flight::Array<flight::Ref<flight::types::Adjustment>>` without a copy that would split identity.
-No workaround is carried.
+No workaround is carried. Measured at `swf_appearance.hpp:123` (and through it `swf_place_object_handler.hpp`):
+`flight::Array<flight::Ref<flight::types::Adjustment>>{create_color_scale_bias_adjustment(...)}` has no matching
+constructor. The element is a fresh entity whose only reference is the array, and its `colorMatrix`/scale-bias
+fields are what the consumer reads, so allocating it as an `Adjustment` would narrow the source domain. No emitted
+package stores a concrete adjustment in an `Adjustment[]` today, so there is no existing carrier to reuse.
 
 Also blocks `swf_sound_handler.hpp` at a627849: `cues: TimelineCue[]` receives
 `TimelineStreamAudioCue`, which extends `TimelineCue` in TypeScript but not in the emitted C++ (3 sites).
+The sites are `cues.push(cue)` into `flight::Array<flight::Ref<flight::types::TimelineCue>>`: a
+`TimelineStreamAudioCue` in `appendSwfStreamSoundCue`, and a `TimelineAudioCue` in `readSwfStartSound` and
+`readSwfStartSound2`. The carrier is a plain array on `SwfTagTimelineState`/`TimelineSource.cues`, with no union, and
+the cue is shared by identity: the same object is also parked in `soundCuesAwaitingRate`/`soundCuesAwaitingClass` and
+completed later, so neither a copy nor a base-typed allocation is faithful. The runtime has no bridge either:
+`flight::StructuralRef<RowReadonly<RowOf<Ref<TimelineCue>>>>` built from a `Ref<TimelineStreamAudioCue>` fails
+`structural_ref.hpp`'s "incompatible object type" assertion.
+
+Measured with a scratch model, real C++ heritage would be sufficient for this flow with no runtime change:
+- the derived reference pushes into `flight::Array<flight::Ref<Base>>` with identity kept;
+- a base `StructuralRef` view reads the base fields, which is the argument `TimelineCueHandler` receives;
+- `StructuralRef::shared_exact_object<Derived>()` recovers the same object.
+
+That recovery succeeds only when the object first enters the owner registry as its exact type. The registry is keyed
+by address and first entry wins, so the emitted shape should register the exact owner at construction. C++20
+designated initializers cannot name base members, so heritage-carrying construction cannot keep the
+`Derived{.field = ...}` form for inherited fields.
 
 Also blocks `@flighthq/movieclip` at a627849, and it is the package's own root refusal: `movieClip.ts` fails on a
 reference assertion from `flight::Ref<flight::types::Node2DRuntime>` to `flight::Ref<flight::types::MovieClipRuntime>`.
