@@ -376,6 +376,8 @@ inline void write_collider(flight::Ref<flight::types::Physics2DDebugGeometry> ou
   }
 }
 
+void write_joint(flight::Ref<flight::types::Physics2DDebugGeometry> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJoint>>>> joint);
+
 inline void write_physics2_ddebug_geometry(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world, flight::Ref<flight::types::Physics2DDebugGeometry> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::Physics2DDebugGeometryOptions>>>>>> options = std::nullopt) {
   options = options.value_or(default_options);
   (out->line_count = 0.0);

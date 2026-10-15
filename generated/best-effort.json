@@ -59498,6 +59498,7 @@
         "@flighthq/physics2d-abi/packages/physics2d-abi/src/physics2DAbiQuery.ts",
         "@flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts",
         "@flighthq/physics2d/packages/physics2d/src/broadphase.ts",
+        "@flighthq/physics2d/packages/physics2d/src/colliderTransform.ts",
         "@flighthq/physics2d/packages/physics2d/src/debugGeometry.ts",
         "@flighthq/physics2d/packages/physics2d/src/explainPhysics2DCollision.ts",
         "@flighthq/physics2d/packages/physics2d/src/explainPhysics2DJoints.ts",

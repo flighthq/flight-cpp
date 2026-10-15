@@ -7438,6 +7438,19 @@
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "physics2d-declare-refused-write-joint",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/physics2d/debug_geometry.hpp",
+      "symbol": "write_joint",
+      "refusedFunction": "writeJoint",
+      "declaration": "void write_joint(flight::Ref<flight::types::Physics2DDebugGeometry> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJoint>>>> joint);",
+      "sourceDeclaration": "packages/physics2d/src/debugGeometry.ts -- function writeJoint(out: Physics2DDebugGeometry, world: Readonly<Physics2DWorld>, joint: Readonly<Physics2DJoint>): void, refused; writePhysics2DDebugGeometry calls it once per world joint",
+      "diagnostic": "use of undeclared identifier 'write_joint'",
+      "defect": "The emitter refuses writeJoint because its mouse-joint branch asserts the readonly Physics2DJoint row to the writable Physics2DMouseJoint row, claiming mutation the source refused. That is the joint downcast boundary (docs/compiler-requests/assertion-to-undeclared-row-member.md, physics2d section), which needs a runtime decision about identity-preserving joint carriers. The emitter still retains writePhysics2DDebugGeometry, which calls writeJoint, so debug_geometry.hpp and every barrel that includes it fail to compile on an undeclared name. The declaration's signature is the emitter's own: the retained call passes the function's Ref<Physics2DDebugGeometry> out, its readonly Physics2DWorld row, and constructs exactly the readonly Physics2DJoint row carrier for the joint, and the source returns void. Declaration only: writePhysics2DDebugGeometry and the barrels compile, and calling it fails to link on write_joint -- joint debug geometry stays unusable, never substituted.",
+      "expectedWhen": "always",
+      "expires": "when writeJoint emits (the NOT GENERATED marker disappears and this repair matches nothing); sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "scene3d-formats-unqualified-image-codec-names",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/scene3d_formats/",

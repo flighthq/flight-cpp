@@ -1453,10 +1453,7 @@
       "id": "path-boolean-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/physics2d/debug_geometry.hpp",
-        "flight/physics2d/world.hpp"
-      ],
+      "files": [],
       "id": "physics2d-unqualified-entity-names"
     },
     {
@@ -2805,9 +2802,7 @@
       "id": "physics2d-unqualified-collision-names"
     },
     {
-      "files": [
-        "flight/physics2d/world.hpp"
-      ],
+      "files": [],
       "id": "physics2d-unqualified-spatial-names"
     },
     {
@@ -4527,6 +4522,12 @@
         "flight/effects/effect_defaults.hpp"
       ],
       "id": "effects-membership-test-defaults"
+    },
+    {
+      "files": [
+        "flight/physics2d/debug_geometry.hpp"
+      ],
+      "id": "physics2d-declare-refused-write-joint"
     }
   ],
   "sourcePatches": [
@@ -5893,6 +5894,7 @@
       "flight/path/reverse_path.hpp",
       "flight/path_formats/svg_path_data.hpp",
       "flight/permissions/permission.hpp",
+      "flight/physics2d/debug_geometry.hpp",
       "flight/physics2d/explain_physics2_dcollision.hpp",
       "flight/physics2d/step.hpp",
       "flight/physics2d/world_queries.hpp",
@@ -6098,10 +6100,6 @@
       "flight/particleemitter/update_particle_emitter3_d.hpp",
       "flight/particles/validate_particle_emitter_config.hpp",
       "flight/particles_formats/register_built_in_particle_formats.hpp",
-      "flight/physics2d/debug_geometry.hpp",
-      "flight/physics2d/joints.hpp",
-      "flight/physics2d/step.hpp",
-      "flight/physics2d/world.hpp",
       "flight/physics3d/joints.hpp",
       "flight/physics3d/world.hpp",
       "flight/physics3d_abi/physics3_dabi_command.hpp",
@@ -7200,14 +7198,14 @@
       "sourceModules": 3
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/physics2d",
       "cppNamespace": "flight::physics2d",
-      "emittedModules": 21,
+      "emittedModules": 22,
       "package": "@flighthq/physics2d",
-      "refusedModules": 5,
+      "refusedModules": 4,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 26
@@ -8213,8 +8211,8 @@
   },
   "summary": {
     "packages": 153,
-    "emittedModules": 2478,
-    "refusedModules": 600,
+    "emittedModules": 2479,
+    "refusedModules": 599,
     "sourceModules": 3078
   }
 }
