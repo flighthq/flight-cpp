@@ -325,29 +325,77 @@ function declareRefusedEffectRunners(contents) {
 // resolver's body at the same structural downcast. The retained registration is valid partial output,
 // but it still needs the refused boundary declared. Discovering the exact snake-case symbol from the
 // retained call keeps one systemic repair honest across the family without wildcarding unrelated names.
+//
+// The SIGNATURE is read out of that retained call rather than spelled here, and the difference is not
+// cosmetic. It was spelled here, and that is what broke the a627849 move: the carrier's type names move
+// with the pin -- RenderEffect and RenderEffectPadding became Effect and EffectPadding -- so a spelled
+// declaration went on naming two types the emitter no longer mentions and the registration's own
+// std::function stopped matching it. The inserted text also made those dead names look USED, so
+// `effects-unqualified-types-names`, whose symbol list still held the pre-rename types, hoisted
+// `#include <flight/types/render_effect*.hpp>` into all nineteen headers of the family -- neither of
+// which exists at a627849, so the package stopped compiling for a reason nothing in the emitter had.
+// Reading the carrier keeps the declaration the emitter's own at every pin, and a shape this does not
+// recognize declines rather than writing a declaration that cannot be right.
 function declareRefusedEffectPaddingResolvers(contents) {
   if (!/\/\/ NOT GENERATED: function resolve[A-Za-z0-9]+EffectPadding\b/u.test(contents)) return undefined;
   const names = [
     ...new Set([...contents.matchAll(/\b(resolve_[a-z0-9_]+_effect_padding)\b/gu)].map((match) => match[1])),
   ];
   if (names.length === 0) return undefined;
-  const declarations = names
-    .map(
-      (name) =>
-        `flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderEffectPadding>>>> ${name}(` +
-        'flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderEffect>>>> effect);',
-    )
+  const signatures = names.map((name) => {
+    const carrier = refusedResolverCarrier(contents, name);
+    return carrier === undefined ? undefined : { name, ...carrier };
+  });
+  // Every name has to carry a readable signature: declaring some and leaving the rest would read as
+  // applied while those headers still fail on an undeclared symbol.
+  if (signatures.some((signature) => signature === undefined)) return undefined;
+  const declarations = signatures
+    .map((signature) => `${signature.returns} ${signature.name}(${signature.parameters});`)
     .join('\n');
   if (contents.includes(declarations)) return undefined;
+  // The block goes in ahead of the emitter's own includes, so the types the signature names are
+  // forward-declared. Which names those are is read from the signature too, rather than spelled: the
+  // pin decides them, and the original error was a spelled pair outliving its pin.
+  const forward = [
+    ...new Set(
+      signatures.flatMap((signature) => [
+        ...`${signature.returns} ${signature.parameters}`.matchAll(/flight::Ref<flight::types::([A-Za-z_]\w*)>/gu),
+      ]),
+    ),
+  ]
+    .map((match) => match[1])
+    .sort();
   const anchor = /^static_assert\(flight::runtime_contract\.cpp_abi == \d+,[^\n]*\n/mu.exec(contents);
   if (anchor === null) return undefined;
   const at = anchor.index + anchor[0].length;
   return (
     contents.slice(0, at) +
-    '\nnamespace flight::types { struct RenderEffect; struct RenderEffectPadding; }\n' +
+    `\nnamespace flight::types { ${forward.map((name) => `struct ${name};`).join(' ')} }\n` +
     `namespace flight::effects {\n${declarations}\n}\n` +
     contents.slice(at)
   );
+}
+
+// The `std::function<RETURNS(PARAMETERS)>` the retained registration builds around `name`, read from
+// the emitted text. Returns undefined unless the whole shape is there: half a signature would be a
+// declaration that cannot be right, and the caller declines rather than guess at the other half.
+function refusedResolverCarrier(contents, name) {
+  const at = contents.search(new RegExp(`\\b${name}\\b`, 'u'));
+  if (at < 0) return undefined;
+  const open = contents.lastIndexOf('std::function<', at);
+  if (open < 0) return undefined;
+  const angleOpen = open + 'std::function'.length;
+  const angleClose = matchingAngle(contents, angleOpen);
+  if (angleClose === undefined || angleClose > at) return undefined;
+  // Only the closing bracket of an enclosing `std::optional<...>` and a brace may sit between the
+  // function type and the name it wraps; anything else means this std::function is not this name's.
+  if (!/^[>\s{]*$/u.test(contents.slice(angleClose + 1, at))) return undefined;
+  const inner = contents.slice(angleOpen + 1, angleClose);
+  const parametersAt = inner.indexOf('(');
+  if (parametersAt < 0) return undefined;
+  const parametersClose = matchingParenthesis(inner, parametersAt);
+  if (parametersClose !== inner.length - 1) return undefined;
+  return { parameters: inner.slice(parametersAt + 1, parametersClose), returns: inner.slice(0, parametersAt) };
 }
 
 // An Array<optional<T>>::get(index) distinguishes an out-of-range read (outer nullopt) from an
