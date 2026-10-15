@@ -405,6 +405,7 @@ export function planPackageMerge({ candidateRoot, committedRoot, movingTogether 
     writes.set(`include/${header}`, null);
     changedHeaders.push(header);
   }
+  const restoredAliasFiles = restoreAliasesWithoutCommittedCanonical({ candidateRoot, committedRoot, group, packageName, prefix, problems, writes });
   const inPrefix = (file) => file.startsWith(prefix);
   const mergedHeaderText = (header) =>
     writes.has(`include/${header}`) ? writes.get(`include/${header}`) : read(committedRoot, `include/${header}`);
@@ -430,7 +431,10 @@ export function planPackageMerge({ candidateRoot, committedRoot, movingTogether 
     (candidateManifest.sourcePatches ?? []).filter((patch) => patchNamesPackage(patch, packageName)),
   );
   const aliases = committedManifest.duplicateStructuralStructAliases;
-  const aliasFiles = mergeFileList(aliases.files, candidateManifest.duplicateStructuralStructAliases.files, inPrefix);
+  // A file whose every alias was restored above is no longer an alias file.
+  const aliasFiles = mergeFileList(aliases.files, candidateManifest.duplicateStructuralStructAliases.files, inPrefix).filter(
+    (file) => !restoredAliasFiles.has(file) || CROSS_PACKAGE_ALIAS.test(mergedHeaderText(file) ?? ''),
+  );
   manifest.duplicateStructuralStructAliases = {
     files: aliasFiles,
     structs: mergeAliasedStructs({
@@ -593,6 +597,66 @@ export function planPackageMerge({ candidateRoot, committedRoot, movingTogether 
     warnings,
     writes,
   };
+}
+
+// The derived duplicate-struct alias (scripts/emissionRepairs.mjs aliasDuplicateStructuralStructs) is judged
+// inside the candidate's closure, where every dependency was regenerated alongside the moving package. Only the
+// moving package's slice is written, though, and an anonymous struct's name is its member order hashed in the
+// order the compilation first met the shape -- so a dependency regenerated with a different closure can name
+// the same shape differently. Measured on @flighthq/swf after the Effects migration: the swf closure emitted
+// flight::effects copies named in swf's member order, which the committed Effects row (generated without swf)
+// names otherwise, and the splice aliased swf to two structs no committed header defines.
+//
+// So every alias the slice carries to ANOTHER package is re-judged against the tree it will sit in: the owner's
+// committed headers, or the candidate's when the owner moves with this package. It is kept only when that
+// tree defines the struct with a byte-identical body. Otherwise the alias is undone by writing back the
+// candidate's canonical body, which the repair already proved byte-identical to the copy it replaced. The
+// include the repair hoisted for it stays; it names a header the owner still has. A flight::types canonical
+// may legitimately differ by qualification, so it cannot be restored from the canonical text; a failure there
+// is reported rather than rewritten.
+const CROSS_PACKAGE_ALIAS = /^using (\w+) = (flight::[a-z0-9_:]+)::\1;$/mu;
+
+function restoreAliasesWithoutCommittedCanonical({ candidateRoot, committedRoot, group, packageName, prefix, problems, writes }) {
+  const ownNamespace = `flight::${prefix.replace(/^flight\//u, '').replace(/\/$/u, '').replaceAll('/', '::')}`;
+  const movingDirectories = new Set([packageName, ...group].map((name) => includePrefixOf(name)));
+  const definitions = new Map();
+  const definitionsIn = (root, directory) => {
+    const key = `${root}\0${directory}`;
+    if (!definitions.has(key)) {
+      const found = new Map();
+      for (const header of includeFilesUnder(root, directory)) {
+        const text = readFileSync(path.join(root, 'include', header), 'utf8');
+        for (const match of text.matchAll(/^struct (\w+) : public flight::ReferenceEnabled \{\n[\s\S]*?^\};$/gmu)) {
+          const bodies = found.get(match[1]) ?? [];
+          bodies.push(match[0]);
+          found.set(match[1], bodies);
+        }
+      }
+      definitions.set(key, found);
+    }
+    return definitions.get(key);
+  };
+  const restoredFiles = new Set();
+  for (const [file, contents] of [...writes]) {
+    if (contents === null || !file.startsWith(`include/${prefix}`)) continue;
+    const restored = contents.replace(new RegExp(CROSS_PACKAGE_ALIAS.source, 'gmu'), (line, name, namespace) => {
+      if (namespace === ownNamespace) return line;
+      const directory = `${namespace.replace(/^flight::/u, '').replaceAll('::', '/')}/`;
+      const ownerRoot = movingDirectories.has(`flight/${directory}`) ? candidateRoot : committedRoot;
+      const candidateBodies = definitionsIn(candidateRoot, `flight/${directory}`).get(name) ?? [];
+      const ownerBodies = definitionsIn(ownerRoot, `flight/${directory}`).get(name) ?? [];
+      if (candidateBodies.length > 0 && ownerBodies.includes(candidateBodies[0])) return line;
+      if (namespace === 'flight::types' || candidateBodies.length === 0) {
+        problems.push(`${file.slice('include/'.length)} aliases ${name} to ${namespace}, which the committed tree does not define identically.`);
+        return line;
+      }
+      return candidateBodies[0];
+    });
+    if (restored === contents) continue;
+    writes.set(file, restored);
+    restoredFiles.add(file.slice('include/'.length));
+  }
+  return restoredFiles;
 }
 
 // The one refusal that is about a single row rather than the inventory: the move would strand another row.

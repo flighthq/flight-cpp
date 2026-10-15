@@ -135,3 +135,23 @@ ambiguous (see AGENTS.md, "The duplicate structural struct alias"). Its first ca
 Pixi, Starling PEX and Spine parsers in `@flighthq/particles-formats` each re-declare that partial-input
 struct, and none converted to the owner's copy. The repair is computed from the tree, so it expires
 when the emitter canonicalizes the owner itself.
+
+## Closure-dependent names (measured)
+
+An anonymous struct's name is its member list in the order the compilation first met the shape, plus a
+hash of that order. So the same shape can be named differently depending on which packages were compiled
+together. Measured at flight-compiler `2b687ea`, flight `a627849`, after the Effects migration (`350fe7ee`):
+
+- In a closure that includes `@flighthq/swf`, `flight::effects` emits the gradient-bevel and convolution
+  filter shapes in swf's member order, as `strength_angle_distance_bevel_type_…_bf9034238ba34907` and
+  `matrix_clamp_bias_divisor_matrix_x_…_403b8a3c5921e3e0`.
+- The committed Effects row, generated without swf, names the same shapes
+  `strength_angle_bevel_type_…_6d9e97bd4e0e8f59` and `matrix_clamp_matrix_x_…_2dc6796a7a415226`. A scoped
+  regeneration of effects alone reproduces those committed headers byte for byte.
+
+A scoped swf generation therefore derived two aliases to `flight::effects` names that no committed header
+defines. `planPackageMerge` now re-judges every cross-package alias against the committed owner and undoes
+any alias it cannot confirm (see AGENTS.md). Blur and gradient-glow still alias, because their names agree
+in both closures. The emitter-side fix is a name that does not depend on encounter order, for example
+members in a canonical order. Until then a full regeneration and a scoped one can name these shapes
+differently.

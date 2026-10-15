@@ -219,6 +219,36 @@ describe('scoped merge', () => {
     }
   });
 
+  test('a cross-package alias is kept only where the committed owner defines the struct identically', () => {
+    const committed = copyTree('alias-committed');
+    const candidate = copyTree('alias-candidate');
+    const target = '@flighthq/math';
+    const owner = 'include/flight/geometry/aabb.hpp';
+    const struct = (name) => `struct ${name} : public flight::ReferenceEnabled {\n  double x;\n};`;
+    // The candidate closure regenerated geometry with both shapes; the committed geometry row (generated
+    // without math in its closure) names only one of them the same way.
+    appendTo(candidate, owner, `\n${struct('scoped_kept_1111')}\n${struct('scoped_missing_0000')}\n`);
+    appendTo(committed, owner, `\n${struct('scoped_kept_1111')}\n`);
+    const header = packageHeaders(candidate, target).find((file) => !file.endsWith('_internal_index.hpp'));
+    appendTo(
+      candidate,
+      `include/${header}`,
+      '\nusing scoped_kept_1111 = flight::geometry::scoped_kept_1111;\n' +
+        'using scoped_missing_0000 = flight::geometry::scoped_missing_0000;\n' +
+        'using scoped_types_2222 = flight::types::scoped_types_2222;\n',
+    );
+
+    const plan = planPackageMerge({ candidateRoot: candidate, committedRoot: committed, packageName: target });
+    const merged = plan.writes.get(`include/${header}`);
+    assert.match(merged, /^using scoped_kept_1111 = flight::geometry::scoped_kept_1111;$/mu);
+    assert.doesNotMatch(merged, /using scoped_missing_0000/u);
+    assert.ok(merged.includes(struct('scoped_missing_0000')), 'the missing canonical is restored from the candidate body');
+    // A flight::types canonical may differ by qualification, so it is reported, never rewritten.
+    assert.match(merged, /^using scoped_types_2222 = flight::types::scoped_types_2222;$/mu);
+    assert.ok(plan.problems.some((problem) => problem.includes('scoped_types_2222')), plan.problems.join('\n'));
+    assert.ok(!plan.problems.some((problem) => problem.includes('scoped_kept_1111')));
+  });
+
   test('only the requested package subtree and its rows move', () => {
     const committed = copyTree('committed');
     const candidate = copyTree('candidate');

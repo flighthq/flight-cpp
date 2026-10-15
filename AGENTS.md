@@ -121,6 +121,12 @@ It needs no declaration and no expiry entry: it is computed from the tree, so wh
 duplicating these it finds nothing and changes nothing. What it did is recorded in
 `manifest.duplicateStructuralStructAliases`.
 
+A scoped `pkg:generate` judges these aliases inside the closure it regenerated, but writes only the moving
+package's slice, and an anonymous struct's name depends on the closure that first met its shape. So the
+merge re-judges every alias the slice carries to another package against the tree it will sit in: an alias
+whose owner does not commit a byte-identical struct of that name is undone, writing back the body the repair
+replaced. A `flight::types` alias that fails this is reported, not rewritten.
+
 ### Hand-written overrides
 
 `overrides/include/` holds hand-written headers that **shadow** the generated tree. The whole mechanism
