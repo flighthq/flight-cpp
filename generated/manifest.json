@@ -222,6 +222,8 @@
         "flight/midi/midi_subscription.hpp",
         "flight/net/net.hpp",
         "flight/notification/notification.hpp",
+        "flight/particleemitter/update_particle_emitter2_d.hpp",
+        "flight/particleemitter/update_particle_emitter3_d.hpp",
         "flight/power/power.hpp",
         "flight/preferences/storage.hpp",
         "flight/render/render_cache.hpp",
@@ -360,6 +362,8 @@
         "flight/node/revision.hpp",
         "flight/node/stage_fit.hpp",
         "flight/node/traversal.hpp",
+        "flight/particleemitter/particle_emitter.hpp",
+        "flight/particleemitter/update_particle_emitter3_d.hpp",
         "flight/quadbatch/quad_batch.hpp",
         "flight/render/enable_color_adjustments.hpp",
         "flight/render/explain_scene2_dpipeline_coverage.hpp",
@@ -464,6 +468,7 @@
         "flight/node/node_transform2d.hpp",
         "flight/node/node_transform3d.hpp",
         "flight/node/revision.hpp",
+        "flight/particleemitter/particle_emitter.hpp",
         "flight/scene2d/display_object.hpp",
         "flight/scene2d_canvas/canvas_rich_text.hpp",
         "flight/scene2d_formats/lottie_image_layer.hpp",
@@ -1305,7 +1310,8 @@
         "flight/particleemitter/prewarm_particle_emitter2_d.hpp",
         "flight/particleemitter/step_particle_emitter2_d.hpp",
         "flight/particleemitter/step_particle_emitter3_d.hpp",
-        "flight/particleemitter/update_particle_emitter2_d.hpp"
+        "flight/particleemitter/update_particle_emitter2_d.hpp",
+        "flight/particleemitter/update_particle_emitter3_d.hpp"
       ],
       "id": "particleemitter-unqualified-types-names"
     },
@@ -3276,10 +3282,7 @@
       "id": "node-unqualified-geometry-names"
     },
     {
-      "files": [
-        "flight/particleemitter/particle_emitter.hpp",
-        "flight/particleemitter/particle_emitter3_d.hpp"
-      ],
+      "files": [],
       "id": "particleemitter-unqualified-geometry-names"
     },
     {
@@ -4517,6 +4520,30 @@
         "flight/physics2d/debug_geometry.hpp"
       ],
       "id": "physics2d-declare-refused-write-joint"
+    },
+    {
+      "files": [
+        "flight/particleemitter/particle_emitter.hpp"
+      ],
+      "id": "particleemitter-data-atlas-partial-row-absence"
+    },
+    {
+      "files": [
+        "flight/particleemitter/particle_emitter.hpp"
+      ],
+      "id": "particleemitter-declare-refused-create-2d"
+    },
+    {
+      "files": [
+        "flight/particleemitter/particle_emitter3_d.hpp"
+      ],
+      "id": "particleemitter-declare-refused-create-3d"
+    },
+    {
+      "files": [
+        "flight/particleemitter/update_particle_emitter2_d.hpp"
+      ],
+      "id": "particleemitter-reexported-callbacks-type"
     }
   ],
   "sourcePatches": [
@@ -5327,9 +5354,23 @@
     },
     {
       "dependency": "flight",
-      "digest": "b7abdec0dcc9a31e242d9290e5ddd38cfc6270fe7cf546e791c2e621f6a52bd8",
+      "digest": "dc8dd49b3d8ec82730ef60a257cacfca003020ba074604606bff0ba56f57ddb2",
       "id": "particleemitter3d-concrete-node-construction",
       "module": "packages/particleemitter/src/particleEmitter3D.ts",
+      "package": "@flighthq/particleemitter"
+    },
+    {
+      "dependency": "flight",
+      "digest": "70a308d4f94d8efc9ec6b2a39d9ee5386265400808cce0b7f087e3ca6ee6101a",
+      "id": "particleemitter-node-matrix-direct-emitter",
+      "module": "packages/particleemitter/src/updateParticleEmitter2D.ts and packages/particleemitter/src/updateParticleEmitter3D.ts",
+      "package": "@flighthq/particleemitter"
+    },
+    {
+      "dependency": "flight",
+      "digest": "2dd786de92773a3ba71f1b82e89964354bca5002e43f761fb2340180364f0030",
+      "id": "particleemitter-clone-typed-partial-data",
+      "module": "packages/particleemitter/src/particleEmitter.ts and packages/particleemitter/src/particleEmitter3D.ts",
       "package": "@flighthq/particleemitter"
     },
     {
@@ -6143,10 +6184,6 @@
       "flight/materials/material_presets.hpp",
       "flight/media/audio_mixer.hpp",
       "flight/media/video_channel.hpp",
-      "flight/particleemitter/particle_emitter3_d.hpp",
-      "flight/particleemitter/step_particle_emitter3_d.hpp",
-      "flight/particleemitter/update_particle_emitter2_d.hpp",
-      "flight/particleemitter/update_particle_emitter3_d.hpp",
       "flight/particles/validate_particle_emitter_config.hpp",
       "flight/physics3d/joints.hpp",
       "flight/physics3d/world.hpp",
@@ -6231,7 +6268,7 @@
       "flight/textshaper/text_shaper_cache.hpp",
       "flight/tokens/substitute_flight_document_scene_tokens.hpp"
     ],
-    "includes": 786
+    "includes": 784
   },
   "packages": [
     {
@@ -7133,14 +7170,14 @@
       "sourceModules": 3
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/particleemitter",
       "cppNamespace": "flight::particleemitter",
-      "emittedModules": 7,
+      "emittedModules": 9,
       "package": "@flighthq/particleemitter",
-      "refusedModules": 5,
+      "refusedModules": 3,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 12
@@ -8237,8 +8274,8 @@
   },
   "summary": {
     "packages": 153,
-    "emittedModules": 2537,
-    "refusedModules": 614,
+    "emittedModules": 2539,
+    "refusedModules": 612,
     "sourceModules": 3151
   }
 }

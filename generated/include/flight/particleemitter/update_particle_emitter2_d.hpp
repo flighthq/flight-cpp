@@ -13,6 +13,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/particle_emitter_callbacks.hpp>
+
 #include <flight/types/particle_emitter2_d.hpp>
 
 #include <flight/types/node2_d.hpp>
@@ -37,6 +39,8 @@ namespace flight::types { template <typename T> struct Signal; }
 #include <flight/particleemitter/particle_emitter.hpp>
 
 namespace flight::particleemitter {
+
+using flight::types::ParticleEmitterCallbacks;
 
 using flight::types::Node2DTraits;
 using flight::types::ParticleEmitter2D;
