@@ -858,6 +858,7 @@
         "flight/mesh/mesh_geometry_operations.hpp",
         "flight/node/node_color_adjustment.hpp",
         "flight/particles_formats/libgdx_parse.hpp",
+        "flight/particles_formats/particle_designer_parse.hpp",
         "flight/path_boolean/martinez_kernel.hpp",
         "flight/permissions/permission.hpp",
         "flight/physics2d_abi/reference_physics2_dabi.hpp",
@@ -3213,17 +3214,11 @@
       "id": "skeleton2d-formats-unqualified-skeleton2d-names"
     },
     {
-      "files": [
-        "flight/particles_formats/particle_designer_parse.hpp",
-        "flight/particles_formats/spine_parse.hpp"
-      ],
+      "files": [],
       "id": "particles-formats-unqualified-importdiagnostics-names"
     },
     {
-      "files": [
-        "flight/particles_formats/particle_designer_parse.hpp",
-        "flight/particles_formats/spine_parse.hpp"
-      ],
+      "files": [],
       "id": "particles-formats-unqualified-particles-names"
     },
     {
@@ -4911,6 +4906,41 @@
     },
     {
       "dependency": "flight",
+      "digest": "1ee9ed503d4f2b9f7f34b53db4c29fc1725f5b355df1fa73cc9ead74ff623b3d",
+      "id": "particles-formats-pd-raw-dict-local-alias",
+      "module": "packages/particles-formats/src/particleDesignerParse.ts",
+      "package": "@flighthq/particles-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "edb26c07f832d8fbc70fb50cd97174db6b98c84e2be7e3eda6f87cb53dbfb1c0",
+      "id": "particles-formats-spine-blend-mode-present",
+      "module": "packages/particles-formats/src/spineSerialize.ts",
+      "package": "@flighthq/particles-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "77c2816fb36eb0ff7cca9eaada637127d731521d460ab0d835ac5139591e1bfb",
+      "id": "particles-formats-pex-blend-mode-present",
+      "module": "packages/particles-formats/src/starlingPexSerialize.ts",
+      "package": "@flighthq/particles-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "3841ef32a6961da6fad4f20fa7c6ccc1916fa703abb53ab72c149d55b8a965dd",
+      "id": "particles-formats-pd-dict-own-key-reads",
+      "module": "packages/particles-formats/src/particleDesignerParse.ts",
+      "package": "@flighthq/particles-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "5187b96ab62054df6e1dd129963581a13930accffcf943d408f06310c8deb18a",
+      "id": "particles-formats-libgdx-active-ranges",
+      "module": "packages/particles-formats/src/libgdxParse.ts",
+      "package": "@flighthq/particles-formats"
+    },
+    {
+      "dependency": "flight",
       "digest": "a50d46ce2a5a708b637d16daa6ce0fce933b434cdac62d4ead2e310f867cd761",
       "id": "gui-hit-area-type-evidence",
       "module": "packages/gui/src/guiController.ts",
@@ -5889,7 +5919,11 @@
       "flight/particleemitter/particle_emitter3_d.hpp",
       "flight/particles_formats/libgdx_parse.hpp",
       "flight/particles_formats/libgdx_serialize.hpp",
-      "flight/particles_formats/unity_parse.hpp",
+      "flight/particles_formats/particle_designer_parse.hpp",
+      "flight/particles_formats/pixi_parse.hpp",
+      "flight/particles_formats/register_built_in_particle_formats.hpp",
+      "flight/particles_formats/spine_parse.hpp",
+      "flight/particles_formats/starling_pex_parse.hpp",
       "flight/path/path_morph_geometry.hpp",
       "flight/path/reverse_path.hpp",
       "flight/path_formats/svg_path_data.hpp",
@@ -5974,6 +6008,7 @@
       "class_name_cue_ca53ee8b35497d37",
       "codec_id_deblocking_frame_count_height_smoothing_width_e646285bb518325f",
       "colors_timeline_79cefceb3eed9427",
+      "config_diagnostics_c75f552162a3a41d",
       "end_start_97b3a2515eda198d",
       "end_start_b3d703e568b779f1",
       "entity_runtime_key_2a5696294f4ba375",
@@ -6099,7 +6134,6 @@
       "flight/particleemitter/update_particle_emitter2_d.hpp",
       "flight/particleemitter/update_particle_emitter3_d.hpp",
       "flight/particles/validate_particle_emitter_config.hpp",
-      "flight/particles_formats/register_built_in_particle_formats.hpp",
       "flight/physics3d/joints.hpp",
       "flight/physics3d/world.hpp",
       "flight/physics3d_abi/physics3_dabi_command.hpp",
@@ -6205,7 +6239,7 @@
       "flight/textshaper/text_shaper_cache.hpp",
       "flight/tokens/substitute_flight_document_scene_tokens.hpp"
     ],
-    "includes": 797
+    "includes": 788
   },
   "packages": [
     {
@@ -7133,17 +7167,17 @@
       "sourceModules": 13
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/particles_formats",
       "cppNamespace": "flight::particles_formats",
-      "emittedModules": 11,
+      "emittedModules": 15,
       "package": "@flighthq/particles-formats",
-      "refusedModules": 6,
+      "refusedModules": 3,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
-      "sourceModules": 17
+      "sourceModules": 18
     },
     {
       "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
@@ -8211,8 +8245,8 @@
   },
   "summary": {
     "packages": 153,
-    "emittedModules": 2479,
-    "refusedModules": 599,
-    "sourceModules": 3078
+    "emittedModules": 2483,
+    "refusedModules": 596,
+    "sourceModules": 3079
   }
 }

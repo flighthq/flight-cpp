@@ -4,11 +4,11 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function readSpineImages -- source line 102
+//   missing: function parseSpineJson -- source line 26
 #include <cmath>
 #include <cstdint>
 #include <flight/any.hpp>
 #include <flight/array.hpp>
-#include <flight/json.hpp>
 #include <flight/number.hpp>
 #include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
@@ -16,7 +16,6 @@
 #include <limits>
 #include <optional>
 #include <random>
-#include <stdexcept>
 #include <variant>
 #include <flight/runtime.hpp>
 
@@ -176,20 +175,30 @@ inline void validate_spine_nested_entries(flight::Record<flight::String, flight:
   read_spine_images(raw.get(flight::String("images")).value());
 }
 
-inline flight::Record<flight::String, flight::Any> parse_spine_json(flight::String json) {
-  flight::JsonValue raw;
-  try {
-    (raw = flight::Json::parse(json));
-  }
-  catch (const std::exception& error) {
-    throw flight::Error(flight::String("Invalid Spine particle JSON: ") + flight::to_string(((error instanceof flight::Error) ? error.message() : flight::to_string(error))) + flight::String(""));
-  }
-  if (!is_unknown_record(raw)) {
-    throw flight::Error(flight::String("Invalid Spine particle document: expected a JSON object, got ") + flight::to_string((([&]() { const auto& presence_operand = raw; return presence_operand.is_null(); }()) ? flight::String("null") : (flight::is_array(raw) ? flight::String("array") : ([&]() -> flight::String { const auto& typeof_json_value = raw; const auto typeof_json_kind = typeof_json_value.kind(); if (typeof_json_kind == flight::JsonValue::Kind::boolean) return flight::String("boolean"); if (typeof_json_kind == flight::JsonValue::Kind::number) return flight::String("number"); if (typeof_json_kind == flight::JsonValue::Kind::string) return flight::String("string"); return flight::String("object"); }())))) + flight::String(""));
-  }
-  validate_spine_nested_entries(raw);
-  return raw;
-}
+
+// NOT GENERATED: function parseSpineJson -- source line 26
+// refusal: cpp-instanceof-operand-unresolved [source-portability]
+//
+// The source it stood for:
+//   function parseSpineJson(json: string): Record<string, unknown> {
+//     let raw: unknown;
+//     try {
+//       raw = JSON.parse(json);
+//     } catch (error) {
+//       throw new Error(`Invalid Spine particle JSON: ${error instanceof Error ? error.message : String(error)}`);
+//     }
+//     if (!isUnknownRecord(raw)) {
+//       throw new Error(
+//         `Invalid Spine particle document: expected a JSON object, got ${raw === null ? 'null' : Array.isArray(raw) ? 'array' : typeof raw}`,
+//       );
+//     }
+//     validateSpineNestedEntries(raw);
+//     return raw;
+//   }
+//   
+// cpp emission failed for @flighthq/particles-formats/packages/particles-formats/src/spineParse.ts: an
+// instanceof test against Error needs the operand's recorded type to say which carried kind it asks about, and
+// this read has none; state the operand's type where it is read
 
 inline flight::Array<flight::Ref<flight::types::ImportDiagnostic>> collect_spine_diagnostics(flight::Record<flight::String, flight::Any> raw) {
   flight::Array<flight::Ref<flight::types::ImportDiagnostic>> diagnostics = flight::Array<flight::Ref<flight::types::ImportDiagnostic>>{};

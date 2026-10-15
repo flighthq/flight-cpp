@@ -55322,6 +55322,7 @@
     },
     {
       "consumers": [
+        "@flighthq/particles-formats/packages/particles-formats/src/registerBuiltInParticleFormats.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
