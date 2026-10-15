@@ -69,6 +69,24 @@ Their headers, and `contract.hpp` and `_internal_index.hpp` that include them, a
 Other JSON-reading packages share the same gap, among them the `textureatlas-formats`, `spritesheet-formats`
 and `scene3d-formats` `static_cast<T>(Json::parse(...))` sites.
 
+## `parseSpineJson`: emitted before, refused at a627849
+
+`spineParse.ts`'s `parseSpineJson` wraps `JSON.parse` in a `try` whose `catch` builds its message from
+`error instanceof Error ? error.message : String(error)`.
+- **Old pin:** the row emitted this function, but the body was not C++. It contained the literal
+  `(error instanceof flight::Error)` and called `.message()` on a `const std::exception&`. It never compiled, so
+  its loss changes no compile verdict.
+- **a627849:** the emitter refuses it (`cpp-instanceof-operand-unresolved`), and the header marks it NOT GENERATED.
+- **Why the refusal is right:** the runtime lowers `JSON.parse` to `flight::Json::parse`, which returns a
+  `flight::JsonValue` and throws `flight::JsonSyntaxError`, a `std::runtime_error`, not a `flight::Error`. In
+  TypeScript, `JSON.parse` throws a `SyntaxError`, for which `instanceof Error` is true. So the caught C++ carrier
+  cannot answer that test faithfully.
+- **No fix taken:** the function's return is also step 1 of this request. A stub or a permissive conversion would
+  be the fallback this file rules out, so none is carried.
+- **Evidence:** measured on the particles-formats row refresh. `pkg:compile` is 12/18 both before and after,
+  and the three native particles-formats tests pass on both. None of them reaches `parseSpineJson`; Spine
+  parsing has no native parity coverage, and none is claimed.
+
 ## Carrying workaround
 
 None. A conversion or an override would compile code that throws on real documents, or would fork the parser.
