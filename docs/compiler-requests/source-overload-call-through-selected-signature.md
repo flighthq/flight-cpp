@@ -40,4 +40,5 @@ against `T`, not against `Manager | T`.
   and reads each branch's alternative through its presence.
 - `createTexture` from `@flighthq/swf` (`swfImageTexture.ts`, `swfVideoHandler.ts`): carried by
   [`swf-image-texture-2d-constructor`](../../source-patches/swf-image-texture-2d-constructor.patch) for the
-  image path. Both sites then meet the texture-lane override signature.
+  image path and [`swf-video-texture-2d-constructor`](../../source-patches/swf-video-texture-2d-constructor.patch)
+  for the video path. Both sites then meet the texture-lane override signature.

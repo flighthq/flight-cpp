@@ -3131,6 +3131,22 @@
       "appliedOn": "2026-10-12"
     },
     {
+      "id": "swf-video-texture-2d-constructor",
+      "dependency": "flight",
+      "patch": "swf-video-texture-2d-constructor.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/swf/src/swfVideoHandler.ts",
+      "package": "@flighthq/swf",
+      "answers": "diagnostic",
+      "refusal": "createTexture is overloaded; TypeScript resolves the dimension-less call in acquireSwfVideoTexture to the overload returning Texture2D, but the emitter calls the implementation signature returning the flat Texture union and passes a designated brace initializer to it, so no create_texture overload matches (swf_video_handler.hpp:72) and the Texture result cannot be stored as Texture2D",
+      "rewrite": "Calls createTexture2D, the 2D leaf constructor, with the same options object; the import names createTexture2D instead of createTexture, which the module no longer uses.",
+      "equivalence": "The options literal carries only `sampler`, so createTexture's switch on opts?.dimension takes its default branch, which is exactly `return createTexture2D(opts)`. The only other work on that path is createCommonTextureFields(opts), whose result the branch discards: it clones the sampler and allocates two Vector2 objects through allocateEntity, which builds a fresh object and records no identity, counter, uid or registry entry, and it reads only properties of a freshly built literal, which has no getters. createTexture2D then performs the same createCommonTextureFields/initializeTexture2D work the default branch would, so the returned texture's sampler is a clone of the same createSampler result with the same filter values and defaults (anisotropy 1, mipmaps false as given, clamp-to-edge wrap), the same colorSpace/flip/uv defaults, source null, version 0, and no resource attachment (opts.resource is absent). The texture is still cached in parsed.videoTextures under the same characterId, so repeated placements share one identity.",
+      "whyNotUpstreamFirst": "Naming the 2D constructor is ordinary target-neutral TypeScript that states the intended dimension, which createTexture's own comment recommends; it is the same rewrite as swf-image-texture-2d-constructor applied to the second call site in the package.",
+      "unblocks": "the create_texture call in swf_video_handler.hpp and its includer swf_video_tag_family.hpp; swfVideoHandler.ts itself stays refused for its contextual-union callable (callable-arm-in-contextual-union), so the header remains best-effort.",
+      "expires": "when the emitter lowers an overloaded call through the overload TypeScript selected.",
+      "appliedOn": "2026-10-15"
+    },
+    {
       "id": "compiler-placeholder-graph-qualification",
       "dependency": "flight-compiler",
       "patch": "compiler-placeholder-graph-qualification.patch",

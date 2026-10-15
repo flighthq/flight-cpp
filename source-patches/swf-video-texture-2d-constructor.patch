@@ -1,0 +1,19 @@
+diff --git a/packages/swf/src/swfVideoHandler.ts b/packages/swf/src/swfVideoHandler.ts
+index f6b72da..1516ebc 100644
+--- a/packages/swf/src/swfVideoHandler.ts
++++ b/packages/swf/src/swfVideoHandler.ts
+@@ -1,4 +1,4 @@
+-import { createSampler, createTexture } from '@flighthq/texture/contract';
++import { createSampler, createTexture2D } from '@flighthq/texture/contract';
+ import type {
+   SwfTagHandler,
+   SwfTagParseResult,
+@@ -65,7 +65,7 @@ function acquireSwfVideoTexture(
+ ): Texture2D {
+   let texture = parsed.videoTextures.get(characterId);
+   if (texture === undefined) {
+-    texture = createTexture({
++    texture = createTexture2D({
+       sampler: createSampler({
+         magFilter: definition.smoothing ? 'linear' : 'nearest',
+         minFilter: definition.smoothing ? 'linear' : 'nearest',
