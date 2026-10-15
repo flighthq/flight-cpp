@@ -2754,6 +2754,18 @@
       "expires": "when the emitter qualifies a name owned by another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "particleemitter-reexported-callbacks-type",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/particleemitter/update_particle_emitter2_d.hpp",
+      "symbol": "ParticleEmitterCallbacks",
+      "declaration": "using flight::types::ParticleEmitterCallbacks;",
+      "diagnostic": "'ParticleEmitterCallbacks' is not a member of 'flight::particleemitter'; did you mean 'ParticleEmitterData'?",
+      "defect": "updateParticleEmitter2D.ts re-exports the type (`export type { ParticleEmitterCallbacks };`, imported from @flighthq/types/contract) and prewarmParticleEmitter2D.ts imports it from there, so the emitter spells it flight::particleemitter::ParticleEmitterCallbacks. The re-export itself emits nothing, so that name does not exist in namespace flight::particleemitter. The using-declaration IS the re-export: it introduces the same flight::types::ParticleEmitterCallbacks under the module's namespace, with no operation or storage.",
+      "expectedWhen": "always",
+      "expires": "when the emitter lowers a type-only named re-export to a using-declaration in the re-exporting module (docs/compiler-requests/named-reexport-declaration-provenance.md covers the non-type-only lane only); sdk:check fails if this repair matches no header.",
+      "include": "flight/types/particle_emitter_callbacks.hpp"
+    },
+    {
       "id": "scene3d-unqualified-types-names",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/scene3d/",

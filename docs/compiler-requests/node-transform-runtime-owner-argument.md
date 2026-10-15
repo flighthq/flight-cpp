@@ -63,6 +63,13 @@ None. `@flighthq/node` is not part of the velocity unit that found it.
 They fail here, in `node_transform2d.hpp:249` and `node_transform3d.hpp:113/122/199/218`. Through them the step and
 prewarm modules fail too.
 
+The particleemitter row regenerated at a627849 (scoped, measured on `367f203d`) still fails here in 2D. In 3D it
+now fails one step earlier, at its own call site (`update_particle_emitter3_d.hpp:112`). The emitter casts the emitter to a
+readonly merged row whose runtime-key member is a particleemitter-local concrete struct, where
+`Transform3DNode<Traits>` names the generic `flight::types::entity_runtime_key_d09eb903fba65d57<Traits>`. That boundary
+is [a generic structural parameter given a narrower row](generic-structural-parameter-given-a-narrower-row.md); this
+request applies again only once it is past.
+
 ## Why there is no small source repair (measured 2026-10-13)
 
 The helper that fails, `getTransform2DRuntime(target: Transform2DRuntimeOwner<Traits>)`, comes from this repository's
