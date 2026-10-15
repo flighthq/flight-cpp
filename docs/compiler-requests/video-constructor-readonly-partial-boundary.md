@@ -46,9 +46,9 @@ types. It adds no runtime dependency. The native regression checks the same owne
 default/override, callback/property/symbol order and exception cases, as well as the
 canonical function-value surface and all four represented option arms.
 
-The video override remains **partial**. Other video helpers still lack their emitted
-readonly host/texture-row callable carriers even though their native convenience
-operations have executable behavior. This unit supplies the four declared closed
+The video override remains **partial**. The subsequent [readonly helper supply](video-readonly-helper-carriers.md) covers eight helpers;
+`advanceVideoTexture` still lacks a faithful readonly-host callable carrier because
+its asserted image can emit an undefined host callback argument. This unit supplies the four declared closed
 option shapes; generic mapped-union planning and open dynamic own-property spreads
 outside those declared shapes are not supplied. See `remaining` in the override
 manifest for exact API names. The original native Texture target and syntax gate do

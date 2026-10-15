@@ -2,8 +2,9 @@
 #pragma once
 
 // PARTIAL: the public constructor is supplied for readonly host and the four declared
-// partial TextureLike option rows. Other canonical readonly helper carriers remain
-// unsupplied; native convenience operations are retained. See overrides/manifest.json.
+// partial TextureLike option rows and eight readonly helpers. The readonly-host
+// advance carrier remains unsupplied; native convenience operations are retained.
+// See overrides/manifest.json for the asserted-source/undefined-argument boundary.
 #include <optional>
 #include <type_traits>
 #include <utility>
@@ -319,6 +320,259 @@ inline void set_video_texture_source(
             std::in_place_type<flight::Ref<ImageResource>>, *image}}
       : std::nullopt;
   (*two_d)->version = initial_video_version;
+}
+
+// A readonly union retains the active concrete row; it does not recover a native
+// owner. The pinned emitter currently erases Readonly<TextureLike> to TextureLike.
+template <typename Owner>
+using ReadonlyVideoTextureArm = flight::StructuralRef<flight::RowReadonly<
+    flight::RowOf<flight::Ref<Owner>>>>;
+using ReadonlyVideoTexture = std::variant<
+    ReadonlyVideoTextureArm<flight::types::Texture2DArray>,
+    ReadonlyVideoTextureArm<flight::types::TextureCube>,
+    ReadonlyVideoTextureArm<flight::types::Texture2D>,
+    ReadonlyVideoTextureArm<flight::types::Texture3D>>;
+
+namespace video_detail {
+template <typename Row>
+inline Texture clone_readonly_texture(Row source) {
+  // Object-literal evaluation order in cloneTexture, before its discriminant read.
+  const auto color_space = flight::row_get<flight::RowKey<"colorSpace">>(source);
+  const auto flip_x = flight::row_get<flight::RowKey<"flipX">>(source);
+  const auto flip_y = flight::row_get<flight::RowKey<"flipY">>(source);
+  const auto sampler = clone_sampler(flight::row_get<flight::RowKey<"sampler">>(source));
+  const auto uv_offset = clone_vector2(flight::row_get<flight::RowKey<"uvOffset">>(source));
+  const auto uv_rotation = flight::row_get<flight::RowKey<"uvRotation">>(source);
+  const auto uv_scale = clone_vector2(flight::row_get<flight::RowKey<"uvScale">>(source));
+  const auto version = flight::unsigned_right_shift(flight::row_get<flight::RowKey<"version">>(source), 0.0);
+  const auto dimension = flight::row_get<flight::RowKey<"dimension">>(source);
+  using Owner = typename Row::object_type;
+  using Ref = flight::Ref<Owner>;
+  auto out = flight::entity::allocate_entity<Ref>();
+  flight::row_set<flight::RowKey<"colorSpace">>(out, color_space);
+  flight::row_set<flight::RowKey<"flipX">>(out, flip_x);
+  flight::row_set<flight::RowKey<"flipY">>(out, flip_y);
+  flight::row_set<flight::RowKey<"sampler">>(out, sampler);
+  flight::row_set<flight::RowKey<"uvOffset">>(out, uv_offset);
+  flight::row_set<flight::RowKey<"uvRotation">>(out, uv_rotation);
+  flight::row_set<flight::RowKey<"uvScale">>(out, uv_scale);
+  flight::row_set<flight::RowKey<"version">>(out, version);
+  // The closed row's dimension is its discriminant. Keep the single source read.
+  flight::row_set<flight::RowKey<"dimension">>(out, dimension);
+  if constexpr (std::same_as<Owner, flight::types::TextureCube> ||
+                std::same_as<Owner, flight::types::Texture2DArray>) {
+    flight::row_set<flight::RowKey<"sources">>(out,
+        flight::row_get<flight::RowKey<"sources">>(source).slice());
+  } else {
+    flight::row_set<flight::RowKey<"source">>(out,
+        flight::row_get<flight::RowKey<"source">>(source));
+  }
+  return Texture{std::in_place_type<Ref>, flight::entity::finish_entity<Ref>(out)};
+}
+
+template <typename Row>
+inline void copy_readonly_texture(TextureLike out, Row source) {
+  const auto out_dimension = std::visit([](const auto& value) {return value->dimension;}, out);
+  if (out_dimension != flight::row_get<flight::RowKey<"dimension">>(source)) {
+    throw flight::Error(flight::String("copyTexture requires matching dimensions"));
+  }
+  const auto color_space = flight::row_get<flight::RowKey<"colorSpace">>(source);
+  const auto flip_x = flight::row_get<flight::RowKey<"flipX">>(source);
+  const auto flip_y = flight::row_get<flight::RowKey<"flipY">>(source);
+  const auto uv_rotation = flight::row_get<flight::RowKey<"uvRotation">>(source);
+  const auto version = flight::unsigned_right_shift(flight::row_get<flight::RowKey<"version">>(source), 0.0);
+  // Evaluate each destination reference before reading the source getter.
+  const auto out_sampler = std::visit([](const auto& value) {return value->sampler;}, out);
+  const auto source_sampler = flight::row_get<flight::RowKey<"sampler">>(source);
+  copy_sampler(out_sampler, source_sampler);
+  const auto out_offset = std::visit([](const auto& value) {return value->uv_offset;}, out);
+  const auto source_offset = flight::row_get<flight::RowKey<"uvOffset">>(source);
+  copy_vector2(out_offset, source_offset);
+  const auto out_scale = std::visit([](const auto& value) {return value->uv_scale;}, out);
+  const auto source_scale = flight::row_get<flight::RowKey<"uvScale">>(source);
+  copy_vector2(out_scale, source_scale);
+  std::visit([&](const auto& value) {
+    value->color_space = color_space;
+    value->flip_x = flip_x;
+    value->flip_y = flip_y;
+  }, out);
+  const auto dimension = std::visit([](const auto& value) {return value->dimension;}, out);
+  if (dimension == flight::String("2d") || dimension == flight::String("2d-array") ||
+      dimension == flight::String("3d") || dimension == flight::String("cube")) {
+    if (flight::row_get<flight::RowKey<"dimension">>(source) != dimension) {
+      throw flight::Error(flight::String("copyTexture requires matching dimensions"));
+    }
+    using SourceOwner = typename Row::object_type;
+    if constexpr (std::same_as<SourceOwner, flight::types::TextureCube> ||
+                  std::same_as<SourceOwner, flight::types::Texture2DArray>) {
+      const auto content = flight::row_get<flight::RowKey<"sources">>(source).slice();
+      std::visit([&](const auto& value) {
+        if constexpr (requires {value->sources = content;}) value->sources = content;
+      }, out);
+    } else {
+      const auto content = flight::row_get<flight::RowKey<"source">>(source);
+      std::visit([&](const auto& value) {
+        if constexpr (requires {value->source = content;}) value->source = content;
+      }, out);
+    }
+  }
+  std::visit([&](const auto& value) {value->uv_rotation = uv_rotation; value->version = version;}, out);
+}
+
+template <typename Row>
+inline void readonly_uv_matrix(Matrix3Like out, Row texture) {
+  const double rotation = flight::row_get<flight::RowKey<"uvRotation">>(texture);
+  const double flip_x = flight::row_get<flight::RowKey<"flipX">>(texture) ? -1.0 : 1.0;
+  const double flip_y = flight::row_get<flight::RowKey<"flipY">>(texture) ? -1.0 : 1.0;
+  const double sx = flight::row_get<flight::RowKey<"uvScale">>(texture)->x * flip_x;
+  const double sy = flight::row_get<flight::RowKey<"uvScale">>(texture)->y * flip_y;
+  const double pre_x = flight::row_get<flight::RowKey<"flipX">>(texture)
+      ? flight::row_get<flight::RowKey<"uvScale">>(texture)->x : 0.0;
+  const double pre_y = flight::row_get<flight::RowKey<"flipY">>(texture)
+      ? flight::row_get<flight::RowKey<"uvScale">>(texture)->y : 0.0;
+  double cosine, sine;
+  if (rotation == 0.0) {cosine = 1.0; sine = 0.0;}
+  else if (rotation == half_pi) {cosine = 0.0; sine = 1.0;}
+  else if (rotation == -half_pi) {cosine = 0.0; sine = -1.0;}
+  else if (rotation == flight::pi || rotation == -flight::pi) {cosine = -1.0; sine = 0.0;}
+  else {cosine = std::cos(rotation); sine = std::sin(rotation);}
+  const double tx = flight::row_get<flight::RowKey<"uvOffset">>(texture)->x + cosine * pre_x - sine * pre_y;
+  const double ty = flight::row_get<flight::RowKey<"uvOffset">>(texture)->y + sine * pre_x + cosine * pre_y;
+  auto m = out->m;
+  m.set_index(0.0, sx * cosine); m.set_index(1.0, sx * sine); m.set_index(2.0, 0.0);
+  m.set_index(3.0, -sy * sine); m.set_index(4.0, sy * cosine); m.set_index(5.0, 0.0);
+  m.set_index(6.0, tx); m.set_index(7.0, ty); m.set_index(8.0, 1.0);
+}
+
+template <typename Row>
+inline std::optional<HostImageSource> readonly_video_source(Row texture) {
+  if (flight::row_get<flight::RowKey<"dimension">>(texture) != flight::String("2d")) return std::nullopt;
+  if constexpr (std::same_as<typename Row::object_type, Texture2D>) {
+    const auto image = flight::row_get<flight::RowKey<"source">>(texture);
+    if (!image) return std::nullopt;
+    return std::visit([](const auto& owner) -> std::optional<HostImageSource> {
+      using Owner = typename std::decay_t<decltype(owner)>::element_type;
+      if constexpr (std::same_as<Owner, ImageResource>) return owner->source;
+      // These closed native source declarations have no host `source` property.
+      // The pinned optional read produces undefined, then its ?? null fallback.
+      else return std::nullopt;
+    }, *image);
+  }
+  return std::nullopt;
+}
+} // namespace video_detail
+
+inline Texture clone_video_texture(ReadonlyVideoTexture source) {
+  return std::visit([](const auto& row) {return video_detail::clone_readonly_texture(row);}, source);
+}
+inline void copy_video_texture(TextureLike out, ReadonlyVideoTexture source) {
+  std::visit([&](const auto& row) {video_detail::copy_readonly_texture(out, row);}, source);
+}
+inline void get_video_texture_uv_matrix(Matrix3Like out, ReadonlyVideoTexture texture) {
+  std::visit([&](const auto& row) {video_detail::readonly_uv_matrix(out, row);}, texture);
+}
+inline void get_video_texture_inverse_uv_matrix(Matrix3Like out, ReadonlyVideoTexture texture) {
+  get_video_texture_uv_matrix(out, texture);
+  flight::geometry::inverse_matrix3(out, out);
+}
+inline double get_video_texture_width(ReadonlyVideoHost host, ReadonlyVideoTexture texture) {
+  const auto source = std::visit([](const auto& row) {return video_detail::readonly_video_source(row);}, texture);
+  double width = 0.0;
+  if (source) {
+    const auto callback = flight::row_get<flight::RowKey<"getWidth">>(host);
+    if (callback) width = (*callback)(*source);
+  }
+  return width > 0.0 ? width : -1.0;
+}
+inline double get_video_texture_height(ReadonlyVideoHost host, ReadonlyVideoTexture texture) {
+  const auto source = std::visit([](const auto& row) {return video_detail::readonly_video_source(row);}, texture);
+  double height = 0.0;
+  if (source) {
+    const auto callback = flight::row_get<flight::RowKey<"getHeight">>(host);
+    if (callback) height = (*callback)(*source);
+  }
+  return height > 0.0 ? height : -1.0;
+}
+inline bool is_video_texture_frame_ready(ReadonlyVideoHost host, ReadonlyVideoTexture texture) {
+  const auto source = std::visit([](const auto& row) {return video_detail::readonly_video_source(row);}, texture);
+  if (!source) return false;
+  const auto ready = flight::row_get<flight::RowKey<"isReady">>(host);
+  if (!ready || !(*ready)(*source)) return false;
+  const auto width = flight::row_get<flight::RowKey<"getWidth">>(host);
+  if (!width || !((*width)(*source) > 0.0)) return false;
+  const auto height = flight::row_get<flight::RowKey<"getHeight">>(host);
+  return height && (*height)(*source) > 0.0;
+}
+inline void set_video_texture_source(ReadonlyVideoHost host, TextureLike texture,
+    flight::Ref<VideoResource> source) {
+  if (std::visit([](const auto& owner) {return owner->dimension;}, texture) != flight::String("2d")) {
+    throw flight::Error(flight::String("setVideoTextureSource requires a Texture2D"));
+  }
+  const auto image = create_video_image_resource(host, ReadonlyVideoResource(source));
+  const auto owner = std::get<flight::Ref<Texture2D>>(texture);
+  owner->source = image ? std::optional<TextureSourceValue>{TextureSourceValue{
+      std::in_place_type<flight::Ref<ImageResource>>, *image}} : std::nullopt;
+  owner->version = initial_video_version;
+}
+
+namespace video_detail {
+inline ReadonlyVideoTexture readonly_texture(TextureLike texture) {
+  return std::visit([](const auto& owner) -> ReadonlyVideoTexture {
+    using Owner = typename std::decay_t<decltype(owner)>::element_type;
+    using Row = ReadonlyVideoTextureArm<Owner>;
+    return ReadonlyVideoTexture{std::in_place_type<Row>, Row(owner)};
+  }, texture);
+}
+} // namespace video_detail
+// The pinned emitter erases readonly TextureLike to the native variant. Bridge
+// those exact host-row call sites into the same live readonly rows.
+template <typename NativeTexture>
+  requires std::same_as<NativeTexture, TextureLike>
+inline double get_video_texture_width(ReadonlyVideoHost host, NativeTexture texture) {
+  return get_video_texture_width(host, video_detail::readonly_texture(texture));
+}
+template <typename NativeTexture>
+  requires std::same_as<NativeTexture, TextureLike>
+inline double get_video_texture_height(ReadonlyVideoHost host, NativeTexture texture) {
+  return get_video_texture_height(host, video_detail::readonly_texture(texture));
+}
+template <typename NativeTexture>
+  requires std::same_as<NativeTexture, TextureLike>
+inline bool is_video_texture_frame_ready(ReadonlyVideoHost host, NativeTexture texture) {
+  return is_video_texture_frame_ready(host, video_detail::readonly_texture(texture));
+}
+
+template <typename Host, typename Owner>
+  requires (std::same_as<Host, ReadonlyVideoHost> &&
+      (std::same_as<Owner, flight::types::Texture2DArray> ||
+       std::same_as<Owner, flight::types::TextureCube> ||
+       std::same_as<Owner, flight::types::Texture2D> ||
+       std::same_as<Owner, flight::types::Texture3D>))
+inline double get_video_texture_width(Host host, std::shared_ptr<Owner> texture) {
+  using Row = ReadonlyVideoTextureArm<Owner>;
+  return get_video_texture_width(host, ReadonlyVideoTexture{std::in_place_type<Row>, Row(texture)});
+}
+
+template <typename Host, typename Owner>
+  requires (std::same_as<Host, ReadonlyVideoHost> &&
+      (std::same_as<Owner, flight::types::Texture2DArray> ||
+       std::same_as<Owner, flight::types::TextureCube> ||
+       std::same_as<Owner, flight::types::Texture2D> ||
+       std::same_as<Owner, flight::types::Texture3D>))
+inline double get_video_texture_height(Host host, std::shared_ptr<Owner> texture) {
+  using Row = ReadonlyVideoTextureArm<Owner>;
+  return get_video_texture_height(host, ReadonlyVideoTexture{std::in_place_type<Row>, Row(texture)});
+}
+
+template <typename Host, typename Owner>
+  requires (std::same_as<Host, ReadonlyVideoHost> &&
+      (std::same_as<Owner, flight::types::Texture2DArray> ||
+       std::same_as<Owner, flight::types::TextureCube> ||
+       std::same_as<Owner, flight::types::Texture2D> ||
+       std::same_as<Owner, flight::types::Texture3D>))
+inline bool is_video_texture_frame_ready(Host host, std::shared_ptr<Owner> texture) {
+  using Row = ReadonlyVideoTextureArm<Owner>;
+  return is_video_texture_frame_ready(host, ReadonlyVideoTexture{std::in_place_type<Row>, Row(texture)});
 }
 
 } // namespace flight::texture

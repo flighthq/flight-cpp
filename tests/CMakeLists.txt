@@ -2070,3 +2070,15 @@ if(TARGET Flight::HostSdl)
 endif()
 
 flight_cpp_package_test_labels(flight_cpp.generated_video_texture_options texture types)
+
+add_executable(flight_cpp_generated_video_texture_helpers_tests generated_video_texture_helpers_test.cpp)
+target_link_libraries(flight_cpp_generated_video_texture_helpers_tests PRIVATE Flight::Cpp)
+target_include_directories(flight_cpp_generated_video_texture_helpers_tests BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include" "${PROJECT_SOURCE_DIR}/generated/include")
+add_test(NAME flight_cpp.generated_video_texture_helpers COMMAND flight_cpp_generated_video_texture_helpers_tests)
+set_tests_properties(flight_cpp.generated_video_texture_helpers PROPERTIES LABELS "pkg:texture;pkg:types")
+
+add_executable(flight_cpp_generated_video_texture_callable_proxies_tests generated_video_texture_callable_proxies_test.cpp)
+target_link_libraries(flight_cpp_generated_video_texture_callable_proxies_tests PRIVATE Flight::Cpp)
+target_include_directories(flight_cpp_generated_video_texture_callable_proxies_tests BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include" "${PROJECT_SOURCE_DIR}/generated/include")
+add_test(NAME flight_cpp.generated_video_texture_callable_proxies COMMAND flight_cpp_generated_video_texture_callable_proxies_tests)
+set_tests_properties(flight_cpp.generated_video_texture_callable_proxies PROPERTIES LABELS "pkg:texture;pkg:types")

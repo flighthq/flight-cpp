@@ -576,3 +576,6 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   declared per receiver; no patch is carried.
 
 - [Video constructor readonly host and partial-row boundary](video-constructor-readonly-partial-boundary.md).
+
+- [Readonly video helper carriers](video-readonly-helper-carriers.md).
+- [Video frame advance asserted source and undefined callback argument](video-advance-asserted-host-source.md).
