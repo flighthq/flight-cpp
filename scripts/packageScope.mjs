@@ -406,6 +406,7 @@ export function planPackageMerge({ candidateRoot, committedRoot, movingTogether 
     changedHeaders.push(header);
   }
   const restoredAliasFiles = restoreAliasesWithoutCommittedCanonical({ candidateRoot, committedRoot, group, packageName, prefix, problems, writes });
+  reportIncomingAliasMismatches({ candidateRoot, committedRoot, group, packageName, prefix, problems, warnings, writes });
   const inPrefix = (file) => file.startsWith(prefix);
   const mergedHeaderText = (header) =>
     writes.has(`include/${header}`) ? writes.get(`include/${header}`) : read(committedRoot, `include/${header}`);
@@ -615,6 +616,105 @@ export function planPackageMerge({ candidateRoot, committedRoot, movingTogether 
 // may legitimately differ by qualification, so it cannot be restored from the canonical text; a failure there
 // is reported rather than rewritten.
 const CROSS_PACKAGE_ALIAS = /^using (\w+) = (flight::[a-z0-9_:]+)::\1;$/mu;
+
+// The INCOMING mirror of the function above, and deliberately REPORT-ONLY.
+//
+// That one judges the aliases the MOVING slice carries OUT to another package. It cannot see the opposite
+// direction: a committed, NON-moving package's alias pointing INTO a package that is moving. There the aliasing
+// header holds no body -- `using X = flight::owner::X;` is all that is left of it -- so nothing on the moving
+// side can be compared against it, and the move silently falsifies the alias by changing or removing the
+// canonical body it names. Measured shape: the Effects migration kept
+// `strength_blur_x_blur_y_quality_source_mode_alphas_colors_ratios_247d12b54a1b51b1` and changed its body.
+//
+// It needs NO witness, which is why it adds no manifest state: the COMMITTED owner body is still on disk at
+// merge time -- it is exactly what is about to be replaced -- and it is the body the alias was proven equal to
+// when the alias was made. So `committed owner body === merged owner body` is the whole question.
+//
+// Materiality falls out of the comparison rather than being layered on it: the two sides are the candidate and
+// the committed floor, so a mismatch IS one this move caused. There is no legacy-unchanged branch to warn
+// about, because a floor that was already inconsistent cannot be detected from bodies alone -- that is what a
+// witness would have been for, and the reason it was dropped.
+//
+// No writes, and that is a decision rather than a limitation: the only repair is to rewrite the NON-moving
+// package's header, which this merge has no business doing. The move should not land until the aliasing
+// package moves too or is regenerated, so the problem names BOTH files.
+export function reportIncomingAliasMismatches({ candidateRoot, committedRoot, group, packageName, prefix, problems, warnings, writes }) {
+  // Every prefix this merge is moving, not just the primary one: a co-moved package's alias is its own
+  // direction, and judging it here would block a move that is internally consistent.
+  const movingPrefixes = new Set([packageName, ...group].map((name) => includePrefixOf(name)));
+  const index = new Map();
+  // Bodies carry their defining header, because the diagnostic has to name the canonical FILE and not just
+  // the namespace, and because the merged body has to be read from the PLANNED write when there is one.
+  // `planned` is true only on the MOVING side: the slice's writes are the merged result, while the
+  // committed side has to be read as it stands -- it is the reference the alias was proven against, and
+  // letting a planned write stand in for it would compare the move against itself and never fail.
+  const entriesIn = (root, directory, planned) => {
+    const key = `${root}\0${directory}\0${planned ? 'planned' : 'committed'}`;
+    if (!index.has(key)) {
+      const found = new Map();
+      for (const header of includeFilesUnder(root, directory)) {
+        const file = `include/${header}`;
+        // `writes.has` and the value are two different questions: a key whose value is null is a planned
+        // DELETION, and `??` would treat that null as absent and fall back to the disk copy -- reading the
+        // body the move is about to remove and comparing against it, which is exactly the bug this check
+        // exists to catch. So presence is tested with `has`, absence is `undefined`, and null means the
+        // header does not exist in the merged result at all.
+        const hasPlanned = planned && writes?.has(file) === true;
+        const text = hasPlanned ? writes.get(file) : readFileSync(path.join(root, file), 'utf8');
+        if (text === null) continue;
+        for (const match of text.matchAll(/^struct (\w+) : public flight::ReferenceEnabled \{\n[\s\S]*?^\};$/gmu)) {
+          found.set(match[1], [...(found.get(match[1]) ?? []), match[0]]);
+        }
+      }
+      index.set(key, found);
+    }
+    return index.get(key);
+  };
+  let committedAliasFiles;
+  try {
+    const manifest = JSON.parse(readFileSync(path.join(committedRoot, 'manifest.json'), 'utf8'));
+    committedAliasFiles = manifest.duplicateStructuralStructAliases?.files ?? [];
+  } catch (error) {
+    // A guard that silently switches itself off is worse than no guard, so an unreadable or unparsable
+    // inventory is reported as the failure it is rather than read as "no aliases to check".
+    problems.push(`the incoming alias check could not read ${committedRoot}/manifest.json: ${error.message}`);
+    return;
+  }
+  for (const file of committedAliasFiles) {
+    const aliasPrefix = `${file.split('/').slice(0, 2).join('/')}/`;
+    if (movingPrefixes.has(aliasPrefix)) continue;
+    const text = readFileSync(path.join(committedRoot, 'include', file), 'utf8');
+    for (const [, name, namespace] of text.matchAll(new RegExp(CROSS_PACKAGE_ALIAS.source, 'gmu'))) {
+      const directory = `${namespace.replace(/^flight::/u, '').replaceAll('::', '/')}/`;
+      if (!movingPrefixes.has(`flight/${directory}`)) continue;
+      const committed = entriesIn(committedRoot, `flight/${directory}`, false).get(name) ?? [];
+      if (committed.length === 0) {
+        // No committed canonical to falsify: the alias already names nothing this floor defines. Unchanged
+        // legacy, so it is a warning rather than a block -- this move neither caused nor worsened it.
+        warnings.push(`${file} aliases ${name} to ${namespace}, which the committed tree does not define; unchanged by this move.`);
+        continue;
+      }
+      const merged = entriesIn(candidateRoot, `flight/${directory}`, true).get(name) ?? [];
+      if (merged.some((body) => committed.includes(body))) continue;
+      // The diagnostic names the canonical's FILE. It reads the MOVING tree first, because when the body
+      // moved that is where the reader has to look; but when this move REMOVES the body there is nothing
+      // there to find, and falling back to the directory would leave the reader hunting for a file. In that
+      // case the canonical that still exists -- the one the alias actually names today -- is the COMMITTED
+      // one, so that is the path to print.
+      const definingHeader = (root) =>
+        includeFilesUnder(root, `flight/${directory}`)
+          .map((header) => `include/${header}`)
+          .find((candidate) =>
+            (root === candidateRoot && writes?.has(candidate) ? writes.get(candidate) : readFileSync(path.join(root, candidate), 'utf8'))
+              ?.includes(`${name} : public flight::ReferenceEnabled`),
+          );
+      const ownerHeader = definingHeader(candidateRoot) ?? definingHeader(committedRoot);
+      problems.push(
+        `${file} (${aliasPrefix.replace(/\/$/u, '')}) aliases ${name} to ${namespace}: this move ${merged.length === 0 ? 'removes' : 'changes'} the canonical body at ${ownerHeader ?? `flight/${directory}`}, so ${aliasPrefix.replace(/\/$/u, '')} must move or be regenerated before this lands.`,
+      );
+    }
+  }
+}
 
 function restoreAliasesWithoutCommittedCanonical({ candidateRoot, committedRoot, group, packageName, prefix, problems, writes }) {
   const ownNamespace = `flight::${prefix.replace(/^flight\//u, '').replace(/\/$/u, '').replaceAll('/', '::')}`;
