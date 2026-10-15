@@ -9502,6 +9502,8 @@
     },
     {
       "consumers": [
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontDetect.ts",
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontFormatKind.ts",
         "@flighthq/encoding/packages/encoding/src/contract.ts",
         "@flighthq/encoding/packages/encoding/src/index.ts"
       ],
@@ -19722,6 +19724,7 @@
     },
     {
       "consumers": [
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontDetect.ts",
         "@flighthq/command/packages/command/src/commandBinding.ts",
         "@flighthq/effects-canvas/packages/effects-canvas/src/canvasEffectRegistry.ts",
         "@flighthq/effects-gl/packages/effects-gl/src/glCustomShaderEffect.ts",
@@ -44814,6 +44817,7 @@
     {
       "consumers": [
         "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontBinary.ts",
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontDetect.ts",
         "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontFnt.ts",
         "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontJson.ts",
         "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontXml.ts",
@@ -44838,6 +44842,8 @@
     },
     {
       "consumers": [
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontDetect.ts",
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontFormatKind.ts",
         "@flighthq/types/packages/types/src/BitmapFontImportOptions.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
@@ -44866,6 +44872,7 @@
     },
     {
       "consumers": [
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontDetect.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -47822,6 +47829,7 @@
         "@flighthq/bitmap/packages/bitmap/src/bitmapFingerprint.ts",
         "@flighthq/bitmap/packages/bitmap/src/bitmapQuery.ts",
         "@flighthq/bitmap/packages/bitmap/src/bitmapTransform.ts",
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontDetect.ts",
         "@flighthq/bitmapfont/packages/bitmapfont/src/bitmapFont.ts",
         "@flighthq/bitmapfont/packages/bitmapfont/src/bitmapFontGlyphSource.ts",
         "@flighthq/camera-controls/packages/camera-controls/src/cameraShake.ts",
@@ -52109,6 +52117,7 @@
     {
       "consumers": [
         "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontBinary.ts",
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontDetect.ts",
         "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontFnt.ts",
         "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontJson.ts",
         "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontXml.ts",

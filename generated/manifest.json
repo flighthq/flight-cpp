@@ -2462,6 +2462,7 @@
     {
       "files": [
         "flight/bitmapfont_formats/bitmap_font_binary.hpp",
+        "flight/bitmapfont_formats/bitmap_font_detect.hpp",
         "flight/bitmapfont_formats/bitmap_font_fnt.hpp",
         "flight/bitmapfont_formats/bitmap_font_json.hpp",
         "flight/bitmapfont_formats/bitmap_font_record.hpp",
@@ -6051,7 +6052,6 @@
   },
   "canonicalPackageLocalIncludes": {
     "files": [
-      "flight/bitmapfont_formats/bitmap_font_json.hpp",
       "flight/bitmaptext/update_bitmap_text.hpp",
       "flight/collision/collision_support2_d.hpp",
       "flight/collision/enable_collision_guards.hpp",
@@ -6404,17 +6404,17 @@
       "sourceModules": 8
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/bitmapfont_formats",
       "cppNamespace": "flight::bitmapfont_formats",
-      "emittedModules": 6,
+      "emittedModules": 8,
       "package": "@flighthq/bitmapfont-formats",
-      "refusedModules": 2,
+      "refusedModules": 3,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
-      "sourceModules": 8
+      "sourceModules": 11
     },
     {
       "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
@@ -8276,8 +8276,8 @@
   },
   "summary": {
     "packages": 153,
-    "emittedModules": 2469,
-    "refusedModules": 604,
-    "sourceModules": 3073
+    "emittedModules": 2471,
+    "refusedModules": 605,
+    "sourceModules": 3076
   }
 }
