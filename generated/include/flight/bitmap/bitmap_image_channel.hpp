@@ -10,5 +10,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::bitmap {
 
 using flight::types::ImageChannel;
+using flight::types::image_channel;
 
 } // namespace flight::bitmap
