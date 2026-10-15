@@ -566,5 +566,5 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   (`no matching function for call to 'compute_node_root_local_bounds_rectangle'`). TypeScript accepts the
   argument because `Node2D` supplies every constituent of `Spatial2DNode<Node2DTraits>`; the emitter
   renders `Node2D` as a two-component row and `Spatial2DNode<Traits>` as a five-component one. Measured:
-  the runtime's own `structural_ref_cast` DOES span the gap, so the emission is missing a projection
-  rather than the runtime a cast. No patch is carried.
+  the runtime's `structural_ref_cast` expression compiles, but its result does not match the callee's
+  row parameter; no working call-site projection is established. No patch is carried.
