@@ -5704,6 +5704,13 @@
     },
     {
       "dependency": "flight",
+      "digest": "7304378eb02e7ff146fd613305d0528545a41c7da4c3f41d567b09c61ee94be9",
+      "id": "swf-video-texture-2d-constructor",
+      "module": "packages/swf/src/swfVideoHandler.ts",
+      "package": "@flighthq/swf"
+    },
+    {
+      "dependency": "flight",
       "digest": "24c5deea8c620fdf601735ae6ac9320cd2324b7a1961a7f5b595c086d3ce8d39",
       "id": "velocity-transform-trait-traversal",
       "module": "packages/velocity/src/transformVelocity.ts",
@@ -5966,6 +5973,7 @@
       "flight/swf/_internal_swf_tag_stream_test_helper.hpp",
       "flight/swf/swf_bounded_definition.hpp",
       "flight/swf/swf_document.hpp",
+      "flight/swf/swf_filter.hpp",
       "flight/swf/swf_jpeg_bitmap_handler.hpp",
       "flight/swf/swf_lossless_bitmap_handler.hpp",
       "flight/swf/swf_script_handler.hpp",

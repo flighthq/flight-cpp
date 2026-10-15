@@ -156,10 +156,7 @@ struct strength_angle_distance_color_blur_x_blur_y_quality_source_mode_alpha_7aa
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BLUR_X_BLUR_Y_CB675B2356FD5887
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BLUR_X_BLUR_Y_CB675B2356FD5887
-struct blur_x_blur_y_cb675b2356fd5887 : public flight::ReferenceEnabled {
-  std::optional<double> blur_x;
-  std::optional<double> blur_y;
-};
+using blur_x_blur_y_cb675b2356fd5887 = flight::effects::blur_x_blur_y_cb675b2356fd5887;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BLUR_X_BLUR_Y_CB675B2356FD5887
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_ALPHA_BLUR_X_BLUR_Y_COLOR_QUALITY_STRENGTH_15F5C1A09B0347C4
@@ -220,16 +217,7 @@ struct strength_angle_distance_highlight_color_shadow_color_bevel_type_blur_x_bl
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_ALPHAS_COLORS_RATIOS_247D12B54A1B51B1
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_ALPHAS_COLORS_RATIOS_247D12B54A1B51B1
-struct strength_blur_x_blur_y_quality_source_mode_alphas_colors_ratios_247d12b54a1b51b1 : public flight::ReferenceEnabled {
-  std::optional<double> strength;
-  std::optional<double> blur_x;
-  std::optional<double> blur_y;
-  std::optional<double> quality;
-  std::optional<flight::types::EffectSourceMode> source_mode;
-  flight::Array<double> alphas;
-  flight::Array<double> colors;
-  flight::Array<double> ratios;
-};
+using strength_blur_x_blur_y_quality_source_mode_alphas_colors_ratios_247d12b54a1b51b1 = flight::effects::strength_blur_x_blur_y_quality_source_mode_alphas_colors_ratios_247d12b54a1b51b1;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_ALPHAS_COLORS_RATIOS_247D12B54A1B51B1
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_ANGLE_DISTANCE_BEVEL_TYPE_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_ALPHAS_COLORS_RATIOS_BF9034238BA34907

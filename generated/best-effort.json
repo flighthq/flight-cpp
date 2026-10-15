@@ -267,7 +267,7 @@
       "consumers": [
         "@flighthq/adjustments/packages/adjustments/src/contract.ts",
         "@flighthq/adjustments/packages/adjustments/src/index.ts",
-        "@flighthq/swf/packages/swf/src/swfDocument.ts"
+        "@flighthq/swf/packages/swf/src/swfAppearance.ts"
       ],
       "module": {
         "name": "ColorScaleBiasAdjustment",
@@ -923,7 +923,7 @@
         "@flighthq/audio/packages/audio/src/contract.ts",
         "@flighthq/audio/packages/audio/src/decodeAudioResourceBytes.ts",
         "@flighthq/audio/packages/audio/src/index.ts",
-        "@flighthq/swf/packages/swf/src/swfDocument.ts"
+        "@flighthq/swf/packages/swf/src/swfSoundHandler.ts"
       ],
       "module": {
         "name": "AudioResource",
@@ -951,7 +951,7 @@
         "@flighthq/audio/packages/audio/src/contract.ts",
         "@flighthq/audio/packages/audio/src/index.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/loadScene2DAudioResources.ts",
-        "@flighthq/swf/packages/swf/src/swfDocument.ts"
+        "@flighthq/swf/packages/swf/src/swfSoundHandler.ts"
       ],
       "module": {
         "name": "AudioResourceReference",
@@ -9945,6 +9945,7 @@
         "@flighthq/surface/packages/surface/src/surface.ts",
         "@flighthq/surface/packages/surface/src/wgpuSurface.ts",
         "@flighthq/swf/packages/swf/src/swfDocument.ts",
+        "@flighthq/swf/packages/swf/src/swfSoundHandler.ts",
         "@flighthq/text-markup/packages/text-markup/src/markupTagRegistry.ts",
         "@flighthq/text/packages/text/src/nativeText.ts",
         "@flighthq/text/packages/text/src/richText.ts",
@@ -12122,7 +12123,7 @@
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/enableScene3DResourceFailureGuards.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/resolveScene3DResources.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/sceneResourceRecovery.ts",
-        "@flighthq/swf/packages/swf/src/swfDocument.ts"
+        "@flighthq/swf/packages/swf/src/swfJpegBitmapHandler.ts"
       ],
       "declarationFingerprints": [
         "sha256:1f9baf10724b4eb1dfd5ce785637676861104503f3e9bc95d1e161bfab998a16",
@@ -12320,12 +12321,23 @@
         "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/libgdxAtlasParse.ts",
         "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/starlingParse.ts",
         "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/texturePackerParse.ts",
+        "@flighthq/swf/packages/swf/src/swfControlHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfDefineMorphShapeHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfDefineShapeHandler.ts",
         "@flighthq/swf/packages/swf/src/swfDocument.ts",
+        "@flighthq/swf/packages/swf/src/swfEditTextHandler.ts",
         "@flighthq/swf/packages/swf/src/swfFilter.ts",
+        "@flighthq/swf/packages/swf/src/swfFontHandler.ts",
         "@flighthq/swf/packages/swf/src/swfFrameAction.ts",
+        "@flighthq/swf/packages/swf/src/swfJpegBitmapHandler.ts",
         "@flighthq/swf/packages/swf/src/swfMorphShape.ts",
+        "@flighthq/swf/packages/swf/src/swfPlaceObject3Handler.ts",
+        "@flighthq/swf/packages/swf/src/swfScriptHandler.ts",
         "@flighthq/swf/packages/swf/src/swfShape.ts",
+        "@flighthq/swf/packages/swf/src/swfSoundHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfStaticTextHandler.ts",
         "@flighthq/swf/packages/swf/src/swfText.ts",
+        "@flighthq/swf/packages/swf/src/swfTimelineParse.ts",
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledJsonParse.ts",
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledProject.ts",
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledXmlParse.ts"
@@ -15268,7 +15280,8 @@
         "@flighthq/movieclip/packages/movieclip/src/contract.ts",
         "@flighthq/movieclip/packages/movieclip/src/index.ts",
         "@flighthq/swf/packages/swf/src/swfDocument.ts",
-        "@flighthq/swf/packages/swf/src/swfFrameAction.ts"
+        "@flighthq/swf/packages/swf/src/swfFrameAction.ts",
+        "@flighthq/swf/packages/swf/src/swfNode.ts"
       ],
       "declarationFingerprints": [
         "sha256:0c647de08278aa62d4860c3c2fecbd1f6d678f3c930ed6be76f0ba0b10efaf8b",
@@ -15654,7 +15667,7 @@
         "@flighthq/scene3d/packages/scene3d/src/sceneNodeCulling.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneNodeDispose.ts",
         "@flighthq/skeleton3d/packages/skeleton3d/src/prepareScene3DSkinning.ts",
-        "@flighthq/swf/packages/swf/src/swfDocument.ts"
+        "@flighthq/swf/packages/swf/src/swfNode.ts"
       ],
       "module": {
         "name": "Node",
@@ -15803,6 +15816,7 @@
         "@flighthq/shape/packages/shape/src/shape.ts",
         "@flighthq/shape/packages/shape/src/shapeCommands.ts",
         "@flighthq/swf/packages/swf/src/swfDocument.ts",
+        "@flighthq/swf/packages/swf/src/swfNode.ts",
         "@flighthq/text/packages/text/src/explainTextLabelContent.ts",
         "@flighthq/text/packages/text/src/nativeText.ts",
         "@flighthq/text/packages/text/src/richText.ts",
@@ -22350,7 +22364,8 @@
       "consumers": [
         "@flighthq/requirement/packages/requirement/src/contract.ts",
         "@flighthq/requirement/packages/requirement/src/index.ts",
-        "@flighthq/requirement/packages/requirement/src/requirementCollector.ts"
+        "@flighthq/requirement/packages/requirement/src/requirementCollector.ts",
+        "@flighthq/swf/packages/swf/src/swfRequirements.ts"
       ],
       "module": {
         "name": "RequirementSet",
@@ -22864,6 +22879,7 @@
         "@flighthq/shape/packages/shape/src/scale9Shape.ts",
         "@flighthq/shape/packages/shape/src/shape.ts",
         "@flighthq/swf/packages/swf/src/swfDocument.ts",
+        "@flighthq/swf/packages/swf/src/swfNode.ts",
         "@flighthq/text/packages/text/src/explainTextLabelContent.ts",
         "@flighthq/text/packages/text/src/nativeText.ts",
         "@flighthq/text/packages/text/src/richText.ts",
@@ -23021,7 +23037,7 @@
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuSprite.ts",
         "@flighthq/scene2d/packages/scene2d/src/contract.ts",
         "@flighthq/scene2d/packages/scene2d/src/scale9Sprite.ts",
-        "@flighthq/swf/packages/swf/src/swfDocument.ts"
+        "@flighthq/swf/packages/swf/src/swfNode.ts"
       ],
       "declarationFingerprints": [
         "sha256:0153c34e039eb6f737e56daddeb03d7ed0da0b4f1f0010f6712a694cf9268dcc",
@@ -35792,7 +35808,7 @@
       "consumers": [
         "@flighthq/shape/packages/shape/src/contract.ts",
         "@flighthq/shape/packages/shape/src/index.ts",
-        "@flighthq/swf/packages/swf/src/swfDocument.ts"
+        "@flighthq/swf/packages/swf/src/swfDefineShapeHandler.ts"
       ],
       "declarationFingerprints": [
         "sha256:350fecc1c19c6639197dbfac4770d6b8bba6b93e6d0267e1b01753625361cd44",
@@ -35839,7 +35855,7 @@
         "@flighthq/shape/packages/shape/src/index.ts",
         "@flighthq/shape/packages/shape/src/morphShape.ts",
         "@flighthq/shape/packages/shape/src/scale9Shape.ts",
-        "@flighthq/swf/packages/swf/src/swfDocument.ts",
+        "@flighthq/swf/packages/swf/src/swfDefineShapeHandler.ts",
         "@flighthq/swf/packages/swf/src/swfShape.ts",
         "@flighthq/swf/packages/swf/src/swfText.ts"
       ],
@@ -40711,9 +40727,9 @@
       "declarationFingerprints": [
         "sha256:1f7582636643b48352ae4d1b802b014ed58f3d13c61fded4327fda69e20c6b92",
         "sha256:2ae464155668c9f7b0d438a66d22dbce19f19a606c3ac2dc160c70039861672c",
-        "sha256:6ac381096aa06c84ac0380a56525c498887874302cd03c2e76bb3daa2c11073a",
         "sha256:984845894adba4ade9f98abe83bb40308ddcd8ead9b59224ad8ef6e878f24727",
-        "sha256:a799c99250ea69533b01251f8f23840b3f38e95cb1a342a660327f6dbb27ca64"
+        "sha256:a799c99250ea69533b01251f8f23840b3f38e95cb1a342a660327f6dbb27ca64",
+        "sha256:c1f789d2683b11aad28807199821c72966f7f3b3a5d2ea525bc725342d717722"
       ],
       "module": {
         "name": "SwfVideoHandler",
@@ -42129,7 +42145,8 @@
       "consumers": [
         "@flighthq/render-gl/packages/render-gl/src/glExternalTexture.ts",
         "@flighthq/render-wgpu/packages/render-wgpu/src/wgpuExternalTexture.ts",
-        "@flighthq/swf/packages/swf/src/swfDocument.ts",
+        "@flighthq/swf/packages/swf/src/swfImageTexture.ts",
+        "@flighthq/swf/packages/swf/src/swfVideoHandler.ts",
         "@flighthq/texture/packages/texture/src/contract.ts",
         "@flighthq/texture/packages/texture/src/cubeTexture.ts",
         "@flighthq/texture/packages/texture/src/renderTexture.ts",
@@ -42197,7 +42214,8 @@
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/revealScene3DResourcesOnResolve.ts",
         "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuMeshPipeline.ts",
         "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuParticleEmitter3D.ts",
-        "@flighthq/swf/packages/swf/src/swfDocument.ts",
+        "@flighthq/swf/packages/swf/src/swfImageTexture.ts",
+        "@flighthq/swf/packages/swf/src/swfVideoHandler.ts",
         "@flighthq/texture/packages/texture/src/contract.ts",
         "@flighthq/texture/packages/texture/src/cubeTexture.ts",
         "@flighthq/texture/packages/texture/src/renderTexture.ts",
@@ -44419,6 +44437,7 @@
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/resolveScene2DResources.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/scene2DDocument.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts",
+        "@flighthq/swf/packages/swf/src/expandSwfTagHandlerDispatch.ts",
         "@flighthq/types/packages/types/src/Scene2DDocument.ts",
         "@flighthq/types/packages/types/src/Scene2DResources.ts",
         "@flighthq/types/packages/types/src/SwfTagHandler.ts",
@@ -46844,6 +46863,11 @@
     },
     {
       "consumers": [
+        "@flighthq/swf/packages/swf/src/mergeSwfParseOptions.ts",
+        "@flighthq/swf/packages/swf/src/swfContentCapabilities.ts",
+        "@flighthq/swf/packages/swf/src/swfHeader.ts",
+        "@flighthq/swf/packages/swf/src/swfImageDecoder.ts",
+        "@flighthq/swf/packages/swf/src/swfTagCensus.ts",
         "@flighthq/types/packages/types/src/Awd2ParseOptions.ts",
         "@flighthq/types/packages/types/src/ElectronHost.ts",
         "@flighthq/types/packages/types/src/Host.ts",
@@ -46959,6 +46983,7 @@
         "@flighthq/bitmapfont/packages/bitmapfont/src/bitmapFontFromGlyphAtlas.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssetBinding.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/shared.ts",
+        "@flighthq/swf/packages/swf/src/swfImageTexture.ts",
         "@flighthq/texture/packages/texture/src/cubeTexture.ts",
         "@flighthq/texture/packages/texture/src/renderTexture.ts",
         "@flighthq/texture/packages/texture/src/texture.ts",
@@ -48400,6 +48425,8 @@
         "@flighthq/surface/packages/surface/src/glSurface.ts",
         "@flighthq/surface/packages/surface/src/surface.ts",
         "@flighthq/surface/packages/surface/src/wgpuSurface.ts",
+        "@flighthq/swf/packages/swf/src/swfImageTexture.ts",
+        "@flighthq/swf/packages/swf/src/swfNodeKinds.ts",
         "@flighthq/text-markup/packages/text-markup/src/markupTagRegistry.ts",
         "@flighthq/textbidi/packages/textbidi/src/bidiClassKernel.ts",
         "@flighthq/textlayout/packages/textlayout/src/textBounds.ts",
@@ -52086,7 +52113,6 @@
     },
     {
       "consumers": [
-        "@flighthq/swf/packages/swf/src/swfImageDecoder.ts",
         "@flighthq/types/packages/types/src/Scene2DResources.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
@@ -52218,6 +52244,7 @@
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/sceneResourceSignals.ts",
         "@flighthq/scene3d/packages/scene3d/src/scene.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneDocumentLights.ts",
+        "@flighthq/swf/packages/swf/src/expandSwfTagHandlerDispatch.ts",
         "@flighthq/texture/packages/texture/src/texture.ts",
         "@flighthq/types/packages/types/src/CreateTextureOptions.ts",
         "@flighthq/types/packages/types/src/ImageBitmapComposition.ts",
@@ -52259,7 +52286,7 @@
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoad.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/skeletonDetect.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryFull.ts",
-        "@flighthq/swf/packages/swf/src/swfTagRegistry.ts",
+        "@flighthq/swf/packages/swf/src/expandSwfTagHandlerDispatch.ts",
         "@flighthq/types/packages/types/src/Awd2Block.ts",
         "@flighthq/types/packages/types/src/BitmapFontImportOptions.ts",
         "@flighthq/types/packages/types/src/ColladaDecoding.ts",
@@ -54162,6 +54189,7 @@
     {
       "consumers": [
         "@flighthq/interaction/packages/interaction/src/registerDefaultHitTests.ts",
+        "@flighthq/swf/packages/swf/src/swfNodeKinds.ts",
         "@flighthq/types/packages/types/src/MorphShapeAnimationTarget.ts",
         "@flighthq/types/packages/types/src/SwfTagParseState.ts",
         "@flighthq/types/packages/types/src/contract.ts",
@@ -54505,6 +54533,8 @@
         "@flighthq/scene2d/packages/scene2d/src/displayObjectAnimation.ts",
         "@flighthq/scene2d/packages/scene2d/src/scale9Sprite.ts",
         "@flighthq/shape/packages/shape/src/scale9Shape.ts",
+        "@flighthq/swf/packages/swf/src/expandSwfTagHandlerDispatch.ts",
+        "@flighthq/swf/packages/swf/src/swfNodeKinds.ts",
         "@flighthq/timeline/packages/timeline/src/timeline.ts",
         "@flighthq/types/packages/types/src/BitmapText.ts",
         "@flighthq/types/packages/types/src/ButtonController.ts",
@@ -54823,7 +54853,6 @@
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRasterizer.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextMeasure.ts",
         "@flighthq/shortcut/packages/shortcut/src/shortcutExplicitDependency.ts",
-        "@flighthq/swf/packages/swf/src/swfTagRegistry.ts",
         "@flighthq/texture-formats/packages/texture-formats/src/byteReader.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
@@ -57331,6 +57360,7 @@
       "consumers": [
         "@flighthq/interaction/packages/interaction/src/registerDefaultHitTests.ts",
         "@flighthq/interaction/packages/interaction/src/registerTextHitTest.ts",
+        "@flighthq/swf/packages/swf/src/swfNodeKinds.ts",
         "@flighthq/textlayout/packages/textlayout/src/richTextMetrics.ts",
         "@flighthq/types/packages/types/src/GlRichTextOverlay.ts",
         "@flighthq/types/packages/types/src/SelectableRichTextManager.ts",
@@ -57450,6 +57480,7 @@
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureWindowSource.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssetBinding.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/shared.ts",
+        "@flighthq/swf/packages/swf/src/swfImageTexture.ts",
         "@flighthq/texture/packages/texture/src/cubeTexture.ts",
         "@flighthq/texture/packages/texture/src/renderTexture.ts",
         "@flighthq/texture/packages/texture/src/sampler.ts",
@@ -57513,6 +57544,7 @@
       "consumers": [
         "@flighthq/interaction/packages/interaction/src/registerDefaultHitTests.ts",
         "@flighthq/shape/packages/shape/src/scale9Shape.ts",
+        "@flighthq/swf/packages/swf/src/swfNodeKinds.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -58384,6 +58416,7 @@
         "@flighthq/interaction/packages/interaction/src/registerDefaultHitTests.ts",
         "@flighthq/shape/packages/shape/src/enableShapeBoundsGuards.ts",
         "@flighthq/shape/packages/shape/src/scale9Shape.ts",
+        "@flighthq/swf/packages/swf/src/swfNodeKinds.ts",
         "@flighthq/types/packages/types/src/LottieRegistry.ts",
         "@flighthq/types/packages/types/src/MorphShape.ts",
         "@flighthq/types/packages/types/src/Scale9Shape.ts",
@@ -59754,6 +59787,7 @@
         "@flighthq/interaction/packages/interaction/src/registerDefaultHitTests.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssetBinding.ts",
         "@flighthq/scene2d/packages/scene2d/src/scale9Sprite.ts",
+        "@flighthq/swf/packages/swf/src/swfNodeKinds.ts",
         "@flighthq/types/packages/types/src/Scale9Sprite.ts",
         "@flighthq/types/packages/types/src/SpriteRenderer.ts",
         "@flighthq/types/packages/types/src/contract.ts",
@@ -60388,6 +60422,7 @@
     },
     {
       "consumers": [
+        "@flighthq/swf/packages/swf/src/swfContentCapabilities.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -60401,6 +60436,7 @@
     },
     {
       "consumers": [
+        "@flighthq/swf/packages/swf/src/expandSwfTagHandlerDispatch.ts",
         "@flighthq/types/packages/types/src/SwfTagHandler.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
@@ -60429,6 +60465,9 @@
     },
     {
       "consumers": [
+        "@flighthq/swf/packages/swf/src/swfContentCapabilities.ts",
+        "@flighthq/swf/packages/swf/src/swfHeader.ts",
+        "@flighthq/swf/packages/swf/src/swfTagCensus.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -60455,6 +60494,7 @@
     },
     {
       "consumers": [
+        "@flighthq/swf/packages/swf/src/mergeSwfParseOptions.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -60468,8 +60508,19 @@
     },
     {
       "consumers": [
-        "@flighthq/swf/packages/swf/src/swfExplain.ts",
-        "@flighthq/swf/packages/swf/src/swfTagRegistry.ts",
+        "@flighthq/swf/packages/swf/src/expandSwfTagHandlerDispatch.ts",
+        "@flighthq/swf/packages/swf/src/mergeSwfParseOptions.ts",
+        "@flighthq/swf/packages/swf/src/swfAllTagHandlers.ts",
+        "@flighthq/swf/packages/swf/src/swfBitmapTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfControlTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfFontTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfPlacementTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfScriptTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfShapeTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfSoundTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfSpriteTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfTextTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfVideoTagFamily.ts",
         "@flighthq/types/packages/types/src/SwfParseOptions.ts",
         "@flighthq/types/packages/types/src/SwfTagParseState.ts",
         "@flighthq/types/packages/types/src/contract.ts",
@@ -60485,6 +60536,12 @@
     },
     {
       "consumers": [
+        "@flighthq/swf/packages/swf/src/expandSwfTagHandlerDispatch.ts",
+        "@flighthq/swf/packages/swf/src/swfContentCapabilities.ts",
+        "@flighthq/swf/packages/swf/src/swfHeader.ts",
+        "@flighthq/swf/packages/swf/src/swfHeaderReader.ts",
+        "@flighthq/swf/packages/swf/src/swfPrimitive.ts",
+        "@flighthq/swf/packages/swf/src/swfTagCensus.ts",
         "@flighthq/types/packages/types/src/SwfHeader.ts",
         "@flighthq/types/packages/types/src/SwfTagHandler.ts",
         "@flighthq/types/packages/types/src/contract.ts",
@@ -61145,6 +61202,7 @@
         "@flighthq/spritesheet/packages/spritesheet/src/spritesheetAnimation.ts",
         "@flighthq/spritesheet/packages/spritesheet/src/spritesheetFrom.ts",
         "@flighthq/spritesheet/packages/spritesheet/src/spritesheetValidation.ts",
+        "@flighthq/swf/packages/swf/src/swfImageTexture.ts",
         "@flighthq/texture/packages/texture/src/cubeTexture.ts",
         "@flighthq/texture/packages/texture/src/renderTexture.ts",
         "@flighthq/texture/packages/texture/src/texture.ts",
@@ -61744,6 +61802,7 @@
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssetBinding.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/loadScene2DImageResources.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/shared.ts",
+        "@flighthq/swf/packages/swf/src/swfImageTexture.ts",
         "@flighthq/texture/packages/texture/src/cubeTexture.ts",
         "@flighthq/texture/packages/texture/src/renderTexture.ts",
         "@flighthq/texture/packages/texture/src/texture.ts",
@@ -62615,6 +62674,7 @@
         "@flighthq/screen/packages/screen/src/screen.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/pointAttachment2D.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/regionAttachment2D.ts",
+        "@flighthq/swf/packages/swf/src/swfImageTexture.ts",
         "@flighthq/texture/packages/texture/src/cubeTexture.ts",
         "@flighthq/texture/packages/texture/src/renderTexture.ts",
         "@flighthq/texture/packages/texture/src/texture.ts",
@@ -64545,14 +64605,34 @@
         "@flighthq/statechart/packages/statechart/src/enableStatechartGuards.ts",
         "@flighthq/statechart/packages/statechart/src/statechart.ts",
         "@flighthq/statechart/packages/statechart/src/statechartSignals.ts",
+        "@flighthq/swf/packages/swf/src/swfAppearance.ts",
         "@flighthq/swf/packages/swf/src/swfBitmap.ts",
+        "@flighthq/swf/packages/swf/src/swfBoundedDefinition.ts",
+        "@flighthq/swf/packages/swf/src/swfControlHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfDefineMorphShapeHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfDefineShapeHandler.ts",
         "@flighthq/swf/packages/swf/src/swfDocument.ts",
         "@flighthq/swf/packages/swf/src/swfEditText.ts",
+        "@flighthq/swf/packages/swf/src/swfEditTextHandler.ts",
         "@flighthq/swf/packages/swf/src/swfFilter.ts",
+        "@flighthq/swf/packages/swf/src/swfFontHandler.ts",
         "@flighthq/swf/packages/swf/src/swfFrameAction.ts",
+        "@flighthq/swf/packages/swf/src/swfJpegBitmapHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfLosslessBitmapHandler.ts",
         "@flighthq/swf/packages/swf/src/swfMorphShape.ts",
+        "@flighthq/swf/packages/swf/src/swfNode.ts",
+        "@flighthq/swf/packages/swf/src/swfPlaceObject3Handler.ts",
+        "@flighthq/swf/packages/swf/src/swfPlaceObjectHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfRequirements.ts",
+        "@flighthq/swf/packages/swf/src/swfScriptHandler.ts",
         "@flighthq/swf/packages/swf/src/swfShape.ts",
+        "@flighthq/swf/packages/swf/src/swfSoundHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfSpriteHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfStaticTextHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfTagStreamTestHelper.ts",
         "@flighthq/swf/packages/swf/src/swfText.ts",
+        "@flighthq/swf/packages/swf/src/swfTimelineParse.ts",
+        "@flighthq/swf/packages/swf/src/swfVideoHandler.ts",
         "@flighthq/text/packages/text/src/explainTextLabelContent.ts",
         "@flighthq/text/packages/text/src/nativeText.ts",
         "@flighthq/text/packages/text/src/richText.ts",

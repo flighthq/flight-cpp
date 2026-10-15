@@ -740,7 +740,7 @@ inline std::optional<flight::Ref<SwfFile>> read_swf_file(flight::Uint8Array sour
 
 inline std::optional<flight::Map<double, flight::Ref<flight::types::GlyphOutlineSource>>> create_glyph_outline_sources_from_swf(flight::Uint8Array source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfParseOptions>>>> options, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
   auto file = read_swf_file(source, options, diagnostics);
-  return (!file.has_value() ? std::nullopt : std::optional<flight::Map<double, flight::Ref<flight::types::GlyphOutlineSource>>>{flight::Map<double, flight::Ref<flight::types::GlyphOutlineSource>>(file.value()->parsed->font_outline_sources)});
+  return (!file.has_value() ? std::nullopt : std::optional<flight::Map<double, flight::Ref<flight::types::GlyphOutlineSource>>>{flight::Map<double, flight::Ref<flight::types::GlyphOutlineSource>>(file.value()->parsed->font_outline_sources).clone()});
 }
 
 inline std::optional<flight::Ref<flight::types::SwfDocumentImport>> create_scene2_dimport_from_swf(flight::Uint8Array source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfParseOptions>>>> options, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {

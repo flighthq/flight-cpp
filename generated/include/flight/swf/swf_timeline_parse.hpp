@@ -114,7 +114,7 @@ inline std::optional<flight::Ref<flight::types::SwfTimeline>> read_swf_timeline(
       if ((state->remaining_frame_entries < 0.0)) {
         return std::nullopt;
       }
-      timeline->frames.push(flight::Map<double, flight::Ref<flight::types::SwfTagPlacement>>(timeline->placements));
+      timeline->frames.push(flight::Map<double, flight::Ref<flight::types::SwfTagPlacement>>(timeline->placements).clone());
     }
     else {
       std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagHandler>>>>> family = state->dispatch.get(code);
