@@ -268,6 +268,23 @@ target_include_directories(flight_cpp_generated_bitmap_tests BEFORE PRIVATE "${P
 target_link_libraries(flight_cpp_generated_bitmap_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_bitmap COMMAND flight_cpp_generated_bitmap_tests)
 
+add_executable(
+  flight_cpp_generated_bitmapfont_tests
+  generated_bitmapfont_test.cpp
+)
+target_include_directories(
+  flight_cpp_generated_bitmapfont_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(
+  flight_cpp_generated_bitmapfont_tests
+  PRIVATE Flight::Cpp Flight::SdkPreview
+)
+add_test(
+  NAME flight_cpp.generated_bitmapfont
+  COMMAND flight_cpp_generated_bitmapfont_tests
+)
+
 add_executable(flight_cpp_generated_clip_tests generated_clip_test.cpp)
 target_include_directories(
   flight_cpp_generated_clip_tests
@@ -1635,6 +1652,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_texture_options_row texture 
 flight_cpp_package_test_labels(flight_cpp.generated_cube_texture texture types)
 flight_cpp_package_test_labels(flight_cpp.generated_cube_texture_api texture types)
 flight_cpp_package_test_labels(flight_cpp.generated_bitmap bitmap)
+flight_cpp_package_test_labels(flight_cpp.generated_bitmapfont bitmap bitmapfont)
 flight_cpp_package_test_labels(flight_cpp.generated_texture_formats texture-formats)
 flight_cpp_package_test_labels(flight_cpp.generated_clip clip)
 flight_cpp_package_test_labels(flight_cpp.generated_clip_edge clip)
