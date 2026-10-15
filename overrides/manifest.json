@@ -2298,6 +2298,22 @@
       "remaining": "The erased Effect base owner still cannot recover a concrete effect, and two effects that share a kind but have different native owner types cannot share dynamic property storage. Same-kind cross-owner interpolation therefore fails loudly rather than reinterpreting or partially copying an owner.",
       "expires": "when the emitter represents EffectFieldRoles for this profile, so that EFFECT_FIELD_ROLES and lerpEffect both emit.",
       "authoredOn": "2026-10-14"
+    },
+    {
+      "id": "spatial-format-indexing-notice",
+      "path": "flight/spatial/format_spatial_indexing_notice.hpp",
+      "package": "@flighthq/spatial",
+      "status": "complete",
+      "supplies": "packages/spatial/src/formatSpatialIndexingNotice.ts",
+      "remaining": "None in the supplied module at this pin.",
+      "derivedFrom": "69c727108626a7028fc6e54124b5d0432b6b2f1efa36ac7c5d97733884d92afa",
+      "reason": "At a627849 the emitter refuses formatSpatialIndexingNotice (cpp-member-projection-without-present-storage): its branches test notice.reason, a `SpatialIndexingReason | null` member of the Readonly<SpatialIndexingNotice> row, and then interpolate members inside the narrowed branches. The module is the package's only refusal, and contract.ts is refused as its dependent, which holds the package at partial.",
+      "change": "Supplies the one function over the emitter's own parameter carrier -- the readonly SpatialIndexingNotice row the SpatialIndexingGuard callback receives -- reading every field with row_get and rendering each template interpolation with flight::to_string. The module's existing include of the types header is kept and uniform_grid.hpp is added for MAX_INDEXED_CELLS_PER_OBJECT.",
+      "equivalence": "Branch order is the source's: reason before mode, so a reasoned notice takes its reason text whatever the mode; missing-id splits on operation; a null or unnamed reason falls through to declined, overflow, and the no-advice fallback. Every message is the source text character for character, including the em dashes and quotes, and numbers render through the runtime's JavaScript Number-to-String. The function only reads its argument and returns a new string. scripts/spatialNoticeOracle.mjs runs the pinned TypeScript itself over 87 reason, mode, operation, and NaN/Infinity/-0/exponent cases and requires identical output; tests/generated_spatial_notice_test.cpp pins every branch and formats a real uniform-grid inverted-bounds notice through setSpatialIndexingGuard.",
+      "whyNotAPatchOrRepair": "A repair cannot add a function body. The source is an ordinary null-aware discriminant test over a readonly record; rewriting it in TypeScript around the emitter's narrowing restriction would make the target-neutral source less direct.",
+      "unblocks": "format_spatial_indexing_notice.hpp and the refused contract.ts barrel, lifting @flighthq/spatial from 10/11 emitted to a complete module set.",
+      "expires": "when member projections of a narrowed nullable readonly-row member lower with present storage and formatSpatialIndexingNotice emits.",
+      "authoredOn": "2026-10-15"
     }
   ]
 }

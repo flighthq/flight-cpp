@@ -1080,6 +1080,14 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_spatial_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_spatial COMMAND flight_cpp_generated_spatial_tests)
 
+add_executable(flight_cpp_generated_spatial_notice_tests generated_spatial_notice_test.cpp)
+target_include_directories(
+  flight_cpp_generated_spatial_notice_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_spatial_notice_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_spatial_notice COMMAND flight_cpp_generated_spatial_notice_tests)
+
 add_executable(flight_cpp_generated_input_manager_tests generated_input_manager_test.cpp)
 target_include_directories(
   flight_cpp_generated_input_manager_tests
@@ -1744,6 +1752,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_swf swf)
 flight_cpp_package_test_labels(flight_cpp.generated_swf_video_texture swf texture)
 flight_cpp_package_test_labels(flight_cpp.generated_physics2d physics2d)
 flight_cpp_package_test_labels(flight_cpp.generated_spatial spatial)
+flight_cpp_package_test_labels(flight_cpp.generated_spatial_notice spatial)
 flight_cpp_package_test_labels(flight_cpp.generated_input_manager input)
 flight_cpp_package_test_labels(flight_cpp.generated_input_state input)
 flight_cpp_package_test_labels(flight_cpp.generated_input_binding input)

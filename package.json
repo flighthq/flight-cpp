@@ -67,6 +67,7 @@
     "sdl-app:oracle": "node ./scripts/sdlAppProfileOracle.mjs",
     "sdl-gl:oracle": "node ./scripts/sdlGlProfileOracle.mjs",
     "sdl-wgpu:oracle": "node ./scripts/sdlWgpuProfileOracle.mjs",
+    "spatial-notice:oracle": "node ./scripts/spatialNoticeOracle.mjs",
     "stream:oracle": "node ./scripts/streamOracle.mjs",
     "structural:oracle": "node ./scripts/structuralProxyOracle.mjs",
     "text-encoder:oracle": "node ./scripts/textEncoderOracle.mjs",
