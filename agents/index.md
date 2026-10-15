@@ -31,7 +31,7 @@ Last full baseline (builder audit, base 846fa56, old flight pin 7e2fc7d). Not to
 - **D3 — Compiler defects.** Work stays inside flight-cpp: runtime extension, external bindings,
   source patches, repairs, overrides, in the order `AGENTS.md` prescribes. Every compiler defect
   found is also written up as a request (see "Compiler requests"). The fleet does not move the
-  flight-compiler pin; the user does, after landing fixes upstream.
+  flight-compiler pin on its own; the user decides each move (the 806d257 move is authorized as D8).
 - **D4 — WGPU.** GL first. WGPU packages (render-wgpu, scene2d-wgpu, scene3d-wgpu, effects-wgpu)
   are queued after the GL stack is green, as an optional host library. Until then they stay partial
   with honest fail-loud boundaries.
