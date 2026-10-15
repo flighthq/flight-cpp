@@ -335,18 +335,22 @@
         "flight/bitmaptext/bitmap_text.hpp",
         "flight/command/command.hpp",
         "flight/gizmo/node2d_gizmo_features.hpp",
+        "flight/gui/_internal_gui_test_helper.hpp",
         "flight/gui/button_controller.hpp",
         "flight/gui/combo_box_controller.hpp",
+        "flight/gui/gui_controller.hpp",
         "flight/gui/gui_dialog.hpp",
         "flight/gui/list_controller.hpp",
         "flight/gui/progress_bar_controller.hpp",
         "flight/gui/radio_group_controller.hpp",
+        "flight/gui/scroll_bar_controller.hpp",
         "flight/gui/scroll_view_controller.hpp",
         "flight/gui/slider_controller.hpp",
         "flight/gui/split_pane_controller.hpp",
         "flight/gui/tab_bar_controller.hpp",
         "flight/gui/text_input_controller.hpp",
         "flight/gui/toggle_controller.hpp",
+        "flight/gui/tooltip_controller.hpp",
         "flight/gui/tree_view_controller.hpp",
         "flight/gui/window_controller.hpp",
         "flight/interaction/enable_interaction_guards.hpp",
@@ -1755,9 +1759,7 @@
       "id": "gizmo-entity-runtime-key-member"
     },
     {
-      "files": [
-        "flight/gui/gui_controller.hpp"
-      ],
+      "files": [],
       "id": "gui-entity-runtime-key-member"
     },
     {
@@ -2733,9 +2735,7 @@
       "id": "gizmo-unqualified-signals-names"
     },
     {
-      "files": [
-        "flight/gui/gui_controller.hpp"
-      ],
+      "files": [],
       "id": "gui-unqualified-signals-names"
     },
     {
@@ -2859,9 +2859,7 @@
       "id": "physics3d-unqualified-spatial-names"
     },
     {
-      "files": [
-        "flight/gui/gui_controller.hpp"
-      ],
+      "files": [],
       "id": "gui-unqualified-interaction-names"
     },
     {
@@ -6160,8 +6158,6 @@
       "flight/effects_wgpu/wgpu_vignette_effect.hpp",
       "flight/effects_wgpu/wgpu_white_balance_effect.hpp",
       "flight/glyphatlas/glyph_source.hpp",
-      "flight/gui/scroll_bar_controller.hpp",
-      "flight/gui/tooltip_controller.hpp",
       "flight/intl/collator.hpp",
       "flight/intl/datetime.hpp",
       "flight/intl/list.hpp",
@@ -6250,7 +6246,7 @@
       "flight/textshaper/text_shaper_cache.hpp",
       "flight/tokens/substitute_flight_document_scene_tokens.hpp"
     ],
-    "includes": 771
+    "includes": 769
   },
   "packages": [
     {
@@ -6788,14 +6784,14 @@
       "sourceModules": 10
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/gui",
       "cppNamespace": "flight::gui",
-      "emittedModules": 16,
+      "emittedModules": 18,
       "package": "@flighthq/gui",
-      "refusedModules": 4,
+      "refusedModules": 2,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 20
@@ -8256,8 +8252,8 @@
   },
   "summary": {
     "packages": 153,
-    "emittedModules": 2539,
-    "refusedModules": 612,
+    "emittedModules": 2541,
+    "refusedModules": 610,
     "sourceModules": 3151
   }
 }

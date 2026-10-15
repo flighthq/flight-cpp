@@ -2289,21 +2289,21 @@
       "code": "dependency-refused",
       "module": "packages/gui/src/buttonController.ts",
       "package": "@flighthq/gui",
-      "reason": "dependency ./guiController was refused for @flighthq/gui/packages/gui/src/guiController.ts",
+      "reason": "dependency ./guiController.ts was refused for @flighthq/gui/packages/gui/src/guiController.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/gui/src/comboBoxController.ts",
       "package": "@flighthq/gui",
-      "reason": "dependency ./buttonController was refused for @flighthq/gui/packages/gui/src/buttonController.ts",
+      "reason": "dependency ./buttonController.ts was refused for @flighthq/gui/packages/gui/src/buttonController.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/gui/src/contract.ts",
       "package": "@flighthq/gui",
-      "reason": "dependency ./buttonController was refused for @flighthq/gui/packages/gui/src/buttonController.ts",
+      "reason": "dependency ./buttonController.ts was refused for @flighthq/gui/packages/gui/src/buttonController.ts",
       "stage": "dependency"
     },
     {
@@ -2319,7 +2319,7 @@
       "code": "dependency-refused",
       "module": "packages/gui/src/guiDialog.ts",
       "package": "@flighthq/gui",
-      "reason": "dependency ./guiController was refused for @flighthq/gui/packages/gui/src/guiController.ts",
+      "reason": "dependency ./guiController.ts was refused for @flighthq/gui/packages/gui/src/guiController.ts",
       "stage": "dependency"
     },
     {
@@ -2335,102 +2335,98 @@
       "code": "dependency-refused",
       "module": "packages/gui/src/index.ts",
       "package": "@flighthq/gui",
-      "reason": "dependency ./contract was refused for @flighthq/gui/packages/gui/src/contract.ts",
+      "reason": "dependency ./buttonController.ts was refused for @flighthq/gui/packages/gui/src/buttonController.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/gui/src/listController.ts",
       "package": "@flighthq/gui",
-      "reason": "dependency ./guiController was refused for @flighthq/gui/packages/gui/src/guiController.ts",
+      "reason": "dependency ./guiController.ts was refused for @flighthq/gui/packages/gui/src/guiController.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/gui/src/progressBarController.ts",
       "package": "@flighthq/gui",
-      "reason": "dependency ./guiController was refused for @flighthq/gui/packages/gui/src/guiController.ts",
+      "reason": "dependency ./guiController.ts was refused for @flighthq/gui/packages/gui/src/guiController.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/gui/src/radioGroupController.ts",
       "package": "@flighthq/gui",
-      "reason": "dependency ./guiController was refused for @flighthq/gui/packages/gui/src/guiController.ts",
+      "reason": "dependency ./guiController.ts was refused for @flighthq/gui/packages/gui/src/guiController.ts",
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 137,
+      "code": "dependency-refused",
       "module": "packages/gui/src/scrollBarController.ts",
       "package": "@flighthq/gui",
-      "reason": "cpp emission failed for @flighthq/gui/packages/gui/src/scrollBarController.ts: external call result type flight::host::TimerHandle is not one represented contextual runtime domain",
-      "stage": "emission"
+      "reason": "dependency ./guiController.ts was refused for @flighthq/gui/packages/gui/src/guiController.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/gui/src/scrollViewController.ts",
       "package": "@flighthq/gui",
-      "reason": "dependency ./guiController was refused for @flighthq/gui/packages/gui/src/guiController.ts",
+      "reason": "dependency ./guiController.ts was refused for @flighthq/gui/packages/gui/src/guiController.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/gui/src/sliderController.ts",
       "package": "@flighthq/gui",
-      "reason": "dependency ./guiController was refused for @flighthq/gui/packages/gui/src/guiController.ts",
+      "reason": "dependency ./guiController.ts was refused for @flighthq/gui/packages/gui/src/guiController.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/gui/src/splitPaneController.ts",
       "package": "@flighthq/gui",
-      "reason": "dependency ./guiController was refused for @flighthq/gui/packages/gui/src/guiController.ts",
+      "reason": "dependency ./guiController.ts was refused for @flighthq/gui/packages/gui/src/guiController.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/gui/src/tabBarController.ts",
       "package": "@flighthq/gui",
-      "reason": "dependency ./guiController was refused for @flighthq/gui/packages/gui/src/guiController.ts",
+      "reason": "dependency ./guiController.ts was refused for @flighthq/gui/packages/gui/src/guiController.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/gui/src/textInputController.ts",
       "package": "@flighthq/gui",
-      "reason": "dependency ./guiController was refused for @flighthq/gui/packages/gui/src/guiController.ts",
+      "reason": "dependency ./guiController.ts was refused for @flighthq/gui/packages/gui/src/guiController.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/gui/src/toggleController.ts",
       "package": "@flighthq/gui",
-      "reason": "dependency ./guiController was refused for @flighthq/gui/packages/gui/src/guiController.ts",
+      "reason": "dependency ./guiController.ts was refused for @flighthq/gui/packages/gui/src/guiController.ts",
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 24,
+      "code": "dependency-refused",
       "module": "packages/gui/src/tooltipController.ts",
       "package": "@flighthq/gui",
-      "reason": "cpp emission failed for @flighthq/gui/packages/gui/src/tooltipController.ts: external call result type flight::host::TimerHandle is not one represented contextual runtime domain",
-      "stage": "emission"
+      "reason": "dependency ./guiController.ts was refused for @flighthq/gui/packages/gui/src/guiController.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/gui/src/treeViewController.ts",
       "package": "@flighthq/gui",
-      "reason": "dependency ./guiController was refused for @flighthq/gui/packages/gui/src/guiController.ts",
+      "reason": "dependency ./guiController.ts was refused for @flighthq/gui/packages/gui/src/guiController.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/gui/src/windowController.ts",
       "package": "@flighthq/gui",
-      "reason": "dependency ./buttonController was refused for @flighthq/gui/packages/gui/src/buttonController.ts",
+      "reason": "dependency ./buttonController.ts was refused for @flighthq/gui/packages/gui/src/buttonController.ts",
       "stage": "dependency"
     },
     {

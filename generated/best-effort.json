@@ -11572,6 +11572,7 @@
       "consumers": [
         "@flighthq/gui/packages/gui/src/comboBoxController.ts",
         "@flighthq/gui/packages/gui/src/contract.ts",
+        "@flighthq/gui/packages/gui/src/index.ts",
         "@flighthq/gui/packages/gui/src/windowController.ts"
       ],
       "module": {
@@ -11588,7 +11589,8 @@
     },
     {
       "consumers": [
-        "@flighthq/gui/packages/gui/src/contract.ts"
+        "@flighthq/gui/packages/gui/src/contract.ts",
+        "@flighthq/gui/packages/gui/src/index.ts"
       ],
       "module": {
         "name": "ComboBoxController",
@@ -11604,9 +11606,7 @@
       "status": "dependency-incomplete"
     },
     {
-      "consumers": [
-        "@flighthq/gui/packages/gui/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/gui",
@@ -11616,7 +11616,9 @@
       "refusedDependencies": [
         "@flighthq/gui/packages/gui/src/buttonController.ts",
         "@flighthq/gui/packages/gui/src/comboBoxController.ts",
+        "@flighthq/gui/packages/gui/src/guiController.ts",
         "@flighthq/gui/packages/gui/src/guiDialog.ts",
+        "@flighthq/gui/packages/gui/src/guiTestHelper.ts",
         "@flighthq/gui/packages/gui/src/listController.ts",
         "@flighthq/gui/packages/gui/src/progressBarController.ts",
         "@flighthq/gui/packages/gui/src/radioGroupController.ts",
@@ -11638,7 +11640,9 @@
       "consumers": [
         "@flighthq/gui/packages/gui/src/buttonController.ts",
         "@flighthq/gui/packages/gui/src/comboBoxController.ts",
+        "@flighthq/gui/packages/gui/src/contract.ts",
         "@flighthq/gui/packages/gui/src/guiDialog.ts",
+        "@flighthq/gui/packages/gui/src/index.ts",
         "@flighthq/gui/packages/gui/src/listController.ts",
         "@flighthq/gui/packages/gui/src/progressBarController.ts",
         "@flighthq/gui/packages/gui/src/radioGroupController.ts",
@@ -11682,7 +11686,8 @@
     },
     {
       "consumers": [
-        "@flighthq/gui/packages/gui/src/contract.ts"
+        "@flighthq/gui/packages/gui/src/contract.ts",
+        "@flighthq/gui/packages/gui/src/index.ts"
       ],
       "module": {
         "name": "GuiDialog",
@@ -11698,7 +11703,10 @@
     },
     {
       "classification": "target-runtime",
-      "consumers": [],
+      "consumers": [
+        "@flighthq/gui/packages/gui/src/contract.ts",
+        "@flighthq/gui/packages/gui/src/index.ts"
+      ],
       "declarationFingerprints": [
         "sha256:aec3659baea27fa24012a481dc3648fb492d1c824176eca835a93cc5192cb653",
         "sha256:ef0eadcb33d6f67fd25fe81f22752ee9a8b951e90c1c63eab8000e84ed78a63e",
@@ -11722,14 +11730,32 @@
       },
       "path": "flight/gui/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/gui/packages/gui/src/contract.ts"
+        "@flighthq/gui/packages/gui/src/buttonController.ts",
+        "@flighthq/gui/packages/gui/src/comboBoxController.ts",
+        "@flighthq/gui/packages/gui/src/guiController.ts",
+        "@flighthq/gui/packages/gui/src/guiDialog.ts",
+        "@flighthq/gui/packages/gui/src/guiTestHelper.ts",
+        "@flighthq/gui/packages/gui/src/listController.ts",
+        "@flighthq/gui/packages/gui/src/progressBarController.ts",
+        "@flighthq/gui/packages/gui/src/radioGroupController.ts",
+        "@flighthq/gui/packages/gui/src/scrollBarController.ts",
+        "@flighthq/gui/packages/gui/src/scrollViewController.ts",
+        "@flighthq/gui/packages/gui/src/sliderController.ts",
+        "@flighthq/gui/packages/gui/src/splitPaneController.ts",
+        "@flighthq/gui/packages/gui/src/tabBarController.ts",
+        "@flighthq/gui/packages/gui/src/textInputController.ts",
+        "@flighthq/gui/packages/gui/src/toggleController.ts",
+        "@flighthq/gui/packages/gui/src/tooltipController.ts",
+        "@flighthq/gui/packages/gui/src/treeViewController.ts",
+        "@flighthq/gui/packages/gui/src/windowController.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
       "consumers": [
         "@flighthq/gui/packages/gui/src/comboBoxController.ts",
-        "@flighthq/gui/packages/gui/src/contract.ts"
+        "@flighthq/gui/packages/gui/src/contract.ts",
+        "@flighthq/gui/packages/gui/src/index.ts"
       ],
       "module": {
         "name": "ListController",
@@ -11745,7 +11771,8 @@
     },
     {
       "consumers": [
-        "@flighthq/gui/packages/gui/src/contract.ts"
+        "@flighthq/gui/packages/gui/src/contract.ts",
+        "@flighthq/gui/packages/gui/src/index.ts"
       ],
       "module": {
         "name": "ProgressBarController",
@@ -11760,7 +11787,8 @@
     },
     {
       "consumers": [
-        "@flighthq/gui/packages/gui/src/contract.ts"
+        "@flighthq/gui/packages/gui/src/contract.ts",
+        "@flighthq/gui/packages/gui/src/index.ts"
       ],
       "module": {
         "name": "RadioGroupController",
@@ -11775,23 +11803,11 @@
       "status": "dependency-incomplete"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/gui/packages/gui/src/contract.ts",
+        "@flighthq/gui/packages/gui/src/index.ts",
         "@flighthq/gui/packages/gui/src/listController.ts",
         "@flighthq/gui/packages/gui/src/scrollViewController.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:0052e95fe570ea04648219bcb14d2ce1c56ceaf27522bcd4fa8a92afcfc197c3",
-        "sha256:37411ed6e23745a16678c52ca9e36cf27f07d1fece007bef5ef8ee708577a0ea",
-        "sha256:5a1dda5506a94f93a230be430ec312c71ee7fbcfa87e187dece70bf4899c210d",
-        "sha256:812faa24924517a7dc1bf73ee2afdf5c11d546a7bda3de3973adfdc8aaeb89d2",
-        "sha256:8532a0994109e2aa483e03726a1bd038bd6c752b90f829acdc492e0d876aa521",
-        "sha256:9ba280ca34a27d3495a19a2b9b59c91f2b7c4d07aa855bd423af42022b256071",
-        "sha256:9cda0338abfb0da0604ca444adad81991adbc4ed92faac08bb2c0f59e7f72c2d",
-        "sha256:af17a12a7dd2e8db991f0182262895f83bf13c8fd00c47bbc9a97e2e81a854fe",
-        "sha256:cd5f8fdfab444d3c25d17ae3e69e83009422e1bbf059d57b38c882107bcc8174",
-        "sha256:da3759efffa47b9892dd522221b56b2ff71bc5d10f3078268445f0bc1e815687"
       ],
       "module": {
         "name": "ScrollBarController",
@@ -11799,11 +11815,15 @@
         "source": "packages/gui/src/scrollBarController.ts"
       },
       "path": "flight/gui/scroll_bar_controller.hpp",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/gui/packages/gui/src/guiController.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [
-        "@flighthq/gui/packages/gui/src/contract.ts"
+        "@flighthq/gui/packages/gui/src/contract.ts",
+        "@flighthq/gui/packages/gui/src/index.ts"
       ],
       "module": {
         "name": "ScrollViewController",
@@ -11819,7 +11839,8 @@
     },
     {
       "consumers": [
-        "@flighthq/gui/packages/gui/src/contract.ts"
+        "@flighthq/gui/packages/gui/src/contract.ts",
+        "@flighthq/gui/packages/gui/src/index.ts"
       ],
       "module": {
         "name": "SliderController",
@@ -11834,7 +11855,8 @@
     },
     {
       "consumers": [
-        "@flighthq/gui/packages/gui/src/contract.ts"
+        "@flighthq/gui/packages/gui/src/contract.ts",
+        "@flighthq/gui/packages/gui/src/index.ts"
       ],
       "module": {
         "name": "SplitPaneController",
@@ -11849,7 +11871,8 @@
     },
     {
       "consumers": [
-        "@flighthq/gui/packages/gui/src/contract.ts"
+        "@flighthq/gui/packages/gui/src/contract.ts",
+        "@flighthq/gui/packages/gui/src/index.ts"
       ],
       "module": {
         "name": "TabBarController",
@@ -11864,7 +11887,8 @@
     },
     {
       "consumers": [
-        "@flighthq/gui/packages/gui/src/contract.ts"
+        "@flighthq/gui/packages/gui/src/contract.ts",
+        "@flighthq/gui/packages/gui/src/index.ts"
       ],
       "module": {
         "name": "TextInputController",
@@ -11884,6 +11908,7 @@
     {
       "consumers": [
         "@flighthq/gui/packages/gui/src/contract.ts",
+        "@flighthq/gui/packages/gui/src/index.ts",
         "@flighthq/gui/packages/gui/src/radioGroupController.ts"
       ],
       "module": {
@@ -11898,18 +11923,9 @@
       "status": "dependency-incomplete"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
-        "@flighthq/gui/packages/gui/src/contract.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:24af6eb1316b6c6f9379a97ba55bfa4da7293bf0c5846689b0da8467f956d67c",
-        "sha256:66216180fcdf0a422ed24f7859371e6d876769878e8fe17ca98bbd00537e3af9",
-        "sha256:883a252e747ae2fab68979e98570228f026841b667e07da65534f979b6168f76",
-        "sha256:b927ddb65edd2f60020ede9edcb30b1580d434214c6c9f70e8c1bf3c90bf4766",
-        "sha256:d0220e9eaa69e926c3c3a0328c782eb2f1dec11249735325aeaef086bdd28a7c",
-        "sha256:d3c1a85e11729ae16e95a45ac48c2ada71e6890a085545decc930c5e3acc3aa0",
-        "sha256:f341a242e9ad036969fa59e683cbc11872a3c45f8014f25e028cf6c849332fb9"
+        "@flighthq/gui/packages/gui/src/contract.ts",
+        "@flighthq/gui/packages/gui/src/index.ts"
       ],
       "module": {
         "name": "TooltipController",
@@ -11917,11 +11933,15 @@
         "source": "packages/gui/src/tooltipController.ts"
       },
       "path": "flight/gui/tooltip_controller.hpp",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/gui/packages/gui/src/guiController.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [
-        "@flighthq/gui/packages/gui/src/contract.ts"
+        "@flighthq/gui/packages/gui/src/contract.ts",
+        "@flighthq/gui/packages/gui/src/index.ts"
       ],
       "module": {
         "name": "TreeViewController",
@@ -11936,7 +11956,8 @@
     },
     {
       "consumers": [
-        "@flighthq/gui/packages/gui/src/contract.ts"
+        "@flighthq/gui/packages/gui/src/contract.ts",
+        "@flighthq/gui/packages/gui/src/index.ts"
       ],
       "module": {
         "name": "WindowController",
