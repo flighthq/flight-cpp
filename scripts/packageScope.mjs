@@ -480,17 +480,34 @@ export function planPackageMerge({ candidateRoot, committedRoot, movingTogether 
       throw new Error('Only one of the trees has best-effort.json; regenerate the whole SDK in one mode.');
     }
     const bestEffort = readJson(committedRoot, 'best-effort.json');
+    const candidateBestEffort = readJson(candidateRoot, 'best-effort.json');
     // `consumers` names every module that imports this one, and a reverse dependent is by definition
     // outside the dependency closure the candidate was generated over. Those consumers are kept from the
-    // committed record; consumers inside the closure are the candidate's to state.
+    // committed record; consumers inside the closure are the candidate's to state. Consumer edges have a
+    // second owner, though: when THIS package adds or removes an import, that edge lives on the dependency's
+    // module row. Refresh the moving package's edges across every committed row without disturbing any
+    // other package's consumers. A candidate row absent from the new closure means the package no longer
+    // imports it, so its old edges are intentionally removed.
     const closure = new Set(candidateManifest.packages.map((row) => row.package));
     const committedConsumers = new Map(
       bestEffort.modules
         .filter((row) => row.module.packageName === packageName)
         .map((row) => [row.module.source, row.consumers ?? []]),
     );
-    const candidateModules = readJson(candidateRoot, 'best-effort.json')
-      .modules.filter((row) => row.module.packageName === packageName)
+    const moduleKey = (module) => `${module.packageName}\0${module.source}`;
+    const candidateByModule = new Map(candidateBestEffort.modules.map((row) => [moduleKey(row.module), row]));
+    bestEffort.modules = bestEffort.modules.map((row) => {
+      if (row.module.packageName === packageName) return row;
+      const preserved = (row.consumers ?? []).filter((consumer) => consumerPackage(consumer) !== packageName);
+      const current = (candidateByModule.get(moduleKey(row.module))?.consumers ?? []).filter(
+        (consumer) => consumerPackage(consumer) === packageName,
+      );
+      const consumers = [...preserved, ...current].sort(compareText);
+      if (stableJson(consumers) === stableJson(row.consumers ?? [])) return row;
+      return { ...row, consumers };
+    });
+    const candidateModules = candidateBestEffort.modules
+      .filter((row) => row.module.packageName === packageName)
       .map((row) => {
         const outside = (committedConsumers.get(row.module.source) ?? []).filter(
           (consumer) => !closure.has(consumerPackage(consumer)),

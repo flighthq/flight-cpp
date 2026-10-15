@@ -307,6 +307,64 @@ describe('scoped merge', () => {
     assert.ok(json('best-effort.json').modules.some((row) => row.module.packageName === target && row.consumers.some(outsideConsumer)));
   });
 
+  test('a scoped merge adds its consumer edge to a dependency-owned best-effort row', () => {
+    const committed = copyTree('consumer-add-committed');
+    const candidate = copyTree('consumer-add-candidate');
+    const target = '@flighthq/math';
+    const dependency = '@flighthq/types';
+    const added = `${target}/packages/math/src/newConsumer.ts`;
+    const unrelated = '@flighthq/camera/packages/camera/src/unrelatedConsumer.ts';
+    const fromFixturePackages = (consumer) =>
+      [target, '@flighthq/camera'].some((package_) => consumer.startsWith(`${package_}/packages/`));
+    const source = json('best-effort.json').modules.find((row) => row.module.packageName === dependency).module.source;
+    editJson(committed, 'best-effort.json', (value) => {
+      const row = value.modules.find((entry) => entry.module.source === source);
+      row.consumers = [...row.consumers.filter((consumer) => !fromFixturePackages(consumer)), unrelated].sort(compareText);
+    });
+    editJson(candidate, 'best-effort.json', (value) => {
+      const row = value.modules.find((entry) => entry.module.source === source);
+      // The closure candidate knows the moving consumer, but cannot see an unrelated reverse dependent.
+      row.consumers = [...row.consumers.filter((consumer) => !fromFixturePackages(consumer)), added].sort(compareText);
+    });
+
+    const plan = planPackageMerge({ candidateRoot: candidate, committedRoot: committed, packageName: target });
+    assert.deepEqual([...plan.writes.keys()], ['best-effort.json']);
+    const row = JSON.parse(plan.writes.get('best-effort.json')).modules.find((entry) => entry.module.source === source);
+    assert.ok(row.consumers.includes(added));
+    assert.ok(row.consumers.includes(unrelated));
+  });
+
+  test('a scoped merge removes its stale consumer edge from a dependency-owned best-effort row', () => {
+    const committed = copyTree('consumer-remove-committed');
+    const candidate = copyTree('consumer-remove-candidate');
+    const target = '@flighthq/math';
+    const dependency = '@flighthq/types';
+    const removed = `${target}/packages/math/src/oldConsumer.ts`;
+    const unrelated = '@flighthq/camera/packages/camera/src/unrelatedConsumer.ts';
+    const fromFixturePackages = (consumer) =>
+      [target, '@flighthq/camera'].some((package_) => consumer.startsWith(`${package_}/packages/`));
+    const source = json('best-effort.json').modules.find((row) => row.module.packageName === dependency).module.source;
+    editJson(committed, 'best-effort.json', (value) => {
+      const row = value.modules.find((entry) => entry.module.source === source);
+      row.consumers = [
+        ...row.consumers.filter((consumer) => !fromFixturePackages(consumer)),
+        removed,
+        unrelated,
+      ].sort(compareText);
+    });
+    editJson(candidate, 'best-effort.json', (value) => {
+      const row = value.modules.find((entry) => entry.module.source === source);
+      // Neither edge appears in the closure candidate: one was removed, and the other belongs elsewhere.
+      row.consumers = row.consumers.filter((consumer) => !fromFixturePackages(consumer));
+    });
+
+    const plan = planPackageMerge({ candidateRoot: candidate, committedRoot: committed, packageName: target });
+    assert.deepEqual([...plan.writes.keys()], ['best-effort.json']);
+    const row = JSON.parse(plan.writes.get('best-effort.json')).modules.find((entry) => entry.module.source === source);
+    assert.ok(!row.consumers.includes(removed));
+    assert.ok(row.consumers.includes(unrelated));
+  });
+
   test('evaluation groups are recomputed, so a package that gains a module keeps every module in one group', () => {
     const target = '@flighthq/math';
     const committed = copyTree('groups-committed');
