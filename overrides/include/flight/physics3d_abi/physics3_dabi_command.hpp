@@ -6,7 +6,6 @@
 //   missing: function encodeJointFlags -- source line 364
 //   missing: function getJointKindValues -- source line 423
 //   missing: function writePhysics3DAbiSetJointCommand -- source line 213
-//   missing: function writeShapeScalars -- source line 619
 #include <cmath>
 #include <cstdint>
 #include <flight/data_view.hpp>
@@ -27,8 +26,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/physics3_dabi.hpp>
 
 #include <flight/types/physics3_d.hpp>
-
-#include <flight/types/collision.hpp>
 
 namespace flight::types { struct CollisionAabb3D; }
 namespace flight::types { struct CollisionBox3D; }
@@ -56,7 +53,6 @@ namespace flight::types { struct RigidBody3D; }
 
 namespace flight::physics3d_abi {
 
-using flight::types::CollisionColliderShape3D;
 using flight::types::Physics3DAbiCommandBuffer;
 using flight::types::Physics3DAbiObjectId;
 using flight::types::Physics3DCollider;
@@ -633,151 +629,44 @@ inline bool write_physics3_dabi_set_solver_config_command(flight::Ref<flight::ty
   return true;
 }
 
-
-// NOT GENERATED: function writeShapeScalars -- source line 619
-//
-// The source it stood for:
-//   function writeShapeScalars(view: DataView, byteOffset: number, shape: Readonly<CollisionColliderShape3D>): void {
-//     if (shape.kind === 'sphere') {
-//       writeFloat64Values(view, byteOffset, [shape.x, shape.y, shape.z, shape.radius]);
-//     } else if (shape.kind === 'aabb') {
-//       writeFloat64Values(view, byteOffset, [shape.minX, shape.minY, shape.minZ, shape.maxX, shape.maxY, shape.maxZ]);
-//     } else if (shape.kind === 'box') {
-//       writeFloat64Values(view, byteOffset, [
-//         shape.x,
-//         shape.y,
-//         shape.z,
-//         shape.halfX,
-//         shape.halfY,
-//         shape.halfZ,
-//         shape.rotationX,
-//         shape.rotationY,
-//         shape.rotationZ,
-//         shape.rotationW,
-//       ]);
-//     } else if (shape.kind === 'capsule' || shape.kind === 'cylinder') {
-//       writeFloat64Values(view, byteOffset, [shape.x0, shape.y0, shape.z0, shape.x1, shape.y1, shape.z1, shape.radius]);
-//     } else if (shape.kind === 'cone') {
-//       writeFloat64Values(view, byteOffset, [
-//         shape.apexX,
-//         shape.apexY,
-//         shape.apexZ,
-//         shape.baseX,
-//         shape.baseY,
-//         shape.baseZ,
-//         shape.radius,
-//       ]);
-//     } else if (shape.kind === 'convex') {
-//       writeFloat64Values(view, byteOffset, shape.points);
-//     } else if (shape.kind === 'triangle-mesh') {
-//       writeFloat64Values(view, byteOffset, [
-//         shape.x,
-//         shape.y,
-//         shape.z,
-//         shape.rotationX,
-//         shape.rotationY,
-//         shape.rotationZ,
-//         shape.rotationW,
-//       ]);
-//       writeFloat64Values(view, byteOffset + 7 * 8, shape.points);
-//     } else {
-//       writeFloat64Values(view, byteOffset, [
-//         shape.cellSizeX,
-//         shape.cellSizeZ,
-//         shape.x,
-//         shape.y,
-//         shape.z,
-//         shape.rotationX,
-//         shape.rotationY,
-//         shape.rotationZ,
-//         shape.rotationW,
-//       ]);
-//       writeFloat64Values(view, byteOffset + 9 * 8, shape.heights);
-//     }
-//   }
-//
-// cpp emission failed for @flighthq/physics3d-abi/packages/physics3d-abi/src/physics3DAbiCommand.ts: narrowed
-// member CollisionHeightfield3D must identify one C++ variant alternative
-
-inline void write_shape_scalars(flight::DataView view, double byte_offset,
-                                flight::types::CollisionColliderShape3D shape) {
-  switch (shape.index()) {
-    case 0: {
-      const auto& value = std::get<0>(shape);
-      write_float64_values(
-          view, byte_offset,
-          flight::Array{value->x, value->y, value->z, value->radius});
-      return;
+inline void write_shape_scalars(flight::DataView view, double byte_offset, flight::types::CollisionColliderShape3D shape) {
+  if (shape.index() == 0) {
+    write_float64_values(view, byte_offset, flight::Array{std::get<0>(shape)->x, std::get<0>(shape)->y, std::get<0>(shape)->z, std::get<0>(shape)->radius});
+  }
+  else {
+    if (shape.index() == 3) {
+      write_float64_values(view, byte_offset, flight::Array{std::get<3>(shape)->min_x, std::get<3>(shape)->min_y, std::get<3>(shape)->min_z, std::get<3>(shape)->max_x, std::get<3>(shape)->max_y, std::get<3>(shape)->max_z});
     }
-    case 1: {
-      const auto& value = std::get<1>(shape);
-      write_float64_values(
-          view, byte_offset,
-          flight::Array{value->apex_x, value->apex_y, value->apex_z,
-                        value->base_x, value->base_y, value->base_z,
-                        value->radius});
-      return;
+    else {
+      if (shape.index() == 2) {
+        write_float64_values(view, byte_offset, flight::Array{std::get<2>(shape)->x, std::get<2>(shape)->y, std::get<2>(shape)->z, std::get<2>(shape)->half_x, std::get<2>(shape)->half_y, std::get<2>(shape)->half_z, std::get<2>(shape)->rotation_x, std::get<2>(shape)->rotation_y, std::get<2>(shape)->rotation_z, std::get<2>(shape)->rotation_w});
+      }
+      else {
+        if ((shape.index() == 5 || shape.index() == 6)) {
+          write_float64_values(view, byte_offset, flight::Array{std::visit([](const auto& value) -> double { using Value = std::remove_cvref_t<decltype(value)>; if constexpr (std::is_same_v<Value, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>> || std::is_same_v<Value, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>>) return value->x0; else throw std::logic_error("control-flow-excluded variant property alternative"); }, shape), std::visit([](const auto& value) -> double { using Value = std::remove_cvref_t<decltype(value)>; if constexpr (std::is_same_v<Value, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>> || std::is_same_v<Value, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>>) return value->y0; else throw std::logic_error("control-flow-excluded variant property alternative"); }, shape), std::visit([](const auto& value) -> double { using Value = std::remove_cvref_t<decltype(value)>; if constexpr (std::is_same_v<Value, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>> || std::is_same_v<Value, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>>) return value->z0; else throw std::logic_error("control-flow-excluded variant property alternative"); }, shape), std::visit([](const auto& value) -> double { using Value = std::remove_cvref_t<decltype(value)>; if constexpr (std::is_same_v<Value, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>> || std::is_same_v<Value, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>>) return value->x1; else throw std::logic_error("control-flow-excluded variant property alternative"); }, shape), std::visit([](const auto& value) -> double { using Value = std::remove_cvref_t<decltype(value)>; if constexpr (std::is_same_v<Value, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>> || std::is_same_v<Value, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>>) return value->y1; else throw std::logic_error("control-flow-excluded variant property alternative"); }, shape), std::visit([](const auto& value) -> double { using Value = std::remove_cvref_t<decltype(value)>; if constexpr (std::is_same_v<Value, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>> || std::is_same_v<Value, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>>) return value->z1; else throw std::logic_error("control-flow-excluded variant property alternative"); }, shape), std::visit([](const auto& value) -> double { using Value = std::remove_cvref_t<decltype(value)>; if constexpr (std::is_same_v<Value, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>> || std::is_same_v<Value, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>>) return value->radius; else throw std::logic_error("control-flow-excluded variant property alternative"); }, shape)});
+        }
+        else {
+          if (shape.index() == 1) {
+            write_float64_values(view, byte_offset, flight::Array{std::get<1>(shape)->apex_x, std::get<1>(shape)->apex_y, std::get<1>(shape)->apex_z, std::get<1>(shape)->base_x, std::get<1>(shape)->base_y, std::get<1>(shape)->base_z, std::get<1>(shape)->radius});
+          }
+          else {
+            if (shape.index() == 4) {
+              write_float64_values(view, byte_offset, std::get<4>(shape)->points);
+            }
+            else {
+              if (shape.index() == 8) {
+                write_float64_values(view, byte_offset, flight::Array{std::get<8>(shape)->x, std::get<8>(shape)->y, std::get<8>(shape)->z, std::get<8>(shape)->rotation_x, std::get<8>(shape)->rotation_y, std::get<8>(shape)->rotation_z, std::get<8>(shape)->rotation_w});
+                write_float64_values(view, (byte_offset + (7.0 * 8.0)), std::get<8>(shape)->points);
+              }
+              else {
+                write_float64_values(view, byte_offset, flight::Array{std::get<7>(shape)->cell_size_x, std::get<7>(shape)->cell_size_z, std::get<7>(shape)->x, std::get<7>(shape)->y, std::get<7>(shape)->z, std::get<7>(shape)->rotation_x, std::get<7>(shape)->rotation_y, std::get<7>(shape)->rotation_z, std::get<7>(shape)->rotation_w});
+                write_float64_values(view, (byte_offset + (9.0 * 8.0)), std::get<7>(shape)->heights);
+              }
+            }
+          }
+        }
+      }
     }
-    case 2: {
-      const auto& value = std::get<2>(shape);
-      write_float64_values(
-          view, byte_offset,
-          flight::Array{value->x, value->y, value->z, value->half_x,
-                        value->half_y, value->half_z, value->rotation_x,
-                        value->rotation_y, value->rotation_z,
-                        value->rotation_w});
-      return;
-    }
-    case 3: {
-      const auto& value = std::get<3>(shape);
-      write_float64_values(
-          view, byte_offset,
-          flight::Array{value->min_x, value->min_y, value->min_z,
-                        value->max_x, value->max_y, value->max_z});
-      return;
-    }
-    case 4:
-      write_float64_values(view, byte_offset, std::get<4>(shape)->points);
-      return;
-    case 5: {
-      const auto& value = std::get<5>(shape);
-      write_float64_values(
-          view, byte_offset,
-          flight::Array{value->x0, value->y0, value->z0, value->x1,
-                        value->y1, value->z1, value->radius});
-      return;
-    }
-    case 6: {
-      const auto& value = std::get<6>(shape);
-      write_float64_values(
-          view, byte_offset,
-          flight::Array{value->x0, value->y0, value->z0, value->x1,
-                        value->y1, value->z1, value->radius});
-      return;
-    }
-    case 7: {
-      const auto& value = std::get<7>(shape);
-      write_float64_values(
-          view, byte_offset,
-          flight::Array{value->cell_size_x, value->cell_size_z, value->x,
-                        value->y, value->z, value->rotation_x,
-                        value->rotation_y, value->rotation_z,
-                        value->rotation_w});
-      write_float64_values(view, byte_offset + 9.0 * 8.0, value->heights);
-      return;
-    }
-    case 8: {
-      const auto& value = std::get<8>(shape);
-      write_float64_values(
-          view, byte_offset,
-          flight::Array{value->x, value->y, value->z, value->rotation_x,
-                        value->rotation_y, value->rotation_z,
-                        value->rotation_w});
-      write_float64_values(view, byte_offset + 7.0 * 8.0, value->points);
-      return;
-    }
-    default:
-      throw std::logic_error("unreachable Physics3D ABI shape alternative");
   }
 }
 
