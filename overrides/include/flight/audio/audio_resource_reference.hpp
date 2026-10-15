@@ -49,7 +49,6 @@ namespace flight::types { struct HostAudioDecodeCapabilities; }
 namespace flight::audio {
 
 using flight::types::AudioResource;
-using flight::types::AudioResourceReference;
 using flight::types::EmbeddedAudioResourceReference;
 using flight::types::ExternalAudioResourceReference;
 

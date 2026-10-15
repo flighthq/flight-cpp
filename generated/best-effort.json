@@ -44313,7 +44313,6 @@
     },
     {
       "consumers": [
-        "@flighthq/audio/packages/audio/src/audioDecoderRegistry.ts",
         "@flighthq/audio/packages/audio/src/audioResource.ts",
         "@flighthq/audio/packages/audio/src/audioResourceFrom.ts",
         "@flighthq/audio/packages/audio/src/decodeAudioResourceBytes.ts",
@@ -44337,7 +44336,7 @@
     },
     {
       "consumers": [
-        "@flighthq/audio/packages/audio/src/audioDecoderRegistry.ts",
+        "@flighthq/audio/packages/audio/src/audioResourceFrom.ts",
         "@flighthq/audio/packages/audio/src/decodeAudioResourceBytes.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/loadScene2DAudioResources.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/loadScene2DImageResources.ts",
@@ -51321,6 +51320,9 @@
     },
     {
       "consumers": [
+        "@flighthq/audio/packages/audio/src/audioDecodeSlot.ts",
+        "@flighthq/audio/packages/audio/src/audioResourceFrom.ts",
+        "@flighthq/audio/packages/audio/src/decodeAudioResourceBytes.ts",
         "@flighthq/types/packages/types/src/ElectronHost.ts",
         "@flighthq/types/packages/types/src/Host.ts",
         "@flighthq/types/packages/types/src/Scene2DResources.ts",
