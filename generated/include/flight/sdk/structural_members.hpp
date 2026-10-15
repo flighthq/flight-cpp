@@ -871,8 +871,6 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("imageWidth") && requires { object.image_width; }) return (object.image_width);
   else if constexpr (Key::name.view() == std::string_view("images") && requires { object.images; }) return (object.images);
   else if constexpr (Key::name.view() == std::string_view("impact") && requires { object.impact; }) return (object.impact);
-  else if constexpr (Key::name.view() == std::string_view("implementationImport") && requires { object.implementation_import; }) return (object.implementation_import);
-  else if constexpr (Key::name.view() == std::string_view("implementationSymbol") && requires { object.implementation_symbol; }) return (object.implementation_symbol);
   else if constexpr (Key::name.view() == std::string_view("imported") && requires { object.imported; }) return (object.imported);
   else if constexpr (Key::name.view() == std::string_view("impulse0") && requires { object.impulse0; }) return (object.impulse0);
   else if constexpr (Key::name.view() == std::string_view("impulse1") && requires { object.impulse1; }) return (object.impulse1);
@@ -3246,8 +3244,6 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("imageWidth") && requires(Object& object) { object.image_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().image_width)>>{};
   else if constexpr (Key::name.view() == std::string_view("images") && requires(Object& object) { object.images; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().images)>>{};
   else if constexpr (Key::name.view() == std::string_view("impact") && requires(Object& object) { object.impact; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().impact)>>{};
-  else if constexpr (Key::name.view() == std::string_view("implementationImport") && requires(Object& object) { object.implementation_import; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().implementation_import)>>{};
-  else if constexpr (Key::name.view() == std::string_view("implementationSymbol") && requires(Object& object) { object.implementation_symbol; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().implementation_symbol)>>{};
   else if constexpr (Key::name.view() == std::string_view("imported") && requires(Object& object) { object.imported; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().imported)>>{};
   else if constexpr (Key::name.view() == std::string_view("impulse0") && requires(Object& object) { object.impulse0; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().impulse0)>>{};
   else if constexpr (Key::name.view() == std::string_view("impulse1") && requires(Object& object) { object.impulse1; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().impulse1)>>{};
@@ -5624,8 +5620,6 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->image_width; }) owner.bind_named("imageWidth", [object]() -> decltype(auto) { return (object->image_width); });
   if constexpr (requires { object->images; }) owner.bind_named("images", [object]() -> decltype(auto) { return (object->images); });
   if constexpr (requires { object->impact; }) owner.bind_named("impact", [object]() -> decltype(auto) { return (object->impact); });
-  if constexpr (requires { object->implementation_import; }) owner.bind_named("implementationImport", [object]() -> decltype(auto) { return (object->implementation_import); });
-  if constexpr (requires { object->implementation_symbol; }) owner.bind_named("implementationSymbol", [object]() -> decltype(auto) { return (object->implementation_symbol); });
   if constexpr (requires { object->imported; }) owner.bind_named("imported", [object]() -> decltype(auto) { return (object->imported); });
   if constexpr (requires { object->impulse0; }) owner.bind_named("impulse0", [object]() -> decltype(auto) { return (object->impulse0); });
   if constexpr (requires { object->impulse1; }) owner.bind_named("impulse1", [object]() -> decltype(auto) { return (object->impulse1); });
@@ -8036,8 +8030,6 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(image_width)
   FLIGHT_SDK_ROW_WIDENS(images)
   FLIGHT_SDK_ROW_WIDENS(impact)
-  FLIGHT_SDK_ROW_WIDENS(implementation_import)
-  FLIGHT_SDK_ROW_WIDENS(implementation_symbol)
   FLIGHT_SDK_ROW_WIDENS(imported)
   FLIGHT_SDK_ROW_WIDENS(impulse0)
   FLIGHT_SDK_ROW_WIDENS(impulse1)

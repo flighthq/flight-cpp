@@ -9794,8 +9794,6 @@
         "@flighthq/preferences/packages/preferences/src/storage.ts",
         "@flighthq/protocol/packages/protocol/src/protocol.ts",
         "@flighthq/quadbatch/packages/quadbatch/src/quadBatch.ts",
-        "@flighthq/registry-catalog/packages/registry-catalog/src/registryCatalog.ts",
-        "@flighthq/registry-codegen/packages/registry-codegen/src/registryCodegen.ts",
         "@flighthq/registry/packages/registry/src/registryTable.ts",
         "@flighthq/render-gl/packages/render-gl/src/glCubeRenderTarget.ts",
         "@flighthq/render-gl/packages/render-gl/src/glExternalTexture.ts",
@@ -9943,7 +9941,6 @@
         "@flighthq/textlayout/packages/textlayout/src/textLayout.ts",
         "@flighthq/textlayout/packages/textlayout/src/textLayoutGroup.ts",
         "@flighthq/textlayout/packages/textlayout/src/textMetrics.ts",
-        "@flighthq/textshaper-canvas/packages/textshaper-canvas/src/canvasTextShaper.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaperCache.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaperRun.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaperSignals.ts",
@@ -19778,86 +19775,6 @@
         "source": "packages/registry/src/registryTable.ts"
       },
       "path": "flight/registry/registry_table.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [
-        "@flighthq/registry-catalog/packages/registry-catalog/src/contract.ts",
-        "@flighthq/registry-catalog/packages/registry-catalog/src/index.ts"
-      ],
-      "module": {
-        "name": "BuiltInRegistryCatalogEntries",
-        "packageName": "@flighthq/registry-catalog",
-        "source": "packages/registry-catalog/src/builtInRegistryCatalogEntries.ts"
-      },
-      "path": "flight/registry_catalog/built_in_registry_catalog_entries.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [],
-      "module": {
-        "name": "Contract",
-        "packageName": "@flighthq/registry-catalog",
-        "source": "packages/registry-catalog/src/contract.ts"
-      },
-      "path": "flight/registry_catalog/contract.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [],
-      "module": {
-        "name": "Index",
-        "packageName": "@flighthq/registry-catalog",
-        "source": "packages/registry-catalog/src/index.ts"
-      },
-      "path": "flight/registry_catalog/_internal_index.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [
-        "@flighthq/registry-catalog/packages/registry-catalog/src/contract.ts",
-        "@flighthq/registry-catalog/packages/registry-catalog/src/index.ts",
-        "@flighthq/registry-codegen/packages/registry-codegen/src/registryCodegen.ts"
-      ],
-      "module": {
-        "name": "RegistryCatalog",
-        "packageName": "@flighthq/registry-catalog",
-        "source": "packages/registry-catalog/src/registryCatalog.ts"
-      },
-      "path": "flight/registry_catalog/registry_catalog.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [],
-      "module": {
-        "name": "Contract",
-        "packageName": "@flighthq/registry-codegen",
-        "source": "packages/registry-codegen/src/contract.ts"
-      },
-      "path": "flight/registry_codegen/contract.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [],
-      "module": {
-        "name": "Index",
-        "packageName": "@flighthq/registry-codegen",
-        "source": "packages/registry-codegen/src/index.ts"
-      },
-      "path": "flight/registry_codegen/_internal_index.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [
-        "@flighthq/registry-codegen/packages/registry-codegen/src/contract.ts",
-        "@flighthq/registry-codegen/packages/registry-codegen/src/index.ts"
-      ],
-      "module": {
-        "name": "RegistryCodegen",
-        "packageName": "@flighthq/registry-codegen",
-        "source": "packages/registry-codegen/src/registryCodegen.ts"
-      },
-      "path": "flight/registry_codegen/registry_codegen.hpp",
       "status": "emitted"
     },
     {
@@ -40951,8 +40868,7 @@
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/glTextLabel.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuRichText.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuTextLabel.ts",
-        "@flighthq/text/packages/text/src/contract.ts",
-        "@flighthq/textshaper-canvas/packages/textshaper-canvas/src/canvasTextShaper.ts"
+        "@flighthq/text/packages/text/src/contract.ts"
       ],
       "module": {
         "name": "TextFormatFont",
@@ -42057,51 +41973,6 @@
         "source": "packages/textshaper/src/textShaperSignals.ts"
       },
       "path": "flight/textshaper/text_shaper_signals.hpp",
-      "status": "emitted"
-    },
-    {
-      "classification": "target-runtime",
-      "consumers": [
-        "@flighthq/textshaper-canvas/packages/textshaper-canvas/src/contract.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:01f8dae552b80693d4151bfd4093a5886b01557dc0e420298da08b74c5b0a90c",
-        "sha256:796db569aee303706fc151f1dc1e5ae495978cf23a93f48b4edd0c9dfe3ab150",
-        "sha256:b671958b5c1d7b76576b583e552d6aebe6f0c7a064a83355f3dbe99fc1d37e58",
-        "sha256:bf1299f419b36f604e88d4f3a2a15c9a13a994b909bb54326925244091835ef9",
-        "sha256:e1cddf6b608fb55cb325b3eb09fc40c57bd2d08ce773d78f8931fd362281a54b",
-        "sha256:f5100392dac9f014a9e8d5cf956843059996457078c1ae1d4723e210e9024579"
-      ],
-      "module": {
-        "name": "CanvasTextShaper",
-        "packageName": "@flighthq/textshaper-canvas",
-        "source": "packages/textshaper-canvas/src/canvasTextShaper.ts"
-      },
-      "path": "flight/textshaper_canvas/canvas_text_shaper.hpp",
-      "rule": "cpp-runtime-external-symbol-binding-incomplete",
-      "status": "refused-placeholder"
-    },
-    {
-      "consumers": [],
-      "module": {
-        "name": "Contract",
-        "packageName": "@flighthq/textshaper-canvas",
-        "source": "packages/textshaper-canvas/src/contract.ts"
-      },
-      "path": "flight/textshaper_canvas/contract.hpp",
-      "refusedDependencies": [
-        "@flighthq/textshaper-canvas/packages/textshaper-canvas/src/canvasTextShaper.ts"
-      ],
-      "status": "dependency-incomplete"
-    },
-    {
-      "consumers": [],
-      "module": {
-        "name": "Index",
-        "packageName": "@flighthq/textshaper-canvas",
-        "source": "packages/textshaper-canvas/src/index.ts"
-      },
-      "path": "flight/textshaper_canvas/_internal_index.hpp",
       "status": "emitted"
     },
     {
@@ -46021,7 +45892,6 @@
     },
     {
       "consumers": [
-        "@flighthq/textshaper-canvas/packages/textshaper-canvas/src/canvasTextShaper.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -48406,7 +48276,6 @@
         "@flighthq/textlayout/packages/textlayout/src/textLayout.ts",
         "@flighthq/textlayout/packages/textlayout/src/textLayoutGroup.ts",
         "@flighthq/textlayout/packages/textlayout/src/textMetrics.ts",
-        "@flighthq/textshaper-canvas/packages/textshaper-canvas/src/canvasTextShaper.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaperCache.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaperPool.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaperRun.ts",
@@ -49299,7 +49168,6 @@
     },
     {
       "consumers": [
-        "@flighthq/textshaper-canvas/packages/textshaper-canvas/src/canvasTextShaper.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaper.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaperRun.ts",
         "@flighthq/types/packages/types/src/CanvasTextShaperBackend.ts",
@@ -49343,7 +49211,6 @@
         "@flighthq/textlayout/packages/textlayout/src/richTextQuery.ts",
         "@flighthq/textlayout/packages/textlayout/src/textFormat.ts",
         "@flighthq/textlayout/packages/textlayout/src/textLayout.ts",
-        "@flighthq/textshaper-canvas/packages/textshaper-canvas/src/canvasTextShaper.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaperCache.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaperItemize.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaperRun.ts",
@@ -50865,7 +50732,6 @@
     },
     {
       "consumers": [
-        "@flighthq/textshaper-canvas/packages/textshaper-canvas/src/canvasTextShaper.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaper.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaperRun.ts",
         "@flighthq/types/packages/types/src/CanvasTextShaperBackend.ts",
@@ -58550,7 +58416,6 @@
     },
     {
       "consumers": [
-        "@flighthq/textshaper-canvas/packages/textshaper-canvas/src/canvasTextShaper.ts",
         "@flighthq/textshaper/packages/textshaper/src/enableTextShaperGuards.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaper.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaperCache.ts",
@@ -60666,7 +60531,6 @@
         "@flighthq/textlayout/packages/textlayout/src/textLayoutGroup.ts",
         "@flighthq/textlayout/packages/textlayout/src/textLayoutMeasure.ts",
         "@flighthq/textlayout/packages/textlayout/src/textMetrics.ts",
-        "@flighthq/textshaper-canvas/packages/textshaper-canvas/src/canvasTextShaper.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaper.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaperCache.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaperItemize.ts",
@@ -60847,7 +60711,6 @@
         "@flighthq/textlayout/packages/textlayout/src/textLayoutGroup.ts",
         "@flighthq/textlayout/packages/textlayout/src/textLayoutMeasure.ts",
         "@flighthq/textlayout/packages/textlayout/src/textMetrics.ts",
-        "@flighthq/textshaper-canvas/packages/textshaper-canvas/src/canvasTextShaper.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaper.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaperRun.ts",
         "@flighthq/types/packages/types/src/CanvasTextShaperBackend.ts",
@@ -60980,7 +60843,6 @@
         "@flighthq/host/packages/host/src/host.ts",
         "@flighthq/host/packages/host/src/hostQuery.ts",
         "@flighthq/textlayout/packages/textlayout/src/textLayoutMeasure.ts",
-        "@flighthq/textshaper-canvas/packages/textshaper-canvas/src/canvasTextShaper.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaper.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaperCache.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaperItemize.ts",
@@ -64145,8 +64007,6 @@
         "@flighthq/picking/packages/picking/src/pickScene3D.ts",
         "@flighthq/picking/packages/picking/src/sceneHitAttributes.ts",
         "@flighthq/quadbatch/packages/quadbatch/src/quadBatch.ts",
-        "@flighthq/registry-catalog/packages/registry-catalog/src/registryCatalog.ts",
-        "@flighthq/registry-codegen/packages/registry-codegen/src/registryCodegen.ts",
         "@flighthq/render-gl/packages/render-gl/src/enableGlRenderStateGuards.ts",
         "@flighthq/render-gl/packages/render-gl/src/enableGlRenderTextureGuards.ts",
         "@flighthq/render-gl/packages/render-gl/src/explainGlTextureResolution.ts",

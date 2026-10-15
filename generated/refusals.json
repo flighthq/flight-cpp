@@ -9465,20 +9465,6 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "module": "packages/textshaper-canvas/src/canvasTextShaper.ts",
-      "package": "@flighthq/textshaper-canvas",
-      "reason": "cpp emission failed for @flighthq/textshaper-canvas/packages/textshaper-canvas/src/canvasTextShaper.ts: runtime external symbol binding plan is incomplete (missing: OffscreenCanvas[value], OffscreenCanvasRenderingContext2D[type])",
-      "stage": "emission"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/textshaper-canvas/src/contract.ts",
-      "package": "@flighthq/textshaper-canvas",
-      "reason": "dependency ./canvasTextShaper was refused for @flighthq/textshaper-canvas/packages/textshaper-canvas/src/canvasTextShaper.ts",
-      "stage": "dependency"
-    },
-    {
       "code": "dependency-refused",
       "module": "packages/texture/src/contract.ts",
       "package": "@flighthq/texture",

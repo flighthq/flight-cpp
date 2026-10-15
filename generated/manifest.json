@@ -1075,12 +1075,6 @@
     },
     {
       "files": [
-        "flight/registry_codegen/registry_codegen.hpp"
-      ],
-      "id": "registry-codegen-row-write-array-projection"
-    },
-    {
-      "files": [
         "flight/preferences/storage.hpp"
       ],
       "id": "preferences-unqualified-types-names"
@@ -7417,32 +7411,6 @@
       "sourceModules": 3
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
-      "cppIncludePrefix": "flight/registry_catalog",
-      "cppNamespace": "flight::registry_catalog",
-      "emittedModules": 4,
-      "package": "@flighthq/registry-catalog",
-      "refusedModules": 0,
-      "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-        "version": "0.5.0"
-      },
-      "sourceModules": 4
-    },
-    {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
-      "cppIncludePrefix": "flight/registry_codegen",
-      "cppNamespace": "flight::registry_codegen",
-      "emittedModules": 3,
-      "package": "@flighthq/registry-codegen",
-      "refusedModules": 0,
-      "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-        "version": "0.5.0"
-      },
-      "sourceModules": 3
-    },
-    {
       "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/render",
       "cppNamespace": "flight::render",
@@ -8083,20 +8051,6 @@
     },
     {
       "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
-      "cppIncludePrefix": "flight/textshaper_canvas",
-      "cppNamespace": "flight::textshaper_canvas",
-      "emittedModules": 2,
-      "environment": "web",
-      "package": "@flighthq/textshaper-canvas",
-      "refusedModules": 1,
-      "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-        "version": "0.5.0"
-      },
-      "sourceModules": 3
-    },
-    {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/texture",
       "cppNamespace": "flight::texture",
       "emittedModules": 6,
@@ -8326,9 +8280,9 @@
     ]
   },
   "summary": {
-    "packages": 156,
-    "emittedModules": 2478,
-    "refusedModules": 605,
-    "sourceModules": 3083
+    "packages": 153,
+    "emittedModules": 2469,
+    "refusedModules": 604,
+    "sourceModules": 3073
   }
 }
