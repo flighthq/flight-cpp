@@ -2,6 +2,7 @@
 
 #include <SDL3/SDL_error.h>
 #include <SDL3/SDL_keyboard.h>
+#include <SDL3/SDL_surface.h>
 
 #include <flight/font/glyph_outline_source.hpp>
 #include <flight/font_formats/open_type_cmap.hpp>
@@ -29,6 +30,25 @@ namespace {
 
 [[nodiscard]] std::runtime_error sdl_error(std::string_view action) {
   return std::runtime_error(std::string(action) + ": " + SDL_GetError());
+}
+
+void capture_frame(Canvas& canvas, const std::string& path) {
+  using Surface = std::unique_ptr<SDL_Surface, decltype(&SDL_DestroySurface)>;
+  Surface pixels(SDL_RenderReadPixels(canvas.native_renderer(), nullptr), SDL_DestroySurface);
+  if (!pixels) throw sdl_error("SDL could not capture the example frame");
+  Surface rgb(SDL_ConvertSurface(pixels.get(), SDL_PIXELFORMAT_RGB24), SDL_DestroySurface);
+  if (!rgb) throw sdl_error("SDL could not convert the captured frame to RGB");
+  const bool lock = SDL_MUSTLOCK(rgb.get());
+  if (lock && !SDL_LockSurface(rgb.get())) throw sdl_error("SDL could not lock the captured frame");
+  std::ofstream output(path, std::ios::binary);
+  output << "P6\n" << rgb->w << ' ' << rgb->h << "\n255\n";
+  const auto* data = static_cast<const char*>(rgb->pixels);
+  for (int y = 0; y < rgb->h; ++y) {
+    output.write(data + static_cast<std::ptrdiff_t>(y) * rgb->pitch,
+                 static_cast<std::streamsize>(rgb->w) * 3);
+  }
+  if (lock) SDL_UnlockSurface(rgb.get());
+  if (!output) throw std::runtime_error("could not write captured example frame: " + path);
 }
 
 [[nodiscard]] std::uint8_t channel(double value) {
@@ -683,10 +703,14 @@ int SdlExample::run(
     int height,
     std::uint32_t background,
     ExitCallback on_exit) {
-  if (argc > 2 || (argc == 2 && std::string_view(argv[1]) != "--smoke")) {
-    throw std::invalid_argument("the only supported option is --smoke");
+  bool smoke = false;
+  std::optional<std::string> capture_path;
+  for (int argument = 1; argument < argc; ++argument) {
+    const std::string_view option(argv[argument]);
+    if (option == "--smoke") smoke = true;
+    else if (option == "--capture" && argument + 1 < argc) capture_path = argv[++argument];
+    else throw std::invalid_argument("supported options: --smoke [--capture output.ppm]");
   }
-  const bool smoke = argc == 2;
   flight::host_sdl::Host host;
   Canvas canvas(title, smoke, width, height);
   Input input;
@@ -784,6 +808,7 @@ int SdlExample::run(
         .index = index,
         .smoke = smoke,
     });
+    if (index == 0 && capture_path.has_value()) capture_frame(canvas, capture_path.value());
     canvas.present();
 
     ++index;

@@ -28,6 +28,10 @@ frames, and exits. The camera2d, collision, and spatial ports also assert genera
 so a locally simulated frame cannot satisfy their smoke checks. CTest uses SDL's dummy video driver
 for painter examples and its offscreen GL driver with software rendering for `scene3d` on Linux.
 
+Use `--capture output.ppm` to save the first rendered frame before presentation. Combine it with
+`--smoke` to capture a frame while retaining all three verified frames. The lossless RGB PPM capture
+can be converted to PNG for sharing.
+
 ```sh
 cmake -S . -B build \
   -DBUILD_TESTING=ON \
