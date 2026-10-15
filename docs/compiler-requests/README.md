@@ -574,3 +574,5 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   across 14 other headers (render, skeleton2d-formats, interaction, lighting, log, scene3d, scene3d-gl,
   scene3d-wgpu, scene2d-formats, physics3d-abi). Carried by the `respell-membership-test` emission repair,
   declared per receiver; no patch is carried.
+
+- [Video constructor readonly host and partial-row boundary](video-constructor-readonly-partial-boundary.md).

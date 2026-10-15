@@ -258,6 +258,11 @@ target_link_libraries(flight_cpp_generated_cube_texture_tests PRIVATE Flight::Cp
 flight_cpp_set_project_warnings(flight_cpp_generated_cube_texture_tests)
 add_test(NAME flight_cpp.generated_cube_texture COMMAND flight_cpp_generated_cube_texture_tests)
 
+add_executable(flight_cpp_generated_video_texture_options_tests generated_video_texture_options_test.cpp)
+target_link_libraries(flight_cpp_generated_video_texture_options_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+flight_cpp_set_project_warnings(flight_cpp_generated_video_texture_options_tests)
+add_test(NAME flight_cpp.generated_video_texture_options COMMAND flight_cpp_generated_video_texture_options_tests)
+
 add_executable(flight_cpp_generated_cube_texture_api_tests generated_cube_texture_api_test.cpp)
 target_link_libraries(flight_cpp_generated_cube_texture_api_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 flight_cpp_set_project_warnings(flight_cpp_generated_cube_texture_api_tests)
@@ -2063,3 +2068,5 @@ if(TARGET Flight::HostSdl)
     flight_cpp_set_project_warnings("flight_cpp_header_host_sdl_${header}_test")
   endforeach()
 endif()
+
+flight_cpp_package_test_labels(flight_cpp.generated_video_texture_options texture types)

@@ -54,3 +54,20 @@ top-level partial union as one optional row whose `frames` field is the same arr
 whose `meta` field keeps the same owner. Internal helpers receive only that shared metadata field, which
 is all they previously read. It changes no runtime value or accepted structural caller and expires when
 the named union form plans those same rows directly.
+
+
+## Bounded video constructor supply
+
+The partial `texture-video-variant-and-construction` override now supplies the constructor
+for readonly host rows and the closed four-arm union of readonly `RowPartial<RowOf<...>>`
+option rows. Its typed snapshot preserves the declared fields and retained source owners,
+reads represented own string fields before the entity symbol, then applies the forced
+`dimension`, `source` and `version` fields. Host width/height callbacks run before the spread.
+The native function-value test uses that exact readonly/partial-union signature; the pinned
+TypeScript oracle executes the original constructor and every exercised helper declaration.
+
+This is a constructor boundary, not a general mapped-union compiler implementation. Open
+dynamic own-property spreads beyond those four declared shapes are not supplied. The raw
+module remains refused, and canonical readonly carriers for the other video helper APIs
+remain explicitly listed in the partial override metadata. Passing the native convenience
+Texture tests does not promote those missing callable surfaces to complete.

@@ -1,8 +1,9 @@
 // Native lowering of videoTexture.ts at the pinned Flight revision.
 #pragma once
 
-// The generated module treats TextureLike's value variant as a pointer and omits both video
-// constructors. This override retains the source operations with explicit variant dispatch.
+// PARTIAL: the public constructor is supplied for readonly host and the four declared
+// partial TextureLike option rows. Other canonical readonly helper carriers remain
+// unsupplied; native convenience operations are retained. See overrides/manifest.json.
 #include <optional>
 #include <type_traits>
 #include <utility>
@@ -99,6 +100,115 @@ inline std::optional<flight::Ref<ImageResource>> create_video_image_resource(
   auto image = flight::entity::finish_entity<flight::Ref<ImageResource>>(image_construction);
   update_video_image_size(host_video, image);
   return image;
+}
+
+// The public source accepts a readonly partial of each concrete TextureLike arm.
+using ReadonlyVideoHost = flight::StructuralRef<flight::RowReadonly<
+    flight::RowOf<flight::Ref<HostVideoCapability>>>>;
+using ReadonlyVideoResource = flight::StructuralRef<flight::RowReadonly<
+    flight::RowOf<flight::Ref<VideoResource>>>>;
+template <typename TextureOwner>
+using ReadonlyPartialVideoOptions = flight::StructuralRef<flight::RowReadonly<
+    flight::RowPartial<flight::RowOf<flight::Ref<TextureOwner>>>>>;
+using VideoTextureOptions = std::variant<
+    ReadonlyPartialVideoOptions<flight::types::Texture2DArray>,
+    ReadonlyPartialVideoOptions<flight::types::TextureCube>,
+    ReadonlyPartialVideoOptions<flight::types::Texture2D>,
+    ReadonlyPartialVideoOptions<flight::types::Texture3D>>;
+
+namespace video_detail {
+template <typename Row>
+inline constexpr bool options_row_v =
+    std::same_as<Row, ReadonlyPartialVideoOptions<flight::types::Texture2DArray>> ||
+    std::same_as<Row, ReadonlyPartialVideoOptions<flight::types::TextureCube>> ||
+    std::same_as<Row, ReadonlyPartialVideoOptions<flight::types::Texture2D>> ||
+    std::same_as<Row, ReadonlyPartialVideoOptions<flight::types::Texture3D>>;
+
+// The source spread is a fresh option object, not a retyped source owner. Keep the
+// arm's content and computed member alive in that snapshot even though the forced
+// 2D constructor does not consume them. Its source/dimension/version writes follow.
+struct SpreadOptions {
+  flight::Ref<CreateTexture2DOptions> common = flight::make_ref<CreateTexture2DOptions>();
+  std::optional<TextureSourceValue> source;
+  std::optional<flight::Array<std::optional<TextureSourceValue>>> sources;
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime;
+};
+
+template <typename Row>
+  requires options_row_v<Row>
+inline SpreadOptions snapshot_options(Row source) {
+  SpreadOptions result;
+  // This enumerates only names, without erasing a value through Any. Native
+  // members retain declaration order; partial object literals retain field order.
+  for (const auto& key : flight::NamedProperties(source.shared_owner()).keys()) {
+    const auto name = key.to_utf8();
+    if (name == "colorSpace") result.common->color_space = flight::row_get<flight::RowKey<"colorSpace">>(source);
+    else if (name == "flipX") result.common->flip_x = flight::row_get<flight::RowKey<"flipX">>(source);
+    else if (name == "flipY") result.common->flip_y = flight::row_get<flight::RowKey<"flipY">>(source);
+    else if (name == "sampler") result.common->sampler = flight::row_get<flight::RowKey<"sampler">>(source);
+    else if (name == "uvOffset") result.common->uv_offset = flight::row_get<flight::RowKey<"uvOffset">>(source);
+    else if (name == "uvRotation") result.common->uv_rotation = flight::row_get<flight::RowKey<"uvRotation">>(source);
+    else if (name == "uvScale") result.common->uv_scale = flight::row_get<flight::RowKey<"uvScale">>(source);
+    else if (name == "dimension") result.common->dimension = flight::row_get<flight::RowKey<"dimension">>(source);
+    else if (name == "version") result.common->version = flight::row_get<flight::RowKey<"version">>(source);
+    else if constexpr (std::same_as<Row, ReadonlyPartialVideoOptions<flight::types::Texture2D>> ||
+                       std::same_as<Row, ReadonlyPartialVideoOptions<flight::types::Texture3D>>) {
+      if (name == "source") {
+        const auto value = flight::row_get<flight::RowKey<"source">>(source);
+        if (value) {
+          if constexpr (std::same_as<Row, ReadonlyPartialVideoOptions<flight::types::Texture2D>>) result.source = *value;
+          else result.source = TextureSourceValue{std::in_place_type<flight::Ref<flight::types::VoxelGrid>>, *value};
+        }
+      }
+    } else {
+      if (name == "sources") result.sources = flight::row_get<flight::RowKey<"sources">>(source);
+    }
+  }
+  result.entity_runtime = flight::row_get<
+      std::optional<flight::Ref<flight::types::EntityRuntime>>>(source, flight::types::entity_runtime_key);
+  return result;
+}
+} // namespace video_detail
+
+inline std::optional<flight::Ref<ImageResource>> create_video_image_resource(
+    ReadonlyVideoHost host_video,
+    ReadonlyVideoResource source) {
+  if (!flight::row_get<flight::RowKey<"element">>(source).has_value()) return std::nullopt;
+  auto image = flight::entity::allocate_entity<flight::Ref<ImageResource>>();
+  initialize_video_image_resource(image,
+      flight::row_get<flight::RowKey<"element">>(source).value(), initial_video_version);
+  const auto get_width = flight::row_get<flight::RowKey<"getWidth">>(host_video);
+  flight::row_set<flight::RowKey<"width">>(image,
+      get_width ? (*get_width)(flight::row_get<flight::RowKey<"source">>(image)) : 0.0);
+  const auto get_height = flight::row_get<flight::RowKey<"getHeight">>(host_video);
+  flight::row_set<flight::RowKey<"height">>(image,
+      get_height ? (*get_height)(flight::row_get<flight::RowKey<"source">>(image)) : 0.0);
+  return flight::entity::finish_entity<flight::Ref<ImageResource>>(image);
+}
+
+inline flight::Ref<Texture2D> create_video_texture(
+    ReadonlyVideoHost host_video,
+    flight::Ref<VideoResource> source,
+    std::optional<VideoTextureOptions> opts = std::nullopt) {
+  // Host callbacks run before any option property is copied by the spread.
+  const auto image = create_video_image_resource(host_video, ReadonlyVideoResource(source));
+  auto snapshot = opts ? std::visit([](const auto& row) {
+    return video_detail::snapshot_options(row);
+  }, *opts) : video_detail::SpreadOptions{};
+  snapshot.common->dimension = flight::String("2d");
+  snapshot.common->source = image
+      ? decltype(snapshot.common->source){std::in_place_type<flight::Ref<ImageResource>>, *image}
+      : decltype(snapshot.common->source){std::in_place_type<flight::Null>, flight::null};
+  snapshot.common->version = image ? (*image)->version : initial_video_version;
+  return create_texture2_d(std::optional<flight::Ref<CreateTexture2DOptions>>{snapshot.common});
+}
+
+template <typename Row>
+  requires video_detail::options_row_v<Row>
+inline flight::Ref<Texture2D> create_video_texture(
+    ReadonlyVideoHost host_video, flight::Ref<VideoResource> source, Row opts) {
+  return create_video_texture(host_video, source,
+      std::optional<VideoTextureOptions>{VideoTextureOptions{std::in_place_type<Row>, std::move(opts)}});
 }
 
 inline flight::Ref<Texture2D> create_video_texture(
