@@ -568,3 +568,8 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   renders `Node2D` as a two-component row and `Spatial2DNode<Traits>` as a five-component one. Measured:
   the runtime's `structural_ref_cast` expression compiles, but its result does not match the callee's
   row parameter; no working call-site projection is established. No patch is carried.
+- [A membership test must lower to the runtime's presence question](membership-test-lowered-literally.md) —
+  `@flighthq/effects` `copyEffectDefaults`, reported as `unknown type name 'key_2'`, plus 28 more sites
+  across 14 other headers (render, skeleton2d-formats, interaction, lighting, log, scene3d, scene3d-gl,
+  scene3d-wgpu, scene2d-formats, physics3d-abi). Carried by the `respell-membership-test` emission repair,
+  declared per receiver; no patch is carried.
