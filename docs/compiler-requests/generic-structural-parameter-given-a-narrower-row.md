@@ -89,17 +89,38 @@ overload matches.
 **Measured:** the emitted call does not match any overload; the two emitted views have two and five
 components; the argument's row lacks the three named components.
 
-**Measured, and it corrects an earlier claim of mine:** the runtime's own projection already spans the gap
-at the type level. This compiles against the emitted tree:
+**Measured: the projection COMPILES but does not produce the parameter's row.** This corrects an earlier
+claim of mine in both directions, and the second half matters more than the first.
 
 ```cpp
-const auto source = flight::types::Node2D{};
-const auto projected = flight::structural_ref_cast<flight::types::Spatial2DNode<flight::types::Node2DTraits>>(source);
+const auto source = make_node2d();   // the emitted construction path the repository's own tests use:
+                                     // make_structural_ref<flight::types::Node2D::schema_type>(row_field<...>...)
+const types::Spatial2DNode<types::Node2DTraits> projected =
+    flight::structural_ref_cast<types::Spatial2DNode<types::Node2DTraits>>(source);
 ```
 
-So it is **not** true that the differing row decomposition makes a cell projection impossible -- I asserted
-that before testing it, and the test refutes me. A cell-wise projection is available; what the emission
-lacks is the projection, not the ability to express one.
+  - I earlier asserted a call-site projection "cannot rescue it", WITHOUT TESTING IT. That was wrong: the
+    expression above compiles.
+  - But the correction is not that it works. The compiler then reports, at the call,
+      `candidate function template not viable: no known conversion from
+       'flight::StructuralRef<flight::RowReadonly<flight::Row...'`
+    -- the cast's RESULT is a read-only `StructuralRef<RowReadonly<...>>`, while the parameter is the
+    five-component `RowMerge`. So the runtime's projection helper does NOT yield the parameter's row shape,
+    and it is not a working workaround. Spelling the projection with the alias rather than `auto`, and
+    passing the template argument explicitly, both change nothing: this is a row-shape gap, not a
+    deduction gap.
+
+**The cells are not there to project.** Built the emitted way, the owner carries the traits data cells
+only. The three components the callee's row names are not data:
+  - `RowOf<flight::Ref<HasBoundsRectangle>>` and `RowOf<flight::Ref<HasTransform2D>>` are TAG components:
+    `HasBoundsRectangle extends Entity {}` is an EMPTY marker interface, and the bounds cell lives on
+    `HasBoundsRectangleRuntime.boundsRectangle`.
+  - `RowOf<flight::Ref<entity_runtime_key_c3fe878ec1e8f9f2<Traits>>>` is a Traits-KEYED runtime cell,
+    while the emitted traits struct carries the ERASED `std::optional<flight::Ref<flight::types::EntityRuntime>>
+    entity_runtime_key`.
+This is the irreducible blocker for a workaround inside this repository: a lane fix would have to
+synthesize three components the owner does not carry, which is fabricating cells rather than projecting
+them. The fix is emitter-side, where the projection can be carried or `Node2D` emitted as the intersection.
 
 **Proposed, and needing compiler validation (not asserted here):** that the emitter carry an
 identity-preserving structural projection at such a call site, or that `Node2D` be emitted as the
