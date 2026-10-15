@@ -123,7 +123,12 @@ inline flight::Ref<flight::types::InstancedMeshSignals> create_instanced_mesh_si
 
 inline flight::Ref<flight::types::InstancedMeshSignals> enable_instanced_mesh_signals(flight::Ref<flight::types::InstancedMesh> target) {
   auto runtime = target->entity_runtime_key.value();
-  return ([&]() { auto&& assignment_target = runtime->instanced_mesh_signals; if (!assignment_target.has_value()) assignment_target = std::variant<flight::Ref<flight::types::InstancedMeshSignals>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::InstancedMeshSignals>>, create_instanced_mesh_signals()}; return assignment_target.value(); }());
+  std::variant<flight::Ref<flight::types::InstancedMeshSignals>, flight::Null, flight::Undefined> signals = ([&]() -> std::variant<flight::Ref<flight::types::InstancedMeshSignals>, flight::Null, flight::Undefined> { auto optional_property_2 = runtime->instanced_mesh_signals; if (std::holds_alternative<flight::Undefined>(optional_property_2)) return std::variant<flight::Ref<flight::types::InstancedMeshSignals>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property_2)) return std::variant<flight::Ref<flight::types::InstancedMeshSignals>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Ref<flight::types::InstancedMeshSignals>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::InstancedMeshSignals>>, std::get<flight::Ref<flight::types::InstancedMeshSignals>>(optional_property_2)}; }());
+  if ((std::holds_alternative<flight::Null>(signals) || std::holds_alternative<flight::Undefined>(signals))) {
+    (signals = std::variant<flight::Ref<flight::types::InstancedMeshSignals>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::InstancedMeshSignals>>, create_instanced_mesh_signals()});
+    (runtime->instanced_mesh_signals = std::variant<flight::Ref<flight::types::InstancedMeshSignals>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::InstancedMeshSignals>>, std::get<0>(signals)});
+  }
+  return std::get<0>(signals);
 }
 
 inline void invalidate_instanced_mesh(flight::Ref<flight::types::InstancedMesh> target) {

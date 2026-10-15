@@ -5411,6 +5411,13 @@
     },
     {
       "dependency": "flight",
+      "digest": "c9796b0f0ff46f66c6541b0e08cd3d77b45bc7d57bd83bf7f595526e7db27104",
+      "id": "scene3d-instanced-mesh-lazy-signals",
+      "module": "packages/scene3d/src/instancedMesh.ts enableInstancedMeshSignals",
+      "package": "@flighthq/scene3d"
+    },
+    {
+      "dependency": "flight",
       "digest": "24323d32bdb09a289add8adec7d62e77adf762f9fbbf10d2aa17ec479ad2493b",
       "id": "node3d-named-runtime-carriers",
       "module": "Node3D, Mesh, and InstancedMesh runtime carriers",
