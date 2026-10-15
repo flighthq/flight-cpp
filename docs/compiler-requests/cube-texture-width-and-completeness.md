@@ -75,9 +75,11 @@ primitive's visited-index order and early return.
 ## Carried scope and expiry
 
 The override is re-derived from the current repaired generated cube header. It changes only the
-selected-owner width read and completeness body. It remains partial: `cloneCubeTexture`,
-`copyCubeTexture`, `equalsCubeTexture`, and `setCubeTextureFace` are still visibly refused and absent.
-The existing all-surface Texture native test still needs those APIs; the focused cube test exercises
+selected-owner width read and completeness body. That unit initially leaves `cloneCubeTexture`,
+`copyCubeTexture`, `equalsCubeTexture`, and `setCubeTextureFace` refused and absent. The independent
+[cube API follow-up](cube-face-index-write-domain.md) supplies clone/copy/equals and makes the original
+all-surface Texture target pass. The unrestricted setter remains visibly absent and keeps the cube
+supply partial; the target does not exercise that setter. The focused width/completeness test covers
 the supplied constructor, face-size and completeness behavior.
 
 Drop the override when the emitter lowers the common property through the retained variant and tests

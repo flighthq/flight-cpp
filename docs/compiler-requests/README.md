@@ -187,6 +187,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [Cube texture property reads and nullable face completeness](cube-texture-width-and-completeness.md) —
   the cube header reads width on a variant and tests bounds instead of nullable face elements;
   a derived partial override restores selected-owner reads and the original every semantics.
+- [Cube face writes require the full numeric array-property domain](cube-face-index-write-domain.md) —
+  the unrestricted setter can append, create holes or write named properties; the dense-profile
+  decision retains that explicit gap while independent cube clone/copy/equals are supplied.
 - [A numeric enum value is widened to a `number` union in flow](numeric-enum-flow-widened-to-number-union.md) —
   refuses `@flighthq/debug` `debug.ts` (`enableDebug`); no workaround.
 - [Nullable storage of an imported alias is spelled by its expansion](nullable-alias-storage-spelled-by-expansion.md) —
