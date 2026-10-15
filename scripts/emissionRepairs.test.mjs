@@ -293,3 +293,77 @@ test('a qualified use alone does not fire insert-using-declaration', () => {
     assert.deepEqual(applyEmissionRepairs([repair], files)[0].files, [], repair.id);
   }
 });
+
+// --- declare-refused-effect-padding-resolvers ---------------------------------------------------------------
+// The signature is READ from the retained registration, because the carrier's type names move with the pin.
+// This handler once spelled them, and at a627849 that spelling named two types the emitter no longer
+// mentions: the declaration stopped matching the std::function it exists to satisfy, and the dead names
+// looked used, which made another repair hoist the removed flight/types/render_effect*.hpp includes into
+// every header of the family. These cases pin the derivation, not one pin's spelling.
+
+const resolverRegistration = (carrier) =>
+  'inline void register_bevel_effect_padding_resolver() {\n' +
+  `  std::optional<std::function<${carrier}>>{resolve_bevel_effect_padding};\n` +
+  '}\n';
+
+const resolverHeader = (carrier) =>
+  '#pragma once\n' +
+  'static_assert(flight::runtime_contract.cpp_abi == 1, "x");\n\n' +
+  'namespace flight::effects {\n' +
+  '// NOT GENERATED: function resolveBevelEffectPadding -- source line 57\n' +
+  '// refusal: example\n\n' +
+  resolverRegistration(carrier) +
+  '\n} // namespace flight::effects\n';
+
+const resolverRepair = (id = 'effects-refused-padding-resolver-declarations') => ({
+  appliesTo: 'flight/effects/',
+  defect: 'example',
+  diagnostic: 'example',
+  expectedWhen: 'always',
+  expires: 'example',
+  id,
+  kind: 'declare-refused-effect-padding-resolvers',
+  sourceDeclaration: 'example',
+});
+
+const CARRIER = 'flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::EffectPadding>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Effect>>>>)';
+
+test('the refused resolver is declared with the retained registration\'s own carrier, and only declared', () => {
+  const files = [{ contents: resolverHeader(CARRIER), path: 'flight/effects/bevel_effect.hpp' }];
+  const applied = applyEmissionRepairs([resolverRepair()], files);
+  assert.deepEqual(applied[0].files, ['flight/effects/bevel_effect.hpp']);
+  const text = files[0].contents;
+  // The declaration is the carrier's, spelled back verbatim and given the emitted snake-case name.
+  assert.ok(text.includes(`flight::effects {\nflight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::EffectPadding>>>> resolve_bevel_effect_padding(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Effect>>>>);`), text);
+  // Its types are forward-declared ahead of the emitter's includes, taken from that same carrier.
+  assert.ok(text.includes('namespace flight::types { struct Effect; struct EffectPadding; }\n'), text);
+  // A declaration, never a body: the refusal stands and nothing defines the symbol.
+  assert.doesNotMatch(text, /resolve_bevel_effect_padding\([^;]*\)\s*\{/u);
+  assert.doesNotMatch(text, /(?:inline|static)\s+[^;]*resolve_bevel_effect_padding\([^;]*\)\s*\{/u);
+  assert.ok(text.includes('// NOT GENERATED: function resolveBevelEffectPadding'));
+  // Idempotent.
+  assert.deepEqual(applyEmissionRepairs([resolverRepair()], files)[0].files, []);
+});
+
+test('a carrier spelled with the pre-rename owners is declared in those names, not in the current ones', () => {
+  const legacy = 'flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderEffectPadding>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderEffect>>>>)';
+  const files = [{ contents: resolverHeader(legacy), path: 'flight/effects/bevel_effect.hpp' }];
+  applyEmissionRepairs([resolverRepair()], files);
+  const text = files[0].contents;
+  // The point of the regression: no pin's names are baked into the handler.
+  assert.ok(text.includes('resolve_bevel_effect_padding(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderEffect>>>>);'));
+  assert.ok(text.includes('namespace flight::types { struct RenderEffect; struct RenderEffectPadding; }\n'));
+  assert.ok(!text.includes('struct Effect; struct EffectPadding;'));
+});
+
+test('a header whose registration carries no readable std::function declines, and is left byte-identical', () => {
+  for (const contents of [
+    resolverHeader(CARRIER).replace(`std::function<${CARRIER}>`, 'ResolverAlias'),
+    resolverHeader(CARRIER).replace('{resolve_bevel_effect_padding}', '{some_other_resolver}'),
+    `#pragma once\nstatic_assert(flight::runtime_contract.cpp_abi == 1, "x");\nnamespace flight::effects {\n${resolverRegistration(CARRIER)}\n} // namespace flight::effects\n`,
+  ]) {
+    const files = [{ contents, path: 'flight/effects/bevel_effect.hpp' }];
+    assert.deepEqual(applyEmissionRepairs([resolverRepair()], files)[0].files, []);
+    assert.equal(files[0].contents, contents);
+  }
+});
