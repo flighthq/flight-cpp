@@ -4150,6 +4150,23 @@
       "unblocks": "Removes the invalid named BillboardKind re-export at the root of five Scene3D header failures, without claiming the remaining Billboard or Scene3D algorithms compile.",
       "expires": "when named re-exports retain the exact declaring origin namespace and allocated C++ spelling upstream.",
       "appliedOn": "2026-10-14"
+    },
+    {
+      "id": "scene3d-instanced-mesh-lazy-signals",
+      "dependency": "flight",
+      "patch": "scene3d-instanced-mesh-lazy-signals.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/scene3d/src/instancedMesh.ts enableInstancedMeshSignals",
+      "package": "@flighthq/scene3d",
+      "answers": "diagnostic",
+      "refusal": "The optional nullable InstancedMeshSignals slot is represented by variant<Ref<InstancedMeshSignals>,Null,Undefined>, but logical assignment emits optional-only has_value/value calls.",
+      "rewrite": "Caches the exact selected runtime signal slot once, tests both nullish sentinels with == null, allocates and stores one signal group only on that branch, and returns the selected local.",
+      "equivalence": "The selected InstancedMeshRuntime and existing signal group retain their exact owners. Both null and undefined allocate once; existing values short-circuit the factory and setter. The property is read once and the result is the assigned value, even if a setter transforms storage. No domain is narrowed, owner copied, runtime carrier changed or absent state conflated with a present reference.",
+      "verification": "Focused actual pinned/patched source sentinel, short-circuit and owner-identity cases plus actual emitted/native controls are required before readiness.",
+      "whyNotUpstreamFirst": "The pinned TypeScript nullish assignment is correct; this explicit local and lazy branch is the target-neutral pattern already carried for optional nullable registry slots.",
+      "unblocks": "Only the incorrect optional-method lowering in enableInstancedMeshSignals; unrelated instanced-mesh construction/erased-owner errors remain visible.",
+      "expires": "when the compiler lowers nullish assignment according to its declared variant carrier and projects the proven present owner, or Flight adopts the explicit branch upstream.",
+      "appliedOn": "2026-10-15"
     }
   ]
 }

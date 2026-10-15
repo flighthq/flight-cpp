@@ -1,0 +1,17 @@
+diff --git a/packages/scene3d/src/instancedMesh.ts b/packages/scene3d/src/instancedMesh.ts
+--- a/packages/scene3d/src/instancedMesh.ts
++++ b/packages/scene3d/src/instancedMesh.ts
+@@ -141,7 +141,12 @@
+  */
+ export function enableInstancedMeshSignals(target: InstancedMesh): InstancedMeshSignals {
+   const runtime = target[EntityRuntimeKey]!;
+-  return (runtime.instancedMeshSignals ??= createInstancedMeshSignals());
++  let signals = runtime.instancedMeshSignals;
++  if (signals == null) {
++    signals = createInstancedMeshSignals();
++    runtime.instancedMeshSignals = signals;
++  }
++  return signals;
+ }
+ 
+ /**
