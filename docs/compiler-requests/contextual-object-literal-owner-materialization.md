@@ -48,6 +48,44 @@ The `ImageResource` reference must remain the same allocation selected by the so
 into a base `TextureSource`, or routing through a union arm that loses the exact owner, changes
 identity and is not an equivalent repair.
 
+## The TypeScript-selected overload is the authority, not the C++ designators
+
+The arm is fixed in TypeScript before any C++ is emitted, and it must be read from there. Resolving
+the designators against the C++ overload set instead is not merely harder, it is unsound: C++ has no
+notion of an optional discriminant, so a bare designated-initializer list leaves every options arm
+viable and a designator rule would have to guess which factory runs.
+
+`@flighthq/types` `CreateTextureOptions.ts`:
+
+```ts
+type CreateTextureVariantOptions<Type extends TextureLike> = Type extends TextureLike
+  ? Omit<Partial<Type>, 'dimension'> &
+      (Type['dimension'] extends '2d' ? { readonly dimension?: '2d' }
+                                      : { readonly dimension: Type['dimension'] })
+  : never;
+export type CreateTextureOptions = CreateTextureVariantOptions<TextureLike> & {
+  readonly resource?: ImageResourceReference | null;
+};
+export type CreateTexture2DOptions = Extract<CreateTextureOptions, { dimension?: '2d' }>;
+```
+
+`@flighthq/texture` `texture.ts:120-123` declares the matching overload set, two-dimensional first:
+
+```ts
+export function createTexture(opts?: Readonly<CreateTexture2DOptions>): Texture2D;
+export function createTexture(opts: Readonly<CreateTexture2DArrayOptions>): Extract<Texture, { dimension: '2d-array' }>;
+export function createTexture(opts: Readonly<CreateTexture3DOptions>): Extract<Texture, { dimension: '3d' }>;
+export function createTexture(opts: Readonly<CreateTextureCubeOptions>): Extract<Texture, { dimension: 'cube' }>;
+```
+
+The union is discriminated on `dimension`, and the two-dimensional arm is the only one whose
+discriminant is optional; the other three require a literal. TypeScript resolves overloads in order,
+so a literal that carries no `dimension` makes those three non-viable and binds the two-dimensional
+overload. Every site below therefore has exactly one statically selected arm, and the lowering is
+`make_ref` of that arm's options type. This also fixes what the emitted call must return: the
+two-dimensional overload returns `Texture2D`, which is the variant arm the call sites already
+construct.
+
 ## Current reach
 
 `@flighthq/textureatlas` `textureAtlasFrom.ts` is the measured current-pin site. Its header is the
@@ -55,6 +93,81 @@ only direct textureatlas failure with `no matching function for call to 'create_
 isolated with unlimited diagnostics, the same header also reports four separate missing image
 loader declarations inherited from the refused `@flighthq/image` module. Those dependency errors
 belong to the browser URL/location binding request and are not part of this options-owner defect.
+
+Seven further call sites are now verified to fail the same way, each compiled as its own translation unit
+with the repository's real include order (`-I overrides/include -I generated/include -I include`) and
+`-ferror-limit=0`, with the site's own diagnostic present and no fatal error before it. None of these
+paths is shadowed by an override, and `deferred-packages.json` is empty, so every one is held to the
+compile gate.
+
+| Site | Emitted literal | Selected arm |
+| --- | --- | --- |
+| `bitmaptext/update_bitmap_text.hpp:121` | `{.dimension = String("2d"), .source = image.value()}` | 2D (`dimension` literal) |
+| `scene2d_formats/lottie_image_layer.hpp:99` | `{.dimension = String("2d"), .source = image.value()}` | 2D (`dimension` literal) |
+| `scene2d_formats/rive_asset_binding.hpp:106` | `{.dimension = String("2d"), .source = nullptr}` | 2D (`dimension` literal; `null` is the documented 2D sentinel) |
+| `scene3d_formats/shared.hpp:100` and `:110` | `{.resource = resource.value()}` | 2D (only arm with an optional discriminant) |
+| `swf/swf_video_handler.hpp:72` | `{.sampler = create_sampler(...)}` | 2D (only arm with an optional discriminant) |
+| `render_wgpu/wgpu_external_texture.hpp:105` | `{.color_space = ..., .sampler = ..., .dimension = String("2d"), .source = source}` | 2D (`dimension` literal) |
+
+`swf_video_handler.hpp:72` is the cleanest instance in the tree: compiling that header yields exactly
+one error and nothing else, so it isolates the defect with no package context. Its literal names
+only `.sampler`, which all four options shapes carry identically, so the designators cannot
+place the arm; the TypeScript discriminant does.
+
+The `null` source at `rive_asset_binding.hpp:106` is not an unknown and must not be treated as one:
+`texture.ts` records that two-dimensional content "retains a null source sentinel during the loader
+migration", so a null source is a valid two-dimensional form and the `dimension: '2d'` discriminant
+still selects the arm.
+
+### One site is not verified
+
+`scene3d_formats/gltf_parse.hpp:813` carries `{.resource = resource.value()}` and by the same
+TypeScript reasoning is two-dimensional, but it is **not** a verified compile failure: its translation
+unit dies on a fatal error before reaching the call, because
+`overrides/include/flight/scene3d/mesh.hpp:15` includes `<flight/types/material_value.hpp>`, which
+exists nowhere in the repository. Its arm is determined; its failure is untested. Those are different
+claims and this request makes only the first.
+
+## Minimal regression cases
+
+A focused regression should cover the shapes that distinguish "selected by a literal discriminant"
+from "selected because no other arm is viable", and should assert the materialized owner rather than
+only that the call compiles.
+
+```ts
+// selected by the literal discriminant
+createTexture({ dimension: '2d', source: bitmap });
+
+// selected because the discriminant is optional and the other arms require one
+createTexture({ resource: resource });
+createTexture({ sampler: sampler });
+
+// the documented 2D null sentinel -- still the 2D arm
+createTexture({ dimension: '2d', source: null });
+```
+
+The first three shapes are the ones the verified sites actually emit. Each must lower to
+`make_ref` of the two-dimensional options owner with the same source allocation, and a case that
+selects a non-2D arm by its literal discriminant (`dimension: '3d'`, `'cube'`, `'2d-array'`) must
+materialize *that* arm's owner instead -- the lowering follows the selected overload, it does not
+hard-code two dimensions.
+
+No ambiguity negative case is proposed here. An invented one would assert the absence of an arm that
+the TypeScript checker in fact resolves, which is the opposite of the truth; a negative control is
+only meaningful against a shape the checker genuinely cannot resolve, and no such instance of this
+call was found.
+
+## Investigation lead, not established feasibility
+
+`packages/compiler-backend-cpp/src/cppCompilerBackend.ts:22907` calls
+`getIrInvocationArgumentExpectedTypeCpp(expression, index)`, so the emitter already computes an
+invocation argument's expected type. That is a hook that appears to be the right place to read the
+selected options carrier. It is recorded as a lead only: no prototype was built or verified, so
+nothing here establishes that the change is reachable without wider emitter design, and no claim is
+made about evaluation order, allocation count, or identity preservation beyond the requirement stated
+under "Expected lowering".
+
+## Carrying override and package tier
 
 The carrying partial override materializes the exact owner shown above and is exercised against the
 upstream identity, fresh-atlas, and empty-region assertions. Together with the separately bounded
