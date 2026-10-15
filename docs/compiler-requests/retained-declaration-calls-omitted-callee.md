@@ -217,3 +217,58 @@ libc++abi: terminating due to uncaught exception of type flight::Error:
 Every retained logger therefore throws instead of logging, and packages whose behavior is observed through
 the log become unobservable. This site strengthens the propagation requirement: compile-time failures are
 loud, while a retained call to an omitted callee that still compiles remains silent until execution.
+
+## Tenth measured site: `@flighthq/bitmapfont` -- the refusal names its own missing carrier
+
+`packages/bitmapfont/src/bitmapFontGlyphSource.ts` refuses `initializeGlyphSourceFromBitmapFont` (source line
+16) and emits its caller `createGlyphSourceFromBitmapFont` in full. The retained caller constructs the entity
+and then calls the function the module omitted:
+
+```cpp
+inline flight::Ref<flight::types::GlyphSource> create_glyph_source_from_bitmap_font(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapFont>>>> font) {
+  flight::types::EntityConstruction<flight::Ref<flight::types::GlyphSource>> out = flight::entity::allocate_entity<flight::Ref<flight::types::GlyphSource>>();
+  initialize_glyph_source_from_bitmap_font(out, font);
+  return flight::entity::finish_entity<flight::Ref<flight::types::GlyphSource>>(...);
+}
+```
+
+Measured, emission alone, no override:
+
+```text
+flight/bitmapfont/bitmap_font_glyph_source.hpp:103:3: use of undeclared identifier 'initialize_glyph_source_from_bitmap_font'
+flight/bitmapfont/_internal_index.hpp:                the same, through the include
+flight/bitmapfont/contract.hpp:                       the same, through the include
+```
+
+`initialize_glyph_source_from_bitmap_font` is defined nowhere in the emitted tree -- its `NOT GENERATED`
+marker sits at `bitmap_font_glyph_source.hpp:57`, above the empty space where the definition would be. Both
+callers' witnesses hold: the marker is present, emitted code calls the symbol, and nothing defines it.
+
+**Why this site is worth naming separately: the refusal states the fix.** Its class is
+`cpp-contextual-union-interface-heritage-carrier-unrepresented [target-runtime]`, and the diagnostic reads:
+
+> contextual nullable interface conversion from VoxelGrid to TextureSource follows TypeScript interface
+> heritage, but flight-cpp stores those declarations in independent `flight::Ref<flight::types::VoxelGrid>`
+> and `flight::Ref<flight::types::TextureSource>` owner types: each interface struct is emitted flattened, so
+> the heritage is not a C++ base relation and no pointer cast exists to follow. A native pointer cast would
+> claim C++ inheritance the emitted interface structs do not have, materializing the target would replace
+> object identity, and a structural row would change the declared result carrier. ... **add an
+> owner-preserving interface-heritage carrier to the runtime contract.**
+
+So this is the family's clearest case: the refused function is not refused for an arbitrary reason but
+because a *carrier* is absent, and the missing carrier is runtime-wide rather than TEXT-local. The same
+decision -- heritage as a real C++ base relation, or a checked recovery of the concrete owner -- is the open
+identity-preserving owner-recovery question that also blocks physics2d's joint factories,
+`connectSignalTracked`, the loader refinement and `bitmapfont-formats`. No package-scoped override or patch
+can close it; it can only make the header compile.
+
+**Planned closeout, deliberately split in two.** The TEXT-lane closeout is the fail-loud
+`declare-refused-function` repair (`repairs/emission-repairs.json`, two precedents in `@flighthq/particleemitter`):
+it declares the symbol with the emitter's own carriers and no body, so the three headers compile and any
+call fails at link, keeping the function visibly unusable rather than substituted. The runtime carrier is a
+separate future architecture decision and is explicitly **not** part of that closeout.
+
+The upstream case for this function is thin and worth stating so nobody mistakes a green suite for coverage:
+`bitmapFontGlyphSource.test.ts` asserts only `expect(typeof initializeGlyphSourceFromBitmapFont).toBe('function')`.
+A declaration-only repair satisfies exactly that, which is why the fail-loud closeout is verified by a
+header compile plus a *negative* link check rather than by a behavioural assertion.
