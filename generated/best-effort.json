@@ -19797,6 +19797,7 @@
         "@flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dAnimationTarget.ts",
         "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/spritesheetDetect.ts",
         "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasDetect.ts",
+        "@flighthq/tilemap-formats/packages/tilemap-formats/src/tilemapDetect.ts",
         "@flighthq/tokens/packages/tokens/src/flightDocumentSceneTokens.ts"
       ],
       "module": {
@@ -43050,7 +43051,6 @@
       },
       "path": "flight/tilemap_formats/tilemap_detect.hpp",
       "refusedDependencies": [
-        "@flighthq/registry/packages/registry/src/registryTable.ts",
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledJsonParse.ts"
       ],
       "status": "dependency-incomplete"
@@ -48451,6 +48451,8 @@
         "@flighthq/textureatlas/packages/textureatlas/src/textureAtlasGrid.ts",
         "@flighthq/textureatlas/packages/textureatlas/src/textureAtlasRegion.ts",
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledTmjFormat.ts",
+        "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledTmxFormat.ts",
+        "@flighthq/tilemap-formats/packages/tilemap-formats/src/tilemapDetect.ts",
         "@flighthq/timeline/packages/timeline/src/timeline.ts",
         "@flighthq/tray/packages/tray/src/tray.ts",
         "@flighthq/tween/packages/tween/src/internal.ts",
@@ -52287,6 +52289,7 @@
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/skeletonDetect.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryFull.ts",
         "@flighthq/swf/packages/swf/src/expandSwfTagHandlerDispatch.ts",
+        "@flighthq/tilemap-formats/packages/tilemap-formats/src/tilemapDetect.ts",
         "@flighthq/types/packages/types/src/Awd2Block.ts",
         "@flighthq/types/packages/types/src/BitmapFontImportOptions.ts",
         "@flighthq/types/packages/types/src/ColladaDecoding.ts",
@@ -61933,6 +61936,7 @@
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledGid.ts",
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledTmjFormat.ts",
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledTmxFormat.ts",
+        "@flighthq/tilemap-formats/packages/tilemap-formats/src/tilemapDetect.ts",
         "@flighthq/types/packages/types/src/TilemapImportOptions.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
@@ -61967,6 +61971,7 @@
       "consumers": [
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/enableTilemapFormatsGuards.ts",
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledLayerData.ts",
+        "@flighthq/tilemap-formats/packages/tilemap-formats/src/tilemapDetect.ts",
         "@flighthq/types/packages/types/src/TilemapImportOptions.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
@@ -62004,6 +62009,7 @@
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledGid.ts",
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledTmjFormat.ts",
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledTmxFormat.ts",
+        "@flighthq/tilemap-formats/packages/tilemap-formats/src/tilemapDetect.ts",
         "@flighthq/types/packages/types/src/TiledMap.ts",
         "@flighthq/types/packages/types/src/TiledParseOptions.ts",
         "@flighthq/types/packages/types/src/TilemapImportOptions.ts",
@@ -62035,6 +62041,7 @@
     },
     {
       "consumers": [
+        "@flighthq/tilemap-formats/packages/tilemap-formats/src/tilemapDetect.ts",
         "@flighthq/types/packages/types/src/TilemapImportOptions.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
@@ -62049,6 +62056,7 @@
     },
     {
       "consumers": [
+        "@flighthq/tilemap-formats/packages/tilemap-formats/src/tilemapDetect.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],

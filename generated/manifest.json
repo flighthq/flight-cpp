@@ -1651,7 +1651,8 @@
         "flight/tilemap_formats/tiled_project.hpp",
         "flight/tilemap_formats/tiled_tmj_format.hpp",
         "flight/tilemap_formats/tiled_tmx_format.hpp",
-        "flight/tilemap_formats/tiled_xml_parse.hpp"
+        "flight/tilemap_formats/tiled_xml_parse.hpp",
+        "flight/tilemap_formats/tilemap_detect.hpp"
       ],
       "id": "tilemap-formats-unqualified-types-names"
     },
@@ -3349,9 +3350,7 @@
       "id": "image-test-dimension-resolver-declaration"
     },
     {
-      "files": [
-        "flight/tilemap_formats/tiled_xml_parse.hpp"
-      ],
+      "files": [],
       "id": "tilemap-formats-unqualified-xml-names"
     },
     {
@@ -4806,6 +4805,13 @@
     },
     {
       "dependency": "flight",
+      "digest": "780edb2f0db537b773c93d4244b98f79fc5be0c394424e346c0c95752d78a068",
+      "id": "tilemap-formats-native-portability",
+      "module": "packages/tilemap-formats/src/tilemapDetect.ts, packages/tilemap-formats/src/tiledLayerData.ts, packages/tilemap-formats/src/tiledTmxFormat.ts, and packages/tilemap-formats/src/tiledXmlParse.ts",
+      "package": "@flighthq/tilemap-formats"
+    },
+    {
+      "dependency": "flight",
       "digest": "ffbbb53db99e7191d96b5fe84c7fb9429b76a304db2240661d79e9c47daa862e",
       "id": "spritesheet-player-readonly-identity-comparison",
       "module": "packages/spritesheet/src/spritesheetPlayer.ts",
@@ -5946,7 +5952,7 @@
       "flight/swf/swf_sound_handler.hpp",
       "flight/swf/swf_static_text_handler.hpp",
       "flight/swf/swf_video_handler.hpp",
-      "flight/tilemap_formats/tiled_tmx_format.hpp"
+      "flight/tilemap_formats/tiled_tmj_format.hpp"
     ],
     "structs": [
       "alpha_5f8492cbcea5bcc7",
@@ -6199,11 +6205,6 @@
       "flight/textsegment/text_segment_boundary.hpp",
       "flight/textsegment/text_segmenter_backend.hpp",
       "flight/textshaper/text_shaper_cache.hpp",
-      "flight/tilemap_formats/tiled_json_parse.hpp",
-      "flight/tilemap_formats/tiled_project.hpp",
-      "flight/tilemap_formats/tiled_tmj_format.hpp",
-      "flight/tilemap_formats/tiled_tmx_format.hpp",
-      "flight/tilemap_formats/tiled_xml_parse.hpp",
       "flight/tokens/substitute_flight_document_scene_tokens.hpp"
     ],
     "includes": 797
@@ -8046,17 +8047,17 @@
       "sourceModules": 3
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/tilemap_formats",
       "cppNamespace": "flight::tilemap_formats",
-      "emittedModules": 5,
+      "emittedModules": 11,
       "package": "@flighthq/tilemap-formats",
-      "refusedModules": 6,
+      "refusedModules": 2,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
-      "sourceModules": 11
+      "sourceModules": 13
     },
     {
       "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
@@ -8212,8 +8213,8 @@
   },
   "summary": {
     "packages": 153,
-    "emittedModules": 2472,
-    "refusedModules": 604,
-    "sourceModules": 3076
+    "emittedModules": 2478,
+    "refusedModules": 600,
+    "sourceModules": 3078
   }
 }
