@@ -831,9 +831,7 @@
       "id": "scene2d-unqualified-types-names"
     },
     {
-      "files": [
-        "flight/texture/video_texture.hpp"
-      ],
+      "files": [],
       "id": "texture-unqualified-geometry-names"
     },
     {
@@ -842,7 +840,6 @@
         "flight/texture/render_texture.hpp",
         "flight/texture/sampler.hpp",
         "flight/texture/texture.hpp",
-        "flight/texture/texture_color_space.hpp",
         "flight/texture/video_texture.hpp",
         "flight/texture/voxel_grid.hpp"
       ],
@@ -934,7 +931,8 @@
         "flight/scene3d_formats/three_ds_parse.hpp",
         "flight/skeleton2d_formats/spine_binary_bone_timeline_handler.hpp",
         "flight/skeleton2d_formats/spine_parse_helpers.hpp",
-        "flight/textshaper/text_shaper_cluster.hpp"
+        "flight/textshaper/text_shaper_cluster.hpp",
+        "flight/texture/cube_texture.hpp"
       ],
       "id": "array-from-tuple-construction"
     },
@@ -5501,7 +5499,7 @@
     },
     {
       "dependency": "flight",
-      "digest": "8a6603ea5873e2ceaf7a0d3230146eef84f71ad209b24f997fe569e4f5b2184c",
+      "digest": "7b74702e92467fe2e06375c1d621d641318a2c7c025388d7ea9d22a8dad98581",
       "id": "texture-direct-cube-face-storage",
       "module": "packages/texture/src/cubeTexture.ts",
       "package": "@flighthq/texture"
@@ -6264,9 +6262,6 @@
       "flight/textsegment/text_segment_boundary.hpp",
       "flight/textsegment/text_segmenter_backend.hpp",
       "flight/textshaper/text_shaper_cache.hpp",
-      "flight/texture/cube_texture.hpp",
-      "flight/texture/render_texture.hpp",
-      "flight/texture/video_texture.hpp",
       "flight/texture_formats/parse_atf.hpp",
       "flight/tilemap_formats/tiled_json_parse.hpp",
       "flight/tilemap_formats/tiled_project.hpp",
@@ -6275,7 +6270,7 @@
       "flight/tilemap_formats/tiled_xml_parse.hpp",
       "flight/tokens/substitute_flight_document_scene_tokens.hpp"
     ],
-    "includes": 855
+    "includes": 850
   },
   "packages": [
     {
@@ -8050,7 +8045,7 @@
       "sourceModules": 10
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/texture",
       "cppNamespace": "flight::texture",
       "emittedModules": 6,

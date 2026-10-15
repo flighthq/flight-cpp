@@ -4,46 +4,53 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function createRenderTexture -- source line 17
+#include <flight/structural_ref.hpp>
 #include <optional>
-#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/texture_source_kind.hpp>
+namespace flight::types { struct CreateRenderTextureOptions; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct RenderTarget; }
+namespace flight::types { struct RenderTexture; }
+namespace flight::types { struct Sampler; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct TextureResourceOptions; }
+namespace flight::types { struct Vector2; }
 
-#include <flight/types/texture.hpp>
-
-#include <flight/types/render_target.hpp>
-
-#include <flight/types/entity.hpp>
-
+#include <flight/types/alpha_type.hpp>
 #include <flight/types/create_render_texture_options.hpp>
-
-#include <flight/texture/sampler.hpp>
-#include <flight/texture/texture.hpp>
+#include <flight/types/create_texture_options.hpp>
+#include <flight/types/entity.hpp>
+#include <flight/types/render_target.hpp>
+#include <flight/types/render_texture.hpp>
+#include <flight/types/sampler.hpp>
+#include <flight/types/texture.hpp>
+#include <flight/types/texture_source_kind.hpp>
+#include <flight/types/texture_source_value.hpp>
+#include <flight/types/vector2.hpp>
 
 namespace flight::texture {
 
 using flight::types::CreateRenderTextureOptions;
-using flight::types::EntityConstruction;
 using flight::types::RenderTarget;
-using flight::types::RenderTargetColorSpace;
+using flight::types::Sampler;
 using flight::types::Texture2D;
-using flight::types::render_target_texture_source_kind;
+using flight::types::Vector2;
 
-inline void initialize_render_texture_target(flight::Ref<EntityConstruction<flight::Ref<RenderTarget>>> out, flight::Ref<CreateRenderTextureOptions> options, flight::Ref<RenderTargetColorSpace> color_space) {
-  (out->color_attachments = options->color_attachments);
-  (out->color_formats = options->color_formats);
-  (out->color_space = color_space);
-  (out->depth = options->depth);
-  (out->format = options->format);
-  (out->height = options->height);
-  (out->kind = render_target_texture_source_kind);
-  (out->sample_count = options->sample_count);
-  (out->version = 0.0);
-  (out->width = options->width);
+inline void initialize_render_texture_target(flight::types::EntityConstruction<flight::Ref<flight::types::RenderTarget>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CreateRenderTextureOptions>>>> options, flight::types::RenderTargetColorSpace color_space) {
+  flight::row_set<flight::RowKey<"colorAttachments">>(out, flight::row_get<flight::RowKey<"colorAttachments">>(options));
+  flight::row_set<flight::RowKey<"colorFormats">>(out, flight::row_get<flight::RowKey<"colorFormats">>(options));
+  flight::row_set<flight::RowKey<"colorSpace">>(out, std::optional<flight::String>{color_space});
+  flight::row_set<flight::RowKey<"depth">>(out, flight::row_get<flight::RowKey<"depth">>(options));
+  flight::row_set<flight::RowKey<"format">>(out, flight::row_get<flight::RowKey<"format">>(options));
+  flight::row_set<flight::RowKey<"height">>(out, flight::row_get<flight::RowKey<"height">>(options));
+  flight::row_set<flight::RowKey<"kind">>(out, flight::types::render_target_texture_source_kind);
+  flight::row_set<flight::RowKey<"sampleCount">>(out, flight::row_get<flight::RowKey<"sampleCount">>(options));
+  flight::row_set<flight::RowKey<"version">>(out, 0.0);
+  flight::row_set<flight::RowKey<"width">>(out, flight::row_get<flight::RowKey<"width">>(options));
 }
 
 
@@ -78,10 +85,11 @@ inline void initialize_render_texture_target(flight::Ref<EntityConstruction<flig
 //   }
 //   
 // cpp emission failed for @flighthq/texture/packages/texture/src/renderTexture.ts: a reference assertion from
-// flight::Ref<Texture2D> to flight::Ref<RenderTexture> has no heritage to cast along: the declarations share no
-// emitted C++ class-heritage path (source interface and intersection relationships flatten into independent
-// owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the
-// exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target
-// owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
+// flight::Ref<flight::types::Texture2D> to flight::Ref<flight::types::RenderTexture> has no heritage to cast
+// along: the declarations share no emitted C++ class-heritage path (source interface and intersection
+// relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner
+// that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that
+// validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a
+// replacement row, or invent side storage
 
 } // namespace flight::texture

@@ -689,13 +689,13 @@ inline void attach_texture_to_resource(Texture texture, TextureResource resource
 }
 
 using CreateTexture2DVariantOptions =
-    flight::types::color_space_version_source_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_5a93a3871f953593;
+    flight::types::CreateTexture2DOptions;
 using CreateTexture3DVariantOptions =
-    flight::types::color_space_version_source_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_eae08baefdaeada2;
+    flight::types::CreateTexture3DOptions;
 using CreateTexture2DArrayVariantOptions =
-    flight::types::color_space_version_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_sources_dimension_resource_b96956d30cc649c7;
+    flight::types::CreateTexture2DArrayOptions;
 using CreateTextureCubeVariantOptions =
-    flight::types::color_space_version_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_sources_dimension_resource_8f80a98cd173b278;
+    flight::types::CreateTextureCubeOptions;
 using CreateTexture2DOptionsRow = flight::StructuralRef<flight::RowReadonly<
     flight::RowOf<flight::Ref<flight::types::CreateTexture2DOptions>>>>;
 
@@ -950,11 +950,18 @@ inline flight::Ref<TextureCube> create_texture(flight::Ref<CreateTextureCubeVari
 // already erased to one C++ variant. Only the 2D arm has the 2D return type selected by those calls;
 // callers of the other arms use the exact-owner overloads above.
 inline flight::Ref<Texture2D> create_texture(CreateTextureOptions opts) {
-  if (auto* options = std::get_if<flight::Ref<CreateTexture2DVariantOptions>>(&opts)) {
-    return create_texture(*options);
-  }
-  throw flight::Error(
-      flight::String("createTexture overload result was erased; pass the exact non-2D options owner"));
+  return std::visit(
+      [](const auto& options) -> flight::Ref<Texture2D> {
+        using Options = std::remove_cvref_t<decltype(options)>;
+        using Dimension = std::remove_cvref_t<decltype(options->dimension)>;
+        if constexpr (std::same_as<Dimension, std::optional<flight::String>>) {
+          return create_texture2_d_from_options(std::optional<Options>{options});
+        } else {
+          throw flight::Error(
+              flight::String("createTexture overload result was erased; pass the exact non-2D options owner"));
+        }
+      },
+      std::move(opts));
 }
 
 inline Texture clone_texture(TextureLike source) {

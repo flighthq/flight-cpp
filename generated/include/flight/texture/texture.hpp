@@ -69,7 +69,6 @@ using flight::types::ExternalImageResourceReference;
 using flight::types::ImageResource;
 using flight::types::RenderTarget;
 using flight::types::Sampler;
-using flight::types::Texture;
 using flight::types::Texture2D;
 using flight::types::TextureSource;
 using flight::types::TextureUvTransform;

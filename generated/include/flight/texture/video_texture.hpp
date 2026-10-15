@@ -3,151 +3,177 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function createVideoImageResource -- source line 138
 //   missing: function createVideoTexture -- source line 42
+#include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
+#include <stdexcept>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/video_resource.hpp>
+#include <flight/types/texture_source.hpp>
 
-#include <flight/types/texture_source_kind.hpp>
+#include <flight/types/render_target.hpp>
 
-#include <flight/types/texture.hpp>
+#include <flight/types/external_texture.hpp>
 
-#include <flight/types/matrix3.hpp>
+#include <flight/types/compressed_image_resource.hpp>
 
-#include <flight/types/image_resource.hpp>
+#include <flight/types/bitmap.hpp>
 
-#include <flight/types/host_video.hpp>
+namespace flight::types { struct Bitmap; }
+namespace flight::types { struct CompressedImageResource; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct ExternalTexture; }
+namespace flight::types { struct HostVideoCapability; }
+namespace flight::types { struct ImageResource; }
+namespace flight::types { struct Matrix3; }
+namespace flight::types { struct RenderTarget; }
+namespace flight::types { struct Sampler; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+namespace flight::types { struct TextureResourceOptions; }
+namespace flight::types { struct TextureSource; }
+namespace flight::types { struct TextureUvTransform; }
+namespace flight::types { struct Vector2; }
+namespace flight::types { struct VideoResource; }
+namespace flight::types { struct VideoResourceLoadOptions; }
+namespace flight::types { struct VoxelGrid; }
 
-#include <flight/types/host_image_source.hpp>
-
-#include <flight/types/entity.hpp>
-
+#include <flight/entity/entity.hpp>
 #include <flight/geometry/matrix3.hpp>
-
+#include <flight/types/alpha_type.hpp>
+#include <flight/types/create_texture_options.hpp>
+#include <flight/types/entity.hpp>
+#include <flight/types/host_image_source.hpp>
+#include <flight/types/host_video.hpp>
+#include <flight/types/image_resource.hpp>
+#include <flight/types/matrix3.hpp>
+#include <flight/types/sampler.hpp>
+#include <flight/types/texture.hpp>
+#include <flight/types/texture_source_kind.hpp>
+#include <flight/types/texture_source_value.hpp>
+#include <flight/types/texture_uv_transform.hpp>
+#include <flight/types/vector2.hpp>
+#include <flight/types/video_resource.hpp>
+#include <flight/types/voxel_grid.hpp>
 #include <flight/texture/texture.hpp>
 
 namespace flight::texture {
 
-using flight::types::EntityConstruction;
-using flight::types::HostImageSource;
+using flight::types::Bitmap;
+using flight::types::CompressedImageResource;
+using flight::types::ExternalTexture;
 using flight::types::HostVideoCapability;
 using flight::types::ImageResource;
-using flight::types::Matrix3Like;
+using flight::types::RenderTarget;
+using flight::types::Sampler;
 using flight::types::Texture;
 using flight::types::Texture2D;
 using flight::types::TextureLike;
+using flight::types::TextureSource;
+using flight::types::TextureUvTransform;
+using flight::types::Vector2;
 using flight::types::VideoResource;
-using flight::types::image_texture_source_kind;
+using flight::types::VoxelGrid;
 
-using flight::geometry::inverse_matrix3;
-
-inline flight::Ref<Texture> clone_video_texture(flight::Ref<TextureLike> source) {
-  return clone_texture(source);
+inline flight::types::Texture clone_video_texture(flight::types::TextureLike source) {
+  return flight::texture::clone_texture(source);
 }
 
-inline void copy_video_texture(flight::Ref<TextureLike> out, flight::Ref<TextureLike> source) {
-  copy_texture(out, source);
+inline void copy_video_texture(flight::types::TextureLike out, flight::types::TextureLike source) {
+  flight::texture::copy_texture(out, source);
 }
 
-inline void get_video_texture_uv_matrix(flight::Ref<Matrix3Like> out, flight::Ref<TextureLike> texture) {
-  get_texture_uv_matrix(out, texture);
+inline void get_video_texture_uv_matrix(flight::types::Matrix3Like out, flight::types::TextureLike texture) {
+  flight::texture::get_texture_uv_matrix(out, texture);
 }
 
-inline void get_video_texture_inverse_uv_matrix(flight::Ref<Matrix3Like> out, flight::Ref<TextureLike> texture) {
+inline void get_video_texture_inverse_uv_matrix(flight::types::Matrix3Like out, flight::types::TextureLike texture) {
   get_video_texture_uv_matrix(out, texture);
-  inverse_matrix3(out, out);
+  flight::geometry::inverse_matrix3(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::types::Matrix3Like>>>(out)));
 }
 
-inline void initialize_video_image_resource(flight::Ref<EntityConstruction<flight::Ref<ImageResource>>> out, flight::Ref<HostImageSource> source, double version) {
-  (out->alpha_type = flight::String("straight"));
-  (out->gamut = flight::String("srgb"));
-  (out->height = 0.0);
-  (out->kind = image_texture_source_kind);
-  (out->source = source);
-  (out->version = version);
-  (out->width = 0.0);
+inline void initialize_video_image_resource(flight::types::EntityConstruction<flight::Ref<flight::types::ImageResource>> out, flight::types::HostImageSource source, double version) {
+  flight::row_set<flight::RowKey<"alphaType">>(out, flight::String("straight"));
+  flight::row_set<flight::RowKey<"gamut">>(out, flight::String("srgb"));
+  flight::row_set<flight::RowKey<"height">>(out, 0.0);
+  flight::row_set<flight::RowKey<"kind">>(out, flight::types::image_texture_source_kind);
+  flight::row_set<flight::RowKey<"source">>(out, source);
+  flight::row_set<flight::RowKey<"version">>(out, version);
+  flight::row_set<flight::RowKey<"width">>(out, 0.0);
 }
 
-inline std::optional<flight::Ref<ImageResource>> get_video_image(flight::Ref<TextureLike> texture) {
-  return ((texture->dimension == flight::String("2d")) ? std::optional{static_cast<std::optional<flight::Ref<ImageResource>>>(texture->source)} : std::nullopt);
+inline std::optional<flight::Ref<flight::types::ImageResource>> get_video_image(flight::types::TextureLike texture) {
+  return ((std::visit([](const auto& value) { return value->dimension; }, texture) == flight::String("2d")) ? std::optional{([&]() -> std::optional<flight::Ref<flight::types::ImageResource>> { const auto& narrowed_union = flight::row_get<flight::RowKey<"source">>(std::get<2>(texture)); if (!narrowed_union.has_value()) return std::nullopt; if (const auto* alternative = std::get_if<flight::Ref<flight::types::ImageResource>>(&narrowed_union.value())) return std::optional<flight::Ref<flight::types::ImageResource>>{*alternative}; throw std::logic_error("asserted union alternative is not present in the value"); }())} : std::nullopt);
 }
 
-inline std::optional<flight::Ref<HostImageSource>> get_video_source(flight::Ref<TextureLike> texture) {
-  return ([&]() -> std::optional<flight::Ref<HostImageSource>> { auto optional_chain_receiver = get_video_image(texture); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->source; }());
+inline std::optional<flight::types::HostImageSource> get_video_source(flight::types::TextureLike texture) {
+  return ([&]() -> std::optional<flight::types::HostImageSource> { auto optional_chain_receiver = get_video_image(texture); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->source; }());
 }
 
-inline double get_video_texture_height(flight::Ref<HostVideoCapability> host_video, flight::Ref<TextureLike> texture) {
-  std::optional<flight::Ref<HostImageSource>> source = get_video_source(texture);
-  const double height = (source.has_value() ? ([&]() -> std::optional<double> { auto optional_chain_receiver = host_video->get_height; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()(source.value()); }()).value_or(0.0) : 0.0);
+inline double get_video_texture_height(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostVideoCapability>>>> host_video, flight::types::TextureLike texture) {
+  auto source = get_video_source(texture);
+  const double height = (source.has_value() ? ([&]() -> std::optional<double> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"getHeight">>(host_video); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()(source.value()); }()).value_or(0.0) : 0.0);
   return ((height > 0.0) ? height : -1.0);
 }
 
-inline double get_video_texture_width(flight::Ref<HostVideoCapability> host_video, flight::Ref<TextureLike> texture) {
-  std::optional<flight::Ref<HostImageSource>> source = get_video_source(texture);
-  const double width = (source.has_value() ? ([&]() -> std::optional<double> { auto optional_chain_receiver = host_video->get_width; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()(source.value()); }()).value_or(0.0) : 0.0);
+inline double get_video_texture_width(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostVideoCapability>>>> host_video, flight::types::TextureLike texture) {
+  auto source = get_video_source(texture);
+  const double width = (source.has_value() ? ([&]() -> std::optional<double> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"getWidth">>(host_video); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()(source.value()); }()).value_or(0.0) : 0.0);
   return ((width > 0.0) ? width : -1.0);
 }
 
-inline bool is_video_texture_frame_ready(flight::Ref<HostVideoCapability> host_video, flight::Ref<TextureLike> texture) {
-  std::optional<flight::Ref<HostImageSource>> source = get_video_source(texture);
-  return (((source.has_value() && (([&]() -> std::optional<bool> { auto optional_chain_receiver = host_video->is_ready; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()(source.value()); }()) == true)) && (([&]() -> std::optional<double> { auto optional_chain_receiver = host_video->get_width; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()(source.value()); }()).value_or(0.0) > 0.0)) && (([&]() -> std::optional<double> { auto optional_chain_receiver = host_video->get_height; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()(source.value()); }()).value_or(0.0) > 0.0));
+inline bool is_video_texture_frame_ready(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostVideoCapability>>>> host_video, flight::types::TextureLike texture) {
+  auto source = get_video_source(texture);
+  return (((source.has_value() && (([&]() -> std::optional<bool> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"isReady">>(host_video); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()(source.value()); }()) == true)) && (([&]() -> std::optional<double> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"getWidth">>(host_video); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()(source.value()); }()).value_or(0.0) > 0.0)) && (([&]() -> std::optional<double> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"getHeight">>(host_video); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()(source.value()); }()).value_or(0.0) > 0.0));
 }
 
-inline void update_video_image_size(flight::Ref<HostVideoCapability> host_video, flight::Ref<ImageResource> image) {
-  (image->width = ([&]() -> std::optional<double> { auto optional_chain_receiver = host_video->get_width; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()(image->source); }()).value_or(0.0));
-  (image->height = ([&]() -> std::optional<double> { auto optional_chain_receiver = host_video->get_height; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()(image->source); }()).value_or(0.0));
+inline void update_video_image_size(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostVideoCapability>>>> host_video, flight::Ref<flight::types::ImageResource> image) {
+  (image->width = ([&]() -> std::optional<double> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"getWidth">>(host_video); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()(image->source); }()).value_or(0.0));
+  (image->height = ([&]() -> std::optional<double> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"getHeight">>(host_video); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()(image->source); }()).value_or(0.0));
 }
 
-inline double advance_video_texture(flight::Ref<HostVideoCapability> host_video, flight::Ref<TextureLike> texture) {
-  std::optional<flight::Ref<ImageResource>> image = get_video_image(texture);
+inline double advance_video_texture(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostVideoCapability>>>> host_video, flight::types::TextureLike texture) {
+  auto image = get_video_image(texture);
   if (!image.has_value()) {
-    return texture->version;
+    return std::visit([](const auto& value) { return value->version; }, texture);
   }
   update_video_image_size(host_video, image.value());
   (image.value()->version = flight::unsigned_right_shift((image.value()->version + 1.0), 0.0));
-  (texture->version = image.value()->version);
-  return texture->version;
+  (std::visit([](const auto& value) { return value->version; }, texture) = image.value()->version);
+  return std::visit([](const auto& value) { return value->version; }, texture);
 }
 
 inline const double initial_video_version = 4294967295.0;
 
-inline void destroy_video_texture(flight::Ref<Texture2D> texture) {
-  (texture->source = nullptr);
+inline void destroy_video_texture(flight::Ref<flight::types::Texture2D> texture) {
+  (texture->source = std::nullopt);
   (texture->version = initial_video_version);
 }
 
-inline void reset_video_texture_frame(flight::Ref<TextureLike> texture) {
-  std::optional<flight::Ref<ImageResource>> image = get_video_image(texture);
+inline void reset_video_texture_frame(flight::types::TextureLike texture) {
+  auto image = get_video_image(texture);
   if (image.has_value()) {
     (image.value()->version = initial_video_version);
   }
-  (texture->version = initial_video_version);
+  (std::visit([](const auto& value) { return value->version; }, texture) = initial_video_version);
 }
 
-
-// NOT GENERATED: function createVideoImageResource -- source line 138
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   function createVideoImageResource(
-//     hostVideo: Readonly<HostVideoCapability>,
-//     source: Readonly<VideoResource>,
-//   ): ImageResource | null {
-//     if (source.element === null) return null;
-//     const image = allocateEntity<ImageResource>();
-//     initializeVideoImageResource(image, source.element, INITIAL_VIDEO_VERSION);
-//     updateVideoImageSize(hostVideo, image);
-//     return finishEntity(image);
-//   }
-//   
-// cpp emission failed for @flighthq/texture/packages/texture/src/videoTexture.ts: a presence test against null
-// has no absence channel in the emitted C++ storage for property
+inline std::optional<flight::Ref<flight::types::ImageResource>> create_video_image_resource(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostVideoCapability>>>> host_video, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>> source) {
+  if (!flight::row_get<flight::RowKey<"element">>(source).has_value()) {
+    return std::nullopt;
+  }
+  flight::types::EntityConstruction<flight::Ref<flight::types::ImageResource>> image = flight::entity::allocate_entity<flight::Ref<flight::types::ImageResource>>();
+  initialize_video_image_resource(image, flight::row_get<flight::RowKey<"element">>(source).value(), initial_video_version);
+  update_video_image_size(host_video, flight::structural_ref_cast<flight::Ref<flight::types::ImageResource>>(image));
+  return std::optional<flight::Ref<flight::types::ImageResource>>{flight::entity::finish_entity<flight::Ref<flight::types::ImageResource>>(image)};
+}
 
 
 // NOT GENERATED: function createVideoTexture -- source line 42
@@ -173,12 +199,12 @@ inline void reset_video_texture_frame(flight::Ref<TextureLike> texture) {
 // cpp emission failed for @flighthq/texture/packages/texture/src/videoTexture.ts: Partial<T> requires a
 // statically resolvable C++ object shape; T is named
 
-inline void set_video_texture_source(flight::Ref<HostVideoCapability> host_video, flight::Ref<TextureLike> texture, flight::Ref<VideoResource> source) {
-  if ((texture->dimension != flight::String("2d"))) {
+inline void set_video_texture_source(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostVideoCapability>>>> host_video, flight::types::TextureLike texture, flight::Ref<flight::types::VideoResource> source) {
+  if ((std::visit([](const auto& value) { return value->dimension; }, texture) != flight::String("2d"))) {
     throw flight::Error(flight::String("setVideoTextureSource requires a Texture2D"));
   }
-  (texture->source = create_video_image_resource(host_video, source));
-  (texture->version = initial_video_version);
+  (std::get<2>(texture)->source = ([&]() -> std::optional<std::variant<flight::Ref<flight::types::VoxelGrid>, flight::Ref<flight::types::TextureSource>, flight::Ref<flight::types::ExternalTexture>, flight::Ref<flight::types::Bitmap>, flight::Ref<flight::types::CompressedImageResource>, flight::Ref<flight::types::RenderTarget>, flight::Ref<flight::types::ImageResource>>> { auto contextual_union_source = create_video_image_resource(host_video, source); if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<std::variant<flight::Ref<flight::types::VoxelGrid>, flight::Ref<flight::types::TextureSource>, flight::Ref<flight::types::ExternalTexture>, flight::Ref<flight::types::Bitmap>, flight::Ref<flight::types::CompressedImageResource>, flight::Ref<flight::types::RenderTarget>, flight::Ref<flight::types::ImageResource>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::ImageResource>>, contextual_union_source.value()}; }()));
+  (std::get<2>(texture)->version = initial_video_version);
 }
 
 } // namespace flight::texture

@@ -4,10 +4,11 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function cloneCubeTexture -- source line 11
-//   missing: function createCubeTexture -- source line 19
-//   missing: function getCubeTextureFaceSize -- source line 36
-//   missing: function isCubeTextureComplete -- source line 45
+//   missing: function copyCubeTexture -- source line 15
+//   missing: function equalsCubeTexture -- source line 28
 //   missing: function setCubeTextureFace -- source line 57
+#include <flight/boolean.hpp>
+#include <flight/structural_ref.hpp>
 #include <optional>
 #include <tuple>
 #include <variant>
@@ -16,108 +17,132 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/texture_source.hpp>
+namespace flight::types { struct Bitmap; }
+namespace flight::types { struct CompressedImageResource; }
+namespace flight::types { struct CreateCubeTextureOptions; }
+namespace flight::types { struct ExternalTexture; }
+namespace flight::types { struct ImageResource; }
+namespace flight::types { struct RenderTarget; }
+namespace flight::types { struct Sampler; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+namespace flight::types { struct TextureResourceOptions; }
+namespace flight::types { struct TextureSource; }
+namespace flight::types { struct Vector2; }
+namespace flight::types { struct VoxelGrid; }
 
-#include <flight/types/texture.hpp>
-
+#include <flight/types/bitmap.hpp>
+#include <flight/types/compressed_image_resource.hpp>
+#include <flight/types/create_cube_texture_options.hpp>
+#include <flight/types/create_texture_options.hpp>
 #include <flight/types/cube_texture.hpp>
-
+#include <flight/types/external_texture.hpp>
+#include <flight/types/image_resource.hpp>
+#include <flight/types/render_target.hpp>
+#include <flight/types/sampler.hpp>
+#include <flight/types/texture.hpp>
+#include <flight/types/texture_source.hpp>
+#include <flight/types/texture_source_value.hpp>
+#include <flight/types/vector2.hpp>
+#include <flight/types/voxel_grid.hpp>
 #include <flight/texture/sampler.hpp>
 #include <flight/texture/texture.hpp>
 
 namespace flight::texture {
 
+using flight::types::Bitmap;
+using flight::types::CompressedImageResource;
 using flight::types::CubeTexture;
+using flight::types::ExternalTexture;
+using flight::types::ImageResource;
+using flight::types::RenderTarget;
+using flight::types::Sampler;
 using flight::types::Texture;
+using flight::types::Texture2D;
 using flight::types::TextureSource;
+using flight::types::Vector2;
+using flight::types::VoxelGrid;
 
 
 // NOT GENERATED: function cloneCubeTexture -- source line 11
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
 //   export function cloneCubeTexture(source: Readonly<CubeTexture>): CubeTexture {
 //     return cloneTexture(source) as CubeTexture;
 //   }
-//
-// cpp emission failed for @flighthq/texture/packages/texture/src/cubeTexture.ts: a reference assertion from
-// flight::Ref<Texture> to flight::Ref<CubeTexture> has no heritage to cast along: the declarations share no
-// emitted C++ class-heritage path (source interface and intersection relationships flatten into independent
-// owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the
-// exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target
-// owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
+//   
+// cpp emission failed for @flighthq/types/packages/types/src/Texture.ts: contextual union value type
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::CubeTexture>>> is not a represented
+// runtime domain: the value's type resembles an alternative but is not the declaration it names. Pass the
+// declared type, or declare the destination union over the type the value has
 
-inline void copy_cube_texture(flight::Ref<CubeTexture> out, flight::Ref<CubeTexture> source) {
-  copy_texture(out, source);
+
+// NOT GENERATED: function copyCubeTexture -- source line 15
+// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+//
+// The source it stood for:
+//   export function copyCubeTexture(out: CubeTexture, source: Readonly<CubeTexture>): void {
+//     copyTexture(out, source);
+//   }
+//   
+// cpp emission failed for @flighthq/types/packages/types/src/Texture.ts: contextual union value type
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::CubeTexture>>> is not a represented
+// runtime domain: the value's type resembles an alternative but is not the declaration it names. Pass the
+// declared type, or declare the destination union over the type the value has
+
+inline flight::types::CubeTexture create_cube_texture(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CreateCubeTextureOptions>>>>> opts = std::nullopt) {
+  return flight::texture::create_texture(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CreateTextureCubeOptions>>>>(flight::row_field<flight::RowKey<"colorSpace">>(([&]() -> std::optional<flight::String> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::types::TextureColorSpace> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"colorSpace">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return std::optional<flight::String>{flight::String("srgb")}; }())), flight::row_field<flight::RowKey<"sampler">>((flight::to_boolean(([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::SamplerLike>>>> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"sampler">>(optional_chain_receiver.value()); }())) ? std::optional<flight::Ref<flight::types::Sampler>>{flight::texture::clone_sampler(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::SamplerLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Sampler>>>>(flight::row_get<flight::RowKey<"sampler">>(opts.value()).value())))} : std::nullopt)), flight::row_field<flight::RowKey<"dimension">>(flight::String("cube")), flight::row_field<flight::RowKey<"sources">>(([&]() -> std::optional<flight::Array<std::optional<flight::types::TextureSourceValue>>> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::types::TextureSourceCubeFaces> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"sources">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return std::optional<flight::Array<std::optional<flight::types::TextureSourceValue>>>{flight::Array<std::optional<flight::types::TextureSourceValue>>{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}}; }()))));
 }
 
 
-// NOT GENERATED: function createCubeTexture -- source line 19
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// NOT GENERATED: function equalsCubeTexture -- source line 28
+// refusal: cpp-contextual-union-value-type-unrepresented [source-portability]
 //
 // The source it stood for:
-//   export function createCubeTexture(opts?: Readonly<CreateCubeTextureOptions>): CubeTexture {
-//     return createTexture({
-//       colorSpace: opts?.colorSpace ?? 'srgb',
-//       sampler: opts?.sampler ? cloneSampler(opts.sampler) : undefined,
-//       dimension: 'cube',
-//       sources: opts?.sources ?? [null, null, null, null, null, null],
-//     }) as CubeTexture;
+//   export function equalsCubeTexture(
+//     a: Readonly<CubeTexture> | null | undefined,
+//     b: Readonly<CubeTexture> | null | undefined,
+//   ): boolean {
+//     if (!a || !b) return false;
+//     return equalsTexture(a, b);
 //   }
-//
-// cpp emission failed for @flighthq/texture/packages/texture/src/cubeTexture.ts: a reference assertion from
-// flight::Ref<TextureCube> to flight::Ref<CubeTexture> has no heritage to cast along: the declarations share no
-// emitted C++ class-heritage path (source interface and intersection relationships flatten into independent
-// owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the
-// exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target
-// owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
+//   
+// cpp emission failed for @flighthq/texture/packages/texture/src/cubeTexture.ts: contextual union value type
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::CubeTexture>>> is not a represented
+// runtime domain: the value leaves a member the destination requires optional or absent, or gives it an
+// incompatible type, so it is not the shape an alternative declares. This expression refers to an existing
+// owner. Keep the value in the declared destination arm from the point it is created, or explicitly rebuild the
+// declared result in source where changing identity is intended. The compiler will not retype, copy, or
+// materialize the existing object into a sibling owner.
 
-inline bool equals_cube_texture(std::variant<flight::Ref<CubeTexture>, flight::Null, flight::Undefined> a, std::variant<flight::Ref<CubeTexture>, flight::Null, flight::Undefined> b) {
-  if (((std::holds_alternative<flight::Null>(a) || std::holds_alternative<flight::Undefined>(a)) || (std::holds_alternative<flight::Null>(b) || std::holds_alternative<flight::Undefined>(b)))) {
-    return false;
+inline double get_cube_texture_face_size(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::CubeTexture>>> cube) {
+  flight::types::TextureSourceCubeFaces sources = flight::row_get<flight::RowKey<"sources">>(cube);
+  {
+    double i = 0.0;
+    while ((i < 6.0)) {
+      {
+        std::optional<std::variant<flight::Ref<flight::types::VoxelGrid>, flight::Ref<flight::types::TextureSource>, flight::Ref<flight::types::ExternalTexture>, flight::Ref<flight::types::Bitmap>, flight::Ref<flight::types::CompressedImageResource>, flight::Ref<flight::types::RenderTarget>, flight::Ref<flight::types::ImageResource>>> face = sources.element(i);
+        if (face.has_value()) {
+          return face.value().width;
+        }
+      }
+      (i += 1.0);
+    }
   }
-  return equals_texture(std::get<0>(a), std::get<0>(b));
+  return -1.0;
 }
 
-
-// NOT GENERATED: function getCubeTextureFaceSize -- source line 36
-// refusal: cpp-contextual-union-missing-expression-type:optionalVariant [compiler-restriction]
-//
-// The source it stood for:
-//   export function getCubeTextureFaceSize(cube: Readonly<CubeTexture>): number {
-//     const sources = cube.sources;
-//     for (let i = 0; i < 6; i++) {
-//       const face = sources[i];
-//       if (face !== null) return face.width;
-//     }
-//     return -1;
-//   }
-//
-// cpp emission failed for @flighthq/texture/packages/texture/src/cubeTexture.ts: contextual optionalVariant
-// construction requires expression type evidence
-
-
-// NOT GENERATED: function isCubeTextureComplete -- source line 45
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function isCubeTextureComplete(cube: Readonly<CubeTexture>): boolean {
-//     const sources = cube.sources;
-//     return (
-//       sources[0] !== null &&
-//       sources[1] !== null &&
-//       sources[2] !== null &&
-//       sources[3] !== null &&
-//       sources[4] !== null &&
-//       sources[5] !== null
-//     );
-//   }
-//
-// cpp emission failed for @flighthq/texture/packages/texture/src/cubeTexture.ts: a presence test against null
-// has no absence channel in the emitted C++ storage for element
+inline bool is_cube_texture_complete(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::CubeTexture>>> cube) {
+  flight::types::TextureSourceCubeFaces sources = flight::row_get<flight::RowKey<"sources">>(cube);
+  return (((((sources.get(0.0).has_value() && sources.get(1.0).has_value()) && sources.get(2.0).has_value()) && sources.get(3.0).has_value()) && sources.get(4.0).has_value()) && sources.get(5.0).has_value());
+}
 
 
 // NOT GENERATED: function setCubeTextureFace -- source line 57
+// refusal: cpp-erased-value-assertion-unrepresented [source-portability]
 //
 // The source it stood for:
 //   export function setCubeTextureFace(cube: CubeTexture, faceIndex: number, source: TextureSource | null): void {
@@ -126,8 +151,12 @@ inline bool equals_cube_texture(std::variant<flight::Ref<CubeTexture>, flight::N
 //     (sources as unknown as (TextureSource | null)[])[faceIndex] = source;
 //     cube.version = (cube.version + 1) >>> 0;
 //   }
-//
-// cpp emission failed for @flighthq/texture/packages/texture/src/cubeTexture.ts: tuple projection requires one
-// statically known nonnegative integer index
+//   
+// cpp emission failed for @flighthq/texture/packages/texture/src/cubeTexture.ts: an erased assertion hides the
+// represented source carrier flight::types::TextureSourceCubeFaces before naming
+// flight::Array<std::optional<flight::Ref<flight::types::TextureSource>>>, but those carriers are not
+// representation-equivalent. Keep the exact array type through the assertion, or explicitly convert its elements
+// before asserting the result; the compiler will not reinterpret the source carrier, cast it, or materialize a
+// replacement array
 
 } // namespace flight::texture
