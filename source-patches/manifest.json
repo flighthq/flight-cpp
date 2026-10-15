@@ -4133,6 +4133,23 @@
       "unblocks": "@flighthq/render renderTarget.ts and renderTransform2d.ts, and every header that reaches them.",
       "expires": "when flight-compiler derives the concrete trait from the inference site and writes it, or refuses the site instead of emitting a call it cannot instantiate.",
       "appliedOn": "2026-10-14"
+    },
+    {
+      "id": "compiler-named-reexport-provenance",
+      "dependency": "flight-compiler",
+      "patch": "compiler-named-reexport-provenance.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts emitReexportsCpp",
+      "package": "@flighthq/scene3d",
+      "answers": "diagnostic",
+      "refusal": "Named value re-exports ask a barrel for an allocated declaration name, fall back to PascalCase, and qualify the guessed name with the facade package rather than the declaring package. Scene3D therefore re-exports absent BillboardKind while the owner declares billboard_kind.",
+      "rewrite": "Reuses exact cross-package star-export origin selection for an unrenamed non-type-only named re-export, retaining declaring namespace, allocated spelling, declaration identity, ambiguity checks and type/value lanes. The shared origin collector takes an optional chosen name for this path, so unrelated sibling namespace/renamed exports do not affect a named selection; full star-export traversal remains unchanged.",
+      "equivalence": "A C++ using-declaration names the exact original declaration and introduces no operation, storage, object, function forwarding or conversion. Diamond routes to one binding remain one declaration, distinct origins are refused rather than chosen, and cycles terminate. Type-only named aliases and renamed-value refusals retain their existing paths.",
+      "verification": "The patched pinned compiler builds and twenty-four exact-origin/type-value/ambiguity/cycle/local-forwarding and function/class/enum controls pass. A generated constant-address plus mutable-storage consumer compiles and runs. Fresh one-module Scene3D emission with all 244 source patches produces a billboard.hpp byte-identical to the controlled correction; all five affected native headers were attempted at -j2 and still fail at the independent Billboard/Node signals and structural owner boundaries, with Traits additionally reached by the camera. The missing-name diagnostic is gone. No broad dependency regeneration or package readiness claim. Full package-scoped generation changes only the BillboardKind, MeshKind and Node3DKind using-declarations plus the package patch provenance record. Node/Mesh overrides are rederived over those exact one-line source changes and retain the original variable bindings; the focused CTest asserts both real-header constant addresses.",
+      "whyNotUpstreamFirst": "The TypeScript re-export already expresses the intended identity exactly. The defect is the backend selecting a facade fallback instead of the recorded declaring origin; a runtime conversion or source-specific alias cannot repair that provenance.",
+      "unblocks": "Removes the invalid named BillboardKind re-export at the root of five Scene3D header failures, without claiming the remaining Billboard or Scene3D algorithms compile.",
+      "expires": "when named re-exports retain the exact declaring origin namespace and allocated C++ spelling upstream.",
+      "appliedOn": "2026-10-14"
     }
   ]
 }

@@ -53,7 +53,7 @@ using flight::types::Node3D;
 using flight::types::NodeSignals;
 using flight::types::entity_runtime_key;
 
-using flight::types::BillboardKind;
+using flight::types::billboard_kind;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_ENABLED_NAME_ALPHA_VISIBLE_6EED4C0384CBBF3F
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_ENABLED_NAME_ALPHA_VISIBLE_6EED4C0384CBBF3F

@@ -5239,10 +5239,10 @@
       "package": "@flighthq/scene3d-gl"
     },
     {
-      "dependency": "flight",
-      "digest": "7cb9363a577bc455343230bddb77a0bfded1db4119687ffb0f11d5eb6c441fdd",
-      "id": "scene3d-material-value-enumeration",
-      "module": "packages/scene3d/src/sceneMaterial.ts",
+      "dependency": "flight-compiler",
+      "digest": "353b1108df83022607052dee0d64fdae2d8206eca8fdd28eb93dc4229dbb9f78",
+      "id": "compiler-named-reexport-provenance",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts emitReexportsCpp",
       "package": "@flighthq/scene3d"
     },
     {
@@ -5258,6 +5258,13 @@
       "id": "render-scene3d-projection-api",
       "module": "packages/render/src/sceneRender.ts",
       "package": "@flighthq/render"
+    },
+    {
+      "dependency": "flight",
+      "digest": "7cb9363a577bc455343230bddb77a0bfded1db4119687ffb0f11d5eb6c441fdd",
+      "id": "scene3d-material-value-enumeration",
+      "module": "packages/scene3d/src/sceneMaterial.ts",
+      "package": "@flighthq/scene3d"
     },
     {
       "dependency": "flight",
@@ -5303,13 +5310,6 @@
     },
     {
       "dependency": "flight",
-      "digest": "a7ca8d936cd6033f1ccff021ca8c3b63180a0c24b868dc436e94147f5bb0d680",
-      "id": "scene-nodeof-traversal-capabilities",
-      "module": "packages/node traversal and visitor contracts; Scene2D kind usage; Scene3D cloning, kind/material enumeration, bounds, and culling",
-      "package": "@flighthq/node and @flighthq/scene2d and @flighthq/scene3d"
-    },
-    {
-      "dependency": "flight",
       "digest": "b7abdec0dcc9a31e242d9290e5ddd38cfc6270fe7cf546e791c2e621f6a52bd8",
       "id": "particleemitter3d-concrete-node-construction",
       "module": "packages/particleemitter/src/particleEmitter3D.ts",
@@ -5317,10 +5317,10 @@
     },
     {
       "dependency": "flight",
-      "digest": "ccc4f61cdf5933761b8a5ba27aa3a72fed5673750d4557f387fbe93fedb29e07",
-      "id": "scene3d-mesh-capability-presence",
-      "module": "Scene3D subtree cloning, morph preparation, kind discovery, and bounds/culling guards",
-      "package": "@flighthq/scene3d"
+      "digest": "a7ca8d936cd6033f1ccff021ca8c3b63180a0c24b868dc436e94147f5bb0d680",
+      "id": "scene-nodeof-traversal-capabilities",
+      "module": "packages/node traversal and visitor contracts; Scene2D kind usage; Scene3D cloning, kind/material enumeration, bounds, and culling",
+      "package": "@flighthq/node and @flighthq/scene2d and @flighthq/scene3d"
     },
     {
       "dependency": "flight",
@@ -5377,6 +5377,13 @@
       "id": "meshgeometry-present-index-storage",
       "module": "mesh geometry options/creation, primitive building, tangent generation, index conversion, layout conversion, merge/validation, and mirrored transforms",
       "package": "@flighthq/mesh"
+    },
+    {
+      "dependency": "flight",
+      "digest": "ccc4f61cdf5933761b8a5ba27aa3a72fed5673750d4557f387fbe93fedb29e07",
+      "id": "scene3d-mesh-capability-presence",
+      "module": "Scene3D subtree cloning, morph preparation, kind discovery, and bounds/culling guards",
+      "package": "@flighthq/scene3d"
     },
     {
       "dependency": "flight",

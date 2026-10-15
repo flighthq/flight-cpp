@@ -34,6 +34,7 @@
     "host-capability:oracle": "node ./scripts/hostCapabilityOracle.mjs",
     "image-data:oracle": "node ./scripts/imageDataOracle.mjs",
     "intl:oracle": "node ./scripts/intlSurfaceOracle.mjs",
+    "named-reexport:oracle": "node ./scripts/namedReexportOracle.mjs",
     "number-to-fixed:oracle": "node ./scripts/numberToFixedOracle.mjs",
     "overrides:check": "node ./scripts/overridesCheck.mjs",
     "overrides:test": "node --test ./scripts/overrides.test.mjs",

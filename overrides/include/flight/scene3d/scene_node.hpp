@@ -18,6 +18,8 @@
 
 namespace flight::scene3d {
 
+using flight::types::node3_dkind;
+
 using Node3DTraits = flight::Ref<flight::types::Node3DTraits>;
 using Node3DView = flight::types::NodeOf<Node3DTraits>;
 using Node3DBaseRuntime = flight::types::NodeRuntime<Node3DTraits>;

@@ -35,7 +35,7 @@ using flight::types::Node3D;
 using flight::types::NodeSignals;
 using flight::types::entity_runtime_key;
 
-using flight::types::Node3DKind;
+using flight::types::node3_dkind;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_ENTITY_RUNTIME_KEY_49FD6F1D74D9DA19
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_ENTITY_RUNTIME_KEY_49FD6F1D74D9DA19

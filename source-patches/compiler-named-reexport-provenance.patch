@@ -1,0 +1,62 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -31715,6 +31715,16 @@
+     }
+     if (exported.kind !== 'reexport') return [];
+     const targetModule = getCppResolvedImportModule(exported.specifier, context);
++    // A barrel owns an export route, not the declaration's allocated C++ spelling or namespace.
++    // Use the same exact origin selection as a cross-package star export; never guess at the facade.
++    if (targetModule && targetModule.packageName !== module.packageName &&
++        !exported.typeOnly && exported.exported === exported.imported) {
++      const origins = collectCppStarReexportOrigins(
++        targetModule, context, new Set([getCppModuleIdentityKey(module)]), exported.imported,
++      );
++      return getCppStarReexportSelections(origins.get(exported.imported), exported.imported, context)
++        .flatMap((selection) => emitCppStarReexportLines(selection, context));
++    }
+     const targetName = targetModule
+       ? getCppResolvedExportTargetName(targetModule, exported.imported, exported.typeOnly ? 'type' : 'value', context)
+       : pascalCase(exported.imported);
+@@ -33237,6 +33247,7 @@
+   module: Readonly<IrModule>,
+   context: EmitContext,
+   visiting: ReadonlySet<string>,
++  selectedName?: string,
+ ): Map<string, Map<string, CppStarReexportOrigin>> {
+   const origins = new Map<string, Map<string, CppStarReexportOrigin>>();
+   const moduleKey = getCppModuleIdentityKey(module);
+@@ -33264,12 +33275,14 @@
+   for (const exported of module.exports) {
+     // `export *` never carries a default export, so a star re-export does not either.
+     if (exported.kind === 'default') continue;
++    // A named re-export walks only its chosen name; unrelated sibling exports are not selected.
++    if (selectedName !== undefined && exported.kind !== 'all' && exported.exported !== selectedName) continue;
+     if (exported.kind === 'all') {
+       const starTarget = getCppResolvedImportModule(exported.specifier, moduleContext);
+       // An unresolvable specifier names no known export, so there is nothing here to lower or to refuse:
+       // the module-resolution plan owns that gap.
+       if (starTarget === undefined) continue;
+-      for (const [name, declarations] of collectCppStarReexportOrigins(starTarget, context, nextVisiting)) {
++      for (const [name, declarations] of collectCppStarReexportOrigins(starTarget, context, nextVisiting, selectedName)) {
+         for (const origin of declarations.values()) record(name, route(origin, exported.typeOnly));
+       }
+       continue;
+@@ -33312,7 +33325,7 @@
+               'cpp-export-all-unresolved',
+             );
+           }
+-          const importedOrigins = collectCppStarReexportOrigins(importedTarget, context, nextVisiting).get(
++          const importedOrigins = collectCppStarReexportOrigins(importedTarget, context, nextVisiting, selectedName === undefined ? undefined : imported.binding.imported).get(
+             imported.binding.imported,
+           );
+           if (importedOrigins === undefined || importedOrigins.size === 0) {
+@@ -33368,7 +33381,7 @@
+         'cpp-export-all-unresolved',
+       );
+     }
+-    const namedOrigins = collectCppStarReexportOrigins(namedTarget, context, nextVisiting).get(exported.imported);
++    const namedOrigins = collectCppStarReexportOrigins(namedTarget, context, nextVisiting, selectedName === undefined ? undefined : exported.imported).get(exported.imported);
+     if (namedOrigins === undefined || namedOrigins.size === 0) {
+       emissionError(
+         context,

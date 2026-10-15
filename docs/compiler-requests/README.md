@@ -27,6 +27,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 | [`compiler-constrained-type-parameter-union-slot.patch`](../../source-patches/compiler-constrained-type-parameter-union-slot.patch) | [A local typed by a constrained type parameter is stored as the constraint](constrained-type-parameter-local-storage.md) |
 | [`compiler-dependent-callable-pack-reuse.patch`](../../source-patches/compiler-dependent-callable-pack-reuse.patch) | [A forwarded parameter pack is consumed more than once](forwarded-parameter-pack-reused.md) |
 | [`compiler-generic-receiver-null-write.patch`](../../source-patches/compiler-generic-receiver-null-write.patch) | [A `null` written through a generic receiver must produce the member's absent state](generic-receiver-null-write-engages-optional.md) |
+| [`compiler-named-reexport-provenance.patch`](../../source-patches/compiler-named-reexport-provenance.patch) | [Named re-export declaration provenance](named-reexport-declaration-provenance.md) |
 | [`compiler-new-map-copy.patch`](../../source-patches/compiler-new-map-copy.patch) | [`new Map(existingMap)` must copy, not alias](new-map-copy-lowered-to-alias.md) |
 | [`compiler-new-set-copy.patch`](../../source-patches/compiler-new-set-copy.patch) | [`new Set(existingSet)` must copy, not alias](new-set-copy-lowered-to-alias.md) |
 | [`compiler-new-set-from-iterator.patch`](../../source-patches/compiler-new-set-from-iterator.patch) | [`new Set(collection.values())` must lower without a contextual optional construction](new-set-from-collection-iterator.md) |

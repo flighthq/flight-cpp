@@ -19,6 +19,8 @@
 
 namespace flight::scene3d {
 
+using flight::types::mesh_kind;
+
 struct enabled_name_f1abece853ac935c : public flight::ReferenceEnabled {
   std::optional<bool> enabled;
   std::variant<flight::String, flight::Null, flight::Undefined> name =

@@ -60,7 +60,7 @@ using flight::types::Node3D;
 using flight::types::NodeSignals;
 using flight::types::entity_runtime_key;
 
-using flight::types::MeshKind;
+using flight::types::mesh_kind;
 
 inline flight::Ref<flight::types::MeshRuntime> create_mesh_runtime() {
   flight::Ref<flight::types::MeshRuntime> out = flight::make_ref<flight::types::MeshRuntime>(*flight::scene3d::create_node3_druntime());

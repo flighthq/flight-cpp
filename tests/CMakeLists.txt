@@ -549,6 +549,14 @@ target_link_libraries(
 )
 add_test(NAME flight_cpp.generated_scene3d COMMAND flight_cpp_generated_scene3d_tests)
 
+add_executable(flight_cpp_generated_scene3d_kind_reexports_tests generated_scene3d_kind_reexports_test.cpp)
+target_include_directories(
+  flight_cpp_generated_scene3d_kind_reexports_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_scene3d_kind_reexports_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_scene3d_kind_reexports COMMAND flight_cpp_generated_scene3d_kind_reexports_tests)
+
 add_executable(
   flight_cpp_generated_scene3d_formats_tests
   generated_scene3d_formats_test.cpp
@@ -1680,6 +1688,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_materials materials)
 flight_cpp_package_test_labels(flight_cpp.generated_lighting geometry lighting)
 flight_cpp_package_test_labels(flight_cpp.generated_shading shading)
 flight_cpp_package_test_labels(flight_cpp.generated_scene3d materials mesh node scene3d)
+flight_cpp_package_test_labels(flight_cpp.generated_scene3d_kind_reexports scene3d)
 flight_cpp_package_test_labels(flight_cpp.generated_scene3d_formats scene3d-formats)
 flight_cpp_package_test_labels(flight_cpp.generated_scene3d_resources scene3d-resources)
 flight_cpp_package_test_labels(flight_cpp.generated_mesh geometry mesh)
