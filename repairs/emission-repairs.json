@@ -4574,10 +4574,10 @@
       "kind": "insert-using-declaration",
       "appliesTo": "flight/interaction/",
       "symbol": "get_node_interaction_state",
-      "declaration": "std::optional<flight::Ref<flight::types::NodeInteractionState>> get_node_interaction_state(flight::Ref<flight::types::NodeAny> source);",
+      "declaration": "std::optional<flight::Ref<flight::types::NodeInteractionState>> get_node_interaction_state(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::NodeAny>>> source);",
       "include": "flight/types/node_interaction_state.hpp",
       "diagnostic": "'get_node_interaction_state' was not declared in this scope",
-      "defect": "The emitter refuses getNodeInteractionState but retains calls to it in the same module and quoted sibling consumers. Declaring the exact retained function after the defining type headers lets every consumer type-check while the complete override supplies its implementation.",
+      "defect": "The emitter refuses getNodeInteractionState but retains calls whose represented parameter is the readonly NodeAny structural row. Declares that exact current carrier rather than the legacy native NodeAny carrier; the owned override supplies behavior without recovering or replacing the source owner.",
       "expectedWhen": "always",
       "expires": "when getNodeInteractionState emits or refused sibling calls carry its declaration; sdk:check fails if this repair matches no header."
     },
@@ -9256,6 +9256,19 @@
       "defect": "The emitter lowers JavaScript's `key in object` literally, and `in` is not a C++ operator, so the header does not compile and the compiler reports the key token as a type name. The faithful primitive already exists: flight::Record::has(key) asks whether the PROPERTY EXISTS, which is the question `in` asks -- a key whose value is undefined is present, and get(key)->has_value(), the Any's own test, would wrongly call it absent (measured: absent has=0 get-engaged=0 any-defined=0; present-undefined has=1 get-engaged=1 any-defined=0). Anchored to this header and this receiver rather than matched by text, because a text repair cannot see a receiver's type and `in` appears over Records, strings and maps alike.",
       "expectedWhen": "always",
       "expires": "when the emitter lowers a membership test to the runtime's presence question instead of emitting `in`; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "interaction-declare-refused-hit-area-contains-point",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/interaction/hit_tests.hpp",
+      "symbol": "hit_area_contains_point",
+      "refusedFunction": "hitAreaContainsPoint",
+      "declaration": "bool hit_area_contains_point(flight::types::NodeAny node, flight::types::HitArea hit_area, double x, double y);",
+      "sourceDeclaration": "packages/interaction/src/hitTests.ts -- function hitAreaContainsPoint(node: NodeAny, hitArea: HitArea, x: number, y: number): boolean; refused while retained hitTestNodeRegion calls it with exactly those carriers",
+      "diagnostic": "use of undeclared identifier 'hit_area_contains_point'",
+      "defect": "The emitter refuses hitAreaContainsPoint at an unproved structural variant to nominal NodeAny assertion, but retains hitTestNodeRegion calling the refused function. The three witnesses are the NOT GENERATED hitAreaContainsPoint marker, the missing declaration diagnostic, and the retained call with native NodeAny/HitArea/double/double parameters. This declares only the source signature; it supplies no body, owner recovery or hit result. Calling the refused helper or its retained caller still fails to link.",
+      "expectedWhen": "always",
+      "expires": "when hitAreaContainsPoint emits (its NOT GENERATED marker disappears); sdk:check fails if this repair matches no header."
     }
   ]
 }

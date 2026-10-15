@@ -215,6 +215,7 @@
         "flight/clock/clock_signals.hpp",
         "flight/command/command_history_signals.hpp",
         "flight/gui/gui_controller.hpp",
+        "flight/interaction/focus_manager.hpp",
         "flight/loader/load.hpp",
         "flight/loader/resource_loader.hpp",
         "flight/log/log.hpp",
@@ -349,7 +350,15 @@
         "flight/gui/tree_view_controller.hpp",
         "flight/gui/window_controller.hpp",
         "flight/interaction/enable_interaction_guards.hpp",
+        "flight/interaction/focus_manager.hpp",
         "flight/interaction/hit_tests.hpp",
+        "flight/interaction/interaction_manager.hpp",
+        "flight/interaction/interaction_spatial_index.hpp",
+        "flight/interaction/register_quad_batch_hit_test.hpp",
+        "flight/interaction/register_shape_hit_test.hpp",
+        "flight/interaction/register_sprite_hit_test.hpp",
+        "flight/interaction/register_text_hit_test.hpp",
+        "flight/interaction/register_tilemap_hit_test.hpp",
         "flight/node/bounds_rectangle.hpp",
         "flight/node/enable_node_guards.hpp",
         "flight/node/has_bounds_rectangle.hpp",
@@ -459,6 +468,7 @@
       "files": [
         "flight/gizmo/gizmo_state.hpp",
         "flight/gui/_internal_gui_test_helper.hpp",
+        "flight/interaction/focus_manager.hpp",
         "flight/interaction/interaction_manager.hpp",
         "flight/interaction/node_interaction_state.hpp",
         "flight/interaction/spatial_query.hpp",
@@ -749,7 +759,6 @@
     },
     {
       "files": [
-        "flight/interaction/interaction_manager.hpp",
         "flight/lifecycle/lifecycle.hpp",
         "flight/text/rich_text.hpp"
       ],
@@ -1466,11 +1475,7 @@
       "id": "input-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/interaction/focus_manager.hpp",
-        "flight/interaction/interaction_manager.hpp",
-        "flight/interaction/node_interaction_state.hpp"
-      ],
+      "files": [],
       "id": "interaction-unqualified-entity-names"
     },
     {
@@ -1756,9 +1761,7 @@
       "id": "gui-entity-runtime-key-member"
     },
     {
-      "files": [
-        "flight/interaction/node_interactive_state_binding.hpp"
-      ],
+      "files": [],
       "id": "interaction-entity-runtime-key-member"
     },
     {
@@ -2040,7 +2043,9 @@
     },
     {
       "files": [
+        "flight/interaction/hit_tests.hpp",
         "flight/interaction/interaction_manager.hpp",
+        "flight/interaction/interaction_spatial_index.hpp",
         "flight/interaction/node_interaction_state.hpp"
       ],
       "id": "interaction-node-state-accessor-declaration"
@@ -2738,10 +2743,7 @@
       "id": "input-unqualified-signals-names"
     },
     {
-      "files": [
-        "flight/interaction/focus_manager.hpp",
-        "flight/interaction/interaction_manager.hpp"
-      ],
+      "files": [],
       "id": "interaction-unqualified-signals-names"
     },
     {
@@ -3100,10 +3102,7 @@
       "id": "render-unqualified-materials-names"
     },
     {
-      "files": [
-        "flight/interaction/interaction_manager.hpp",
-        "flight/interaction/register_quad_batch_hit_test.hpp"
-      ],
+      "files": [],
       "id": "interaction-unqualified-geometry-names"
     },
     {
@@ -4537,6 +4536,12 @@
         "flight/particleemitter/update_particle_emitter2_d.hpp"
       ],
       "id": "particleemitter-reexported-callbacks-type"
+    },
+    {
+      "files": [
+        "flight/interaction/hit_tests.hpp"
+      ],
+      "id": "interaction-declare-refused-hit-area-contains-point"
     }
   ],
   "sourcePatches": [
@@ -5939,13 +5944,6 @@
       "flight/glyphatlas/glyph_atlas_entry.hpp",
       "flight/input/input_manager.hpp",
       "flight/interaction/focus_manager.hpp",
-      "flight/interaction/hit_tests.hpp",
-      "flight/interaction/interaction_manager.hpp",
-      "flight/interaction/register_quad_batch_hit_test.hpp",
-      "flight/interaction/register_shape_hit_test.hpp",
-      "flight/interaction/register_sprite_hit_test.hpp",
-      "flight/interaction/register_text_hit_test.hpp",
-      "flight/interaction/register_tilemap_hit_test.hpp",
       "flight/log/log.hpp",
       "flight/mesh/mesh_geometry.hpp",
       "flight/mesh/mesh_geometry_attributes.hpp",
@@ -6164,15 +6162,6 @@
       "flight/glyphatlas/glyph_source.hpp",
       "flight/gui/scroll_bar_controller.hpp",
       "flight/gui/tooltip_controller.hpp",
-      "flight/interaction/focus_manager.hpp",
-      "flight/interaction/hit_tests.hpp",
-      "flight/interaction/interaction_manager.hpp",
-      "flight/interaction/interaction_spatial_index.hpp",
-      "flight/interaction/register_quad_batch_hit_test.hpp",
-      "flight/interaction/register_shape_hit_test.hpp",
-      "flight/interaction/register_sprite_hit_test.hpp",
-      "flight/interaction/register_text_hit_test.hpp",
-      "flight/interaction/register_tilemap_hit_test.hpp",
       "flight/intl/collator.hpp",
       "flight/intl/datetime.hpp",
       "flight/intl/list.hpp",
@@ -6261,7 +6250,7 @@
       "flight/textshaper/text_shaper_cache.hpp",
       "flight/tokens/substitute_flight_document_scene_tokens.hpp"
     ],
-    "includes": 784
+    "includes": 771
   },
   "packages": [
     {
@@ -6890,14 +6879,14 @@
       "sourceModules": 3
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/interaction",
       "cppNamespace": "flight::interaction",
       "emittedModules": 8,
       "package": "@flighthq/interaction",
       "refusedModules": 11,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 19

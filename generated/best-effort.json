@@ -12438,9 +12438,7 @@
       "status": "emitted"
     },
     {
-      "consumers": [
-        "@flighthq/interaction/packages/interaction/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/interaction",
@@ -12469,6 +12467,7 @@
     {
       "consumers": [
         "@flighthq/interaction/packages/interaction/src/contract.ts",
+        "@flighthq/interaction/packages/interaction/src/index.ts",
         "@flighthq/interaction/packages/interaction/src/registerDefaultHitTests.ts"
       ],
       "module": {
@@ -12484,7 +12483,8 @@
     },
     {
       "consumers": [
-        "@flighthq/interaction/packages/interaction/src/contract.ts"
+        "@flighthq/interaction/packages/interaction/src/contract.ts",
+        "@flighthq/interaction/packages/interaction/src/index.ts"
       ],
       "module": {
         "name": "DisplayObjectOverlap",
@@ -12496,7 +12496,8 @@
     },
     {
       "consumers": [
-        "@flighthq/interaction/packages/interaction/src/contract.ts"
+        "@flighthq/interaction/packages/interaction/src/contract.ts",
+        "@flighthq/interaction/packages/interaction/src/index.ts"
       ],
       "module": {
         "name": "EnableInteractionGuards",
@@ -12515,7 +12516,8 @@
       "classification": "target-runtime",
       "consumers": [
         "@flighthq/gui/packages/gui/src/guiDialog.ts",
-        "@flighthq/interaction/packages/interaction/src/contract.ts"
+        "@flighthq/interaction/packages/interaction/src/contract.ts",
+        "@flighthq/interaction/packages/interaction/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:160b03731dc05d058493cc7519a9246350969e6ec31b8a63b59c92e48f583c0f",
@@ -12558,6 +12560,7 @@
       "consumers": [
         "@flighthq/interaction/packages/interaction/src/contract.ts",
         "@flighthq/interaction/packages/interaction/src/displayHitTests.ts",
+        "@flighthq/interaction/packages/interaction/src/index.ts",
         "@flighthq/interaction/packages/interaction/src/interactionManager.ts",
         "@flighthq/interaction/packages/interaction/src/interactionSpatialIndex.ts",
         "@flighthq/interaction/packages/interaction/src/registerDefaultHitTests.ts",
@@ -12609,7 +12612,21 @@
       },
       "path": "flight/interaction/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/interaction/packages/interaction/src/contract.ts"
+        "@flighthq/interaction/packages/interaction/src/displayHitTests.ts",
+        "@flighthq/interaction/packages/interaction/src/enableInteractionGuards.ts",
+        "@flighthq/interaction/packages/interaction/src/focusManager.ts",
+        "@flighthq/interaction/packages/interaction/src/hitTests.ts",
+        "@flighthq/interaction/packages/interaction/src/interactionManager.ts",
+        "@flighthq/interaction/packages/interaction/src/interactionSpatialIndex.ts",
+        "@flighthq/interaction/packages/interaction/src/nodeInteractionState.ts",
+        "@flighthq/interaction/packages/interaction/src/nodeInteractiveStateBinding.ts",
+        "@flighthq/interaction/packages/interaction/src/registerDefaultHitTests.ts",
+        "@flighthq/interaction/packages/interaction/src/registerQuadBatchHitTest.ts",
+        "@flighthq/interaction/packages/interaction/src/registerShapeHitTest.ts",
+        "@flighthq/interaction/packages/interaction/src/registerSpriteHitTest.ts",
+        "@flighthq/interaction/packages/interaction/src/registerTextHitTest.ts",
+        "@flighthq/interaction/packages/interaction/src/registerTilemapHitTest.ts",
+        "@flighthq/interaction/packages/interaction/src/spriteHitTests.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -12621,7 +12638,8 @@
         "@flighthq/gui/packages/gui/src/guiTestHelper.ts",
         "@flighthq/interaction/packages/interaction/src/contract.ts",
         "@flighthq/interaction/packages/interaction/src/enableInteractionGuards.ts",
-        "@flighthq/interaction/packages/interaction/src/focusManager.ts"
+        "@flighthq/interaction/packages/interaction/src/focusManager.ts",
+        "@flighthq/interaction/packages/interaction/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:004359dca58656fa1a83fd445e688290152fffbf1be2caf01f2396a580d96a8c",
@@ -12706,6 +12724,7 @@
       "classification": "source-portability",
       "consumers": [
         "@flighthq/interaction/packages/interaction/src/contract.ts",
+        "@flighthq/interaction/packages/interaction/src/index.ts",
         "@flighthq/interaction/packages/interaction/src/interactionManager.ts"
       ],
       "declarationFingerprints": [
@@ -12734,6 +12753,7 @@
         "@flighthq/interaction/packages/interaction/src/enableInteractionGuards.ts",
         "@flighthq/interaction/packages/interaction/src/focusManager.ts",
         "@flighthq/interaction/packages/interaction/src/hitTests.ts",
+        "@flighthq/interaction/packages/interaction/src/index.ts",
         "@flighthq/interaction/packages/interaction/src/interactionManager.ts",
         "@flighthq/interaction/packages/interaction/src/interactionSpatialIndex.ts"
       ],
@@ -12770,19 +12790,20 @@
       "classification": "source-portability",
       "consumers": [
         "@flighthq/gui/packages/gui/src/buttonController.ts",
-        "@flighthq/interaction/packages/interaction/src/contract.ts"
+        "@flighthq/interaction/packages/interaction/src/contract.ts",
+        "@flighthq/interaction/packages/interaction/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:0d2a192abdc10bb5b93ec5d5c8aa3b21f8e5dbd00307f0d0863bf151672f6787",
         "sha256:1838da35f977aaed6974dc4e7aa89ef89921dccf120e39121d31239a3a4a625d",
         "sha256:1f82a5ecb3f2c5b8c3fe02614a621f194252e60486d6dc9b454138d559c17a49",
+        "sha256:44784a34763135c93e13ad10364048441dd2c2468c8422caeb24c991d937568e",
         "sha256:4f39540ca6b600ace9a399e77940f370afdb5ff02ba7f0c8fe5966b6856116da",
         "sha256:5840c8caaa31eaad7636bdff0505b0bd418f58275f2e043de8e6c35513fb508f",
         "sha256:7b6b367de93983ecbca9fa3ab6ae70b7570a60c40e52ea4f1056b9560ce7c2e0",
         "sha256:8429522dbcf43198bcb2aec18cc9fbdc788a80c6adeaa2cb68836b40673a3949",
         "sha256:9682d0f6880e1335bdfd904cf93ad02f97fe743aaccfd2a56aa42160f7782a49",
         "sha256:cfeac0175126dc6f591d5d712bd751af8eb5f6b757b09bd3e35fbdb032d83c3a",
-        "sha256:d143376d98399e875a12a9bd8b35f1461451b527597c401b70897c5baf975bf0",
         "sha256:d202eead94d8b0f5efa84ba321f3df4697aa83566390c87f0253ba04e4039a01",
         "sha256:d39385b51025e73d57a92c08c28aaae9f7d87b8f540ab0feacbb1541646f5d0c",
         "sha256:da3ea77693333a2bb48ca25827279fb4097bafde324d3bf98331a306bbebd497",
@@ -12803,7 +12824,8 @@
     },
     {
       "consumers": [
-        "@flighthq/interaction/packages/interaction/src/contract.ts"
+        "@flighthq/interaction/packages/interaction/src/contract.ts",
+        "@flighthq/interaction/packages/interaction/src/index.ts"
       ],
       "module": {
         "name": "RegisterDefaultHitTests",
@@ -12821,7 +12843,8 @@
     {
       "classification": "target-runtime",
       "consumers": [
-        "@flighthq/interaction/packages/interaction/src/contract.ts"
+        "@flighthq/interaction/packages/interaction/src/contract.ts",
+        "@flighthq/interaction/packages/interaction/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:02da221f1414da92c1328523fa1c8e82d311f1102758fd86a491af0f51081caa",
@@ -12842,7 +12865,8 @@
     {
       "classification": "target-runtime",
       "consumers": [
-        "@flighthq/interaction/packages/interaction/src/contract.ts"
+        "@flighthq/interaction/packages/interaction/src/contract.ts",
+        "@flighthq/interaction/packages/interaction/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:410ea68ab32a5a12f133751c245ad74355ffe4090d7a2363a6f76d68d392bc37",
@@ -12861,7 +12885,8 @@
     {
       "classification": "target-runtime",
       "consumers": [
-        "@flighthq/interaction/packages/interaction/src/contract.ts"
+        "@flighthq/interaction/packages/interaction/src/contract.ts",
+        "@flighthq/interaction/packages/interaction/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:335d80a669f24ced46644a9697e65b87aa3dbf8ba03404ce4a53f37da857f4cb",
@@ -12882,7 +12907,8 @@
     {
       "classification": "target-runtime",
       "consumers": [
-        "@flighthq/interaction/packages/interaction/src/contract.ts"
+        "@flighthq/interaction/packages/interaction/src/contract.ts",
+        "@flighthq/interaction/packages/interaction/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:2a4931a51b9dcbd06b824408ba2b6ce5fb70d5d608712724f24c4f5d96d2a5b5",
@@ -12901,7 +12927,8 @@
     {
       "classification": "target-runtime",
       "consumers": [
-        "@flighthq/interaction/packages/interaction/src/contract.ts"
+        "@flighthq/interaction/packages/interaction/src/contract.ts",
+        "@flighthq/interaction/packages/interaction/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:349af0b65284c238118caad45b6546a0506eb3351524919b81c2b6ef27c03faa",
@@ -12919,7 +12946,8 @@
     },
     {
       "consumers": [
-        "@flighthq/interaction/packages/interaction/src/contract.ts"
+        "@flighthq/interaction/packages/interaction/src/contract.ts",
+        "@flighthq/interaction/packages/interaction/src/index.ts"
       ],
       "module": {
         "name": "SpatialQuery",
@@ -12932,6 +12960,7 @@
     {
       "consumers": [
         "@flighthq/interaction/packages/interaction/src/contract.ts",
+        "@flighthq/interaction/packages/interaction/src/index.ts",
         "@flighthq/interaction/packages/interaction/src/registerDefaultHitTests.ts"
       ],
       "module": {
@@ -19791,7 +19820,6 @@
         "@flighthq/effects-gl/packages/effects-gl/src/glEffectRegistry.ts",
         "@flighthq/effects-wgpu/packages/effects-wgpu/src/wgpuRenderEffectRegistry.ts",
         "@flighthq/effects/packages/effects/src/effectPadding.ts",
-        "@flighthq/interaction/packages/interaction/src/nodeInteractiveStateBinding.ts",
         "@flighthq/registry/packages/registry/src/contract.ts",
         "@flighthq/registry/packages/registry/src/index.ts",
         "@flighthq/render-gl/packages/render-gl/src/glDraw.ts",

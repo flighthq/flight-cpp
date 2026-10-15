@@ -2497,21 +2497,21 @@
       "code": "dependency-refused",
       "module": "packages/interaction/src/contract.ts",
       "package": "@flighthq/interaction",
-      "reason": "dependency ./focusManager was refused for @flighthq/interaction/packages/interaction/src/focusManager.ts",
+      "reason": "dependency ./focusManager.ts was refused for @flighthq/interaction/packages/interaction/src/focusManager.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/interaction/src/displayHitTests.ts",
       "package": "@flighthq/interaction",
-      "reason": "dependency ./hitTests was refused for @flighthq/interaction/packages/interaction/src/hitTests.ts",
+      "reason": "dependency ./hitTests.ts was refused for @flighthq/interaction/packages/interaction/src/hitTests.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/interaction/src/enableInteractionGuards.ts",
       "package": "@flighthq/interaction",
-      "reason": "dependency ./interactionManager was refused for @flighthq/interaction/packages/interaction/src/interactionManager.ts",
+      "reason": "dependency ./interactionManager.ts was refused for @flighthq/interaction/packages/interaction/src/interactionManager.ts",
       "stage": "dependency"
     },
     {
@@ -2536,7 +2536,7 @@
       "code": "dependency-refused",
       "module": "packages/interaction/src/index.ts",
       "package": "@flighthq/interaction",
-      "reason": "dependency ./contract was refused for @flighthq/interaction/packages/interaction/src/contract.ts",
+      "reason": "dependency ./displayHitTests.ts was refused for @flighthq/interaction/packages/interaction/src/displayHitTests.ts",
       "stage": "dependency"
     },
     {
@@ -2569,7 +2569,7 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 27,
+      "line": 26,
       "module": "packages/interaction/src/nodeInteractiveStateBinding.ts",
       "package": "@flighthq/interaction",
       "reason": "cpp emission failed for @flighthq/interaction/packages/interaction/src/nodeInteractiveStateBinding.ts: Partial<Record<K, V>> has an open member set with no fixed shape: a JavaScript dictionary's keys are optional already, so Partial adds no member set to recover -- it widens each value to admit undefined, and that widening is what the runtime record cannot hold. Declare the members the code reads, or use the record directly through its key where the code only reads",
@@ -2579,7 +2579,7 @@
       "code": "dependency-refused",
       "module": "packages/interaction/src/registerDefaultHitTests.ts",
       "package": "@flighthq/interaction",
-      "reason": "dependency ./displayHitTests was refused for @flighthq/interaction/packages/interaction/src/displayHitTests.ts",
+      "reason": "dependency ./displayHitTests.ts was refused for @flighthq/interaction/packages/interaction/src/displayHitTests.ts",
       "stage": "dependency"
     },
     {
@@ -2631,7 +2631,7 @@
       "code": "dependency-refused",
       "module": "packages/interaction/src/spriteHitTests.ts",
       "package": "@flighthq/interaction",
-      "reason": "dependency ./hitTests was refused for @flighthq/interaction/packages/interaction/src/hitTests.ts",
+      "reason": "dependency ./hitTests.ts was refused for @flighthq/interaction/packages/interaction/src/hitTests.ts",
       "stage": "dependency"
     },
     {
