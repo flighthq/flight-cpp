@@ -38634,7 +38634,7 @@
       "status": "dependency-incomplete"
     },
     {
-      "classification": "compiler-restriction",
+      "classification": "source-portability",
       "consumers": [
         "@flighthq/snapshot/packages/snapshot/src/contract.ts"
       ],
@@ -38650,6 +38650,7 @@
         "source": "packages/snapshot/src/enableSnapshotGuards.ts"
       },
       "path": "flight/snapshot/enable_snapshot_guards.hpp",
+      "rule": "cpp-instanceof-operand-unresolved",
       "status": "refused-placeholder"
     },
     {

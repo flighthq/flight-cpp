@@ -30,6 +30,7 @@ inline void disable_snapshot_guards() {
 
 
 // NOT GENERATED: function nonPlainSnapshotKind -- source line 101
+// refusal: cpp-instanceof-operand-unresolved [source-portability]
 //
 // The source it stood for:
 //   function nonPlainSnapshotKind(value: object): string | null {
@@ -42,8 +43,9 @@ inline void disable_snapshot_guards() {
 //     return null;
 //   }
 //   
-// cpp emission failed for @flighthq/snapshot/packages/snapshot/src/enableSnapshotGuards.ts: ambient value
-// ArrayBuffer member isView has no C++ binding
+// cpp emission failed for @flighthq/snapshot/packages/snapshot/src/enableSnapshotGuards.ts: an instanceof test
+// against Map answers from an erased carrier or from a union, and this operand's recorded type is neither;
+// declare the operand as the union its alternatives belong to
 
 inline void warn_on_unsupported_snapshot_source(flight::Any source) {
   auto seen = flight::Set<flight::ErasedRef>();

@@ -661,6 +661,7 @@
         "flight/scene3d_wgpu/enable_wgpu_scene3_dforward_light_selection_guards.hpp",
         "flight/skeleton2d/enable_skeleton2_dguards.hpp",
         "flight/skeleton3d/enable_skeleton3_dguards.hpp",
+        "flight/snapshot/enable_snapshot_guards.hpp",
         "flight/swf/enable_swf_guards.hpp",
         "flight/text/enable_text_label_guards.hpp",
         "flight/text_markup/enable_text_markup_guards.hpp",
@@ -797,6 +798,7 @@
         "flight/scene3d_wgpu/enable_wgpu_scene3_dforward_light_selection_guards.hpp",
         "flight/skeleton2d/enable_skeleton2_dguards.hpp",
         "flight/skeleton3d/enable_skeleton3_dguards.hpp",
+        "flight/snapshot/enable_snapshot_guards.hpp",
         "flight/swf/enable_swf_guards.hpp",
         "flight/text/enable_text_label_guards.hpp",
         "flight/text_markup/enable_text_markup_guards.hpp",
@@ -6235,7 +6237,6 @@
       "flight/shape/scale9_shape.hpp",
       "flight/shape/shape.hpp",
       "flight/shape/shape_bounds.hpp",
-      "flight/snapshot/enable_snapshot_guards.hpp",
       "flight/text/rich_text.hpp",
       "flight/text/text_label.hpp",
       "flight/text_markup/text_markup.hpp",
@@ -6246,7 +6247,7 @@
       "flight/textshaper/text_shaper_cache.hpp",
       "flight/tokens/substitute_flight_document_scene_tokens.hpp"
     ],
-    "includes": 769
+    "includes": 768
   },
   "packages": [
     {
@@ -7800,14 +7801,14 @@
       "sourceModules": 10
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/snapshot",
       "cppNamespace": "flight::snapshot",
       "emittedModules": 2,
       "package": "@flighthq/snapshot",
       "refusedModules": 5,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 7

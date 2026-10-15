@@ -8657,7 +8657,7 @@
       "line": 101,
       "module": "packages/snapshot/src/enableSnapshotGuards.ts",
       "package": "@flighthq/snapshot",
-      "reason": "cpp emission failed for @flighthq/snapshot/packages/snapshot/src/enableSnapshotGuards.ts: ambient value ArrayBuffer member isView has no C++ binding",
+      "reason": "cpp emission failed for @flighthq/snapshot/packages/snapshot/src/enableSnapshotGuards.ts: an instanceof test against Map answers from an erased carrier or from a union, and this operand's recorded type is neither; declare the operand as the union its alternatives belong to",
       "stage": "emission"
     },
     {

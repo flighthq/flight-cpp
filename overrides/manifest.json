@@ -2022,7 +2022,7 @@
       "package": "@flighthq/snapshot",
       "status": "complete",
       "supplies": "packages/snapshot/src/enableSnapshotGuards.ts",
-      "derivedFrom": "79fec39f8227b28bea68fd1ae500772a8680fe5d4ccab514c12a980b90940134",
+      "derivedFrom": "fefe8e7b420d75d9b280efbea6ab85a0ffe591f95690b399297ed44df56dd149",
       "reason": "The emitter refuses ArrayBuffer.isView despite the native predicate and emits Set<ErasedRef>::has(Any) for the cycle walk, which does not compile and would need the exact object identity the narrowing proved.",
       "change": "Walks SnapshotValue node identities with a visited set, names distinct non-plain kinds in sorted order, reports repeated identities as cycles, and emits the source warning text through @flighthq/log's once-only channel. Enable and disable install or clear the capture seam.",
       "equivalence": "Plain acyclic graphs are silent; Map/Set/Date/RegExp/ArrayBuffer/TypedArray sentinels produce the non-plain diagnostic once; cycles terminate and produce the cycle diagnostic once; disable prevents later inspection. The guard observes the mutable source before capture freezes its clone.",
