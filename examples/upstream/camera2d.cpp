@@ -131,7 +131,7 @@ template <typename Value>
           .y = world_height * 0.5,
           .zoom = 1.0,
       });
-  return flight::camera::create_camera2_d(800.0, 600.0, readonly_row(options));
+  return flight::camera::create_camera2_d(readonly_row(options));
 }
 
 class CameraExample final {
@@ -228,18 +228,18 @@ class CameraExample final {
         0.25,
         4.0);
     flight::camera::zoom_camera2_dat_screen_point(
-        camera_, frame.input.pointer_x, frame.input.pointer_y, next);
+        camera_, 800.0, 600.0, frame.input.pointer_x, frame.input.pointer_y, next);
   }
 
   void update_camera(double delta_time) {
     flight::camera_controls::update_camera2_dfollow(
-        camera_, player_.x, player_.y, delta_time, follow_options_);
+        camera_, 800.0, 600.0, player_.x, player_.y, delta_time, follow_options_);
     ++follow_updates_;
-    flight::camera::get_camera2_dview_matrix(camera_, view_matrix_);
-    flight::camera::get_camera2_dvisible_bounds(camera_, visible_bounds_);
-    flight::camera::get_camera2_dparallax_point(camera_, 0.1, stars_offset_);
-    flight::camera::get_camera2_dparallax_point(camera_, 0.4, mountains_offset_);
-    flight::camera::get_camera2_dparallax_point(camera_, 0.6, clouds_offset_);
+    flight::camera::get_camera2_dview_matrix(camera_, 800.0, 600.0, view_matrix_);
+    flight::camera::get_camera2_dvisible_bounds(camera_, 800.0, 600.0, visible_bounds_);
+    flight::camera::get_camera2_dparallax_point(camera_, 800.0, 600.0, 0.1, stars_offset_);
+    flight::camera::get_camera2_dparallax_point(camera_, 800.0, 600.0, 0.4, mountains_offset_);
+    flight::camera::get_camera2_dparallax_point(camera_, 800.0, 600.0, 0.6, clouds_offset_);
   }
 
   [[nodiscard]] static bool near(double actual, double expected) {
@@ -264,7 +264,7 @@ class CameraExample final {
     if (smoke_probe_complete_) return;
 
     auto zoom_probe = create_example_camera();
-    flight::camera::zoom_camera2_dat_screen_point(zoom_probe, 200.0, 150.0, 2.0);
+    flight::camera::zoom_camera2_dat_screen_point(zoom_probe, 800.0, 600.0, 200.0, 150.0, 2.0);
     if (!near(zoom_probe->x, 1100.0) || !near(zoom_probe->y, 825.0) ||
         !near(zoom_probe->zoom, 2.0)) {
       throw std::runtime_error("camera2d smoke did not observe generated anchored zoom output");
@@ -272,7 +272,7 @@ class CameraExample final {
 
     auto follow_probe = create_example_camera();
     flight::camera_controls::update_camera2_dfollow(
-        follow_probe, 1500.0, 1100.0, 1.0 / 60.0, follow_options_);
+        follow_probe, 800.0, 600.0, 1500.0, 1100.0, 1.0 / 60.0, follow_options_);
     if (!(follow_probe->x > world_width * 0.5 && follow_probe->x < 1500.0 &&
           follow_probe->y > world_height * 0.5 && follow_probe->y < 1100.0)) {
       throw std::runtime_error("camera2d smoke did not observe generated follow output");
