@@ -9,6 +9,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/textureatlas/texture_atlas_grid.hpp>
+
 namespace flight::types { struct Bitmap; }
 namespace flight::types { struct BitmapFont; }
 namespace flight::types { struct BitmapFontData; }
@@ -56,15 +58,7 @@ using flight::types::BitmapFont;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_BITMAPFONT_ENTITY_RUNTIME_KEY_IMAGE_HEIGHT_IMAGE_NAME_IMAGE_WIDTH_REGIONS_SCALE_TEXTURE_043BB97832A671F4
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_BITMAPFONT_ENTITY_RUNTIME_KEY_IMAGE_HEIGHT_IMAGE_NAME_IMAGE_WIDTH_REGIONS_SCALE_TEXTURE_043BB97832A671F4
-struct entity_runtime_key_image_height_image_name_image_width_regions_scale_texture_043bb97832a671f4 : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::optional<double> image_height;
-  std::variant<flight::String, flight::Null, flight::Undefined> image_name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::optional<double> image_width;
-  std::optional<flight::Array<flight::Ref<flight::types::TextureAtlasRegion>>> regions;
-  std::optional<double> scale;
-  std::variant<flight::Ref<flight::types::Texture2D>, flight::Null, flight::Undefined> texture = std::variant<flight::Ref<flight::types::Texture2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-};
+using entity_runtime_key_image_height_image_name_image_width_regions_scale_texture_043bb97832a671f4 = flight::textureatlas::entity_runtime_key_image_height_image_name_image_width_regions_scale_texture_043bb97832a671f4;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_BITMAPFONT_ENTITY_RUNTIME_KEY_IMAGE_HEIGHT_IMAGE_NAME_IMAGE_WIDTH_REGIONS_SCALE_TEXTURE_043BB97832A671F4
 
 inline flight::Ref<flight::types::BitmapFont> create_bitmap_font_from_glyph_atlas(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlyphAtlas>>>> atlas) {

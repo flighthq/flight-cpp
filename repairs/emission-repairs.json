@@ -9181,6 +9181,19 @@
       "defect": "Same shape as registry-codegen-row-write-array-projection: the member is declared as rows over the entry type and the emitted write passes the entry references themselves. The element conversion is a row projection over the SAME subject, so nothing is reinterpreted; only the unobserved local array has to be rebuilt, and array_of preserves every element identity while returning the separate array handle the local already has no other holder for. See that entry for why array_of is legal only with the identity precondition stated.",
       "expectedWhen": "always",
       "expires": "when the emitter projects an array into the row element type its member declares; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "bitmapfont-declare-refused-initialize-glyph-source",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/bitmapfont/bitmap_font_glyph_source.hpp",
+      "symbol": "initialize_glyph_source_from_bitmap_font",
+      "refusedFunction": "initializeGlyphSourceFromBitmapFont",
+      "declaration": "void initialize_glyph_source_from_bitmap_font(flight::types::EntityConstruction<flight::Ref<flight::types::GlyphSource>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapFont>>>> font);",
+      "sourceDeclaration": "packages/bitmapfont/src/bitmapFontGlyphSource.ts -- initializeGlyphSourceFromBitmapFont(out: EntityConstruction<GlyphSource>, font: Readonly<BitmapFont>): void, refused; createGlyphSourceFromBitmapFont calls it",
+      "diagnostic": "use of undeclared identifier 'initialize_glyph_source_from_bitmap_font'",
+      "defect": "The emitter refuses initializeGlyphSourceFromBitmapFont (cpp-contextual-union-interface-heritage-carrier-unrepresented) while emitting its caller createGlyphSourceFromBitmapFont, so the header calls an undeclared symbol. The declaration's signature is the emitter's own: the retained call at bitmap_font_glyph_source.hpp:103 constructs exactly these carriers. Declaration only: the caller compiles and calling it fails to link, so the function stays visibly unusable rather than substituted.",
+      "expectedWhen": "always",
+      "expires": "when initializeGlyphSourceFromBitmapFont emits (the NOT GENERATED marker disappears and this repair matches nothing); sdk:check fails if this repair matches no header."
     }
   ]
 }

@@ -4578,6 +4578,12 @@
         "flight/render/render_state.hpp"
       ],
       "id": "render-state-generic-null-clip-hooks-fallback"
+    },
+    {
+      "files": [
+        "flight/bitmapfont/bitmap_font_glyph_source.hpp"
+      ],
+      "id": "bitmapfont-declare-refused-initialize-glyph-source"
     }
   ],
   "sourcePatches": [
@@ -5884,6 +5890,7 @@
       "flight/adjustments/color_lut_cache.hpp",
       "flight/adjustments/color_matrix_adjustment.hpp",
       "flight/app/app_window.hpp",
+      "flight/bitmapfont/bitmap_font_from_glyph_atlas.hpp",
       "flight/camera/explain_camera3_dview.hpp",
       "flight/collision/collide_contact_manifold2_d.hpp",
       "flight/collision/collide_contact_manifold3_d.hpp",
