@@ -4590,6 +4590,12 @@
         "flight/texture/cube_texture.hpp"
       ],
       "id": "texture-cube-sampler-preserves-readonly"
+    },
+    {
+      "files": [
+        "flight/texture/cube_texture.hpp"
+      ],
+      "id": "texture-cube-null-face-array-optional-storage"
     }
   ],
   "sourcePatches": [

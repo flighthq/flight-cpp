@@ -9072,6 +9072,18 @@
       "expires": "when a guarded present optional readonly structural row passes to an identically readonly helper parameter without a writable round trip; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "texture-cube-null-face-array-optional-storage",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/texture/cube_texture.hpp",
+      "from": "flight::Array<std::optional<flight::types::TextureSourceValue>>{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}",
+      "to": "flight::Array<std::optional<flight::types::TextureSourceValue>>{std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt}",
+      "sourceDeclaration": "packages/texture/src/cubeTexture.ts -- createCubeTexture defaults opts.sources to six explicit null face slots; the patched TextureSourceCubeFaces retains nullable TextureSourceValue elements",
+      "diagnostic": "no matching constructor for flight::Array<std::optional<flight::types::TextureSourceValue>> from six nullptr arguments",
+      "defect": "The emitter elects the declared optional variant element carrier but initializes its six explicit null slots as pointer nulls. Several variant alternatives accept nullptr, so no unique present arm exists. std::nullopt spells the absent element state already used by the exact cube constructor without selecting or fabricating a source owner; the array stays dense with six slots.",
+      "expectedWhen": "always",
+      "expires": "when null literals in an array of nullable multi-owner variants lower to the optional element absence; sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "skeleton3d-mesh-joints-exact-geometry-owner",
       "kind": "respell-reference-member-access",
       "appliesTo": "flight/skeleton3d/skin_mesh_geometry.hpp",
