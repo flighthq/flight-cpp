@@ -284470,6 +284470,23 @@
             "source": "packages/scene3d-resources/src/sceneResourceSignals.ts"
           },
           "importedNames": [
+            "HostImageDecodeCapabilities"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "HostImageDecode",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/HostImageDecode.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SceneResourceSignals",
+            "packageName": "@flighthq/scene3d-resources",
+            "source": "packages/scene3d-resources/src/sceneResourceSignals.ts"
+          },
+          "importedNames": [
             "ImageResourceFetch",
             "ImageResourceReference"
           ],

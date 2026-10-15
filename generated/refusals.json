@@ -7348,7 +7348,7 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-resources/src/contract.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "dependency ./anisotropyPbrScene3DMaterialTextures.ts was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/anisotropyPbrScene3DMaterialTextures.ts",
+      "reason": "dependency ./loadScene3DResources.ts was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/loadScene3DResources.ts",
       "stage": "dependency"
     },
     {
@@ -7398,7 +7398,7 @@
       "line": 4,
       "module": "packages/scene3d-resources/src/imageResourceFetch.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "cpp emission failed for @flighthq/scene3d-resources/packages/scene3d-resources/src/imageResourceFetch.ts: async closures require C++ coroutine lowering",
+      "reason": "cpp emission failed for @flighthq/scene3d-resources/packages/scene3d-resources/src/imageResourceFetch.ts: undefined is not represented by the contextual C++ union",
       "stage": "emission"
     },
     {
@@ -7418,13 +7418,18 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 16,
+      "code": "unsupported-typescript",
       "module": "packages/scene3d-resources/src/loadScene3DResources.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "cpp emission failed for @flighthq/scene3d-resources/packages/scene3d-resources/src/loadScene3DResources.ts: ambient value Promise member allSettled has no C++ binding",
-      "stage": "emission"
+      "reason": "unsupported type MappedType",
+      "stage": "lowering"
+    },
+    {
+      "code": "unsupported-typescript",
+      "module": "packages/scene3d-resources/src/loadScene3DResources.ts",
+      "package": "@flighthq/scene3d-resources",
+      "reason": "unsupported type MappedType",
+      "stage": "lowering"
     },
     {
       "code": "dependency-refused",

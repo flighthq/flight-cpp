@@ -226,6 +226,7 @@
         "flight/preferences/storage.hpp",
         "flight/render/render_cache.hpp",
         "flight/scene2d_resources/scene2_ddocument_source.hpp",
+        "flight/scene3d_resources/scene_document_source.hpp",
         "flight/signals/emitter.hpp",
         "flight/signals/safe.hpp",
         "flight/signals/signal.hpp",
@@ -1340,8 +1341,8 @@
         "flight/scene3d_resources/explain_scene3_dresource_coverage.hpp",
         "flight/scene3d_resources/get_scene3_dresource_textures.hpp",
         "flight/scene3d_resources/gltf_load.hpp",
+        "flight/scene3d_resources/gltf_load_import.hpp",
         "flight/scene3d_resources/iridescence_pbr_scene3_dmaterial_textures.hpp",
-        "flight/scene3d_resources/load_scene3_dresources.hpp",
         "flight/scene3d_resources/md2_load.hpp",
         "flight/scene3d_resources/md5_load.hpp",
         "flight/scene3d_resources/obj_load.hpp",
@@ -1560,10 +1561,7 @@
       "id": "scene3d-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/scene3d_resources/resolve_scene3_dresources.hpp",
-        "flight/scene3d_resources/scene_material_texture_registry.hpp"
-      ],
+      "files": [],
       "id": "scene3d-resources-unqualified-entity-names"
     },
     {
@@ -2774,10 +2772,7 @@
       "id": "preferences-unqualified-signals-names"
     },
     {
-      "files": [
-        "flight/scene3d_resources/enable_scene3_dresource_failure_guards.hpp",
-        "flight/scene3d_resources/reveal_scene3_dresources_on_resolve.hpp"
-      ],
+      "files": [],
       "id": "scene3d-resources-unqualified-signals-names"
     },
     {
@@ -2829,15 +2824,11 @@
       "id": "scene3d-unqualified-geometry-names"
     },
     {
-      "files": [
-        "flight/scene3d_resources/scene_document_source.hpp"
-      ],
+      "files": [],
       "id": "scene3d-resources-unqualified-loader-names"
     },
     {
-      "files": [
-        "flight/scene3d_resources/gltf_load.hpp"
-      ],
+      "files": [],
       "id": "scene3d-resources-unqualified-scene3d-formats-names"
     },
     {
@@ -6180,19 +6171,7 @@
       "flight/scene2d_formats/svg_use_element.hpp",
       "flight/scene2d_resources/load_scene2_daudio_resources.hpp",
       "flight/scene2d_resources/load_scene2_dimage_resources.hpp",
-      "flight/scene3d_resources/anisotropy_pbr_scene3_dmaterial_textures.hpp",
-      "flight/scene3d_resources/clearcoat_pbr_scene3_dmaterial_textures.hpp",
-      "flight/scene3d_resources/enable_scene3_dresource_failure_guards.hpp",
-      "flight/scene3d_resources/gltf_load.hpp",
-      "flight/scene3d_resources/iridescence_pbr_scene3_dmaterial_textures.hpp",
-      "flight/scene3d_resources/load_scene3_dresources.hpp",
-      "flight/scene3d_resources/resolve_scene3_dresources.hpp",
-      "flight/scene3d_resources/reveal_scene3_dresources_on_resolve.hpp",
-      "flight/scene3d_resources/shaded_scene3_dmaterial_textures.hpp",
-      "flight/scene3d_resources/sheen_pbr_scene3_dmaterial_textures.hpp",
-      "flight/scene3d_resources/specular_pbr_scene3_dmaterial_textures.hpp",
-      "flight/scene3d_resources/transmission_volume_pbr_scene3_dmaterial_textures.hpp",
-      "flight/scene3d_resources/wrapped_diffuse_pbr_scene3_dmaterial_textures.hpp",
+      "flight/scene3d_resources/contract.hpp",
       "flight/scene3d_wgpu/_internal_wgpu_scene3_dtest_helper.hpp",
       "flight/scene3d_wgpu/blinn_phong_wgpu_mesh_material_renderer.hpp",
       "flight/scene3d_wgpu/custom_shader_wgpu_mesh_material_renderer.hpp",
@@ -6245,7 +6224,7 @@
       "flight/textshaper/text_shaper_cache.hpp",
       "flight/tokens/substitute_flight_document_scene_tokens.hpp"
     ],
-    "includes": 787
+    "includes": 786
   },
   "packages": [
     {
@@ -7604,17 +7583,17 @@
       "sourceModules": 69
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/scene3d_resources",
       "cppNamespace": "flight::scene3d_resources",
-      "emittedModules": 11,
+      "emittedModules": 12,
       "package": "@flighthq/scene3d-resources",
       "refusedModules": 17,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
-      "sourceModules": 28
+      "sourceModules": 29
     },
     {
       "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
@@ -8251,8 +8230,8 @@
   },
   "summary": {
     "packages": 153,
-    "emittedModules": 2536,
+    "emittedModules": 2537,
     "refusedModules": 614,
-    "sourceModules": 3150
+    "sourceModules": 3151
   }
 }

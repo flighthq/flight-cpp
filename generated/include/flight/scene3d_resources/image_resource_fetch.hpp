@@ -33,6 +33,7 @@ inline flight::String resolve_image_resource_uri(flight::String uri, std::option
 
 
 // NOT GENERATED: function createWebImageResourceFetch -- source line 4
+// refusal: cpp-union-sentinel-unrepresented [compiler-restriction]
 //
 // The source it stood for:
 //   export function createWebImageResourceFetch(hostImage: Readonly<HostImageCapability>): ImageResourceFetch {
@@ -48,6 +49,6 @@ inline flight::String resolve_image_resource_uri(flight::String uri, std::option
 //   }
 //   
 // cpp emission failed for @flighthq/scene3d-resources/packages/scene3d-resources/src/imageResourceFetch.ts:
-// async closures require C++ coroutine lowering
+// undefined is not represented by the contextual C++ union
 
 } // namespace flight::scene3d_resources

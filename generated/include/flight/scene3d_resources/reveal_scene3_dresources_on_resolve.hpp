@@ -25,23 +25,39 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/material.hpp>
 
+namespace flight::types { struct BlinnPhongMaterial; }
+namespace flight::types { struct CustomShaderMaterial; }
+namespace flight::types { struct DepthMaterial; }
 namespace flight::types { struct EmbeddedImageResourceReference; }
+namespace flight::types { struct EmissiveMaterial; }
+namespace flight::types { struct ExtendedPbrMaterial; }
 namespace flight::types { struct ExternalImageResourceReference; }
+namespace flight::types { struct LambertMaterial; }
+namespace flight::types { struct MatcapMaterial; }
 namespace flight::types { struct Material3D; }
 namespace flight::types { struct Material; }
 namespace flight::types { struct Node3D; }
+namespace flight::types { struct NormalMaterial; }
+namespace flight::types { struct PhongMaterial; }
 namespace flight::types { struct Scene3D; }
 namespace flight::types { struct Scene3DMaterialTextureRegistry; }
 namespace flight::types { struct Scene3DResourceResolver; }
 namespace flight::types { struct Scene3DResourceResolverWithRuntime; }
 namespace flight::types { struct Scene3DResourceRevealOptions; }
 namespace flight::types { struct Scene3DResourceSignals; }
+namespace flight::types { struct ShadedMaterial; }
+namespace flight::types { struct SpecularGlossinessPbrMaterial; }
+namespace flight::types { struct StandardPbrMaterial; }
 namespace flight::types { struct Texture2D; }
 namespace flight::types { struct Texture2DArray; }
 namespace flight::types { struct Texture3D; }
 namespace flight::types { struct TextureCube; }
+namespace flight::types { struct ToonMaterial; }
 namespace flight::types { struct TweenManager; }
 namespace flight::types { struct TweenOptions; }
+namespace flight::types { struct UnlitMaterial; }
+namespace flight::types { struct VertexColorMaterial; }
+namespace flight::types { struct WireframeMaterial; }
 namespace flight::types { template <typename T> struct Tween; }
 
 namespace flight::scene3d_resources {

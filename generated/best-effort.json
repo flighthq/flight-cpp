@@ -9878,7 +9878,6 @@
         "@flighthq/scene2d/packages/scene2d/src/sprite.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2BlockDispatch.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/resolveScene3DResources.ts",
-        "@flighthq/scene3d-resources/packages/scene3d-resources/src/sceneMaterialTextureRegistry.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/sceneResourceResolver.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/sceneResourceSignals.ts",
         "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuMeshPipeline.ts",
@@ -30543,7 +30542,8 @@
     {
       "consumers": [
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/contract.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/index.ts"
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/index.ts",
+        "@flighthq/scene3d-resources/packages/scene3d-resources/src/md2Load.ts"
       ],
       "module": {
         "name": "Md2Document",
@@ -30591,8 +30591,7 @@
       "consumers": [
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/contract.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/index.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2Document.ts",
-        "@flighthq/scene3d-resources/packages/scene3d-resources/src/md2Load.ts"
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2Document.ts"
       ],
       "declarationFingerprints": [
         "sha256:55068f14c7c28f41de6e300422440922e8f12c4b7337031969cb0dde718d7f60",
@@ -30760,7 +30759,8 @@
     {
       "consumers": [
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/contract.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/index.ts"
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/index.ts",
+        "@flighthq/scene3d-resources/packages/scene3d-resources/src/md5Load.ts"
       ],
       "module": {
         "name": "Md5Document",
@@ -30856,8 +30856,7 @@
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/contract.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/index.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5Document.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5SkeletonHandler.ts",
-        "@flighthq/scene3d-resources/packages/scene3d-resources/src/md5Load.ts"
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5SkeletonHandler.ts"
       ],
       "declarationFingerprints": [
         "sha256:05dd6f2ae90ee2a585f6f8ac2970d1a503083866cfdb7024456a4e46ace05eb6",
@@ -30989,7 +30988,8 @@
     {
       "consumers": [
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/contract.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/index.ts"
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/index.ts",
+        "@flighthq/scene3d-resources/packages/scene3d-resources/src/objLoad.ts"
       ],
       "module": {
         "name": "ObjDocument",
@@ -31100,8 +31100,7 @@
       "consumers": [
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/contract.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/index.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objDocument.ts",
-        "@flighthq/scene3d-resources/packages/scene3d-resources/src/objLoad.ts"
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objDocument.ts"
       ],
       "declarationFingerprints": [
         "sha256:0629740884fa9db5101436dc053f96d4acf6ea4293149c47115d1fa06a090a9d",
@@ -31188,7 +31187,8 @@
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/contract.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfImport.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/index.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerAllGltfHandlers.ts"
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerAllGltfHandlers.ts",
+        "@flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoadImport.ts"
       ],
       "module": {
         "name": "RegisterGltfAnimationHandlers",
@@ -31206,7 +31206,8 @@
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/contract.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfImport.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/index.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerAllGltfHandlers.ts"
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerAllGltfHandlers.ts",
+        "@flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoadImport.ts"
       ],
       "module": {
         "name": "RegisterGltfCameraHandlers",
@@ -31263,7 +31264,8 @@
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/contract.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfImport.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/index.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerAllGltfHandlers.ts"
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerAllGltfHandlers.ts",
+        "@flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoadImport.ts"
       ],
       "module": {
         "name": "RegisterGltfSkinHandlers",
@@ -31542,7 +31544,8 @@
     {
       "consumers": [
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/contract.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/index.ts"
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/index.ts",
+        "@flighthq/scene3d-resources/packages/scene3d-resources/src/threeDsLoad.ts"
       ],
       "module": {
         "name": "ThreeDsDocument",
@@ -31644,8 +31647,7 @@
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsKeyframeHandler.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsLightHandler.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsMaterialHandler.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsMeshHandler.ts",
-        "@flighthq/scene3d-resources/packages/scene3d-resources/src/threeDsLoad.ts"
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsMeshHandler.ts"
       ],
       "module": {
         "name": "ThreeDsParse",
@@ -33526,6 +33528,7 @@
         "source": "packages/scene3d-resources/src/imageResourceFetch.ts"
       },
       "path": "flight/scene3d_resources/image_resource_fetch.hpp",
+      "rule": "cpp-union-sentinel-unrepresented",
       "status": "refused-placeholder"
     },
     {
@@ -33563,10 +33566,7 @@
       "consumers": [
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/contract.ts"
       ],
-      "declarationFingerprints": [
-        "sha256:63175b071f9643f2ad1da6d6acec11982df63b51678d4347316d51a2b1809620",
-        "sha256:caf6625235906f2c4abf7c15df588b48f003fa55e2d4bba9283b89c9cf4e6209"
-      ],
+      "declarationFingerprints": [],
       "module": {
         "name": "LoadScene3DResources",
         "packageName": "@flighthq/scene3d-resources",
@@ -44552,6 +44552,7 @@
     {
       "consumers": [
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/mergeAwd2ParseOptions.ts",
+        "@flighthq/scene3d-resources/packages/scene3d-resources/src/awd2Load.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -50917,6 +50918,7 @@
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerGltfMaterialExtensionHandlers.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerGltfSkinHandlers.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoad.ts",
+        "@flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoadImport.ts",
         "@flighthq/types/packages/types/src/Scene3DResources.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
@@ -51791,6 +51793,8 @@
     {
       "consumers": [
         "@flighthq/image-codec/packages/image-codec/src/decodeImage.ts",
+        "@flighthq/scene3d-resources/packages/scene3d-resources/src/sceneResourceResolver.ts",
+        "@flighthq/scene3d-resources/packages/scene3d-resources/src/sceneResourceSignals.ts",
         "@flighthq/types/packages/types/src/ElectronHost.ts",
         "@flighthq/types/packages/types/src/Host.ts",
         "@flighthq/types/packages/types/src/ImageBitmapComposition.ts",
@@ -52377,6 +52381,7 @@
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsKeyframeHandler.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsMaterialHandler.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoad.ts",
+        "@flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoadImport.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/skeletonDetect.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryFull.ts",
         "@flighthq/swf/packages/swf/src/expandSwfTagHandlerDispatch.ts",
@@ -54480,6 +54485,7 @@
         "@flighthq/net/packages/net/src/net.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/awd2Load.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoad.ts",
+        "@flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoadImport.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/md2Load.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/md5Load.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/objLoad.ts",
@@ -58023,6 +58029,7 @@
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsMaterialHandler.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/awd2Load.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoad.ts",
+        "@flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoadImport.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/md2Load.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/md5Load.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/objLoad.ts",
@@ -58250,6 +58257,7 @@
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/awd2Load.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/clearcoatPbrScene3DMaterialTextures.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoad.ts",
+        "@flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoadImport.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/iridescencePbrScene3DMaterialTextures.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/md2Load.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/md5Load.ts",
@@ -58993,6 +59001,7 @@
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/loadScene2DImageResources.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/scene2DDocumentSource.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoad.ts",
+        "@flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoadImport.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/sceneResourceResolver.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/sceneResourceSignals.ts",
         "@flighthq/screen/packages/screen/src/screen.ts",
