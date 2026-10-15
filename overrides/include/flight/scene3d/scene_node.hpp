@@ -23,6 +23,8 @@ using Node3DView = flight::types::NodeOf<Node3DTraits>;
 using Node3DBaseRuntime = flight::types::NodeRuntime<Node3DTraits>;
 using Node3DBaseRuntimeOwner = flight::Ref<Node3DBaseRuntime>;
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_ENABLED_NAME_ALPHA_VISIBLE_6EED4C0384CBBF3F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_ENABLED_NAME_ALPHA_VISIBLE_6EED4C0384CBBF3F
 struct enabled_name_alpha_visible_6eed4c0384cbbf3f
     : public flight::ReferenceEnabled {
   std::optional<bool> enabled;
@@ -31,6 +33,8 @@ struct enabled_name_alpha_visible_6eed4c0384cbbf3f
   std::optional<double> alpha;
   std::optional<bool> visible;
 };
+
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_ENABLED_NAME_ALPHA_VISIBLE_6EED4C0384CBBF3F
 
 namespace detail {
 
@@ -197,7 +201,15 @@ inline flight::Ref<flight::types::Node3DRuntime> create_node3_druntime() {
 template <typename Runtime, typename Out, typename Options, typename Factory>
 inline void initialize_node3_d(const Out& out, flight::String kind,
                                const Options& options, Factory create_runtime) {
-  const auto runtime = create_runtime();
+  // The current emitter gives runtime factories one optional traits argument.
+  // Older generated callers and the exact-owner factories have zero arguments.
+  const auto runtime = [&] {
+    if constexpr (std::is_invocable_v<Factory, std::nullopt_t>) {
+      return create_runtime(std::nullopt);
+    } else {
+      return create_runtime();
+    }
+  }();
   flight::row_set<flight::RowKey<"data">>(
       out, std::optional<flight::Ref<flight::types::NodeData>>{});
   flight::row_set<flight::RowKey<"enabled">>(

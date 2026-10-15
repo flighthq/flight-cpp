@@ -3166,26 +3166,6 @@
       "source": "packages/scene3d/src/billboardCamera.ts"
     },
     {
-      "name": "CloneNode3DSubtree",
-      "packageName": "@flighthq/scene3d",
-      "source": "packages/scene3d/src/cloneNode3DSubtree.ts"
-    },
-    {
-      "name": "InstancedMesh",
-      "packageName": "@flighthq/scene3d",
-      "source": "packages/scene3d/src/instancedMesh.ts"
-    },
-    {
-      "name": "Mesh",
-      "packageName": "@flighthq/scene3d",
-      "source": "packages/scene3d/src/mesh.ts"
-    },
-    {
-      "name": "PrepareScene3DMorph",
-      "packageName": "@flighthq/scene3d",
-      "source": "packages/scene3d/src/prepareScene3DMorph.ts"
-    },
-    {
       "name": "Scene",
       "packageName": "@flighthq/scene3d",
       "source": "packages/scene3d/src/scene.ts"
@@ -3214,16 +3194,6 @@
       "name": "SceneNodeAppearance",
       "packageName": "@flighthq/scene3d",
       "source": "packages/scene3d/src/sceneNodeAppearance.ts"
-    },
-    {
-      "name": "SceneNodeBounds",
-      "packageName": "@flighthq/scene3d",
-      "source": "packages/scene3d/src/sceneNodeBounds.ts"
-    },
-    {
-      "name": "SceneNodeCulling",
-      "packageName": "@flighthq/scene3d",
-      "source": "packages/scene3d/src/sceneNodeCulling.ts"
     },
     {
       "name": "SceneNodeDispose",
@@ -26286,46 +26256,6 @@
       "cyclic": false,
       "modules": [
         {
-          "name": "Mesh",
-          "packageName": "@flighthq/scene3d",
-          "source": "packages/scene3d/src/mesh.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "CloneNode3DSubtree",
-          "packageName": "@flighthq/scene3d",
-          "source": "packages/scene3d/src/cloneNode3DSubtree.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "InstancedMesh",
-          "packageName": "@flighthq/scene3d",
-          "source": "packages/scene3d/src/instancedMesh.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "PrepareScene3DMorph",
-          "packageName": "@flighthq/scene3d",
-          "source": "packages/scene3d/src/prepareScene3DMorph.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
           "name": "Scene",
           "packageName": "@flighthq/scene3d",
           "source": "packages/scene3d/src/scene.ts"
@@ -26369,26 +26299,6 @@
           "name": "SceneNodeAppearance",
           "packageName": "@flighthq/scene3d",
           "source": "packages/scene3d/src/sceneNodeAppearance.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "SceneNodeBounds",
-          "packageName": "@flighthq/scene3d",
-          "source": "packages/scene3d/src/sceneNodeBounds.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "SceneNodeCulling",
-          "packageName": "@flighthq/scene3d",
-          "source": "packages/scene3d/src/sceneNodeCulling.ts"
         }
       ]
     },
@@ -49663,7 +49573,7 @@
             "line": 15,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboard.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboard.ts\",351]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboard.ts\",353]",
             "kind": "import",
             "name": "BillboardKind",
             "scope": "module",
@@ -49689,7 +49599,7 @@
             "line": 17,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboard.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboard.ts\",410]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboard.ts\",412]",
             "kind": "import",
             "name": "createNode3DRuntime",
             "scope": "module",
@@ -49715,7 +49625,7 @@
             "line": 17,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboard.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboard.ts\",431]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboard.ts\",433]",
             "kind": "import",
             "name": "getNode3DRuntime",
             "scope": "module",
@@ -49741,7 +49651,7 @@
             "line": 17,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboard.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboard.ts\",449]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboard.ts\",451]",
             "kind": "import",
             "name": "initializeNode3D",
             "scope": "module",
@@ -49767,7 +49677,7 @@
             "line": 34,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboard.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboard.ts\",1701]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboard.ts\",1706]",
             "kind": "function",
             "name": "createBillboard",
             "scope": "module",
@@ -49788,7 +49698,7 @@
             "line": 49,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboard.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboard.ts\",2201]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboard.ts\",2208]",
             "kind": "function",
             "name": "enableBillboardSignals",
             "scope": "module",
@@ -49809,7 +49719,7 @@
             "line": 53,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboard.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboard.ts\",2313]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboard.ts\",2320]",
             "kind": "function",
             "name": "getBillboardRuntime",
             "scope": "module",
@@ -49830,7 +49740,7 @@
             "line": 57,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboard.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboard.ts\",2436]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboard.ts\",2443]",
             "kind": "function",
             "name": "getBillboardSignals",
             "scope": "module",
@@ -49851,7 +49761,7 @@
             "line": 64,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboard.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboard.ts\",2848]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboard.ts\",2855]",
             "kind": "function",
             "name": "isBillboard",
             "scope": "module",
@@ -49873,7 +49783,7 @@
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboard.ts"
           },
-          "specifier": "./sceneNode",
+          "specifier": "./sceneNode.ts",
           "target": {
             "name": "SceneNode",
             "packageName": "@flighthq/scene3d",
@@ -50325,7 +50235,7 @@
             "line": 14,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",456]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",459]",
             "kind": "import",
             "name": "getNode3DRuntime",
             "scope": "module",
@@ -50351,7 +50261,7 @@
             "line": 14,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",474]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",477]",
             "kind": "import",
             "name": "isNode3D",
             "scope": "module",
@@ -50377,7 +50287,7 @@
             "line": 25,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",1265]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",1271]",
             "kind": "function",
             "name": "orientBillboardToCamera",
             "scope": "module",
@@ -50398,7 +50308,7 @@
             "line": 36,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",1894]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",1900]",
             "kind": "function",
             "name": "orientScene3DBillboardsToCamera",
             "scope": "module",
@@ -50419,7 +50329,7 @@
             "line": 46,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",2482]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",2488]",
             "kind": "function",
             "name": "setBillboardCameraBasisGuard",
             "scope": "module",
@@ -50440,7 +50350,7 @@
             "line": 54,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",3034]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",3040]",
             "kind": "function",
             "name": "applyBillboardFacing",
             "scope": "module",
@@ -50461,7 +50371,7 @@
             "line": 76,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",3967]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",3973]",
             "kind": "function",
             "name": "orientBillboardSubtree",
             "scope": "module",
@@ -50482,7 +50392,7 @@
             "line": 90,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",4634]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",4640]",
             "kind": "function",
             "name": "setBillboardCameraBasis",
             "scope": "module",
@@ -50503,7 +50413,7 @@
             "line": 141,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",7123]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",7129]",
             "kind": "function",
             "name": "writeBillboardFacingMatrix",
             "scope": "module",
@@ -50524,7 +50434,7 @@
             "line": 258,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10115]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10121]",
             "kind": "variable",
             "name": "FACING_EPSILON",
             "scope": "module",
@@ -50545,7 +50455,7 @@
             "line": 260,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10145]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10151]",
             "kind": "variable",
             "name": "_cameraWorld",
             "scope": "module",
@@ -50566,7 +50476,7 @@
             "line": 261,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10183]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10189]",
             "kind": "variable",
             "name": "_inverseParentWorld",
             "scope": "module",
@@ -50587,7 +50497,7 @@
             "line": 262,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10228]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10234]",
             "kind": "variable",
             "name": "_facingWorld",
             "scope": "module",
@@ -50608,7 +50518,7 @@
             "line": 263,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10266]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10272]",
             "kind": "variable",
             "name": "_localScratch",
             "scope": "module",
@@ -50629,7 +50539,7 @@
             "line": 264,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10305]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10311]",
             "kind": "variable",
             "name": "_position",
             "scope": "module",
@@ -50650,7 +50560,7 @@
             "line": 265,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10340]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10346]",
             "kind": "variable",
             "name": "_scale",
             "scope": "module",
@@ -50671,7 +50581,7 @@
             "line": 266,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10372]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10378]",
             "kind": "variable",
             "name": "_rotationScratch",
             "scope": "module",
@@ -50692,7 +50602,7 @@
             "line": 268,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10426]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10432]",
             "kind": "variable",
             "name": "_cameraEyeX",
             "scope": "module",
@@ -50713,7 +50623,7 @@
             "line": 269,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10447]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10453]",
             "kind": "variable",
             "name": "_cameraEyeY",
             "scope": "module",
@@ -50734,7 +50644,7 @@
             "line": 270,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10468]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10474]",
             "kind": "variable",
             "name": "_cameraEyeZ",
             "scope": "module",
@@ -50755,7 +50665,7 @@
             "line": 271,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10489]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10495]",
             "kind": "variable",
             "name": "_cameraRightX",
             "scope": "module",
@@ -50776,7 +50686,7 @@
             "line": 272,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10512]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10518]",
             "kind": "variable",
             "name": "_cameraRightY",
             "scope": "module",
@@ -50797,7 +50707,7 @@
             "line": 273,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10535]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10541]",
             "kind": "variable",
             "name": "_cameraRightZ",
             "scope": "module",
@@ -50818,7 +50728,7 @@
             "line": 274,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10558]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10564]",
             "kind": "variable",
             "name": "_cameraUpX",
             "scope": "module",
@@ -50839,7 +50749,7 @@
             "line": 275,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10578]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10584]",
             "kind": "variable",
             "name": "_cameraUpY",
             "scope": "module",
@@ -50860,7 +50770,7 @@
             "line": 276,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10598]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10604]",
             "kind": "variable",
             "name": "_cameraUpZ",
             "scope": "module",
@@ -50881,7 +50791,7 @@
             "line": 277,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10618]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10624]",
             "kind": "variable",
             "name": "_cameraBackX",
             "scope": "module",
@@ -50902,7 +50812,7 @@
             "line": 278,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10640]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10646]",
             "kind": "variable",
             "name": "_cameraBackY",
             "scope": "module",
@@ -50923,7 +50833,7 @@
             "line": 279,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10662]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10668]",
             "kind": "variable",
             "name": "_cameraBackZ",
             "scope": "module",
@@ -50944,7 +50854,7 @@
             "line": 281,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10685]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10691]",
             "kind": "variable",
             "name": "billboardCameraBasisGuard",
             "scope": "module",
@@ -50966,7 +50876,7 @@
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts"
           },
-          "specifier": "./billboard",
+          "specifier": "./billboard.ts",
           "target": {
             "name": "Billboard",
             "packageName": "@flighthq/scene3d",
@@ -50980,7 +50890,7 @@
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/billboardCamera.ts"
           },
-          "specifier": "./sceneNode",
+          "specifier": "./sceneNode.ts",
           "target": {
             "name": "SceneNode",
             "packageName": "@flighthq/scene3d",
@@ -51107,7 +51017,7 @@
               "line": 258,
               "packageName": "@flighthq/scene3d",
               "source": "packages/scene3d/src/billboardCamera.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10115]",
+              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10121]",
               "kind": "variable",
               "name": "FACING_EPSILON",
               "scope": "module",
@@ -51130,7 +51040,7 @@
               "line": 260,
               "packageName": "@flighthq/scene3d",
               "source": "packages/scene3d/src/billboardCamera.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10145]",
+              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10151]",
               "kind": "variable",
               "name": "_cameraWorld",
               "scope": "module",
@@ -51153,7 +51063,7 @@
               "line": 261,
               "packageName": "@flighthq/scene3d",
               "source": "packages/scene3d/src/billboardCamera.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10183]",
+              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10189]",
               "kind": "variable",
               "name": "_inverseParentWorld",
               "scope": "module",
@@ -51176,7 +51086,7 @@
               "line": 262,
               "packageName": "@flighthq/scene3d",
               "source": "packages/scene3d/src/billboardCamera.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10228]",
+              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10234]",
               "kind": "variable",
               "name": "_facingWorld",
               "scope": "module",
@@ -51199,7 +51109,7 @@
               "line": 263,
               "packageName": "@flighthq/scene3d",
               "source": "packages/scene3d/src/billboardCamera.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10266]",
+              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10272]",
               "kind": "variable",
               "name": "_localScratch",
               "scope": "module",
@@ -51222,7 +51132,7 @@
               "line": 264,
               "packageName": "@flighthq/scene3d",
               "source": "packages/scene3d/src/billboardCamera.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10305]",
+              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10311]",
               "kind": "variable",
               "name": "_position",
               "scope": "module",
@@ -51245,7 +51155,7 @@
               "line": 265,
               "packageName": "@flighthq/scene3d",
               "source": "packages/scene3d/src/billboardCamera.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10340]",
+              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10346]",
               "kind": "variable",
               "name": "_scale",
               "scope": "module",
@@ -51268,7 +51178,7 @@
               "line": 266,
               "packageName": "@flighthq/scene3d",
               "source": "packages/scene3d/src/billboardCamera.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10372]",
+              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10378]",
               "kind": "variable",
               "name": "_rotationScratch",
               "scope": "module",
@@ -51291,7 +51201,7 @@
               "line": 268,
               "packageName": "@flighthq/scene3d",
               "source": "packages/scene3d/src/billboardCamera.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10426]",
+              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10432]",
               "kind": "variable",
               "name": "_cameraEyeX",
               "scope": "module",
@@ -51314,7 +51224,7 @@
               "line": 269,
               "packageName": "@flighthq/scene3d",
               "source": "packages/scene3d/src/billboardCamera.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10447]",
+              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10453]",
               "kind": "variable",
               "name": "_cameraEyeY",
               "scope": "module",
@@ -51337,7 +51247,7 @@
               "line": 270,
               "packageName": "@flighthq/scene3d",
               "source": "packages/scene3d/src/billboardCamera.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10468]",
+              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10474]",
               "kind": "variable",
               "name": "_cameraEyeZ",
               "scope": "module",
@@ -51360,7 +51270,7 @@
               "line": 271,
               "packageName": "@flighthq/scene3d",
               "source": "packages/scene3d/src/billboardCamera.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10489]",
+              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10495]",
               "kind": "variable",
               "name": "_cameraRightX",
               "scope": "module",
@@ -51383,7 +51293,7 @@
               "line": 272,
               "packageName": "@flighthq/scene3d",
               "source": "packages/scene3d/src/billboardCamera.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10512]",
+              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10518]",
               "kind": "variable",
               "name": "_cameraRightY",
               "scope": "module",
@@ -51406,7 +51316,7 @@
               "line": 273,
               "packageName": "@flighthq/scene3d",
               "source": "packages/scene3d/src/billboardCamera.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10535]",
+              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10541]",
               "kind": "variable",
               "name": "_cameraRightZ",
               "scope": "module",
@@ -51429,7 +51339,7 @@
               "line": 274,
               "packageName": "@flighthq/scene3d",
               "source": "packages/scene3d/src/billboardCamera.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10558]",
+              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10564]",
               "kind": "variable",
               "name": "_cameraUpX",
               "scope": "module",
@@ -51452,7 +51362,7 @@
               "line": 275,
               "packageName": "@flighthq/scene3d",
               "source": "packages/scene3d/src/billboardCamera.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10578]",
+              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10584]",
               "kind": "variable",
               "name": "_cameraUpY",
               "scope": "module",
@@ -51475,7 +51385,7 @@
               "line": 276,
               "packageName": "@flighthq/scene3d",
               "source": "packages/scene3d/src/billboardCamera.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10598]",
+              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10604]",
               "kind": "variable",
               "name": "_cameraUpZ",
               "scope": "module",
@@ -51498,7 +51408,7 @@
               "line": 277,
               "packageName": "@flighthq/scene3d",
               "source": "packages/scene3d/src/billboardCamera.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10618]",
+              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10624]",
               "kind": "variable",
               "name": "_cameraBackX",
               "scope": "module",
@@ -51521,7 +51431,7 @@
               "line": 278,
               "packageName": "@flighthq/scene3d",
               "source": "packages/scene3d/src/billboardCamera.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10640]",
+              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10646]",
               "kind": "variable",
               "name": "_cameraBackY",
               "scope": "module",
@@ -51544,7 +51454,7 @@
               "line": 279,
               "packageName": "@flighthq/scene3d",
               "source": "packages/scene3d/src/billboardCamera.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10662]",
+              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10668]",
               "kind": "variable",
               "name": "_cameraBackZ",
               "scope": "module",
@@ -51567,7 +51477,7 @@
               "line": 281,
               "packageName": "@flighthq/scene3d",
               "source": "packages/scene3d/src/billboardCamera.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10685]",
+              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/billboardCamera.ts\",10691]",
               "kind": "variable",
               "name": "billboardCameraBasisGuard",
               "scope": "module",
@@ -86181,385 +86091,6 @@
         "name": "Clone",
         "packageName": "@flighthq/entity",
         "source": "packages/entity/src/clone.ts"
-      },
-      "steps": []
-    },
-    {
-      "bindings": [
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 3,
-            "fingerprint": "sha256:18c4face1f4ebb34f925828f74e623afc0fd30eb7796fc7db937b0988d62548f",
-            "line": 2,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/cloneNode3DSubtree.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/cloneNode3DSubtree.ts\",11]",
-            "kind": "import",
-            "name": "addNodeChild",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "addNodeChild",
-            "kind": "dependency",
-            "module": {
-              "name": "Hierarchy",
-              "packageName": "@flighthq/node",
-              "source": "packages/node/src/hierarchy.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 3,
-            "fingerprint": "sha256:d94849164804f37b5331e3ac12598a3100260902111a066704ee5884c37de470",
-            "line": 3,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/cloneNode3DSubtree.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/cloneNode3DSubtree.ts\",27]",
-            "kind": "import",
-            "name": "getNodeChildren",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "getNodeChildren",
-            "kind": "dependency",
-            "module": {
-              "name": "Traversal",
-              "packageName": "@flighthq/node",
-              "source": "packages/node/src/traversal.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 3,
-            "fingerprint": "sha256:06441a24dadbf833b902a2e92da8c304c8149b64325a828eb9b41304f590e826",
-            "line": 4,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/cloneNode3DSubtree.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/cloneNode3DSubtree.ts\",46]",
-            "kind": "import",
-            "name": "getNodeLocalMatrix4",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "getNodeLocalMatrix4",
-            "kind": "dependency",
-            "module": {
-              "name": "NodeTransform3d",
-              "packageName": "@flighthq/node",
-              "source": "packages/node/src/nodeTransform3d.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 3,
-            "fingerprint": "sha256:c612849a76939f6eb17088bb5895feba4dcf69d79dcee99ad084e5963a963b23",
-            "line": 5,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/cloneNode3DSubtree.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/cloneNode3DSubtree.ts\",69]",
-            "kind": "import",
-            "name": "isNodeLocalMatrix4Detached",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "isNodeLocalMatrix4Detached",
-            "kind": "dependency",
-            "module": {
-              "name": "NodeTransform3d",
-              "packageName": "@flighthq/node",
-              "source": "packages/node/src/nodeTransform3d.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 3,
-            "fingerprint": "sha256:12e677103243be2d96611ea044afe6c9e9331efacb2f465e074ff67da91b474e",
-            "line": 6,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/cloneNode3DSubtree.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/cloneNode3DSubtree.ts\",99]",
-            "kind": "import",
-            "name": "setNodeLocalMatrix4",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "setNodeLocalMatrix4",
-            "kind": "dependency",
-            "module": {
-              "name": "NodeTransform3d",
-              "packageName": "@flighthq/node",
-              "source": "packages/node/src/nodeTransform3d.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 3,
-            "fingerprint": "sha256:537e13ee9d93cdb371edbfdeb04a61bb58bc13951e93aa541598b4a8731b454f",
-            "line": 7,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/cloneNode3DSubtree.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/cloneNode3DSubtree.ts\",122]",
-            "kind": "import",
-            "name": "setNodeTransform3D",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "setNodeTransform3D",
-            "kind": "dependency",
-            "module": {
-              "name": "NodeTransform3d",
-              "packageName": "@flighthq/node",
-              "source": "packages/node/src/nodeTransform3d.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:1e8435eb1f2cff150452ba5b8d3828bd6858dd1d4c5678cdaabe12b85d31a411",
-            "line": 11,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/cloneNode3DSubtree.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/cloneNode3DSubtree.ts\",285]",
-            "kind": "import",
-            "name": "cloneMesh",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "cloneMesh",
-            "kind": "dependency",
-            "module": {
-              "name": "Mesh",
-              "packageName": "@flighthq/scene3d",
-              "source": "packages/scene3d/src/mesh.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:b9f3970ea46a885bb13a465b5a255cd5dce1b2318eb77aee184fc43e71e6755f",
-            "line": 12,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/cloneNode3DSubtree.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/cloneNode3DSubtree.ts\",321]",
-            "kind": "import",
-            "name": "createNode3D",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "createNode3D",
-            "kind": "dependency",
-            "module": {
-              "name": "SceneNode",
-              "packageName": "@flighthq/scene3d",
-              "source": "packages/scene3d/src/sceneNode.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:3fee6cea0efd349faae5456b693e3c5a63f542a39e1ccb05a2059cf8c6c27ffa",
-            "line": 14,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/cloneNode3DSubtree.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/cloneNode3DSubtree.ts\",373]",
-            "kind": "function",
-            "name": "cloneNode3DSubtree",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:314a26d9e7b58ea41f6e55cd6577ed0b727950b905e855fbda70ac8cadd846fd",
-            "line": 25,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/cloneNode3DSubtree.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/cloneNode3DSubtree.ts\",754]",
-            "kind": "function",
-            "name": "cloneNode3DShallow",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:a69cbbe8f4a5461c54005dd71a7a0390102ac1a468cb776fc0f9020b1a399e19",
-            "line": 49,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/cloneNode3DSubtree.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/cloneNode3DSubtree.ts\",1439]",
-            "kind": "function",
-            "name": "isSceneMesh",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        }
-      ],
-      "dependencies": [
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "CloneNode3DSubtree",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/cloneNode3DSubtree.ts"
-          },
-          "specifier": "./mesh",
-          "target": {
-            "name": "Mesh",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "CloneNode3DSubtree",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/cloneNode3DSubtree.ts"
-          },
-          "specifier": "./sceneNode",
-          "target": {
-            "name": "SceneNode",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNode.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "CloneNode3DSubtree",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/cloneNode3DSubtree.ts"
-          },
-          "importedNames": [
-            "addNodeChild"
-          ],
-          "specifier": "@flighthq/node/contract",
-          "target": {
-            "name": "Hierarchy",
-            "packageName": "@flighthq/node",
-            "source": "packages/node/src/hierarchy.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "CloneNode3DSubtree",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/cloneNode3DSubtree.ts"
-          },
-          "importedNames": [
-            "getNodeLocalMatrix4",
-            "isNodeLocalMatrix4Detached",
-            "setNodeLocalMatrix4",
-            "setNodeTransform3D"
-          ],
-          "specifier": "@flighthq/node/contract",
-          "target": {
-            "name": "NodeTransform3d",
-            "packageName": "@flighthq/node",
-            "source": "packages/node/src/nodeTransform3d.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "CloneNode3DSubtree",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/cloneNode3DSubtree.ts"
-          },
-          "importedNames": [
-            "getNodeChildren"
-          ],
-          "specifier": "@flighthq/node/contract",
-          "target": {
-            "name": "Traversal",
-            "packageName": "@flighthq/node",
-            "source": "packages/node/src/traversal.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "CloneNode3DSubtree",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/cloneNode3DSubtree.ts"
-          },
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Contract",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/contract.ts"
-          }
-        }
-      ],
-      "module": {
-        "name": "CloneNode3DSubtree",
-        "packageName": "@flighthq/scene3d",
-        "source": "packages/scene3d/src/cloneNode3DSubtree.ts"
       },
       "steps": []
     },
@@ -185402,1014 +184933,6 @@
     {
       "bindings": [
         {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:e9ce4fe9ad3c23a3f0889179feb11934787ad8bffe34d8e664c93d3a2d1d5b46",
-            "line": 1,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",9]",
-            "kind": "import",
-            "name": "allocateEntity",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "allocateEntity",
-            "kind": "dependency",
-            "module": {
-              "name": "Entity",
-              "packageName": "@flighthq/entity",
-              "source": "packages/entity/src/entity.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 26,
-            "fingerprint": "sha256:6d44af5ed0291e503b1e8c6ad198418f00e8a69d87b3a54acc4dc7ca7f7484d1",
-            "line": 1,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",25]",
-            "kind": "import",
-            "name": "finishEntity",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "finishEntity",
-            "kind": "dependency",
-            "module": {
-              "name": "Entity",
-              "packageName": "@flighthq/entity",
-              "source": "packages/entity/src/entity.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:b3be2af67d045a638782d9676cb1848082be8962e3ad38b2da2440eaafcc55e9",
-            "line": 2,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",83]",
-            "kind": "import",
-            "name": "copyMatrix4",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "copyMatrix4",
-            "kind": "dependency",
-            "module": {
-              "name": "Matrix4",
-              "packageName": "@flighthq/geometry",
-              "source": "packages/geometry/src/matrix4.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 23,
-            "fingerprint": "sha256:c0735fd7577caab3ddb78a8a059bb4402ac116eab0ef978e91bb6890a01ebb27",
-            "line": 2,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",96]",
-            "kind": "import",
-            "name": "createAabb",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "createAabb",
-            "kind": "dependency",
-            "module": {
-              "name": "Aabb",
-              "packageName": "@flighthq/geometry",
-              "source": "packages/geometry/src/aabb.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 35,
-            "fingerprint": "sha256:72b5b93e92d4ba01768546f3a992508b9fcebbddf896d11ffd352d20760377af",
-            "line": 2,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",108]",
-            "kind": "import",
-            "name": "createMatrix4",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "createMatrix4",
-            "kind": "dependency",
-            "module": {
-              "name": "Matrix4",
-              "packageName": "@flighthq/geometry",
-              "source": "packages/geometry/src/matrix4.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 50,
-            "fingerprint": "sha256:351d6bb9dae73396a1130706229be5cd867574ee7aa6c643002b39f3ab27d8ad",
-            "line": 2,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",123]",
-            "kind": "import",
-            "name": "transformAabbByMatrix4",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "transformAabbByMatrix4",
-            "kind": "dependency",
-            "module": {
-              "name": "Aabb",
-              "packageName": "@flighthq/geometry",
-              "source": "packages/geometry/src/aabb.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 74,
-            "fingerprint": "sha256:420484013ea152277073392aafba7d6841b028065904a4d672e627627a18b5be",
-            "line": 2,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",147]",
-            "kind": "import",
-            "name": "unionAabb",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "unionAabb",
-            "kind": "dependency",
-            "module": {
-              "name": "Aabb",
-              "packageName": "@flighthq/geometry",
-              "source": "packages/geometry/src/aabb.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:2b92b392e3b0ed5b3d1af3a3367212a577c7f3dbd47b0fd89106a250e63235e1",
-            "line": 3,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",204]",
-            "kind": "import",
-            "name": "ensureMeshGeometryBounds",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "ensureMeshGeometryBounds",
-            "kind": "dependency",
-            "module": {
-              "name": "MeshGeometryCompute",
-              "packageName": "@flighthq/mesh",
-              "source": "packages/mesh/src/meshGeometryCompute.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:f695125ef15fca88aad4ca9f4017858873dc8acecca23873c3db6d3f8d8ac3da",
-            "line": 4,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",272]",
-            "kind": "import",
-            "name": "createSignal",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "createSignal",
-            "kind": "dependency",
-            "module": {
-              "name": "Signal",
-              "packageName": "@flighthq/signals",
-              "source": "packages/signals/src/signal.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:8dbd9a7a5a2bbacbe8a8f1b2c515bdfce0b4062e3b92fcac4e71e01f6dd140a3",
-            "line": 16,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",527]",
-            "kind": "import",
-            "name": "EntityRuntimeKey",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "EntityRuntimeKey",
-            "kind": "dependency",
-            "module": {
-              "name": "Contract",
-              "packageName": "@flighthq/types",
-              "source": "packages/types/src/contract.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 28,
-            "fingerprint": "sha256:efb2ae11a7848e115dc2e0c0f2303776b0e8458e182054f69df4110e14689032",
-            "line": 16,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",545]",
-            "kind": "import",
-            "name": "InstancedMeshKind",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "InstancedMeshKind",
-            "kind": "dependency",
-            "module": {
-              "name": "Contract",
-              "packageName": "@flighthq/types",
-              "source": "packages/types/src/contract.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:264acf56c6228bd7865e419ba7c638237448db885295d94ac059b7fa47fdf326",
-            "line": 20,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",639]",
-            "kind": "import",
-            "name": "createNode3DRuntime",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "createNode3DRuntime",
-            "kind": "dependency",
-            "module": {
-              "name": "SceneNode",
-              "packageName": "@flighthq/scene3d",
-              "source": "packages/scene3d/src/sceneNode.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 31,
-            "fingerprint": "sha256:6ac7ab5a71a1d5a24873a90f7954927ebbc6fd663c944dfef04422b9979abb9c",
-            "line": 20,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",660]",
-            "kind": "import",
-            "name": "initializeNode3D",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "initializeNode3D",
-            "kind": "dependency",
-            "module": {
-              "name": "SceneNode",
-              "packageName": "@flighthq/scene3d",
-              "source": "packages/scene3d/src/sceneNode.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:7bf9917ec414d2136162c8419846cd0ab6606a7afa60adf13f12cbf80e2200c7",
-            "line": 35,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",1523]",
-            "kind": "function",
-            "name": "appendInstancedMeshInstance",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:781899422f572d9d4976f5ae84569106d7948c9d58a5b9a2992f3f0411be80ed",
-            "line": 46,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",2053]",
-            "kind": "function",
-            "name": "clearInstancedMesh",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:a52d535de9adf4d6558797a8d6a8a2143fca284c0243b85c36184c1759eb2c02",
-            "line": 58,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",2588]",
-            "kind": "function",
-            "name": "cloneInstancedMesh",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:869d71ce79362011c016e795add979980bfb9e0cbb22a897d880fbdc77d60a6b",
-            "line": 79,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",3604]",
-            "kind": "function",
-            "name": "computeInstancedMeshLocalBoundsAabb",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:8b6d72cdaa5a4357182aa02d1aaa8e45142396b7b66e414af3ad1f529ed407fb",
-            "line": 106,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",4748]",
-            "kind": "function",
-            "name": "createInstancedMesh",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:807d6afe0d9ce9b4bdfa653278ab60332492e53c912b3becfb62ca3aec5e1d2b",
-            "line": 126,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",5398]",
-            "kind": "function",
-            "name": "createInstancedMeshRuntime",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:1d45b1d9f135125d274abf9072e59993a8049d5a5045ab032a3230674a8f087b",
-            "line": 131,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",5550]",
-            "kind": "function",
-            "name": "createInstancedMeshSignals",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:47b1239505925068bcc5426aa1b2a89895e5892b43ac50249a752503e7834e99",
-            "line": 142,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",6014]",
-            "kind": "function",
-            "name": "enableInstancedMeshSignals",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:c2fef566fcd5bacfe722d3d630aac7ce7199afaf78a7f7ba7b666c96ae22610f",
-            "line": 151,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",6407]",
-            "kind": "function",
-            "name": "getInstancedMeshCapacity",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:30859ca05adbde6a91ee215e9446fa941cc70e722898c0f9919b31e46960d24b",
-            "line": 160,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",6811]",
-            "kind": "function",
-            "name": "getInstancedMeshInstanceColor",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:75ff478a2ffc46cdd9a85c10ad3d3bfda3f17f914888f4b7deb33b2890e37589",
-            "line": 170,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",7256]",
-            "kind": "function",
-            "name": "getInstancedMeshInstanceMatrix",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:3c79da60e1b66d00086afb042d7793b0780da11fc27e0bca237f548b3120d4bb",
-            "line": 177,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",7610]",
-            "kind": "function",
-            "name": "getInstancedMeshSignals",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:d5185a1b81c17bc2212eb8f10941db09177d24a6819b207dd4c0c10a54354a42",
-            "line": 181,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",7782]",
-            "kind": "function",
-            "name": "initializeInstancedMeshSignals",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:15905855eb540c371335dc0a21bec36b38efbef3c4128f0378d63701c2560bc7",
-            "line": 188,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",8089]",
-            "kind": "function",
-            "name": "invalidateInstancedMesh",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:b10928eda47b140488df41b123ec3a61bae65bb3d2f406261702facca1bcb369",
-            "line": 192,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",8183]",
-            "kind": "function",
-            "name": "isInstancedMesh",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:12292c09b7ec9ef80c225a320b3a995816c9c9e59ca17c81534fdbfa14240cc0",
-            "line": 206,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",8750]",
-            "kind": "function",
-            "name": "iterateInstancedMeshInstances",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:2ab0a9cdf05a34e9cc7c1fa533a0a0b6dc74d05d540d5ef66c93415c20059d2e",
-            "line": 219,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",9359]",
-            "kind": "function",
-            "name": "removeInstancedMeshInstance",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:6d9854eaaf1ea24fc50c10c3e685e0a5274568b86ab7d933354093cf5521e0ba",
-            "line": 238,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",10241]",
-            "kind": "function",
-            "name": "reserveInstancedMesh",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:58cbdabfc62bb2282906e9ca16da6a6ceaf285d649e691574f98b1f8983a15a2",
-            "line": 256,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",11094]",
-            "kind": "function",
-            "name": "setInstancedMeshInstanceColor",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:30932ca8aec70de3202ae6a4835b00e260dab82798d123ba7948942572077888",
-            "line": 273,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",11862]",
-            "kind": "function",
-            "name": "setInstancedMeshInstanceCount",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:bdb4d4f9e5fbd5801a0c087890aceb583359489a03506c75d41e4a9f7085543e",
-            "line": 286,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",12446]",
-            "kind": "function",
-            "name": "setInstancedMeshInstanceMatrix",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:ebd12b151913f7ae055ae0ebc4aeb85ded95a398f4c92d097a7e12bb1d4f6a86",
-            "line": 299,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",13171]",
-            "kind": "function",
-            "name": "setInstancedMeshInstanceMatrixRange",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "temporal-until-evaluation",
-          "binding": {
-            "column": 7,
-            "fingerprint": "sha256:56651cad2e34bd4e46273c52344a1ad30ff7d3860ac60ea34c759de02dadc998",
-            "line": 315,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",13685]",
-            "kind": "variable",
-            "name": "DEFAULT_CAPACITY",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "evaluation",
-            "step": 0
-          },
-          "kind": "local",
-          "mutation": "immutable"
-        },
-        {
-          "access": "temporal-until-evaluation",
-          "binding": {
-            "column": 7,
-            "fingerprint": "sha256:00972f37f763d37f5ff1ad3493259b2091796af7066688c08dc9d467d6a2d9a7",
-            "line": 317,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",13715]",
-            "kind": "variable",
-            "name": "_scratchInstanceBounds",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "evaluation",
-            "step": 1
-          },
-          "kind": "local",
-          "mutation": "immutable"
-        }
-      ],
-      "dependencies": [
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "InstancedMesh",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts"
-          },
-          "specifier": "./sceneNode",
-          "target": {
-            "name": "SceneNode",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNode.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "InstancedMesh",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts"
-          },
-          "specifier": "@flighthq/entity/contract",
-          "target": {
-            "name": "Entity",
-            "packageName": "@flighthq/entity",
-            "source": "packages/entity/src/entity.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "InstancedMesh",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts"
-          },
-          "importedNames": [
-            "createAabb",
-            "transformAabbByMatrix4",
-            "unionAabb"
-          ],
-          "specifier": "@flighthq/geometry/contract",
-          "target": {
-            "name": "Aabb",
-            "packageName": "@flighthq/geometry",
-            "source": "packages/geometry/src/aabb.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "InstancedMesh",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts"
-          },
-          "importedNames": [
-            "copyMatrix4",
-            "createMatrix4"
-          ],
-          "specifier": "@flighthq/geometry/contract",
-          "target": {
-            "name": "Matrix4",
-            "packageName": "@flighthq/geometry",
-            "source": "packages/geometry/src/matrix4.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "InstancedMesh",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts"
-          },
-          "specifier": "@flighthq/mesh/contract",
-          "target": {
-            "name": "MeshGeometryCompute",
-            "packageName": "@flighthq/mesh",
-            "source": "packages/mesh/src/meshGeometryCompute.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "InstancedMesh",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts"
-          },
-          "specifier": "@flighthq/signals/contract",
-          "target": {
-            "name": "Signal",
-            "packageName": "@flighthq/signals",
-            "source": "packages/signals/src/signal.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "InstancedMesh",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/instancedMesh.ts"
-          },
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Contract",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/contract.ts"
-          }
-        }
-      ],
-      "module": {
-        "name": "InstancedMesh",
-        "packageName": "@flighthq/scene3d",
-        "source": "packages/scene3d/src/instancedMesh.ts"
-      },
-      "steps": [
-        {
-          "action": "initialize",
-          "bindings": [
-            {
-              "column": 7,
-              "fingerprint": "sha256:56651cad2e34bd4e46273c52344a1ad30ff7d3860ac60ea34c759de02dadc998",
-              "line": 315,
-              "packageName": "@flighthq/scene3d",
-              "source": "packages/scene3d/src/instancedMesh.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",13685]",
-              "kind": "variable",
-              "name": "DEFAULT_CAPACITY",
-              "scope": "module",
-              "space": "value"
-            }
-          ],
-          "completion": "abrupt-stops-module-evaluation",
-          "declaration": "variable",
-          "path": [
-            "declarations",
-            22
-          ]
-        },
-        {
-          "action": "initialize",
-          "bindings": [
-            {
-              "column": 7,
-              "fingerprint": "sha256:00972f37f763d37f5ff1ad3493259b2091796af7066688c08dc9d467d6a2d9a7",
-              "line": 317,
-              "packageName": "@flighthq/scene3d",
-              "source": "packages/scene3d/src/instancedMesh.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/instancedMesh.ts\",13715]",
-              "kind": "variable",
-              "name": "_scratchInstanceBounds",
-              "scope": "module",
-              "space": "value"
-            }
-          ],
-          "completion": "abrupt-stops-module-evaluation",
-          "declaration": "variable",
-          "path": [
-            "declarations",
-            23
-          ]
-        }
-      ]
-    },
-    {
-      "bindings": [
-        {
           "access": "temporal-until-evaluation",
           "binding": {
             "column": 14,
@@ -216004,696 +214527,6 @@
         "name": "MergeDomRenderOptions",
         "packageName": "@flighthq/scene2d-dom",
         "source": "packages/scene2d-dom/src/mergeDomRenderOptions.ts"
-      },
-      "steps": []
-    },
-    {
-      "bindings": [
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:e9ce4fe9ad3c23a3f0889179feb11934787ad8bffe34d8e664c93d3a2d1d5b46",
-            "line": 1,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/mesh.ts\",9]",
-            "kind": "import",
-            "name": "allocateEntity",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "allocateEntity",
-            "kind": "dependency",
-            "module": {
-              "name": "Entity",
-              "packageName": "@flighthq/entity",
-              "source": "packages/entity/src/entity.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 26,
-            "fingerprint": "sha256:6d44af5ed0291e503b1e8c6ad198418f00e8a69d87b3a54acc4dc7ca7f7484d1",
-            "line": 1,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/mesh.ts\",25]",
-            "kind": "import",
-            "name": "finishEntity",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "finishEntity",
-            "kind": "dependency",
-            "module": {
-              "name": "Entity",
-              "packageName": "@flighthq/entity",
-              "source": "packages/entity/src/entity.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:73463de3aef3acb87aca52e6299512527a08420bc825c4904f42ab95579f52f9",
-            "line": 2,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/mesh.ts\",83]",
-            "kind": "import",
-            "name": "cloneMeshGeometryForDeformation",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "cloneMeshGeometryForDeformation",
-            "kind": "dependency",
-            "module": {
-              "name": "MeshGeometryDeformationClone",
-              "packageName": "@flighthq/mesh",
-              "source": "packages/mesh/src/meshGeometryDeformationClone.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 3,
-            "fingerprint": "sha256:0a83787834fc5aa7aa7217e3f8b4a51e3da3d1fa38bf18a70ce4f8181e45394d",
-            "line": 4,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/mesh.ts\",160]",
-            "kind": "import",
-            "name": "enableNodeSignals",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "enableNodeSignals",
-            "kind": "dependency",
-            "module": {
-              "name": "Node",
-              "packageName": "@flighthq/node",
-              "source": "packages/node/src/node.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 3,
-            "fingerprint": "sha256:06441a24dadbf833b902a2e92da8c304c8149b64325a828eb9b41304f590e826",
-            "line": 5,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/mesh.ts\",181]",
-            "kind": "import",
-            "name": "getNodeLocalMatrix4",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "getNodeLocalMatrix4",
-            "kind": "dependency",
-            "module": {
-              "name": "NodeTransform3d",
-              "packageName": "@flighthq/node",
-              "source": "packages/node/src/nodeTransform3d.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 3,
-            "fingerprint": "sha256:de5d36bca5761da08eadf4941029a2fab3afcb1b8b1ab21a7cfb601d6510a22e",
-            "line": 6,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/mesh.ts\",204]",
-            "kind": "import",
-            "name": "getNodeSignals",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "getNodeSignals",
-            "kind": "dependency",
-            "module": {
-              "name": "Node",
-              "packageName": "@flighthq/node",
-              "source": "packages/node/src/node.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 3,
-            "fingerprint": "sha256:c612849a76939f6eb17088bb5895feba4dcf69d79dcee99ad084e5963a963b23",
-            "line": 7,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/mesh.ts\",222]",
-            "kind": "import",
-            "name": "isNodeLocalMatrix4Detached",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "isNodeLocalMatrix4Detached",
-            "kind": "dependency",
-            "module": {
-              "name": "NodeTransform3d",
-              "packageName": "@flighthq/node",
-              "source": "packages/node/src/nodeTransform3d.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 3,
-            "fingerprint": "sha256:12e677103243be2d96611ea044afe6c9e9331efacb2f465e074ff67da91b474e",
-            "line": 8,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/mesh.ts\",252]",
-            "kind": "import",
-            "name": "setNodeLocalMatrix4",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "setNodeLocalMatrix4",
-            "kind": "dependency",
-            "module": {
-              "name": "NodeTransform3d",
-              "packageName": "@flighthq/node",
-              "source": "packages/node/src/nodeTransform3d.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 3,
-            "fingerprint": "sha256:537e13ee9d93cdb371edbfdeb04a61bb58bc13951e93aa541598b4a8731b454f",
-            "line": 9,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/mesh.ts\",275]",
-            "kind": "import",
-            "name": "setNodeTransform3D",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "setNodeTransform3D",
-            "kind": "dependency",
-            "module": {
-              "name": "NodeTransform3d",
-              "packageName": "@flighthq/node",
-              "source": "packages/node/src/nodeTransform3d.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 3,
-            "fingerprint": "sha256:8dbd9a7a5a2bbacbe8a8f1b2c515bdfce0b4062e3b92fcac4e71e01f6dd140a3",
-            "line": 22,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/mesh.ts\",494]",
-            "kind": "import",
-            "name": "EntityRuntimeKey",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "EntityRuntimeKey",
-            "kind": "dependency",
-            "module": {
-              "name": "Contract",
-              "packageName": "@flighthq/types",
-              "source": "packages/types/src/contract.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 3,
-            "fingerprint": "sha256:2e420edb586a1c255157496331f48bd6a338808f4a837a589043361378e58eb8",
-            "line": 23,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/mesh.ts\",514]",
-            "kind": "import",
-            "name": "MeshDeformerMorph",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "MeshDeformerMorph",
-            "kind": "dependency",
-            "module": {
-              "name": "Contract",
-              "packageName": "@flighthq/types",
-              "source": "packages/types/src/contract.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 3,
-            "fingerprint": "sha256:ee90e60553f4841cbee0399fc6c0fa497754a0bd9ecd6e4866948413b4879777",
-            "line": 24,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/mesh.ts\",535]",
-            "kind": "import",
-            "name": "MeshDeformerNone",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "MeshDeformerNone",
-            "kind": "dependency",
-            "module": {
-              "name": "Contract",
-              "packageName": "@flighthq/types",
-              "source": "packages/types/src/contract.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 3,
-            "fingerprint": "sha256:137e7112db0ac76f9bf8652719ad19ec318b57b8c0615680618a3003740e4f6e",
-            "line": 25,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/mesh.ts\",555]",
-            "kind": "import",
-            "name": "MeshDeformerSkeletal",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "MeshDeformerSkeletal",
-            "kind": "dependency",
-            "module": {
-              "name": "Contract",
-              "packageName": "@flighthq/types",
-              "source": "packages/types/src/contract.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 3,
-            "fingerprint": "sha256:1d8e1781a1529b496c361965799ccaace1b96edcfa9dce0679a6333561ff8644",
-            "line": 26,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/mesh.ts\",579]",
-            "kind": "import",
-            "name": "MeshKind",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "MeshKind",
-            "kind": "dependency",
-            "module": {
-              "name": "Contract",
-              "packageName": "@flighthq/types",
-              "source": "packages/types/src/contract.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:264acf56c6228bd7865e419ba7c638237448db885295d94ac059b7fa47fdf326",
-            "line": 29,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/mesh.ts\",634]",
-            "kind": "import",
-            "name": "createNode3DRuntime",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "createNode3DRuntime",
-            "kind": "dependency",
-            "module": {
-              "name": "SceneNode",
-              "packageName": "@flighthq/scene3d",
-              "source": "packages/scene3d/src/sceneNode.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 31,
-            "fingerprint": "sha256:6ac7ab5a71a1d5a24873a90f7954927ebbc6fd663c944dfef04422b9979abb9c",
-            "line": 29,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/mesh.ts\",655]",
-            "kind": "import",
-            "name": "initializeNode3D",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "initializeNode3D",
-            "kind": "dependency",
-            "module": {
-              "name": "SceneNode",
-              "packageName": "@flighthq/scene3d",
-              "source": "packages/scene3d/src/sceneNode.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:1e8435eb1f2cff150452ba5b8d3828bd6858dd1d4c5678cdaabe12b85d31a411",
-            "line": 43,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/mesh.ts\",1640]",
-            "kind": "function",
-            "name": "cloneMesh",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:6bb1328d887c60937535105c07adfa6d63be4ffcdd5b16bedb5ae3d0f5da539c",
-            "line": 66,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/mesh.ts\",2941]",
-            "kind": "function",
-            "name": "createMesh",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:775623eb8b80dcb41de69e96131895af87d11258007fa7cce57494de799bfba2",
-            "line": 79,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/mesh.ts\",3337]",
-            "kind": "function",
-            "name": "createMeshRuntime",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:d0a3459c3aee9fcb091f4a743a6920d1b89c81db6b3309f67d55260a2a6ad771",
-            "line": 84,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/mesh.ts\",3462]",
-            "kind": "function",
-            "name": "enableMeshSignals",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:af7776bd24a43c71f1770268c3c384e88fd65631d8efa47d90789fc6ead93b9e",
-            "line": 94,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/mesh.ts\",4161]",
-            "kind": "function",
-            "name": "getMeshDeformer",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:e144ffa01cef0c063cdd98fa8eb0cd219fe195633a7a07012bb82478f661b14d",
-            "line": 100,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/mesh.ts\",4373]",
-            "kind": "function",
-            "name": "getMeshRuntime",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:4644fabad8a553268952593253c432f6deb19178534b9035ab8b9a36883226b6",
-            "line": 104,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/mesh.ts\",4482]",
-            "kind": "function",
-            "name": "getMeshSignals",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:b7293d35544aeffbd6e94d9473f7e0d49897580dc6e89ee1ae49d455b02bec60",
-            "line": 111,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/mesh.ts\",4819]",
-            "kind": "function",
-            "name": "isMesh",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        }
-      ],
-      "dependencies": [
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "Mesh",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts"
-          },
-          "specifier": "./sceneNode",
-          "target": {
-            "name": "SceneNode",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNode.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "Mesh",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts"
-          },
-          "specifier": "@flighthq/entity/contract",
-          "target": {
-            "name": "Entity",
-            "packageName": "@flighthq/entity",
-            "source": "packages/entity/src/entity.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "Mesh",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts"
-          },
-          "specifier": "@flighthq/mesh/contract",
-          "target": {
-            "name": "MeshGeometryDeformationClone",
-            "packageName": "@flighthq/mesh",
-            "source": "packages/mesh/src/meshGeometryDeformationClone.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "Mesh",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts"
-          },
-          "importedNames": [
-            "enableNodeSignals",
-            "getNodeSignals"
-          ],
-          "specifier": "@flighthq/node/contract",
-          "target": {
-            "name": "Node",
-            "packageName": "@flighthq/node",
-            "source": "packages/node/src/node.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "Mesh",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts"
-          },
-          "importedNames": [
-            "getNodeLocalMatrix4",
-            "isNodeLocalMatrix4Detached",
-            "setNodeLocalMatrix4",
-            "setNodeTransform3D"
-          ],
-          "specifier": "@flighthq/node/contract",
-          "target": {
-            "name": "NodeTransform3d",
-            "packageName": "@flighthq/node",
-            "source": "packages/node/src/nodeTransform3d.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "Mesh",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/mesh.ts"
-          },
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Contract",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/contract.ts"
-          }
-        }
-      ],
-      "module": {
-        "name": "Mesh",
-        "packageName": "@flighthq/scene3d",
-        "source": "packages/scene3d/src/mesh.ts"
       },
       "steps": []
     },
@@ -258122,154 +255955,6 @@
       "steps": []
     },
     {
-      "bindings": [
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:beeb82011427ba0d7609a82ead7698b7b5e8f57828a5c2d76ecefc709419c45d",
-            "line": 1,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/prepareScene3DMorph.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/prepareScene3DMorph.ts\",9]",
-            "kind": "import",
-            "name": "updateMeshMorph",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "updateMeshMorph",
-            "kind": "dependency",
-            "module": {
-              "name": "UpdateMeshMorph",
-              "packageName": "@flighthq/mesh",
-              "source": "packages/mesh/src/updateMeshMorph.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:7f408dbe0b75b5b461040d5c4669763068309d6ae811786b9fae292bc222b751",
-            "line": 2,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/prepareScene3DMorph.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/prepareScene3DMorph.ts\",68]",
-            "kind": "import",
-            "name": "getNodeRuntime",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "getNodeRuntime",
-            "kind": "dependency",
-            "module": {
-              "name": "Node",
-              "packageName": "@flighthq/node",
-              "source": "packages/node/src/node.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:a40d8fe203fde823bc5967441aefa0137e2a77f4014a6d026b82fedc5dfbee69",
-            "line": 21,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/prepareScene3DMorph.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/prepareScene3DMorph.ts\",1613]",
-            "kind": "function",
-            "name": "prepareScene3DMorph",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:3a33788a7940b94f4522a65c71ff49b502e75c60967cc97548ba95e8b38de542",
-            "line": 36,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/prepareScene3DMorph.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/prepareScene3DMorph.ts\",2091]",
-            "kind": "function",
-            "name": "isSceneMorphMesh",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        }
-      ],
-      "dependencies": [
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "PrepareScene3DMorph",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/prepareScene3DMorph.ts"
-          },
-          "specifier": "@flighthq/mesh/contract",
-          "target": {
-            "name": "UpdateMeshMorph",
-            "packageName": "@flighthq/mesh",
-            "source": "packages/mesh/src/updateMeshMorph.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "PrepareScene3DMorph",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/prepareScene3DMorph.ts"
-          },
-          "specifier": "@flighthq/node/contract",
-          "target": {
-            "name": "Node",
-            "packageName": "@flighthq/node",
-            "source": "packages/node/src/node.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "PrepareScene3DMorph",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/prepareScene3DMorph.ts"
-          },
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Contract",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/contract.ts"
-          }
-        }
-      ],
-      "module": {
-        "name": "PrepareScene3DMorph",
-        "packageName": "@flighthq/scene3d",
-        "source": "packages/scene3d/src/prepareScene3DMorph.ts"
-      },
-      "steps": []
-    },
-    {
       "bindings": [],
       "dependencies": [
         {
@@ -278346,7 +276031,7 @@
             "line": 9,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/scene.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/scene.ts\",362]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/scene.ts\",365]",
             "kind": "function",
             "name": "createScene3D",
             "scope": "module",
@@ -278367,7 +276052,7 @@
             "line": 18,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/scene.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/scene.ts\",878]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/scene.ts\",881]",
             "kind": "function",
             "name": "initializeScene3D",
             "scope": "module",
@@ -278389,7 +276074,7 @@
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/scene.ts"
           },
-          "specifier": "./sceneNode",
+          "specifier": "./sceneNode.ts",
           "target": {
             "name": "SceneNode",
             "packageName": "@flighthq/scene3d",
@@ -284956,7 +282641,7 @@
             "line": 11,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/sceneMaterial.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneMaterial.ts\",798]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneMaterial.ts\",800]",
             "kind": "function",
             "name": "findScene3DMaterialByName",
             "scope": "module",
@@ -284977,7 +282662,7 @@
             "line": 30,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/sceneMaterial.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneMaterial.ts\",1810]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneMaterial.ts\",1816]",
             "kind": "function",
             "name": "getScene3DMaterials",
             "scope": "module",
@@ -284998,7 +282683,7 @@
             "line": 37,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/sceneMaterial.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneMaterial.ts\",2171]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneMaterial.ts\",2179]",
             "kind": "function",
             "name": "collectNodeMaterials",
             "scope": "module",
@@ -285019,7 +282704,7 @@
             "line": 48,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/sceneMaterial.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneMaterial.ts\",2723]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneMaterial.ts\",2733]",
             "kind": "function",
             "name": "getNamedNodeMaterial",
             "scope": "module",
@@ -285738,7 +283423,7 @@
             "line": 10,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/sceneNodeAppearance.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeAppearance.ts\",641]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeAppearance.ts\",644]",
             "kind": "function",
             "name": "ensureNode3DWorldAlpha",
             "scope": "module",
@@ -285759,7 +283444,7 @@
             "line": 43,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/sceneNodeAppearance.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeAppearance.ts\",2305]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeAppearance.ts\",2308]",
             "kind": "function",
             "name": "getNode3DWorldAlpha",
             "scope": "module",
@@ -285780,7 +283465,7 @@
             "line": 51,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/sceneNodeAppearance.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeAppearance.ts\",2708]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeAppearance.ts\",2711]",
             "kind": "function",
             "name": "setNode3DAlpha",
             "scope": "module",
@@ -285801,7 +283486,7 @@
             "line": 58,
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/sceneNodeAppearance.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeAppearance.ts\",3027]",
+            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeAppearance.ts\",3030]",
             "kind": "variable",
             "name": "_worldAppearanceRevisionCounter",
             "scope": "module",
@@ -285823,7 +283508,7 @@
             "packageName": "@flighthq/scene3d",
             "source": "packages/scene3d/src/sceneNodeAppearance.ts"
           },
-          "specifier": "./sceneNode",
+          "specifier": "./sceneNode.ts",
           "target": {
             "name": "SceneNode",
             "packageName": "@flighthq/scene3d",
@@ -285874,7 +283559,7 @@
               "line": 58,
               "packageName": "@flighthq/scene3d",
               "source": "packages/scene3d/src/sceneNodeAppearance.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeAppearance.ts\",3027]",
+              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeAppearance.ts\",3030]",
               "kind": "variable",
               "name": "_worldAppearanceRevisionCounter",
               "scope": "module",
@@ -285886,903 +283571,6 @@
           "path": [
             "declarations",
             3
-          ]
-        }
-      ]
-    },
-    {
-      "bindings": [
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:c0735fd7577caab3ddb78a8a059bb4402ac116eab0ef978e91bb6890a01ebb27",
-            "line": 1,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeBounds.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeBounds.ts\",9]",
-            "kind": "import",
-            "name": "createAabb",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "createAabb",
-            "kind": "dependency",
-            "module": {
-              "name": "Aabb",
-              "packageName": "@flighthq/geometry",
-              "source": "packages/geometry/src/aabb.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 22,
-            "fingerprint": "sha256:7d7e555d43c7ddcce16aadc7e91092481edd2f88f31c22acda70769be017cdd3",
-            "line": 1,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeBounds.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeBounds.ts\",21]",
-            "kind": "import",
-            "name": "setAabb",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "setAabb",
-            "kind": "dependency",
-            "module": {
-              "name": "Aabb",
-              "packageName": "@flighthq/geometry",
-              "source": "packages/geometry/src/aabb.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 31,
-            "fingerprint": "sha256:351d6bb9dae73396a1130706229be5cd867574ee7aa6c643002b39f3ab27d8ad",
-            "line": 1,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeBounds.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeBounds.ts\",30]",
-            "kind": "import",
-            "name": "transformAabbByMatrix4",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "transformAabbByMatrix4",
-            "kind": "dependency",
-            "module": {
-              "name": "Aabb",
-              "packageName": "@flighthq/geometry",
-              "source": "packages/geometry/src/aabb.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 55,
-            "fingerprint": "sha256:420484013ea152277073392aafba7d6841b028065904a4d672e627627a18b5be",
-            "line": 1,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeBounds.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeBounds.ts\",54]",
-            "kind": "import",
-            "name": "unionAabb",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "unionAabb",
-            "kind": "dependency",
-            "module": {
-              "name": "Aabb",
-              "packageName": "@flighthq/geometry",
-              "source": "packages/geometry/src/aabb.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:2b92b392e3b0ed5b3d1af3a3367212a577c7f3dbd47b0fd89106a250e63235e1",
-            "line": 2,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeBounds.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeBounds.ts\",111]",
-            "kind": "import",
-            "name": "ensureMeshGeometryBounds",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "ensureMeshGeometryBounds",
-            "kind": "dependency",
-            "module": {
-              "name": "MeshGeometryCompute",
-              "packageName": "@flighthq/mesh",
-              "source": "packages/mesh/src/meshGeometryCompute.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:db4e593e3a816de3f1220089505351dbaa3141b30091af82a19e1999f5577436",
-            "line": 3,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeBounds.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeBounds.ts\",179]",
-            "kind": "import",
-            "name": "ensureNodeWorldMatrix4",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "ensureNodeWorldMatrix4",
-            "kind": "dependency",
-            "module": {
-              "name": "NodeTransform3d",
-              "packageName": "@flighthq/node",
-              "source": "packages/node/src/nodeTransform3d.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 34,
-            "fingerprint": "sha256:7f408dbe0b75b5b461040d5c4669763068309d6ae811786b9fae292bc222b751",
-            "line": 3,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeBounds.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeBounds.ts\",203]",
-            "kind": "import",
-            "name": "getNodeRuntime",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "getNodeRuntime",
-            "kind": "dependency",
-            "module": {
-              "name": "Node",
-              "packageName": "@flighthq/node",
-              "source": "packages/node/src/node.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 50,
-            "fingerprint": "sha256:64bc1aeeb736c28fa4eef0863747953df0a689b03450d4a742b8945b43fdf07f",
-            "line": 3,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeBounds.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeBounds.ts\",219]",
-            "kind": "import",
-            "name": "getNodeWorldMatrix4",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "getNodeWorldMatrix4",
-            "kind": "dependency",
-            "module": {
-              "name": "NodeTransform3d",
-              "packageName": "@flighthq/node",
-              "source": "packages/node/src/nodeTransform3d.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:7372a0919e3c8cbb0e150f52a38b0b630f814bdd7802e4f0a62052e9a38702f7",
-            "line": 24,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeBounds.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeBounds.ts\",1811]",
-            "kind": "function",
-            "name": "getNode3DWorldBounds",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:f88de3201faf6546ec676fda470a14ae4533b586a0ce54a571d8c8663b771c16",
-            "line": 38,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeBounds.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeBounds.ts\",2174]",
-            "kind": "function",
-            "name": "_accumulateWorldBounds",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:a69cbbe8f4a5461c54005dd71a7a0390102ac1a468cb776fc0f9020b1a399e19",
-            "line": 59,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeBounds.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeBounds.ts\",3109]",
-            "kind": "function",
-            "name": "isSceneMesh",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "temporal-until-evaluation",
-          "binding": {
-            "column": 7,
-            "fingerprint": "sha256:f8c7693b91b585cee9437ddd7af932faacc58527bd60602eb0bf8afa49a2a801",
-            "line": 64,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeBounds.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeBounds.ts\",3282]",
-            "kind": "variable",
-            "name": "_scratchWorldAabb",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "evaluation",
-            "step": 0
-          },
-          "kind": "local",
-          "mutation": "immutable"
-        }
-      ],
-      "dependencies": [
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "SceneNodeBounds",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeBounds.ts"
-          },
-          "specifier": "@flighthq/geometry/contract",
-          "target": {
-            "name": "Aabb",
-            "packageName": "@flighthq/geometry",
-            "source": "packages/geometry/src/aabb.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "SceneNodeBounds",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeBounds.ts"
-          },
-          "specifier": "@flighthq/mesh/contract",
-          "target": {
-            "name": "MeshGeometryCompute",
-            "packageName": "@flighthq/mesh",
-            "source": "packages/mesh/src/meshGeometryCompute.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "SceneNodeBounds",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeBounds.ts"
-          },
-          "importedNames": [
-            "getNodeRuntime"
-          ],
-          "specifier": "@flighthq/node/contract",
-          "target": {
-            "name": "Node",
-            "packageName": "@flighthq/node",
-            "source": "packages/node/src/node.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "SceneNodeBounds",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeBounds.ts"
-          },
-          "importedNames": [
-            "ensureNodeWorldMatrix4",
-            "getNodeWorldMatrix4"
-          ],
-          "specifier": "@flighthq/node/contract",
-          "target": {
-            "name": "NodeTransform3d",
-            "packageName": "@flighthq/node",
-            "source": "packages/node/src/nodeTransform3d.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "SceneNodeBounds",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeBounds.ts"
-          },
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Contract",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/contract.ts"
-          }
-        }
-      ],
-      "module": {
-        "name": "SceneNodeBounds",
-        "packageName": "@flighthq/scene3d",
-        "source": "packages/scene3d/src/sceneNodeBounds.ts"
-      },
-      "steps": [
-        {
-          "action": "initialize",
-          "bindings": [
-            {
-              "column": 7,
-              "fingerprint": "sha256:f8c7693b91b585cee9437ddd7af932faacc58527bd60602eb0bf8afa49a2a801",
-              "line": 64,
-              "packageName": "@flighthq/scene3d",
-              "source": "packages/scene3d/src/sceneNodeBounds.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeBounds.ts\",3282]",
-              "kind": "variable",
-              "name": "_scratchWorldAabb",
-              "scope": "module",
-              "space": "value"
-            }
-          ],
-          "completion": "abrupt-stops-module-evaluation",
-          "declaration": "variable",
-          "path": [
-            "declarations",
-            3
-          ]
-        }
-      ]
-    },
-    {
-      "bindings": [
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 3,
-            "fingerprint": "sha256:c0735fd7577caab3ddb78a8a059bb4402ac116eab0ef978e91bb6890a01ebb27",
-            "line": 2,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeCulling.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeCulling.ts\",11]",
-            "kind": "import",
-            "name": "createAabb",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "createAabb",
-            "kind": "dependency",
-            "module": {
-              "name": "Aabb",
-              "packageName": "@flighthq/geometry",
-              "source": "packages/geometry/src/aabb.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 3,
-            "fingerprint": "sha256:5b99121fda08c1f1fdb4405d76152bfa5cb7155c76b7b404b5bff4b5b08ca7e3",
-            "line": 3,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeCulling.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeCulling.ts\",25]",
-            "kind": "import",
-            "name": "isFrustumIntersectingAabb",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "isFrustumIntersectingAabb",
-            "kind": "dependency",
-            "module": {
-              "name": "Frustum",
-              "packageName": "@flighthq/geometry",
-              "source": "packages/geometry/src/frustum.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 3,
-            "fingerprint": "sha256:b8d1b89f83f95dd82afa5cdfd72ca11c97827d3e3e230e906238f07dc27c3f7a",
-            "line": 4,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeCulling.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeCulling.ts\",54]",
-            "kind": "import",
-            "name": "setFrustumFromMatrix4",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "setFrustumFromMatrix4",
-            "kind": "dependency",
-            "module": {
-              "name": "Frustum",
-              "packageName": "@flighthq/geometry",
-              "source": "packages/geometry/src/frustum.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 3,
-            "fingerprint": "sha256:351d6bb9dae73396a1130706229be5cd867574ee7aa6c643002b39f3ab27d8ad",
-            "line": 5,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeCulling.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeCulling.ts\",79]",
-            "kind": "import",
-            "name": "transformAabbByMatrix4",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "transformAabbByMatrix4",
-            "kind": "dependency",
-            "module": {
-              "name": "Aabb",
-              "packageName": "@flighthq/geometry",
-              "source": "packages/geometry/src/aabb.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:4a035fdc771aafaece2b0e8e83b271883e9220a522bdb9a3d4695086c45908d2",
-            "line": 7,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeCulling.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeCulling.ts\",150]",
-            "kind": "import",
-            "name": "computeMeshGeometryBounds",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "computeMeshGeometryBounds",
-            "kind": "dependency",
-            "module": {
-              "name": "MeshGeometryCompute",
-              "packageName": "@flighthq/mesh",
-              "source": "packages/mesh/src/meshGeometryCompute.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:db4e593e3a816de3f1220089505351dbaa3141b30091af82a19e1999f5577436",
-            "line": 8,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeCulling.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeCulling.ts\",219]",
-            "kind": "import",
-            "name": "ensureNodeWorldMatrix4",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "ensureNodeWorldMatrix4",
-            "kind": "dependency",
-            "module": {
-              "name": "NodeTransform3d",
-              "packageName": "@flighthq/node",
-              "source": "packages/node/src/nodeTransform3d.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 34,
-            "fingerprint": "sha256:7f408dbe0b75b5b461040d5c4669763068309d6ae811786b9fae292bc222b751",
-            "line": 8,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeCulling.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeCulling.ts\",243]",
-            "kind": "import",
-            "name": "getNodeRuntime",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "getNodeRuntime",
-            "kind": "dependency",
-            "module": {
-              "name": "Node",
-              "packageName": "@flighthq/node",
-              "source": "packages/node/src/node.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 50,
-            "fingerprint": "sha256:64bc1aeeb736c28fa4eef0863747953df0a689b03450d4a742b8945b43fdf07f",
-            "line": 8,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeCulling.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeCulling.ts\",259]",
-            "kind": "import",
-            "name": "getNodeWorldMatrix4",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "getNodeWorldMatrix4",
-            "kind": "dependency",
-            "module": {
-              "name": "NodeTransform3d",
-              "packageName": "@flighthq/node",
-              "source": "packages/node/src/nodeTransform3d.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:6fd04a59c270a622e54dba5150806ebc24ba515b640562db30c9933f6ba736ed",
-            "line": 19,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeCulling.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeCulling.ts\",1077]",
-            "kind": "function",
-            "name": "buildScene3DFrustum",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:1558f180d5f4cc2a00e4b93cebcb4a9d5a21e293e716ef6712141e47478d5ae2",
-            "line": 34,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeCulling.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeCulling.ts\",1995]",
-            "kind": "function",
-            "name": "cullNode3DByFrustum",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:59543a0ee7c0282df266c63f452d7bfc9de2e3311464ab4f98d137643c4b4387",
-            "line": 39,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeCulling.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeCulling.ts\",2157]",
-            "kind": "function",
-            "name": "_cullNode",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:a69cbbe8f4a5461c54005dd71a7a0390102ac1a468cb776fc0f9020b1a399e19",
-            "line": 72,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeCulling.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeCulling.ts\",3275]",
-            "kind": "function",
-            "name": "isSceneMesh",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "temporal-until-evaluation",
-          "binding": {
-            "column": 7,
-            "fingerprint": "sha256:d397b327217b9427104c04b1ce985a083cdd64e82f8a559cb0c4d52e50902ce8",
-            "line": 77,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeCulling.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeCulling.ts\",3448]",
-            "kind": "variable",
-            "name": "_scratchLocalAabb",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "evaluation",
-            "step": 0
-          },
-          "kind": "local",
-          "mutation": "immutable"
-        },
-        {
-          "access": "temporal-until-evaluation",
-          "binding": {
-            "column": 7,
-            "fingerprint": "sha256:f8c7693b91b585cee9437ddd7af932faacc58527bd60602eb0bf8afa49a2a801",
-            "line": 78,
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeCulling.ts",
-            "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeCulling.ts\",3488]",
-            "kind": "variable",
-            "name": "_scratchWorldAabb",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "evaluation",
-            "step": 1
-          },
-          "kind": "local",
-          "mutation": "immutable"
-        }
-      ],
-      "dependencies": [
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "SceneNodeCulling",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeCulling.ts"
-          },
-          "importedNames": [
-            "createAabb",
-            "transformAabbByMatrix4"
-          ],
-          "specifier": "@flighthq/geometry/contract",
-          "target": {
-            "name": "Aabb",
-            "packageName": "@flighthq/geometry",
-            "source": "packages/geometry/src/aabb.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "SceneNodeCulling",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeCulling.ts"
-          },
-          "importedNames": [
-            "isFrustumIntersectingAabb",
-            "setFrustumFromMatrix4"
-          ],
-          "specifier": "@flighthq/geometry/contract",
-          "target": {
-            "name": "Frustum",
-            "packageName": "@flighthq/geometry",
-            "source": "packages/geometry/src/frustum.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "SceneNodeCulling",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeCulling.ts"
-          },
-          "specifier": "@flighthq/mesh/contract",
-          "target": {
-            "name": "MeshGeometryCompute",
-            "packageName": "@flighthq/mesh",
-            "source": "packages/mesh/src/meshGeometryCompute.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "SceneNodeCulling",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeCulling.ts"
-          },
-          "importedNames": [
-            "getNodeRuntime"
-          ],
-          "specifier": "@flighthq/node/contract",
-          "target": {
-            "name": "Node",
-            "packageName": "@flighthq/node",
-            "source": "packages/node/src/node.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "SceneNodeCulling",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeCulling.ts"
-          },
-          "importedNames": [
-            "ensureNodeWorldMatrix4",
-            "getNodeWorldMatrix4"
-          ],
-          "specifier": "@flighthq/node/contract",
-          "target": {
-            "name": "NodeTransform3d",
-            "packageName": "@flighthq/node",
-            "source": "packages/node/src/nodeTransform3d.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "SceneNodeCulling",
-            "packageName": "@flighthq/scene3d",
-            "source": "packages/scene3d/src/sceneNodeCulling.ts"
-          },
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Contract",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/contract.ts"
-          }
-        }
-      ],
-      "module": {
-        "name": "SceneNodeCulling",
-        "packageName": "@flighthq/scene3d",
-        "source": "packages/scene3d/src/sceneNodeCulling.ts"
-      },
-      "steps": [
-        {
-          "action": "initialize",
-          "bindings": [
-            {
-              "column": 7,
-              "fingerprint": "sha256:d397b327217b9427104c04b1ce985a083cdd64e82f8a559cb0c4d52e50902ce8",
-              "line": 77,
-              "packageName": "@flighthq/scene3d",
-              "source": "packages/scene3d/src/sceneNodeCulling.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeCulling.ts\",3448]",
-              "kind": "variable",
-              "name": "_scratchLocalAabb",
-              "scope": "module",
-              "space": "value"
-            }
-          ],
-          "completion": "abrupt-stops-module-evaluation",
-          "declaration": "variable",
-          "path": [
-            "declarations",
-            4
-          ]
-        },
-        {
-          "action": "initialize",
-          "bindings": [
-            {
-              "column": 7,
-              "fingerprint": "sha256:f8c7693b91b585cee9437ddd7af932faacc58527bd60602eb0bf8afa49a2a801",
-              "line": 78,
-              "packageName": "@flighthq/scene3d",
-              "source": "packages/scene3d/src/sceneNodeCulling.ts",
-              "id": "binding:[\"@flighthq/scene3d\",\"packages/scene3d/src/sceneNodeCulling.ts\",3488]",
-              "kind": "variable",
-              "name": "_scratchWorldAabb",
-              "scope": "module",
-              "space": "value"
-            }
-          ],
-          "completion": "abrupt-stops-module-evaluation",
-          "declaration": "variable",
-          "path": [
-            "declarations",
-            5
           ]
         }
       ]

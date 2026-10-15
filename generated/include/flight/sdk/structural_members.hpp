@@ -1327,6 +1327,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("nPointsStream") && requires { object.n_points_stream; }) return (object.n_points_stream);
   else if constexpr (Key::name.view() == std::string_view("name") && requires { object.name; }) return (object.name);
   else if constexpr (Key::name.view() == std::string_view("namePrefix") && requires { object.name_prefix; }) return (object.name_prefix);
+  else if constexpr (Key::name.view() == std::string_view("names") && requires { object.names; }) return (object.names);
   else if constexpr (Key::name.view() == std::string_view("near") && requires { object.near; }) return (object.near);
   else if constexpr (Key::name.view() == std::string_view("nearClipPlane") && requires { object.near_clip_plane; }) return (object.near_clip_plane);
   else if constexpr (Key::name.view() == std::string_view("net") && requires { object.net; }) return (object.net);
@@ -3700,6 +3701,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("nPointsStream") && requires(Object& object) { object.n_points_stream; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().n_points_stream)>>{};
   else if constexpr (Key::name.view() == std::string_view("name") && requires(Object& object) { object.name; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().name)>>{};
   else if constexpr (Key::name.view() == std::string_view("namePrefix") && requires(Object& object) { object.name_prefix; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().name_prefix)>>{};
+  else if constexpr (Key::name.view() == std::string_view("names") && requires(Object& object) { object.names; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().names)>>{};
   else if constexpr (Key::name.view() == std::string_view("near") && requires(Object& object) { object.near; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().near)>>{};
   else if constexpr (Key::name.view() == std::string_view("nearClipPlane") && requires(Object& object) { object.near_clip_plane; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().near_clip_plane)>>{};
   else if constexpr (Key::name.view() == std::string_view("net") && requires(Object& object) { object.net; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().net)>>{};
@@ -6076,6 +6078,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->n_points_stream; }) owner.bind_named("nPointsStream", [object]() -> decltype(auto) { return (object->n_points_stream); });
   if constexpr (requires { object->name; }) owner.bind_named("name", [object]() -> decltype(auto) { return (object->name); });
   if constexpr (requires { object->name_prefix; }) owner.bind_named("namePrefix", [object]() -> decltype(auto) { return (object->name_prefix); });
+  if constexpr (requires { object->names; }) owner.bind_named("names", [object]() -> decltype(auto) { return (object->names); });
   if constexpr (requires { object->near; }) owner.bind_named("near", [object]() -> decltype(auto) { return (object->near); });
   if constexpr (requires { object->near_clip_plane; }) owner.bind_named("nearClipPlane", [object]() -> decltype(auto) { return (object->near_clip_plane); });
   if constexpr (requires { object->net; }) owner.bind_named("net", [object]() -> decltype(auto) { return (object->net); });
@@ -8486,6 +8489,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(n_points_stream)
   FLIGHT_SDK_ROW_WIDENS(name)
   FLIGHT_SDK_ROW_WIDENS(name_prefix)
+  FLIGHT_SDK_ROW_WIDENS(names)
   FLIGHT_SDK_ROW_WIDENS(near)
   FLIGHT_SDK_ROW_WIDENS(near_clip_plane)
   FLIGHT_SDK_ROW_WIDENS(net)

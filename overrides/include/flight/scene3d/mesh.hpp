@@ -12,7 +12,7 @@
 #include <flight/scene3d/scene_node.hpp>
 #include <flight/structural_ref.hpp>
 #include <flight/types/material.hpp>
-#include <flight/types/material_value.hpp>
+#include <flight/types/material3_dvalue.hpp>
 #include <flight/types/mesh.hpp>
 #include <flight/types/mesh_deformer.hpp>
 #include <flight/types/node_signals.hpp>
@@ -38,7 +38,7 @@ inline flight::Ref<flight::types::MeshRuntime> create_mesh_runtime() {
 
 inline flight::Ref<flight::types::Mesh> create_mesh(
     flight::Ref<flight::types::MeshGeometry> geometry,
-    flight::Array<std::optional<flight::types::MaterialValue>> materials,
+    flight::Array<std::optional<flight::types::Material3DValue>> materials,
     std::optional<flight::String> kind = std::nullopt,
     std::optional<flight::Ref<enabled_name_f1abece853ac935c>> options =
         std::nullopt) {

@@ -14051,8 +14051,7 @@
     {
       "consumers": [
         "@flighthq/materials/packages/materials/src/contract.ts",
-        "@flighthq/materials/packages/materials/src/material3d.ts",
-        "@flighthq/scene3d/packages/scene3d/src/sceneDocument.ts"
+        "@flighthq/materials/packages/materials/src/material3d.ts"
       ],
       "module": {
         "name": "Material",
@@ -14069,7 +14068,8 @@
         "@flighthq/materials/packages/materials/src/customShaderMaterial.ts",
         "@flighthq/materials/packages/materials/src/extendedPbrMaterial.ts",
         "@flighthq/materials/packages/materials/src/pbrMaterials.ts",
-        "@flighthq/materials/packages/materials/src/unlitMaterials.ts"
+        "@flighthq/materials/packages/materials/src/unlitMaterials.ts",
+        "@flighthq/scene3d/packages/scene3d/src/sceneDocument.ts"
       ],
       "module": {
         "name": "Material3d",
@@ -28884,7 +28884,8 @@
     {
       "consumers": [
         "@flighthq/scene3d/packages/scene3d/src/billboardCamera.ts",
-        "@flighthq/scene3d/packages/scene3d/src/contract.ts"
+        "@flighthq/scene3d/packages/scene3d/src/contract.ts",
+        "@flighthq/scene3d/packages/scene3d/src/index.ts"
       ],
       "module": {
         "name": "Billboard",
@@ -28897,7 +28898,8 @@
     {
       "consumers": [
         "@flighthq/scene3d/packages/scene3d/src/contract.ts",
-        "@flighthq/scene3d/packages/scene3d/src/enableScene3DGuards.ts"
+        "@flighthq/scene3d/packages/scene3d/src/enableScene3DGuards.ts",
+        "@flighthq/scene3d/packages/scene3d/src/index.ts"
       ],
       "module": {
         "name": "BillboardCamera",
@@ -28909,7 +28911,8 @@
     },
     {
       "consumers": [
-        "@flighthq/scene3d/packages/scene3d/src/contract.ts"
+        "@flighthq/scene3d/packages/scene3d/src/contract.ts",
+        "@flighthq/scene3d/packages/scene3d/src/index.ts"
       ],
       "module": {
         "name": "CloneNode3DSubtree",
@@ -28917,12 +28920,13 @@
         "source": "packages/scene3d/src/cloneNode3DSubtree.ts"
       },
       "path": "flight/scene3d/clone_node3_dsubtree.hpp",
-      "status": "emitted"
+      "refusedDependencies": [
+        "@flighthq/scene3d/packages/scene3d/src/mesh.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
-      "consumers": [
-        "@flighthq/scene3d/packages/scene3d/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/scene3d",
@@ -28930,15 +28934,22 @@
       },
       "path": "flight/scene3d/contract.hpp",
       "refusedDependencies": [
+        "@flighthq/scene3d/packages/scene3d/src/cloneNode3DSubtree.ts",
         "@flighthq/scene3d/packages/scene3d/src/enableScene3DGuards.ts",
+        "@flighthq/scene3d/packages/scene3d/src/instancedMesh.ts",
+        "@flighthq/scene3d/packages/scene3d/src/mesh.ts",
+        "@flighthq/scene3d/packages/scene3d/src/prepareScene3DMorph.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneAnimation.ts",
-        "@flighthq/scene3d/packages/scene3d/src/sceneDocument.ts"
+        "@flighthq/scene3d/packages/scene3d/src/sceneDocument.ts",
+        "@flighthq/scene3d/packages/scene3d/src/sceneNodeBounds.ts",
+        "@flighthq/scene3d/packages/scene3d/src/sceneNodeCulling.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
       "consumers": [
-        "@flighthq/scene3d/packages/scene3d/src/contract.ts"
+        "@flighthq/scene3d/packages/scene3d/src/contract.ts",
+        "@flighthq/scene3d/packages/scene3d/src/index.ts"
       ],
       "module": {
         "name": "EnableScene3DGuards",
@@ -28960,13 +28971,22 @@
       },
       "path": "flight/scene3d/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/scene3d/packages/scene3d/src/contract.ts"
+        "@flighthq/scene3d/packages/scene3d/src/cloneNode3DSubtree.ts",
+        "@flighthq/scene3d/packages/scene3d/src/enableScene3DGuards.ts",
+        "@flighthq/scene3d/packages/scene3d/src/instancedMesh.ts",
+        "@flighthq/scene3d/packages/scene3d/src/mesh.ts",
+        "@flighthq/scene3d/packages/scene3d/src/prepareScene3DMorph.ts",
+        "@flighthq/scene3d/packages/scene3d/src/sceneAnimation.ts",
+        "@flighthq/scene3d/packages/scene3d/src/sceneDocument.ts",
+        "@flighthq/scene3d/packages/scene3d/src/sceneNodeBounds.ts",
+        "@flighthq/scene3d/packages/scene3d/src/sceneNodeCulling.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
       "consumers": [
-        "@flighthq/scene3d/packages/scene3d/src/contract.ts"
+        "@flighthq/scene3d/packages/scene3d/src/contract.ts",
+        "@flighthq/scene3d/packages/scene3d/src/index.ts"
       ],
       "module": {
         "name": "InstancedMesh",
@@ -28974,7 +28994,10 @@
         "source": "packages/scene3d/src/instancedMesh.ts"
       },
       "path": "flight/scene3d/instanced_mesh.hpp",
-      "status": "emitted"
+      "refusedDependencies": [
+        "@flighthq/mesh/packages/mesh/src/meshGeometryCompute.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [
@@ -28984,6 +29007,7 @@
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/revealScene3DResourcesOnResolve.ts",
         "@flighthq/scene3d/packages/scene3d/src/cloneNode3DSubtree.ts",
         "@flighthq/scene3d/packages/scene3d/src/contract.ts",
+        "@flighthq/scene3d/packages/scene3d/src/index.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneDocument.ts"
       ],
       "module": {
@@ -28992,11 +29016,15 @@
         "source": "packages/scene3d/src/mesh.ts"
       },
       "path": "flight/scene3d/mesh.hpp",
-      "status": "emitted"
+      "refusedDependencies": [
+        "@flighthq/mesh/packages/mesh/src/meshGeometryDeformationClone.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [
-        "@flighthq/scene3d/packages/scene3d/src/contract.ts"
+        "@flighthq/scene3d/packages/scene3d/src/contract.ts",
+        "@flighthq/scene3d/packages/scene3d/src/index.ts"
       ],
       "module": {
         "name": "PrepareScene3DMorph",
@@ -29004,12 +29032,16 @@
         "source": "packages/scene3d/src/prepareScene3DMorph.ts"
       },
       "path": "flight/scene3d/prepare_scene3_dmorph.hpp",
-      "status": "emitted"
+      "refusedDependencies": [
+        "@flighthq/mesh/packages/mesh/src/updateMeshMorph.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentScene3DMaterialization.ts",
         "@flighthq/scene3d/packages/scene3d/src/contract.ts",
+        "@flighthq/scene3d/packages/scene3d/src/index.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneDocument.ts"
       ],
       "module": {
@@ -29022,7 +29054,8 @@
     },
     {
       "consumers": [
-        "@flighthq/scene3d/packages/scene3d/src/contract.ts"
+        "@flighthq/scene3d/packages/scene3d/src/contract.ts",
+        "@flighthq/scene3d/packages/scene3d/src/index.ts"
       ],
       "module": {
         "name": "SceneAnimation",
@@ -29044,16 +29077,17 @@
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5Parse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/objParse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsParse.ts",
-        "@flighthq/scene3d/packages/scene3d/src/contract.ts"
+        "@flighthq/scene3d/packages/scene3d/src/contract.ts",
+        "@flighthq/scene3d/packages/scene3d/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:0af5d12b9a43d85256e976b6e230e413b6d416be651f41d5e7cd57ace6b3feea",
         "sha256:0fd8519a77484bd14fc9ca405a67ecf658adf0c1b3d10f76c14c7b574ed9f555",
         "sha256:117dfc2ac51cd8c0fe2b77d39c145bf6f4090eac502583432527c1b49d5727aa",
         "sha256:2e6991456120afb813cfa33d92c266a810784a6a75c13967ceac3496c5aaa62b",
-        "sha256:4af0afb0abede72b3373db7565b4e2c2a5daef4977a09cd728ec4c737cfa7e99",
-        "sha256:75b4559e66fc21abadb64d57f7e239bb7b1389c146f1080f298ecaac500cc3ae",
-        "sha256:92617b86aa55be79dbd9d76eadad6b9ed61075477fdd8e869e38210708de047e",
+        "sha256:4d31aecd8e7a6879920b2544d11e41303878bb78dd74730fef2b5015c4dded37",
+        "sha256:511cc425d688ca9ee6d5eae76c4df5b354d95f8efe3ea760686d760341a8561d",
+        "sha256:ade2a5156ef9ac6ad2ebe98cc3a04bec6c37c073d8d4139fe4606562c2ef3324",
         "sha256:c30dc1e778a46b94a6b5bc232570f445bede2e9756e43ae0de266c10e14ba891",
         "sha256:c6fa61cf33b4029f9c810a6f6293dcb53bb9502d16df4880d91e8b552f1ee2c8",
         "sha256:c9496927ea62d19545f50d6135e7eb6de0cb252c302c1e7277531ad343b32b1b",
@@ -29072,7 +29106,8 @@
     {
       "consumers": [
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentScene3DMaterialization.ts",
-        "@flighthq/scene3d/packages/scene3d/src/contract.ts"
+        "@flighthq/scene3d/packages/scene3d/src/contract.ts",
+        "@flighthq/scene3d/packages/scene3d/src/index.ts"
       ],
       "module": {
         "name": "SceneDocumentLights",
@@ -29084,7 +29119,8 @@
     },
     {
       "consumers": [
-        "@flighthq/scene3d/packages/scene3d/src/contract.ts"
+        "@flighthq/scene3d/packages/scene3d/src/contract.ts",
+        "@flighthq/scene3d/packages/scene3d/src/index.ts"
       ],
       "module": {
         "name": "SceneKindUsage",
@@ -29096,7 +29132,8 @@
     },
     {
       "consumers": [
-        "@flighthq/scene3d/packages/scene3d/src/contract.ts"
+        "@flighthq/scene3d/packages/scene3d/src/contract.ts",
+        "@flighthq/scene3d/packages/scene3d/src/index.ts"
       ],
       "module": {
         "name": "SceneMaterial",
@@ -29115,6 +29152,7 @@
         "@flighthq/scene3d/packages/scene3d/src/billboardCamera.ts",
         "@flighthq/scene3d/packages/scene3d/src/cloneNode3DSubtree.ts",
         "@flighthq/scene3d/packages/scene3d/src/contract.ts",
+        "@flighthq/scene3d/packages/scene3d/src/index.ts",
         "@flighthq/scene3d/packages/scene3d/src/instancedMesh.ts",
         "@flighthq/scene3d/packages/scene3d/src/mesh.ts",
         "@flighthq/scene3d/packages/scene3d/src/scene.ts",
@@ -29133,7 +29171,8 @@
       "consumers": [
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/renderGlScene3D.ts",
         "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/renderWgpuScene3D.ts",
-        "@flighthq/scene3d/packages/scene3d/src/contract.ts"
+        "@flighthq/scene3d/packages/scene3d/src/contract.ts",
+        "@flighthq/scene3d/packages/scene3d/src/index.ts"
       ],
       "module": {
         "name": "SceneNodeAppearance",
@@ -29148,7 +29187,8 @@
         "@flighthq/picking/packages/picking/src/pickScene3D.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/prepareGlScene3DForwardLights.ts",
         "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/prepareWgpuScene3DForwardLights.ts",
-        "@flighthq/scene3d/packages/scene3d/src/contract.ts"
+        "@flighthq/scene3d/packages/scene3d/src/contract.ts",
+        "@flighthq/scene3d/packages/scene3d/src/index.ts"
       ],
       "module": {
         "name": "SceneNodeBounds",
@@ -29156,11 +29196,15 @@
         "source": "packages/scene3d/src/sceneNodeBounds.ts"
       },
       "path": "flight/scene3d/scene_node_bounds.hpp",
-      "status": "emitted"
+      "refusedDependencies": [
+        "@flighthq/mesh/packages/mesh/src/meshGeometryCompute.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [
-        "@flighthq/scene3d/packages/scene3d/src/contract.ts"
+        "@flighthq/scene3d/packages/scene3d/src/contract.ts",
+        "@flighthq/scene3d/packages/scene3d/src/index.ts"
       ],
       "module": {
         "name": "SceneNodeCulling",
@@ -29168,11 +29212,15 @@
         "source": "packages/scene3d/src/sceneNodeCulling.ts"
       },
       "path": "flight/scene3d/scene_node_culling.hpp",
-      "status": "emitted"
+      "refusedDependencies": [
+        "@flighthq/mesh/packages/mesh/src/meshGeometryCompute.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [
-        "@flighthq/scene3d/packages/scene3d/src/contract.ts"
+        "@flighthq/scene3d/packages/scene3d/src/contract.ts",
+        "@flighthq/scene3d/packages/scene3d/src/index.ts"
       ],
       "module": {
         "name": "SceneNodeDispose",
@@ -29184,7 +29232,8 @@
     },
     {
       "consumers": [
-        "@flighthq/scene3d/packages/scene3d/src/contract.ts"
+        "@flighthq/scene3d/packages/scene3d/src/contract.ts",
+        "@flighthq/scene3d/packages/scene3d/src/index.ts"
       ],
       "module": {
         "name": "SceneNodeTransform",

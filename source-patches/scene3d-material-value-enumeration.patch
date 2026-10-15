@@ -5,7 +5,7 @@ index d5f369d..dcc2cad 100644
 @@ -1,5 +1,5 @@
  import { findNode, forEachNodeDescendant } from '@flighthq/node/contract';
 -import type { Material, Mesh, Node3D } from '@flighthq/types/contract';
-+import type { MaterialValue, Mesh, Node3D } from '@flighthq/types/contract';
++import type { Material3DValue, Mesh, Node3D } from '@flighthq/types/contract';
  
  // Finds the first material named `name` in the scene subtree rooted at `root` (depth-first
  // pre-order, `root` included), scanning each mesh node's `materials` array. Returns `null` when no
@@ -14,11 +14,11 @@ index d5f369d..dcc2cad 100644
  // example to tweak transparency — instead of matching on observable traits. The material sibling
  // of node's findNodeByName.
 -export function findScene3DMaterialByName(root: Readonly<Node3D>, name: string): Material | null {
-+export function findScene3DMaterialByName(root: Readonly<Node3D>, name: string): MaterialValue | null {
++export function findScene3DMaterialByName(root: Readonly<Node3D>, name: string): Material3DValue | null {
    const rootMatch = getNamedNodeMaterial(root, name);
    if (rootMatch !== null) return rootMatch;
 -  let found: Material | null = null;
-+  let found: MaterialValue | null = null;
++  let found: Material3DValue | null = null;
    findNode(root, (node) => {
      const match = getNamedNodeMaterial(node as Readonly<Node3D>, name);
      if (match === null) return false;
@@ -27,7 +27,7 @@ index d5f369d..dcc2cad 100644
  // import to inspect or re-derive the materials a format produced (pair with getMaterialOfKind to
  // read a specific kind's fields). Order is the depth-first visitation order of first appearance.
 -export function getScene3DMaterials(root: Readonly<Node3D>, out: Material[]): void {
-+export function getScene3DMaterials(root: Readonly<Node3D>, out: MaterialValue[]): void {
++export function getScene3DMaterials(root: Readonly<Node3D>, out: Material3DValue[]): void {
    collectNodeMaterials(root, out);
    forEachNodeDescendant(root, (node) => collectNodeMaterials(node as Readonly<Node3D>, out));
  }
@@ -35,7 +35,7 @@ index d5f369d..dcc2cad 100644
  // Appends `node`'s own not-yet-collected materials to `out`. Only mesh-like nodes (drawable leaves)
  // carry `materials`; a bare group node reads through as absent.
 -function collectNodeMaterials(node: Readonly<Node3D>, out: Material[]): void {
-+function collectNodeMaterials(node: Readonly<Node3D>, out: MaterialValue[]): void {
++function collectNodeMaterials(node: Readonly<Node3D>, out: Material3DValue[]): void {
    const materials = (node as Readonly<Partial<Mesh>>).materials;
    if (materials == null) return;
    for (let i = 0; i < materials.length; i++) {
@@ -44,7 +44,7 @@ index d5f369d..dcc2cad 100644
  // Returns the first material named `name` on `node`'s own `materials` array, or `null`. Only
  // mesh-like nodes (drawable leaves) carry `materials`; a bare group node reads through as absent.
 -function getNamedNodeMaterial(node: Readonly<Node3D>, name: string): Material | null {
-+function getNamedNodeMaterial(node: Readonly<Node3D>, name: string): MaterialValue | null {
++function getNamedNodeMaterial(node: Readonly<Node3D>, name: string): Material3DValue | null {
    const materials = (node as Readonly<Partial<Mesh>>).materials;
    if (materials == null) return null;
    for (let i = 0; i < materials.length; i++) {

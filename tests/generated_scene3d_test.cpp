@@ -105,8 +105,8 @@ int main() {
         "attribute construction computes local bounds");
 
   const auto pbr_material = flight::materials::create_standard_pbr_material();
-  flight::Array<std::optional<types::MaterialValue>> materials{
-      std::optional<types::MaterialValue>{types::MaterialValue{
+  flight::Array<std::optional<types::Material3DValue>> materials{
+      std::optional<types::Material3DValue>{types::Material3DValue{
           std::in_place_type<flight::Ref<types::StandardPbrMaterial>>,
           pbr_material}}};
   const auto mesh = scene3d::create_mesh(geometry, materials);

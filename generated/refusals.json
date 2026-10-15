@@ -6065,9 +6065,16 @@
     },
     {
       "code": "dependency-refused",
+      "module": "packages/scene3d/src/cloneNode3DSubtree.ts",
+      "package": "@flighthq/scene3d",
+      "reason": "dependency ./mesh.ts was refused for @flighthq/scene3d/packages/scene3d/src/mesh.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
       "module": "packages/scene3d/src/contract.ts",
       "package": "@flighthq/scene3d",
-      "reason": "dependency ./sceneDocument was refused for @flighthq/scene3d/packages/scene3d/src/sceneDocument.ts",
+      "reason": "dependency ./sceneDocument.ts was refused for @flighthq/scene3d/packages/scene3d/src/sceneDocument.ts",
       "stage": "dependency"
     },
     {
@@ -6081,7 +6088,28 @@
       "code": "dependency-refused",
       "module": "packages/scene3d/src/index.ts",
       "package": "@flighthq/scene3d",
-      "reason": "dependency ./contract was refused for @flighthq/scene3d/packages/scene3d/src/contract.ts",
+      "reason": "dependency ./enableScene3DGuards.ts was refused for @flighthq/scene3d/packages/scene3d/src/enableScene3DGuards.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d/src/instancedMesh.ts",
+      "package": "@flighthq/scene3d",
+      "reason": "dependency @flighthq/mesh/contract was refused for @flighthq/mesh/packages/mesh/src/meshGeometryCompute.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d/src/mesh.ts",
+      "package": "@flighthq/scene3d",
+      "reason": "dependency @flighthq/mesh/contract was refused for @flighthq/mesh/packages/mesh/src/meshGeometryDeformationClone.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d/src/prepareScene3DMorph.ts",
+      "package": "@flighthq/scene3d",
+      "reason": "dependency @flighthq/mesh/contract was refused for @flighthq/mesh/packages/mesh/src/updateMeshMorph.ts",
       "stage": "dependency"
     },
     {
@@ -6099,6 +6127,20 @@
       "package": "@flighthq/scene3d",
       "reason": "cpp emission failed for @flighthq/scene3d/packages/scene3d/src/sceneDocument.ts: Object.assign requires one closed callable-object target and an exact compatible object literal source",
       "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d/src/sceneNodeBounds.ts",
+      "package": "@flighthq/scene3d",
+      "reason": "dependency @flighthq/mesh/contract was refused for @flighthq/mesh/packages/mesh/src/meshGeometryCompute.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d/src/sceneNodeCulling.ts",
+      "package": "@flighthq/scene3d",
+      "reason": "dependency @flighthq/mesh/contract was refused for @flighthq/mesh/packages/mesh/src/meshGeometryCompute.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
