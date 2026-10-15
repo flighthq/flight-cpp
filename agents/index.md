@@ -39,6 +39,24 @@ Last full baseline (builder audit, base 846fa56, old flight pin 7e2fc7d). Not to
   supports. See "Host seams, not stubs".
 - **D6 — Global audits.** No whole-SDK runs during ordinary work, by anyone. Rare auditor runs at
   foreman's request; the full audit is finalization work (Phase 5).
+## Decisions (user, 2026-10-15) — current priority
+
+- **D7 — E2E first.** The top priority is a working end-to-end C++ example, built and run natively, as
+  existed before the re-pin. Nothing has been built or run natively since the re-pin. Track A in
+  `queue.md` owns this, and everything else ranks below it.
+- **D8 — Compiler move is a mechanical migration, not a rewrite.** flight-compiler moves
+  2b687ea → 806d257 (26 commits: a deterministic identifier rename, about 10 emitter fixes, and
+  opt-in C ABI output). The move is done once, by one agent, whole-tree (Track M). Prior work
+  carries forward by rename and three-way merge, never by re-deriving from scratch. A package that
+  worked before and gets worse under the new compiler keeps its prior emission, so the move never
+  makes anything worse. C ABI output stays off during the move; it is a separate later item.
+- **D9 — Evidence is lean.** Effort goes to progress, not proof. See "Evidence" below. This
+  supersedes the release-slot, archive and proof habits that grew up during the re-pin.
+- **D6 amended.** Track M may run whole-tree generation and header sweeps while the rest of the
+  fleet is frozen (see `queue.md`). Everyone else stays package-scoped.
+- **Toolchains.** Any agent may install toolchains and dependencies it needs (cmake, a C++20
+  compiler, SDL3, Mesa/EGL, …). Install only what your item needs.
+
 ## Definition of done for a package
 
 A package is **done** when all hold, verified by its lane:
@@ -72,6 +90,22 @@ The machine is shared by ~13 agents (16 cores, 23 GB). Builds of the whole SDK t
   question needs a whole-tree answer. Otherwise the full sweep belongs to finalization (Phase 5).
   Lanes make progress from package-scoped evidence; they do not wait for, or ask for, global numbers.
 - Use a per-agent build directory and keep it, so builds stay incremental. Do not wipe it to "be sure".
+
+### Evidence — mandatory (D9)
+
+A change is shown by: the commit, one line in its message with the numbers that matter (headers
+compiling before → after for the touched packages, tests run/passed, example smoke result), and
+one `./agent.sh attest` for the check actually run. That is all.
+
+Do **not** produce or relay: tarball archives, payload SHA manifests, proof JSON files, "foreign
+proofs", content re-verification of already-landed commits, repeated baseline/candidate reruns of
+an unchanged check, or evidence relays between agents. Do not re-run a check whose inputs did not
+change. When something fails, say what failed in one line and fix it or record it; do not build
+apparatus around it.
+
+Integration merges anything whose stated gate passed and that does not break a build. It does not
+re-run the author's checks and does not hold merges in serial "release slots", except during the
+Track M freeze, where Track M is the only writer of `generated/`, `overrides/` and `repairs/`.
 
 ### Lanes
 

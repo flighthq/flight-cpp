@@ -1,6 +1,6 @@
 # Work queue
 
-Status: **APPROVED** by the user, 2026-10-11 (see `index.md`).
+Status: **APPROVED** by the user, 2026-10-11; **NOW** section added 2026-10-15 and takes precedence (see `index.md` D7–D9).
 
 Foreman divides and dispatches; builders own implementation. Rules, CPU budget and the package
 definition of done are in `index.md`. Items are ordered by priority within each phase. `Needs:`
@@ -27,6 +27,93 @@ spatial, motionpath, clock → ANIM; geometry, math → CORE.
 
 Any package Q0 finds at the new pin that is missing from this table goes to the lane closest in kind;
 Q0 reports the assignment.
+
+---
+
+## NOW — current priority (user, 2026-10-15). Supersedes Phase 0–1 ordering below.
+
+Two tracks, in this order of priority. Everything else waits or idles. Idle is fine: it frees CPU.
+Evidence follows `index.md` "Evidence" (D9): commit, one numbers line, one attest. Nothing more.
+
+### Staffing (principal's recommendation; foreman may substitute an equivalent free agent)
+
+| Agent | Work |
+| --- | --- |
+| builder4 | **Track A** (e2e). Then rebuilds examples on Track M's candidate (M6). |
+| builder6 | **Track M** (compiler move), sole writer of `generated/`, `overrides/`, `repairs/` during the freeze. |
+| builder7 | Finish Snapshot landing now, then idle. |
+| builder3 | Stop scene2d-resources work. Hand its **source patches + new test only** to builder6 as files; M3 regenerates with them. No re-proof. |
+| builder (SceneDocument), effects-wgpu, scene3d-wgpu prep | **Dropped / parked.** M3 regenerates every package anyway; WGPU is Phase 4. Re-evaluate after M lands. |
+| everyone else | Idle until M lands. No builds. |
+| integration | Merges Snapshot, then Track A fixes, then the single Track M parcel. Scoped merge only. |
+
+### Track A · E2E native examples (builder4) — top priority, starts now
+
+A1. Install a native toolchain in your sandbox: cmake, ninja, a C++20 compiler (gcc or clang), SDL3
+    development package, Mesa (EGL + software GL / llvmpipe). Use the distro packages; build SDL3 from
+    source only if no package exists.
+A2. At the current base, configure as in `examples/upstream/README.md` (`BUILD_TESTING`,
+    `FLIGHT_CPP_BUILD_EXAMPLES`, `FLIGHT_CPP_BUILD_HOST_SDL`), build `flight_cpp_upstream_examples`
+    at `-j4` in a persistent build dir, and run the six `--smoke` CTests.
+A3. **scene3d first.** Make it build and smoke-pass at the current pin. Then camera2d, clock, collision,
+    motionpath, spatial. Fix breakage by the normal `AGENTS.md` order (runtime → binding → patch →
+    repair → override). Touch any lane's files as needed (cross-lane is authorized for Track A).
+    Do not weaken a smoke assertion to pass.
+A4. Capture one rendered frame of scene3d to `artifacts/e2e/scene3d.png` (software GL offscreen) so the
+    user can see it. Same for one 2D example.
+A5. Land fixes as they go, small commits, so Track M builds on them. Report to foreman: which of the 6
+    build, which smoke-pass, with the PNG path. That list is the **E2E baseline** that M6 must not regress.
+Accept: scene3d builds, smoke passes, and the PNG exists. Report the other five honestly either way.
+Not in scope: E0a–E0d rework (painter → scene2d-gl). That comes after.
+
+### Track M · flight-compiler 2b687ea → 806d257 (builder6) — starts now, in parallel
+
+Principle: **rename first, then regenerate, so that the diff shows only real emitter changes**, and
+carry every prior workaround forward by three-way merge. The new compiler changes the names of
+dimensional identifiers (`camera2_d` → `camera_2d`, `scene3_dresource` → `scene_3d_resource`,
+`tex_image2_d` → `tex_image_2d`); the old `snakeCase` and new `convertCppIdentifierToSnakeCase` in
+`compiler-backend-cpp/src/cppCompilerIdentity.ts` are both deterministic. The remaining ~10 commits are
+targeted emitter fixes; C ABI output is opt-in CLI and stays **off**.
+
+M1. **Rename tool** (no tree writes yet; do this while Track A works). `scripts/` tool that computes
+    old→new identifier pairs by applying the old and new conversion to every identifier in the pinned
+    flight TypeScript (and to synthesized compounds the emitter builds from those names), and rewrites
+    any working tree with it: file contents **and** file names, across `generated/`, `overrides/`,
+    `repairs/`, `examples/`, `tests/`, `src/`, `include/`, `bindings/`, `abi/`. Not `source-patches/`
+    (they patch TypeScript). Whole-identifier matches only; a token like `foo2_data` that is not in
+    the map must not be touched. The tool must be re-runnable on any agent's branch, so in-flight work
+    can be renamed rather than redone.
+M2. **Freeze and baseline.** Once Snapshot and the Track A fixes so far have landed, the freeze begins: no one
+    else writes `generated/`, `overrides/`, `repairs/`. Run one full header sweep (`sdk:compile:sdl`,
+    `-j8` allowed during the freeze) at the base to get **per-package headers-compiling counts**. Reuse
+    an existing report at this exact base if one exists.
+M3. **Apply the rename** to the base tree as one mechanical commit (pin unchanged). Then move the
+    flight-compiler pin to 806d257, rehydrate, and run **one** full `sdk:generate` (with builder3's
+    scene2d-resources patches) as a second commit.
+M4. **Read the diff.** `git diff` between the renamed-old tree and the new one, summarized per package.
+    Any leftover rename-shaped difference means the map is incomplete: fix the tool and redo M3 (cheap).
+    A package with no diff is done. For the rest, the diff is the list of emitter changes to check.
+M5. **Carry workarounds forward mechanically.**
+    - Overrides whose generated source changed: `git merge-file <override> <renamed-old generated>
+      <new generated>`. A clean merge is accepted and `derivedFrom` refreshed. A conflict is the
+      "one minor tweak" case: resolve it by hand, from the diff, in minutes. Never rewrite from scratch.
+    - Repairs that now match nothing (`sdk:check` reports them): drop them if the emitter now emits the
+      declaration, otherwise re-anchor them to the new text.
+    - Source patches: leave them alone. Report any whose module the new compiler now lowers unpatched,
+      as a later cleanup list.
+M6. **Never regress.** Re-run the header sweep. Any package whose headers-compiling count dropped,
+    and which a quick fix from the diff does not restore, **keeps its prior emission**: commit the
+    renamed-old header as an override of the new one (`status` `partial`, note "prior emission kept
+    pending compiler 806d257 regression", `derivedFrom` = new generated hash) and file a one-file
+    compiler request. builder4 then rebuilds the examples on the candidate. The E2E baseline from A5
+    must still hold.
+M7. Land as **one parcel** (rename commit, pin+regen commit, merge/repair commit). Write
+    `docs/compiler-806d257.md`: per-package headers before → after, overrides auto-merged vs
+    hand-resolved vs kept-prior, repairs dropped, examples result, source patches now obsolete. The
+    pin move gets its own commit, per `AGENTS.md`. The freeze ends when it lands; idle agents then
+    rebase and run the M1 tool on any unmerged work.
+Accept: pin at 806d257; `sdk:check` and `overrides:check` pass; no package compiles fewer headers than
+at M2; the E2E baseline holds.
 
 ---
 
