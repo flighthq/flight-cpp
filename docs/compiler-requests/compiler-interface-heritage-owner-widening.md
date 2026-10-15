@@ -94,6 +94,64 @@ each should be read together rather than as two separate capabilities.
 Both packages also have a wider consumer: `@flighthq/bitmapfont-formats` depends on bitmapfont, so the
 bitmapfont refusal cascades into that package's denominator as well.
 
+### The carrier at bitmapfont is representational, not a TypeScript widening
+
+The two sites reach this boundary differently, and the difference is visible in the declared types. At
+glyphatlas the sub-interface value is statically known and widens in the source. At bitmapfont the
+TypeScript types on both sides already agree, so nothing widens there:
+
+```ts
+// @flighthq/types GlyphSource.ts:20 -- the seam's declared result
+getGlyphAtlasImage(page?: number): TextureSource | null;
+// @flighthq/types Texture.ts:36 -- the member's declared type
+source: TextureSource | null;
+```
+
+`bitmapFontGlyphSource.ts` reads `font.pages[page]?.texture` and returns `texture.source`, which is
+already `TextureSource | null`. The crossing is introduced by the C++ representation, where the member
+is stored as a union of concrete owners while the seam declares the base owner:
+
+```cpp
+// @flighthq/types texture.hpp:72 -- stored
+std::optional<flight::types::TextureSourceValue> source;
+// @flighthq/types texture_source_value.hpp:18 -- a variant of seven concrete owner refs
+using TextureSourceValue = std::variant<flight::Ref<VoxelGrid>, flight::Ref<TextureSource>,
+    flight::Ref<ExternalTexture>, flight::Ref<Bitmap>, flight::Ref<CompressedImageResource>,
+    flight::Ref<RenderTarget>, flight::Ref<ImageResource>>;
+// @flighthq/types glyph_source.hpp:57 -- declared
+std::function<std::optional<flight::Ref<flight::types::TextureSource>>(std::optional<double>)>
+    get_glyph_atlas_image;
+```
+
+The refused conversion is therefore `optional<variant<7 concrete owner refs>>` to
+`optional<Ref<TextureSource>>`, and the refusal names `VoxelGrid` because it is the first arm that
+would need a heritage cast, not the only one.
+
+This does not change the rule or add a supply: either option above closes both sites. It changes what a
+fix may assume about the crossing. At glyphatlas the emitter can see the concrete owner; here the
+concrete owner is precisely what the variant erases, so a fix that needs the concrete type at the
+crossing cannot reach this site on its own. The refusal's own "avoid the boundary" advice does not
+apply here either -- it suggests declaring the destination as the derived interface where the concrete
+type is known, and this destination is the `GlyphSource` seam's declared type rather than a local
+choice.
+
+#### Minimal reproduction: a union-typed member read
+
+```ts
+interface Texture2D { readonly dimension: '2d'; source: TextureSource | null }
+interface BitmapFont { readonly pages: readonly Texture2D[] }
+
+// Both sides are declared as the base owner, so TypeScript reports no conversion; the emitted member
+// is still a variant of concrete owners, so the read cannot be narrowed to the base owner.
+export function bindGlyphAtlasImage(font: Readonly<BitmapFont>) {
+  return (page = 0): TextureSource | null => {
+    const texture = font.pages[page];
+    return texture?.dimension === '2d' ? texture.source : null;
+  };
+}
+```
+
+
 ## Same defect in P-3D2
 
 `@flighthq/scene3d-formats` records the same rule at
