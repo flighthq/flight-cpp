@@ -107,7 +107,11 @@ inline std::optional<flight::host_sdl::WebGlTexture> resolve_gl_texture(
       source.value());
   const auto runtime = get_gl_render_state_runtime(state);
   const auto resolver = runtime->registries->texture_resolvers.get(source_kind);
-  if (!resolver.has_value()) return std::nullopt;
+  if (!resolver.has_value()) {
+    const auto miss = runtime->registry_miss;
+    if (miss.has_value()) (*miss.value())(flight::types::RenderRegistryTable::TextureResolver, source_kind);
+    return std::nullopt;
+  }
   const auto color_space = flight::texture::get_texture_sample_color_space(
       gl_texture_value_color_space(texture),
       working_color_space.value_or(flight::String("linear")));
