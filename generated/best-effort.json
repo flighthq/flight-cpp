@@ -2723,7 +2723,9 @@
     },
     {
       "consumers": [
-        "@flighthq/collision/packages/collision/src/collideContactManifold2D.ts"
+        "@flighthq/collision/packages/collision/src/collideContactManifold2D.ts",
+        "@flighthq/collision/packages/collision/src/contract.ts",
+        "@flighthq/collision/packages/collision/src/index.ts"
       ],
       "module": {
         "name": "CapsuleContact2D",
@@ -2736,6 +2738,7 @@
     {
       "consumers": [
         "@flighthq/collision/packages/collision/src/contract.ts",
+        "@flighthq/collision/packages/collision/src/index.ts",
         "@flighthq/collision/packages/collision/src/sweepCollisionShape2D.ts",
         "@flighthq/physics2d/packages/physics2d/src/step.ts"
       ],
@@ -2815,6 +2818,7 @@
         "@flighthq/collision/packages/collision/src/contract.ts",
         "@flighthq/collision/packages/collision/src/enableCollisionGuards.ts",
         "@flighthq/collision/packages/collision/src/explainCollisionTest2D.ts",
+        "@flighthq/collision/packages/collision/src/index.ts",
         "@flighthq/collision/packages/collision/src/pointContainment2D.ts",
         "@flighthq/collision/packages/collision/src/raycastCollisionShape2D.ts",
         "@flighthq/collision/packages/collision/src/segmentCollision2D.ts",
@@ -2834,6 +2838,7 @@
         "@flighthq/collision/packages/collision/src/contract.ts",
         "@flighthq/collision/packages/collision/src/enableCollisionGuards.ts",
         "@flighthq/collision/packages/collision/src/explainCollisionTest3D.ts",
+        "@flighthq/collision/packages/collision/src/index.ts",
         "@flighthq/physics3d-abi/packages/physics3d-abi/src/referencePhysics3DAbi.ts",
         "@flighthq/physics3d/packages/physics3d/src/stepValidation.ts"
       ],
@@ -2932,6 +2937,8 @@
     {
       "consumers": [
         "@flighthq/collision/packages/collision/src/capsuleContact2D.ts",
+        "@flighthq/collision/packages/collision/src/contract.ts",
+        "@flighthq/collision/packages/collision/src/index.ts",
         "@flighthq/collision/packages/collision/src/shapeContact2D.ts"
       ],
       "module": {
@@ -2947,6 +2954,7 @@
         "@flighthq/collision/packages/collision/src/capsuleContact2D.ts",
         "@flighthq/collision/packages/collision/src/collideContactManifold2D.ts",
         "@flighthq/collision/packages/collision/src/contract.ts",
+        "@flighthq/collision/packages/collision/src/index.ts",
         "@flighthq/collision/packages/collision/src/shapeContact2D.ts",
         "@flighthq/collision/packages/collision/src/sweepCollisionShape2D.ts",
         "@flighthq/physics2d/packages/physics2d/src/step.ts"
@@ -2978,9 +2986,7 @@
       "status": "emitted"
     },
     {
-      "consumers": [
-        "@flighthq/collision/packages/collision/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/collision",
@@ -3013,6 +3019,7 @@
     {
       "consumers": [
         "@flighthq/collision/packages/collision/src/contract.ts",
+        "@flighthq/collision/packages/collision/src/index.ts",
         "@flighthq/collision/packages/collision/src/raycastCollisionShape3D.ts",
         "@flighthq/physics3d/packages/physics3d/src/debugGeometry.ts",
         "@flighthq/physics3d/packages/physics3d/src/massProperties.ts"
@@ -3029,6 +3036,8 @@
       "consumers": [
         "@flighthq/collision/packages/collision/src/capsuleContact2D.ts",
         "@flighthq/collision/packages/collision/src/collisionSupport2D.ts",
+        "@flighthq/collision/packages/collision/src/contract.ts",
+        "@flighthq/collision/packages/collision/src/index.ts",
         "@flighthq/collision/packages/collision/src/shapeCollision2D.ts",
         "@flighthq/collision/packages/collision/src/shapeContact2D.ts",
         "@flighthq/collision/packages/collision/src/sweepCollisionShape2D.ts"
@@ -3044,7 +3053,8 @@
     {
       "classification": "compiler-restriction",
       "consumers": [
-        "@flighthq/collision/packages/collision/src/contract.ts"
+        "@flighthq/collision/packages/collision/src/contract.ts",
+        "@flighthq/collision/packages/collision/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:0639e88bbbd58703889dfdedb3ef7ce4a9e88d30c9620257b005d5f051e708bc",
@@ -3069,7 +3079,8 @@
     },
     {
       "consumers": [
-        "@flighthq/collision/packages/collision/src/contract.ts"
+        "@flighthq/collision/packages/collision/src/contract.ts",
+        "@flighthq/collision/packages/collision/src/index.ts"
       ],
       "module": {
         "name": "ExplainCollisionTest2D",
@@ -3085,7 +3096,8 @@
     },
     {
       "consumers": [
-        "@flighthq/collision/packages/collision/src/contract.ts"
+        "@flighthq/collision/packages/collision/src/contract.ts",
+        "@flighthq/collision/packages/collision/src/index.ts"
       ],
       "module": {
         "name": "ExplainCollisionTest3D",
@@ -3137,6 +3149,7 @@
     {
       "consumers": [
         "@flighthq/collision/packages/collision/src/contract.ts",
+        "@flighthq/collision/packages/collision/src/index.ts",
         "@flighthq/collision/packages/collision/src/sweepCollisionShape3D.ts"
       ],
       "module": {
@@ -3163,12 +3176,21 @@
         "@flighthq/collision/packages/collision/src/collisionFace3D.ts",
         "@flighthq/collision/packages/collision/src/collisionSupport2D.ts",
         "@flighthq/collision/packages/collision/src/collisionSupport3D.ts",
-        "@flighthq/collision/packages/collision/src/contract.ts",
+        "@flighthq/collision/packages/collision/src/enableCollisionGuards.ts",
+        "@flighthq/collision/packages/collision/src/explainCollisionTest2D.ts",
+        "@flighthq/collision/packages/collision/src/explainCollisionTest3D.ts",
         "@flighthq/collision/packages/collision/src/gjk2D.ts",
         "@flighthq/collision/packages/collision/src/gjk3D.ts",
+        "@flighthq/collision/packages/collision/src/gjkDistance3D.ts",
+        "@flighthq/collision/packages/collision/src/pointContainment3D.ts",
+        "@flighthq/collision/packages/collision/src/raycastCollisionShape3D.ts",
         "@flighthq/collision/packages/collision/src/registerBuiltInCollisionPairTests2D.ts",
         "@flighthq/collision/packages/collision/src/registerBuiltInCollisionPairTests3D.ts",
-        "@flighthq/collision/packages/collision/src/testCollision3D.ts"
+        "@flighthq/collision/packages/collision/src/sweepCollisionShape2D.ts",
+        "@flighthq/collision/packages/collision/src/sweepCollisionShape3D.ts",
+        "@flighthq/collision/packages/collision/src/testCollision2D.ts",
+        "@flighthq/collision/packages/collision/src/testCollision3D.ts",
+        "@flighthq/collision/packages/collision/src/triangleMesh3D.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -3177,6 +3199,7 @@
         "@flighthq/collision/packages/collision/src/contract.ts",
         "@flighthq/collision/packages/collision/src/explainCollisionTest2D.ts",
         "@flighthq/collision/packages/collision/src/gjk2D.ts",
+        "@flighthq/collision/packages/collision/src/index.ts",
         "@flighthq/collision/packages/collision/src/shapeCollision2D.ts",
         "@flighthq/collision/packages/collision/src/shapeContact2D.ts"
       ],
@@ -3209,6 +3232,7 @@
     {
       "consumers": [
         "@flighthq/collision/packages/collision/src/contract.ts",
+        "@flighthq/collision/packages/collision/src/index.ts",
         "@flighthq/collision/packages/collision/src/raycastCollisionShape2D.ts",
         "@flighthq/physics2d/packages/physics2d/src/step.ts",
         "@flighthq/physics2d/packages/physics2d/src/worldQueries.ts"
@@ -3224,6 +3248,7 @@
     {
       "consumers": [
         "@flighthq/collision/packages/collision/src/contract.ts",
+        "@flighthq/collision/packages/collision/src/index.ts",
         "@flighthq/collision/packages/collision/src/raycastCollisionShape3D.ts",
         "@flighthq/physics3d/packages/physics3d/src/worldQueries.ts"
       ],
@@ -3241,6 +3266,7 @@
     {
       "consumers": [
         "@flighthq/collision/packages/collision/src/contract.ts",
+        "@flighthq/collision/packages/collision/src/index.ts",
         "@flighthq/collision/packages/collision/src/sweepCollisionShape2D.ts",
         "@flighthq/physics2d/packages/physics2d/src/worldQueries.ts"
       ],
@@ -3255,6 +3281,7 @@
     {
       "consumers": [
         "@flighthq/collision/packages/collision/src/contract.ts",
+        "@flighthq/collision/packages/collision/src/index.ts",
         "@flighthq/physics3d/packages/physics3d/src/colliderCollision.ts",
         "@flighthq/physics3d/packages/physics3d/src/worldQueries.ts"
       ],
@@ -3305,6 +3332,7 @@
     {
       "consumers": [
         "@flighthq/collision/packages/collision/src/contract.ts",
+        "@flighthq/collision/packages/collision/src/index.ts",
         "@flighthq/physics2d/packages/physics2d/src/step.ts"
       ],
       "module": {
@@ -3318,6 +3346,7 @@
     {
       "consumers": [
         "@flighthq/collision/packages/collision/src/contract.ts",
+        "@flighthq/collision/packages/collision/src/index.ts",
         "@flighthq/collision/packages/collision/src/registerBuiltInCollisionPairTests2D.ts",
         "@flighthq/collision/packages/collision/src/shapeContact2D.ts"
       ],
@@ -3346,7 +3375,8 @@
     {
       "consumers": [
         "@flighthq/collision/packages/collision/src/collideContactManifold2D.ts",
-        "@flighthq/collision/packages/collision/src/contract.ts"
+        "@flighthq/collision/packages/collision/src/contract.ts",
+        "@flighthq/collision/packages/collision/src/index.ts"
       ],
       "module": {
         "name": "ShapeContact2D",
@@ -3360,6 +3390,7 @@
       "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/collision/packages/collision/src/contract.ts",
+        "@flighthq/collision/packages/collision/src/index.ts",
         "@flighthq/physics2d/packages/physics2d/src/step.ts",
         "@flighthq/physics2d/packages/physics2d/src/worldQueries.ts"
       ],
@@ -3403,6 +3434,7 @@
     {
       "consumers": [
         "@flighthq/collision/packages/collision/src/contract.ts",
+        "@flighthq/collision/packages/collision/src/index.ts",
         "@flighthq/collision/packages/collision/src/triangleMesh3D.ts",
         "@flighthq/physics3d/packages/physics3d/src/colliderCollision.ts",
         "@flighthq/physics3d/packages/physics3d/src/continuous.ts",
@@ -3423,7 +3455,8 @@
       "consumers": [
         "@flighthq/collision/packages/collision/src/contract.ts",
         "@flighthq/collision/packages/collision/src/enableCollisionGuards.ts",
-        "@flighthq/collision/packages/collision/src/explainCollisionTest2D.ts"
+        "@flighthq/collision/packages/collision/src/explainCollisionTest2D.ts",
+        "@flighthq/collision/packages/collision/src/index.ts"
       ],
       "module": {
         "name": "TestCollision2D",
@@ -3461,6 +3494,7 @@
       "classification": "target-runtime",
       "consumers": [
         "@flighthq/collision/packages/collision/src/contract.ts",
+        "@flighthq/collision/packages/collision/src/index.ts",
         "@flighthq/physics3d-abi/packages/physics3d-abi/src/referencePhysics3DAbi.ts",
         "@flighthq/physics3d/packages/physics3d/src/colliderCollision.ts",
         "@flighthq/physics3d/packages/physics3d/src/colliderTransform.ts",

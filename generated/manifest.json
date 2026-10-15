@@ -1377,10 +1377,7 @@
       "id": "audio-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/collision/sweep_collision_shape2_d.hpp",
-        "flight/collision/triangle_mesh3_d.hpp"
-      ],
+      "files": [],
       "id": "collision-unqualified-entity-names"
     },
     {
@@ -3849,6 +3846,7 @@
     },
     {
       "files": [
+        "flight/collision/sweep_collision_shape2_d.hpp",
         "flight/effects_canvas/canvas_effect_state.hpp",
         "flight/scene2d_canvas/canvas_render_texture.hpp",
         "flight/scene3d_gl/gl_environment_cube.hpp",
@@ -5161,7 +5159,7 @@
     },
     {
       "dependency": "flight",
-      "digest": "ba9d3edcba057bcd8a2841d7626a9eadaefe94c4269d1fa4b426646e3b07a42c",
+      "digest": "7e939673913fd6f4698dab596b9e54481ae6b8b85bba030ae8b73cf8e3d1908e",
       "id": "collision-raycast-named-shape-parameters",
       "module": "packages/collision/src/raycastCollisionShape3D.ts",
       "package": "@flighthq/collision"
@@ -6072,10 +6070,6 @@
   "canonicalPackageLocalIncludes": {
     "files": [
       "flight/bitmaptext/update_bitmap_text.hpp",
-      "flight/collision/collision_support2_d.hpp",
-      "flight/collision/enable_collision_guards.hpp",
-      "flight/collision/sweep_collision_shape2_d.hpp",
-      "flight/collision/triangle_mesh3_d.hpp",
       "flight/effects/bevel_effect.hpp",
       "flight/effects/bitmap_displacement_effect.hpp",
       "flight/effects/bloom_effect.hpp",
@@ -6288,7 +6282,7 @@
       "flight/tilemap_formats/tiled_xml_parse.hpp",
       "flight/tokens/substitute_flight_document_scene_tokens.hpp"
     ],
-    "includes": 850
+    "includes": 836
   },
   "packages": [
     {
@@ -6526,14 +6520,14 @@
       "sourceModules": 4
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/collision",
       "cppNamespace": "flight::collision",
       "emittedModules": 32,
       "package": "@flighthq/collision",
       "refusedModules": 6,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 38

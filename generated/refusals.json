@@ -321,7 +321,7 @@
       "code": "dependency-refused",
       "module": "packages/collision/src/collideContactManifold3D.ts",
       "package": "@flighthq/collision",
-      "reason": "dependency ./collisionFace3D was refused for @flighthq/collision/packages/collision/src/collisionFace3D.ts",
+      "reason": "dependency ./collisionFace3D.ts was refused for @flighthq/collision/packages/collision/src/collisionFace3D.ts",
       "stage": "dependency"
     },
     {
@@ -355,7 +355,7 @@
       "code": "dependency-refused",
       "module": "packages/collision/src/contract.ts",
       "package": "@flighthq/collision",
-      "reason": "dependency ./collideContactManifold3D was refused for @flighthq/collision/packages/collision/src/collideContactManifold3D.ts",
+      "reason": "dependency ./collideContactManifold3D.ts was refused for @flighthq/collision/packages/collision/src/collideContactManifold3D.ts",
       "stage": "dependency"
     },
     {
@@ -371,70 +371,70 @@
       "code": "dependency-refused",
       "module": "packages/collision/src/explainCollisionTest2D.ts",
       "package": "@flighthq/collision",
-      "reason": "dependency ./collisionSupport2D was refused for @flighthq/collision/packages/collision/src/collisionSupport2D.ts",
+      "reason": "dependency ./collisionSupport2D.ts was refused for @flighthq/collision/packages/collision/src/collisionSupport2D.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/collision/src/explainCollisionTest3D.ts",
       "package": "@flighthq/collision",
-      "reason": "dependency ./collisionSupport3D was refused for @flighthq/collision/packages/collision/src/collisionSupport3D.ts",
+      "reason": "dependency ./collisionSupport3D.ts was refused for @flighthq/collision/packages/collision/src/collisionSupport3D.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/collision/src/gjk2D.ts",
       "package": "@flighthq/collision",
-      "reason": "dependency ./collisionSupport2D was refused for @flighthq/collision/packages/collision/src/collisionSupport2D.ts",
+      "reason": "dependency ./collisionSupport2D.ts was refused for @flighthq/collision/packages/collision/src/collisionSupport2D.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/collision/src/gjk3D.ts",
       "package": "@flighthq/collision",
-      "reason": "dependency ./collisionSupport3D was refused for @flighthq/collision/packages/collision/src/collisionSupport3D.ts",
+      "reason": "dependency ./collisionSupport3D.ts was refused for @flighthq/collision/packages/collision/src/collisionSupport3D.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/collision/src/gjkDistance3D.ts",
       "package": "@flighthq/collision",
-      "reason": "dependency ./collisionSupport3D was refused for @flighthq/collision/packages/collision/src/collisionSupport3D.ts",
+      "reason": "dependency ./collisionSupport3D.ts was refused for @flighthq/collision/packages/collision/src/collisionSupport3D.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/collision/src/index.ts",
       "package": "@flighthq/collision",
-      "reason": "dependency ./collideContactManifold3D was refused for @flighthq/collision/packages/collision/src/collideContactManifold3D.ts",
+      "reason": "dependency ./collideContactManifold3D.ts was refused for @flighthq/collision/packages/collision/src/collideContactManifold3D.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/collision/src/pointContainment3D.ts",
       "package": "@flighthq/collision",
-      "reason": "dependency ./gjk3D was refused for @flighthq/collision/packages/collision/src/gjk3D.ts",
+      "reason": "dependency ./gjk3D.ts was refused for @flighthq/collision/packages/collision/src/gjk3D.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/collision/src/raycastCollisionShape3D.ts",
       "package": "@flighthq/collision",
-      "reason": "dependency ./pointContainment3D was refused for @flighthq/collision/packages/collision/src/pointContainment3D.ts",
+      "reason": "dependency ./pointContainment3D.ts was refused for @flighthq/collision/packages/collision/src/pointContainment3D.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/collision/src/registerBuiltInCollisionPairTests2D.ts",
       "package": "@flighthq/collision",
-      "reason": "dependency ./collisionSupport2D was refused for @flighthq/collision/packages/collision/src/collisionSupport2D.ts",
+      "reason": "dependency ./collisionSupport2D.ts was refused for @flighthq/collision/packages/collision/src/collisionSupport2D.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/collision/src/registerBuiltInCollisionPairTests3D.ts",
       "package": "@flighthq/collision",
-      "reason": "dependency ./collisionSupport3D was refused for @flighthq/collision/packages/collision/src/collisionSupport3D.ts",
+      "reason": "dependency ./collisionSupport3D.ts was refused for @flighthq/collision/packages/collision/src/collisionSupport3D.ts",
       "stage": "dependency"
     },
     {
@@ -450,21 +450,21 @@
       "code": "dependency-refused",
       "module": "packages/collision/src/sweepCollisionShape3D.ts",
       "package": "@flighthq/collision",
-      "reason": "dependency ./gjkDistance3D was refused for @flighthq/collision/packages/collision/src/gjkDistance3D.ts",
+      "reason": "dependency ./gjkDistance3D.ts was refused for @flighthq/collision/packages/collision/src/gjkDistance3D.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/collision/src/testCollision2D.ts",
       "package": "@flighthq/collision",
-      "reason": "dependency ./collisionSupport2D was refused for @flighthq/collision/packages/collision/src/collisionSupport2D.ts",
+      "reason": "dependency ./collisionSupport2D.ts was refused for @flighthq/collision/packages/collision/src/collisionSupport2D.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/collision/src/testCollision3D.ts",
       "package": "@flighthq/collision",
-      "reason": "dependency ./collisionSupport3D was refused for @flighthq/collision/packages/collision/src/collisionSupport3D.ts",
+      "reason": "dependency ./collisionSupport3D.ts was refused for @flighthq/collision/packages/collision/src/collisionSupport3D.ts",
       "stage": "dependency"
     },
     {
