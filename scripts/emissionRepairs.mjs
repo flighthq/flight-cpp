@@ -28,6 +28,7 @@ const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration',
   'declare-refused-effect-padding-resolvers',
   'declare-refused-effect-runners',
   'declare-refused-function',
+  'respell-membership-test',
 ]);
 // How `flight::Ref<Symbol<...>>` expands for one named template. `shared-pointer` for a struct that
 // derives from flight::ReferenceEnabled, `value` for anything else (an alias to a StructuralRef or a
@@ -49,7 +50,7 @@ const EXPECTATIONS = new Set(['always', 'withBindings']);
 const SHARED_FIELDS = ['id', 'kind', 'appliesTo', 'diagnostic', 'defect', 'expires'];
 // Required fields that hold a LIST of names rather than a string. The string loop below rejects an array,
 // so these are named here and checked separately -- the same split `symbols` already needs.
-const LIST_FIELDS = new Set(['keys']);
+const LIST_FIELDS = new Set(['keys', 'receivers']);
 const REQUIRED_FIELDS = {
   'deduce-call-argument-from-assignment': [...SHARED_FIELDS, 'symbol', 'sourceDeclaration'],
   default: [...SHARED_FIELDS, 'symbol', 'declaration'],
@@ -74,6 +75,7 @@ const REQUIRED_FIELDS = {
   'declare-refused-effect-padding-resolvers': [...SHARED_FIELDS, 'sourceDeclaration'],
   'declare-refused-effect-runners': [...SHARED_FIELDS, 'sourceDeclaration'],
   'declare-refused-function': [...SHARED_FIELDS, 'symbol', 'refusedFunction', 'declaration', 'sourceDeclaration'],
+  'respell-membership-test': [...SHARED_FIELDS, 'receivers', 'sourceDeclaration'],
 };
 
 export function loadEmissionRepairs(root) {
@@ -244,6 +246,7 @@ const HANDLERS = {
   'declare-refused-effect-padding-resolvers': declareRefusedEffectPaddingResolvers,
   'declare-refused-effect-runners': declareRefusedEffectRunners,
   'declare-refused-function': declareRefusedFunction,
+  'respell-membership-test': respellMembershipTest,
 };
 
 // A function the emitter refused but its own emitted code still calls -- cloneParticleEmitter2D calls the refused
@@ -374,6 +377,58 @@ function declareRefusedEffectPaddingResolvers(contents) {
     `namespace flight::effects {\n${declarations}\n}\n` +
     contents.slice(at)
   );
+}
+
+// JavaScript's `key in object` lowers LITERALLY -- `(key in entry)` -- and `in` is not a C++ operator, so
+// the header does not compile: the compiler reports the key token as a type name. The runtime already has
+// the right primitive and it is a PRESENCE test, not a value test: `Record::has(key)`, which is engaged
+// exactly when the property exists. That distinction is the whole point of the lowering. `key in obj` is
+// true for a key whose value is `undefined`, and `Record::get` returns an optional engaged iff the key
+// exists while the `Any` it holds is undefined iff the VALUE is -- so `get(key)->has_value()`, the Any's
+// own test, would call a present-undefined key absent. Measured on the runtime, not assumed:
+//   absent            : has=0  get-engaged=0  any-defined=0
+//   present-undefined : has=1  get-engaged=1  any-defined=0
+//
+// Anchored, never global. The repair rewrites only the receivers its entry DECLARES, and a text repair
+// cannot see a receiver's type -- it has to be told which ones are Records, and told per file. That is why
+// this is `receivers` under a file-scoped `appliesTo` rather than a sweep: a `in b` where `b` is anything
+// else is left alone, and so is any key that is not a bare identifier or a string literal, because those
+// are the only two shapes the emitter produces at a membership site and anything else is not this idiom.
+//
+// Naturally idempotent: the rewritten text no longer contains ` in <receiver>)`.
+function respellMembershipTest(contents, repair) {
+  let text = contents;
+  let changed = false;
+  for (const receiver of repair.receivers) {
+    const suffix = ` in ${receiver})`;
+    let from = 0;
+    for (;;) {
+      const at = text.indexOf(suffix, from);
+      if (at === -1) break;
+      // `at` opens the suffix, so the group's closing `)` is its last character. Walk back from there to
+      // the `(` that opens the group, so a key holding parentheses -- `flight::String("x")` -- is taken
+      // whole rather than guessed at.
+      const close = at + suffix.length - 1;
+      let depth = 1;
+      let open = close;
+      while (open > 0 && depth > 0) {
+        open -= 1;
+        if (text[open] === ')') depth += 1;
+        else if (text[open] === '(') depth -= 1;
+      }
+      if (depth !== 0) break;
+      const key = text.slice(open + 1, at);
+      if (!/^(?:[A-Za-z_]\w*|flight::String\("[^"\\]*"\))$/u.test(key)) {
+        from = close + 1;
+        continue;
+      }
+      const replacement = `(${receiver}.has(${key}))`;
+      text = `${text.slice(0, open)}${replacement}${text.slice(close + 1)}`;
+      changed = true;
+      from = open + replacement.length;
+    }
+  }
+  return changed ? text : undefined;
 }
 
 // The `std::function<RETURNS(PARAMETERS)>` the retained registration builds around `name`, read from

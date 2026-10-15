@@ -294,6 +294,53 @@ test('a qualified use alone does not fire insert-using-declaration', () => {
   }
 });
 
+// --- respell-membership-test ---------------------------------------------------------------------------------
+// JavaScript's `key in object` lowered literally. The rewrite names the runtime's presence question,
+// Record::has, and it is anchored: only the receivers an entry declares are rewritten, per file.
+
+const membershipRepair = (receivers = ['entry']) => ({
+  appliesTo: 'flight/effects/effect_defaults.hpp',
+  defect: 'example',
+  diagnostic: "unknown type name 'key_2'",
+  expectedWhen: 'always',
+  expires: 'example',
+  id: 'effects-membership-test-defaults',
+  kind: 'respell-membership-test',
+  receivers,
+  sourceDeclaration: 'example',
+});
+
+const membershipHeader = (body) => `#pragma once\nnamespace flight::effects {\n${body}\n} // namespace flight::effects\n`;
+
+test('a membership test at a declared receiver becomes the runtime presence question', () => {
+  const files = [{ contents: membershipHeader('  if (!(key_2 in entry)) {\n    return;\n  }'), path: 'flight/effects/effect_defaults.hpp' }];
+  const applied = applyEmissionRepairs([membershipRepair()], files);
+  assert.deepEqual(applied[0].files, ['flight/effects/effect_defaults.hpp']);
+  assert.ok(files[0].contents.includes('if (!(entry.has(key_2)))'), files[0].contents);
+  assert.ok(!files[0].contents.includes(' in entry'), files[0].contents);
+  // Idempotent: the rewritten text no longer carries the idiom.
+  assert.deepEqual(applyEmissionRepairs([membershipRepair()], files)[0].files, []);
+});
+
+test('a string-literal key is taken whole, parentheses and all', () => {
+  const files = [{ contents: membershipHeader('  if ((flight::String("curve") in entry)) {\n    return;\n  }'), path: 'flight/effects/effect_defaults.hpp' }];
+  assert.deepEqual(applyEmissionRepairs([membershipRepair()], files)[0].files, ['flight/effects/effect_defaults.hpp']);
+  assert.ok(files[0].contents.includes('if ((entry.has(flight::String("curve"))))'), files[0].contents);
+});
+
+test('a receiver the entry does not declare, and a key that is not a bare name or literal, are left alone', () => {
+  for (const body of [
+    '  if (!(key in other)) {\n    return;\n  }',
+    '  if (!(record.member in entry)) {\n    return;\n  }',
+    '  if (!(keys[0] in entry)) {\n    return;\n  }',
+  ]) {
+    const contents = membershipHeader(body);
+    const files = [{ contents, path: 'flight/effects/effect_defaults.hpp' }];
+    assert.deepEqual(applyEmissionRepairs([membershipRepair()], files)[0].files, [], body);
+    assert.equal(files[0].contents, contents, body);
+  }
+});
+
 // --- declare-refused-effect-padding-resolvers ---------------------------------------------------------------
 // The signature is READ from the retained registration, because the carrier's type names move with the pin.
 // This handler once spelled them, and at a627849 that spelling named two types the emitter no longer
