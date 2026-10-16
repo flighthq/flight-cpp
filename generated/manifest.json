@@ -281,26 +281,10 @@
   },
   "emissionRepairs": [
     {
-      "files": [],
-      "id": "node-imported-mutable-runtime-template-default"
-    },
-    {
-      "files": [],
-      "id": "node-imported-runtime-template-default"
-    },
-    {
       "files": [
         "flight/node/node.hpp"
       ],
       "id": "node-default-can-add-child-specialization"
-    },
-    {
-      "files": [],
-      "id": "node-hierarchy-ensure-world-matrix-forward-declaration"
-    },
-    {
-      "files": [],
-      "id": "node-hierarchy-get-world-matrix-forward-declaration"
     },
     {
       "files": [
@@ -2543,28 +2527,16 @@
       "id": "tilemap-create-signal-using-declaration"
     },
     {
-      "files": [],
-      "id": "clip-unqualified-path-names"
-    },
-    {
       "files": [
         "flight/power/power.hpp"
       ],
       "id": "power-unqualified-types-names"
     },
     {
-      "files": [],
-      "id": "physics2d-unqualified-collision-names"
-    },
-    {
       "files": [
         "flight/physics2d/debug_geometry.hpp"
       ],
       "id": "physics2d-declare-refused-write-joint"
-    },
-    {
-      "files": [],
-      "id": "scene3d-formats-unqualified-image-codec-names"
     },
     {
       "files": [
@@ -2607,22 +2579,6 @@
       "id": "effects-canvas-unqualified-types-names"
     },
     {
-      "files": [],
-      "id": "scene2d-formats-unqualified-color-names"
-    },
-    {
-      "files": [],
-      "id": "scene2d-formats-unqualified-path-names"
-    },
-    {
-      "files": [],
-      "id": "scene2d-formats-unqualified-path-boolean-names"
-    },
-    {
-      "files": [],
-      "id": "scene2d-formats-unqualified-shape-names"
-    },
-    {
       "files": [
         "flight/physics3d_abi/physics_3d_abi_command.hpp"
       ],
@@ -2636,10 +2592,6 @@
         "flight/textinput/text_input_manager.hpp"
       ],
       "id": "textinput-unqualified-types-names"
-    },
-    {
-      "files": [],
-      "id": "skeleton2d-formats-unqualified-easing-names"
     },
     {
       "files": [
@@ -2819,10 +2771,6 @@
       "id": "signals-flatten-generic-slot-read"
     },
     {
-      "files": [],
-      "id": "signals-safe-flatten-generic-slot-read"
-    },
-    {
       "files": [
         "flight/signals/safe.hpp"
       ],
@@ -2929,18 +2877,6 @@
         "flight/scene2d_canvas/canvas_render_texture.hpp"
       ],
       "id": "scene2d-canvas-render-texture-readonly-map-key"
-    },
-    {
-      "files": [],
-      "id": "structural-record-entity-runtime-key-member-spelling"
-    },
-    {
-      "files": [],
-      "id": "structural-record-color-attachments-member-spelling"
-    },
-    {
-      "files": [],
-      "id": "structural-record-surface-ownership-member-spelling"
     },
     {
       "files": [
@@ -3183,10 +3119,6 @@
       "id": "render-wgpu-quad-transform-forward-declaration"
     },
     {
-      "files": [],
-      "id": "render-wgpu-never-assertion-preserves-argument"
-    },
-    {
       "files": [
         "flight/effects/bevel_effect.hpp",
         "flight/effects/bitmap_displacement_effect.hpp",
@@ -3221,10 +3153,6 @@
         "flight/types/command.hpp"
       ],
       "id": "command-interface-heritage"
-    },
-    {
-      "files": [],
-      "id": "node-transform2d-world-revision-forward-declaration"
     },
     {
       "files": [
@@ -3287,14 +3215,6 @@
       "id": "textureatlas-formats-region-options-owner"
     },
     {
-      "files": [],
-      "id": "textureatlas-formats-aseprite-source-size-member-spelling"
-    },
-    {
-      "files": [],
-      "id": "textureatlas-formats-aseprite-sprite-source-size-member-spelling"
-    },
-    {
       "files": [
         "flight/texture/cube_texture.hpp"
       ],
@@ -3329,10 +3249,6 @@
         "flight/types/tint_adjustment.hpp"
       ],
       "id": "adjustments-tint-interface-heritage"
-    },
-    {
-      "files": [],
-      "id": "structural-record-on-trigger-member-spelling"
     },
     {
       "files": [

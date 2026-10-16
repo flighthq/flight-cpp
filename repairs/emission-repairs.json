@@ -4,30 +4,6 @@
   "note": "Mechanical repairs applied to compiler output so a package can ship before upstream fixes the emitter. A repair may only correct TEXT. It may never change absence, reference identity, equality, ordering, exception shape, or task settlement -- those are the contract in AGENTS.md, and a semantic repair is a lie that our own tests would then certify. Every repair declares the upstream defect it stands in for, and `npm run sdk:check` fails when a repair stops matching anything, so a repair cannot outlive the bug it answers. Two kinds exist. A declared `insert-forward-declaration` entry below names a symbol the emitter omits. The duplicate-structural-struct aliasing in scripts/emissionRepairs.mjs needs no entry because it is derived entirely from the emitted tree: it finds an anonymous structural struct defined in more than one package namespace with BYTE-IDENTICAL bodies, keeps the flight::types definition, and turns every other copy into a type alias to it. It reports what it aliased in manifest.duplicateStructuralStructAliases, and it is self-expiring -- when the emitter stops duplicating these, it finds nothing and rewrites nothing.",
   "repairs": [
     {
-      "id": "node-imported-mutable-runtime-template-default",
-      "kind": "respell-reference-member-access",
-      "appliesTo": "flight/node/",
-      "from": "template <typename Traits = flight::Ref<flight::types::NodeTraits>> inline std::shared_ptr<flight::types::NodeRuntime<Traits>> get_mutable_node_runtime",
-      "to": "template <typename Traits> inline std::shared_ptr<flight::types::NodeRuntime<Traits>> get_mutable_node_runtime",
-      "sourceDeclaration": "getMutableNodeRuntime<Traits extends object = NodeTraits>",
-      "diagnostic": "redefinition of default argument for class Traits",
-      "defect": "Imported function forward declarations repeat the callee's defaulted template argument in every header on a node-module include cycle. C++ permits the default on one declaration only; removing it from the forward declarations retains deduction and leaves the public definition as the canonical default owner.",
-      "expectedWhen": "always",
-      "expires": "when imported function forward declarations omit template defaults just as they already omit parameter defaults; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "node-imported-runtime-template-default",
-      "kind": "respell-reference-member-access",
-      "appliesTo": "flight/node/",
-      "from": "template <typename Traits = flight::Ref<flight::types::NodeTraits>> inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>> get_node_runtime",
-      "to": "template <typename Traits> inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>> get_node_runtime",
-      "sourceDeclaration": "getNodeRuntime<Traits extends object = NodeTraits>",
-      "diagnostic": "redefinition of default argument for class Traits",
-      "defect": "Imported function forward declarations repeat the callee's defaulted template argument in every header on a node-module include cycle. C++ permits the default on one declaration only; removing it from the forward declarations retains deduction and leaves the public definition as the canonical default owner.",
-      "expectedWhen": "always",
-      "expires": "when imported function forward declarations omit template defaults just as they already omit parameter defaults; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "node-default-can-add-child-specialization",
       "kind": "respell-reference-member-access",
       "appliesTo": "flight/node/node.hpp",
@@ -38,28 +14,6 @@
       "defect": "The nullish fallback is a generic function value placed into a fully contextualized NodeOf<any> callback slot, but the emitter leaves the function template unspecialized. Naming the already-proven contextual type selects the same instantiation TypeScript assigns.",
       "expectedWhen": "always",
       "expires": "when contextual generic function values specialize from their destination callable type; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "node-hierarchy-ensure-world-matrix-forward-declaration",
-      "kind": "insert-forward-declaration",
-      "appliesTo": "flight/node/hierarchy.hpp",
-      "symbol": "ensure_node_world_matrix",
-      "declaration": "namespace flight::node { template <typename Traits> inline void ensure_node_world_matrix(flight::types::Transform2DNode<Traits> target); }",
-      "diagnostic": "'ensure_node_world_matrix' is not a member of 'flight::node'",
-      "defect": "The emitted node include cycle enters hierarchy.hpp while node_transform2d.hpp is still guarded and incomplete, so hierarchy's reparentNode body is parsed before the later ensureNodeWorldMatrix definition. A declaration at the import boundary preserves the same function and breaks only the C++ declaration-order cycle.",
-      "expectedWhen": "always",
-      "expires": "when cyclic imported functions are declared before package bodies; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "node-hierarchy-get-world-matrix-forward-declaration",
-      "kind": "insert-forward-declaration",
-      "appliesTo": "flight/node/hierarchy.hpp",
-      "symbol": "get_node_world_matrix",
-      "declaration": "namespace flight::node { template <typename Traits> inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>> get_node_world_matrix(flight::types::Transform2DNode<Traits> target); }",
-      "diagnostic": "'get_node_world_matrix' is not a member of 'flight::node'",
-      "defect": "The emitted node include cycle enters hierarchy.hpp while node_transform2d.hpp is still guarded and incomplete, so hierarchy's reparentNode body is parsed before the later getNodeWorldMatrix definition. A declaration at the import boundary preserves the same function and breaks only the C++ declaration-order cycle.",
-      "expectedWhen": "always",
-      "expires": "when cyclic imported functions are declared before package bodies; sdk:check fails if this repair matches no header."
     },
     {
       "id": "render-gl-matrix-projection-alias",
@@ -7318,38 +7272,6 @@
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "clip-unqualified-path-names",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/clip/",
-      "namespace": "flight::path",
-      "symbols": [
-        {
-          "include": "flight/path/path.hpp",
-          "name": "append_path_cubic_curve_to"
-        },
-        {
-          "include": "flight/path/path.hpp",
-          "name": "append_path_line_to"
-        },
-        {
-          "include": "flight/path/path.hpp",
-          "name": "append_path_move_to"
-        },
-        {
-          "include": "flight/path/path.hpp",
-          "name": "create_path"
-        },
-        {
-          "include": "flight/path/flatten_path.hpp",
-          "name": "flatten_path"
-        }
-      ],
-      "diagnostic": "'append_path_cubic_curve_to' was not declared in this scope",
-      "defect": "The emitter writes 4 function name(s) owned by flight::path unqualified inside namespace flight::clip. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "power-unqualified-types-names",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/power/",
@@ -7422,34 +7344,6 @@
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "physics2d-unqualified-collision-names",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/physics2d/",
-      "namespace": "flight::collision",
-      "symbols": [
-        {
-          "include": "flight/collision/collide_contact_manifold_2d.hpp",
-          "name": "collide_contact_manifold_2d"
-        },
-        {
-          "include": "flight/collision/contact_manifold_2d.hpp",
-          "name": "create_collision_contact_manifold_2d"
-        },
-        {
-          "include": "flight/collision/sweep_collision_shape_2d.hpp",
-          "name": "create_collision_time_of_impact_2d"
-        },
-        {
-          "include": "flight/collision/sweep_collision_shape_2d.hpp",
-          "name": "sweep_collision_shape_2d"
-        }
-      ],
-      "diagnostic": "'collide_contact_manifold_2d' was not declared in this scope",
-      "defect": "The emitter writes 4 function name(s) owned by flight::collision unqualified inside namespace flight::physics2d. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "physics2d-declare-refused-write-joint",
       "kind": "declare-refused-function",
       "appliesTo": "flight/physics2d/debug_geometry.hpp",
@@ -7461,22 +7355,6 @@
       "defect": "The emitter refuses writeJoint because its mouse-joint branch asserts the readonly Physics2DJoint row to the writable Physics2DMouseJoint row, claiming mutation the source refused. That is the joint downcast boundary (docs/compiler-requests/assertion-to-undeclared-row-member.md, physics2d section), which needs a runtime decision about identity-preserving joint carriers. The emitter still retains writePhysics2DDebugGeometry, which calls writeJoint, so debug_geometry.hpp and every barrel that includes it fail to compile on an undeclared name. The declaration's signature is the emitter's own: the retained call passes the function's Ref<Physics2DDebugGeometry> out, its readonly Physics2DWorld row, and constructs exactly the readonly Physics2DJoint row carrier for the joint, and the source returns void. Declaration only: writePhysics2DDebugGeometry and the barrels compile, and calling it fails to link on write_joint -- joint debug geometry stays unusable, never substituted.",
       "expectedWhen": "always",
       "expires": "when writeJoint emits (the NOT GENERATED marker disappears and this repair matches nothing); sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "scene3d-formats-unqualified-image-codec-names",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/scene3d_formats/",
-      "namespace": "flight::image_codec",
-      "symbols": [
-        {
-          "include": "flight/image_codec/detect_image_mime_type.hpp",
-          "name": "detect_image_mime_type"
-        }
-      ],
-      "diagnostic": "'detect_image_mime_type' was not declared in this scope",
-      "defect": "The emitter writes 1 function name(s) owned by flight::image_codec unqualified inside namespace flight::scene3d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
       "id": "scene2d-canvas-unqualified-scene2d-canvas-names",
@@ -7603,150 +7481,6 @@
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "scene2d-formats-unqualified-color-names",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/scene2d_formats/",
-      "namespace": "flight::color",
-      "symbols": [
-        {
-          "include": "flight/color/pack_color.hpp",
-          "name": "pack_color"
-        }
-      ],
-      "diagnostic": "'pack_color' was not declared in this scope",
-      "defect": "The emitter writes 1 function name(s) owned by flight::color unqualified inside namespace flight::scene2d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "scene2d-formats-unqualified-path-names",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/scene2d_formats/",
-      "namespace": "flight::path",
-      "symbols": [
-        {
-          "include": "flight/path/path.hpp",
-          "name": "append_path_circle"
-        },
-        {
-          "include": "flight/path/path.hpp",
-          "name": "append_path_cubic_curve_to"
-        },
-        {
-          "include": "flight/path/path.hpp",
-          "name": "append_path_ellipse"
-        },
-        {
-          "include": "flight/path/path.hpp",
-          "name": "append_path_line_to"
-        },
-        {
-          "include": "flight/path/path.hpp",
-          "name": "append_path_move_to"
-        },
-        {
-          "include": "flight/path/path.hpp",
-          "name": "append_path_polygon"
-        },
-        {
-          "include": "flight/path/path.hpp",
-          "name": "append_path_polyline"
-        },
-        {
-          "include": "flight/path/path.hpp",
-          "name": "append_path_rectangle"
-        },
-        {
-          "include": "flight/path/path.hpp",
-          "name": "append_path_rounded_rectangle"
-        },
-        {
-          "include": "flight/path/path.hpp",
-          "name": "create_path"
-        },
-        {
-          "include": "flight/path/dash_path.hpp",
-          "name": "dash_path"
-        },
-        {
-          "include": "flight/path/get_path_bounds.hpp",
-          "name": "get_path_bounds"
-        },
-        {
-          "include": "flight/path/reverse_path.hpp",
-          "name": "reverse_path"
-        },
-        {
-          "include": "flight/path/transform_path.hpp",
-          "name": "transform_path"
-        }
-      ],
-      "diagnostic": "'append_path_circle' was not declared in this scope",
-      "defect": "The emitter writes 14 function name(s) owned by flight::path unqualified inside namespace flight::scene2d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "scene2d-formats-unqualified-path-boolean-names",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/scene2d_formats/",
-      "namespace": "flight::path_boolean",
-      "symbols": [
-        {
-          "include": "flight/path_boolean/boolean_paths.hpp",
-          "name": "intersect_paths"
-        },
-        {
-          "include": "flight/path_boolean/simplify_path.hpp",
-          "name": "simplify_path"
-        }
-      ],
-      "diagnostic": "'intersect_paths' was not declared in this scope",
-      "defect": "The emitter writes 2 function name(s) owned by flight::path_boolean unqualified inside namespace flight::scene2d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "scene2d-formats-unqualified-shape-names",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/scene2d_formats/",
-      "namespace": "flight::shape",
-      "symbols": [
-        {
-          "include": "flight/shape/shape_commands.hpp",
-          "name": "append_shape_begin_fill"
-        },
-        {
-          "include": "flight/shape/shape_commands.hpp",
-          "name": "append_shape_begin_gradient_fill"
-        },
-        {
-          "include": "flight/shape/shape_commands.hpp",
-          "name": "append_shape_end_fill"
-        },
-        {
-          "include": "flight/shape/shape_commands.hpp",
-          "name": "append_shape_line_gradient_style"
-        },
-        {
-          "include": "flight/shape/shape_commands.hpp",
-          "name": "append_shape_line_style"
-        },
-        {
-          "include": "flight/shape/shape_commands.hpp",
-          "name": "append_shape_path"
-        },
-        {
-          "include": "flight/shape/register_default_shape_bounds_commands.hpp",
-          "name": "register_default_shape_bounds_commands"
-        }
-      ],
-      "diagnostic": "'append_shape_begin_fill' was not declared in this scope",
-      "defect": "The emitter writes 7 function name(s) owned by flight::shape unqualified inside namespace flight::scene2d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "physics3d-abi-unqualified-physics2d-abi-names",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/physics3d_abi/",
@@ -7827,22 +7561,6 @@
       ],
       "diagnostic": "'HandleTextInputKeyboardOptions' was not declared in this scope",
       "defect": "The emitter writes 13 name(s) owned by flight::types unqualified inside namespace flight::textinput. Collected by compiling every header in the package with -fmax-errors=0, so names MASKED behind an earlier diagnostic in the same file are included -- the compile report keeps only the first.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "skeleton2d-formats-unqualified-easing-names",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/skeleton2d_formats/",
-      "namespace": "flight::easing",
-      "symbols": [
-        {
-          "include": "flight/easing/ease_cubic_bezier.hpp",
-          "name": "ease_cubic_bezier"
-        }
-      ],
-      "diagnostic": "'ease_cubic_bezier' was not declared in this scope",
-      "defect": "The emitter writes 1 function name(s) owned by flight::easing unqualified inside namespace flight::skeleton2d_formats. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
@@ -8118,18 +7836,6 @@
       "expires": "when length-bounded reads from nullable generic arrays flatten the bounds absence into the element absence; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "signals-safe-flatten-generic-slot-read",
-      "kind": "respell-reference-member-access",
-      "appliesTo": "flight/signals/safe.hpp",
-      "from": "std::optional<std::optional<T>> slot = slots.get(i);",
-      "to": "std::optional<T> slot = slots.get(i).value_or(std::nullopt);",
-      "sourceDeclaration": "packages/signals/src/safe.ts -- slots[i] reads the snapshot `(T | null)[]` inside `for (let i = 0; i < slots.length; i++)`, with exactly the one null absence channel the element declares",
-      "diagnostic": "the bounds optional from Array::get nests the slot element optional, so the narrowed slot is passed to tombstone_once_slot and called as optional<T>",
-      "defect": "The same nested read signals-flatten-generic-slot-read repairs in slot.hpp: Array<optional<T>>::get distinguishes an out-of-range read from an empty in-range element, while JavaScript exposes both as the same nullish slot value in this length-bounded loop, and the narrowed read unwraps only the outer layer. It was unreachable until emitSignalSafe could be instantiated (compiler-constrained-type-parameter-union-slot).",
-      "expectedWhen": "always",
-      "expires": "when length-bounded reads from nullable generic arrays flatten the bounds absence into the element absence; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "signals-safe-tombstone-identity-comparison",
       "kind": "respell-reference-member-access",
       "appliesTo": "flight/signals/safe.hpp",
@@ -8369,42 +8075,6 @@
       "defect": "The emitter correctly represents the readonly parameter as a structural view but does not project that view back to its retained owner identity for Map lookup. The adjacent erase path already emits the same structural_ref_cast for this key.",
       "expectedWhen": "always",
       "expires": "when readonly object views used as identity-map keys retain their shared owner for lookup as they already do for erase; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "structural-record-entity-runtime-key-member-spelling",
-      "kind": "respell-reference-member-access",
-      "appliesTo": "flight/",
-      "from": ".EntityRuntimeKey = structural_record_source->EntityRuntimeKey",
-      "to": ".entity_runtime_key = structural_record_source->entity_runtime_key",
-      "sourceDeclaration": "packages/types/src/Entity.ts -- the symbol-keyed EntityRuntimeKey slot is emitted as the C++ member entity_runtime_key",
-      "diagnostic": "a structural-record materialization names EntityRuntimeKey instead of the emitted entity_runtime_key member",
-      "defect": "The structural-record materializer retains the TypeScript symbol binding's source spelling in a C++ designated initializer and member read even though the owner type declares the normalized entity_runtime_key member.",
-      "expectedWhen": "always",
-      "expires": "when structural-record materialization uses emitted C++ member names for symbol-keyed fields; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "structural-record-color-attachments-member-spelling",
-      "kind": "respell-reference-member-access",
-      "appliesTo": "flight/",
-      "from": ".colorAttachments = structural_record_source->colorAttachments",
-      "to": ".color_attachments = structural_record_source->color_attachments",
-      "sourceDeclaration": "packages/types/src/CanvasRenderTarget.ts -- colorAttachments is emitted as the C++ member color_attachments",
-      "diagnostic": "a structural-record materialization names colorAttachments instead of the emitted color_attachments member",
-      "defect": "The structural-record materializer retains the TypeScript field spelling in both sides of a C++ designated member copy instead of using the normalized emitted member name.",
-      "expectedWhen": "always",
-      "expires": "when structural-record materialization consistently uses normalized emitted C++ member names; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "structural-record-surface-ownership-member-spelling",
-      "kind": "respell-reference-member-access",
-      "appliesTo": "flight/",
-      "from": ".surfaceOwnership = structural_record_source->surfaceOwnership",
-      "to": ".surface_ownership = structural_record_source->surface_ownership",
-      "sourceDeclaration": "packages/types/src/CanvasRenderTarget.ts -- surfaceOwnership is emitted as the C++ member surface_ownership",
-      "diagnostic": "a structural-record materialization names surfaceOwnership instead of the emitted surface_ownership member",
-      "defect": "The structural-record materializer retains the TypeScript field spelling in both sides of a C++ designated member copy instead of using the normalized emitted member name.",
-      "expectedWhen": "always",
-      "expires": "when structural-record materialization consistently uses normalized emitted C++ member names; sdk:check fails if this repair matches no header."
     },
     {
       "id": "scene2d-canvas-bitmap-text-draw-forward-declaration",
@@ -8895,18 +8565,6 @@
       "expires": "when wgpuDraw emits for the native profile or callers of its refused declarations receive declarations automatically; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "render-wgpu-never-assertion-preserves-argument",
-      "kind": "respell-reference-member-access",
-      "appliesTo": "flight/render_wgpu/wgpu_texture_render_target.hpp",
-      "from": "static_cast<void>(render_proxy)",
-      "to": "render_proxy",
-      "sourceDeclaration": "packages/render-wgpu/src/wgpuTextureRenderTarget.ts -- renderProxy as never is a TypeScript-only assertion passed unchanged to drawWgpuQuadWithTransform",
-      "diagnostic": "invalid use of void expression at draw_wgpu_quad_with_transform",
-      "defect": "The emitter lowers a TypeScript never assertion to a C++ cast-to-void expression, discarding the argument instead of preserving the source value through the static assertion.",
-      "expectedWhen": "always",
-      "expires": "when TypeScript never assertions erase without changing the emitted value expression; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "effects-refused-padding-resolver-declarations",
       "kind": "declare-refused-effect-padding-resolvers",
       "appliesTo": "flight/effects/",
@@ -8939,17 +8597,6 @@
       "defect": "The type emitter flattens inherited interface fields into five unrelated C++ owners, discarding the declared Command heritage and preventing identity-preserving shared_ptr widening from each concrete command to its base interface.",
       "expectedWhen": "always",
       "expires": "when emitted reference-backed interfaces retain declared interface heritage instead of duplicating inherited fields; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "node-transform2d-world-revision-forward-declaration",
-      "kind": "insert-forward-declaration",
-      "appliesTo": "flight/node/node_transform2d.hpp",
-      "symbol": "compute_node_world_transform_revision",
-      "declaration": "namespace flight::node { template <typename Traits> inline void compute_node_world_transform_revision(std::shared_ptr<flight::types::NodeRuntime<Traits>> runtime, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>>> parent_runtime); }",
-      "diagnostic": "no member named 'compute_node_world_transform_revision' in namespace 'flight::node'",
-      "defect": "revision.hpp includes node.hpp, which reaches node_transform2d.hpp/node_transform3d.hpp while revision.hpp is still guarded and incomplete, so their qualified calls to compute_node_world_transform_revision are parsed before its definition. A declaration at the import boundary names the same function template and breaks only the declaration-order cycle; it relies on source patch node-revision-required-parent-runtime having removed the default argument.",
-      "expectedWhen": "always",
-      "expires": "when cyclic imported functions are declared before package bodies; sdk:check fails if this repair matches no header."
     },
     {
       "id": "node-transform3d-world-revision-forward-declaration",
@@ -9061,30 +8708,6 @@
       "expires": "when anonymous structural options passed across package boundaries retain the callee owner or lower through an identity-preserving structural view; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "textureatlas-formats-aseprite-source-size-member-spelling",
-      "kind": "respell-reference-member-access",
-      "appliesTo": "flight/textureatlas_formats/texture_atlas_aseprite_parse.hpp",
-      "from": ".sourceSize = structural_record_source->sourceSize",
-      "to": ".source_size = structural_record_source->source_size",
-      "sourceDeclaration": "packages/types/src/TextureAtlasAsepriteSchema.ts -- TextureAtlasAsepriteBaseFrame.sourceSize is emitted as the C++ member source_size",
-      "diagnostic": "no member named sourceSize in flight::types::TextureAtlasAsepriteBaseFrame",
-      "defect": "The structural-record materializer retains the TypeScript property spelling in both sides of a C++ designated member copy instead of using the normalized emitted member name.",
-      "expectedWhen": "always",
-      "expires": "when structural-record materialization consistently uses normalized emitted C++ member names; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "textureatlas-formats-aseprite-sprite-source-size-member-spelling",
-      "kind": "respell-reference-member-access",
-      "appliesTo": "flight/textureatlas_formats/texture_atlas_aseprite_parse.hpp",
-      "from": ".spriteSourceSize = structural_record_source->spriteSourceSize",
-      "to": ".sprite_source_size = structural_record_source->sprite_source_size",
-      "sourceDeclaration": "packages/types/src/TextureAtlasAsepriteSchema.ts -- TextureAtlasAsepriteBaseFrame.spriteSourceSize is emitted as the C++ member sprite_source_size",
-      "diagnostic": "no member named spriteSourceSize in flight::types::TextureAtlasAsepriteBaseFrame",
-      "defect": "The structural-record materializer retains the TypeScript property spelling in both sides of a C++ designated member copy instead of using the normalized emitted member name.",
-      "expectedWhen": "always",
-      "expires": "when structural-record materialization consistently uses normalized emitted C++ member names; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "texture-cube-sampler-preserves-readonly",
       "kind": "respell-reference-member-access",
       "appliesTo": "flight/texture/cube_texture.hpp",
@@ -9155,18 +8778,6 @@
       "defect": "The type emitter flattens inherited interface fields into unrelated C++ owners: ColorMatrixAdjustment repeats Adjustment's fields and TintAdjustment repeats both, with no heritage. TypeScript widens a TintAdjustment to Adjustment implicitly, so setNodeColorAdjustmentsTint builds flight::Array<flight::Ref<Adjustment>>{create_tint_adjustment(tint)}, which has no conversion from Ref<TintAdjustment>. Restoring the declared interface heritage removes only duplicated member declarations; every field keeps its name, type and declaration order (entity_runtime_key, kind, color_matrix), and Ref<TintAdjustment> then converts to Ref<Adjustment> sharing the same object, which is the reference identity TypeScript has.",
       "expectedWhen": "always",
       "expires": "when emitted reference-backed interfaces retain declared interface heritage instead of duplicating inherited fields; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "structural-record-on-trigger-member-spelling",
-      "kind": "respell-reference-member-access",
-      "appliesTo": "flight/",
-      "from": ".onTrigger = structural_record_source->onTrigger",
-      "to": ".on_trigger = structural_record_source->on_trigger",
-      "sourceDeclaration": "packages/types/src/Shortcut.ts -- the Shortcut entity's onTrigger field is emitted as the C++ member on_trigger",
-      "diagnostic": "a structural-record materialization names onTrigger instead of the emitted on_trigger member",
-      "defect": "The structural-record materializer retains the TypeScript field spelling in both sides of a C++ designated member copy instead of using the normalized emitted member name. The same repair kind already covers EntityRuntimeKey, colorAttachments and surfaceOwnership; this is the Shortcut entity's remaining field.",
-      "expectedWhen": "always",
-      "expires": "when structural-record materialization consistently uses normalized emitted C++ member names; sdk:check fails if this repair matches no header"
     },
     {
       "id": "render-state-nullable-structural-canvas-host-fallback",
