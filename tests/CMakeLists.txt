@@ -1,3 +1,13 @@
+# Per-package labels: `ctest -L '^pkg:<package>$'` runs exactly the semantic tests that include that
+# SDK package's generated headers, and `npm run pkg:compile -- <package> --ctest` builds and runs them.
+# A label is the unscoped npm name (`pkg:scene2d-canvas`, not the C++ directory), and every package a
+# test includes directly is listed; scripts/packageScope.test.mjs checks this table against the
+# includes so a new test or include cannot go unlabeled.
+function(flight_cpp_package_test_labels test)
+  list(TRANSFORM ARGN PREPEND "pkg:" OUTPUT_VARIABLE labels)
+  set_tests_properties("${test}" PROPERTIES LABELS "${labels}")
+endfunction()
+
 add_executable(flight_cpp_runtime_tests runtime_test.cpp)
 target_link_libraries(flight_cpp_runtime_tests PRIVATE Flight::Cpp)
 flight_cpp_set_project_warnings(flight_cpp_runtime_tests)
@@ -189,7 +199,7 @@ if(TARGET Flight::HostSdlGl)
   target_include_directories(flight_cpp_generated_gl_registries_tests BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include")
   target_link_libraries(flight_cpp_generated_gl_registries_tests PRIVATE Flight::Cpp Flight::SdkPreview Flight::HostSdlGl)
   add_test(NAME flight_cpp.generated_gl_registries COMMAND flight_cpp_generated_gl_registries_tests)
-  set_tests_properties(flight_cpp.generated_gl_registries PROPERTIES LABELS "pkg:render-gl;pkg:types")
+  flight_cpp_package_test_labels(flight_cpp.generated_gl_registries render-gl scene3d-gl types)
 endif()
 
 add_executable(
@@ -1663,16 +1673,6 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_picking_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_picking COMMAND flight_cpp_generated_picking_tests)
 
-# Per-package labels: `ctest -L '^pkg:<package>$'` runs exactly the semantic tests that include that
-# SDK package's generated headers, and `npm run pkg:compile -- <package> --ctest` builds and runs them.
-# A label is the unscoped npm name (`pkg:scene2d-canvas`, not the C++ directory), and every package a
-# test includes directly is listed; scripts/packageScope.test.mjs checks this table against the
-# includes so a new test or include cannot go unlabeled.
-function(flight_cpp_package_test_labels test)
-  list(TRANSFORM ARGN PREPEND "pkg:" OUTPUT_VARIABLE labels)
-  set_tests_properties("${test}" PROPERTIES LABELS "${labels}")
-endfunction()
-
 flight_cpp_package_test_labels(flight_cpp.structural_row types)
 flight_cpp_package_test_labels(flight_cpp.merged_row app entity types)
 flight_cpp_package_test_labels(flight_cpp.indexed_member types)
@@ -1694,9 +1694,9 @@ flight_cpp_package_test_labels(flight_cpp.generated_render_scene2d_coverage rend
 flight_cpp_package_test_labels(flight_cpp.generated_canvas_render_state_owner render types)
 flight_cpp_package_test_labels(flight_cpp.generated_canvas_texture_resolver scene2d-canvas)
 flight_cpp_package_test_labels(flight_cpp.generated_texture texture types)
-flight_cpp_package_test_labels(flight_cpp.generated_texture_options_row texture types)
-flight_cpp_package_test_labels(flight_cpp.generated_cube_texture texture types)
-flight_cpp_package_test_labels(flight_cpp.generated_cube_texture_api texture types)
+flight_cpp_package_test_labels(flight_cpp.generated_texture_options_row texture)
+flight_cpp_package_test_labels(flight_cpp.generated_cube_texture texture)
+flight_cpp_package_test_labels(flight_cpp.generated_cube_texture_api texture)
 flight_cpp_package_test_labels(flight_cpp.generated_bitmap bitmap)
 flight_cpp_package_test_labels(flight_cpp.generated_bitmapfont bitmap bitmapfont)
 flight_cpp_package_test_labels(flight_cpp.generated_texture_formats texture-formats)
@@ -1708,10 +1708,10 @@ flight_cpp_package_test_labels(flight_cpp.generated_entity entity)
 flight_cpp_package_test_labels(flight_cpp.generated_camera_controls camera camera-controls geometry)
 flight_cpp_package_test_labels(flight_cpp.generated_textureatlas textureatlas)
 flight_cpp_package_test_labels(flight_cpp.generated_textureatlas_formats textureatlas textureatlas-formats)
-flight_cpp_package_test_labels(flight_cpp.generated_tilemap tilemap)
+flight_cpp_package_test_labels(flight_cpp.generated_tilemap signals tilemap)
 flight_cpp_package_test_labels(flight_cpp.generated_tilemap_formats tilemap-formats)
-flight_cpp_package_test_labels(flight_cpp.generated_gizmo gizmo)
-flight_cpp_package_test_labels(flight_cpp.generated_selection selection)
+flight_cpp_package_test_labels(flight_cpp.generated_gizmo camera gizmo scene2d selection signals)
+flight_cpp_package_test_labels(flight_cpp.generated_selection selection signals)
 flight_cpp_package_test_labels(flight_cpp.generated_spritesheet_formats spritesheet-formats)
 flight_cpp_package_test_labels(flight_cpp.generated_spritesheet signals spritesheet)
 flight_cpp_package_test_labels(flight_cpp.generated_materials materials)
@@ -1789,7 +1789,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_clock clock signals)
 flight_cpp_package_test_labels(flight_cpp.generated_movieclip movieclip signals timeline)
 flight_cpp_package_test_labels(flight_cpp.generated_swf_reader swf)
 flight_cpp_package_test_labels(flight_cpp.generated_swf swf)
-flight_cpp_package_test_labels(flight_cpp.generated_swf_video_texture swf texture)
+flight_cpp_package_test_labels(flight_cpp.generated_swf_video_texture swf)
 flight_cpp_package_test_labels(flight_cpp.generated_physics2d physics2d)
 flight_cpp_package_test_labels(flight_cpp.generated_spatial spatial)
 flight_cpp_package_test_labels(flight_cpp.generated_spatial_notice spatial)
@@ -2096,6 +2096,8 @@ if(TARGET Flight::HostSdl)
 endif()
 
 flight_cpp_package_test_labels(flight_cpp.generated_video_texture_options texture types)
+flight_cpp_package_test_labels(flight_cpp.generated_video_texture_callable_proxies texture)
+flight_cpp_package_test_labels(flight_cpp.generated_video_texture_helpers texture types)
 
 add_executable(flight_cpp_generated_video_texture_helpers_tests generated_video_texture_helpers_test.cpp)
 target_link_libraries(flight_cpp_generated_video_texture_helpers_tests PRIVATE Flight::Cpp)

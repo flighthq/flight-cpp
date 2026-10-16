@@ -717,8 +717,16 @@ describe('binding-profile transition', () => {
       { id: OLD_SET, profiles: OLD_PROFILES },
       { id: NEW_SET, profiles: NEW_PROFILES },
     ].sort((left, right) => compareText(left.id, right.id)));
-    // The profile record keeps the position a full run gives bindingProfiles.
-    assert.deepEqual(Object.keys(merged).slice(0, 4), ['schema', 'compiler', 'bindingProfileSets', 'namespaceMapping']);
+    // The profile record keeps the position a full run gives bindingProfiles, and the keys a full run
+    // writes after it keep theirs: `profileTypeNames` precedes `namespaceMapping` in both manifest forms
+    // (sdkGeneration.mjs), so the transition form is `bindingProfileSets` followed by it.
+    assert.deepEqual(Object.keys(merged).slice(0, 5), [
+      'schema',
+      'compiler',
+      'bindingProfileSets',
+      'profileTypeNames',
+      'namespaceMapping',
+    ]);
     // One Flight revision throughout: only the profiles are mixed.
     assert.deepEqual(merged.source.revisions, [REVISION]);
     for (const row of merged.packages) {

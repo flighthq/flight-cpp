@@ -121,31 +121,55 @@ export function parseChainFromBody(body) {
   return hits.map((hit) => hit.step);
 }
 
-// Assert the ports against the REAL TypeScript of both pins. The old pin is read from the working tree
-// of the pinned checkout and the new pin from `git show 806d257:...` in that same checkout, so the
-// checkout is read, never moved. An absent checkout is reported, not failed: a fresh clone stays runnable.
+// Assert the ports against the REAL TypeScript of both pins. BOTH converters are read from their own
+// revision with `git show <pin>:...` in the pinned checkout, so the checkout is read, never moved.
+//
+// Reading the old converter from the checkout's working tree was the obvious first version, and it is
+// wrong the moment the pin move it exists to perform is applied: after the move the working tree holds
+// the NEW converter, `extractBody` finds no `snakeCase` signature and the tool throws before it plans
+// anything -- so it could never be re-run over a branch that already carries the rename, which is the
+// property this script is documented to have. The working tree is still the fallback for a checkout that
+// does not carry the old commit, and a checkout with neither is reported rather than failed.
+//
+// An absent checkout is reported, not failed: a fresh clone stays runnable.
 export function runConverterSelfCheck(repoRoot) {
   const checkout = path.join(repoRoot, ...FLIGHT_COMPILER_SRC);
   if (!fs.existsSync(path.join(checkout, '.git'))) {
     return { status: 'skipped', reason: `no pinned flight-compiler checkout at ${checkout}` };
   }
-  let newSource;
-  try {
-    newSource = execFileSync('git', ['-C', checkout, 'show', `${NEW_PIN}:${IDENTITY_SOURCE_PATH}`], {
-      encoding: 'utf8',
-      maxBuffer: 64 * 1024 * 1024,
-    });
-  } catch (error) {
-    return { status: 'skipped', reason: `${NEW_PIN} is not in the pinned checkout: ${String(error.message).split('\n')[0]}` };
+  const readRevision = (revision) => {
+    try {
+      return execFileSync('git', ['-C', checkout, 'show', `${revision}:${IDENTITY_SOURCE_PATH}`], {
+        encoding: 'utf8',
+        maxBuffer: 64 * 1024 * 1024,
+      });
+    } catch {
+      return undefined;
+    }
+  };
+  const newSource = readRevision(NEW_PIN);
+  if (newSource === undefined) {
+    return { status: 'skipped', reason: `${NEW_PIN} is not in the pinned checkout` };
   }
-  const oldSource = fs.readFileSync(path.join(checkout, IDENTITY_SOURCE_PATH), 'utf8');
+  const oldFromRevision = readRevision(OLD_PIN);
+  const workingTree = path.join(checkout, IDENTITY_SOURCE_PATH);
+  const oldSource = oldFromRevision ?? (fs.existsSync(workingTree) ? fs.readFileSync(workingTree, 'utf8') : undefined);
+  if (oldSource === undefined) {
+    return { status: 'skipped', reason: `neither ${OLD_PIN} nor a working-tree converter is present` };
+  }
 
   const failures = [];
   const results = [];
-  const cases = [
-    { label: 'old snakeCase', body: extractBody(oldSource, OLD_SIGNATURE, 'old'), declared: OLD_CHAIN },
-    { label: 'new convertCppIdentifierToSnakeCase', body: extractBody(newSource, NEW_SIGNATURE, 'new'), declared: NEW_CHAIN },
-  ];
+  let cases;
+  try {
+    cases = [
+      { label: 'old snakeCase', body: extractBody(oldSource, OLD_SIGNATURE, 'old'), declared: OLD_CHAIN },
+      { label: 'new convertCppIdentifierToSnakeCase', body: extractBody(newSource, NEW_SIGNATURE, 'new'), declared: NEW_CHAIN },
+    ];
+  } catch (error) {
+    // Refusing loudly beats computing a map from a port nobody checked: `main` treats `fail` as fatal.
+    return { status: 'fail', checkout, results: [], examples: [], failures: [String(error.message)] };
+  }
   for (const item of cases) {
     const parsed = parseChainFromBody(item.body);
     const chainMatches = JSON.stringify(parsed) === JSON.stringify(item.declared);
@@ -240,7 +264,43 @@ export function harvestIdentifiers(repoRoot) {
       basenameCount += 1;
     }
   }
-  return { status: 'ok', files, tokenCount, basenameCount, identifiers: [...identifiers].sort() };
+  const synthesized = harvestEmittedModuleNames(repoRoot, identifiers);
+  return { status: 'ok', files, tokenCount, basenameCount, synthesizedCount: synthesized, identifiers: [...identifiers].sort() };
+}
+
+// The emitter names modules that no TypeScript token spells.
+//
+// An open base contract -- `export interface Material3D extends Material` carrying a symbol-keyed phantom
+// -- is materialized as a union of its implementors, and the emitter writes it as `<Name>Value.ts` and
+// `<Name>Value`. Nothing in the Flight source contains the token `Material3DValue`, so a harvest that
+// reads only the source cannot rename it. That is not hypothetical: the pin move left
+// `generated/include/flight/types/material3_dvalue.hpp` untouched, the tree kept compiling against it,
+// and the next regeneration renamed the file out from under two overrides that included it.
+//
+// Reading the committed inventory is the way to reach those names, because every emitted header states
+// the source and the declaration it came from. That is the emitter's own output rather than an inferred
+// pattern, so the map gains exactly the names the emitter really produced and no others.
+function harvestEmittedModuleNames(repoRoot, identifiers) {
+  const generatedRoot = path.join(repoRoot, 'generated', 'include');
+  if (!fs.existsSync(generatedRoot)) return 0;
+  let synthesized = 0;
+  for (const file of walkFiles(generatedRoot)) {
+    if (path.extname(file) !== '.hpp') continue;
+    let banner;
+    try {
+      banner = fs.readFileSync(file, 'utf8').split('\n', 1)[0];
+    } catch {
+      continue;
+    }
+    // `// Generated by <tool> from <pkg>/<packages>/<dir>/<Source>.ts#<Declaration> at <rev>. Do not edit.`
+    const provenance = /^\/\/ Generated by \S+ from (\S+)\.ts#([A-Za-z_][A-Za-z0-9_]*)/u.exec(banner);
+    if (!provenance) continue;
+    identifiers.add(provenance[2]);
+    const stem = path.basename(provenance[1]);
+    if (stem.length > 0) identifiers.add(stem);
+    synthesized += 1;
+  }
+  return synthesized;
 }
 
 // Build the map and the part index it is consulted through. Keyed on the OLD spelling throughout: that
@@ -725,6 +785,7 @@ export function formatReport(plan, scope, { selfCheck, harvest } = {}) {
     push(`identifiers harvested: ${harvest.status}`);
     if (harvest.status === 'skipped') push(`  ${harvest.reason}`);
     else push(`  source files ${harvest.files}, tokens seen ${harvest.tokenCount}, distinct identifiers ${harvest.identifiers.length}`);
+    if (harvest.status !== 'skipped') push(`  emitted headers read for module names ${harvest.synthesizedCount ?? 0}`);
   }
   push('');
   push('mapping');
