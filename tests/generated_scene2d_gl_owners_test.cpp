@@ -64,8 +64,8 @@ int main() {
     material->kind = flight::String("test-material");
     using MaterialView = flight::StructuralRef<flight::RowReadonly<
         flight::RowOf<flight::Ref<flight::types::Material>>>>;
-    MaterialView material_view(flight::StructuralRef<flight::RowWritable<
-        flight::RowOf<flight::Ref<flight::types::Material2D>>>>(material));
+    MaterialView material_view{flight::StructuralRef<flight::RowWritable<
+        flight::RowOf<flight::Ref<flight::types::Material2D>>>>{material}};
     auto material_renderer = flight::make_ref<flight::types::GlQuadMaterialRenderer>();
     flight::render_gl::register_gl_quad_material_renderer(state, material->kind, material_renderer);
     require(material_view.shared_exact_object<flight::types::Material2D>() == material &&
