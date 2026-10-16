@@ -63,11 +63,14 @@ One header, `flight/picking/runtime_support.hpp`, was a hand-written support hea
 It has no generated counterpart to be derived from, so it was folded into the two overrides that included
 it and removed. `npm run overrides:check` is green: 186 declared, none drifted, none unmanifested.
 
-## Packages that compile fewer headers than the M2 baseline
+## What the move broke before the carry
 
-| package | baseline | now | what it is |
+Measured against the M2 baseline with the crashed subset retried serially, before the twenty prior
+emissions were carried. This is the work the carry answers, not the state the tree ships in.
+
+| package | baseline | new lowering | what it is |
 | --- | --- | --- | --- |
-| materials | 20 | 21 | recovered by the re-instated patch; above the baseline, so not a regression |
+| materials | 20 | 12 -> 21 | the re-instated disambiguator patch; above the baseline now |
 | image_codec | 5 | 1 | `std::variant<ArrayBuffer, Uint8Array>` cast |
 | text | 9 | 4 | `get_text_layout` |
 | intl | 5 | 3 | `get_collator`, `get_plural_rules` |
@@ -75,30 +78,12 @@ it and removed. `npm run overrides:check` is green: 186 declared, none drifted, 
 | effects_wgpu | 6 | 4 | `optional<Ref<WgpuEffectPipeline>>` conversion |
 | shape | 14 | 13 | `scale9_shape.hpp`; `shape.hpp` also lost an include of `flight/types/shape_command.hpp` |
 | tray | 1 | 0 | `destroy_tray_runtime` |
-| tokens | (gained elsewhere) | | `flight_document_scene_tokens.hpp`, optional-variant conversion |
 | scene2d_resources | 7 | 6 | `load_scene_2d_image_resources.hpp` |
-| scene3d_gl | 23 | 16 | NOT a regression. Every "lost" header was a `-j8` compiler crash; retried serially, all pass. The six scene3d_gl headers that still fail serially -- `_internal_index`, `anisotropy_pbr_gl_extension`, `gl_blinn_phong_mesh_material_renderer`, `gl_extended_pbr_mesh_material_renderer`, `gl_shaded_prelude`, `gl_specular_glossiness_pbr_mesh_material_renderer` -- failed at the M2 baseline too. |
+| scene3d_gl | 23 | 23 | NOT a regression: every "lost" header was a `-j8` crash and passes at `-j1`, and the six scene3d_gl headers that still fail serially failed at the baseline too |
 
 `effects_wgpu` and `scene3d_wgpu` were also the two packages still emitted at the older source revision
 `7e2fc7d`; the move regenerated them at `a627849`, so their headers changed for a source reason and not
 for a compiler one.
-
-## The header sweep
-
-`FLIGHT_CPP_COMPILE_JOBS=8 npm run sdk:compile:sdl`:
-
-| | baseline (2b687ea) | after the move |
-| --- | --- | --- |
-| headers attempted | 3152 | 3152 |
-| headers compiling | **2292** | **2291** |
-| headers failing | 860 | 861 |
-| failing with `compiler exited with status 134` | 9 | 20 |
-
-The sweep is noisy at `-j8`: a `134` is the compiler dying under eight concurrent heavy translation units,
-not a rejected header. Retrying all twenty serially, fourteen passed and the other six -- every one in
-scene3d_gl -- had already failed at the baseline. The per-package table below is what survives that, after
-mapping the baseline's pre-rename header names onto the names the rename commit gave them and setting the
-crashes aside.
 
 ## The carry table
 
