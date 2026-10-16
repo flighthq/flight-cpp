@@ -26,15 +26,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/spot_light.hpp>
 
-#include <flight/types/scene3_drender_list.hpp>
+#include <flight/types/scene_3d_render_list.hpp>
 
-#include <flight/types/scene3_dlight_block.hpp>
+#include <flight/types/scene_3d_light_block.hpp>
 
 #include <flight/types/render_state.hpp>
 
 #include <flight/types/point_light.hpp>
 
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 
 #include <flight/types/node.hpp>
 
@@ -50,7 +50,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/directional_light.hpp>
 
-#include <flight/types/camera3_d.hpp>
+#include <flight/types/camera_3d.hpp>
 
 #include <flight/types/ambient_light.hpp>
 
@@ -140,7 +140,7 @@ inline bool is_float32_array_equal(flight::Float32Array a, flight::Float32Array 
   return true;
 }
 
-inline void apply_scene3_dprojection_jitter(flight::Ref<flight::types::Matrix4> out, double x, double y) {
+inline void apply_scene_3d_projection_jitter(flight::Ref<flight::types::Matrix4> out, double x, double y) {
   flight::Float32Array m = out->m;
   ([&]() { auto&& typed_array = m; const auto typed_index = 0.0; const auto typed_current = typed_array.get_index(typed_index); const auto typed_right = (x * m.get_index(3.0)); const auto typed_value = typed_current + typed_right; return typed_array.set_index(typed_index, typed_value); }());
   ([&]() { auto&& typed_array_2 = m; const auto typed_index_2 = 4.0; const auto typed_current_2 = typed_array_2.get_index(typed_index_2); const auto typed_right_2 = (x * m.get_index(7.0)); const auto typed_value_2 = typed_current_2 + typed_right_2; return typed_array_2.set_index(typed_index_2, typed_value_2); }());
@@ -163,7 +163,7 @@ struct PreparedScene3D : public flight::ReferenceEnabled {
 
 inline const double default_viewport_aspect = 1.0;
 
-inline double resolve_scene3_dviewport_aspect(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, std::optional<double> viewport_aspect) {
+inline double resolve_scene_3d_viewport_aspect(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, std::optional<double> viewport_aspect) {
   if (((viewport_aspect.has_value() && std::isfinite(viewport_aspect.value())) && (viewport_aspect.value() > 0.0))) {
     return viewport_aspect.value();
   }
@@ -176,7 +176,7 @@ inline double resolve_scene3_dviewport_aspect(flight::StructuralRef<flight::RowR
 
 inline flight::WeakMap<flight::Ref<flight::types::RenderState>, flight::Ref<PreparedScene3D>> prepared_scene3_ds = flight::WeakMap<flight::Ref<flight::types::RenderState>, flight::Ref<PreparedScene3D>>();
 
-inline flight::Ref<PreparedScene3D> ensure_prepared_scene3_d(flight::Ref<flight::types::RenderState> state) {
+inline flight::Ref<PreparedScene3D> ensure_prepared_scene_3d(flight::Ref<flight::types::RenderState> state) {
   auto prepared = prepared_scene3_ds.get(state);
   if (!prepared.has_value()) {
     auto view_projection = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
@@ -260,9 +260,9 @@ inline void pack_spot_light(flight::Float32Array data, double offset, flight::St
 
 inline flight::Ref<flight::types::Matrix4> scratch_projection = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
-inline void set_scene3_dview_projection_matrix4(flight::Ref<flight::types::Matrix4> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, double aspect) {
+inline void set_scene_3d_view_projection_matrix4(flight::Ref<flight::types::Matrix4> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, double aspect) {
   flight::camera::set_projection_matrix4(scratch_projection, flight::row_get<flight::RowKey<"projection">>(camera), aspect, flight::row_get<flight::RowKey<"near">>(camera), flight::row_get<flight::RowKey<"far">>(camera));
-  apply_scene3_dprojection_jitter(scratch_projection, flight::row_get<flight::RowKey<"jitter">>(camera)->x, flight::row_get<flight::RowKey<"jitter">>(camera)->y);
+  apply_scene_3d_projection_jitter(scratch_projection, flight::row_get<flight::RowKey<"jitter">>(camera)->x, flight::row_get<flight::RowKey<"jitter">>(camera)->y);
   if (flight::to_boolean(flight::row_get<flight::RowKey<"nearClipPlane">>(camera))) {
     flight::camera::apply_oblique_near_clip_plane(scratch_projection, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::PlaneLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Plane>>>>(flight::row_get<flight::RowKey<"nearClipPlane">>(camera).value())));
   }
@@ -271,7 +271,7 @@ inline void set_scene3_dview_projection_matrix4(flight::Ref<flight::types::Matri
 
 inline flight::Float32Array scratch_light_data = flight::Float32Array(flight::types::scene_light_block_floats);
 
-inline void pack_scene3_dlight_block(flight::Ref<flight::types::Scene3DLightBlock> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Scene3DLightsLike>>> lights) {
+inline void pack_scene_3d_light_block(flight::Ref<flight::types::Scene3DLightBlock> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Scene3DLightsLike>>> lights) {
   scratch_light_data.fill(0.0);
   double directional_count = 0.0;
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::DirectionalLight>>>>> directional = flight::row_get<flight::RowKey<"directional">>(lights);
@@ -538,12 +538,12 @@ inline std::optional<std::function<void(flight::StructuralRef<flight::RowReadonl
 // to mutate. Declare both the storage slot and the accessor result as the full writable Transform3DNode row
 // where initialization establishes those cells, rather than widening Readonly<Node3D> at the use site.
 
-inline flight::Ref<flight::types::Scene3DRenderList> prepare_scene3_drender(flight::Ref<flight::types::RenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>> scene, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Scene3DLightsLike>>> lights, std::optional<double> viewport_aspect = std::nullopt) {
-  auto prepared = ensure_prepared_scene3_d(state);
+inline flight::Ref<flight::types::Scene3DRenderList> prepare_scene_3d_render(flight::Ref<flight::types::RenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>> scene, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Scene3DLightsLike>>> lights, std::optional<double> viewport_aspect = std::nullopt) {
+  auto prepared = ensure_prepared_scene_3d(state);
   auto list = prepared->list;
-  set_scene3_dview_projection_matrix4(prepared->view_projection, camera, resolve_scene3_dviewport_aspect(camera, viewport_aspect));
+  set_scene_3d_view_projection_matrix4(prepared->view_projection, camera, resolve_scene_3d_viewport_aspect(camera, viewport_aspect));
   flight::geometry::set_frustum_from_matrix4(prepared->frustum, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(prepared->view_projection)));
-  pack_scene3_dlight_block(flight::structural_ref_cast<flight::Ref<flight::types::Scene3DLightBlock>>(list->lights), lights);
+  pack_scene_3d_light_block(flight::structural_ref_cast<flight::Ref<flight::types::Scene3DLightBlock>>(list->lights), lights);
   ([&]() { auto&& assignment_receiver = prepared->meshes; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
   ([&]() { auto&& assignment_receiver = prepared->instanced_meshes; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
   const bool refresh_transforms = (state->scene_graph_sync_policy == flight::String("refreshDerivedState"));

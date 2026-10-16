@@ -52,7 +52,7 @@ inline void upload_gl_palette_texture_rows(flight::host_sdl::WebGl2Context gl, f
         const double row_start = (y * width);
         const double row_texels = flight::minimum(width, (total_texels - row_start));
         const double float_start = (row_start * 4.0);
-        gl.tex_sub_image2_d(gl.texture_2_d, 0.0, 0.0, y, row_texels, 1.0, gl.rgba, gl.float_, data.subarray(float_start, (float_start + (row_texels * 4.0))));
+        gl.tex_sub_image_2d(gl.texture_2_d, 0.0, 0.0, y, row_texels, 1.0, gl.rgba, gl.float_, data.subarray(float_start, (float_start + (row_texels * 4.0))));
       }
       (y += 1.0);
     }
@@ -69,10 +69,10 @@ inline void upload_gl_skin_palette_texture(flight::host_sdl::WebGl2Context gl, f
     const double width = flight::minimum(total_texels, max_width);
     const double height = std::ceil((total_texels / width));
     if ((height == 1.0)) {
-      gl.tex_image2_d(gl.texture_2_d, 0.0, gl.rgba32_f, width, 1.0, 0.0, gl.rgba, gl.float_, joint_matrices);
+      gl.tex_image_2d(gl.texture_2_d, 0.0, gl.rgba32_f, width, 1.0, 0.0, gl.rgba, gl.float_, joint_matrices);
     }
     else {
-      gl.tex_image2_d(gl.texture_2_d, 0.0, gl.rgba32_f, width, height, 0.0, gl.rgba, gl.float_, nullptr);
+      gl.tex_image_2d(gl.texture_2_d, 0.0, gl.rgba32_f, width, height, 0.0, gl.rgba, gl.float_, nullptr);
       upload_gl_palette_texture_rows(gl, joint_matrices, total_texels, width, height);
     }
     gl.tex_parameteri(gl.texture_2_d, gl.texture_min_filter, gl.nearest);
@@ -86,7 +86,7 @@ inline void upload_gl_skin_palette_texture(flight::host_sdl::WebGl2Context gl, f
     const double allocated_texels = (palette->joint_capacity * texels_per_joint.value());
     const double width_2 = flight::minimum(allocated_texels, max_width_2);
     if ((total_texels <= width_2)) {
-      gl.tex_sub_image2_d(gl.texture_2_d, 0.0, 0.0, 0.0, total_texels, 1.0, gl.rgba, gl.float_, joint_matrices);
+      gl.tex_sub_image_2d(gl.texture_2_d, 0.0, 0.0, 0.0, total_texels, 1.0, gl.rgba, gl.float_, joint_matrices);
     }
     else {
       const double height_2 = std::ceil((total_texels / width_2));

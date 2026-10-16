@@ -28,11 +28,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/render_proxy_visitor.hpp>
 
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 
 #include <flight/types/render_proxy.hpp>
 
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 
 #include <flight/types/node.hpp>
 
@@ -63,14 +63,14 @@ namespace flight::types { template <typename Traits> struct NodeRuntime; }
 #include <flight/render/render_state.hpp>
 
 
-namespace flight::types { struct RenderProxy2D; struct RenderState; } namespace flight::render { inline void update_render_proxy2_d(flight::Ref<flight::types::RenderState> state, flight::types::NodeAny source, flight::Ref<flight::types::RenderProxy2D> data, std::optional<flight::Ref<flight::types::RenderProxy2D>> parent_data); }
+namespace flight::types { struct RenderProxy2D; struct RenderState; } namespace flight::render { inline void update_render_proxy_2d(flight::Ref<flight::types::RenderState> state, flight::types::NodeAny source, flight::Ref<flight::types::RenderProxy2D> data, std::optional<flight::Ref<flight::types::RenderProxy2D>> parent_data); }
 
 namespace flight::types { struct RenderState; } namespace flight::render { inline bool walk_node(flight::Ref<flight::types::RenderState> state, flight::types::Node2D root, flight::types::RenderProxyVisitor visit); }
 
 namespace flight::types { struct RenderState; } namespace flight::render { inline void walk_render_subtree(flight::Ref<flight::types::RenderState> state, flight::types::NodeAny root, std::function<void(flight::Ref<flight::types::RenderState>, flight::types::NodeAny)> visit); }
 namespace flight::render {
 
-inline flight::Ref<flight::types::RenderProxy2D> get_or_create_render_proxy2_d(flight::Ref<flight::types::RenderState> state, flight::types::Node2D source);
+inline flight::Ref<flight::types::RenderProxy2D> get_or_create_render_proxy_2d(flight::Ref<flight::types::RenderState> state, flight::types::Node2D source);
 
 using flight::types::ColorScaleBias;
 using flight::types::Matrix;
@@ -154,7 +154,7 @@ inline void install_render_adapt_hook(flight::Ref<flight::types::RenderState> st
 // invent side storage
 
 inline bool is_render_proxy_visible(flight::Ref<flight::types::RenderProxy2D> data) {
-  return ((data->visible && (data->alpha > 0.0)) && !((data->transform2_d->a == 0.0) && (data->transform2_d->d == 0.0)));
+  return ((data->visible && (data->alpha > 0.0)) && !((data->transform_2d->a == 0.0) && (data->transform_2d->d == 0.0)));
 }
 
 
@@ -432,8 +432,8 @@ inline void update_render_proxy_renderer(flight::Ref<flight::types::RenderState>
 // flight::types::NodeAny. The compiler will not reinterpret the owner, cast it, copy or materialize a
 // replacement, or add side storage.
 
-inline bool prepare_scene2_drender(flight::Ref<flight::types::RenderState> state, flight::types::Node2D source) {
-  return walk_node(state, source, update_render_proxy2_d);
+inline bool prepare_scene_2d_render(flight::Ref<flight::types::RenderState> state, flight::types::Node2D source) {
+  return walk_node(state, source, update_render_proxy_2d);
 }
 
 
@@ -471,7 +471,7 @@ inline bool prepare_scene2_drender(flight::Ref<flight::types::RenderState> state
 // recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
 // invent side storage
 
-inline void dispose_scene2_drender(flight::Ref<flight::types::RenderState> state, flight::types::NodeAny root) {
+inline void dispose_scene_2d_render(flight::Ref<flight::types::RenderState> state, flight::types::NodeAny root) {
   walk_render_subtree(state, root, dispose_render_proxy);
 }
 

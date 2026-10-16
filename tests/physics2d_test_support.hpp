@@ -121,12 +121,12 @@ inline Shape world_shape_for(const Shape& local) {
 inline Collider collider(const Shape& local, const flight::Ref<types::Physics2DMaterial>& source_material = material(),
                          bool sensor = false,
                          std::optional<flight::Ref<types::Physics2DCollisionFilter>> source_filter = std::nullopt) {
-  const Shape owned_local = flight::physics2d::clone_physics2_dlocal_shape(local);
+  const Shape owned_local = flight::physics2d::clone_physics_2d_local_shape(local);
   auto out = flight::entity::allocate_entity<Collider>();
   auto owned_filter = source_filter.has_value() ? filter(source_filter.value()->category_bits, source_filter.value()->mask_bits,
                                                          source_filter.value()->group_index)
                                                 : filter(1, 0xffffffff, 0);
-  flight::physics2d::initialize_physics2_dcollider(
+  flight::physics2d::initialize_physics_2d_collider(
       out, owned_filter, owned_local,
       material(source_material->density, source_material->friction, source_material->restitution), sensor,
       world_shape_for(owned_local));
@@ -134,14 +134,14 @@ inline Collider collider(const Shape& local, const flight::Ref<types::Physics2DM
 }
 
 inline Body body(const char* type, double x, double y, double angle = 0) {
-  return flight::physics2d::create_rigid_body2_d(flight::String(type), x, y, angle);
+  return flight::physics2d::create_rigid_body_2d(flight::String(type), x, y, angle);
 }
 
 // createPhysics2DWorld(): its own default gravity, (0, -9.81).
-inline World world() { return flight::physics2d::create_physics2_dworld(); }
+inline World world() { return flight::physics2d::create_physics_2d_world(); }
 
 inline World world(double gravity_x, double gravity_y) {
-  return flight::physics2d::create_physics2_dworld(gravity_x, gravity_y);
+  return flight::physics2d::create_physics_2d_world(gravity_x, gravity_y);
 }
 
 }  // namespace flight::physics2d_test

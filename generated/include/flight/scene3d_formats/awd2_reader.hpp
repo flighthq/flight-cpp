@@ -19,7 +19,7 @@ namespace flight::types { struct Transform3D; }
 #include <flight/geometry/matrix4.hpp>
 #include <flight/geometry/transform3d.hpp>
 #include <flight/types/matrix4.hpp>
-#include <flight/types/transform3_d.hpp>
+#include <flight/types/transform_3d.hpp>
 #include <flight/scene3d_formats/awd2_schema.hpp>
 #include <flight/scene3d_formats/shared.hpp>
 
@@ -31,28 +31,28 @@ using flight::types::Transform3D;
 inline double awd_data_type_byte_size(double data_type) {
   {
     auto switch_value = data_type;
-    if (switch_value == flight::scene3d_formats::awd2_data_int8) {
+    if (switch_value == flight::scene3d_formats::awd_2data_int8) {
       return 1.0;
     }
-    else if (switch_value == flight::scene3d_formats::awd2_data_uint8) {
+    else if (switch_value == flight::scene3d_formats::awd_2data_uint8) {
       return 1.0;
     }
-    else if (switch_value == flight::scene3d_formats::awd2_data_int16) {
+    else if (switch_value == flight::scene3d_formats::awd_2data_int16) {
       return 2.0;
     }
-    else if (switch_value == flight::scene3d_formats::awd2_data_uint16) {
+    else if (switch_value == flight::scene3d_formats::awd_2data_uint16) {
       return 2.0;
     }
-    else if (switch_value == flight::scene3d_formats::awd2_data_int32) {
+    else if (switch_value == flight::scene3d_formats::awd_2data_int32) {
       return 4.0;
     }
-    else if (switch_value == flight::scene3d_formats::awd2_data_uint32) {
+    else if (switch_value == flight::scene3d_formats::awd_2data_uint32) {
       return 4.0;
     }
-    else if (switch_value == flight::scene3d_formats::awd2_data_float32) {
+    else if (switch_value == flight::scene3d_formats::awd_2data_float32) {
       return 4.0;
     }
-    else if (switch_value == flight::scene3d_formats::awd2_data_float64) {
+    else if (switch_value == flight::scene3d_formats::awd_2data_float64) {
       return 8.0;
     }
     else {
@@ -90,28 +90,28 @@ inline double read_awd_data_value(flight::DataView view, double offset, double d
   flight::DataView dv = view;
   {
     auto switch_value_2 = data_type;
-    if (switch_value_2 == flight::scene3d_formats::awd2_data_int8) {
+    if (switch_value_2 == flight::scene3d_formats::awd_2data_int8) {
       return dv.get_int8(offset);
     }
-    else if (switch_value_2 == flight::scene3d_formats::awd2_data_int16) {
+    else if (switch_value_2 == flight::scene3d_formats::awd_2data_int16) {
       return dv.get_int16(offset, true);
     }
-    else if (switch_value_2 == flight::scene3d_formats::awd2_data_int32) {
+    else if (switch_value_2 == flight::scene3d_formats::awd_2data_int32) {
       return dv.get_int32(offset, true);
     }
-    else if (switch_value_2 == flight::scene3d_formats::awd2_data_uint8) {
+    else if (switch_value_2 == flight::scene3d_formats::awd_2data_uint8) {
       return dv.get_uint8(offset);
     }
-    else if (switch_value_2 == flight::scene3d_formats::awd2_data_uint16) {
+    else if (switch_value_2 == flight::scene3d_formats::awd_2data_uint16) {
       return dv.get_uint16(offset, true);
     }
-    else if (switch_value_2 == flight::scene3d_formats::awd2_data_uint32) {
+    else if (switch_value_2 == flight::scene3d_formats::awd_2data_uint32) {
       return dv.get_uint32(offset, true);
     }
-    else if (switch_value_2 == flight::scene3d_formats::awd2_data_float32) {
+    else if (switch_value_2 == flight::scene3d_formats::awd_2data_float32) {
       return dv.get_float32(offset, true);
     }
-    else if (switch_value_2 == flight::scene3d_formats::awd2_data_float64) {
+    else if (switch_value_2 == flight::scene3d_formats::awd_2data_float64) {
       return dv.get_float64(offset, true);
     }
     else {
@@ -243,10 +243,10 @@ inline double skip_awd_attr_list(flight::DataView view, double offset, double en
 
 inline flight::Ref<flight::types::Matrix4> awd_transform_scratch = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
-inline flight::Ref<flight::types::Transform3D> awd_transform_to_transform3_d(flight::Float64Array transform) {
+inline flight::Ref<flight::types::Transform3D> awd_transform_to_transform_3d(flight::Float64Array transform) {
   awd_transform_to_matrix4(awd_transform_scratch, transform);
-  auto out = flight::geometry::create_transform3_d();
-  flight::geometry::decompose_matrix4_to_transform3_d(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(awd_transform_scratch)));
+  auto out = flight::geometry::create_transform_3d();
+  flight::geometry::decompose_matrix4_to_transform_3d(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(awd_transform_scratch)));
   return out;
 }
 

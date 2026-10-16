@@ -36,7 +36,7 @@ struct TooltipControllerFields;
 #include <flight/types/gui_controller.hpp>
 #include <flight/types/interaction_signals.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/node_interactive_state_binding.hpp>
 #include <flight/types/pointer_event_data.hpp>
 #include <flight/types/tooltip_controller.hpp>

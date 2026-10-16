@@ -20,10 +20,10 @@ using LodMeshRuntime = flight::Ref<flight::types::Node3DRuntime>;
 } // namespace flight::types
 
 #include <flight/types/mesh.hpp>
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 #include <flight/types/node.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 #include <flight/types/vector3.hpp>
 #include <flight/types/quaternion.hpp>
 

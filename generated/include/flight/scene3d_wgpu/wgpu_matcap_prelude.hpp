@@ -25,7 +25,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/scene3d_wgpu/wgpu_mesh_fragment_tail.hpp>
 #include <flight/scene3d_wgpu/wgpu_mesh_pipeline.hpp>
-#include <flight/scene3d_wgpu/wgpu_scene3_druntime.hpp>
+#include <flight/scene3d_wgpu/wgpu_scene_3d_runtime.hpp>
 
 namespace flight::scene3d_wgpu {
 
@@ -86,7 +86,7 @@ inline flight::Ref<WgpuMatcapPipeline> compile_wgpu_matcap_pipeline(flight::Ref<
 }
 
 inline flight::Ref<WgpuMatcapPipeline> ensure_wgpu_matcap_pipeline(flight::Ref<WgpuRenderState> state, flight::Ref<WgpuMatcapDefineKey> key, flight::String format) {
-  return ensure_wgpu_scene3_dpipeline(state, flight::String("matcap:") + flight::to_string(format) + flight::String("|") + flight::to_string(build_wgpu_matcap_define_key(key)) + flight::String(""), [=](bool blended, bool skinned) { return compile_wgpu_matcap_pipeline(state, key, format, blended, skinned); });
+  return ensure_wgpu_scene_3d_pipeline(state, flight::String("matcap:") + flight::to_string(format) + flight::String("|") + flight::to_string(build_wgpu_matcap_define_key(key)) + flight::String(""), [=](bool blended, bool skinned) { return compile_wgpu_matcap_pipeline(state, key, format, blended, skinned); });
 }
 
 inline flight::Float32Array scratch = flight::Float32Array((matcap_uniform_bytes / 4.0));

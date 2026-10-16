@@ -12,7 +12,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/camera/culling.hpp>
 #include <flight/camera/depth.hpp>
 #include <flight/camera/enable_camera_guards.hpp>
-#include <flight/camera/explain_camera3_dview.hpp>
+#include <flight/camera/explain_camera_3d_view.hpp>
 #include <flight/camera/frustum_corners.hpp>
 #include <flight/camera/intersection.hpp>
 #include <flight/camera/parallax.hpp>

@@ -80,7 +80,7 @@ inline flight::host_sdl::WebGlTexture create_gl_effect_gradient_ramp_texture(fli
   flight::Uint8ClampedArray data = build_ramp_data(colors, alphas, ratios);
   flight::host_sdl::WebGlTexture texture = gl.create_texture();
   gl.bind_texture(gl.texture_2_d, texture);
-  gl.tex_image2_d(gl.texture_2_d, 0.0, gl.rgba8, 256.0, 1.0, 0.0, gl.rgba, gl.unsigned_byte, data);
+  gl.tex_image_2d(gl.texture_2_d, 0.0, gl.rgba8, 256.0, 1.0, 0.0, gl.rgba, gl.unsigned_byte, data);
   gl.tex_parameteri(gl.texture_2_d, gl.texture_min_filter, gl.linear);
   gl.tex_parameteri(gl.texture_2_d, gl.texture_mag_filter, gl.linear);
   gl.tex_parameteri(gl.texture_2_d, gl.texture_wrap_s, gl.clamp_to_edge);

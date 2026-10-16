@@ -18,7 +18,7 @@ namespace flight::types { struct Vector3; }
 #include <flight/geometry/matrix4.hpp>
 #include <flight/types/aabb.hpp>
 #include <flight/types/bounding_sphere.hpp>
-#include <flight/types/camera3_d.hpp>
+#include <flight/types/camera_3d.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/frustum.hpp>
 #include <flight/types/matrix4.hpp>
@@ -29,25 +29,25 @@ namespace flight::camera {
 
 inline flight::Ref<flight::types::Matrix4> scratch_view_projection_flight_value_variable__u00005f__u00005f_scratch_u000056_iew_u000050_rojection_flight_private_f8bb43bff3845aa3 = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
-inline void get_camera3_dfrustum(flight::types::FrustumLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, double aspect) {
-  flight::camera::get_camera3_dview_projection_matrix4(scratch_view_projection_flight_value_variable__u00005f__u00005f_scratch_u000056_iew_u000050_rojection_flight_private_f8bb43bff3845aa3, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(camera), aspect);
+inline void get_camera_3d_frustum(flight::types::FrustumLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, double aspect) {
+  flight::camera::get_camera_3d_view_projection_matrix4(scratch_view_projection_flight_value_variable__u00005f__u00005f_scratch_u000056_iew_u000050_rojection_flight_private_f8bb43bff3845aa3, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(camera), aspect);
   flight::geometry::set_frustum_from_matrix4(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(scratch_view_projection_flight_value_variable__u00005f__u00005f_scratch_u000056_iew_u000050_rojection_flight_private_f8bb43bff3845aa3)));
 }
 
 inline flight::Ref<flight::types::Frustum> scratch_frustum = flight::geometry::create_frustum();
 
-inline bool is_box_in_camera3_dfrustum(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb, double aspect) {
-  get_camera3_dfrustum(scratch_frustum, camera, aspect);
+inline bool is_box_in_camera_3d_frustum(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> aabb, double aspect) {
+  get_camera_3d_frustum(scratch_frustum, camera, aspect);
   return flight::geometry::is_frustum_intersecting_aabb(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::FrustumLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Frustum>>>>(scratch_frustum)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>>>(aabb));
 }
 
-inline bool is_point_in_camera3_dfrustum(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> point, double aspect) {
-  get_camera3_dfrustum(scratch_frustum, camera, aspect);
+inline bool is_point_in_camera_3d_frustum(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> point, double aspect) {
+  get_camera_3d_frustum(scratch_frustum, camera, aspect);
   return flight::geometry::is_frustum_containing_point(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::FrustumLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Frustum>>>>(scratch_frustum)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(point));
 }
 
-inline bool is_sphere_in_camera3_dfrustum(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>> sphere, double aspect) {
-  get_camera3_dfrustum(scratch_frustum, camera, aspect);
+inline bool is_sphere_in_camera_3d_frustum(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>> sphere, double aspect) {
+  get_camera_3d_frustum(scratch_frustum, camera, aspect);
   return flight::geometry::is_frustum_intersecting_sphere(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::FrustumLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Frustum>>>>(scratch_frustum)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>>>(sphere));
 }
 

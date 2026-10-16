@@ -18,7 +18,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/three_ds_schema.hpp>
 
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d_document.hpp>
 
 #include <flight/types/import_diagnostic.hpp>
 

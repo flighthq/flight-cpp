@@ -569,7 +569,7 @@ inline void set_matrix4_element(flight::types::Matrix4Like out, double row, doub
   ([&]() { auto&& typed_array_120 = out->m; const auto typed_index_120 = ((column * 4.0) + row); const auto typed_value_120 = value; return typed_array_120.set_index(typed_index_120, typed_value_120); }());
 }
 
-inline void set_matrix4_from2_d(flight::types::Matrix4Like out, double a, double b, double c, double d, std::optional<double> tx = std::nullopt, std::optional<double> ty = std::nullopt) {
+inline void set_matrix4_from_2d(flight::types::Matrix4Like out, double a, double b, double c, double d, std::optional<double> tx = std::nullopt, std::optional<double> ty = std::nullopt) {
   flight::Float32Array out_2 = out->m;
   (tx = (tx.has_value() ? tx.value() : 0.0));
   (ty = (ty.has_value() ? ty.value() : 0.0));
@@ -596,13 +596,13 @@ inline void set_matrix4_from_float32_array(flight::types::Matrix4Like out, doubl
 }
 
 inline void set_matrix4_from_matrix(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> source) {
-  set_matrix4_from2_d(out, flight::row_get<flight::RowKey<"a">>(source), flight::row_get<flight::RowKey<"b">>(source), flight::row_get<flight::RowKey<"c">>(source), flight::row_get<flight::RowKey<"d">>(source), flight::row_get<flight::RowKey<"tx">>(source), flight::row_get<flight::RowKey<"ty">>(source));
+  set_matrix4_from_2d(out, flight::row_get<flight::RowKey<"a">>(source), flight::row_get<flight::RowKey<"b">>(source), flight::row_get<flight::RowKey<"c">>(source), flight::row_get<flight::RowKey<"d">>(source), flight::row_get<flight::RowKey<"tx">>(source), flight::row_get<flight::RowKey<"ty">>(source));
 }
 
 inline void set_matrix4_from_matrix3(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix3Like>>> source) {
   flight::Float32Array out_2 = out->m;
   flight::Float32Array source_2 = flight::row_get<flight::RowKey<"m">>(source);
-  set_matrix4_from2_d(out, source_2.get_index(0.0), source_2.get_index(3.0), source_2.get_index(1.0), source_2.get_index(4.0), source_2.get_index(6.0), source_2.get_index(7.0));
+  set_matrix4_from_2d(out, source_2.get_index(0.0), source_2.get_index(3.0), source_2.get_index(1.0), source_2.get_index(4.0), source_2.get_index(6.0), source_2.get_index(7.0));
   ([&]() { auto&& typed_array_137 = out_2; const auto typed_index_137 = 2.0; const auto typed_value_137 = source_2.get_index(2.0); return typed_array_137.set_index(typed_index_137, typed_value_137); }());
   ([&]() { auto&& typed_array_138 = out_2; const auto typed_index_138 = 6.0; const auto typed_value_138 = source_2.get_index(5.0); return typed_array_138.set_index(typed_index_138, typed_value_138); }());
   ([&]() { auto&& typed_array_139 = out_2; const auto typed_index_139 = 10.0; const auto typed_value_139 = source_2.get_index(8.0); return typed_array_139.set_index(typed_index_139, typed_value_139); }());
@@ -934,9 +934,9 @@ inline flight::Ref<flight::types::Matrix4> clone_matrix4(flight::StructuralRef<f
   return m;
 }
 
-inline flight::Ref<flight::types::Matrix4> create_matrix4_from2_d(double a, double b, double c, double d, std::optional<double> tx = std::nullopt, std::optional<double> ty = std::nullopt) {
+inline flight::Ref<flight::types::Matrix4> create_matrix4_from_2d(double a, double b, double c, double d, std::optional<double> tx = std::nullopt, std::optional<double> ty = std::nullopt) {
   auto out = create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
-  set_matrix4_from2_d(out, a, b, c, d, tx, ty);
+  set_matrix4_from_2d(out, a, b, c, d, tx, ty);
   return out;
 }
 

@@ -14,8 +14,8 @@ namespace flight::types { struct Scene3DDocumentLoadOptions; }
 
 #include <flight/scene3d_formats/three_ds_document.hpp>
 #include <flight/types/net.hpp>
-#include <flight/types/scene3_ddocument.hpp>
-#include <flight/types/scene3_dresources.hpp>
+#include <flight/types/scene_3d_document.hpp>
+#include <flight/types/scene_3d_resources.hpp>
 #include <flight/scene3d_resources/scene_document_source.hpp>
 
 namespace flight::scene3d_resources {
@@ -24,13 +24,13 @@ using flight::types::HostNetCapability;
 using flight::types::Scene3DDocument;
 using flight::types::Scene3DDocumentLoadOptions;
 
-inline flight::Task<std::optional<flight::Ref<flight::types::Scene3DDocument>>> load_scene3_ddocument_from3ds_url(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>> host_net, flight::String url, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocumentLoadOptions>>>>> options = std::nullopt) {
-  std::optional<flight::Uint8Array> bytes = co_await flight::scene3d_resources::load_scene3_ddocument_bytes_from_url(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>>>(host_net), url, options);
+inline flight::Task<std::optional<flight::Ref<flight::types::Scene3DDocument>>> load_scene_3d_document_from3ds_url(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>> host_net, flight::String url, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocumentLoadOptions>>>>> options = std::nullopt) {
+  std::optional<flight::Uint8Array> bytes = co_await flight::scene3d_resources::load_scene_3d_document_bytes_from_url(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>>>(host_net), url, options);
   if (!bytes.has_value()) {
     co_return std::nullopt;
   }
   auto document = flight::scene3d_formats::parse3ds(bytes.value(), std::nullopt, std::nullopt);
-  flight::scene3d_resources::set_scene3_ddocument_resource_base_path_from_url(document, url);
+  flight::scene3d_resources::set_scene_3d_document_resource_base_path_from_url(document, url);
   co_return std::optional<flight::Ref<flight::types::Scene3DDocument>>{document};
 }
 

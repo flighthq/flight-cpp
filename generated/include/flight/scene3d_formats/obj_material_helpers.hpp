@@ -32,7 +32,7 @@ namespace flight::types { struct TextureCube; }
 namespace flight::types { struct Transform3D; }
 
 #include <flight/types/animation_track.hpp>
-#include <flight/types/camera3_d.hpp>
+#include <flight/types/camera_3d.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/image_resource_reference.hpp>
 #include <flight/types/light_value.hpp>
@@ -40,11 +40,11 @@ namespace flight::types { struct Transform3D; }
 #include <flight/types/matrix4.hpp>
 #include <flight/types/mesh_geometry.hpp>
 #include <flight/types/morph_target.hpp>
-#include <flight/types/scene3_danimation_path.hpp>
-#include <flight/types/scene3_ddocument.hpp>
-#include <flight/types/scene3_dmetadata.hpp>
+#include <flight/types/scene_3d_animation_path.hpp>
+#include <flight/types/scene_3d_document.hpp>
+#include <flight/types/scene_3d_metadata.hpp>
 #include <flight/types/texture.hpp>
-#include <flight/types/transform3_d.hpp>
+#include <flight/types/transform_3d.hpp>
 #include <flight/scene3d_formats/shared.hpp>
 
 namespace flight::scene3d_formats {

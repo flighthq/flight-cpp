@@ -14,9 +14,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/transform3_d.hpp>
+#include <flight/types/transform_3d.hpp>
 
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d_document.hpp>
 
 #include <flight/types/perspective_projection_options.hpp>
 
@@ -24,7 +24,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/import_diagnostic.hpp>
 
-#include <flight/types/camera3_d.hpp>
+#include <flight/types/camera_3d.hpp>
 
 namespace flight::types { struct Awd2Block; }
 namespace flight::types { struct Awd2BlockHandler; }

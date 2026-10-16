@@ -69,7 +69,7 @@ using GlTextureResolver = std::function<std::optional<flight::Ref<GlTextureReali
 #include <flight/types/gl_quad_material_renderer.hpp>
 #include <flight/types/gl_render_options.hpp>
 #include <flight/types/gl_render_state.hpp>
-#include <flight/types/gl_scene3_druntime.hpp>
+#include <flight/types/gl_scene_3d_runtime.hpp>
 #include <flight/types/gl_texture_resolver.hpp>
 #include <flight/types/gl_velocity_writer.hpp>
 #include <flight/types/render_state_options.hpp>

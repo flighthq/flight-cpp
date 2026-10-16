@@ -15,7 +15,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/spatial.hpp>
 
-#include <flight/types/physics3_d.hpp>
+#include <flight/types/physics_3d.hpp>
 
 namespace flight::types { struct Physics3DCollider; }
 namespace flight::types { struct Physics3DContact; }
@@ -47,11 +47,11 @@ struct Physics3DBroadphaseScratch;
 } // namespace flight::physics3d
 
 #include <flight/types/collision.hpp>
-#include <flight/types/physics3_d.hpp>
+#include <flight/types/physics_3d.hpp>
 #include <flight/types/spatial.hpp>
 #include <flight/physics3d/collider_transform.hpp>
-#include <flight/physics3d/physics3_dbroadphase_publication.hpp>
-#include <flight/physics3d/physics3_dspatial_indexing_guards.hpp>
+#include <flight/physics3d/physics_3d_broadphase_publication.hpp>
+#include <flight/physics3d/physics_3d_spatial_indexing_guards.hpp>
 
 namespace flight::physics3d {
 
@@ -67,8 +67,8 @@ struct Physics3DBroadphaseScratch : public flight::ReferenceEnabled {
   flight::Ref<flight::types::SpatialAabb3D> body_bounds;
 };
 
-inline void synchronize_physics3_dbroadphase_with_scratch(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<Physics3DBroadphaseScratch> scratch, double dt) {
-  flight::Set<double> published_body_indices = flight::physics3d::get_physics3_dbroadphase_body_indices(world);
+inline void synchronize_physics_3d_broadphase_with_scratch(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<Physics3DBroadphaseScratch> scratch, double dt) {
+  flight::Set<double> published_body_indices = flight::physics3d::get_physics_3d_broadphase_body_indices(world);
   {
     double body_index = 0.0;
     while ((body_index < static_cast<double>(world->bodies.size()))) {
@@ -86,8 +86,8 @@ inline void synchronize_physics3_dbroadphase_with_scratch(flight::Ref<flight::ty
           while ((collider_index < static_cast<double>(body->colliders.size()))) {
             {
               auto collider = body->colliders.element(collider_index);
-              flight::physics3d::update_physics3_dcollider_world_shape(collider, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
-              flight::physics3d::write_physics3_dcollider_bounds(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>(collider)), scratch->bounds);
+              flight::physics3d::update_physics_3d_collider_world_shape(collider, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
+              flight::physics3d::write_physics_3d_collider_bounds(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>(collider)), scratch->bounds);
               if ((scratch->bounds->min_x < min_x)) {
                 (min_x = scratch->bounds->min_x);
               }
@@ -120,7 +120,7 @@ inline void synchronize_physics3_dbroadphase_with_scratch(flight::Ref<flight::ty
           }
         }
         if ((min_x > max_x)) {
-          flight::physics3d::withdraw_physics3_dbroadphase_body(world, body->index, published_body_indices);
+          flight::physics3d::withdraw_physics_3d_broadphase_body(world, body->index, published_body_indices);
           {
             (body_index += 1.0);
             continue;
@@ -162,7 +162,7 @@ inline void synchronize_physics3_dbroadphase_with_scratch(flight::Ref<flight::ty
           }
         }
         if (((((((((!std::isfinite(min_x) || !std::isfinite(min_y)) || !std::isfinite(min_z)) || !std::isfinite(max_x)) || !std::isfinite(max_y)) || !std::isfinite(max_z)) || ((max_x - min_x) > max_simulated_extent)) || ((max_y - min_y) > max_simulated_extent)) || ((max_z - min_z) > max_simulated_extent))) {
-          flight::physics3d::withdraw_physics3_dbroadphase_body(world, body->index, published_body_indices);
+          flight::physics3d::withdraw_physics_3d_broadphase_body(world, body->index, published_body_indices);
           {
             (body_index += 1.0);
             continue;
@@ -174,51 +174,51 @@ inline void synchronize_physics3_dbroadphase_with_scratch(flight::Ref<flight::ty
         (scratch->body_bounds->max_x = padded_upper_bound(max_x));
         (scratch->body_bounds->max_y = padded_upper_bound(max_y));
         (scratch->body_bounds->max_z = padded_upper_bound(max_z));
-        flight::physics3d::publish_physics3_dbroadphase_body(world, body->index, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialAabb3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SpatialAabb3D>>>>(scratch->body_bounds)), published_body_indices);
+        flight::physics3d::publish_physics_3d_broadphase_body(world, body->index, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialAabb3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SpatialAabb3D>>>>(scratch->body_bounds)), published_body_indices);
       }
       (body_index += 1.0);
     }
   }
-  flight::physics3d::report_physics3_dspatial_indexing(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)));
+  flight::physics3d::report_physics_3d_spatial_indexing(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)));
 }
 
-inline flight::Ref<Physics3DBroadphaseScratch> create_physics3_dbroadphase_scratch() {
+inline flight::Ref<Physics3DBroadphaseScratch> create_physics_3d_broadphase_scratch() {
   return flight::make_ref<Physics3DBroadphaseScratch>(Physics3DBroadphaseScratch{.bounds = flight::make_ref<flight::types::SpatialAabb3D>(flight::types::SpatialAabb3D{.min_x = 0.0, .min_y = 0.0, .min_z = 0.0, .max_x = 0.0, .max_y = 0.0, .max_z = 0.0}), .body_bounds = flight::make_ref<flight::types::SpatialAabb3D>(flight::types::SpatialAabb3D{.min_x = 0.0, .min_y = 0.0, .min_z = 0.0, .max_x = 0.0, .max_y = 0.0, .max_z = 0.0})});
 }
 
-inline flight::Array<flight::Ref<Physics3DBroadphaseScratch>> physics3_dbroadphase_scratch_pool = flight::Array<flight::Ref<Physics3DBroadphaseScratch>>{create_physics3_dbroadphase_scratch()};
+inline flight::Array<flight::Ref<Physics3DBroadphaseScratch>> physics_3d_broadphase_scratch_pool = flight::Array<flight::Ref<Physics3DBroadphaseScratch>>{create_physics_3d_broadphase_scratch()};
 
-inline flight::Ref<Physics3DBroadphaseScratch> acquire_physics3_dbroadphase_scratch() {
-  return ([&]() -> flight::Ref<Physics3DBroadphaseScratch> { auto nullish_coalesce_left = physics3_dbroadphase_scratch_pool.pop(); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_physics3_dbroadphase_scratch(); }());
+inline flight::Ref<Physics3DBroadphaseScratch> acquire_physics_3d_broadphase_scratch() {
+  return ([&]() -> flight::Ref<Physics3DBroadphaseScratch> { auto nullish_coalesce_left = physics_3d_broadphase_scratch_pool.pop(); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_physics_3d_broadphase_scratch(); }());
 }
 
-inline void release_physics3_dbroadphase_scratch(flight::Ref<Physics3DBroadphaseScratch> scratch) {
-  physics3_dbroadphase_scratch_pool.push(scratch);
+inline void release_physics_3d_broadphase_scratch(flight::Ref<Physics3DBroadphaseScratch> scratch) {
+  physics_3d_broadphase_scratch_pool.push(scratch);
 }
 
-inline void synchronize_physics3_dbroadphase(flight::Ref<flight::types::Physics3DWorld> world) {
-  auto scratch = acquire_physics3_dbroadphase_scratch();
+inline void synchronize_physics_3d_broadphase(flight::Ref<flight::types::Physics3DWorld> world) {
+  auto scratch = acquire_physics_3d_broadphase_scratch();
   std::exception_ptr finally_exception;
   try {
-    synchronize_physics3_dbroadphase_with_scratch(world, scratch, 0.0);
+    synchronize_physics_3d_broadphase_with_scratch(world, scratch, 0.0);
   }
   catch (...) {
     finally_exception = std::current_exception();
   }
-  release_physics3_dbroadphase_scratch(scratch);
+  release_physics_3d_broadphase_scratch(scratch);
   if (finally_exception) std::rethrow_exception(finally_exception);
 }
 
-inline void synchronize_physics3_dswept_broadphase(flight::Ref<flight::types::Physics3DWorld> world, double dt) {
-  auto scratch = acquire_physics3_dbroadphase_scratch();
+inline void synchronize_physics_3d_swept_broadphase(flight::Ref<flight::types::Physics3DWorld> world, double dt) {
+  auto scratch = acquire_physics_3d_broadphase_scratch();
   std::exception_ptr finally_exception_2;
   try {
-    synchronize_physics3_dbroadphase_with_scratch(world, scratch, dt);
+    synchronize_physics_3d_broadphase_with_scratch(world, scratch, dt);
   }
   catch (...) {
     finally_exception_2 = std::current_exception();
   }
-  release_physics3_dbroadphase_scratch(scratch);
+  release_physics_3d_broadphase_scratch(scratch);
   if (finally_exception_2) std::rethrow_exception(finally_exception_2);
 }
 

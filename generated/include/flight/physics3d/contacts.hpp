@@ -13,13 +13,13 @@ namespace flight::types { struct Physics3DContactPoint; }
 
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/physics3_d.hpp>
+#include <flight/types/physics_3d.hpp>
 
 namespace flight::physics3d {
 
 using flight::types::Physics3DContact;
 
-inline void initialize_physics3_dcontact(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DContact>> out, double body_a, double body_b, std::optional<double> collider_a = std::nullopt, std::optional<double> collider_b = std::nullopt) {
+inline void initialize_physics_3d_contact(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DContact>> out, double body_a, double body_b, std::optional<double> collider_a = std::nullopt, std::optional<double> collider_b = std::nullopt) {
   collider_a = collider_a.value_or(0.0);
   collider_b = collider_b.value_or(0.0);
   const bool ordered = (body_a <= body_b);
@@ -39,15 +39,15 @@ inline void initialize_physics3_dcontact(flight::types::EntityConstruction<fligh
   flight::row_set<flight::RowKey<"touching">>(out, false);
 }
 
-inline flight::Ref<flight::types::Physics3DContact> create_physics3_dcontact(double body_a, double body_b, std::optional<double> collider_a = std::nullopt, std::optional<double> collider_b = std::nullopt) {
+inline flight::Ref<flight::types::Physics3DContact> create_physics_3d_contact(double body_a, double body_b, std::optional<double> collider_a = std::nullopt, std::optional<double> collider_b = std::nullopt) {
   collider_a = collider_a.value_or(0.0);
   collider_b = collider_b.value_or(0.0);
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DContact>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics3DContact>>();
-  initialize_physics3_dcontact(out, body_a, body_b, collider_a.value(), collider_b.value());
+  initialize_physics_3d_contact(out, body_a, body_b, collider_a.value(), collider_b.value());
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics3DContact>>(out);
 }
 
-inline void initialize_physics3_dcontact_point(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DContactPoint>> out) {
+inline void initialize_physics_3d_contact_point(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DContactPoint>> out) {
   flight::row_set<flight::RowKey<"x">>(out, 0.0);
   flight::row_set<flight::RowKey<"y">>(out, 0.0);
   flight::row_set<flight::RowKey<"z">>(out, 0.0);
@@ -61,9 +61,9 @@ inline void initialize_physics3_dcontact_point(flight::types::EntityConstruction
   flight::row_set<flight::RowKey<"rBZ">>(out, 0.0);
 }
 
-inline flight::Ref<flight::types::Physics3DContactPoint> create_physics3_dcontact_point() {
+inline flight::Ref<flight::types::Physics3DContactPoint> create_physics_3d_contact_point() {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DContactPoint>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics3DContactPoint>>();
-  initialize_physics3_dcontact_point(out);
+  initialize_physics_3d_contact_point(out);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics3DContactPoint>>(out);
 }
 

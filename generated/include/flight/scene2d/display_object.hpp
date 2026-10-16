@@ -17,11 +17,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/scene2_d.hpp>
+#include <flight/types/scene_2d.hpp>
 
 #include <flight/types/rectangle.hpp>
 
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 
 #include <flight/types/node.hpp>
 
@@ -147,7 +147,7 @@ using flight::types::Scene2D;
 // mutable nominal Ref.
 
 inline flight::types::DisplayObject create_display_object(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::types::DisplayObject>>>>> obj = std::nullopt) {
-  return flight::structural_ref_cast<flight::types::DisplayObject>(create_node2_d<flight::Ref<flight::types::DisplayObjectRuntime>>(flight::types::display_object_kind, obj, std::nullopt, std::optional<std::function<flight::Ref<flight::types::DisplayObjectRuntime>(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::DisplayObjectRuntime>>>>>>)>>{[](std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::DisplayObjectRuntime>>>>>> contextual_callable_argument0) -> flight::Ref<flight::types::DisplayObjectRuntime> { return create_display_object_runtime(); }}));
+  return flight::structural_ref_cast<flight::types::DisplayObject>(create_node_2d<flight::Ref<flight::types::DisplayObjectRuntime>>(flight::types::display_object_kind, obj, std::nullopt, std::optional<std::function<flight::Ref<flight::types::DisplayObjectRuntime>(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::DisplayObjectRuntime>>>>>>)>>{[](std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::DisplayObjectRuntime>>>>>> contextual_callable_argument0) -> flight::Ref<flight::types::DisplayObjectRuntime> { return create_display_object_runtime(); }}));
 }
 
 
@@ -197,11 +197,11 @@ inline flight::types::DisplayObject create_display_object(std::optional<flight::
 // out of a readonly boundary grants mutation no caller asked for. Both repairs keep the exact Traits or generic
 // specialization the retained row carries; neither adds cells to a row that does not declare them.
 
-inline bool is_node2_d(flight::types::NodeAny node) {
-  return (flight::row_get<flight::RowKey<"traits">>(flight::node::get_node_runtime<flight::Ref<flight::types::NodeTraits>>(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::NodeTraits>>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::types::NodeAny>>>(node)))) == flight::types::node2_dtraits_key);
+inline bool is_node_2d(flight::types::NodeAny node) {
+  return (flight::row_get<flight::RowKey<"traits">>(flight::node::get_node_runtime<flight::Ref<flight::types::NodeTraits>>(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::NodeTraits>>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::types::NodeAny>>>(node)))) == flight::types::node_2d_traits_key);
 }
 
-inline void set_node2_dclip(flight::types::Node2D source, std::optional<flight::Ref<flight::types::ClipRegion>> value) {
+inline void set_node_2d_clip(flight::types::Node2D source, std::optional<flight::Ref<flight::types::ClipRegion>> value) {
   flight::row_set<flight::RowKey<"clip">>(source, value);
   flight::node::invalidate_node_appearance(source);
 }

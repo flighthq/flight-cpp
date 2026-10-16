@@ -37,7 +37,7 @@ struct CustomMaterialLayouts;
 #include <flight/scene3d_wgpu/wgpu_custom_material_abi.hpp>
 #include <flight/scene3d_wgpu/wgpu_mesh_material_registry.hpp>
 #include <flight/scene3d_wgpu/wgpu_mesh_pipeline.hpp>
-#include <flight/scene3d_wgpu/wgpu_scene3_druntime.hpp>
+#include <flight/scene3d_wgpu/wgpu_scene_3d_runtime.hpp>
 
 namespace flight::scene3d_wgpu {
 

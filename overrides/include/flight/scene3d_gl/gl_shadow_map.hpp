@@ -139,9 +139,9 @@ struct entity_runtime_key_779add7e108ae342 : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_GL_ENTITY_RUNTIME_KEY_779ADD7E108AE342
 
-inline void draw_gl_scene3_dshadow_map(flight::Ref<flight::types::GlRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>> scene, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> shadow_camera, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::DirectionalLight>>>>> directional_light) {
+inline void draw_gl_scene_3d_shadow_map(flight::Ref<flight::types::GlRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>> scene, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> shadow_camera, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::DirectionalLight>>>>> directional_light) {
   flight::host_sdl::WebGl2Context gl = state->gl;
-  auto runtime = flight::scene3d_gl::get_gl_scene3_druntime(state);
+  auto runtime = flight::scene3d_gl::get_gl_scene_3d_runtime(state);
   auto previous_shadow = runtime->shadow;
   if (previous_shadow.has_value()) {
     (previous_shadow.value()->enabled = false);
@@ -158,10 +158,10 @@ inline void draw_gl_scene3_dshadow_map(flight::Ref<flight::types::GlRenderState>
   auto target = runtime->shadow_target.value();
   const double normal_bias_world = (flight::row_get<flight::RowKey<"normalBias">>(directional_light.value()) * flight::camera::get_orthographic_projection_texel_size(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::OrthographicProjection>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::OrthographicProjection>>>>(std::get<0>(flight::row_get<flight::RowKey<"projection">>(shadow_camera)))), target->width, target->height));
   flight::Ref<flight::types::Matrix4> matrix = ([&]() -> flight::Ref<flight::types::Matrix4> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Ref<flight::types::Matrix4>> { auto optional_chain_receiver = previous_shadow; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->matrix; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt); }());
-  flight::camera::get_camera3_dview_projection_matrix4(matrix, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(shadow_camera), 1.0);
+  flight::camera::get_camera_3d_view_projection_matrix4(matrix, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(shadow_camera), 1.0);
   const auto skin_feature = runtime->mesh_skin_feature;
   const auto* skin = std::get_if<flight::Ref<flight::types::GlMeshSkinFeature>>(&skin_feature);
-  auto rigid_program = flight::scene3d_gl::ensure_gl_scene3_dprogram<flight::Ref<flight::types::GlMeshProgram>>(state, flight::String("shadow:depth"), compile_shadow_depth_program);
+  auto rigid_program = flight::scene3d_gl::ensure_gl_scene_3d_program<flight::Ref<flight::types::GlMeshProgram>>(state, flight::String("shadow:depth"), compile_shadow_depth_program);
   const auto skinned_program_capture = flight::make_binding_cell(std::optional<flight::Ref<flight::types::GlMeshProgram>>{std::nullopt});
   const auto instanced_program_capture = flight::make_binding_cell(std::optional<flight::Ref<flight::types::GlMeshProgram>>{std::nullopt});
   std::optional<flight::host_sdl::WebGlFramebuffer> prev_framebuffer = static_cast<std::optional<flight::host_sdl::WebGlFramebuffer>>(gl.get_parameter(gl.framebuffer_binding));
@@ -203,14 +203,14 @@ inline void draw_gl_scene3_dshadow_map(flight::Ref<flight::types::GlRenderState>
   flight::Ref<flight::types::GlMeshProgram> program;
   if (instanced) {
     if (!instanced_program_capture.read_binding().has_value()) {
-      instanced_program_capture.rebind(std::optional<flight::Ref<flight::types::GlMeshProgram>>{flight::scene3d_gl::ensure_gl_scene3_dprogram<flight::Ref<flight::types::GlMeshProgram>>(state, flight::String("shadow:depth:instanced"), compile_shadow_depth_instanced_program)});
+      instanced_program_capture.rebind(std::optional<flight::Ref<flight::types::GlMeshProgram>>{flight::scene3d_gl::ensure_gl_scene_3d_program<flight::Ref<flight::types::GlMeshProgram>>(state, flight::String("shadow:depth:instanced"), compile_shadow_depth_instanced_program)});
     }
     (program = instanced_program_capture.read_binding().value());
   }
   else {
     if (skinned) {
       if (!skinned_program_capture.read_binding().has_value()) {
-        skinned_program_capture.rebind(std::optional<flight::Ref<flight::types::GlMeshProgram>>{flight::scene3d_gl::ensure_gl_scene3_dprogram<flight::Ref<flight::types::GlMeshProgram>>(state, flight::String("shadow:depth:skin"), [skin](flight::host_sdl::WebGl2Context owner_gl) { return compile_shadow_depth_skinned_program(owner_gl, (*skin)->vertex_declarations_glsl); })});
+        skinned_program_capture.rebind(std::optional<flight::Ref<flight::types::GlMeshProgram>>{flight::scene3d_gl::ensure_gl_scene_3d_program<flight::Ref<flight::types::GlMeshProgram>>(state, flight::String("shadow:depth:skin"), [skin](flight::host_sdl::WebGl2Context owner_gl) { return compile_shadow_depth_skinned_program(owner_gl, (*skin)->vertex_declarations_glsl); })});
       }
       (program = skinned_program_capture.read_binding().value());
     }

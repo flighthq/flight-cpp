@@ -21,9 +21,9 @@ namespace flight::types { struct Scene3DMetadata; }
 #include <flight/types/animation_clip.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/image_resource_reference.hpp>
-#include <flight/types/node3_d.hpp>
-#include <flight/types/scene3_d.hpp>
-#include <flight/types/scene3_dmetadata.hpp>
+#include <flight/types/node_3d.hpp>
+#include <flight/types/scene_3d.hpp>
+#include <flight/types/scene_3d_metadata.hpp>
 #include <flight/scene3d/scene_node.hpp>
 
 namespace flight::scene3d {
@@ -39,17 +39,17 @@ struct enabled_name_f1abece853ac935c : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_ENABLED_NAME_F1ABECE853AC935C
 
-inline void initialize_scene3_d(flight::types::EntityConstruction<flight::Ref<flight::types::Scene3D>> out, std::optional<flight::Ref<enabled_name_f1abece853ac935c>> obj = std::nullopt) {
-  auto root = flight::scene3d::create_node3_d(flight::types::node3_dkind, obj);
+inline void initialize_scene_3d(flight::types::EntityConstruction<flight::Ref<flight::types::Scene3D>> out, std::optional<flight::Ref<enabled_name_f1abece853ac935c>> obj = std::nullopt) {
+  auto root = flight::scene3d::create_node_3d(flight::types::node_3d_kind, obj);
   flight::row_set<flight::RowKey<"animations">>(out, flight::Record<flight::String, flight::Ref<flight::types::AnimationClip>>{});
   flight::row_set<flight::RowKey<"metadata">>(out, std::nullopt);
   flight::row_set<flight::RowKey<"resources">>(out, flight::Array<flight::types::ImageResourceReference>{});
   flight::row_set<flight::RowKey<"root">>(out, root);
 }
 
-inline flight::Ref<flight::types::Scene3D> create_scene3_d(std::optional<flight::Ref<enabled_name_f1abece853ac935c>> obj = std::nullopt) {
+inline flight::Ref<flight::types::Scene3D> create_scene_3d(std::optional<flight::Ref<enabled_name_f1abece853ac935c>> obj = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Scene3D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Scene3D>>();
-  initialize_scene3_d(out, obj);
+  initialize_scene_3d(out, obj);
   return flight::entity::finish_entity<flight::Ref<flight::types::Scene3D>>(out);
 }
 

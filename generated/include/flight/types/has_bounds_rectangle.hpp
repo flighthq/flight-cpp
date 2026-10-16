@@ -29,7 +29,7 @@ struct BoundsNodeAny;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>
-#include <flight/types/has_transform2_d.hpp>
+#include <flight/types/has_transform_2d.hpp>
 #include <flight/types/node.hpp>
 #include <flight/types/rectangle.hpp>
 #include <flight/types/entity.hpp>

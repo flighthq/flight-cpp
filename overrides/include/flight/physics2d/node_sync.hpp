@@ -22,15 +22,15 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/node/revision.hpp>
 #include <flight/types/collision.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node2_d.hpp>
-#include <flight/types/physics2_d.hpp>
+#include <flight/types/node_2d.hpp>
+#include <flight/types/physics_2d.hpp>
 
 namespace flight::physics2d {
 
 using flight::types::Physics2DCollider;
 using flight::types::RigidBody2D;
 
-inline void sync_physics2_dbody_to_node2_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>> body, flight::types::Node2D node) {
+inline void sync_physics_2d_body_to_node_2d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>> body, flight::types::Node2D node) {
   flight::row_set<flight::RowKey<"x">>(node, flight::row_get<flight::RowKey<"x">>(body));
   flight::row_set<flight::RowKey<"y">>(node, flight::row_get<flight::RowKey<"y">>(body));
   flight::row_set<flight::RowKey<"rotation">>(node, (flight::row_get<flight::RowKey<"angle">>(body) * flight::math::rad_to_deg_flight_value_variable__u000052__u000041__u000044__u00005f__u000054__u00004f__u00005f__u000044__u000045__u000047__flight_source_ad5040a7d8c07bd3));

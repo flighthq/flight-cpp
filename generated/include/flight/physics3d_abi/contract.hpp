@@ -5,12 +5,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/physics3d_abi/physics3_dabi.hpp>
-#include <flight/physics3d_abi/physics3_dabi_buffer.hpp>
-#include <flight/physics3d_abi/physics3_dabi_command.hpp>
-#include <flight/physics3d_abi/physics3_dabi_layout.hpp>
-#include <flight/physics3d_abi/physics3_dabi_query.hpp>
-#include <flight/physics3d_abi/reference_physics3_dabi.hpp>
+#include <flight/physics3d_abi/physics_3d_abi.hpp>
+#include <flight/physics3d_abi/physics_3d_abi_buffer.hpp>
+#include <flight/physics3d_abi/physics_3d_abi_command.hpp>
+#include <flight/physics3d_abi/physics_3d_abi_layout.hpp>
+#include <flight/physics3d_abi/physics_3d_abi_query.hpp>
+#include <flight/physics3d_abi/reference_physics_3d_abi.hpp>
 
 namespace flight::physics3d_abi {
 

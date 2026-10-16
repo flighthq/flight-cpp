@@ -20,8 +20,8 @@ namespace flight::types { struct ThreeDsMesh; }
 
 #include <flight/scene3d/scene_document.hpp>
 #include <flight/types/import_diagnostic.hpp>
-#include <flight/types/scene3_d.hpp>
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d.hpp>
+#include <flight/types/scene_3d_document.hpp>
 #include <flight/types/three_ds_chunk_handler.hpp>
 #include <flight/types/three_ds_schema.hpp>
 #include <flight/scene3d_formats/three_ds_chunk_dispatch.hpp>
@@ -43,8 +43,8 @@ inline flight::Ref<flight::types::Scene3DDocument> parse3ds(flight::Uint8Array b
   return flight::scene3d_formats::parse_three_ds_document_with_dispatch(bytes, diagnostics, dispatch);
 }
 
-inline flight::Ref<flight::types::Scene3D> create_scene3_dfrom3ds(flight::Uint8Array bytes, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsImportOptions>>>>> options = std::nullopt) {
-  return flight::scene3d::create_scene3_dfrom_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(parse3ds(bytes, diagnostics, options))), std::nullopt);
+inline flight::Ref<flight::types::Scene3D> create_scene_3d_from3ds(flight::Uint8Array bytes, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsImportOptions>>>>> options = std::nullopt) {
+  return flight::scene3d::create_scene_3d_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(parse3ds(bytes, diagnostics, options))), std::nullopt);
 }
 
 } // namespace flight::scene3d_formats

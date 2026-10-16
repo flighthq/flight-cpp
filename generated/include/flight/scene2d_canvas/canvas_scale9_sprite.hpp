@@ -13,9 +13,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/scene2_drenderer.hpp>
+#include <flight/types/scene_2d_renderer.hpp>
 
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 
 #include <flight/types/matrix.hpp>
 
@@ -41,7 +41,7 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/scene2d/sprite.hpp>
 #include <flight/texture/texture.hpp>
 #include <flight/types/contract.hpp>
-#include <flight/scene2d_canvas/canvas_node2_d.hpp>
+#include <flight/scene2d_canvas/canvas_node_2d.hpp>
 #include <flight/scene2d_canvas/canvas_render_state.hpp>
 #include <flight/scene2d_canvas/canvas_scale9_sprite_slices.hpp>
 #include <flight/scene2d_canvas/canvas_texture_window_source.hpp>
@@ -73,7 +73,7 @@ inline void apply_stripped_transform_flight_value_function_apply_u000053_tripped
 }
 
 inline void draw_canvas_scale9_sprite(flight::Ref<flight::types::CanvasRenderState> state, flight::Ref<flight::types::RenderProxy2D> render_proxy) {
-  flight::scene2d_canvas::draw_canvas_scene2_d(state, render_proxy);
+  flight::scene2d_canvas::draw_canvas_scene_2d(state, render_proxy);
   flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scale9Sprite>>>> source = flight::structural_ref_cast<flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scale9Sprite>>>>>(render_proxy->source);
   std::optional<flight::types::Texture> texture = flight::row_get<flight::RowKey<"data">>(source)->texture;
   if ((!texture.has_value() || (std::visit([](const auto& value) { return value->dimension; }, texture.value()) != flight::String("2d")))) {
@@ -103,11 +103,11 @@ inline void draw_canvas_scale9_sprite(flight::Ref<flight::types::CanvasRenderSta
   const double scale_y = object_pattern_value->scale_y;
   const double slice_count = flight::scene2d_canvas::write_canvas_scale9_sprite_slices(slices, source_width, source_height, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(flight::row_get<flight::RowKey<"data">>(source)->scale9_grid), (source_width * scale_x), (source_height * scale_y));
   if ((slice_count == 0.0)) {
-    flight::scene2d_canvas::set_canvas_transform(state, context, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(render_proxy->transform2_d)));
+    flight::scene2d_canvas::set_canvas_transform(state, context, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(render_proxy->transform_2d)));
     context.draw_image(drawable.value(), source_x, source_y, source_width, source_height, 0.0, 0.0, source_width, source_height);
   }
   else {
-    apply_stripped_transform_flight_value_function_apply_u000053_tripped_u000054_ransform_flight_private_5a081199a00a0115(state, context, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(render_proxy->transform2_d)), scale_x, scale_y);
+    apply_stripped_transform_flight_value_function_apply_u000053_tripped_u000054_ransform_flight_private_5a081199a00a0115(state, context, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(render_proxy->transform_2d)), scale_x, scale_y);
     {
       double slice = 0.0;
       while ((slice < slice_count)) {

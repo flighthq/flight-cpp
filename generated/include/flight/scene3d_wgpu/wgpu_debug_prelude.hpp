@@ -25,7 +25,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/scene3d_wgpu/wgpu_mesh_fragment_tail.hpp>
 #include <flight/scene3d_wgpu/wgpu_mesh_pipeline.hpp>
-#include <flight/scene3d_wgpu/wgpu_scene3_druntime.hpp>
+#include <flight/scene3d_wgpu/wgpu_scene_3d_runtime.hpp>
 
 namespace flight::scene3d_wgpu {
 
@@ -90,7 +90,7 @@ inline flight::Ref<WgpuDebugPipeline> compile_wgpu_debug_pipeline(flight::Ref<Wg
 
 inline flight::Ref<WgpuDebugPipeline> ensure_wgpu_debug_pipeline(flight::Ref<WgpuRenderState> state, flight::Ref<WgpuDebugDefineKey> key, flight::String format, std::optional<bool> double_sided = std::nullopt) {
   double_sided = double_sided.value_or(false);
-  return ensure_wgpu_scene3_dpipeline(state, flight::String("debug:") + flight::to_string(format) + flight::String("|") + flight::to_string(build_wgpu_debug_define_key(key)) + flight::String("|") + flight::to_string((double_sided.value() ? flight::String("double") : flight::String("single"))) + flight::String(""), [=](bool blended, bool skinned) {
+  return ensure_wgpu_scene_3d_pipeline(state, flight::String("debug:") + flight::to_string(format) + flight::String("|") + flight::to_string(build_wgpu_debug_define_key(key)) + flight::String("|") + flight::to_string((double_sided.value() ? flight::String("double") : flight::String("single"))) + flight::String(""), [=](bool blended, bool skinned) {
   return compile_wgpu_debug_pipeline(state, key, format, blended, double_sided.value(), skinned);
 });
 }

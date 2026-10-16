@@ -10,7 +10,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/node_signals.hpp>
 
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 
 #include <flight/types/entity.hpp>
 
@@ -69,7 +69,7 @@ inline flight::Ref<flight::types::Billboard> create_billboard(flight::Ref<flight
   mode = mode.value_or(flight::String("full"));
   kind = kind.value_or(flight::types::billboard_kind);
   flight::types::EntityConstruction<flight::Ref<flight::types::Billboard>> billboard = flight::entity::allocate_entity<flight::Ref<flight::types::Billboard>>();
-  flight::scene3d::initialize_node3_d<flight::Ref<flight::types::Node3DRuntime>>(billboard, kind.value(), obj, [](std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::Node3DRuntime>>>>>> contextual_callable_argument0) -> flight::Ref<flight::types::Node3DRuntime> { return flight::scene3d::create_node3_druntime(); });
+  flight::scene3d::initialize_node_3d<flight::Ref<flight::types::Node3DRuntime>>(billboard, kind.value(), obj, [](std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::Node3DRuntime>>>>>> contextual_callable_argument0) -> flight::Ref<flight::types::Node3DRuntime> { return flight::scene3d::create_node_3d_runtime(); });
   flight::row_set<flight::RowKey<"geometry">>(billboard, geometry);
   flight::row_set<flight::RowKey<"materials">>(billboard, materials);
   flight::row_set<flight::RowKey<"mode">>(billboard, mode.value());
@@ -81,7 +81,7 @@ inline flight::Ref<flight::types::NodeSignals> enable_billboard_signals(flight::
 }
 
 inline flight::types::BillboardRuntime get_billboard_runtime(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Billboard>>>> source) {
-  return flight::scene3d::get_node3_druntime(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>>>(source));
+  return flight::scene3d::get_node_3d_runtime(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>>>(source));
 }
 
 inline std::optional<flight::Ref<flight::types::NodeSignals>> get_billboard_signals(flight::Ref<flight::types::Billboard> source) {

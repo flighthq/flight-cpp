@@ -52,10 +52,10 @@ using RenderRootGuard = std::function<void(flight::Ref<RenderState>, std::shared
 #include <flight/types/path.hpp>
 #include <flight/types/path_mesh.hpp>
 #include <flight/types/render_proxy.hpp>
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 #include <flight/types/render_proxy_adapter.hpp>
 #include <flight/types/render_registry_signals.hpp>
-#include <flight/types/scene2_drenderer.hpp>
+#include <flight/types/scene_2d_renderer.hpp>
 #include <flight/types/stroke_style.hpp>
 
 namespace flight::types {

@@ -10,7 +10,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/render_state.hpp>
 
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 
 #include <flight/types/matrix.hpp>
 
@@ -51,24 +51,24 @@ struct data_enabled_kind_name_entity_runtime_key_pivot_x_pivot_y_rotation_scale_
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_44BEFDAA61DCDDFE
 
-inline void recalculate_render_transform2_d(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::RenderProxy2D> data, std::optional<flight::Ref<flight::types::RenderProxy2D>> parent_data = std::nullopt) {
-  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>> transform2_d = flight::node::get_node_local_matrix(flight::structural_ref_cast<flight::types::Transform2DNode<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<data_enabled_kind_name_entity_runtime_key_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_44befdaa61dcddfe>>>>(flight::structural_ref_cast<flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<data_enabled_kind_name_entity_runtime_key_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_44befdaa61dcddfe>>>>>(data->source))));
-  std::optional<flight::Ref<flight::types::Matrix>> parent_transform2_d = (parent_data.has_value() ? std::optional<flight::Ref<flight::types::Matrix>>{parent_data.value()->transform2_d} : std::nullopt);
-  if (parent_transform2_d.has_value()) {
-    flight::geometry::multiply_matrix(data->transform2_d, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(parent_transform2_d.value())), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(transform2_d));
+inline void recalculate_render_transform_2d(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::RenderProxy2D> data, std::optional<flight::Ref<flight::types::RenderProxy2D>> parent_data = std::nullopt) {
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>> transform_2d = flight::node::get_node_local_matrix(flight::structural_ref_cast<flight::types::Transform2DNode<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<data_enabled_kind_name_entity_runtime_key_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_44befdaa61dcddfe>>>>(flight::structural_ref_cast<flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<data_enabled_kind_name_entity_runtime_key_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_44befdaa61dcddfe>>>>>(data->source))));
+  std::optional<flight::Ref<flight::types::Matrix>> parent_transform_2d = (parent_data.has_value() ? std::optional<flight::Ref<flight::types::Matrix>>{parent_data.value()->transform_2d} : std::nullopt);
+  if (parent_transform_2d.has_value()) {
+    flight::geometry::multiply_matrix(data->transform_2d, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(parent_transform_2d.value())), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(transform_2d));
   }
   else {
-    flight::geometry::copy_matrix(data->transform2_d, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(transform2_d));
+    flight::geometry::copy_matrix(data->transform_2d, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(transform_2d));
   }
   (data->transform_frame_id = flight::render::get_render_state_runtime(state)->current_frame_id);
 }
 
-inline bool update_render_proxy2_dtransform(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::RenderProxy2D> data, std::optional<flight::Ref<flight::types::RenderProxy2D>> parent_data = std::nullopt) {
+inline bool update_render_proxy_2d_transform(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::RenderProxy2D> data, std::optional<flight::Ref<flight::types::RenderProxy2D>> parent_data = std::nullopt) {
   const double local_transform_id = flight::node::get_node_local_transform_revision(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>, flight::RowOf<Traits>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::NodeTraits>>>>>>(flight::structural_ref_cast<flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::NodeTraits>>>>>>>(data->source))));
   const bool parent_dirty = (parent_data.has_value() && (parent_data.value()->transform_frame_id == flight::render::get_render_state_runtime(state)->current_frame_id));
   const bool local_dirty = ((state->scene_graph_sync_policy == flight::String("refreshDerivedState")) || (data->last_local_transform_id != local_transform_id));
   if ((parent_dirty || local_dirty)) {
-    recalculate_render_transform2_d(state, data, parent_data);
+    recalculate_render_transform_2d(state, data, parent_data);
     (data->last_local_transform_id = local_transform_id);
     return true;
   }

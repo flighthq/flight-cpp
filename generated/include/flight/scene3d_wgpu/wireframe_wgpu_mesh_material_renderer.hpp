@@ -18,7 +18,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/scene3d_wgpu/wgpu_mesh_material_registry.hpp>
 #include <flight/scene3d_wgpu/wgpu_mesh_pipeline.hpp>
-#include <flight/scene3d_wgpu/wgpu_scene3_druntime.hpp>
+#include <flight/scene3d_wgpu/wgpu_scene_3d_runtime.hpp>
 #include <flight/scene3d_wgpu/wgpu_wireframe_prelude.hpp>
 #include <flight/scene3d_wgpu/wgpu_wireframe_upload.hpp>
 

@@ -4,12 +4,12 @@
 // Five measured one-at-a-time mutations produced 4/2/1/1/1 failures for append-instead-of-replace,
 // skipped texture fan-out, omitted required-slot completeness, a corrupted diagnostic reason, and a
 // zero-length unregister splice, respectively.
-#include <flight/scene2d_resources/load_scene2_daudio_resources.hpp>
-#include <flight/scene2d_resources/load_scene2_dimage_resources.hpp>
-#include <flight/scene2d_resources/scene2_ddocument.hpp>
-#include <flight/scene2d_resources/scene2_ddocument_importer_registry.hpp>
-#include <flight/scene2d_resources/scene2_ddocument_source.hpp>
-#include <flight/scene2d_resources/scene2_dresource_diagnostics.hpp>
+#include <flight/scene2d_resources/load_scene_2d_audio_resources.hpp>
+#include <flight/scene2d_resources/load_scene_2d_image_resources.hpp>
+#include <flight/scene2d_resources/scene_2d_document.hpp>
+#include <flight/scene2d_resources/scene_2d_document_importer_registry.hpp>
+#include <flight/scene2d_resources/scene_2d_document_source.hpp>
+#include <flight/scene2d_resources/scene_2d_resource_diagnostics.hpp>
 
 #include <iostream>
 #include <optional>
@@ -86,7 +86,7 @@ flight::Ref<types::ExternalAudioResourceReference> audio_reference(
 void document_and_slot_construction() {
   const auto root = create_test_node("root");
   const auto target = create_test_node("before-slot-name");
-  const auto slot = resources::create_scene2_dslot_reference(
+  const auto slot = resources::create_scene_2d_slot_reference(
       flight::String("avatar"), target,
       nullable_string(flight::String("Game.Avatar")), false);
   flight::Array<flight::Ref<types::Scene2DSlotReference>> slots{slot};
@@ -97,7 +97,7 @@ void document_and_slot_construction() {
       types::ImageResourceReference{std::in_place_type<flight::Ref<types::ExternalImageResourceReference>>, image}};
   flight::Array<types::AudioResourceReference> audio_values{
       types::AudioResourceReference{std::in_place_type<flight::Ref<types::ExternalAudioResourceReference>>, audio}};
-  const auto document = resources::create_scene2_ddocument(
+  const auto document = resources::create_scene_2d_document(
       root, slots, nullable_string(flight::String("acme")),
       nullable_number(std::nullopt), images, audio_values);
 
@@ -118,8 +118,8 @@ void document_and_slot_construction() {
             !slot->entity_runtime_key.has_value(),
         "slot construction retains linkage, target identity, defaults, and entity-key absence");
 
-  const auto empty_a = resources::create_scene2_ddocument(create_test_node("empty-a"));
-  const auto empty_b = resources::create_scene2_ddocument(create_test_node("empty-b"));
+  const auto empty_a = resources::create_scene_2d_document(create_test_node("empty-a"));
+  const auto empty_b = resources::create_scene_2d_document(create_test_node("empty-b"));
   check(empty_a->slots.empty() && empty_a->image_resources.empty() &&
             empty_a->audio_resources.empty(),
         "document construction defaults each manifest collection to empty");
@@ -130,8 +130,8 @@ void document_and_slot_construction() {
 }
 
 void importer_registry_and_document_loading() {
-  const auto first_registry = resources::create_scene2_ddocument_importer_registry();
-  const auto isolated_registry = resources::create_scene2_ddocument_importer_registry();
+  const auto first_registry = resources::create_scene_2d_document_importer_registry();
+  const auto isolated_registry = resources::create_scene_2d_document_importer_registry();
   check(first_registry->entries.empty() && isolated_registry->entries.empty() &&
             first_registry->entries.identity() != isolated_registry->entries.identity(),
         "importer registries start empty and isolated");
@@ -139,10 +139,10 @@ void importer_registry_and_document_loading() {
   int first_match_calls = 0;
   int second_match_calls = 0;
   const auto first_document =
-      resources::create_scene2_ddocument(create_test_node("first-document"));
+      resources::create_scene_2d_document(create_test_node("first-document"));
   const auto replacement_document =
-      resources::create_scene2_ddocument(create_test_node("replacement-document"));
-  resources::register_scene2_ddocument_importer(
+      resources::create_scene_2d_document(create_test_node("replacement-document"));
+  resources::register_scene_2d_document_importer(
       first_registry, flight::String("first"),
       types::Scene2DDocumentImporterMatcher{
           [&](flight::Uint8Array, ImportContextView) {
@@ -153,7 +153,7 @@ void importer_registry_and_document_loading() {
           [first_document](flight::Uint8Array, ImportContextView) {
             return std::optional<flight::Ref<types::Scene2DDocument>>{first_document};
           }});
-  resources::register_scene2_ddocument_importer(
+  resources::register_scene_2d_document_importer(
       first_registry, flight::String("second"),
       types::Scene2DDocumentImporterMatcher{
           [&](flight::Uint8Array source, ImportContextView) {
@@ -166,7 +166,7 @@ void importer_registry_and_document_loading() {
           }});
   const auto entries_identity = first_registry->entries.identity();
   const auto replaced_entry = first_registry->entries[0];
-  resources::register_scene2_ddocument_importer(
+  resources::register_scene_2d_document_importer(
       first_registry, flight::String("first"),
       types::Scene2DDocumentImporterMatcher{
           [&](flight::Uint8Array source, ImportContextView) {
@@ -184,7 +184,7 @@ void importer_registry_and_document_loading() {
             first_registry->entries[1]->kind == flight::String("second"),
         "register replaces a kind in place without replacing or reordering the entries array");
 
-  const auto imported = resources::create_scene2_ddocument_from_bytes(
+  const auto imported = resources::create_scene_2d_document_from_bytes(
       flight::Uint8Array{42}, RegistryView(first_registry));
   check(imported ==
                 std::optional<flight::Ref<types::Scene2DDocument>>{replacement_document} &&
@@ -202,16 +202,16 @@ void importer_registry_and_document_loading() {
         return flight::Task<std::optional<flight::Uint8Array>>::resolve(
             std::optional<flight::Uint8Array>{flight::Uint8Array{42}});
       };
-  const auto loaded = resources::load_scene2_ddocument_from_url(
+  const auto loaded = resources::load_scene_2d_document_from_url(
                           flight::String("asset.scene"), RegistryView(first_registry),
                           successful_fetch)
                           .get();
   check(fetch_calls == 1 && loaded.has_value() && loaded.value() == replacement_document,
         "document loading fetches once and passes the bytes through importer lookup");
 
-  check(resources::unregister_scene2_ddocument_importer(
+  check(resources::unregister_scene_2d_document_importer(
             first_registry, flight::String("first")) &&
-            !resources::unregister_scene2_ddocument_importer(
+            !resources::unregister_scene_2d_document_importer(
                 first_registry, flight::String("first")) &&
             first_registry->entries.size() == 1 &&
             first_registry->entries[0]->kind == flight::String("second"),
@@ -219,17 +219,17 @@ void importer_registry_and_document_loading() {
 }
 
 void manifest_order_and_coverage() {
-  const auto filled = resources::create_scene2_dslot_reference(
+  const auto filled = resources::create_scene_2d_slot_reference(
       flight::String("filled"), create_test_node("filled-target"));
   filled->content = create_test_node("filled-content");
-  const auto missing = resources::create_scene2_dslot_reference(
+  const auto missing = resources::create_scene_2d_slot_reference(
       flight::String("missing"), create_test_node("missing-target"));
-  const auto optional = resources::create_scene2_dslot_reference(
+  const auto optional = resources::create_scene_2d_slot_reference(
       flight::String("optional"), create_test_node("optional-target"),
       nullable_string(std::nullopt), false);
   flight::Array<flight::Ref<types::Scene2DSlotReference>> slots{
       filled, missing, optional};
-  const auto document = resources::create_scene2_ddocument(
+  const auto document = resources::create_scene_2d_document(
       create_test_node("coverage-root"), slots);
   const auto resolved_image = image_reference(types::resource_resolution_state->resolved);
   const auto failed_image = image_reference(types::resource_resolution_state->failed);
@@ -246,34 +246,34 @@ void manifest_order_and_coverage() {
             document->slots[0] == filled && document->slots[1] == missing &&
             document->slots[2] == optional,
         "slot manifests retain authored array identity and ordering");
-  const auto coverage = resources::explain_scene2_dresource_coverage(document);
+  const auto coverage = resources::explain_scene_2d_resource_coverage(document);
   check(coverage->image_resources->resolved == 1.0 &&
             coverage->image_resources->total == 2.0 &&
             coverage->audio_resources->resolved == 0.0 &&
             coverage->audio_resources->total == 1.0 && !coverage->complete,
         "coverage counts every asset reference and observes unresolved required slots");
 
-  const auto required_only = resources::create_scene2_dslot_reference(
+  const auto required_only = resources::create_scene_2d_slot_reference(
       flight::String("required-only"), create_test_node("required-only-target"));
   required_only->content = create_test_node("required-only-content");
-  const auto optional_only = resources::create_scene2_dslot_reference(
+  const auto optional_only = resources::create_scene_2d_slot_reference(
       flight::String("optional-only"), create_test_node("optional-only-target"),
       nullable_string(std::nullopt), false);
-  const auto slot_document = resources::create_scene2_ddocument(
+  const auto slot_document = resources::create_scene_2d_document(
       create_test_node("slot-coverage-root"),
       flight::Array<flight::Ref<types::Scene2DSlotReference>>{
           required_only, optional_only});
   const auto filled_slot_coverage =
-      resources::explain_scene2_dresource_coverage(slot_document);
+      resources::explain_scene_2d_resource_coverage(slot_document);
   check(filled_slot_coverage->complete,
         "coverage ignores an unresolved optional slot when every required slot is filled");
   required_only->content = std::nullopt;
   const auto missing_slot_coverage =
-      resources::explain_scene2_dresource_coverage(slot_document);
+      resources::explain_scene_2d_resource_coverage(slot_document);
   check(!missing_slot_coverage->complete,
         "coverage observes a required slot becoming unresolved");
-  const auto empty = resources::explain_scene2_dresource_coverage(
-      resources::create_scene2_ddocument(create_test_node("empty")));
+  const auto empty = resources::explain_scene_2d_resource_coverage(
+      resources::create_scene_2d_document(create_test_node("empty")));
   check(empty->complete && empty->image_resources->total == 0.0 &&
             empty->audio_resources->total == 0.0,
         "coverage reports a document with no resources as complete");
@@ -281,8 +281,8 @@ void manifest_order_and_coverage() {
 
 void image_texture_binding_and_invalidation() {
   const auto reference = image_reference(types::resource_resolution_state->resolved);
-  const auto first = flight::texture::create_texture2_d(std::nullopt);
-  const auto second = flight::texture::create_texture2_d(std::nullopt);
+  const auto first = flight::texture::create_texture_2d(std::nullopt);
+  const auto second = flight::texture::create_texture_2d(std::nullopt);
   const auto first_version = first->version;
   const auto second_version = second->version;
   reference->textures = flight::Array<types::Texture>{
@@ -292,7 +292,7 @@ void image_texture_binding_and_invalidation() {
   const auto source = flight::make_ref<types::TextureSource>();
   source->kind = flight::String("image");
   source->version = 17.0;
-  resources::bind_scene2_dimage_resource_textures(
+  resources::bind_scene_2d_image_resource_textures(
       types::ImageResourceReference{
           std::in_place_type<flight::Ref<types::ExternalImageResourceReference>>, reference},
       source);
@@ -306,7 +306,7 @@ void image_texture_binding_and_invalidation() {
         "image binding invalidates every attached texture exactly once");
 
   const auto unattached = image_reference(types::resource_resolution_state->resolved);
-  resources::bind_scene2_dimage_resource_textures(
+  resources::bind_scene_2d_image_resource_textures(
       types::ImageResourceReference{
           std::in_place_type<flight::Ref<types::ExternalImageResourceReference>>, unattached},
       source);
@@ -316,17 +316,17 @@ void image_texture_binding_and_invalidation() {
 
 void diagnostics_malformed_inputs_and_default_fetches() {
   std::vector<std::pair<flight::String, flight::String>> notices;
-  resources::set_scene2_dresource_failure_guard(
+  resources::set_scene_2d_resource_failure_guard(
       types::Scene2DResourceFailureGuard{[&](FailureView notice) {
         notices.emplace_back(notice->operation, notice->reason);
       }});
 
-  const auto empty_registry = resources::create_scene2_ddocument_importer_registry();
-  check(!resources::create_scene2_ddocument_from_bytes(
+  const auto empty_registry = resources::create_scene_2d_document_importer_registry();
+  check(!resources::create_scene_2d_document_from_bytes(
              flight::Uint8Array{0}, RegistryView(empty_registry))
              .has_value(),
         "malformed/unclaimed bytes return the documented null sentinel");
-  resources::register_scene2_ddocument_importer(
+  resources::register_scene_2d_document_importer(
       empty_registry, flight::String("broken"),
       types::Scene2DDocumentImporterMatcher{
           [](flight::Uint8Array, ImportContextView) { return true; }},
@@ -334,7 +334,7 @@ void diagnostics_malformed_inputs_and_default_fetches() {
           [](flight::Uint8Array, ImportContextView) {
             return std::optional<flight::Ref<types::Scene2DDocument>>{};
           }});
-  check(!resources::create_scene2_ddocument_from_bytes(
+  check(!resources::create_scene_2d_document_from_bytes(
              flight::Uint8Array{1}, RegistryView(empty_registry))
              .has_value(),
         "an importer rejection retains the null sentinel");
@@ -343,7 +343,7 @@ void diagnostics_malformed_inputs_and_default_fetches() {
       [](flight::String, flight::AbortSignal, auto) {
         return flight::Task<std::optional<flight::Uint8Array>>::resolve(std::nullopt);
       };
-  check(!resources::load_scene2_ddocument_from_url(
+  check(!resources::load_scene_2d_document_from_url(
              flight::String("missing.scene"), RegistryView(empty_registry), failing_fetch)
              .get()
              .has_value(),
@@ -371,11 +371,11 @@ void diagnostics_malformed_inputs_and_default_fetches() {
                 .has_value(),
         "default external fetch seams accept the declared arguments and resolve to null");
 
-  resources::set_scene2_dresource_failure_guard(std::nullopt);
+  resources::set_scene_2d_resource_failure_guard(std::nullopt);
   const auto notice_count = notices.size();
-  static_cast<void>(resources::create_scene2_ddocument_from_bytes(
+  static_cast<void>(resources::create_scene_2d_document_from_bytes(
       flight::Uint8Array{0},
-      RegistryView(resources::create_scene2_ddocument_importer_registry())));
+      RegistryView(resources::create_scene_2d_document_importer_registry())));
   check(notices.size() == notice_count,
         "clearing the diagnostic guard ends its observable lifecycle");
 }
@@ -388,6 +388,6 @@ int main() {
   manifest_order_and_coverage();
   image_texture_binding_and_invalidation();
   diagnostics_malformed_inputs_and_default_fetches();
-  resources::set_scene2_dresource_failure_guard(std::nullopt);
+  resources::set_scene_2d_resource_failure_guard(std::nullopt);
   return failures == 0 ? 0 : 1;
 }

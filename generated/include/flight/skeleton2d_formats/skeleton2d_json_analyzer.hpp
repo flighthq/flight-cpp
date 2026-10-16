@@ -27,7 +27,7 @@ using flight::shortcut::parse;
 struct Skeleton2DJsonAnalyzerEntry;
 } // namespace flight::skeleton2d_formats
 
-#include <flight/types/skeleton2_djson_analysis.hpp>
+#include <flight/types/skeleton_2d_json_analysis.hpp>
 
 namespace flight::skeleton2d_formats {
 
@@ -121,7 +121,7 @@ inline void count_array(flight::Map<flight::String, double> counts, flight::Reco
 
 inline flight::Array<flight::Ref<Skeleton2DJsonAnalyzerEntry>> analyzers = flight::Array<flight::Ref<Skeleton2DJsonAnalyzerEntry>>{};
 
-inline bool unregister_skeleton2_djson_analyzer(flight::String format) {
+inline bool unregister_skeleton_2d_json_analyzer(flight::String format) {
   const double index = analyzers.find_index([=](flight::Ref<Skeleton2DJsonAnalyzerEntry> entry) { return (entry->format == format); });
   if ((index == -1.0)) {
     return false;
@@ -132,7 +132,7 @@ inline bool unregister_skeleton2_djson_analyzer(flight::String format) {
 
 inline double next_order = 0.0;
 
-inline void register_skeleton2_djson_analyzer(flight::String format, std::function<bool(flight::Record<flight::String, flight::Any>)> detect, std::function<flight::Map<flight::String, double>(flight::Record<flight::String, flight::Any>)> census) {
+inline void register_skeleton_2d_json_analyzer(flight::String format, std::function<bool(flight::Record<flight::String, flight::Any>)> detect, std::function<flight::Map<flight::String, double>(flight::Record<flight::String, flight::Any>)> census) {
   const double existing = analyzers.find_index([=](flight::Ref<Skeleton2DJsonAnalyzerEntry> entry) { return (entry->format == format); });
   flight::Ref<Skeleton2DJsonAnalyzerEntry> entry = flight::make_ref<Skeleton2DJsonAnalyzerEntry>(Skeleton2DJsonAnalyzerEntry{.census = census, .detect = detect, .format = format, .order = ((existing >= 0.0) ? analyzers.element(existing)->order : next_order++)});
   if ((existing >= 0.0)) {
@@ -144,8 +144,8 @@ inline void register_skeleton2_djson_analyzer(flight::String format, std::functi
 }
 
 inline void register_built_in_analyzers() {
-  register_skeleton2_djson_analyzer(flight::String("spine-json"), is_spine_json_flight_value_function_is_u000053_pine_u00004a_son_flight_private_d18be3a31005ef47, census_spine_json);
-  register_skeleton2_djson_analyzer(flight::String("dragonbones"), is_dragon_bones_flight_value_function_is_u000044_ragon_u000042_ones_flight_private_d18be3a31005ef47, census_dragon_bones);
+  register_skeleton_2d_json_analyzer(flight::String("spine-json"), is_spine_json_flight_value_function_is_u000053_pine_u00004a_son_flight_private_d18be3a31005ef47, census_spine_json);
+  register_skeleton_2d_json_analyzer(flight::String("dragonbones"), is_dragon_bones_flight_value_function_is_u000044_ragon_u000042_ones_flight_private_d18be3a31005ef47, census_dragon_bones);
 }
 
 inline flight::Array<flight::Ref<Skeleton2DJsonAnalyzerEntry>> get_analyzers_in_order() {
@@ -155,7 +155,7 @@ inline flight::Array<flight::Ref<Skeleton2DJsonAnalyzerEntry>> get_analyzers_in_
   return analyzers;
 }
 
-inline std::optional<flight::Ref<flight::types::Skeleton2DJsonAnalysis>> analyze_skeleton2_djson(flight::String json) {
+inline std::optional<flight::Ref<flight::types::Skeleton2DJsonAnalysis>> analyze_skeleton_2d_json(flight::String json) {
   flight::JsonValue doc;
   try {
     (doc = flight::Json::parse(json));

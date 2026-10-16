@@ -53,9 +53,9 @@ auto stone() { return t::material(1, 0.3, 0); }
 
 // createPhysics2DWorld() with no arguments: gravity (0, -9.81). The shared support header's world() defaults to
 // zero gravity, so the no-argument upstream form goes straight to the generated constructor.
-t::World default_world() { return p::create_physics2_dworld(); }
+t::World default_world() { return p::create_physics_2d_world(); }
 
-t::Body add(const t::World& world, const t::Body& body) { return p::add_physics2_dbody(world, body); }
+t::Body add(const t::World& world, const t::Body& body) { return p::add_physics_2d_body(world, body); }
 void push(const t::Body& body, const t::Collider& collider) { body->colliders.push(collider); }
 
 void expect_true(bool condition, const char* what) {
@@ -109,7 +109,7 @@ Trace trace_world(const t::World& world) {
 }
 
 flight::Ref<types::SpatialIndexBackend2D> grid_copy() {
-  flight::Ref<types::SpatialIndexBackend2D> inner = flight::spatial::create_uniform_grid_spatial_backend2_d(1.0);
+  flight::Ref<types::SpatialIndexBackend2D> inner = flight::spatial::create_uniform_grid_spatial_backend_2d(1.0);
   return flight::make_ref<types::SpatialIndexBackend2D>(*inner);
 }
 
@@ -140,7 +140,7 @@ flight::Ref<types::SpatialIndexBackend2D> swapped_pair_backend() {
 }
 
 void run_steps(const t::World& world, int count) {
-  for (int i = 0; i < count; i++) p::step_physics2_d(world, 1.0 / 60);
+  for (int i = 0; i < count; i++) p::step_physics_2d(world, 1.0 / 60);
 }
 
 flight::Ref<types::Physics2DJoint> entity_joint(const char* kind, double body_a, double body_b, bool collide_connected = false) {
@@ -173,9 +173,9 @@ double contact_count(const t::World& world) { return count_of(world->contacts); 
 // Resets the module-level step seams however a case exits, as the upstream afterEach does.
 struct SeamReset {
   ~SeamReset() {
-    p::set_physics2_dcontact_intake_guard(std::nullopt);
-    p::set_physics2_djoint_resolution_guard(std::nullopt);
-    p::set_physics2_dstep_guard(std::nullopt);
+    p::set_physics_2d_contact_intake_guard(std::nullopt);
+    p::set_physics_2d_joint_resolution_guard(std::nullopt);
+    p::set_physics_2d_step_guard(std::nullopt);
   }
 };
 
@@ -213,11 +213,11 @@ void declined_body(flight::upstream_test::Runner& runner) {
       auto world = t::world(0, 0);
       auto diverging = dynamic_box(world, 0);
       dynamic_box(world, 0.5);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       expect(contact_count(world)).to_be(1.0);
 
       widen_past_limit(diverging);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       expect(contact_count(world)).to_be(0.0);
     });
 
@@ -227,9 +227,9 @@ void declined_body(flight::upstream_test::Runner& runner) {
       auto near = dynamic_box(world, 0.5);
       auto other = dynamic_box(world, 20);
       auto also_other = dynamic_box(world, 20.5);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       widen_past_limit(diverging);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
 
       expect(contact_count(world)).to_be(1.0);
       expect(world->contacts.element(0)->body_a).to_be(other->index);
@@ -242,12 +242,12 @@ void declined_body(flight::upstream_test::Runner& runner) {
       auto world = t::world(0, 0);
       auto emptied = dynamic_box(world, 0);
       dynamic_box(world, 0.5);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
 
       expect(contains(region_ids(world), emptied->index)).to_be(true);
 
       (void)emptied->colliders.splice(0);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
 
       expect(contains(region_ids(world), emptied->index)).to_be(false);
       expect(contact_count(world)).to_be(0.0);
@@ -257,10 +257,10 @@ void declined_body(flight::upstream_test::Runner& runner) {
       auto world = t::world(0, 0);
       auto diverging = dynamic_box(world, 0);
       dynamic_box(world, 0.5);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
 
       widen_past_limit(diverging);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
 
       expect(contains(region_ids(world), diverging->index)).to_be(false);
     });
@@ -269,9 +269,9 @@ void declined_body(flight::upstream_test::Runner& runner) {
       auto world = t::world(0, 0);
       auto diverging = dynamic_box(world, 0);
       dynamic_box(world, 0.5);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       widen_past_limit(diverging);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       expect(contact_count(world)).to_be(0.0);
 
       auto local = local_box(diverging);
@@ -279,7 +279,7 @@ void declined_body(flight::upstream_test::Runner& runner) {
       local->min_y = -0.5;
       local->max_x = 0.5;
       local->max_y = 0.5;
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       expect(contact_count(world)).to_be(1.0);
     });
   });
@@ -304,14 +304,14 @@ void bullets(flight::upstream_test::Runner& runner) {
       auto continuous = t::world(0, 0);
       wall(continuous, 5, 5.1);
       auto bullet = projectile(continuous, 100);
-      p::step_physics2_d(continuous, 0.1);
+      p::step_physics_2d(continuous, 0.1);
       expect(bullet->x).to_be_close_to(4.5);
       expect(bullet->velocity_x).to_be_close_to(0);
 
       auto discrete = t::world(0, 0);
       wall(discrete, 5, 5.1);
       auto ordinary = projectile(discrete, 100, 0, false);
-      p::step_physics2_d(discrete, 0.1);
+      p::step_physics_2d(discrete, 0.1);
       expect(ordinary->x).to_be_close_to(10);
     });
 
@@ -320,7 +320,7 @@ void bullets(flight::upstream_test::Runner& runner) {
       wall(world, 5, 5.1, 1);
       auto bullet = projectile(world, 100, 1);
 
-      p::step_physics2_d(world, 0.1);
+      p::step_physics_2d(world, 0.1);
 
       expect(bullet->velocity_x).to_be_close_to(-100);
       expect(bullet->x).to_be_close_to(-1);
@@ -332,7 +332,7 @@ void bullets(flight::upstream_test::Runner& runner) {
       wall(world, 5, 5.1, 1);
       auto bullet = projectile(world, 100, 1);
 
-      p::step_physics2_d(world, 0.2);
+      p::step_physics_2d(world, 0.2);
 
       expect(bullet->x).to_be_greater_than_or_equal(-4.5);
       expect(bullet->x).to_be_less_than_or_equal(4.5);
@@ -348,7 +348,7 @@ void bullets(flight::upstream_test::Runner& runner) {
       push(target, t::collider(t::circle(0, 0, 0.5), t::material(1, 0, 0)));
       add(world, target);
 
-      p::step_physics2_d(world, 0.1);
+      p::step_physics_2d(world, 0.1);
 
       expect(target->sleeping).to_be(false);
       expect(target->velocity_x).to_be_greater_than(0.0);
@@ -361,13 +361,13 @@ void bullets(flight::upstream_test::Runner& runner) {
       disabled->config->continuous_collision = false;
       wall(disabled, 5, 5.1);
       auto unchecked = projectile(disabled, 100);
-      p::step_physics2_d(disabled, 0.1);
+      p::step_physics_2d(disabled, 0.1);
       expect(unchecked->x).to_be_close_to(10);
 
       auto sensor_world = t::world(0, 0);
       wall(sensor_world, 5, 5.1, 0, true);
       auto sensor_bullet = projectile(sensor_world, 100);
-      p::step_physics2_d(sensor_world, 0.1);
+      p::step_physics_2d(sensor_world, 0.1);
       expect(sensor_bullet->x).to_be_close_to(10);
     });
 
@@ -385,7 +385,7 @@ void bullets(flight::upstream_test::Runner& runner) {
         expect(contact->points.element(0)->normal_impulse).to_be_greater_than(0.0);
       });
 
-      p::step_physics2_d(world, 0.1);
+      p::step_physics_2d(world, 0.1);
 
       expect_true(order == std::vector<std::string>{"pre", "post"}, "pre then post");
       expect(count_of(world->events->began)).to_be(1.0);
@@ -395,7 +395,7 @@ void bullets(flight::upstream_test::Runner& runner) {
 
       world->contact_hooks->pre_solve = std::nullopt;
       world->contact_hooks->post_solve = std::nullopt;
-      p::step_physics2_d(world, 0.1);
+      p::step_physics_2d(world, 0.1);
       expect(count_of(world->events->ended)).to_be(0.0);
     });
 
@@ -411,7 +411,7 @@ void bullets(flight::upstream_test::Runner& runner) {
       push(rod, t::collider(t::aabb(-2, -0.025, 2, 0.025), slick()));
       add(continuous, rod);
 
-      p::step_physics2_d(continuous, 0.1);
+      p::step_physics_2d(continuous, 0.1);
 
       expect(count_of(continuous->events->began)).to_be(1.0);
       expect(contact_count(continuous)).to_be(1.0);
@@ -426,7 +426,7 @@ void bullets(flight::upstream_test::Runner& runner) {
       push(unchecked, t::collider(t::aabb(-2, -0.025, 2, 0.025), slick()));
       add(discrete, unchecked);
 
-      p::step_physics2_d(discrete, 0.1);
+      p::step_physics_2d(discrete, 0.1);
 
       expect(contact_count(discrete)).to_be(0.0);
       expect(unchecked->angle).to_be_close_to(M_PI);
@@ -442,7 +442,7 @@ void bullets(flight::upstream_test::Runner& runner) {
         contact->enabled = false;
       });
 
-      p::step_physics2_d(world, 0.1);
+      p::step_physics_2d(world, 0.1);
 
       expect(calls).to_be(1);
       expect(bullet->x).to_be_close_to(10);
@@ -473,7 +473,7 @@ void centre_of_mass(flight::upstream_test::Runner& runner) {
       expect(body->center_y).to_be(0.0);
       body->angular_velocity = 1;
 
-      for (int step = 0; step < 50; step++) p::step_physics2_d(world, 0.1);
+      for (int step = 0; step < 50; step++) p::step_physics_2d(world, 0.1);
 
       expect(com_x(body)).to_be_close_to(1, 12);
       expect(com_y(body)).to_be_close_to(0, 12);
@@ -490,7 +490,7 @@ void centre_of_mass(flight::upstream_test::Runner& runner) {
 
       const double start_x = com_x(spinning);
       const double start_y = com_y(spinning);
-      for (int step = 0; step < 60; step++) p::step_physics2_d(world, 1.0 / 60);
+      for (int step = 0; step < 60; step++) p::step_physics_2d(world, 1.0 / 60);
 
       expect(com_x(spinning) - start_x).to_be_close_to(centred->x, 12);
       expect(com_y(spinning) - start_y).to_be_close_to(centred->y, 12);
@@ -502,7 +502,7 @@ void centre_of_mass(flight::upstream_test::Runner& runner) {
       body->velocity_x = 5;
       body->velocity_y = -2;
 
-      p::step_physics2_d(world, 0.25);
+      p::step_physics_2d(world, 0.25);
 
       expect(body->x).to_be_close_to(1.25, 12);
       expect(body->y).to_be_close_to(-0.5, 12);
@@ -516,7 +516,7 @@ void centre_of_mass(flight::upstream_test::Runner& runner) {
       body->angular_velocity = 3;
       body->velocity_x = 4;
 
-      p::step_physics2_d(world, 0.5);
+      p::step_physics_2d(world, 0.5);
 
       expect(body->angle).to_be(0.0);
       expect(body->x).to_be_close_to(2, 12);
@@ -538,7 +538,7 @@ void centre_of_mass(flight::upstream_test::Runner& runner) {
 
       const double start_x = com_x(body);
       for (int step = 0; step < 8; step++) {
-        p::step_physics2_d(world, 1.0 / 60);
+        p::step_physics_2d(world, 1.0 / 60);
         expect(com_x(body)).to_be(start_x);
       }
       expect(body->angle).to_be_less_than(0.29);
@@ -552,7 +552,7 @@ void centre_of_mass(flight::upstream_test::Runner& runner) {
       add(world, body);
       expect(body->center_x).to_be_close_to(2, 12);
 
-      for (int step = 0; step < 400; step++) p::step_physics2_d(world, 1.0 / 60);
+      for (int step = 0; step < 400; step++) p::step_physics_2d(world, 1.0 / 60);
 
       expect(com_y(body)).to_be_greater_than(0.4);
       expect(com_y(body)).to_be_less_than(0.6);
@@ -574,7 +574,7 @@ void filtering(flight::upstream_test::Runner& runner) {
       auto world = t::world(0, 0);
       filtered_box(world, "static", 0x0001, 0x0002);
       filtered_box(world, "dynamic", 0x0002, 0x0004);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       expect(contact_count(world)).to_be(0.0);
     });
 
@@ -582,7 +582,7 @@ void filtering(flight::upstream_test::Runner& runner) {
       auto world = t::world(0, 0);
       filtered_box(world, "static", 0x0001, 0x0002);
       filtered_box(world, "dynamic", 0x0002, 0x0001);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       expect(contact_count(world)).to_be(1.0);
     });
 
@@ -590,7 +590,7 @@ void filtering(flight::upstream_test::Runner& runner) {
       auto world = t::world(0, 0);
       filtered_box(world, "static", 0x0001, 0, 7);
       filtered_box(world, "dynamic", 0x0002, 0, 7);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       expect(contact_count(world)).to_be(1.0);
     });
 
@@ -598,7 +598,7 @@ void filtering(flight::upstream_test::Runner& runner) {
       auto world = t::world(0, 0);
       filtered_box(world, "static", 0x0001, 0xffffffff, -7);
       filtered_box(world, "dynamic", 0x0002, 0xffffffff, -7);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       expect(contact_count(world)).to_be(0.0);
     });
   });
@@ -623,7 +623,7 @@ void hooks(flight::upstream_test::Runner& runner) {
         expect(any).to_be(true);
       });
 
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
 
       expect_true(order == std::vector<std::string>{"pre", "post"}, "pre then post, once each");
     });
@@ -636,7 +636,7 @@ void hooks(flight::upstream_test::Runner& runner) {
       world->contact_hooks->pre_solve = Hook([](auto, flight::Ref<types::Physics2DContact> contact) { contact->enabled = false; });
       world->contact_hooks->post_solve = Hook([&post_solve_calls](auto, auto) { post_solve_calls++; });
 
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
 
       expect(crate->y).to_be(0.4);
       expect(world->contacts.element(0)->enabled).to_be(false);
@@ -647,7 +647,7 @@ void hooks(flight::upstream_test::Runner& runner) {
       }
 
       world->contact_hooks->pre_solve = std::nullopt;
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
 
       expect(world->contacts.element(0)->enabled).to_be(true);
       expect(crate->y).to_be_greater_than(0.4);
@@ -664,7 +664,7 @@ void hooks(flight::upstream_test::Runner& runner) {
       world->contact_hooks->pre_solve = Hook([&calls](auto, auto) { calls++; });
       world->contact_hooks->post_solve = Hook([&calls](auto, auto) { calls++; });
 
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
 
       expect(contact_count(world)).to_be(1.0);
       expect(world->contacts.element(0)->sensor).to_be(true);
@@ -675,13 +675,13 @@ void hooks(flight::upstream_test::Runner& runner) {
       auto world = t::world(0, 0);
       ground(world);
       box(world, 0, 0.4);
-      world->contact_hooks->pre_solve = Hook([](flight::Ref<types::Physics2DWorld> current, auto) { p::step_physics2_d(current, 1.0 / 60); });
+      world->contact_hooks->pre_solve = Hook([](flight::Ref<types::Physics2DWorld> current, auto) { p::step_physics_2d(current, 1.0 / 60); });
 
-      expect_throw_containing([&] { p::step_physics2_d(world, 1.0 / 60); }, "recursively");
+      expect_throw_containing([&] { p::step_physics_2d(world, 1.0 / 60); }, "recursively");
       expect(world->previous_timestep).to_be(0.0);
 
       world->contact_hooks->pre_solve = std::nullopt;
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       expect(world->previous_timestep).to_be(1.0 / 60);
     });
 
@@ -690,27 +690,27 @@ void hooks(flight::upstream_test::Runner& runner) {
       ground(world);
       box(world, 0, 0.4);
       auto pending = t::body("dynamic", 10, 10);
-      world->contact_hooks->pre_solve = Hook([pending](flight::Ref<types::Physics2DWorld> current, auto) { p::add_physics2_dbody(current, pending); });
+      world->contact_hooks->pre_solve = Hook([pending](flight::Ref<types::Physics2DWorld> current, auto) { p::add_physics_2d_body(current, pending); });
 
-      expect_throw_containing([&] { p::step_physics2_d(world, 1.0 / 60); }, "while it is stepping");
+      expect_throw_containing([&] { p::step_physics_2d(world, 1.0 / 60); }, "while it is stepping");
       expect(pending->index).to_be(-1.0);
       expect(count_of(world->bodies)).to_be(2.0);
 
       world->contact_hooks->pre_solve = std::nullopt;
-      expect_true(p::add_physics2_dbody(world, pending) == pending, "the pending body is added afterwards");
+      expect_true(p::add_physics_2d_body(world, pending) == pending, "the pending body is added afterwards");
     });
 
     runner.it("rejects body actions from hooks instead of applying them at a phase-dependent time", [] {
       auto world = t::world(0, 0);
       ground(world);
       auto crate = box(world, 0, 0.4);
-      world->contact_hooks->post_solve = Hook([crate](auto, auto) { p::apply_physics2_dforce(crate, 10, 0); });
+      world->contact_hooks->post_solve = Hook([crate](auto, auto) { p::apply_physics_2d_force(crate, 10, 0); });
 
-      expect_throw_containing([&] { p::step_physics2_d(world, 1.0 / 60); }, "while it is stepping");
+      expect_throw_containing([&] { p::step_physics_2d(world, 1.0 / 60); }, "while it is stepping");
       expect(crate->force_x).to_be(0.0);
 
       world->contact_hooks->post_solve = std::nullopt;
-      expect(p::apply_physics2_dforce(crate, 10, 0)).to_be(true);
+      expect(p::apply_physics_2d_force(crate, 10, 0)).to_be(true);
     });
 
     runner.it("rejects invalid pre- and post-solve output before it can poison a later step", [] {
@@ -719,15 +719,15 @@ void hooks(flight::upstream_test::Runner& runner) {
       box(world, 0, 0.4)->velocity_y = -1;
       world->contact_hooks->pre_solve = Hook([](auto, flight::Ref<types::Physics2DContact> contact) { contact->friction = NaN; });
 
-      expect_throw_containing([&] { p::step_physics2_d(world, 1.0 / 60); }, "pre-solve hook produced invalid");
+      expect_throw_containing([&] { p::step_physics_2d(world, 1.0 / 60); }, "pre-solve hook produced invalid");
       expect(world->contacts.element(0)->friction).to_be_close_to(0.3);
       world->contact_hooks->pre_solve = std::nullopt;
       world->contact_hooks->post_solve = Hook([](auto, flight::Ref<types::Physics2DContact> contact) { contact->restitution = INF; });
 
-      expect_throw_containing([&] { p::step_physics2_d(world, 1.0 / 60); }, "post-solve hook produced invalid");
+      expect_throw_containing([&] { p::step_physics_2d(world, 1.0 / 60); }, "post-solve hook produced invalid");
       expect(world->contacts.element(0)->restitution).to_be(0.0);
       world->contact_hooks->post_solve = std::nullopt;
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
     });
 
     runner.it("does not scale a warm cache until pre-solve completes successfully", [] {
@@ -737,17 +737,17 @@ void hooks(flight::upstream_test::Runner& runner) {
       world->config->position_iterations = 0;
       ground(world);
       box(world, 0, 0.49);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       auto point = world->contacts.element(0)->points.element(0);
       point->normal_impulse = 3;
       world->contact_hooks->pre_solve = Hook([](auto, auto) { throw flight::Error(flight::String("stop")); });
 
-      expect_throw_containing([&] { p::step_physics2_d(world, 1.0 / 30); }, "stop");
+      expect_throw_containing([&] { p::step_physics_2d(world, 1.0 / 30); }, "stop");
       expect(point->normal_impulse).to_be(3.0);
       expect(world->previous_timestep).to_be(1.0 / 60);
 
       world->contact_hooks->pre_solve = std::nullopt;
-      p::step_physics2_d(world, 1.0 / 30);
+      p::step_physics_2d(world, 1.0 / 30);
       expect(point->normal_impulse).to_be(6.0);
     });
 
@@ -759,13 +759,13 @@ void hooks(flight::upstream_test::Runner& runner) {
       crate->force_x = 2;
       world->contact_hooks->post_solve = Hook([](auto, auto) { throw flight::Error(flight::String("observer failed")); });
 
-      expect_throw_containing([&] { p::step_physics2_d(world, 1.0 / 60); }, "observer failed");
+      expect_throw_containing([&] { p::step_physics_2d(world, 1.0 / 60); }, "observer failed");
       expect(crate->x).to_be_greater_than(0.0);
       expect(crate->force_x).to_be(0.0);
       expect(world->previous_timestep).to_be(1.0 / 60);
 
       world->contact_hooks->post_solve = std::nullopt;
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
     });
   });
 }
@@ -788,7 +788,7 @@ void immovable_sensors(flight::upstream_test::Runner& runner) {
       auto world = t::world(0, 0);
       immovable(world, 0, true);
       immovable(world, 0, false);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       expect(count_of(world->events->began)).to_be(1.0);
       expect(contact_count(world)).to_be(1.0);
       expect(world->contacts.element(0)->sensor).to_be(true);
@@ -798,7 +798,7 @@ void immovable_sensors(flight::upstream_test::Runner& runner) {
       auto world = t::world(0, 0);
       immovable(world, 0, false);
       immovable(world, 0, false);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       expect(count_of(world->events->began)).to_be(0.0);
       expect(contact_count(world)).to_be(0.0);
     });
@@ -807,7 +807,7 @@ void immovable_sensors(flight::upstream_test::Runner& runner) {
       auto world = t::world(0, 0);
       mixed(world, 0);
       immovable(world, 0, false);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       expect(count_of(world->events->began)).to_be(0.0);
       expect(contact_count(world)).to_be(0.0);
     });
@@ -816,7 +816,7 @@ void immovable_sensors(flight::upstream_test::Runner& runner) {
       auto world = t::world(0, 0);
       mixed(world, 0);
       immovable(world, 100, false);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       expect(contact_count(world)).to_be(1.0);
       expect(world->contacts.element(0)->sensor).to_be(true);
     });
@@ -825,7 +825,7 @@ void immovable_sensors(flight::upstream_test::Runner& runner) {
       auto world = t::world(0, 0);
       mixed(world, 0);
       box(world, 0, 0);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       bool any_solid = false;
       for (const auto& contact : world->contacts) any_solid = any_solid || !contact->sensor;
       expect(any_solid).to_be(true);
@@ -835,7 +835,7 @@ void immovable_sensors(flight::upstream_test::Runner& runner) {
       auto world = t::world(0, 0);
       auto sensor = immovable(world, 0, true);
       auto scenery = immovable(world, 0, false);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       expect(sensor->x).to_be(0.0);
       expect(scenery->x).to_be(0.0);
       expect(sensor->velocity_x).to_be(0.0);
@@ -845,10 +845,10 @@ void immovable_sensors(flight::upstream_test::Runner& runner) {
       auto world = t::world(0, 0);
       auto sensor = immovable(world, 0, true);
       immovable(world, 0, false);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       expect(count_of(world->events->began)).to_be(1.0);
       sensor->x = 100;
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       expect(count_of(world->events->ended)).to_be(1.0);
       expect(contact_count(world)).to_be(0.0);
     });
@@ -862,14 +862,14 @@ void seams(flight::upstream_test::Runner& runner) {
       auto world = t::world(0, -10);
       box(world, 0, 0);
       int calls = 0;
-      p::set_physics2_dcontact_intake_guard([&calls](auto) { calls++; });
+      p::set_physics_2d_contact_intake_guard([&calls](auto) { calls++; });
 
-      p::step_physics2_d(world, 1.0 / 60);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       expect(calls).to_be(2);
 
       world->config->velocity_iterations = -1;
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       expect(calls).to_be(2);
     });
 
@@ -878,10 +878,10 @@ void seams(flight::upstream_test::Runner& runner) {
       auto world = t::world(0, -10);
       box(world, 0, 0);
       int calls = 0;
-      p::set_physics2_dcontact_intake_guard([&calls](auto) { calls++; });
-      p::set_physics2_dcontact_intake_guard(std::nullopt);
+      p::set_physics_2d_contact_intake_guard([&calls](auto) { calls++; });
+      p::set_physics_2d_contact_intake_guard(std::nullopt);
 
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
 
       expect(calls).to_be(0);
     });
@@ -893,15 +893,15 @@ void seams(flight::upstream_test::Runner& runner) {
       auto world = t::world(0, -10);
       box(world, 0, 0);
       int calls = 0;
-      p::set_physics2_djoint_resolution_guard([&calls](auto) { calls++; });
+      p::set_physics_2d_joint_resolution_guard([&calls](auto) { calls++; });
 
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       expect(calls).to_be(0);
 
       auto first = world->bodies.element(0)->index;
-      p::add_physics2_djoint(world, entity_joint("acme.Unregistered", first, first));
-      p::step_physics2_d(world, 1.0 / 60);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::add_physics_2d_joint(world, entity_joint("acme.Unregistered", first, first));
+      p::step_physics_2d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       expect(calls).to_be(2);
     });
 
@@ -910,12 +910,12 @@ void seams(flight::upstream_test::Runner& runner) {
       auto world = t::world(0, -10);
       box(world, 0, 0);
       auto first = world->bodies.element(0)->index;
-      p::add_physics2_djoint(world, entity_joint("acme.Unregistered", first, first));
+      p::add_physics_2d_joint(world, entity_joint("acme.Unregistered", first, first));
       world->config->velocity_iterations = -1;
       int calls = 0;
-      p::set_physics2_djoint_resolution_guard([&calls](auto) { calls++; });
+      p::set_physics_2d_joint_resolution_guard([&calls](auto) { calls++; });
 
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
 
       expect(calls).to_be(0);
     });
@@ -925,12 +925,12 @@ void seams(flight::upstream_test::Runner& runner) {
       auto world = t::world(0, -10);
       box(world, 0, 0);
       auto first = world->bodies.element(0)->index;
-      p::add_physics2_djoint(world, entity_joint("acme.Unregistered", first, first));
+      p::add_physics_2d_joint(world, entity_joint("acme.Unregistered", first, first));
       int calls = 0;
-      p::set_physics2_djoint_resolution_guard([&calls](auto) { calls++; });
-      p::set_physics2_djoint_resolution_guard(std::nullopt);
+      p::set_physics_2d_joint_resolution_guard([&calls](auto) { calls++; });
+      p::set_physics_2d_joint_resolution_guard(std::nullopt);
 
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
 
       expect(calls).to_be(0);
     });
@@ -942,12 +942,12 @@ void seams(flight::upstream_test::Runner& runner) {
       auto world = t::world(0, -10);
       box(world, 0, 0);
       std::vector<double> seen;
-      p::set_physics2_dstep_guard([&seen](auto, double dt) { seen.push_back(dt); });
+      p::set_physics_2d_step_guard([&seen](auto, double dt) { seen.push_back(dt); });
 
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       expect(static_cast<double>(seen.size())).to_be(0.0);
 
-      p::step_physics2_d(world, NaN);
+      p::step_physics_2d(world, NaN);
       expect(static_cast<double>(seen.size())).to_be(1.0);
       expect(std::isnan(seen[0])).to_be(true);
     });
@@ -956,10 +956,10 @@ void seams(flight::upstream_test::Runner& runner) {
       SeamReset reset;
       auto world = t::world(0, -10);
       int calls = 0;
-      p::set_physics2_dstep_guard([&calls](auto, double) { calls++; });
-      p::set_physics2_dstep_guard(std::nullopt);
+      p::set_physics_2d_step_guard([&calls](auto, double) { calls++; });
+      p::set_physics_2d_step_guard(std::nullopt);
 
-      p::step_physics2_d(world, -1);
+      p::step_physics_2d(world, -1);
 
       expect(calls).to_be(0);
     });
@@ -982,11 +982,11 @@ void step_physics(flight::upstream_test::Runner& runner) {
         out.push(flight::make_ref<types::SpatialPair>(types::SpatialPair{.a = fixed_index, .b = dynamic_index}));
         if (nested_calls == 0) {
           nested_calls++;
-          p::step_physics2_d(nested_world, 1.0 / 60);
+          p::step_physics_2d(nested_world, 1.0 / 60);
         }
       };
 
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
 
       expect(nested_calls).to_be(1);
       expect(contact_count(world)).to_be(1.0);
@@ -999,7 +999,7 @@ void step_physics(flight::upstream_test::Runner& runner) {
       crate->force_y = 4;
       world->config->position_correction = NaN;
 
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
 
       expect(crate->x).to_be(0.0);
       expect(crate->y).to_be(2.0);
@@ -1016,12 +1016,12 @@ void step_physics(flight::upstream_test::Runner& runner) {
       world->config->position_iterations = 0;
       ground(world);
       box(world, 0, 0.49);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       auto point = world->contacts.element(0)->points.element(0);
       point->normal_impulse = 3;
       point->tangent_impulse = 4;
 
-      p::step_physics2_d(world, 1.0 / 30);
+      p::step_physics_2d(world, 1.0 / 30);
 
       expect(point->normal_impulse).to_be(6.0);
       expect(point->tangent_impulse).to_be(8.0);
@@ -1067,8 +1067,8 @@ void step_physics(flight::upstream_test::Runner& runner) {
       add(with_projection, fixed_with);
       auto body_with = box(with_projection, 0.75, 0);
 
-      p::step_physics2_d(without_projection, 1.0 / 60);
-      p::step_physics2_d(with_projection, 1.0 / 60);
+      p::step_physics_2d(without_projection, 1.0 / 60);
+      p::step_physics_2d(with_projection, 1.0 / 60);
 
       expect(body_without->x - fixed_without->x).to_be(0.75);
       expect(body_with->x - fixed_with->x).to_be_greater_than(0.84);
@@ -1086,7 +1086,7 @@ void step_physics(flight::upstream_test::Runner& runner) {
       world->config->warm_starting = false;
       world->config->velocity_iterations = 0;
       world->config->position_iterations = 0;
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
 
       for (const auto& contact : world->contacts) {
         for (double i = 0; i < contact->point_count; i++) {
@@ -1119,7 +1119,7 @@ void step_physics(flight::upstream_test::Runner& runner) {
       auto plain_right = box(plain, 0.9, 0.5);
       auto plain_top = box(plain, 0, 1.6);
 
-      auto reversed = flight::physics2d::create_physics2_dworld(0.0, -9.81, reversed_pair_backend());
+      auto reversed = flight::physics2d::create_physics_2d_world(0.0, -9.81, reversed_pair_backend());
       ground(reversed);
       auto reversed_left = box(reversed, -0.9, 0.5);
       auto reversed_right = box(reversed, 0.9, 0.5);
@@ -1135,7 +1135,7 @@ void step_physics(flight::upstream_test::Runner& runner) {
     });
 
     runner.it("orders every contact pair by body index however the broadphase hands it over", [] {
-      auto swapped = flight::physics2d::create_physics2_dworld(0.0, -9.81, swapped_pair_backend());
+      auto swapped = flight::physics2d::create_physics_2d_world(0.0, -9.81, swapped_pair_backend());
       ground(swapped);
       auto crate = box(swapped, 0.2, 1.4);
       run_steps(swapped, 120);
@@ -1202,7 +1202,7 @@ void step_physics(flight::upstream_test::Runner& runner) {
       auto crate = box(world, 0, 2);
       const auto before = trace_world(world);
       for (double dt : {0.0, -1.0 / 60, NaN, INF, -INF}) {
-        p::step_physics2_d(world, dt);
+        p::step_physics_2d(world, dt);
         expect_true(trace_world(world) == before, "the world is untouched");
       }
       expect(crate->y).to_be(2.0);
@@ -1226,7 +1226,7 @@ void step_physics(flight::upstream_test::Runner& runner) {
           world->config->position_iterations = row.value;
         }
 
-        p::step_physics2_d(world, 1.0 / 60);
+        p::step_physics_2d(world, 1.0 / 60);
 
         expect_true(trace_world(world) == before, "the world is untouched");
         expect(contact_count(world)).to_be(0.0);
@@ -1241,7 +1241,7 @@ void step_physics(flight::upstream_test::Runner& runner) {
       world->config->velocity_iterations = 0;
       box(world, 0, 0);
       box(world, 0, 0.75);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       auto contact = world->contacts.element(0);
       expect(contact->point_count).to_be(2.0);
       std::map<double, std::pair<double, double>> expected;
@@ -1253,7 +1253,7 @@ void step_physics(flight::upstream_test::Runner& runner) {
       }
       contact->points.reverse();
 
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
 
       for (double i = 0; i < contact->point_count; i++) {
         auto point = contact->points.element(i);
@@ -1275,14 +1275,14 @@ void step_physics(flight::upstream_test::Runner& runner) {
 
       double began = 0;
       for (int i = 0; i < 200 && began == 0; i++) {
-        p::step_physics2_d(world, 1.0 / 60);
+        p::step_physics_2d(world, 1.0 / 60);
         began += count_of(world->events->began);
       }
       expect(began).to_be(1.0);
 
       crate->y = 50;
       crate->velocity_y = 0;
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
       expect(count_of(world->events->ended)).to_be(1.0);
       expect(contact_count(world)).to_be(0.0);
     });
@@ -1305,7 +1305,7 @@ void step_physics(flight::upstream_test::Runner& runner) {
       push(target, t::collider(t::aabb(-0.5, -0.5, 0.5, 0.5), stone()));
       add(world, target);
 
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
 
       expect(count_of(world->events->began)).to_be(1.0);
       expect(world->contacts.element(0)->point_count).to_be(0.0);
@@ -1313,7 +1313,7 @@ void step_physics(flight::upstream_test::Runner& runner) {
       expect(world->contacts.element(0)->touching).to_be(true);
 
       target->x = 2;
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
 
       expect(count_of(world->events->ended)).to_be(1.0);
       expect(contact_count(world)).to_be(0.0);
@@ -1328,7 +1328,7 @@ void step_physics(flight::upstream_test::Runner& runner) {
       push(trigger, t::collider(t::circle(0, 0, 0.5), stone(), true));
       add(world, trigger);
 
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
 
       expect(count_of(world->events->began)).to_be(1.0);
       expect(world->contacts.element(0)->point_count).to_be(0.0);
@@ -1351,7 +1351,7 @@ void capsules(flight::upstream_test::Runner& runner) {
 
       double worst_angle_after_settling = 0;
       for (int step = 0; step < 900; step++) {
-        p::step_physics2_d(world, 1.0 / 240);
+        p::step_physics_2d(world, 1.0 / 240);
         if (step > 500) worst_angle_after_settling = std::max(worst_angle_after_settling, std::abs(capsule->angle));
       }
 
@@ -1372,7 +1372,7 @@ void capsules(flight::upstream_test::Runner& runner) {
       add(world, bullet);
       bullet->velocity_x = 600;
 
-      for (int step = 0; step < 10; step++) p::step_physics2_d(world, 1.0 / 60);
+      for (int step = 0; step < 10; step++) p::step_physics_2d(world, 1.0 / 60);
 
       expect(bullet->x).to_be_less_than(10.0);
     });
@@ -1387,7 +1387,7 @@ void capsules(flight::upstream_test::Runner& runner) {
       push(capsule, t::collider(t::capsule(-0.4, 0, 0.4, 0, 0.3), stone()));
       add(world, capsule);
 
-      for (int step = 0; step < 600; step++) p::step_physics2_d(world, 1.0 / 240);
+      for (int step = 0; step < 600; step++) p::step_physics_2d(world, 1.0 / 240);
 
       expect(std::isfinite(capsule->x)).to_be(true);
       expect(capsule->x).to_be_greater_than(-2.0);
@@ -1406,7 +1406,7 @@ void capsules(flight::upstream_test::Runner& runner) {
       push(upper, t::collider(t::capsule(-1, 0, 1, 0, 0.5), stone()));
       add(world, upper);
 
-      for (int step = 0; step < 1200; step++) p::step_physics2_d(world, 1.0 / 240);
+      for (int step = 0; step < 1200; step++) p::step_physics_2d(world, 1.0 / 240);
 
       expect(lower->y).to_be_close_to(0.5, 1);
       expect(upper->y).to_be_close_to(1.5, 1);
@@ -1423,12 +1423,12 @@ void joints_and_sleep(flight::upstream_test::Runner& runner) {
       one_body->prepare = [](auto, auto, double) {};
       one_body->solve = [](auto, auto) {};
       one_body->uses_body_a = false;
-      p::register_physics2_djoint_solver(world, flight::String("OneBody"), one_body);
+      p::register_physics_2d_joint_solver(world, flight::String("OneBody"), one_body);
       auto placeholder = box(world, 0, 0);
       auto constrained = box(world, 0.2, 0);
-      p::add_physics2_djoint(world, entity_joint("OneBody", placeholder->index, constrained->index));
+      p::add_physics_2d_joint(world, entity_joint("OneBody", placeholder->index, constrained->index));
 
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
 
       expect(contact_count(world)).to_be(1.0);
     });
@@ -1470,7 +1470,7 @@ void joints_and_sleep(flight::upstream_test::Runner& runner) {
       expect(crate->sleeping).to_be(true);
 
       crate->force_x = 500;
-      p::step_physics2_d(world, 1.0 / 60);
+      p::step_physics_2d(world, 1.0 / 60);
 
       expect(crate->sleeping).to_be(false);
       expect(crate->velocity_x).to_be_greater_than(0.0);
@@ -1486,7 +1486,7 @@ void joints_and_sleep(flight::upstream_test::Runner& runner) {
 
       int sleeping_samples = 0;
       for (int i = 0; i < 600; i++) {
-        p::step_physics2_d(world, 1.0 / 60);
+        p::step_physics_2d(world, 1.0 / 60);
         for (const auto& body : world->bodies) {
           if (!body->sleeping) continue;
           sleeping_samples++;
@@ -1507,11 +1507,11 @@ void joints_and_sleep(flight::upstream_test::Runner& runner) {
       recording->warm_start = [&calls](flight::Ref<types::Physics2DWorld>, flight::Ref<types::Physics2DJoint>) { calls.push_back("warmStart"); };
       recording->solve = [&calls](auto, auto) { calls.push_back("solve"); };
       recording->clear_accumulated_impulses = [&calls](flight::Ref<types::Physics2DJoint>) { calls.push_back("clear"); };
-      p::register_physics2_djoint_solver(world, flight::String("Recording"), recording);
+      p::register_physics_2d_joint_solver(world, flight::String("Recording"), recording);
       ground(world);
       auto left = box(world, -1, 2);
       auto right = box(world, 1, 2);
-      p::add_physics2_djoint(world, entity_joint("Recording", left->index, right->index, true));
+      p::add_physics_2d_joint(world, entity_joint("Recording", left->index, right->index, true));
       run_steps(world, 240);
       expect(left->sleeping).to_be(true);
       expect(right->sleeping).to_be(true);
@@ -1561,7 +1561,7 @@ void stress(flight::upstream_test::Runner& runner) {
       std::vector<t::Body> pile;
       for (int i = 0; i < 16; i++) pile.push_back(add_box(world, "dynamic", 0, 0.5 + i));
 
-      for (int i = 0; i < 900; i++) p::step_physics2_d(world, 1.0 / 60);
+      for (int i = 0; i < 900; i++) p::step_physics_2d(world, 1.0 / 60);
 
       for (const auto& body : pile) expect_finite_body(body);
       for (std::size_t i = 1; i < pile.size(); i++) expect(pile[i]->y).to_be_greater_than(pile[i - 1]->y);
@@ -1578,7 +1578,7 @@ void stress(flight::upstream_test::Runner& runner) {
       push(floor, t::collider(t::aabb(-5, -1, 5, 0), material()));
       add(world, floor);
       add_box(world, "dynamic", 0, 0.5);
-      for (int i = 0; i < 240; i++) p::step_physics2_d(world, 1.0 / 60);
+      for (int i = 0; i < 240; i++) p::step_physics_2d(world, 1.0 / 60);
       expect(contact_count(world)).to_be(1.0);
       auto contact = world->contacts.element(0);
       auto points = contact->points;
@@ -1591,7 +1591,7 @@ void stress(flight::upstream_test::Runner& runner) {
           world->solve_island_joint_counts,   world->solve_island_body_indices,  world->solve_island_contact_indices,
           world->solve_island_joint_indices,  world->solve_island_cursors};
 
-      for (int i = 0; i < 600; i++) p::step_physics2_d(world, 1.0 / 60);
+      for (int i = 0; i < 600; i++) p::step_physics_2d(world, 1.0 / 60);
 
       expect_true(world->contacts.element(0) == contact, "the same contact object");
       // Identity of the retained Array/Map handles, probed by a write through the retained handle.

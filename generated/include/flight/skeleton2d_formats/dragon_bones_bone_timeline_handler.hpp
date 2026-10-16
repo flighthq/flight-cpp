@@ -49,7 +49,7 @@ using times_values_components_interpolation_quaternion_easing_segment_easings_9b
 inline void add_dragon_bones_bone_channel(flight::Array<flight::Ref<flight::types::AnimationChannel>> channels, flight::Array<double> times, flight::Array<double> values, double components, flight::types::AnimationInterpolation interpolation, double bone_index, flight::types::Skeleton2DAnimationPath path, std::optional<std::optional<flight::Array<std::optional<std::function<double(double)>>>>> segment_easings = std::nullopt) {
   segment_easings = segment_easings.value_or(std::nullopt);
   auto track = flight::animation::create_animation_track(([&]() { auto object_member_components = std::optional<double>{components}; auto object_member_interpolation = std::optional<flight::String>{interpolation}; auto object_member_segment_easings = ([&]() -> std::variant<flight::Array<std::optional<std::function<double(double)>>>, flight::Null, flight::Undefined> { auto contextual_union_source = segment_easings.value(); if (!contextual_union_source.has_value()) return std::variant<flight::Array<std::optional<std::function<double(double)>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Array<std::optional<std::function<double(double)>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<std::optional<std::function<double(double)>>>>, contextual_union_source.value()}; }()); auto object_member_times = times.slice(); auto object_member_values = values; return flight::make_ref<times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042>(times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042{.times = object_member_times, .values = object_member_values, .components = object_member_components, .interpolation = object_member_interpolation, .segment_easings = object_member_segment_easings}); }()));
-  channels.push(flight::animation::create_animation_channel(track, flight::Any::object(flight::skeleton2d::create_skeleton2_dbone_animation_target(bone_index, path))));
+  channels.push(flight::animation::create_animation_channel(track, flight::Any::object(flight::skeleton2d::create_skeleton_2d_bone_animation_target(bone_index, path))));
 }
 
 inline void add_dragon_bones_vector_channel(flight::Array<flight::Ref<flight::types::AnimationChannel>> channels, flight::Any raw, double bone_index, flight::types::Skeleton2DAnimationPath path, double frame_rate, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
@@ -57,7 +57,7 @@ inline void add_dragon_bones_vector_channel(flight::Array<flight::Ref<flight::ty
   if ((static_cast<double>(frames.size()) == 0.0)) {
     return;
   }
-  const double fallback = ((path == flight::types::skeleton2_danimation_path->scale) ? 1.0 : 0.0);
+  const double fallback = ((path == flight::types::skeleton_2d_animation_path->scale) ? 1.0 : 0.0);
   flight::Array<double> values = flight::Array<double>{};
   for (auto frame : frames) {
     values.push(flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(frame.get(flight::String("x")).value(), fallback), flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(frame.get(flight::String("y")).value(), fallback));
@@ -112,18 +112,18 @@ inline void add_dragon_bones_rotate_channels(flight::Array<flight::Ref<flight::t
     }
   }
   std::optional<flight::Array<std::optional<std::function<double(double)>>>> easings = flight::skeleton2d_formats::build_dragon_bones_segment_easings(frames);
-  const flight::String rotation_path = flight::types::skeleton2_danimation_path->rotation;
+  const flight::String rotation_path = flight::types::skeleton_2d_animation_path->rotation;
   add_dragon_bones_bone_channel(channels, times, rotations, 1.0, interpolation, bone_index, rotation_path, easings);
   if (skewed) {
-    const flight::String shear_path = flight::types::skeleton2_danimation_path->shear;
+    const flight::String shear_path = flight::types::skeleton_2d_animation_path->shear;
     add_dragon_bones_bone_channel(channels, times, shears, 2.0, interpolation, bone_index, shear_path, easings);
   }
 }
 
 inline void parse_dragon_bones_bone_timeline(flight::Array<flight::Ref<flight::types::AnimationChannel>> channels, flight::Record<flight::String, flight::Any> timeline, double bone_index, double frame_rate, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
-  add_dragon_bones_vector_channel(channels, timeline.get(flight::String("translateFrame")).value(), bone_index, flight::types::skeleton2_danimation_path->translation, frame_rate, diagnostics);
+  add_dragon_bones_vector_channel(channels, timeline.get(flight::String("translateFrame")).value(), bone_index, flight::types::skeleton_2d_animation_path->translation, frame_rate, diagnostics);
   add_dragon_bones_rotate_channels(channels, timeline.get(flight::String("rotateFrame")).value(), bone_index, frame_rate, diagnostics);
-  add_dragon_bones_vector_channel(channels, timeline.get(flight::String("scaleFrame")).value(), bone_index, flight::types::skeleton2_danimation_path->scale, frame_rate, diagnostics);
+  add_dragon_bones_vector_channel(channels, timeline.get(flight::String("scaleFrame")).value(), bone_index, flight::types::skeleton_2d_animation_path->scale, frame_rate, diagnostics);
   flight::skeleton2d_formats::skip_crumb_dragon_bones_group(diagnostics, timeline.get(flight::String("frame")).value(), flight::String("dragonbones.legacy-bone-frame-unsupported"));
 }
 

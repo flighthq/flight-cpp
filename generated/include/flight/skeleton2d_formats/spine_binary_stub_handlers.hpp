@@ -18,12 +18,12 @@ namespace flight::types { struct SpineBinaryRegistry; }
 namespace flight::types { struct SpineBinarySectionContext; }
 namespace flight::types { struct SpineBinaryTimelineContext; }
 
-#include <flight/types/attachment_skin2_d.hpp>
-#include <flight/types/bone2_d.hpp>
+#include <flight/types/attachment_skin_2d.hpp>
+#include <flight/types/bone_2d.hpp>
 #include <flight/types/byte_reader.hpp>
 #include <flight/types/import_diagnostic.hpp>
-#include <flight/types/skeleton2_dimport.hpp>
-#include <flight/types/slot2_d.hpp>
+#include <flight/types/skeleton_2d_import.hpp>
+#include <flight/types/slot_2d.hpp>
 #include <flight/types/spine_binary_registry.hpp>
 #include <flight/skeleton2d_formats/spine_binary_parse_helpers.hpp>
 #include <flight/skeleton2d_formats/spine_binary_reader.hpp>

@@ -18,11 +18,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/scene2_dsignals.hpp>
+#include <flight/types/scene_2d_signals.hpp>
 
-#include <flight/types/scene2_d.hpp>
+#include <flight/types/scene_2d.hpp>
 
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 
 #include <flight/types/node.hpp>
 
@@ -51,7 +51,7 @@ using flight::types::Scene2D;
 using flight::types::Scene2DRuntime;
 using flight::types::Scene2DSignals;
 
-inline flight::Ref<flight::types::Scene2DRuntime> create_scene2_druntime() {
+inline flight::Ref<flight::types::Scene2DRuntime> create_scene_2d_runtime() {
   return flight::make_ref<flight::types::Scene2DRuntime>(flight::types::Scene2DRuntime{.binding = std::nullopt, .scene2d_signals = std::nullopt});
 }
 
@@ -126,7 +126,7 @@ struct align_color_scale_mode_scene2d_height_scene2d_width_50b58c1d4dc14149 : pu
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_ALIGN_COLOR_SCALE_MODE_SCENE2D_HEIGHT_SCENE2D_WIDTH_50B58C1D4DC14149
 
-inline void initialize_scene2_d(flight::types::EntityConstruction<flight::Ref<flight::types::Scene2D>> out, flight::types::Node2D root, std::optional<flight::Ref<align_color_scale_mode_scene2d_height_scene2d_width_50b58c1d4dc14149>> obj = std::nullopt) {
+inline void initialize_scene_2d(flight::types::EntityConstruction<flight::Ref<flight::types::Scene2D>> out, flight::types::Node2D root, std::optional<flight::Ref<align_color_scale_mode_scene2d_height_scene2d_width_50b58c1d4dc14149>> obj = std::nullopt) {
   flight::row_set<flight::RowKey<"align">>(out, ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::types::ViewportAlign> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->align; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("topleft"); }()));
   flight::row_set<flight::RowKey<"color">>(out, ([&]() -> std::optional<double> { auto nullish_coalesce_left_2 = ([&]() -> std::variant<double, flight::Null, flight::Undefined> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return optional_chain_receiver.value()->color; }()); if (const auto* alternative = std::get_if<double>(&nullish_coalesce_left_2)) return std::optional<double>{*alternative}; return std::nullopt; }()));
   flight::row_set<flight::RowKey<"root">>(out, root);
@@ -171,15 +171,15 @@ inline void initialize_scene2_d(flight::types::EntityConstruction<flight::Ref<fl
 // Node2DRuntime row where initialization establishes those cells, rather than widening
 // Readonly<NodeRuntime<Node2DTraits>> at the use site.
 
-inline void initialize_scene2_dsignals(flight::types::EntityConstruction<flight::Ref<flight::types::Scene2DSignals>> out) {
+inline void initialize_scene_2d_signals(flight::types::EntityConstruction<flight::Ref<flight::types::Scene2DSignals>> out) {
   flight::row_set<flight::RowKey<"onFullscreenChanged">>(out, flight::signals::create_signal<std::function<void()>>());
   flight::row_set<flight::RowKey<"onOrientationChanged">>(out, flight::signals::create_signal<std::function<void()>>());
   flight::row_set<flight::RowKey<"onResize">>(out, flight::signals::create_signal<std::function<void()>>());
 }
 
-inline flight::Ref<flight::types::Scene2DSignals> create_scene2_dsignals() {
+inline flight::Ref<flight::types::Scene2DSignals> create_scene_2d_signals() {
   flight::types::EntityConstruction<flight::Ref<flight::types::Scene2DSignals>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Scene2DSignals>>();
-  initialize_scene2_dsignals(out);
+  initialize_scene_2d_signals(out);
   return flight::entity::finish_entity<flight::Ref<flight::types::Scene2DSignals>>(out);
 }
 
@@ -243,13 +243,13 @@ inline flight::Ref<flight::types::Scene2DSignals> create_scene2_dsignals() {
 // it -- rather than asserting past flight::Ref<flight::types::EntityRuntime>. The compiler will not reinterpret
 // the owner, cast it, copy or materialize a replacement, or add side storage.
 
-inline flight::Ref<flight::types::Scene2DSignals> enable_scene2_dsignals(flight::Ref<flight::types::Scene2D> source) {
-  auto runtime = ensure_scene2_druntime(source);
-  return ([&]() { auto&& assignment_target = runtime->scene2d_signals; if (!assignment_target.has_value()) assignment_target = std::optional<flight::Ref<flight::types::Scene2DSignals>>{create_scene2_dsignals()}; return assignment_target.value(); }());
+inline flight::Ref<flight::types::Scene2DSignals> enable_scene_2d_signals(flight::Ref<flight::types::Scene2D> source) {
+  auto runtime = ensure_scene_2d_runtime(source);
+  return ([&]() { auto&& assignment_target = runtime->scene2d_signals; if (!assignment_target.has_value()) assignment_target = std::optional<flight::Ref<flight::types::Scene2DSignals>>{create_scene_2d_signals()}; return assignment_target.value(); }());
 }
 
-inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene2DRuntime>>>> get_scene2_druntime(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene2D>>>> source) {
-  return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene2DRuntime>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene2DRuntime>>>>(ensure_scene2_druntime(flight::structural_ref_cast<flight::Ref<flight::types::Scene2D>>(source))));
+inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene2DRuntime>>>> get_scene_2d_runtime(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene2D>>>> source) {
+  return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene2DRuntime>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene2DRuntime>>>>(ensure_scene_2d_runtime(flight::structural_ref_cast<flight::Ref<flight::types::Scene2D>>(source))));
 }
 
 } // namespace flight::scene2d

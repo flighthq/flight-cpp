@@ -16,7 +16,7 @@ namespace flight::types { struct Physics3DJointFrames; }
 namespace flight::types { struct RigidBody3D; }
 
 #include <flight/types/collision.hpp>
-#include <flight/types/physics3_d.hpp>
+#include <flight/types/physics_3d.hpp>
 #include <flight/physics3d/symmetric_tensor.hpp>
 
 namespace flight::physics3d {
@@ -25,11 +25,11 @@ using flight::types::Physics3DCollider;
 using flight::types::Physics3DJoint;
 using flight::types::RigidBody3D;
 
-inline double get_physics3_djoint_row_velocity(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_b, double direction_x, double direction_y, double direction_z, double arm_ax, double arm_ay, double arm_az, double arm_bx, double arm_by, double arm_bz) {
+inline double get_physics_3d_joint_row_velocity(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_b, double direction_x, double direction_y, double direction_z, double arm_ax, double arm_ay, double arm_az, double arm_bx, double arm_by, double arm_bz) {
   return ((((((((((flight::row_get<flight::RowKey<"velocityX">>(body_b) - flight::row_get<flight::RowKey<"velocityX">>(body_a)) * direction_x) + ((flight::row_get<flight::RowKey<"velocityY">>(body_b) - flight::row_get<flight::RowKey<"velocityY">>(body_a)) * direction_y)) + ((flight::row_get<flight::RowKey<"velocityZ">>(body_b) - flight::row_get<flight::RowKey<"velocityZ">>(body_a)) * direction_z)) + (flight::row_get<flight::RowKey<"angularVelocityX">>(body_b) * arm_bx)) + (flight::row_get<flight::RowKey<"angularVelocityY">>(body_b) * arm_by)) + (flight::row_get<flight::RowKey<"angularVelocityZ">>(body_b) * arm_bz)) - (flight::row_get<flight::RowKey<"angularVelocityX">>(body_a) * arm_ax)) - (flight::row_get<flight::RowKey<"angularVelocityY">>(body_a) * arm_ay)) - (flight::row_get<flight::RowKey<"angularVelocityZ">>(body_a) * arm_az));
 }
 
-inline void swap_physics3_djoint_frames(flight::Ref<flight::types::Physics3DJointFrames> frames) {
+inline void swap_physics_3d_joint_frames(flight::Ref<flight::types::Physics3DJointFrames> frames) {
   const double x = frames->local_rotation_ax;
   const double y = frames->local_rotation_ay;
   const double z = frames->local_rotation_az;
@@ -44,7 +44,7 @@ inline void swap_physics3_djoint_frames(flight::Ref<flight::types::Physics3DJoin
   (frames->local_rotation_bw = w);
 }
 
-inline void write_physics3_djoint_anchor_velocity(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_b, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>> joint, flight::Array<double> out) {
+inline void write_physics_3d_joint_anchor_velocity(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_b, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>> joint, flight::Array<double> out) {
   const double anchor_ax = (flight::row_get<flight::RowKey<"velocityX">>(body_a) + ((flight::row_get<flight::RowKey<"angularVelocityY">>(body_a) * flight::row_get<flight::RowKey<"rAZ">>(joint)) - (flight::row_get<flight::RowKey<"angularVelocityZ">>(body_a) * flight::row_get<flight::RowKey<"rAY">>(joint))));
   const double anchor_ay = (flight::row_get<flight::RowKey<"velocityY">>(body_a) + ((flight::row_get<flight::RowKey<"angularVelocityZ">>(body_a) * flight::row_get<flight::RowKey<"rAX">>(joint)) - (flight::row_get<flight::RowKey<"angularVelocityX">>(body_a) * flight::row_get<flight::RowKey<"rAZ">>(joint))));
   const double anchor_az = (flight::row_get<flight::RowKey<"velocityZ">>(body_a) + ((flight::row_get<flight::RowKey<"angularVelocityX">>(body_a) * flight::row_get<flight::RowKey<"rAY">>(joint)) - (flight::row_get<flight::RowKey<"angularVelocityY">>(body_a) * flight::row_get<flight::RowKey<"rAX">>(joint))));
@@ -53,7 +53,7 @@ inline void write_physics3_djoint_anchor_velocity(flight::StructuralRef<flight::
   (out.element(2.0) = ((flight::row_get<flight::RowKey<"velocityZ">>(body_b) + ((flight::row_get<flight::RowKey<"angularVelocityX">>(body_b) * flight::row_get<flight::RowKey<"rBY">>(joint)) - (flight::row_get<flight::RowKey<"angularVelocityY">>(body_b) * flight::row_get<flight::RowKey<"rBX">>(joint)))) - anchor_az));
 }
 
-inline void write_physics3_djoint_angular_mass(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_b, flight::Array<double> out) {
+inline void write_physics_3d_joint_angular_mass(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_b, flight::Array<double> out) {
   (out.element(flight::physics3d::tensor_xx) = (flight::row_get<flight::RowKey<"inverseInertiaWorldXX">>(body_a) + flight::row_get<flight::RowKey<"inverseInertiaWorldXX">>(body_b)));
   (out.element(flight::physics3d::tensor_yy) = (flight::row_get<flight::RowKey<"inverseInertiaWorldYY">>(body_a) + flight::row_get<flight::RowKey<"inverseInertiaWorldYY">>(body_b)));
   (out.element(flight::physics3d::tensor_zz) = (flight::row_get<flight::RowKey<"inverseInertiaWorldZZ">>(body_a) + flight::row_get<flight::RowKey<"inverseInertiaWorldZZ">>(body_b)));
@@ -69,11 +69,11 @@ inline void multiply_quaternions(double a_x, double a_y, double a_z, double a_w,
   (out.element(3.0) = ((((a_w * b_w) - (a_x * b_x)) - (a_y * b_y)) - (a_z * b_z)));
 }
 
-inline void write_physics3_djoint_frame_rotation(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body, double local_rotation_x, double local_rotation_y, double local_rotation_z, double local_rotation_w, flight::Array<double> out) {
+inline void write_physics_3d_joint_frame_rotation(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body, double local_rotation_x, double local_rotation_y, double local_rotation_z, double local_rotation_w, flight::Array<double> out) {
   multiply_quaternions(flight::row_get<flight::RowKey<"orientationX">>(body), flight::row_get<flight::RowKey<"orientationY">>(body), flight::row_get<flight::RowKey<"orientationZ">>(body), flight::row_get<flight::RowKey<"orientationW">>(body), local_rotation_x, local_rotation_y, local_rotation_z, local_rotation_w, out);
 }
 
-inline void write_physics3_djoint_relative_rotation(double frame_ax, double frame_ay, double frame_az, double frame_aw, double frame_bx, double frame_by, double frame_bz, double frame_bw, flight::Array<double> out) {
+inline void write_physics_3d_joint_relative_rotation(double frame_ax, double frame_ay, double frame_az, double frame_aw, double frame_bx, double frame_by, double frame_bz, double frame_bw, flight::Array<double> out) {
   multiply_quaternions(-frame_ax, -frame_ay, -frame_az, frame_aw, frame_bx, frame_by, frame_bz, frame_bw, out);
   if ((out.element(3.0) < 0.0)) {
     (out.element(0.0) = -out.element(0.0));
@@ -114,7 +114,7 @@ inline flight::Array<double> angular_impulse_tensor = flight::Array<double>{0.0,
 
 inline flight::Array<double> angular_impulse_vector = flight::Array<double>{0.0, 0.0, 0.0};
 
-inline void apply_physics3_djoint_angular_impulse(flight::Ref<flight::types::RigidBody3D> body_a, flight::Ref<flight::types::RigidBody3D> body_b, double impulse_x, double impulse_y, double impulse_z) {
+inline void apply_physics_3d_joint_angular_impulse(flight::Ref<flight::types::RigidBody3D> body_a, flight::Ref<flight::types::RigidBody3D> body_b, double impulse_x, double impulse_y, double impulse_z) {
   read_world_inverse_inertia_flight_value_function_read_u000057_orld_u000049_nverse_u000049_nertia_flight_private_8fe2f8441cb1b660(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), angular_impulse_tensor);
   flight::physics3d::apply_symmetric_tensor(angular_impulse_tensor, impulse_x, impulse_y, impulse_z, angular_impulse_vector);
   (body_a->angular_velocity_x -= angular_impulse_vector.element(0.0));
@@ -129,7 +129,7 @@ inline void apply_physics3_djoint_angular_impulse(flight::Ref<flight::types::Rig
 
 inline flight::Array<double> anchor_vector = flight::Array<double>{0.0, 0.0, 0.0};
 
-inline void write_physics3_djoint_anchors(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_b, flight::Ref<flight::types::Physics3DJoint> joint) {
+inline void write_physics_3d_joint_anchors(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_b, flight::Ref<flight::types::Physics3DJoint> joint) {
   rotate_by_quaternion((joint->local_anchor_ax - flight::row_get<flight::RowKey<"centerX">>(body_a)), (joint->local_anchor_ay - flight::row_get<flight::RowKey<"centerY">>(body_a)), (joint->local_anchor_az - flight::row_get<flight::RowKey<"centerZ">>(body_a)), flight::row_get<flight::RowKey<"orientationX">>(body_a), flight::row_get<flight::RowKey<"orientationY">>(body_a), flight::row_get<flight::RowKey<"orientationZ">>(body_a), flight::row_get<flight::RowKey<"orientationW">>(body_a), anchor_vector);
   (joint->r_ax = anchor_vector.element(0.0));
   (joint->r_ay = anchor_vector.element(1.0));
@@ -142,7 +142,7 @@ inline void write_physics3_djoint_anchors(flight::StructuralRef<flight::RowReado
 
 inline flight::Array<double> basis_rotation = flight::Array<double>{0.0, 0.0, 0.0, 0.0};
 
-inline void write_physics3_djoint_frame_basis(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body, double local_rotation_x, double local_rotation_y, double local_rotation_z, double local_rotation_w, flight::Array<double> out) {
+inline void write_physics_3d_joint_frame_basis(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body, double local_rotation_x, double local_rotation_y, double local_rotation_z, double local_rotation_w, flight::Array<double> out) {
   multiply_quaternions(flight::row_get<flight::RowKey<"orientationX">>(body), flight::row_get<flight::RowKey<"orientationY">>(body), flight::row_get<flight::RowKey<"orientationZ">>(body), flight::row_get<flight::RowKey<"orientationW">>(body), local_rotation_x, local_rotation_y, local_rotation_z, local_rotation_w, basis_rotation);
   const double x = basis_rotation.element(0.0);
   const double y = basis_rotation.element(1.0);
@@ -189,7 +189,7 @@ inline void apply_body_joint_impulse(flight::Ref<flight::types::RigidBody3D> bod
   (body->angular_velocity_z += body_impulse_vector.element(2.0));
 }
 
-inline void apply_physics3_djoint_impulse(flight::Ref<flight::types::RigidBody3D> body_a, flight::Ref<flight::types::RigidBody3D> body_b, double r_ax, double r_ay, double r_az, double r_bx, double r_by, double r_bz, double impulse_x, double impulse_y, double impulse_z) {
+inline void apply_physics_3d_joint_impulse(flight::Ref<flight::types::RigidBody3D> body_a, flight::Ref<flight::types::RigidBody3D> body_b, double r_ax, double r_ay, double r_az, double r_bx, double r_by, double r_bz, double impulse_x, double impulse_y, double impulse_z) {
   apply_body_joint_impulse(body_a, r_ax, r_ay, r_az, -impulse_x, -impulse_y, -impulse_z);
   apply_body_joint_impulse(body_b, r_bx, r_by, r_bz, impulse_x, impulse_y, impulse_z);
 }
@@ -198,8 +198,8 @@ inline flight::Array<double> point_mass_tensor = flight::Array<double>{0.0, 0.0,
 
 inline flight::Array<double> rotation_error_relative = flight::Array<double>{0.0, 0.0, 0.0, 0.0};
 
-inline void write_physics3_djoint_rotation_error(double frame_ax, double frame_ay, double frame_az, double frame_aw, double frame_bx, double frame_by, double frame_bz, double frame_bw, flight::Array<double> out) {
-  write_physics3_djoint_relative_rotation(frame_ax, frame_ay, frame_az, frame_aw, frame_bx, frame_by, frame_bz, frame_bw, rotation_error_relative);
+inline void write_physics_3d_joint_rotation_error(double frame_ax, double frame_ay, double frame_az, double frame_aw, double frame_bx, double frame_by, double frame_bz, double frame_bw, flight::Array<double> out) {
+  write_physics_3d_joint_relative_rotation(frame_ax, frame_ay, frame_az, frame_aw, frame_bx, frame_by, frame_bz, frame_bw, rotation_error_relative);
   const double x = rotation_error_relative.element(0.0);
   const double y = rotation_error_relative.element(1.0);
   const double z = rotation_error_relative.element(2.0);
@@ -218,7 +218,7 @@ inline flight::Array<double> row_impulse_tensor = flight::Array<double>{0.0, 0.0
 
 inline flight::Array<double> row_impulse_vector = flight::Array<double>{0.0, 0.0, 0.0};
 
-inline void apply_physics3_djoint_row_impulse(flight::Ref<flight::types::RigidBody3D> body_a, flight::Ref<flight::types::RigidBody3D> body_b, double direction_x, double direction_y, double direction_z, double arm_ax, double arm_ay, double arm_az, double arm_bx, double arm_by, double arm_bz, double impulse) {
+inline void apply_physics_3d_joint_row_impulse(flight::Ref<flight::types::RigidBody3D> body_a, flight::Ref<flight::types::RigidBody3D> body_b, double direction_x, double direction_y, double direction_z, double arm_ax, double arm_ay, double arm_az, double arm_bx, double arm_by, double arm_bz, double impulse) {
   (body_a->velocity_x -= ((impulse * direction_x) * body_a->inverse_mass));
   (body_a->velocity_y -= ((impulse * direction_y) * body_a->inverse_mass));
   (body_a->velocity_z -= ((impulse * direction_z) * body_a->inverse_mass));
@@ -241,7 +241,7 @@ inline flight::Array<double> row_mass_tensor = flight::Array<double>{0.0, 0.0, 0
 
 inline flight::Array<double> row_mass_vector = flight::Array<double>{0.0, 0.0, 0.0};
 
-inline double get_physics3_djoint_row_mass(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_b, double direction_x, double direction_y, double direction_z, double arm_ax, double arm_ay, double arm_az, double arm_bx, double arm_by, double arm_bz) {
+inline double get_physics_3d_joint_row_mass(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_b, double direction_x, double direction_y, double direction_z, double arm_ax, double arm_ay, double arm_az, double arm_bx, double arm_by, double arm_bz) {
   const double linear = (((direction_x * direction_x) + (direction_y * direction_y)) + (direction_z * direction_z));
   double denominator = ((flight::row_get<flight::RowKey<"inverseMass">>(body_a) + flight::row_get<flight::RowKey<"inverseMass">>(body_b)) * linear);
   read_world_inverse_inertia_flight_value_function_read_u000057_orld_u000049_nverse_u000049_nertia_flight_private_8fe2f8441cb1b660(body_a, row_mass_tensor);
@@ -255,7 +255,7 @@ inline double get_physics3_djoint_row_mass(flight::StructuralRef<flight::RowRead
 
 inline flight::Array<double> separation_center = flight::Array<double>{0.0, 0.0, 0.0};
 
-inline void write_physics3_djoint_separation(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_b, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>> joint, flight::Array<double> out) {
+inline void write_physics_3d_joint_separation(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_b, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>> joint, flight::Array<double> out) {
   write_world_center(body_a, separation_center);
   const double anchor_ax = (separation_center.element(0.0) + flight::row_get<flight::RowKey<"rAX">>(joint));
   const double anchor_ay = (separation_center.element(1.0) + flight::row_get<flight::RowKey<"rAY">>(joint));
@@ -284,7 +284,7 @@ inline void add_skew_sandwich(flight::SequenceView<double> tensor, double r_x, d
   (out.element(flight::physics3d::tensor_yz) += ((r_z * skew_row2.element(0.0)) - (r_x * skew_row2.element(2.0))));
 }
 
-inline void write_physics3_djoint_point_mass(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_b, double r_ax, double r_ay, double r_az, double r_bx, double r_by, double r_bz, flight::Array<double> out) {
+inline void write_physics_3d_joint_point_mass(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_b, double r_ax, double r_ay, double r_az, double r_bx, double r_by, double r_bz, flight::Array<double> out) {
   const double diagonal = (flight::row_get<flight::RowKey<"inverseMass">>(body_a) + flight::row_get<flight::RowKey<"inverseMass">>(body_b));
   (out.element(flight::physics3d::tensor_xx) = diagonal);
   (out.element(flight::physics3d::tensor_yy) = diagonal);

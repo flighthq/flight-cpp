@@ -5,7 +5,7 @@
   "overrides": [
     {
       "id": "render-scene2d-coverage-variant-arms",
-      "path": "flight/render/explain_scene2_dcoverage.hpp",
+      "path": "flight/render/explain_scene_2d_coverage.hpp",
       "package": "@flighthq/render",
       "status": "complete",
       "supplies": "packages/render/src/explainScene2DCoverage.ts",
@@ -14,7 +14,7 @@
       "change": "Constructs the elected satisfied, unavailable, fallback-unavailable, unregistered, and fallback-remediable entry owner at each invalid union-construction site while retaining the current node-renderer and optional shape-command map membership checks verbatim.",
       "equivalence": "Satisfied, unavailable, fallback-unavailable, unregistered, and fallback-remediable entries preserve every facet, kind, registry, remedy, and coverage value. Node kinds remain ordered before shape-command kinds, catalog lookup remains first-match, output clearing retains array identity, and stop-at-first still returns before any gap write.",
       "whyNotAPatchOrRepair": "The TypeScript discriminated union is already precise; a text insertion cannot replace the four invalid object-literal-to-union expressions with explicit elected reference owners.",
-      "unblocks": "explain_scene2_dcoverage.hpp compiles independently.",
+      "unblocks": "explain_scene_2d_coverage.hpp compiles independently.",
       "remaining": "None in the emitted declarations of this module.",
       "expires": "when contextual object literals construct the elected SceneCoverageEntry union arm.",
       "authoredOn": "2026-10-13"
@@ -278,7 +278,7 @@
       "package": "@flighthq/camera",
       "status": "complete",
       "derivedFrom": "a0691bb583a0058e537b205e94c46826a09a1c5c027021af4b7d4d4f0a312f58",
-      "reason": "get_camera3_dfrustum_corners writes `out.element(i_2).x = ...` where `out` is Array<Vector3Like> and Vector3Like is flight::Ref<Vector3>, a std::shared_ptr. The TypeScript is `out[i].x = results[i][0]`, a member assignment THROUGH a reference, and the emitter wrote it as a direct member access on the element: \"'std::shared_ptr<flight::types::Vector3>' has no member named 'x'\".",
+      "reason": "get_camera_3d_frustum_corners writes `out.element(i_2).x = ...` where `out` is Array<Vector3Like> and Vector3Like is flight::Ref<Vector3>, a std::shared_ptr. The TypeScript is `out[i].x = results[i][0]`, a member assignment THROUGH a reference, and the emitter wrote it as a direct member access on the element: \"'std::shared_ptr<flight::types::Vector3>' has no member named 'x'\".",
       "change": "Three characters, three times: `.` becomes `->` on the three component assignments. Nothing else in the function changes.",
       "equivalence": "Array::element returns a reference to the stored shared_ptr, so `->x = v` assigns through to the pointee -- the same object the caller passed in, mutated in place, which is what the TypeScript does to the array it was given. No declaration is added or removed, no control flow changes, and the function's result is unchanged.",
       "whyNotAPatchOrRepair": "A source patch cannot reach it: the TypeScript is already correct and idiomatic, and there is no equivalent spelling of `out[i].x = v` that would make the emitter choose `->`. A repair cannot reach it either, for a reason worth stating because the fix LOOKS mechanical: deciding between `.` and `->` requires knowing that the element type is a pointer, which is type information no text rewrite has. There are eleven `.element(...).member` sites in the tree and @flighthq/adjustments compiles with its own, because there the element is a value -- so a textual rule would break the compiling package to fix this one. AGENTS.md names rewriting an operator the emitter emitted as source text as override territory, and this is exactly that.",
@@ -512,7 +512,7 @@
     },
     {
       "id": "collision-face3d-kind-dispatch",
-      "path": "flight/collision/collision_face3_d.hpp",
+      "path": "flight/collision/collision_face_3d.hpp",
       "package": "@flighthq/collision",
       "status": "complete",
       "supplies": "packages/collision/src/collisionFace3D.ts",
@@ -528,7 +528,7 @@
     },
     {
       "id": "collision-support2d-exact-shape-registry",
-      "path": "flight/collision/collision_support2_d.hpp",
+      "path": "flight/collision/collision_support_2d.hpp",
       "package": "@flighthq/collision",
       "status": "complete",
       "supplies": "packages/collision/src/collisionSupport2D.ts",
@@ -544,7 +544,7 @@
     },
     {
       "id": "collision-support3d-exact-shape-registry",
-      "path": "flight/collision/collision_support3_d.hpp",
+      "path": "flight/collision/collision_support_3d.hpp",
       "package": "@flighthq/collision",
       "status": "complete",
       "supplies": "packages/collision/src/collisionSupport3D.ts",
@@ -576,7 +576,7 @@
     },
     {
       "id": "collision-sweep2d-continuous-convex-dispatch",
-      "path": "flight/collision/sweep_collision_shape2_d.hpp",
+      "path": "flight/collision/sweep_collision_shape_2d.hpp",
       "package": "@flighthq/collision",
       "status": "complete",
       "supplies": "packages/collision/src/sweepCollisionShape2D.ts",
@@ -586,13 +586,13 @@
       "equivalence": "Relative motion, maximum fraction, initial-overlap handling, clockwise or counter-clockwise polygons, zero-length capsules, earliest piece selection, canonical zero, contact support points, pool nesting, and all source epsilons are retained. SequenceView carries scratch typed arrays and polygon arrays without copying their storage.",
       "whyNotAPatchOrRepair": "A repair cannot add four geometric bodies. The source already states the concrete kind and initialization invariants; replacing them with target-specific dispatch or array carriers would make the TypeScript less direct.",
       "unblocks": "The sweep module and its package barrels as part of the collision gain from 18/38 to 35/38.",
-      "remaining": "None in sweep_collision_shape2_d.ts at this pin; the formerly reported shape-contact miss path now retains its false branch in generated output.",
+      "remaining": "None in sweep_collision_shape_2d.ts at this pin; the formerly reported shape-contact miss path now retains its false branch in generated output.",
       "expires": "when contextual shape vertices retain their concrete sequence carrier, kind tests bind the union alternative, and the compiler emits the four refused functions.",
       "authoredOn": "2026-10-04"
     },
     {
       "id": "collision-triangle-mesh3d-retained-acceleration",
-      "path": "flight/collision/triangle_mesh3_d.hpp",
+      "path": "flight/collision/triangle_mesh_3d.hpp",
       "package": "@flighthq/collision",
       "status": "complete",
       "supplies": "packages/collision/src/triangleMesh3D.ts",
@@ -602,7 +602,7 @@
       "equivalence": "Creation copies source arrays, invalidation increments versions, validation retains safe-integer and nondegenerate-triangle rules, cache hits use source reference identity, transforms preserve the unit quaternion contract, BVH ordering keeps centroid and triangle-index ties, and raycast/contact/sweep results use the source normals, fractions, features, limits, and four-point spatial reduction. Live probes cover mesh validation, transformed data paths, raycast fraction and normal, bounds, heightfield validation, and cache-backed queries.",
       "whyNotAPatchOrRepair": "A repair cannot add cache state or five behavioral functions. WeakMap, dense array initialization, contextual unions, and discriminated shape access are valid target-neutral source constructs; rewriting the whole acceleration module around current C++ restrictions would be disproportionate and less clear.",
       "unblocks": "The triangle-mesh module and its downstream collision headers as part of the package gain from 18/38 to 35/38.",
-      "remaining": "None in triangle_mesh3_d.ts at this pin; the formerly reported raycast capsule member access is corrected in generated output.",
+      "remaining": "None in triangle_mesh_3d.ts at this pin; the formerly reported raycast capsule member access is corrected in generated output.",
       "expires": "when fully initialized dense arrays, member projections over present storage, contextual collision unions, and the five refused functions lower directly.",
       "authoredOn": "2026-10-04"
     },
@@ -879,7 +879,7 @@
       "reason": "The emitter passes a bare designated-initializer list to flight::texture::create_texture, and every overload takes an owned options reference or a variant of them, so no owner is materialized and the call matches nothing. The previous entry's premise no longer holds: create_texture_atlas is emitted and create_texture is supplied by the texture override.",
       "expires": "when the emitter materializes the contextual object-literal owner at this call site, per docs/compiler-requests/contextual-object-literal-owner-materialization.md; overrides:check reports the digest when this generated file moves.",
       "change": "Materialized the 2D options owner explicitly around the emitted argument: create_texture(make_ref<flight::texture::CreateTexture2DVariantOptions>(CreateTexture2DVariantOptions{.source = runtime->bitmap})). The current emitted signature and body are otherwise carried through unchanged, and the page is built by the real emitted textureatlas::create_texture_atlas rather than by an inlined stub.",
-      "equivalence": "The named owner carries the same single .source alternative the emitted designated initializer named, and create_texture's 2D overload returns the same Ref<Texture2D> the emitted atlas arm requires, so the call reaches create_texture2_d_from_options exactly as the pinned source intends. Regions stay empty by design, matching the pinned source: a bitmap font addresses its glyphs through its own glyph table, so the page carries the pixels and names no sub-rectangles.",
+      "equivalence": "The named owner carries the same single .source alternative the emitted designated initializer named, and create_texture's 2D overload returns the same Ref<Texture2D> the emitted atlas arm requires, so the call reaches create_texture_2d_from_options exactly as the pinned source intends. Regions stay empty by design, matching the pinned source: a bitmap font addresses its glyphs through its own glyph table, so the page carries the pixels and names no sub-rectangles.",
       "whyNotAPatchOrRepair": "A repair may only add text with no behavior, and this rewrites the emitted argument expression; the pinned bitmapFontFromGlyphAtlas.ts is correct TypeScript, so a source patch has nothing to rewrite. The fix belongs in the emitter.",
       "unblocks": "bitmap_font_from_glyph_atlas.hpp and its downstream includers compile against the current emission.",
       "authoredOn": "2026-10-06"
@@ -1216,7 +1216,7 @@
       "change": "Starts from the a627849 emission unchanged except at isPhysics2DJointValid's NOT GENERATED marker. There the function is supplied from its source: the kind, body-id and break-threshold checks, then `for (const key in joint)` through named_properties(joint), the emitter's own idiom for key iteration, skipping breakForce and breakTorque and rejecting any number-typed value that is not finite.",
       "equivalence": "named_properties enumerates the row's own enumerable string keys in declaration order and reads each as the value JavaScript's `joint[key]` yields, so the loop visits the same keys and applies the same typeof and isFinite tests. typeof joint.kind === 'string' and typeof joint.collideConnected === 'boolean' cannot fail on the native row, which stores a String and a bool, so those two tests are not written.",
       "whyNotAPatchOrRepair": "Declaration repair cannot add validation behavior, and replacing the source's open-property iteration with a closed roster would silently stop validating user-defined fields.",
-      "unblocks": "step_validation.hpp compiles independently and supplies is_physics2_djoint_valid, which validatePhysics2DWorldState calls for every joint.",
+      "unblocks": "step_validation.hpp compiles independently and supplies is_physics_2d_joint_valid, which validatePhysics2DWorldState calls for every joint.",
       "remaining": "None in this module. A native joint is the Physics2DJoint row, so the derived members a concrete joint carries in TypeScript are not on it to be validated. That is the joint downcast boundary (docs/compiler-requests/assertion-to-undeclared-row-member.md), not a gap in this validator.",
       "expires": "when for-in over an interface row and keyed reads with a runtime key lower directly.",
       "authoredOn": "2026-10-13",
@@ -1368,7 +1368,7 @@
     },
     {
       "id": "picking-projection-variant-dispatch",
-      "path": "flight/picking/pick_scene3_d.hpp",
+      "path": "flight/picking/pick_scene_3d.hpp",
       "package": "@flighthq/picking",
       "status": "complete",
       "supplies": "packages/picking/src/pickScene3D.ts",
@@ -1377,7 +1377,7 @@
       "change": "Re-derived the module at a627849. Camera projection uses explicit visitation; exact native owners are recovered only through checked StructuralRef ownership; node traversal, bounds pruning, local triangle intersection, world-space hit reconstruction, predicate and options handling, nearest selection and stable all-hit ordering are implemented without a renderer or scene host.",
       "equivalence": "Perspective and orthographic rays retain the source coordinates. Disabled subtrees are pruned, predicates run once per eligible mesh, posed bounds take precedence, max distance and backface culling are respected, triangle identity and barycentrics are preserved, nearest equal-distance ties retain the first traversal hit, all-hit equal-distance ties remain stable, output arrays are reused and resized, and a miss leaves the caller's single-hit output unchanged.",
       "whyNotAPatchOrRepair": "A declaration cannot supply the two refused algorithms or express std::visit. A portable TypeScript patch cannot encode checked native-owner recovery or C++ variant dispatch without changing the source model for one target.",
-      "unblocks": "pick_scene3_d.hpp supplies the complete picking traversal and ray intersection surface at this pin.",
+      "unblocks": "pick_scene_3d.hpp supplies the complete picking traversal and ray intersection surface at this pin.",
       "remaining": "None in the supplied module at this pin.",
       "expires": "when projection narrowing emits variant visitation and readonly structural narrowing retains the exact derived native owner for Mesh and NodeAny.",
       "authoredOn": "2026-10-13"
@@ -1394,7 +1394,7 @@
       "equivalence": "All represented attribute queries preserve triangle indices and barycentric coordinates, return false without mutating caller outputs when an attribute or node is absent, normalize transformed vectors, and preserve the exact stored material identity. The material result is narrowed to the concrete Material3D type described below.",
       "whyNotAPatchOrRepair": "A declaration repair cannot manufacture native base heritage. Changing the source to return Material3D would narrow the portable public API, while constructing or casting a separate Material owner would violate identity.",
       "unblocks": "scene_hit_attributes.hpp compiles independently and supplies every represented hit-attribute operation at this pin.",
-      "remaining": "get_scene3_dhit_material returns optional<Ref<Material3D>> rather than the source's optional Material base interface. Existing stored materials preserve exact identity, but callers requiring the erased Material carrier must wait for identity-preserving generated interface heritage.",
+      "remaining": "get_scene_3d_hit_material returns optional<Ref<Material3D>> rather than the source's optional Material base interface. Existing stored materials preserve exact identity, but callers requiring the erased Material carrier must wait for identity-preserving generated interface heritage.",
       "expires": "when generated Material3D owners expose identity-preserving Material base heritage.",
       "authoredOn": "2026-10-13"
     },
@@ -1464,7 +1464,7 @@
     },
     {
       "id": "physics2d-abi-variant-shape-encoding",
-      "path": "flight/physics2d_abi/physics2_dabi_command.hpp",
+      "path": "flight/physics2d_abi/physics_2d_abi_command.hpp",
       "package": "@flighthq/physics2d-abi",
       "status": "partial",
       "supplies": "packages/physics2d-abi/src/physics2DAbiCommand.ts",
@@ -1473,14 +1473,14 @@
       "change": "Starts from the a627849 emission unchanged, with two edits. (1) The joints.hpp include is replaced by the nine joint-kind string constants, defined in flight::physics2d_abi with joints.ts's values at a627849, and encodeJointKind names them there. (2) encodeJointFlags and getJointKindValues are declared, without bodies, at their NOT GENERATED markers, with the signatures the retained writePhysics2DAbiSetJointCommand calls. The 7e2fc7d override instead gave them bodies: collideConnected only, with every kind value zero.",
       "equivalence": "Each joint-kind constant has the same string value as the import it replaces, and encodeJointKind compares the same strings in the same order. Every other function is the emission byte for byte. The two declarations add no behavior. A program that calls writePhysics2DAbiSetJointCommand fails to link, rather than writing a SetJoint record that silently drops motor/limit flags and every kind-specific value.",
       "whyNotAPatchOrRepair": "An emission repair cannot remove the core include, and a source patch cannot make the derived joint fields reachable from Physics2DJoint without an unsafe cast or erased-owner recovery, both out of bounds. The declarations are the declare-refused-function rule applied inside the override that already shadows this file.",
-      "unblocks": "physics2_dabi_command.hpp compiles independently, with every command writer except SetJoint usable: gravity, solver config, body, collider (all seven shapes), destroy, body actions and wake.",
+      "unblocks": "physics_2d_abi_command.hpp compiles independently, with every command writer except SetJoint usable: gravity, solver config, body, collider (all seven shapes), destroy, body actions and wake.",
       "remaining": "writePhysics2DAbiSetJointCommand is declared but not linkable until the emitter retains a checked joint owner (docs/compiler-requests/compiler-interface-heritage-owner-widening.md). The joint-kind constants are a copy, to drop once <flight/physics2d/joints.hpp> compiles.",
       "expires": "when physics2d's joints header compiles at the pin and the emitter generates encodeJointFlags and getJointKindValues.",
       "authoredOn": "2026-10-13"
     },
     {
       "id": "physics3d-abi-exact-shape-encoding",
-      "path": "flight/physics3d_abi/physics3_dabi_command.hpp",
+      "path": "flight/physics3d_abi/physics_3d_abi_command.hpp",
       "package": "@flighthq/physics3d-abi",
       "status": "partial",
       "derivedFrom": "b686e5efb31501c38109a8b74333377c1803681dc035f1b184693fb08e7d5359",
@@ -1488,14 +1488,14 @@
       "change": "Re-derived 2026-10-15 from the a627849 emission and kept unchanged except for three corrections. It drops the unused physics2d-abi include and its two using-declarations. It reads the heightfield arm's cellSizeX/cellSizeZ/x/y/z/rotation*/heights from the exact std::get<7> owner instead of the invalid row_get, at both sites. It removes hasJointFrames, whose only caller is the refused writePhysics3DAbiSetJointCommand. The emitter's own writeShapeScalars dispatch replaces the copy's hand-written switch. Comment lines lose only trailing whitespace.",
       "equivalence": "Each supported shape preserves its ABI kind, scalar and integer counts, source scalar order, mesh indices, heightfield dimensions, version, eight-byte record alignment, and zero-only alignment padding. The variant index order (sphere, cone, box, aabb, convex, capsule, cylinder, heightfield, triangle-mesh) matches every emitted index test to the source's kind branch; the heightfield reads are the same members the source names. No joint record is published, because the common Physics3DJoint owner cannot recover the derived flag and value cells faithfully.",
       "whyNotAPatchOrRepair": "A declaration repair cannot replace invalid retained expressions or remove an invalid helper body. Portable TypeScript already performs ordinary discriminant narrowing, while changing its public joint parameter to a generated C++ variant would alter the API.",
-      "unblocks": "physics3_dabi_command.hpp compiles independently and exposes every non-joint command writer, including all nine collider shape encodings.",
+      "unblocks": "physics_3d_abi_command.hpp compiles independently and exposes every non-joint command writer, including all nine collider shape encodings.",
       "remaining": "writePhysics3DAbiSetJointCommand remains unavailable until joint storage retains a checked concrete owner or declared interface heritage. The override does not write a zero-filled or otherwise fabricated joint payload.",
       "expires": "when heightfield arm reads lower to the exact owner, `in` membership tests lower or are refused with their callers, module-local imports match the source, and joint narrowing retains recoverable derived ownership.",
       "authoredOn": "2026-10-13"
     },
     {
       "id": "physics3d-abi-reference-world-with-honest-joint-boundary",
-      "path": "flight/physics3d_abi/reference_physics3_dabi.hpp",
+      "path": "flight/physics3d_abi/reference_physics_3d_abi.hpp",
       "package": "@flighthq/physics3d-abi",
       "status": "partial",
       "derivedFrom": "b004ab52c6de7634feb160397fa4ed1773b670767dd0294d2ff84b381e1598d9",
@@ -1503,7 +1503,7 @@
       "change": "Keeps the current-pin generated runtime, constructs each persistent world with exact generated owners and weak self-captures, copies decoded config fields into exact public owners, delegates validation to the exact-variant physics3d validator, clones all nine collider variants into separate local/world storage, calls supported ray queries directly, integrates collider-free bodies through the available core primitives, rejects SetJoint before mutation, and clears the contact-hooks capability while collision stepping is unavailable.",
       "equivalence": "World handles remain monotonic and instance-local; maps, sorted caller IDs, reusable readback arrays and supported callbacks belong to one persistent world. Exact body and collider mutation, validation, readback, point/ray/region queries and collider-free substepped integration preserve source values and identity. Unsupported joint wire data produces UnsupportedJoint before mutation, and unavailable collision or joint stepping never fabricates contacts, hooks, owners or payloads.",
       "whyNotAPatchOrRepair": "The missing world factory requires executable mutually recursive callback state, while declaration insertion cannot replace retained config assignment, collider construction, function selection or SetJoint bodies. The portable source already expresses them correctly; changing physics3d core is outside this package-owned task, and copying derived joints into a flattened base would break identity.",
-      "unblocks": "reference_physics3_dabi.hpp and the three package aggregators compile with callable world lifecycle, body and collider commands, collider-free stepping, readback, and point/ray/region queries.",
+      "unblocks": "reference_physics_3d_abi.hpp and the three package aggregators compile with callable world lifecycle, body and collider commands, collider-free stepping, readback, and point/ray/region queries.",
       "remaining": "SetJoint encoding and construction remain unavailable until joint interfaces retain checked concrete ownership; execution reports UnsupportedJoint without mutation. Worlds containing colliders, contacts or joints report Declined from step until core collision and joint stepping compile. queryShapeCast remains an empty callback until the refused core collider sweep is available; no no-hit result is fabricated.",
       "expires": "when shared mutable self-capture lowers with initial storage, collider unions narrow to exact owners, decoded structural configs retain their destination owner, and core joint, collision-step and shape-cast dependencies compile.",
       "authoredOn": "2026-10-13"
@@ -1675,7 +1675,7 @@
       "status": "complete",
       "supplies": "packages/scene3d/src/sceneNodeAppearance.ts",
       "derivedFrom": "4e7c15f067ba59d005b6faace353b1d2234aba83dda70436cea37457480e7ff4",
-      "reason": "At a627849 the emitter preserves the appearance algorithm but produces an undeclared Traits owner in set_node3_dalpha, structural Node3D rows that cannot recover the flattened exact runtime, and invalid structural parent conversions in the recursive cache path.",
+      "reason": "At a627849 the emitter preserves the appearance algorithm but produces an undeclared Traits owner in set_node_3d_alpha, structural Node3D rows that cannot recover the flattened exact runtime, and invalid structural parent conversions in the recursive cache path.",
       "change": "Uses the exact Node3D runtime owner to invalidate local appearance revisions and supplies recursive world-alpha caching with the upstream parent and local revision keys plus the nonzero monotonic world revision counter.",
       "equivalence": "Directly incrementing Node3DRuntime::appearance_id is the exact invalidateNodeAppearance operation, and reading it is getNodeAppearanceRevision. The exact runtime parent carrier contains only represented Node3D parents, so recursion preserves the source isNode3D guard; after ensuring a parent its world alpha is populated, making value_or(1) equivalent to the source value access. Alpha multiplication, both cache keys, unsigned counter wrap handling, and stable runtime identity otherwise follow the source operation for operation.",
       "whyNotAPatchOrRepair": "The TypeScript already expresses the portable behavior and its exact-owner boundary is covered by the Scene3D source patch, yet the a627849 emitter still loses that owner as undeclared Traits and structural rows. Declaration repair cannot replace the invalid calls and casts or recover their retained Node3DRuntime identity.",
@@ -1750,7 +1750,7 @@
     },
     {
       "id": "skeleton3d-prepare-scene-skinning-exact-owners",
-      "path": "flight/skeleton3d/prepare_scene3_dskinning.hpp",
+      "path": "flight/skeleton3d/prepare_scene_3d_skinning.hpp",
       "package": "@flighthq/skeleton3d",
       "status": "complete",
       "supplies": "packages/skeleton3d/src/prepareScene3DSkinning.ts",
@@ -1759,7 +1759,7 @@
       "change": "Supplies the two preparation functions over the established exact Mesh and Node3D row owners. It recomputes the skeleton palette, captures and caches bind-pose arrays on demand, reuses or creates the runtime bounds, passes an AabbLike carrier that shares the exact min/max Vector3 owners, and walks enabled Node3D children while recovering Mesh only from the retained exact row owner.",
       "equivalence": "The skin-null branch remains a no-op; palette computation, bind-pose caching, and bounds assignment retain their source order. The AabbLike carrier owns no copied coordinates and writes through the same min/max Vector3 references stored by deformedLocalBounds. Exact Mesh recovery is independent of kind, so custom-kind meshes remain included, and recursion visits the same enabled subtree in child order while skipping disabled subtrees whole.",
       "whyNotAPatchOrRepair": "The source already states the concrete mutation authority and structural guard in portable TypeScript. The remaining failures are four interacting flattened-owner projections across Mesh, NodeAny, AabbLike, and recursive children; isolated textual respellings would encode those representations into source or add repairs beyond the one authorized skinMeshGeometry owner repair.",
-      "unblocks": "prepare_scene3_dskinning.hpp and the package aggregate headers compile while retaining GPU-only vertex data and updating posed local bounds before culling.",
+      "unblocks": "prepare_scene_3d_skinning.hpp and the package aggregate headers compile while retaining GPU-only vertex data and updating posed local bounds before culling.",
       "remaining": "None in prepareScene3DSkinning.ts at this pin.",
       "expires": "when concrete flattened node runtime access, sibling Aabb-to-AabbLike output projection, capability narrowing, and recursive NodeAny child projection emit directly.",
       "authoredOn": "2026-10-12"
@@ -2427,8 +2427,8 @@
       "supplies": "packages/types/src/GlRenderStateOptions.ts"
     },
     {
-      "id": "native-e2e-scene3d_gl-gl_scene3_druntime",
-      "path": "flight/scene3d_gl/gl_scene3_druntime.hpp",
+      "id": "native-e2e-scene3d_gl-gl_scene_3d_runtime",
+      "path": "flight/scene3d_gl/gl_scene_3d_runtime.hpp",
       "package": "@flighthq/scene3d-gl",
       "status": "partial",
       "derivedFrom": "292056cd98de64f8173c9e1f66b34a32c44f70ad9bbbead2424c64c1a236df0c",
@@ -2458,8 +2458,8 @@
       "supplies": "packages/scene3d-gl/src/glStandardPbrMeshMaterialRenderer.ts"
     },
     {
-      "id": "native-e2e-scene3d_gl-scene3_dgl_pipeline",
-      "path": "flight/scene3d_gl/scene3_dgl_pipeline.hpp",
+      "id": "native-e2e-scene3d_gl-scene_3d_gl_pipeline",
+      "path": "flight/scene3d_gl/scene_3d_gl_pipeline.hpp",
       "package": "@flighthq/scene3d-gl",
       "status": "partial",
       "derivedFrom": "7bf1bc4ecbda53f146c9f4c4894ae5c6411cbb7153f2440db1884bd57c3c522f",
@@ -2804,8 +2804,8 @@
       "authoredOn": "2026-10-15"
     },
     {
-      "id": "native-e2e-scene3d_gl-render_gl_scene3_d",
-      "path": "flight/scene3d_gl/render_gl_scene3_d.hpp",
+      "id": "native-e2e-scene3d_gl-render_gl_scene_3d",
+      "path": "flight/scene3d_gl/render_gl_scene_3d.hpp",
       "package": "@flighthq/scene3d-gl",
       "status": "partial",
       "derivedFrom": "5642404cc7fdd60616bb44b81c84aef8eb7d1f05fe75e388ab6d64b1c9ea886a",
@@ -2866,8 +2866,8 @@
       "supplies": "packages/scene3d-gl/src/glViewportAspect.ts"
     },
     {
-      "id": "native-e2e-types-gl_scene3_druntime",
-      "path": "flight/types/gl_scene3_druntime.hpp",
+      "id": "native-e2e-types-gl_scene_3d_runtime",
+      "path": "flight/types/gl_scene_3d_runtime.hpp",
       "package": "@flighthq/types",
       "status": "complete",
       "derivedFrom": "147897d6516f09adbb891e847e997d762269a1ab56293ecc2941ead73e529a75",

@@ -7365,7 +7365,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_COMPUTED(invalid_flight_document_value)
   FLIGHT_SDK_ROW_COMPUTED(parse_failure)
   FLIGHT_SDK_ROW_COMPUTED(quad_batch_signals_slot)
-  FLIGHT_SDK_ROW_COMPUTED(scene3_dresource_resolver_runtime_key)
+  FLIGHT_SDK_ROW_COMPUTED(scene_3d_resource_resolver_runtime_key)
   FLIGHT_SDK_ROW_COMPUTED(tilemap_signals_slot)
   std::size_t matched = 0;
   FLIGHT_SDK_ROW_WIDENS(float_)

@@ -14,7 +14,7 @@ using CanvasTextInputOverlay = std::function<void(flight::Ref<flight::types::Can
 } // namespace flight::types
 
 #include <flight/types/canvas_render_state.hpp>
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 
 namespace flight::types {
 

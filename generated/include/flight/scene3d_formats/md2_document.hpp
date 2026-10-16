@@ -18,8 +18,8 @@ namespace flight::types { struct Scene3DDocument; }
 #include <flight/types/import_diagnostic.hpp>
 #include <flight/types/md2_section_handler.hpp>
 #include <flight/types/morph_target.hpp>
-#include <flight/types/scene3_d.hpp>
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d.hpp>
+#include <flight/types/scene_3d_document.hpp>
 #include <flight/scene3d_formats/md2_parse.hpp>
 #include <flight/scene3d_formats/md2_section_registry.hpp>
 
@@ -34,8 +34,8 @@ inline flight::Ref<flight::types::Scene3DDocument> parse_md2(flight::Uint8Array 
   return flight::scene3d_formats::parse_md2_with_section_handlers(bytes, diagnostics, ([&]() -> flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Md2SectionHandler>>>>> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Md2SectionHandler>>>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"sectionHandlers">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::scene3d_formats::md2_all_section_handlers; }()));
 }
 
-inline flight::Ref<flight::types::Scene3D> create_scene3_dfrom_md2(flight::Uint8Array bytes, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Md2ImportOptions>>>>> options = std::nullopt) {
-  return flight::scene3d::create_scene3_dfrom_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(parse_md2(bytes, diagnostics, options))), std::nullopt);
+inline flight::Ref<flight::types::Scene3D> create_scene_3d_from_md2(flight::Uint8Array bytes, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Md2ImportOptions>>>>> options = std::nullopt) {
+  return flight::scene3d::create_scene_3d_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(parse_md2(bytes, diagnostics, options))), std::nullopt);
 }
 
 } // namespace flight::scene3d_formats

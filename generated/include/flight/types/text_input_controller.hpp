@@ -30,7 +30,7 @@ using TextInputControllerKeyboardData = flight::StructuralRef<flight::RowReadonl
 #include <flight/types/entity.hpp>
 #include <flight/types/gui_controller.hpp>
 #include <flight/types/input_keyboard_data.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/rich_text.hpp>
 #include <flight/types/signal.hpp>
 #include <flight/types/text_input_manager.hpp>

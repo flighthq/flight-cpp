@@ -50,7 +50,7 @@ struct ListControllerFields;
 #include <flight/types/keyboard_event_data.hpp>
 #include <flight/types/list_controller.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/node_interactive_state_binding.hpp>
 #include <flight/types/scroll_bar_controller.hpp>
 #include <flight/types/signal.hpp>

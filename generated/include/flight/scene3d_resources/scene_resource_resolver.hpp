@@ -41,7 +41,7 @@ namespace flight::types { template <typename T> struct Signal; }
 #include <flight/types/pbr_extension.hpp>
 #include <flight/types/resource_loader.hpp>
 #include <flight/types/resource_loader_options.hpp>
-#include <flight/types/scene3_dresources.hpp>
+#include <flight/types/scene_3d_resources.hpp>
 #include <flight/types/signal.hpp>
 #include <flight/types/texture.hpp>
 #include <flight/types/texture_source.hpp>
@@ -58,10 +58,10 @@ using flight::types::Scene3DResourceResolverRuntime;
 using flight::types::Scene3DResourceResolverWithRuntime;
 using flight::types::Scene3DResourceSignals;
 using flight::types::TextureSource;
-using flight::types::scene3_dresource_resolver_runtime_key;
+using flight::types::scene_3d_resource_resolver_runtime_key;
 
-inline void dispose_scene3_dresource_resolver(flight::Ref<flight::types::Scene3DResourceResolverWithRuntime> resolver) {
-  auto runtime = resolver->scene3_dresource_resolver_runtime_key;
+inline void dispose_scene_3d_resource_resolver(flight::Ref<flight::types::Scene3DResourceResolverWithRuntime> resolver) {
+  auto runtime = resolver->scene_3d_resource_resolver_runtime_key;
   flight::loader::cancel_resource_load(runtime->loader);
   flight::loader::dispose_resource_loader(runtime->loader);
   for (const auto& [for_of_key, for_of_value] : runtime->in_flight) {
@@ -73,26 +73,26 @@ inline void dispose_scene3_dresource_resolver(flight::Ref<flight::types::Scene3D
   runtime->resolved.clear();
 }
 
-inline void initialize_scene3_dresource_resolver(flight::types::EntityConstruction<flight::Ref<flight::types::Scene3DResourceResolverWithRuntime>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostImageCapability>>>> host_image, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DResourceResolverOptions>>>>> options = std::nullopt) {
+inline void initialize_scene_3d_resource_resolver(flight::types::EntityConstruction<flight::Ref<flight::types::Scene3DResourceResolverWithRuntime>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostImageCapability>>>> host_image, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DResourceResolverOptions>>>>> options = std::nullopt) {
   auto loader = flight::loader::create_resource_loader(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ResourceLoaderOptions>>>>(flight::row_field<flight::RowKey<"dedupe">>(std::optional<bool>{false}), flight::row_field<flight::RowKey<"maxConcurrent">>(([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"maxConcurrent">>(optional_chain_receiver.value()); }())), flight::row_field<flight::RowKey<"streaming">>(std::optional<bool>{true})));
   flight::loader::start_resource_load(loader);
   flight::row_set<flight::RowKey<"fetch">>(out, ([&]() -> flight::types::ImageResourceFetch { auto nullish_coalesce_left = ([&]() -> std::optional<flight::types::ImageResourceFetch> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"fetch">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::scene3d_resources::create_web_image_resource_fetch(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostImageCapability>>>>>(host_image)); }()));
   flight::row_set<flight::RowKey<"imageDecode">>(out, ([&]() -> std::optional<flight::Ref<flight::types::HostImageDecodeCapabilities>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"imageDecode">>(optional_chain_receiver.value()); }()));
-  flight::row_set<flight::RowKey<"registry">>(out, ([&]() -> flight::Ref<flight::types::Scene3DMaterialTextureRegistry> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Ref<flight::types::Scene3DMaterialTextureRegistry>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"registry">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::scene3d_resources::create_scene3_dmaterial_texture_registry(); }()));
-  flight::row_set(out, flight::types::scene3_dresource_resolver_runtime_key, flight::make_ref<flight::types::Scene3DResourceResolverRuntime>(flight::types::Scene3DResourceResolverRuntime{.in_flight = flight::Map<flight::types::ImageResourceReference, flight::Ref<flight::types::Scene3DResourceInFlight>>(), .loader = loader, .resolved = flight::Map<flight::types::ImageResourceReference, flight::Ref<flight::types::TextureSource>>(), .signals = std::nullopt}));
+  flight::row_set<flight::RowKey<"registry">>(out, ([&]() -> flight::Ref<flight::types::Scene3DMaterialTextureRegistry> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Ref<flight::types::Scene3DMaterialTextureRegistry>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"registry">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::scene3d_resources::create_scene_3d_material_texture_registry(); }()));
+  flight::row_set(out, flight::types::scene_3d_resource_resolver_runtime_key, flight::make_ref<flight::types::Scene3DResourceResolverRuntime>(flight::types::Scene3DResourceResolverRuntime{.in_flight = flight::Map<flight::types::ImageResourceReference, flight::Ref<flight::types::Scene3DResourceInFlight>>(), .loader = loader, .resolved = flight::Map<flight::types::ImageResourceReference, flight::Ref<flight::types::TextureSource>>(), .signals = std::nullopt}));
 }
 
-inline flight::Ref<flight::types::Scene3DResourceResolverWithRuntime> create_scene3_dresource_resolver(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostImageCapability>>>> host_image, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DResourceResolverOptions>>>>> options = std::nullopt) {
+inline flight::Ref<flight::types::Scene3DResourceResolverWithRuntime> create_scene_3d_resource_resolver(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostImageCapability>>>> host_image, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DResourceResolverOptions>>>>> options = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Scene3DResourceResolverWithRuntime>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Scene3DResourceResolverWithRuntime>>();
-  initialize_scene3_dresource_resolver(out, host_image, options);
+  initialize_scene_3d_resource_resolver(out, host_image, options);
   return flight::entity::finish_entity<flight::Ref<flight::types::Scene3DResourceResolverWithRuntime>>(out);
 }
 
-inline flight::Ref<flight::types::Scene3DResourceResolverWithRuntime> create_built_in_scene3_dresource_resolver(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostImageCapability>>>> host_image, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DResourceResolverOptions>>>>> options = std::nullopt) {
-  auto resolver = create_scene3_dresource_resolver(host_image, options);
-  flight::scene3d_resources::register_standard_pbr_scene3_dmaterial_textures(resolver->registry);
-  flight::scene3d_resources::register_unlit_scene3_dmaterial_textures(resolver->registry);
-  flight::scene3d_resources::register_extended_pbr_scene3_dmaterial_textures(resolver->registry);
+inline flight::Ref<flight::types::Scene3DResourceResolverWithRuntime> create_built_in_scene_3d_resource_resolver(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostImageCapability>>>> host_image, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DResourceResolverOptions>>>>> options = std::nullopt) {
+  auto resolver = create_scene_3d_resource_resolver(host_image, options);
+  flight::scene3d_resources::register_standard_pbr_scene_3d_material_textures(resolver->registry);
+  flight::scene3d_resources::register_unlit_scene_3d_material_textures(resolver->registry);
+  flight::scene3d_resources::register_extended_pbr_scene_3d_material_textures(resolver->registry);
   return resolver;
 }
 

@@ -56,15 +56,15 @@ using DomClipEntry = std::variant<flight::Ref<flight::types::DomScene2DRectangle
 
 #include <flight/types/bitmap.hpp>
 #include <flight/types/blend_mode.hpp>
-#include <flight/types/dom_scene2_drectangle.hpp>
+#include <flight/types/dom_scene_2d_rectangle.hpp>
 #include <flight/types/dom_texture_resolver.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 #include <flight/types/render_state.hpp>
 #include <flight/types/shape_command.hpp>
 #include <flight/types/shape_rasterizer.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/scene2_drenderer.hpp>
+#include <flight/types/scene_2d_renderer.hpp>
 #include <flight/types/host_canvas.hpp>
 #include <flight/types/image_resource.hpp>
 #include <flight/types/canvas_shape_registry.hpp>
@@ -80,7 +80,7 @@ using DomClipEntry = std::variant<flight::Ref<flight::types::DomScene2DRectangle
 #include <flight/types/blend_mode.hpp>
 #include <flight/types/render_state.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 
 namespace flight::types {
 

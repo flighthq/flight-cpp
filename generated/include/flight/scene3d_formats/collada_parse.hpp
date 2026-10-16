@@ -19,9 +19,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/xml_element.hpp>
 
-#include <flight/types/transform3_d.hpp>
+#include <flight/types/transform_3d.hpp>
 
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d_document.hpp>
 
 #include <flight/types/matrix4.hpp>
 
@@ -103,9 +103,9 @@ inline flight::Map<flight::String, flight::Ref<flight::types::XmlElement>> build
 inline void apply_collada_root_transform(flight::Ref<flight::types::Scene3DDocumentNode> node, flight::types::Matrix4Like root_matrix) {
   auto local = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
   auto composed = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
-  flight::geometry::compose_matrix4_from_transform3_d(local, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Transform3DLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Transform3D>>>>(node->transform)));
+  flight::geometry::compose_matrix4_from_transform_3d(local, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Transform3DLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Transform3D>>>>(node->transform)));
   flight::geometry::multiply_matrix4(composed, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::types::Matrix4Like>>>(root_matrix)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(local)));
-  flight::geometry::decompose_matrix4_to_transform3_d(node->transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(composed)));
+  flight::geometry::decompose_matrix4_to_transform_3d(node->transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(composed)));
 }
 
 inline flight::Ref<flight::types::Matrix4> scratch_flight_value_variable__u00005f__u00005f_scratch_flight_private_ea0a54af7b23d793 = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
@@ -183,7 +183,7 @@ inline void apply_collada_lookat(flight::types::Matrix4Like composed, flight::Ar
 }
 
 inline flight::Ref<flight::types::Transform3D> compose_collada_transform_elements(flight::Ref<flight::types::XmlElement> node_element) {
-  auto transform = flight::geometry::create_transform3_d();
+  auto transform = flight::geometry::create_transform_3d();
   flight::Array<flight::Ref<flight::types::XmlElement>> transform_elements = node_element->children.filter([=](flight::Ref<flight::types::XmlElement> c) {
   const flight::String n = flight::scene3d_formats::collada_local_name(c);
   return (((((n == flight::String("matrix")) || (n == flight::String("translate"))) || (n == flight::String("rotate"))) || (n == flight::String("scale"))) || (n == flight::String("lookat")));
@@ -220,14 +220,14 @@ inline flight::Ref<flight::types::Transform3D> compose_collada_transform_element
       }
     }
   }
-  flight::geometry::decompose_matrix4_to_transform3_d(transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(composed)));
+  flight::geometry::decompose_matrix4_to_transform_3d(transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(composed)));
   return transform;
 }
 
 inline double build_collada_node(flight::Ref<flight::types::Scene3DDocument> document, flight::Ref<flight::types::XmlElement> node_element, flight::Map<flight::String, flight::Ref<flight::types::XmlElement>> node_library, flight::Set<flight::String> instance_stack, flight::Map<flight::String, double> geometry_id_to_mesh_index, flight::Map<flight::String, flight::Array<flight::String>> geometry_primitive_symbols, flight::Map<flight::String, double> material_indices, flight::Map<flight::String, double> node_id_map, flight::Array<flight::Ref<flight::types::ColladaDeferredCameraBinding>> deferred_cameras, flight::Array<flight::Ref<flight::types::ColladaDeferredControllerBinding>> deferred_controllers, flight::Array<flight::Ref<flight::types::ColladaDeferredLightBinding>> deferred_lights, flight::Array<flight::Ref<flight::types::ImportDiagnostic>> diagnostics) {
   const double node_index = static_cast<double>(document->nodes.size());
   auto transform = compose_collada_transform_elements(node_element);
-  flight::Ref<flight::types::Scene3DDocumentNode> node = flight::make_ref<flight::types::Scene3DDocumentNode>(flight::types::Scene3DDocumentNode{.children = flight::Array<double>{}, .kind = flight::types::node3_dkind, .name = std::optional<flight::String>{node_element->attributes.get(flight::String("name")).value()}, .transform = transform});
+  flight::Ref<flight::types::Scene3DDocumentNode> node = flight::make_ref<flight::types::Scene3DDocumentNode>(flight::types::Scene3DDocumentNode{.children = flight::Array<double>{}, .kind = flight::types::node_3d_kind, .name = std::optional<flight::String>{node_element->attributes.get(flight::String("name")).value()}, .transform = transform});
   document->nodes.push(node);
   const flight::String node_id = node_element->attributes.get(flight::String("id")).value();
   const flight::String node_sid = node_element->attributes.get(flight::String("sid")).value();

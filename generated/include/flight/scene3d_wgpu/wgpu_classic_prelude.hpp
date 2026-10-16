@@ -25,7 +25,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/scene3d_wgpu/wgpu_mesh_fragment_tail.hpp>
 #include <flight/scene3d_wgpu/wgpu_mesh_pipeline.hpp>
-#include <flight/scene3d_wgpu/wgpu_scene3_druntime.hpp>
+#include <flight/scene3d_wgpu/wgpu_scene_3d_runtime.hpp>
 
 namespace flight::scene3d_wgpu {
 
@@ -119,8 +119,8 @@ struct sample_type_056ee483a28c4f4f : public flight::ReferenceEnabled {
 // optionalSingle construction requires expression type evidence
 
 inline flight::Ref<WgpuClassicPipeline> ensure_wgpu_classic_pipeline(flight::Ref<WgpuRenderState> state, flight::Ref<WgpuClassicDefineKey> key, flight::String format) {
-  flight::Ref<WgpuClassicDefineKey> full_key = flight::make_ref<WgpuClassicDefineKey>(WgpuClassicDefineKey{.has_color_adjustment = get_wgpu_scene3_druntime(state)->active_color_adjustment_run, .has_color_matrix = get_wgpu_scene3_druntime(state)->active_color_matrix_run});
-  return ensure_wgpu_scene3_dpipeline(state, flight::String("classic:") + flight::to_string(format) + flight::String("|") + flight::to_string(build_wgpu_classic_define_key(full_key)) + flight::String(""), [=](bool blended, bool skinned) { return compile_wgpu_classic_pipeline(state, full_key, format, blended, skinned, get_wgpu_color_adjustment_material_feature(state)); });
+  flight::Ref<WgpuClassicDefineKey> full_key = flight::make_ref<WgpuClassicDefineKey>(WgpuClassicDefineKey{.has_color_adjustment = get_wgpu_scene_3d_runtime(state)->active_color_adjustment_run, .has_color_matrix = get_wgpu_scene_3d_runtime(state)->active_color_matrix_run});
+  return ensure_wgpu_scene_3d_pipeline(state, flight::String("classic:") + flight::to_string(format) + flight::String("|") + flight::to_string(build_wgpu_classic_define_key(full_key)) + flight::String(""), [=](bool blended, bool skinned) { return compile_wgpu_classic_pipeline(state, full_key, format, blended, skinned, get_wgpu_color_adjustment_material_feature(state)); });
 }
 
 inline const flight::String classic_shared_sampler_wgsl_body = classic_wgsl_body.replace(flight::String("@group(2) @binding(1) var diffuseSampler : sampler;\n@group(2) @binding(2) var specularSampler : sampler;\n@group(2) @binding(3) var normalSampler : sampler;\n@group(2) @binding(4) var alphaSampler : sampler;\n@group(2) @binding(5) var diffuseTexture : texture_2d<f32>;\n@group(2) @binding(6) var specularTexture : texture_2d<f32>;\n@group(2) @binding(7) var normalTexture : texture_2d<f32>;\n@group(2) @binding(8) var alphaTexture : texture_2d<f32>;"), flight::String("@group(2) @binding(1) var materialSampler : sampler;\n@group(2) @binding(2) var diffuseTexture : texture_2d<f32>;\n@group(2) @binding(3) var specularTexture : texture_2d<f32>;\n@group(2) @binding(4) var normalTexture : texture_2d<f32>;\n@group(2) @binding(5) var alphaTexture : texture_2d<f32>;")).replace_all(flight::String("diffuseSampler"), flight::String("materialSampler")).replace_all(flight::String("specularSampler"), flight::String("materialSampler")).replace_all(flight::String("normalSampler"), flight::String("materialSampler")).replace_all(flight::String("alphaSampler"), flight::String("materialSampler"));

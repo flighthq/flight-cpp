@@ -11,8 +11,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/scene_document/scene_document_layout_bindings.hpp>
 #include <flight/scene_document/scene_document_materialization_selection.hpp>
 #include <flight/scene_document/scene_document_refusal.hpp>
-#include <flight/scene_document/scene_document_scene2_dmaterialization.hpp>
-#include <flight/scene_document/scene_document_scene3_dmaterialization.hpp>
+#include <flight/scene_document/scene_document_scene_2d_materialization.hpp>
+#include <flight/scene_document/scene_document_scene_3d_materialization.hpp>
 #include <flight/scene_document/scene_document_yaml_subset.hpp>
 
 namespace flight::scene_document {

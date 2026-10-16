@@ -35,7 +35,7 @@ using Material3DValue = std::variant<flight::Ref<flight::types::SpecularGlossine
 #include <flight/types/extended_pbr_material.hpp>
 #include <flight/types/lambert_material.hpp>
 #include <flight/types/matcap_material.hpp>
-#include <flight/types/material3_d.hpp>
+#include <flight/types/material_3d.hpp>
 #include <flight/types/normal_material.hpp>
 #include <flight/types/phong_material.hpp>
 #include <flight/types/shaded_material.hpp>

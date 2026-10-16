@@ -34,7 +34,7 @@ namespace flight::types { struct Transform3D; }
 #include <flight/animation/animation_track.hpp>
 #include <flight/types/animation_interpolation.hpp>
 #include <flight/types/animation_track.hpp>
-#include <flight/types/camera3_d.hpp>
+#include <flight/types/camera_3d.hpp>
 #include <flight/types/easing_function.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/image_resource_reference.hpp>
@@ -45,10 +45,10 @@ namespace flight::types { struct Transform3D; }
 #include <flight/types/md2_section_handler.hpp>
 #include <flight/types/mesh_geometry.hpp>
 #include <flight/types/morph_target.hpp>
-#include <flight/types/scene3_danimation_path.hpp>
-#include <flight/types/scene3_ddocument.hpp>
-#include <flight/types/scene3_dmetadata.hpp>
-#include <flight/types/transform3_d.hpp>
+#include <flight/types/scene_3d_animation_path.hpp>
+#include <flight/types/scene_3d_document.hpp>
+#include <flight/types/scene_3d_metadata.hpp>
+#include <flight/types/transform_3d.hpp>
 #include <flight/scene3d_formats/md2_schema.hpp>
 
 namespace flight::scene3d_formats {
@@ -109,7 +109,7 @@ inline flight::Ref<flight::types::Scene3DDocumentAnimation> build_md2_action_cli
     }
   }
   auto track = flight::animation::create_animation_track(([&]() { auto object_member_components = std::optional<double>{target_count}; auto object_member_interpolation = std::optional<flight::String>{flight::String("Linear")}; auto object_member_times = times; auto object_member_values = values; return flight::make_ref<times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042>(times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042{.times = object_member_times, .values = object_member_values, .components = object_member_components, .interpolation = object_member_interpolation}); }()));
-  return flight::make_ref<flight::types::Scene3DDocumentAnimation>(flight::types::Scene3DDocumentAnimation{.channels = flight::Array<flight::Ref<flight::types::Scene3DDocumentAnimationChannel>>{flight::make_ref<flight::types::Scene3DDocumentAnimationChannel>(flight::types::Scene3DDocumentAnimationChannel{.node = 0.0, .path = flight::types::scene3_danimation_path_weights, .track = track})}, .duration = times.get_index((count - 1.0)), .name = std::optional<flight::String>{unique_md2_clip_name(action, used_names)}});
+  return flight::make_ref<flight::types::Scene3DDocumentAnimation>(flight::types::Scene3DDocumentAnimation{.channels = flight::Array<flight::Ref<flight::types::Scene3DDocumentAnimationChannel>>{flight::make_ref<flight::types::Scene3DDocumentAnimationChannel>(flight::types::Scene3DDocumentAnimationChannel{.node = 0.0, .path = flight::types::scene_3d_animation_path_weights, .track = track})}, .duration = times.get_index((count - 1.0)), .name = std::optional<flight::String>{unique_md2_clip_name(action, used_names)}});
 }
 
 inline flight::Array<flight::Ref<flight::types::Scene3DDocumentAnimation>> build_md2_morph_animations(flight::Array<flight::Ref<flight::types::Md2Frame>> frames, std::optional<flight::Ref<flight::types::MeshMorph>> morph) {

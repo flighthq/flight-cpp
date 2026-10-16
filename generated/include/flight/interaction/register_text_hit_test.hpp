@@ -17,11 +17,11 @@ namespace flight::types { struct TextLayoutResult; }
 namespace flight::types { template <typename Traits> struct Node; }
 
 #include <flight/types/entity.hpp>
-#include <flight/types/has_transform2_d.hpp>
+#include <flight/types/has_transform_2d.hpp>
 #include <flight/types/hit_test_function.hpp>
 #include <flight/types/matrix.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/rich_text.hpp>
 #include <flight/types/text_label.hpp>
 #include <flight/types/text_layout.hpp>

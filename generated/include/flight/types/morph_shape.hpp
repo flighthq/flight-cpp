@@ -58,9 +58,9 @@ using MorphShapePaintBinding = std::variant<flight::Ref<MorphShapeTexturePaintBi
 #include <flight/types/path_morph.hpp>
 #include <flight/types/shape.hpp>
 #include <flight/types/shape_command.hpp>
-#include <flight/types/scene2_d.hpp>
+#include <flight/types/scene_2d.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/adjustment.hpp>
 #include <flight/types/color_scale_bias.hpp>
@@ -72,7 +72,7 @@ using MorphShapePaintBinding = std::variant<flight::Ref<MorphShapeTexturePaintBi
 #include <flight/types/has_bounds_rectangle.hpp>
 #include <flight/types/blend_mode.hpp>
 #include <flight/types/clip_region.hpp>
-#include <flight/types/material2_d.hpp>
+#include <flight/types/material_2d.hpp>
 #include <flight/types/material.hpp>
 
 namespace flight::types {

@@ -17,9 +17,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/byte_reader.hpp>
 
-#include <flight/types/attachment_skin2_d.hpp>
+#include <flight/types/attachment_skin_2d.hpp>
 
-#include <flight/types/attachment2_d.hpp>
+#include <flight/types/attachment_2d.hpp>
 
 #include <flight/types/animation_track.hpp>
 
@@ -94,7 +94,7 @@ inline void add_spine_binary_attachment_channel(flight::Ref<flight::types::ByteR
     return;
   }
   auto track = flight::animation::create_animation_track(([&]() { auto object_member_components = std::optional<double>{1.0}; auto object_member_interpolation = std::optional<flight::String>{flight::types::animation_interpolation_step}; auto object_member_times = times; auto object_member_values = values; return flight::make_ref<times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042>(times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042{.times = object_member_times, .values = object_member_values, .components = object_member_components, .interpolation = object_member_interpolation}); }()));
-  channels.push(flight::animation::create_animation_channel(track, flight::Any::object(flight::skeleton2d::create_skeleton2_dslot_animation_target(slot_index, flight::types::skeleton2_dslot_animation_path->attachment, std::optional<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>>{attachments}))));
+  channels.push(flight::animation::create_animation_channel(track, flight::Any::object(flight::skeleton2d::create_skeleton_2d_slot_animation_target(slot_index, flight::types::skeleton_2d_slot_animation_path->attachment, std::optional<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>>{attachments}))));
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON2D_FORMATS_CURVES_TIMES_VALUES_1BED83E47A7A4148
@@ -239,7 +239,7 @@ inline void read_spine_binary_slot_timelines(flight::Ref<flight::types::SpineBin
               }
               auto timeline = read_spine_binary_color_timeline(reader, frame_count, count);
               auto track = flight::animation::create_animation_track(([&]() { auto object_member_components_2 = std::optional<double>{count}; auto object_member_interpolation_2 = std::optional<flight::String>{flight::types::animation_interpolation_linear}; auto object_member_segment_easings = ([&]() -> std::variant<flight::Array<std::optional<std::function<double(double)>>>, flight::Null, flight::Undefined> { auto contextual_union_source_2 = flight::skeleton2d_formats::build_spine_binary_segment_easings(timeline, count, context->section->diagnostics); if (!contextual_union_source_2.has_value()) return std::variant<flight::Array<std::optional<std::function<double(double)>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Array<std::optional<std::function<double(double)>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<std::optional<std::function<double(double)>>>>, contextual_union_source_2.value()}; }()); auto object_member_times_2 = timeline->times; auto object_member_values_2 = timeline->values; return flight::make_ref<times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042>(times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042{.times = object_member_times_2, .values = object_member_values_2, .components = object_member_components_2, .interpolation = object_member_interpolation_2, .segment_easings = object_member_segment_easings}); }()));
-              context->channels.push(flight::animation::create_animation_channel(track, flight::Any::object(flight::skeleton2d::create_skeleton2_dslot_animation_target(slot_index, flight::types::skeleton2_dslot_animation_path->color, std::nullopt))));
+              context->channels.push(flight::animation::create_animation_channel(track, flight::Any::object(flight::skeleton2d::create_skeleton_2d_slot_animation_target(slot_index, flight::types::skeleton_2d_slot_animation_path->color, std::nullopt))));
             }
             (j += 1.0);
           }

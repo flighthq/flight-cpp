@@ -391,7 +391,7 @@ inline bool upload_gl_compressed_texture_container(flight::host_sdl::WebGl2Conte
   const double mip_levels = flight::row_get<flight::RowKey<"mipLevels">>(container);
   if ((native_format != -1.0)) {
     if ((layers > 1.0)) {
-      gl.tex_storage3_d(gl.texture_2_d_array, mip_levels, native_format, flight::row_get<flight::RowKey<"width">>(container), flight::row_get<flight::RowKey<"height">>(container), layers);
+      gl.tex_storage_3d(gl.texture_2_d_array, mip_levels, native_format, flight::row_get<flight::RowKey<"width">>(container), flight::row_get<flight::RowKey<"height">>(container), layers);
     }
     {
       double index = 0.0;
@@ -404,11 +404,11 @@ inline bool upload_gl_compressed_texture_container(flight::host_sdl::WebGl2Conte
           const double face = std::fmod(face_layer, faces);
           const double layer = ((face_layer - face) / faces);
           if ((layers > 1.0)) {
-            gl.compressed_tex_sub_image3_d(gl.texture_2_d_array, mip, 0.0, 0.0, layer, entry->width, entry->height, 1.0, native_format, view, std::nullopt, std::nullopt);
+            gl.compressed_tex_sub_image_3d(gl.texture_2_d_array, mip, 0.0, 0.0, layer, entry->width, entry->height, 1.0, native_format, view, std::nullopt, std::nullopt);
           }
           else {
             const double target = ((faces == 6.0) ? (gl.texture_cube_map_positive_x + face) : gl.texture_2_d);
-            gl.compressed_tex_image2_d(target, mip, native_format, entry->width, entry->height, 0.0, view, std::nullopt, std::nullopt);
+            gl.compressed_tex_image_2d(target, mip, native_format, entry->width, entry->height, 0.0, view, std::nullopt, std::nullopt);
           }
         }
         (index += 1.0);
@@ -429,7 +429,7 @@ inline bool upload_gl_compressed_texture_container(flight::host_sdl::WebGl2Conte
         if (!rgba.has_value()) {
           return false;
         }
-        gl.tex_image2_d(gl.texture_2_d, mip_2, ((color_space == flight::String("srgb")) ? gl.srgb8_alpha8 : gl.rgba), entry_2->width, entry_2->height, 0.0, gl.rgba, gl.unsigned_byte, rgba.value());
+        gl.tex_image_2d(gl.texture_2_d, mip_2, ((color_space == flight::String("srgb")) ? gl.srgb8_alpha8 : gl.rgba), entry_2->width, entry_2->height, 0.0, gl.rgba, gl.unsigned_byte, rgba.value());
       }
       (mip_2 += 1.0);
     }

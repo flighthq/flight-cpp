@@ -28,11 +28,11 @@ namespace flight::types { struct Physics3DMaterial; }
 namespace flight::types { struct RigidBody3D; }
 namespace flight::types { struct SpatialAabb3D; }
 
-#include <flight/collision/triangle_mesh3_d.hpp>
+#include <flight/collision/triangle_mesh_3d.hpp>
 #include <flight/entity/entity.hpp>
 #include <flight/types/collision.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/physics3_d.hpp>
+#include <flight/types/physics_3d.hpp>
 #include <flight/types/spatial.hpp>
 
 namespace flight::physics3d {
@@ -60,7 +60,7 @@ struct x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_ki
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_X_Y_Z_HALF_X_HALF_Y_HALF_Z_ROTATION_X_ROTATION_Y_ROTATION_Z_ROTATION_W_KIND_ENTITY_RUNTIME_KEY_A224064F8B7801C3
 
-inline void initialize_collision_box3_d(flight::types::EntityConstruction<flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_entity_runtime_key_a224064f8b7801c3>> out, flight::String kind) {
+inline void initialize_collision_box_3d(flight::types::EntityConstruction<flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_entity_runtime_key_a224064f8b7801c3>> out, flight::String kind) {
   flight::row_set<flight::RowKey<"halfX">>(out, 0.0);
   flight::row_set<flight::RowKey<"halfY">>(out, 0.0);
   flight::row_set<flight::RowKey<"halfZ">>(out, 0.0);
@@ -88,7 +88,7 @@ struct x0_y0_z0_x1_y1_z1_radius_kind_entity_runtime_key_379d14451c869a71 : publi
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_X0_Y0_Z0_X1_Y1_Z1_RADIUS_KIND_ENTITY_RUNTIME_KEY_379D14451C869A71
 
-inline void initialize_collision_capsule3_d(flight::types::EntityConstruction<flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_entity_runtime_key_379d14451c869a71>> out, flight::String kind, double radius, double x0, double x1, double y0, double y1, double z0, double z1) {
+inline void initialize_collision_capsule_3d(flight::types::EntityConstruction<flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_entity_runtime_key_379d14451c869a71>> out, flight::String kind, double radius, double x0, double x1, double y0, double y1, double z0, double z1) {
   flight::row_set<flight::RowKey<"kind">>(out, kind);
   flight::row_set<flight::RowKey<"radius">>(out, radius);
   flight::row_set<flight::RowKey<"x0">>(out, x0);
@@ -113,7 +113,7 @@ struct apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_entity_runtime_key_
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_APEX_X_APEX_Y_APEX_Z_BASE_X_BASE_Y_BASE_Z_RADIUS_KIND_ENTITY_RUNTIME_KEY_ECF0E28787D35CFB
 
-inline void initialize_collision_cone3_d(flight::types::EntityConstruction<flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_entity_runtime_key_ecf0e28787d35cfb>> out, double apex_x, double apex_y, double apex_z, double base_x, double base_y, double base_z, flight::String kind, double radius) {
+inline void initialize_collision_cone_3d(flight::types::EntityConstruction<flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_entity_runtime_key_ecf0e28787d35cfb>> out, double apex_x, double apex_y, double apex_z, double base_x, double base_y, double base_z, flight::String kind, double radius) {
   flight::row_set<flight::RowKey<"apexX">>(out, apex_x);
   flight::row_set<flight::RowKey<"apexY">>(out, apex_y);
   flight::row_set<flight::RowKey<"apexZ">>(out, apex_z);
@@ -132,7 +132,7 @@ struct points_kind_entity_runtime_key_d2635f8f4ed37d13 : public flight::types::E
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_POINTS_KIND_ENTITY_RUNTIME_KEY_D2635F8F4ED37D13
 
-inline void initialize_collision_convex3_d(flight::types::EntityConstruction<flight::Ref<points_kind_entity_runtime_key_d2635f8f4ed37d13>> out, flight::String kind, flight::Array<double> points) {
+inline void initialize_collision_convex_3d(flight::types::EntityConstruction<flight::Ref<points_kind_entity_runtime_key_d2635f8f4ed37d13>> out, flight::String kind, flight::Array<double> points) {
   flight::row_set<flight::RowKey<"kind">>(out, kind);
   flight::row_set<flight::RowKey<"points">>(out, points);
 }
@@ -151,7 +151,7 @@ struct x0_y0_z0_x1_y1_z1_radius_kind_entity_runtime_key_23c7cf24203b0e08 : publi
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_X0_Y0_Z0_X1_Y1_Z1_RADIUS_KIND_ENTITY_RUNTIME_KEY_23C7CF24203B0E08
 
-inline void initialize_collision_cylinder3_d(flight::types::EntityConstruction<flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_entity_runtime_key_23c7cf24203b0e08>> out, flight::String kind, double radius, double x0, double x1, double y0, double y1, double z0, double z1) {
+inline void initialize_collision_cylinder_3d(flight::types::EntityConstruction<flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_entity_runtime_key_23c7cf24203b0e08>> out, flight::String kind, double radius, double x0, double x1, double y0, double y1, double z0, double z1) {
   flight::row_set<flight::RowKey<"kind">>(out, kind);
   flight::row_set<flight::RowKey<"radius">>(out, radius);
   flight::row_set<flight::RowKey<"x0">>(out, x0);
@@ -162,7 +162,7 @@ inline void initialize_collision_cylinder3_d(flight::types::EntityConstruction<f
   flight::row_set<flight::RowKey<"z1">>(out, z1);
 }
 
-inline void assign_collision_heightfield3_dfields(flight::types::EntityConstruction<flight::Ref<flight::types::CollisionHeightfield3D>> out, double cell_size_x, double cell_size_z, double columns, flight::Array<double> heights, flight::String kind, double rotation_w, double rotation_x, double rotation_y, double rotation_z, double rows, double version, double x, double y, double z) {
+inline void assign_collision_heightfield_3d_fields(flight::types::EntityConstruction<flight::Ref<flight::types::CollisionHeightfield3D>> out, double cell_size_x, double cell_size_z, double columns, flight::Array<double> heights, flight::String kind, double rotation_w, double rotation_x, double rotation_y, double rotation_z, double rows, double version, double x, double y, double z) {
   flight::row_set<flight::RowKey<"cellSizeX">>(out, cell_size_x);
   flight::row_set<flight::RowKey<"cellSizeZ">>(out, cell_size_z);
   flight::row_set<flight::RowKey<"columns">>(out, columns);
@@ -190,7 +190,7 @@ struct x_y_z_radius_kind_entity_runtime_key_c2a8c2a59b329461 : public flight::ty
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_X_Y_Z_RADIUS_KIND_ENTITY_RUNTIME_KEY_C2A8C2A59B329461
 
-inline void initialize_collision_sphere3_d(flight::types::EntityConstruction<flight::Ref<x_y_z_radius_kind_entity_runtime_key_c2a8c2a59b329461>> out, flight::String kind, double radius, double x, double y, double z) {
+inline void initialize_collision_sphere_3d(flight::types::EntityConstruction<flight::Ref<x_y_z_radius_kind_entity_runtime_key_c2a8c2a59b329461>> out, flight::String kind, double radius, double x, double y, double z) {
   flight::row_set<flight::RowKey<"kind">>(out, kind);
   flight::row_set<flight::RowKey<"radius">>(out, radius);
   flight::row_set<flight::RowKey<"x">>(out, x);
@@ -198,7 +198,7 @@ inline void initialize_collision_sphere3_d(flight::types::EntityConstruction<fli
   flight::row_set<flight::RowKey<"z">>(out, z);
 }
 
-inline void assign_collision_triangle_mesh3_dfields(flight::types::EntityConstruction<flight::Ref<flight::types::CollisionTriangleMesh3D>> out, flight::Array<double> indices, flight::String kind, flight::Array<double> points, double rotation_w, double rotation_x, double rotation_y, double rotation_z, double version, double x, double y, double z) {
+inline void assign_collision_triangle_mesh_3d_fields(flight::types::EntityConstruction<flight::Ref<flight::types::CollisionTriangleMesh3D>> out, flight::Array<double> indices, flight::String kind, flight::Array<double> points, double rotation_w, double rotation_x, double rotation_y, double rotation_z, double version, double x, double y, double z) {
   flight::row_set<flight::RowKey<"indices">>(out, indices);
   flight::row_set<flight::RowKey<"kind">>(out, kind);
   flight::row_set<flight::RowKey<"points">>(out, points);
@@ -424,7 +424,7 @@ struct kind_d44ac88f3bf40e0b : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_KIND_D44AC88F3BF40E0B
 
-inline std::variant<flight::Ref<entity_runtime_key_kind_columns_rows_heights_cell_size_x_cell_size_z_version_x_y_z_rotation_x_rotation_y_rotation_z_rotation_w_95dc92e8ae1b56a4>, flight::Ref<entity_runtime_key_kind_points_indices_version_x_y_z_rotation_x_rotation_y_rotation_z_rotation_w_100018bc43756510>, flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_entity_runtime_key_647c515fc0efb053>, flight::Ref<min_x_min_y_min_z_max_x_max_y_max_z_kind_entity_runtime_key_84470cd7700d84c3>, flight::Ref<points_kind_entity_runtime_key_b5b053ba1df30f1e>, flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_entity_runtime_key_515ec14a3a107276>, flight::Ref<x_y_z_radius_kind_entity_runtime_key_fe8fac385a575cfc>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_entity_runtime_key_d64a7dbd73e7ae79>> create_physics3_dcollider_world_shape(flight::types::CollisionColliderShape3D local) {
+inline std::variant<flight::Ref<entity_runtime_key_kind_columns_rows_heights_cell_size_x_cell_size_z_version_x_y_z_rotation_x_rotation_y_rotation_z_rotation_w_95dc92e8ae1b56a4>, flight::Ref<entity_runtime_key_kind_points_indices_version_x_y_z_rotation_x_rotation_y_rotation_z_rotation_w_100018bc43756510>, flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_entity_runtime_key_647c515fc0efb053>, flight::Ref<min_x_min_y_min_z_max_x_max_y_max_z_kind_entity_runtime_key_84470cd7700d84c3>, flight::Ref<points_kind_entity_runtime_key_b5b053ba1df30f1e>, flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_entity_runtime_key_515ec14a3a107276>, flight::Ref<x_y_z_radius_kind_entity_runtime_key_fe8fac385a575cfc>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_entity_runtime_key_d64a7dbd73e7ae79>> create_physics_3d_collider_world_shape(flight::types::CollisionColliderShape3D local) {
   {
     double switch_fallthrough_state = -1.0;
     {
@@ -466,7 +466,7 @@ inline std::variant<flight::Ref<entity_runtime_key_kind_columns_rows_heights_cel
         if (switch_value_2 == 0.0) {
           {
             flight::types::EntityConstruction<flight::Ref<x_y_z_radius_kind_entity_runtime_key_5b0c8e007ec28bcc>> out_9 = flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<x_y_z_radius_kind_entity_runtime_key_5b0c8e007ec28bcc>>>(flight::entity::allocate_entity<flight::Ref<x_y_z_radius_kind_entity_runtime_key_c2a8c2a59b329461>>());
-            initialize_collision_sphere3_d(flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<x_y_z_radius_kind_entity_runtime_key_c2a8c2a59b329461>>>(out_9), flight::String("sphere"), std::get<0>(local)->radius, std::get<0>(local)->x, std::get<0>(local)->y, std::get<0>(local)->z);
+            initialize_collision_sphere_3d(flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<x_y_z_radius_kind_entity_runtime_key_c2a8c2a59b329461>>>(out_9), flight::String("sphere"), std::get<0>(local)->radius, std::get<0>(local)->x, std::get<0>(local)->y, std::get<0>(local)->z);
             return flight::entity::finish_entity<flight::Ref<x_y_z_radius_kind_entity_runtime_key_5b0c8e007ec28bcc>>(out_9);
           }
         }
@@ -476,56 +476,56 @@ inline std::variant<flight::Ref<entity_runtime_key_kind_columns_rows_heights_cel
         else if (switch_value_2 == 2.0) {
           {
             flight::types::EntityConstruction<flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_entity_runtime_key_5d31bd78b4507714>> out = flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_entity_runtime_key_5d31bd78b4507714>>>(flight::entity::allocate_entity<flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_entity_runtime_key_a224064f8b7801c3>>());
-            initialize_collision_box3_d(flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_entity_runtime_key_a224064f8b7801c3>>>(out), flight::String("box"));
+            initialize_collision_box_3d(flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_entity_runtime_key_a224064f8b7801c3>>>(out), flight::String("box"));
             return flight::entity::finish_entity<flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_entity_runtime_key_5d31bd78b4507714>>(out);
           }
         }
         else if (switch_value_2 == 3.0) {
           {
             flight::types::EntityConstruction<flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_entity_runtime_key_ec18528224a104c6>> out_2 = flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_entity_runtime_key_ec18528224a104c6>>>(flight::entity::allocate_entity<flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_entity_runtime_key_379d14451c869a71>>());
-            initialize_collision_capsule3_d(flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_entity_runtime_key_379d14451c869a71>>>(out_2), flight::String("capsule"), std::get<5>(local)->radius, std::get<5>(local)->x0, std::get<5>(local)->x1, std::get<5>(local)->y0, std::get<5>(local)->y1, std::get<5>(local)->z0, std::get<5>(local)->z1);
+            initialize_collision_capsule_3d(flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_entity_runtime_key_379d14451c869a71>>>(out_2), flight::String("capsule"), std::get<5>(local)->radius, std::get<5>(local)->x0, std::get<5>(local)->x1, std::get<5>(local)->y0, std::get<5>(local)->y1, std::get<5>(local)->z0, std::get<5>(local)->z1);
             return flight::entity::finish_entity<flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_entity_runtime_key_ec18528224a104c6>>(out_2);
           }
         }
         else if (switch_value_2 == 4.0) {
           {
             flight::types::EntityConstruction<flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_entity_runtime_key_5de7ed65dc033149>> out_3 = flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_entity_runtime_key_5de7ed65dc033149>>>(flight::entity::allocate_entity<flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_entity_runtime_key_23c7cf24203b0e08>>());
-            initialize_collision_cylinder3_d(flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_entity_runtime_key_23c7cf24203b0e08>>>(out_3), flight::String("cylinder"), std::get<6>(local)->radius, std::get<6>(local)->x0, std::get<6>(local)->x1, std::get<6>(local)->y0, std::get<6>(local)->y1, std::get<6>(local)->z0, std::get<6>(local)->z1);
+            initialize_collision_cylinder_3d(flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_entity_runtime_key_23c7cf24203b0e08>>>(out_3), flight::String("cylinder"), std::get<6>(local)->radius, std::get<6>(local)->x0, std::get<6>(local)->x1, std::get<6>(local)->y0, std::get<6>(local)->y1, std::get<6>(local)->z0, std::get<6>(local)->z1);
             return flight::entity::finish_entity<flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_entity_runtime_key_5de7ed65dc033149>>(out_3);
           }
         }
         else if (switch_value_2 == 5.0) {
           {
             flight::types::EntityConstruction<flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_entity_runtime_key_a24434761882ed0a>> out_4 = flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_entity_runtime_key_a24434761882ed0a>>>(flight::entity::allocate_entity<flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_entity_runtime_key_ecf0e28787d35cfb>>());
-            initialize_collision_cone3_d(flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_entity_runtime_key_ecf0e28787d35cfb>>>(out_4), std::get<1>(local)->apex_x, std::get<1>(local)->apex_y, std::get<1>(local)->apex_z, std::get<1>(local)->base_x, std::get<1>(local)->base_y, std::get<1>(local)->base_z, flight::String("cone"), std::get<1>(local)->radius);
+            initialize_collision_cone_3d(flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_entity_runtime_key_ecf0e28787d35cfb>>>(out_4), std::get<1>(local)->apex_x, std::get<1>(local)->apex_y, std::get<1>(local)->apex_z, std::get<1>(local)->base_x, std::get<1>(local)->base_y, std::get<1>(local)->base_z, flight::String("cone"), std::get<1>(local)->radius);
             return flight::entity::finish_entity<flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_entity_runtime_key_a24434761882ed0a>>(out_4);
           }
         }
         else if (switch_value_2 == 6.0) {
           {
             flight::types::EntityConstruction<flight::Ref<points_kind_entity_runtime_key_21de6796ead51a0a>> out_5 = flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<points_kind_entity_runtime_key_21de6796ead51a0a>>>(flight::entity::allocate_entity<flight::Ref<points_kind_entity_runtime_key_d2635f8f4ed37d13>>());
-            initialize_collision_convex3_d(flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<points_kind_entity_runtime_key_d2635f8f4ed37d13>>>(out_5), flight::String("convex"), std::get<4>(local)->points.slice());
+            initialize_collision_convex_3d(flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<points_kind_entity_runtime_key_d2635f8f4ed37d13>>>(out_5), flight::String("convex"), std::get<4>(local)->points.slice());
             return flight::entity::finish_entity<flight::Ref<points_kind_entity_runtime_key_21de6796ead51a0a>>(out_5);
           }
         }
         else if (switch_value_2 == 7.0) {
           {
             flight::types::EntityConstruction<flight::Ref<flight::types::CollisionTriangleMesh3D>> out_6 = flight::entity::allocate_entity<flight::Ref<flight::types::CollisionTriangleMesh3D>>();
-            assign_collision_triangle_mesh3_dfields(out_6, std::get<8>(local)->indices, flight::String("triangle-mesh"), std::get<8>(local)->points, std::get<8>(local)->rotation_w, std::get<8>(local)->rotation_x, std::get<8>(local)->rotation_y, std::get<8>(local)->rotation_z, std::get<8>(local)->version, std::get<8>(local)->x, std::get<8>(local)->y, std::get<8>(local)->z);
+            assign_collision_triangle_mesh_3d_fields(out_6, std::get<8>(local)->indices, flight::String("triangle-mesh"), std::get<8>(local)->points, std::get<8>(local)->rotation_w, std::get<8>(local)->rotation_x, std::get<8>(local)->rotation_y, std::get<8>(local)->rotation_z, std::get<8>(local)->version, std::get<8>(local)->x, std::get<8>(local)->y, std::get<8>(local)->z);
             return flight::entity::finish_entity<flight::Ref<flight::types::CollisionTriangleMesh3D>>(out_6);
           }
         }
         else if (switch_value_2 == 8.0) {
           {
             flight::types::EntityConstruction<flight::Ref<flight::types::CollisionHeightfield3D>> out_7 = flight::entity::allocate_entity<flight::Ref<flight::types::CollisionHeightfield3D>>();
-            assign_collision_heightfield3_dfields(out_7, std::get<7>(local)->cell_size_x, std::get<7>(local)->cell_size_z, std::get<7>(local)->columns, std::get<7>(local)->heights, flight::String("heightfield"), std::get<7>(local)->rotation_w, std::get<7>(local)->rotation_x, std::get<7>(local)->rotation_y, std::get<7>(local)->rotation_z, std::get<7>(local)->rows, std::get<7>(local)->version, std::get<7>(local)->x, std::get<7>(local)->y, std::get<7>(local)->z);
+            assign_collision_heightfield_3d_fields(out_7, std::get<7>(local)->cell_size_x, std::get<7>(local)->cell_size_z, std::get<7>(local)->columns, std::get<7>(local)->heights, flight::String("heightfield"), std::get<7>(local)->rotation_w, std::get<7>(local)->rotation_x, std::get<7>(local)->rotation_y, std::get<7>(local)->rotation_z, std::get<7>(local)->rows, std::get<7>(local)->version, std::get<7>(local)->x, std::get<7>(local)->y, std::get<7>(local)->z);
             return flight::entity::finish_entity<flight::Ref<flight::types::CollisionHeightfield3D>>(out_7);
           }
         }
         else if (switch_value_2 == 9.0) {
           {
             flight::types::EntityConstruction<flight::Ref<x_y_z_radius_kind_entity_runtime_key_5b0c8e007ec28bcc>> out_8 = flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<x_y_z_radius_kind_entity_runtime_key_5b0c8e007ec28bcc>>>(flight::entity::allocate_entity<flight::Ref<x_y_z_radius_kind_entity_runtime_key_c2a8c2a59b329461>>());
-            initialize_collision_sphere3_d(flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<x_y_z_radius_kind_entity_runtime_key_c2a8c2a59b329461>>>(out_8), flight::String("sphere"), 0.0, 0.0, 0.0, 0.0);
+            initialize_collision_sphere_3d(flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<x_y_z_radius_kind_entity_runtime_key_c2a8c2a59b329461>>>(out_8), flight::String("sphere"), 0.0, 0.0, 0.0, 0.0);
             return flight::entity::finish_entity<flight::Ref<x_y_z_radius_kind_entity_runtime_key_5b0c8e007ec28bcc>>(out_8);
           }
         }
@@ -535,7 +535,7 @@ inline std::variant<flight::Ref<entity_runtime_key_kind_columns_rows_heights_cel
   throw std::logic_error("Flight function completed without a value");
 }
 
-inline void rotate_physics3_dpoint(double q_x, double q_y, double q_z, double q_w, double x, double y, double z, flight::Array<double> out) {
+inline void rotate_physics_3d_point(double q_x, double q_y, double q_z, double q_w, double x, double y, double z, flight::Array<double> out) {
   const double t_x = (2.0 * ((q_y * z) - (q_z * y)));
   const double t_y = (2.0 * ((q_z * x) - (q_x * z)));
   const double t_z = (2.0 * ((q_x * y) - (q_y * x)));
@@ -563,7 +563,7 @@ inline void write_disc_extent(double axis_x, double axis_y, double axis_z, doubl
 
 inline flight::Array<double> scratch_extent = flight::Array<double>{0.0, 0.0, 0.0};
 
-inline void write_physics3_dcollider_bounds(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>> collider, flight::Ref<flight::types::SpatialAabb3D> out) {
+inline void write_physics_3d_collider_bounds(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>> collider, flight::Ref<flight::types::SpatialAabb3D> out) {
   flight::types::CollisionColliderShape3D shape = flight::row_get<flight::RowKey<"world">>(collider);
   {
     double switch_fallthrough_state = -1.0;
@@ -744,11 +744,11 @@ inline void write_physics3_dcollider_bounds(flight::StructuralRef<flight::RowRea
           }
         }
         else if (switch_value_4 == 7.0) {
-          flight::collision::write_collision_triangle_mesh_bounds3_d(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionTriangleMesh3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::CollisionTriangleMesh3D>>>>(std::get<8>(shape))), ([&]() -> flight::Ref<flight::types::CollisionAabb3D> { const auto structural_record_source = out; return flight::make_ref<flight::types::CollisionAabb3D>(flight::types::CollisionAabb3D{.minX = structural_record_source->minX, .minY = structural_record_source->minY, .minZ = structural_record_source->minZ, .maxX = structural_record_source->maxX, .maxY = structural_record_source->maxY, .maxZ = structural_record_source->maxZ}); }()));
+          flight::collision::write_collision_triangle_mesh_bounds_3d(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionTriangleMesh3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::CollisionTriangleMesh3D>>>>(std::get<8>(shape))), ([&]() -> flight::Ref<flight::types::CollisionAabb3D> { const auto structural_record_source = out; return flight::make_ref<flight::types::CollisionAabb3D>(flight::types::CollisionAabb3D{.minX = structural_record_source->minX, .minY = structural_record_source->minY, .minZ = structural_record_source->minZ, .maxX = structural_record_source->maxX, .maxY = structural_record_source->maxY, .maxZ = structural_record_source->maxZ}); }()));
           return;
         }
         else if (switch_value_4 == 8.0) {
-          flight::collision::write_collision_heightfield_bounds3_d(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionHeightfield3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::CollisionHeightfield3D>>>>(std::get<7>(shape))), ([&]() -> flight::Ref<flight::types::CollisionAabb3D> { const auto structural_record_source_2 = out; return flight::make_ref<flight::types::CollisionAabb3D>(flight::types::CollisionAabb3D{.minX = structural_record_source_2->minX, .minY = structural_record_source_2->minY, .minZ = structural_record_source_2->minZ, .maxX = structural_record_source_2->maxX, .maxY = structural_record_source_2->maxY, .maxZ = structural_record_source_2->maxZ}); }()));
+          flight::collision::write_collision_heightfield_bounds_3d(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionHeightfield3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::CollisionHeightfield3D>>>>(std::get<7>(shape))), ([&]() -> flight::Ref<flight::types::CollisionAabb3D> { const auto structural_record_source_2 = out; return flight::make_ref<flight::types::CollisionAabb3D>(flight::types::CollisionAabb3D{.minX = structural_record_source_2->minX, .minY = structural_record_source_2->minY, .minZ = structural_record_source_2->minZ, .maxX = structural_record_source_2->maxX, .maxY = structural_record_source_2->maxY, .maxZ = structural_record_source_2->maxZ}); }()));
           return;
         }
         else if (switch_value_4 == 9.0) {
@@ -767,8 +767,8 @@ inline void write_physics3_dcollider_bounds(flight::StructuralRef<flight::RowRea
 
 inline flight::Array<double> scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6 = flight::Array<double>{0.0, 0.0, 0.0};
 
-inline void update_physics3_dstatic_surface_pose(std::variant<flight::Ref<flight::types::CollisionHeightfield3D>, flight::Ref<flight::types::CollisionTriangleMesh3D>> local, std::variant<flight::Ref<flight::types::CollisionHeightfield3D>, flight::Ref<flight::types::CollisionTriangleMesh3D>> world, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body) {
-  rotate_physics3_dpoint(flight::row_get<flight::RowKey<"orientationX">>(body), flight::row_get<flight::RowKey<"orientationY">>(body), flight::row_get<flight::RowKey<"orientationZ">>(body), flight::row_get<flight::RowKey<"orientationW">>(body), std::visit([](const auto& value) { return value->x; }, local), std::visit([](const auto& value) { return value->y; }, local), std::visit([](const auto& value) { return value->z; }, local), scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6);
+inline void update_physics_3d_static_surface_pose(std::variant<flight::Ref<flight::types::CollisionHeightfield3D>, flight::Ref<flight::types::CollisionTriangleMesh3D>> local, std::variant<flight::Ref<flight::types::CollisionHeightfield3D>, flight::Ref<flight::types::CollisionTriangleMesh3D>> world, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body) {
+  rotate_physics_3d_point(flight::row_get<flight::RowKey<"orientationX">>(body), flight::row_get<flight::RowKey<"orientationY">>(body), flight::row_get<flight::RowKey<"orientationZ">>(body), flight::row_get<flight::RowKey<"orientationW">>(body), std::visit([](const auto& value) { return value->x; }, local), std::visit([](const auto& value) { return value->y; }, local), std::visit([](const auto& value) { return value->z; }, local), scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6);
   (std::visit([](const auto& value) { return value->x; }, world) = (flight::row_get<flight::RowKey<"x">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(0.0)));
   (std::visit([](const auto& value) { return value->y; }, world) = (flight::row_get<flight::RowKey<"y">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(1.0)));
   (std::visit([](const auto& value) { return value->z; }, world) = (flight::row_get<flight::RowKey<"z">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(2.0)));
@@ -778,7 +778,7 @@ inline void update_physics3_dstatic_surface_pose(std::variant<flight::Ref<flight
   (std::visit([](const auto& value) { return value->rotation_w; }, world) = ((((flight::row_get<flight::RowKey<"orientationW">>(body) * std::visit([](const auto& value) { return value->rotation_w; }, local)) - (flight::row_get<flight::RowKey<"orientationX">>(body) * std::visit([](const auto& value) { return value->rotation_x; }, local))) - (flight::row_get<flight::RowKey<"orientationY">>(body) * std::visit([](const auto& value) { return value->rotation_y; }, local))) - (flight::row_get<flight::RowKey<"orientationZ">>(body) * std::visit([](const auto& value) { return value->rotation_z; }, local))));
 }
 
-inline void update_physics3_dcollider_world_shape(flight::Ref<flight::types::Physics3DCollider> collider, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body) {
+inline void update_physics_3d_collider_world_shape(flight::Ref<flight::types::Physics3DCollider> collider, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body) {
   flight::types::CollisionColliderShape3D local = collider->local;
   flight::types::CollisionColliderShape3D world = collider->world;
   const double q_x = flight::row_get<flight::RowKey<"orientationX">>(body);
@@ -786,7 +786,7 @@ inline void update_physics3_dcollider_world_shape(flight::Ref<flight::types::Phy
   const double q_z = flight::row_get<flight::RowKey<"orientationZ">>(body);
   const double q_w = flight::row_get<flight::RowKey<"orientationW">>(body);
   if ((local.index() == 0 && world.index() == 0)) {
-    rotate_physics3_dpoint(q_x, q_y, q_z, q_w, std::get<0>(local)->x, std::get<0>(local)->y, std::get<0>(local)->z, scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6);
+    rotate_physics_3d_point(q_x, q_y, q_z, q_w, std::get<0>(local)->x, std::get<0>(local)->y, std::get<0>(local)->z, scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6);
     (std::get<0>(world)->x = (flight::row_get<flight::RowKey<"x">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(0.0)));
     (std::get<0>(world)->y = (flight::row_get<flight::RowKey<"y">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(1.0)));
     (std::get<0>(world)->z = (flight::row_get<flight::RowKey<"z">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(2.0)));
@@ -797,7 +797,7 @@ inline void update_physics3_dcollider_world_shape(flight::Ref<flight::types::Phy
     const double center_x = ((std::get<3>(local)->min_x + std::get<3>(local)->max_x) / 2.0);
     const double center_y = ((std::get<3>(local)->min_y + std::get<3>(local)->max_y) / 2.0);
     const double center_z = ((std::get<3>(local)->min_z + std::get<3>(local)->max_z) / 2.0);
-    rotate_physics3_dpoint(q_x, q_y, q_z, q_w, center_x, center_y, center_z, scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6);
+    rotate_physics_3d_point(q_x, q_y, q_z, q_w, center_x, center_y, center_z, scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6);
     (std::get<2>(world)->x = (flight::row_get<flight::RowKey<"x">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(0.0)));
     (std::get<2>(world)->y = (flight::row_get<flight::RowKey<"y">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(1.0)));
     (std::get<2>(world)->z = (flight::row_get<flight::RowKey<"z">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(2.0)));
@@ -811,7 +811,7 @@ inline void update_physics3_dcollider_world_shape(flight::Ref<flight::types::Phy
     return;
   }
   if ((local.index() == 2 && world.index() == 2)) {
-    rotate_physics3_dpoint(q_x, q_y, q_z, q_w, std::get<2>(local)->x, std::get<2>(local)->y, std::get<2>(local)->z, scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6);
+    rotate_physics_3d_point(q_x, q_y, q_z, q_w, std::get<2>(local)->x, std::get<2>(local)->y, std::get<2>(local)->z, scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6);
     (std::get<2>(world)->x = (flight::row_get<flight::RowKey<"x">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(0.0)));
     (std::get<2>(world)->y = (flight::row_get<flight::RowKey<"y">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(1.0)));
     (std::get<2>(world)->z = (flight::row_get<flight::RowKey<"z">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(2.0)));
@@ -825,11 +825,11 @@ inline void update_physics3_dcollider_world_shape(flight::Ref<flight::types::Phy
     return;
   }
   if ((local.index() == 5 && world.index() == 5)) {
-    rotate_physics3_dpoint(q_x, q_y, q_z, q_w, std::get<5>(local)->x0, std::get<5>(local)->y0, std::get<5>(local)->z0, scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6);
+    rotate_physics_3d_point(q_x, q_y, q_z, q_w, std::get<5>(local)->x0, std::get<5>(local)->y0, std::get<5>(local)->z0, scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6);
     (std::get<5>(world)->x0 = (flight::row_get<flight::RowKey<"x">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(0.0)));
     (std::get<5>(world)->y0 = (flight::row_get<flight::RowKey<"y">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(1.0)));
     (std::get<5>(world)->z0 = (flight::row_get<flight::RowKey<"z">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(2.0)));
-    rotate_physics3_dpoint(q_x, q_y, q_z, q_w, std::get<5>(local)->x1, std::get<5>(local)->y1, std::get<5>(local)->z1, scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6);
+    rotate_physics_3d_point(q_x, q_y, q_z, q_w, std::get<5>(local)->x1, std::get<5>(local)->y1, std::get<5>(local)->z1, scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6);
     (std::get<5>(world)->x1 = (flight::row_get<flight::RowKey<"x">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(0.0)));
     (std::get<5>(world)->y1 = (flight::row_get<flight::RowKey<"y">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(1.0)));
     (std::get<5>(world)->z1 = (flight::row_get<flight::RowKey<"z">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(2.0)));
@@ -837,11 +837,11 @@ inline void update_physics3_dcollider_world_shape(flight::Ref<flight::types::Phy
     return;
   }
   if ((local.index() == 6 && world.index() == 6)) {
-    rotate_physics3_dpoint(q_x, q_y, q_z, q_w, std::get<6>(local)->x0, std::get<6>(local)->y0, std::get<6>(local)->z0, scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6);
+    rotate_physics_3d_point(q_x, q_y, q_z, q_w, std::get<6>(local)->x0, std::get<6>(local)->y0, std::get<6>(local)->z0, scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6);
     (std::get<6>(world)->x0 = (flight::row_get<flight::RowKey<"x">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(0.0)));
     (std::get<6>(world)->y0 = (flight::row_get<flight::RowKey<"y">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(1.0)));
     (std::get<6>(world)->z0 = (flight::row_get<flight::RowKey<"z">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(2.0)));
-    rotate_physics3_dpoint(q_x, q_y, q_z, q_w, std::get<6>(local)->x1, std::get<6>(local)->y1, std::get<6>(local)->z1, scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6);
+    rotate_physics_3d_point(q_x, q_y, q_z, q_w, std::get<6>(local)->x1, std::get<6>(local)->y1, std::get<6>(local)->z1, scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6);
     (std::get<6>(world)->x1 = (flight::row_get<flight::RowKey<"x">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(0.0)));
     (std::get<6>(world)->y1 = (flight::row_get<flight::RowKey<"y">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(1.0)));
     (std::get<6>(world)->z1 = (flight::row_get<flight::RowKey<"z">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(2.0)));
@@ -849,11 +849,11 @@ inline void update_physics3_dcollider_world_shape(flight::Ref<flight::types::Phy
     return;
   }
   if ((local.index() == 1 && world.index() == 1)) {
-    rotate_physics3_dpoint(q_x, q_y, q_z, q_w, std::get<1>(local)->apex_x, std::get<1>(local)->apex_y, std::get<1>(local)->apex_z, scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6);
+    rotate_physics_3d_point(q_x, q_y, q_z, q_w, std::get<1>(local)->apex_x, std::get<1>(local)->apex_y, std::get<1>(local)->apex_z, scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6);
     (std::get<1>(world)->apex_x = (flight::row_get<flight::RowKey<"x">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(0.0)));
     (std::get<1>(world)->apex_y = (flight::row_get<flight::RowKey<"y">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(1.0)));
     (std::get<1>(world)->apex_z = (flight::row_get<flight::RowKey<"z">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(2.0)));
-    rotate_physics3_dpoint(q_x, q_y, q_z, q_w, std::get<1>(local)->base_x, std::get<1>(local)->base_y, std::get<1>(local)->base_z, scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6);
+    rotate_physics_3d_point(q_x, q_y, q_z, q_w, std::get<1>(local)->base_x, std::get<1>(local)->base_y, std::get<1>(local)->base_z, scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6);
     (std::get<1>(world)->base_x = (flight::row_get<flight::RowKey<"x">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(0.0)));
     (std::get<1>(world)->base_y = (flight::row_get<flight::RowKey<"y">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(1.0)));
     (std::get<1>(world)->base_z = (flight::row_get<flight::RowKey<"z">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(2.0)));
@@ -867,7 +867,7 @@ inline void update_physics3_dcollider_world_shape(flight::Ref<flight::types::Phy
       double i = 0.0;
       while (((i + 2.0) < static_cast<double>(source.size()))) {
         {
-          rotate_physics3_dpoint(q_x, q_y, q_z, q_w, source.element(i), source.element((i + 1.0)), source.element((i + 2.0)), scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6);
+          rotate_physics_3d_point(q_x, q_y, q_z, q_w, source.element(i), source.element((i + 1.0)), source.element((i + 2.0)), scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6);
           (target.element(i) = (flight::row_get<flight::RowKey<"x">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(0.0)));
           (target.element((i + 1.0)) = (flight::row_get<flight::RowKey<"y">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(1.0)));
           (target.element((i + 2.0)) = (flight::row_get<flight::RowKey<"z">>(body) + scratch_point_flight_value_variable_scratch_u000050_oint_flight_private_9a8b7c1afc7fbda6.element(2.0)));
@@ -878,14 +878,14 @@ inline void update_physics3_dcollider_world_shape(flight::Ref<flight::types::Phy
     return;
   }
   if ((local.index() == 8 && world.index() == 8)) {
-    update_physics3_dstatic_surface_pose(std::variant<flight::Ref<flight::types::CollisionHeightfield3D>, flight::Ref<flight::types::CollisionTriangleMesh3D>>{std::in_place_type<flight::Ref<flight::types::CollisionTriangleMesh3D>>, std::get<8>(local)}, std::variant<flight::Ref<flight::types::CollisionHeightfield3D>, flight::Ref<flight::types::CollisionTriangleMesh3D>>{std::in_place_type<flight::Ref<flight::types::CollisionTriangleMesh3D>>, std::get<8>(world)}, body);
+    update_physics_3d_static_surface_pose(std::variant<flight::Ref<flight::types::CollisionHeightfield3D>, flight::Ref<flight::types::CollisionTriangleMesh3D>>{std::in_place_type<flight::Ref<flight::types::CollisionTriangleMesh3D>>, std::get<8>(local)}, std::variant<flight::Ref<flight::types::CollisionHeightfield3D>, flight::Ref<flight::types::CollisionTriangleMesh3D>>{std::in_place_type<flight::Ref<flight::types::CollisionTriangleMesh3D>>, std::get<8>(world)}, body);
     (std::get<8>(world)->points = std::get<8>(local)->points);
     (std::get<8>(world)->indices = std::get<8>(local)->indices);
     (std::get<8>(world)->version = std::get<8>(local)->version);
     return;
   }
   if ((local.index() == 7 && world.index() == 7)) {
-    update_physics3_dstatic_surface_pose(std::variant<flight::Ref<flight::types::CollisionHeightfield3D>, flight::Ref<flight::types::CollisionTriangleMesh3D>>{std::in_place_type<flight::Ref<flight::types::CollisionHeightfield3D>>, std::get<7>(local)}, std::variant<flight::Ref<flight::types::CollisionHeightfield3D>, flight::Ref<flight::types::CollisionTriangleMesh3D>>{std::in_place_type<flight::Ref<flight::types::CollisionHeightfield3D>>, std::get<7>(world)}, body);
+    update_physics_3d_static_surface_pose(std::variant<flight::Ref<flight::types::CollisionHeightfield3D>, flight::Ref<flight::types::CollisionTriangleMesh3D>>{std::in_place_type<flight::Ref<flight::types::CollisionHeightfield3D>>, std::get<7>(local)}, std::variant<flight::Ref<flight::types::CollisionHeightfield3D>, flight::Ref<flight::types::CollisionTriangleMesh3D>>{std::in_place_type<flight::Ref<flight::types::CollisionHeightfield3D>>, std::get<7>(world)}, body);
     (std::get<7>(world)->columns = std::get<7>(local)->columns);
     (std::get<7>(world)->rows = std::get<7>(local)->rows);
     (std::get<7>(world)->heights = std::get<7>(local)->heights);

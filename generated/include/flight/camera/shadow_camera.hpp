@@ -26,7 +26,7 @@ namespace flight::types { struct Vector2; }
 namespace flight::types { struct Vector3; }
 
 #include <flight/types/aabb.hpp>
-#include <flight/types/camera3_d.hpp>
+#include <flight/types/camera_3d.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/orthographic_projection_options.hpp>
@@ -46,7 +46,7 @@ inline flight::types::Vector3Like up_y = flight::make_ref<flight::types::Vector3
 
 inline flight::types::Vector3Like up_z = flight::make_ref<flight::types::Vector3>(flight::types::Vector3{.x = 0.0, .y = 0.0, .z = 1.0});
 
-inline void configure_directional_shadow_camera3_d(flight::Ref<flight::types::Camera3D> camera, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> light_direction, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> scene_bounds) {
+inline void configure_directional_shadow_camera_3d(flight::Ref<flight::types::Camera3D> camera, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> light_direction, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> scene_bounds) {
   auto min = flight::row_get<flight::RowKey<"min">>(scene_bounds);
   auto max = flight::row_get<flight::RowKey<"max">>(scene_bounds);
   const double cx = ((min->x + max->x) * 0.5);
@@ -68,13 +68,13 @@ inline void configure_directional_shadow_camera3_d(flight::Ref<flight::types::Ca
   (target_flight_value_variable__u00005f_target_flight_private_66f9c3ae9d9b481a->y = cy);
   (target_flight_value_variable__u00005f_target_flight_private_66f9c3ae9d9b481a->z = cz);
   auto up = ((std::abs(dy) > 0.99) ? up_z : up_y);
-  flight::camera::set_camera3_dview_matrix4_from_look_at(camera, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(eye_flight_value_variable__u00005f_eye_flight_private_66f9c3ae9d9b481a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(target_flight_value_variable__u00005f_target_flight_private_66f9c3ae9d9b481a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::types::Vector3Like>>>(up)));
+  flight::camera::set_camera_3d_view_matrix4_from_look_at(camera, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(eye_flight_value_variable__u00005f_eye_flight_private_66f9c3ae9d9b481a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(target_flight_value_variable__u00005f_target_flight_private_66f9c3ae9d9b481a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::types::Vector3Like>>>(up)));
   (camera->near = radius);
   (camera->far = (radius * 3.0));
   (camera->projection = std::variant<flight::Ref<flight::types::OrthographicProjection>, flight::Ref<flight::types::PerspectiveProjection>, flight::Ref<flight::types::RawProjection>>{std::in_place_type<flight::Ref<flight::types::OrthographicProjection>>, flight::camera::create_orthographic_projection(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::OrthographicProjectionOptions>>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::OrthographicProjectionOptions>>>>(flight::row_field<flight::RowKey<"halfHeight">>(radius), flight::row_field<flight::RowKey<"halfWidth">>(radius))))});
 }
 
-inline void configure_directional_shadow_camera3_dtight_fit(flight::Ref<flight::types::Camera3D> camera, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> light_direction, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> world_bounds, std::optional<double> padding = std::nullopt) {
+inline void configure_directional_shadow_camera_3d_tight_fit(flight::Ref<flight::types::Camera3D> camera, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> light_direction, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>> world_bounds, std::optional<double> padding = std::nullopt) {
   padding = padding.value_or(1.0);
   auto min = flight::row_get<flight::RowKey<"min">>(world_bounds);
   auto max = flight::row_get<flight::RowKey<"max">>(world_bounds);
@@ -108,7 +108,7 @@ inline void configure_directional_shadow_camera3_dtight_fit(flight::Ref<flight::
   (target_flight_value_variable__u00005f_target_flight_private_66f9c3ae9d9b481a->x = cx);
   (target_flight_value_variable__u00005f_target_flight_private_66f9c3ae9d9b481a->y = cy);
   (target_flight_value_variable__u00005f_target_flight_private_66f9c3ae9d9b481a->z = cz);
-  flight::camera::set_camera3_dview_matrix4_from_look_at(camera, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(eye_flight_value_variable__u00005f_eye_flight_private_66f9c3ae9d9b481a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(target_flight_value_variable__u00005f_target_flight_private_66f9c3ae9d9b481a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::types::Vector3Like>>>(((std::abs(dy) > 0.99) ? up_z : up_y))));
+  flight::camera::set_camera_3d_view_matrix4_from_look_at(camera, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(eye_flight_value_variable__u00005f_eye_flight_private_66f9c3ae9d9b481a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(target_flight_value_variable__u00005f_target_flight_private_66f9c3ae9d9b481a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::types::Vector3Like>>>(((std::abs(dy) > 0.99) ? up_z : up_y))));
   flight::Float32Array view = camera->view->m;
   double half_width = 0.0;
   double half_height = 0.0;

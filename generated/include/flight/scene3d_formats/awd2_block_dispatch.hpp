@@ -26,7 +26,7 @@ namespace flight::types { struct Scene3DDocument; }
 #include <flight/types/entity.hpp>
 #include <flight/types/import_diagnostic.hpp>
 #include <flight/types/mesh_geometry.hpp>
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d_document.hpp>
 
 namespace flight::scene3d_formats {
 

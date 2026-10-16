@@ -21,7 +21,7 @@
 //     an unknown kind is not ported: the emitted signature takes the shape as a closed variant, so an unlisted
 //     kind cannot be constructed to ask about.
 #include <flight/collision/contact_feature_id.hpp>
-#include <flight/collision/point_containment2_d.hpp>
+#include <flight/collision/point_containment_2d.hpp>
 
 #include <cmath>
 #include <iostream>
@@ -81,7 +81,7 @@ Shape obb(double x, double y, double half_w, double half_h, double rotation) {
 }
 
 bool contains(const Shape& shape, double x, double y) {
-  return collision::get_collision_shape_contains_point2_d(shape, x, y);
+  return collision::get_collision_shape_contains_point_2d(shape, x, y);
 }
 
 // Contact identity: one id per feature, and no field aliasing into another.

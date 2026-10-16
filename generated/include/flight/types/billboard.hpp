@@ -38,10 +38,10 @@ using BillboardRuntime = flight::Ref<flight::types::Node3DRuntime>;
 
 #include <flight/types/material3_dvalue.hpp>
 #include <flight/types/mesh_geometry.hpp>
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 #include <flight/types/node.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 #include <flight/types/vector3.hpp>
 #include <flight/types/quaternion.hpp>
 

@@ -34,10 +34,10 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/node/node_transform2d.hpp>
 #include <flight/types/effect_padding.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/has_transform2_d.hpp>
+#include <flight/types/has_transform_2d.hpp>
 #include <flight/types/matrix.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/rectangle.hpp>
 #include <flight/types/render_target.hpp>
 
@@ -90,7 +90,7 @@ inline flight::Ref<flight::types::Matrix> temp_inv_local = flight::geometry::cre
 
 inline flight::Ref<flight::types::Matrix> temp_translation = flight::geometry::create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
-inline void compute_scene2_drender_target_transform(flight::types::MatrixLike out_render_transform, flight::types::Node2D source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>> bounds, std::optional<double> content_x = std::nullopt, std::optional<double> content_y = std::nullopt) {
+inline void compute_scene_2d_render_target_transform(flight::types::MatrixLike out_render_transform, flight::types::Node2D source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>> bounds, std::optional<double> content_x = std::nullopt, std::optional<double> content_y = std::nullopt) {
   content_x = content_x.value_or(0.0);
   content_y = content_y.value_or(0.0);
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>> local_transform = flight::node::get_node_local_matrix(source);

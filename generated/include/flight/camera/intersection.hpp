@@ -14,16 +14,16 @@ namespace flight::types { struct Ray3D; }
 namespace flight::types { struct Vector3; }
 
 #include <flight/types/bounding_sphere.hpp>
-#include <flight/types/camera3_d.hpp>
+#include <flight/types/camera_3d.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/plane.hpp>
-#include <flight/types/ray3_d.hpp>
+#include <flight/types/ray_3d.hpp>
 #include <flight/types/vector3.hpp>
 #include <flight/camera/picking.hpp>
 
 namespace flight::camera {
 
-inline bool intersect_camera3_dray_with_plane(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Ray3DLike>>> ray, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::PlaneLike>>> plane) {
+inline bool intersect_camera_3d_ray_with_plane(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Ray3DLike>>> ray, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::PlaneLike>>> plane) {
   const double dx = flight::row_get<flight::RowKey<"direction">>(ray)->x;
   const double dy = flight::row_get<flight::RowKey<"direction">>(ray)->y;
   const double dz = flight::row_get<flight::RowKey<"direction">>(ray)->z;
@@ -50,14 +50,14 @@ inline bool intersect_camera3_dray_with_plane(flight::types::Vector3Like out, fl
 
 inline flight::Ref<flight::types::Vector3> scratch_ndc = flight::make_ref<flight::types::Vector3>(flight::types::Vector3{.x = 0.0, .y = 0.0, .z = 0.0});
 
-inline bool get_camera3_dray_through_bounding_sphere(flight::types::Ray3DLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>> sphere, double aspect) {
+inline bool get_camera_3d_ray_through_bounding_sphere(flight::types::Ray3DLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>> sphere, double aspect) {
   if ((flight::row_get<flight::RowKey<"radius">>(sphere) < 0.0)) {
     return false;
   }
-  if (!flight::camera::get_camera3_dworld_to_screen(scratch_ndc, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(camera), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(flight::row_get<flight::RowKey<"center">>(sphere))), aspect)) {
+  if (!flight::camera::get_camera_3d_world_to_screen(scratch_ndc, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(camera), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(flight::row_get<flight::RowKey<"center">>(sphere))), aspect)) {
     return false;
   }
-  return flight::camera::get_camera3_dscreen_to_world_ray(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(camera), scratch_ndc->x, scratch_ndc->y, aspect);
+  return flight::camera::get_camera_3d_screen_to_world_ray(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(camera), scratch_ndc->x, scratch_ndc->y, aspect);
 }
 
 } // namespace flight::camera

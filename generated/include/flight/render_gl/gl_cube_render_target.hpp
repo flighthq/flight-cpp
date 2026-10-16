@@ -102,7 +102,7 @@ inline flight::Ref<flight::types::GlCubeRenderTarget> create_gl_cube_render_targ
     double face = 0.0;
     while ((face < 6.0)) {
       {
-        gl.tex_image2_d((gl.texture_cube_map_positive_x + face), 0.0, gl.rgba16_f, normalized_size, normalized_size, 0.0, gl.rgba, gl.half_float, nullptr);
+        gl.tex_image_2d((gl.texture_cube_map_positive_x + face), 0.0, gl.rgba16_f, normalized_size, normalized_size, 0.0, gl.rgba, gl.half_float, nullptr);
       }
       (face += 1.0);
     }
@@ -113,7 +113,7 @@ inline flight::Ref<flight::types::GlCubeRenderTarget> create_gl_cube_render_targ
   gl.tex_parameteri(gl.texture_cube_map, gl.texture_wrap_t, gl.clamp_to_edge);
   gl.tex_parameteri(gl.texture_cube_map, gl.texture_wrap_r, gl.clamp_to_edge);
   gl.bind_framebuffer(gl.framebuffer, framebuffer);
-  gl.framebuffer_texture2_d(gl.framebuffer, gl.color_attachment0, gl.texture_cube_map_positive_x, texture, 0.0);
+  gl.framebuffer_texture_2d(gl.framebuffer, gl.color_attachment0, gl.texture_cube_map_positive_x, texture, 0.0);
   std::optional<flight::host_sdl::WebGlRenderbuffer> depth_stencil_renderbuffer = std::nullopt;
   if ((([&]() -> std::optional<bool> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"depth">>(optional_chain_receiver.value()); }()) != false)) {
     (depth_stencil_renderbuffer = std::optional<flight::host_sdl::WebGlRenderbuffer>{gl.create_renderbuffer()});

@@ -22,11 +22,11 @@ namespace flight::types { struct UpdateScene3DResourceStreamingOptions; }
 
 #include <flight/image/image_resource_reference.hpp>
 #include <flight/types/image_resource_reference.hpp>
-#include <flight/types/scene3_d.hpp>
-#include <flight/types/scene3_dresources.hpp>
+#include <flight/types/scene_3d.hpp>
+#include <flight/types/scene_3d_resources.hpp>
 #include <flight/types/texture.hpp>
-#include <flight/scene3d_resources/get_scene3_dresource_textures.hpp>
-#include <flight/scene3d_resources/resolve_scene3_dresources.hpp>
+#include <flight/scene3d_resources/get_scene_3d_resource_textures.hpp>
+#include <flight/scene3d_resources/resolve_scene_3d_resources.hpp>
 
 namespace flight::scene3d_resources {
 
@@ -35,16 +35,16 @@ using flight::types::Scene3DResourceResolverWithRuntime;
 using flight::types::Scene3DResources;
 using flight::types::UpdateScene3DResourceStreamingOptions;
 
-inline double retry_failed_scene3_dresources(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3D>>>> scene, flight::Ref<flight::types::Scene3DResourceResolverWithRuntime> resolver, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::UpdateScene3DResourceStreamingOptions>>>>> options = std::nullopt) {
+inline double retry_failed_scene_3d_resources(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3D>>>> scene, flight::Ref<flight::types::Scene3DResourceResolverWithRuntime> resolver, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::UpdateScene3DResourceStreamingOptions>>>>> options = std::nullopt) {
   flight::Array<flight::types::Texture> textures = flight::Array<flight::types::Texture>{};
-  flight::scene3d_resources::get_scene3_dresource_textures(textures, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3D>>>>>(scene));
+  flight::scene3d_resources::get_scene_3d_resource_textures(textures, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3D>>>>>(scene));
   auto reset = flight::Set<flight::types::ImageResourceReference>();
   {
     double i = 0.0;
     while ((i < static_cast<double>(textures.size()))) {
       {
         auto texture = textures.element(i);
-        std::optional<std::variant<flight::Ref<flight::types::EmbeddedImageResourceReference>, flight::Ref<flight::types::ExternalImageResourceReference>>> ref = flight::scene3d_resources::get_scene3_dtexture_resource_reference(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3D>>>>>(scene), texture);
+        std::optional<std::variant<flight::Ref<flight::types::EmbeddedImageResourceReference>, flight::Ref<flight::types::ExternalImageResourceReference>>> ref = flight::scene3d_resources::get_scene_3d_texture_resource_reference(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3D>>>>>(scene), texture);
         if ((!ref.has_value() || reset.has(ref.value()))) {
           (i += 1.0);
           continue;
@@ -60,7 +60,7 @@ inline double retry_failed_scene3_dresources(flight::StructuralRef<flight::RowRe
       (i += 1.0);
     }
   }
-  flight::scene3d_resources::update_scene3_dresource_streaming(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3D>>>>>(scene), resolver, options);
+  flight::scene3d_resources::update_scene_3d_resource_streaming(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3D>>>>>(scene), resolver, options);
   return static_cast<double>(reset.size());
 }
 

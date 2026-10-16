@@ -148,7 +148,7 @@ void check_shape_defaults(const flight::Ref<types::Shape>& value,
 
   const auto& runtime = value->entity_runtime_key.value();
   check(runtime != nullptr && runtime->traits.has_value() &&
-            runtime->traits.value() == types::node2_dtraits_key,
+            runtime->traits.value() == types::node_2d_traits_key,
         label + " runtime carries the Node2D trait key");
   check(runtime->appearance_id == 0.0 && runtime->children_id == 0.0 &&
             runtime->local_bounds_id == 0.0 &&

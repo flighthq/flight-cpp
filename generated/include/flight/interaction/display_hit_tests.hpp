@@ -20,7 +20,7 @@ inline bool default_movie_clip_hit_test_handler(flight::types::NodeAny source, d
   return false;
 }
 
-inline bool default_node2_dhit_test_handler(flight::types::NodeAny source, double x, double y) {
+inline bool default_node_2d_hit_test_handler(flight::types::NodeAny source, double x, double y) {
   return false;
 }
 

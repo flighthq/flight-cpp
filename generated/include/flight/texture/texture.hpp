@@ -553,7 +553,7 @@ inline void apply_common_texture_fields(flight::types::Texture out, flight::Ref<
   (std::visit([](const auto& value) { return value->version; }, out) = fields->version);
 }
 
-inline flight::Ref<flight::types::Texture2D> clone_texture2_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Texture2DLike>>> source, flight::Ref<color_space_flip_x_flip_y_sampler_uv_offset_uv_rotation_uv_scale_version_c68ed3be0a4d59d2> common) {
+inline flight::Ref<flight::types::Texture2D> clone_texture_2d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Texture2DLike>>> source, flight::Ref<color_space_flip_x_flip_y_sampler_uv_offset_uv_rotation_uv_scale_version_c68ed3be0a4d59d2> common) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Texture2D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Texture2D>>();
   apply_common_texture_fields(std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, flight::structural_ref_cast<flight::Ref<flight::types::Texture2D>>(out)}, common);
   flight::row_set<flight::RowKey<"dimension">>(out, flight::String("2d"));
@@ -590,7 +590,7 @@ inline flight::types::Texture clone_texture(flight::types::TextureLike source) {
   {
     auto switch_value_4 = std::visit([](const auto& value) { return value->dimension; }, source);
     if (switch_value_4 == flight::String("2d")) {
-      return std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, clone_texture2_d(std::get<2>(source), common)};
+      return std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, clone_texture_2d(std::get<2>(source), common)};
     }
     else if (switch_value_4 == flight::String("2d-array")) {
       return std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2DArray>>, clone_texture2_darray(std::get<0>(source), common)};
@@ -626,7 +626,7 @@ struct source_color_space_sampler_version_flip_x_flip_y_uv_offset_uv_rotation_uv
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTURE_SOURCE_COLOR_SPACE_SAMPLER_VERSION_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_DIMENSION_RESOURCE_5AC9E12B08D83B87
 
-inline void initialize_texture2_d(flight::types::EntityConstruction<flight::Ref<flight::types::Texture2D>> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CreateTexture2DOptions>>>>> opts = std::nullopt) {
+inline void initialize_texture_2d(flight::types::EntityConstruction<flight::Ref<flight::types::Texture2D>> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CreateTexture2DOptions>>>>> opts = std::nullopt) {
   apply_common_texture_fields(std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, flight::structural_ref_cast<flight::Ref<flight::types::Texture2D>>(out)}, create_common_texture_fields(opts));
   flight::row_set<flight::RowKey<"dimension">>(out, flight::String("2d"));
   if (!opts.has_value()) {
@@ -647,9 +647,9 @@ inline void attach_texture_to_resource(flight::types::Texture texture, std::vari
   }
 }
 
-inline flight::Ref<flight::types::Texture2D> create_texture2_d(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CreateTexture2DOptions>>>>> opts = std::nullopt) {
+inline flight::Ref<flight::types::Texture2D> create_texture_2d(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CreateTexture2DOptions>>>>> opts = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Texture2D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Texture2D>>();
-  initialize_texture2_d(out, opts);
+  initialize_texture_2d(out, opts);
   auto texture = flight::entity::finish_entity<flight::Ref<flight::types::Texture2D>>(out);
   attach_texture_to_resource(std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, texture}, get_texture_resource(opts));
   return texture;
@@ -657,7 +657,7 @@ inline flight::Ref<flight::types::Texture2D> create_texture2_d(std::optional<fli
 
 inline flight::types::Texture create_texture(std::optional<CreateTextureOptionsView> opts = std::nullopt) {
   if (!opts.has_value()) {
-    return std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, create_texture2_d(std::nullopt)};
+    return std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, create_texture_2d(std::nullopt)};
   }
   {
     auto switch_value_5 = std::visit([](const auto& value) -> std::optional<flight::String> { using Value = std::remove_cvref_t<decltype(value)>; if constexpr (std::is_same_v<Value, flight::Ref<CreateTexture2DArrayOptionsView>>) return std::optional<flight::String>{value->dimension}; else if constexpr (std::is_same_v<Value, flight::Ref<CreateTextureCubeOptionsView>>) return std::optional<flight::String>{value->dimension}; else if constexpr (std::is_same_v<Value, flight::Ref<CreateTexture3DOptionsView>>) return std::optional<flight::String>{value->dimension}; else if constexpr (std::is_same_v<Value, flight::Ref<CreateTexture2DOptionsView>>) return value->dimension; else { static_assert(!sizeof(Value), "unproved variant property alternative"); } }, opts.value());
@@ -700,10 +700,10 @@ inline flight::types::Texture create_texture(std::optional<CreateTextureOptionsV
       }
     }
     else if (switch_value_5 == flight::String("2d")) {
-      return std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, create_texture2_d(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CreateTexture2DOptions>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::texture::CreateTexture2DOptionsView>>>>(opts.value())))};
+      return std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, create_texture_2d(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CreateTexture2DOptions>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::texture::CreateTexture2DOptionsView>>>>(opts.value())))};
     }
     else {
-      return std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, create_texture2_d(opts.value())};
+      return std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, create_texture_2d(opts.value())};
     }
   }
   throw std::logic_error("Flight function completed without a value");

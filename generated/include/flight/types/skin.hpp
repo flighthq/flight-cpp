@@ -14,8 +14,8 @@ namespace flight::types {
 struct Skin;
 } // namespace flight::types
 
-#include <flight/types/node3_d.hpp>
-#include <flight/types/skeleton3_d.hpp>
+#include <flight/types/node_3d.hpp>
+#include <flight/types/skeleton_3d.hpp>
 
 namespace flight::types {
 

@@ -53,7 +53,7 @@ namespace flight::types { struct SpatialPair; }
 #include <flight/types/collision.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/non_entity_create_result.hpp>
-#include <flight/types/physics2_d.hpp>
+#include <flight/types/physics_2d.hpp>
 #include <flight/types/spatial.hpp>
 #include <flight/types/spatial_indexing.hpp>
 #include <flight/physics2d/broadphase.hpp>
@@ -79,9 +79,9 @@ using flight::types::RigidBody2D;
 using flight::types::SpatialIndexBackend2D;
 using flight::types::SpatialPair;
 
-inline flight::Ref<flight::types::RigidBody2D> add_physics2_dbody(flight::Ref<flight::types::Physics2DWorld> world, flight::Ref<flight::types::RigidBody2D> body) {
-  flight::physics2d::assert_physics2_dworld_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)));
-  if (((flight::physics2d::physics2_dbody_owners.has(body) || (body->index != -1.0)) || world->bodies.includes(body))) {
+inline flight::Ref<flight::types::RigidBody2D> add_physics_2d_body(flight::Ref<flight::types::Physics2DWorld> world, flight::Ref<flight::types::RigidBody2D> body) {
+  flight::physics2d::assert_physics_2d_world_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)));
+  if (((flight::physics2d::physics_2d_body_owners.has(body) || (body->index != -1.0)) || world->bodies.includes(body))) {
     throw flight::Error(flight::String("Cannot add a rigid body that already belongs to a physics world"));
   }
   auto colliders = flight::Set<flight::Ref<flight::types::Physics2DCollider>>();
@@ -90,7 +90,7 @@ inline flight::Ref<flight::types::RigidBody2D> add_physics2_dbody(flight::Ref<fl
       throw flight::Error(flight::String("Cannot add a rigid body containing the same collider twice"));
     }
     colliders.add(collider);
-    auto owner = flight::physics2d::physics2_dcollider_owners.get(collider);
+    auto owner = flight::physics2d::physics_2d_collider_owners.get(collider);
     if ((owner.has_value() && (owner.value() != body))) {
       throw flight::Error(flight::String("Cannot share a physics collider between rigid bodies"));
     }
@@ -98,15 +98,15 @@ inline flight::Ref<flight::types::RigidBody2D> add_physics2_dbody(flight::Ref<fl
   (body->index = world->next_body_index++);
   world->bodies.push(body);
   world->body_by_index.set(body->index, body);
-  flight::physics2d::physics2_dbody_owners.set(body, world);
+  flight::physics2d::physics_2d_body_owners.set(body, world);
   for (auto collider_2 : colliders) {
-    flight::physics2d::physics2_dcollider_owners.set(collider_2, body);
+    flight::physics2d::physics_2d_collider_owners.set(collider_2, body);
   }
-  flight::physics2d::update_rigid_body2_dmass_data(body);
+  flight::physics2d::update_rigid_body_2d_mass_data(body);
   return body;
 }
 
-inline flight::types::CollisionBuiltInShape2D clone_physics2_dlocal_shape(flight::types::CollisionBuiltInShape2D local) {
+inline flight::types::CollisionBuiltInShape2D clone_physics_2d_local_shape(flight::types::CollisionBuiltInShape2D local) {
   {
     auto switch_value = std::visit([](const auto& value) { return value->kind; }, local);
     if (switch_value == flight::String("circle")) {
@@ -134,15 +134,15 @@ inline flight::types::CollisionBuiltInShape2D clone_physics2_dlocal_shape(flight
   throw std::logic_error("Flight function completed without a value");
 }
 
-inline flight::Ref<flight::types::Physics2DSolverConfig> create_physics2_dsolver_config() {
+inline flight::Ref<flight::types::Physics2DSolverConfig> create_physics_2d_solver_config() {
   return flight::make_ref<flight::types::Physics2DSolverConfig>(flight::types::Physics2DSolverConfig{.allow_sleeping = true, .sleep_linear_threshold = 0.01, .sleep_angular_threshold = ((2.0 * flight::pi) / 180.0), .time_to_sleep = 0.5, .velocity_iterations = 10.0, .position_iterations = 3.0, .penetration_slop = 0.005, .position_correction = 0.2, .restitution_threshold = 1.0, .warm_starting = true, .continuous_collision = true, .max_ccd_substeps = 8.0, .max_ccd_rotation_substeps = 64.0});
 }
 
-inline std::optional<flight::Ref<flight::types::RigidBody2D>> find_physics2_dbody(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world, double index) {
+inline std::optional<flight::Ref<flight::types::RigidBody2D>> find_physics_2d_body(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world, double index) {
   return flight::row_get<flight::RowKey<"bodyByIndex">>(world).get(index);
 }
 
-inline void initialize_physics2_dcollider(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DCollider>> out, flight::Ref<flight::types::Physics2DCollisionFilter> filter, flight::types::CollisionBuiltInShape2D local, flight::Ref<flight::types::Physics2DMaterial> material, bool sensor, flight::types::CollisionBuiltInShape2D world) {
+inline void initialize_physics_2d_collider(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DCollider>> out, flight::Ref<flight::types::Physics2DCollisionFilter> filter, flight::types::CollisionBuiltInShape2D local, flight::Ref<flight::types::Physics2DMaterial> material, bool sensor, flight::types::CollisionBuiltInShape2D world) {
   flight::row_set<flight::RowKey<"filter">>(out, filter);
   flight::row_set<flight::RowKey<"local">>(out, local);
   flight::row_set<flight::RowKey<"material">>(out, material);
@@ -193,7 +193,7 @@ inline void initialize_physics2_dcollider(flight::types::EntityConstruction<flig
 // materializing it would change identity. Keep both APIs on the same declared arm owner, introduce one shared
 // nominal arm owner, or add an identity-preserving runtime view.
 
-inline void initialize_rigid_body2_d(flight::types::EntityConstruction<flight::Ref<flight::types::RigidBody2D>> out, double angle, flight::types::Physics2DBodyType type, double x, double y) {
+inline void initialize_rigid_body_2d(flight::types::EntityConstruction<flight::Ref<flight::types::RigidBody2D>> out, double angle, flight::types::Physics2DBodyType type, double x, double y) {
   flight::row_set<flight::RowKey<"angle">>(out, angle);
   flight::row_set<flight::RowKey<"angularDamping">>(out, 0.0);
   flight::row_set<flight::RowKey<"angularVelocity">>(out, 0.0);
@@ -222,18 +222,18 @@ inline void initialize_rigid_body2_d(flight::types::EntityConstruction<flight::R
   flight::row_set<flight::RowKey<"y">>(out, y);
 }
 
-inline flight::Ref<flight::types::RigidBody2D> create_rigid_body2_d(flight::types::Physics2DBodyType type, double x, double y, std::optional<double> angle = std::nullopt) {
+inline flight::Ref<flight::types::RigidBody2D> create_rigid_body_2d(flight::types::Physics2DBodyType type, double x, double y, std::optional<double> angle = std::nullopt) {
   angle = angle.value_or(0.0);
   flight::types::EntityConstruction<flight::Ref<flight::types::RigidBody2D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::RigidBody2D>>();
-  initialize_rigid_body2_d(out, angle.value(), type, x, y);
+  initialize_rigid_body_2d(out, angle.value(), type, x, y);
   return flight::entity::finish_entity<flight::Ref<flight::types::RigidBody2D>>(out);
 }
 
-inline bool is_physics2_dpair_ordered(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>> b) {
+inline bool is_physics_2d_pair_ordered(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>> b) {
   return (flight::row_get<flight::RowKey<"index">>(a) <= flight::row_get<flight::RowKey<"index">>(b));
 }
 
-inline double cross_physics2_dbody_point_vector(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>> body, double point_x, double point_y, double vector_x, double vector_y) {
+inline double cross_physics_2d_body_point_vector(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>> body, double point_x, double point_y, double vector_x, double vector_y) {
   const double cos = std::cos(flight::row_get<flight::RowKey<"angle">>(body));
   const double sin = std::sin(flight::row_get<flight::RowKey<"angle">>(body));
   const double center_x = ((flight::row_get<flight::RowKey<"x">>(body) + (flight::row_get<flight::RowKey<"centerX">>(body) * cos)) - (flight::row_get<flight::RowKey<"centerY">>(body) * sin));
@@ -241,7 +241,7 @@ inline double cross_physics2_dbody_point_vector(flight::StructuralRef<flight::Ro
   return (((point_x - center_x) * vector_y) - ((point_y - center_y) * vector_x));
 }
 
-inline void remove_physics2_dcontact_events_for_body(flight::Array<flight::Ref<flight::types::Physics2DContact>> events, double body_index) {
+inline void remove_physics_2d_contact_events_for_body(flight::Array<flight::Ref<flight::types::Physics2DContact>> events, double body_index) {
   {
     double i = (static_cast<double>(events.size()) - 1.0);
     while ((i >= 0.0)) {
@@ -255,100 +255,100 @@ inline void remove_physics2_dcontact_events_for_body(flight::Array<flight::Ref<f
   }
 }
 
-inline void wake_physics2_dbody_from_topology(flight::Ref<flight::types::RigidBody2D> body) {
+inline void wake_physics_2d_body_from_topology(flight::Ref<flight::types::RigidBody2D> body) {
   (body->sleeping = false);
   (body->sleep_timer = 0.0);
 }
 
-inline bool apply_physics2_dforce(flight::Ref<flight::types::RigidBody2D> body, double force_x, double force_y) {
-  flight::physics2d::assert_physics2_dbody_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body)));
+inline bool apply_physics_2d_force(flight::Ref<flight::types::RigidBody2D> body, double force_x, double force_y) {
+  flight::physics2d::assert_physics_2d_body_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body)));
   if ((((body->type != flight::String("dynamic")) || !std::isfinite(force_x)) || !std::isfinite(force_y))) {
     return false;
   }
   (body->force_x += force_x);
   (body->force_y += force_y);
   if (((force_x != 0.0) || (force_y != 0.0))) {
-    wake_physics2_dbody_from_topology(body);
+    wake_physics_2d_body_from_topology(body);
   }
   return true;
 }
 
-inline bool apply_physics2_dforce_at_point(flight::Ref<flight::types::RigidBody2D> body, double force_x, double force_y, double point_x, double point_y) {
-  flight::physics2d::assert_physics2_dbody_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body)));
+inline bool apply_physics_2d_force_at_point(flight::Ref<flight::types::RigidBody2D> body, double force_x, double force_y, double point_x, double point_y) {
+  flight::physics2d::assert_physics_2d_body_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body)));
   if ((((((body->type != flight::String("dynamic")) || !std::isfinite(force_x)) || !std::isfinite(force_y)) || !std::isfinite(point_x)) || !std::isfinite(point_y))) {
     return false;
   }
   (body->force_x += force_x);
   (body->force_y += force_y);
   if (!body->fixed_rotation) {
-    (body->torque += cross_physics2_dbody_point_vector(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body)), point_x, point_y, force_x, force_y));
+    (body->torque += cross_physics_2d_body_point_vector(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body)), point_x, point_y, force_x, force_y));
   }
   if (((force_x != 0.0) || (force_y != 0.0))) {
-    wake_physics2_dbody_from_topology(body);
+    wake_physics_2d_body_from_topology(body);
   }
   return true;
 }
 
-inline bool apply_physics2_dlinear_impulse(flight::Ref<flight::types::RigidBody2D> body, double impulse_x, double impulse_y) {
-  flight::physics2d::assert_physics2_dbody_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body)));
+inline bool apply_physics_2d_linear_impulse(flight::Ref<flight::types::RigidBody2D> body, double impulse_x, double impulse_y) {
+  flight::physics2d::assert_physics_2d_body_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body)));
   if ((((body->type != flight::String("dynamic")) || !std::isfinite(impulse_x)) || !std::isfinite(impulse_y))) {
     return false;
   }
   (body->velocity_x += (impulse_x * body->inverse_mass));
   (body->velocity_y += (impulse_y * body->inverse_mass));
   if (((impulse_x != 0.0) || (impulse_y != 0.0))) {
-    wake_physics2_dbody_from_topology(body);
+    wake_physics_2d_body_from_topology(body);
   }
   return true;
 }
 
-inline bool apply_physics2_dlinear_impulse_at_point(flight::Ref<flight::types::RigidBody2D> body, double impulse_x, double impulse_y, double point_x, double point_y) {
-  flight::physics2d::assert_physics2_dbody_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body)));
+inline bool apply_physics_2d_linear_impulse_at_point(flight::Ref<flight::types::RigidBody2D> body, double impulse_x, double impulse_y, double point_x, double point_y) {
+  flight::physics2d::assert_physics_2d_body_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body)));
   if ((((((body->type != flight::String("dynamic")) || !std::isfinite(impulse_x)) || !std::isfinite(impulse_y)) || !std::isfinite(point_x)) || !std::isfinite(point_y))) {
     return false;
   }
   (body->velocity_x += (impulse_x * body->inverse_mass));
   (body->velocity_y += (impulse_y * body->inverse_mass));
-  (body->angular_velocity += (cross_physics2_dbody_point_vector(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body)), point_x, point_y, impulse_x, impulse_y) * body->inverse_inertia));
+  (body->angular_velocity += (cross_physics_2d_body_point_vector(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body)), point_x, point_y, impulse_x, impulse_y) * body->inverse_inertia));
   if (((impulse_x != 0.0) || (impulse_y != 0.0))) {
-    wake_physics2_dbody_from_topology(body);
+    wake_physics_2d_body_from_topology(body);
   }
   return true;
 }
 
-inline bool apply_physics2_dtorque(flight::Ref<flight::types::RigidBody2D> body, double torque) {
-  flight::physics2d::assert_physics2_dbody_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body)));
+inline bool apply_physics_2d_torque(flight::Ref<flight::types::RigidBody2D> body, double torque) {
+  flight::physics2d::assert_physics_2d_body_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body)));
   if ((((body->type != flight::String("dynamic")) || body->fixed_rotation) || !std::isfinite(torque))) {
     return false;
   }
   (body->torque += torque);
   if ((torque != 0.0)) {
-    wake_physics2_dbody_from_topology(body);
+    wake_physics_2d_body_from_topology(body);
   }
   return true;
 }
 
-inline bool set_physics2_dbody_bullet(flight::Ref<flight::types::Physics2DWorld> world, flight::Ref<flight::types::RigidBody2D> body, bool bullet) {
-  flight::physics2d::assert_physics2_dworld_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)));
+inline bool set_physics_2d_body_bullet(flight::Ref<flight::types::Physics2DWorld> world, flight::Ref<flight::types::RigidBody2D> body, bool bullet) {
+  flight::physics2d::assert_physics_2d_world_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)));
   if (((world->body_by_index.get(body->index) != body) || (flight::String("boolean") != flight::String("boolean")))) {
     return false;
   }
   (body->bullet = bullet);
-  wake_physics2_dbody_from_topology(body);
+  wake_physics_2d_body_from_topology(body);
   return true;
 }
 
-inline bool set_physics2_dbody_sleep_enabled(flight::Ref<flight::types::Physics2DWorld> world, flight::Ref<flight::types::RigidBody2D> body, bool sleep_enabled) {
-  flight::physics2d::assert_physics2_dworld_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)));
+inline bool set_physics_2d_body_sleep_enabled(flight::Ref<flight::types::Physics2DWorld> world, flight::Ref<flight::types::RigidBody2D> body, bool sleep_enabled) {
+  flight::physics2d::assert_physics_2d_world_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)));
   if (((world->body_by_index.get(body->index) != body) || (flight::String("boolean") != flight::String("boolean")))) {
     return false;
   }
   (body->sleep_enabled = sleep_enabled);
-  wake_physics2_dbody_from_topology(body);
+  wake_physics_2d_body_from_topology(body);
   return true;
 }
 
-inline void invalidate_physics2_dbody_contacts(flight::Ref<flight::types::Physics2DWorld> world, double body_index) {
+inline void invalidate_physics_2d_body_contacts(flight::Ref<flight::types::Physics2DWorld> world, double body_index) {
   {
     double i = (static_cast<double>(world->contacts.size()) - 1.0);
     while ((i >= 0.0)) {
@@ -360,9 +360,9 @@ inline void invalidate_physics2_dbody_contacts(flight::Ref<flight::types::Physic
         }
         if ((contact->enabled && !contact->sensor)) {
           const double other_index = ((contact->body_a == body_index) ? contact->body_b : contact->body_a);
-          auto other = find_physics2_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), other_index);
+          auto other = find_physics_2d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), other_index);
           if (other.has_value()) {
-            wake_physics2_dbody_from_topology(other.value());
+            wake_physics_2d_body_from_topology(other.value());
           }
         }
         world->contacts.splice(i, 1.0);
@@ -370,17 +370,17 @@ inline void invalidate_physics2_dbody_contacts(flight::Ref<flight::types::Physic
       (i -= 1.0);
     }
   }
-  remove_physics2_dcontact_events_for_body(world->events->began, body_index);
-  remove_physics2_dcontact_events_for_body(world->events->ended, body_index);
+  remove_physics_2d_contact_events_for_body(world->events->began, body_index);
+  remove_physics_2d_contact_events_for_body(world->events->ended, body_index);
 }
 
-inline bool remove_physics2_dbody(flight::Ref<flight::types::Physics2DWorld> world, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>> body) {
-  flight::physics2d::assert_physics2_dworld_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)));
+inline bool remove_physics_2d_body(flight::Ref<flight::types::Physics2DWorld> world, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>> body) {
+  flight::physics2d::assert_physics_2d_world_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)));
   const double at = world->bodies.index_of(flight::structural_ref_cast<flight::Ref<flight::types::RigidBody2D>>(body));
   if ((at < 0.0)) {
     return false;
   }
-  invalidate_physics2_dbody_contacts(world, flight::row_get<flight::RowKey<"index">>(body));
+  invalidate_physics_2d_body_contacts(world, flight::row_get<flight::RowKey<"index">>(body));
   {
     double i = (static_cast<double>(world->joints.size()) - 1.0);
     while ((i >= 0.0)) {
@@ -396,29 +396,29 @@ inline bool remove_physics2_dbody(flight::Ref<flight::types::Physics2DWorld> wor
         }
         if ((solver.has_value() && uses_body_a)) {
           const double other_index = (removes_body_a ? joint->body_b : joint->body_a);
-          auto other = find_physics2_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), other_index);
+          auto other = find_physics_2d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), other_index);
           if (other.has_value()) {
-            wake_physics2_dbody_from_topology(other.value());
+            wake_physics_2d_body_from_topology(other.value());
           }
         }
         world->joints.splice(i, 1.0);
-        flight::physics2d::physics2_djoint_owners.erase(joint);
+        flight::physics2d::physics_2d_joint_owners.erase(joint);
       }
       (i -= 1.0);
     }
   }
-  flight::physics2d::rebuild_physics2_djoint_collision_suppressions(world);
+  flight::physics2d::rebuild_physics_2d_joint_collision_suppressions(world);
   world->body_by_index.erase(flight::row_get<flight::RowKey<"index">>(body));
   world->bodies.splice(at, 1.0);
   world->index->remove_spatial_object(flight::row_get<flight::RowKey<"index">>(body));
   flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>> mutable_body = flight::structural_ref_cast<flight::Ref<flight::types::RigidBody2D>>(body);
   flight::row_set<flight::RowKey<"index">>(mutable_body, -1.0);
-  flight::physics2d::physics2_dbody_owners.erase(flight::structural_ref_cast<flight::Ref<flight::types::RigidBody2D>>(body));
+  flight::physics2d::physics_2d_body_owners.erase(flight::structural_ref_cast<flight::Ref<flight::types::RigidBody2D>>(body));
   return true;
 }
 
-inline void invalidate_physics2_dbody_constraints(flight::Ref<flight::types::Physics2DWorld> world, double body_index) {
-  invalidate_physics2_dbody_contacts(world, body_index);
+inline void invalidate_physics_2d_body_constraints(flight::Ref<flight::types::Physics2DWorld> world, double body_index) {
+  invalidate_physics_2d_body_contacts(world, body_index);
   for (auto joint : world->joints) {
     auto solver = world->joint_solvers.get(joint->kind);
     const bool uses_body_a = (([&]() -> std::optional<bool> { auto optional_chain_receiver = solver; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->uses_body_a; }()) != false);
@@ -438,36 +438,36 @@ inline void invalidate_physics2_dbody_constraints(flight::Ref<flight::types::Phy
     if ((other_index == body_index)) {
       continue;
     }
-    auto other = find_physics2_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), other_index);
+    auto other = find_physics_2d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), other_index);
     if (other.has_value()) {
-      wake_physics2_dbody_from_topology(other.value());
+      wake_physics_2d_body_from_topology(other.value());
     }
   }
 }
 
-inline flight::Ref<flight::types::Physics2DCollider> add_physics2_dcollider(flight::Ref<flight::types::Physics2DWorld> world, flight::Ref<flight::types::RigidBody2D> body, flight::Ref<flight::types::Physics2DCollider> collider) {
-  flight::physics2d::assert_physics2_dworld_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)));
-  auto body_owner = flight::physics2d::physics2_dbody_owners.get(body);
+inline flight::Ref<flight::types::Physics2DCollider> add_physics_2d_collider(flight::Ref<flight::types::Physics2DWorld> world, flight::Ref<flight::types::RigidBody2D> body, flight::Ref<flight::types::Physics2DCollider> collider) {
+  flight::physics2d::assert_physics_2d_world_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)));
+  auto body_owner = flight::physics2d::physics_2d_body_owners.get(body);
   if ((body_owner.has_value() && (body_owner.value() != world))) {
     throw flight::Error(flight::String("Cannot mutate a rigid body through a physics world that does not own it"));
   }
   if (body->colliders.includes(collider)) {
     throw flight::Error(flight::String("Cannot add the same physics collider to a rigid body twice"));
   }
-  auto owner = flight::physics2d::physics2_dcollider_owners.get(collider);
+  auto owner = flight::physics2d::physics_2d_collider_owners.get(collider);
   if ((owner.has_value() && (owner.value() != body))) {
     throw flight::Error(flight::String("Cannot share a physics collider between rigid bodies"));
   }
   const bool in_world = (world->body_by_index.get(body->index) == body);
   if (in_world) {
-    invalidate_physics2_dbody_constraints(world, body->index);
+    invalidate_physics_2d_body_constraints(world, body->index);
   }
   body->colliders.push(collider);
-  flight::physics2d::physics2_dcollider_owners.set(collider, body);
-  flight::physics2d::update_rigid_body2_dmass_data(body);
+  flight::physics2d::physics_2d_collider_owners.set(collider, body);
+  flight::physics2d::update_rigid_body_2d_mass_data(body);
   if (in_world) {
-    wake_physics2_dbody_from_topology(body);
-    flight::physics2d::synchronize_physics2_dbroadphase(world);
+    wake_physics_2d_body_from_topology(body);
+    flight::physics2d::synchronize_physics_2d_broadphase(world);
   }
   return collider;
 }
@@ -528,9 +528,9 @@ inline flight::Ref<flight::types::Physics2DCollider> add_physics2_dcollider(flig
 // materializing it would change identity. Keep both APIs on the same declared arm owner, introduce one shared
 // nominal arm owner, or add an identity-preserving runtime view.
 
-inline bool remove_physics2_dcollider(flight::Ref<flight::types::Physics2DWorld> world, flight::Ref<flight::types::RigidBody2D> body, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>> collider) {
-  flight::physics2d::assert_physics2_dworld_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)));
-  auto body_owner = flight::physics2d::physics2_dbody_owners.get(body);
+inline bool remove_physics_2d_collider(flight::Ref<flight::types::Physics2DWorld> world, flight::Ref<flight::types::RigidBody2D> body, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>> collider) {
+  flight::physics2d::assert_physics_2d_world_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)));
+  auto body_owner = flight::physics2d::physics_2d_body_owners.get(body);
   if ((body_owner.has_value() && (body_owner.value() != world))) {
     return false;
   }
@@ -540,65 +540,65 @@ inline bool remove_physics2_dcollider(flight::Ref<flight::types::Physics2DWorld>
   }
   const bool in_world = (world->body_by_index.get(body->index) == body);
   if (in_world) {
-    invalidate_physics2_dbody_constraints(world, body->index);
+    invalidate_physics_2d_body_constraints(world, body->index);
   }
   body->colliders.splice(at, 1.0);
-  flight::physics2d::physics2_dcollider_owners.erase(flight::structural_ref_cast<flight::Ref<flight::types::Physics2DCollider>>(collider));
-  flight::physics2d::update_rigid_body2_dmass_data(body);
+  flight::physics2d::physics_2d_collider_owners.erase(flight::structural_ref_cast<flight::Ref<flight::types::Physics2DCollider>>(collider));
+  flight::physics2d::update_rigid_body_2d_mass_data(body);
   if (in_world) {
-    wake_physics2_dbody_from_topology(body);
-    flight::physics2d::synchronize_physics2_dbroadphase(world);
+    wake_physics_2d_body_from_topology(body);
+    flight::physics2d::synchronize_physics_2d_broadphase(world);
   }
   return true;
 }
 
-inline bool set_physics2_dbody_fixed_rotation(flight::Ref<flight::types::Physics2DWorld> world, flight::Ref<flight::types::RigidBody2D> body, bool fixed_rotation) {
-  flight::physics2d::assert_physics2_dworld_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)));
+inline bool set_physics_2d_body_fixed_rotation(flight::Ref<flight::types::Physics2DWorld> world, flight::Ref<flight::types::RigidBody2D> body, bool fixed_rotation) {
+  flight::physics2d::assert_physics_2d_world_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)));
   if (((world->body_by_index.get(body->index) != body) || (flight::String("boolean") != flight::String("boolean")))) {
     return false;
   }
   if ((body->fixed_rotation == fixed_rotation)) {
     return true;
   }
-  invalidate_physics2_dbody_constraints(world, body->index);
+  invalidate_physics_2d_body_constraints(world, body->index);
   (body->fixed_rotation = fixed_rotation);
   if (fixed_rotation) {
     (body->angular_velocity = 0.0);
     (body->torque = 0.0);
   }
-  flight::physics2d::update_rigid_body2_dmass_data(body);
-  wake_physics2_dbody_from_topology(body);
+  flight::physics2d::update_rigid_body_2d_mass_data(body);
+  wake_physics_2d_body_from_topology(body);
   return true;
 }
 
-inline bool set_physics2_dbody_transform(flight::Ref<flight::types::Physics2DWorld> world, flight::Ref<flight::types::RigidBody2D> body, double x, double y, double angle) {
-  flight::physics2d::assert_physics2_dworld_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)));
+inline bool set_physics_2d_body_transform(flight::Ref<flight::types::Physics2DWorld> world, flight::Ref<flight::types::RigidBody2D> body, double x, double y, double angle) {
+  flight::physics2d::assert_physics_2d_world_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)));
   if (((((world->body_by_index.get(body->index) != body) || !std::isfinite(x)) || !std::isfinite(y)) || !std::isfinite(angle))) {
     return false;
   }
   if ((((body->x == x) && (body->y == y)) && (body->angle == angle))) {
     return true;
   }
-  invalidate_physics2_dbody_constraints(world, body->index);
+  invalidate_physics_2d_body_constraints(world, body->index);
   (body->x = x);
   (body->y = y);
   (body->angle = angle);
-  wake_physics2_dbody_from_topology(body);
-  flight::physics2d::synchronize_physics2_dbroadphase(world);
+  wake_physics_2d_body_from_topology(body);
+  flight::physics2d::synchronize_physics_2d_broadphase(world);
   return true;
 }
 
-inline bool set_physics2_dbody_type(flight::Ref<flight::types::Physics2DWorld> world, flight::Ref<flight::types::RigidBody2D> body, flight::types::Physics2DBodyType type) {
-  flight::physics2d::assert_physics2_dworld_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)));
+inline bool set_physics_2d_body_type(flight::Ref<flight::types::Physics2DWorld> world, flight::Ref<flight::types::RigidBody2D> body, flight::types::Physics2DBodyType type) {
+  flight::physics2d::assert_physics_2d_world_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)));
   if ((world->body_by_index.get(body->index) != body)) {
     return false;
   }
   if ((body->type == type)) {
     return true;
   }
-  invalidate_physics2_dbody_constraints(world, body->index);
+  invalidate_physics_2d_body_constraints(world, body->index);
   (body->type = type);
-  flight::physics2d::update_rigid_body2_dmass_data(body);
+  flight::physics2d::update_rigid_body_2d_mass_data(body);
   if ((type != flight::String("dynamic"))) {
     (body->force_x = 0.0);
     (body->force_y = 0.0);
@@ -609,23 +609,23 @@ inline bool set_physics2_dbody_type(flight::Ref<flight::types::Physics2DWorld> w
     (body->velocity_y = 0.0);
     (body->angular_velocity = 0.0);
   }
-  wake_physics2_dbody_from_topology(body);
+  wake_physics_2d_body_from_topology(body);
   return true;
 }
 
-inline const double physics2_dworld_version = 2.0;
+inline const double physics_2d_world_version = 2.0;
 
-inline bool hydrate_physics2_dworld(flight::Ref<flight::types::Physics2DWorld> world) {
-  flight::physics2d::assert_physics2_dworld_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)));
+inline bool hydrate_physics_2d_world(flight::Ref<flight::types::Physics2DWorld> world) {
+  flight::physics2d::assert_physics_2d_world_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)));
   const std::optional<double> serialized_version = static_cast<std::optional<double>>(world->version);
   const double version = (!serialized_version.has_value() ? 0.0 : serialized_version.value());
-  if (((!flight::is_safe_integer(version) || (version < 0.0)) || (version > physics2_dworld_version))) {
+  if (((!flight::is_safe_integer(version) || (version < 0.0)) || (version > physics_2d_world_version))) {
     return false;
   }
-  if ((version == physics2_dworld_version)) {
+  if ((version == physics_2d_world_version)) {
     return true;
   }
-  auto defaults = create_physics2_dsolver_config();
+  auto defaults = create_physics_2d_solver_config();
   if (false) {
     (world->config->continuous_collision = defaults->continuous_collision);
   }
@@ -646,11 +646,11 @@ inline bool hydrate_physics2_dworld(flight::Ref<flight::types::Physics2DWorld> w
       (body->sleep_enabled = true);
     }
   }
-  (world->version = physics2_dworld_version);
+  (world->version = physics_2d_world_version);
   return true;
 }
 
-inline void initialize_physics2_dworld(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DWorld>> out, flight::Ref<flight::types::Physics2DSolverConfig> config, double gravity_x, double gravity_y, flight::Ref<flight::types::SpatialIndexBackend2D> index) {
+inline void initialize_physics_2d_world(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DWorld>> out, flight::Ref<flight::types::Physics2DSolverConfig> config, double gravity_x, double gravity_y, flight::Ref<flight::types::SpatialIndexBackend2D> index) {
   flight::row_set<flight::RowKey<"bodies">>(out, flight::Array<flight::Ref<flight::types::RigidBody2D>>{});
   flight::row_set<flight::RowKey<"bodyByIndex">>(out, flight::Map<double, flight::Ref<flight::types::RigidBody2D>>());
   flight::row_set<flight::RowKey<"config">>(out, config);
@@ -680,14 +680,14 @@ inline void initialize_physics2_dworld(flight::types::EntityConstruction<flight:
   flight::row_set<flight::RowKey<"solveIslandJointIndices">>(out, flight::Array<double>{});
   flight::row_set<flight::RowKey<"solveIslandJointStarts">>(out, flight::Array<double>{});
   flight::row_set<flight::RowKey<"solveIslandRoots">>(out, flight::Array<double>{});
-  flight::row_set<flight::RowKey<"version">>(out, physics2_dworld_version);
+  flight::row_set<flight::RowKey<"version">>(out, physics_2d_world_version);
 }
 
-inline flight::Ref<flight::types::Physics2DWorld> create_physics2_dworld(std::optional<double> gravity_x = std::nullopt, std::optional<double> gravity_y = std::nullopt, std::optional<flight::Ref<flight::types::SpatialIndexBackend2D>> index = std::nullopt) {
+inline flight::Ref<flight::types::Physics2DWorld> create_physics_2d_world(std::optional<double> gravity_x = std::nullopt, std::optional<double> gravity_y = std::nullopt, std::optional<flight::Ref<flight::types::SpatialIndexBackend2D>> index = std::nullopt) {
   gravity_x = gravity_x.value_or(0.0);
   gravity_y = gravity_y.value_or(-9.81);
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DWorld>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics2DWorld>>();
-  initialize_physics2_dworld(out, create_physics2_dsolver_config(), gravity_x.value(), gravity_y.value(), (index.has_value() ? index.value() : flight::spatial::create_uniform_grid_spatial_backend2_d(1.0)));
+  initialize_physics_2d_world(out, create_physics_2d_solver_config(), gravity_x.value(), gravity_y.value(), (index.has_value() ? index.value() : flight::spatial::create_uniform_grid_spatial_backend_2d(1.0)));
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics2DWorld>>(out);
 }
 

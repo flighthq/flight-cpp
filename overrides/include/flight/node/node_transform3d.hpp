@@ -11,9 +11,9 @@
 #include <flight/structural_ref.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/matrix4.hpp>
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 #include <flight/types/quaternion.hpp>
-#include <flight/types/transform3_d.hpp>
+#include <flight/types/transform_3d.hpp>
 #include <flight/types/vector3.hpp>
 
 namespace flight::node {
@@ -180,7 +180,7 @@ inline void invalidate_node_local_transform(
 }
 
 template <typename Out, typename Source>
-inline void get_node_transform3_d(const Out& out, const Source& source) {
+inline void get_node_transform_3d(const Out& out, const Source& source) {
   const auto out_position = transform3d_detail::position(out);
   const auto source_position = transform3d_detail::position(source);
   out_position->x = source_position->x;
@@ -265,15 +265,15 @@ inline void set_node_local_matrix4(const Target& target, const Source& source) {
 }
 
 template <typename Target, typename Source>
-inline void set_node_transform3_d(const Target& target, const Source& source) {
-  get_node_transform3_d(target, source);
+inline void set_node_transform_3d(const Target& target, const Source& source) {
+  get_node_transform_3d(target, source);
   auto runtime = transform3d_detail::runtime(target);
   runtime->local_transform_id = flight::unsigned_right_shift(
       runtime->local_transform_id + 1.0, 0.0);
 }
 
 template <typename Target>
-inline void sync_node_transform3_dfrom_matrix4(const Target& target) {
+inline void sync_node_transform_3d_from_matrix4(const Target& target) {
   ensure_node_local_matrix4(target);
   auto runtime = transform3d_detail::runtime(target);
   flight::geometry::decompose_matrix4(

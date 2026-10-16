@@ -9,7 +9,7 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/skeleton2_d.hpp>
+#include <flight/types/skeleton_2d.hpp>
 
 namespace flight::types { struct Skeleton2D; }
 namespace flight::types { struct Skeleton2DConstraint; }
@@ -22,15 +22,15 @@ using flight::types::Skeleton2D;
 
 inline flight::Map<flight::String, flight::types::Skeleton2DConstraintSolver> solvers = flight::Map<flight::String, flight::types::Skeleton2DConstraintSolver>();
 
-inline std::optional<std::function<void(flight::Ref<flight::types::Skeleton2D>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DConstraint>>>>)>> get_skeleton2_dconstraint_solver(flight::String kind) {
+inline std::optional<std::function<void(flight::Ref<flight::types::Skeleton2D>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DConstraint>>>>)>> get_skeleton_2d_constraint_solver(flight::String kind) {
   return solvers.get(kind);
 }
 
-inline void register_skeleton2_dconstraint_solver(flight::String kind, flight::types::Skeleton2DConstraintSolver solve) {
+inline void register_skeleton_2d_constraint_solver(flight::String kind, flight::types::Skeleton2DConstraintSolver solve) {
   solvers.set(kind, solve);
 }
 
-inline void solve_skeleton2_dconstraints(flight::Ref<flight::types::Skeleton2D> skeleton, flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DConstraint>>>>> constraints) {
+inline void solve_skeleton_2d_constraints(flight::Ref<flight::types::Skeleton2D> skeleton, flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DConstraint>>>>> constraints) {
   {
     double i = 0.0;
     while ((i < static_cast<double>(constraints.size()))) {
@@ -48,7 +48,7 @@ inline void solve_skeleton2_dconstraints(flight::Ref<flight::types::Skeleton2D> 
   }
 }
 
-inline void unregister_skeleton2_dconstraint_solver(flight::String kind) {
+inline void unregister_skeleton_2d_constraint_solver(flight::String kind) {
   solvers.erase(kind);
 }
 

@@ -69,7 +69,7 @@ struct SavedGlRenderState : public flight::ReferenceEnabled {
   std::optional<flight::Ref<GlViewportRect>> render_target_viewport;
   GlBox scissor_box;
   bool scissor_test;
-  flight::Array<std::optional<flight::host_sdl::WebGlTexture>> texture2_d_by_unit;
+  flight::Array<std::optional<flight::host_sdl::WebGlTexture>> texture_2d_by_unit;
   bool unpack_premultiply_alpha;
   std::optional<flight::host_sdl::WebGlVertexArrayObject> vertex_array;
   GlBox viewport;
@@ -179,7 +179,7 @@ inline void push_gl_render_state(flight::Ref<GlRenderState> state) {
       .render_target_viewport = runtime->render_target_viewport,
       .scissor_box = read_gl_box(gl, gl.scissor_box),
       .scissor_test = gl.is_enabled(gl.scissor_test),
-      .texture2_d_by_unit = textures,
+      .texture_2d_by_unit = textures,
       .unpack_premultiply_alpha = static_cast<bool>(
           gl.get_parameter(gl.unpack_premultiply_alpha_webgl)),
       .vertex_array = static_cast<std::optional<flight::host_sdl::WebGlVertexArrayObject>>(
@@ -221,10 +221,10 @@ inline void pop_gl_render_state(flight::Ref<GlRenderState> state) {
   gl.bind_vertex_array(saved->vertex_array);
   gl.use_program(saved->program);
   gl.bind_framebuffer(gl.framebuffer, saved->framebuffer);
-  for (std::size_t index = 0; index < saved->texture2_d_by_unit.size(); ++index) {
+  for (std::size_t index = 0; index < saved->texture_2d_by_unit.size(); ++index) {
     gl.active_texture(gl.texture0 + static_cast<std::uint32_t>(index));
     gl.bind_texture(gl.texture_2_d,
-                    saved->texture2_d_by_unit.element(index));
+                    saved->texture_2d_by_unit.element(index));
   }
   gl.active_texture(saved->active_texture);
   gl.color_mask(saved->color_mask.element(0), saved->color_mask.element(1),

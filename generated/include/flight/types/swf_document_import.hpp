@@ -24,8 +24,8 @@ struct SwfNodeAppearance;
 #include <flight/types/effect.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/image_resource_reference.hpp>
-#include <flight/types/node2_d.hpp>
-#include <flight/types/scene2_ddocument.hpp>
+#include <flight/types/node_2d.hpp>
+#include <flight/types/scene_2d_document.hpp>
 #include <flight/types/entity.hpp>
 
 namespace flight::types {

@@ -24,7 +24,7 @@ namespace flight::types { struct GlScene3DRuntime; }
 #include <flight/scene3d_gl/gl_lit_program.hpp>
 #include <flight/scene3d_gl/gl_mesh_program.hpp>
 #include <flight/scene3d_gl/gl_pbr_prelude.hpp>
-#include <flight/scene3d_gl/gl_scene3_druntime.hpp>
+#include <flight/scene3d_gl/gl_scene_3d_runtime.hpp>
 
 namespace flight::scene3d_gl {
 
@@ -60,12 +60,12 @@ inline flight::Ref<flight::types::GlPbrProgram> compile_gl_pbr_program(flight::h
 
 inline flight::Ref<flight::types::GlPbrProgram> ensure_gl_pbr_program(flight::Ref<flight::types::GlRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlPbrDefineKey>>>> key, std::optional<flight::Array<flight::Ref<flight::types::GlPbrExtensionShaderContribution>>> contributions = std::nullopt) {
   contributions = contributions.value_or(flight::Array<flight::Ref<flight::types::GlPbrExtensionShaderContribution>>{});
-  auto full_key = flight::make_ref<flight::types::GlPbrDefineKey>(flight::types::GlPbrDefineKey{.has_color_adjustment = std::optional<bool>{flight::scene3d_gl::get_gl_scene3_druntime(state)->active_color_adjustment_run}, .has_color_matrix = std::optional<bool>{flight::scene3d_gl::get_gl_scene3_druntime(state)->active_color_matrix_run}, .has_instances = std::optional<bool>{flight::scene3d_gl::get_gl_scene3_druntime(state)->active_instanced_run}, .has_skin = std::optional<bool>{flight::scene3d_gl::get_gl_scene3_druntime(state)->active_skinned_run}});
+  auto full_key = flight::make_ref<flight::types::GlPbrDefineKey>(flight::types::GlPbrDefineKey{.has_color_adjustment = std::optional<bool>{flight::scene3d_gl::get_gl_scene_3d_runtime(state)->active_color_adjustment_run}, .has_color_matrix = std::optional<bool>{flight::scene3d_gl::get_gl_scene_3d_runtime(state)->active_color_matrix_run}, .has_instances = std::optional<bool>{flight::scene3d_gl::get_gl_scene_3d_runtime(state)->active_instanced_run}, .has_skin = std::optional<bool>{flight::scene3d_gl::get_gl_scene_3d_runtime(state)->active_skinned_run}});
   const flight::String extension_key = contributions.value().map([=](flight::Ref<flight::types::GlPbrExtensionShaderContribution> contribution) {
   return contribution->key;
 }).join(flight::String(","));
   const double registry_revision = flight::render_gl::get_gl_render_state_runtime(state)->pbr_extension_revision;
-  return flight::scene3d_gl::ensure_gl_scene3_dprogram<flight::Ref<flight::types::GlPbrProgram>>(state, flight::String("pbr:") + flight::to_string(flight::scene3d_gl::build_gl_pbr_define_key(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlPbrDefineKey>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlPbrDefineKey>>>>(full_key)))) + flight::String(":") + flight::to_string(registry_revision) + flight::String(":") + flight::to_string(extension_key) + flight::String(""), [=](flight::host_sdl::WebGl2Context gl) {
+  return flight::scene3d_gl::ensure_gl_scene_3d_program<flight::Ref<flight::types::GlPbrProgram>>(state, flight::String("pbr:") + flight::to_string(flight::scene3d_gl::build_gl_pbr_define_key(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlPbrDefineKey>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlPbrDefineKey>>>>(full_key)))) + flight::String(":") + flight::to_string(registry_revision) + flight::String(":") + flight::to_string(extension_key) + flight::String(""), [=](flight::host_sdl::WebGl2Context gl) {
   return compile_gl_pbr_program(gl, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlPbrDefineKey>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlPbrDefineKey>>>>(full_key)), contributions.value(), flight::render_gl::get_gl_color_adjustment_material_feature(state), std::nullopt);
 });
 }

@@ -16,7 +16,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/spatial.hpp>
 
-#include <flight/types/physics3_d.hpp>
+#include <flight/types/physics_3d.hpp>
 
 #include <flight/types/collision.hpp>
 
@@ -70,11 +70,11 @@ using flight::types::SpatialIndexBackend3D;
 struct Physics3DPositionScratch;
 } // namespace flight::physics3d
 
-#include <flight/collision/contact_manifold3_d.hpp>
+#include <flight/collision/contact_manifold_3d.hpp>
 #include <flight/entity/entity.hpp>
 #include <flight/types/collision.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/physics3_d.hpp>
+#include <flight/types/physics_3d.hpp>
 #include <flight/types/spatial.hpp>
 #include <flight/physics3d/collider_collision.hpp>
 #include <flight/physics3d/collider_transform.hpp>
@@ -83,7 +83,7 @@ struct Physics3DPositionScratch;
 
 namespace flight::physics3d {
 
-inline void initialize_physics3_dcontact_constraint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DContactConstraint>> out) {
+inline void initialize_physics_3d_contact_constraint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DContactConstraint>> out) {
   flight::row_set<flight::RowKey<"contact">>(out, -1.0);
   flight::row_set<flight::RowKey<"pointCount">>(out, 0.0);
   flight::row_set<flight::RowKey<"points">>(out, flight::Array<flight::Ref<flight::types::Physics3DContactConstraintPoint>>{});
@@ -95,13 +95,13 @@ inline void initialize_physics3_dcontact_constraint(flight::types::EntityConstru
   flight::row_set<flight::RowKey<"tangent1Z">>(out, 0.0);
 }
 
-inline flight::Ref<flight::types::Physics3DContactConstraint> create_physics3_dcontact_constraint() {
+inline flight::Ref<flight::types::Physics3DContactConstraint> create_physics_3d_contact_constraint() {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DContactConstraint>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics3DContactConstraint>>();
-  initialize_physics3_dcontact_constraint(out);
+  initialize_physics_3d_contact_constraint(out);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics3DContactConstraint>>(out);
 }
 
-inline void initialize_physics3_dcontact_constraint_point(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DContactConstraintPoint>> out) {
+inline void initialize_physics_3d_contact_constraint_point(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DContactConstraintPoint>> out) {
   flight::row_set<flight::RowKey<"bias">>(out, 0.0);
   flight::row_set<flight::RowKey<"featureId">>(out, 0.0);
   flight::row_set<flight::RowKey<"normalImpulse">>(out, 0.0);
@@ -112,9 +112,9 @@ inline void initialize_physics3_dcontact_constraint_point(flight::types::EntityC
   flight::row_set<flight::RowKey<"tangentMass1">>(out, 0.0);
 }
 
-inline flight::Ref<flight::types::Physics3DContactConstraintPoint> create_physics3_dcontact_constraint_point() {
+inline flight::Ref<flight::types::Physics3DContactConstraintPoint> create_physics_3d_contact_constraint_point() {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DContactConstraintPoint>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics3DContactConstraintPoint>>();
-  initialize_physics3_dcontact_constraint_point(out);
+  initialize_physics_3d_contact_constraint_point(out);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics3DContactConstraintPoint>>(out);
 }
 
@@ -199,7 +199,7 @@ inline void apply_contact_impulse(flight::Ref<flight::types::RigidBody3D> body_a
   apply_body_impulse(body_b, r_bx, r_by, r_bz, -impulse_x, -impulse_y, -impulse_z);
 }
 
-inline void solve_physics3_dcontact_velocities(flight::Ref<flight::types::Physics3DWorld> world) {
+inline void solve_physics_3d_contact_velocities(flight::Ref<flight::types::Physics3DWorld> world) {
   flight::Array<flight::Ref<flight::types::Physics3DContactConstraint>> constraints = world->solver->constraints;
   {
     double constraint_index = 0.0;
@@ -250,7 +250,7 @@ inline void solve_physics3_dcontact_velocities(flight::Ref<flight::types::Physic
   }
 }
 
-inline void warm_start_physics3_dcontacts(flight::Ref<flight::types::Physics3DWorld> world) {
+inline void warm_start_physics_3d_contacts(flight::Ref<flight::types::Physics3DWorld> world) {
   if (!world->config->sequential_impulse->warm_starting) {
     return;
   }
@@ -367,7 +367,7 @@ inline flight::Array<double> previous_tangent_impulses0 = flight::Array<double>{
 
 inline flight::Array<double> previous_tangent_impulses1 = flight::Array<double>{};
 
-inline void prepare_physics3_dcontact_constraints(flight::Ref<flight::types::Physics3DWorld> world) {
+inline void prepare_physics_3d_contact_constraints(flight::Ref<flight::types::Physics3DWorld> world) {
   auto state = world->solver;
   flight::Map<flight::Ref<flight::types::Physics3DContact>, flight::Ref<flight::types::Physics3DContactConstraint>> previous_by_contact = state->constraint_by_contact;
   flight::Array<flight::Ref<flight::types::Physics3DContactConstraint>> constraints = state->constraints;
@@ -410,7 +410,7 @@ inline void prepare_physics3_dcontact_constraints(flight::Ref<flight::types::Phy
               }
               std::optional<flight::Ref<flight::types::Physics3DContactConstraint>> constraint = previous_by_contact.get(contact);
               if (!constraint.has_value()) {
-                (constraint = std::optional<flight::Ref<flight::types::Physics3DContactConstraint>>{create_physics3_dcontact_constraint()});
+                (constraint = std::optional<flight::Ref<flight::types::Physics3DContactConstraint>>{create_physics_3d_contact_constraint()});
                 previous_by_contact.set(contact, constraint.value());
               }
               const double previous_point_count = constraint.value()->point_count;
@@ -437,7 +437,7 @@ inline void prepare_physics3_dcontact_constraints(flight::Ref<flight::types::Phy
                     auto source = contact->points.element(i_3);
                     std::optional<flight::Ref<flight::types::Physics3DContactConstraintPoint>> point_2 = constraint.value()->points.get(i_3);
                     if (([&]() { const auto& presence_operand = point_2; return !presence_operand.has_value(); }())) {
-                      (point_2 = create_physics3_dcontact_constraint_point());
+                      (point_2 = create_physics_3d_contact_constraint_point());
                       constraint.value()->points.push(point_2.value());
                     }
                     (point_2.value()->feature_id = source->feature_id);
@@ -483,7 +483,7 @@ struct Physics3DPositionScratch : public flight::ReferenceEnabled {
   flight::Array<double> center_b;
 };
 
-inline double solve_physics3_dcontact_positions_with_scratch(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<Physics3DPositionScratch> scratch) {
+inline double solve_physics_3d_contact_positions_with_scratch(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<Physics3DPositionScratch> scratch) {
   auto config = world->config->sequential_impulse;
   double deepest = 0.0;
   flight::Array<flight::Ref<flight::types::Physics3DContactConstraint>> constraints = world->solver->constraints;
@@ -505,15 +505,15 @@ inline double solve_physics3_dcontact_positions_with_scratch(flight::Ref<flight:
           (constraint_index += 1.0);
           continue;
         }
-        flight::physics3d::update_physics3_dcollider_world_shape(collider_a.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a.value())));
-        flight::physics3d::update_physics3_dcollider_world_shape(collider_b.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b.value())));
-        if (!flight::physics3d::collide_physics3_dcollider_shapes(collider_a.value()->world, collider_b.value()->world, scratch->manifold)) {
+        flight::physics3d::update_physics_3d_collider_world_shape(collider_a.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a.value())));
+        flight::physics3d::update_physics_3d_collider_world_shape(collider_b.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b.value())));
+        if (!flight::physics3d::collide_physics_3d_collider_shapes(collider_a.value()->world, collider_b.value()->world, scratch->manifold)) {
           (constraint_index += 1.0);
           continue;
         }
         auto manifold = scratch->manifold;
-        flight::physics3d::write_rigid_body3_dworld_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a.value())), scratch->center_a);
-        flight::physics3d::write_rigid_body3_dworld_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b.value())), scratch->center_b);
+        flight::physics3d::write_rigid_body_3d_world_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a.value())), scratch->center_a);
+        flight::physics3d::write_rigid_body_3d_world_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b.value())), scratch->center_b);
         {
           double i = 0.0;
           while ((i < manifold->point_count)) {
@@ -547,31 +547,31 @@ inline double solve_physics3_dcontact_positions_with_scratch(flight::Ref<flight:
   return deepest;
 }
 
-inline flight::Ref<Physics3DPositionScratch> create_physics3_dposition_scratch() {
-  return flight::make_ref<Physics3DPositionScratch>(Physics3DPositionScratch{.manifold = flight::collision::create_collision_contact_manifold3_d(), .center_a = flight::Array<double>{0.0, 0.0, 0.0}, .center_b = flight::Array<double>{0.0, 0.0, 0.0}});
+inline flight::Ref<Physics3DPositionScratch> create_physics_3d_position_scratch() {
+  return flight::make_ref<Physics3DPositionScratch>(Physics3DPositionScratch{.manifold = flight::collision::create_collision_contact_manifold_3d(), .center_a = flight::Array<double>{0.0, 0.0, 0.0}, .center_b = flight::Array<double>{0.0, 0.0, 0.0}});
 }
 
-inline flight::Array<flight::Ref<Physics3DPositionScratch>> physics3_dposition_scratch_pool = flight::Array<flight::Ref<Physics3DPositionScratch>>{create_physics3_dposition_scratch()};
+inline flight::Array<flight::Ref<Physics3DPositionScratch>> physics_3d_position_scratch_pool = flight::Array<flight::Ref<Physics3DPositionScratch>>{create_physics_3d_position_scratch()};
 
-inline flight::Ref<Physics3DPositionScratch> acquire_physics3_dposition_scratch() {
-  return ([&]() -> flight::Ref<Physics3DPositionScratch> { auto nullish_coalesce_left = physics3_dposition_scratch_pool.pop(); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_physics3_dposition_scratch(); }());
+inline flight::Ref<Physics3DPositionScratch> acquire_physics_3d_position_scratch() {
+  return ([&]() -> flight::Ref<Physics3DPositionScratch> { auto nullish_coalesce_left = physics_3d_position_scratch_pool.pop(); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_physics_3d_position_scratch(); }());
 }
 
-inline void release_physics3_dposition_scratch(flight::Ref<Physics3DPositionScratch> scratch) {
-  physics3_dposition_scratch_pool.push(scratch);
+inline void release_physics_3d_position_scratch(flight::Ref<Physics3DPositionScratch> scratch) {
+  physics_3d_position_scratch_pool.push(scratch);
 }
 
-inline double solve_physics3_dcontact_positions(flight::Ref<flight::types::Physics3DWorld> world) {
-  auto scratch = acquire_physics3_dposition_scratch();
+inline double solve_physics_3d_contact_positions(flight::Ref<flight::types::Physics3DWorld> world) {
+  auto scratch = acquire_physics_3d_position_scratch();
   std::optional<double> finally_return;
   std::exception_ptr finally_exception;
   try {
-    finally_return = solve_physics3_dcontact_positions_with_scratch(world, scratch);
+    finally_return = solve_physics_3d_contact_positions_with_scratch(world, scratch);
   }
   catch (...) {
     finally_exception = std::current_exception();
   }
-  release_physics3_dposition_scratch(scratch);
+  release_physics_3d_position_scratch(scratch);
   if (finally_exception) std::rethrow_exception(finally_exception);
   if (finally_return.has_value()) return finally_return.value();
   throw std::logic_error("Flight function completed without a value");

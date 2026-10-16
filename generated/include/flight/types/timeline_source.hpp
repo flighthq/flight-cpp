@@ -19,7 +19,7 @@ struct TimelineSource;
 } // namespace flight::types
 
 #include <flight/types/entity.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/timeline_cue.hpp>
 #include <flight/types/timeline_label.hpp>
 #include <flight/types/entity.hpp>

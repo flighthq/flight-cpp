@@ -820,7 +820,7 @@ inline void attach_texture_to_flat_resource(const Texture& texture, const Resour
 }
 
 template <typename Options>
-inline flight::Ref<Texture2D> create_texture2_d_from_options(
+inline flight::Ref<Texture2D> create_texture_2d_from_options(
     std::optional<std::shared_ptr<Options>> opts) {
   const auto common = create_common_texture_fields_from(opts);
   auto out = flight::make_ref<Texture2D>();
@@ -833,7 +833,7 @@ inline flight::Ref<Texture2D> create_texture2_d_from_options(
   return out;
 }
 
-inline void initialize_texture2_d(
+inline void initialize_texture_2d(
     flight::types::EntityConstruction<flight::Ref<Texture2D>> out,
     std::optional<flight::Ref<flight::types::CreateTexture2DOptions>> opts) {
   const auto common = create_common_texture_fields_from(opts);
@@ -851,7 +851,7 @@ inline void initialize_texture2_d(
       "source", opts ? texture_source_option(*opts) : std::optional<TextureSourceValue>{});
 }
 
-inline void initialize_texture2_d(
+inline void initialize_texture_2d(
     flight::types::EntityConstruction<flight::Ref<Texture2D>> out,
     std::optional<CreateTexture2DOptionsRow> opts = std::nullopt) {
   const auto common = create_common_texture_fields_from(opts);
@@ -871,9 +871,9 @@ inline void initialize_texture2_d(
 
 template <typename Options>
   requires std::same_as<Options, flight::Ref<flight::types::CreateTexture2DOptions>>
-inline flight::Ref<Texture2D> create_texture2_d(std::optional<Options> opts) {
+inline flight::Ref<Texture2D> create_texture_2d(std::optional<Options> opts) {
   auto construction = flight::entity::allocate_entity<flight::Ref<Texture2D>>();
-  initialize_texture2_d(construction, opts);
+  initialize_texture_2d(construction, opts);
   auto texture = flight::entity::finish_entity<flight::Ref<Texture2D>>(construction);
   if (opts) {
     Texture wrapped{std::in_place_type<flight::Ref<Texture2D>>, texture};
@@ -882,10 +882,10 @@ inline flight::Ref<Texture2D> create_texture2_d(std::optional<Options> opts) {
   return texture;
 }
 
-inline flight::Ref<Texture2D> create_texture2_d(
+inline flight::Ref<Texture2D> create_texture_2d(
     std::optional<CreateTexture2DOptionsRow> opts = std::nullopt) {
   auto construction = flight::entity::allocate_entity<flight::Ref<Texture2D>>();
-  initialize_texture2_d(construction, opts);
+  initialize_texture_2d(construction, opts);
   auto texture = flight::entity::finish_entity<flight::Ref<Texture2D>>(construction);
   if (opts) {
     Texture wrapped{std::in_place_type<flight::Ref<Texture2D>>, texture};
@@ -897,11 +897,11 @@ inline flight::Ref<Texture2D> create_texture2_d(
 
 inline flight::Ref<Texture2D> create_texture(
     std::optional<flight::Ref<flight::types::CreateTexture2DOptions>> opts = std::nullopt) {
-  return create_texture2_d(std::move(opts));
+  return create_texture_2d(std::move(opts));
 }
 
 inline flight::Ref<Texture2D> create_texture(flight::Ref<CreateTexture2DVariantOptions> opts) {
-  return create_texture2_d_from_options(
+  return create_texture_2d_from_options(
       std::optional<flight::Ref<CreateTexture2DVariantOptions>>{std::move(opts)});
 }
 
@@ -976,7 +976,7 @@ inline flight::Ref<Texture2D> create_texture(CreateTextureOptions opts) {
         using Options = std::remove_cvref_t<decltype(options)>;
         using Dimension = std::remove_cvref_t<decltype(options->dimension)>;
         if constexpr (std::same_as<Dimension, std::optional<flight::String>>) {
-          return create_texture2_d_from_options(std::optional<Options>{options});
+          return create_texture_2d_from_options(std::optional<Options>{options});
         } else {
           throw flight::Error(
               flight::String("createTexture overload result was erased; pass the exact non-2D options owner"));

@@ -14,7 +14,7 @@ namespace flight::types { struct Physics2DJoint; }
 namespace flight::types { struct Physics2DWorld; }
 namespace flight::types { struct RigidBody2D; }
 
-#include <flight/types/physics2_d.hpp>
+#include <flight/types/physics_2d.hpp>
 
 namespace flight::physics2d {
 
@@ -23,24 +23,24 @@ using flight::types::Physics2DJoint;
 using flight::types::Physics2DWorld;
 using flight::types::RigidBody2D;
 
-inline flight::WeakMap<flight::Ref<flight::types::RigidBody2D>, flight::Ref<flight::types::Physics2DWorld>> physics2_dbody_owners = flight::WeakMap<flight::Ref<flight::types::RigidBody2D>, flight::Ref<flight::types::Physics2DWorld>>();
+inline flight::WeakMap<flight::Ref<flight::types::RigidBody2D>, flight::Ref<flight::types::Physics2DWorld>> physics_2d_body_owners = flight::WeakMap<flight::Ref<flight::types::RigidBody2D>, flight::Ref<flight::types::Physics2DWorld>>();
 
-inline flight::WeakMap<flight::Ref<flight::types::Physics2DCollider>, flight::Ref<flight::types::RigidBody2D>> physics2_dcollider_owners = flight::WeakMap<flight::Ref<flight::types::Physics2DCollider>, flight::Ref<flight::types::RigidBody2D>>();
+inline flight::WeakMap<flight::Ref<flight::types::Physics2DCollider>, flight::Ref<flight::types::RigidBody2D>> physics_2d_collider_owners = flight::WeakMap<flight::Ref<flight::types::Physics2DCollider>, flight::Ref<flight::types::RigidBody2D>>();
 
-inline flight::WeakMap<flight::Ref<flight::types::Physics2DJoint>, flight::Ref<flight::types::Physics2DWorld>> physics2_djoint_owners = flight::WeakMap<flight::Ref<flight::types::Physics2DJoint>, flight::Ref<flight::types::Physics2DWorld>>();
+inline flight::WeakMap<flight::Ref<flight::types::Physics2DJoint>, flight::Ref<flight::types::Physics2DWorld>> physics_2d_joint_owners = flight::WeakMap<flight::Ref<flight::types::Physics2DJoint>, flight::Ref<flight::types::Physics2DWorld>>();
 
-inline flight::WeakSet<flight::Ref<flight::types::Physics2DWorld>> stepping_physics2_dworlds = flight::WeakSet<flight::Ref<flight::types::Physics2DWorld>>();
+inline flight::WeakSet<flight::Ref<flight::types::Physics2DWorld>> stepping_physics_2d_worlds = flight::WeakSet<flight::Ref<flight::types::Physics2DWorld>>();
 
-inline void assert_physics2_dworld_not_stepping(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world) {
-  if (stepping_physics2_dworlds.has(flight::structural_ref_cast<flight::Ref<flight::types::Physics2DWorld>>(world))) {
+inline void assert_physics_2d_world_not_stepping(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world) {
+  if (stepping_physics_2d_worlds.has(flight::structural_ref_cast<flight::Ref<flight::types::Physics2DWorld>>(world))) {
     throw flight::Error(flight::String("Cannot mutate a physics world while it is stepping"));
   }
 }
 
-inline void assert_physics2_dbody_not_stepping(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>> body) {
-  auto world = physics2_dbody_owners.get(flight::structural_ref_cast<flight::Ref<flight::types::RigidBody2D>>(body));
+inline void assert_physics_2d_body_not_stepping(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>> body) {
+  auto world = physics_2d_body_owners.get(flight::structural_ref_cast<flight::Ref<flight::types::RigidBody2D>>(body));
   if (world.has_value()) {
-    assert_physics2_dworld_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world.value())));
+    assert_physics_2d_world_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world.value())));
   }
 }
 

@@ -225,7 +225,7 @@ inline flight::Ref<TilemapSignals> create_tilemap_signals() {
 }
 
 inline flight::Ref<TilemapRuntime> create_tilemap_runtime() {
-  const auto base = flight::scene2d::create_node2_d_runtime();
+  const auto base = flight::scene2d::create_node_2d_runtime();
   auto runtime = flight::make_ref<TilemapRuntime>();
   runtime->binding = base->binding;
   runtime->uid = base->uid;
@@ -285,7 +285,7 @@ inline flight::Ref<Tilemap> create_tilemap(
   tilemap->name = object.has_value()
                       ? flight::row_get<flight::RowKey<"name">>(object.value())
                       : std::optional<flight::String>{};
-  tilemap->entity_runtime_key = flight::scene2d::create_node2_d_runtime();
+  tilemap->entity_runtime_key = flight::scene2d::create_node_2d_runtime();
   tilemap->alpha = object.has_value()
                        ? flight::row_get<flight::RowKey<"alpha">>(object.value()).value_or(1.0)
                        : 1.0;

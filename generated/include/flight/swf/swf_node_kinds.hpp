@@ -8,7 +8,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/entity.hpp>
 #include <flight/types/morph_shape.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/rich_text.hpp>
 #include <flight/types/scale9_shape.hpp>
 #include <flight/types/shape.hpp>

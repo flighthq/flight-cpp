@@ -13,12 +13,12 @@
 #include <flight/picking/runtime_support.hpp>
 #include <flight/runtime.hpp>
 #include <flight/structural_ref.hpp>
-#include <flight/types/material3_d.hpp>
+#include <flight/types/material_3d.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/mesh.hpp>
 #include <flight/types/mesh_triangle_vertex_indices.hpp>
-#include <flight/types/ray3_d.hpp>
-#include <flight/types/scene3_dhit.hpp>
+#include <flight/types/ray_3d.hpp>
+#include <flight/types/scene_3d_hit.hpp>
 #include <flight/types/screen.hpp>
 #include <flight/types/unity_schema.hpp>
 #include <flight/types/vector2.hpp>
@@ -40,7 +40,7 @@ attribute_exact_hit(const AttributeHitView& hit) {
 }
 
 [[nodiscard]] inline std::optional<flight::Ref<flight::types::Material3D>>
-get_scene3_dhit_material(const AttributeHitView& hit_view) {
+get_scene_3d_hit_material(const AttributeHitView& hit_view) {
   const auto hit = attribute_exact_hit(hit_view);
   if (!hit->node.has_value()) return std::nullopt;
   const auto& node = hit->node.value();
@@ -54,7 +54,7 @@ get_scene3_dhit_material(const AttributeHitView& hit_view) {
   return node->materials.element(subset_index);
 }
 
-[[nodiscard]] inline double get_scene3_dhit_subset_index(
+[[nodiscard]] inline double get_scene_3d_hit_subset_index(
     const AttributeHitView& hit_view) {
   const auto hit = attribute_exact_hit(hit_view);
   if (!hit->node.has_value()) return -1.0;
@@ -62,7 +62,7 @@ get_scene3_dhit_material(const AttributeHitView& hit_view) {
       hit->node.value()->geometry, hit->triangle_index);
 }
 
-[[nodiscard]] inline bool is_scene3_dhit_front_facing(
+[[nodiscard]] inline bool is_scene_3d_hit_front_facing(
     const AttributeHitView& hit_view, const AttributeRayView& ray_view) {
   const auto hit = attribute_exact_hit(hit_view);
   const auto ray =
@@ -92,7 +92,7 @@ struct w_x_y_z_5137f2b28145ccce : public flight::ReferenceEnabled {
   double z;
 };
 
-[[nodiscard]] inline bool get_scene3_dhit_uv0(
+[[nodiscard]] inline bool get_scene_3d_hit_uv0(
     const flight::types::Vector2Like& out,
     const AttributeHitView& hit_view) {
   const auto hit = attribute_exact_hit(hit_view);
@@ -118,7 +118,7 @@ struct w_x_y_z_5137f2b28145ccce : public flight::ReferenceEnabled {
   return true;
 }
 
-[[nodiscard]] inline bool get_scene3_dhit_vertex_normal(
+[[nodiscard]] inline bool get_scene_3d_hit_vertex_normal(
     const flight::types::Vector3Like& out,
     const AttributeHitView& hit_view) {
   const auto hit = attribute_exact_hit(hit_view);
@@ -167,7 +167,7 @@ struct w_x_y_z_5137f2b28145ccce : public flight::ReferenceEnabled {
           matrix.get_index(10.0) * nz);
 }
 
-[[nodiscard]] inline bool get_scene3_dhit_vertex_tangent(
+[[nodiscard]] inline bool get_scene_3d_hit_vertex_tangent(
     const flight::Ref<w_x_y_z_5137f2b28145ccce>& out,
     const AttributeHitView& hit_view) {
   const auto hit = attribute_exact_hit(hit_view);
@@ -193,7 +193,7 @@ struct w_x_y_z_5137f2b28145ccce : public flight::ReferenceEnabled {
     return false;
   }
   auto world_normal = flight::geometry::create_vector3();
-  if (!get_scene3_dhit_vertex_normal(world_normal, hit_view)) return false;
+  if (!get_scene_3d_hit_vertex_normal(world_normal, hit_view)) return false;
 
   const double tx =
       hit->u * tangent0->x + hit->v * tangent1->x + hit->w * tangent2->x;

@@ -38,7 +38,7 @@ struct WgpuObjectCallbacks final {
 // maxTextureDimension2D is required on GPUDevice.limits. 8192 is WebGPU's portable baseline;
 // providers can publish a larger value when adopting a device or adapter.
 struct WgpuSupportedLimits final {
-  double max_texture_dimension2_d{8192.0};
+  double max_texture_dimension_2d{8192.0};
 
   [[nodiscard]] friend bool operator==(const WgpuSupportedLimits&,
                                        const WgpuSupportedLimits&) noexcept = default;

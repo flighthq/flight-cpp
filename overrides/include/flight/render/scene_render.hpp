@@ -19,14 +19,14 @@
 #include <flight/node/node_transform3d.hpp>
 #include <flight/runtime.hpp>
 #include <flight/structural_ref.hpp>
-#include <flight/types/camera3_d.hpp>
+#include <flight/types/camera_3d.hpp>
 #include <flight/types/instanced_mesh.hpp>
 #include <flight/types/mesh.hpp>
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 #include <flight/types/render_state.hpp>
-#include <flight/types/scene3_dlight_block.hpp>
-#include <flight/types/scene3_dlights.hpp>
-#include <flight/types/scene3_drender_list.hpp>
+#include <flight/types/scene_3d_light_block.hpp>
+#include <flight/types/scene_3d_lights.hpp>
+#include <flight/types/scene_3d_render_list.hpp>
 #include <flight/weak_map.hpp>
 
 namespace flight::render {
@@ -83,7 +83,7 @@ prepared_scene3_dcache() {
 }
 
 template <typename State>
-inline flight::Ref<PreparedScene3D> ensure_prepared_scene3_d(
+inline flight::Ref<PreparedScene3D> ensure_prepared_scene_3d(
     std::shared_ptr<State> state) {
   auto& cache = prepared_scene3_dcache<State>();
   if (auto existing = cache.get(state); existing.has_value()) {
@@ -147,7 +147,7 @@ inline bool is_float32_array_equal(flight::Float32Array a,
   return true;
 }
 
-inline void apply_scene3_dprojection_jitter(
+inline void apply_scene_3d_projection_jitter(
     flight::Ref<flight::types::Matrix4> out, double x, double y) {
   auto m = out->m;
   m.set_index(0.0, m.get_index(0.0) + x * m.get_index(3.0));
@@ -160,7 +160,7 @@ inline void apply_scene3_dprojection_jitter(
   m.set_index(13.0, m.get_index(13.0) + y * m.get_index(15.0));
 }
 
-inline double resolve_scene3_dviewport_aspect(
+inline double resolve_scene_3d_viewport_aspect(
     flight::Ref<flight::types::Camera3D> camera,
     std::optional<double> viewport_aspect) {
   if (viewport_aspect.has_value() && std::isfinite(viewport_aspect.value()) &&
@@ -177,13 +177,13 @@ inline double resolve_scene3_dviewport_aspect(
   return 1.0;
 }
 
-inline void set_scene3_dview_projection_matrix4(
+inline void set_scene_3d_view_projection_matrix4(
     flight::Ref<flight::types::Matrix4> out,
     flight::Ref<flight::types::Camera3D> camera, double aspect) {
   flight::camera::set_projection_matrix4(scratch_projection,
                                           camera->projection, aspect,
                                           camera->near, camera->far);
-  apply_scene3_dprojection_jitter(scratch_projection, camera->jitter->x,
+  apply_scene_3d_projection_jitter(scratch_projection, camera->jitter->x,
                                   camera->jitter->y);
   if (camera->near_clip_plane.has_value()) {
     flight::camera::apply_oblique_near_clip_plane(
@@ -270,7 +270,7 @@ inline void pack_hemisphere_light(
   data.set_index(offset + 10.0, 0.0);
 }
 
-inline void pack_scene3_dlight_block(
+inline void pack_scene_3d_light_block(
     flight::Ref<flight::types::Scene3DLightBlock> out,
     flight::Ref<flight::types::Scene3DLights> lights) {
   scratch_light_data.fill(0.0);
@@ -558,20 +558,20 @@ inline void collect_visible_meshes(
 }
 
 template <typename State>
-inline flight::Ref<flight::types::Scene3DRenderList> prepare_scene3_drender(
+inline flight::Ref<flight::types::Scene3DRenderList> prepare_scene_3d_render(
     std::shared_ptr<State> state, SceneNodeView scene, Camera3DView camera_view,
     SceneLightsView lights_view,
     std::optional<double> viewport_aspect = std::nullopt) {
   auto camera = exact_object<flight::types::Camera3D>(camera_view, "camera");
   auto lights =
       exact_object<flight::types::Scene3DLights>(lights_view, "light set");
-  auto prepared = ensure_prepared_scene3_d(state);
-  set_scene3_dview_projection_matrix4(
+  auto prepared = ensure_prepared_scene_3d(state);
+  set_scene_3d_view_projection_matrix4(
       prepared->view_projection, camera,
-      resolve_scene3_dviewport_aspect(camera, viewport_aspect));
+      resolve_scene_3d_viewport_aspect(camera, viewport_aspect));
   flight::geometry::set_frustum_from_matrix4(
       prepared->frustum, readonly_object(prepared->view_projection));
-  pack_scene3_dlight_block(prepared->light_block, lights);
+  pack_scene_3d_light_block(prepared->light_block, lights);
   prepared->meshes.resize(0.0);
   prepared->instanced_meshes.resize(0.0);
   collect_visible_meshes(
@@ -585,12 +585,12 @@ inline flight::Ref<flight::types::Scene3DRenderList> prepare_scene3_drender(
 }
 
 template <typename State>
-inline flight::Ref<flight::types::Scene3DRenderList> prepare_scene3_drender(
+inline flight::Ref<flight::types::Scene3DRenderList> prepare_scene_3d_render(
     std::shared_ptr<State> state, flight::Ref<flight::types::Node3D> scene,
     flight::Ref<flight::types::Camera3D> camera,
     flight::Ref<flight::types::Scene3DLights> lights,
     std::optional<double> viewport_aspect = std::nullopt) {
-  return prepare_scene3_drender(
+  return prepare_scene_3d_render(
       state, readonly_object(scene), readonly_object(camera),
       flight::structural_ref_cast<SceneLightsView>(readonly_object(lights)),
       viewport_aspect);

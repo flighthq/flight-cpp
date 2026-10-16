@@ -13,7 +13,7 @@ namespace flight::types { struct Matrix; }
 namespace flight::types { struct Vector2; }
 
 #include <flight/geometry/matrix.hpp>
-#include <flight/types/camera2_d.hpp>
+#include <flight/types/camera_2d.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/matrix.hpp>
 #include <flight/types/vector2.hpp>
@@ -23,8 +23,8 @@ namespace flight::camera {
 
 inline flight::Ref<flight::types::Matrix> scratch_matrix_flight_value_variable_scratch_u00004d_atrix_flight_private_56e331fa27728e8e = flight::geometry::create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
-inline void get_camera2_dparallax_point(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>> camera, double viewport_width, double viewport_height, double factor, flight::types::Vector2Like out) {
-  flight::camera::get_camera2_dview_matrix(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(camera), viewport_width, viewport_height, scratch_matrix_flight_value_variable_scratch_u00004d_atrix_flight_private_56e331fa27728e8e);
+inline void get_camera_2d_parallax_point(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>> camera, double viewport_width, double viewport_height, double factor, flight::types::Vector2Like out) {
+  flight::camera::get_camera_2d_view_matrix(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(camera), viewport_width, viewport_height, scratch_matrix_flight_value_variable_scratch_u00004d_atrix_flight_private_56e331fa27728e8e);
   (out->x = ((scratch_matrix_flight_value_variable_scratch_u00004d_atrix_flight_private_56e331fa27728e8e->tx - (viewport_width * 0.5)) * factor));
   (out->y = ((scratch_matrix_flight_value_variable_scratch_u00004d_atrix_flight_private_56e331fa27728e8e->ty - (viewport_height * 0.5)) * factor));
 }

@@ -46,7 +46,7 @@ namespace flight::types { struct SpatialIndexBackend2D; }
 
 #include <flight/types/collision.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/physics2_d.hpp>
+#include <flight/types/physics_2d.hpp>
 #include <flight/types/spatial.hpp>
 
 namespace flight::physics2d {
@@ -63,7 +63,7 @@ using flight::types::Physics2DWorld;
 using flight::types::RigidBody2D;
 using flight::types::SpatialIndexBackend2D;
 
-inline bool is_physics2_dcontact_valid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DContact>>>> contact) {
+inline bool is_physics_2d_contact_valid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DContact>>>> contact) {
   if ((((((((((((((((!flight::is_safe_integer(flight::row_get<flight::RowKey<"bodyA">>(contact)) || !flight::is_safe_integer(flight::row_get<flight::RowKey<"bodyB">>(contact))) || !flight::is_safe_integer(flight::row_get<flight::RowKey<"colliderA">>(contact))) || !flight::is_safe_integer(flight::row_get<flight::RowKey<"colliderB">>(contact))) || !flight::is_safe_integer(flight::row_get<flight::RowKey<"pointCount">>(contact))) || (flight::row_get<flight::RowKey<"pointCount">>(contact) < 0.0)) || (flight::row_get<flight::RowKey<"pointCount">>(contact) > static_cast<double>(flight::row_get<flight::RowKey<"points">>(contact).size()))) || !std::isfinite(flight::row_get<flight::RowKey<"normalX">>(contact))) || !std::isfinite(flight::row_get<flight::RowKey<"normalY">>(contact))) || !std::isfinite(flight::row_get<flight::RowKey<"friction">>(contact))) || (flight::row_get<flight::RowKey<"friction">>(contact) < 0.0)) || !std::isfinite(flight::row_get<flight::RowKey<"restitution">>(contact))) || (flight::row_get<flight::RowKey<"restitution">>(contact) < 0.0)) || (flight::String("boolean") != flight::String("boolean"))) || (flight::String("boolean") != flight::String("boolean"))) || (flight::String("boolean") != flight::String("boolean")))) {
     return false;
   }
@@ -85,24 +85,24 @@ inline bool is_physics2_dcontact_valid(flight::StructuralRef<flight::RowReadonly
   return true;
 }
 
-inline bool is_physics2_dcontact_state_valid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world) {
+inline bool is_physics_2d_contact_state_valid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world) {
   for (auto contact : flight::row_get<flight::RowKey<"contacts">>(world)) {
-    if (!is_physics2_dcontact_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DContact>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DContact>>>>(contact)))) {
+    if (!is_physics_2d_contact_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DContact>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DContact>>>>(contact)))) {
       return false;
     }
   }
   return true;
 }
 
-inline bool is_physics2_dgravity_valid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world) {
+inline bool is_physics_2d_gravity_valid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world) {
   return (std::isfinite(flight::row_get<flight::RowKey<"gravityX">>(world)) && std::isfinite(flight::row_get<flight::RowKey<"gravityY">>(world)));
 }
 
-inline bool is_physics2_dprevious_timestep_valid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world) {
+inline bool is_physics_2d_previous_timestep_valid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world) {
   return ((flight::row_get<flight::RowKey<"previousTimestep">>(world) == 0.0) || (std::isfinite(flight::row_get<flight::RowKey<"previousTimestep">>(world)) && (flight::row_get<flight::RowKey<"previousTimestep">>(world) > 0.0)));
 }
 
-inline bool is_physics2_dsolver_config_valid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DSolverConfig>>>> config) {
+inline bool is_physics_2d_solver_config_valid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DSolverConfig>>>> config) {
   return ((((((((((((((((((((flight::String("boolean") == flight::String("boolean")) && std::isfinite(flight::row_get<flight::RowKey<"sleepLinearThreshold">>(config))) && (flight::row_get<flight::RowKey<"sleepLinearThreshold">>(config) >= 0.0)) && std::isfinite(flight::row_get<flight::RowKey<"sleepAngularThreshold">>(config))) && (flight::row_get<flight::RowKey<"sleepAngularThreshold">>(config) >= 0.0)) && std::isfinite(flight::row_get<flight::RowKey<"timeToSleep">>(config))) && (flight::row_get<flight::RowKey<"timeToSleep">>(config) >= 0.0)) && std::isfinite(flight::row_get<flight::RowKey<"penetrationSlop">>(config))) && (flight::row_get<flight::RowKey<"penetrationSlop">>(config) >= 0.0)) && std::isfinite(flight::row_get<flight::RowKey<"positionCorrection">>(config))) && (flight::row_get<flight::RowKey<"positionCorrection">>(config) >= 0.0)) && (flight::row_get<flight::RowKey<"positionCorrection">>(config) <= 1.0)) && std::isfinite(flight::row_get<flight::RowKey<"restitutionThreshold">>(config))) && (flight::row_get<flight::RowKey<"restitutionThreshold">>(config) >= 0.0)) && (flight::String("boolean") == flight::String("boolean"))) && (flight::String("boolean") == flight::String("boolean"))) && flight::is_safe_integer(flight::row_get<flight::RowKey<"maxCcdSubsteps">>(config))) && (flight::row_get<flight::RowKey<"maxCcdSubsteps">>(config) >= 0.0)) && flight::is_safe_integer(flight::row_get<flight::RowKey<"maxCcdRotationSubsteps">>(config))) && (flight::row_get<flight::RowKey<"maxCcdRotationSubsteps">>(config) >= 0.0));
 }
 
@@ -142,16 +142,16 @@ inline bool is_collision_shape_state_valid(flight::types::CollisionBuiltInShape2
   throw std::logic_error("Flight function completed without a value");
 }
 
-inline bool is_physics2_dcollider_state_valid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>> collider) {
+inline bool is_physics_2d_collider_state_valid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>> collider) {
   auto filter = flight::row_get<flight::RowKey<"filter">>(collider);
   return ((((((((is_collision_shape_state_valid(flight::row_get<flight::RowKey<"local">>(collider)) && std::isfinite(flight::row_get<flight::RowKey<"material">>(collider)->density)) && (flight::row_get<flight::RowKey<"material">>(collider)->density >= 0.0)) && std::isfinite(flight::row_get<flight::RowKey<"material">>(collider)->friction)) && (flight::row_get<flight::RowKey<"material">>(collider)->friction >= 0.0)) && std::isfinite(flight::row_get<flight::RowKey<"material">>(collider)->restitution)) && (flight::row_get<flight::RowKey<"material">>(collider)->restitution >= 0.0)) && (flight::String("boolean") == flight::String("boolean"))) && (false || ((flight::is_safe_integer(filter->category_bits) && flight::is_safe_integer(filter->mask_bits)) && flight::is_safe_integer(filter->group_index))));
 }
 
-inline bool is_physics2_dtimestep_valid(double dt) {
+inline bool is_physics_2d_timestep_valid(double dt) {
   return (std::isfinite(dt) && (dt > 0.0));
 }
 
-inline bool is_physics2_dbreak_threshold_valid(double threshold) {
+inline bool is_physics_2d_break_threshold_valid(double threshold) {
   return (((flight::String("number") == flight::String("number")) && !std::isnan(threshold)) && (threshold >= 0.0));
 }
 
@@ -188,7 +188,7 @@ inline bool is_physics2_dbreak_threshold_valid(double threshold) {
 //   // breaks" while looking like a number the author chose.
 // cpp emission failed for @flighthq/physics2d/packages/physics2d/src/stepValidation.ts: object key iteration
 // requires closed key evidence
-inline bool is_physics2_djoint_valid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJoint>>>> joint) {
+inline bool is_physics_2d_joint_valid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJoint>>>> joint) {
   // typeof joint.kind is always 'string' and typeof joint.collideConnected always 'boolean' here: the row
   // stores a String and a bool, so those two tests of the source cannot fail and are not written.
   if (flight::row_get<flight::RowKey<"kind">>(joint).length() == 0 ||
@@ -196,8 +196,8 @@ inline bool is_physics2_djoint_valid(flight::StructuralRef<flight::RowReadonly<f
       !flight::is_safe_integer(flight::row_get<flight::RowKey<"bodyB">>(joint))) {
     return false;
   }
-  if (!is_physics2_dbreak_threshold_valid(flight::row_get<flight::RowKey<"breakForce">>(joint)) ||
-      !is_physics2_dbreak_threshold_valid(flight::row_get<flight::RowKey<"breakTorque">>(joint))) {
+  if (!is_physics_2d_break_threshold_valid(flight::row_get<flight::RowKey<"breakForce">>(joint)) ||
+      !is_physics_2d_break_threshold_valid(flight::row_get<flight::RowKey<"breakTorque">>(joint))) {
     return false;
   }
   const auto named_view = flight::named_properties(joint);
@@ -213,9 +213,9 @@ inline bool is_physics2_djoint_valid(flight::StructuralRef<flight::RowReadonly<f
   return true;
 }
 
-inline bool is_physics2_djoint_state_valid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world) {
+inline bool is_physics_2d_joint_state_valid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world) {
   for (auto joint : flight::row_get<flight::RowKey<"joints">>(world)) {
-    if (!is_physics2_djoint_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJoint>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DJoint>>>>(joint)))) {
+    if (!is_physics_2d_joint_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJoint>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DJoint>>>>(joint)))) {
       return false;
     }
   }
@@ -224,7 +224,7 @@ inline bool is_physics2_djoint_state_valid(flight::StructuralRef<flight::RowRead
 
 inline flight::Array<flight::String> rigid_body_finite_keys = flight::Array<flight::String>{flight::String("x"), flight::String("y"), flight::String("angle"), flight::String("velocityX"), flight::String("velocityY"), flight::String("angularVelocity"), flight::String("forceX"), flight::String("forceY"), flight::String("torque"), flight::String("centerX"), flight::String("centerY")};
 
-inline bool is_rigid_body2_dstate_valid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>> body) {
+inline bool is_rigid_body_2d_state_valid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>> body) {
   if ((((((((((((((((((((((!flight::is_safe_integer(flight::row_get<flight::RowKey<"index">>(body)) || (flight::row_get<flight::RowKey<"index">>(body) < 0.0)) || (((flight::row_get<flight::RowKey<"type">>(body) != flight::String("dynamic")) && (flight::row_get<flight::RowKey<"type">>(body) != flight::String("kinematic"))) && (flight::row_get<flight::RowKey<"type">>(body) != flight::String("static")))) || (flight::String("boolean") != flight::String("boolean"))) || (flight::String("boolean") != flight::String("boolean"))) || (flight::String("boolean") != flight::String("boolean"))) || (flight::String("boolean") != flight::String("boolean"))) || !std::isfinite(flight::row_get<flight::RowKey<"sleepTimer">>(body))) || (flight::row_get<flight::RowKey<"sleepTimer">>(body) < 0.0)) || !std::isfinite(flight::row_get<flight::RowKey<"linearDamping">>(body))) || (flight::row_get<flight::RowKey<"linearDamping">>(body) < 0.0)) || !std::isfinite(flight::row_get<flight::RowKey<"angularDamping">>(body))) || (flight::row_get<flight::RowKey<"angularDamping">>(body) < 0.0)) || !std::isfinite(flight::row_get<flight::RowKey<"gravityScale">>(body))) || !std::isfinite(flight::row_get<flight::RowKey<"mass">>(body))) || (flight::row_get<flight::RowKey<"mass">>(body) < 0.0)) || !std::isfinite(flight::row_get<flight::RowKey<"inverseMass">>(body))) || (flight::row_get<flight::RowKey<"inverseMass">>(body) < 0.0)) || !std::isfinite(flight::row_get<flight::RowKey<"inertia">>(body))) || (flight::row_get<flight::RowKey<"inertia">>(body) < 0.0)) || !std::isfinite(flight::row_get<flight::RowKey<"inverseInertia">>(body))) || (flight::row_get<flight::RowKey<"inverseInertia">>(body) < 0.0))) {
     return false;
   }
@@ -234,19 +234,19 @@ inline bool is_rigid_body2_dstate_valid(flight::StructuralRef<flight::RowReadonl
     }
   }
   for (auto collider : flight::row_get<flight::RowKey<"colliders">>(body)) {
-    if (!is_physics2_dcollider_state_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>(collider)))) {
+    if (!is_physics_2d_collider_state_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>(collider)))) {
       return false;
     }
   }
   return true;
 }
 
-inline bool is_physics2_dbody_state_valid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world) {
+inline bool is_physics_2d_body_state_valid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world) {
   if ((!flight::is_safe_integer(flight::row_get<flight::RowKey<"nextBodyIndex">>(world)) || (flight::row_get<flight::RowKey<"nextBodyIndex">>(world) < 0.0))) {
     return false;
   }
   for (auto body : flight::row_get<flight::RowKey<"bodies">>(world)) {
-    if ((!is_rigid_body2_dstate_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body))) || (flight::row_get<flight::RowKey<"bodyByIndex">>(world).get(body->index) != body))) {
+    if ((!is_rigid_body_2d_state_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body))) || (flight::row_get<flight::RowKey<"bodyByIndex">>(world).get(body->index) != body))) {
       return false;
     }
   }

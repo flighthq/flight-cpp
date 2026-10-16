@@ -119,48 +119,48 @@ flight::Ref<types::Matrix> build_matrix(double x, double y, double rotation, dou
 }
 
 bool round_trips(const flight::Ref<types::Matrix>& source) {
-  const auto out = geo::create_transform2_d();
-  geo::decompose_matrix_to_transform2_d(out, source);
+  const auto out = geo::create_transform_2d();
+  geo::decompose_matrix_to_transform_2d(out, source);
   const auto rebuilt = build_matrix(out->x, out->y, out->rotation, out->scale_x, out->scale_y, out->skew_x, out->skew_y);
   return close(rebuilt->a, source->a) && close(rebuilt->b, source->b) && close(rebuilt->c, source->c) && close(rebuilt->d, source->d);
 }
 
 void test_transform2d() {
   {
-    const auto t = geo::create_transform2_d();
+    const auto t = geo::create_transform_2d();
     check(same(t->pivot_x, 0) && same(t->pivot_y, 0) && same(t->rotation, 0) && same(t->scale_x, 1) && same(t->scale_y, 1) && same(t->skew_x, 0) &&
               same(t->skew_y, 0) && same(t->x, 0) && same(t->y, 0),
           "createTransform2D defaults to the identity transform");
   }
   {
-    const auto t = geo::create_transform2_d(10, 20, 45, 2, 3);
+    const auto t = geo::create_transform_2d(10, 20, 45, 2, 3);
     check(same(t->rotation, 45) && same(t->scale_x, 2) && same(t->scale_y, 3) && same(t->x, 10) && same(t->y, 20), "createTransform2D accepts positional fields");
   }
   {
-    const auto out = geo::create_transform2_d(99, 99, 99, 99, 99, 99, 99);
-    geo::decompose_matrix_to_transform2_d(out, geo::create_matrix());
+    const auto out = geo::create_transform_2d(99, 99, 99, 99, 99, 99, 99);
+    geo::decompose_matrix_to_transform_2d(out, geo::create_matrix());
     check(same(out->rotation, 0) && same(out->scale_x, 1) && same(out->scale_y, 1) && same(out->skew_x, 0) && same(out->skew_y, 0) && same(out->x, 0) &&
               same(out->y, 0),
           "decomposeMatrixToTransform2D decomposes the identity matrix");
   }
   {
-    const auto out = geo::create_transform2_d();
-    geo::decompose_matrix_to_transform2_d(out, build_matrix(5, 7, 0, 2, 3));
+    const auto out = geo::create_transform_2d();
+    geo::decompose_matrix_to_transform_2d(out, build_matrix(5, 7, 0, 2, 3));
     check(close(out->x, 5) && close(out->y, 7) && close(out->scale_x, 2) && close(out->scale_y, 3), "decomposeMatrixToTransform2D recovers translation and scale");
   }
   {
-    const auto out = geo::create_transform2_d();
-    geo::decompose_matrix_to_transform2_d(out, build_matrix(0, 0, 30, 1, 1));
+    const auto out = geo::create_transform_2d();
+    geo::decompose_matrix_to_transform_2d(out, build_matrix(0, 0, 30, 1, 1));
     check(close(out->rotation, 30) && same(out->skew_x, 0) && same(out->skew_y, 0), "decomposeMatrixToTransform2D recovers a pure rotation with no skew");
   }
   {
-    const auto out = geo::create_transform2_d();
-    geo::decompose_matrix_to_transform2_d(out, build_matrix(0, 0, 0, 1, 1, 10, 20));
+    const auto out = geo::create_transform_2d();
+    geo::decompose_matrix_to_transform_2d(out, build_matrix(0, 0, 0, 1, 1, 10, 20));
     check(same(out->rotation, 0) && close(out->skew_x, 10) && close(out->skew_y, 20), "decomposeMatrixToTransform2D round-trips a skewed transform, folding the angles into skew");
   }
   {
-    const auto out = geo::create_transform2_d();
-    geo::decompose_matrix_to_transform2_d(out, geo::create_matrix(1, 0, 0, -1, 0, 0));
+    const auto out = geo::create_transform_2d();
+    geo::decompose_matrix_to_transform_2d(out, geo::create_matrix(1, 0, 0, -1, 0, 0));
     check(close(out->scale_x, 1) && close(out->scale_y, -1), "decomposeMatrixToTransform2D carries a reflection on scaleY");
   }
   check(round_trips(geo::create_matrix(1, 0, 0, -1, 0, 0)) && round_trips(geo::create_matrix(-1, 0, 0, 1, 0, 0)) &&
@@ -180,7 +180,7 @@ void test_transform2d() {
           }
     check(ok && negative_determinant_count == 572, "decomposeMatrixToTransform2D round-trips every non-degenerate matrix in a grid spanning both determinant signs");
   }
-  static_assert(std::is_pointer_v<decltype(&geo::initialize_transform2_d)>, "initializeTransform2D is the construction initializer of createTransform2D");
+  static_assert(std::is_pointer_v<decltype(&geo::initialize_transform_2d)>, "initializeTransform2D is the construction initializer of createTransform2D");
 }
 
 // ---------------------------------------------------------------------------------------------------

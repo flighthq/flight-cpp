@@ -51,9 +51,9 @@ struct RichText;
 #include <flight/types/text_label.hpp>
 #include <flight/types/text_vertical_align.hpp>
 #include <flight/types/text_layout.hpp>
-#include <flight/types/scene2_d.hpp>
+#include <flight/types/scene_2d.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/text_format.hpp>
 #include <flight/types/adjustment.hpp>
@@ -67,7 +67,7 @@ struct RichText;
 #include <flight/types/text_label.hpp>
 #include <flight/types/blend_mode.hpp>
 #include <flight/types/clip_region.hpp>
-#include <flight/types/material2_d.hpp>
+#include <flight/types/material_2d.hpp>
 #include <flight/types/material.hpp>
 
 namespace flight::types {

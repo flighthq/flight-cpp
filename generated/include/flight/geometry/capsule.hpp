@@ -22,7 +22,7 @@ namespace flight::types { struct Vector3; }
 #include <flight/types/bounding_sphere.hpp>
 #include <flight/types/capsule.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/ray3_d.hpp>
+#include <flight/types/ray_3d.hpp>
 #include <flight/types/vector3.hpp>
 
 namespace flight::geometry {
@@ -43,7 +43,7 @@ inline flight::Ref<flight::types::Capsule> create_capsule(double start_x, double
   return flight::entity::finish_entity<flight::Ref<flight::types::Capsule>>(out);
 }
 
-inline double intersect_ray3_dcapsule(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Ray3DLike>>> ray, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::CapsuleLike>>> capsule) {
+inline double intersect_ray_3d_capsule(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Ray3DLike>>> ray, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::CapsuleLike>>> capsule) {
   const double ox = flight::row_get<flight::RowKey<"origin">>(ray)->x;
   const double oy = flight::row_get<flight::RowKey<"origin">>(ray)->y;
   const double oz = flight::row_get<flight::RowKey<"origin">>(ray)->z;

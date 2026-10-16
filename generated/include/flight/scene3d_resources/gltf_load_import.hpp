@@ -23,8 +23,8 @@ namespace flight::types { template <typename T> struct Signal; }
 #include <flight/types/gltf_extension.hpp>
 #include <flight/types/import_diagnostic.hpp>
 #include <flight/types/net.hpp>
-#include <flight/types/scene3_ddocument.hpp>
-#include <flight/types/scene3_dresources.hpp>
+#include <flight/types/scene_3d_document.hpp>
+#include <flight/types/scene_3d_resources.hpp>
 #include <flight/types/signal.hpp>
 #include <flight/scene3d_resources/gltf_load.hpp>
 
@@ -43,12 +43,12 @@ inline flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>> get_ful
   return handlers;
 }
 
-inline flight::Task<std::optional<flight::Ref<flight::types::Scene3DDocument>>> load_scene3_ddocument_from_glb_url(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>> host_net, flight::String url, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfScene3DDocumentLoadOptions>>>>> options = std::nullopt) {
-  co_return co_await flight::scene3d_resources::load_scene3_ddocument_from_glb_url_with_core_feature_handlers(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>>>(host_net), url, ([&]() -> flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"coreFeatureHandlers">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return get_full_gltf_core_feature_handlers(); }()), options);
+inline flight::Task<std::optional<flight::Ref<flight::types::Scene3DDocument>>> load_scene_3d_document_from_glb_url(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>> host_net, flight::String url, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfScene3DDocumentLoadOptions>>>>> options = std::nullopt) {
+  co_return co_await flight::scene3d_resources::load_scene_3d_document_from_glb_url_with_core_feature_handlers(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>>>(host_net), url, ([&]() -> flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"coreFeatureHandlers">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return get_full_gltf_core_feature_handlers(); }()), options);
 }
 
-inline flight::Task<std::optional<flight::Ref<flight::types::Scene3DDocument>>> load_scene3_ddocument_from_gltf_url(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>> host_net, flight::String url, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfScene3DDocumentLoadOptions>>>>> options = std::nullopt) {
-  co_return co_await flight::scene3d_resources::load_scene3_ddocument_from_gltf_url_with_core_feature_handlers(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>>>(host_net), url, ([&]() -> flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"coreFeatureHandlers">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return get_full_gltf_core_feature_handlers(); }()), options);
+inline flight::Task<std::optional<flight::Ref<flight::types::Scene3DDocument>>> load_scene_3d_document_from_gltf_url(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>> host_net, flight::String url, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfScene3DDocumentLoadOptions>>>>> options = std::nullopt) {
+  co_return co_await flight::scene3d_resources::load_scene_3d_document_from_gltf_url_with_core_feature_handlers(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>>>(host_net), url, ([&]() -> flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"coreFeatureHandlers">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return get_full_gltf_core_feature_handlers(); }()), options);
 }
 
 } // namespace flight::scene3d_resources

@@ -766,7 +766,7 @@ void WebGl2Context::compile_shader(const std::optional<WebGlShader>& shader) con
       require_object(shader ? shader->state_ : nullptr, detail::WebGlObjectKind::shader));
 }
 
-void WebGl2Context::compressed_tex_image2_d(
+void WebGl2Context::compressed_tex_image_2d(
     std::uint32_t target,
     int level,
     std::uint32_t internal_format,
@@ -781,7 +781,7 @@ void WebGl2Context::compressed_tex_image2_d(
       target, level, internal_format, width, height, border, range.size, range.data);
 }
 
-void WebGl2Context::compressed_tex_sub_image3_d(
+void WebGl2Context::compressed_tex_sub_image_3d(
     std::uint32_t target,
     int level,
     int x_offset,
@@ -962,7 +962,7 @@ void WebGl2Context::framebuffer_renderbuffer(
       target, attachment, renderbuffer_target, name);
 }
 
-void WebGl2Context::framebuffer_texture2_d(
+void WebGl2Context::framebuffer_texture_2d(
     std::uint32_t target,
     std::uint32_t attachment,
     std::uint32_t texture_target,
@@ -1295,7 +1295,7 @@ void WebGl2Context::stencil_op_separate(
       face, fail, depth_fail, depth_pass);
 }
 
-void WebGl2Context::tex_image2_d(
+void WebGl2Context::tex_image_2d(
     std::uint32_t target,
     int level,
     int internal_format,
@@ -1310,7 +1310,7 @@ void WebGl2Context::tex_image2_d(
       target, level, internal_format, width, height, border, format, type, pixels.data());
 }
 
-void WebGl2Context::tex_image2_d(
+void WebGl2Context::tex_image_2d(
     std::uint32_t target,
     int level,
     int internal_format,
@@ -1325,7 +1325,7 @@ void WebGl2Context::tex_image2_d(
       target, level, internal_format, width, height, border, format, type, nullptr);
 }
 
-void WebGl2Context::tex_image2_d(
+void WebGl2Context::tex_image_2d(
     std::uint32_t target,
     int level,
     int internal_format,
@@ -1369,7 +1369,7 @@ void WebGl2Context::tex_image2_d(
       pixel_data);
 }
 
-void WebGl2Context::tex_image3_d(
+void WebGl2Context::tex_image_3d(
     std::uint32_t target,
     int level,
     int internal_format,
@@ -1394,7 +1394,7 @@ void WebGl2Context::tex_image3_d(
       pixels.data());
 }
 
-void WebGl2Context::tex_image3_d(
+void WebGl2Context::tex_image_3d(
     std::uint32_t target,
     int level,
     int internal_format,
@@ -1424,7 +1424,7 @@ void WebGl2Context::tex_parameteri(
   gl_function<PFNGLTEXPARAMETERIPROC>(*this, "glTexParameteri")(target, parameter, value);
 }
 
-void WebGl2Context::tex_storage3_d(
+void WebGl2Context::tex_storage_3d(
     std::uint32_t target,
     int levels,
     std::uint32_t internal_format,
@@ -1435,7 +1435,7 @@ void WebGl2Context::tex_storage3_d(
       target, levels, internal_format, width, height, depth);
 }
 
-void WebGl2Context::tex_sub_image2_d(
+void WebGl2Context::tex_sub_image_2d(
     std::uint32_t target,
     int level,
     int x_offset,

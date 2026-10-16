@@ -58,9 +58,9 @@ namespace flight::types { struct Transform3D; }
 #include <flight/types/import_diagnostic.hpp>
 #include <flight/types/iridescence_pbr_extension.hpp>
 #include <flight/types/pbr_extension.hpp>
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d_document.hpp>
 #include <flight/types/texture.hpp>
-#include <flight/types/transform3_d.hpp>
+#include <flight/types/transform_3d.hpp>
 #include <flight/scene3d_formats/gltf_material_extension.hpp>
 
 namespace flight::scene3d_formats {

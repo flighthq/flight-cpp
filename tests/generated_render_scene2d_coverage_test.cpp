@@ -1,4 +1,4 @@
-#include <flight/render/explain_scene2_dcoverage.hpp>
+#include <flight/render/explain_scene_2d_coverage.hpp>
 
 #include <iostream>
 #include <memory>
@@ -153,7 +153,7 @@ bool check_satisfied_registry_paths() {
   auto state = state_with(Array<String>{String("sprite")},
                           Array<String>{String("moveTo")});
   Array<SceneCoverageEntry> out;
-  const bool found = flight::render::collect_scene2_dcoverage_gaps(
+  const bool found = flight::render::collect_scene_2d_coverage_gaps(
       std::optional<Array<SceneCoverageEntry>>{out}, state,
       usage(Array<String>{String("sprite")}, Array<String>{String("moveTo")}),
       false, std::nullopt);
@@ -175,7 +175,7 @@ bool check_satisfied_registry_paths() {
                     String("moveTo"), RenderRegistryTable::ShapeCommandHandler,
                     flight::types::scene_coverage->satisfied,
                     "shape-command satisfied entry lost its fields") &&
-         check(flight::render::has_scene2_dcoverage(
+         check(flight::render::has_scene_2d_coverage(
                    state, usage(Array<String>{String("sprite")},
                                 Array<String>{String("moveTo")})),
                "has-coverage rejected present renderer and command");
@@ -191,7 +191,7 @@ bool check_order_clear_and_early_exit() {
   Array<Ref<CatalogEntry>> catalog{catalog_entry(
       String("mesh"), RenderRegistryTable::NodeRenderer,
       String("mesh-module"), String("registerMesh"))};
-  flight::render::explain_scene2_dcoverage(
+  flight::render::explain_scene_2d_coverage(
       out, state,
       usage(Array<String>{String("sprite"), String("mesh")},
             Array<String>{String("lineTo")}),
@@ -228,17 +228,17 @@ bool check_order_clear_and_early_exit() {
   }
 
   Array<SceneCoverageEntry> untouched;
-  const bool stopped = flight::render::collect_scene2_dcoverage_gaps(
+  const bool stopped = flight::render::collect_scene_2d_coverage_gaps(
       std::optional<Array<SceneCoverageEntry>>{untouched}, state,
       usage(Array<String>{String("missing"), String("sprite")},
             Array<String>{String("lineTo")}),
       true, std::nullopt);
   return check(stopped && untouched.empty(),
                "stop-at-first wrote a gap or failed to stop") &&
-         check(!flight::render::has_scene2_dcoverage(
+         check(!flight::render::has_scene_2d_coverage(
                    state, usage(Array<String>{String("missing")}, {})),
                "has-coverage accepted a missing node renderer") &&
-         check(!flight::render::has_scene2_dcoverage(
+         check(!flight::render::has_scene_2d_coverage(
                    state, usage({}, Array<String>{String("lineTo")})),
                "has-coverage accepted an absent shape-command map");
 }

@@ -10,7 +10,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/html_view.hpp>
 #include <flight/types/morph_shape.hpp>
 #include <flight/types/movie_clip.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/quad_batch.hpp>
 #include <flight/types/rich_text.hpp>
 #include <flight/types/scale9_shape.hpp>
@@ -26,7 +26,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::interaction {
 
 inline void register_default_hit_tests() {
-  flight::interaction::register_hit_test(flight::types::display_object_kind, flight::interaction::default_node2_dhit_test_handler);
+  flight::interaction::register_hit_test(flight::types::display_object_kind, flight::interaction::default_node_2d_hit_test_handler);
   flight::interaction::register_hit_test(flight::types::html_view_kind, flight::interaction::default_html_view_hit_test_handler);
   flight::interaction::register_hit_test(flight::types::movie_clip_kind, flight::interaction::default_movie_clip_hit_test_handler);
   flight::interaction::register_hit_test(flight::types::morph_shape_kind, flight::interaction::default_shape_hit_test_handler);

@@ -24,8 +24,8 @@ namespace flight::types { struct Vector3; }
 #include <flight/entity/entity.hpp>
 #include <flight/geometry/matrix4.hpp>
 #include <flight/geometry/vector2.hpp>
-#include <flight/types/camera3_d.hpp>
-#include <flight/types/camera3_doptions.hpp>
+#include <flight/types/camera_3d.hpp>
+#include <flight/types/camera_3d_options.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/plane.hpp>
@@ -36,7 +36,7 @@ namespace flight::types { struct Vector3; }
 
 namespace flight::camera {
 
-inline void initialize_camera3_d(flight::types::EntityConstruction<flight::Ref<flight::types::Camera3D>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3DOptions>>>> opts) {
+inline void initialize_camera_3d(flight::types::EntityConstruction<flight::Ref<flight::types::Camera3D>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3DOptions>>>> opts) {
   flight::row_set<flight::RowKey<"far">>(out, flight::row_get<flight::RowKey<"far">>(opts));
   flight::row_set<flight::RowKey<"inverseViewProjection">>(out, flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt));
   flight::row_set<flight::RowKey<"jitter">>(out, flight::geometry::create_vector2(0.0, 0.0));
@@ -46,13 +46,13 @@ inline void initialize_camera3_d(flight::types::EntityConstruction<flight::Ref<f
   flight::row_set<flight::RowKey<"view">>(out, flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt));
 }
 
-inline flight::Ref<flight::types::Camera3D> create_camera3_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3DOptions>>>> opts) {
+inline flight::Ref<flight::types::Camera3D> create_camera_3d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3DOptions>>>> opts) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Camera3D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Camera3D>>();
-  initialize_camera3_d(out, opts);
+  initialize_camera_3d(out, opts);
   return flight::entity::finish_entity<flight::Ref<flight::types::Camera3D>>(out);
 }
 
-inline void set_camera3_daspect(flight::Ref<flight::types::Camera3D> camera, double aspect) {
+inline void set_camera_3d_aspect(flight::Ref<flight::types::Camera3D> camera, double aspect) {
   flight::types::Projection projection = camera->projection;
   if (projection.index() == 1) {
     (std::get<1>(projection)->aspect = aspect);
@@ -64,16 +64,16 @@ inline void set_camera3_daspect(flight::Ref<flight::types::Camera3D> camera, dou
   (std::get<0>(projection)->half_width = (std::get<0>(projection)->half_height * aspect));
 }
 
-inline void set_camera3_djitter(flight::Ref<flight::types::Camera3D> camera, double x, double y) {
+inline void set_camera_3d_jitter(flight::Ref<flight::types::Camera3D> camera, double x, double y) {
   (camera->jitter->x = x);
   (camera->jitter->y = y);
 }
 
-inline void set_camera3_dview_matrix4_from_look_at(flight::Ref<flight::types::Camera3D> camera, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> eye, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> target, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> up) {
+inline void set_camera_3d_view_matrix4_from_look_at(flight::Ref<flight::types::Camera3D> camera, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> eye, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> target, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> up) {
   flight::geometry::set_matrix4_look_at(camera->view, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(eye), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(target), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(up));
 }
 
-inline void apply_camera3_dprojection_jitter(flight::types::Matrix4Like out, double x, double y) {
+inline void apply_camera_3d_projection_jitter(flight::types::Matrix4Like out, double x, double y) {
   flight::Float32Array m = out->m;
   ([&]() { auto&& typed_array = m; const auto typed_index = 0.0; const auto typed_current = typed_array.get_index(typed_index); const auto typed_right = (x * m.get_index(3.0)); const auto typed_value = typed_current + typed_right; return typed_array.set_index(typed_index, typed_value); }());
   ([&]() { auto&& typed_array_2 = m; const auto typed_index_2 = 4.0; const auto typed_current_2 = typed_array_2.get_index(typed_index_2); const auto typed_right_2 = (x * m.get_index(7.0)); const auto typed_value_2 = typed_current_2 + typed_right_2; return typed_array_2.set_index(typed_index_2, typed_value_2); }());
@@ -89,9 +89,9 @@ inline flight::Ref<flight::types::Matrix4> scratch_inverse_flight_value_variable
 
 inline flight::Ref<flight::types::Matrix4> scratch_projection = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
-inline void get_camera3_dview_projection_matrix4(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, double aspect) {
+inline void get_camera_3d_view_projection_matrix4(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, double aspect) {
   flight::camera::set_projection_matrix4(scratch_projection, flight::row_get<flight::RowKey<"projection">>(camera), aspect, flight::row_get<flight::RowKey<"near">>(camera), flight::row_get<flight::RowKey<"far">>(camera));
-  apply_camera3_dprojection_jitter(scratch_projection, flight::row_get<flight::RowKey<"jitter">>(camera)->x, flight::row_get<flight::RowKey<"jitter">>(camera)->y);
+  apply_camera_3d_projection_jitter(scratch_projection, flight::row_get<flight::RowKey<"jitter">>(camera)->x, flight::row_get<flight::RowKey<"jitter">>(camera)->y);
   if (flight::to_boolean(flight::row_get<flight::RowKey<"nearClipPlane">>(camera))) {
     flight::camera::apply_oblique_near_clip_plane(scratch_projection, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::PlaneLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Plane>>>>(flight::row_get<flight::RowKey<"nearClipPlane">>(camera).value())));
   }
@@ -100,28 +100,28 @@ inline void get_camera3_dview_projection_matrix4(flight::types::Matrix4Like out,
 
 inline flight::Ref<flight::types::Matrix4> scratch_view_projection_flight_value_variable__u00005f__u00005f_scratch_u000056_iew_u000050_rojection_flight_private_786af8329ceb23be = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
-inline bool get_camera3_dinverse_view_projection_matrix4(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, double aspect) {
-  get_camera3_dview_projection_matrix4(scratch_view_projection_flight_value_variable__u00005f__u00005f_scratch_u000056_iew_u000050_rojection_flight_private_786af8329ceb23be, camera, aspect);
+inline bool get_camera_3d_inverse_view_projection_matrix4(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, double aspect) {
+  get_camera_3d_view_projection_matrix4(scratch_view_projection_flight_value_variable__u00005f__u00005f_scratch_u000056_iew_u000050_rojection_flight_private_786af8329ceb23be, camera, aspect);
   return flight::geometry::inverse_matrix4(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(scratch_view_projection_flight_value_variable__u00005f__u00005f_scratch_u000056_iew_u000050_rojection_flight_private_786af8329ceb23be)));
 }
 
-inline bool update_camera3_dinverse_view_projection(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, double aspect) {
-  const bool ok = get_camera3_dinverse_view_projection_matrix4(scratch_inverse_flight_value_variable__u00005f__u00005f_scratch_u000049_nverse_flight_private_786af8329ceb23be, camera, aspect);
+inline bool update_camera_3d_inverse_view_projection(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, double aspect) {
+  const bool ok = get_camera_3d_inverse_view_projection_matrix4(scratch_inverse_flight_value_variable__u00005f__u00005f_scratch_u000049_nverse_flight_private_786af8329ceb23be, camera, aspect);
   if (ok) {
     flight::row_get<flight::RowKey<"inverseViewProjection">>(camera)->m.set(scratch_inverse_flight_value_variable__u00005f__u00005f_scratch_u000049_nverse_flight_private_786af8329ceb23be->m);
   }
   return ok;
 }
 
-inline std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>)>> camera3_dview_guard = std::nullopt;
+inline std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>)>> camera_3d_view_guard = std::nullopt;
 
-inline void set_camera3_dview_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>)>> guard) {
-  (camera3_dview_guard = guard);
+inline void set_camera_3d_view_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>)>> guard) {
+  (camera_3d_view_guard = guard);
 }
 
-inline void set_camera3_dview_matrix4_from_matrix4(flight::Ref<flight::types::Camera3D> camera, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> view) {
+inline void set_camera_3d_view_matrix4_from_matrix4(flight::Ref<flight::types::Camera3D> camera, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> view) {
   camera->view->m.set(flight::row_get<flight::RowKey<"m">>(view));
-  ([&]() { auto optional_chain_receiver = camera3_dview_guard; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(camera); }());
+  ([&]() { auto optional_chain_receiver = camera_3d_view_guard; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(camera); }());
 }
 
 } // namespace flight::camera

@@ -88,7 +88,7 @@ int main(int argc, char** argv) {
   surface_options->alpha_mode = types::MaterialAlphaMode(flight::String("mask"));
   surface_options->blend_mode = types::blend_mode->add;
   surface_options->double_sided = true;
-  const auto surface = materials::create_material3_d<flight::Ref<types::Material3D>>(
+  const auto surface = materials::create_material_3d<flight::Ref<types::Material3D>>(
       flight::String("TestSurface"),
       std::optional<ReadonlyRow<types::Material3DOptions>>{
           ReadonlyRow<types::Material3DOptions>(surface_options)});
@@ -101,9 +101,9 @@ int main(int argc, char** argv) {
         "surface construction forwards alpha options");
   check(surface->blend_mode == types::blend_mode->add && surface->double_sided,
         "surface construction forwards blend and sidedness options");
-  check(materials::is_material3_dmasked(readonly(surface)) &&
-            !materials::is_material3_dopaque(readonly(surface)) &&
-            !materials::is_material3_dblended(readonly(surface)),
+  check(materials::is_material_3d_masked(readonly(surface)) &&
+            !materials::is_material_3d_opaque(readonly(surface)) &&
+            !materials::is_material_3d_blended(readonly(surface)),
         "surface alpha-mode queries observe forwarded options");
 
   const auto classic = materials::create_blinn_phong_material();

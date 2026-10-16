@@ -21,21 +21,21 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/slot2_d.hpp>
+#include <flight/types/slot_2d.hpp>
 
-#include <flight/types/skeleton2_dslot_animation_target.hpp>
+#include <flight/types/skeleton_2d_slot_animation_target.hpp>
 
-#include <flight/types/skeleton2_danimation_target_kind.hpp>
+#include <flight/types/skeleton_2d_animation_target_kind.hpp>
 
-#include <flight/types/skeleton2_danimation_target_binder.hpp>
+#include <flight/types/skeleton_2d_animation_target_binder.hpp>
 
-#include <flight/types/skeleton2_danimation_target.hpp>
+#include <flight/types/skeleton_2d_animation_target.hpp>
 
-#include <flight/types/skeleton2_d.hpp>
+#include <flight/types/skeleton_2d.hpp>
 
-#include <flight/types/bone2_d.hpp>
+#include <flight/types/bone_2d.hpp>
 
-#include <flight/types/attachment2_d.hpp>
+#include <flight/types/attachment_2d.hpp>
 
 #include <flight/types/animation_track.hpp>
 
@@ -57,7 +57,7 @@ namespace flight::types { struct Slot2D; }
 
 namespace flight::skeleton2d {
 
-using flight::types::skeleton2_danimation_target_kind;
+using flight::types::skeleton_2d_animation_target_kind;
 
 using flight::types::AnimationChannel;
 using flight::types::AnimationTrack;
@@ -70,7 +70,7 @@ using flight::types::Skeleton2DAnimationTargetKind;
 using flight::types::Skeleton2DSlotAnimationTarget;
 using flight::types::Slot2D;
 
-inline double find_skeleton2_dstep_keyframe(flight::SequenceView<double> times, double time) {
+inline double find_skeleton_2d_step_keyframe(flight::SequenceView<double> times, double time) {
   const double count = times.length;
   if ((count == 0.0)) {
     return -1.0;
@@ -89,30 +89,30 @@ inline double find_skeleton2_dstep_keyframe(flight::SequenceView<double> times, 
   return 0.0;
 }
 
-inline void initialize_skeleton2_dbone_animation_target(flight::types::EntityConstruction<flight::Ref<flight::types::Skeleton2DAnimationTarget>> out, double bone_index, flight::types::Skeleton2DAnimationPath path) {
+inline void initialize_skeleton_2d_bone_animation_target(flight::types::EntityConstruction<flight::Ref<flight::types::Skeleton2DAnimationTarget>> out, double bone_index, flight::types::Skeleton2DAnimationPath path) {
   flight::row_set<flight::RowKey<"boneIndex">>(out, bone_index);
-  flight::row_set<flight::RowKey<"kind">>(out, flight::types::skeleton2_danimation_target_kind->bone);
+  flight::row_set<flight::RowKey<"kind">>(out, flight::types::skeleton_2d_animation_target_kind->bone);
   flight::row_set<flight::RowKey<"path">>(out, path);
 }
 
-inline flight::Ref<flight::types::Skeleton2DAnimationTarget> create_skeleton2_dbone_animation_target(double bone_index, flight::types::Skeleton2DAnimationPath path) {
+inline flight::Ref<flight::types::Skeleton2DAnimationTarget> create_skeleton_2d_bone_animation_target(double bone_index, flight::types::Skeleton2DAnimationPath path) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Skeleton2DAnimationTarget>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Skeleton2DAnimationTarget>>();
-  initialize_skeleton2_dbone_animation_target(out, bone_index, path);
+  initialize_skeleton_2d_bone_animation_target(out, bone_index, path);
   return flight::entity::finish_entity<flight::Ref<flight::types::Skeleton2DAnimationTarget>>(out);
 }
 
-inline void initialize_skeleton2_dslot_animation_target(flight::types::EntityConstruction<flight::Ref<flight::types::Skeleton2DSlotAnimationTarget>> out, double slot_index, flight::types::Skeleton2DSlotAnimationPath path, std::optional<std::optional<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>>> attachments = std::nullopt) {
+inline void initialize_skeleton_2d_slot_animation_target(flight::types::EntityConstruction<flight::Ref<flight::types::Skeleton2DSlotAnimationTarget>> out, double slot_index, flight::types::Skeleton2DSlotAnimationPath path, std::optional<std::optional<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>>> attachments = std::nullopt) {
   attachments = attachments.value_or(std::nullopt);
   flight::row_set<flight::RowKey<"attachments">>(out, ([&]() -> std::variant<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>, flight::Null, flight::Undefined> { auto contextual_union_source = attachments.value(); if (!contextual_union_source.has_value()) return std::variant<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>>, contextual_union_source.value()}; }()));
-  flight::row_set<flight::RowKey<"kind">>(out, flight::types::skeleton2_danimation_target_kind->slot);
+  flight::row_set<flight::RowKey<"kind">>(out, flight::types::skeleton_2d_animation_target_kind->slot);
   flight::row_set<flight::RowKey<"path">>(out, path);
   flight::row_set<flight::RowKey<"slotIndex">>(out, slot_index);
 }
 
-inline flight::Ref<flight::types::Skeleton2DSlotAnimationTarget> create_skeleton2_dslot_animation_target(double slot_index, flight::types::Skeleton2DSlotAnimationPath path, std::optional<std::optional<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>>> attachments = std::nullopt) {
+inline flight::Ref<flight::types::Skeleton2DSlotAnimationTarget> create_skeleton_2d_slot_animation_target(double slot_index, flight::types::Skeleton2DSlotAnimationPath path, std::optional<std::optional<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>>> attachments = std::nullopt) {
   attachments = attachments.value_or(std::nullopt);
   flight::types::EntityConstruction<flight::Ref<flight::types::Skeleton2DSlotAnimationTarget>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Skeleton2DSlotAnimationTarget>>();
-  initialize_skeleton2_dslot_animation_target(out, slot_index, path, attachments.value());
+  initialize_skeleton_2d_slot_animation_target(out, slot_index, path, attachments.value());
   return flight::entity::finish_entity<flight::Ref<flight::types::Skeleton2DSlotAnimationTarget>>(out);
 }
 
@@ -203,17 +203,17 @@ inline flight::Array<double> scratch_flight_value_variable__u00005f_scratch_flig
 
 inline const flight::String step_interpolation_flight_value_variable__u000053__u000054__u000045__u000050__u00005f__u000049__u00004e__u000054__u000045__u000052__u000050__u00004f__u00004c__u000041__u000054__u000049__u00004f__u00004e__flight_private_47a494618abcbdfd = flight::String("Step");
 
-inline void bind_skeleton2_dslot_attachment(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationChannel>>>> channel, flight::Ref<flight::types::Slot2D> slot, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DSlotAnimationTarget>>>> target, double time) {
+inline void bind_skeleton_2d_slot_attachment(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationChannel>>>> channel, flight::Ref<flight::types::Slot2D> slot, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DSlotAnimationTarget>>>> target, double time) {
   std::variant<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>, flight::Null, flight::Undefined> table = ([&]() -> std::variant<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>, flight::Null, flight::Undefined> { auto optional_property = flight::row_get<flight::RowKey<"attachments">>(target); if (std::holds_alternative<flight::Undefined>(optional_property)) return std::variant<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property)) return std::variant<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>>, std::get<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>>(optional_property)}; }());
   if ((std::holds_alternative<flight::Undefined>(table) || std::holds_alternative<flight::Null>(table))) {
     return;
   }
-  const double keyframe = find_skeleton2_dstep_keyframe(flight::row_get<flight::RowKey<"track">>(channel)->times, time);
+  const double keyframe = find_skeleton_2d_step_keyframe(flight::row_get<flight::RowKey<"track">>(channel)->times, time);
   if ((keyframe < 0.0)) {
     return;
   }
   if ((flight::row_get<flight::RowKey<"track">>(channel)->interpolation != step_interpolation_flight_value_variable__u000053__u000054__u000045__u000050__u00005f__u000049__u00004e__u000054__u000045__u000052__u000050__u00004f__u00004c__u000041__u000054__u000049__u00004f__u00004e__flight_private_47a494618abcbdfd)) {
-    flight::skeleton2d::report_skeleton2_dcoerced_interpolation(flight::String("Attachment"), flight::row_get<flight::RowKey<"track">>(channel)->interpolation, step_interpolation_flight_value_variable__u000053__u000054__u000045__u000050__u00005f__u000049__u00004e__u000054__u000045__u000052__u000050__u00004f__u00004c__u000041__u000054__u000049__u00004f__u00004e__flight_private_47a494618abcbdfd);
+    flight::skeleton2d::report_skeleton_2d_coerced_interpolation(flight::String("Attachment"), flight::row_get<flight::RowKey<"track">>(channel)->interpolation, step_interpolation_flight_value_variable__u000053__u000054__u000045__u000050__u00005f__u000049__u00004e__u000054__u000045__u000052__u000050__u00004f__u00004c__u000041__u000054__u000049__u00004f__u00004e__flight_private_47a494618abcbdfd);
   }
   const double index = flight::round(flight::row_get<flight::RowKey<"track">>(channel)->values[(keyframe * flight::row_get<flight::RowKey<"track">>(channel)->components)]);
   (slot->attachment = (((index >= 0.0) && (index < static_cast<double>(std::get<0>(table).size()))) ? std::get<0>(table).element(index) : std::variant<flight::Ref<flight::types::Attachment2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}));
@@ -278,24 +278,24 @@ inline void bind_skeleton2_dslot_attachment(flight::StructuralRef<flight::RowRea
 //   }
 //   
 // cpp emission failed for @flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dAnimationTarget.ts: contextual
-// union value type flight::Map<flight::String, bind_skeleton2_dbone_channel> is not a represented runtime domain
+// union value type flight::Map<flight::String, bind_skeleton_2d_bone_channel> is not a represented runtime domain
 
-inline std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationChannel>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>>, flight::Ref<flight::types::Skeleton2D>, flight::Any, double)>> get_skeleton2_danimation_target_binder(flight::String kind) {
-  return get_skeleton2_danimation_target_binder_registry().get(kind);
+inline std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationChannel>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>>, flight::Ref<flight::types::Skeleton2D>, flight::Any, double)>> get_skeleton_2d_animation_target_binder(flight::String kind) {
+  return get_skeleton_2d_animation_target_binder_registry().get(kind);
 }
 
-inline flight::Array<flight::String> get_skeleton2_danimation_target_binder_kinds() {
+inline flight::Array<flight::String> get_skeleton_2d_animation_target_binder_kinds() {
   flight::Array<flight::String> kinds = flight::Array<flight::String>{};
-  flight::registry::get_kind_map_keys(kinds, get_skeleton2_danimation_target_binder_registry());
+  flight::registry::get_kind_map_keys(kinds, get_skeleton_2d_animation_target_binder_registry());
   return kinds;
 }
 
-inline void register_skeleton2_danimation_target_binder(flight::String kind, flight::types::Skeleton2DAnimationTargetBinder bind) {
-  (binders = std::optional<flight::Map<flight::String, flight::types::Skeleton2DAnimationTargetBinder>>{flight::registry::with_kind_map_entry<flight::types::Skeleton2DAnimationTargetBinder>(get_skeleton2_danimation_target_binder_registry(), kind, bind)});
+inline void register_skeleton_2d_animation_target_binder(flight::String kind, flight::types::Skeleton2DAnimationTargetBinder bind) {
+  (binders = std::optional<flight::Map<flight::String, flight::types::Skeleton2DAnimationTargetBinder>>{flight::registry::with_kind_map_entry<flight::types::Skeleton2DAnimationTargetBinder>(get_skeleton_2d_animation_target_binder_registry(), kind, bind)});
 }
 
-inline void unregister_skeleton2_danimation_target_binder(flight::String kind) {
-  (binders = std::optional<flight::Map<flight::String, flight::types::Skeleton2DAnimationTargetBinder>>{flight::registry::without_kind_map_entry<flight::types::Skeleton2DAnimationTargetBinder>(get_skeleton2_danimation_target_binder_registry(), kind)});
+inline void unregister_skeleton_2d_animation_target_binder(flight::String kind) {
+  (binders = std::optional<flight::Map<flight::String, flight::types::Skeleton2DAnimationTargetBinder>>{flight::registry::without_kind_map_entry<flight::types::Skeleton2DAnimationTargetBinder>(get_skeleton_2d_animation_target_binder_registry(), kind)});
 }
 
 } // namespace flight::skeleton2d

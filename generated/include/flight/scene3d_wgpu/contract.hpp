@@ -5,14 +5,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/scene3d_wgpu/explain_wgpu_scene3_dcoverage.hpp>
+#include <flight/scene3d_wgpu/explain_wgpu_scene_3d_coverage.hpp>
 #include <flight/scene3d_wgpu/blinn_phong_wgpu_mesh_material_renderer.hpp>
 #include <flight/scene3d_wgpu/custom_shader_wgpu_mesh_material_renderer.hpp>
 #include <flight/scene3d_wgpu/depth_wgpu_mesh_material_renderer.hpp>
-#include <flight/scene3d_wgpu/render_wgpu_scene3_d.hpp>
-#include <flight/scene3d_wgpu/enable_wgpu_scene3_dforward_light_selection_guards.hpp>
-#include <flight/scene3d_wgpu/enable_wgpu_scene3_dcustom_shader_guards.hpp>
-#include <flight/scene3d_wgpu/explain_wgpu_scene3_dforward_light_selection.hpp>
+#include <flight/scene3d_wgpu/render_wgpu_scene_3d.hpp>
+#include <flight/scene3d_wgpu/enable_wgpu_scene_3d_forward_light_selection_guards.hpp>
+#include <flight/scene3d_wgpu/enable_wgpu_scene_3d_custom_shader_guards.hpp>
+#include <flight/scene3d_wgpu/explain_wgpu_scene_3d_forward_light_selection.hpp>
 #include <flight/scene3d_wgpu/emissive_wgpu_mesh_material_renderer.hpp>
 #include <flight/scene3d_wgpu/wgpu_environment_cube.hpp>
 #include <flight/scene3d_wgpu/wgpu_environment_ibl_bake.hpp>
@@ -21,9 +21,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/scene3d_wgpu/matcap_wgpu_mesh_material_renderer.hpp>
 #include <flight/scene3d_wgpu/normal_wgpu_mesh_material_renderer.hpp>
 #include <flight/scene3d_wgpu/phong_wgpu_mesh_material_renderer.hpp>
-#include <flight/scene3d_wgpu/prepare_wgpu_scene3_dforward_lights.hpp>
+#include <flight/scene3d_wgpu/prepare_wgpu_scene_3d_forward_lights.hpp>
 #include <flight/scene3d_wgpu/register_wgpu_standard_pbr_material.hpp>
-#include <flight/scene3d_wgpu/scene3_dwgpu_pipeline.hpp>
+#include <flight/scene3d_wgpu/scene_3d_wgpu_pipeline.hpp>
 #include <flight/scene3d_wgpu/shaded_wgpu_mesh_material_renderer.hpp>
 #include <flight/scene3d_wgpu/specular_glossiness_pbr_wgpu_mesh_material_renderer.hpp>
 #include <flight/scene3d_wgpu/standard_pbr_wgpu_mesh_material_renderer.hpp>
@@ -36,11 +36,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/scene3d_wgpu/wgpu_mesh_material_registry.hpp>
 #include <flight/scene3d_wgpu/wgpu_mesh_pipeline.hpp>
 #include <flight/scene3d_wgpu/wgpu_mesh_upload.hpp>
-#include <flight/scene3d_wgpu/wgpu_particle_emitter3_d.hpp>
+#include <flight/scene3d_wgpu/wgpu_particle_emitter_3d.hpp>
 #include <flight/scene3d_wgpu/wgpu_pbr_pipeline_cache.hpp>
 #include <flight/scene3d_wgpu/wgpu_pbr_prelude.hpp>
-#include <flight/scene3d_wgpu/wgpu_scene3_druntime.hpp>
-#include <flight/scene3d_wgpu/wgpu_scene3_dtime.hpp>
+#include <flight/scene3d_wgpu/wgpu_scene_3d_runtime.hpp>
+#include <flight/scene3d_wgpu/wgpu_scene_3d_time.hpp>
 #include <flight/scene3d_wgpu/wgpu_shaded_prelude.hpp>
 #include <flight/scene3d_wgpu/wgpu_shaded_modifier_snippet.hpp>
 #include <flight/scene3d_wgpu/wgpu_shadow_map.hpp>

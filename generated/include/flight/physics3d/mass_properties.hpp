@@ -28,11 +28,11 @@ namespace flight::types { struct Physics3DMassData; }
 namespace flight::types { struct Physics3DMaterial; }
 namespace flight::types { struct RigidBody3D; }
 
-#include <flight/collision/convex_hull3_d.hpp>
+#include <flight/collision/convex_hull_3d.hpp>
 #include <flight/entity/entity.hpp>
 #include <flight/types/collision.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/physics3_d.hpp>
+#include <flight/types/physics_3d.hpp>
 #include <flight/physics3d/symmetric_tensor.hpp>
 
 namespace flight::physics3d {
@@ -43,7 +43,7 @@ using flight::types::Physics3DMassData;
 using flight::types::Physics3DMaterial;
 using flight::types::RigidBody3D;
 
-inline void initialize_physics3_dmass_data(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DMassData>> out) {
+inline void initialize_physics_3d_mass_data(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DMassData>> out) {
   flight::row_set<flight::RowKey<"mass">>(out, 0.0);
   flight::row_set<flight::RowKey<"inertiaXX">>(out, 0.0);
   flight::row_set<flight::RowKey<"inertiaYY">>(out, 0.0);
@@ -56,9 +56,9 @@ inline void initialize_physics3_dmass_data(flight::types::EntityConstruction<fli
   flight::row_set<flight::RowKey<"centerZ">>(out, 0.0);
 }
 
-inline flight::Ref<flight::types::Physics3DMassData> create_physics3_dmass_data() {
+inline flight::Ref<flight::types::Physics3DMassData> create_physics_3d_mass_data() {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DMassData>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics3DMassData>>();
-  initialize_physics3_dmass_data(out);
+  initialize_physics_3d_mass_data(out);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics3DMassData>>(out);
 }
 
@@ -117,7 +117,7 @@ inline void write_diagonal(flight::Ref<flight::types::Physics3DMassData> out, do
   (out->center_z = 0.0);
 }
 
-inline void compute_physics3_dbox_mass_data(double half_extent_x, double half_extent_y, double half_extent_z, double density, flight::Ref<flight::types::Physics3DMassData> out) {
+inline void compute_physics_3d_box_mass_data(double half_extent_x, double half_extent_y, double half_extent_z, double density, flight::Ref<flight::types::Physics3DMassData> out) {
   const double mass = ((((8.0 * half_extent_x) * half_extent_y) * half_extent_z) * density);
   const double x2 = (half_extent_x * half_extent_x);
   const double y2 = (half_extent_y * half_extent_y);
@@ -125,7 +125,7 @@ inline void compute_physics3_dbox_mass_data(double half_extent_x, double half_ex
   write_diagonal(out, mass, ((mass * (y2 + z2)) / 3.0), ((mass * (x2 + z2)) / 3.0), ((mass * (x2 + y2)) / 3.0));
 }
 
-inline void compute_physics3_dcapsule_mass_data(double radius, double half_height, double density, flight::Ref<flight::types::Physics3DMassData> out) {
+inline void compute_physics_3d_capsule_mass_data(double radius, double half_height, double density, flight::Ref<flight::types::Physics3DMassData> out) {
   const double height = (half_height + half_height);
   const double radius2 = (radius * radius);
   const double cylinder_mass = (((flight::pi * radius2) * height) * density);
@@ -138,7 +138,7 @@ inline void compute_physics3_dcapsule_mass_data(double radius, double half_heigh
   write_diagonal(out, mass, transverse, axial, transverse);
 }
 
-inline void compute_physics3_dcone_mass_data(double radius, double height, double density, flight::Ref<flight::types::Physics3DMassData> out) {
+inline void compute_physics_3d_cone_mass_data(double radius, double height, double density, flight::Ref<flight::types::Physics3DMassData> out) {
   const double radius2 = (radius * radius);
   const double mass = ((((flight::pi / 3.0) * radius2) * height) * density);
   const double axial = ((0.3 * mass) * radius2);
@@ -146,7 +146,7 @@ inline void compute_physics3_dcone_mass_data(double radius, double height, doubl
   write_diagonal(out, mass, transverse, axial, transverse);
 }
 
-inline void compute_physics3_dcylinder_mass_data(double radius, double half_height, double density, flight::Ref<flight::types::Physics3DMassData> out) {
+inline void compute_physics_3d_cylinder_mass_data(double radius, double half_height, double density, flight::Ref<flight::types::Physics3DMassData> out) {
   const double height = (half_height + half_height);
   const double radius2 = (radius * radius);
   const double mass = (((flight::pi * radius2) * height) * density);
@@ -155,13 +155,13 @@ inline void compute_physics3_dcylinder_mass_data(double radius, double half_heig
   write_diagonal(out, mass, transverse, axial, transverse);
 }
 
-inline void compute_physics3_dsphere_mass_data(double radius, double density, flight::Ref<flight::types::Physics3DMassData> out) {
+inline void compute_physics_3d_sphere_mass_data(double radius, double density, flight::Ref<flight::types::Physics3DMassData> out) {
   const double mass = ((((((4.0 / 3.0) * flight::pi) * radius) * radius) * radius) * density);
   const double moment = (((0.4 * mass) * radius) * radius);
   write_diagonal(out, mass, moment, moment, moment);
 }
 
-inline void zero_physics3_dmass_data(flight::Ref<flight::types::Physics3DMassData> out) {
+inline void zero_physics_3d_mass_data(flight::Ref<flight::types::Physics3DMassData> out) {
   (out->mass = 0.0);
   (out->inertia_xx = 0.0);
   (out->inertia_yy = 0.0);
@@ -174,14 +174,14 @@ inline void zero_physics3_dmass_data(flight::Ref<flight::types::Physics3DMassDat
   (out->center_z = 0.0);
 }
 
-inline flight::Array<flight::Ref<flight::types::Physics3DMassData>> physics3_dmass_data_pool = flight::Array<flight::Ref<flight::types::Physics3DMassData>>{};
+inline flight::Array<flight::Ref<flight::types::Physics3DMassData>> physics_3d_mass_data_pool = flight::Array<flight::Ref<flight::types::Physics3DMassData>>{};
 
-inline flight::Ref<flight::types::Physics3DMassData> acquire_physics3_dmass_data() {
-  return ([&]() -> flight::Ref<flight::types::Physics3DMassData> { auto nullish_coalesce_left = physics3_dmass_data_pool.pop(); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_physics3_dmass_data(); }());
+inline flight::Ref<flight::types::Physics3DMassData> acquire_physics_3d_mass_data() {
+  return ([&]() -> flight::Ref<flight::types::Physics3DMassData> { auto nullish_coalesce_left = physics_3d_mass_data_pool.pop(); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_physics_3d_mass_data(); }());
 }
 
-inline void release_physics3_dmass_data(flight::Ref<flight::types::Physics3DMassData> data) {
-  physics3_dmass_data_pool.push(data);
+inline void release_physics_3d_mass_data(flight::Ref<flight::types::Physics3DMassData> data) {
+  physics_3d_mass_data_pool.push(data);
 }
 
 inline flight::Array<double> scratch_hull_faces_flight_value_variable_scratch_u000048_ull_u000046_aces_flight_private_ff3f920f945a64c3 = flight::Array<double>{};
@@ -190,7 +190,7 @@ inline flight::Array<double> scratch_tensor_a = flight::Array<double>{0.0, 0.0, 
 
 inline flight::Array<double> scratch_tensor_b = flight::Array<double>{0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
-inline void combine_physics3_dmass_data(flight::Ref<flight::types::Physics3DMassData> target, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DMassData>>>> addend) {
+inline void combine_physics_3d_mass_data(flight::Ref<flight::types::Physics3DMassData> target, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DMassData>>>> addend) {
   const double total_mass = (target->mass + flight::row_get<flight::RowKey<"mass">>(addend));
   if ((total_mass <= 0.0)) {
     (target->mass = 0.0);
@@ -222,9 +222,9 @@ inline void combine_physics3_dmass_data(flight::Ref<flight::types::Physics3DMass
   (target->inertia_yz = (scratch_tensor_a.element(flight::physics3d::tensor_yz) + scratch_tensor_b.element(flight::physics3d::tensor_yz)));
 }
 
-inline void compute_physics3_dconvex_hull_mass_data(flight::Array<double> points, double density, flight::Ref<flight::types::Physics3DMassData> out) {
-  zero_physics3_dmass_data(out);
-  const double triangle_count = flight::collision::write_collision_convex_hull_faces3_d(points, scratch_hull_faces_flight_value_variable_scratch_u000048_ull_u000046_aces_flight_private_ff3f920f945a64c3);
+inline void compute_physics_3d_convex_hull_mass_data(flight::Array<double> points, double density, flight::Ref<flight::types::Physics3DMassData> out) {
+  zero_physics_3d_mass_data(out);
+  const double triangle_count = flight::collision::write_collision_convex_hull_faces_3d(points, scratch_hull_faces_flight_value_variable_scratch_u000048_ull_u000046_aces_flight_private_ff3f920f945a64c3);
   if ((triangle_count == 0.0)) {
     return;
   }
@@ -304,7 +304,7 @@ inline void compute_physics3_dconvex_hull_mass_data(flight::Array<double> points
   (out->inertia_yz = scratch_tensor_b.element(flight::physics3d::tensor_yz));
 }
 
-inline void compute_physics3_dcollider_mass_data(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>> collider, flight::Ref<flight::types::Physics3DMassData> out) {
+inline void compute_physics_3d_collider_mass_data(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>> collider, flight::Ref<flight::types::Physics3DMassData> out) {
   flight::types::CollisionColliderShape3D shape = flight::row_get<flight::RowKey<"local">>(collider);
   const double density = flight::row_get<flight::RowKey<"material">>(collider)->density;
   {
@@ -340,21 +340,21 @@ inline void compute_physics3_dcollider_mass_data(flight::StructuralRef<flight::R
       {
         auto switch_value_2 = switch_fallthrough_state;
         if (switch_value_2 == 0.0) {
-          compute_physics3_dsphere_mass_data(std::get<0>(shape)->radius, density, out);
+          compute_physics_3d_sphere_mass_data(std::get<0>(shape)->radius, density, out);
           (out->center_x = std::get<0>(shape)->x);
           (out->center_y = std::get<0>(shape)->y);
           (out->center_z = std::get<0>(shape)->z);
           return;
         }
         else if (switch_value_2 == 1.0) {
-          compute_physics3_dbox_mass_data(((std::get<3>(shape)->max_x - std::get<3>(shape)->min_x) / 2.0), ((std::get<3>(shape)->max_y - std::get<3>(shape)->min_y) / 2.0), ((std::get<3>(shape)->max_z - std::get<3>(shape)->min_z) / 2.0), density, out);
+          compute_physics_3d_box_mass_data(((std::get<3>(shape)->max_x - std::get<3>(shape)->min_x) / 2.0), ((std::get<3>(shape)->max_y - std::get<3>(shape)->min_y) / 2.0), ((std::get<3>(shape)->max_z - std::get<3>(shape)->min_z) / 2.0), density, out);
           (out->center_x = ((std::get<3>(shape)->min_x + std::get<3>(shape)->max_x) / 2.0));
           (out->center_y = ((std::get<3>(shape)->min_y + std::get<3>(shape)->max_y) / 2.0));
           (out->center_z = ((std::get<3>(shape)->min_z + std::get<3>(shape)->max_z) / 2.0));
           return;
         }
         else if (switch_value_2 == 2.0) {
-          compute_physics3_dbox_mass_data(std::get<2>(shape)->half_x, std::get<2>(shape)->half_y, std::get<2>(shape)->half_z, density, out);
+          compute_physics_3d_box_mass_data(std::get<2>(shape)->half_x, std::get<2>(shape)->half_y, std::get<2>(shape)->half_z, density, out);
           rotate_diagonal_tensor(out, std::get<2>(shape)->rotation_x, std::get<2>(shape)->rotation_y, std::get<2>(shape)->rotation_z, std::get<2>(shape)->rotation_w);
           (out->center_x = std::get<2>(shape)->x);
           (out->center_y = std::get<2>(shape)->y);
@@ -367,7 +367,7 @@ inline void compute_physics3_dcollider_mass_data(flight::StructuralRef<flight::R
             const double axis_y = (std::get<5>(shape)->y1 - std::get<5>(shape)->y0);
             const double axis_z = (std::get<5>(shape)->z1 - std::get<5>(shape)->z0);
             const double length = std::sqrt((((axis_x * axis_x) + (axis_y * axis_y)) + (axis_z * axis_z)));
-            compute_physics3_dcapsule_mass_data(std::get<5>(shape)->radius, (length / 2.0), density, out);
+            compute_physics_3d_capsule_mass_data(std::get<5>(shape)->radius, (length / 2.0), density, out);
             if ((length > 0.0)) {
               align_tensor_axis_to_y(out, (axis_x / length), (axis_y / length), (axis_z / length));
             }
@@ -383,7 +383,7 @@ inline void compute_physics3_dcollider_mass_data(flight::StructuralRef<flight::R
             const double axis_y_2 = (std::get<6>(shape)->y1 - std::get<6>(shape)->y0);
             const double axis_z_2 = (std::get<6>(shape)->z1 - std::get<6>(shape)->z0);
             const double length_2 = std::sqrt((((axis_x_2 * axis_x_2) + (axis_y_2 * axis_y_2)) + (axis_z_2 * axis_z_2)));
-            compute_physics3_dcylinder_mass_data(std::get<6>(shape)->radius, (length_2 / 2.0), density, out);
+            compute_physics_3d_cylinder_mass_data(std::get<6>(shape)->radius, (length_2 / 2.0), density, out);
             if ((length_2 > 0.0)) {
               align_tensor_axis_to_y(out, (axis_x_2 / length_2), (axis_y_2 / length_2), (axis_z_2 / length_2));
             }
@@ -399,7 +399,7 @@ inline void compute_physics3_dcollider_mass_data(flight::StructuralRef<flight::R
             const double axis_y_3 = (std::get<1>(shape)->base_y - std::get<1>(shape)->apex_y);
             const double axis_z_3 = (std::get<1>(shape)->base_z - std::get<1>(shape)->apex_z);
             const double length_3 = std::sqrt((((axis_x_3 * axis_x_3) + (axis_y_3 * axis_y_3)) + (axis_z_3 * axis_z_3)));
-            compute_physics3_dcone_mass_data(std::get<1>(shape)->radius, length_3, density, out);
+            compute_physics_3d_cone_mass_data(std::get<1>(shape)->radius, length_3, density, out);
             if ((length_3 > 0.0)) {
               align_tensor_axis_to_y(out, (axis_x_3 / length_3), (axis_y_3 / length_3), (axis_z_3 / length_3));
             }
@@ -410,11 +410,11 @@ inline void compute_physics3_dcollider_mass_data(flight::StructuralRef<flight::R
           }
         }
         else if (switch_value_2 == 6.0) {
-          compute_physics3_dconvex_hull_mass_data(std::get<4>(shape)->points, density, out);
+          compute_physics_3d_convex_hull_mass_data(std::get<4>(shape)->points, density, out);
           return;
         }
         else if (switch_value_2 == 7.0) {
-          zero_physics3_dmass_data(out);
+          zero_physics_3d_mass_data(out);
           (switch_fallthrough_state = -1.0);
         }
       }
@@ -422,7 +422,7 @@ inline void compute_physics3_dcollider_mass_data(flight::StructuralRef<flight::R
   }
 }
 
-inline void set_rigid_body3_dmass_data(flight::Ref<flight::types::RigidBody3D> body, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DMassData>>>> data) {
+inline void set_rigid_body_3d_mass_data(flight::Ref<flight::types::RigidBody3D> body, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DMassData>>>> data) {
   (body->mass = flight::row_get<flight::RowKey<"mass">>(data));
   (body->center_x = flight::row_get<flight::RowKey<"centerX">>(data));
   (body->center_y = flight::row_get<flight::RowKey<"centerY">>(data));
@@ -454,23 +454,23 @@ inline void set_rigid_body3_dmass_data(flight::Ref<flight::types::RigidBody3D> b
   (body->inverse_inertia_yz = scratch_tensor_b.element(flight::physics3d::tensor_yz));
 }
 
-inline void update_rigid_body3_dmass_data(flight::Ref<flight::types::RigidBody3D> body) {
-  auto total = acquire_physics3_dmass_data();
-  auto one = acquire_physics3_dmass_data();
+inline void update_rigid_body_3d_mass_data(flight::Ref<flight::types::RigidBody3D> body) {
+  auto total = acquire_physics_3d_mass_data();
+  auto one = acquire_physics_3d_mass_data();
   std::exception_ptr finally_exception;
   try {
-    zero_physics3_dmass_data(total);
+    zero_physics_3d_mass_data(total);
     for (auto collider : body->colliders) {
-      compute_physics3_dcollider_mass_data(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>(collider)), one);
-      combine_physics3_dmass_data(total, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DMassData>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DMassData>>>>(one)));
+      compute_physics_3d_collider_mass_data(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>(collider)), one);
+      combine_physics_3d_mass_data(total, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DMassData>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DMassData>>>>(one)));
     }
-    set_rigid_body3_dmass_data(body, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DMassData>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DMassData>>>>(total)));
+    set_rigid_body_3d_mass_data(body, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DMassData>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DMassData>>>>(total)));
   }
   catch (...) {
     finally_exception = std::current_exception();
   }
-  release_physics3_dmass_data(one);
-  release_physics3_dmass_data(total);
+  release_physics_3d_mass_data(one);
+  release_physics_3d_mass_data(total);
   if (finally_exception) std::rethrow_exception(finally_exception);
 }
 

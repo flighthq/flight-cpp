@@ -31,7 +31,7 @@ using flight::types::Sampler;
 using flight::types::Texture2D;
 
 // Reference: the overload TypeScript selected for the original `createTexture({ sampler })` call,
-// invoked through the exact-owner carrier (the override forwards it to create_texture2_d).
+// invoked through the exact-owner carrier (the override forwards it to create_texture_2d).
 flight::Ref<Texture2D> reference_texture(bool smoothing) {
   auto opts = flight::make_ref<flight::types::CreateTexture2DOptions>();
   opts->sampler = flight::texture::create_sampler(

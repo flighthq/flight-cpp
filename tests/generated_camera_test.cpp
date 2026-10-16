@@ -74,19 +74,19 @@ flight::Ref<types::Camera3D> camera3d(
           .near = near,
           .projection = types::Projection{projection},
       });
-  return camera::create_camera3_d(readonly(options));
+  return camera::create_camera_3d(readonly(options));
 }
 
 void set_standard_view(const flight::Ref<types::Camera3D>& value) {
   const auto eye = geometry::create_vector3(0.0, 0.0, 5.0);
   const auto target = geometry::create_vector3(0.0, 0.0, 0.0);
   const auto up = geometry::create_vector3(0.0, 1.0, 0.0);
-  camera::set_camera3_dview_matrix4_from_look_at(
+  camera::set_camera_3d_view_matrix4_from_look_at(
       value, readonly(eye), readonly(target), readonly(up));
 }
 
 void camera2d_projection_viewport_and_failures() {
-  const auto default_value = camera::create_camera2_d();
+  const auto default_value = camera::create_camera_2d();
   check(default_value->zoom == 1.0,
         "Camera2D construction defaults omitted zoom to one");
 
@@ -98,34 +98,34 @@ void camera2d_projection_viewport_and_failures() {
           .y = -20.0,
           .zoom = 1.5,
       });
-  const auto value = camera::create_camera2_d(readonly(options));
+  const auto value = camera::create_camera_2d(readonly(options));
   const auto screen = geometry::create_vector2();
   const auto world = geometry::create_vector2();
 
-  camera::project_camera2_dpoint(
+  camera::project_camera_2d_point(
       readonly(value), 800.0, 600.0, 40.0, -20.0, screen);
   check_close(screen->x, 400.0 + 15.0 * std::cos(rotation),
               "2D view pans before rotating and zooming x");
   check_close(screen->y, 300.0 - 15.0 * std::sin(rotation),
               "2D view pans before rotating and zooming y");
-  camera::unproject_camera2_dpoint(
+  camera::unproject_camera_2d_point(
       readonly(value), 800.0, 600.0, screen->x, screen->y, world);
   check_close(world->x, 40.0, "2D project/unproject round-trips world x");
   check_close(world->y, -20.0, "2D project/unproject round-trips world y");
 
-  camera::set_camera2_dlook_at(value, -12.0, 18.0);
-  camera::project_camera2_dpoint(
+  camera::set_camera_2d_look_at(value, -12.0, 18.0);
+  camera::project_camera_2d_point(
       readonly(value), 0.0, 0.0, -12.0, 18.0, screen);
   check_close(screen->x, 0.0, "zero-width viewport still centers at its origin x");
   check_close(screen->y, 0.0, "zero-height viewport still centers at its origin y");
 
-  camera::unproject_camera2_dpoint(
+  camera::unproject_camera_2d_point(
       readonly(value), 1024.0, 512.0, 113.0, 379.0, world);
   const double anchored_x = world->x;
   const double anchored_y = world->y;
-  camera::zoom_camera2_dat_screen_point(
+  camera::zoom_camera_2d_at_screen_point(
       value, 1024.0, 512.0, 113.0, 379.0, 3.25);
-  camera::unproject_camera2_dpoint(
+  camera::unproject_camera_2d_point(
       readonly(value), 1024.0, 512.0, 113.0, 379.0, world);
   check(value->zoom == 3.25, "anchored zoom mutates the camera in place");
   check_close(world->x, anchored_x,
@@ -134,14 +134,14 @@ void camera2d_projection_viewport_and_failures() {
               "anchored zoom retains the rotated world point y");
 
   const auto bounds = geometry::create_rectangle();
-  camera::get_camera2_dvisible_bounds(
+  camera::get_camera_2d_visible_bounds(
       readonly(value), 1024.0, 512.0, bounds);
   const double right = bounds->x + bounds->width;
   const double bottom = bounds->y + bounds->height;
   for (const auto& corner :
        {std::pair{0.0, 0.0}, std::pair{1024.0, 0.0},
         std::pair{1024.0, 512.0}, std::pair{0.0, 512.0}}) {
-    camera::unproject_camera2_dpoint(
+    camera::unproject_camera_2d_point(
         readonly(value), 1024.0, 512.0, corner.first, corner.second, world);
     check(world->x >= bounds->x - tolerance && world->x <= right + tolerance &&
               world->y >= bounds->y - tolerance && world->y <= bottom + tolerance,
@@ -152,14 +152,14 @@ void camera2d_projection_viewport_and_failures() {
   double guarded_zoom = 1.0;
   using Camera2DView = flight::StructuralRef<
       flight::RowReadonly<flight::RowOf<flight::Ref<types::Camera2D>>>>;
-  camera::set_camera2_dvisible_bounds_guard(
+  camera::set_camera_2d_visible_bounds_guard(
       std::function<void(Camera2DView)>([&](Camera2DView guarded) {
         ++guard_calls;
         guarded_zoom = flight::row_get<flight::RowKey<"zoom">>(guarded);
       }));
   value->zoom = 0.0;
-  camera::get_camera2_dvisible_bounds(readonly(value), 64.0, 32.0, bounds);
-  camera::set_camera2_dvisible_bounds_guard(std::nullopt);
+  camera::get_camera_2d_visible_bounds(readonly(value), 64.0, 32.0, bounds);
+  camera::set_camera_2d_visible_bounds_guard(std::nullopt);
   check(guard_calls == 1 && guarded_zoom == 0.0,
         "degenerate 2D view reports exactly one failure with current state");
   check(std::isfinite(bounds->x + bounds->width) &&
@@ -188,17 +188,17 @@ void projection_ownership_and_camera3d_state() {
             value->jitter->x == 0.0 && value->jitter->y == 0.0,
         "camera owns distinct view/cache matrices and zero jitter state");
 
-  camera::set_camera3_daspect(value, 1.75);
+  camera::set_camera_3d_aspect(value, 1.75);
   check(projection->aspect == 1.75,
         "aspect transition mutates the retained perspective projection");
-  camera::set_camera3_djitter(value, 0.25, -0.5);
+  camera::set_camera_3d_jitter(value, 0.25, -0.5);
   check(value->jitter->x == 0.25 && value->jitter->y == -0.5,
         "jitter transition mutates both camera offsets");
 
   int view_guard_calls = 0;
   using Camera3DView = flight::StructuralRef<
       flight::RowReadonly<flight::RowOf<flight::Ref<types::Camera3D>>>>;
-  camera::set_camera3_dview_guard(
+  camera::set_camera_3d_view_guard(
       std::function<void(Camera3DView)>([&](Camera3DView guarded) {
         ++view_guard_calls;
         check(flight::row_get<flight::RowKey<"view">>(guarded) == value->view,
@@ -207,23 +207,23 @@ void projection_ownership_and_camera3d_state() {
   const auto view_owner = value->view;
   const auto assigned_view = geometry::create_matrix4();
   assigned_view->m.set_index(0.0, 4.0);
-  camera::set_camera3_dview_matrix4_from_matrix4(
+  camera::set_camera_3d_view_matrix4_from_matrix4(
       value, readonly(assigned_view));
-  camera::set_camera3_dview_guard(std::nullopt);
+  camera::set_camera_3d_view_guard(std::nullopt);
   check(view_guard_calls == 1 && value->view == view_owner,
         "matrix assignment writes through the stable view owner and notifies once");
   set_standard_view(value);
 
   const auto view_projection = geometry::create_matrix4();
-  camera::get_camera3_dview_projection_matrix4(
+  camera::get_camera_3d_view_projection_matrix4(
       view_projection, readonly(value), 1.75);
-  check(camera::update_camera3_dinverse_view_projection(
+  check(camera::update_camera_3d_inverse_view_projection(
             readonly(value), 1.75),
         "valid view-projection refreshes the camera cache");
   const double cached = value->inverse_view_projection->m.get_index(0.0);
   value->near = 1.0;
   value->far = 1.0;
-  check(!camera::update_camera3_dinverse_view_projection(
+  check(!camera::update_camera_3d_inverse_view_projection(
              readonly(value), 1.75) &&
             value->inverse_view_projection->m.get_index(0.0) == cached,
         "singular cache refresh fails without destroying the last valid matrix");
@@ -269,7 +269,7 @@ void projection_ownership_and_camera3d_state() {
                   std::in_place_type<flight::Ref<types::Plane>>, clip_plane},
           .projection = types::Projection{projection},
       });
-  const auto clipped = camera::create_camera3_d(readonly(clipped_options));
+  const auto clipped = camera::create_camera_3d(readonly(clipped_options));
   check(clipped->near_clip_plane.has_value() &&
             clipped->near_clip_plane.value() == clip_plane,
         "camera construction retains a supplied near-clip plane identity");
@@ -294,16 +294,16 @@ void picking_culling_corners_and_depth() {
 
   const auto world = geometry::create_vector3(0.75, -0.4, 0.0);
   const auto ndc = geometry::create_vector3();
-  check(camera::get_camera3_dworld_to_screen(
+  check(camera::get_camera_3d_world_to_screen(
             ndc, readonly(value), readonly(world), 1.5),
         "world point in front of the camera projects to NDC");
-  const auto ray = geometry::create_ray3_d();
-  check(camera::get_camera3_dscreen_to_world_ray(
+  const auto ray = geometry::create_ray_3d();
+  check(camera::get_camera_3d_screen_to_world_ray(
             ray, readonly(value), ndc->x, ndc->y, 1.5),
         "projected NDC unprojects to a world ray");
   const auto plane = geometry::create_plane(0.0, 0.0, 1.0, 0.0);
   const auto hit = geometry::create_vector3();
-  check(camera::intersect_camera3_dray_with_plane(
+  check(camera::intersect_camera_3d_ray_with_plane(
             hit, readonly(ray), readonly(plane)),
         "round-trip ray intersects the source world plane");
   check_close(hit->x, world->x, "3D screen/world round-trip restores x");
@@ -312,29 +312,29 @@ void picking_culling_corners_and_depth() {
 
   const auto inside = geometry::create_vector3(0.0, 0.0, 0.0);
   const auto behind = geometry::create_vector3(0.0, 0.0, 10.0);
-  check(camera::is_point_in_camera3_dfrustum(
+  check(camera::is_point_in_camera_3d_frustum(
             readonly(value), readonly(inside), 1.0) &&
-            !camera::is_point_in_camera3_dfrustum(
+            !camera::is_point_in_camera_3d_frustum(
                 readonly(value), readonly(behind), 1.0),
         "frustum visibility distinguishes front from behind-camera points");
   const auto sphere = geometry::create_bounding_sphere(0.0, 0.0, 0.0, 1.0);
-  check(camera::is_sphere_in_camera3_dfrustum(
+  check(camera::is_sphere_in_camera_3d_frustum(
             readonly(value), readonly(sphere), 1.0),
         "front-facing sphere remains visible");
   sphere->radius = -1.0;
-  check(!camera::is_sphere_in_camera3_dfrustum(
+  check(!camera::is_sphere_in_camera_3d_frustum(
              readonly(value), readonly(sphere), 1.0),
         "negative-radius sphere is culled as empty");
 
   using AabbView = flight::StructuralRef<
       flight::RowReadonly<flight::RowOf<flight::Ref<types::AabbLike>>>>;
   const auto box = geometry::create_aabb(-1.0, -1.0, -1.0, 1.0, 1.0, 1.0);
-  check(camera::is_box_in_camera3_dfrustum(
+  check(camera::is_box_in_camera_3d_frustum(
             readonly(value), readonly_as<AabbView>(box), 1.0),
         "front-facing box intersects the camera frustum");
   box->min->z = 8.0;
   box->max->z = 12.0;
-  check(!camera::is_box_in_camera3_dfrustum(
+  check(!camera::is_box_in_camera_3d_frustum(
              readonly(value), readonly_as<AabbView>(box), 1.0),
         "behind-camera box is culled after in-place bounds mutation");
 
@@ -344,7 +344,7 @@ void picking_culling_corners_and_depth() {
       geometry::create_vector3(), geometry::create_vector3(),
       geometry::create_vector3(), geometry::create_vector3(),
   };
-  check(camera::get_camera3_dfrustum_corners(corners, readonly(value), 2.0),
+  check(camera::get_camera_3d_frustum_corners(corners, readonly(value), 2.0),
         "invertible view-projection writes all frustum corners");
   check(corners.element(0.0)->z > corners.element(4.0)->z &&
             corners.element(0.0)->x < 0.0 && corners.element(1.0)->x > 0.0 &&
@@ -354,14 +354,14 @@ void picking_culling_corners_and_depth() {
 
   value->near = 2.0;
   value->far = 2.0;
-  check(!camera::get_camera3_dscreen_to_world_ray(
+  check(!camera::get_camera_3d_screen_to_world_ray(
              ray, readonly(value), 0.0, 0.0, 1.0) &&
-            !camera::get_camera3_dfrustum_corners(
+            !camera::get_camera_3d_frustum_corners(
                 corners, readonly(value), 1.0) &&
-            camera::get_camera3_dlinear_depth(readonly(value), 0.0) == 0.0 &&
-            camera::get_camera3_dview_space_z(readonly(value), 0.0) == 0.0,
+            camera::get_camera_3d_linear_depth(readonly(value), 0.0) == 0.0 &&
+            camera::get_camera_3d_view_space_z(readonly(value), 0.0) == 0.0,
         "degenerate clip range fails ray/corner inversion and returns zero depth");
-  check(!camera::get_camera3_dworld_to_screen(
+  check(!camera::get_camera_3d_world_to_screen(
              ndc, readonly(value), readonly(behind), 1.0),
         "world-to-screen rejects a behind-camera point");
 }
@@ -372,16 +372,16 @@ void reflection_and_shadow_transitions() {
   const auto eye = geometry::create_vector3(2.0, 3.0, 5.0);
   const auto target = geometry::create_vector3(0.0, 0.0, 0.0);
   const auto up = geometry::create_vector3(0.0, 1.0, 0.0);
-  camera::set_camera3_dview_matrix4_from_look_at(
+  camera::set_camera_3d_view_matrix4_from_look_at(
       original, readonly(eye), readonly(target), readonly(up));
-  camera::set_camera3_djitter(original, 0.125, -0.25);
+  camera::set_camera_3d_jitter(original, 0.125, -0.25);
 
   const auto reflected = camera3d(perspective());
   const auto restored = camera3d(perspective());
   const auto mirror = geometry::create_plane(0.0, 1.0, 0.0, 0.0);
-  camera::reflect_camera3_dby_plane(
+  camera::reflect_camera_3d_by_plane(
       reflected, readonly(original), readonly(mirror));
-  camera::reflect_camera3_dby_plane(
+  camera::reflect_camera_3d_by_plane(
       restored, readonly(reflected), readonly(mirror));
   bool restored_view = true;
   for (double index = 0.0; index < 16.0; index += 1.0) {
@@ -399,7 +399,7 @@ void reflection_and_shadow_transitions() {
       flight::RowReadonly<flight::RowOf<flight::Ref<types::AabbLike>>>>;
   const auto bounds = geometry::create_aabb(-2.0, -1.0, -3.0, 4.0, 5.0, 6.0);
   const auto light = geometry::create_vector3(0.0, -1.0, 0.0);
-  camera::configure_directional_shadow_camera3_dtight_fit(
+  camera::configure_directional_shadow_camera_3d_tight_fit(
       reflected, readonly(light), readonly_as<AabbView>(bounds), 1.25);
   check(std::holds_alternative<flight::Ref<types::OrthographicProjection>>(
             reflected->projection),
@@ -412,7 +412,7 @@ void reflection_and_shadow_transitions() {
 
   const auto empty = geometry::create_aabb();
   const auto zero = geometry::create_vector3(0.0, 0.0, 0.0);
-  camera::configure_directional_shadow_camera3_dtight_fit(
+  camera::configure_directional_shadow_camera_3d_tight_fit(
       reflected, readonly(zero), readonly_as<AabbView>(empty));
   const auto fallback =
       std::get<flight::Ref<types::OrthographicProjection>>(reflected->projection);

@@ -24,7 +24,7 @@ namespace flight::types { struct RigidBody2D; }
 namespace flight::types { struct SpatialIndexBackend2D; }
 
 #include <flight/types/collision.hpp>
-#include <flight/types/physics2_d.hpp>
+#include <flight/types/physics_2d.hpp>
 #include <flight/types/spatial.hpp>
 #include <flight/physics2d/islands.hpp>
 #include <flight/physics2d/world.hpp>
@@ -41,7 +41,7 @@ using flight::types::Physics2DWorld;
 using flight::types::RigidBody2D;
 using flight::types::SpatialIndexBackend2D;
 
-inline void apply_physics2_dimpulse(flight::Ref<flight::types::RigidBody2D> body_a, flight::Ref<flight::types::RigidBody2D> body_b, double r_ax, double r_ay, double r_bx, double r_by, double impulse_x, double impulse_y) {
+inline void apply_physics_2d_impulse(flight::Ref<flight::types::RigidBody2D> body_a, flight::Ref<flight::types::RigidBody2D> body_b, double r_ax, double r_ay, double r_bx, double r_by, double impulse_x, double impulse_y) {
   (body_a->velocity_x += (impulse_x * body_a->inverse_mass));
   (body_a->velocity_y += (impulse_y * body_a->inverse_mass));
   (body_a->angular_velocity += (body_a->inverse_inertia * ((r_ax * impulse_y) - (r_ay * impulse_x))));
@@ -58,14 +58,14 @@ inline double relative_normal_velocity(flight::StructuralRef<flight::RowReadonly
   return (((vax - vbx) * normal_x) + ((vay - vby) * normal_y));
 }
 
-inline void warm_start_physics2_dcontact_at(flight::Ref<flight::types::Physics2DWorld> world, double contact_index) {
+inline void warm_start_physics_2d_contact_at(flight::Ref<flight::types::Physics2DWorld> world, double contact_index) {
   std::optional<flight::Ref<flight::types::Physics2DContact>> contact = world->contacts.get(contact_index);
   if (((([&]() { const auto& presence_operand = contact; return !presence_operand.has_value(); }()) || !contact.value()->enabled) || contact.value()->sensor)) {
     return;
   }
-  auto body_a = flight::physics2d::find_physics2_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), contact.value()->body_a);
-  auto body_b = flight::physics2d::find_physics2_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), contact.value()->body_b);
-  if (((!body_a.has_value() || !body_b.has_value()) || !flight::physics2d::is_rigid_body2_dpair_awake(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body_a.value())), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body_b.value()))))) {
+  auto body_a = flight::physics2d::find_physics_2d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), contact.value()->body_a);
+  auto body_b = flight::physics2d::find_physics_2d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), contact.value()->body_b);
+  if (((!body_a.has_value() || !body_b.has_value()) || !flight::physics2d::is_rigid_body_2d_pair_awake(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body_a.value())), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body_b.value()))))) {
     return;
   }
   const double normal_x = contact.value()->normal_x;
@@ -79,29 +79,29 @@ inline void warm_start_physics2_dcontact_at(flight::Ref<flight::types::Physics2D
         auto point = contact.value()->points.element(i);
         const double impulse_x = ((point->normal_impulse * normal_x) + (point->tangent_impulse * tangent_x));
         const double impulse_y = ((point->normal_impulse * normal_y) + (point->tangent_impulse * tangent_y));
-        apply_physics2_dimpulse(body_a.value(), body_b.value(), point->r_ax, point->r_ay, point->r_bx, point->r_by, impulse_x, impulse_y);
+        apply_physics_2d_impulse(body_a.value(), body_b.value(), point->r_ax, point->r_ay, point->r_bx, point->r_by, impulse_x, impulse_y);
       }
       (i += 1.0);
     }
   }
 }
 
-inline void warm_start_physics2_dcontact_indices(flight::Ref<flight::types::Physics2DWorld> world, flight::Array<double> indices, double start, double count) {
+inline void warm_start_physics_2d_contact_indices(flight::Ref<flight::types::Physics2DWorld> world, flight::Array<double> indices, double start, double count) {
   const double end = (start + count);
   {
     double i = start;
     while ((i < end)) {
-      warm_start_physics2_dcontact_at(world, indices.element(i));
+      warm_start_physics_2d_contact_at(world, indices.element(i));
       (i += 1.0);
     }
   }
 }
 
-inline void warm_start_physics2_dcontacts(flight::Ref<flight::types::Physics2DWorld> world) {
+inline void warm_start_physics_2d_contacts(flight::Ref<flight::types::Physics2DWorld> world) {
   {
     double i = 0.0;
     while ((i < static_cast<double>(world->contacts.size()))) {
-      warm_start_physics2_dcontact_at(world, i);
+      warm_start_physics_2d_contact_at(world, i);
       (i += 1.0);
     }
   }
@@ -115,7 +115,7 @@ inline double relative_axis_velocity(flight::StructuralRef<flight::RowReadonly<f
   return (((vax - vbx) * axis_x) + ((vay - vby) * axis_y));
 }
 
-inline void solve_physics2_dcontact(flight::Ref<flight::types::Physics2DContact> contact, flight::Ref<flight::types::RigidBody2D> body_a, flight::Ref<flight::types::RigidBody2D> body_b) {
+inline void solve_physics_2d_contact(flight::Ref<flight::types::Physics2DContact> contact, flight::Ref<flight::types::RigidBody2D> body_a, flight::Ref<flight::types::RigidBody2D> body_b) {
   const double normal_x = contact->normal_x;
   const double normal_y = contact->normal_y;
   const double tangent_x = -normal_y;
@@ -131,59 +131,59 @@ inline void solve_physics2_dcontact(flight::Ref<flight::types::Physics2DContact>
         const double clamped_tangent = flight::maximum(-limit, flight::minimum(limit, (point->tangent_impulse + tangent_impulse)));
         (tangent_impulse = (clamped_tangent - point->tangent_impulse));
         (point->tangent_impulse = clamped_tangent);
-        apply_physics2_dimpulse(body_a, body_b, point->r_ax, point->r_ay, point->r_bx, point->r_by, (tangent_impulse * tangent_x), (tangent_impulse * tangent_y));
+        apply_physics_2d_impulse(body_a, body_b, point->r_ax, point->r_ay, point->r_bx, point->r_by, (tangent_impulse * tangent_x), (tangent_impulse * tangent_y));
         const double normal_velocity = relative_normal_velocity(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body_b)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DContactPoint>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DContactPoint>>>>(point)), normal_x, normal_y);
         double normal_impulse = (-point->normal_mass * (normal_velocity + point->bias));
         const double clamped_normal = flight::maximum(0.0, (point->normal_impulse + normal_impulse));
         (normal_impulse = (clamped_normal - point->normal_impulse));
         (point->normal_impulse = clamped_normal);
-        apply_physics2_dimpulse(body_a, body_b, point->r_ax, point->r_ay, point->r_bx, point->r_by, (normal_impulse * normal_x), (normal_impulse * normal_y));
+        apply_physics_2d_impulse(body_a, body_b, point->r_ax, point->r_ay, point->r_bx, point->r_by, (normal_impulse * normal_x), (normal_impulse * normal_y));
       }
       (i += 1.0);
     }
   }
 }
 
-inline void solve_physics2_dcontact_at(flight::Ref<flight::types::Physics2DWorld> world, double contact_index) {
+inline void solve_physics_2d_contact_at(flight::Ref<flight::types::Physics2DWorld> world, double contact_index) {
   std::optional<flight::Ref<flight::types::Physics2DContact>> contact = world->contacts.get(contact_index);
   if (((([&]() { const auto& presence_operand = contact; return !presence_operand.has_value(); }()) || !contact.value()->enabled) || contact.value()->sensor)) {
     return;
   }
-  auto body_a = flight::physics2d::find_physics2_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), contact.value()->body_a);
-  auto body_b = flight::physics2d::find_physics2_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), contact.value()->body_b);
-  if (((!body_a.has_value() || !body_b.has_value()) || !flight::physics2d::is_rigid_body2_dpair_awake(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body_a.value())), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body_b.value()))))) {
+  auto body_a = flight::physics2d::find_physics_2d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), contact.value()->body_a);
+  auto body_b = flight::physics2d::find_physics_2d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), contact.value()->body_b);
+  if (((!body_a.has_value() || !body_b.has_value()) || !flight::physics2d::is_rigid_body_2d_pair_awake(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body_a.value())), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body_b.value()))))) {
     return;
   }
-  solve_physics2_dcontact(contact.value(), body_a.value(), body_b.value());
+  solve_physics_2d_contact(contact.value(), body_a.value(), body_b.value());
 }
 
-inline void solve_physics2_dcontact_indices_once(flight::Ref<flight::types::Physics2DWorld> world, flight::Array<double> indices, double start, double count) {
+inline void solve_physics_2d_contact_indices_once(flight::Ref<flight::types::Physics2DWorld> world, flight::Array<double> indices, double start, double count) {
   const double end = (start + count);
   {
     double i = start;
     while ((i < end)) {
-      solve_physics2_dcontact_at(world, indices.element(i));
+      solve_physics_2d_contact_at(world, indices.element(i));
       (i += 1.0);
     }
   }
 }
 
-inline void solve_physics2_dcontacts_once(flight::Ref<flight::types::Physics2DWorld> world) {
+inline void solve_physics_2d_contacts_once(flight::Ref<flight::types::Physics2DWorld> world) {
   {
     double i = 0.0;
     while ((i < static_cast<double>(world->contacts.size()))) {
-      solve_physics2_dcontact_at(world, i);
+      solve_physics_2d_contact_at(world, i);
       (i += 1.0);
     }
   }
 }
 
-inline void solve_physics2_dcontacts(flight::Ref<flight::types::Physics2DWorld> world) {
+inline void solve_physics_2d_contacts(flight::Ref<flight::types::Physics2DWorld> world) {
   const double iterations = world->config->velocity_iterations;
   {
     double iteration = 0.0;
     while ((iteration < iterations)) {
-      solve_physics2_dcontacts_once(world);
+      solve_physics_2d_contacts_once(world);
       (iteration += 1.0);
     }
   }

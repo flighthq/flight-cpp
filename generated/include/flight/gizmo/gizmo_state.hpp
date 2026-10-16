@@ -26,15 +26,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/selection_state.hpp>
 
-#include <flight/types/scene2_d.hpp>
+#include <flight/types/scene_2d.hpp>
 
 #include <flight/types/rectangle.hpp>
 
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 
 #include <flight/types/gizmo_state.hpp>
 
-#include <flight/types/camera2_d.hpp>
+#include <flight/types/camera_2d.hpp>
 
 namespace flight::types { struct Camera2D; }
 namespace flight::types { struct Entity; }
@@ -88,7 +88,7 @@ struct GizmoRuntime;
 #include <flight/signals/emitter.hpp>
 #include <flight/signals/signal.hpp>
 #include <flight/signals/slot.hpp>
-#include <flight/types/camera2_d.hpp>
+#include <flight/types/camera_2d.hpp>
 #include <flight/types/cursor.hpp>
 #include <flight/types/display_object.hpp>
 #include <flight/types/entity.hpp>
@@ -98,12 +98,12 @@ struct GizmoRuntime;
 #include <flight/types/interaction_signals.hpp>
 #include <flight/types/keyboard_event_data.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/node_interaction.hpp>
 #include <flight/types/partial_node.hpp>
 #include <flight/types/pointer_event_data.hpp>
 #include <flight/types/rectangle.hpp>
-#include <flight/types/scene2_d.hpp>
+#include <flight/types/scene_2d.hpp>
 #include <flight/types/selection_state.hpp>
 #include <flight/types/shape.hpp>
 #include <flight/types/shape_command.hpp>
@@ -464,7 +464,7 @@ inline void start_gizmo_transform(flight::Ref<GizmoRuntime<NodeType>> runtime, f
   }
   std::optional<NodeType> active = flight::selection::get_active_node<NodeType>(runtime->selection.value());
   const double axis_rotation = (((runtime->space == flight::String("local")) && active.has_value()) ? runtime->features.value()->get_world_rotation(active) : (runtime->camera.value()->rotation * flight::math::rad_to_deg_flight_value_variable__u000052__u000041__u000044__u00005f__u000054__u00004f__u00005f__u000044__u000045__u000047__flight_source_ad5040a7d8c07bd3));
-  flight::camera::unproject_camera2_dpoint(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>(runtime->camera.value())), runtime->viewport_width, runtime->viewport_height, flight::row_get<flight::RowKey<"x">>(data), flight::row_get<flight::RowKey<"y">>(data), runtime->scratch_point);
+  flight::camera::unproject_camera_2d_point(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>(runtime->camera.value())), runtime->viewport_width, runtime->viewport_height, flight::row_get<flight::RowKey<"x">>(data), flight::row_get<flight::RowKey<"y">>(data), runtime->scratch_point);
   (runtime->drag = std::optional<flight::Ref<GizmoDrag>>{flight::make_ref<GizmoDrag>(GizmoDrag{.axis_rotation = axis_rotation, .handle = handle, .mode = mode, .pivot_world_x = runtime->pivot_world->x, .pivot_world_y = runtime->pivot_world->y, .pivot_screen_x = runtime->pivot_screen->x, .pivot_screen_y = runtime->pivot_screen->y, .pointer_id = flight::row_get<flight::RowKey<"pointerId">>(data), .screen_rotation = (flight::row_get<flight::RowKey<"rotation">>(runtime->handle_root) * flight::math::deg_to_rad_flight_value_variable__u000044__u000045__u000047__u00005f__u000054__u00004f__u00005f__u000052__u000041__u000044__flight_source_ad5040a7d8c07bd3), .start_screen_x = flight::row_get<flight::RowKey<"x">>(data), .start_screen_y = flight::row_get<flight::RowKey<"y">>(data), .start_world_x = runtime->scratch_point->x, .start_world_y = runtime->scratch_point->y})});
   flight::signals::emit_signal<std::function<void()>>(runtime->signals->on_transform_begin);
 }
@@ -524,16 +524,16 @@ template <typename NodeType>
 inline void update_gizmo_outline(flight::Ref<GizmoRuntime<NodeType>> runtime) {
   auto bounds = runtime->bounds;
   flight::Array<double> points = runtime->outline_points;
-  flight::camera::project_camera2_dpoint(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>(runtime->camera.value())), runtime->viewport_width, runtime->viewport_height, bounds->x, bounds->y, runtime->scratch_point);
+  flight::camera::project_camera_2d_point(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>(runtime->camera.value())), runtime->viewport_width, runtime->viewport_height, bounds->x, bounds->y, runtime->scratch_point);
   (points.element(0.0) = runtime->scratch_point->x);
   (points.element(1.0) = runtime->scratch_point->y);
-  flight::camera::project_camera2_dpoint(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>(runtime->camera.value())), runtime->viewport_width, runtime->viewport_height, (bounds->x + bounds->width), bounds->y, runtime->scratch_point);
+  flight::camera::project_camera_2d_point(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>(runtime->camera.value())), runtime->viewport_width, runtime->viewport_height, (bounds->x + bounds->width), bounds->y, runtime->scratch_point);
   (points.element(2.0) = runtime->scratch_point->x);
   (points.element(3.0) = runtime->scratch_point->y);
-  flight::camera::project_camera2_dpoint(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>(runtime->camera.value())), runtime->viewport_width, runtime->viewport_height, (bounds->x + bounds->width), (bounds->y + bounds->height), runtime->scratch_point);
+  flight::camera::project_camera_2d_point(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>(runtime->camera.value())), runtime->viewport_width, runtime->viewport_height, (bounds->x + bounds->width), (bounds->y + bounds->height), runtime->scratch_point);
   (points.element(4.0) = runtime->scratch_point->x);
   (points.element(5.0) = runtime->scratch_point->y);
-  flight::camera::project_camera2_dpoint(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>(runtime->camera.value())), runtime->viewport_width, runtime->viewport_height, bounds->x, (bounds->y + bounds->height), runtime->scratch_point);
+  flight::camera::project_camera_2d_point(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>(runtime->camera.value())), runtime->viewport_width, runtime->viewport_height, bounds->x, (bounds->y + bounds->height), runtime->scratch_point);
   (points.element(6.0) = runtime->scratch_point->x);
   (points.element(7.0) = runtime->scratch_point->y);
   flight::shape::clear_shape_commands(runtime->outline);
@@ -589,7 +589,7 @@ inline void update_gizmo_scale(flight::Ref<GizmoRuntime<NodeType>> runtime, flig
 
 template <typename NodeType>
 inline void update_gizmo_translation(flight::Ref<GizmoRuntime<NodeType>> runtime, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<GizmoDrag>>>> drag, double screen_x, double screen_y) {
-  flight::camera::unproject_camera2_dpoint(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>(runtime->camera.value())), runtime->viewport_width, runtime->viewport_height, screen_x, screen_y, runtime->scratch_point);
+  flight::camera::unproject_camera_2d_point(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>(runtime->camera.value())), runtime->viewport_width, runtime->viewport_height, screen_x, screen_y, runtime->scratch_point);
   const double delta_x = (runtime->scratch_point->x - flight::row_get<flight::RowKey<"startWorldX">>(drag));
   const double delta_y = (runtime->scratch_point->y - flight::row_get<flight::RowKey<"startWorldY">>(drag));
   const double radians = (flight::row_get<flight::RowKey<"axisRotation">>(drag) * flight::math::deg_to_rad_flight_value_variable__u000044__u000045__u000047__u00005f__u000054__u00004f__u00005f__u000052__u000041__u000044__flight_source_ad5040a7d8c07bd3);
@@ -803,7 +803,7 @@ inline void update_gizmo(flight::Ref<flight::types::GizmoState<NodeType>> state)
   }
   set_gizmo_node_visible(runtime->overlay_root, true);
   resolve_gizmo_pivot<NodeType>(runtime);
-  flight::camera::project_camera2_dpoint(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>(runtime->camera.value())), runtime->viewport_width, runtime->viewport_height, runtime->pivot_world->x, runtime->pivot_world->y, runtime->pivot_screen);
+  flight::camera::project_camera_2d_point(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>(runtime->camera.value())), runtime->viewport_width, runtime->viewport_height, runtime->pivot_world->x, runtime->pivot_world->y, runtime->pivot_screen);
   set_gizmo_node_transform(runtime->handle_root, runtime->pivot_screen->x, runtime->pivot_screen->y, resolve_gizmo_screen_rotation<NodeType>(runtime));
   set_gizmo_node_visible(runtime->handle_root, (runtime->mode != flight::String("none")));
   update_gizmo_handle_visibility<NodeType>(runtime, runtime->mode);

@@ -10,9 +10,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/scene2_drenderer.hpp>
+#include <flight/types/scene_2d_renderer.hpp>
 
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 
 #include <flight/types/matrix.hpp>
 
@@ -38,7 +38,7 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/scene2d/sprite.hpp>
 #include <flight/texture/texture.hpp>
 #include <flight/types/contract.hpp>
-#include <flight/scene2d_canvas/canvas_node2_d.hpp>
+#include <flight/scene2d_canvas/canvas_node_2d.hpp>
 #include <flight/scene2d_canvas/canvas_render_state.hpp>
 #include <flight/scene2d_canvas/canvas_texture_resolver.hpp>
 #include <flight/scene2d_canvas/canvas_texture_view.hpp>
@@ -55,7 +55,7 @@ using flight::types::Scene2DRenderer;
 inline flight::Ref<flight::types::Vector2> sprite_view_size = flight::make_ref<flight::types::Vector2>(flight::types::Vector2{.x = 0.0, .y = 0.0});
 
 inline void draw_canvas_sprite(flight::Ref<flight::types::CanvasRenderState> state, flight::Ref<flight::types::RenderProxy2D> sprite) {
-  flight::scene2d_canvas::draw_canvas_scene2_d(state, sprite);
+  flight::scene2d_canvas::draw_canvas_scene_2d(state, sprite);
   std::optional<flight::types::Texture> texture = flight::row_get<flight::RowKey<"data">>(flight::structural_ref_cast<flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Sprite>>>>>(sprite->source))->texture;
   if ((!texture.has_value() || (std::visit([](const auto& value) { return value->dimension; }, texture.value()) != flight::String("2d")))) {
     return;
@@ -73,7 +73,7 @@ inline void draw_canvas_sprite(flight::Ref<flight::types::CanvasRenderState> sta
   flight::CanvasRenderingContext2D context = state->context;
   ([&]() { auto optional_chain_receiver = state->apply_blend_mode; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(state, sprite->blend_mode); }());
   flight::scene2d_canvas::set_canvas_global_alpha(state, sprite->alpha);
-  flight::scene2d_canvas::set_canvas_transform(state, context, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(sprite->transform2_d)));
+  flight::scene2d_canvas::set_canvas_transform(state, context, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(sprite->transform_2d)));
   const bool smoothing = flight::scene2d_canvas::resolve_canvas_texture_smoothing(state, std::get<2>(texture.value())->sampler->mag_filter);
   if (!smoothing) {
     flight::scene2d_canvas::set_canvas_image_smoothing(state, false);

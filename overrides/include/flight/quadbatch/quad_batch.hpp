@@ -698,7 +698,7 @@ inline void set_quad_batch_transform_type(flight::Ref<flight::types::QuadBatch> 
 
 inline flight::Ref<flight::types::QuadBatchRuntime>
 create_quad_batch_runtime() {
-  const auto base = flight::scene2d::create_node2_d_runtime();
+  const auto base = flight::scene2d::create_node_2d_runtime();
   auto runtime = flight::make_ref<flight::types::QuadBatchRuntime>();
   runtime->binding = base->binding;
   runtime->uid = base->uid;
@@ -774,7 +774,7 @@ inline flight::Ref<flight::types::QuadBatch> create_quad_batch_with_data(
   out->enabled = true;
   out->kind = flight::types::quad_batch_kind;
   out->name = std::nullopt;
-  out->entity_runtime_key = flight::scene2d::create_node2_d_runtime();
+  out->entity_runtime_key = flight::scene2d::create_node_2d_runtime();
   out->alpha = 1.0;
   out->visible = true;
   out->blend_mode = std::nullopt;

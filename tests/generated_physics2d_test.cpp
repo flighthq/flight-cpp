@@ -88,28 +88,28 @@ ColliderRow collider(const Shape& local, double density) {
 types::Physics2DMassData masses_of(const Shape& local, double density) {
   const auto out = flight::make_ref<types::Physics2DMassData>(
       types::Physics2DMassData{.mass = 0.0, .inertia = 0.0, .center_x = 0.0, .center_y = 0.0});
-  physics::compute_physics2_dcollider_mass_data(collider(local, density), out);
+  physics::compute_physics_2d_collider_mass_data(collider(local, density), out);
   return *out;
 }
 
 // Material mixing: the geometric mean for friction, the bouncier surface for restitution, both symmetric.
 void test_material_mixing() {
-  check(physics::mix_physics2_dfriction(0.0, 1.0) == 0.0 && physics::mix_physics2_dfriction(1.0, 0.0) == 0.0,
+  check(physics::mix_physics_2d_friction(0.0, 1.0) == 0.0 && physics::mix_physics_2d_friction(1.0, 0.0) == 0.0,
         "either surface at zero friction makes the pair frictionless");
-  check(close(physics::mix_physics2_dfriction(0.25, 1.0), physics::mix_physics2_dfriction(1.0, 0.25)),
+  check(close(physics::mix_physics_2d_friction(0.25, 1.0), physics::mix_physics_2d_friction(1.0, 0.25)),
         "friction mixing is symmetric in the pair");
-  check(close(physics::mix_physics2_dfriction(0.36, 0.36), 0.36), "equal coefficients keep their value");
-  check(close(physics::mix_physics2_dfriction(4.0, 9.0), 6.0), "and the mean is the geometric one");
+  check(close(physics::mix_physics_2d_friction(0.36, 0.36), 0.36), "equal coefficients keep their value");
+  check(close(physics::mix_physics_2d_friction(4.0, 9.0), 6.0), "and the mean is the geometric one");
 
   const double widest = std::numeric_limits<double>::max();
-  const double mixed = physics::mix_physics2_dfriction(widest, widest);
+  const double mixed = physics::mix_physics_2d_friction(widest, widest);
   check(std::isfinite(mixed) && close(mixed / widest, 1.0),
         "two large finite coefficients do not overflow the mix");
 
-  check(physics::mix_physics2_drestitution(0.2, 0.8) == 0.8 &&
-            physics::mix_physics2_drestitution(0.8, 0.2) == 0.8,
+  check(physics::mix_physics_2d_restitution(0.2, 0.8) == 0.8 &&
+            physics::mix_physics_2d_restitution(0.8, 0.2) == 0.8,
         "the bouncier surface decides restitution, whichever side it is on");
-  check(physics::mix_physics2_drestitution(0.0, 0.9) == 0.9, "and a dead surface does not damp a live one");
+  check(physics::mix_physics_2d_restitution(0.0, 0.9) == 0.9, "and a dead surface does not damp a live one");
 }
 
 // Disc and boxes: derived mass, the closed-form inertia about the collider's own centroid, and the centroid itself.

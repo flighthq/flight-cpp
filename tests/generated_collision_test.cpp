@@ -17,8 +17,8 @@
 // boundary, latest-array scratch rebinding, degenerate sweep validation, shape-A contact-coordinate
 // sign, reversed-argument normal, and failure-output clearing mutations produced 4/1/1/1/2/1/2
 // focused assertion failures, respectively; every mutant was discarded after its run.
-#include <flight/collision/point_containment3_d.hpp>
-#include <flight/collision/sweep_collision_shape2_d.hpp>
+#include <flight/collision/point_containment_3d.hpp>
+#include <flight/collision/sweep_collision_shape_2d.hpp>
 
 #include <cmath>
 #include <iostream>
@@ -67,7 +67,7 @@ types::CollisionBuiltInShape2D built_in_shape2_d(Value value) {
   };
 }
 
-void check_point_containment3_d() {
+void check_point_containment_3d() {
   const auto sphere = built_in_shape(Sphere3D{
       .x = 1.0,
       .y = 2.0,
@@ -75,11 +75,11 @@ void check_point_containment3_d() {
       .radius = 2.0,
       .kind = flight::String("sphere"),
   });
-  check(collision::get_collision_shape_contains_point3_d(sphere, 1.0, 2.0, 3.0),
+  check(collision::get_collision_shape_contains_point_3d(sphere, 1.0, 2.0, 3.0),
         "sphere contains its center with ordered point coordinates");
-  check(collision::get_collision_shape_contains_point3_d(sphere, 1.0, 2.0, 5.0),
+  check(collision::get_collision_shape_contains_point_3d(sphere, 1.0, 2.0, 5.0),
         "sphere includes its surface");
-  check(!collision::get_collision_shape_contains_point3_d(sphere, 1.0, 2.0, 5.01),
+  check(!collision::get_collision_shape_contains_point_3d(sphere, 1.0, 2.0, 5.01),
         "sphere excludes a point outside on Z");
 
   const auto aabb = built_in_shape(Aabb3D{
@@ -91,11 +91,11 @@ void check_point_containment3_d() {
       .max_z = 3.0,
       .kind = flight::String("aabb"),
   });
-  check(collision::get_collision_shape_contains_point3_d(aabb, 0.0, 0.0, 0.0),
+  check(collision::get_collision_shape_contains_point_3d(aabb, 0.0, 0.0, 0.0),
         "AABB contains an interior point");
-  check(collision::get_collision_shape_contains_point3_d(aabb, 1.0, 2.0, 3.0),
+  check(collision::get_collision_shape_contains_point_3d(aabb, 1.0, 2.0, 3.0),
         "AABB includes its max corner boundary");
-  check(!collision::get_collision_shape_contains_point3_d(aabb, 0.0, 0.0, -3.01),
+  check(!collision::get_collision_shape_contains_point_3d(aabb, 0.0, 0.0, -3.01),
         "AABB excludes a point beyond its min Z face");
 
   constexpr double eighth_turn_sine = 0.3826834323650897717;
@@ -113,9 +113,9 @@ void check_point_containment3_d() {
       .rotation_w = eighth_turn_cosine,
       .kind = flight::String("box"),
   });
-  check(collision::get_collision_shape_contains_point3_d(box, 1.2, 0.0, -1.2),
+  check(collision::get_collision_shape_contains_point_3d(box, 1.2, 0.0, -1.2),
         "oriented box includes a point on its rotated long axis");
-  check(!collision::get_collision_shape_contains_point3_d(box, 1.2, 0.0, 1.2),
+  check(!collision::get_collision_shape_contains_point_3d(box, 1.2, 0.0, 1.2),
         "oriented box uses the conjugate rather than the forward rotation");
   const auto identity_box = built_in_shape(Box3D{
       .x = 0.0,
@@ -130,10 +130,10 @@ void check_point_containment3_d() {
       .rotation_w = 1.0,
       .kind = flight::String("box"),
   });
-  check(collision::get_collision_shape_contains_point3_d(
+  check(collision::get_collision_shape_contains_point_3d(
             identity_box, 1.0, 0.0, 0.0),
         "box includes its face boundary");
-  check(!collision::get_collision_shape_contains_point3_d(
+  check(!collision::get_collision_shape_contains_point_3d(
             identity_box, 1.01, 0.0, 0.0),
         "box excludes a point beyond its face");
 
@@ -147,11 +147,11 @@ void check_point_containment3_d() {
       .radius = 0.5,
       .kind = flight::String("capsule"),
   });
-  check(collision::get_collision_shape_contains_point3_d(capsule, 0.0, 0.5, 0.0),
+  check(collision::get_collision_shape_contains_point_3d(capsule, 0.0, 0.5, 0.0),
         "capsule includes its cylindrical side boundary");
-  check(collision::get_collision_shape_contains_point3_d(capsule, 2.5, 0.0, 0.0),
+  check(collision::get_collision_shape_contains_point_3d(capsule, 2.5, 0.0, 0.0),
         "capsule includes its rounded cap boundary");
-  check(!collision::get_collision_shape_contains_point3_d(capsule, 2.51, 0.0, 0.0),
+  check(!collision::get_collision_shape_contains_point_3d(capsule, 2.51, 0.0, 0.0),
         "capsule excludes a point beyond its rounded cap");
   const auto degenerate_capsule = built_in_shape(Capsule3D{
       .x0 = 1.0,
@@ -163,10 +163,10 @@ void check_point_containment3_d() {
       .radius = 1.0,
       .kind = flight::String("capsule"),
   });
-  check(collision::get_collision_shape_contains_point3_d(
+  check(collision::get_collision_shape_contains_point_3d(
             degenerate_capsule, 1.0, 2.0, 1.0),
         "zero-length capsule remains a boundary-inclusive sphere");
-  check(!collision::get_collision_shape_contains_point3_d(
+  check(!collision::get_collision_shape_contains_point_3d(
             degenerate_capsule, 1.0, 2.01, 1.0),
         "zero-length capsule excludes a point beyond its radius");
 
@@ -180,11 +180,11 @@ void check_point_containment3_d() {
       .radius = 1.0,
       .kind = flight::String("cylinder"),
   });
-  check(collision::get_collision_shape_contains_point3_d(cylinder, 1.0, 2.0, 0.0),
+  check(collision::get_collision_shape_contains_point_3d(cylinder, 1.0, 2.0, 0.0),
         "cylinder includes its rim and flat-cap boundary");
-  check(!collision::get_collision_shape_contains_point3_d(cylinder, 0.99, 2.01, 0.0),
+  check(!collision::get_collision_shape_contains_point_3d(cylinder, 0.99, 2.01, 0.0),
         "cylinder excludes the rounded-corner region beyond its cap");
-  check(!collision::get_collision_shape_contains_point3_d(cylinder, 1.01, 0.0, 0.0),
+  check(!collision::get_collision_shape_contains_point_3d(cylinder, 1.01, 0.0, 0.0),
         "cylinder excludes a point beyond its radial boundary");
   const auto degenerate_cylinder = built_in_shape(Cylinder3D{
       .x0 = 1.0,
@@ -196,7 +196,7 @@ void check_point_containment3_d() {
       .radius = 1.0,
       .kind = flight::String("cylinder"),
   });
-  check(!collision::get_collision_shape_contains_point3_d(
+  check(!collision::get_collision_shape_contains_point_3d(
             degenerate_cylinder, 1.0, 1.0, 1.0),
         "zero-length cylinder is rejected rather than rounded like a capsule");
 
@@ -210,13 +210,13 @@ void check_point_containment3_d() {
       .radius = 1.5,
       .kind = flight::String("cone"),
   });
-  check(collision::get_collision_shape_contains_point3_d(cone, 0.75, 1.5, 0.0),
+  check(collision::get_collision_shape_contains_point_3d(cone, 0.75, 1.5, 0.0),
         "cone includes its tapered side boundary");
-  check(!collision::get_collision_shape_contains_point3_d(cone, 0.8, 1.5, 0.0),
+  check(!collision::get_collision_shape_contains_point_3d(cone, 0.8, 1.5, 0.0),
         "cone applies the interpolated radius rather than the base radius");
-  check(collision::get_collision_shape_contains_point3_d(cone, 0.0, 3.0, 0.0),
+  check(collision::get_collision_shape_contains_point_3d(cone, 0.0, 3.0, 0.0),
         "cone includes its apex boundary");
-  check(!collision::get_collision_shape_contains_point3_d(cone, 0.0, 3.01, 0.0),
+  check(!collision::get_collision_shape_contains_point_3d(cone, 0.0, 3.01, 0.0),
         "cone excludes a point beyond its apex");
   const auto degenerate_cone = built_in_shape(Cone3D{
       .apex_x = 1.0,
@@ -228,7 +228,7 @@ void check_point_containment3_d() {
       .radius = 1.0,
       .kind = flight::String("cone"),
   });
-  check(!collision::get_collision_shape_contains_point3_d(
+  check(!collision::get_collision_shape_contains_point_3d(
             degenerate_cone, 1.0, 1.0, 1.0),
         "zero-length cone is rejected before radius interpolation");
 
@@ -241,8 +241,8 @@ void check_point_containment3_d() {
   };
   std::vector<int> support_order;
   bool exact_support_owners = true;
-  collision::clear_collision_supports3_d();
-  collision::register_collision_support3_d(
+  collision::clear_collision_supports_3d();
+  collision::register_collision_support_3d(
       flight::String("convex"),
       [&](types::CollisionShape3D shape, double, double, double,
           flight::Array<double> out) {
@@ -253,7 +253,7 @@ void check_point_containment3_d() {
         out.element(1.0) = 0.0;
         out.element(2.0) = 0.0;
       });
-  collision::register_collision_support3_d(
+  collision::register_collision_support_3d(
       flight::String("sphere"),
       [&](types::CollisionShape3D shape, double, double, double,
           flight::Array<double> out) {
@@ -264,7 +264,7 @@ void check_point_containment3_d() {
         out.element(1.0) = 0.0;
         out.element(2.0) = 0.0;
       });
-  static_cast<void>(collision::is_point_in_convex_hull3_d(
+  static_cast<void>(collision::is_point_in_convex_hull_3d(
       identity_points, 4.0, 5.0, 6.0));
   check(collision::scratch_hull == scratch_hull_owner &&
             collision::scratch_probe == scratch_probe_owner,
@@ -280,8 +280,8 @@ void check_point_containment3_d() {
             support_order[0] == 1 && support_order[1] == 2,
         "convex GJK receives the exact hull first and exact point probe second");
 
-  collision::clear_collision_supports3_d();
-  collision::register_built_in_collision_supports3_d();
+  collision::clear_collision_supports_3d();
+  collision::register_built_in_collision_supports_3d();
   const flight::Array<double> cube_points{
       -1.0, -1.0, -1.0, 1.0, -1.0, -1.0,
       1.0, 1.0, -1.0, -1.0, 1.0, -1.0,
@@ -292,9 +292,9 @@ void check_point_containment3_d() {
       .points = cube_points,
       .kind = flight::String("convex"),
   });
-  check(collision::get_collision_shape_contains_point3_d(convex, 0.0, 0.0, 0.0),
+  check(collision::get_collision_shape_contains_point_3d(convex, 0.0, 0.0, 0.0),
         "convex GJK contains an interior point");
-  check(!collision::get_collision_shape_contains_point3_d(convex, 1.1, 0.0, 0.0),
+  check(!collision::get_collision_shape_contains_point_3d(convex, 1.1, 0.0, 0.0),
         "convex GJK excludes an exterior point");
   const flight::Array<double> tetra_points{
       0.0, 0.0, 0.0,
@@ -306,15 +306,15 @@ void check_point_containment3_d() {
       .points = tetra_points,
       .kind = flight::String("convex"),
   });
-  check(collision::get_collision_shape_contains_point3_d(tetra, 0.1, 0.1, 0.1),
+  check(collision::get_collision_shape_contains_point_3d(tetra, 0.1, 0.1, 0.1),
         "convex GJK contains a point inside a tetrahedron");
-  check(!collision::get_collision_shape_contains_point3_d(tetra, 0.9, 0.9, 0.9),
+  check(!collision::get_collision_shape_contains_point_3d(tetra, 0.9, 0.9, 0.9),
         "convex GJK rejects a tetrahedron bounding-box corner");
   const auto empty_convex = built_in_shape(Convex3D{
       .points = flight::Array<double>{},
       .kind = flight::String("convex"),
   });
-  check(!collision::get_collision_shape_contains_point3_d(
+  check(!collision::get_collision_shape_contains_point_3d(
             empty_convex, 0.0, 0.0, 0.0),
         "empty convex hull returns false before GJK");
 
@@ -328,19 +328,19 @@ void check_point_containment3_d() {
       .points = large_tetra_points,
       .kind = flight::String("convex"),
   });
-  check(collision::get_collision_shape_contains_point3_d(large_tetra, 2.0, 2.0, 2.0),
+  check(collision::get_collision_shape_contains_point_3d(large_tetra, 2.0, 2.0, 2.0),
         "first convex query reads the caller's larger hull");
-  check(!collision::get_collision_shape_contains_point3_d(tetra, 2.0, 2.0, 2.0),
+  check(!collision::get_collision_shape_contains_point_3d(tetra, 2.0, 2.0, 2.0),
         "second convex query does not retain the first caller hull");
   check(collision::scratch_hull->points.identity() == tetra_points.identity(),
         "convex scratch rebinds to the latest caller point-array owner");
 }
 
-void check_sweep_collision_shape2_d() {
+void check_sweep_collision_shape_2d() {
   using collision::SweepAabb2D;
   using collision::SweepCircle2D;
 
-  auto out = collision::create_collision_time_of_impact2_d();
+  auto out = collision::create_collision_time_of_impact_2d();
   check(out->fraction == 0.0 && out->x == 0.0 && out->y == 0.0 &&
             out->normal_x == 0.0 && out->normal_y == 0.0,
         "sweep output starts in the reusable miss state");
@@ -357,10 +357,10 @@ void check_sweep_collision_shape2_d() {
       .radius = 1.0,
       .kind = flight::String("circle"),
   });
-  check(!collision::sweep_collision_shape2_d(
+  check(!collision::sweep_collision_shape_2d(
             moving_circle, 0.0, 0.0, fixed_circle, 0.0, 0.0, out),
         "separated stationary circles have no time of impact");
-  check(collision::sweep_collision_shape2_d(
+  check(collision::sweep_collision_shape_2d(
             moving_circle, 10.0, 0.0, fixed_circle, 0.0, 0.0, out),
         "public sweep dispatch reaches the exact circle solver");
   check(std::abs(out->fraction - 0.3) <= 1e-12 && out->normal_x == -1.0 &&
@@ -372,7 +372,7 @@ void check_sweep_collision_shape2_d() {
   out->y = 9.0;
   out->normal_x = 9.0;
   out->normal_y = 9.0;
-  check(!collision::sweep_collision_shape2_d(
+  check(!collision::sweep_collision_shape_2d(
             moving_circle, 10.0, 0.0, fixed_circle, 0.0, 0.0, out, 0.2),
         "sweep honours maxFraction");
   check(out->fraction == 0.0 && out->x == 0.0 && out->y == 0.0 &&
@@ -392,13 +392,13 @@ void check_sweep_collision_shape2_d() {
       .radius = 1.0,
       .kind = flight::String("circle"),
   });
-  check(collision::sweep_collision_shape2_d(
+  check(collision::sweep_collision_shape_2d(
             face_circle, 10.0, 0.0, fixed_box, 0.0, 0.0, out),
         "circle-to-box sweep reaches polygon-face dispatch");
   check(std::abs(out->fraction - 0.4) <= 1e-12 && out->normal_x == -1.0 &&
             out->normal_y == 0.0 && out->x == 5.0 && out->y == 6.0,
         "circle-to-box sweep writes the exact face hit on shape A");
-  check(collision::sweep_collision_shape2_d(
+  check(collision::sweep_collision_shape_2d(
             fixed_box, 0.0, 0.0, face_circle, 10.0, 0.0, out),
         "reversed box-to-circle sweep remains reachable");
   check(std::abs(out->fraction - 0.4) <= 1e-12 && out->normal_x == 1.0 &&
@@ -411,7 +411,7 @@ void check_sweep_collision_shape2_d() {
       .radius = 1.0,
       .kind = flight::String("circle"),
   });
-  check(collision::sweep_collision_shape2_d(
+  check(collision::sweep_collision_shape_2d(
             moving_circle, 1.0, 0.0, overlapping_circle, 0.0, 0.0, out),
         "an initially overlapping pair reports a zero-fraction hit");
   check(out->fraction == 0.0 && out->normal_x == -1.0,
@@ -422,7 +422,7 @@ void check_sweep_collision_shape2_d() {
       .radius = 1.0,
       .kind = flight::String("circle"),
   });
-  check(!collision::sweep_collision_shape2_d(
+  check(!collision::sweep_collision_shape_2d(
             moving_circle, -1.0, 0.0, touching_circle, 0.0, 0.0, out),
         "a touching pair moving apart has no future impact");
 
@@ -434,7 +434,7 @@ void check_sweep_collision_shape2_d() {
   out->fraction = 9.0;
   out->x = 9.0;
   out->normal_x = 9.0;
-  check(!collision::sweep_collision_shape2_d(
+  check(!collision::sweep_collision_shape_2d(
             unsupported_point, 1.0, 0.0, fixed_circle, 0.0, 0.0, out),
         "unsupported area-less sweep input fails closed");
   check(out->fraction == 0.0 && out->x == 0.0 && out->normal_x == 0.0,
@@ -445,10 +445,10 @@ void check_sweep_collision_shape2_d() {
       .radius = 0.0,
       .kind = flight::String("circle"),
   });
-  check(!collision::sweep_collision_shape2_d(
+  check(!collision::sweep_collision_shape_2d(
             degenerate_circle, 10.0, 0.0, fixed_circle, 0.0, 0.0, out),
         "zero-radius sweep input is rejected as degenerate");
-  check(!collision::sweep_collision_shape2_d(
+  check(!collision::sweep_collision_shape_2d(
             moving_circle,
             std::numeric_limits<double>::quiet_NaN(),
             0.0,
@@ -462,7 +462,7 @@ void check_sweep_collision_shape2_d() {
 } // namespace
 
 int main() {
-  check_point_containment3_d();
-  check_sweep_collision_shape2_d();
+  check_point_containment_3d();
+  check_sweep_collision_shape_2d();
   return failures == 0 ? 0 : 1;
 }

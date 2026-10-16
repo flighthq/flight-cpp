@@ -32,7 +32,7 @@ namespace flight::types { struct RigidBody3D; }
 namespace flight::types { struct SpatialIndexBackend3D; }
 
 #include <flight/types/collision.hpp>
-#include <flight/types/physics3_d.hpp>
+#include <flight/types/physics_3d.hpp>
 #include <flight/types/spatial.hpp>
 #include <flight/physics3d/world.hpp>
 
@@ -65,7 +65,7 @@ inline bool is_body_live(flight::StructuralRef<flight::RowReadonly<flight::RowOf
   return ((flight::row_get<flight::RowKey<"type">>(body) != flight::String("static")) && !flight::row_get<flight::RowKey<"sleeping">>(body));
 }
 
-inline bool is_rigid_body3_dpair_awake(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> b) {
+inline bool is_rigid_body_3d_pair_awake(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> b) {
   return (is_body_live(a) || is_body_live(b));
 }
 
@@ -119,7 +119,7 @@ inline double island_root_of(flight::Map<double, double> parents, double index) 
 }
 
 inline void keep_body_awake(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world, double body_index) {
-  auto body = flight::physics3d::find_physics3_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(world), body_index);
+  auto body = flight::physics3d::find_physics_3d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(world), body_index);
   if ((body.has_value() && (body.value()->type != flight::String("static")))) {
     (body.value()->sleep_timer = 0.0);
   }
@@ -142,7 +142,7 @@ inline void prepare_island_slices(flight::Array<double> starts, flight::Array<do
 }
 
 inline double solve_island_for_body(flight::Ref<flight::types::Physics3DWorld> world, double body_index) {
-  auto body = flight::physics3d::find_physics3_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), body_index);
+  auto body = flight::physics3d::find_physics_3d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), body_index);
   if (((!body.has_value() || (body.value()->type == flight::String("static"))) || body.value()->sleeping)) {
     return -1.0;
   }
@@ -158,8 +158,8 @@ inline double solve_island_for_pair(flight::Ref<flight::types::Physics3DWorld> w
 }
 
 inline void union_dynamic_pair(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world, flight::Map<double, double> parents, double a, double b) {
-  auto first = flight::physics3d::find_physics3_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(world), a);
-  auto second = flight::physics3d::find_physics3_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(world), b);
+  auto first = flight::physics3d::find_physics_3d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(world), a);
+  auto second = flight::physics3d::find_physics_3d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(world), b);
   if ((!first.has_value() || !second.has_value())) {
     return;
   }
@@ -173,7 +173,7 @@ inline void union_dynamic_pair(flight::StructuralRef<flight::RowReadonly<flight:
   }
 }
 
-inline void update_physics3_dsleep(flight::Ref<flight::types::Physics3DWorld> world, double dt) {
+inline void update_physics_3d_sleep(flight::Ref<flight::types::Physics3DWorld> world, double dt) {
   auto config = world->config;
   flight::Array<flight::Ref<flight::types::RigidBody3D>> bodies = world->bodies;
   flight::Map<double, double> parents = world->island_parents;
@@ -314,10 +314,10 @@ inline void update_physics3_dsleep(flight::Ref<flight::types::Physics3DWorld> wo
   }
 }
 
-inline std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>)>> physics3_djoint_resolution_guard = std::nullopt;
+inline std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>)>> physics_3d_joint_resolution_guard = std::nullopt;
 
-inline void build_physics3_dsolve_islands(flight::Ref<flight::types::Physics3DWorld> world) {
-  ([&]() { auto optional_chain_receiver = physics3_djoint_resolution_guard; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(world); }());
+inline void build_physics_3d_solve_islands(flight::Ref<flight::types::Physics3DWorld> world) {
+  ([&]() { auto optional_chain_receiver = physics_3d_joint_resolution_guard; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(world); }());
   flight::Array<double> roots = world->solve_island_roots;
   flight::Map<double, double> by_root = world->solve_island_by_root;
   flight::Array<double> body_counts = world->solve_island_body_counts;
@@ -453,8 +453,8 @@ inline void build_physics3_dsolve_islands(flight::Ref<flight::types::Physics3DWo
   }
 }
 
-inline void set_physics3_djoint_resolution_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>)>> guard) {
-  (physics3_djoint_resolution_guard = guard);
+inline void set_physics_3d_joint_resolution_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>)>> guard) {
+  (physics_3d_joint_resolution_guard = guard);
 }
 
 } // namespace flight::physics3d

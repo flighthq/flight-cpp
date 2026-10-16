@@ -25,7 +25,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/scene3d_wgpu/wgpu_mesh_fragment_tail.hpp>
 #include <flight/scene3d_wgpu/wgpu_mesh_pipeline.hpp>
-#include <flight/scene3d_wgpu/wgpu_scene3_druntime.hpp>
+#include <flight/scene3d_wgpu/wgpu_scene_3d_runtime.hpp>
 
 namespace flight::scene3d_wgpu {
 
@@ -101,7 +101,7 @@ struct sample_type_056ee483a28c4f4f : public flight::ReferenceEnabled {
 // optionalSingle construction requires expression type evidence
 
 inline flight::Ref<WgpuToonPipeline> ensure_wgpu_toon_pipeline(flight::Ref<WgpuRenderState> state, flight::Ref<WgpuToonDefineKey> key, flight::String format) {
-  return ensure_wgpu_scene3_dpipeline(state, flight::String("toon:") + flight::to_string(format) + flight::String("|") + flight::to_string(build_wgpu_toon_define_key(key)) + flight::String(""), [=](bool blended, bool skinned) { return compile_wgpu_toon_pipeline(state, key, format, blended, skinned); });
+  return ensure_wgpu_scene_3d_pipeline(state, flight::String("toon:") + flight::to_string(format) + flight::String("|") + flight::to_string(build_wgpu_toon_define_key(key)) + flight::String(""), [=](bool blended, bool skinned) { return compile_wgpu_toon_pipeline(state, key, format, blended, skinned); });
 }
 
 inline flight::Float32Array scratch = flight::Float32Array((toon_uniform_bytes / 4.0));

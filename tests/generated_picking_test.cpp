@@ -110,7 +110,7 @@ flight::Ref<types::MeshGeometry> triangle_geometry(bool front_facing = true,
 flight::Ref<types::Mesh> mesh_from(
     flight::Ref<types::MeshGeometry> geometry_value) {
   auto runtime = flight::make_ref<types::MeshRuntime>();
-  scene3d::initialize_node3_druntime(runtime);
+  scene3d::initialize_node_3d_runtime(runtime);
   runtime->deformed_local_bounds =
       decltype(runtime->deformed_local_bounds){
           std::in_place_type<flight::Undefined>, flight::undefined};
@@ -139,14 +139,14 @@ flight::Ref<types::Mesh> mesh_from(
 
 flight::Ref<types::Node3D> scene_with(
     const flight::Array<flight::Ref<types::Mesh>>& meshes) {
-  auto scene = scene3d::create_node3_d();
+  auto scene = scene3d::create_node_3d();
   for (const auto& mesh : meshes) flight::node::add_node_child(scene, mesh);
   return scene;
 }
 
 flight::Ref<types::Ray3D> ray(double x = 0.0, double y = 0.0,
                               double z = 5.0, double dz = -1.0) {
-  auto out = geometry::create_ray3_d();
+  auto out = geometry::create_ray_3d();
   out->origin->x = x;
   out->origin->y = y;
   out->origin->z = z;
@@ -162,7 +162,7 @@ std::optional<picking::OptionsView> options_view(
 }
 
 void construction_absence_and_identity() {
-  const auto hit = picking::create_scene3_dhit();
+  const auto hit = picking::create_scene_3d_hit();
   bool zeroed = !hit->node.has_value() && hit->triangle_index == -1.0 &&
                 hit->distance == 0.0 && hit->normal_x == 0.0 &&
                 hit->normal_y == 0.0 && hit->normal_z == 0.0;
@@ -171,16 +171,16 @@ void construction_absence_and_identity() {
 
   hit->distance = 17.0;
   hit->point_x = 23.0;
-  const auto empty_scene = scene3d::create_node3_d();
-  const auto miss = picking::pick_scene3_dwith_ray3_d(
+  const auto empty_scene = scene3d::create_node_3d();
+  const auto miss = picking::pick_scene_3d_with_ray_3d(
       readonly(empty_scene), readonly(ray()), hit);
   check(!miss.has_value() && hit->distance == 17.0 && hit->point_x == 23.0,
         "a nearest miss leaves the caller-owned output unchanged");
 
-  auto stale = picking::create_scene3_dhit();
+  auto stale = picking::create_scene_3d_hit();
   flight::Array<flight::Ref<types::Scene3DHit>> out_array{stale};
   const auto identity = out_array.identity();
-  const auto empty = picking::pick_scene3_dall_with_ray3_d(
+  const auto empty = picking::pick_scene_3d_all_with_ray_3d(
       readonly(empty_scene), readonly(ray()), out_array);
   bool same_array = empty.identity() == identity && empty.size() == 0;
   if (mutation == flight::String("--mutate-identity")) same_array = false;
@@ -196,7 +196,7 @@ void ordering_ties_coordinates_and_rays() {
   const auto scene = scene_with(
       flight::Array<flight::Ref<types::Mesh>>{far, near});
   const auto center_ray = ray();
-  const auto hits = picking::pick_scene3_dall_with_ray3_d(
+  const auto hits = picking::pick_scene_3d_all_with_ray_3d(
       readonly(scene), readonly(center_ray), {});
   bool ordered = hits.size() == 2 && hits.element(0.0)->node == near &&
                  hits.element(1.0)->node == far &&
@@ -208,25 +208,25 @@ void ordering_ties_coordinates_and_rays() {
   const auto tie_second = mesh_from(triangle_geometry());
   const auto tie_scene = scene_with(
       flight::Array<flight::Ref<types::Mesh>>{tie_first, tie_second});
-  const auto tie_hits = picking::pick_scene3_dall_with_ray3_d(
+  const auto tie_hits = picking::pick_scene_3d_all_with_ray_3d(
       readonly(tie_scene), readonly(center_ray), {});
-  const auto nearest_out = picking::create_scene3_dhit();
-  const auto nearest = picking::pick_scene3_dwith_ray3_d(
+  const auto nearest_out = picking::create_scene_3d_hit();
+  const auto nearest = picking::pick_scene_3d_with_ray_3d(
       readonly(tie_scene), readonly(center_ray), nearest_out);
   check(tie_hits.size() == 2 && tie_hits.element(0.0)->node == tie_first &&
             tie_hits.element(1.0)->node == tie_second && nearest.has_value() &&
             nearest.value() == nearest_out && nearest_out->node == tie_first,
         "stable all-hit ties and nearest ties retain traversal order");
 
-  const auto parent = scene3d::create_node3_d();
+  const auto parent = scene3d::create_node_3d();
   parent->position->x = 2.0;
   parent->entity_runtime_key.value()->local_transform_id += 1.0;
   const auto transformed = mesh_from(triangle_geometry());
   transformed->position->x = 1.0;
   transformed->entity_runtime_key.value()->local_transform_id += 1.0;
   flight::node::add_node_child(parent, transformed);
-  const auto coordinate_out = picking::create_scene3_dhit();
-  const auto coordinate_hit = picking::pick_scene3_dwith_ray3_d(
+  const auto coordinate_out = picking::create_scene_3d_hit();
+  const auto coordinate_hit = picking::pick_scene_3d_with_ray_3d(
       readonly(parent), readonly(ray(3.0)), coordinate_out);
   bool coordinates = coordinate_hit.has_value() &&
                      coordinate_out->node == transformed &&
@@ -246,7 +246,7 @@ void ordering_ties_coordinates_and_rays() {
   culling->cull_backfaces = true;
   culling->max_distance = std::nullopt;
   culling->predicate = std::nullopt;
-  const auto back_hits = picking::pick_scene3_dall_with_ray3_d(
+  const auto back_hits = picking::pick_scene_3d_all_with_ray_3d(
       readonly(back_scene), readonly(center_ray), {}, options_view(culling));
   bool ray_semantics = back_hits.size() == 0;
   if (mutation == flight::String("--mutate-rays")) ray_semantics = false;
@@ -265,7 +265,7 @@ void filtering_and_disabled_subtrees() {
     ++predicate_calls;
     return candidate.template shared_exact_object<types::Mesh>() != mesh;
   };
-  const auto filtered_hits = picking::pick_scene3_dall_with_ray3_d(
+  const auto filtered_hits = picking::pick_scene_3d_all_with_ray_3d(
       readonly(scene), readonly(ray()), {}, options_view(filtered));
   bool filters = predicate_calls == 1 && filtered_hits.size() == 0;
 
@@ -273,16 +273,16 @@ void filtering_and_disabled_subtrees() {
   limited->cull_backfaces = std::nullopt;
   limited->max_distance = 4.0;
   limited->predicate = std::nullopt;
-  const auto limited_hits = picking::pick_scene3_dall_with_ray3_d(
+  const auto limited_hits = picking::pick_scene_3d_all_with_ray_3d(
       readonly(scene), readonly(ray()), {}, options_view(limited));
   filters = filters && limited_hits.size() == 0;
 
   mesh->enabled = false;
-  const auto disabled_hits = picking::pick_scene3_dall_with_ray3_d(
+  const auto disabled_hits = picking::pick_scene_3d_all_with_ray_3d(
       readonly(scene), readonly(ray()), {});
   scene->enabled = false;
   mesh->enabled = true;
-  const auto pruned_hits = picking::pick_scene3_dall_with_ray3_d(
+  const auto pruned_hits = picking::pick_scene_3d_all_with_ray_3d(
       readonly(scene), readonly(ray()), {});
   filters = filters && disabled_hits.size() == 0 && pruned_hits.size() == 0;
   if (mutation == flight::String("--mutate-filtering")) filters = false;
@@ -292,7 +292,7 @@ void filtering_and_disabled_subtrees() {
 
 flight::Ref<types::Scene3DHit> attributed_hit(
     const flight::Ref<types::Mesh>& mesh) {
-  auto hit = picking::create_scene3_dhit();
+  auto hit = picking::create_scene_3d_hit();
   hit->node = mesh;
   hit->triangle_index = 0.0;
   hit->u = 0.25;
@@ -313,12 +313,12 @@ void hit_attributes_and_output_absence() {
   material->double_sided = false;
   mesh->materials.push(
       std::optional<flight::Ref<types::Material3D>>{material});
-  const auto selected = picking::get_scene3_dhit_material(readonly(hit));
+  const auto selected = picking::get_scene_3d_hit_material(readonly(hit));
 
   auto uv = flight::make_ref<types::Vector2>();
   uv->x = 7.0;
   uv->y = 8.0;
-  const bool has_uv = picking::get_scene3_dhit_uv0(uv, readonly(hit));
+  const bool has_uv = picking::get_scene_3d_hit_uv0(uv, readonly(hit));
 
   for (double vertex = 0.0; vertex < 3.0; vertex += 1.0) {
     const double base = vertex * 12.0;
@@ -330,7 +330,7 @@ void hit_attributes_and_output_absence() {
   mesh->entity_runtime_key.value()->local_transform_id += 1.0;
   auto normal = geometry::create_vector3();
   const bool has_normal =
-      picking::get_scene3_dhit_vertex_normal(normal, readonly(hit));
+      picking::get_scene_3d_hit_vertex_normal(normal, readonly(hit));
   const double inverse_length = 1.0 / std::sqrt(1.25);
 
   for (double vertex = 0.0; vertex < 3.0; vertex += 1.0) {
@@ -343,11 +343,11 @@ void hit_attributes_and_output_absence() {
   mesh->entity_runtime_key.value()->local_transform_id += 1.0;
   auto tangent = flight::make_ref<picking::w_x_y_z_5137f2b28145ccce>();
   const bool has_tangent =
-      picking::get_scene3_dhit_vertex_tangent(tangent, readonly(hit));
+      picking::get_scene_3d_hit_vertex_tangent(tangent, readonly(hit));
 
   auto world_ray = ray();
   bool attributes = selected.has_value() && selected.value() == material &&
-                    picking::get_scene3_dhit_subset_index(readonly(hit)) ==
+                    picking::get_scene_3d_hit_subset_index(readonly(hit)) ==
                         0.0 &&
                     has_uv && close(uv->x, 0.25) && close(uv->y, 0.5) &&
                     has_normal && close(normal->x, 0.5 * inverse_length) &&
@@ -355,7 +355,7 @@ void hit_attributes_and_output_absence() {
                     close(normal->z, 0.0) && has_tangent &&
                     close(tangent->x, -1.0) && close(tangent->y, 0.0) &&
                     close(tangent->z, 0.0) && tangent->w == -1.0 &&
-                    picking::is_scene3_dhit_front_facing(
+                    picking::is_scene_3d_hit_front_facing(
                         readonly(hit), readonly(world_ray));
   if (mutation == flight::String("--mutate-attributes")) attributes = false;
   check(attributes,
@@ -373,10 +373,10 @@ void hit_attributes_and_output_absence() {
   tangent->y = 2.0;
   tangent->z = 3.0;
   const bool absent_uv =
-      !picking::get_scene3_dhit_uv0(uv, readonly(position_hit));
-  const bool absent_normal = !picking::get_scene3_dhit_vertex_normal(
+      !picking::get_scene_3d_hit_uv0(uv, readonly(position_hit));
+  const bool absent_normal = !picking::get_scene_3d_hit_vertex_normal(
       normal, readonly(position_hit));
-  const bool absent_tangent = !picking::get_scene3_dhit_vertex_tangent(
+  const bool absent_tangent = !picking::get_scene_3d_hit_vertex_tangent(
       tangent, readonly(position_hit));
   check(absent_uv && absent_normal && absent_tangent && uv->x == 7.0 &&
             uv->y == 8.0 && normal->x == 7.0 && normal->y == 8.0 &&

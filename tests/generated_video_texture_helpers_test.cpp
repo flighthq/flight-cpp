@@ -70,7 +70,7 @@ int main() {
   const auto bitmap = flight::make_ref<types::Bitmap>();
   const auto voxel = flight::make_ref<types::VoxelGrid>();
   const types::TextureSourceValue face{std::in_place_type<flight::Ref<types::Bitmap>>,bitmap};
-  const auto two_d = tex::create_texture2_d(); two_d->source = face;
+  const auto two_d = tex::create_texture_2d(); two_d->source = face;
   const auto cube = tex::create_cube_texture();cube->sources.element(0) = face;
   const auto array = tex::create_texture(flight::make_ref<types::CreateTexture2DArrayOptions>());
   array->sources = flight::Array<std::optional<types::TextureSourceValue>>{face,std::nullopt};

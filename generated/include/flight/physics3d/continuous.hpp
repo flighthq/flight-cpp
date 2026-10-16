@@ -22,7 +22,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/spatial.hpp>
 
-#include <flight/types/physics3_d.hpp>
+#include <flight/types/physics_3d.hpp>
 
 #include <flight/types/collision.hpp>
 
@@ -80,11 +80,11 @@ using flight::types::SpatialIndexingExplanation;
 struct Physics3DContinuousScratch;
 } // namespace flight::physics3d
 
-#include <flight/collision/contact_manifold3_d.hpp>
-#include <flight/collision/sweep_collision_shape3_d.hpp>
+#include <flight/collision/contact_manifold_3d.hpp>
+#include <flight/collision/sweep_collision_shape_3d.hpp>
 #include <flight/math/constants.hpp>
 #include <flight/types/collision.hpp>
-#include <flight/types/physics3_d.hpp>
+#include <flight/types/physics_3d.hpp>
 #include <flight/types/spatial.hpp>
 #include <flight/types/spatial_indexing.hpp>
 #include <flight/physics3d/broadphase.hpp>
@@ -102,7 +102,7 @@ struct Physics3DContinuousScratch;
 
 namespace flight::physics3d {
 
-inline bool has_active_physics3_dbullet(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world) {
+inline bool has_active_physics_3d_bullet(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world) {
   for (auto body : flight::row_get<flight::RowKey<"bodies">>(world)) {
     if ((((body->type == flight::String("dynamic")) && body->bullet) && !body->sleeping)) {
       return true;
@@ -111,7 +111,7 @@ inline bool has_active_physics3_dbullet(flight::StructuralRef<flight::RowReadonl
   return false;
 }
 
-inline void clear_physics3_drotational_ccd_envelope(flight::Ref<flight::types::Physics3DRotationalCcdEnvelope> out) {
+inline void clear_physics_3d_rotational_ccd_envelope(flight::Ref<flight::types::Physics3DRotationalCcdEnvelope> out) {
   (out->angular_travel = 0.0);
   (out->sample_count = 0.0);
   (out->max_angular_increment = 0.0);
@@ -119,17 +119,17 @@ inline void clear_physics3_drotational_ccd_envelope(flight::Ref<flight::types::P
   (out->target_increment_met = false);
 }
 
-inline void advance_awake_physics3_dbodies(flight::Ref<flight::types::Physics3DWorld> world, double dt) {
+inline void advance_awake_physics_3d_bodies(flight::Ref<flight::types::Physics3DWorld> world, double dt) {
   for (auto body : world->bodies) {
     if (((body->type == flight::String("static")) || body->sleeping)) {
       continue;
     }
-    flight::physics3d::integrate_rigid_body3_dpose(body, dt);
-    flight::physics3d::refresh_rigid_body3_dworld_inertia(body);
+    flight::physics3d::integrate_rigid_body_3d_pose(body, dt);
+    flight::physics3d::refresh_rigid_body_3d_world_inertia(body);
   }
 }
 
-inline void save_physics3_dbody_pose(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body, flight::Array<double> out) {
+inline void save_physics_3d_body_pose(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body, flight::Array<double> out) {
   (out.element(0.0) = flight::row_get<flight::RowKey<"x">>(body));
   (out.element(1.0) = flight::row_get<flight::RowKey<"y">>(body));
   (out.element(2.0) = flight::row_get<flight::RowKey<"z">>(body));
@@ -139,7 +139,7 @@ inline void save_physics3_dbody_pose(flight::StructuralRef<flight::RowReadonly<f
   (out.element(6.0) = flight::row_get<flight::RowKey<"orientationW">>(body));
 }
 
-inline void restore_physics3_dbody_pose(flight::Ref<flight::types::RigidBody3D> body, flight::Array<double> pose) {
+inline void restore_physics_3d_body_pose(flight::Ref<flight::types::RigidBody3D> body, flight::Array<double> pose) {
   (body->x = pose.element(0.0));
   (body->y = pose.element(1.0));
   (body->z = pose.element(2.0));
@@ -149,11 +149,11 @@ inline void restore_physics3_dbody_pose(flight::Ref<flight::types::RigidBody3D> 
   (body->orientation_w = pose.element(6.0));
 }
 
-inline bool is_physics3_dbody_moving(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body) {
+inline bool is_physics_3d_body_moving(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body) {
   return ((flight::row_get<flight::RowKey<"type">>(body) != flight::String("static")) && !flight::row_get<flight::RowKey<"sleeping">>(body));
 }
 
-inline bool is_physics3_dccd_pair_active(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_b) {
+inline bool is_physics_3d_ccd_pair_active(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_b) {
   const bool bullet_a = (((flight::row_get<flight::RowKey<"type">>(body_a) == flight::String("dynamic")) && flight::row_get<flight::RowKey<"bullet">>(body_a)) && !flight::row_get<flight::RowKey<"sleeping">>(body_a));
   const bool bullet_b = (((flight::row_get<flight::RowKey<"type">>(body_b) == flight::String("dynamic")) && flight::row_get<flight::RowKey<"bullet">>(body_b)) && !flight::row_get<flight::RowKey<"sleeping">>(body_b));
   if ((!bullet_a && !bullet_b)) {
@@ -175,7 +175,7 @@ inline double get_relative_normal_velocity_flight_value_function_get_u000052_ela
   return ((((flight::row_get<flight::RowKey<"velocityX">>(body_a) - flight::row_get<flight::RowKey<"velocityX">>(body_b)) * normal_x) + ((flight::row_get<flight::RowKey<"velocityY">>(body_a) - flight::row_get<flight::RowKey<"velocityY">>(body_b)) * normal_y)) + ((flight::row_get<flight::RowKey<"velocityZ">>(body_a) - flight::row_get<flight::RowKey<"velocityZ">>(body_b)) * normal_z));
 }
 
-inline bool has_physics3_dcontact_transition(flight::Array<flight::Ref<flight::types::Physics3DContact>> contacts, double body_a, double body_b, double collider_a, double collider_b) {
+inline bool has_physics_3d_contact_transition(flight::Array<flight::Ref<flight::types::Physics3DContact>> contacts, double body_a, double body_b, double collider_a, double collider_b) {
   {
     double index = 0.0;
     while ((index < static_cast<double>(contacts.size()))) {
@@ -191,14 +191,14 @@ inline bool has_physics3_dcontact_transition(flight::Array<flight::Ref<flight::t
   return false;
 }
 
-inline void restore_physics3_dimpact_hook_fields(flight::Ref<flight::types::Physics3DContact> contact, double friction, double restitution, bool enabled, bool sensor) {
+inline void restore_physics_3d_impact_hook_fields(flight::Ref<flight::types::Physics3DContact> contact, double friction, double restitution, bool enabled, bool sensor) {
   (contact->friction = friction);
   (contact->restitution = restitution);
   (contact->enabled = enabled);
   (contact->sensor = sensor);
 }
 
-inline void run_physics3_dimpact_pre_solve_hook(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<flight::types::Physics3DContact> contact) {
+inline void run_physics_3d_impact_pre_solve_hook(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<flight::types::Physics3DContact> contact) {
   std::optional<std::function<void(flight::Ref<flight::types::Physics3DWorld>, flight::Ref<flight::types::Physics3DContact>)>> hook = world->contact_hooks->pre_solve;
   if (!hook.has_value()) {
     return;
@@ -211,11 +211,11 @@ inline void run_physics3_dimpact_pre_solve_hook(flight::Ref<flight::types::Physi
     hook.value()(world, contact);
   }
   catch (const std::exception& error) {
-    restore_physics3_dimpact_hook_fields(contact, friction, restitution, enabled, sensor);
+    restore_physics_3d_impact_hook_fields(contact, friction, restitution, enabled, sensor);
     throw error;
   }
-  if (!flight::physics3d::is_physics3_dcontact_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DContact>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DContact>>>>(contact)))) {
-    restore_physics3_dimpact_hook_fields(contact, friction, restitution, enabled, sensor);
+  if (!flight::physics3d::is_physics_3d_contact_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DContact>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DContact>>>>(contact)))) {
+    restore_physics_3d_impact_hook_fields(contact, friction, restitution, enabled, sensor);
     throw flight::Error(flight::String("Physics3D pre-solve hook produced invalid contact state"));
   }
 }
@@ -230,7 +230,7 @@ inline double get_relative_point_normal_velocity(flight::StructuralRef<flight::R
   return ((((point_ax - point_bx) * normal_x) + ((point_ay - point_by) * normal_y)) + ((point_az - point_bz) * normal_z));
 }
 
-inline void read_physics3_dworld_inverse_inertia(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body, flight::Array<double> out) {
+inline void read_physics_3d_world_inverse_inertia(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body, flight::Array<double> out) {
   (out.element(flight::physics3d::tensor_xx) = flight::row_get<flight::RowKey<"inverseInertiaWorldXX">>(body));
   (out.element(flight::physics3d::tensor_yy) = flight::row_get<flight::RowKey<"inverseInertiaWorldYY">>(body));
   (out.element(flight::physics3d::tensor_zz) = flight::row_get<flight::RowKey<"inverseInertiaWorldZZ">>(body));
@@ -239,7 +239,7 @@ inline void read_physics3_dworld_inverse_inertia(flight::StructuralRef<flight::R
   (out.element(flight::physics3d::tensor_yz) = flight::row_get<flight::RowKey<"inverseInertiaWorldYZ">>(body));
 }
 
-inline void wake_physics3_dimpact_body(flight::Ref<flight::types::RigidBody3D> body) {
+inline void wake_physics_3d_impact_body(flight::Ref<flight::types::RigidBody3D> body) {
   if ((body->type == flight::String("static"))) {
     return;
   }
@@ -249,30 +249,30 @@ inline void wake_physics3_dimpact_body(flight::Ref<flight::types::RigidBody3D> b
 
 inline const double approach_epsilon = 1e-9;
 
-inline bool is_physics3_dimpact_approaching(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_b, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionTimeOfImpact3D>>>> impact) {
+inline bool is_physics_3d_impact_approaching(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_b, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionTimeOfImpact3D>>>> impact) {
   return (get_relative_normal_velocity_flight_value_function_get_u000052_elative_u00004e_ormal_u000056_elocity_flight_private_ff06f225606b7241(body_a, body_b, flight::row_get<flight::RowKey<"normalX">>(impact), flight::row_get<flight::RowKey<"normalY">>(impact), flight::row_get<flight::RowKey<"normalZ">>(impact)) < -approach_epsilon);
 }
 
 inline const double ccd_rotation_increment = flight::math::deg_to_rad_flight_value_variable__u000044__u000045__u000047__u00005f__u000054__u00004f__u00005f__u000052__u000041__u000044__flight_source_ad5040a7d8c07bd3;
 
-inline double get_physics3_drotation_sample_count(double angular_travel, double max_substeps) {
+inline double get_physics_3d_rotation_sample_count(double angular_travel, double max_substeps) {
   if ((!(angular_travel > 0.0) || (max_substeps <= 0.0))) {
     return 0.0;
   }
   return flight::minimum(max_substeps, flight::maximum(1.0, std::ceil((angular_travel / ccd_rotation_increment))));
 }
 
-inline bool write_physics3_drotational_ccd_envelope(double angular_speed, double maximum_radius, double dt, double max_substeps, flight::Ref<flight::types::Physics3DRotationalCcdEnvelope> out) {
+inline bool write_physics_3d_rotational_ccd_envelope(double angular_speed, double maximum_radius, double dt, double max_substeps, flight::Ref<flight::types::Physics3DRotationalCcdEnvelope> out) {
   if ((((((((!std::isfinite(angular_speed) || (angular_speed < 0.0)) || !std::isfinite(maximum_radius)) || (maximum_radius < 0.0)) || !std::isfinite(dt)) || (dt < 0.0)) || !flight::is_safe_integer(max_substeps)) || (max_substeps < 0.0))) {
-    clear_physics3_drotational_ccd_envelope(out);
+    clear_physics_3d_rotational_ccd_envelope(out);
     return false;
   }
   const double angular_travel = (angular_speed * dt);
   if (!std::isfinite(angular_travel)) {
-    clear_physics3_drotational_ccd_envelope(out);
+    clear_physics_3d_rotational_ccd_envelope(out);
     return false;
   }
-  const double sample_count = get_physics3_drotation_sample_count(angular_travel, max_substeps);
+  const double sample_count = get_physics_3d_rotation_sample_count(angular_travel, max_substeps);
   const double max_angular_increment = ((angular_travel == 0.0) ? 0.0 : ((sample_count == 0.0) ? std::numeric_limits<double>::infinity() : (angular_travel / sample_count)));
   (out->angular_travel = angular_travel);
   (out->sample_count = sample_count);
@@ -292,30 +292,30 @@ inline flight::Array<double> impact_tensor = flight::Array<double>{0.0, 0.0, 0.0
 
 inline flight::Array<double> impact_vector = flight::Array<double>{0.0, 0.0, 0.0};
 
-inline double get_physics3_dangular_mass_term(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body, double r_x, double r_y, double r_z, double normal_x, double normal_y, double normal_z) {
+inline double get_physics_3d_angular_mass_term(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body, double r_x, double r_y, double r_z, double normal_x, double normal_y, double normal_z) {
   const double cross_x = ((r_y * normal_z) - (r_z * normal_y));
   const double cross_y = ((r_z * normal_x) - (r_x * normal_z));
   const double cross_z = ((r_x * normal_y) - (r_y * normal_x));
-  read_physics3_dworld_inverse_inertia(body, impact_tensor);
+  read_physics_3d_world_inverse_inertia(body, impact_tensor);
   flight::physics3d::apply_symmetric_tensor(impact_tensor, cross_x, cross_y, cross_z, impact_vector);
   return (((cross_x * impact_vector.element(0.0)) + (cross_y * impact_vector.element(1.0))) + (cross_z * impact_vector.element(2.0)));
 }
 
-inline double get_physics3_dimpact_effective_mass(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_b, double r_ax, double r_ay, double r_az, double r_bx, double r_by, double r_bz, double normal_x, double normal_y, double normal_z) {
+inline double get_physics_3d_impact_effective_mass(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_b, double r_ax, double r_ay, double r_az, double r_bx, double r_by, double r_bz, double normal_x, double normal_y, double normal_z) {
   double denominator = (flight::row_get<flight::RowKey<"inverseMass">>(body_a) + flight::row_get<flight::RowKey<"inverseMass">>(body_b));
-  (denominator += get_physics3_dangular_mass_term(body_a, r_ax, r_ay, r_az, normal_x, normal_y, normal_z));
-  (denominator += get_physics3_dangular_mass_term(body_b, r_bx, r_by, r_bz, normal_x, normal_y, normal_z));
+  (denominator += get_physics_3d_angular_mass_term(body_a, r_ax, r_ay, r_az, normal_x, normal_y, normal_z));
+  (denominator += get_physics_3d_angular_mass_term(body_b, r_bx, r_by, r_bz, normal_x, normal_y, normal_z));
   return ((denominator > 0.0) ? (1.0 / denominator) : 0.0);
 }
 
-inline void apply_physics3_dimpact_impulse(flight::Ref<flight::types::RigidBody3D> body, double r_x, double r_y, double r_z, double impulse_x, double impulse_y, double impulse_z) {
+inline void apply_physics_3d_impact_impulse(flight::Ref<flight::types::RigidBody3D> body, double r_x, double r_y, double r_z, double impulse_x, double impulse_y, double impulse_z) {
   (body->velocity_x += (impulse_x * body->inverse_mass));
   (body->velocity_y += (impulse_y * body->inverse_mass));
   (body->velocity_z += (impulse_z * body->inverse_mass));
   const double torque_x = ((r_y * impulse_z) - (r_z * impulse_y));
   const double torque_y = ((r_z * impulse_x) - (r_x * impulse_z));
   const double torque_z = ((r_x * impulse_y) - (r_y * impulse_x));
-  read_physics3_dworld_inverse_inertia(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)), impact_tensor);
+  read_physics_3d_world_inverse_inertia(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)), impact_tensor);
   flight::physics3d::apply_symmetric_tensor(impact_tensor, torque_x, torque_y, torque_z, impact_vector);
   (body->angular_velocity_x += impact_vector.element(0.0));
   (body->angular_velocity_y += impact_vector.element(1.0));
@@ -362,47 +362,47 @@ struct Physics3DContinuousScratch : public flight::ReferenceEnabled {
   flight::Array<double> pose_b;
 };
 
-inline bool test_physics3_dcollider_overlap_at_fraction(flight::Ref<flight::types::RigidBody3D> body_a, flight::Ref<flight::types::RigidBody3D> body_b, flight::Ref<flight::types::Physics3DCollider> collider_a, flight::Ref<flight::types::Physics3DCollider> collider_b, double dt, double fraction, flight::Ref<Physics3DContinuousScratch> scratch) {
-  save_physics3_dbody_pose(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), scratch->pose_a);
-  save_physics3_dbody_pose(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), scratch->pose_b);
+inline bool test_physics_3d_collider_overlap_at_fraction(flight::Ref<flight::types::RigidBody3D> body_a, flight::Ref<flight::types::RigidBody3D> body_b, flight::Ref<flight::types::Physics3DCollider> collider_a, flight::Ref<flight::types::Physics3DCollider> collider_b, double dt, double fraction, flight::Ref<Physics3DContinuousScratch> scratch) {
+  save_physics_3d_body_pose(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), scratch->pose_a);
+  save_physics_3d_body_pose(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), scratch->pose_b);
   std::optional<bool> finally_return;
   std::exception_ptr finally_exception;
   try {
-    flight::physics3d::integrate_rigid_body3_dpose(body_a, (dt * fraction));
-    flight::physics3d::integrate_rigid_body3_dpose(body_b, (dt * fraction));
-    flight::physics3d::update_physics3_dcollider_world_shape(collider_a, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)));
-    flight::physics3d::update_physics3_dcollider_world_shape(collider_b, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)));
-    const bool overlapping = flight::physics3d::collide_physics3_dcollider_shapes(collider_a->world, collider_b->world, scratch->rotational_manifold);
+    flight::physics3d::integrate_rigid_body_3d_pose(body_a, (dt * fraction));
+    flight::physics3d::integrate_rigid_body_3d_pose(body_b, (dt * fraction));
+    flight::physics3d::update_physics_3d_collider_world_shape(collider_a, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)));
+    flight::physics3d::update_physics_3d_collider_world_shape(collider_b, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)));
+    const bool overlapping = flight::physics3d::collide_physics_3d_collider_shapes(collider_a->world, collider_b->world, scratch->rotational_manifold);
     if (overlapping) {
-      flight::physics3d::write_rigid_body3_dworld_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), scratch->candidate_center_a);
-      flight::physics3d::write_rigid_body3_dworld_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), scratch->candidate_center_b);
+      flight::physics3d::write_rigid_body_3d_world_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), scratch->candidate_center_a);
+      flight::physics3d::write_rigid_body_3d_world_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), scratch->candidate_center_b);
     }
     finally_return = overlapping;
   }
   catch (...) {
     finally_exception = std::current_exception();
   }
-  restore_physics3_dbody_pose(body_a, scratch->pose_a);
-  restore_physics3_dbody_pose(body_b, scratch->pose_b);
-  flight::physics3d::update_physics3_dcollider_world_shape(collider_a, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)));
-  flight::physics3d::update_physics3_dcollider_world_shape(collider_b, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)));
+  restore_physics_3d_body_pose(body_a, scratch->pose_a);
+  restore_physics_3d_body_pose(body_b, scratch->pose_b);
+  flight::physics3d::update_physics_3d_collider_world_shape(collider_a, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)));
+  flight::physics3d::update_physics_3d_collider_world_shape(collider_b, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)));
   if (finally_exception) std::rethrow_exception(finally_exception);
   if (finally_return.has_value()) return finally_return.value();
   throw std::logic_error("Flight function completed without a value");
 }
 
-inline bool find_physics3_drotational_impact(flight::Ref<flight::types::RigidBody3D> body_a, flight::Ref<flight::types::RigidBody3D> body_b, flight::Ref<flight::types::Physics3DCollider> collider_a, flight::Ref<flight::types::Physics3DCollider> collider_b, double dt, double angular_travel, double max_substeps, flight::Ref<Physics3DContinuousScratch> scratch) {
-  if (test_physics3_dcollider_overlap_at_fraction(body_a, body_b, collider_a, collider_b, dt, 0.0, scratch)) {
+inline bool find_physics_3d_rotational_impact(flight::Ref<flight::types::RigidBody3D> body_a, flight::Ref<flight::types::RigidBody3D> body_b, flight::Ref<flight::types::Physics3DCollider> collider_a, flight::Ref<flight::types::Physics3DCollider> collider_b, double dt, double angular_travel, double max_substeps, flight::Ref<Physics3DContinuousScratch> scratch) {
+  if (test_physics_3d_collider_overlap_at_fraction(body_a, body_b, collider_a, collider_b, dt, 0.0, scratch)) {
     return false;
   }
-  const double substeps = get_physics3_drotation_sample_count(angular_travel, max_substeps);
+  const double substeps = get_physics_3d_rotation_sample_count(angular_travel, max_substeps);
   double lower_fraction = 0.0;
   {
     double sample = 1.0;
     while ((sample <= substeps)) {
       {
         const double upper_fraction = (sample / substeps);
-        if (!test_physics3_dcollider_overlap_at_fraction(body_a, body_b, collider_a, collider_b, dt, upper_fraction, scratch)) {
+        if (!test_physics_3d_collider_overlap_at_fraction(body_a, body_b, collider_a, collider_b, dt, upper_fraction, scratch)) {
           (lower_fraction = upper_fraction);
           {
             (sample += 1.0);
@@ -416,7 +416,7 @@ inline bool find_physics3_drotational_impact(flight::Ref<flight::types::RigidBod
           while ((iteration < ccd_rotation_bisection_iterations)) {
             {
               const double middle = ((lower + upper) * 0.5);
-              if (test_physics3_dcollider_overlap_at_fraction(body_a, body_b, collider_a, collider_b, dt, middle, scratch)) {
+              if (test_physics_3d_collider_overlap_at_fraction(body_a, body_b, collider_a, collider_b, dt, middle, scratch)) {
                 (upper = middle);
               }
               else {
@@ -426,7 +426,7 @@ inline bool find_physics3_drotational_impact(flight::Ref<flight::types::RigidBod
             (iteration += 1.0);
           }
         }
-        test_physics3_dcollider_overlap_at_fraction(body_a, body_b, collider_a, collider_b, dt, upper, scratch);
+        test_physics_3d_collider_overlap_at_fraction(body_a, body_b, collider_a, collider_b, dt, upper, scratch);
         auto manifold = scratch->rotational_manifold;
         double point_x = 0.0;
         double point_y = 0.0;
@@ -458,7 +458,7 @@ inline bool find_physics3_drotational_impact(flight::Ref<flight::types::RigidBod
   return false;
 }
 
-inline bool is_physics3_drotational_impact_approaching(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_b, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionContactManifold3D>>>> manifold, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Physics3DContinuousScratch>>>> scratch) {
+inline bool is_physics_3d_rotational_impact_approaching(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body_b, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionContactManifold3D>>>> manifold, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Physics3DContinuousScratch>>>> scratch) {
   {
     double point = 0.0;
     while ((point < flight::row_get<flight::RowKey<"pointCount">>(manifold))) {
@@ -474,26 +474,26 @@ inline bool is_physics3_drotational_impact_approaching(flight::StructuralRef<fli
   return false;
 }
 
-inline bool find_physics3_dcollider_impact(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world, flight::Ref<flight::types::RigidBody3D> body_a, flight::Ref<flight::types::RigidBody3D> body_b, flight::Ref<flight::types::Physics3DCollider> collider_a, flight::Ref<flight::types::Physics3DCollider> collider_b, double dt, bool accept_non_approaching, flight::Ref<Physics3DContinuousScratch> scratch) {
-  const bool moving_a = is_physics3_dbody_moving(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)));
-  const bool moving_b = is_physics3_dbody_moving(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)));
-  const bool linear_hit = (flight::physics3d::sweep_physics3_dcollider_shapes(collider_a->world, (moving_a ? (body_a->velocity_x * dt) : 0.0), (moving_a ? (body_a->velocity_y * dt) : 0.0), (moving_a ? (body_a->velocity_z * dt) : 0.0), collider_b->world, (moving_b ? (body_b->velocity_x * dt) : 0.0), (moving_b ? (body_b->velocity_y * dt) : 0.0), (moving_b ? (body_b->velocity_z * dt) : 0.0), scratch->linear_impact, 1.0) && (scratch->linear_impact->fraction > 0.0));
+inline bool find_physics_3d_collider_impact(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world, flight::Ref<flight::types::RigidBody3D> body_a, flight::Ref<flight::types::RigidBody3D> body_b, flight::Ref<flight::types::Physics3DCollider> collider_a, flight::Ref<flight::types::Physics3DCollider> collider_b, double dt, bool accept_non_approaching, flight::Ref<Physics3DContinuousScratch> scratch) {
+  const bool moving_a = is_physics_3d_body_moving(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)));
+  const bool moving_b = is_physics_3d_body_moving(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)));
+  const bool linear_hit = (flight::physics3d::sweep_physics_3d_collider_shapes(collider_a->world, (moving_a ? (body_a->velocity_x * dt) : 0.0), (moving_a ? (body_a->velocity_y * dt) : 0.0), (moving_a ? (body_a->velocity_z * dt) : 0.0), collider_b->world, (moving_b ? (body_b->velocity_x * dt) : 0.0), (moving_b ? (body_b->velocity_y * dt) : 0.0), (moving_b ? (body_b->velocity_z * dt) : 0.0), scratch->linear_impact, 1.0) && (scratch->linear_impact->fraction > 0.0));
   const double angular_travel_a = (moving_a ? (std::hypot(body_a->angular_velocity_x, body_a->angular_velocity_y, body_a->angular_velocity_z) * dt) : 0.0);
   const double angular_travel_b = (moving_b ? (std::hypot(body_b->angular_velocity_x, body_b->angular_velocity_y, body_b->angular_velocity_z) * dt) : 0.0);
-  const bool rotational_hit = (((((angular_travel_a > 0.0) || (angular_travel_b > 0.0)) && (flight::row_get<flight::RowKey<"config">>(world)->max_ccd_rotation_substeps > 0.0)) && find_physics3_drotational_impact(body_a, body_b, collider_a, collider_b, dt, flight::maximum(angular_travel_a, angular_travel_b), flight::row_get<flight::RowKey<"config">>(world)->max_ccd_rotation_substeps, scratch)) && (scratch->rotational_impact->fraction > 0.0));
+  const bool rotational_hit = (((((angular_travel_a > 0.0) || (angular_travel_b > 0.0)) && (flight::row_get<flight::RowKey<"config">>(world)->max_ccd_rotation_substeps > 0.0)) && find_physics_3d_rotational_impact(body_a, body_b, collider_a, collider_b, dt, flight::maximum(angular_travel_a, angular_travel_b), flight::row_get<flight::RowKey<"config">>(world)->max_ccd_rotation_substeps, scratch)) && (scratch->rotational_impact->fraction > 0.0));
   bool found = false;
   (scratch->candidate_rotational = false);
-  if ((linear_hit && (accept_non_approaching || is_physics3_dimpact_approaching(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionTimeOfImpact3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::CollisionTimeOfImpact3D>>>>(scratch->linear_impact)))))) {
+  if ((linear_hit && (accept_non_approaching || is_physics_3d_impact_approaching(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionTimeOfImpact3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::CollisionTimeOfImpact3D>>>>(scratch->linear_impact)))))) {
     (found = true);
   }
-  if (((rotational_hit && (!found || (scratch->rotational_impact->fraction < scratch->linear_impact->fraction))) && (accept_non_approaching || is_physics3_drotational_impact_approaching(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionContactManifold3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::CollisionContactManifold3D>>>>(scratch->rotational_manifold)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Physics3DContinuousScratch>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<Physics3DContinuousScratch>>>>(scratch)))))) {
+  if (((rotational_hit && (!found || (scratch->rotational_impact->fraction < scratch->linear_impact->fraction))) && (accept_non_approaching || is_physics_3d_rotational_impact_approaching(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionContactManifold3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::CollisionContactManifold3D>>>>(scratch->rotational_manifold)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Physics3DContinuousScratch>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<Physics3DContinuousScratch>>>>(scratch)))))) {
     (found = true);
     (scratch->candidate_rotational = true);
   }
   return found;
 }
 
-inline flight::Ref<flight::types::Physics3DContact> write_physics3_dimpact_contact(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<flight::types::RigidBody3D> body_a, flight::Ref<flight::types::RigidBody3D> body_b, flight::Ref<Physics3DContinuousScratch> scratch) {
+inline flight::Ref<flight::types::Physics3DContact> write_physics_3d_impact_contact(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<flight::types::RigidBody3D> body_a, flight::Ref<flight::types::RigidBody3D> body_b, flight::Ref<Physics3DContinuousScratch> scratch) {
   std::optional<flight::Ref<flight::types::Physics3DContact>> contact = std::nullopt;
   {
     double index = 0.0;
@@ -510,7 +510,7 @@ inline flight::Ref<flight::types::Physics3DContact> write_physics3_dimpact_conta
   }
   (scratch->contact_created = !contact.has_value());
   if (!contact.has_value()) {
-    (contact = std::optional<flight::Ref<flight::types::Physics3DContact>>{flight::physics3d::create_physics3_dcontact(scratch->body_a, scratch->body_b, scratch->collider_a, scratch->collider_b)});
+    (contact = std::optional<flight::Ref<flight::types::Physics3DContact>>{flight::physics3d::create_physics_3d_contact(scratch->body_a, scratch->body_b, scratch->collider_a, scratch->collider_b)});
     (contact.value()->normal_x = scratch->normal_x);
     (contact.value()->normal_y = scratch->normal_y);
     (contact.value()->normal_z = scratch->normal_z);
@@ -525,10 +525,10 @@ inline flight::Ref<flight::types::Physics3DContact> write_physics3_dimpact_conta
   (contact.value()->normal_z = scratch->normal_z);
   (contact.value()->touching = true);
   while ((static_cast<double>(contact.value()->points.size()) < scratch->point_count)) {
-    contact.value()->points.push(flight::physics3d::create_physics3_dcontact_point());
+    contact.value()->points.push(flight::physics3d::create_physics_3d_contact_point());
   }
-  flight::physics3d::write_rigid_body3_dworld_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), scratch->center_a);
-  flight::physics3d::write_rigid_body3_dworld_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), scratch->center_b);
+  flight::physics3d::write_rigid_body_3d_world_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), scratch->center_a);
+  flight::physics3d::write_rigid_body_3d_world_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), scratch->center_b);
   {
     double point_index = 0.0;
     while ((point_index < scratch->point_count)) {
@@ -554,33 +554,33 @@ inline flight::Ref<flight::types::Physics3DContact> write_physics3_dimpact_conta
   return contact.value();
 }
 
-inline void report_physics3_dsensor_impact(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<flight::types::RigidBody3D> body_a, flight::Ref<flight::types::RigidBody3D> body_b, double collider_aindex, double collider_bindex, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>> collider_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>> collider_b, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionTimeOfImpact3D>>>> impact, bool rotational, double dt, flight::Ref<Physics3DContinuousScratch> scratch) {
-  if (has_physics3_dcontact_transition(world->events->began, body_a->index, body_b->index, collider_aindex, collider_bindex)) {
+inline void report_physics_3d_sensor_impact(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<flight::types::RigidBody3D> body_a, flight::Ref<flight::types::RigidBody3D> body_b, double collider_aindex, double collider_bindex, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>> collider_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>> collider_b, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionTimeOfImpact3D>>>> impact, bool rotational, double dt, flight::Ref<Physics3DContinuousScratch> scratch) {
+  if (has_physics_3d_contact_transition(world->events->began, body_a->index, body_b->index, collider_aindex, collider_bindex)) {
     return;
   }
-  save_physics3_dbody_pose(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), scratch->pose_a);
-  save_physics3_dbody_pose(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), scratch->pose_b);
+  save_physics_3d_body_pose(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), scratch->pose_a);
+  save_physics_3d_body_pose(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), scratch->pose_b);
   std::exception_ptr finally_exception_2;
   try {
-    flight::physics3d::integrate_rigid_body3_dpose(body_a, (dt * flight::row_get<flight::RowKey<"fraction">>(impact)));
-    flight::physics3d::integrate_rigid_body3_dpose(body_b, (dt * flight::row_get<flight::RowKey<"fraction">>(impact)));
-    flight::physics3d::write_rigid_body3_dworld_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), scratch->center_a);
-    flight::physics3d::write_rigid_body3_dworld_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), scratch->center_b);
+    flight::physics3d::integrate_rigid_body_3d_pose(body_a, (dt * flight::row_get<flight::RowKey<"fraction">>(impact)));
+    flight::physics3d::integrate_rigid_body_3d_pose(body_b, (dt * flight::row_get<flight::RowKey<"fraction">>(impact)));
+    flight::physics3d::write_rigid_body_3d_world_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), scratch->center_a);
+    flight::physics3d::write_rigid_body_3d_world_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), scratch->center_b);
   }
   catch (...) {
     finally_exception_2 = std::current_exception();
   }
-  restore_physics3_dbody_pose(body_a, scratch->pose_a);
-  restore_physics3_dbody_pose(body_b, scratch->pose_b);
+  restore_physics_3d_body_pose(body_a, scratch->pose_a);
+  restore_physics_3d_body_pose(body_b, scratch->pose_b);
   if (finally_exception_2) std::rethrow_exception(finally_exception_2);
   const double point_count = (rotational ? scratch->rotational_manifold->point_count : 1.0);
-  auto contact = flight::physics3d::create_physics3_dcontact(body_a->index, body_b->index, collider_aindex, collider_bindex);
+  auto contact = flight::physics3d::create_physics_3d_contact(body_a->index, body_b->index, collider_aindex, collider_bindex);
   (contact->normal_x = flight::row_get<flight::RowKey<"normalX">>(impact));
   (contact->normal_y = flight::row_get<flight::RowKey<"normalY">>(impact));
   (contact->normal_z = flight::row_get<flight::RowKey<"normalZ">>(impact));
   (contact->point_count = point_count);
-  (contact->friction = flight::physics3d::mix_physics3_dfriction(flight::row_get<flight::RowKey<"material">>(collider_a)->friction, flight::row_get<flight::RowKey<"material">>(collider_b)->friction));
-  (contact->restitution = flight::physics3d::mix_physics3_drestitution(flight::row_get<flight::RowKey<"material">>(collider_a)->restitution, flight::row_get<flight::RowKey<"material">>(collider_b)->restitution));
+  (contact->friction = flight::physics3d::mix_physics_3d_friction(flight::row_get<flight::RowKey<"material">>(collider_a)->friction, flight::row_get<flight::RowKey<"material">>(collider_b)->friction));
+  (contact->restitution = flight::physics3d::mix_physics_3d_restitution(flight::row_get<flight::RowKey<"material">>(collider_a)->restitution, flight::row_get<flight::RowKey<"material">>(collider_b)->restitution));
   (contact->sensor = true);
   (contact->touching = true);
   {
@@ -588,7 +588,7 @@ inline void report_physics3_dsensor_impact(flight::Ref<flight::types::Physics3DW
     while ((point_index < point_count)) {
       {
         std::variant<flight::Ref<flight::types::CollisionContactPoint3D>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionTimeOfImpact3D>>>>> source = (rotational ? scratch->rotational_manifold->points.element(point_index) : std::variant<flight::Ref<flight::types::CollisionContactPoint3D>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionTimeOfImpact3D>>>>>{std::in_place_type<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionTimeOfImpact3D>>>>>, impact});
-        auto point = flight::physics3d::create_physics3_dcontact_point();
+        auto point = flight::physics3d::create_physics_3d_contact_point();
         (point->x = std::visit([](const auto& value) { return value->x; }, source));
         (point->y = std::visit([](const auto& value) { return value->y; }, source));
         (point->z = std::visit([](const auto& value) { return value->z; }, source));
@@ -609,7 +609,7 @@ inline void report_physics3_dsensor_impact(flight::Ref<flight::types::Physics3DW
   world->events->began.push(contact);
 }
 
-inline void report_physics3_dsensor_impacts_before_fraction(flight::Ref<flight::types::Physics3DWorld> world, double dt, double maximum_fraction, flight::Ref<Physics3DContinuousScratch> scratch) {
+inline void report_physics_3d_sensor_impacts_before_fraction(flight::Ref<flight::types::Physics3DWorld> world, double dt, double maximum_fraction, flight::Ref<Physics3DContinuousScratch> scratch) {
   {
     double pair_index = 0.0;
     while ((pair_index < static_cast<double>(scratch->pairs.size()))) {
@@ -621,14 +621,14 @@ inline void report_physics3_dsensor_impacts_before_fraction(flight::Ref<flight::
           (pair_index += 1.0);
           continue;
         }
-        const bool ordered = flight::physics3d::is_physics3_dpair_ordered(first.value()->index, second.value()->index);
+        const bool ordered = flight::physics3d::is_physics_3d_pair_ordered(first.value()->index, second.value()->index);
         auto body_a = (ordered ? first.value() : second.value());
         auto body_b = (ordered ? second.value() : first.value());
-        if (!is_physics3_dccd_pair_active(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)))) {
+        if (!is_physics_3d_ccd_pair_active(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)))) {
           (pair_index += 1.0);
           continue;
         }
-        if (flight::physics3d::is_physics3_dpair_joint_suppressed(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), body_a->index, body_b->index)) {
+        if (flight::physics3d::is_physics_3d_pair_joint_suppressed(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), body_a->index, body_b->index)) {
           (pair_index += 1.0);
           continue;
         }
@@ -650,13 +650,13 @@ inline void report_physics3_dsensor_impacts_before_fraction(flight::Ref<flight::
                       (collider_bindex += 1.0);
                       continue;
                     }
-                    if (has_physics3_dcontact_transition(world->events->began, body_a->index, body_b->index, collider_aindex, collider_bindex)) {
+                    if (has_physics_3d_contact_transition(world->events->began, body_a->index, body_b->index, collider_aindex, collider_bindex)) {
                       {
                         (collider_bindex += 1.0);
                         continue;
                       }
                     }
-                    if (!find_physics3_dcollider_impact(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), body_a, body_b, collider_a, collider_b, dt, true, scratch)) {
+                    if (!find_physics_3d_collider_impact(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), body_a, body_b, collider_a, collider_b, dt, true, scratch)) {
                       (collider_bindex += 1.0);
                       continue;
                     }
@@ -665,7 +665,7 @@ inline void report_physics3_dsensor_impacts_before_fraction(flight::Ref<flight::
                       (collider_bindex += 1.0);
                       continue;
                     }
-                    report_physics3_dsensor_impact(world, body_a, body_b, collider_aindex, collider_bindex, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>(collider_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>(collider_b)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionTimeOfImpact3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::CollisionTimeOfImpact3D>>>>(candidate)), scratch->candidate_rotational, dt, scratch);
+                    report_physics_3d_sensor_impact(world, body_a, body_b, collider_aindex, collider_bindex, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>(collider_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>(collider_b)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionTimeOfImpact3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::CollisionTimeOfImpact3D>>>>(candidate)), scratch->candidate_rotational, dt, scratch);
                   }
                   (collider_bindex += 1.0);
                 }
@@ -680,26 +680,26 @@ inline void report_physics3_dsensor_impacts_before_fraction(flight::Ref<flight::
   }
 }
 
-inline bool find_earliest_physics3_dimpact(flight::Ref<flight::types::Physics3DWorld> world, double dt, flight::Ref<Physics3DContinuousScratch> scratch) {
+inline bool find_earliest_physics_3d_impact(flight::Ref<flight::types::Physics3DWorld> world, double dt, flight::Ref<Physics3DContinuousScratch> scratch) {
   (scratch->fraction = std::numeric_limits<double>::infinity());
   (scratch->body_a = -1.0);
   (scratch->body_b = -1.0);
-  flight::physics3d::synchronize_physics3_dswept_broadphase(world, dt);
+  flight::physics3d::synchronize_physics_3d_swept_broadphase(world, dt);
   world->index->query_spatial_pairs(scratch->pairs);
-  flight::physics3d::synchronize_physics3_dbroadphase(world);
+  flight::physics3d::synchronize_physics_3d_broadphase(world);
   for (auto pair : scratch->pairs) {
     auto first = world->body_by_index.get(pair->a);
     auto second = world->body_by_index.get(pair->b);
     if ((!first.has_value() || !second.has_value())) {
       continue;
     }
-    const bool ordered = flight::physics3d::is_physics3_dpair_ordered(first.value()->index, second.value()->index);
+    const bool ordered = flight::physics3d::is_physics_3d_pair_ordered(first.value()->index, second.value()->index);
     auto body_a = (ordered ? first.value() : second.value());
     auto body_b = (ordered ? second.value() : first.value());
-    if (!is_physics3_dccd_pair_active(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)))) {
+    if (!is_physics_3d_ccd_pair_active(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)))) {
       continue;
     }
-    if (flight::physics3d::is_physics3_dpair_joint_suppressed(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), body_a->index, body_b->index)) {
+    if (flight::physics3d::is_physics_3d_pair_joint_suppressed(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), body_a->index, body_b->index)) {
       continue;
     }
     {
@@ -720,7 +720,7 @@ inline bool find_earliest_physics3_dimpact(flight::Ref<flight::types::Physics3DW
                   (j += 1.0);
                   continue;
                 }
-                if (!find_physics3_dcollider_impact(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), body_a, body_b, collider_a, collider_b, dt, false, scratch)) {
+                if (!find_physics_3d_collider_impact(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), body_a, body_b, collider_a, collider_b, dt, false, scratch)) {
                   (j += 1.0);
                   continue;
                 }
@@ -737,8 +737,8 @@ inline bool find_earliest_physics3_dimpact(flight::Ref<flight::types::Physics3DW
                 (scratch->normal_x = candidate->normal_x);
                 (scratch->normal_y = candidate->normal_y);
                 (scratch->normal_z = candidate->normal_z);
-                (scratch->friction = flight::physics3d::mix_physics3_dfriction(collider_a->material->friction, collider_b->material->friction));
-                (scratch->restitution = flight::physics3d::mix_physics3_drestitution(collider_a->material->restitution, collider_b->material->restitution));
+                (scratch->friction = flight::physics3d::mix_physics_3d_friction(collider_a->material->friction, collider_b->material->friction));
+                (scratch->restitution = flight::physics3d::mix_physics_3d_restitution(collider_a->material->restitution, collider_b->material->restitution));
                 (scratch->rotational = scratch->candidate_rotational);
                 (scratch->point_count = (scratch->rotational ? scratch->rotational_manifold->point_count : 1.0));
                 if (scratch->rotational) {
@@ -774,11 +774,11 @@ inline bool find_earliest_physics3_dimpact(flight::Ref<flight::types::Physics3DW
       }
     }
   }
-  report_physics3_dsensor_impacts_before_fraction(world, dt, scratch->fraction, scratch);
+  report_physics_3d_sensor_impacts_before_fraction(world, dt, scratch->fraction, scratch);
   return (scratch->body_a >= 0.0);
 }
 
-inline void write_physics3_dimpact_friction_basis(double normal_x, double normal_y, double normal_z, flight::Ref<Physics3DContinuousScratch> out) {
+inline void write_physics_3d_impact_friction_basis(double normal_x, double normal_y, double normal_z, flight::Ref<Physics3DContinuousScratch> out) {
   double seed_x = 0.0;
   double seed_y = 0.0;
   double seed_z = 0.0;
@@ -811,10 +811,10 @@ inline void write_physics3_dimpact_friction_basis(double normal_x, double normal
   (out->tangent1_z = ((normal_x * tangent0_y) - (normal_y * tangent0_x)));
 }
 
-inline void resolve_physics3_drotational_impact(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world, flight::Ref<flight::types::RigidBody3D> body_a, flight::Ref<flight::types::RigidBody3D> body_b, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DContact>>>> contact, flight::Ref<Physics3DContinuousScratch> scratch) {
-  flight::physics3d::write_rigid_body3_dworld_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), scratch->center_a);
-  flight::physics3d::write_rigid_body3_dworld_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), scratch->center_b);
-  write_physics3_dimpact_friction_basis(scratch->normal_x, scratch->normal_y, scratch->normal_z, scratch);
+inline void resolve_physics_3d_rotational_impact(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world, flight::Ref<flight::types::RigidBody3D> body_a, flight::Ref<flight::types::RigidBody3D> body_b, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DContact>>>> contact, flight::Ref<Physics3DContinuousScratch> scratch) {
+  flight::physics3d::write_rigid_body_3d_world_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), scratch->center_a);
+  flight::physics3d::write_rigid_body_3d_world_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), scratch->center_b);
+  write_physics_3d_impact_friction_basis(scratch->normal_x, scratch->normal_y, scratch->normal_z, scratch);
   {
     double point = 0.0;
     while ((point < scratch->point_count)) {
@@ -845,18 +845,18 @@ inline void resolve_physics3_drotational_impact(flight::StructuralRef<flight::Ro
               const double r_by = (scratch->points.element((offset_2 + 1.0)) - scratch->center_b.element(1.0));
               const double r_bz = (scratch->points.element((offset_2 + 2.0)) - scratch->center_b.element(2.0));
               const double velocity = get_relative_point_normal_velocity(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), r_ax, r_ay, r_az, r_bx, r_by, r_bz, scratch->normal_x, scratch->normal_y, scratch->normal_z);
-              const double mass = get_physics3_dimpact_effective_mass(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), r_ax, r_ay, r_az, r_bx, r_by, r_bz, scratch->normal_x, scratch->normal_y, scratch->normal_z);
+              const double mass = get_physics_3d_impact_effective_mass(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), r_ax, r_ay, r_az, r_bx, r_by, r_bz, scratch->normal_x, scratch->normal_y, scratch->normal_z);
               const double impulse = flight::maximum((scratch->normal_impulses.element(point_2) + ((scratch->velocity_biases.element(point_2) - velocity) * mass)), 0.0);
               const double delta = (impulse - scratch->normal_impulses.element(point_2));
               (scratch->normal_impulses.element(point_2) = impulse);
-              apply_physics3_dimpact_impulse(body_a, r_ax, r_ay, r_az, (scratch->normal_x * delta), (scratch->normal_y * delta), (scratch->normal_z * delta));
-              apply_physics3_dimpact_impulse(body_b, r_bx, r_by, r_bz, (-scratch->normal_x * delta), (-scratch->normal_y * delta), (-scratch->normal_z * delta));
+              apply_physics_3d_impact_impulse(body_a, r_ax, r_ay, r_az, (scratch->normal_x * delta), (scratch->normal_y * delta), (scratch->normal_z * delta));
+              apply_physics_3d_impact_impulse(body_b, r_bx, r_by, r_bz, (-scratch->normal_x * delta), (-scratch->normal_y * delta), (-scratch->normal_z * delta));
               const double max_friction = (flight::row_get<flight::RowKey<"friction">>(contact) * impulse);
               const double tangent_velocity0 = get_relative_point_normal_velocity(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), r_ax, r_ay, r_az, r_bx, r_by, r_bz, scratch->tangent0_x, scratch->tangent0_y, scratch->tangent0_z);
-              const double tangent_mass0 = get_physics3_dimpact_effective_mass(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), r_ax, r_ay, r_az, r_bx, r_by, r_bz, scratch->tangent0_x, scratch->tangent0_y, scratch->tangent0_z);
+              const double tangent_mass0 = get_physics_3d_impact_effective_mass(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), r_ax, r_ay, r_az, r_bx, r_by, r_bz, scratch->tangent0_x, scratch->tangent0_y, scratch->tangent0_z);
               double tangent_impulse0 = (scratch->tangent_impulses0.element(point_2) - (tangent_velocity0 * tangent_mass0));
               const double tangent_velocity1 = get_relative_point_normal_velocity(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), r_ax, r_ay, r_az, r_bx, r_by, r_bz, scratch->tangent1_x, scratch->tangent1_y, scratch->tangent1_z);
-              const double tangent_mass1 = get_physics3_dimpact_effective_mass(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), r_ax, r_ay, r_az, r_bx, r_by, r_bz, scratch->tangent1_x, scratch->tangent1_y, scratch->tangent1_z);
+              const double tangent_mass1 = get_physics_3d_impact_effective_mass(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b)), r_ax, r_ay, r_az, r_bx, r_by, r_bz, scratch->tangent1_x, scratch->tangent1_y, scratch->tangent1_z);
               double tangent_impulse1 = (scratch->tangent_impulses1.element(point_2) - (tangent_velocity1 * tangent_mass1));
               const double tangent_magnitude = std::sqrt(((tangent_impulse0 * tangent_impulse0) + (tangent_impulse1 * tangent_impulse1)));
               if ((tangent_magnitude > max_friction)) {
@@ -871,8 +871,8 @@ inline void resolve_physics3_drotational_impact(flight::StructuralRef<flight::Ro
               const double friction_x = ((scratch->tangent0_x * delta_tangent0) + (scratch->tangent1_x * delta_tangent1));
               const double friction_y = ((scratch->tangent0_y * delta_tangent0) + (scratch->tangent1_y * delta_tangent1));
               const double friction_z = ((scratch->tangent0_z * delta_tangent0) + (scratch->tangent1_z * delta_tangent1));
-              apply_physics3_dimpact_impulse(body_a, r_ax, r_ay, r_az, friction_x, friction_y, friction_z);
-              apply_physics3_dimpact_impulse(body_b, r_bx, r_by, r_bz, -friction_x, -friction_y, -friction_z);
+              apply_physics_3d_impact_impulse(body_a, r_ax, r_ay, r_az, friction_x, friction_y, friction_z);
+              apply_physics_3d_impact_impulse(body_b, r_bx, r_by, r_bz, -friction_x, -friction_y, -friction_z);
             }
             (point_2 += 1.0);
           }
@@ -883,23 +883,23 @@ inline void resolve_physics3_drotational_impact(flight::StructuralRef<flight::Ro
   }
 }
 
-inline void resolve_physics3_dimpact(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<Physics3DContinuousScratch> scratch) {
+inline void resolve_physics_3d_impact(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<Physics3DContinuousScratch> scratch) {
   auto body_a = world->body_by_index.get(scratch->body_a);
   auto body_b = world->body_by_index.get(scratch->body_b);
   if ((!body_a.has_value() || !body_b.has_value())) {
     return;
   }
-  wake_physics3_dimpact_body(body_a.value());
-  wake_physics3_dimpact_body(body_b.value());
-  auto contact = write_physics3_dimpact_contact(world, body_a.value(), body_b.value(), scratch);
+  wake_physics_3d_impact_body(body_a.value());
+  wake_physics_3d_impact_body(body_b.value());
+  auto contact = write_physics_3d_impact_contact(world, body_a.value(), body_b.value(), scratch);
   if (scratch->contact_created) {
-    run_physics3_dimpact_pre_solve_hook(world, contact);
+    run_physics_3d_impact_pre_solve_hook(world, contact);
   }
   if ((!contact->enabled || contact->sensor)) {
     return;
   }
   if ((scratch->rotational && (scratch->point_count > 0.0))) {
-    resolve_physics3_drotational_impact(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), body_a.value(), body_b.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DContact>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DContact>>>>(contact)), scratch);
+    resolve_physics_3d_rotational_impact(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), body_a.value(), body_b.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DContact>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DContact>>>>(contact)), scratch);
     return;
   }
   const double approach = get_relative_normal_velocity_flight_value_function_get_u000052_elative_u00004e_ormal_u000056_elocity_flight_private_ff06f225606b7241(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_a.value())), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_b.value())), scratch->normal_x, scratch->normal_y, scratch->normal_z);
@@ -943,31 +943,31 @@ inline void resolve_physics3_dimpact(flight::Ref<flight::types::Physics3DWorld> 
   (body_b.value()->velocity_z -= (impulse_z * body_b.value()->inverse_mass));
 }
 
-inline flight::Ref<Physics3DContinuousScratch> create_physics3_dcontinuous_scratch() {
-  return flight::make_ref<Physics3DContinuousScratch>(Physics3DContinuousScratch{.pairs = flight::Array<flight::Ref<flight::types::SpatialPair>>{}, .linear_impact = flight::collision::create_collision_time_of_impact3_d(), .rotational_impact = flight::collision::create_collision_time_of_impact3_d(), .fraction = 0.0, .body_a = -1.0, .body_b = -1.0, .collider_a = -1.0, .collider_b = -1.0, .normal_x = 0.0, .normal_y = 0.0, .normal_z = 0.0, .friction = 0.0, .restitution = 0.0, .rotational = false, .candidate_rotational = false, .contact_created = false, .rotational_manifold = flight::collision::create_collision_contact_manifold3_d(), .point_count = 0.0, .points = flight::Array(12.0).fill(0.0), .depths = flight::Array(4.0).fill(0.0), .feature_ids = flight::Array(4.0).fill(0.0), .normal_impulses = flight::Array(4.0).fill(0.0), .tangent_impulses0 = flight::Array(4.0).fill(0.0), .tangent_impulses1 = flight::Array(4.0).fill(0.0), .velocity_biases = flight::Array(4.0).fill(0.0), .tangent0_x = 0.0, .tangent0_y = 0.0, .tangent0_z = 0.0, .tangent1_x = 0.0, .tangent1_y = 0.0, .tangent1_z = 0.0, .center_a = flight::Array<double>{0.0, 0.0, 0.0}, .center_b = flight::Array<double>{0.0, 0.0, 0.0}, .candidate_center_a = flight::Array<double>{0.0, 0.0, 0.0}, .candidate_center_b = flight::Array<double>{0.0, 0.0, 0.0}, .pose_a = flight::Array(7.0).fill(0.0), .pose_b = flight::Array(7.0).fill(0.0)});
+inline flight::Ref<Physics3DContinuousScratch> create_physics_3d_continuous_scratch() {
+  return flight::make_ref<Physics3DContinuousScratch>(Physics3DContinuousScratch{.pairs = flight::Array<flight::Ref<flight::types::SpatialPair>>{}, .linear_impact = flight::collision::create_collision_time_of_impact_3d(), .rotational_impact = flight::collision::create_collision_time_of_impact_3d(), .fraction = 0.0, .body_a = -1.0, .body_b = -1.0, .collider_a = -1.0, .collider_b = -1.0, .normal_x = 0.0, .normal_y = 0.0, .normal_z = 0.0, .friction = 0.0, .restitution = 0.0, .rotational = false, .candidate_rotational = false, .contact_created = false, .rotational_manifold = flight::collision::create_collision_contact_manifold_3d(), .point_count = 0.0, .points = flight::Array(12.0).fill(0.0), .depths = flight::Array(4.0).fill(0.0), .feature_ids = flight::Array(4.0).fill(0.0), .normal_impulses = flight::Array(4.0).fill(0.0), .tangent_impulses0 = flight::Array(4.0).fill(0.0), .tangent_impulses1 = flight::Array(4.0).fill(0.0), .velocity_biases = flight::Array(4.0).fill(0.0), .tangent0_x = 0.0, .tangent0_y = 0.0, .tangent0_z = 0.0, .tangent1_x = 0.0, .tangent1_y = 0.0, .tangent1_z = 0.0, .center_a = flight::Array<double>{0.0, 0.0, 0.0}, .center_b = flight::Array<double>{0.0, 0.0, 0.0}, .candidate_center_a = flight::Array<double>{0.0, 0.0, 0.0}, .candidate_center_b = flight::Array<double>{0.0, 0.0, 0.0}, .pose_a = flight::Array(7.0).fill(0.0), .pose_b = flight::Array(7.0).fill(0.0)});
 }
 
-inline flight::Array<flight::Ref<Physics3DContinuousScratch>> physics3_dcontinuous_scratch_pool = flight::Array<flight::Ref<Physics3DContinuousScratch>>{create_physics3_dcontinuous_scratch()};
+inline flight::Array<flight::Ref<Physics3DContinuousScratch>> physics_3d_continuous_scratch_pool = flight::Array<flight::Ref<Physics3DContinuousScratch>>{create_physics_3d_continuous_scratch()};
 
-inline flight::Ref<Physics3DContinuousScratch> acquire_physics3_dcontinuous_scratch() {
-  return ([&]() -> flight::Ref<Physics3DContinuousScratch> { auto nullish_coalesce_left = physics3_dcontinuous_scratch_pool.pop(); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_physics3_dcontinuous_scratch(); }());
+inline flight::Ref<Physics3DContinuousScratch> acquire_physics_3d_continuous_scratch() {
+  return ([&]() -> flight::Ref<Physics3DContinuousScratch> { auto nullish_coalesce_left = physics_3d_continuous_scratch_pool.pop(); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_physics_3d_continuous_scratch(); }());
 }
 
-inline void release_physics3_dcontinuous_scratch(flight::Ref<Physics3DContinuousScratch> scratch) {
-  physics3_dcontinuous_scratch_pool.push(scratch);
+inline void release_physics_3d_continuous_scratch(flight::Ref<Physics3DContinuousScratch> scratch) {
+  physics_3d_continuous_scratch_pool.push(scratch);
 }
 
-inline flight::WeakSet<flight::Ref<flight::types::Physics3DWorld>> integrating_physics3_dworlds = flight::WeakSet<flight::Ref<flight::types::Physics3DWorld>>();
+inline flight::WeakSet<flight::Ref<flight::types::Physics3DWorld>> integrating_physics_3d_worlds = flight::WeakSet<flight::Ref<flight::types::Physics3DWorld>>();
 
-inline void integrate_physics3_dcontinuous(flight::Ref<flight::types::Physics3DWorld> world, double dt) {
-  if (integrating_physics3_dworlds.has(world)) {
+inline void integrate_physics_3d_continuous(flight::Ref<flight::types::Physics3DWorld> world, double dt) {
+  if (integrating_physics_3d_worlds.has(world)) {
     throw flight::Error(flight::String("Cannot integrate a physics world recursively while it is stepping"));
   }
-  auto scratch = acquire_physics3_dcontinuous_scratch();
-  const bool owns_mutation_boundary = !flight::physics3d::stepping_physics3_dworlds.has(world);
-  integrating_physics3_dworlds.add(world);
+  auto scratch = acquire_physics_3d_continuous_scratch();
+  const bool owns_mutation_boundary = !flight::physics3d::stepping_physics_3d_worlds.has(world);
+  integrating_physics_3d_worlds.add(world);
   if (owns_mutation_boundary) {
-    flight::physics3d::stepping_physics3_dworlds.add(world);
+    flight::physics3d::stepping_physics_3d_worlds.add(world);
   }
   std::exception_ptr finally_exception_3;
   try {
@@ -976,14 +976,14 @@ inline void integrate_physics3_dcontinuous(flight::Ref<flight::types::Physics3DW
       double substep = 0.0;
       while (((substep < world->config->max_ccd_substeps) && (remaining > 0.0))) {
         {
-          if (!find_earliest_physics3_dimpact(world, remaining, scratch)) {
+          if (!find_earliest_physics_3d_impact(world, remaining, scratch)) {
             break;
           }
           const double advance = (remaining * scratch->fraction);
-          advance_awake_physics3_dbodies(world, advance);
+          advance_awake_physics_3d_bodies(world, advance);
           (remaining -= advance);
-          flight::physics3d::synchronize_physics3_dbroadphase(world);
-          resolve_physics3_dimpact(world, scratch);
+          flight::physics3d::synchronize_physics_3d_broadphase(world);
+          resolve_physics_3d_impact(world, scratch);
           if ((scratch->fraction >= 1.0)) {
             return;
           }
@@ -992,17 +992,17 @@ inline void integrate_physics3_dcontinuous(flight::Ref<flight::types::Physics3DW
       }
     }
     if ((remaining > 0.0)) {
-      advance_awake_physics3_dbodies(world, remaining);
+      advance_awake_physics_3d_bodies(world, remaining);
     }
   }
   catch (...) {
     finally_exception_3 = std::current_exception();
   }
-  release_physics3_dcontinuous_scratch(scratch);
+  release_physics_3d_continuous_scratch(scratch);
   if (owns_mutation_boundary) {
-    flight::physics3d::stepping_physics3_dworlds.delete_(world);
+    flight::physics3d::stepping_physics_3d_worlds.delete_(world);
   }
-  integrating_physics3_dworlds.delete_(world);
+  integrating_physics_3d_worlds.delete_(world);
   if (finally_exception_3) std::rethrow_exception(finally_exception_3);
 }
 

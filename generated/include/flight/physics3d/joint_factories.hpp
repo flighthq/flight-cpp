@@ -30,7 +30,7 @@ namespace flight::types { struct Physics3DSliderJointOptions; }
 
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/physics3_d.hpp>
+#include <flight/types/physics_3d.hpp>
 #include <flight/physics3d/joints.hpp>
 
 namespace flight::physics3d {
@@ -66,19 +66,19 @@ inline void init_joint_base(flight::Ref<flight::types::Physics3DJoint> out, flig
   (out->r_bz = 0.0);
 }
 
-inline void initialize_physics3_dball_and_socket_joint(flight::types::EntityConstruction<flight::types::Physics3DBallAndSocketJoint> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Physics3DBallAndSocketJointOptions>>> options) {
-  flight::row_set<flight::RowKey<"kind">>(out, flight::physics3d::physics3_dball_and_socket_joint_kind);
+inline void initialize_physics_3d_ball_and_socket_joint(flight::types::EntityConstruction<flight::types::Physics3DBallAndSocketJoint> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Physics3DBallAndSocketJointOptions>>> options) {
+  flight::row_set<flight::RowKey<"kind">>(out, flight::physics3d::physics_3d_ball_and_socket_joint_kind);
   init_joint_base(flight::structural_ref_cast<flight::Ref<flight::types::Physics3DJoint>>(out), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointOptions>>>>>(options));
 }
 
-inline flight::types::Physics3DBallAndSocketJoint create_physics3_dball_and_socket_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Physics3DBallAndSocketJointOptions>>> options) {
+inline flight::types::Physics3DBallAndSocketJoint create_physics_3d_ball_and_socket_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Physics3DBallAndSocketJointOptions>>> options) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DJoint>> out = flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DJoint>>>(flight::entity::allocate_entity<flight::types::Physics3DBallAndSocketJoint>());
-  initialize_physics3_dball_and_socket_joint(flight::structural_ref_cast<flight::types::EntityConstruction<flight::types::Physics3DBallAndSocketJoint>>(out), options);
+  initialize_physics_3d_ball_and_socket_joint(flight::structural_ref_cast<flight::types::EntityConstruction<flight::types::Physics3DBallAndSocketJoint>>(out), options);
   return flight::entity::finish_entity<flight::types::Physics3DBallAndSocketJoint>(flight::structural_ref_cast<flight::types::EntityConstruction<flight::types::Physics3DBallAndSocketJoint>>(out));
 }
 
-inline void initialize_physics3_ddistance_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DDistanceJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DDistanceJointOptions>>>> options) {
-  flight::row_set<flight::RowKey<"kind">>(out, flight::physics3d::physics3_ddistance_joint_kind);
+inline void initialize_physics_3d_distance_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DDistanceJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DDistanceJointOptions>>>> options) {
+  flight::row_set<flight::RowKey<"kind">>(out, flight::physics3d::physics_3d_distance_joint_kind);
   init_joint_base(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointOptions>>>>>(options));
   flight::row_set<flight::RowKey<"length">>(out, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"length">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
   flight::row_set<flight::RowKey<"enableSpring">>(out, ([&]() -> bool { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"enableSpring">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return false; }()));
@@ -91,9 +91,9 @@ inline void initialize_physics3_ddistance_joint(flight::types::EntityConstructio
   flight::row_set<flight::RowKey<"upperLimitImpulse">>(out, 0.0);
 }
 
-inline flight::Ref<flight::types::Physics3DDistanceJoint> create_physics3_ddistance_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DDistanceJointOptions>>>> options) {
+inline flight::Ref<flight::types::Physics3DDistanceJoint> create_physics_3d_distance_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DDistanceJointOptions>>>> options) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DDistanceJoint>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics3DDistanceJoint>>();
-  initialize_physics3_ddistance_joint(out, options);
+  initialize_physics_3d_distance_joint(out, options);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics3DDistanceJoint>>(out);
 }
 
@@ -108,8 +108,8 @@ inline void init_joint_frames(flight::Ref<flight::types::Physics3DJointFrames> o
   (out->local_rotation_bw = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"localRotationBW">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()));
 }
 
-inline void initialize_physics3_dcone_twist_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DConeTwistJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DConeTwistJointOptions>>>> options) {
-  flight::row_set<flight::RowKey<"kind">>(out, flight::physics3d::physics3_dcone_twist_joint_kind);
+inline void initialize_physics_3d_cone_twist_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DConeTwistJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DConeTwistJointOptions>>>> options) {
+  flight::row_set<flight::RowKey<"kind">>(out, flight::physics3d::physics_3d_cone_twist_joint_kind);
   init_joint_base(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointOptions>>>>>(options));
   init_joint_frames(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointFrameOptions>>>>>(options));
   flight::row_set<flight::RowKey<"enableSwingLimit">>(out, ([&]() -> bool { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"enableSwingLimit">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return true; }()));
@@ -126,9 +126,9 @@ inline void initialize_physics3_dcone_twist_joint(flight::types::EntityConstruct
   flight::row_set<flight::RowKey<"upperTwistImpulse">>(out, 0.0);
 }
 
-inline flight::Ref<flight::types::Physics3DConeTwistJoint> create_physics3_dcone_twist_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DConeTwistJointOptions>>>> options) {
+inline flight::Ref<flight::types::Physics3DConeTwistJoint> create_physics_3d_cone_twist_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DConeTwistJointOptions>>>> options) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DConeTwistJoint>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics3DConeTwistJoint>>();
-  initialize_physics3_dcone_twist_joint(out, options);
+  initialize_physics_3d_cone_twist_joint(out, options);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics3DConeTwistJoint>>(out);
 }
 
@@ -172,8 +172,8 @@ struct entity_runtime_key_kind_body_a_body_b_local_anchor_ax_local_anchor_ay_loc
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ENTITY_RUNTIME_KEY_KIND_BODY_A_BODY_B_LOCAL_ANCHOR_AX_LOCAL_ANCHOR_AY_LOCAL_ANCHOR_AZ_LOCAL_ANCHOR_BX_LOCAL_ANCHOR_BY_LOCAL_ANCHOR_BZ_COLLIDE_CONNECTED_BREAK_FORCE_BREAK_TORQUE_BROKEN_IMPULSE0_IMPULSE1_IMPULSE2_IMPULSE3_IMPULSE4_IMPULSE5_R_AX_R_AY_R_AZ_R_BX_R_BY_R_BZ_LOCAL_ROTATION_AX_LOCAL_ROTATION_AY_LOCAL_ROTATION_AZ_LOCAL_ROTATION_AW_LOCAL_ROTATION_BX_LOCAL_ROTATION_BY_LOCAL_ROTATION_BZ_LOCAL_ROTATION_BW_5A60FC5F307A79CB
 
-inline void initialize_physics3_dfixed_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DFixedJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Physics3DFixedJointOptions>>> options) {
-  flight::row_set<flight::RowKey<"kind">>(out, flight::physics3d::physics3_dfixed_joint_kind);
+inline void initialize_physics_3d_fixed_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DFixedJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Physics3DFixedJointOptions>>> options) {
+  flight::row_set<flight::RowKey<"kind">>(out, flight::physics3d::physics_3d_fixed_joint_kind);
   init_joint_base(flight::structural_ref_cast<flight::Ref<flight::types::Physics3DJoint>>(out), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointOptions>>>>>(options));
   init_joint_frames(flight::structural_ref_cast<flight::Ref<flight::types::Physics3DJointFrames>>(out), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointFrameOptions>>>>>(options));
 }
@@ -192,14 +192,14 @@ struct entity_runtime_key_kind_body_a_body_b_local_anchor_ax_local_anchor_ay_loc
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS3D_ENTITY_RUNTIME_KEY_KIND_BODY_A_BODY_B_LOCAL_ANCHOR_AX_LOCAL_ANCHOR_AY_LOCAL_ANCHOR_AZ_LOCAL_ANCHOR_BX_LOCAL_ANCHOR_BY_LOCAL_ANCHOR_BZ_COLLIDE_CONNECTED_BREAK_FORCE_BREAK_TORQUE_BROKEN_IMPULSE0_IMPULSE1_IMPULSE2_IMPULSE3_IMPULSE4_IMPULSE5_R_AX_R_AY_R_AZ_R_BX_R_BY_R_BZ_LOCAL_ROTATION_AX_LOCAL_ROTATION_AY_LOCAL_ROTATION_AZ_LOCAL_ROTATION_AW_LOCAL_ROTATION_BX_LOCAL_ROTATION_BY_LOCAL_ROTATION_BZ_LOCAL_ROTATION_BW_3491D61E9F6B4C72
 
-inline flight::Ref<flight::types::Physics3DFixedJoint> create_physics3_dfixed_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Physics3DFixedJointOptions>>> options) {
+inline flight::Ref<flight::types::Physics3DFixedJoint> create_physics_3d_fixed_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Physics3DFixedJointOptions>>> options) {
   flight::types::EntityConstruction<flight::Ref<entity_runtime_key_kind_body_a_body_b_local_anchor_ax_local_anchor_ay_local_anchor_az_local_anchor_bx_local_anchor_by_local_anchor_bz_collide_connected_break_force_break_torque_broken_impulse0_impulse1_impulse2_impulse3_impulse4_impulse5_r_ax_r_ay_r_az_r_bx_r_by_r_bz_local_rotation_ax_local_rotation_ay_local_rotation_az_local_rotation_aw_local_rotation_bx_local_rotation_by_local_rotation_bz_local_rotation_bw_3491d61e9f6b4c72>> out = flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<entity_runtime_key_kind_body_a_body_b_local_anchor_ax_local_anchor_ay_local_anchor_az_local_anchor_bx_local_anchor_by_local_anchor_bz_collide_connected_break_force_break_torque_broken_impulse0_impulse1_impulse2_impulse3_impulse4_impulse5_r_ax_r_ay_r_az_r_bx_r_by_r_bz_local_rotation_ax_local_rotation_ay_local_rotation_az_local_rotation_aw_local_rotation_bx_local_rotation_by_local_rotation_bz_local_rotation_bw_3491d61e9f6b4c72>>>(flight::entity::allocate_entity<flight::Ref<flight::types::Physics3DFixedJoint>>());
-  initialize_physics3_dfixed_joint(flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DFixedJoint>>>(out), options);
+  initialize_physics_3d_fixed_joint(flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DFixedJoint>>>(out), options);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics3DFixedJoint>>(flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DFixedJoint>>>(out));
 }
 
-inline void initialize_physics3_dgeneric6_dof_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DGeneric6DofJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DGeneric6DofJointOptions>>>> options) {
-  flight::row_set<flight::RowKey<"kind">>(out, flight::physics3d::physics3_dgeneric6_dof_joint_kind);
+inline void initialize_physics_3d_generic6_dof_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DGeneric6DofJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DGeneric6DofJointOptions>>>> options) {
+  flight::row_set<flight::RowKey<"kind">>(out, flight::physics3d::physics_3d_generic6_dof_joint_kind);
   init_joint_base(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointOptions>>>>>(options));
   init_joint_frames(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointFrameOptions>>>>>(options));
   flight::row_set<flight::RowKey<"lowerLinearX">>(out, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"lowerLinearX">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()));
@@ -221,14 +221,14 @@ inline void initialize_physics3_dgeneric6_dof_joint(flight::types::EntityConstru
   flight::row_set<flight::RowKey<"upperLimitImpulses">>(out, flight::Array<double>{0.0, 0.0, 0.0, 0.0, 0.0, 0.0});
 }
 
-inline flight::Ref<flight::types::Physics3DGeneric6DofJoint> create_physics3_dgeneric6_dof_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DGeneric6DofJointOptions>>>> options) {
+inline flight::Ref<flight::types::Physics3DGeneric6DofJoint> create_physics_3d_generic6_dof_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DGeneric6DofJointOptions>>>> options) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DGeneric6DofJoint>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics3DGeneric6DofJoint>>();
-  initialize_physics3_dgeneric6_dof_joint(out, options);
+  initialize_physics_3d_generic6_dof_joint(out, options);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics3DGeneric6DofJoint>>(out);
 }
 
-inline void initialize_physics3_dhinge_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DHingeJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DHingeJointOptions>>>> options) {
-  flight::row_set<flight::RowKey<"kind">>(out, flight::physics3d::physics3_dhinge_joint_kind);
+inline void initialize_physics_3d_hinge_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DHingeJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DHingeJointOptions>>>> options) {
+  flight::row_set<flight::RowKey<"kind">>(out, flight::physics3d::physics_3d_hinge_joint_kind);
   init_joint_base(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointOptions>>>>>(options));
   init_joint_frames(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointFrameOptions>>>>>(options));
   flight::row_set<flight::RowKey<"enableLimit">>(out, ([&]() -> bool { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"enableLimit">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return false; }()));
@@ -245,14 +245,14 @@ inline void initialize_physics3_dhinge_joint(flight::types::EntityConstruction<f
   flight::row_set<flight::RowKey<"upperLimitImpulse">>(out, 0.0);
 }
 
-inline flight::Ref<flight::types::Physics3DHingeJoint> create_physics3_dhinge_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DHingeJointOptions>>>> options) {
+inline flight::Ref<flight::types::Physics3DHingeJoint> create_physics_3d_hinge_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DHingeJointOptions>>>> options) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DHingeJoint>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics3DHingeJoint>>();
-  initialize_physics3_dhinge_joint(out, options);
+  initialize_physics_3d_hinge_joint(out, options);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics3DHingeJoint>>(out);
 }
 
-inline void initialize_physics3_dslider_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DSliderJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DSliderJointOptions>>>> options) {
-  flight::row_set<flight::RowKey<"kind">>(out, flight::physics3d::physics3_dslider_joint_kind);
+inline void initialize_physics_3d_slider_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DSliderJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DSliderJointOptions>>>> options) {
+  flight::row_set<flight::RowKey<"kind">>(out, flight::physics3d::physics_3d_slider_joint_kind);
   init_joint_base(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointOptions>>>>>(options));
   init_joint_frames(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointFrameOptions>>>>>(options));
   flight::row_set<flight::RowKey<"enableLimit">>(out, ([&]() -> bool { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"enableLimit">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return false; }()));
@@ -269,9 +269,9 @@ inline void initialize_physics3_dslider_joint(flight::types::EntityConstruction<
   flight::row_set<flight::RowKey<"upperLimitImpulse">>(out, 0.0);
 }
 
-inline flight::Ref<flight::types::Physics3DSliderJoint> create_physics3_dslider_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DSliderJointOptions>>>> options) {
+inline flight::Ref<flight::types::Physics3DSliderJoint> create_physics_3d_slider_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DSliderJointOptions>>>> options) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DSliderJoint>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics3DSliderJoint>>();
-  initialize_physics3_dslider_joint(out, options);
+  initialize_physics_3d_slider_joint(out, options);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics3DSliderJoint>>(out);
 }
 

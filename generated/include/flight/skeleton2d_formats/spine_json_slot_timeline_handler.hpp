@@ -14,13 +14,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/slot2_d.hpp>
+#include <flight/types/slot_2d.hpp>
 
 #include <flight/types/import_diagnostic.hpp>
 
-#include <flight/types/attachment_skin2_d.hpp>
+#include <flight/types/attachment_skin_2d.hpp>
 
-#include <flight/types/attachment2_d.hpp>
+#include <flight/types/attachment_2d.hpp>
 
 #include <flight/types/animation_track.hpp>
 
@@ -83,7 +83,7 @@ inline void add_spine_slot_color_channel(flight::Array<flight::Ref<flight::types
   const flight::String interpolation = (all_stepped ? flight::types::animation_interpolation_step : flight::types::animation_interpolation_linear);
   std::optional<flight::Array<std::optional<std::function<double(double)>>>> segment_easings = flight::skeleton2d_formats::build_spine_segment_easings(keys, times, values, 4.0, diagnostics);
   auto track = flight::animation::create_animation_track(([&]() { auto object_member_components = std::optional<double>{4.0}; auto object_member_interpolation = std::optional<flight::String>{interpolation}; auto object_member_segment_easings = ([&]() -> std::variant<flight::Array<std::optional<std::function<double(double)>>>, flight::Null, flight::Undefined> { auto contextual_union_source = segment_easings; if (!contextual_union_source.has_value()) return std::variant<flight::Array<std::optional<std::function<double(double)>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Array<std::optional<std::function<double(double)>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<std::optional<std::function<double(double)>>>>, contextual_union_source.value()}; }()); auto object_member_times = times; auto object_member_values = values; return flight::make_ref<times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042>(times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042{.times = object_member_times, .values = object_member_values, .components = object_member_components, .interpolation = object_member_interpolation, .segment_easings = object_member_segment_easings}); }()));
-  channels.push(flight::animation::create_animation_channel(track, flight::Any::object(flight::skeleton2d::create_skeleton2_dslot_animation_target(slot_index, flight::types::skeleton2_dslot_animation_path->color, std::nullopt))));
+  channels.push(flight::animation::create_animation_channel(track, flight::Any::object(flight::skeleton2d::create_skeleton_2d_slot_animation_target(slot_index, flight::types::skeleton_2d_slot_animation_path->color, std::nullopt))));
 }
 
 inline void add_spine_slot_attachment_channel(flight::Array<flight::Ref<flight::types::AnimationChannel>> channels, flight::Array<flight::Any> raw_keys, double slot_index, flight::String slot_name, flight::Array<flight::Ref<flight::types::AttachmentSkin2D>> skins) {
@@ -115,7 +115,7 @@ inline void add_spine_slot_attachment_channel(flight::Array<flight::Ref<flight::
     return;
   }
   auto track = flight::animation::create_animation_track(([&]() { auto object_member_components_2 = std::optional<double>{1.0}; auto object_member_interpolation_2 = std::optional<flight::String>{flight::types::animation_interpolation_step}; auto object_member_times_2 = times; auto object_member_values_2 = values; return flight::make_ref<times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042>(times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042{.times = object_member_times_2, .values = object_member_values_2, .components = object_member_components_2, .interpolation = object_member_interpolation_2}); }()));
-  channels.push(flight::animation::create_animation_channel(track, flight::Any::object(flight::skeleton2d::create_skeleton2_dslot_animation_target(slot_index, flight::types::skeleton2_dslot_animation_path->attachment, std::optional<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>>{attachments}))));
+  channels.push(flight::animation::create_animation_channel(track, flight::Any::object(flight::skeleton2d::create_skeleton_2d_slot_animation_target(slot_index, flight::types::skeleton_2d_slot_animation_path->attachment, std::optional<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>>{attachments}))));
 }
 
 inline void parse_spine_slot_timelines(flight::Array<flight::Ref<flight::types::AnimationChannel>> channels, flight::Any raw, flight::Array<flight::Ref<flight::types::Slot2D>> slots, flight::Array<flight::Ref<flight::types::AttachmentSkin2D>> skins, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {

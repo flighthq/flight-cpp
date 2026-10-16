@@ -5,8 +5,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/scene3d_resources/explain_scene3_dresource_coverage.hpp>
-#include <flight/scene3d_resources/get_scene3_dresource_textures.hpp>
+#include <flight/scene3d_resources/explain_scene_3d_resource_coverage.hpp>
+#include <flight/scene3d_resources/get_scene_3d_resource_textures.hpp>
 #include <flight/scene3d_resources/three_ds_load.hpp>
 #include <flight/scene3d_resources/gltf_load.hpp>
 #include <flight/scene3d_resources/gltf_load_import.hpp>
@@ -15,23 +15,23 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/scene3d_resources/obj_load.hpp>
 #include <flight/scene3d_resources/scene_document_source.hpp>
 #include <flight/scene3d_resources/awd2_load.hpp>
-#include <flight/scene3d_resources/resolve_scene3_dresources.hpp>
-#include <flight/scene3d_resources/load_scene3_dresources.hpp>
-#include <flight/scene3d_resources/reveal_scene3_dresources_on_resolve.hpp>
+#include <flight/scene3d_resources/resolve_scene_3d_resources.hpp>
+#include <flight/scene3d_resources/load_scene_3d_resources.hpp>
+#include <flight/scene3d_resources/reveal_scene_3d_resources_on_resolve.hpp>
 #include <flight/scene3d_resources/scene_material_texture_registry.hpp>
 #include <flight/scene3d_resources/scene_resource_recovery.hpp>
 #include <flight/scene3d_resources/image_resource_fetch.hpp>
-#include <flight/scene3d_resources/iridescence_pbr_scene3_dmaterial_textures.hpp>
+#include <flight/scene3d_resources/iridescence_pbr_scene_3d_material_textures.hpp>
 #include <flight/scene3d_resources/scene_resource_resolver.hpp>
 #include <flight/scene3d_resources/scene_resource_signals.hpp>
-#include <flight/scene3d_resources/shaded_scene3_dmaterial_textures.hpp>
-#include <flight/scene3d_resources/sheen_pbr_scene3_dmaterial_textures.hpp>
-#include <flight/scene3d_resources/specular_pbr_scene3_dmaterial_textures.hpp>
-#include <flight/scene3d_resources/transmission_volume_pbr_scene3_dmaterial_textures.hpp>
-#include <flight/scene3d_resources/wrapped_diffuse_pbr_scene3_dmaterial_textures.hpp>
-#include <flight/scene3d_resources/enable_scene3_dresource_failure_guards.hpp>
-#include <flight/scene3d_resources/anisotropy_pbr_scene3_dmaterial_textures.hpp>
-#include <flight/scene3d_resources/clearcoat_pbr_scene3_dmaterial_textures.hpp>
+#include <flight/scene3d_resources/shaded_scene_3d_material_textures.hpp>
+#include <flight/scene3d_resources/sheen_pbr_scene_3d_material_textures.hpp>
+#include <flight/scene3d_resources/specular_pbr_scene_3d_material_textures.hpp>
+#include <flight/scene3d_resources/transmission_volume_pbr_scene_3d_material_textures.hpp>
+#include <flight/scene3d_resources/wrapped_diffuse_pbr_scene_3d_material_textures.hpp>
+#include <flight/scene3d_resources/enable_scene_3d_resource_failure_guards.hpp>
+#include <flight/scene3d_resources/anisotropy_pbr_scene_3d_material_textures.hpp>
+#include <flight/scene3d_resources/clearcoat_pbr_scene_3d_material_textures.hpp>
 
 namespace flight::scene3d_resources {
 

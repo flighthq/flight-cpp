@@ -2251,7 +2251,7 @@
         "packageName": "@flighthq/camera",
         "source": "packages/camera/src/explainCamera3DView.ts"
       },
-      "path": "flight/camera/explain_camera3_dview.hpp",
+      "path": "flight/camera/explain_camera_3d_view.hpp",
       "status": "emitted"
     },
     {
@@ -2731,7 +2731,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/capsuleContact2D.ts"
       },
-      "path": "flight/collision/capsule_contact2_d.hpp",
+      "path": "flight/collision/capsule_contact_2d.hpp",
       "status": "emitted"
     },
     {
@@ -2746,7 +2746,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/collideContactManifold2D.ts"
       },
-      "path": "flight/collision/collide_contact_manifold2_d.hpp",
+      "path": "flight/collision/collide_contact_manifold_2d.hpp",
       "status": "emitted"
     },
     {
@@ -2761,7 +2761,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/collideContactManifold3D.ts"
       },
-      "path": "flight/collision/collide_contact_manifold3_d.hpp",
+      "path": "flight/collision/collide_contact_manifold_3d.hpp",
       "refusedDependencies": [
         "@flighthq/collision/packages/collision/src/collisionFace3D.ts",
         "@flighthq/collision/packages/collision/src/collisionSupport3D.ts",
@@ -2808,7 +2808,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/collisionFace3D.ts"
       },
-      "path": "flight/collision/collision_face3_d.hpp",
+      "path": "flight/collision/collision_face_3d.hpp",
       "rule": "cpp-type-assertion-unidentified",
       "status": "refused-placeholder"
     },
@@ -2829,7 +2829,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/collisionShapeValidation2D.ts"
       },
-      "path": "flight/collision/collision_shape_validation2_d.hpp",
+      "path": "flight/collision/collision_shape_validation_2d.hpp",
       "status": "emitted"
     },
     {
@@ -2846,7 +2846,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/collisionShapeValidation3D.ts"
       },
-      "path": "flight/collision/collision_shape_validation3_d.hpp",
+      "path": "flight/collision/collision_shape_validation_3d.hpp",
       "status": "emitted"
     },
     {
@@ -2880,7 +2880,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/collisionSupport2D.ts"
       },
-      "path": "flight/collision/collision_support2_d.hpp",
+      "path": "flight/collision/collision_support_2d.hpp",
       "rule": "cpp-type-assertion-unidentified",
       "status": "refused-placeholder"
     },
@@ -2929,7 +2929,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/collisionSupport3D.ts"
       },
-      "path": "flight/collision/collision_support3_d.hpp",
+      "path": "flight/collision/collision_support_3d.hpp",
       "rule": "cpp-type-assertion-unidentified",
       "status": "refused-placeholder"
     },
@@ -2963,7 +2963,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/contactManifold2D.ts"
       },
-      "path": "flight/collision/contact_manifold2_d.hpp",
+      "path": "flight/collision/contact_manifold_2d.hpp",
       "status": "emitted"
     },
     {
@@ -2981,7 +2981,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/contactManifold3D.ts"
       },
-      "path": "flight/collision/contact_manifold3_d.hpp",
+      "path": "flight/collision/contact_manifold_3d.hpp",
       "status": "emitted"
     },
     {
@@ -3028,7 +3028,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/convexHull3D.ts"
       },
-      "path": "flight/collision/convex_hull3_d.hpp",
+      "path": "flight/collision/convex_hull_3d.hpp",
       "status": "emitted"
     },
     {
@@ -3046,7 +3046,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/convexVertices2D.ts"
       },
-      "path": "flight/collision/convex_vertices2_d.hpp",
+      "path": "flight/collision/convex_vertices_2d.hpp",
       "status": "emitted"
     },
     {
@@ -3086,7 +3086,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/explainCollisionTest2D.ts"
       },
-      "path": "flight/collision/explain_collision_test2_d.hpp",
+      "path": "flight/collision/explain_collision_test_2d.hpp",
       "refusedDependencies": [
         "@flighthq/collision/packages/collision/src/collisionSupport2D.ts",
         "@flighthq/collision/packages/collision/src/testCollision2D.ts"
@@ -3103,7 +3103,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/explainCollisionTest3D.ts"
       },
-      "path": "flight/collision/explain_collision_test3_d.hpp",
+      "path": "flight/collision/explain_collision_test_3d.hpp",
       "refusedDependencies": [
         "@flighthq/collision/packages/collision/src/collisionSupport3D.ts",
         "@flighthq/collision/packages/collision/src/testCollision3D.ts"
@@ -3121,7 +3121,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/gjk2D.ts"
       },
-      "path": "flight/collision/gjk2_d.hpp",
+      "path": "flight/collision/gjk_2d.hpp",
       "refusedDependencies": [
         "@flighthq/collision/packages/collision/src/collisionSupport2D.ts"
       ],
@@ -3139,7 +3139,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/gjk3D.ts"
       },
-      "path": "flight/collision/gjk3_d.hpp",
+      "path": "flight/collision/gjk_3d.hpp",
       "refusedDependencies": [
         "@flighthq/collision/packages/collision/src/collisionSupport3D.ts"
       ],
@@ -3156,7 +3156,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/gjkDistance3D.ts"
       },
-      "path": "flight/collision/gjk_distance3_d.hpp",
+      "path": "flight/collision/gjk_distance_3d.hpp",
       "refusedDependencies": [
         "@flighthq/collision/packages/collision/src/collisionSupport3D.ts"
       ],
@@ -3207,7 +3207,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/manifold2D.ts"
       },
-      "path": "flight/collision/manifold2_d.hpp",
+      "path": "flight/collision/manifold_2d.hpp",
       "status": "emitted"
     },
     {
@@ -3225,7 +3225,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/manifold3D.ts"
       },
-      "path": "flight/collision/manifold3_d.hpp",
+      "path": "flight/collision/manifold_3d.hpp",
       "status": "emitted"
     },
     {
@@ -3241,7 +3241,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/pointContainment2D.ts"
       },
-      "path": "flight/collision/point_containment2_d.hpp",
+      "path": "flight/collision/point_containment_2d.hpp",
       "status": "emitted"
     },
     {
@@ -3256,7 +3256,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/pointContainment3D.ts"
       },
-      "path": "flight/collision/point_containment3_d.hpp",
+      "path": "flight/collision/point_containment_3d.hpp",
       "refusedDependencies": [
         "@flighthq/collision/packages/collision/src/gjk3D.ts"
       ],
@@ -3274,7 +3274,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/raycastCollisionShape2D.ts"
       },
-      "path": "flight/collision/raycast_collision_shape2_d.hpp",
+      "path": "flight/collision/raycast_collision_shape_2d.hpp",
       "status": "emitted"
     },
     {
@@ -3289,7 +3289,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/raycastCollisionShape3D.ts"
       },
-      "path": "flight/collision/raycast_collision_shape3_d.hpp",
+      "path": "flight/collision/raycast_collision_shape_3d.hpp",
       "refusedDependencies": [
         "@flighthq/collision/packages/collision/src/pointContainment3D.ts"
       ],
@@ -3305,7 +3305,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/registerBuiltInCollisionPairTests2D.ts"
       },
-      "path": "flight/collision/register_built_in_collision_pair_tests2_d.hpp",
+      "path": "flight/collision/register_built_in_collision_pair_tests_2d.hpp",
       "refusedDependencies": [
         "@flighthq/collision/packages/collision/src/collisionSupport2D.ts"
       ],
@@ -3322,7 +3322,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/registerBuiltInCollisionPairTests3D.ts"
       },
-      "path": "flight/collision/register_built_in_collision_pair_tests3_d.hpp",
+      "path": "flight/collision/register_built_in_collision_pair_tests_3d.hpp",
       "refusedDependencies": [
         "@flighthq/collision/packages/collision/src/collisionSupport3D.ts"
       ],
@@ -3339,7 +3339,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/segmentCollision2D.ts"
       },
-      "path": "flight/collision/segment_collision2_d.hpp",
+      "path": "flight/collision/segment_collision_2d.hpp",
       "status": "emitted"
     },
     {
@@ -3354,7 +3354,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/shapeCollision2D.ts"
       },
-      "path": "flight/collision/shape_collision2_d.hpp",
+      "path": "flight/collision/shape_collision_2d.hpp",
       "status": "emitted"
     },
     {
@@ -3368,7 +3368,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/shapeCollision3D.ts"
       },
-      "path": "flight/collision/shape_collision3_d.hpp",
+      "path": "flight/collision/shape_collision_3d.hpp",
       "status": "emitted"
     },
     {
@@ -3382,7 +3382,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/shapeContact2D.ts"
       },
-      "path": "flight/collision/shape_contact2_d.hpp",
+      "path": "flight/collision/shape_contact_2d.hpp",
       "status": "emitted"
     },
     {
@@ -3426,7 +3426,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/sweepCollisionShape2D.ts"
       },
-      "path": "flight/collision/sweep_collision_shape2_d.hpp",
+      "path": "flight/collision/sweep_collision_shape_2d.hpp",
       "rule": "cpp-contextual-union-value-type-unrepresented",
       "status": "refused-placeholder"
     },
@@ -3444,7 +3444,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/sweepCollisionShape3D.ts"
       },
-      "path": "flight/collision/sweep_collision_shape3_d.hpp",
+      "path": "flight/collision/sweep_collision_shape_3d.hpp",
       "refusedDependencies": [
         "@flighthq/collision/packages/collision/src/gjkDistance3D.ts"
       ],
@@ -3462,7 +3462,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/testCollision2D.ts"
       },
-      "path": "flight/collision/test_collision2_d.hpp",
+      "path": "flight/collision/test_collision_2d.hpp",
       "refusedDependencies": [
         "@flighthq/collision/packages/collision/src/collisionSupport2D.ts",
         "@flighthq/collision/packages/collision/src/gjk2D.ts"
@@ -3482,7 +3482,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/testCollision3D.ts"
       },
-      "path": "flight/collision/test_collision3_d.hpp",
+      "path": "flight/collision/test_collision_3d.hpp",
       "refusedDependencies": [
         "@flighthq/collision/packages/collision/src/collisionSupport3D.ts",
         "@flighthq/collision/packages/collision/src/gjk3D.ts"
@@ -3586,7 +3586,7 @@
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/triangleMesh3D.ts"
       },
-      "path": "flight/collision/triangle_mesh3_d.hpp",
+      "path": "flight/collision/triangle_mesh_3d.hpp",
       "rule": "cpp-array-length-sparse-runtime-required",
       "status": "refused-placeholder"
     },
@@ -16091,7 +16091,7 @@
         "packageName": "@flighthq/particleemitter",
         "source": "packages/particleemitter/src/emitParticleBurst2D.ts"
       },
-      "path": "flight/particleemitter/emit_particle_burst2_d.hpp",
+      "path": "flight/particleemitter/emit_particle_burst_2d.hpp",
       "refusedDependencies": [
         "@flighthq/particleemitter/packages/particleemitter/src/particleEmitter.ts"
       ],
@@ -16106,7 +16106,7 @@
         "packageName": "@flighthq/particleemitter",
         "source": "packages/particleemitter/src/emitParticleBurst3D.ts"
       },
-      "path": "flight/particleemitter/emit_particle_burst3_d.hpp",
+      "path": "flight/particleemitter/emit_particle_burst_3d.hpp",
       "refusedDependencies": [
         "@flighthq/particleemitter/packages/particleemitter/src/particleEmitter3D.ts"
       ],
@@ -16210,7 +16210,7 @@
         "packageName": "@flighthq/particleemitter",
         "source": "packages/particleemitter/src/particleEmitter3D.ts"
       },
-      "path": "flight/particleemitter/particle_emitter3_d.hpp",
+      "path": "flight/particleemitter/particle_emitter_3d.hpp",
       "rule": "cpp-contextual-union-inequivalent",
       "status": "refused-placeholder"
     },
@@ -16223,7 +16223,7 @@
         "packageName": "@flighthq/particleemitter",
         "source": "packages/particleemitter/src/prewarmParticleEmitter2D.ts"
       },
-      "path": "flight/particleemitter/prewarm_particle_emitter2_d.hpp",
+      "path": "flight/particleemitter/prewarm_particle_emitter_2d.hpp",
       "refusedDependencies": [
         "@flighthq/particleemitter/packages/particleemitter/src/updateParticleEmitter2D.ts"
       ],
@@ -16238,7 +16238,7 @@
         "packageName": "@flighthq/particleemitter",
         "source": "packages/particleemitter/src/prewarmParticleEmitter3D.ts"
       },
-      "path": "flight/particleemitter/prewarm_particle_emitter3_d.hpp",
+      "path": "flight/particleemitter/prewarm_particle_emitter_3d.hpp",
       "refusedDependencies": [
         "@flighthq/particleemitter/packages/particleemitter/src/updateParticleEmitter3D.ts"
       ],
@@ -16253,7 +16253,7 @@
         "packageName": "@flighthq/particleemitter",
         "source": "packages/particleemitter/src/stepParticleEmitter2D.ts"
       },
-      "path": "flight/particleemitter/step_particle_emitter2_d.hpp",
+      "path": "flight/particleemitter/step_particle_emitter_2d.hpp",
       "refusedDependencies": [
         "@flighthq/particleemitter/packages/particleemitter/src/updateParticleEmitter2D.ts"
       ],
@@ -16272,7 +16272,7 @@
         "packageName": "@flighthq/particleemitter",
         "source": "packages/particleemitter/src/stepParticleEmitter3D.ts"
       },
-      "path": "flight/particleemitter/step_particle_emitter3_d.hpp",
+      "path": "flight/particleemitter/step_particle_emitter_3d.hpp",
       "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
@@ -16287,7 +16287,7 @@
         "packageName": "@flighthq/particleemitter",
         "source": "packages/particleemitter/src/updateParticleEmitter2D.ts"
       },
-      "path": "flight/particleemitter/update_particle_emitter2_d.hpp",
+      "path": "flight/particleemitter/update_particle_emitter_2d.hpp",
       "refusedDependencies": [
         "@flighthq/particleemitter/packages/particleemitter/src/particleEmitter.ts"
       ],
@@ -16304,7 +16304,7 @@
         "packageName": "@flighthq/particleemitter",
         "source": "packages/particleemitter/src/updateParticleEmitter3D.ts"
       },
-      "path": "flight/particleemitter/update_particle_emitter3_d.hpp",
+      "path": "flight/particleemitter/update_particle_emitter_3d.hpp",
       "refusedDependencies": [
         "@flighthq/particleemitter/packages/particleemitter/src/particleEmitter3D.ts"
       ],
@@ -17656,7 +17656,7 @@
         "packageName": "@flighthq/physics2d",
         "source": "packages/physics2d/src/enablePhysics2DGuards.ts"
       },
-      "path": "flight/physics2d/enable_physics2_dguards.hpp",
+      "path": "flight/physics2d/enable_physics_2d_guards.hpp",
       "refusedDependencies": [
         "@flighthq/log/packages/log/src/log.ts",
         "@flighthq/physics2d/packages/physics2d/src/explainPhysics2DJoints.ts",
@@ -17676,7 +17676,7 @@
         "packageName": "@flighthq/physics2d",
         "source": "packages/physics2d/src/explainPhysics2DCollision.ts"
       },
-      "path": "flight/physics2d/explain_physics2_dcollision.hpp",
+      "path": "flight/physics2d/explain_physics_2d_collision.hpp",
       "status": "emitted"
     },
     {
@@ -17690,7 +17690,7 @@
         "packageName": "@flighthq/physics2d",
         "source": "packages/physics2d/src/explainPhysics2DJoints.ts"
       },
-      "path": "flight/physics2d/explain_physics2_djoints.hpp",
+      "path": "flight/physics2d/explain_physics_2d_joints.hpp",
       "refusedDependencies": [
         "@flighthq/physics2d/packages/physics2d/src/world.ts"
       ],
@@ -17707,7 +17707,7 @@
         "packageName": "@flighthq/physics2d",
         "source": "packages/physics2d/src/explainPhysics2DStep.ts"
       },
-      "path": "flight/physics2d/explain_physics2_dstep.hpp",
+      "path": "flight/physics2d/explain_physics_2d_step.hpp",
       "refusedDependencies": [
         "@flighthq/physics2d/packages/physics2d/src/stepValidation.ts"
       ],
@@ -17966,7 +17966,7 @@
         "packageName": "@flighthq/physics2d",
         "source": "packages/physics2d/src/registerBuiltInPhysics2DJointSolvers.ts"
       },
-      "path": "flight/physics2d/register_built_in_physics2_djoint_solvers.hpp",
+      "path": "flight/physics2d/register_built_in_physics_2d_joint_solvers.hpp",
       "refusedDependencies": [
         "@flighthq/physics2d/packages/physics2d/src/jointRegistry.ts",
         "@flighthq/physics2d/packages/physics2d/src/joints.ts"
@@ -18164,7 +18164,7 @@
         "packageName": "@flighthq/physics2d-abi",
         "source": "packages/physics2d-abi/src/physics2DAbi.ts"
       },
-      "path": "flight/physics2d_abi/physics2_dabi.hpp",
+      "path": "flight/physics2d_abi/physics_2d_abi.hpp",
       "refusedDependencies": [
         "@flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts"
       ],
@@ -18180,7 +18180,7 @@
         "packageName": "@flighthq/physics2d-abi",
         "source": "packages/physics2d-abi/src/physics2DAbiBuffer.ts"
       },
-      "path": "flight/physics2d_abi/physics2_dabi_buffer.hpp",
+      "path": "flight/physics2d_abi/physics_2d_abi_buffer.hpp",
       "status": "emitted"
     },
     {
@@ -18229,7 +18229,7 @@
         "packageName": "@flighthq/physics2d-abi",
         "source": "packages/physics2d-abi/src/physics2DAbiCommand.ts"
       },
-      "path": "flight/physics2d_abi/physics2_dabi_command.hpp",
+      "path": "flight/physics2d_abi/physics_2d_abi_command.hpp",
       "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
@@ -18246,7 +18246,7 @@
         "packageName": "@flighthq/physics2d-abi",
         "source": "packages/physics2d-abi/src/physics2DAbiLayout.ts"
       },
-      "path": "flight/physics2d_abi/physics2_dabi_layout.hpp",
+      "path": "flight/physics2d_abi/physics_2d_abi_layout.hpp",
       "status": "emitted"
     },
     {
@@ -18259,7 +18259,7 @@
         "packageName": "@flighthq/physics2d-abi",
         "source": "packages/physics2d-abi/src/physics2DAbiQuery.ts"
       },
-      "path": "flight/physics2d_abi/physics2_dabi_query.hpp",
+      "path": "flight/physics2d_abi/physics_2d_abi_query.hpp",
       "status": "emitted"
     },
     {
@@ -18333,7 +18333,7 @@
         "packageName": "@flighthq/physics2d-abi",
         "source": "packages/physics2d-abi/src/referencePhysics2DAbi.ts"
       },
-      "path": "flight/physics2d_abi/reference_physics2_dabi.hpp",
+      "path": "flight/physics2d_abi/reference_physics_2d_abi.hpp",
       "rule": "cpp-contextual-union-interface-heritage-carrier-unrepresented",
       "status": "refused-placeholder"
     },
@@ -18520,7 +18520,7 @@
         "packageName": "@flighthq/physics3d",
         "source": "packages/physics3d/src/enablePhysics3DGuards.ts"
       },
-      "path": "flight/physics3d/enable_physics3_dguards.hpp",
+      "path": "flight/physics3d/enable_physics_3d_guards.hpp",
       "refusedDependencies": [
         "@flighthq/log/packages/log/src/log.ts",
         "@flighthq/physics3d/packages/physics3d/src/contactIntake.ts",
@@ -18543,7 +18543,7 @@
         "packageName": "@flighthq/physics3d",
         "source": "packages/physics3d/src/explainPhysics3DCollision.ts"
       },
-      "path": "flight/physics3d/explain_physics3_dcollision.hpp",
+      "path": "flight/physics3d/explain_physics_3d_collision.hpp",
       "refusedDependencies": [
         "@flighthq/collision/packages/collision/src/collisionSupport3D.ts"
       ],
@@ -18560,7 +18560,7 @@
         "packageName": "@flighthq/physics3d",
         "source": "packages/physics3d/src/explainPhysics3DJoints.ts"
       },
-      "path": "flight/physics3d/explain_physics3_djoints.hpp",
+      "path": "flight/physics3d/explain_physics_3d_joints.hpp",
       "refusedDependencies": [
         "@flighthq/physics3d/packages/physics3d/src/world.ts"
       ],
@@ -18577,7 +18577,7 @@
         "packageName": "@flighthq/physics3d",
         "source": "packages/physics3d/src/explainPhysics3DStep.ts"
       },
-      "path": "flight/physics3d/explain_physics3_dstep.hpp",
+      "path": "flight/physics3d/explain_physics_3d_step.hpp",
       "refusedDependencies": [
         "@flighthq/physics3d/packages/physics3d/src/stepValidation.ts"
       ],
@@ -18967,7 +18967,7 @@
         "packageName": "@flighthq/physics3d",
         "source": "packages/physics3d/src/physics3DBroadphasePublication.ts"
       },
-      "path": "flight/physics3d/physics3_dbroadphase_publication.hpp",
+      "path": "flight/physics3d/physics_3d_broadphase_publication.hpp",
       "status": "emitted"
     },
     {
@@ -18981,7 +18981,7 @@
         "packageName": "@flighthq/physics3d",
         "source": "packages/physics3d/src/physics3DSpatialIndexingGuards.ts"
       },
-      "path": "flight/physics3d/physics3_dspatial_indexing_guards.hpp",
+      "path": "flight/physics3d/physics_3d_spatial_indexing_guards.hpp",
       "status": "emitted"
     },
     {
@@ -18995,7 +18995,7 @@
         "packageName": "@flighthq/physics3d",
         "source": "packages/physics3d/src/registerBuiltInPhysics3DJointSolvers.ts"
       },
-      "path": "flight/physics3d/register_built_in_physics3_djoint_solvers.hpp",
+      "path": "flight/physics3d/register_built_in_physics_3d_joint_solvers.hpp",
       "refusedDependencies": [
         "@flighthq/physics3d/packages/physics3d/src/jointRegistry.ts",
         "@flighthq/physics3d/packages/physics3d/src/joints.ts"
@@ -19238,7 +19238,7 @@
         "packageName": "@flighthq/physics3d-abi",
         "source": "packages/physics3d-abi/src/physics3DAbi.ts"
       },
-      "path": "flight/physics3d_abi/physics3_dabi.hpp",
+      "path": "flight/physics3d_abi/physics_3d_abi.hpp",
       "refusedDependencies": [
         "@flighthq/physics3d-abi/packages/physics3d-abi/src/referencePhysics3DAbi.ts"
       ],
@@ -19254,7 +19254,7 @@
         "packageName": "@flighthq/physics3d-abi",
         "source": "packages/physics3d-abi/src/physics3DAbiBuffer.ts"
       },
-      "path": "flight/physics3d_abi/physics3_dabi_buffer.hpp",
+      "path": "flight/physics3d_abi/physics_3d_abi_buffer.hpp",
       "status": "emitted"
     },
     {
@@ -19307,7 +19307,7 @@
         "packageName": "@flighthq/physics3d-abi",
         "source": "packages/physics3d-abi/src/physics3DAbiCommand.ts"
       },
-      "path": "flight/physics3d_abi/physics3_dabi_command.hpp",
+      "path": "flight/physics3d_abi/physics_3d_abi_command.hpp",
       "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
@@ -19324,7 +19324,7 @@
         "packageName": "@flighthq/physics3d-abi",
         "source": "packages/physics3d-abi/src/physics3DAbiLayout.ts"
       },
-      "path": "flight/physics3d_abi/physics3_dabi_layout.hpp",
+      "path": "flight/physics3d_abi/physics_3d_abi_layout.hpp",
       "status": "emitted"
     },
     {
@@ -19337,7 +19337,7 @@
         "packageName": "@flighthq/physics3d-abi",
         "source": "packages/physics3d-abi/src/physics3DAbiQuery.ts"
       },
-      "path": "flight/physics3d_abi/physics3_dabi_query.hpp",
+      "path": "flight/physics3d_abi/physics_3d_abi_query.hpp",
       "status": "emitted"
     },
     {
@@ -19410,7 +19410,7 @@
         "packageName": "@flighthq/physics3d-abi",
         "source": "packages/physics3d-abi/src/referencePhysics3DAbi.ts"
       },
-      "path": "flight/physics3d_abi/reference_physics3_dabi.hpp",
+      "path": "flight/physics3d_abi/reference_physics_3d_abi.hpp",
       "rule": "cpp-contextual-union-interface-heritage-carrier-unrepresented",
       "status": "refused-placeholder"
     },
@@ -19486,7 +19486,7 @@
         "packageName": "@flighthq/picking",
         "source": "packages/picking/src/pickScene3D.ts"
       },
-      "path": "flight/picking/pick_scene3_d.hpp",
+      "path": "flight/picking/pick_scene_3d.hpp",
       "rule": "cpp-structural-assertion-writable-capability-unproven",
       "status": "refused-placeholder"
     },
@@ -19990,7 +19990,7 @@
         "packageName": "@flighthq/render",
         "source": "packages/render/src/explainScene2DCoverage.ts"
       },
-      "path": "flight/render/explain_scene2_dcoverage.hpp",
+      "path": "flight/render/explain_scene_2d_coverage.hpp",
       "status": "emitted"
     },
     {
@@ -20003,7 +20003,7 @@
         "packageName": "@flighthq/render",
         "source": "packages/render/src/explainScene2DPipelineCoverage.ts"
       },
-      "path": "flight/render/explain_scene2_dpipeline_coverage.hpp",
+      "path": "flight/render/explain_scene_2d_pipeline_coverage.hpp",
       "status": "emitted"
     },
     {
@@ -20019,7 +20019,7 @@
         "packageName": "@flighthq/render",
         "source": "packages/render/src/explainScene2DRender.ts"
       },
-      "path": "flight/render/explain_scene2_drender.hpp",
+      "path": "flight/render/explain_scene_2d_render.hpp",
       "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
@@ -20033,7 +20033,7 @@
         "packageName": "@flighthq/render",
         "source": "packages/render/src/explainScene3DPipelineCoverage.ts"
       },
-      "path": "flight/render/explain_scene3_dpipeline_coverage.hpp",
+      "path": "flight/render/explain_scene_3d_pipeline_coverage.hpp",
       "status": "emitted"
     },
     {
@@ -22862,7 +22862,7 @@
         "packageName": "@flighthq/scene-document",
         "source": "packages/scene-document/src/sceneDocumentScene2DMaterialization.ts"
       },
-      "path": "flight/scene_document/scene_document_scene2_dmaterialization.hpp",
+      "path": "flight/scene_document/scene_document_scene_2d_materialization.hpp",
       "rule": "cpp-imported-type-unsupported:unsupportedAmbientReference",
       "status": "refused-placeholder"
     },
@@ -22899,7 +22899,7 @@
         "packageName": "@flighthq/scene-document",
         "source": "packages/scene-document/src/sceneDocumentScene3DMaterialization.ts"
       },
-      "path": "flight/scene_document/scene_document_scene3_dmaterialization.hpp",
+      "path": "flight/scene_document/scene_document_scene_3d_materialization.hpp",
       "rule": "cpp-imported-type-unsupported:unsupportedAmbientReference",
       "status": "refused-placeholder"
     },
@@ -23395,7 +23395,7 @@
         "packageName": "@flighthq/scene2d-canvas",
         "source": "packages/scene2d-canvas/src/canvasNode2D.ts"
       },
-      "path": "flight/scene2d_canvas/canvas_node2_d.hpp",
+      "path": "flight/scene2d_canvas/canvas_node_2d.hpp",
       "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
@@ -23410,7 +23410,7 @@
         "packageName": "@flighthq/scene2d-canvas",
         "source": "packages/scene2d-canvas/src/canvasParticleEmitter2D.ts"
       },
-      "path": "flight/scene2d_canvas/canvas_particle_emitter2_d.hpp",
+      "path": "flight/scene2d_canvas/canvas_particle_emitter_2d.hpp",
       "refusedDependencies": [
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderState.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts"
@@ -24187,7 +24187,7 @@
         "packageName": "@flighthq/scene2d-canvas",
         "source": "packages/scene2d-canvas/src/explainCanvasScene2DCoverage.ts"
       },
-      "path": "flight/scene2d_canvas/explain_canvas_scene2_dcoverage.hpp",
+      "path": "flight/scene2d_canvas/explain_canvas_scene_2d_coverage.hpp",
       "refusedDependencies": [
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasQuadMaterialRegistry.ts"
       ],
@@ -24271,7 +24271,7 @@
         "packageName": "@flighthq/scene2d-canvas",
         "source": "packages/scene2d-canvas/src/scene2DCanvasPipeline.ts"
       },
-      "path": "flight/scene2d_canvas/scene2_dcanvas_pipeline.hpp",
+      "path": "flight/scene2d_canvas/scene_2d_canvas_pipeline.hpp",
       "refusedDependencies": [
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasBitmapText.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasCache.ts",
@@ -24567,7 +24567,7 @@
         "packageName": "@flighthq/scene2d-dom",
         "source": "packages/scene2d-dom/src/domNode2D.ts"
       },
-      "path": "flight/scene2d_dom/dom_node2_d.hpp",
+      "path": "flight/scene2d_dom/dom_node_2d.hpp",
       "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
@@ -25037,7 +25037,7 @@
         "packageName": "@flighthq/scene2d-dom",
         "source": "packages/scene2d-dom/src/scene2DDomPipeline.ts"
       },
-      "path": "flight/scene2d_dom/scene2_ddom_pipeline.hpp",
+      "path": "flight/scene2d_dom/scene_2d_dom_pipeline.hpp",
       "rule": "cpp-structural-row-widening-unproven",
       "status": "refused-placeholder"
     },
@@ -26415,7 +26415,7 @@
         "packageName": "@flighthq/scene2d-formats",
         "source": "packages/scene2d-formats/src/riveScene2D.ts"
       },
-      "path": "flight/scene2d_formats/rive_scene2_d.hpp",
+      "path": "flight/scene2d_formats/rive_scene_2d.hpp",
       "refusedDependencies": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts",
         "@flighthq/scene2d/packages/scene2d/src/displayObject.ts"
@@ -26433,7 +26433,7 @@
         "packageName": "@flighthq/scene2d-formats",
         "source": "packages/scene2d-formats/src/riveScene2DDocument.ts"
       },
-      "path": "flight/scene2d_formats/rive_scene2_ddocument.hpp",
+      "path": "flight/scene2d_formats/rive_scene_2d_document.hpp",
       "refusedDependencies": [
         "@flighthq/image/packages/image/src/imageResourceReference.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssetBinding.ts",
@@ -27157,7 +27157,7 @@
         "packageName": "@flighthq/scene2d-gl",
         "source": "packages/scene2d-gl/src/explainGlScene2DCoverage.ts"
       },
-      "path": "flight/scene2d_gl/explain_gl_scene2_dcoverage.hpp",
+      "path": "flight/scene2d_gl/explain_gl_scene_2d_coverage.hpp",
       "refusedDependencies": [
         "@flighthq/render-gl/packages/render-gl/src/glRenderState.ts"
       ],
@@ -27392,7 +27392,7 @@
         "packageName": "@flighthq/scene2d-gl",
         "source": "packages/scene2d-gl/src/glNode2D.ts"
       },
-      "path": "flight/scene2d_gl/gl_node2_d.hpp",
+      "path": "flight/scene2d_gl/gl_node_2d.hpp",
       "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
@@ -27419,7 +27419,7 @@
         "packageName": "@flighthq/scene2d-gl",
         "source": "packages/scene2d-gl/src/glParticleEmitter2D.ts"
       },
-      "path": "flight/scene2d_gl/gl_particle_emitter2_d.hpp",
+      "path": "flight/scene2d_gl/gl_particle_emitter_2d.hpp",
       "rule": "cpp-union-runtime-domains-erased",
       "status": "refused-placeholder"
     },
@@ -27902,7 +27902,7 @@
         "packageName": "@flighthq/scene2d-gl",
         "source": "packages/scene2d-gl/src/scene2DGlPipeline.ts"
       },
-      "path": "flight/scene2d_gl/scene2_dgl_pipeline.hpp",
+      "path": "flight/scene2d_gl/scene_2d_gl_pipeline.hpp",
       "refusedDependencies": [
         "@flighthq/render-gl/packages/render-gl/src/contract.ts",
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/glBitmapText.ts",
@@ -27931,7 +27931,7 @@
         "packageName": "@flighthq/scene2d-resources",
         "source": "packages/scene2d-resources/src/builtInScene2DDocumentImporters.ts"
       },
-      "path": "flight/scene2d_resources/built_in_scene2_ddocument_importers.hpp",
+      "path": "flight/scene2d_resources/built_in_scene_2d_document_importers.hpp",
       "refusedDependencies": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImport.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2DDocument.ts",
@@ -27965,7 +27965,7 @@
         "packageName": "@flighthq/scene2d-resources",
         "source": "packages/scene2d-resources/src/enableScene2DResourceFailureGuards.ts"
       },
-      "path": "flight/scene2d_resources/enable_scene2_dresource_failure_guards.hpp",
+      "path": "flight/scene2d_resources/enable_scene_2d_resource_failure_guards.hpp",
       "refusedDependencies": [
         "@flighthq/log/packages/log/src/log.ts"
       ],
@@ -28003,7 +28003,7 @@
         "packageName": "@flighthq/scene2d-resources",
         "source": "packages/scene2d-resources/src/loadScene2DAudioResources.ts"
       },
-      "path": "flight/scene2d_resources/load_scene2_daudio_resources.hpp",
+      "path": "flight/scene2d_resources/load_scene_2d_audio_resources.hpp",
       "status": "refused-placeholder"
     },
     {
@@ -28022,7 +28022,7 @@
         "packageName": "@flighthq/scene2d-resources",
         "source": "packages/scene2d-resources/src/loadScene2DImageResources.ts"
       },
-      "path": "flight/scene2d_resources/load_scene2_dimage_resources.hpp",
+      "path": "flight/scene2d_resources/load_scene_2d_image_resources.hpp",
       "status": "refused-placeholder"
     },
     {
@@ -28035,7 +28035,7 @@
         "packageName": "@flighthq/scene2d-resources",
         "source": "packages/scene2d-resources/src/resolveScene2DResources.ts"
       },
-      "path": "flight/scene2d_resources/resolve_scene2_dresources.hpp",
+      "path": "flight/scene2d_resources/resolve_scene_2d_resources.hpp",
       "status": "emitted"
     },
     {
@@ -28050,7 +28050,7 @@
         "packageName": "@flighthq/scene2d-resources",
         "source": "packages/scene2d-resources/src/scene2DDocument.ts"
       },
-      "path": "flight/scene2d_resources/scene2_ddocument.hpp",
+      "path": "flight/scene2d_resources/scene_2d_document.hpp",
       "status": "emitted"
     },
     {
@@ -28066,7 +28066,7 @@
         "packageName": "@flighthq/scene2d-resources",
         "source": "packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts"
       },
-      "path": "flight/scene2d_resources/scene2_ddocument_importer_registry.hpp",
+      "path": "flight/scene2d_resources/scene_2d_document_importer_registry.hpp",
       "status": "emitted"
     },
     {
@@ -28079,7 +28079,7 @@
         "packageName": "@flighthq/scene2d-resources",
         "source": "packages/scene2d-resources/src/scene2DDocumentSource.ts"
       },
-      "path": "flight/scene2d_resources/scene2_ddocument_source.hpp",
+      "path": "flight/scene2d_resources/scene_2d_document_source.hpp",
       "status": "emitted"
     },
     {
@@ -28098,7 +28098,7 @@
         "packageName": "@flighthq/scene2d-resources",
         "source": "packages/scene2d-resources/src/scene2DResourceDiagnostics.ts"
       },
-      "path": "flight/scene2d_resources/scene2_dresource_diagnostics.hpp",
+      "path": "flight/scene2d_resources/scene_2d_resource_diagnostics.hpp",
       "status": "emitted"
     },
     {
@@ -28112,7 +28112,7 @@
         "packageName": "@flighthq/scene2d-resources",
         "source": "packages/scene2d-resources/src/scene2DSlotReference.ts"
       },
-      "path": "flight/scene2d_resources/scene2_dslot_reference.hpp",
+      "path": "flight/scene2d_resources/scene_2d_slot_reference.hpp",
       "status": "emitted"
     },
     {
@@ -28235,7 +28235,7 @@
         "packageName": "@flighthq/scene2d-wgpu",
         "source": "packages/scene2d-wgpu/src/scene2DWgpuPipeline.ts"
       },
-      "path": "flight/scene2d_wgpu/scene2_dwgpu_pipeline.hpp",
+      "path": "flight/scene2d_wgpu/scene_2d_wgpu_pipeline.hpp",
       "refusedDependencies": [
         "@flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuBitmapText.ts",
@@ -28477,7 +28477,7 @@
         "packageName": "@flighthq/scene2d-wgpu",
         "source": "packages/scene2d-wgpu/src/wgpuNode2D.ts"
       },
-      "path": "flight/scene2d_wgpu/wgpu_node2_d.hpp",
+      "path": "flight/scene2d_wgpu/wgpu_node_2d.hpp",
       "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
@@ -28503,7 +28503,7 @@
         "packageName": "@flighthq/scene2d-wgpu",
         "source": "packages/scene2d-wgpu/src/wgpuParticleEmitter2D.ts"
       },
-      "path": "flight/scene2d_wgpu/wgpu_particle_emitter2_d.hpp",
+      "path": "flight/scene2d_wgpu/wgpu_particle_emitter_2d.hpp",
       "rule": "cpp-contextual-union-missing-expression-type:optionalSingle",
       "status": "refused-placeholder"
     },
@@ -29006,7 +29006,7 @@
         "packageName": "@flighthq/scene3d",
         "source": "packages/scene3d/src/cloneNode3DSubtree.ts"
       },
-      "path": "flight/scene3d/clone_node3_dsubtree.hpp",
+      "path": "flight/scene3d/clone_node_3d_subtree.hpp",
       "refusedDependencies": [
         "@flighthq/scene3d/packages/scene3d/src/mesh.ts"
       ],
@@ -29044,7 +29044,7 @@
         "packageName": "@flighthq/scene3d",
         "source": "packages/scene3d/src/enableScene3DGuards.ts"
       },
-      "path": "flight/scene3d/enable_scene3_dguards.hpp",
+      "path": "flight/scene3d/enable_scene_3d_guards.hpp",
       "refusedDependencies": [
         "@flighthq/log/packages/log/src/log.ts"
       ],
@@ -29120,7 +29120,7 @@
         "packageName": "@flighthq/scene3d",
         "source": "packages/scene3d/src/prepareScene3DMorph.ts"
       },
-      "path": "flight/scene3d/prepare_scene3_dmorph.hpp",
+      "path": "flight/scene3d/prepare_scene_3d_morph.hpp",
       "refusedDependencies": [
         "@flighthq/mesh/packages/mesh/src/updateMeshMorph.ts"
       ],
@@ -31340,7 +31340,7 @@
         "packageName": "@flighthq/scene3d-formats",
         "source": "packages/scene3d-formats/src/scene3DFormatsTestHelper.ts"
       },
-      "path": "flight/scene3d_formats/_internal_scene3_dformats_test_helper.hpp",
+      "path": "flight/scene3d_formats/_internal_scene_3d_formats_test_helper.hpp",
       "rule": "cpp-type-assertion-unidentified",
       "status": "refused-placeholder"
     },
@@ -31865,7 +31865,7 @@
         "packageName": "@flighthq/scene3d-gl",
         "source": "packages/scene3d-gl/src/enableGlScene3DColorSpaceGuards.ts"
       },
-      "path": "flight/scene3d_gl/enable_gl_scene3_dcolor_space_guards.hpp",
+      "path": "flight/scene3d_gl/enable_gl_scene_3d_color_space_guards.hpp",
       "refusedDependencies": [
         "@flighthq/log/packages/log/src/log.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/glScene3DRuntime.ts"
@@ -31882,7 +31882,7 @@
         "packageName": "@flighthq/scene3d-gl",
         "source": "packages/scene3d-gl/src/enableGlScene3DCustomShaderGuards.ts"
       },
-      "path": "flight/scene3d_gl/enable_gl_scene3_dcustom_shader_guards.hpp",
+      "path": "flight/scene3d_gl/enable_gl_scene_3d_custom_shader_guards.hpp",
       "refusedDependencies": [
         "@flighthq/log/packages/log/src/log.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/glScene3DRuntime.ts"
@@ -31899,7 +31899,7 @@
         "packageName": "@flighthq/scene3d-gl",
         "source": "packages/scene3d-gl/src/enableGlScene3DDeformGuards.ts"
       },
-      "path": "flight/scene3d_gl/enable_gl_scene3_ddeform_guards.hpp",
+      "path": "flight/scene3d_gl/enable_gl_scene_3d_deform_guards.hpp",
       "refusedDependencies": [
         "@flighthq/log/packages/log/src/log.ts",
         "@flighthq/mesh/packages/mesh/src/meshGeometry.ts",
@@ -31918,7 +31918,7 @@
         "packageName": "@flighthq/scene3d-gl",
         "source": "packages/scene3d-gl/src/enableGlScene3DForwardLightSelectionGuards.ts"
       },
-      "path": "flight/scene3d_gl/enable_gl_scene3_dforward_light_selection_guards.hpp",
+      "path": "flight/scene3d_gl/enable_gl_scene_3d_forward_light_selection_guards.hpp",
       "refusedDependencies": [
         "@flighthq/log/packages/log/src/log.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/glScene3DRuntime.ts"
@@ -31948,7 +31948,7 @@
         "packageName": "@flighthq/scene3d-gl",
         "source": "packages/scene3d-gl/src/explainGlScene3DCoverage.ts"
       },
-      "path": "flight/scene3d_gl/explain_gl_scene3_dcoverage.hpp",
+      "path": "flight/scene3d_gl/explain_gl_scene_3d_coverage.hpp",
       "refusedDependencies": [
         "@flighthq/render-gl/packages/render-gl/src/glRenderState.ts"
       ],
@@ -31964,7 +31964,7 @@
         "packageName": "@flighthq/scene3d-gl",
         "source": "packages/scene3d-gl/src/explainGlScene3DForwardLightSelection.ts"
       },
-      "path": "flight/scene3d_gl/explain_gl_scene3_dforward_light_selection.hpp",
+      "path": "flight/scene3d_gl/explain_gl_scene_3d_forward_light_selection.hpp",
       "status": "emitted"
     },
     {
@@ -32468,7 +32468,7 @@
         "packageName": "@flighthq/scene3d-gl",
         "source": "packages/scene3d-gl/src/glParticleEmitter3D.ts"
       },
-      "path": "flight/scene3d_gl/gl_particle_emitter3_d.hpp",
+      "path": "flight/scene3d_gl/gl_particle_emitter_3d.hpp",
       "refusedDependencies": [
         "@flighthq/render-gl/packages/render-gl/src/glDraw.ts",
         "@flighthq/render-gl/packages/render-gl/src/glRenderState.ts",
@@ -32666,7 +32666,7 @@
         "packageName": "@flighthq/scene3d-gl",
         "source": "packages/scene3d-gl/src/glScene3DRuntime.ts"
       },
-      "path": "flight/scene3d_gl/gl_scene3_druntime.hpp",
+      "path": "flight/scene3d_gl/gl_scene_3d_runtime.hpp",
       "rule": "cpp-weak-map-erased-ref-view-unsupported",
       "status": "refused-placeholder"
     },
@@ -32699,7 +32699,7 @@
         "packageName": "@flighthq/scene3d-gl",
         "source": "packages/scene3d-gl/src/glScene3DTestHelper.ts"
       },
-      "path": "flight/scene3d_gl/_internal_gl_scene3_dtest_helper.hpp",
+      "path": "flight/scene3d_gl/_internal_gl_scene_3d_test_helper.hpp",
       "rule": "cpp-host-object-dynamic-index",
       "status": "refused-placeholder"
     },
@@ -32714,7 +32714,7 @@
         "packageName": "@flighthq/scene3d-gl",
         "source": "packages/scene3d-gl/src/glScene3DTime.ts"
       },
-      "path": "flight/scene3d_gl/gl_scene3_dtime.hpp",
+      "path": "flight/scene3d_gl/gl_scene_3d_time.hpp",
       "refusedDependencies": [
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/glScene3DRuntime.ts"
       ],
@@ -33167,7 +33167,7 @@
         "packageName": "@flighthq/scene3d-gl",
         "source": "packages/scene3d-gl/src/prepareGlScene3DForwardLights.ts"
       },
-      "path": "flight/scene3d_gl/prepare_gl_scene3_dforward_lights.hpp",
+      "path": "flight/scene3d_gl/prepare_gl_scene_3d_forward_lights.hpp",
       "refusedDependencies": [
         "@flighthq/lighting/packages/lighting/src/sceneForwardLights.ts",
         "@flighthq/render/packages/render/src/sceneRender.ts",
@@ -33185,7 +33185,7 @@
         "packageName": "@flighthq/scene3d-gl",
         "source": "packages/scene3d-gl/src/presentGlScene3D.ts"
       },
-      "path": "flight/scene3d_gl/present_gl_scene3_d.hpp",
+      "path": "flight/scene3d_gl/present_gl_scene_3d.hpp",
       "refusedDependencies": [
         "@flighthq/render-gl/packages/render-gl/src/glPresentRenderTarget.ts",
         "@flighthq/render-gl/packages/render-gl/src/glRenderPass.ts",
@@ -33249,7 +33249,7 @@
         "packageName": "@flighthq/scene3d-gl",
         "source": "packages/scene3d-gl/src/renderGlScene3D.ts"
       },
-      "path": "flight/scene3d_gl/render_gl_scene3_d.hpp",
+      "path": "flight/scene3d_gl/render_gl_scene_3d.hpp",
       "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
@@ -33263,7 +33263,7 @@
         "packageName": "@flighthq/scene3d-gl",
         "source": "packages/scene3d-gl/src/scene3DGlPipeline.ts"
       },
-      "path": "flight/scene3d_gl/scene3_dgl_pipeline.hpp",
+      "path": "flight/scene3d_gl/scene_3d_gl_pipeline.hpp",
       "refusedDependencies": [
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/scene2DGlPipeline.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/anisotropyPbrGlExtension.ts",
@@ -33386,7 +33386,7 @@
         "packageName": "@flighthq/scene3d-resources",
         "source": "packages/scene3d-resources/src/anisotropyPbrScene3DMaterialTextures.ts"
       },
-      "path": "flight/scene3d_resources/anisotropy_pbr_scene3_dmaterial_textures.hpp",
+      "path": "flight/scene3d_resources/anisotropy_pbr_scene_3d_material_textures.hpp",
       "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
@@ -33419,7 +33419,7 @@
         "packageName": "@flighthq/scene3d-resources",
         "source": "packages/scene3d-resources/src/clearcoatPbrScene3DMaterialTextures.ts"
       },
-      "path": "flight/scene3d_resources/clearcoat_pbr_scene3_dmaterial_textures.hpp",
+      "path": "flight/scene3d_resources/clearcoat_pbr_scene_3d_material_textures.hpp",
       "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
@@ -33481,7 +33481,7 @@
         "packageName": "@flighthq/scene3d-resources",
         "source": "packages/scene3d-resources/src/enableScene3DResourceFailureGuards.ts"
       },
-      "path": "flight/scene3d_resources/enable_scene3_dresource_failure_guards.hpp",
+      "path": "flight/scene3d_resources/enable_scene_3d_resource_failure_guards.hpp",
       "rule": "cpp-weak-map-value-representation-unproven",
       "status": "refused-placeholder"
     },
@@ -33494,7 +33494,7 @@
         "packageName": "@flighthq/scene3d-resources",
         "source": "packages/scene3d-resources/src/explainScene3DResourceCoverage.ts"
       },
-      "path": "flight/scene3d_resources/explain_scene3_dresource_coverage.hpp",
+      "path": "flight/scene3d_resources/explain_scene_3d_resource_coverage.hpp",
       "refusedDependencies": [
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/sceneMaterialTextureRegistry.ts"
       ],
@@ -33517,7 +33517,7 @@
         "packageName": "@flighthq/scene3d-resources",
         "source": "packages/scene3d-resources/src/getScene3DResourceTextures.ts"
       },
-      "path": "flight/scene3d_resources/get_scene3_dresource_textures.hpp",
+      "path": "flight/scene3d_resources/get_scene_3d_resource_textures.hpp",
       "rule": "cpp-type-assertion-unidentified",
       "status": "refused-placeholder"
     },
@@ -33605,7 +33605,7 @@
         "packageName": "@flighthq/scene3d-resources",
         "source": "packages/scene3d-resources/src/iridescencePbrScene3DMaterialTextures.ts"
       },
-      "path": "flight/scene3d_resources/iridescence_pbr_scene3_dmaterial_textures.hpp",
+      "path": "flight/scene3d_resources/iridescence_pbr_scene_3d_material_textures.hpp",
       "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
@@ -33620,7 +33620,7 @@
         "packageName": "@flighthq/scene3d-resources",
         "source": "packages/scene3d-resources/src/loadScene3DResources.ts"
       },
-      "path": "flight/scene3d_resources/load_scene3_dresources.hpp",
+      "path": "flight/scene3d_resources/load_scene_3d_resources.hpp",
       "status": "refused-placeholder"
     },
     {
@@ -33697,7 +33697,7 @@
         "packageName": "@flighthq/scene3d-resources",
         "source": "packages/scene3d-resources/src/resolveScene3DResources.ts"
       },
-      "path": "flight/scene3d_resources/resolve_scene3_dresources.hpp",
+      "path": "flight/scene3d_resources/resolve_scene_3d_resources.hpp",
       "rule": "cpp-contextual-union-inequivalent",
       "status": "refused-placeholder"
     },
@@ -33716,7 +33716,7 @@
         "packageName": "@flighthq/scene3d-resources",
         "source": "packages/scene3d-resources/src/revealScene3DResourcesOnResolve.ts"
       },
-      "path": "flight/scene3d_resources/reveal_scene3_dresources_on_resolve.hpp",
+      "path": "flight/scene3d_resources/reveal_scene_3d_resources_on_resolve.hpp",
       "rule": "cpp-erased-structural-row-construction-unrepresented",
       "status": "refused-placeholder"
     },
@@ -33845,7 +33845,7 @@
         "packageName": "@flighthq/scene3d-resources",
         "source": "packages/scene3d-resources/src/shadedScene3DMaterialTextures.ts"
       },
-      "path": "flight/scene3d_resources/shaded_scene3_dmaterial_textures.hpp",
+      "path": "flight/scene3d_resources/shaded_scene_3d_material_textures.hpp",
       "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
@@ -33862,7 +33862,7 @@
         "packageName": "@flighthq/scene3d-resources",
         "source": "packages/scene3d-resources/src/sheenPbrScene3DMaterialTextures.ts"
       },
-      "path": "flight/scene3d_resources/sheen_pbr_scene3_dmaterial_textures.hpp",
+      "path": "flight/scene3d_resources/sheen_pbr_scene_3d_material_textures.hpp",
       "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
@@ -33879,7 +33879,7 @@
         "packageName": "@flighthq/scene3d-resources",
         "source": "packages/scene3d-resources/src/specularPbrScene3DMaterialTextures.ts"
       },
-      "path": "flight/scene3d_resources/specular_pbr_scene3_dmaterial_textures.hpp",
+      "path": "flight/scene3d_resources/specular_pbr_scene_3d_material_textures.hpp",
       "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
@@ -33912,7 +33912,7 @@
         "packageName": "@flighthq/scene3d-resources",
         "source": "packages/scene3d-resources/src/transmissionVolumePbrScene3DMaterialTextures.ts"
       },
-      "path": "flight/scene3d_resources/transmission_volume_pbr_scene3_dmaterial_textures.hpp",
+      "path": "flight/scene3d_resources/transmission_volume_pbr_scene_3d_material_textures.hpp",
       "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
@@ -33929,7 +33929,7 @@
         "packageName": "@flighthq/scene3d-resources",
         "source": "packages/scene3d-resources/src/wrappedDiffusePbrScene3DMaterialTextures.ts"
       },
-      "path": "flight/scene3d_resources/wrapped_diffuse_pbr_scene3_dmaterial_textures.hpp",
+      "path": "flight/scene3d_resources/wrapped_diffuse_pbr_scene_3d_material_textures.hpp",
       "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
@@ -34110,7 +34110,7 @@
         "packageName": "@flighthq/scene3d-wgpu",
         "source": "packages/scene3d-wgpu/src/enableWgpuScene3DCustomShaderGuards.ts"
       },
-      "path": "flight/scene3d_wgpu/enable_wgpu_scene3_dcustom_shader_guards.hpp",
+      "path": "flight/scene3d_wgpu/enable_wgpu_scene_3d_custom_shader_guards.hpp",
       "rule": "cpp-contextual-union-inequivalent",
       "status": "refused-placeholder"
     },
@@ -34123,7 +34123,7 @@
         "packageName": "@flighthq/scene3d-wgpu",
         "source": "packages/scene3d-wgpu/src/enableWgpuScene3DForwardLightSelectionGuards.ts"
       },
-      "path": "flight/scene3d_wgpu/enable_wgpu_scene3_dforward_light_selection_guards.hpp",
+      "path": "flight/scene3d_wgpu/enable_wgpu_scene_3d_forward_light_selection_guards.hpp",
       "refusedDependencies": [
         "@flighthq/log/packages/log/src/log.ts",
         "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuScene3DRuntime.ts"
@@ -34139,7 +34139,7 @@
         "packageName": "@flighthq/scene3d-wgpu",
         "source": "packages/scene3d-wgpu/src/explainWgpuScene3DCoverage.ts"
       },
-      "path": "flight/scene3d_wgpu/explain_wgpu_scene3_dcoverage.hpp",
+      "path": "flight/scene3d_wgpu/explain_wgpu_scene_3d_coverage.hpp",
       "refusedDependencies": [
         "@flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts"
       ],
@@ -34154,7 +34154,7 @@
         "packageName": "@flighthq/scene3d-wgpu",
         "source": "packages/scene3d-wgpu/src/explainWgpuScene3DForwardLightSelection.ts"
       },
-      "path": "flight/scene3d_wgpu/explain_wgpu_scene3_dforward_light_selection.hpp",
+      "path": "flight/scene3d_wgpu/explain_wgpu_scene_3d_forward_light_selection.hpp",
       "status": "emitted"
     },
     {
@@ -34269,7 +34269,7 @@
         "packageName": "@flighthq/scene3d-wgpu",
         "source": "packages/scene3d-wgpu/src/prepareWgpuScene3DForwardLights.ts"
       },
-      "path": "flight/scene3d_wgpu/prepare_wgpu_scene3_dforward_lights.hpp",
+      "path": "flight/scene3d_wgpu/prepare_wgpu_scene_3d_forward_lights.hpp",
       "refusedDependencies": [
         "@flighthq/lighting/packages/lighting/src/sceneForwardLights.ts",
         "@flighthq/render/packages/render/src/sceneRender.ts"
@@ -34327,7 +34327,7 @@
         "packageName": "@flighthq/scene3d-wgpu",
         "source": "packages/scene3d-wgpu/src/renderWgpuScene3D.ts"
       },
-      "path": "flight/scene3d_wgpu/render_wgpu_scene3_d.hpp",
+      "path": "flight/scene3d_wgpu/render_wgpu_scene_3d.hpp",
       "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
@@ -34347,7 +34347,7 @@
         "packageName": "@flighthq/scene3d-wgpu",
         "source": "packages/scene3d-wgpu/src/scene3DWgpuPipeline.ts"
       },
-      "path": "flight/scene3d_wgpu/scene3_dwgpu_pipeline.hpp",
+      "path": "flight/scene3d_wgpu/scene_3d_wgpu_pipeline.hpp",
       "rule": "cpp-contextual-union-value-type-unrepresented",
       "status": "refused-placeholder"
     },
@@ -34899,7 +34899,7 @@
         "packageName": "@flighthq/scene3d-wgpu",
         "source": "packages/scene3d-wgpu/src/wgpuParticleEmitter3D.ts"
       },
-      "path": "flight/scene3d_wgpu/wgpu_particle_emitter3_d.hpp",
+      "path": "flight/scene3d_wgpu/wgpu_particle_emitter_3d.hpp",
       "rule": "cpp-structural-assertion-writable-capability-unproven",
       "status": "refused-placeholder"
     },
@@ -34975,7 +34975,7 @@
         "packageName": "@flighthq/scene3d-wgpu",
         "source": "packages/scene3d-wgpu/src/wgpuScene3DRuntime.ts"
       },
-      "path": "flight/scene3d_wgpu/wgpu_scene3_druntime.hpp",
+      "path": "flight/scene3d_wgpu/wgpu_scene_3d_runtime.hpp",
       "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
@@ -35000,7 +35000,7 @@
         "packageName": "@flighthq/scene3d-wgpu",
         "source": "packages/scene3d-wgpu/src/wgpuScene3DTestHelper.ts"
       },
-      "path": "flight/scene3d_wgpu/_internal_wgpu_scene3_dtest_helper.hpp",
+      "path": "flight/scene3d_wgpu/_internal_wgpu_scene_3d_test_helper.hpp",
       "rule": "cpp-intersection-member-shapeless",
       "status": "refused-placeholder"
     },
@@ -35014,7 +35014,7 @@
         "packageName": "@flighthq/scene3d-wgpu",
         "source": "packages/scene3d-wgpu/src/wgpuScene3DTime.ts"
       },
-      "path": "flight/scene3d_wgpu/wgpu_scene3_dtime.hpp",
+      "path": "flight/scene3d_wgpu/wgpu_scene_3d_time.hpp",
       "status": "emitted"
     },
     {
@@ -36739,7 +36739,7 @@
         "packageName": "@flighthq/skeleton2d",
         "source": "packages/skeleton2d/src/applyAnimationClipToSkeleton2D.ts"
       },
-      "path": "flight/skeleton2d/apply_animation_clip_to_skeleton2_d.hpp",
+      "path": "flight/skeleton2d/apply_animation_clip_to_skeleton_2d.hpp",
       "refusedDependencies": [
         "@flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dAnimationTarget.ts"
       ],
@@ -36755,7 +36755,7 @@
         "packageName": "@flighthq/skeleton2d",
         "source": "packages/skeleton2d/src/boundingBoxAttachment2D.ts"
       },
-      "path": "flight/skeleton2d/bounding_box_attachment2_d.hpp",
+      "path": "flight/skeleton2d/bounding_box_attachment_2d.hpp",
       "status": "emitted"
     },
     {
@@ -36768,7 +36768,7 @@
         "packageName": "@flighthq/skeleton2d",
         "source": "packages/skeleton2d/src/clippingAttachment2D.ts"
       },
-      "path": "flight/skeleton2d/clipping_attachment2_d.hpp",
+      "path": "flight/skeleton2d/clipping_attachment_2d.hpp",
       "status": "emitted"
     },
     {
@@ -36807,7 +36807,7 @@
         "packageName": "@flighthq/skeleton2d",
         "source": "packages/skeleton2d/src/deformAnimationTarget2D.ts"
       },
-      "path": "flight/skeleton2d/deform_animation_target2_d.hpp",
+      "path": "flight/skeleton2d/deform_animation_target_2d.hpp",
       "rule": "cpp-erased-value-assertion-unrepresented",
       "status": "refused-placeholder"
     },
@@ -36821,7 +36821,7 @@
         "packageName": "@flighthq/skeleton2d",
         "source": "packages/skeleton2d/src/deformMeshAttachment2D.ts"
       },
-      "path": "flight/skeleton2d/deform_mesh_attachment2_d.hpp",
+      "path": "flight/skeleton2d/deform_mesh_attachment_2d.hpp",
       "status": "emitted"
     },
     {
@@ -36835,7 +36835,7 @@
         "packageName": "@flighthq/skeleton2d",
         "source": "packages/skeleton2d/src/deformPathAttachment2D.ts"
       },
-      "path": "flight/skeleton2d/deform_path_attachment2_d.hpp",
+      "path": "flight/skeleton2d/deform_path_attachment_2d.hpp",
       "status": "emitted"
     },
     {
@@ -36848,7 +36848,7 @@
         "packageName": "@flighthq/skeleton2d",
         "source": "packages/skeleton2d/src/enableSkeleton2DGuards.ts"
       },
-      "path": "flight/skeleton2d/enable_skeleton2_dguards.hpp",
+      "path": "flight/skeleton2d/enable_skeleton_2d_guards.hpp",
       "refusedDependencies": [
         "@flighthq/log/packages/log/src/log.ts"
       ],
@@ -36864,7 +36864,7 @@
         "packageName": "@flighthq/skeleton2d",
         "source": "packages/skeleton2d/src/explainSkeleton2DChannel.ts"
       },
-      "path": "flight/skeleton2d/explain_skeleton2_dchannel.hpp",
+      "path": "flight/skeleton2d/explain_skeleton_2d_channel.hpp",
       "status": "emitted"
     },
     {
@@ -36877,7 +36877,7 @@
         "packageName": "@flighthq/skeleton2d",
         "source": "packages/skeleton2d/src/explainSkeleton2DDeformLength.ts"
       },
-      "path": "flight/skeleton2d/explain_skeleton2_ddeform_length.hpp",
+      "path": "flight/skeleton2d/explain_skeleton_2d_deform_length.hpp",
       "status": "emitted"
     },
     {
@@ -36900,7 +36900,7 @@
         "packageName": "@flighthq/skeleton2d",
         "source": "packages/skeleton2d/src/ikConstraint2D.ts"
       },
-      "path": "flight/skeleton2d/ik_constraint2_d.hpp",
+      "path": "flight/skeleton2d/ik_constraint_2d.hpp",
       "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
@@ -36954,7 +36954,7 @@
         "packageName": "@flighthq/skeleton2d",
         "source": "packages/skeleton2d/src/pathConstraint2D.ts"
       },
-      "path": "flight/skeleton2d/path_constraint2_d.hpp",
+      "path": "flight/skeleton2d/path_constraint_2d.hpp",
       "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
@@ -36968,7 +36968,7 @@
         "packageName": "@flighthq/skeleton2d",
         "source": "packages/skeleton2d/src/pointAttachment2D.ts"
       },
-      "path": "flight/skeleton2d/point_attachment2_d.hpp",
+      "path": "flight/skeleton2d/point_attachment_2d.hpp",
       "status": "emitted"
     },
     {
@@ -36981,7 +36981,7 @@
         "packageName": "@flighthq/skeleton2d",
         "source": "packages/skeleton2d/src/regionAttachment2D.ts"
       },
-      "path": "flight/skeleton2d/region_attachment2_d.hpp",
+      "path": "flight/skeleton2d/region_attachment_2d.hpp",
       "status": "emitted"
     },
     {
@@ -37135,7 +37135,7 @@
         "packageName": "@flighthq/skeleton2d",
         "source": "packages/skeleton2d/src/skin2D.ts"
       },
-      "path": "flight/skeleton2d/skin2_d.hpp",
+      "path": "flight/skeleton2d/skin_2d.hpp",
       "status": "emitted"
     },
     {
@@ -37152,7 +37152,7 @@
         "packageName": "@flighthq/skeleton2d",
         "source": "packages/skeleton2d/src/skinAttachment2DPoints.ts"
       },
-      "path": "flight/skeleton2d/skin_attachment2_dpoints.hpp",
+      "path": "flight/skeleton2d/skin_attachment_2d_points.hpp",
       "status": "emitted"
     },
     {
@@ -37166,7 +37166,7 @@
         "packageName": "@flighthq/skeleton2d",
         "source": "packages/skeleton2d/src/slotDeform2D.ts"
       },
-      "path": "flight/skeleton2d/slot_deform2_d.hpp",
+      "path": "flight/skeleton2d/slot_deform_2d.hpp",
       "status": "emitted"
     },
     {
@@ -37187,7 +37187,7 @@
         "packageName": "@flighthq/skeleton2d",
         "source": "packages/skeleton2d/src/transformConstraint2D.ts"
       },
-      "path": "flight/skeleton2d/transform_constraint2_d.hpp",
+      "path": "flight/skeleton2d/transform_constraint_2d.hpp",
       "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
@@ -38439,7 +38439,7 @@
         "packageName": "@flighthq/skeleton3d",
         "source": "packages/skeleton3d/src/enableSkeleton3DGuards.ts"
       },
-      "path": "flight/skeleton3d/enable_skeleton3_dguards.hpp",
+      "path": "flight/skeleton3d/enable_skeleton_3d_guards.hpp",
       "refusedDependencies": [
         "@flighthq/log/packages/log/src/log.ts",
         "@flighthq/skeleton3d/packages/skeleton3d/src/skeleton3d.ts"
@@ -38487,7 +38487,7 @@
         "packageName": "@flighthq/skeleton3d",
         "source": "packages/skeleton3d/src/prepareScene3DSkinning.ts"
       },
-      "path": "flight/skeleton3d/prepare_scene3_dskinning.hpp",
+      "path": "flight/skeleton3d/prepare_scene_3d_skinning.hpp",
       "refusedDependencies": [
         "@flighthq/skeleton3d/packages/skeleton3d/src/skeleton3d.ts"
       ],
@@ -38802,7 +38802,7 @@
         "packageName": "@flighthq/spatial",
         "source": "packages/spatial/src/bvh3D.ts"
       },
-      "path": "flight/spatial/bvh3_d.hpp",
+      "path": "flight/spatial/bvh_3d.hpp",
       "status": "emitted"
     },
     {
@@ -38828,7 +38828,7 @@
         "packageName": "@flighthq/spatial",
         "source": "packages/spatial/src/explainSpatialIndexing2D.ts"
       },
-      "path": "flight/spatial/explain_spatial_indexing2_d.hpp",
+      "path": "flight/spatial/explain_spatial_indexing_2d.hpp",
       "status": "emitted"
     },
     {
@@ -38841,7 +38841,7 @@
         "packageName": "@flighthq/spatial",
         "source": "packages/spatial/src/explainSpatialIndexing3D.ts"
       },
-      "path": "flight/spatial/explain_spatial_indexing3_d.hpp",
+      "path": "flight/spatial/explain_spatial_indexing_3d.hpp",
       "status": "emitted"
     },
     {
@@ -38899,7 +38899,7 @@
         "packageName": "@flighthq/spatial",
         "source": "packages/spatial/src/spatialIndex3D.ts"
       },
-      "path": "flight/spatial/spatial_index3_d.hpp",
+      "path": "flight/spatial/spatial_index_3d.hpp",
       "status": "emitted"
     },
     {
@@ -38947,7 +38947,7 @@
         "packageName": "@flighthq/spatial",
         "source": "packages/spatial/src/uniformGrid3D.ts"
       },
-      "path": "flight/spatial/uniform_grid3_d.hpp",
+      "path": "flight/spatial/uniform_grid_3d.hpp",
       "status": "emitted"
     },
     {
@@ -38995,7 +38995,7 @@
         "packageName": "@flighthq/spring",
         "source": "packages/spring/src/spring2D.ts"
       },
-      "path": "flight/spring/spring2_d.hpp",
+      "path": "flight/spring/spring_2d.hpp",
       "status": "emitted"
     },
     {
@@ -39007,7 +39007,7 @@
         "packageName": "@flighthq/spring",
         "source": "packages/spring/src/spring3D.ts"
       },
-      "path": "flight/spring/spring3_d.hpp",
+      "path": "flight/spring/spring_3d.hpp",
       "status": "emitted"
     },
     {
@@ -44435,7 +44435,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Attachment2D.ts"
       },
-      "path": "flight/types/attachment2_d.hpp",
+      "path": "flight/types/attachment_2d.hpp",
       "status": "emitted"
     },
     {
@@ -44456,7 +44456,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/AttachmentSkin2D.ts"
       },
-      "path": "flight/types/attachment_skin2_d.hpp",
+      "path": "flight/types/attachment_skin_2d.hpp",
       "status": "emitted"
     },
     {
@@ -45520,7 +45520,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Bone2D.ts"
       },
-      "path": "flight/types/bone2_d.hpp",
+      "path": "flight/types/bone_2d.hpp",
       "status": "emitted"
     },
     {
@@ -45534,7 +45534,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/BoundingBoxAttachment2D.ts"
       },
-      "path": "flight/types/bounding_box_attachment2_d.hpp",
+      "path": "flight/types/bounding_box_attachment_2d.hpp",
       "status": "emitted"
     },
     {
@@ -45651,7 +45651,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Camera2D.ts"
       },
-      "path": "flight/types/camera2_d.hpp",
+      "path": "flight/types/camera_2d.hpp",
       "status": "emitted"
     },
     {
@@ -45694,7 +45694,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Camera3D.ts"
       },
-      "path": "flight/types/camera3_d.hpp",
+      "path": "flight/types/camera_3d.hpp",
       "status": "emitted"
     },
     {
@@ -45708,7 +45708,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Camera3DOptions.ts"
       },
-      "path": "flight/types/camera3_doptions.hpp",
+      "path": "flight/types/camera_3d_options.hpp",
       "status": "emitted"
     },
     {
@@ -45722,7 +45722,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Camera3DViewExplanation.ts"
       },
-      "path": "flight/types/camera3_dview_explanation.hpp",
+      "path": "flight/types/camera_3d_view_explanation.hpp",
       "status": "emitted"
     },
     {
@@ -46480,7 +46480,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/ClippingAttachment2D.ts"
       },
-      "path": "flight/types/clipping_attachment2_d.hpp",
+      "path": "flight/types/clipping_attachment_2d.hpp",
       "status": "emitted"
     },
     {
@@ -47549,7 +47549,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/DomScene2DRectangle.ts"
       },
-      "path": "flight/types/dom_scene2_drectangle.hpp",
+      "path": "flight/types/dom_scene_2d_rectangle.hpp",
       "status": "emitted"
     },
     {
@@ -50622,7 +50622,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/GlScene3DForwardLightList.ts"
       },
-      "path": "flight/types/gl_scene3_dforward_light_list.hpp",
+      "path": "flight/types/gl_scene_3d_forward_light_list.hpp",
       "status": "emitted"
     },
     {
@@ -50644,7 +50644,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/GlScene3DRuntime.ts"
       },
-      "path": "flight/types/gl_scene3_druntime.hpp",
+      "path": "flight/types/gl_scene_3d_runtime.hpp",
       "status": "emitted"
     },
     {
@@ -51406,7 +51406,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/HasTransform2D.ts"
       },
-      "path": "flight/types/has_transform2_d.hpp",
+      "path": "flight/types/has_transform_2d.hpp",
       "status": "emitted"
     },
     {
@@ -51425,7 +51425,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/HasTransform3D.ts"
       },
-      "path": "flight/types/has_transform3_d.hpp",
+      "path": "flight/types/has_transform_3d.hpp",
       "status": "emitted"
     },
     {
@@ -53546,7 +53546,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Material2D.ts"
       },
-      "path": "flight/types/material2_d.hpp",
+      "path": "flight/types/material_2d.hpp",
       "status": "emitted"
     },
     {
@@ -53579,7 +53579,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Material3D.ts"
       },
-      "path": "flight/types/material3_d.hpp",
+      "path": "flight/types/material_3d.hpp",
       "status": "emitted"
     },
     {
@@ -53594,7 +53594,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Material3DOptions.ts"
       },
-      "path": "flight/types/material3_doptions.hpp",
+      "path": "flight/types/material_3d_options.hpp",
       "status": "emitted"
     },
     {
@@ -53987,7 +53987,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/MeshAttachment2D.ts"
       },
-      "path": "flight/types/mesh_attachment2_d.hpp",
+      "path": "flight/types/mesh_attachment_2d.hpp",
       "status": "emitted"
     },
     {
@@ -54768,7 +54768,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Node2D.ts"
       },
-      "path": "flight/types/node2_d.hpp",
+      "path": "flight/types/node_2d.hpp",
       "status": "emitted"
     },
     {
@@ -54783,7 +54783,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Node2DAnimationPath.ts"
       },
-      "path": "flight/types/node2_danimation_path.hpp",
+      "path": "flight/types/node_2d_animation_path.hpp",
       "status": "emitted"
     },
     {
@@ -54797,7 +54797,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Node2DAnimationTarget.ts"
       },
-      "path": "flight/types/node2_danimation_target.hpp",
+      "path": "flight/types/node_2d_animation_target.hpp",
       "status": "emitted"
     },
     {
@@ -54810,7 +54810,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Node2DInteractionSignals.ts"
       },
-      "path": "flight/types/node2_dinteraction_signals.hpp",
+      "path": "flight/types/node_2d_interaction_signals.hpp",
       "status": "emitted"
     },
     {
@@ -54847,7 +54847,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Node3D.ts"
       },
-      "path": "flight/types/node3_d.hpp",
+      "path": "flight/types/node_3d.hpp",
       "status": "emitted"
     },
     {
@@ -54860,7 +54860,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Node3DVisitor.ts"
       },
-      "path": "flight/types/node3_dvisitor.hpp",
+      "path": "flight/types/node_3d_visitor.hpp",
       "status": "emitted"
     },
     {
@@ -55364,7 +55364,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/ParticleEmitter2D.ts"
       },
-      "path": "flight/types/particle_emitter2_d.hpp",
+      "path": "flight/types/particle_emitter_2d.hpp",
       "status": "emitted"
     },
     {
@@ -55379,7 +55379,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/ParticleEmitter3D.ts"
       },
-      "path": "flight/types/particle_emitter3_d.hpp",
+      "path": "flight/types/particle_emitter_3d.hpp",
       "status": "emitted"
     },
     {
@@ -55679,7 +55679,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/PathAttachment2D.ts"
       },
-      "path": "flight/types/path_attachment2_d.hpp",
+      "path": "flight/types/path_attachment_2d.hpp",
       "status": "emitted"
     },
     {
@@ -56105,7 +56105,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Physics2D.ts"
       },
-      "path": "flight/types/physics2_d.hpp",
+      "path": "flight/types/physics_2d.hpp",
       "status": "emitted"
     },
     {
@@ -56123,7 +56123,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Physics2DAbi.ts"
       },
-      "path": "flight/types/physics2_dabi.hpp",
+      "path": "flight/types/physics_2d_abi.hpp",
       "status": "emitted"
     },
     {
@@ -56171,7 +56171,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Physics3D.ts"
       },
-      "path": "flight/types/physics3_d.hpp",
+      "path": "flight/types/physics_3d.hpp",
       "status": "emitted"
     },
     {
@@ -56189,7 +56189,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Physics3DAbi.ts"
       },
-      "path": "flight/types/physics3_dabi.hpp",
+      "path": "flight/types/physics_3d_abi.hpp",
       "status": "emitted"
     },
     {
@@ -56382,7 +56382,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/PointAttachment2D.ts"
       },
-      "path": "flight/types/point_attachment2_d.hpp",
+      "path": "flight/types/point_attachment_2d.hpp",
       "status": "emitted"
     },
     {
@@ -56706,7 +56706,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Ray3D.ts"
       },
-      "path": "flight/types/ray3_d.hpp",
+      "path": "flight/types/ray_3d.hpp",
       "status": "emitted"
     },
     {
@@ -56797,7 +56797,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/RegionAttachment2D.ts"
       },
-      "path": "flight/types/region_attachment2_d.hpp",
+      "path": "flight/types/region_attachment_2d.hpp",
       "status": "emitted"
     },
     {
@@ -56961,7 +56961,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/RenderProxy2D.ts"
       },
-      "path": "flight/types/render_proxy2_d.hpp",
+      "path": "flight/types/render_proxy_2d.hpp",
       "status": "emitted"
     },
     {
@@ -57802,7 +57802,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene2D.ts"
       },
-      "path": "flight/types/scene2_d.hpp",
+      "path": "flight/types/scene_2d.hpp",
       "status": "emitted"
     },
     {
@@ -57815,7 +57815,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene2DAlign.ts"
       },
-      "path": "flight/types/scene2_dalign.hpp",
+      "path": "flight/types/scene_2d_align.hpp",
       "status": "emitted"
     },
     {
@@ -57828,7 +57828,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene2DDisplayState.ts"
       },
-      "path": "flight/types/scene2_ddisplay_state.hpp",
+      "path": "flight/types/scene_2d_display_state.hpp",
       "status": "emitted"
     },
     {
@@ -57851,7 +57851,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene2DDocument.ts"
       },
-      "path": "flight/types/scene2_ddocument.hpp",
+      "path": "flight/types/scene_2d_document.hpp",
       "status": "emitted"
     },
     {
@@ -57865,7 +57865,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene2DFitContext.ts"
       },
-      "path": "flight/types/scene2_dfit_context.hpp",
+      "path": "flight/types/scene_2d_fit_context.hpp",
       "status": "emitted"
     },
     {
@@ -57878,7 +57878,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene2DKindUsage.ts"
       },
-      "path": "flight/types/scene2_dkind_usage.hpp",
+      "path": "flight/types/scene_2d_kind_usage.hpp",
       "status": "emitted"
     },
     {
@@ -57891,7 +57891,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene2DPipelineCoverageExplanation.ts"
       },
-      "path": "flight/types/scene2_dpipeline_coverage_explanation.hpp",
+      "path": "flight/types/scene_2d_pipeline_coverage_explanation.hpp",
       "status": "emitted"
     },
     {
@@ -57904,7 +57904,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene2DQuality.ts"
       },
-      "path": "flight/types/scene2_dquality.hpp",
+      "path": "flight/types/scene_2d_quality.hpp",
       "status": "emitted"
     },
     {
@@ -57918,7 +57918,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene2DRenderBlankReason.ts"
       },
-      "path": "flight/types/scene2_drender_blank_reason.hpp",
+      "path": "flight/types/scene_2d_render_blank_reason.hpp",
       "status": "emitted"
     },
     {
@@ -57931,7 +57931,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene2DRenderExplanation.ts"
       },
-      "path": "flight/types/scene2_drender_explanation.hpp",
+      "path": "flight/types/scene_2d_render_explanation.hpp",
       "status": "emitted"
     },
     {
@@ -57951,7 +57951,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene2DRenderer.ts"
       },
-      "path": "flight/types/scene2_drenderer.hpp",
+      "path": "flight/types/scene_2d_renderer.hpp",
       "status": "emitted"
     },
     {
@@ -57970,7 +57970,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene2DResources.ts"
       },
-      "path": "flight/types/scene2_dresources.hpp",
+      "path": "flight/types/scene_2d_resources.hpp",
       "status": "emitted"
     },
     {
@@ -57983,7 +57983,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene2DScaleMode.ts"
       },
-      "path": "flight/types/scene2_dscale_mode.hpp",
+      "path": "flight/types/scene_2d_scale_mode.hpp",
       "status": "emitted"
     },
     {
@@ -57997,7 +57997,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene2DSignals.ts"
       },
-      "path": "flight/types/scene2_dsignals.hpp",
+      "path": "flight/types/scene_2d_signals.hpp",
       "status": "emitted"
     },
     {
@@ -58018,7 +58018,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene3D.ts"
       },
-      "path": "flight/types/scene3_d.hpp",
+      "path": "flight/types/scene_3d.hpp",
       "status": "emitted"
     },
     {
@@ -58038,7 +58038,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene3DAnimationPath.ts"
       },
-      "path": "flight/types/scene3_danimation_path.hpp",
+      "path": "flight/types/scene_3d_animation_path.hpp",
       "status": "emitted"
     },
     {
@@ -58051,7 +58051,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene3DAnimationTarget.ts"
       },
-      "path": "flight/types/scene3_danimation_target.hpp",
+      "path": "flight/types/scene_3d_animation_target.hpp",
       "status": "emitted"
     },
     {
@@ -58101,7 +58101,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene3DDocument.ts"
       },
-      "path": "flight/types/scene3_ddocument.hpp",
+      "path": "flight/types/scene_3d_document.hpp",
       "status": "emitted"
     },
     {
@@ -58117,7 +58117,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene3DForwardLightSelection.ts"
       },
-      "path": "flight/types/scene3_dforward_light_selection.hpp",
+      "path": "flight/types/scene_3d_forward_light_selection.hpp",
       "status": "emitted"
     },
     {
@@ -58132,7 +58132,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene3DForwardLightSelectionExplanation.ts"
       },
-      "path": "flight/types/scene3_dforward_light_selection_explanation.hpp",
+      "path": "flight/types/scene_3d_forward_light_selection_explanation.hpp",
       "status": "emitted"
     },
     {
@@ -58145,7 +58145,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene3DHit.ts"
       },
-      "path": "flight/types/scene3_dhit.hpp",
+      "path": "flight/types/scene_3d_hit.hpp",
       "status": "emitted"
     },
     {
@@ -58158,7 +58158,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene3DKindUsage.ts"
       },
-      "path": "flight/types/scene3_dkind_usage.hpp",
+      "path": "flight/types/scene_3d_kind_usage.hpp",
       "status": "emitted"
     },
     {
@@ -58189,7 +58189,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene3DLightBlock.ts"
       },
-      "path": "flight/types/scene3_dlight_block.hpp",
+      "path": "flight/types/scene_3d_light_block.hpp",
       "status": "emitted"
     },
     {
@@ -58220,7 +58220,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene3DLights.ts"
       },
-      "path": "flight/types/scene3_dlights.hpp",
+      "path": "flight/types/scene_3d_lights.hpp",
       "status": "emitted"
     },
     {
@@ -58241,7 +58241,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene3DMetadata.ts"
       },
-      "path": "flight/types/scene3_dmetadata.hpp",
+      "path": "flight/types/scene_3d_metadata.hpp",
       "status": "emitted"
     },
     {
@@ -58254,7 +58254,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene3DPickOptions.ts"
       },
-      "path": "flight/types/scene3_dpick_options.hpp",
+      "path": "flight/types/scene_3d_pick_options.hpp",
       "status": "emitted"
     },
     {
@@ -58267,7 +58267,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene3DPipelineCoverageExplanation.ts"
       },
-      "path": "flight/types/scene3_dpipeline_coverage_explanation.hpp",
+      "path": "flight/types/scene_3d_pipeline_coverage_explanation.hpp",
       "status": "emitted"
     },
     {
@@ -58282,7 +58282,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene3DRenderList.ts"
       },
-      "path": "flight/types/scene3_drender_list.hpp",
+      "path": "flight/types/scene_3d_render_list.hpp",
       "status": "emitted"
     },
     {
@@ -58297,7 +58297,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene3DRenderProxy.ts"
       },
-      "path": "flight/types/scene3_drender_proxy.hpp",
+      "path": "flight/types/scene_3d_render_proxy.hpp",
       "status": "emitted"
     },
     {
@@ -58327,7 +58327,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Scene3DResources.ts"
       },
-      "path": "flight/types/scene3_dresources.hpp",
+      "path": "flight/types/scene_3d_resources.hpp",
       "status": "emitted"
     },
     {
@@ -59264,7 +59264,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Skeleton2D.ts"
       },
-      "path": "flight/types/skeleton2_d.hpp",
+      "path": "flight/types/skeleton_2d.hpp",
       "status": "emitted"
     },
     {
@@ -59278,7 +59278,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Skeleton2DAnimationPath.ts"
       },
-      "path": "flight/types/skeleton2_danimation_path.hpp",
+      "path": "flight/types/skeleton_2d_animation_path.hpp",
       "status": "emitted"
     },
     {
@@ -59291,7 +59291,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Skeleton2DAnimationTarget.ts"
       },
-      "path": "flight/types/skeleton2_danimation_target.hpp",
+      "path": "flight/types/skeleton_2d_animation_target.hpp",
       "status": "emitted"
     },
     {
@@ -59304,7 +59304,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Skeleton2DAnimationTargetBinder.ts"
       },
-      "path": "flight/types/skeleton2_danimation_target_binder.hpp",
+      "path": "flight/types/skeleton_2d_animation_target_binder.hpp",
       "status": "emitted"
     },
     {
@@ -59321,7 +59321,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Skeleton2DAnimationTargetKind.ts"
       },
-      "path": "flight/types/skeleton2_danimation_target_kind.hpp",
+      "path": "flight/types/skeleton_2d_animation_target_kind.hpp",
       "status": "emitted"
     },
     {
@@ -59337,7 +59337,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Skeleton2DConstraint.ts"
       },
-      "path": "flight/types/skeleton2_dconstraint.hpp",
+      "path": "flight/types/skeleton_2d_constraint.hpp",
       "status": "emitted"
     },
     {
@@ -59350,7 +59350,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Skeleton2DDeformAnimationTarget.ts"
       },
-      "path": "flight/types/skeleton2_ddeform_animation_target.hpp",
+      "path": "flight/types/skeleton_2d_deform_animation_target.hpp",
       "status": "emitted"
     },
     {
@@ -59364,7 +59364,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Skeleton2DDeformLengthExplanation.ts"
       },
-      "path": "flight/types/skeleton2_ddeform_length_explanation.hpp",
+      "path": "flight/types/skeleton_2d_deform_length_explanation.hpp",
       "status": "emitted"
     },
     {
@@ -59377,7 +59377,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Skeleton2DDrawOrderAnimationTarget.ts"
       },
-      "path": "flight/types/skeleton2_ddraw_order_animation_target.hpp",
+      "path": "flight/types/skeleton_2d_draw_order_animation_target.hpp",
       "status": "emitted"
     },
     {
@@ -59393,7 +59393,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Skeleton2DDrawOrderTimeline.ts"
       },
-      "path": "flight/types/skeleton2_ddraw_order_timeline.hpp",
+      "path": "flight/types/skeleton_2d_draw_order_timeline.hpp",
       "status": "emitted"
     },
     {
@@ -59409,7 +59409,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Skeleton2DGuards.ts"
       },
-      "path": "flight/types/skeleton2_dguards.hpp",
+      "path": "flight/types/skeleton_2d_guards.hpp",
       "status": "emitted"
     },
     {
@@ -59422,7 +59422,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Skeleton2DIkConstraint.ts"
       },
-      "path": "flight/types/skeleton2_dik_constraint.hpp",
+      "path": "flight/types/skeleton_2d_ik_constraint.hpp",
       "status": "emitted"
     },
     {
@@ -59441,7 +59441,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Skeleton2DImport.ts"
       },
-      "path": "flight/types/skeleton2_dimport.hpp",
+      "path": "flight/types/skeleton_2d_import.hpp",
       "status": "emitted"
     },
     {
@@ -59453,7 +59453,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Skeleton2DJsonAnalysis.ts"
       },
-      "path": "flight/types/skeleton2_djson_analysis.hpp",
+      "path": "flight/types/skeleton_2d_json_analysis.hpp",
       "status": "emitted"
     },
     {
@@ -59466,7 +59466,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Skeleton2DPathConstraint.ts"
       },
-      "path": "flight/types/skeleton2_dpath_constraint.hpp",
+      "path": "flight/types/skeleton_2d_path_constraint.hpp",
       "status": "emitted"
     },
     {
@@ -59479,7 +59479,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Skeleton2DSlotAnimationTarget.ts"
       },
-      "path": "flight/types/skeleton2_dslot_animation_target.hpp",
+      "path": "flight/types/skeleton_2d_slot_animation_target.hpp",
       "status": "emitted"
     },
     {
@@ -59495,7 +59495,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Skeleton2DSlotDeform.ts"
       },
-      "path": "flight/types/skeleton2_dslot_deform.hpp",
+      "path": "flight/types/skeleton_2d_slot_deform.hpp",
       "status": "emitted"
     },
     {
@@ -59508,7 +59508,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Skeleton2DTransformConstraint.ts"
       },
-      "path": "flight/types/skeleton2_dtransform_constraint.hpp",
+      "path": "flight/types/skeleton_2d_transform_constraint.hpp",
       "status": "emitted"
     },
     {
@@ -59525,7 +59525,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Skeleton3D.ts"
       },
-      "path": "flight/types/skeleton3_d.hpp",
+      "path": "flight/types/skeleton_3d.hpp",
       "status": "emitted"
     },
     {
@@ -59539,7 +59539,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Skeleton3DValidationDiagnostic.ts"
       },
-      "path": "flight/types/skeleton3_dvalidation_diagnostic.hpp",
+      "path": "flight/types/skeleton_3d_validation_diagnostic.hpp",
       "status": "emitted"
     },
     {
@@ -59594,7 +59594,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Skin2D.ts"
       },
-      "path": "flight/types/skin2_d.hpp",
+      "path": "flight/types/skin_2d.hpp",
       "status": "emitted"
     },
     {
@@ -59644,7 +59644,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Slot2D.ts"
       },
-      "path": "flight/types/slot2_d.hpp",
+      "path": "flight/types/slot_2d.hpp",
       "status": "emitted"
     },
     {
@@ -62560,7 +62560,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Transform2D.ts"
       },
-      "path": "flight/types/transform2_d.hpp",
+      "path": "flight/types/transform_2d.hpp",
       "status": "emitted"
     },
     {
@@ -62590,7 +62590,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Transform3D.ts"
       },
-      "path": "flight/types/transform3_d.hpp",
+      "path": "flight/types/transform_3d.hpp",
       "status": "emitted"
     },
     {
@@ -62606,7 +62606,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/TransformInherit2D.ts"
       },
-      "path": "flight/types/transform_inherit2_d.hpp",
+      "path": "flight/types/transform_inherit_2d.hpp",
       "status": "emitted"
     },
     {
@@ -62619,7 +62619,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/TransformMode2D.ts"
       },
-      "path": "flight/types/transform_mode2_d.hpp",
+      "path": "flight/types/transform_mode_2d.hpp",
       "status": "emitted"
     },
     {
@@ -64019,7 +64019,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/WgpuScene3DForwardLightList.ts"
       },
-      "path": "flight/types/wgpu_scene3_dforward_light_list.hpp",
+      "path": "flight/types/wgpu_scene_3d_forward_light_list.hpp",
       "status": "emitted"
     },
     {
@@ -64034,7 +64034,7 @@
         "packageName": "@flighthq/types",
         "source": "packages/types/src/WgpuScene3DRuntime.ts"
       },
-      "path": "flight/types/wgpu_scene3_druntime.hpp",
+      "path": "flight/types/wgpu_scene_3d_runtime.hpp",
       "status": "emitted"
     },
     {

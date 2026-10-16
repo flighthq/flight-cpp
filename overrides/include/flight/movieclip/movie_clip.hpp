@@ -158,7 +158,7 @@ inline flight::Ref<flight::types::MovieClip> create_movie_clip() {
       .enabled = true,
       .kind = flight::types::movie_clip_kind,
       .name = std::nullopt,
-      .entity_runtime_key = flight::scene2d::create_node2_d_runtime(),
+      .entity_runtime_key = flight::scene2d::create_node_2d_runtime(),
       .alpha = 1.0,
       .visible = true,
       .blend_mode = std::nullopt,

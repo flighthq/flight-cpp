@@ -13,7 +13,7 @@ namespace flight::types { struct Plane; }
 namespace flight::types { struct Vector2; }
 namespace flight::types { struct Vector3; }
 
-#include <flight/types/camera3_d.hpp>
+#include <flight/types/camera_3d.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/plane.hpp>
@@ -22,14 +22,14 @@ namespace flight::types { struct Vector3; }
 
 namespace flight::camera {
 
-inline void get_camera3_dforward(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
+inline void get_camera_3d_forward(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
   flight::Float32Array m = flight::row_get<flight::RowKey<"view">>(camera)->m;
   (out->x = -m.get_index(2.0));
   (out->y = -m.get_index(6.0));
   (out->z = -m.get_index(10.0));
 }
 
-inline void get_camera3_dposition(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
+inline void get_camera_3d_position(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
   flight::Float32Array m = flight::row_get<flight::RowKey<"view">>(camera)->m;
   const double m00 = m.get_index(0.0);
   const double m01 = m.get_index(1.0);
@@ -48,14 +48,14 @@ inline void get_camera3_dposition(flight::types::Vector3Like out, flight::Struct
   (out->z = -(((m20 * tx) + (m21 * ty)) + (m22 * tz)));
 }
 
-inline void get_camera3_dright(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
+inline void get_camera_3d_right(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
   flight::Float32Array m = flight::row_get<flight::RowKey<"view">>(camera)->m;
   (out->x = m.get_index(0.0));
   (out->y = m.get_index(4.0));
   (out->z = m.get_index(8.0));
 }
 
-inline void get_camera3_dup(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
+inline void get_camera_3d_up(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
   flight::Float32Array m = flight::row_get<flight::RowKey<"view">>(camera)->m;
   (out->x = m.get_index(1.0));
   (out->y = m.get_index(5.0));

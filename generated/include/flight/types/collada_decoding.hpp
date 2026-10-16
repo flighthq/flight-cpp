@@ -32,7 +32,7 @@ using ColladaLightKind = flight::String;
 } // namespace flight::types
 
 #include <flight/types/import_diagnostic.hpp>
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d_document.hpp>
 #include <flight/types/xml_element.hpp>
 
 namespace flight::types {

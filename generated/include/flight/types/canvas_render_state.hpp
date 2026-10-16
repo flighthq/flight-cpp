@@ -55,9 +55,9 @@ struct CanvasRenderStateRuntime;
 #include <flight/types/canvas_texture_resolver.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/host_canvas.hpp>
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 #include <flight/types/render_state.hpp>
-#include <flight/types/scene2_drenderer.hpp>
+#include <flight/types/scene_2d_renderer.hpp>
 #include <flight/types/image_resource.hpp>
 #include <flight/types/node.hpp>
 #include <flight/types/render_proxy_adapter.hpp>
@@ -73,7 +73,7 @@ struct CanvasRenderStateRuntime;
 #include <flight/types/blend_mode.hpp>
 #include <flight/types/render_state.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 
 namespace flight::types {
 

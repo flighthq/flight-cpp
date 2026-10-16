@@ -5,15 +5,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/spatial/bvh3_d.hpp>
-#include <flight/spatial/explain_spatial_indexing2_d.hpp>
-#include <flight/spatial/explain_spatial_indexing3_d.hpp>
+#include <flight/spatial/bvh_3d.hpp>
+#include <flight/spatial/explain_spatial_indexing_2d.hpp>
+#include <flight/spatial/explain_spatial_indexing_3d.hpp>
 #include <flight/spatial/format_spatial_indexing_notice.hpp>
 #include <flight/spatial/spatial_index.hpp>
-#include <flight/spatial/spatial_index3_d.hpp>
+#include <flight/spatial/spatial_index_3d.hpp>
 #include <flight/spatial/spatial_indexing_guard.hpp>
 #include <flight/spatial/uniform_grid.hpp>
-#include <flight/spatial/uniform_grid3_d.hpp>
+#include <flight/spatial/uniform_grid_3d.hpp>
 
 namespace flight::spatial {
 

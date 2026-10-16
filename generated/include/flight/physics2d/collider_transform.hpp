@@ -29,7 +29,7 @@ namespace flight::types { struct SpatialAabb2D; }
 #include <flight/entity/entity.hpp>
 #include <flight/types/collision.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/physics2_d.hpp>
+#include <flight/types/physics_2d.hpp>
 #include <flight/types/spatial.hpp>
 
 namespace flight::physics2d {
@@ -47,7 +47,7 @@ struct x0_y0_x1_y1_radius_kind_entity_runtime_key_5162cf10c0c8abd4 : public flig
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS2D_X0_Y0_X1_Y1_RADIUS_KIND_ENTITY_RUNTIME_KEY_5162CF10C0C8ABD4
 
-inline void initialize_collision_capsule2_d(flight::types::EntityConstruction<flight::Ref<x0_y0_x1_y1_radius_kind_entity_runtime_key_5162cf10c0c8abd4>> out, flight::String kind, double radius, double x0, double x1, double y0, double y1) {
+inline void initialize_collision_capsule_2d(flight::types::EntityConstruction<flight::Ref<x0_y0_x1_y1_radius_kind_entity_runtime_key_5162cf10c0c8abd4>> out, flight::String kind, double radius, double x0, double x1, double y0, double y1) {
   flight::row_set<flight::RowKey<"kind">>(out, kind);
   flight::row_set<flight::RowKey<"radius">>(out, radius);
   flight::row_set<flight::RowKey<"x0">>(out, x0);
@@ -64,7 +64,7 @@ struct x_y_radius_kind_entity_runtime_key_3b411ce3c09d63df : public flight::type
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS2D_X_Y_RADIUS_KIND_ENTITY_RUNTIME_KEY_3B411CE3C09D63DF
 
-inline void initialize_collision_circle2_d(flight::types::EntityConstruction<flight::Ref<x_y_radius_kind_entity_runtime_key_3b411ce3c09d63df>> out, flight::String kind, double radius, double x, double y) {
+inline void initialize_collision_circle_2d(flight::types::EntityConstruction<flight::Ref<x_y_radius_kind_entity_runtime_key_3b411ce3c09d63df>> out, flight::String kind, double radius, double x, double y) {
   flight::row_set<flight::RowKey<"kind">>(out, kind);
   flight::row_set<flight::RowKey<"radius">>(out, radius);
   flight::row_set<flight::RowKey<"x">>(out, x);
@@ -79,7 +79,7 @@ struct x_y_half_w_half_h_rotation_kind_entity_runtime_key_92b8fc949c9f8b90 : pub
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS2D_X_Y_HALF_W_HALF_H_ROTATION_KIND_ENTITY_RUNTIME_KEY_92B8FC949C9F8B90
 
-inline void initialize_collision_obb2_d(flight::types::EntityConstruction<flight::Ref<x_y_half_w_half_h_rotation_kind_entity_runtime_key_92b8fc949c9f8b90>> out, double half_h, double half_w, flight::String kind, double rotation, double x, double y) {
+inline void initialize_collision_obb_2d(flight::types::EntityConstruction<flight::Ref<x_y_half_w_half_h_rotation_kind_entity_runtime_key_92b8fc949c9f8b90>> out, double half_h, double half_w, flight::String kind, double rotation, double x, double y) {
   flight::row_set<flight::RowKey<"halfH">>(out, half_h);
   flight::row_set<flight::RowKey<"halfW">>(out, half_w);
   flight::row_set<flight::RowKey<"kind">>(out, kind);
@@ -96,7 +96,7 @@ struct x_y_kind_entity_runtime_key_850398bcd8afaca8 : public flight::types::Coll
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS2D_X_Y_KIND_ENTITY_RUNTIME_KEY_850398BCD8AFACA8
 
-inline void initialize_collision_point2_d(flight::types::EntityConstruction<flight::Ref<x_y_kind_entity_runtime_key_850398bcd8afaca8>> out, flight::String kind, double x, double y) {
+inline void initialize_collision_point_2d(flight::types::EntityConstruction<flight::Ref<x_y_kind_entity_runtime_key_850398bcd8afaca8>> out, flight::String kind, double x, double y) {
   flight::row_set<flight::RowKey<"kind">>(out, kind);
   flight::row_set<flight::RowKey<"x">>(out, x);
   flight::row_set<flight::RowKey<"y">>(out, y);
@@ -110,7 +110,7 @@ struct points_kind_entity_runtime_key_c19b00bc43900858 : public flight::types::C
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS2D_POINTS_KIND_ENTITY_RUNTIME_KEY_C19B00BC43900858
 
-inline void initialize_collision_polygon2_d(flight::types::EntityConstruction<flight::Ref<points_kind_entity_runtime_key_c19b00bc43900858>> out, flight::String kind, flight::Array<double> points) {
+inline void initialize_collision_polygon_2d(flight::types::EntityConstruction<flight::Ref<points_kind_entity_runtime_key_c19b00bc43900858>> out, flight::String kind, flight::Array<double> points) {
   flight::row_set<flight::RowKey<"kind">>(out, kind);
   flight::row_set<flight::RowKey<"points">>(out, points);
 }
@@ -123,7 +123,7 @@ struct x0_y0_x1_y1_kind_entity_runtime_key_db4d2ef625676b1a : public flight::typ
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS2D_X0_Y0_X1_Y1_KIND_ENTITY_RUNTIME_KEY_DB4D2EF625676B1A
 
-inline void initialize_collision_segment2_d(flight::types::EntityConstruction<flight::Ref<x0_y0_x1_y1_kind_entity_runtime_key_db4d2ef625676b1a>> out, flight::String kind, double x0, double x1, double y0, double y1) {
+inline void initialize_collision_segment_2d(flight::types::EntityConstruction<flight::Ref<x0_y0_x1_y1_kind_entity_runtime_key_db4d2ef625676b1a>> out, flight::String kind, double x0, double x1, double y0, double y1) {
   flight::row_set<flight::RowKey<"kind">>(out, kind);
   flight::row_set<flight::RowKey<"x0">>(out, x0);
   flight::row_set<flight::RowKey<"x1">>(out, x1);
@@ -315,7 +315,7 @@ struct kind_1bc088282030ac0c : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS2D_KIND_1BC088282030AC0C
 
-inline std::variant<flight::Ref<min_x_min_y_max_x_max_y_kind_entity_runtime_key_a005d3d594f52fa9>, flight::Ref<points_kind_entity_runtime_key_211cf6139693b7a7>, flight::Ref<x_y_half_w_half_h_rotation_kind_entity_runtime_key_f44654387aee69ec>, flight::Ref<x_y_kind_entity_runtime_key_2992e2a64a7d3e62>, flight::Ref<x_y_radius_kind_entity_runtime_key_9d232207bd12a07b>, flight::Ref<x0_y0_x1_y1_kind_entity_runtime_key_303e64b3c4d2e7ff>, flight::Ref<x0_y0_x1_y1_radius_kind_entity_runtime_key_fd7c06f4d9e65100>> create_physics2_dcollider_world_shape(flight::types::CollisionBuiltInShape2D local) {
+inline std::variant<flight::Ref<min_x_min_y_max_x_max_y_kind_entity_runtime_key_a005d3d594f52fa9>, flight::Ref<points_kind_entity_runtime_key_211cf6139693b7a7>, flight::Ref<x_y_half_w_half_h_rotation_kind_entity_runtime_key_f44654387aee69ec>, flight::Ref<x_y_kind_entity_runtime_key_2992e2a64a7d3e62>, flight::Ref<x_y_radius_kind_entity_runtime_key_9d232207bd12a07b>, flight::Ref<x0_y0_x1_y1_kind_entity_runtime_key_303e64b3c4d2e7ff>, flight::Ref<x0_y0_x1_y1_radius_kind_entity_runtime_key_fd7c06f4d9e65100>> create_physics_2d_collider_world_shape(flight::types::CollisionBuiltInShape2D local) {
   {
     double switch_fallthrough_state = -1.0;
     {
@@ -351,7 +351,7 @@ inline std::variant<flight::Ref<min_x_min_y_max_x_max_y_kind_entity_runtime_key_
         if (switch_value_2 == 0.0) {
           {
             flight::types::EntityConstruction<flight::Ref<x_y_radius_kind_entity_runtime_key_3b411ce3c09d63df>> out_7 = flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<x_y_radius_kind_entity_runtime_key_3b411ce3c09d63df>>>(flight::entity::allocate_entity<flight::Ref<x_y_radius_kind_entity_runtime_key_6532500072144184>>());
-            initialize_collision_circle2_d(out_7, flight::String("circle"), std::get<2>(local)->radius, std::get<2>(local)->x, std::get<2>(local)->y);
+            initialize_collision_circle_2d(out_7, flight::String("circle"), std::get<2>(local)->radius, std::get<2>(local)->x, std::get<2>(local)->y);
             return flight::entity::finish_entity<flight::Ref<x_y_radius_kind_entity_runtime_key_3b411ce3c09d63df>>(out_7);
           }
         }
@@ -361,42 +361,42 @@ inline std::variant<flight::Ref<min_x_min_y_max_x_max_y_kind_entity_runtime_key_
         else if (switch_value_2 == 2.0) {
           {
             flight::types::EntityConstruction<flight::Ref<x_y_half_w_half_h_rotation_kind_entity_runtime_key_92b8fc949c9f8b90>> out = flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<x_y_half_w_half_h_rotation_kind_entity_runtime_key_92b8fc949c9f8b90>>>(flight::entity::allocate_entity<flight::Ref<x_y_half_w_half_h_rotation_kind_entity_runtime_key_b888b92f9909dbb3>>());
-            initialize_collision_obb2_d(out, 0.0, 0.0, flight::String("obb"), 0.0, 0.0, 0.0);
+            initialize_collision_obb_2d(out, 0.0, 0.0, flight::String("obb"), 0.0, 0.0, 0.0);
             return flight::entity::finish_entity<flight::Ref<x_y_half_w_half_h_rotation_kind_entity_runtime_key_92b8fc949c9f8b90>>(out);
           }
         }
         else if (switch_value_2 == 3.0) {
           {
             flight::types::EntityConstruction<flight::Ref<x0_y0_x1_y1_radius_kind_entity_runtime_key_5162cf10c0c8abd4>> out_2 = flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<x0_y0_x1_y1_radius_kind_entity_runtime_key_5162cf10c0c8abd4>>>(flight::entity::allocate_entity<flight::Ref<x0_y0_x1_y1_radius_kind_entity_runtime_key_b546333f4e6cc1ab>>());
-            initialize_collision_capsule2_d(out_2, flight::String("capsule"), std::get<1>(local)->radius, 0.0, 0.0, 0.0, 0.0);
+            initialize_collision_capsule_2d(out_2, flight::String("capsule"), std::get<1>(local)->radius, 0.0, 0.0, 0.0, 0.0);
             return flight::entity::finish_entity<flight::Ref<x0_y0_x1_y1_radius_kind_entity_runtime_key_5162cf10c0c8abd4>>(out_2);
           }
         }
         else if (switch_value_2 == 4.0) {
           {
             flight::types::EntityConstruction<flight::Ref<points_kind_entity_runtime_key_c19b00bc43900858>> out_3 = flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<points_kind_entity_runtime_key_c19b00bc43900858>>>(flight::entity::allocate_entity<flight::Ref<points_kind_entity_runtime_key_14364be355734497>>());
-            initialize_collision_polygon2_d(out_3, flight::String("polygon"), std::get<4>(local)->points.slice());
+            initialize_collision_polygon_2d(out_3, flight::String("polygon"), std::get<4>(local)->points.slice());
             return flight::entity::finish_entity<flight::Ref<points_kind_entity_runtime_key_c19b00bc43900858>>(out_3);
           }
         }
         else if (switch_value_2 == 5.0) {
           {
             flight::types::EntityConstruction<flight::Ref<x0_y0_x1_y1_kind_entity_runtime_key_db4d2ef625676b1a>> out_4 = flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<x0_y0_x1_y1_kind_entity_runtime_key_db4d2ef625676b1a>>>(flight::entity::allocate_entity<flight::Ref<x0_y0_x1_y1_kind_entity_runtime_key_985227993141c7e5>>());
-            initialize_collision_segment2_d(out_4, flight::String("segment"), std::get<5>(local)->x0, std::get<5>(local)->x1, std::get<5>(local)->y0, std::get<5>(local)->y1);
+            initialize_collision_segment_2d(out_4, flight::String("segment"), std::get<5>(local)->x0, std::get<5>(local)->x1, std::get<5>(local)->y0, std::get<5>(local)->y1);
             return flight::entity::finish_entity<flight::Ref<x0_y0_x1_y1_kind_entity_runtime_key_db4d2ef625676b1a>>(out_4);
           }
         }
         else if (switch_value_2 == 6.0) {
           {
             flight::types::EntityConstruction<flight::Ref<x_y_kind_entity_runtime_key_850398bcd8afaca8>> out_5 = flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<x_y_kind_entity_runtime_key_850398bcd8afaca8>>>(flight::entity::allocate_entity<flight::Ref<x_y_kind_entity_runtime_key_f8723ff314c597f7>>());
-            initialize_collision_point2_d(out_5, flight::String("point"), std::get<3>(local)->x, std::get<3>(local)->y);
+            initialize_collision_point_2d(out_5, flight::String("point"), std::get<3>(local)->x, std::get<3>(local)->y);
             return flight::entity::finish_entity<flight::Ref<x_y_kind_entity_runtime_key_850398bcd8afaca8>>(out_5);
           }
         }
         else if (switch_value_2 == 7.0) {
           {
             flight::types::EntityConstruction<flight::Ref<x_y_kind_entity_runtime_key_850398bcd8afaca8>> out_6 = flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<x_y_kind_entity_runtime_key_850398bcd8afaca8>>>(flight::entity::allocate_entity<flight::Ref<x_y_kind_entity_runtime_key_f8723ff314c597f7>>());
-            initialize_collision_point2_d(out_6, flight::String("point"), 0.0, 0.0);
+            initialize_collision_point_2d(out_6, flight::String("point"), 0.0, 0.0);
             return flight::entity::finish_entity<flight::Ref<x_y_kind_entity_runtime_key_850398bcd8afaca8>>(out_6);
           }
         }
@@ -406,7 +406,7 @@ inline std::variant<flight::Ref<min_x_min_y_max_x_max_y_kind_entity_runtime_key_
   throw std::logic_error("Flight function completed without a value");
 }
 
-inline void update_physics2_dcollider_world_shape(flight::Ref<flight::types::Physics2DCollider> collider, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>> body) {
+inline void update_physics_2d_collider_world_shape(flight::Ref<flight::types::Physics2DCollider> collider, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>> body) {
   flight::types::CollisionBuiltInShape2D local = collider->local;
   flight::types::CollisionBuiltInShape2D world = collider->world;
   const double cos = std::cos(flight::row_get<flight::RowKey<"angle">>(body));
@@ -473,7 +473,7 @@ inline void update_physics2_dcollider_world_shape(flight::Ref<flight::types::Phy
   }
 }
 
-inline void write_physics2_dcollider_bounds(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>> collider, flight::Ref<flight::types::SpatialAabb2D> out) {
+inline void write_physics_2d_collider_bounds(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>> collider, flight::Ref<flight::types::SpatialAabb2D> out) {
   flight::types::CollisionBuiltInShape2D shape = flight::row_get<flight::RowKey<"world">>(collider);
   {
     double switch_fallthrough_state = -1.0;

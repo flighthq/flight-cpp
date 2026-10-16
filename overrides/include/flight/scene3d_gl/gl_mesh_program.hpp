@@ -49,7 +49,7 @@ namespace flight::types { struct TextureCube; }
 #include <flight/render_gl/gl_skin_palette_texture.hpp>
 #include <flight/texture/texture.hpp>
 #include <flight/types/contract.hpp>
-#include <flight/scene3d_gl/gl_scene3_druntime.hpp>
+#include <flight/scene3d_gl/gl_scene_3d_runtime.hpp>
 #include <flight/scene3d_gl/gl_viewport_aspect.hpp>
 
 namespace flight::scene3d_gl {
@@ -67,7 +67,7 @@ inline GlMeshProgramMutableView get_gl_mesh_program_projection(GlMeshProgramView
 
 inline void begin_gl_mesh_draw(flight::Ref<flight::types::GlRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlMeshProgram>>>> program, bool double_sided) {
   flight::host_sdl::WebGl2Context gl = state->gl;
-  auto runtime = flight::scene3d_gl::get_gl_scene3_druntime(state);
+  auto runtime = flight::scene3d_gl::get_gl_scene_3d_runtime(state);
   (runtime->active_mesh_program = program);
   gl.use_program(flight::row_get<flight::RowKey<"program">>(program));
   gl.enable(gl.depth_test);
@@ -193,8 +193,8 @@ inline void destroy_gl_mesh_program(flight::Ref<flight::types::GlRenderState> st
 }
 
 template <typename T>
-inline T ensure_gl_scene3_dprogram(flight::Ref<flight::types::GlRenderState> state, flight::String key, std::function<T(flight::host_sdl::WebGl2Context)> compile) {
-  auto runtime = flight::scene3d_gl::get_gl_scene3_druntime(state);
+inline T ensure_gl_scene_3d_program(flight::Ref<flight::types::GlRenderState> state, flight::String key, std::function<T(flight::host_sdl::WebGl2Context)> compile) {
+  auto runtime = flight::scene3d_gl::get_gl_scene_3d_runtime(state);
   if (runtime->program_cache.has(key)) {
     return flight::erased_ref_as<typename T::element_type>(runtime->program_cache.get(key));
   }
@@ -335,14 +335,14 @@ inline const flight::String gl_instance_vertex_declarations_glsl = flight::Strin
 inline flight::Ref<flight::types::Matrix4> scratch_view_projection = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
 inline void set_gl_mesh_view_projection(flight::Ref<flight::types::GlRenderState> state, std::optional<flight::host_sdl::WebGlUniformLocation> loc_view_projection, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
-  flight::camera::get_camera3_dview_projection_matrix4(scratch_view_projection, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(camera), flight::scene3d_gl::get_gl_scene3_dviewport_aspect(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlRenderState>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlRenderState>>>>(state))));
+  flight::camera::get_camera_3d_view_projection_matrix4(scratch_view_projection, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(camera), flight::scene3d_gl::get_gl_scene_3d_viewport_aspect(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlRenderState>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlRenderState>>>>(state))));
   state->gl.uniform_matrix4fv(loc_view_projection, false, scratch_view_projection->m, std::nullopt, std::nullopt);
 }
 
 inline flight::Ref<flight::types::Vector3> scratch_camera_position = flight::make_ref<flight::types::Vector3>(flight::types::Vector3{.x = 0.0, .y = 0.0, .z = 0.0});
 
 inline void set_gl_mesh_camera_position(flight::host_sdl::WebGl2Context gl, std::optional<flight::host_sdl::WebGlUniformLocation> loc_camera_position, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
-  flight::camera::get_camera3_dposition(scratch_camera_position, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(camera));
+  flight::camera::get_camera_3d_position(scratch_camera_position, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(camera));
   gl.uniform3f(loc_camera_position, scratch_camera_position->x, scratch_camera_position->y, scratch_camera_position->z);
 }
 
@@ -559,7 +559,7 @@ inline void draw_gl_mesh_subset(flight::Ref<flight::types::GlRenderState> state,
   const double instance_count = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"instanceCount">>(proxy); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
   std::optional<flight::Float32Array> instance_matrices = present_gl_mesh_float32_array(([&]() -> std::variant<flight::Float32Array, flight::Null, flight::Undefined> { auto optional_property_7 = flight::row_get<flight::RowKey<"instanceMatrices">>(proxy); if (std::holds_alternative<flight::Undefined>(optional_property_7)) return std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property_7)) return std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Float32Array>, std::get<flight::Float32Array>(optional_property_7)}; }()));
   const bool gpu_instanced = ((instance_count > 0.0) && instance_matrices.has_value());
-  const auto skin_feature = get_gl_scene3_druntime(state)->mesh_skin_feature;
+  const auto skin_feature = get_gl_scene_3d_runtime(state)->mesh_skin_feature;
   const auto* skin = std::get_if<flight::Ref<flight::types::GlMeshSkinFeature>>(&skin_feature);
   const bool gpu_skinned = !gpu_instanced && skin != nullptr && (*skin)->bind_mesh_skin_palette(state, program, proxy);
   if (gpu_instanced) {

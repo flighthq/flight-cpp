@@ -25,7 +25,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/spatial.hpp>
 
-#include <flight/types/physics3_d.hpp>
+#include <flight/types/physics_3d.hpp>
 
 #include <flight/types/collision.hpp>
 
@@ -84,35 +84,35 @@ struct SerializedPhysics3DSolverConfig;
 } // namespace flight::physics3d
 
 #include <flight/entity/entity.hpp>
-#include <flight/spatial/uniform_grid3_d.hpp>
+#include <flight/spatial/uniform_grid_3d.hpp>
 #include <flight/types/collision.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/non_entity_create_result.hpp>
-#include <flight/types/physics3_d.hpp>
+#include <flight/types/physics_3d.hpp>
 #include <flight/types/spatial.hpp>
 #include <flight/physics3d/broadphase.hpp>
 #include <flight/physics3d/integrate.hpp>
 #include <flight/physics3d/joint_collision_suppression.hpp>
 #include <flight/physics3d/mass_properties.hpp>
 #include <flight/physics3d/ownership.hpp>
-#include <flight/physics3d/physics3_dbroadphase_publication.hpp>
+#include <flight/physics3d/physics_3d_broadphase_publication.hpp>
 #include <flight/physics3d/symmetric_tensor.hpp>
 
 namespace flight::physics3d {
 
-inline flight::Ref<flight::types::Physics3DSequentialImpulseConfig> create_physics3_dsequential_impulse_config() {
+inline flight::Ref<flight::types::Physics3DSequentialImpulseConfig> create_physics_3d_sequential_impulse_config() {
   return flight::make_ref<flight::types::Physics3DSequentialImpulseConfig>(flight::types::Physics3DSequentialImpulseConfig{.velocity_iterations = 8.0, .position_iterations = 3.0, .penetration_slop = 0.005, .position_correction = 0.2, .restitution_threshold = 1.0, .warm_starting = true});
 }
 
-inline flight::Ref<flight::types::Physics3DSolverConfig> create_physics3_dsolver_config() {
-  return flight::make_ref<flight::types::Physics3DSolverConfig>(flight::types::Physics3DSolverConfig{.allow_sleeping = true, .sleep_linear_threshold = 0.01, .sleep_angular_threshold = 0.02, .time_to_sleep = 0.5, .substeps = 1.0, .continuous_collision = false, .max_ccd_substeps = 4.0, .max_ccd_rotation_substeps = 64.0, .sequential_impulse = create_physics3_dsequential_impulse_config()});
+inline flight::Ref<flight::types::Physics3DSolverConfig> create_physics_3d_solver_config() {
+  return flight::make_ref<flight::types::Physics3DSolverConfig>(flight::types::Physics3DSolverConfig{.allow_sleeping = true, .sleep_linear_threshold = 0.01, .sleep_angular_threshold = 0.02, .time_to_sleep = 0.5, .substeps = 1.0, .continuous_collision = false, .max_ccd_substeps = 4.0, .max_ccd_rotation_substeps = 64.0, .sequential_impulse = create_physics_3d_sequential_impulse_config()});
 }
 
-inline std::optional<flight::Ref<flight::types::RigidBody3D>> find_physics3_dbody(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world, double index) {
+inline std::optional<flight::Ref<flight::types::RigidBody3D>> find_physics_3d_body(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world, double index) {
   return flight::row_get<flight::RowKey<"bodyByIndex">>(world).get(index);
 }
 
-inline void initialize_physics3_dcollider(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DCollider>> out, flight::Ref<flight::types::Physics3DCollisionFilter> filter, flight::types::CollisionColliderShape3D local, flight::Ref<flight::types::Physics3DMaterial> material, bool sensor, flight::types::CollisionColliderShape3D world) {
+inline void initialize_physics_3d_collider(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DCollider>> out, flight::Ref<flight::types::Physics3DCollisionFilter> filter, flight::types::CollisionColliderShape3D local, flight::Ref<flight::types::Physics3DMaterial> material, bool sensor, flight::types::CollisionColliderShape3D world) {
   flight::row_set<flight::RowKey<"filter">>(out, filter);
   flight::row_set<flight::RowKey<"local">>(out, local);
   flight::row_set<flight::RowKey<"material">>(out, material);
@@ -120,7 +120,7 @@ inline void initialize_physics3_dcollider(flight::types::EntityConstruction<flig
   flight::row_set<flight::RowKey<"world">>(out, world);
 }
 
-inline void initialize_rigid_body3_d(flight::types::EntityConstruction<flight::Ref<flight::types::RigidBody3D>> out, flight::types::Physics3DBodyType type) {
+inline void initialize_rigid_body_3d(flight::types::EntityConstruction<flight::Ref<flight::types::RigidBody3D>> out, flight::types::Physics3DBodyType type) {
   flight::row_set<flight::RowKey<"angularDamping">>(out, 0.0);
   flight::row_set<flight::RowKey<"angularVelocityX">>(out, 0.0);
   flight::row_set<flight::RowKey<"angularVelocityY">>(out, 0.0);
@@ -176,15 +176,15 @@ inline void initialize_rigid_body3_d(flight::types::EntityConstruction<flight::R
   flight::row_set<flight::RowKey<"z">>(out, 0.0);
 }
 
-inline flight::Ref<flight::types::RigidBody3D> create_rigid_body3_d(std::optional<flight::types::Physics3DBodyType> type = std::nullopt) {
+inline flight::Ref<flight::types::RigidBody3D> create_rigid_body_3d(std::optional<flight::types::Physics3DBodyType> type = std::nullopt) {
   type = type.value_or(flight::String("dynamic"));
   flight::types::EntityConstruction<flight::Ref<flight::types::RigidBody3D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::RigidBody3D>>();
-  initialize_rigid_body3_d(out, type.value());
+  initialize_rigid_body_3d(out, type.value());
   return flight::entity::finish_entity<flight::Ref<flight::types::RigidBody3D>>(out);
 }
 
-inline void wake_physics3_dbody(flight::Ref<flight::types::RigidBody3D> body) {
-  flight::physics3d::assert_physics3_dbody_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
+inline void wake_physics_3d_body(flight::Ref<flight::types::RigidBody3D> body) {
+  flight::physics3d::assert_physics_3d_body_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
   if ((body->type == flight::String("static"))) {
     return;
   }
@@ -192,8 +192,8 @@ inline void wake_physics3_dbody(flight::Ref<flight::types::RigidBody3D> body) {
   (body->sleep_timer = 0.0);
 }
 
-inline bool set_physics3_dbody_bullet(flight::Ref<flight::types::RigidBody3D> body, bool bullet) {
-  flight::physics3d::assert_physics3_dbody_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
+inline bool set_physics_3d_body_bullet(flight::Ref<flight::types::RigidBody3D> body, bool bullet) {
+  flight::physics3d::assert_physics_3d_body_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
   if ((flight::String("boolean") != flight::String("boolean"))) {
     return false;
   }
@@ -201,12 +201,12 @@ inline bool set_physics3_dbody_bullet(flight::Ref<flight::types::RigidBody3D> bo
     return true;
   }
   (body->bullet = bullet);
-  wake_physics3_dbody(body);
+  wake_physics_3d_body(body);
   return true;
 }
 
-inline bool set_physics3_dbody_sleep_enabled(flight::Ref<flight::types::RigidBody3D> body, bool sleep_enabled) {
-  flight::physics3d::assert_physics3_dbody_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
+inline bool set_physics_3d_body_sleep_enabled(flight::Ref<flight::types::RigidBody3D> body, bool sleep_enabled) {
+  flight::physics3d::assert_physics_3d_body_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
   if ((flight::String("boolean") != flight::String("boolean"))) {
     return false;
   }
@@ -214,11 +214,11 @@ inline bool set_physics3_dbody_sleep_enabled(flight::Ref<flight::types::RigidBod
     return true;
   }
   (body->sleep_enabled = sleep_enabled);
-  wake_physics3_dbody(body);
+  wake_physics_3d_body(body);
   return true;
 }
 
-inline void write_rigid_body3_dworld_center(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body, flight::Array<double> out) {
+inline void write_rigid_body_3d_world_center(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body, flight::Array<double> out) {
   const double c_x = flight::row_get<flight::RowKey<"centerX">>(body);
   const double c_y = flight::row_get<flight::RowKey<"centerY">>(body);
   const double c_z = flight::row_get<flight::RowKey<"centerZ">>(body);
@@ -240,9 +240,9 @@ inline void write_rigid_body3_dworld_center(flight::StructuralRef<flight::RowRea
   (out.element(2.0) = ((flight::row_get<flight::RowKey<"z">>(body) + c_z) + (2.0 * ((q_x * t_y) - (q_y * t_x)))));
 }
 
-inline const double physics3_dworld_version = 4.0;
+inline const double physics_3d_world_version = 4.0;
 
-inline void initialize_physics3_dworld(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DWorld>> out, flight::Ref<flight::types::Physics3DSolverConfig> config, double gravity_x, double gravity_y, double gravity_z, flight::Ref<flight::types::SpatialIndexBackend3D> index) {
+inline void initialize_physics_3d_world(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DWorld>> out, flight::Ref<flight::types::Physics3DSolverConfig> config, double gravity_x, double gravity_y, double gravity_z, flight::Ref<flight::types::SpatialIndexBackend3D> index) {
   flight::row_set<flight::RowKey<"bodies">>(out, flight::Array<flight::Ref<flight::types::RigidBody3D>>{});
   flight::row_set<flight::RowKey<"bodyByIndex">>(out, flight::Map<double, flight::Ref<flight::types::RigidBody3D>>());
   flight::row_set<flight::RowKey<"config">>(out, config);
@@ -274,12 +274,12 @@ inline void initialize_physics3_dworld(flight::types::EntityConstruction<flight:
   flight::row_set<flight::RowKey<"solveIslandJointStarts">>(out, flight::Array<double>{});
   flight::row_set<flight::RowKey<"solveIslandRoots">>(out, flight::Array<double>{});
   flight::row_set<flight::RowKey<"solver">>(out, ([&]() { auto object_member_constraint_by_contact = flight::Map<flight::Ref<flight::types::Physics3DContact>, flight::Ref<flight::types::Physics3DContactConstraint>>(); auto object_member_constraints = flight::Array<flight::Ref<flight::types::Physics3DContactConstraint>>{}; return flight::make_ref<flight::types::Physics3DSequentialImpulseState>(flight::types::Physics3DSequentialImpulseState{.constraints = object_member_constraints, .constraint_by_contact = object_member_constraint_by_contact}); }()));
-  flight::row_set<flight::RowKey<"version">>(out, physics3_dworld_version);
+  flight::row_set<flight::RowKey<"version">>(out, physics_3d_world_version);
 }
 
-inline flight::Ref<flight::types::Physics3DWorld> create_physics3_dworld(std::optional<flight::Ref<flight::types::SpatialIndexBackend3D>> index = std::nullopt) {
+inline flight::Ref<flight::types::Physics3DWorld> create_physics_3d_world(std::optional<flight::Ref<flight::types::SpatialIndexBackend3D>> index = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DWorld>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics3DWorld>>();
-  initialize_physics3_dworld(out, create_physics3_dsolver_config(), 0.0, -9.80665, 0.0, (index.has_value() ? index.value() : flight::spatial::create_uniform_grid_spatial_backend3_d(1.0)));
+  initialize_physics_3d_world(out, create_physics_3d_solver_config(), 0.0, -9.80665, 0.0, (index.has_value() ? index.value() : flight::spatial::create_uniform_grid_spatial_backend_3d(1.0)));
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics3DWorld>>(out);
 }
 
@@ -414,9 +414,9 @@ inline bool is_physics3_dstatic_surface_collider_flight_value_function_is_u00005
   return ((std::visit([](const auto& value) { return value->kind; }, flight::row_get<flight::RowKey<"local">>(collider)) == flight::String("triangle-mesh")) || (std::visit([](const auto& value) { return value->kind; }, (flight::row_get<flight::RowKey<"local">>(collider).index() == 0 ? std::variant<flight::Ref<x_y_z_radius_kind_b0bc53ca3f0e8006>, flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>, flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>, flight::Ref<min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>, flight::Ref<points_kind_35a8f5f2a3a8bd66>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>, flight::Ref<flight::types::CollisionHeightfield3D>>{std::in_place_type<flight::Ref<x_y_z_radius_kind_b0bc53ca3f0e8006>>, std::get<0>(flight::row_get<flight::RowKey<"local">>(collider))} : (flight::row_get<flight::RowKey<"local">>(collider).index() == 3 ? std::variant<flight::Ref<x_y_z_radius_kind_b0bc53ca3f0e8006>, flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>, flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>, flight::Ref<min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>, flight::Ref<points_kind_35a8f5f2a3a8bd66>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>, flight::Ref<flight::types::CollisionHeightfield3D>>{std::in_place_type<flight::Ref<min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>>, std::get<3>(flight::row_get<flight::RowKey<"local">>(collider))} : (flight::row_get<flight::RowKey<"local">>(collider).index() == 2 ? std::variant<flight::Ref<x_y_z_radius_kind_b0bc53ca3f0e8006>, flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>, flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>, flight::Ref<min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>, flight::Ref<points_kind_35a8f5f2a3a8bd66>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>, flight::Ref<flight::types::CollisionHeightfield3D>>{std::in_place_type<flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>>, std::get<2>(flight::row_get<flight::RowKey<"local">>(collider))} : (flight::row_get<flight::RowKey<"local">>(collider).index() == 5 ? std::variant<flight::Ref<x_y_z_radius_kind_b0bc53ca3f0e8006>, flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>, flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>, flight::Ref<min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>, flight::Ref<points_kind_35a8f5f2a3a8bd66>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>, flight::Ref<flight::types::CollisionHeightfield3D>>{std::in_place_type<flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>>, std::get<5>(flight::row_get<flight::RowKey<"local">>(collider))} : (flight::row_get<flight::RowKey<"local">>(collider).index() == 6 ? std::variant<flight::Ref<x_y_z_radius_kind_b0bc53ca3f0e8006>, flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>, flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>, flight::Ref<min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>, flight::Ref<points_kind_35a8f5f2a3a8bd66>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>, flight::Ref<flight::types::CollisionHeightfield3D>>{std::in_place_type<flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>>, std::get<6>(flight::row_get<flight::RowKey<"local">>(collider))} : (flight::row_get<flight::RowKey<"local">>(collider).index() == 1 ? std::variant<flight::Ref<x_y_z_radius_kind_b0bc53ca3f0e8006>, flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>, flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>, flight::Ref<min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>, flight::Ref<points_kind_35a8f5f2a3a8bd66>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>, flight::Ref<flight::types::CollisionHeightfield3D>>{std::in_place_type<flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>>, std::get<1>(flight::row_get<flight::RowKey<"local">>(collider))} : (flight::row_get<flight::RowKey<"local">>(collider).index() == 4 ? std::variant<flight::Ref<x_y_z_radius_kind_b0bc53ca3f0e8006>, flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>, flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>, flight::Ref<min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>, flight::Ref<points_kind_35a8f5f2a3a8bd66>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>, flight::Ref<flight::types::CollisionHeightfield3D>>{std::in_place_type<flight::Ref<points_kind_35a8f5f2a3a8bd66>>, std::get<4>(flight::row_get<flight::RowKey<"local">>(collider))} : std::variant<flight::Ref<x_y_z_radius_kind_b0bc53ca3f0e8006>, flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>, flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>, flight::Ref<min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>, flight::Ref<points_kind_35a8f5f2a3a8bd66>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>, flight::Ref<flight::types::CollisionHeightfield3D>>{std::in_place_type<flight::Ref<flight::types::CollisionHeightfield3D>>, std::get<7>(flight::row_get<flight::RowKey<"local">>(collider))})))))))) == flight::String("heightfield")));
 }
 
-inline double add_physics3_dbody(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<flight::types::RigidBody3D> body) {
-  flight::physics3d::assert_physics3_dworld_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)));
-  if (((flight::physics3d::physics3_dbody_owners.has(body) || (body->index != -1.0)) || world->bodies.includes(body))) {
+inline double add_physics_3d_body(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<flight::types::RigidBody3D> body) {
+  flight::physics3d::assert_physics_3d_world_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)));
+  if (((flight::physics3d::physics_3d_body_owners.has(body) || (body->index != -1.0)) || world->bodies.includes(body))) {
     throw flight::Error(flight::String("Cannot add a rigid body that already belongs to a physics world"));
   }
   auto colliders = flight::Set<flight::Ref<flight::types::Physics3DCollider>>();
@@ -425,7 +425,7 @@ inline double add_physics3_dbody(flight::Ref<flight::types::Physics3DWorld> worl
       throw flight::Error(flight::String("Cannot add a rigid body containing the same collider twice"));
     }
     colliders.add(collider);
-    auto owner = flight::physics3d::physics3_dcollider_owners.get(collider);
+    auto owner = flight::physics3d::physics_3d_collider_owners.get(collider);
     if ((owner.has_value() && (owner.value() != body))) {
       throw flight::Error(flight::String("Cannot share a physics collider between rigid bodies"));
     }
@@ -437,19 +437,19 @@ inline double add_physics3_dbody(flight::Ref<flight::types::Physics3DWorld> worl
   (world->next_body_index += 1.0);
   world->bodies.push(body);
   world->body_by_index.set(body->index, body);
-  flight::physics3d::physics3_dbody_owners.set(body, world);
+  flight::physics3d::physics_3d_body_owners.set(body, world);
   for (auto collider_2 : colliders) {
-    flight::physics3d::physics3_dcollider_owners.set(collider_2, body);
+    flight::physics3d::physics_3d_collider_owners.set(collider_2, body);
   }
   if ((static_cast<double>(colliders.size()) > 0.0)) {
-    flight::physics3d::update_rigid_body3_dmass_data(body);
+    flight::physics3d::update_rigid_body_3d_mass_data(body);
   }
-  flight::physics3d::refresh_rigid_body3_dworld_inertia(body);
-  flight::physics3d::synchronize_physics3_dbroadphase(world);
+  flight::physics3d::refresh_rigid_body_3d_world_inertia(body);
+  flight::physics3d::synchronize_physics_3d_broadphase(world);
   return body->index;
 }
 
-inline void remove_physics3_dcontact_events_for_body(flight::Array<flight::Ref<flight::types::Physics3DContact>> events, double body_index) {
+inline void remove_physics_3d_contact_events_for_body(flight::Array<flight::Ref<flight::types::Physics3DContact>> events, double body_index) {
   {
     double i = (static_cast<double>(events.size()) - 1.0);
     while ((i >= 0.0)) {
@@ -463,7 +463,7 @@ inline void remove_physics3_dcontact_events_for_body(flight::Array<flight::Ref<f
   }
 }
 
-inline void clear_physics3_dsolve_workspace(flight::Ref<flight::types::Physics3DWorld> world) {
+inline void clear_physics_3d_solve_workspace(flight::Ref<flight::types::Physics3DWorld> world) {
   world->solve_island_by_root.clear();
   ([&]() { auto&& assignment_receiver = world->solve_island_roots; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
   ([&]() { auto&& assignment_receiver = world->solve_island_body_starts; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
@@ -478,7 +478,7 @@ inline void clear_physics3_dsolve_workspace(flight::Ref<flight::types::Physics3D
   ([&]() { auto&& assignment_receiver = world->solve_island_cursors; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
 }
 
-inline void invalidate_physics3_dbody_contacts(flight::Ref<flight::types::Physics3DWorld> world, double index) {
+inline void invalidate_physics_3d_body_contacts(flight::Ref<flight::types::Physics3DWorld> world, double index) {
   {
     double i = (static_cast<double>(world->contacts.size()) - 1.0);
     while ((i >= 0.0)) {
@@ -490,9 +490,9 @@ inline void invalidate_physics3_dbody_contacts(flight::Ref<flight::types::Physic
         }
         if ((contact->enabled && !contact->sensor)) {
           const double other_index = ((contact->body_a == index) ? contact->body_b : contact->body_a);
-          auto other = find_physics3_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), other_index);
+          auto other = find_physics_3d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), other_index);
           if (other.has_value()) {
-            wake_physics3_dbody(other.value());
+            wake_physics_3d_body(other.value());
           }
         }
         world->contacts.splice(i, 1.0);
@@ -500,15 +500,15 @@ inline void invalidate_physics3_dbody_contacts(flight::Ref<flight::types::Physic
       (i -= 1.0);
     }
   }
-  remove_physics3_dcontact_events_for_body(world->events->began, index);
-  remove_physics3_dcontact_events_for_body(world->events->ended, index);
+  remove_physics_3d_contact_events_for_body(world->events->began, index);
+  remove_physics_3d_contact_events_for_body(world->events->ended, index);
   ([&]() { auto&& assignment_receiver = world->solver->constraints; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
   world->solver->constraint_by_contact.clear();
-  clear_physics3_dsolve_workspace(world);
+  clear_physics_3d_solve_workspace(world);
 }
 
-inline bool remove_physics3_dbody(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<flight::types::RigidBody3D> body) {
-  flight::physics3d::assert_physics3_dworld_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)));
+inline bool remove_physics_3d_body(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<flight::types::RigidBody3D> body) {
+  flight::physics3d::assert_physics_3d_world_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)));
   const double at = world->bodies.index_of(body);
   if ((at < 0.0)) {
     return false;
@@ -516,7 +516,7 @@ inline bool remove_physics3_dbody(flight::Ref<flight::types::Physics3DWorld> wor
   world->bodies.splice(at, 1.0);
   world->body_by_index.erase(body->index);
   const double index = body->index;
-  invalidate_physics3_dbody_contacts(world, index);
+  invalidate_physics_3d_body_contacts(world, index);
   {
     double i = (static_cast<double>(world->joints.size()) - 1.0);
     while ((i >= 0.0)) {
@@ -532,26 +532,26 @@ inline bool remove_physics3_dbody(flight::Ref<flight::types::Physics3DWorld> wor
         }
         if ((solver.has_value() && uses_body_a)) {
           const double other_index = (removes_body_a ? joint->body_b : joint->body_a);
-          auto other = find_physics3_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), other_index);
+          auto other = find_physics_3d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), other_index);
           if (other.has_value()) {
-            wake_physics3_dbody(other.value());
+            wake_physics_3d_body(other.value());
           }
         }
         world->joints.splice(i, 1.0);
-        flight::physics3d::physics3_djoint_owners.erase(joint);
+        flight::physics3d::physics_3d_joint_owners.erase(joint);
       }
       (i -= 1.0);
     }
   }
-  flight::physics3d::rebuild_physics3_djoint_collision_suppressions(world);
-  flight::physics3d::withdraw_physics3_dbroadphase_body(world, index, std::nullopt);
+  flight::physics3d::rebuild_physics_3d_joint_collision_suppressions(world);
+  flight::physics3d::withdraw_physics_3d_broadphase_body(world, index, std::nullopt);
   (body->index = -1.0);
-  flight::physics3d::physics3_dbody_owners.erase(body);
+  flight::physics3d::physics_3d_body_owners.erase(body);
   return true;
 }
 
-inline void invalidate_physics3_dbody_constraints(flight::Ref<flight::types::Physics3DWorld> world, double body_index) {
-  invalidate_physics3_dbody_contacts(world, body_index);
+inline void invalidate_physics_3d_body_constraints(flight::Ref<flight::types::Physics3DWorld> world, double body_index) {
+  invalidate_physics_3d_body_contacts(world, body_index);
   for (auto joint : world->joints) {
     auto solver = world->joint_solvers.get(joint->kind);
     const bool uses_body_a = (([&]() -> std::optional<bool> { auto optional_chain_receiver = solver; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->uses_body_a; }()) != false);
@@ -574,23 +574,23 @@ inline void invalidate_physics3_dbody_constraints(flight::Ref<flight::types::Phy
     if ((other_index == body_index)) {
       continue;
     }
-    auto other = find_physics3_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), other_index);
+    auto other = find_physics_3d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), other_index);
     if (other.has_value()) {
-      wake_physics3_dbody(other.value());
+      wake_physics_3d_body(other.value());
     }
   }
 }
 
-inline flight::Ref<flight::types::Physics3DCollider> add_physics3_dcollider(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<flight::types::RigidBody3D> body, flight::Ref<flight::types::Physics3DCollider> collider) {
-  flight::physics3d::assert_physics3_dworld_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)));
-  auto body_owner = flight::physics3d::physics3_dbody_owners.get(body);
+inline flight::Ref<flight::types::Physics3DCollider> add_physics_3d_collider(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<flight::types::RigidBody3D> body, flight::Ref<flight::types::Physics3DCollider> collider) {
+  flight::physics3d::assert_physics_3d_world_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)));
+  auto body_owner = flight::physics3d::physics_3d_body_owners.get(body);
   if ((body_owner.has_value() && (body_owner.value() != world))) {
     throw flight::Error(flight::String("Cannot mutate a rigid body through a physics world that does not own it"));
   }
   if (body->colliders.includes(collider)) {
     throw flight::Error(flight::String("Cannot add the same physics collider to a rigid body twice"));
   }
-  auto owner = flight::physics3d::physics3_dcollider_owners.get(collider);
+  auto owner = flight::physics3d::physics_3d_collider_owners.get(collider);
   if ((owner.has_value() && (owner.value() != body))) {
     throw flight::Error(flight::String("Cannot share a physics collider between rigid bodies"));
   }
@@ -598,13 +598,13 @@ inline flight::Ref<flight::types::Physics3DCollider> add_physics3_dcollider(flig
     throw flight::Error(flight::String("Triangle-mesh and heightfield colliders require a static rigid body"));
   }
   body->colliders.push(collider);
-  flight::physics3d::physics3_dcollider_owners.set(collider, body);
-  flight::physics3d::update_rigid_body3_dmass_data(body);
-  flight::physics3d::refresh_rigid_body3_dworld_inertia(body);
+  flight::physics3d::physics_3d_collider_owners.set(collider, body);
+  flight::physics3d::update_rigid_body_3d_mass_data(body);
+  flight::physics3d::refresh_rigid_body_3d_world_inertia(body);
   if ((world->body_by_index.get(body->index) == body)) {
-    invalidate_physics3_dbody_constraints(world, body->index);
-    wake_physics3_dbody(body);
-    flight::physics3d::synchronize_physics3_dbroadphase(world);
+    invalidate_physics_3d_body_constraints(world, body->index);
+    wake_physics_3d_body(body);
+    flight::physics3d::synchronize_physics_3d_broadphase(world);
   }
   return collider;
 }
@@ -669,9 +669,9 @@ inline flight::Ref<flight::types::Physics3DCollider> add_physics3_dcollider(flig
 // would retype the object, while copying or materializing it would change identity. Keep both APIs on the same
 // declared arm owner, introduce one shared nominal arm owner, or add an identity-preserving runtime view.
 
-inline bool remove_physics3_dcollider(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<flight::types::RigidBody3D> body, flight::Ref<flight::types::Physics3DCollider> collider) {
-  flight::physics3d::assert_physics3_dworld_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)));
-  auto body_owner = flight::physics3d::physics3_dbody_owners.get(body);
+inline bool remove_physics_3d_collider(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<flight::types::RigidBody3D> body, flight::Ref<flight::types::Physics3DCollider> collider) {
+  flight::physics3d::assert_physics_3d_world_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)));
+  auto body_owner = flight::physics3d::physics_3d_body_owners.get(body);
   if ((body_owner.has_value() && (body_owner.value() != world))) {
     return false;
   }
@@ -680,71 +680,71 @@ inline bool remove_physics3_dcollider(flight::Ref<flight::types::Physics3DWorld>
     return false;
   }
   body->colliders.splice(at, 1.0);
-  flight::physics3d::physics3_dcollider_owners.erase(collider);
-  flight::physics3d::update_rigid_body3_dmass_data(body);
-  flight::physics3d::refresh_rigid_body3_dworld_inertia(body);
+  flight::physics3d::physics_3d_collider_owners.erase(collider);
+  flight::physics3d::update_rigid_body_3d_mass_data(body);
+  flight::physics3d::refresh_rigid_body_3d_world_inertia(body);
   if ((world->body_by_index.get(body->index) == body)) {
-    invalidate_physics3_dbody_constraints(world, body->index);
-    wake_physics3_dbody(body);
-    flight::physics3d::synchronize_physics3_dbroadphase(world);
+    invalidate_physics_3d_body_constraints(world, body->index);
+    wake_physics_3d_body(body);
+    flight::physics3d::synchronize_physics_3d_broadphase(world);
   }
   return true;
 }
 
-inline bool is_finite_physics3_dvector(double x, double y, double z) {
+inline bool is_finite_physics_3d_vector(double x, double y, double z) {
   return ((std::isfinite(x) && std::isfinite(y)) && std::isfinite(z));
 }
 
-inline bool apply_physics3_dforce(flight::Ref<flight::types::RigidBody3D> body, double x, double y, double z) {
-  flight::physics3d::assert_physics3_dbody_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
-  if (((body->type != flight::String("dynamic")) || !is_finite_physics3_dvector(x, y, z))) {
+inline bool apply_physics_3d_force(flight::Ref<flight::types::RigidBody3D> body, double x, double y, double z) {
+  flight::physics3d::assert_physics_3d_body_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
+  if (((body->type != flight::String("dynamic")) || !is_finite_physics_3d_vector(x, y, z))) {
     return false;
   }
   (body->force_x += x);
   (body->force_y += y);
   (body->force_z += z);
   if ((((x != 0.0) || (y != 0.0)) || (z != 0.0))) {
-    wake_physics3_dbody(body);
+    wake_physics_3d_body(body);
   }
   return true;
 }
 
-inline bool apply_physics3_dlinear_impulse(flight::Ref<flight::types::RigidBody3D> body, double x, double y, double z) {
-  flight::physics3d::assert_physics3_dbody_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
-  if (((body->type != flight::String("dynamic")) || !is_finite_physics3_dvector(x, y, z))) {
+inline bool apply_physics_3d_linear_impulse(flight::Ref<flight::types::RigidBody3D> body, double x, double y, double z) {
+  flight::physics3d::assert_physics_3d_body_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
+  if (((body->type != flight::String("dynamic")) || !is_finite_physics_3d_vector(x, y, z))) {
     return false;
   }
   (body->velocity_x += (x * body->inverse_mass));
   (body->velocity_y += (y * body->inverse_mass));
   (body->velocity_z += (z * body->inverse_mass));
   if ((((x != 0.0) || (y != 0.0)) || (z != 0.0))) {
-    wake_physics3_dbody(body);
+    wake_physics_3d_body(body);
   }
   return true;
 }
 
-inline bool apply_physics3_dtorque(flight::Ref<flight::types::RigidBody3D> body, double x, double y, double z) {
-  flight::physics3d::assert_physics3_dbody_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
-  if ((((body->type != flight::String("dynamic")) || body->fixed_rotation) || !is_finite_physics3_dvector(x, y, z))) {
+inline bool apply_physics_3d_torque(flight::Ref<flight::types::RigidBody3D> body, double x, double y, double z) {
+  flight::physics3d::assert_physics_3d_body_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
+  if ((((body->type != flight::String("dynamic")) || body->fixed_rotation) || !is_finite_physics_3d_vector(x, y, z))) {
     return false;
   }
   (body->torque_x += x);
   (body->torque_y += y);
   (body->torque_z += z);
   if ((((x != 0.0) || (y != 0.0)) || (z != 0.0))) {
-    wake_physics3_dbody(body);
+    wake_physics_3d_body(body);
   }
   return true;
 }
 
-inline bool set_physics3_dbody_transform(flight::Ref<flight::types::RigidBody3D> body, double x, double y, double z, double orientation_x, double orientation_y, double orientation_z, double orientation_w) {
-  flight::physics3d::assert_physics3_dbody_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
-  if (((!is_finite_physics3_dvector(x, y, z) || !is_finite_physics3_dvector(orientation_x, orientation_y, orientation_z)) || !std::isfinite(orientation_w))) {
+inline bool set_physics_3d_body_transform(flight::Ref<flight::types::RigidBody3D> body, double x, double y, double z, double orientation_x, double orientation_y, double orientation_z, double orientation_w) {
+  flight::physics3d::assert_physics_3d_body_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
+  if (((!is_finite_physics_3d_vector(x, y, z) || !is_finite_physics_3d_vector(orientation_x, orientation_y, orientation_z)) || !std::isfinite(orientation_w))) {
     return false;
   }
-  auto world = flight::physics3d::physics3_dbody_owners.get(body);
+  auto world = flight::physics3d::physics_3d_body_owners.get(body);
   if (world.has_value()) {
-    invalidate_physics3_dbody_constraints(world.value(), body->index);
+    invalidate_physics_3d_body_constraints(world.value(), body->index);
   }
   (body->x = x);
   (body->y = y);
@@ -763,15 +763,15 @@ inline bool set_physics3_dbody_transform(flight::Ref<flight::types::RigidBody3D>
     (body->orientation_z = 0.0);
     (body->orientation_w = 1.0);
   }
-  wake_physics3_dbody(body);
-  flight::physics3d::refresh_rigid_body3_dworld_inertia(body);
+  wake_physics_3d_body(body);
+  flight::physics3d::refresh_rigid_body_3d_world_inertia(body);
   if (world.has_value()) {
-    flight::physics3d::synchronize_physics3_dbroadphase(world.value());
+    flight::physics3d::synchronize_physics_3d_broadphase(world.value());
   }
   return true;
 }
 
-inline void read_rigid_body3_dworld_inverse_inertia(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body, flight::Array<double> out) {
+inline void read_rigid_body_3d_world_inverse_inertia(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body, flight::Array<double> out) {
   (out.element(flight::physics3d::tensor_xx) = flight::row_get<flight::RowKey<"inverseInertiaWorldXX">>(body));
   (out.element(flight::physics3d::tensor_yy) = flight::row_get<flight::RowKey<"inverseInertiaWorldYY">>(body));
   (out.element(flight::physics3d::tensor_zz) = flight::row_get<flight::RowKey<"inverseInertiaWorldZZ">>(body));
@@ -782,16 +782,16 @@ inline void read_rigid_body3_dworld_inverse_inertia(flight::StructuralRef<flight
 
 inline flight::Array<double> scratch_center_flight_value_variable_scratch_u000043_enter_flight_private_79d48c3a690adce6 = flight::Array<double>{0.0, 0.0, 0.0};
 
-inline bool apply_physics3_dforce_at_point(flight::Ref<flight::types::RigidBody3D> body, double x, double y, double z, double point_x, double point_y, double point_z) {
-  flight::physics3d::assert_physics3_dbody_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
-  if ((((body->type != flight::String("dynamic")) || !is_finite_physics3_dvector(x, y, z)) || !is_finite_physics3_dvector(point_x, point_y, point_z))) {
+inline bool apply_physics_3d_force_at_point(flight::Ref<flight::types::RigidBody3D> body, double x, double y, double z, double point_x, double point_y, double point_z) {
+  flight::physics3d::assert_physics_3d_body_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
+  if ((((body->type != flight::String("dynamic")) || !is_finite_physics_3d_vector(x, y, z)) || !is_finite_physics_3d_vector(point_x, point_y, point_z))) {
     return false;
   }
   (body->force_x += x);
   (body->force_y += y);
   (body->force_z += z);
   if (!body->fixed_rotation) {
-    write_rigid_body3_dworld_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)), scratch_center_flight_value_variable_scratch_u000043_enter_flight_private_79d48c3a690adce6);
+    write_rigid_body_3d_world_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)), scratch_center_flight_value_variable_scratch_u000043_enter_flight_private_79d48c3a690adce6);
     const double r_x = (point_x - scratch_center_flight_value_variable_scratch_u000043_enter_flight_private_79d48c3a690adce6.element(0.0));
     const double r_y = (point_y - scratch_center_flight_value_variable_scratch_u000043_enter_flight_private_79d48c3a690adce6.element(1.0));
     const double r_z = (point_z - scratch_center_flight_value_variable_scratch_u000043_enter_flight_private_79d48c3a690adce6.element(2.0));
@@ -800,16 +800,16 @@ inline bool apply_physics3_dforce_at_point(flight::Ref<flight::types::RigidBody3
     (body->torque_z += ((r_x * y) - (r_y * x)));
   }
   if ((((x != 0.0) || (y != 0.0)) || (z != 0.0))) {
-    wake_physics3_dbody(body);
+    wake_physics_3d_body(body);
   }
   return true;
 }
 
 inline flight::Array<double> scratch_inverse_inertia = flight::Array<double>{0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
-inline flight::Ref<flight::types::Physics3DMassData> scratch_mass_data = flight::physics3d::create_physics3_dmass_data();
+inline flight::Ref<flight::types::Physics3DMassData> scratch_mass_data = flight::physics3d::create_physics_3d_mass_data();
 
-inline void refresh_rigid_body3_dmass(flight::Ref<flight::types::RigidBody3D> body) {
+inline void refresh_rigid_body_3d_mass(flight::Ref<flight::types::RigidBody3D> body) {
   (scratch_mass_data->mass = body->mass);
   (scratch_mass_data->center_x = body->center_x);
   (scratch_mass_data->center_y = body->center_y);
@@ -820,20 +820,20 @@ inline void refresh_rigid_body3_dmass(flight::Ref<flight::types::RigidBody3D> bo
   (scratch_mass_data->inertia_xy = body->inertia_xy);
   (scratch_mass_data->inertia_xz = body->inertia_xz);
   (scratch_mass_data->inertia_yz = body->inertia_yz);
-  flight::physics3d::set_rigid_body3_dmass_data(body, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DMassData>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DMassData>>>>(scratch_mass_data)));
+  flight::physics3d::set_rigid_body_3d_mass_data(body, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DMassData>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DMassData>>>>(scratch_mass_data)));
 }
 
-inline bool set_physics3_dbody_fixed_rotation(flight::Ref<flight::types::RigidBody3D> body, bool fixed_rotation) {
-  flight::physics3d::assert_physics3_dbody_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
+inline bool set_physics_3d_body_fixed_rotation(flight::Ref<flight::types::RigidBody3D> body, bool fixed_rotation) {
+  flight::physics3d::assert_physics_3d_body_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
   if ((flight::String("boolean") != flight::String("boolean"))) {
     return false;
   }
   if ((body->fixed_rotation == fixed_rotation)) {
     return true;
   }
-  auto world = flight::physics3d::physics3_dbody_owners.get(body);
+  auto world = flight::physics3d::physics_3d_body_owners.get(body);
   if (world.has_value()) {
-    invalidate_physics3_dbody_constraints(world.value(), body->index);
+    invalidate_physics_3d_body_constraints(world.value(), body->index);
   }
   (body->fixed_rotation = fixed_rotation);
   if (fixed_rotation) {
@@ -844,13 +844,13 @@ inline bool set_physics3_dbody_fixed_rotation(flight::Ref<flight::types::RigidBo
     (body->torque_y = 0.0);
     (body->torque_z = 0.0);
   }
-  refresh_rigid_body3_dmass(body);
-  wake_physics3_dbody(body);
+  refresh_rigid_body_3d_mass(body);
+  wake_physics_3d_body(body);
   return true;
 }
 
-inline bool set_physics3_dbody_type(flight::Ref<flight::types::RigidBody3D> body, flight::types::Physics3DBodyType type) {
-  flight::physics3d::assert_physics3_dbody_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
+inline bool set_physics_3d_body_type(flight::Ref<flight::types::RigidBody3D> body, flight::types::Physics3DBodyType type) {
+  flight::physics3d::assert_physics_3d_body_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
   if ((((type != flight::String("dynamic")) && (type != flight::String("kinematic"))) && (type != flight::String("static")))) {
     return false;
   }
@@ -860,9 +860,9 @@ inline bool set_physics3_dbody_type(flight::Ref<flight::types::RigidBody3D> body
   if ((body->type == type)) {
     return true;
   }
-  auto world = flight::physics3d::physics3_dbody_owners.get(body);
+  auto world = flight::physics3d::physics_3d_body_owners.get(body);
   if (world.has_value()) {
-    invalidate_physics3_dbody_constraints(world.value(), body->index);
+    invalidate_physics_3d_body_constraints(world.value(), body->index);
   }
   (body->type = type);
   if ((type == flight::String("static"))) {
@@ -880,56 +880,56 @@ inline bool set_physics3_dbody_type(flight::Ref<flight::types::RigidBody3D> body
   (body->torque_x = 0.0);
   (body->torque_y = 0.0);
   (body->torque_z = 0.0);
-  refresh_rigid_body3_dmass(body);
-  flight::physics3d::refresh_rigid_body3_dworld_inertia(body);
-  wake_physics3_dbody(body);
+  refresh_rigid_body_3d_mass(body);
+  flight::physics3d::refresh_rigid_body_3d_world_inertia(body);
+  wake_physics_3d_body(body);
   return true;
 }
 
 inline flight::Array<double> scratch_vector_flight_value_variable_scratch_u000056_ector_flight_private_79d48c3a690adce6 = flight::Array<double>{0.0, 0.0, 0.0};
 
-inline bool apply_physics3_dangular_impulse(flight::Ref<flight::types::RigidBody3D> body, double x, double y, double z) {
-  flight::physics3d::assert_physics3_dbody_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
-  if ((((body->type != flight::String("dynamic")) || body->fixed_rotation) || !is_finite_physics3_dvector(x, y, z))) {
+inline bool apply_physics_3d_angular_impulse(flight::Ref<flight::types::RigidBody3D> body, double x, double y, double z) {
+  flight::physics3d::assert_physics_3d_body_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
+  if ((((body->type != flight::String("dynamic")) || body->fixed_rotation) || !is_finite_physics_3d_vector(x, y, z))) {
     return false;
   }
-  flight::physics3d::refresh_rigid_body3_dworld_inertia(body);
-  read_rigid_body3_dworld_inverse_inertia(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)), scratch_inverse_inertia);
+  flight::physics3d::refresh_rigid_body_3d_world_inertia(body);
+  read_rigid_body_3d_world_inverse_inertia(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)), scratch_inverse_inertia);
   flight::physics3d::apply_symmetric_tensor(scratch_inverse_inertia, x, y, z, scratch_vector_flight_value_variable_scratch_u000056_ector_flight_private_79d48c3a690adce6);
   (body->angular_velocity_x += scratch_vector_flight_value_variable_scratch_u000056_ector_flight_private_79d48c3a690adce6.element(0.0));
   (body->angular_velocity_y += scratch_vector_flight_value_variable_scratch_u000056_ector_flight_private_79d48c3a690adce6.element(1.0));
   (body->angular_velocity_z += scratch_vector_flight_value_variable_scratch_u000056_ector_flight_private_79d48c3a690adce6.element(2.0));
   if ((((x != 0.0) || (y != 0.0)) || (z != 0.0))) {
-    wake_physics3_dbody(body);
+    wake_physics_3d_body(body);
   }
   return true;
 }
 
-inline bool apply_physics3_dlinear_impulse_at_point(flight::Ref<flight::types::RigidBody3D> body, double x, double y, double z, double point_x, double point_y, double point_z) {
-  flight::physics3d::assert_physics3_dbody_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
-  if ((((body->type != flight::String("dynamic")) || !is_finite_physics3_dvector(x, y, z)) || !is_finite_physics3_dvector(point_x, point_y, point_z))) {
+inline bool apply_physics_3d_linear_impulse_at_point(flight::Ref<flight::types::RigidBody3D> body, double x, double y, double z, double point_x, double point_y, double point_z) {
+  flight::physics3d::assert_physics_3d_body_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)));
+  if ((((body->type != flight::String("dynamic")) || !is_finite_physics_3d_vector(x, y, z)) || !is_finite_physics_3d_vector(point_x, point_y, point_z))) {
     return false;
   }
   (body->velocity_x += (x * body->inverse_mass));
   (body->velocity_y += (y * body->inverse_mass));
   (body->velocity_z += (z * body->inverse_mass));
   if (!body->fixed_rotation) {
-    write_rigid_body3_dworld_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)), scratch_center_flight_value_variable_scratch_u000043_enter_flight_private_79d48c3a690adce6);
+    write_rigid_body_3d_world_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)), scratch_center_flight_value_variable_scratch_u000043_enter_flight_private_79d48c3a690adce6);
     const double r_x = (point_x - scratch_center_flight_value_variable_scratch_u000043_enter_flight_private_79d48c3a690adce6.element(0.0));
     const double r_y = (point_y - scratch_center_flight_value_variable_scratch_u000043_enter_flight_private_79d48c3a690adce6.element(1.0));
     const double r_z = (point_z - scratch_center_flight_value_variable_scratch_u000043_enter_flight_private_79d48c3a690adce6.element(2.0));
     const double angular_impulse_x = ((r_y * z) - (r_z * y));
     const double angular_impulse_y = ((r_z * x) - (r_x * z));
     const double angular_impulse_z = ((r_x * y) - (r_y * x));
-    flight::physics3d::refresh_rigid_body3_dworld_inertia(body);
-    read_rigid_body3_dworld_inverse_inertia(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)), scratch_inverse_inertia);
+    flight::physics3d::refresh_rigid_body_3d_world_inertia(body);
+    read_rigid_body_3d_world_inverse_inertia(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body)), scratch_inverse_inertia);
     flight::physics3d::apply_symmetric_tensor(scratch_inverse_inertia, angular_impulse_x, angular_impulse_y, angular_impulse_z, scratch_vector_flight_value_variable_scratch_u000056_ector_flight_private_79d48c3a690adce6);
     (body->angular_velocity_x += scratch_vector_flight_value_variable_scratch_u000056_ector_flight_private_79d48c3a690adce6.element(0.0));
     (body->angular_velocity_y += scratch_vector_flight_value_variable_scratch_u000056_ector_flight_private_79d48c3a690adce6.element(1.0));
     (body->angular_velocity_z += scratch_vector_flight_value_variable_scratch_u000056_ector_flight_private_79d48c3a690adce6.element(2.0));
   }
   if ((((x != 0.0) || (y != 0.0)) || (z != 0.0))) {
-    wake_physics3_dbody(body);
+    wake_physics_3d_body(body);
   }
   return true;
 }

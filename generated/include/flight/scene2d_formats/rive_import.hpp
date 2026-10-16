@@ -18,7 +18,7 @@ namespace flight::types { struct RiveImportRegistry; }
 #include <flight/types/rive_import_registry.hpp>
 #include <flight/scene2d_formats/rive_handlers.hpp>
 #include <flight/scene2d_formats/rive_import_registry.hpp>
-#include <flight/scene2d_formats/rive_scene2_d.hpp>
+#include <flight/scene2d_formats/rive_scene_2d.hpp>
 
 namespace flight::scene2d_formats {
 
@@ -26,7 +26,7 @@ using flight::types::ImportDiagnostic;
 using flight::types::PathBooleanKernel;
 using flight::types::RiveImportRegistry;
 
-inline flight::Ref<flight::types::RiveDocumentImportResult> create_scene2_dfrom_rive_document(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathBooleanKernel>>>> path_boolean_kernel, flight::Uint8Array source, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
+inline flight::Ref<flight::types::RiveDocumentImportResult> create_scene_2d_from_rive_document(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathBooleanKernel>>>> path_boolean_kernel, flight::Uint8Array source, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
   auto registry = flight::scene2d_formats::create_rive_import_registry();
   flight::scene2d_formats::register_all_rive_handlers(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathBooleanKernel>>>>>(path_boolean_kernel), registry);
   return flight::scene2d_formats::create_rive_document_import_result(registry, source, diagnostics);

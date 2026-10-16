@@ -55,7 +55,7 @@ struct MeshRuntime;
 #include <flight/types/material3_dvalue.hpp>
 #include <flight/types/mesh_geometry.hpp>
 #include <flight/types/morph_target.hpp>
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 #include <flight/types/skin.hpp>
 #include <flight/types/node.hpp>
 #include <flight/types/entity.hpp>
@@ -63,7 +63,7 @@ struct MeshRuntime;
 #include <flight/types/quaternion.hpp>
 #include <flight/types/adjustment.hpp>
 #include <flight/types/color_scale_bias.hpp>
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 #include <flight/types/interaction_signals.hpp>
 #include <flight/types/node_signals.hpp>
 #include <flight/types/node_interaction_state.hpp>

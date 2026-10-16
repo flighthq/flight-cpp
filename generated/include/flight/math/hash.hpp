@@ -27,16 +27,16 @@ inline double hash_combine(double seed, double value) {
   return hash_uint32(flight::bitwise_xor(seed, (((value + 2654435769.0) + flight::left_shift(seed, 6.0)) + flight::signed_right_shift(seed, 2.0))));
 }
 
-inline double hash2_d(double x, double y) {
+inline double hash_2d(double x, double y) {
   return hash_combine(hash_uint32(flight::bitwise_or(x, 0.0)), flight::bitwise_or(y, 0.0));
 }
 
 inline flight::types::RandomSource create_random_source_from_hash(double x, double y) {
-  return flight::math::create_random_source(hash2_d(x, y));
+  return flight::math::create_random_source(hash_2d(x, y));
 }
 
-inline double hash3_d(double x, double y, double z) {
-  return hash_combine(hash2_d(x, y), flight::bitwise_or(z, 0.0));
+inline double hash_3d(double x, double y, double z) {
+  return hash_combine(hash_2d(x, y), flight::bitwise_or(z, 0.0));
 }
 
 } // namespace flight::math

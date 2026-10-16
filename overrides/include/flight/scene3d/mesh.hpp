@@ -30,7 +30,7 @@ struct enabled_name_f1abece853ac935c : public flight::ReferenceEnabled {
 
 inline flight::Ref<flight::types::MeshRuntime> create_mesh_runtime() {
   auto runtime = flight::make_ref<flight::types::MeshRuntime>();
-  initialize_node3_druntime<flight::types::MeshRuntime>(runtime);
+  initialize_node_3d_runtime<flight::types::MeshRuntime>(runtime);
   runtime->deformed_local_bounds =
       std::variant<flight::Ref<flight::types::Aabb>, flight::Null,
                    flight::Undefined>{

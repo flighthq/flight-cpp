@@ -17,7 +17,7 @@ namespace flight::types { struct Vector3; }
 #include <flight/types/entity.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/quaternion.hpp>
-#include <flight/types/transform3_d.hpp>
+#include <flight/types/transform_3d.hpp>
 #include <flight/types/vector3.hpp>
 #include <flight/geometry/matrix4.hpp>
 #include <flight/geometry/quaternion.hpp>
@@ -25,26 +25,26 @@ namespace flight::types { struct Vector3; }
 
 namespace flight::geometry {
 
-inline void compose_matrix4_from_transform3_d(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Transform3DLike>>> source) {
+inline void compose_matrix4_from_transform_3d(flight::types::Matrix4Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Transform3DLike>>> source) {
   flight::geometry::compose_matrix4(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(flight::row_get<flight::RowKey<"position">>(source))), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Quaternion>>>>(flight::row_get<flight::RowKey<"rotation">>(source))), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(flight::row_get<flight::RowKey<"scale">>(source))));
 }
 
-inline void decompose_matrix4_to_transform3_d(flight::types::Transform3DLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> m) {
+inline void decompose_matrix4_to_transform_3d(flight::types::Transform3DLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> m) {
   flight::geometry::decompose_matrix4(out->position, out->rotation, out->scale, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(m));
 }
 
-inline void initialize_transform3_d(flight::types::EntityConstruction<flight::Ref<flight::types::Transform3D>> out, flight::Ref<flight::types::Vector3> position, flight::Ref<flight::types::Quaternion> rotation, flight::Ref<flight::types::Vector3> scale) {
+inline void initialize_transform_3d(flight::types::EntityConstruction<flight::Ref<flight::types::Transform3D>> out, flight::Ref<flight::types::Vector3> position, flight::Ref<flight::types::Quaternion> rotation, flight::Ref<flight::types::Vector3> scale) {
   flight::row_set<flight::RowKey<"position">>(out, position);
   flight::row_set<flight::RowKey<"rotation">>(out, rotation);
   flight::row_set<flight::RowKey<"scale">>(out, scale);
 }
 
-inline flight::Ref<flight::types::Transform3D> create_transform3_d() {
+inline flight::Ref<flight::types::Transform3D> create_transform_3d() {
   auto position = flight::geometry::create_vector3(std::nullopt, std::nullopt, std::nullopt);
   auto rotation = flight::geometry::create_quaternion(std::nullopt, std::nullopt, std::nullopt, std::nullopt);
   auto scale = flight::geometry::create_vector3(1.0, 1.0, 1.0);
   flight::types::EntityConstruction<flight::Ref<flight::types::Transform3D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Transform3D>>();
-  initialize_transform3_d(out, position, rotation, scale);
+  initialize_transform_3d(out, position, rotation, scale);
   return flight::entity::finish_entity<flight::Ref<flight::types::Transform3D>>(out);
 }
 

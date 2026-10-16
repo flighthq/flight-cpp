@@ -10,9 +10,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 
 #include <flight/types/dom_render_state.hpp>
 
@@ -78,7 +78,7 @@ using flight::types::RenderProxy2D;
 // replacement row, or invent side storage
 
 inline void enable_dom_clip_support(flight::Ref<flight::types::DomRenderState> state) {
-  (state->display_object_clip_hooks = std::optional<flight::Ref<flight::types::Scene2DClipHooks>>{dom_scene2_dclip_hooks});
+  (state->display_object_clip_hooks = std::optional<flight::Ref<flight::types::Scene2DClipHooks>>{dom_scene_2d_clip_hooks});
   flight::scene2d_dom::set_dom_clip_hooks(state);
 }
 

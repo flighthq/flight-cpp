@@ -78,8 +78,8 @@ struct SwfFile;
 
 #include <flight/entity/entity.hpp>
 #include <flight/importdiagnostics/import_diagnostic_collector.hpp>
-#include <flight/scene2d_resources/scene2_ddocument.hpp>
-#include <flight/scene2d_resources/scene2_ddocument_importer_registry.hpp>
+#include <flight/scene2d_resources/scene_2d_document.hpp>
+#include <flight/scene2d_resources/scene_2d_document_importer_registry.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/swf/expand_swf_tag_handler_dispatch.hpp>
 #include <flight/swf/swf_node.hpp>
@@ -633,7 +633,7 @@ inline std::optional<flight::Ref<flight::types::SwfDocumentImport>> instantiate_
     ([&]() { auto optional_chain_receiver = ([&]() -> std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>>, flight::Ref<flight::types::SwfTagHandlerResources>)>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"instantiate">>(handler); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->create_resources; }()); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(parsed, resources); }());
   }
   flight::types::EntityConstruction<flight::Ref<flight::types::SwfDocumentImport>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SwfDocumentImport>>();
-  initialize_swf_document_import(out, instantiation->appearances, flight::scene2d_resources::create_scene2_ddocument(flight::structural_ref_cast<flight::types::Node2D>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MovieClip>>>>(root.value())), slots, std::optional<flight::String>{flight::String("swf")}, parsed->background_color, resources->images, resources->audio), resources->jpeg_alpha_payloads);
+  initialize_swf_document_import(out, instantiation->appearances, flight::scene2d_resources::create_scene_2d_document(flight::structural_ref_cast<flight::types::Node2D>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MovieClip>>>>(root.value())), slots, std::optional<flight::String>{flight::String("swf")}, parsed->background_color, resources->images, resources->audio), resources->jpeg_alpha_payloads);
   return std::optional<flight::Ref<flight::types::SwfDocumentImport>>{flight::entity::finish_entity<flight::Ref<flight::types::SwfDocumentImport>>(out)};
 }
 
@@ -743,7 +743,7 @@ inline std::optional<flight::Map<double, flight::Ref<flight::types::GlyphOutline
   return (!file.has_value() ? std::nullopt : std::optional<flight::Map<double, flight::Ref<flight::types::GlyphOutlineSource>>>{flight::Map<double, flight::Ref<flight::types::GlyphOutlineSource>>(file.value()->parsed->font_outline_sources).clone()});
 }
 
-inline std::optional<flight::Ref<flight::types::SwfDocumentImport>> create_scene2_dimport_from_swf(flight::Uint8Array source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfParseOptions>>>> options, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
+inline std::optional<flight::Ref<flight::types::SwfDocumentImport>> create_scene_2d_import_from_swf(flight::Uint8Array source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfParseOptions>>>> options, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
   auto file = read_swf_file(source, options, diagnostics);
   if (!file.has_value()) {
     return std::nullopt;
@@ -751,11 +751,11 @@ inline std::optional<flight::Ref<flight::types::SwfDocumentImport>> create_scene
   return instantiate_swf_file(file.value(), options, diagnostics);
 }
 
-inline std::optional<flight::Ref<flight::types::Scene2DDocument>> create_scene2_dfrom_swf(flight::Uint8Array source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfParseOptions>>>> options, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
-  return ([&]() -> std::optional<flight::Ref<flight::types::Scene2DDocument>> { auto optional_chain_receiver = create_scene2_dimport_from_swf(source, options, diagnostics); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->document; }());
+inline std::optional<flight::Ref<flight::types::Scene2DDocument>> create_scene_2d_from_swf(flight::Uint8Array source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfParseOptions>>>> options, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
+  return ([&]() -> std::optional<flight::Ref<flight::types::Scene2DDocument>> { auto optional_chain_receiver = create_scene_2d_import_from_swf(source, options, diagnostics); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->document; }());
 }
 
-inline std::optional<flight::Ref<flight::types::Scene2DDocument>> create_scene2_dsymbol_from_swf(flight::Uint8Array source, flight::String linkage_name, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfParseOptions>>>> options, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
+inline std::optional<flight::Ref<flight::types::Scene2DDocument>> create_scene_2d_symbol_from_swf(flight::Uint8Array source, flight::String linkage_name, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfParseOptions>>>> options, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
   auto file = read_swf_file(source, options, diagnostics);
   if (!file.has_value()) {
     return std::nullopt;
@@ -785,7 +785,7 @@ inline std::optional<flight::Ref<flight::types::Scene2DDocument>> create_scene2_
   for (auto handler : instantiation->handlers) {
     ([&]() { auto optional_chain_receiver = ([&]() -> std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>>, flight::Ref<flight::types::SwfTagHandlerResources>)>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"instantiate">>(handler); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->create_resources; }()); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(parsed, resources); }());
   }
-  return std::optional<flight::Ref<flight::types::Scene2DDocument>>{flight::scene2d_resources::create_scene2_ddocument(root.value(), slots, std::optional<flight::String>{flight::String("swf")}, std::nullopt, resources->images, resources->audio)};
+  return std::optional<flight::Ref<flight::types::Scene2DDocument>>{flight::scene2d_resources::create_scene_2d_document(root.value(), slots, std::optional<flight::String>{flight::String("swf")}, std::nullopt, resources->images, resources->audio)};
 }
 
 inline flight::Array<flight::String> read_swf_exported_symbol_names(flight::Uint8Array source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfParseOptions>>>> options) {
@@ -793,8 +793,8 @@ inline flight::Array<flight::String> read_swf_exported_symbol_names(flight::Uint
   return (!file.has_value() ? flight::Array<flight::String>{} : ([&]() { flight::Array<flight::String> array_spread_result_3; { auto&& array_spread_collection_2 = file.value()->parsed->linkages; for (const auto& [array_spread_key_2, array_spread_mapped_value_2] : array_spread_collection_2) { static_cast<void>(array_spread_key_2); array_spread_result_3.push(array_spread_mapped_value_2); } } return array_spread_result_3; }()));
 }
 
-inline void register_swf_scene2_ddocument_importer(flight::Ref<flight::types::Scene2DDocumentImporterRegistry> importers, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfParseOptions>>>> options) {
-  flight::scene2d_resources::register_scene2_ddocument_importer(importers, flight::String("swf"), matches_swf_document, [=](flight::Uint8Array source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene2DDocumentImportContext>>>> ignored_callback_argument) -> std::optional<flight::Ref<flight::types::Scene2DDocument>> { (void)ignored_callback_argument; return create_scene2_dfrom_swf(source, options, std::nullopt); });
+inline void register_swf_scene_2d_document_importer(flight::Ref<flight::types::Scene2DDocumentImporterRegistry> importers, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfParseOptions>>>> options) {
+  flight::scene2d_resources::register_scene_2d_document_importer(importers, flight::String("swf"), matches_swf_document, [=](flight::Uint8Array source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene2DDocumentImportContext>>>> ignored_callback_argument) -> std::optional<flight::Ref<flight::types::Scene2DDocument>> { (void)ignored_callback_argument; return create_scene_2d_from_swf(source, options, std::nullopt); });
 }
 
 } // namespace flight::swf

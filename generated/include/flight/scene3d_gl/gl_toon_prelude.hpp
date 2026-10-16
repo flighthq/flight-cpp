@@ -38,21 +38,21 @@ namespace flight::types { struct Scene3DRenderProxy; }
 #include <flight/types/gl_pbr_transmission_scene_color.hpp>
 #include <flight/types/gl_render_state.hpp>
 #include <flight/types/gl_render_target.hpp>
-#include <flight/types/gl_scene3_druntime.hpp>
+#include <flight/types/gl_scene_3d_runtime.hpp>
 #include <flight/types/gl_skin_palette_texture.hpp>
 #include <flight/types/gl_toon_program.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/mesh.hpp>
 #include <flight/types/mesh_geometry.hpp>
 #include <flight/types/pbr_extension.hpp>
-#include <flight/types/scene3_dlight_block.hpp>
-#include <flight/types/scene3_dlights.hpp>
-#include <flight/types/scene3_drender_proxy.hpp>
+#include <flight/types/scene_3d_light_block.hpp>
+#include <flight/types/scene_3d_lights.hpp>
+#include <flight/types/scene_3d_render_proxy.hpp>
 #include <flight/types/texture.hpp>
 #include <flight/scene3d_gl/gl_lit_program.hpp>
 #include <flight/scene3d_gl/gl_mesh_fragment_tail.hpp>
 #include <flight/scene3d_gl/gl_mesh_program.hpp>
-#include <flight/scene3d_gl/gl_scene3_druntime.hpp>
+#include <flight/scene3d_gl/gl_scene_3d_runtime.hpp>
 
 namespace flight::scene3d_gl {
 
@@ -116,8 +116,8 @@ inline flight::Ref<flight::types::GlToonProgram> compile_gl_toon_program(flight:
 }
 
 inline flight::Ref<flight::types::GlToonProgram> ensure_gl_toon_program(flight::Ref<flight::types::GlRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlToonDefineKey>>>> key) {
-  flight::Ref<flight::types::GlToonDefineKey> full_key = flight::make_ref<flight::types::GlToonDefineKey>(flight::types::GlToonDefineKey{.has_instances = std::optional<bool>{flight::scene3d_gl::get_gl_scene3_druntime(state)->active_instanced_run}, .has_skin = std::optional<bool>{flight::scene3d_gl::get_gl_scene3_druntime(state)->active_skinned_run}});
-  return flight::scene3d_gl::ensure_gl_scene3_dprogram<flight::Ref<flight::types::GlToonProgram>>(state, flight::String("toon:") + flight::to_string(build_gl_toon_define_key(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlToonDefineKey>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlToonDefineKey>>>>(full_key)))) + flight::String(""), [=](flight::host_sdl::WebGl2Context gl) { return compile_gl_toon_program(gl, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlToonDefineKey>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlToonDefineKey>>>>(full_key)), ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = flight::scene3d_gl::get_gl_scene3_druntime(state)->mesh_skin_feature; if (!std::holds_alternative<flight::Ref<flight::types::GlMeshSkinFeature>>(optional_chain_receiver)) return std::nullopt; return std::get<flight::Ref<flight::types::GlMeshSkinFeature>>(optional_chain_receiver)->vertex_declarations_glsl; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }())); });
+  flight::Ref<flight::types::GlToonDefineKey> full_key = flight::make_ref<flight::types::GlToonDefineKey>(flight::types::GlToonDefineKey{.has_instances = std::optional<bool>{flight::scene3d_gl::get_gl_scene_3d_runtime(state)->active_instanced_run}, .has_skin = std::optional<bool>{flight::scene3d_gl::get_gl_scene_3d_runtime(state)->active_skinned_run}});
+  return flight::scene3d_gl::ensure_gl_scene_3d_program<flight::Ref<flight::types::GlToonProgram>>(state, flight::String("toon:") + flight::to_string(build_gl_toon_define_key(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlToonDefineKey>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlToonDefineKey>>>>(full_key)))) + flight::String(""), [=](flight::host_sdl::WebGl2Context gl) { return compile_gl_toon_program(gl, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlToonDefineKey>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlToonDefineKey>>>>(full_key)), ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = flight::scene3d_gl::get_gl_scene_3d_runtime(state)->mesh_skin_feature; if (!std::holds_alternative<flight::Ref<flight::types::GlMeshSkinFeature>>(optional_chain_receiver)) return std::nullopt; return std::get<flight::Ref<flight::types::GlMeshSkinFeature>>(optional_chain_receiver)->vertex_declarations_glsl; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }())); });
 }
 
 } // namespace flight::scene3d_gl

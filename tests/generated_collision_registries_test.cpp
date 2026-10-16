@@ -5,9 +5,9 @@
 // pair keys that cannot collide with concatenated kinds, absent lookups for unregistered kinds, the
 // source support formulas, the AABB face corners, the capsule alignment cutoff, and the guard
 // install/uninstall flag.
-#include <flight/collision/collision_face3_d.hpp>
-#include <flight/collision/collision_support2_d.hpp>
-#include <flight/collision/collision_support3_d.hpp>
+#include <flight/collision/collision_face_3d.hpp>
+#include <flight/collision/collision_support_2d.hpp>
+#include <flight/collision/collision_support_3d.hpp>
 #include <flight/collision/enable_collision_guards.hpp>
 
 #include <cmath>
@@ -47,18 +47,18 @@ types::CollisionShape3D shape3_d(Value value) {
 }
 
 void check_face_queries3_d() {
-  check(!collision::get_collision_face_query3_d(flight::String("box")).has_value(),
+  check(!collision::get_collision_face_query_3d(flight::String("box")).has_value(),
         "an unregistered face kind is absent before built-ins are registered");
-  collision::register_built_in_collision_face_queries3_d();
-  check(collision::get_collision_face_query3_d(flight::String("box")).has_value(), "box face query registered");
-  check(!collision::get_collision_face_query3_d(flight::String("sphere")).has_value(),
+  collision::register_built_in_collision_face_queries_3d();
+  check(collision::get_collision_face_query_3d(flight::String("box")).has_value(), "box face query registered");
+  check(!collision::get_collision_face_query_3d(flight::String("sphere")).has_value(),
         "sphere has no face query, so its lookup stays absent");
 
   flight::Array<double> out(18.0);
   const auto aabb = shape3_d(Aabb3D{
       .min_x = -1.0, .min_y = -2.0, .min_z = -3.0, .max_x = 1.0, .max_y = 2.0, .max_z = 3.0,
       .kind = flight::String("aabb")});
-  const auto aabb_query = *collision::get_collision_face_query3_d(flight::String("aabb"));
+  const auto aabb_query = *collision::get_collision_face_query_3d(flight::String("aabb"));
   check(aabb_query(aabb, 1.0, 0.0, 0.0, out) == 4.0, "AABB face query writes four corners");
   bool on_face = true;
   for (double corner = 0.0; corner < 4.0; corner += 1.0) {
@@ -71,7 +71,7 @@ void check_face_queries3_d() {
   const auto capsule = shape3_d(Capsule3D{
       .x0 = 0.0, .y0 = 0.0, .z0 = 0.0, .x1 = 4.0, .y1 = 0.0, .z1 = 0.0, .radius = 0.5,
       .kind = flight::String("capsule")});
-  const auto capsule_query = *collision::get_collision_face_query3_d(flight::String("capsule"));
+  const auto capsule_query = *collision::get_collision_face_query_3d(flight::String("capsule"));
   check(capsule_query(capsule, 1.0, 0.0, 0.0, out) == 0.0, "an axis-aligned capsule direction has no face");
   check(capsule_query(capsule, 0.0, 2.0, 0.0, out) == 2.0, "a side direction yields the capsule edge");
   check(near(out.element(0.0), 0.0) && near(out.element(1.0), 0.5) && near(out.element(3.0), 4.0) &&
@@ -79,57 +79,57 @@ void check_face_queries3_d() {
         "capsule edge is offset by the radius along the unit direction");
 
   int calls = 0;
-  collision::register_collision_face_query3_d(
+  collision::register_collision_face_query_3d(
       flight::String("aabb"),
       [&calls](types::CollisionShape3D, double, double, double, flight::Array<double>) {
         ++calls;
         return 7.0;
       });
-  check((*collision::get_collision_face_query3_d(flight::String("aabb")))(aabb, 1.0, 0.0, 0.0, out) == 7.0 &&
+  check((*collision::get_collision_face_query_3d(flight::String("aabb")))(aabb, 1.0, 0.0, 0.0, out) == 7.0 &&
             calls == 1,
         "re-registering a face kind replaces the previous query");
 }
 
 void check_supports2_d() {
-  collision::register_built_in_collision_supports2_d();
+  collision::register_built_in_collision_supports_2d();
   flight::Array<double> out{0.0, 0.0};
   const auto circle = shape2_d(Circle2D{.x = 1.0, .y = 1.0, .radius = 5.0, .kind = flight::String("circle")});
-  (*collision::get_collision_support2_d(flight::String("circle")))(circle, 3.0, 4.0, out);
+  (*collision::get_collision_support_2d(flight::String("circle")))(circle, 3.0, 4.0, out);
   check(near(out.element(0.0), 4.0) && near(out.element(1.0), 5.0), "circle support is centre plus radius along the unit direction");
 
   const auto aabb = shape2_d(Aabb2D{.min_x = -1.0, .min_y = -2.0, .max_x = 3.0, .max_y = 4.0, .kind = flight::String("aabb")});
-  (*collision::get_collision_support2_d(flight::String("aabb")))(aabb, -1.0, 1.0, out);
+  (*collision::get_collision_support_2d(flight::String("aabb")))(aabb, -1.0, 1.0, out);
   check(near(out.element(0.0), -1.0) && near(out.element(1.0), 4.0), "AABB support picks the corner per axis sign");
-  check(!collision::get_collision_support2_d(flight::String("segment")).has_value(), "segment has no support function");
+  check(!collision::get_collision_support_2d(flight::String("segment")).has_value(), "segment has no support function");
 
-  const flight::String key = collision::get_collision_pair_key2_d(flight::String("a"), flight::String("bc"));
-  check(key.length() == 4 && key != collision::get_collision_pair_key2_d(flight::String("ab"), flight::String("c")),
+  const flight::String key = collision::get_collision_pair_key_2d(flight::String("a"), flight::String("bc"));
+  check(key.length() == 4 && key != collision::get_collision_pair_key_2d(flight::String("ab"), flight::String("c")),
         "pair keys keep the NUL separator so concatenations cannot collide");
-  collision::register_collision_pair_test2_d(
+  collision::register_collision_pair_test_2d(
       flight::String("a"), flight::String("bc"),
       types::CollisionPairTest2D{[](types::CollisionShape2D, types::CollisionShape2D, flight::Ref<types::CollisionManifold2D>) { return true; }});
-  check(collision::get_collision_pair_test2_d(flight::String("a"), flight::String("bc")).has_value(), "registered pair test is found");
-  check(!collision::get_collision_pair_test2_d(flight::String("ab"), flight::String("c")).has_value(),
+  check(collision::get_collision_pair_test_2d(flight::String("a"), flight::String("bc")).has_value(), "registered pair test is found");
+  check(!collision::get_collision_pair_test_2d(flight::String("ab"), flight::String("c")).has_value(),
         "a pair whose kinds concatenate identically is not found");
-  check(!collision::get_collision_pair_test2_d(flight::String("bc"), flight::String("a")).has_value(),
+  check(!collision::get_collision_pair_test_2d(flight::String("bc"), flight::String("a")).has_value(),
         "pair keys are ordered");
 }
 
 void check_supports3_d() {
-  collision::register_built_in_collision_supports3_d();
+  collision::register_built_in_collision_supports_3d();
   flight::Array<double> out{0.0, 0.0, 0.0};
   const auto aabb = shape3_d(Aabb3D{
       .min_x = -1.0, .min_y = -2.0, .min_z = -3.0, .max_x = 1.0, .max_y = 2.0, .max_z = 3.0,
       .kind = flight::String("aabb")});
-  (*collision::get_collision_support3_d(flight::String("aabb")))(aabb, 1.0, -1.0, 1.0, out);
+  (*collision::get_collision_support_3d(flight::String("aabb")))(aabb, 1.0, -1.0, 1.0, out);
   check(near(out.element(0.0), 1.0) && near(out.element(1.0), -2.0) && near(out.element(2.0), 3.0),
         "3D AABB support picks the corner per axis sign");
 
   const auto sphere = shape3_d(Sphere3D{.x = 1.0, .y = 2.0, .z = 3.0, .radius = 2.0, .kind = flight::String("sphere")});
-  (*collision::get_collision_support3_d(flight::String("sphere")))(sphere, 0.0, 0.0, -5.0, out);
+  (*collision::get_collision_support_3d(flight::String("sphere")))(sphere, 0.0, 0.0, -5.0, out);
   check(near(out.element(0.0), 1.0) && near(out.element(1.0), 2.0) && near(out.element(2.0), 1.0),
         "sphere support is centre plus radius along the unit direction");
-  check(!collision::get_collision_support3_d(flight::String("vendor:thing")).has_value(), "unregistered vendor kind is absent");
+  check(!collision::get_collision_support_3d(flight::String("vendor:thing")).has_value(), "unregistered vendor kind is absent");
 }
 
 void check_guards() {

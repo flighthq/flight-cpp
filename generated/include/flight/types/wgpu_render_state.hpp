@@ -102,7 +102,7 @@ using WgpuColorAdjustmentMaterialFeatureGuard = std::function<void(flight::Ref<W
 #include <flight/types/external_texture.hpp>
 #include <flight/types/image_resource.hpp>
 #include <flight/types/material.hpp>
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 #include <flight/types/render_state.hpp>
 #include <flight/types/render_texture.hpp>
 #include <flight/types/sampler.hpp>
@@ -123,12 +123,12 @@ using WgpuColorAdjustmentMaterialFeatureGuard = std::function<void(flight::Ref<W
 #include <flight/types/wgpu_render_pass.hpp>
 #include <flight/types/wgpu_render_target.hpp>
 #include <flight/types/wgpu_render_texture.hpp>
-#include <flight/types/wgpu_scene3_druntime.hpp>
+#include <flight/types/wgpu_scene_3d_runtime.hpp>
 #include <flight/types/wgpu_shape_mesh.hpp>
 #include <flight/types/wgpu_skinning_adapter.hpp>
 #include <flight/types/wgpu_texture_resolver.hpp>
 #include <flight/types/wgpu_velocity_writer.hpp>
-#include <flight/types/scene2_drenderer.hpp>
+#include <flight/types/scene_2d_renderer.hpp>
 #include <flight/types/host_canvas.hpp>
 #include <flight/types/canvas_shape_registry.hpp>
 #include <flight/types/render_proxy.hpp>
@@ -144,7 +144,7 @@ using WgpuColorAdjustmentMaterialFeatureGuard = std::function<void(flight::Ref<W
 #include <flight/types/image_resource.hpp>
 #include <flight/types/blend_mode.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 
 namespace flight::types {
 

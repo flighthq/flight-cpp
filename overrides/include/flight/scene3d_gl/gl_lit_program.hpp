@@ -23,7 +23,7 @@ struct GlIblPlaceholders;
 } // namespace flight::scene3d_gl
 
 #include <flight/types/contract.hpp>
-#include <flight/scene3d_gl/gl_scene3_druntime.hpp>
+#include <flight/scene3d_gl/gl_scene_3d_runtime.hpp>
 
 namespace flight::scene3d_gl {
 
@@ -60,7 +60,7 @@ inline flight::Ref<GlIblPlaceholders> ensure_gl_ibl_placeholders(flight::Ref<fli
     double face = 0.0;
     while ((face < 6.0)) {
       {
-        gl.tex_image2_d((gl.texture_cube_map_positive_x + face), 0.0, gl.rgba, 1.0, 1.0, 0.0, gl.rgba, gl.unsigned_byte, black);
+        gl.tex_image_2d((gl.texture_cube_map_positive_x + face), 0.0, gl.rgba, 1.0, 1.0, 0.0, gl.rgba, gl.unsigned_byte, black);
       }
       (face += 1.0);
     }
@@ -69,7 +69,7 @@ inline flight::Ref<GlIblPlaceholders> ensure_gl_ibl_placeholders(flight::Ref<fli
   gl.tex_parameteri(gl.texture_cube_map, gl.texture_mag_filter, gl.linear);
   flight::host_sdl::WebGlTexture lut = gl.create_texture();
   gl.bind_texture(gl.texture_2_d, lut);
-  gl.tex_image2_d(gl.texture_2_d, 0.0, gl.rgba, 1.0, 1.0, 0.0, gl.rgba, gl.unsigned_byte, black);
+  gl.tex_image_2d(gl.texture_2_d, 0.0, gl.rgba, 1.0, 1.0, 0.0, gl.rgba, gl.unsigned_byte, black);
   gl.tex_parameteri(gl.texture_2_d, gl.texture_min_filter, gl.linear);
   gl.tex_parameteri(gl.texture_2_d, gl.texture_mag_filter, gl.linear);
   (placeholders = std::optional<flight::Ref<GlIblPlaceholders>>{flight::make_ref<GlIblPlaceholders>(GlIblPlaceholders{.cube = cube, .lut = lut})});
@@ -95,7 +95,7 @@ inline void bind_gl_mesh_light_block(flight::Ref<flight::types::GlRenderState> s
     uploaded_light_block.set(program, lights);
     uploaded_light_version.set(program, flight::row_get<flight::RowKey<"version">>(lights));
   }
-  auto runtime = flight::scene3d_gl::get_gl_scene3_druntime(state);
+  auto runtime = flight::scene3d_gl::get_gl_scene_3d_runtime(state);
   auto shadow = runtime->shadow;
   if ((shadow.has_value() && shadow.value()->enabled)) {
     gl.active_texture((gl.texture0 + shadow_map_texture_unit));

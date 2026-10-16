@@ -18,7 +18,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/import_diagnostic.hpp>
 
-#include <flight/types/attachment2_d.hpp>
+#include <flight/types/attachment_2d.hpp>
 
 #include <flight/types/animation_track.hpp>
 
@@ -58,7 +58,7 @@ inline void add_dragon_bones_display_channel(flight::Array<flight::Ref<flight::t
     values.push(((((index >= 0.0) && (index < static_cast<double>(displays.size()))) && ([&]() { const auto& presence_operand = displays.get(index); return !presence_operand.has_value() || presence_operand.value().has_value(); }())) ? index : -1.0));
   }
   auto track = flight::animation::create_animation_track(([&]() { auto object_member_components = std::optional<double>{1.0}; auto object_member_interpolation = std::optional<flight::String>{flight::types::animation_interpolation_step}; auto object_member_times = times; auto object_member_values = values; return flight::make_ref<times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042>(times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042{.times = object_member_times, .values = object_member_values, .components = object_member_components, .interpolation = object_member_interpolation}); }()));
-  channels.push(flight::animation::create_animation_channel(track, flight::Any::object(flight::skeleton2d::create_skeleton2_dslot_animation_target(slot_index, flight::types::skeleton2_dslot_animation_path->attachment, std::optional<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>>{displays.slice()}))));
+  channels.push(flight::animation::create_animation_channel(track, flight::Any::object(flight::skeleton2d::create_skeleton_2d_slot_animation_target(slot_index, flight::types::skeleton_2d_slot_animation_path->attachment, std::optional<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>>{displays.slice()}))));
 }
 
 inline double color_percent(flight::Any value) {

@@ -33,7 +33,7 @@ namespace flight::materials {
 using flight::types::MaterialConversionExplanation;
 
 inline flight::Ref<flight::types::SpecularGlossinessPbrMaterial> create_specular_glossiness_pbr_material(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::SpecularGlossinessPbrMaterial>>>>>> opts = std::nullopt) {
-  auto material = flight::materials::create_material3_d<flight::Ref<flight::types::SpecularGlossinessPbrMaterial>>(flight::types::specular_glossiness_pbr_material_kind, opts);
+  auto material = flight::materials::create_material_3d<flight::Ref<flight::types::SpecularGlossinessPbrMaterial>>(flight::types::specular_glossiness_pbr_material_kind, opts);
   (material->diffuse = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"diffuse">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 4294967295.0; }()));
   (material->diffuse_map = ([&]() -> std::optional<flight::types::Texture> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"diffuseMap">>(optional_chain_receiver.value()); }()));
   (material->emissive = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"emissive">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 255.0; }()));
@@ -50,7 +50,7 @@ inline flight::Ref<flight::types::SpecularGlossinessPbrMaterial> create_specular
 }
 
 inline flight::Ref<flight::types::StandardPbrMaterial> create_standard_pbr_material(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::StandardPbrMaterial>>>>>> opts = std::nullopt) {
-  auto material = flight::materials::create_material3_d<flight::Ref<flight::types::StandardPbrMaterial>>(flight::types::standard_pbr_material_kind, opts);
+  auto material = flight::materials::create_material_3d<flight::Ref<flight::types::StandardPbrMaterial>>(flight::types::standard_pbr_material_kind, opts);
   (material->alpha_map = ([&]() -> std::optional<flight::types::Texture> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"alphaMap">>(optional_chain_receiver.value()); }()));
   (material->base_color = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"baseColor">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 4294967295.0; }()));
   (material->base_color_map = ([&]() -> std::optional<flight::types::Texture> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"baseColorMap">>(optional_chain_receiver.value()); }()));

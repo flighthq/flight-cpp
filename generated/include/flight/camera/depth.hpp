@@ -15,14 +15,14 @@ namespace flight::types { struct Plane; }
 namespace flight::types { struct RawProjection; }
 namespace flight::types { struct Vector2; }
 
-#include <flight/types/camera3_d.hpp>
+#include <flight/types/camera_3d.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/plane.hpp>
 #include <flight/types/vector2.hpp>
 
 namespace flight::camera {
 
-inline double get_camera3_dlinear_depth(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, double ndc_z) {
+inline double get_camera_3d_linear_depth(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, double ndc_z) {
   const double near = flight::row_get<flight::RowKey<"near">>(camera);
   const double far = flight::row_get<flight::RowKey<"far">>(camera);
   const double range = (far - near);
@@ -39,8 +39,8 @@ inline double get_camera3_dlinear_depth(flight::StructuralRef<flight::RowReadonl
   return (((2.0 * far) * near) / denominator);
 }
 
-inline double get_camera3_dview_space_z(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, double ndc_z) {
-  return -get_camera3_dlinear_depth(camera, ndc_z);
+inline double get_camera_3d_view_space_z(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, double ndc_z) {
+  return -get_camera_3d_linear_depth(camera, ndc_z);
 }
 
 } // namespace flight::camera

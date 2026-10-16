@@ -16,7 +16,7 @@ struct GlShader;
 
 #include <flight/types/gl_context.hpp>
 #include <flight/types/gl_render_state.hpp>
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 
 namespace flight::types {
 

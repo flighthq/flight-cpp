@@ -24,7 +24,7 @@ namespace flight::types { struct Vector3; }
 #include <flight/types/entity.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/obb.hpp>
-#include <flight/types/ray3_d.hpp>
+#include <flight/types/ray_3d.hpp>
 #include <flight/types/vector3.hpp>
 
 namespace flight::geometry {
@@ -91,7 +91,7 @@ inline flight::Ref<flight::types::Obb> create_obb(double center_x, double center
   return flight::entity::finish_entity<flight::Ref<flight::types::Obb>>(out);
 }
 
-inline double intersect_ray3_dobb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Ray3DLike>>> ray, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ObbLike>>> obb) {
+inline double intersect_ray_3d_obb(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Ray3DLike>>> ray, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ObbLike>>> obb) {
   const double ox = (flight::row_get<flight::RowKey<"origin">>(ray)->x - flight::row_get<flight::RowKey<"centerX">>(obb));
   const double oy = (flight::row_get<flight::RowKey<"origin">>(ray)->y - flight::row_get<flight::RowKey<"centerY">>(obb));
   const double oz = (flight::row_get<flight::RowKey<"origin">>(ray)->z - flight::row_get<flight::RowKey<"centerZ">>(obb));

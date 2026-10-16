@@ -26,11 +26,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/rectangle.hpp>
 
-#include <flight/types/particle_emitter2_d.hpp>
+#include <flight/types/particle_emitter_2d.hpp>
 
 #include <flight/types/partial_node.hpp>
 
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 
 #include <flight/types/node.hpp>
 
@@ -105,12 +105,12 @@ inline const double particle_emitter_deleted_id = 65535.0;
 // accessor result as the full writable Node2D row where initialization establishes those cells, rather than
 // widening Readonly<BoundsNode<Node2DTraits>> at the use site.
 
-inline void clear_particle_emitter2_d(flight::Ref<flight::types::ParticleEmitter2D> target) {
+inline void clear_particle_emitter_2d(flight::Ref<flight::types::ParticleEmitter2D> target) {
   auto data = target->data;
   (data->particle_count = 0.0);
 }
 
-inline void compact_particle_emitter2_d(flight::Ref<flight::types::ParticleEmitter2D> target) {
+inline void compact_particle_emitter_2d(flight::Ref<flight::types::ParticleEmitter2D> target) {
   auto data = target->data;
   if ((data->particle_count == 0.0)) {
     return;
@@ -152,7 +152,7 @@ inline void compact_particle_emitter2_d(flight::Ref<flight::types::ParticleEmitt
   (data->particle_count = write);
 }
 
-inline void compute_particle_emitter2_dlocal_bounds_rectangle(flight::Ref<flight::types::Rectangle> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>> source) {
+inline void compute_particle_emitter_2d_local_bounds_rectangle(flight::Ref<flight::types::Rectangle> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>> source) {
   auto object_pattern_value = flight::row_get<flight::RowKey<"data">>(source);
   auto atlas = object_pattern_value->atlas;
   flight::Uint16Array ids = object_pattern_value->ids;
@@ -237,13 +237,13 @@ inline void compute_particle_emitter2_dlocal_bounds_rectangle(flight::Ref<flight
   }
 }
 
-inline double get_particle_emitter2_dcapacity(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>> source) {
+inline double get_particle_emitter_2d_capacity(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>> source) {
   auto data = flight::row_get<flight::RowKey<"data">>(source);
   const double transform_capacity = flight::bitwise_or((static_cast<double>(data->transforms.size()) / particle_transform_stride_flight_value_variable__u000050__u000041__u000052__u000054__u000049__u000043__u00004c__u000045__u00005f__u000054__u000052__u000041__u00004e__u000053__u000046__u00004f__u000052__u00004d__u00005f__u000053__u000054__u000052__u000049__u000044__u000045__flight_private_6d0e302c2faa5df0), 0.0);
   return flight::minimum(static_cast<double>(data->ids.size()), static_cast<double>(data->alphas.size()), transform_capacity);
 }
 
-inline double get_particle_emitter2_dparticle_alpha(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>> source, double index) {
+inline double get_particle_emitter_2d_particle_alpha(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>> source, double index) {
   auto data = flight::row_get<flight::RowKey<"data">>(source);
   if (((index < 0.0) || (index >= data->particle_count))) {
     return -1.0;
@@ -251,7 +251,7 @@ inline double get_particle_emitter2_dparticle_alpha(flight::StructuralRef<flight
   return data->alphas.get_index(index);
 }
 
-inline double get_particle_emitter2_dparticle_id(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>> source, double index) {
+inline double get_particle_emitter_2d_particle_id(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>> source, double index) {
   auto data = flight::row_get<flight::RowKey<"data">>(source);
   if (((index < 0.0) || (index >= data->particle_count))) {
     return -1.0;
@@ -259,7 +259,7 @@ inline double get_particle_emitter2_dparticle_id(flight::StructuralRef<flight::R
   return data->ids.get_index(index);
 }
 
-inline bool get_particle_emitter2_dparticle_velocity(flight::types::Vector2Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>> source, double index) {
+inline bool get_particle_emitter_2d_particle_velocity(flight::types::Vector2Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>> source, double index) {
   auto data = flight::row_get<flight::RowKey<"data">>(source);
   if (((index < 0.0) || (index >= data->particle_count))) {
     return false;
@@ -313,7 +313,7 @@ inline flight::Ref<flight::types::ParticleEmitterData> create_particle_emitter_d
   return flight::entity::finish_entity<flight::Ref<flight::types::ParticleEmitterData>>(out);
 }
 
-inline void remove_particle_emitter2_dparticle(flight::Ref<flight::types::ParticleEmitter2D> target, double index) {
+inline void remove_particle_emitter_2d_particle(flight::Ref<flight::types::ParticleEmitter2D> target, double index) {
   auto data = target->data;
   const double last = (data->particle_count - 1.0);
   if (((index < 0.0) || (index > last))) {
@@ -342,8 +342,8 @@ inline void remove_particle_emitter2_dparticle(flight::Ref<flight::types::Partic
   (data->particle_count = last);
 }
 
-inline void reserve_particle_emitter2_d(flight::Ref<flight::types::ParticleEmitter2D> target, double capacity) {
-  if ((get_particle_emitter2_dcapacity(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>>(target))) >= capacity)) {
+inline void reserve_particle_emitter_2d(flight::Ref<flight::types::ParticleEmitter2D> target, double capacity) {
+  if ((get_particle_emitter_2d_capacity(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>>(target))) >= capacity)) {
     return;
   }
   auto data = target->data;
@@ -355,13 +355,13 @@ inline void reserve_particle_emitter2_d(flight::Ref<flight::types::ParticleEmitt
   (data->velocities = flight::geometry::reserve_float32_array(data->velocities, (capacity * 2.0)));
 }
 
-inline double append_particle_emitter2_dparticle(flight::Ref<flight::types::ParticleEmitter2D> target, double id, double x, double y, double rotation, double scale) {
+inline double append_particle_emitter_2d_particle(flight::Ref<flight::types::ParticleEmitter2D> target, double id, double x, double y, double rotation, double scale) {
   auto data = target->data;
   const double index = data->particle_count;
   const double needed = (index + 1.0);
-  if ((get_particle_emitter2_dcapacity(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>>(target))) < needed)) {
+  if ((get_particle_emitter_2d_capacity(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>>(target))) < needed)) {
     const double new_capacity = flight::maximum(needed, ([&]() -> double { auto logical_or_value = (data->particle_count * 2.0); if (flight::to_boolean(logical_or_value)) return logical_or_value; return 8.0; }()));
-    reserve_particle_emitter2_d(target, new_capacity);
+    reserve_particle_emitter_2d(target, new_capacity);
   }
   (data->particle_count = needed);
   ([&]() { auto&& typed_array_25 = data->ids; const auto typed_index_25 = index; const auto typed_value_25 = id; return typed_array_25.set_index(typed_index_25, typed_value_25); }());
@@ -414,7 +414,7 @@ inline double append_particle_emitter2_dparticle(flight::Ref<flight::types::Part
 // repairs keep the exact Traits or generic specialization the retained row carries; neither adds cells to a row
 // that does not declare them.
 
-inline void set_particle_emitter2_dparticle(flight::Ref<flight::types::ParticleEmitter2D> target, double index, double id, double x, double y, double rotation, double scale) {
+inline void set_particle_emitter_2d_particle(flight::Ref<flight::types::ParticleEmitter2D> target, double index, double id, double x, double y, double rotation, double scale) {
   auto data = target->data;
   if (((index < 0.0) || (index >= data->particle_count))) {
     return;
@@ -427,7 +427,7 @@ inline void set_particle_emitter2_dparticle(flight::Ref<flight::types::ParticleE
   ([&]() { auto&& typed_array_41 = data->transforms; const auto typed_index_41 = (tt + 3.0); const auto typed_value_41 = scale; return typed_array_41.set_index(typed_index_41, typed_value_41); }());
 }
 
-inline void set_particle_emitter2_dparticle_alpha(flight::Ref<flight::types::ParticleEmitter2D> target, double index, double alpha) {
+inline void set_particle_emitter_2d_particle_alpha(flight::Ref<flight::types::ParticleEmitter2D> target, double index, double alpha) {
   auto data = target->data;
   if (((index < 0.0) || (index >= data->particle_count))) {
     return;
@@ -435,7 +435,7 @@ inline void set_particle_emitter2_dparticle_alpha(flight::Ref<flight::types::Par
   ([&]() { auto&& typed_array_42 = data->alphas; const auto typed_index_42 = index; const auto typed_value_42 = alpha; return typed_array_42.set_index(typed_index_42, typed_value_42); }());
 }
 
-inline void set_particle_emitter2_dparticle_color(flight::Ref<flight::types::ParticleEmitter2D> target, double index, double r, double g, double b) {
+inline void set_particle_emitter_2d_particle_color(flight::Ref<flight::types::ParticleEmitter2D> target, double index, double r, double g, double b) {
   auto data = target->data;
   if (((index < 0.0) || (index >= data->particle_count))) {
     return;
@@ -446,7 +446,7 @@ inline void set_particle_emitter2_dparticle_color(flight::Ref<flight::types::Par
   ([&]() { auto&& typed_array_45 = data->colors; const auto typed_index_45 = (ct + 2.0); const auto typed_value_45 = b; return typed_array_45.set_index(typed_index_45, typed_value_45); }());
 }
 
-inline void set_particle_emitter2_dparticle_velocity(flight::Ref<flight::types::ParticleEmitter2D> target, double index, double vx, double vy) {
+inline void set_particle_emitter_2d_particle_velocity(flight::Ref<flight::types::ParticleEmitter2D> target, double index, double vx, double vy) {
   auto data = target->data;
   if (((index < 0.0) || (index >= data->particle_count))) {
     return;
@@ -563,12 +563,12 @@ struct data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_m
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLEEMITTER_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_578A7C2CB5B86B30
 
-flight::Ref<flight::types::ParticleEmitter2D> create_particle_emitter2_d(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_578a7c2cb5b86b30>>>>> obj = std::nullopt);
+flight::Ref<flight::types::ParticleEmitter2D> create_particle_emitter_2d(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_578a7c2cb5b86b30>>>>> obj = std::nullopt);
 
-inline flight::Ref<flight::types::ParticleEmitter2D> clone_particle_emitter2_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>> source) {
+inline flight::Ref<flight::types::ParticleEmitter2D> clone_particle_emitter_2d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>> source) {
   auto src = flight::row_get<flight::RowKey<"data">>(source);
   auto data = flight::make_ref<entity_runtime_key_alphas_atlas_colors_ids_particle_count_positions_z_transforms_velocities_world_space_7b394448aee881e4>(entity_runtime_key_alphas_atlas_colors_ids_particle_count_positions_z_transforms_velocities_world_space_7b394448aee881e4{.alphas = std::optional<flight::Float32Array>{src->alphas.slice()}, .atlas = ([&]() -> std::variant<flight::Ref<flight::types::TextureAtlas>, flight::Null, flight::Undefined> { auto contextual_union_source = src->atlas; if (!contextual_union_source.has_value()) return std::variant<flight::Ref<flight::types::TextureAtlas>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Ref<flight::types::TextureAtlas>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::TextureAtlas>>, contextual_union_source.value()}; }()), .colors = std::optional<flight::Float32Array>{src->colors.slice()}, .ids = std::optional<flight::Uint16Array>{src->ids.slice()}, .particle_count = std::optional<double>{src->particle_count}, .positions_z = std::optional<flight::Float32Array>{src->positions_z.slice()}, .transforms = std::optional<flight::Float32Array>{src->transforms.slice()}, .velocities = std::optional<flight::Float32Array>{src->velocities.slice()}, .world_space = std::optional<bool>{src->world_space}});
-  return create_particle_emitter2_d(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_578a7c2cb5b86b30>>>>(flight::row_field<flight::RowKey<"data">>(std::optional<flight::Ref<entity_runtime_key_alphas_atlas_colors_ids_particle_count_positions_z_transforms_velocities_world_space_7b394448aee881e4>>{data})));
+  return create_particle_emitter_2d(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_578a7c2cb5b86b30>>>>(flight::row_field<flight::RowKey<"data">>(std::optional<flight::Ref<entity_runtime_key_alphas_atlas_colors_ids_particle_count_positions_z_transforms_velocities_world_space_7b394448aee881e4>>{data})));
 }
 
 } // namespace flight::particleemitter

@@ -30,7 +30,7 @@ namespace flight::types { template <typename Traits> struct Scene2DFitContext; }
 #include <flight/types/matrix.hpp>
 #include <flight/types/node.hpp>
 #include <flight/types/rectangle.hpp>
-#include <flight/types/scene2_dfit_context.hpp>
+#include <flight/types/scene_2d_fit_context.hpp>
 #include <flight/types/viewport_align.hpp>
 #include <flight/types/viewport_scale_mode.hpp>
 #include <flight/node/node.hpp>
@@ -47,7 +47,7 @@ using flight::types::NodeRuntime;
 
 using flight::types::Node;
 
-inline double compute_scene2_dfit_align_x(double scaled_content_width, double view_width, flight::types::ViewportAlign align) {
+inline double compute_scene_2d_fit_align_x(double scaled_content_width, double view_width, flight::types::ViewportAlign align) {
   const flight::String value = align;
   if (value.includes(flight::String("left"))) {
     return 0.0;
@@ -58,7 +58,7 @@ inline double compute_scene2_dfit_align_x(double scaled_content_width, double vi
   return ((view_width - scaled_content_width) / 2.0);
 }
 
-inline double compute_scene2_dfit_align_y(double scaled_content_height, double view_height, flight::types::ViewportAlign align) {
+inline double compute_scene_2d_fit_align_y(double scaled_content_height, double view_height, flight::types::ViewportAlign align) {
   const flight::String value = align;
   if (value.includes(flight::String("top"))) {
     return 0.0;
@@ -69,11 +69,11 @@ inline double compute_scene2_dfit_align_y(double scaled_content_height, double v
   return ((view_height - scaled_content_height) / 2.0);
 }
 
-inline double compute_scene2_dfit_fill_scale(double content_width, double content_height, double view_width, double view_height) {
+inline double compute_scene_2d_fit_fill_scale(double content_width, double content_height, double view_width, double view_height) {
   return flight::maximum((view_width / content_width), (view_height / content_height));
 }
 
-inline double compute_scene2_dfit_scale(double content_width, double content_height, double view_width, double view_height) {
+inline double compute_scene_2d_fit_scale(double content_width, double content_height, double view_width, double view_height) {
   return flight::minimum((view_width / content_width), (view_height / content_height));
 }
 
@@ -114,7 +114,7 @@ struct binding_uid_bounds_rectangle_compute_local_bounds_rectangle_is_local_boun
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_NODE_BINDING_UID_BOUNDS_RECTANGLE_COMPUTE_LOCAL_BOUNDS_RECTANGLE_IS_LOCAL_BOUNDS_RECTANGLE_VALID_LOCAL_BOUNDS_RECTANGLE_WORLD_BOUNDS_RECTANGLE_3498263FA9F74013
 
 template <typename Traits = flight::Ref<flight::types::NodeTraits>>
-inline void compute_scene2_dfit_transform(flight::types::MatrixLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene2DFitContext<Traits>>>>> scene2d, double view_width, double view_height) {
+inline void compute_scene_2d_fit_transform(flight::types::MatrixLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene2DFitContext<Traits>>>>> scene2d, double view_width, double view_height) {
   double content_x = 0.0;
   double content_y = 0.0;
   double content_width = 0.0;
@@ -155,10 +155,10 @@ inline void compute_scene2_dfit_transform(flight::types::MatrixLike out, flight:
     }
     else {
       if ((flight::row_get<flight::RowKey<"scaleMode">>(scene2d) == flight::String("showall"))) {
-        (sx = (sy = compute_scene2_dfit_scale(content_width, content_height, view_width, view_height)));
+        (sx = (sy = compute_scene_2d_fit_scale(content_width, content_height, view_width, view_height)));
       }
       else {
-        (sx = (sy = compute_scene2_dfit_fill_scale(content_width, content_height, view_width, view_height)));
+        (sx = (sy = compute_scene_2d_fit_fill_scale(content_width, content_height, view_width, view_height)));
       }
     }
   }
@@ -166,8 +166,8 @@ inline void compute_scene2_dfit_transform(flight::types::MatrixLike out, flight:
   (out->b = 0.0);
   (out->c = 0.0);
   (out->d = sy);
-  (out->tx = (compute_scene2_dfit_align_x((content_width * sx), view_width, flight::row_get<flight::RowKey<"align">>(scene2d)) - (content_x * sx)));
-  (out->ty = (compute_scene2_dfit_align_y((content_height * sy), view_height, flight::row_get<flight::RowKey<"align">>(scene2d)) - (content_y * sy)));
+  (out->tx = (compute_scene_2d_fit_align_x((content_width * sx), view_width, flight::row_get<flight::RowKey<"align">>(scene2d)) - (content_x * sx)));
+  (out->ty = (compute_scene_2d_fit_align_y((content_height * sy), view_height, flight::row_get<flight::RowKey<"align">>(scene2d)) - (content_y * sy)));
 }
 
 } // namespace flight::node

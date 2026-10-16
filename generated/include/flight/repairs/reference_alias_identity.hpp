@@ -9,8 +9,8 @@
 #include <memory>
 #include <flight/runtime.hpp>
 
-#include <flight/types/has_transform2_d.hpp>
-#include <flight/types/has_transform3_d.hpp>
+#include <flight/types/has_transform_2d.hpp>
+#include <flight/types/has_transform_3d.hpp>
 #include <flight/types/node.hpp>
 #include <flight/types/node_order_list.hpp>
 #include <flight/types/registry_table.hpp>

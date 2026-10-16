@@ -43,7 +43,7 @@ namespace flight::types { struct TextureCube; }
 #include <flight/texture/texture.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/scene3d_gl/gl_pbr_standard_block.hpp>
-#include <flight/scene3d_gl/gl_scene3_druntime.hpp>
+#include <flight/scene3d_gl/gl_scene_3d_runtime.hpp>
 
 namespace flight::scene3d_gl {
 
@@ -60,7 +60,7 @@ inline void register_gl_pbr_extension(flight::Ref<flight::types::GlRenderState> 
 
 inline flight::Ref<flight::types::GlPbrExtensionShaderContext> create_gl_pbr_extension_shader_context(flight::Ref<flight::types::GlRenderState> state) {
   return flight::make_ref<flight::types::GlPbrExtensionShaderContext>(flight::types::GlPbrExtensionShaderContext{.has_transmission_scene_color = [=]() {
-  return flight::scene3d_gl::get_gl_scene3_druntime(state)->pbr_transmission_scene_color.has_value();
+  return flight::scene3d_gl::get_gl_scene_3d_runtime(state)->pbr_transmission_scene_color.has_value();
 }, .is_texture_ready = [=](std::optional<std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Texture2DArray>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Texture2D>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Texture3D>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextureCube>>>>>> texture) {
   return flight::scene3d_gl::is_gl_texture_ready(state, ([&]() -> std::optional<std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>> { const auto& converted_union = texture; if (!converted_union.has_value()) return std::nullopt; if (const auto* alternative = std::get_if<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Texture2DArray>>>>>(&converted_union.value())) return std::optional<std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::Texture2DArray>>, flight::structural_ref_cast<flight::Ref<flight::types::Texture2DArray>>(*alternative)}; if (const auto* alternative = std::get_if<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Texture2D>>>>>(&converted_union.value())) return std::optional<std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::Texture2D>>, flight::structural_ref_cast<flight::Ref<flight::types::Texture2D>>(*alternative)}; if (const auto* alternative = std::get_if<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Texture3D>>>>>(&converted_union.value())) return std::optional<std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::Texture3D>>, flight::structural_ref_cast<flight::Ref<flight::types::Texture3D>>(*alternative)}; if (const auto* alternative = std::get_if<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextureCube>>>>>(&converted_union.value())) return std::optional<std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::TextureCube>>, flight::structural_ref_cast<flight::Ref<flight::types::TextureCube>>(*alternative)}; throw std::logic_error("source union alternative is not a readonly view of one the destination names"); }()));
 }});
@@ -127,7 +127,7 @@ inline flight::Array<flight::Ref<flight::types::GlPbrExtensionIssue>> explain_gl
       (i += 1.0);
     }
   }
-  auto scene_color = flight::scene3d_gl::get_gl_scene3_druntime(state)->pbr_transmission_scene_color;
+  auto scene_color = flight::scene3d_gl::get_gl_scene_3d_runtime(state)->pbr_transmission_scene_color;
   std::variant<flight::Ref<flight::types::GlCubeRenderTarget>, flight::Ref<flight::types::GlRenderTarget>, flight::Null, flight::Undefined> active_target = flight::render_gl::get_gl_render_state_runtime(state)->current_render_target;
   if (((((transmission_scene_color_kind.has_value() && scene_color.has_value()) && !((std::holds_alternative<flight::Null>(active_target) || std::holds_alternative<flight::Undefined>(active_target)))) && active_target.index() == 0) && (std::get<0>(active_target)->textures.includes(scene_color.value()->texture) == true))) {
     issues.push(flight::make_ref<flight::types::GlPbrExtensionIssue>(flight::types::GlPbrExtensionIssue{.code = flight::String("framebuffer-feedback"), .kind = transmission_scene_color_kind.value()}));
@@ -170,7 +170,7 @@ inline flight::Ref<flight::types::GlPbrExtensionBindContext> create_gl_pbr_exten
   flight::Array<double> texture_units = get_gl_pbr_extension_texture_units(gl);
   const auto texture_index_capture = flight::make_binding_cell(double{0.0});
   return ([&]() { auto object_member_bind_transmission_scene_color = [=](flight::String sampler_uniform, flight::String max_lod_uniform) {
-  auto scene_color = flight::scene3d_gl::get_gl_scene3_druntime(state)->pbr_transmission_scene_color;
+  auto scene_color = flight::scene3d_gl::get_gl_scene_3d_runtime(state)->pbr_transmission_scene_color;
   if (!scene_color.has_value()) {
     return false;
   }

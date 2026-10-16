@@ -12,25 +12,25 @@ namespace flight::types { struct Camera2DOptions; }
 namespace flight::types { struct Entity; }
 
 #include <flight/entity/entity.hpp>
-#include <flight/types/camera2_d.hpp>
+#include <flight/types/camera_2d.hpp>
 #include <flight/types/entity.hpp>
 
 namespace flight::camera {
 
-inline void initialize_camera2_d(flight::types::EntityConstruction<flight::Ref<flight::types::Camera2D>> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2DOptions>>>>> options = std::nullopt) {
+inline void initialize_camera_2d(flight::types::EntityConstruction<flight::Ref<flight::types::Camera2D>> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2DOptions>>>>> options = std::nullopt) {
   flight::row_set<flight::RowKey<"rotation">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"rotation">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
   flight::row_set<flight::RowKey<"x">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"x">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
   flight::row_set<flight::RowKey<"y">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"y">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
   flight::row_set<flight::RowKey<"zoom">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"zoom">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()));
 }
 
-inline flight::Ref<flight::types::Camera2D> create_camera2_d(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2DOptions>>>>> options = std::nullopt) {
+inline flight::Ref<flight::types::Camera2D> create_camera_2d(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2DOptions>>>>> options = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Camera2D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Camera2D>>();
-  initialize_camera2_d(out, options);
+  initialize_camera_2d(out, options);
   return flight::entity::finish_entity<flight::Ref<flight::types::Camera2D>>(out);
 }
 
-inline void set_camera2_dlook_at(flight::Ref<flight::types::Camera2D> camera, double x, double y) {
+inline void set_camera_2d_look_at(flight::Ref<flight::types::Camera2D> camera, double x, double y) {
   (camera->x = x);
   (camera->y = y);
 }

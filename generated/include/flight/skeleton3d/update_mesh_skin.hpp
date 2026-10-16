@@ -8,7 +8,7 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/skeleton3_d.hpp>
+#include <flight/types/skeleton_3d.hpp>
 
 namespace flight::types { struct Mesh; }
 namespace flight::types { struct MeshGeometry; }
@@ -31,7 +31,7 @@ inline void update_mesh_skin(flight::StructuralRef<flight::RowReadonly<flight::R
   if ((std::holds_alternative<flight::Null>(skin) || std::holds_alternative<flight::Undefined>(skin))) {
     return;
   }
-  flight::skeleton3d::compute_skeleton3_djoint_matrices(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Skeleton3D>>>>(std::get<0>(skin)->skeleton)));
+  flight::skeleton3d::compute_skeleton_3d_joint_matrices(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Skeleton3D>>>>(std::get<0>(skin)->skeleton)));
   auto geometry = flight::row_get<flight::RowKey<"geometry">>(mesh);
   std::optional<flight::Ref<flight::types::MeshSkinBindPose>> bind_pose = flight::mesh::get_mesh_geometry_skin_bind_pose(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>(geometry)));
   if (!bind_pose.has_value()) {

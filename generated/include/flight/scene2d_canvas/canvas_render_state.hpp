@@ -24,7 +24,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/render_registry_signals.hpp>
 
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 
 #include <flight/types/canvas_texture_resolver.hpp>
 

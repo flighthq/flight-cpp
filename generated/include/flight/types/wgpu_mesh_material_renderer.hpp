@@ -19,11 +19,11 @@ namespace flight::types {
 struct WgpuMeshMaterialRenderer;
 } // namespace flight::types
 
-#include <flight/types/camera3_d.hpp>
+#include <flight/types/camera_3d.hpp>
 #include <flight/types/material.hpp>
 #include <flight/types/mesh_geometry.hpp>
-#include <flight/types/scene3_dlight_block.hpp>
-#include <flight/types/scene3_drender_proxy.hpp>
+#include <flight/types/scene_3d_light_block.hpp>
+#include <flight/types/scene_3d_render_proxy.hpp>
 #include <flight/types/wgpu_render_state.hpp>
 
 namespace flight::types {

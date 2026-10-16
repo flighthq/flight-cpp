@@ -31,11 +31,11 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/types/entity.hpp>
 #include <flight/types/gizmo_state.hpp>
 #include <flight/types/has_bounds_rectangle.hpp>
-#include <flight/types/has_transform2_d.hpp>
+#include <flight/types/has_transform_2d.hpp>
 #include <flight/types/hierarchy_node.hpp>
 #include <flight/types/matrix.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/non_entity_create_result.hpp>
 #include <flight/types/rectangle.hpp>
 #include <flight/types/vector2.hpp>
@@ -50,22 +50,22 @@ using flight::types::GizmoNode2DFeatures;
 using flight::types::Rectangle;
 using flight::types::Node2DTraits;
 
-inline bool get_node2_dgizmo_world_bounds_rectangle(flight::Ref<flight::types::Rectangle> out, flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>>> node) {
+inline bool get_node_2d_gizmo_world_bounds_rectangle(flight::Ref<flight::types::Rectangle> out, flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>>> node) {
   flight::geometry::copy_rectangle(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(flight::node::get_node_world_bounds_rectangle(node)));
   return true;
 }
 
-inline void get_node2_dgizmo_world_origin(flight::types::Vector2Like out, flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>>> node) {
+inline void get_node_2d_gizmo_world_origin(flight::types::Vector2Like out, flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>>> node) {
   flight::geometry::matrix_transform_point_xy(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::node::get_node_world_matrix(node)), flight::row_get<flight::RowKey<"pivotX">>(node), flight::row_get<flight::RowKey<"pivotY">>(node));
 }
 
-inline double get_node2_dgizmo_world_rotation(flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>>> node) {
+inline double get_node_2d_gizmo_world_rotation(flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>>> node) {
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>> matrix = flight::node::get_node_world_matrix(node);
   return (std::atan2(flight::row_get<flight::RowKey<"b">>(matrix), flight::row_get<flight::RowKey<"a">>(matrix)) * flight::math::rad_to_deg_flight_value_variable__u000052__u000041__u000044__u00005f__u000054__u00004f__u00005f__u000044__u000045__u000047__flight_source_ad5040a7d8c07bd3);
 }
 
-inline flight::Ref<flight::types::GizmoNode2DFeatures<flight::types::Node2D>> create_node2_dgizmo_features() {
-  return flight::make_ref<flight::types::GizmoNode2DFeatures<flight::types::Node2D>>(flight::types::GizmoNode2DFeatures<flight::types::Node2D>{.get_world_bounds_rectangle = get_node2_dgizmo_world_bounds_rectangle, .get_world_origin = get_node2_dgizmo_world_origin, .get_world_rotation = get_node2_dgizmo_world_rotation});
+inline flight::Ref<flight::types::GizmoNode2DFeatures<flight::types::Node2D>> create_node_2d_gizmo_features() {
+  return flight::make_ref<flight::types::GizmoNode2DFeatures<flight::types::Node2D>>(flight::types::GizmoNode2DFeatures<flight::types::Node2D>{.get_world_bounds_rectangle = get_node_2d_gizmo_world_bounds_rectangle, .get_world_origin = get_node_2d_gizmo_world_origin, .get_world_rotation = get_node_2d_gizmo_world_rotation});
 }
 
 } // namespace flight::gizmo

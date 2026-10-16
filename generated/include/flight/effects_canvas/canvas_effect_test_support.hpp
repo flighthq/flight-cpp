@@ -32,7 +32,7 @@ namespace flight::types { struct Surface; }
 #include <flight/scene2d_canvas/canvas_render_state.hpp>
 #include <flight/scene2d_canvas/canvas_screen_render_target.hpp>
 #include <flight/scene2d_canvas/canvas_texture_render_target.hpp>
-#include <flight/scene2d_canvas/scene2_dcanvas_pipeline.hpp>
+#include <flight/scene2d_canvas/scene_2d_canvas_pipeline.hpp>
 #include <flight/types/contract.hpp>
 
 namespace flight::effects_canvas {

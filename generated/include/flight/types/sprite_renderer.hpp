@@ -21,7 +21,7 @@ struct SpriteRenderer;
 
 #include <flight/types/node_renderer.hpp>
 #include <flight/types/renderer_data.hpp>
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 #include <flight/types/render_state.hpp>
 #include <flight/types/sprite.hpp>
 #include <flight/types/node.hpp>

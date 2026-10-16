@@ -27,7 +27,7 @@ namespace flight::types { struct SpatialIndexBackend2D; }
 #include <flight/entity/entity.hpp>
 #include <flight/types/collision.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/physics2_d.hpp>
+#include <flight/types/physics_2d.hpp>
 #include <flight/types/spatial.hpp>
 
 namespace flight::physics2d {
@@ -41,19 +41,19 @@ using flight::types::Physics2DWorld;
 using flight::types::RigidBody2D;
 using flight::types::SpatialIndexBackend2D;
 
-inline void initialize_physics2_djoint_reaction(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DJointReaction>> out) {
+inline void initialize_physics_2d_joint_reaction(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DJointReaction>> out) {
   flight::row_set<flight::RowKey<"forceX">>(out, 0.0);
   flight::row_set<flight::RowKey<"forceY">>(out, 0.0);
   flight::row_set<flight::RowKey<"torque">>(out, 0.0);
 }
 
-inline flight::Ref<flight::types::Physics2DJointReaction> create_physics2_djoint_reaction() {
+inline flight::Ref<flight::types::Physics2DJointReaction> create_physics_2d_joint_reaction() {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DJointReaction>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics2DJointReaction>>();
-  initialize_physics2_djoint_reaction(out);
+  initialize_physics_2d_joint_reaction(out);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics2DJointReaction>>(out);
 }
 
-inline bool write_physics2_djoint_reaction(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJoint>>>> joint, double dt, flight::Ref<flight::types::Physics2DJointReaction> out) {
+inline bool write_physics_2d_joint_reaction(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJoint>>>> joint, double dt, flight::Ref<flight::types::Physics2DJointReaction> out) {
   (out->force_x = 0.0);
   (out->force_y = 0.0);
   (out->torque = 0.0);

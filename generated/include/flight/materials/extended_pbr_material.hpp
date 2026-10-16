@@ -23,7 +23,7 @@ namespace flight::materials {
 using flight::types::ExtendedPbrMaterial;
 
 inline flight::Ref<flight::types::ExtendedPbrMaterial> create_extended_pbr_material(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::ExtendedPbrMaterial>>>>>> opts = std::nullopt) {
-  auto material = flight::materials::create_material3_d<flight::Ref<flight::types::ExtendedPbrMaterial>>(flight::types::extended_pbr_material_kind, opts);
+  auto material = flight::materials::create_material_3d<flight::Ref<flight::types::ExtendedPbrMaterial>>(flight::types::extended_pbr_material_kind, opts);
   (material->extensions = ([&]() -> flight::Array<flight::Ref<flight::types::PbrExtension>> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::Ref<flight::types::PbrExtension>>> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"extensions">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<flight::Ref<flight::types::PbrExtension>>{}; }()));
   (material->standard = ([&]() -> flight::Ref<flight::types::StandardPbrMaterialProperties> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Ref<flight::types::StandardPbrMaterialProperties>> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"standard">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::materials::create_standard_pbr_material_properties(std::nullopt); }()));
   return material;

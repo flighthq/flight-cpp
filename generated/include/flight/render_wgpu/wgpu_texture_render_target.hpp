@@ -53,16 +53,16 @@ struct a_b_c_d_tx_ty_d975cba1d9c9e6b5 : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_A_B_C_D_TX_TY_D975CBA1D9C9E6B5
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_ALPHA_MATERIAL_TRANSFORM2_D_30E212DB36BB8087
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_ALPHA_MATERIAL_TRANSFORM2_D_30E212DB36BB8087
-struct alpha_material_transform2_d_30e212db36bb8087 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_ALPHA_MATERIAL_TRANSFORM_2D_30E212DB36BB8087
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_ALPHA_MATERIAL_TRANSFORM_2D_30E212DB36BB8087
+struct alpha_material_transform_2d_30e212db36bb8087 : public flight::ReferenceEnabled {
   double alpha;
   std::optional<flight::Ref<flight::types::Material>> material;
-  flight::Ref<a_b_c_d_tx_ty_d975cba1d9c9e6b5> transform2_d;
+  flight::Ref<a_b_c_d_tx_ty_d975cba1d9c9e6b5> transform_2d;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_ALPHA_MATERIAL_TRANSFORM2_D_30E212DB36BB8087
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_ALPHA_MATERIAL_TRANSFORM_2D_30E212DB36BB8087
 
-inline void draw_wgpu_texture_render_target_result(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<alpha_material_transform2_d_30e212db36bb8087> render_proxy, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>> target, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>> transform) {
+inline void draw_wgpu_texture_render_target_result(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<alpha_material_transform_2d_30e212db36bb8087> render_proxy, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>> target, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>> transform) {
   if (((flight::row_get<flight::RowKey<"width">>(target) <= 0.0) || (flight::row_get<flight::RowKey<"height">>(target) <= 0.0))) {
     return;
   }
@@ -70,7 +70,7 @@ inline void draw_wgpu_texture_render_target_result(flight::Ref<flight::types::Wg
   if (!runtime->render_pass.has_value()) {
     return;
   }
-  auto object_pattern_value = render_proxy->transform2_d;
+  auto object_pattern_value = render_proxy->transform_2d;
   const double a = object_pattern_value->a;
   const double b = object_pattern_value->b;
   const double c = object_pattern_value->c;
@@ -122,7 +122,7 @@ inline void initialize_wgpu_texture_render_target(flight::types::EntityConstruct
   const double h = object_pattern_value->height;
   const double samples = object_pattern_value->sample_count;
   const double w = object_pattern_value->width;
-  auto max_dimension = device.limits.max_texture_dimension2_d;
+  auto max_dimension = device.limits.max_texture_dimension_2d;
   if (((w > max_dimension) || (h > max_dimension))) {
     throw flight::Error(flight::String("Wgpu render target sampleCount ") + flight::to_string(samples) + flight::String(" requires a ") + flight::to_string(w) + flight::String("x") + flight::to_string(h) + flight::String(" texture, exceeding maxTextureDimension2D ") + flight::to_string(max_dimension) + flight::String("."));
   }
@@ -163,7 +163,7 @@ inline void resize_wgpu_texture_render_target(flight::Ref<flight::types::WgpuRen
   const double h = object_pattern_value->height;
   const double samples = object_pattern_value->sample_count;
   const double w = object_pattern_value->width;
-  auto max_dimension = device.limits.max_texture_dimension2_d;
+  auto max_dimension = device.limits.max_texture_dimension_2d;
   if (((w > max_dimension) || (h > max_dimension))) {
     throw flight::Error(flight::String("Wgpu render target sampleCount ") + flight::to_string(samples) + flight::String(" requires a ") + flight::to_string(w) + flight::String("x") + flight::to_string(h) + flight::String(" texture, exceeding maxTextureDimension2D ") + flight::to_string(max_dimension) + flight::String("."));
   }

@@ -11,33 +11,33 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::types { struct Skeleton2DCoercedInterpolation; }
 namespace flight::types { struct Skeleton2DDeformLengthMismatch; }
 
-#include <flight/types/skeleton2_dguards.hpp>
+#include <flight/types/skeleton_2d_guards.hpp>
 
 namespace flight::skeleton2d {
 
 inline std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DCoercedInterpolation>>>>)>> coerced_interpolation_guard = std::nullopt;
 
-inline void report_skeleton2_dcoerced_interpolation(flight::String subject, flight::String stated, flight::String applied) {
+inline void report_skeleton_2d_coerced_interpolation(flight::String subject, flight::String stated, flight::String applied) {
   if (!coerced_interpolation_guard.has_value()) {
     return;
   }
   coerced_interpolation_guard.value()(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DCoercedInterpolation>>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DCoercedInterpolation>>>>(flight::row_field<flight::RowKey<"applied">>(applied), flight::row_field<flight::RowKey<"stated">>(stated), flight::row_field<flight::RowKey<"subject">>(subject))));
 }
 
-inline void set_skeleton2_dcoerced_interpolation_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DCoercedInterpolation>>>>)>> guard) {
+inline void set_skeleton_2d_coerced_interpolation_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DCoercedInterpolation>>>>)>> guard) {
   (coerced_interpolation_guard = guard);
 }
 
 inline std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DDeformLengthMismatch>>>>)>> deform_length_guard = std::nullopt;
 
-inline void report_skeleton2_ddeform_length_mismatch(flight::String subject, double offsets, double addressed) {
+inline void report_skeleton_2d_deform_length_mismatch(flight::String subject, double offsets, double addressed) {
   if (!deform_length_guard.has_value()) {
     return;
   }
   deform_length_guard.value()(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DDeformLengthMismatch>>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DDeformLengthMismatch>>>>(flight::row_field<flight::RowKey<"addressed">>(addressed), flight::row_field<flight::RowKey<"offsets">>(offsets), flight::row_field<flight::RowKey<"subject">>(subject))));
 }
 
-inline void set_skeleton2_ddeform_length_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DDeformLengthMismatch>>>>)>> guard) {
+inline void set_skeleton_2d_deform_length_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DDeformLengthMismatch>>>>)>> guard) {
   (deform_length_guard = guard);
 }
 

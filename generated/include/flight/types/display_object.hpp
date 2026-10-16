@@ -31,12 +31,12 @@ namespace flight::types {
 struct DisplayObjectRuntime;
 } // namespace flight::types
 
-#include <flight/types/node2_d.hpp>
-#include <flight/types/scene2_d.hpp>
+#include <flight/types/node_2d.hpp>
+#include <flight/types/scene_2d.hpp>
 #include <flight/types/node.hpp>
 #include <flight/types/adjustment.hpp>
 #include <flight/types/color_scale_bias.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/interaction_signals.hpp>
 #include <flight/types/node_signals.hpp>
 #include <flight/types/node_interaction_state.hpp>
@@ -46,7 +46,7 @@ struct DisplayObjectRuntime;
 #include <flight/types/entity.hpp>
 #include <flight/types/blend_mode.hpp>
 #include <flight/types/clip_region.hpp>
-#include <flight/types/material2_d.hpp>
+#include <flight/types/material_2d.hpp>
 #include <flight/types/material.hpp>
 
 namespace flight::types {

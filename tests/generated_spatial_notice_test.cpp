@@ -112,10 +112,10 @@ void check_guard_composition() {
       [&seen](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<types::SpatialIndexingNotice>>>> value) {
         seen = spatial::format_spatial_indexing_notice(value);
       });
-  auto index = spatial::create_spatial_index2_d(spatial::create_uniform_grid_spatial_backend2_d(10.0));
+  auto index = spatial::create_spatial_index_2d(spatial::create_uniform_grid_spatial_backend_2d(10.0));
   const auto inverted = flight::make_ref<types::SpatialAabb2D>(
       types::SpatialAabb2D{.min_x = 4.0, .min_y = 0.0, .max_x = 0.0, .max_y = 4.0});
-  const bool inserted = spatial::insert_spatial_object2_d(index, 21.0, inverted);
+  const bool inserted = spatial::insert_spatial_object_2d(index, 21.0, inverted);
   spatial::set_spatial_indexing_guard(std::nullopt);
   if (inserted) {
     std::cerr << "FAIL: inverted bounds were indexed\n";

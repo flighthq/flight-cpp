@@ -26,7 +26,7 @@ namespace flight::types { struct Physics2DMaterial; }
 namespace flight::types { struct RigidBody2D; }
 
 #include <flight/types/collision.hpp>
-#include <flight/types/physics2_d.hpp>
+#include <flight/types/physics_2d.hpp>
 
 namespace flight::physics2d {
 
@@ -83,7 +83,7 @@ inline void write_polygon_mass_data(flight::Array<double> points, double density
   (out->inertia = (origin_moment - (out->mass * offset_squared)));
 }
 
-inline void compute_physics2_dcollider_mass_data(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>> collider, flight::Ref<flight::types::Physics2DMassData> out) {
+inline void compute_physics_2d_collider_mass_data(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>> collider, flight::Ref<flight::types::Physics2DMassData> out) {
   flight::types::CollisionBuiltInShape2D shape = flight::row_get<flight::RowKey<"local">>(collider);
   const double density = flight::row_get<flight::RowKey<"material">>(collider)->density;
   {
@@ -175,12 +175,12 @@ inline void compute_physics2_dcollider_mass_data(flight::StructuralRef<flight::R
   }
 }
 
-inline void update_rigid_body2_dmass_data_with_scratch(flight::Ref<flight::types::RigidBody2D> body, flight::Ref<flight::types::Physics2DMassData> scratch) {
+inline void update_rigid_body_2d_mass_data_with_scratch(flight::Ref<flight::types::RigidBody2D> body, flight::Ref<flight::types::Physics2DMassData> scratch) {
   double mass = 0.0;
   double weighted_x = 0.0;
   double weighted_y = 0.0;
   for (auto collider : body->colliders) {
-    compute_physics2_dcollider_mass_data(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>(collider)), scratch);
+    compute_physics_2d_collider_mass_data(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>(collider)), scratch);
     (mass += scratch->mass);
     (weighted_x += (scratch->center_x * scratch->mass));
     (weighted_y += (scratch->center_y * scratch->mass));
@@ -195,7 +195,7 @@ inline void update_rigid_body2_dmass_data_with_scratch(flight::Ref<flight::types
   }
   double inertia = 0.0;
   for (auto collider_2 : body->colliders) {
-    compute_physics2_dcollider_mass_data(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>(collider_2)), scratch);
+    compute_physics_2d_collider_mass_data(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>(collider_2)), scratch);
     const double offset_x = (scratch->center_x - body->center_x);
     const double offset_y = (scratch->center_y - body->center_y);
     (inertia += (scratch->inertia + (scratch->mass * ((offset_x * offset_x) + (offset_y * offset_y)))));
@@ -207,26 +207,26 @@ inline void update_rigid_body2_dmass_data_with_scratch(flight::Ref<flight::types
   (body->inverse_inertia = (((simulated && !body->fixed_rotation) && (inertia > 0.0)) ? (1.0 / inertia) : 0.0));
 }
 
-inline flight::Array<flight::Ref<flight::types::Physics2DMassData>> physics2_dmass_scratch_pool = flight::Array<flight::Ref<flight::types::Physics2DMassData>>{flight::make_ref<flight::types::Physics2DMassData>(flight::types::Physics2DMassData{.mass = 0.0, .inertia = 0.0, .center_x = 0.0, .center_y = 0.0})};
+inline flight::Array<flight::Ref<flight::types::Physics2DMassData>> physics_2d_mass_scratch_pool = flight::Array<flight::Ref<flight::types::Physics2DMassData>>{flight::make_ref<flight::types::Physics2DMassData>(flight::types::Physics2DMassData{.mass = 0.0, .inertia = 0.0, .center_x = 0.0, .center_y = 0.0})};
 
-inline flight::Ref<flight::types::Physics2DMassData> acquire_physics2_dmass_scratch() {
-  return ([&]() -> flight::Ref<flight::types::Physics2DMassData> { auto nullish_coalesce_left = physics2_dmass_scratch_pool.pop(); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::make_ref<flight::types::Physics2DMassData>(flight::types::Physics2DMassData{.mass = 0.0, .inertia = 0.0, .center_x = 0.0, .center_y = 0.0}); }());
+inline flight::Ref<flight::types::Physics2DMassData> acquire_physics_2d_mass_scratch() {
+  return ([&]() -> flight::Ref<flight::types::Physics2DMassData> { auto nullish_coalesce_left = physics_2d_mass_scratch_pool.pop(); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::make_ref<flight::types::Physics2DMassData>(flight::types::Physics2DMassData{.mass = 0.0, .inertia = 0.0, .center_x = 0.0, .center_y = 0.0}); }());
 }
 
-inline void release_physics2_dmass_scratch(flight::Ref<flight::types::Physics2DMassData> scratch) {
-  physics2_dmass_scratch_pool.push(scratch);
+inline void release_physics_2d_mass_scratch(flight::Ref<flight::types::Physics2DMassData> scratch) {
+  physics_2d_mass_scratch_pool.push(scratch);
 }
 
-inline void update_rigid_body2_dmass_data(flight::Ref<flight::types::RigidBody2D> body) {
-  auto scratch = acquire_physics2_dmass_scratch();
+inline void update_rigid_body_2d_mass_data(flight::Ref<flight::types::RigidBody2D> body) {
+  auto scratch = acquire_physics_2d_mass_scratch();
   std::exception_ptr finally_exception;
   try {
-    update_rigid_body2_dmass_data_with_scratch(body, scratch);
+    update_rigid_body_2d_mass_data_with_scratch(body, scratch);
   }
   catch (...) {
     finally_exception = std::current_exception();
   }
-  release_physics2_dmass_scratch(scratch);
+  release_physics_2d_mass_scratch(scratch);
   if (finally_exception) std::rethrow_exception(finally_exception);
 }
 

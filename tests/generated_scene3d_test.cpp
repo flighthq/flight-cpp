@@ -31,9 +31,9 @@ int main() {
   namespace scene3d = flight::scene3d;
   namespace types = flight::types;
 
-  const auto first = scene3d::create_node3_d();
-  const auto second = scene3d::create_node3_d();
-  check(first->kind == types::node3_dkind,
+  const auto first = scene3d::create_node_3d();
+  const auto second = scene3d::create_node_3d();
+  check(first->kind == types::node_3d_kind,
         "Node3D construction retains the upstream default kind");
   check(first->enabled && first->visible && first->alpha == 1.0,
         "Node3D construction applies the upstream appearance defaults");
@@ -50,15 +50,15 @@ int main() {
   options->enabled = false;
   options->name = flight::String("named");
   options->visible = false;
-  const auto configured = scene3d::create_node3_d(flight::String("Configured"), options);
+  const auto configured = scene3d::create_node_3d(flight::String("Configured"), options);
   check(configured->kind == flight::String("Configured") &&
             !configured->enabled && !configured->visible &&
             configured->alpha == 0.25 && configured->name ==
                 std::optional<flight::String>{flight::String("named")},
         "Node3D construction forwards the complete declared option surface");
 
-  const auto runtime = scene3d::get_node3_druntime(configured);
-  check(runtime->traits == std::optional<flight::Symbol>{types::node3_dtraits_key},
+  const auto runtime = scene3d::get_node_3d_runtime(configured);
+  check(runtime->traits == std::optional<flight::Symbol>{types::node_3d_traits_key},
         "Node3D runtime carries the upstream trait key");
   check(runtime->appearance_id == 0.0 && runtime->local_transform_id == 0.0 &&
             runtime->world_alpha_using_appearance_id == -1.0 &&
@@ -67,11 +67,11 @@ int main() {
             !runtime->world_matrix4.has_value(),
         "Node3D runtime initializes base and 3D cache revisions");
 
-  const auto signals = scene3d::enable_node3_dsignals(configured);
+  const auto signals = scene3d::enable_node_3d_signals(configured);
   check(signals != nullptr &&
-            scene3d::get_node3_dsignals(configured) ==
+            scene3d::get_node_3d_signals(configured) ==
                 std::optional<flight::Ref<types::NodeSignals>>{signals} &&
-            scene3d::enable_node3_dsignals(configured) == signals,
+            scene3d::enable_node_3d_signals(configured) == signals,
         "Node3D signals are allocated lazily and retain identity");
 
   auto geometry_options =
@@ -122,7 +122,7 @@ int main() {
         "Mesh construction stores geometry and materials by reference with Node3D defaults");
   const auto mesh_runtime = scene3d::get_mesh_runtime(mesh);
   check(mesh_runtime->traits ==
-            std::optional<flight::Symbol>{types::node3_dtraits_key} &&
+            std::optional<flight::Symbol>{types::node_3d_traits_key} &&
             std::holds_alternative<flight::Undefined>(
                 mesh_runtime->deformed_local_bounds),
         "Mesh owns its concrete runtime while retaining the Node3D trait contract");
@@ -162,7 +162,7 @@ int main() {
         "Mesh discrimination accepts concrete and erased references");
 
   first->position->x = 2.0;
-  scene3d::get_node3_druntime(first)->local_transform_id += 1.0;
+  scene3d::get_node_3d_runtime(first)->local_transform_id += 1.0;
   mesh->position->x = 4.0;
   flight::node::invalidate_node_local_transform(mesh);
   flight::node::add_node_child(first, mesh);
@@ -190,7 +190,7 @@ int main() {
             flight::node::get_node_local_matrix4(mesh)->m.get_index(12.0) ==
                 9.0,
         "direct local matrices are copied, retained, and marked detached");
-  flight::node::sync_node_transform3_dfrom_matrix4(mesh);
+  flight::node::sync_node_transform_3d_from_matrix4(mesh);
   check(!flight::node::is_node_local_matrix4_detached(mesh) &&
             std::abs(mesh->position->x - 9.0) < 1e-6 &&
             std::abs(mesh->position->y - 3.0) < 1e-6,

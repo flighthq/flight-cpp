@@ -15,10 +15,10 @@ namespace flight::types {
 struct GlassExtendedPbrMaterialOptions;
 } // namespace flight::types
 
-#include <flight/types/material3_doptions.hpp>
+#include <flight/types/material_3d_options.hpp>
 #include <flight/types/standard_pbr_material.hpp>
 #include <flight/types/transmission_volume_pbr_extension.hpp>
-#include <flight/types/material3_d.hpp>
+#include <flight/types/material_3d.hpp>
 #include <flight/types/blend_mode.hpp>
 
 namespace flight::types {

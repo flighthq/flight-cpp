@@ -4,7 +4,7 @@
 #include <iostream>
 
 int main() {
-  if (&flight::scene3d::node3_dkind != &flight::types::node3_dkind) {
+  if (&flight::scene3d::node_3d_kind != &flight::types::node_3d_kind) {
     std::cerr << "Node3DKind re-export has different storage\n";
     return 1;
   }

@@ -11,13 +11,13 @@ namespace flight::types { struct Entity; }
 namespace flight::types { struct Matrix; }
 
 #include <flight/geometry/matrix.hpp>
-#include <flight/types/camera2_d.hpp>
+#include <flight/types/camera_2d.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/matrix.hpp>
 
 namespace flight::camera {
 
-inline void get_camera2_dview_matrix(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>> camera, double viewport_width, double viewport_height, flight::types::MatrixLike out) {
+inline void get_camera_2d_view_matrix(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>> camera, double viewport_width, double viewport_height, flight::types::MatrixLike out) {
   const double zoom = flight::row_get<flight::RowKey<"zoom">>(camera);
   flight::geometry::set_transform_matrix(out, zoom, zoom, -flight::row_get<flight::RowKey<"rotation">>(camera), (viewport_width * 0.5), (viewport_height * 0.5));
   flight::geometry::translate_matrix_by_vector_xy(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::types::MatrixLike>>>(out)), -flight::row_get<flight::RowKey<"x">>(camera), -flight::row_get<flight::RowKey<"y">>(camera));

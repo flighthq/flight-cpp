@@ -15,10 +15,10 @@ namespace flight::types { struct Vector3; }
 
 #include <flight/geometry/matrix4.hpp>
 #include <flight/geometry/vector3.hpp>
-#include <flight/types/camera3_d.hpp>
+#include <flight/types/camera_3d.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/matrix4.hpp>
-#include <flight/types/ray3_d.hpp>
+#include <flight/types/ray_3d.hpp>
 #include <flight/types/vector3.hpp>
 #include <flight/camera/camera.hpp>
 
@@ -26,8 +26,8 @@ namespace flight::camera {
 
 inline flight::Ref<flight::types::Matrix4> scratch_view_projection_flight_value_variable__u00005f__u00005f_scratch_u000056_iew_u000050_rojection_flight_private_2e22810aa911c9fe = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
-inline bool get_camera3_dworld_to_screen(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> world_point, double aspect) {
-  flight::camera::get_camera3_dview_projection_matrix4(scratch_view_projection_flight_value_variable__u00005f__u00005f_scratch_u000056_iew_u000050_rojection_flight_private_2e22810aa911c9fe, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(camera), aspect);
+inline bool get_camera_3d_world_to_screen(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> world_point, double aspect) {
+  flight::camera::get_camera_3d_view_projection_matrix4(scratch_view_projection_flight_value_variable__u00005f__u00005f_scratch_u000056_iew_u000050_rojection_flight_private_2e22810aa911c9fe, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(camera), aspect);
   flight::Float32Array m = scratch_view_projection_flight_value_variable__u00005f__u00005f_scratch_u000056_iew_u000050_rojection_flight_private_2e22810aa911c9fe->m;
   const double wx = flight::row_get<flight::RowKey<"x">>(world_point);
   const double wy = flight::row_get<flight::RowKey<"y">>(world_point);
@@ -54,8 +54,8 @@ inline flight::Ref<flight::types::Vector3> scratch_far = flight::geometry::creat
 
 inline flight::Ref<flight::types::Vector3> scratch_dir = flight::geometry::create_vector3(std::nullopt, std::nullopt, std::nullopt);
 
-inline bool get_camera3_dscreen_to_world_ray(flight::types::Ray3DLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, double ndc_x, double ndc_y, double aspect) {
-  flight::camera::get_camera3_dview_projection_matrix4(scratch_view_projection_flight_value_variable__u00005f__u00005f_scratch_u000056_iew_u000050_rojection_flight_private_2e22810aa911c9fe, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(camera), aspect);
+inline bool get_camera_3d_screen_to_world_ray(flight::types::Ray3DLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, double ndc_x, double ndc_y, double aspect) {
+  flight::camera::get_camera_3d_view_projection_matrix4(scratch_view_projection_flight_value_variable__u00005f__u00005f_scratch_u000056_iew_u000050_rojection_flight_private_2e22810aa911c9fe, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(camera), aspect);
   if (!flight::geometry::inverse_matrix4(scratch_inverse_vp_flight_value_variable__u00005f__u00005f_scratch_u000049_nverse_u000056__u000050__flight_private_2e22810aa911c9fe, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(scratch_view_projection_flight_value_variable__u00005f__u00005f_scratch_u000056_iew_u000050_rojection_flight_private_2e22810aa911c9fe)))) {
     return false;
   }

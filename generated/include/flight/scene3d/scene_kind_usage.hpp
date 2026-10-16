@@ -11,11 +11,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/scene3_dkind_usage.hpp>
+#include <flight/types/scene_3d_kind_usage.hpp>
 
-#include <flight/types/scene3_d.hpp>
+#include <flight/types/scene_3d.hpp>
 
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 
 #include <flight/types/modifier.hpp>
 
@@ -66,7 +66,7 @@ inline bool is_scene_mesh_flight_value_function_is_u000053_cene_u00004d_esh_flig
   return flight::row_get<flight::RowKey<"geometry">>(candidate).has_value();
 }
 
-inline void initialize_scene3_dkind_usage(flight::types::EntityConstruction<flight::Ref<flight::types::Scene3DKindUsage>> out) {
+inline void initialize_scene_3d_kind_usage(flight::types::EntityConstruction<flight::Ref<flight::types::Scene3DKindUsage>> out) {
   flight::row_set<flight::RowKey<"materialKinds">>(out, flight::Array<flight::String>{});
   flight::row_set<flight::RowKey<"modifierKinds">>(out, flight::Array<flight::String>{});
   flight::row_set<flight::RowKey<"nodeKinds">>(out, flight::Array<flight::String>{});
@@ -74,13 +74,13 @@ inline void initialize_scene3_dkind_usage(flight::types::EntityConstruction<flig
   flight::row_set<flight::RowKey<"textureSourceKinds">>(out, flight::Array<flight::String>{});
 }
 
-inline flight::Ref<flight::types::Scene3DKindUsage> create_scene3_dkind_usage() {
+inline flight::Ref<flight::types::Scene3DKindUsage> create_scene_3d_kind_usage() {
   flight::types::EntityConstruction<flight::Ref<flight::types::Scene3DKindUsage>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Scene3DKindUsage>>();
-  initialize_scene3_dkind_usage(out);
+  initialize_scene_3d_kind_usage(out);
   return flight::entity::finish_entity<flight::Ref<flight::types::Scene3DKindUsage>>(out);
 }
 
-inline void add_scene3_dused_kind(flight::Array<flight::String> kinds, flight::String kind) {
+inline void add_scene_3d_used_kind(flight::Array<flight::String> kinds, flight::String kind) {
   {
     double i = 0.0;
     while ((i < static_cast<double>(kinds.size()))) {

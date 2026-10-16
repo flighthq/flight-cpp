@@ -50,7 +50,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/entity/entity.hpp>
 
 #include <flight/scene3d_wgpu/wgpu_mesh_upload.hpp>
-#include <flight/scene3d_wgpu/wgpu_scene3_druntime.hpp>
+#include <flight/scene3d_wgpu/wgpu_scene_3d_runtime.hpp>
 
 namespace flight::scene3d_wgpu {
 
@@ -687,7 +687,7 @@ inline void reset_wgpu_uv_transform_stash(flight::Float32Array out) {
 inline flight::Ref<Matrix3> scratch_uv_matrix = create_matrix3(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
 inline void stash_wgpu_uv_transform(flight::Ref<WgpuRenderState> state, std::optional<flight::Ref<TextureLike>> texture) {
-  flight::Float32Array out = get_wgpu_scene3_druntime(state)->pending_uv_transform;
+  flight::Float32Array out = get_wgpu_scene_3d_runtime(state)->pending_uv_transform;
   if (((!texture.has_value() || ((flight::String("storage") in texture.value()) && !has_texture_source(texture.value()))) || !has_texture_uv_transform(texture.value()))) {
     reset_wgpu_uv_transform_stash(out);
     return;
@@ -898,11 +898,11 @@ struct binding_resource_a5b79d316bf17db5 : public flight::ReferenceEnabled {
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_BINDING_RESOURCE_A5B79D316BF17DB5
 
 inline void write_wgpu_frame_uniform(flight::Ref<WgpuRenderState> state, flight::Ref<Camera3D> camera, flight::Ref<Scene3DLightBlock> lights) {
-  flight::Ref<WgpuScene3DRuntime> scene = get_wgpu_scene3_druntime(state);
+  flight::Ref<WgpuScene3DRuntime> scene = get_wgpu_scene_3d_runtime(state);
   std::optional<flight::Ref<WgpuScene3DFrameBinding>> binding = scene->frame_bindings.get(lights);
   if (!binding.has_value()) {
     auto buffer = state->device.create_buffer({.size = frame_uniform_bytes, .usage = flight::bitwise_or(flight::host_sdl::wgpu_buffer_usage_uniform, flight::host_sdl::wgpu_buffer_usage_copy_dst)});
-    auto bind_group = state->device.create_bind_group({.layout = ensure_wgpu_scene3_dlayouts(state)->frame_bind_group_layout, .entries = flight::Array{flight::make_ref<binding_resource_a5b79d316bf17db5>(binding_resource_a5b79d316bf17db5{.binding = 0.0, .resource = flight::make_ref<buffer_f593a54db11caca9>(buffer_f593a54db11caca9{.buffer = buffer})})}});
+    auto bind_group = state->device.create_bind_group({.layout = ensure_wgpu_scene_3d_layouts(state)->frame_bind_group_layout, .entries = flight::Array{flight::make_ref<binding_resource_a5b79d316bf17db5>(binding_resource_a5b79d316bf17db5{.binding = 0.0, .resource = flight::make_ref<buffer_f593a54db11caca9>(buffer_f593a54db11caca9{.buffer = buffer})})}});
     (binding = flight::make_ref<WgpuScene3DFrameBinding>(WgpuScene3DFrameBinding{.bind_group = bind_group, .buffer = buffer}));
     scene->frame_bindings.set(lights, binding.value());
   }
@@ -910,7 +910,7 @@ inline void write_wgpu_frame_uniform(flight::Ref<WgpuRenderState> state, flight:
   (scene->frame_bind_group = binding.value()->bind_group);
   flight::Float32Array f = frame_scratch;
   const double aspect = ((camera->projection.kind == flight::String("perspective")) ? camera->projection->aspect : 1.0);
-  get_camera3_dview_projection_matrix4(scratch_view_projection, camera, ((aspect != 0.0) ? aspect : 1.0));
+  get_camera_3d_view_projection_matrix4(scratch_view_projection, camera, ((aspect != 0.0) ? aspect : 1.0));
   flight::Float32Array source_vp = scratch_view_projection->m;
   flight::Float32Array web_gpu_vp = scratch_web_gpu_view_projection->m;
   web_gpu_vp.set(source_vp);
@@ -926,7 +926,7 @@ inline void write_wgpu_frame_uniform(flight::Ref<WgpuRenderState> state, flight:
       (i += 1.0);
     }
   }
-  get_camera3_dposition(scratch_camera_position, camera);
+  get_camera_3d_position(scratch_camera_position, camera);
   ([&]() { auto&& typed_array_16 = f; const auto typed_index_16 = 16.0; const auto typed_value_16 = scratch_camera_position->x; return typed_array_16.set_index(typed_index_16, typed_value_16); }());
   ([&]() { auto&& typed_array_17 = f; const auto typed_index_17 = 17.0; const auto typed_value_17 = scratch_camera_position->y; return typed_array_17.set_index(typed_index_17, typed_value_17); }());
   ([&]() { auto&& typed_array_18 = f; const auto typed_index_18 = 18.0; const auto typed_value_18 = scratch_camera_position->z; return typed_array_18.set_index(typed_index_18, typed_value_18); }());

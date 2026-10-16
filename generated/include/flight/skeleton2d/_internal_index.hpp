@@ -5,28 +5,28 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/skeleton2d/apply_animation_clip_to_skeleton2_d.hpp>
-#include <flight/skeleton2d/bounding_box_attachment2_d.hpp>
-#include <flight/skeleton2d/clipping_attachment2_d.hpp>
-#include <flight/skeleton2d/deform_animation_target2_d.hpp>
-#include <flight/skeleton2d/deform_mesh_attachment2_d.hpp>
-#include <flight/skeleton2d/deform_path_attachment2_d.hpp>
-#include <flight/skeleton2d/enable_skeleton2_dguards.hpp>
-#include <flight/skeleton2d/explain_skeleton2_dchannel.hpp>
-#include <flight/skeleton2d/explain_skeleton2_ddeform_length.hpp>
-#include <flight/skeleton2d/ik_constraint2_d.hpp>
-#include <flight/skeleton2d/path_constraint2_d.hpp>
-#include <flight/skeleton2d/point_attachment2_d.hpp>
-#include <flight/skeleton2d/region_attachment2_d.hpp>
+#include <flight/skeleton2d/apply_animation_clip_to_skeleton_2d.hpp>
+#include <flight/skeleton2d/bounding_box_attachment_2d.hpp>
+#include <flight/skeleton2d/clipping_attachment_2d.hpp>
+#include <flight/skeleton2d/deform_animation_target_2d.hpp>
+#include <flight/skeleton2d/deform_mesh_attachment_2d.hpp>
+#include <flight/skeleton2d/deform_path_attachment_2d.hpp>
+#include <flight/skeleton2d/enable_skeleton_2d_guards.hpp>
+#include <flight/skeleton2d/explain_skeleton_2d_channel.hpp>
+#include <flight/skeleton2d/explain_skeleton_2d_deform_length.hpp>
+#include <flight/skeleton2d/ik_constraint_2d.hpp>
+#include <flight/skeleton2d/path_constraint_2d.hpp>
+#include <flight/skeleton2d/point_attachment_2d.hpp>
+#include <flight/skeleton2d/region_attachment_2d.hpp>
 #include <flight/skeleton2d/skeleton2d.hpp>
 #include <flight/skeleton2d/skeleton2d_animation_target.hpp>
 #include <flight/skeleton2d/skeleton2d_constants.hpp>
 #include <flight/skeleton2d/skeleton2d_constraint.hpp>
 #include <flight/skeleton2d/skeleton2d_draw_order_target.hpp>
-#include <flight/skeleton2d/skin2_d.hpp>
-#include <flight/skeleton2d/skin_attachment2_dpoints.hpp>
-#include <flight/skeleton2d/slot_deform2_d.hpp>
-#include <flight/skeleton2d/transform_constraint2_d.hpp>
+#include <flight/skeleton2d/skin_2d.hpp>
+#include <flight/skeleton2d/skin_attachment_2d_points.hpp>
+#include <flight/skeleton2d/slot_deform_2d.hpp>
+#include <flight/skeleton2d/transform_constraint_2d.hpp>
 
 namespace flight::skeleton2d {
 

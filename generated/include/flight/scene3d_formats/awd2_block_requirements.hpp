@@ -23,6 +23,6 @@ struct facet_key_dfcea1a2cd30187e : public flight::ReferenceEnabled {
 
 inline flight::Map<flight::String, flight::Array<flight::Ref<flight::types::Requirement>>> awd2_block_scene_requirements = flight::Map<flight::String, flight::Array<flight::Ref<flight::types::Requirement>>>(flight::Array<std::tuple<flight::String, flight::Array<flight::Ref<flight::types::Requirement>>>>{flight::Array{flight::String("Material"), flight::Array{flight::make_ref<facet_key_dfcea1a2cd30187e>(facet_key_dfcea1a2cd30187e{.facet = flight::types::requirement_facet->scene_material_kind, .key = flight::types::shaded_material_kind})}}});
 
-inline flight::Array<flight::Ref<flight::types::Requirement>> awd2_document_scene_requirements = flight::Array<flight::Ref<flight::types::Requirement>>{};
+inline flight::Array<flight::Ref<flight::types::Requirement>> awd_2document_scene_requirements = flight::Array<flight::Ref<flight::types::Requirement>>{};
 
 } // namespace flight::scene3d_formats

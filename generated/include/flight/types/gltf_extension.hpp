@@ -33,9 +33,9 @@ struct GltfImportOptions;
 
 #include <flight/types/gltf_schema.hpp>
 #include <flight/types/import_diagnostic.hpp>
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d_document.hpp>
 #include <flight/types/texture.hpp>
-#include <flight/types/transform3_d.hpp>
+#include <flight/types/transform_3d.hpp>
 
 namespace flight::types {
 

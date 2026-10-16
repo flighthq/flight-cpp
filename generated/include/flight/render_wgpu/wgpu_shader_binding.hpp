@@ -44,7 +44,7 @@ inline std::optional<flight::Ref<flight::types::WgpuBitmapShader>> resolve_wgpu_
 }
 
 inline void set_wgpu_shader(flight::Ref<flight::types::WgpuRenderState> state, flight::types::Node2D node, std::optional<flight::Ref<flight::types::WgpuBitmapShader>> shader) {
-  flight::Ref<flight::types::RenderProxy2D> render_proxy = flight::render::get_or_create_render_proxy2_d(state, node);
+  flight::Ref<flight::types::RenderProxy2D> render_proxy = flight::render::get_or_create_render_proxy_2d(state, node);
   if (!shader.has_value()) {
     shader_bindings.erase(render_proxy);
     return;

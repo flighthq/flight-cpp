@@ -16,14 +16,14 @@ namespace flight::types { struct Rectangle; }
 #include <flight/geometry/rectangle.hpp>
 #include <flight/math/clamp.hpp>
 #include <flight/math/interpolation_advanced.hpp>
-#include <flight/types/camera2_d.hpp>
+#include <flight/types/camera_2d.hpp>
 #include <flight/types/rectangle.hpp>
 
 namespace flight::camera_controls {
 
 inline flight::Ref<flight::types::Rectangle> scratch_bounds = flight::geometry::create_rectangle(std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
-inline void update_camera2_dfollow(flight::Ref<flight::types::Camera2D> camera, double viewport_width, double viewport_height, double target_x, double target_y, double delta_time, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2DFollowOptions>>>>> options = std::nullopt) {
+inline void update_camera_2d_follow(flight::Ref<flight::types::Camera2D> camera, double viewport_width, double viewport_height, double target_x, double target_y, double delta_time, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2DFollowOptions>>>>> options = std::nullopt) {
   const double cam_x = camera->x;
   const double cam_y = camera->y;
   const double dead_half_w = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"deadzoneHalfWidth">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
@@ -62,7 +62,7 @@ inline void update_camera2_dfollow(flight::Ref<flight::types::Camera2D> camera, 
     (next_y = goal_y);
   }
   if (flight::to_boolean(world_bounds)) {
-    flight::camera::get_camera2_dvisible_bounds(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>(camera)), viewport_width, viewport_height, scratch_bounds);
+    flight::camera::get_camera_2d_visible_bounds(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>(camera)), viewport_width, viewport_height, scratch_bounds);
     const double half_vis_w = (scratch_bounds->width * 0.5);
     const double half_vis_h = (scratch_bounds->height * 0.5);
     if ((flight::row_get<flight::RowKey<"width">>(world_bounds.value()) <= scratch_bounds->width)) {

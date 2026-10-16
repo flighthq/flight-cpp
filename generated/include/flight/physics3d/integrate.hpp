@@ -15,7 +15,7 @@ namespace flight::types { struct Physics3DCollider; }
 namespace flight::types { struct RigidBody3D; }
 
 #include <flight/types/collision.hpp>
-#include <flight/types/physics3_d.hpp>
+#include <flight/types/physics_3d.hpp>
 #include <flight/physics3d/symmetric_tensor.hpp>
 
 namespace flight::physics3d {
@@ -23,7 +23,7 @@ namespace flight::physics3d {
 using flight::types::Physics3DCollider;
 using flight::types::RigidBody3D;
 
-inline void clear_rigid_body3_dforces(flight::Ref<flight::types::RigidBody3D> body) {
+inline void clear_rigid_body_3d_forces(flight::Ref<flight::types::RigidBody3D> body) {
   (body->force_x = 0.0);
   (body->force_y = 0.0);
   (body->force_z = 0.0);
@@ -32,7 +32,7 @@ inline void clear_rigid_body3_dforces(flight::Ref<flight::types::RigidBody3D> bo
   (body->torque_z = 0.0);
 }
 
-inline void integrate_rigid_body3_dpose(flight::Ref<flight::types::RigidBody3D> body, double dt) {
+inline void integrate_rigid_body_3d_pose(flight::Ref<flight::types::RigidBody3D> body, double dt) {
   if (((body->type == flight::String("static")) || body->sleeping)) {
     return;
   }
@@ -103,7 +103,7 @@ inline void read_world_inertia(flight::StructuralRef<flight::RowReadonly<flight:
 
 inline flight::Array<double> scratch_tensor_flight_value_variable_scratch_u000054_ensor_flight_private_ba2022e7d5be87f3 = flight::Array<double>{0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
-inline void refresh_rigid_body3_dworld_inertia(flight::Ref<flight::types::RigidBody3D> body) {
+inline void refresh_rigid_body_3d_world_inertia(flight::Ref<flight::types::RigidBody3D> body) {
   (scratch_tensor_flight_value_variable_scratch_u000054_ensor_flight_private_ba2022e7d5be87f3.element(flight::physics3d::tensor_xx) = body->inverse_inertia_xx);
   (scratch_tensor_flight_value_variable_scratch_u000054_ensor_flight_private_ba2022e7d5be87f3.element(flight::physics3d::tensor_yy) = body->inverse_inertia_yy);
   (scratch_tensor_flight_value_variable_scratch_u000054_ensor_flight_private_ba2022e7d5be87f3.element(flight::physics3d::tensor_zz) = body->inverse_inertia_zz);
@@ -121,7 +121,7 @@ inline void refresh_rigid_body3_dworld_inertia(flight::Ref<flight::types::RigidB
 
 inline flight::Array<double> scratch_vector_flight_value_variable_scratch_u000056_ector_flight_private_ba2022e7d5be87f3 = flight::Array<double>{0.0, 0.0, 0.0};
 
-inline void integrate_rigid_body3_dvelocity(flight::Ref<flight::types::RigidBody3D> body, double gravity_x, double gravity_y, double gravity_z, double dt) {
+inline void integrate_rigid_body_3d_velocity(flight::Ref<flight::types::RigidBody3D> body, double gravity_x, double gravity_y, double gravity_z, double dt) {
   if (((body->type != flight::String("dynamic")) || body->sleeping)) {
     return;
   }

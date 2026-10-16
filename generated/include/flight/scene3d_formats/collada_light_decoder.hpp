@@ -24,11 +24,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/vector3.hpp>
 
-#include <flight/types/transform3_d.hpp>
+#include <flight/types/transform_3d.hpp>
 
 #include <flight/types/spot_light_options.hpp>
 
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d_document.hpp>
 
 #include <flight/types/point_light_options.hpp>
 
@@ -234,8 +234,8 @@ inline void resolve_collada_lights(flight::Ref<flight::types::Scene3DDocument> d
     if (([&](const auto& presence_operand) { if constexpr (flight::detail::optional_traits<std::remove_cvref_t<decltype(presence_operand.value())>>::optional) { return !presence_operand.has_value() || !presence_operand.value().has_value(); } else { return !presence_operand.has_value(); } }(world_matrix))) {
       continue;
     }
-    auto transform = flight::geometry::create_transform3_d();
-    flight::geometry::decompose_matrix4_to_transform3_d(transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::types::Matrix4Like>>>(world_matrix.value())));
+    auto transform = flight::geometry::create_transform_3d();
+    flight::geometry::decompose_matrix4_to_transform_3d(transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::types::Matrix4Like>>>(world_matrix.value())));
     document->lights.push(flight::make_ref<flight::types::Scene3DDocumentLight>(flight::types::Scene3DDocumentLight{.descriptor = std::variant<flight::Ref<flight::types::DirectionalLight>, flight::Ref<flight::types::AreaLight>, flight::Ref<flight::types::Light>, flight::Ref<flight::types::Environment>, flight::Ref<flight::types::AmbientLight>, flight::Ref<flight::types::HemisphereLight>, flight::Ref<flight::types::SpotLight>, flight::Ref<flight::types::PointLight>>{std::in_place_type<flight::Ref<flight::types::Light>>, create_collada_light(std::get<0>(definition))}, .name = std::get<0>(definition)->name, .node = std::optional<double>{binding->node_index}, .transform = transform}));
   }
 }

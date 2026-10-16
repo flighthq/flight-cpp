@@ -29,22 +29,22 @@ namespace flight::types { struct Scene3DRenderProxy; }
 #include <flight/types/gl_pbr_transmission_scene_color.hpp>
 #include <flight/types/gl_render_state.hpp>
 #include <flight/types/gl_render_target.hpp>
-#include <flight/types/gl_scene3_druntime.hpp>
+#include <flight/types/gl_scene_3d_runtime.hpp>
 #include <flight/types/gl_skin_palette_texture.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/mesh.hpp>
 #include <flight/types/mesh_geometry.hpp>
 #include <flight/types/pbr_extension.hpp>
-#include <flight/types/scene3_dlight_block.hpp>
-#include <flight/types/scene3_dlights.hpp>
-#include <flight/types/scene3_drender_proxy.hpp>
+#include <flight/types/scene_3d_light_block.hpp>
+#include <flight/types/scene_3d_lights.hpp>
+#include <flight/types/scene_3d_render_proxy.hpp>
 #include <flight/types/texture.hpp>
-#include <flight/scene3d_gl/gl_scene3_druntime.hpp>
+#include <flight/scene3d_gl/gl_scene_3d_runtime.hpp>
 
 namespace flight::scene3d_gl {
 
 inline void set_gl_pbr_transmission_scene_color(flight::Ref<flight::types::GlRenderState> state, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlPbrTransmissionSceneColor>>>>> scene_color) {
-  (flight::scene3d_gl::get_gl_scene3_druntime(state)->pbr_transmission_scene_color = ([&]() -> std::optional<flight::Ref<flight::types::GlPbrTransmissionSceneColor>> { auto contextual_union_source = scene_color; if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<flight::Ref<flight::types::GlPbrTransmissionSceneColor>>{flight::structural_ref_cast<flight::Ref<flight::types::GlPbrTransmissionSceneColor>>(contextual_union_source.value())}; }()));
+  (flight::scene3d_gl::get_gl_scene_3d_runtime(state)->pbr_transmission_scene_color = ([&]() -> std::optional<flight::Ref<flight::types::GlPbrTransmissionSceneColor>> { auto contextual_union_source = scene_color; if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<flight::Ref<flight::types::GlPbrTransmissionSceneColor>>{flight::structural_ref_cast<flight::Ref<flight::types::GlPbrTransmissionSceneColor>>(contextual_union_source.value())}; }()));
 }
 
 } // namespace flight::scene3d_gl

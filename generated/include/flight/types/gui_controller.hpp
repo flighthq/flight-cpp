@@ -22,7 +22,7 @@ using GuiTransitionRequest = flight::Ref<flight::types::NodeInteractiveStateTran
 using GuiTransitionDescriptor = flight::Ref<flight::types::NodeInteractiveStateTransition<flight::StructuralRef<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<Node2DTraits>>>>, flight::RowOf<flight::Ref<Node2DTraits>>>>, flight::String>>;
 } // namespace flight::types
 
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/node_interactive_state_binding.hpp>
 
 namespace flight::types {

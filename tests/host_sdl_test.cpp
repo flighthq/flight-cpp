@@ -1291,8 +1291,8 @@ int main() {
     expect(
         alias == device && device.identity() == alias.identity() &&
             device.native_handle() == &object_state &&
-            device.limits.max_texture_dimension2_d == 16'384.0 && locked.has_value() &&
-            locked->limits.max_texture_dimension2_d == 16'384.0,
+            device.limits.max_texture_dimension_2d == 16'384.0 && locked.has_value() &&
+            locked->limits.max_texture_dimension_2d == 16'384.0,
         "WGPU object carrier lost shared native identity or provider limits");
   }
   expect(
@@ -1553,7 +1553,7 @@ int main() {
         flight::host_sdl::WgpuSupportedLimits{16'384.0});
     expect(
         adapter.features.has(flight::String("timestamp-query")) &&
-            adapter.limits.max_texture_dimension2_d == 16'384.0,
+            adapter.limits.max_texture_dimension_2d == 16'384.0,
         "WGPU adapter carrier lost provider capability metadata");
   }
   expect(object_state.releases == 2, "WGPU adapter did not release its provider handle");

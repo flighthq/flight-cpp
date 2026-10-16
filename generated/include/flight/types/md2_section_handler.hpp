@@ -21,7 +21,7 @@ struct Md2ImportOptions;
 
 #include <flight/types/import_diagnostic.hpp>
 #include <flight/types/morph_target.hpp>
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d_document.hpp>
 
 namespace flight::types {
 

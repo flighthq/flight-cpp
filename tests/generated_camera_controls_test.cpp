@@ -79,11 +79,11 @@ flight::Ref<types::Camera3D> camera3d() {
           .near = 0.1,
           .projection = types::Projection{projection},
       });
-  return camera::create_camera3_d(readonly(options));
+  return camera::create_camera_3d(readonly(options));
 }
 
 void follow_deadzone_damping_bounds_and_edge_time() {
-  auto value = camera::create_camera2_d();
+  auto value = camera::create_camera_2d();
   auto options = flight::make_ref<types::Camera2DFollowOptions>(
       types::Camera2DFollowOptions{
           .deadzone_half_height = 100.0,
@@ -92,13 +92,13 @@ void follow_deadzone_damping_bounds_and_edge_time() {
           .world_bounds = std::nullopt,
       });
 
-  controls::update_camera2_dfollow(
+  controls::update_camera_2d_follow(
       value, 800.0, 600.0, 50.0, 30.0, 0.016, readonly(options));
   check(value->x == 0.0 && value->y == 0.0,
         "follow leaves a target inside the deadzone unchanged");
 
   options->smooth_time = 0.0;
-  controls::update_camera2_dfollow(
+  controls::update_camera_2d_follow(
       value, 800.0, 600.0, 300.0, 0.0, 0.016, readonly(options));
   check(value->x == 200.0 && value->y == 0.0,
         "unsmoothed follow moves only far enough to reach the deadzone edge");
@@ -107,12 +107,12 @@ void follow_deadzone_damping_bounds_and_edge_time() {
   options->deadzone_half_height = 0.0;
   options->deadzone_half_width = 0.0;
   options->smooth_time = 0.1;
-  controls::update_camera2_dfollow(
+  controls::update_camera_2d_follow(
       value, 800.0, 600.0, 100.0, 0.0, 0.016, readonly(options));
   check(value->x > 0.0 && value->x < 100.0 && value->y == 0.0,
         "positive dt damps follow toward its goal");
 
-  controls::update_camera2_dfollow(
+  controls::update_camera_2d_follow(
       value, 800.0, 600.0, 125.0, -20.0, 0.0, readonly(options));
   check(value->x == 125.0 && value->y == -20.0,
         "zero dt follows the authority's immediate-snap edge behavior");
@@ -120,12 +120,12 @@ void follow_deadzone_damping_bounds_and_edge_time() {
   const auto world = geometry::create_rectangle(0.0, 0.0, 2000.0, 2000.0);
   options->smooth_time = 0.0;
   options->world_bounds = readonly(world);
-  controls::update_camera2_dfollow(
+  controls::update_camera_2d_follow(
       value, 800.0, 600.0, 1900.0, 1000.0, 0.016, readonly(options));
   check(value->x == 1600.0 && value->y == 1000.0,
         "follow clamps the camera center to a larger world");
   const auto visible = geometry::create_rectangle();
-  camera::get_camera2_dvisible_bounds(
+  camera::get_camera_2d_visible_bounds(
       readonly(value), 800.0, 600.0, visible);
   check(visible->x >= world->x - tolerance &&
             visible->y >= world->y - tolerance &&
@@ -135,7 +135,7 @@ void follow_deadzone_damping_bounds_and_edge_time() {
 
   const auto small_world = geometry::create_rectangle(10.0, 20.0, 400.0, 200.0);
   options->world_bounds = readonly(small_world);
-  controls::update_camera2_dfollow(
+  controls::update_camera_2d_follow(
       value, 800.0, 600.0, 1900.0, 1000.0, 0.016, readonly(options));
   check(value->x == 210.0 && value->y == 120.0,
         "follow centers each axis whose world is smaller than the view");
@@ -202,7 +202,7 @@ void fly_ownership_ordering_clamps_and_view() {
       source->position->y + std::sin(source->pitch),
       source->position->z - std::cos(source->yaw) * std::cos(source->pitch));
   const auto ndc = geometry::create_vector3();
-  check(camera::get_camera3_dworld_to_screen(
+  check(camera::get_camera_3d_world_to_screen(
             ndc, readonly(value), readonly_as<
                 flight::StructuralRef<
                     flight::RowReadonly<flight::RowOf<types::Vector3Like>>>>(
@@ -322,7 +322,7 @@ void orbit_ownership_ordering_clamps_and_view() {
             source->distance > 5.0 && source->distance < 6.0,
         "orbit update damps distance and takes the shortest azimuth arc");
   const auto ndc = geometry::create_vector3();
-  check(camera::get_camera3_dworld_to_screen(
+  check(camera::get_camera_3d_world_to_screen(
             ndc, readonly(value), readonly_as<
                 flight::StructuralRef<
                     flight::RowReadonly<flight::RowOf<types::Vector3Like>>>>(
@@ -337,7 +337,7 @@ void orbit_ownership_ordering_clamps_and_view() {
       source->target->y + source->distance * std::sin(source->polar),
       source->target->z + source->distance * std::cos(source->azimuth) * cos_polar);
   const auto world_up = geometry::create_vector3(0.0, 1.0, 0.0);
-  camera::set_camera3_dview_matrix4_from_look_at(
+  camera::set_camera_3d_view_matrix4_from_look_at(
       expected_camera, readonly(expected_eye), readonly(source->target),
       readonly(world_up));
   bool exact_view = true;

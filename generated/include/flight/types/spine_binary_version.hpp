@@ -17,7 +17,7 @@ using SpineBinaryVersionFailureReason = flight::String;
 } // namespace flight::types
 
 #include <flight/types/import_diagnostic.hpp>
-#include <flight/types/skeleton2_dimport.hpp>
+#include <flight/types/skeleton_2d_import.hpp>
 
 namespace flight::types {
 

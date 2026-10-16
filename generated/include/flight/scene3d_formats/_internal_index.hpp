@@ -77,7 +77,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/scene3d_formats/register_gltf_lighting_extension_handlers.hpp>
 #include <flight/scene3d_formats/register_gltf_material_extension_handlers.hpp>
 #include <flight/scene3d_formats/register_gltf_skin_handlers.hpp>
-#include <flight/scene3d_formats/_internal_scene3_dformats_test_helper.hpp>
+#include <flight/scene3d_formats/_internal_scene_3d_formats_test_helper.hpp>
 #include <flight/scene3d_formats/scene3d_format_requirements.hpp>
 #include <flight/scene3d_formats/scene_skeleton.hpp>
 #include <flight/scene3d_formats/shared.hpp>

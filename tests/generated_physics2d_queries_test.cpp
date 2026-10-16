@@ -48,9 +48,9 @@ auto stone() { return t::material(1, 0.3, 0); }
 
 // createPhysics2DWorld() with no arguments: gravity (0, -9.81). The shared support header's world() defaults to
 // zero gravity, so the no-argument upstream form goes straight to the generated constructor.
-t::World default_world() { return p::create_physics2_dworld(); }
+t::World default_world() { return p::create_physics_2d_world(); }
 
-t::Body add(const t::World& world, const t::Body& body) { return p::add_physics2_dbody(world, body); }
+t::Body add(const t::World& world, const t::Body& body) { return p::add_physics_2d_body(world, body); }
 
 void push(const t::Body& body, const t::Collider& collider) { body->colliders.push(collider); }
 
@@ -150,7 +150,7 @@ std::optional<double> suppression(const t::World& world, double a, double b) {
 void world_queries(flight::upstream_test::Runner& runner) {
   runner.describe("createPhysics2DQueryFilter", [&] {
     runner.it("includes every body kind, sensor, category, and mask by default", [] {
-      auto filter = p::create_physics2_dquery_filter();
+      auto filter = p::create_physics_2d_query_filter();
       expect(filter->category_bits).to_be(4294967295.0);
       expect(filter->mask_bits).to_be(4294967295.0);
       expect(filter->include_sensors).to_be(true);
@@ -161,21 +161,21 @@ void world_queries(flight::upstream_test::Runner& runner) {
   });
   runner.describe("createPhysics2DQueryResult", [&] {
     runner.it("starts with no live hits", [] {
-      auto result = p::create_physics2_dquery_result();
+      auto result = p::create_physics_2d_query_result();
       expect(static_cast<double>(result->hits.size())).to_be(0.0);
       expect(result->hit_count).to_be(0.0);
     });
   });
   runner.describe("createPhysics2DRayResult", [&] {
     runner.it("starts with no live hits", [] {
-      auto result = p::create_physics2_dray_result();
+      auto result = p::create_physics_2d_ray_result();
       expect(static_cast<double>(result->hits.size())).to_be(0.0);
       expect(result->hit_count).to_be(0.0);
     });
   });
   runner.describe("createPhysics2DShapeCastResult", [&] {
     runner.it("starts as a miss with nothing referenced", [] {
-      auto result = p::create_physics2_dshape_cast_result();
+      auto result = p::create_physics_2d_shape_cast_result();
       expect(result->body.has_value()).to_be(false);
       expect(result->collider.has_value()).to_be(false);
       expect(result->collider_index).to_be(-1.0);
@@ -194,11 +194,11 @@ void world_queries(flight::upstream_test::Runner& runner) {
       auto body = t::body("dynamic", 0, 0, M_PI / 4);
       push(body, t::collider(t::aabb(-2, -0.25, 2, 0.25), stone()));
       add(world, body);
-      auto out = p::create_physics2_dquery_result();
+      auto out = p::create_physics_2d_query_result();
 
-      p::query_physics2_dpoint(world, 1, 0, out);
+      p::query_physics_2d_point(world, 1, 0, out);
       expect(out->hit_count).to_be(0.0);
-      p::query_physics2_dpoint(world, 1, 1, out);
+      p::query_physics_2d_point(world, 1, 1, out);
 
       expect(out->hit_count).to_be(1.0);
       expect_true(out->hits.element(0)->body == body, "hit body");
@@ -211,14 +211,14 @@ void world_queries(flight::upstream_test::Runner& runner) {
       auto body = t::body("dynamic", 0, 0);
       push(body, t::collider(t::circle(0, 0, 1), stone()));
       add(world, body);
-      auto out = p::create_physics2_dquery_result();
+      auto out = p::create_physics_2d_query_result();
 
-      p::query_physics2_dpoint(world, 0, 0, out);
+      p::query_physics_2d_point(world, 0, 0, out);
       auto retained_hit = out->hits.element(0);
       body->x = 5;
-      p::query_physics2_dpoint(world, 0, 0, out);
+      p::query_physics_2d_point(world, 0, 0, out);
       expect(out->hit_count).to_be(0.0);
-      p::query_physics2_dpoint(world, 5, 0, out);
+      p::query_physics_2d_point(world, 5, 0, out);
 
       expect(out->hit_count).to_be(1.0);
       expect_true(out->hits.element(0) == retained_hit, "the retained hit object is reused");
@@ -233,9 +233,9 @@ void world_queries(flight::upstream_test::Runner& runner) {
       push(second, t::collider(t::circle(0, 0, 1), stone()));
       add(world, first);
       add(world, second);
-      auto out = p::create_physics2_dquery_result();
+      auto out = p::create_physics_2d_query_result();
 
-      p::query_physics2_dpoint(world, 0, 0, out);
+      p::query_physics_2d_point(world, 0, 0, out);
 
       expect_true(hit_pairs(out) == std::vector<std::pair<double, double>>{{first->index, 0}, {first->index, 1}, {second->index, 0}},
                   "deterministic body/collider order");
@@ -247,9 +247,9 @@ void world_queries(flight::upstream_test::Runner& runner) {
       push(body, t::collider(t::point(2, 0), stone()));
       push(body, t::collider(t::segment(0, 0, 2, 0), stone()));
       add(world, body);
-      auto out = p::create_physics2_dquery_result();
+      auto out = p::create_physics_2d_query_result();
 
-      p::query_physics2_dpoint(world, 3, 6, out);
+      p::query_physics_2d_point(world, 3, 6, out);
 
       std::vector<double> indices;
       for (double i = 0; i < out->hit_count; ++i) indices.push_back(out->hits.element(i)->collider_index);
@@ -264,17 +264,17 @@ void world_queries(flight::upstream_test::Runner& runner) {
       push(fixed, t::collider(t::circle(0, 0, 1), stone()));
       add(world, dynamic);
       add(world, fixed);
-      auto filter = p::create_physics2_dquery_filter();
+      auto filter = p::create_physics_2d_query_filter();
       filter->category_bits = 0x2;
       filter->mask_bits = 0x4;
       filter->include_sensors = false;
       filter->include_static = false;
-      auto out = p::create_physics2_dquery_result();
+      auto out = p::create_physics_2d_query_result();
 
-      p::query_physics2_dpoint(world, 0, 0, out, t::view(filter));
+      p::query_physics_2d_point(world, 0, 0, out, t::view(filter));
       expect(out->hit_count).to_be(0.0);
       filter->include_sensors = true;
-      p::query_physics2_dpoint(world, 0, 0, out, t::view(filter));
+      p::query_physics_2d_point(world, 0, 0, out, t::view(filter));
       expect_true(hit_bodies(out) == std::vector<t::Body>{dynamic}, "only the dynamic sensor passes");
     });
   });
@@ -288,9 +288,9 @@ void world_queries(flight::upstream_test::Runner& runner) {
       push(near, t::collider(t::aabb(-0.5, -1, 0.5, 1), stone()));
       add(world, far);
       add(world, near);
-      auto out = p::create_physics2_dray_result();
+      auto out = p::create_physics_2d_ray_result();
 
-      p::query_physics2_dray(world, 0, 0, 1, 0, out);
+      p::query_physics_2d_ray(world, 0, 0, 1, 0, out);
 
       expect(out->hit_count).to_be(2.0);
       expect_true(ray_bodies(out) == std::vector<t::Body>{near, far}, "nearest first");
@@ -309,9 +309,9 @@ void world_queries(flight::upstream_test::Runner& runner) {
       auto body = t::body("dynamic", 0, 0, M_PI / 4);
       push(body, t::collider(t::aabb(-2, -0.25, 2, 0.25), stone()));
       add(world, body);
-      auto out = p::create_physics2_dray_result();
+      auto out = p::create_physics_2d_ray_result();
 
-      p::query_physics2_dray(world, -1.5, 1.4, 0.2, 0, out, 1.0);
+      p::query_physics_2d_ray(world, -1.5, 1.4, 0.2, 0, out, 1.0);
 
       expect(out->hit_count).to_be(0.0);
     });
@@ -321,13 +321,13 @@ void world_queries(flight::upstream_test::Runner& runner) {
       auto body = t::body("dynamic", 3, 0);
       push(body, t::collider(t::circle(0, 0, 1), stone()));
       add(world, body);
-      auto out = p::create_physics2_dray_result();
-      p::query_physics2_dray(world, 0, 0, 1, 0, out);
+      auto out = p::create_physics_2d_ray_result();
+      p::query_physics_2d_ray(world, 0, 0, 1, 0, out);
       auto retained = out->hits.element(0);
 
-      p::query_physics2_dray(world, 0, 0, 1, 0, out, 1.0);
+      p::query_physics_2d_ray(world, 0, 0, 1, 0, out, 1.0);
       expect(out->hit_count).to_be(0.0);
-      p::query_physics2_dray(world, 0, 0, 1, 0, out, 2.0);
+      p::query_physics_2d_ray(world, 0, 0, 1, 0, out, 2.0);
 
       expect(out->hit_count).to_be(1.0);
       expect_true(out->hits.element(0) == retained, "the retained hit object is reused");
@@ -338,9 +338,9 @@ void world_queries(flight::upstream_test::Runner& runner) {
       auto body = t::body("dynamic", 3, 4);
       push(body, t::collider(t::point(0, 0), stone()));
       add(world, body);
-      auto out = p::create_physics2_dray_result();
+      auto out = p::create_physics_2d_ray_result();
 
-      p::query_physics2_dray(world, 3, 4, 0, 0, out);
+      p::query_physics_2d_ray(world, 3, 4, 0, 0, out);
 
       expect(out->hit_count).to_be(1.0);
       auto hit = out->hits.element(0);
@@ -362,17 +362,17 @@ void world_queries(flight::upstream_test::Runner& runner) {
       push(near, t::collider(t::circle(0, 0, 0.5), stone()));
       add(world, far);
       add(world, near);
-      auto out = p::create_physics2_dray_result();
+      auto out = p::create_physics_2d_ray_result();
 
-      p::query_physics2_dray_closest(world, 0, 0, 1, 0, out);
+      p::query_physics_2d_ray_closest(world, 0, 0, 1, 0, out);
       expect(out->hit_count).to_be(1.0);
       expect_true(out->hits.element(0)->body == near, "nearest body");
       auto retained = out->hits.element(0);
 
-      auto filter = p::create_physics2_dquery_filter();
+      auto filter = p::create_physics_2d_query_filter();
       filter->category_bits = 0x2;
       filter->mask_bits = 0x2;
-      p::query_physics2_dray_closest(world, 0, 0, 1, 0, out, INF, t::view(filter));
+      p::query_physics_2d_ray_closest(world, 0, 0, 1, 0, out, INF, t::view(filter));
       expect(out->hit_count).to_be(1.0);
       expect_true(out->hits.element(0) == retained, "retained record");
       expect_true(out->hits.element(0)->body == far, "filtered nearest body");
@@ -386,12 +386,12 @@ void world_queries(flight::upstream_test::Runner& runner) {
       push(body, t::collider(t::circle(-5, 0, 1), stone()));
       push(body, t::collider(t::circle(5, 0, 1), stone()));
       add(world, body);
-      auto out = p::create_physics2_dquery_result();
+      auto out = p::create_physics_2d_query_result();
 
-      p::query_physics2_dregion(world, t::view(region(-0.5, -0.5, 0.5, 0.5)), out);
+      p::query_physics_2d_region(world, t::view(region(-0.5, -0.5, 0.5, 0.5)), out);
       expect(out->hit_count).to_be(0.0);
 
-      p::query_physics2_dregion(world, t::view(region(4.5, -0.5, 5.5, 0.5)), out);
+      p::query_physics_2d_region(world, t::view(region(4.5, -0.5, 5.5, 0.5)), out);
       expect(out->hit_count).to_be(1.0);
       expect_true(out->hits.element(0)->body == body, "hit body");
       expect_true(out->hits.element(0)->collider == body->colliders.element(1), "hit collider");
@@ -408,9 +408,9 @@ void world_queries(flight::upstream_test::Runner& runner) {
       add(world, first);
       add(world, second);
       first->x = 0;
-      auto out = p::create_physics2_dquery_result();
+      auto out = p::create_physics_2d_query_result();
 
-      p::query_physics2_dregion(world, t::view(region(-0.25, -0.25, 0.25, 0.25)), out);
+      p::query_physics_2d_region(world, t::view(region(-0.25, -0.25, 0.25, 0.25)), out);
 
       expect_true(hit_pairs(out) == std::vector<std::pair<double, double>>{{first->index, 0}, {first->index, 1}, {second->index, 0}},
                   "deterministic body/collider order at current poses");
@@ -421,11 +421,11 @@ void world_queries(flight::upstream_test::Runner& runner) {
       auto body = t::body("dynamic", 0, 0);
       push(body, t::collider(t::circle(0, 0, 1), stone()));
       add(world, body);
-      auto out = p::create_physics2_dquery_result();
-      p::query_physics2_dregion(world, t::view(region(-1, -1, 1, 1)), out);
+      auto out = p::create_physics_2d_query_result();
+      p::query_physics_2d_region(world, t::view(region(-1, -1, 1, 1)), out);
       auto retained = out->hits.element(0);
 
-      p::query_physics2_dregion(world, t::view(region(10, 10, 11, 11)), out);
+      p::query_physics_2d_region(world, t::view(region(10, 10, 11, 11)), out);
 
       expect(out->hit_count).to_be(0.0);
       expect_true(out->hits.element(0) == retained, "high-water storage retained");
@@ -436,16 +436,16 @@ void world_queries(flight::upstream_test::Runner& runner) {
       auto body = t::body("kinematic", 0, 0);
       push(body, t::collider(t::circle(0, 0, 1), stone()));
       add(world, body);
-      auto filter = p::create_physics2_dquery_filter();
+      auto filter = p::create_physics_2d_query_filter();
       filter->include_kinematic = false;
-      auto out = p::create_physics2_dquery_result();
+      auto out = p::create_physics_2d_query_result();
 
-      p::query_physics2_dregion(world, t::view(region(-1, -1, 1, 1)), out, t::view(filter));
+      p::query_physics_2d_region(world, t::view(region(-1, -1, 1, 1)), out, t::view(filter));
       expect(out->hit_count).to_be(0.0);
       filter->include_kinematic = true;
-      p::query_physics2_dregion(world, t::view(region(1, 1, -1, -1)), out, t::view(filter));
+      p::query_physics_2d_region(world, t::view(region(1, 1, -1, -1)), out, t::view(filter));
       expect(out->hit_count).to_be(0.0);
-      p::query_physics2_dregion(world, t::view(region(-1, -1, 1, 1)), out, t::view(filter));
+      p::query_physics_2d_region(world, t::view(region(-1, -1, 1, 1)), out, t::view(filter));
       expect_true(hit_bodies(out) == std::vector<t::Body>{body}, "the kinematic body once included");
     });
   });
@@ -462,9 +462,9 @@ void world_queries(flight::upstream_test::Runner& runner) {
 
     runner.it("stops the sweep exactly where the shape first touches", [=] {
       auto world = walled_world();
-      auto out = p::create_physics2_dshape_cast_result();
+      auto out = p::create_physics_2d_shape_cast_result();
 
-      p::query_physics2_dshape_cast(world, unit_box(), 10, 0, out);
+      p::query_physics_2d_shape_cast(world, unit_box(), 10, 0, out);
 
       expect(out->hit).to_be(true);
       expect(out->fraction).to_be_close_to(0.45, 9);
@@ -476,9 +476,9 @@ void world_queries(flight::upstream_test::Runner& runner) {
 
     runner.it("reports a clean miss when the sweep is too short to reach anything", [=] {
       auto world = walled_world();
-      auto out = p::create_physics2_dshape_cast_result();
+      auto out = p::create_physics_2d_shape_cast_result();
 
-      p::query_physics2_dshape_cast(world, unit_box(), 3, 0, out);
+      p::query_physics_2d_shape_cast(world, unit_box(), 3, 0, out);
 
       expect(out->body.has_value()).to_be(false);
       expect(out->collider.has_value()).to_be(false);
@@ -493,9 +493,9 @@ void world_queries(flight::upstream_test::Runner& runner) {
 
     runner.it("reports a hit at fraction zero for a shape that already overlaps where it starts", [=] {
       auto world = walled_world();
-      auto out = p::create_physics2_dshape_cast_result();
+      auto out = p::create_physics_2d_shape_cast_result();
 
-      p::query_physics2_dshape_cast(world, t::aabb(5.2, -0.5, 5.8, 0.5), 10, 0, out);
+      p::query_physics_2d_shape_cast(world, t::aabb(5.2, -0.5, 5.8, 0.5), 10, 0, out);
 
       expect(out->hit).to_be(true);
       expect(out->fraction).to_be(0.0);
@@ -508,16 +508,16 @@ void world_queries(flight::upstream_test::Runner& runner) {
         push(blocker, t::collider(t::circle(x, y, 0.6), stone()));
         add(world, blocker);
       }
-      auto out = p::create_physics2_dshape_cast_result();
-      p::query_physics2_dshape_cast(world, t::circle(0, 0, 0.3), 12, 0, out);
+      auto out = p::create_physics_2d_shape_cast_result();
+      p::query_physics_2d_shape_cast(world, t::circle(0, 0, 0.3), 12, 0, out);
 
       constexpr int samples = 20000;
       double marched_fraction = -1;
       for (int sample = 0; sample <= samples && marched_fraction < 0; sample += 1) {
         const double fraction = static_cast<double>(sample) / samples;
         const double probe_x = 12 * fraction;
-        auto found = p::create_physics2_dquery_result();
-        p::query_physics2_dregion(world, t::view(region(probe_x - 0.3, -0.3, probe_x + 0.3, 0.3)), found);
+        auto found = p::create_physics_2d_query_result();
+        p::query_physics_2d_region(world, t::view(region(probe_x - 0.3, -0.3, probe_x + 0.3, 0.3)), found);
         for (double at = 0; at < found->hit_count; at += 1) {
           const auto& shape = found->hits.element(at)->collider->world;
           const auto* circle = std::get_if<flight::Ref<types::x_y_radius_kind_90fbb3b4c4569518>>(&shape);
@@ -541,12 +541,12 @@ void world_queries(flight::upstream_test::Runner& runner) {
         add(world, wall);
       }
       auto tall = [] { return t::aabb(-0.5, -3, 0.5, 3); };
-      auto out = p::create_physics2_dshape_cast_result();
+      auto out = p::create_physics_2d_shape_cast_result();
 
-      p::query_physics2_dshape_cast(world, tall(), 10, 0, out);
+      p::query_physics_2d_shape_cast(world, tall(), 10, 0, out);
       auto first = out->body;
       for (int repeat = 0; repeat < 5; repeat += 1) {
-        p::query_physics2_dshape_cast(world, tall(), 10, 0, out);
+        p::query_physics_2d_shape_cast(world, tall(), 10, 0, out);
         expect_true(out->body == first, "the same body every time");
       }
       expect_true(first.has_value() && first.value() == world->bodies.element(0), "the lower body index");
@@ -554,38 +554,38 @@ void world_queries(flight::upstream_test::Runner& runner) {
 
     runner.it("honours maxFraction without changing what a fraction means", [=] {
       auto world = walled_world();
-      auto out = p::create_physics2_dshape_cast_result();
+      auto out = p::create_physics_2d_shape_cast_result();
 
-      p::query_physics2_dshape_cast(world, unit_box(), 10, 0, out, 0.4);
+      p::query_physics_2d_shape_cast(world, unit_box(), 10, 0, out, 0.4);
       expect(out->hit).to_be(false);
 
-      p::query_physics2_dshape_cast(world, unit_box(), 10, 0, out, 0.5);
+      p::query_physics_2d_shape_cast(world, unit_box(), 10, 0, out, 0.5);
       expect(out->hit).to_be(true);
       expect(out->fraction).to_be_close_to(0.45, 9);
     });
 
     runner.it("applies the query filter to bodies and colliders alike", [=] {
       auto world = walled_world();
-      auto out = p::create_physics2_dshape_cast_result();
-      auto filter = p::create_physics2_dquery_filter();
+      auto out = p::create_physics_2d_shape_cast_result();
+      auto filter = p::create_physics_2d_query_filter();
 
       filter->include_static = false;
-      p::query_physics2_dshape_cast(world, unit_box(), 10, 0, out, 1.0, t::view(filter));
+      p::query_physics_2d_shape_cast(world, unit_box(), 10, 0, out, 1.0, t::view(filter));
       expect(out->hit).to_be(false);
 
       filter->include_static = true;
       filter->mask_bits = 0;
-      p::query_physics2_dshape_cast(world, unit_box(), 10, 0, out, 1.0, t::view(filter));
+      p::query_physics_2d_shape_cast(world, unit_box(), 10, 0, out, 1.0, t::view(filter));
       expect(out->hit).to_be(false);
     });
 
     runner.it("clears a reused result rather than leaving the previous cast in it", [=] {
       auto world = walled_world();
-      auto out = p::create_physics2_dshape_cast_result();
-      p::query_physics2_dshape_cast(world, unit_box(), 10, 0, out);
+      auto out = p::create_physics_2d_shape_cast_result();
+      p::query_physics_2d_shape_cast(world, unit_box(), 10, 0, out);
       expect(out->hit).to_be(true);
 
-      p::query_physics2_dshape_cast(world, unit_box(), -10, 0, out);
+      p::query_physics_2d_shape_cast(world, unit_box(), -10, 0, out);
       expect(out->hit).to_be(false);
       expect(out->body.has_value()).to_be(false);
       expect(out->collider.has_value()).to_be(false);
@@ -594,13 +594,13 @@ void world_queries(flight::upstream_test::Runner& runner) {
 
     runner.it("declines a non-finite displacement or a negative maxFraction instead of searching", [=] {
       auto world = walled_world();
-      auto out = p::create_physics2_dshape_cast_result();
+      auto out = p::create_physics_2d_shape_cast_result();
 
       for (auto [dx, dy] : std::vector<std::pair<double, double>>{{std::nan(""), 0}, {0, INF}}) {
-        p::query_physics2_dshape_cast(world, unit_box(), dx, dy, out);
+        p::query_physics_2d_shape_cast(world, unit_box(), dx, dy, out);
         expect(out->hit).to_be(false);
       }
-      p::query_physics2_dshape_cast(world, unit_box(), 10, 0, out, -1.0);
+      p::query_physics_2d_shape_cast(world, unit_box(), 10, 0, out, -1.0);
       expect(out->hit).to_be(false);
     });
 
@@ -609,9 +609,9 @@ void world_queries(flight::upstream_test::Runner& runner) {
       auto wall = t::body("static", 0, 0);
       push(wall, t::collider(t::aabb(-6, -10, -5, 10), stone()));
       add(world, wall);
-      auto out = p::create_physics2_dshape_cast_result();
+      auto out = p::create_physics_2d_shape_cast_result();
 
-      p::query_physics2_dshape_cast(world, unit_box(), -10, 0, out);
+      p::query_physics_2d_shape_cast(world, unit_box(), -10, 0, out);
 
       expect(out->hit).to_be(true);
       expect(out->fraction).to_be_close_to(0.45, 9);
@@ -629,10 +629,10 @@ void joint_registry(flight::upstream_test::Runner& runner) {
       auto second = registry_body(first_world, 2, 0);
       auto added = joint("Unknown", first->index, second->index);
 
-      p::add_physics2_djoint(first_world, added);
+      p::add_physics_2d_joint(first_world, added);
 
-      expect_throws([&] { p::add_physics2_djoint(first_world, added); });
-      expect_throws([&] { p::add_physics2_djoint(second_world, added); });
+      expect_throws([&] { p::add_physics_2d_joint(first_world, added); });
+      expect_throws([&] { p::add_physics_2d_joint(second_world, added); });
       expect(static_cast<double>(first_world->joints.size())).to_be(1.0);
       expect_true(first_world->joints.element(0) == added, "the one joint");
       expect(static_cast<double>(second_world->joints.size())).to_be(0.0);
@@ -640,7 +640,7 @@ void joint_registry(flight::upstream_test::Runner& runner) {
 
     runner.it("wakes both bodies when an active constraint is added", [] {
       auto world = default_world();
-      p::register_physics2_djoint_solver(world, flight::String("Test"), solver());
+      p::register_physics_2d_joint_solver(world, flight::String("Test"), solver());
       auto first = registry_body(world, 0, 0);
       auto second = registry_body(world, 2, 0);
       first->sleeping = true;
@@ -648,7 +648,7 @@ void joint_registry(flight::upstream_test::Runner& runner) {
       second->sleeping = true;
       second->sleep_timer = 5;
 
-      p::add_physics2_djoint(world, joint("Test", first->index, second->index));
+      p::add_physics_2d_joint(world, joint("Test", first->index, second->index));
 
       expect(first->sleeping).to_be(false);
       expect(first->sleep_timer).to_be(0.0);
@@ -658,10 +658,10 @@ void joint_registry(flight::upstream_test::Runner& runner) {
 
     runner.it("orders the joint by body index, carrying its anchors with the swap", [] {
       auto world = default_world();
-      p::register_physics2_djoint_solver(world, flight::String("Test"), solver());
+      p::register_physics_2d_joint_solver(world, flight::String("Test"), solver());
       auto first = registry_body(world, 0, 0);
       auto second = registry_body(world, 2, 0);
-      auto added = p::add_physics2_djoint(world, joint("Test", second->index, first->index, 7, 9));
+      auto added = p::add_physics_2d_joint(world, joint("Test", second->index, first->index, 7, 9));
 
       expect(added->body_a).to_be(first->index);
       expect(added->body_b).to_be(second->index);
@@ -674,7 +674,7 @@ void joint_registry(flight::upstream_test::Runner& runner) {
       auto first = registry_body(world, 0, 0);
       auto second = registry_body(world, 2, 0);
 
-      auto added = p::add_physics2_djoint(world, joint("Unknown", second->index, first->index, 7, 9));
+      auto added = p::add_physics_2d_joint(world, joint("Unknown", second->index, first->index, 7, 9));
 
       expect(added->body_a).to_be(second->index);
       expect(added->local_anchor_ax).to_be(7.0);
@@ -689,11 +689,11 @@ void joint_registry(flight::upstream_test::Runner& runner) {
       second->sleeping = true;
       second->sleep_timer = 5;
 
-      p::add_physics2_djoint(world, joint("Deferred", first->index, second->index));
+      p::add_physics_2d_joint(world, joint("Deferred", first->index, second->index));
       expect(first->sleeping).to_be(true);
       expect(second->sleeping).to_be(true);
 
-      p::register_physics2_djoint_solver(world, flight::String("Deferred"), solver());
+      p::register_physics_2d_joint_solver(world, flight::String("Deferred"), solver());
       expect(first->sleeping).to_be(false);
       expect(first->sleep_timer).to_be(0.0);
       expect(second->sleeping).to_be(false);
@@ -704,11 +704,11 @@ void joint_registry(flight::upstream_test::Runner& runner) {
       auto world = default_world();
       auto first = registry_body(world, 0, 0);
       auto second = registry_body(world, 2, 0);
-      auto added = p::add_physics2_djoint(world, joint("Vetoing", second->index, first->index, 7, 9));
+      auto added = p::add_physics_2d_joint(world, joint("Vetoing", second->index, first->index, 7, 9));
 
       auto vetoing = solver();
       vetoing->swap_ends = [](flight::Ref<types::Physics2DJoint>) { return false; };
-      p::register_physics2_djoint_solver(world, flight::String("Vetoing"), vetoing);
+      p::register_physics_2d_joint_solver(world, flight::String("Vetoing"), vetoing);
 
       expect(added->body_a).to_be(second->index);
       expect(added->local_anchor_ax).to_be(7.0);
@@ -718,7 +718,7 @@ void joint_registry(flight::upstream_test::Runner& runner) {
       auto world = default_world();
       auto first = registry_body(world, 0, 0);
       auto second = registry_body(world, 2, 0);
-      auto added = p::add_physics2_djoint(world, joint("Test", first->index, second->index, 7, 9));
+      auto added = p::add_physics_2d_joint(world, joint("Test", first->index, second->index, 7, 9));
       expect(added->body_a).to_be(first->index);
       expect(added->local_anchor_ax).to_be(7.0);
     });
@@ -727,15 +727,15 @@ void joint_registry(flight::upstream_test::Runner& runner) {
   runner.describe("getPhysics2DJointSolver", [&] {
     runner.it("returns null for an unregistered kind rather than throwing", [] {
       auto world = default_world();
-      expect(p::get_physics2_djoint_solver(t::view(world), flight::String("acme.Conveyor")).has_value()).to_be(false);
+      expect(p::get_physics_2d_joint_solver(t::view(world), flight::String("acme.Conveyor")).has_value()).to_be(false);
     });
 
     runner.it("steps a world holding a joint whose kind has no solver", [] {
       auto world = default_world();
       auto first = registry_body(world, 0, 0);
       auto second = registry_body(world, 2, 0);
-      p::add_physics2_djoint(world, joint("acme.Unknown", first->index, second->index));
-      expect_no_throw([&] { p::step_physics2_d(world, 1.0 / 60); });
+      p::add_physics_2d_joint(world, joint("acme.Unknown", first->index, second->index));
+      expect_no_throw([&] { p::step_physics_2d(world, 1.0 / 60); });
     });
   });
 
@@ -748,10 +748,10 @@ void joint_registry(flight::upstream_test::Runner& runner) {
         cleared++;
         value->impulse2 = 0;
       };
-      p::register_physics2_djoint_solver(world, flight::String("Test"), clearing);
+      p::register_physics_2d_joint_solver(world, flight::String("Test"), clearing);
       auto first = registry_body(world, 0, 0);
       auto second = registry_body(world, 2, 0);
-      auto added = p::add_physics2_djoint(world, joint("Test", first->index, second->index));
+      auto added = p::add_physics_2d_joint(world, joint("Test", first->index, second->index));
       added->impulse0 = 10;
       added->impulse1 = 20;
       added->impulse2 = 30;
@@ -760,7 +760,7 @@ void joint_registry(flight::upstream_test::Runner& runner) {
       second->sleeping = true;
       second->sleep_timer = 5;
 
-      expect(p::invalidate_physics2_djoint(world, added)).to_be(true);
+      expect(p::invalidate_physics_2d_joint(world, added)).to_be(true);
 
       expect(cleared).to_be(1);
       expect(added->impulse0).to_be(0.0);
@@ -777,23 +777,23 @@ void joint_registry(flight::upstream_test::Runner& runner) {
       auto other = default_world();
       auto first = registry_body(owner, 0, 0);
       auto second = registry_body(owner, 2, 0);
-      auto added = p::add_physics2_djoint(owner, joint("Unknown", first->index, second->index));
+      auto added = p::add_physics_2d_joint(owner, joint("Unknown", first->index, second->index));
       added->impulse0 = 10;
 
-      expect(p::invalidate_physics2_djoint(other, added)).to_be(false);
+      expect(p::invalidate_physics_2d_joint(other, added)).to_be(false);
       expect(added->impulse0).to_be(10.0);
     });
 
     runner.it("reindexes collision suppression after an authored flag changes", [] {
       auto world = default_world();
-      p::register_physics2_djoint_solver(world, flight::String("Test"), solver());
+      p::register_physics_2d_joint_solver(world, flight::String("Test"), solver());
       auto first = registry_body(world, 0, 0);
       auto second = registry_body(world, 2, 0);
-      auto added = p::add_physics2_djoint(world, joint("Test", first->index, second->index));
+      auto added = p::add_physics_2d_joint(world, joint("Test", first->index, second->index));
       expect_true(suppression(world, first->index, second->index) == std::optional<double>(1.0), "suppressed once");
 
       added->collide_connected = true;
-      expect(p::invalidate_physics2_djoint(world, added)).to_be(true);
+      expect(p::invalidate_physics_2d_joint(world, added)).to_be(true);
 
       expect(suppression(world, first->index, second->index).has_value()).to_be(false);
     });
@@ -804,12 +804,12 @@ void joint_registry(flight::upstream_test::Runner& runner) {
       auto world = t::world(0, 0);
       int prepared = 0;
       int solved = 0;
-      p::register_physics2_djoint_solver(world, flight::String("acme.Conveyor"),
+      p::register_physics_2d_joint_solver(world, flight::String("acme.Conveyor"),
                                          solver([&prepared] { prepared++; }, [&solved] { solved++; }));
       auto first = registry_body(world, 0, 0);
       auto second = registry_body(world, 2, 0);
-      p::add_physics2_djoint(world, joint("acme.Conveyor", first->index, second->index));
-      p::step_physics2_d(world, 1.0 / 60);
+      p::add_physics_2d_joint(world, joint("acme.Conveyor", first->index, second->index));
+      p::step_physics_2d(world, 1.0 / 60);
 
       expect(prepared).to_be(1);
       expect(static_cast<double>(solved)).to_be(world->config->velocity_iterations);
@@ -818,17 +818,17 @@ void joint_registry(flight::upstream_test::Runner& runner) {
     runner.it("is scoped to its world, so two worlds can register different kinds", [] {
       auto first = default_world();
       auto second = default_world();
-      p::register_physics2_djoint_solver(first, flight::String("acme.One"), solver());
-      expect(p::get_physics2_djoint_solver(t::view(first), flight::String("acme.One")).has_value()).to_be(true);
-      expect(p::get_physics2_djoint_solver(t::view(second), flight::String("acme.One")).has_value()).to_be(false);
+      p::register_physics_2d_joint_solver(first, flight::String("acme.One"), solver());
+      expect(p::get_physics_2d_joint_solver(t::view(first), flight::String("acme.One")).has_value()).to_be(true);
+      expect(p::get_physics_2d_joint_solver(t::view(second), flight::String("acme.One")).has_value()).to_be(false);
     });
 
     runner.it("lets a later registration replace an earlier one", [] {
       auto world = default_world();
       auto replacement = solver();
-      p::register_physics2_djoint_solver(world, flight::String("acme.One"), solver());
-      p::register_physics2_djoint_solver(world, flight::String("acme.One"), replacement);
-      auto found = p::get_physics2_djoint_solver(t::view(world), flight::String("acme.One"));
+      p::register_physics_2d_joint_solver(world, flight::String("acme.One"), solver());
+      p::register_physics_2d_joint_solver(world, flight::String("acme.One"), replacement);
+      auto found = p::get_physics_2d_joint_solver(t::view(world), flight::String("acme.One"));
       expect_true(found.has_value() && found.value() == replacement, "the replacement");
     });
   });
@@ -839,44 +839,44 @@ void joint_registry(flight::upstream_test::Runner& runner) {
       auto second_world = default_world();
       auto first = registry_body(first_world, 0, 0);
       auto second = registry_body(first_world, 2, 0);
-      auto added = p::add_physics2_djoint(first_world, joint("Unknown", first->index, second->index));
+      auto added = p::add_physics_2d_joint(first_world, joint("Unknown", first->index, second->index));
 
-      p::remove_physics2_djoint(first_world, t::view(added));
+      p::remove_physics_2d_joint(first_world, t::view(added));
 
-      expect_true(p::add_physics2_djoint(second_world, added) == added, "re-inserted");
+      expect_true(p::add_physics_2d_joint(second_world, added) == added, "re-inserted");
     });
 
     runner.it("removes the joint and reports false for one the world does not hold", [] {
       auto world = default_world();
       auto first = registry_body(world, 0, 0);
       auto second = registry_body(world, 2, 0);
-      auto added = p::add_physics2_djoint(world, joint("Test", first->index, second->index));
-      expect(p::remove_physics2_djoint(world, t::view(added))).to_be(true);
+      auto added = p::add_physics_2d_joint(world, joint("Test", first->index, second->index));
+      expect(p::remove_physics_2d_joint(world, t::view(added))).to_be(true);
       expect(static_cast<double>(world->joints.size())).to_be(0.0);
-      expect(p::remove_physics2_djoint(world, t::view(added))).to_be(false);
+      expect(p::remove_physics_2d_joint(world, t::view(added))).to_be(false);
     });
 
     runner.it("drops joints naming a removed body, so a later body cannot inherit the constraint", [] {
       auto world = default_world();
       auto first = registry_body(world, 0, 0);
       auto second = registry_body(world, 2, 0);
-      p::add_physics2_djoint(world, joint("Test", first->index, second->index));
-      p::remove_physics2_dbody(world, t::view(second));
+      p::add_physics_2d_joint(world, joint("Test", first->index, second->index));
+      p::remove_physics_2d_body(world, t::view(second));
       expect(static_cast<double>(world->joints.size())).to_be(0.0);
     });
 
     runner.it("wakes both ends when an active constraint is removed", [] {
       auto world = default_world();
-      p::register_physics2_djoint_solver(world, flight::String("Test"), solver());
+      p::register_physics_2d_joint_solver(world, flight::String("Test"), solver());
       auto first = registry_body(world, 0, 0);
       auto second = registry_body(world, 2, 0);
-      auto added = p::add_physics2_djoint(world, joint("Test", first->index, second->index));
+      auto added = p::add_physics_2d_joint(world, joint("Test", first->index, second->index));
       first->sleeping = true;
       first->sleep_timer = 5;
       second->sleeping = true;
       second->sleep_timer = 5;
 
-      p::remove_physics2_djoint(world, t::view(added));
+      p::remove_physics_2d_joint(world, t::view(added));
 
       expect(first->sleeping).to_be(false);
       expect(first->sleep_timer).to_be(0.0);
@@ -886,29 +886,29 @@ void joint_registry(flight::upstream_test::Runner& runner) {
 
     runner.it("keeps a pair suppressed until its final suppressing joint is removed", [] {
       auto world = default_world();
-      p::register_physics2_djoint_solver(world, flight::String("Test"), solver());
+      p::register_physics_2d_joint_solver(world, flight::String("Test"), solver());
       auto first = registry_body(world, 0, 0);
       auto second = registry_body(world, 2, 0);
-      auto one = p::add_physics2_djoint(world, joint("Test", first->index, second->index));
-      auto two = p::add_physics2_djoint(world, joint("Test", first->index, second->index));
+      auto one = p::add_physics_2d_joint(world, joint("Test", first->index, second->index));
+      auto two = p::add_physics_2d_joint(world, joint("Test", first->index, second->index));
       expect_true(suppression(world, first->index, second->index) == std::optional<double>(2.0), "suppressed twice");
 
-      p::remove_physics2_djoint(world, t::view(one));
+      p::remove_physics_2d_joint(world, t::view(one));
       expect_true(suppression(world, first->index, second->index) == std::optional<double>(1.0), "suppressed once");
-      p::remove_physics2_djoint(world, t::view(two));
+      p::remove_physics_2d_joint(world, t::view(two));
       expect(suppression(world, first->index, second->index).has_value()).to_be(false);
     });
 
     runner.it("wakes the surviving end when its joint neighbour is removed from the world", [] {
       auto world = default_world();
-      p::register_physics2_djoint_solver(world, flight::String("Test"), solver());
+      p::register_physics_2d_joint_solver(world, flight::String("Test"), solver());
       auto removed = registry_body(world, 0, 0);
       auto survivor = registry_body(world, 2, 0);
-      p::add_physics2_djoint(world, joint("Test", removed->index, survivor->index));
+      p::add_physics_2d_joint(world, joint("Test", removed->index, survivor->index));
       survivor->sleeping = true;
       survivor->sleep_timer = 5;
 
-      p::remove_physics2_dbody(world, t::view(removed));
+      p::remove_physics_2d_body(world, t::view(removed));
 
       expect(survivor->sleeping).to_be(false);
       expect(survivor->sleep_timer).to_be(0.0);
@@ -919,15 +919,15 @@ void joint_registry(flight::upstream_test::Runner& runner) {
 void joint_reactions(flight::upstream_test::Runner& runner) {
   runner.describe("createPhysics2DJointReaction", [&] {
     runner.it("starts at rest", [] {
-      auto reaction = p::create_physics2_djoint_reaction();
+      auto reaction = p::create_physics_2d_joint_reaction();
       expect(reaction->force_x).to_be(0.0);
       expect(reaction->force_y).to_be(0.0);
       expect(reaction->torque).to_be(0.0);
     });
 
     runner.it("allocates a fresh object each call, so two readings do not alias", [] {
-      auto first = p::create_physics2_djoint_reaction();
-      auto second = p::create_physics2_djoint_reaction();
+      auto first = p::create_physics_2d_joint_reaction();
+      auto second = p::create_physics_2d_joint_reaction();
       first->force_y = 5;
       expect(second->force_y).to_be(0.0);
     });
@@ -945,11 +945,11 @@ void joint_reactions(flight::upstream_test::Runner& runner) {
       auto anchor = ball("static", 0, 0);
       auto bob = ball("dynamic", 0, -2);
       auto unregistered = joint("acme.Unregistered", anchor->index, bob->index);
-      p::add_physics2_djoint(world, unregistered);
-      p::step_physics2_d(world, dt);
+      p::add_physics_2d_joint(world, unregistered);
+      p::step_physics_2d(world, dt);
 
-      auto out = p::create_physics2_djoint_reaction();
-      expect(p::write_physics2_djoint_reaction(t::view(world), t::view(unregistered), dt, out)).to_be(false);
+      auto out = p::create_physics_2d_joint_reaction();
+      expect(p::write_physics_2d_joint_reaction(t::view(world), t::view(unregistered), dt, out)).to_be(false);
     });
   });
 }

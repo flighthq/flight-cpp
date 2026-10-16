@@ -15,11 +15,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/spatial.hpp>
 
-#include <flight/types/physics2_d.hpp>
+#include <flight/types/physics_2d.hpp>
 
 #include <flight/types/collision.hpp>
 
-#include <flight/collision/sweep_collision_shape2_d.hpp>
+#include <flight/collision/sweep_collision_shape_2d.hpp>
 
 namespace flight::types { struct CollisionAabb2D; }
 namespace flight::types { struct CollisionCapsule2D; }
@@ -69,18 +69,18 @@ using flight::types::RigidBody2D;
 using flight::types::SpatialIndexBackend2D;
 using flight::types::SpatialPair;
 
-using flight::collision::sweep_collision_shape2_d; // repair: defining include precedes the emitter's early using-declaration
+using flight::collision::sweep_collision_shape_2d; // repair: defining include precedes the emitter's early using-declaration
 struct Physics2DQueryScratch;
 } // namespace flight::physics2d
 
-#include <flight/collision/point_containment2_d.hpp>
-#include <flight/collision/raycast_collision_shape2_d.hpp>
-#include <flight/collision/sweep_collision_shape2_d.hpp>
+#include <flight/collision/point_containment_2d.hpp>
+#include <flight/collision/raycast_collision_shape_2d.hpp>
+#include <flight/collision/sweep_collision_shape_2d.hpp>
 #include <flight/entity/entity.hpp>
 #include <flight/types/collision.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/non_entity_create_result.hpp>
-#include <flight/types/physics2_d.hpp>
+#include <flight/types/physics_2d.hpp>
 #include <flight/types/spatial.hpp>
 #include <flight/types/spatial_indexing.hpp>
 #include <flight/physics2d/broadphase.hpp>
@@ -89,33 +89,33 @@ struct Physics2DQueryScratch;
 
 namespace flight::physics2d {
 
-inline flight::Ref<flight::types::Physics2DQueryFilter> create_physics2_dquery_filter() {
+inline flight::Ref<flight::types::Physics2DQueryFilter> create_physics_2d_query_filter() {
   return flight::make_ref<flight::types::Physics2DQueryFilter>(flight::types::Physics2DQueryFilter{.category_bits = 4294967295.0, .mask_bits = 4294967295.0, .include_sensors = true, .include_dynamic = true, .include_kinematic = true, .include_static = true});
 }
 
-inline void initialize_physics2_dquery_result(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DQueryResult>> out) {
+inline void initialize_physics_2d_query_result(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DQueryResult>> out) {
   flight::row_set<flight::RowKey<"hits">>(out, flight::Array<flight::Ref<flight::types::Physics2DQueryHit>>{});
   flight::row_set<flight::RowKey<"hitCount">>(out, 0.0);
 }
 
-inline flight::Ref<flight::types::Physics2DQueryResult> create_physics2_dquery_result() {
+inline flight::Ref<flight::types::Physics2DQueryResult> create_physics_2d_query_result() {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DQueryResult>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics2DQueryResult>>();
-  initialize_physics2_dquery_result(out);
+  initialize_physics_2d_query_result(out);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics2DQueryResult>>(out);
 }
 
-inline void initialize_physics2_dray_result(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DRayResult>> out) {
+inline void initialize_physics_2d_ray_result(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DRayResult>> out) {
   flight::row_set<flight::RowKey<"hits">>(out, flight::Array<flight::Ref<flight::types::Physics2DRayHit>>{});
   flight::row_set<flight::RowKey<"hitCount">>(out, 0.0);
 }
 
-inline flight::Ref<flight::types::Physics2DRayResult> create_physics2_dray_result() {
+inline flight::Ref<flight::types::Physics2DRayResult> create_physics_2d_ray_result() {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DRayResult>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics2DRayResult>>();
-  initialize_physics2_dray_result(out);
+  initialize_physics_2d_ray_result(out);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics2DRayResult>>(out);
 }
 
-inline void initialize_physics2_dshape_cast_result(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DShapeCastResult>> out) {
+inline void initialize_physics_2d_shape_cast_result(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DShapeCastResult>> out) {
   flight::row_set<flight::RowKey<"body">>(out, std::nullopt);
   flight::row_set<flight::RowKey<"collider">>(out, std::nullopt);
   flight::row_set<flight::RowKey<"colliderIndex">>(out, -1.0);
@@ -127,9 +127,9 @@ inline void initialize_physics2_dshape_cast_result(flight::types::EntityConstruc
   flight::row_set<flight::RowKey<"normalY">>(out, 0.0);
 }
 
-inline flight::Ref<flight::types::Physics2DShapeCastResult> create_physics2_dshape_cast_result() {
+inline flight::Ref<flight::types::Physics2DShapeCastResult> create_physics_2d_shape_cast_result() {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DShapeCastResult>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics2DShapeCastResult>>();
-  initialize_physics2_dshape_cast_result(out);
+  initialize_physics_2d_shape_cast_result(out);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics2DShapeCastResult>>(out);
 }
 
@@ -265,36 +265,36 @@ struct Physics2DQueryScratch : public flight::ReferenceEnabled {
   flight::Ref<flight::types::CollisionTimeOfImpact2D> time_of_impact;
 };
 
-inline flight::Ref<Physics2DQueryScratch> create_physics2_dquery_scratch() {
-  return flight::make_ref<Physics2DQueryScratch>(Physics2DQueryScratch{.candidate_bodies = flight::Array<double>{}, .collider_bounds = flight::make_ref<flight::types::SpatialAabb2D>(flight::types::SpatialAabb2D{.min_x = 0.0, .min_y = 0.0, .max_x = 0.0, .max_y = 0.0}), .raycast_hit = flight::collision::create_collision_raycast_hit2_d(), .time_of_impact = flight::collision::create_collision_time_of_impact2_d()});
+inline flight::Ref<Physics2DQueryScratch> create_physics_2d_query_scratch() {
+  return flight::make_ref<Physics2DQueryScratch>(Physics2DQueryScratch{.candidate_bodies = flight::Array<double>{}, .collider_bounds = flight::make_ref<flight::types::SpatialAabb2D>(flight::types::SpatialAabb2D{.min_x = 0.0, .min_y = 0.0, .max_x = 0.0, .max_y = 0.0}), .raycast_hit = flight::collision::create_collision_raycast_hit_2d(), .time_of_impact = flight::collision::create_collision_time_of_impact_2d()});
 }
 
-inline flight::Array<flight::Ref<Physics2DQueryScratch>> physics2_dquery_scratch_pool = flight::Array<flight::Ref<Physics2DQueryScratch>>{create_physics2_dquery_scratch()};
+inline flight::Array<flight::Ref<Physics2DQueryScratch>> physics_2d_query_scratch_pool = flight::Array<flight::Ref<Physics2DQueryScratch>>{create_physics_2d_query_scratch()};
 
-inline flight::Ref<Physics2DQueryScratch> acquire_physics2_dquery_scratch() {
-  auto scratch = ([&]() -> flight::Ref<Physics2DQueryScratch> { auto nullish_coalesce_left = physics2_dquery_scratch_pool.pop(); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_physics2_dquery_scratch(); }());
+inline flight::Ref<Physics2DQueryScratch> acquire_physics_2d_query_scratch() {
+  auto scratch = ([&]() -> flight::Ref<Physics2DQueryScratch> { auto nullish_coalesce_left = physics_2d_query_scratch_pool.pop(); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_physics_2d_query_scratch(); }());
   ([&]() { auto&& assignment_receiver = scratch->candidate_bodies; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
   return scratch;
 }
 
-inline void release_physics2_dquery_scratch(flight::Ref<Physics2DQueryScratch> scratch) {
+inline void release_physics_2d_query_scratch(flight::Ref<Physics2DQueryScratch> scratch) {
   ([&]() { auto&& assignment_receiver = scratch->candidate_bodies; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
-  physics2_dquery_scratch_pool.push(scratch);
+  physics_2d_query_scratch_pool.push(scratch);
 }
 
-inline void query_physics2_dpoint(flight::Ref<flight::types::Physics2DWorld> world, double x, double y, flight::Ref<flight::types::Physics2DQueryResult> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DQueryFilter>>>>> filter = std::nullopt) {
+inline void query_physics_2d_point(flight::Ref<flight::types::Physics2DWorld> world, double x, double y, flight::Ref<flight::types::Physics2DQueryResult> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DQueryFilter>>>>> filter = std::nullopt) {
   (out->hit_count = 0.0);
   if ((!std::isfinite(x) || !std::isfinite(y))) {
     return;
   }
-  auto scratch = acquire_physics2_dquery_scratch();
+  auto scratch = acquire_physics_2d_query_scratch();
   std::exception_ptr finally_exception;
   try {
-    flight::physics2d::synchronize_physics2_dbroadphase(world);
+    flight::physics2d::synchronize_physics_2d_broadphase(world);
     world->index->query_spatial_point(x, y, scratch->candidate_bodies);
     scratch->candidate_bodies.sort(compare_numbers);
     for (auto body_index : scratch->candidate_bodies) {
-      auto body = flight::physics2d::find_physics2_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), body_index);
+      auto body = flight::physics2d::find_physics_2d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), body_index);
       if ((!body.has_value() || !passes_body_filter(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body.value())), filter))) {
         continue;
       }
@@ -307,7 +307,7 @@ inline void query_physics2_dpoint(flight::Ref<flight::types::Physics2DWorld> wor
               (collider_index += 1.0);
               continue;
             }
-            if (!flight::collision::get_collision_shape_contains_point2_d(collider->world, x, y)) {
+            if (!flight::collision::get_collision_shape_contains_point_2d(collider->world, x, y)) {
               (collider_index += 1.0);
               continue;
             }
@@ -321,23 +321,23 @@ inline void query_physics2_dpoint(flight::Ref<flight::types::Physics2DWorld> wor
   catch (...) {
     finally_exception = std::current_exception();
   }
-  release_physics2_dquery_scratch(scratch);
+  release_physics_2d_query_scratch(scratch);
   if (finally_exception) std::rethrow_exception(finally_exception);
 }
 
-inline void query_physics2_dregion(flight::Ref<flight::types::Physics2DWorld> world, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialAabb2D>>>> region, flight::Ref<flight::types::Physics2DQueryResult> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DQueryFilter>>>>> filter = std::nullopt) {
+inline void query_physics_2d_region(flight::Ref<flight::types::Physics2DWorld> world, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialAabb2D>>>> region, flight::Ref<flight::types::Physics2DQueryResult> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DQueryFilter>>>>> filter = std::nullopt) {
   (out->hit_count = 0.0);
   if (!is_valid_region(region)) {
     return;
   }
-  auto scratch = acquire_physics2_dquery_scratch();
+  auto scratch = acquire_physics_2d_query_scratch();
   std::exception_ptr finally_exception_2;
   try {
-    flight::physics2d::synchronize_physics2_dbroadphase(world);
+    flight::physics2d::synchronize_physics_2d_broadphase(world);
     world->index->query_spatial_region(region, scratch->candidate_bodies);
     scratch->candidate_bodies.sort(compare_numbers);
     for (auto body_index : scratch->candidate_bodies) {
-      auto body = flight::physics2d::find_physics2_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), body_index);
+      auto body = flight::physics2d::find_physics_2d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), body_index);
       if ((!body.has_value() || !passes_body_filter(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body.value())), filter))) {
         continue;
       }
@@ -350,7 +350,7 @@ inline void query_physics2_dregion(flight::Ref<flight::types::Physics2DWorld> wo
               (collider_index += 1.0);
               continue;
             }
-            flight::physics2d::write_physics2_dcollider_bounds(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>(collider)), scratch->collider_bounds);
+            flight::physics2d::write_physics_2d_collider_bounds(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>(collider)), scratch->collider_bounds);
             if (!bounds_overlap(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialAabb2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SpatialAabb2D>>>>(scratch->collider_bounds)), region)) {
               (collider_index += 1.0);
               continue;
@@ -365,23 +365,23 @@ inline void query_physics2_dregion(flight::Ref<flight::types::Physics2DWorld> wo
   catch (...) {
     finally_exception_2 = std::current_exception();
   }
-  release_physics2_dquery_scratch(scratch);
+  release_physics_2d_query_scratch(scratch);
   if (finally_exception_2) std::rethrow_exception(finally_exception_2);
 }
 
-inline void query_physics2_dray_internal(flight::Ref<flight::types::Physics2DWorld> world, double origin_x, double origin_y, double direction_x, double direction_y, flight::Ref<flight::types::Physics2DRayResult> out, double max_fraction, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DQueryFilter>>>>> filter, bool closest_only) {
+inline void query_physics_2d_ray_internal(flight::Ref<flight::types::Physics2DWorld> world, double origin_x, double origin_y, double direction_x, double direction_y, flight::Ref<flight::types::Physics2DRayResult> out, double max_fraction, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DQueryFilter>>>>> filter, bool closest_only) {
   (out->hit_count = 0.0);
   if ((((((!std::isfinite(origin_x) || !std::isfinite(origin_y)) || !std::isfinite(direction_x)) || !std::isfinite(direction_y)) || std::isnan(max_fraction)) || (max_fraction < 0.0))) {
     return;
   }
-  auto scratch = acquire_physics2_dquery_scratch();
+  auto scratch = acquire_physics_2d_query_scratch();
   std::exception_ptr finally_exception_3;
   try {
-    flight::physics2d::synchronize_physics2_dbroadphase(world);
+    flight::physics2d::synchronize_physics_2d_broadphase(world);
     world->index->query_spatial_ray(origin_x, origin_y, direction_x, direction_y, scratch->candidate_bodies);
     scratch->candidate_bodies.sort(compare_numbers);
     for (auto body_index : scratch->candidate_bodies) {
-      auto body = flight::physics2d::find_physics2_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), body_index);
+      auto body = flight::physics2d::find_physics_2d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), body_index);
       if ((!body.has_value() || !passes_body_filter(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body.value())), filter))) {
         continue;
       }
@@ -394,7 +394,7 @@ inline void query_physics2_dray_internal(flight::Ref<flight::types::Physics2DWor
               (collider_index += 1.0);
               continue;
             }
-            if (!flight::collision::raycast_collision_shape2_d(collider->world, origin_x, origin_y, direction_x, direction_y, scratch->raycast_hit, max_fraction)) {
+            if (!flight::collision::raycast_collision_shape_2d(collider->world, origin_x, origin_y, direction_x, direction_y, scratch->raycast_hit, max_fraction)) {
               {
                 (collider_index += 1.0);
                 continue;
@@ -418,18 +418,18 @@ inline void query_physics2_dray_internal(flight::Ref<flight::types::Physics2DWor
   catch (...) {
     finally_exception_3 = std::current_exception();
   }
-  release_physics2_dquery_scratch(scratch);
+  release_physics_2d_query_scratch(scratch);
   if (finally_exception_3) std::rethrow_exception(finally_exception_3);
 }
 
-inline void query_physics2_dray(flight::Ref<flight::types::Physics2DWorld> world, double origin_x, double origin_y, double direction_x, double direction_y, flight::Ref<flight::types::Physics2DRayResult> out, std::optional<double> max_fraction = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DQueryFilter>>>>> filter = std::nullopt) {
+inline void query_physics_2d_ray(flight::Ref<flight::types::Physics2DWorld> world, double origin_x, double origin_y, double direction_x, double direction_y, flight::Ref<flight::types::Physics2DRayResult> out, std::optional<double> max_fraction = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DQueryFilter>>>>> filter = std::nullopt) {
   max_fraction = max_fraction.value_or(std::numeric_limits<double>::infinity());
-  query_physics2_dray_internal(world, origin_x, origin_y, direction_x, direction_y, out, max_fraction.value(), filter, false);
+  query_physics_2d_ray_internal(world, origin_x, origin_y, direction_x, direction_y, out, max_fraction.value(), filter, false);
 }
 
-inline void query_physics2_dray_closest(flight::Ref<flight::types::Physics2DWorld> world, double origin_x, double origin_y, double direction_x, double direction_y, flight::Ref<flight::types::Physics2DRayResult> out, std::optional<double> max_fraction = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DQueryFilter>>>>> filter = std::nullopt) {
+inline void query_physics_2d_ray_closest(flight::Ref<flight::types::Physics2DWorld> world, double origin_x, double origin_y, double direction_x, double direction_y, flight::Ref<flight::types::Physics2DRayResult> out, std::optional<double> max_fraction = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DQueryFilter>>>>> filter = std::nullopt) {
   max_fraction = max_fraction.value_or(std::numeric_limits<double>::infinity());
-  query_physics2_dray_internal(world, origin_x, origin_y, direction_x, direction_y, out, max_fraction.value(), filter, true);
+  query_physics_2d_ray_internal(world, origin_x, origin_y, direction_x, direction_y, out, max_fraction.value(), filter, true);
 }
 
 inline flight::Ref<flight::types::Physics2DCollider> create_shape_cast_probe() {
@@ -481,7 +481,7 @@ using x_y_kind_35ad667397176b0f = flight::types::x_y_kind_35ad667397176b0f;
 
 inline bool write_swept_shape_bounds(flight::types::CollisionBuiltInShape2D shape, double dx, double dy, flight::Ref<flight::types::SpatialAabb2D> out) {
   (shape_cast_probe->world = shape);
-  flight::physics2d::write_physics2_dcollider_bounds(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>(shape_cast_probe)), out);
+  flight::physics2d::write_physics_2d_collider_bounds(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>(shape_cast_probe)), out);
   if ((!std::isfinite(out->min_x) || !std::isfinite(out->max_y))) {
     return false;
   }
@@ -500,7 +500,7 @@ inline bool write_swept_shape_bounds(flight::types::CollisionBuiltInShape2D shap
   return true;
 }
 
-inline void query_physics2_dshape_cast(flight::Ref<flight::types::Physics2DWorld> world, flight::types::CollisionBuiltInShape2D shape, double dx, double dy, flight::Ref<flight::types::Physics2DShapeCastResult> out, std::optional<double> max_fraction = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DQueryFilter>>>>> filter = std::nullopt) {
+inline void query_physics_2d_shape_cast(flight::Ref<flight::types::Physics2DWorld> world, flight::types::CollisionBuiltInShape2D shape, double dx, double dy, flight::Ref<flight::types::Physics2DShapeCastResult> out, std::optional<double> max_fraction = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DQueryFilter>>>>> filter = std::nullopt) {
   max_fraction = max_fraction.value_or(1.0);
   clear_shape_cast_result(out);
   if ((!std::isfinite(dx) || !std::isfinite(dy))) {
@@ -509,16 +509,16 @@ inline void query_physics2_dshape_cast(flight::Ref<flight::types::Physics2DWorld
   if ((!std::isfinite(max_fraction.value()) || (max_fraction.value() < 0.0))) {
     return;
   }
-  auto scratch = acquire_physics2_dquery_scratch();
+  auto scratch = acquire_physics_2d_query_scratch();
   std::exception_ptr finally_exception_4;
   try {
-    flight::physics2d::synchronize_physics2_dbroadphase(world);
+    flight::physics2d::synchronize_physics_2d_broadphase(world);
     if (write_swept_shape_bounds(shape, (dx * max_fraction.value()), (dy * max_fraction.value()), scratch->collider_bounds)) {
       world->index->query_spatial_region(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialAabb2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SpatialAabb2D>>>>(scratch->collider_bounds)), scratch->candidate_bodies);
       scratch->candidate_bodies.sort(compare_numbers);
       double best_fraction = std::numeric_limits<double>::infinity();
       for (auto body_index : scratch->candidate_bodies) {
-        auto body = flight::physics2d::find_physics2_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), body_index);
+        auto body = flight::physics2d::find_physics_2d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), body_index);
         if ((!body.has_value() || !passes_body_filter(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body.value())), filter))) {
           continue;
         }
@@ -531,7 +531,7 @@ inline void query_physics2_dshape_cast(flight::Ref<flight::types::Physics2DWorld
                 (collider_index += 1.0);
                 continue;
               }
-              if (!flight::collision::sweep_collision_shape2_d(shape, dx, dy, collider->world, 0.0, 0.0, scratch->time_of_impact, max_fraction.value())) {
+              if (!flight::collision::sweep_collision_shape_2d(shape, dx, dy, collider->world, 0.0, 0.0, scratch->time_of_impact, max_fraction.value())) {
                 {
                   (collider_index += 1.0);
                   continue;
@@ -561,7 +561,7 @@ inline void query_physics2_dshape_cast(flight::Ref<flight::types::Physics2DWorld
   catch (...) {
     finally_exception_4 = std::current_exception();
   }
-  release_physics2_dquery_scratch(scratch);
+  release_physics_2d_query_scratch(scratch);
   if (finally_exception_4) std::rethrow_exception(finally_exception_4);
 }
 

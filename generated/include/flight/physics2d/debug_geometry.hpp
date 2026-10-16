@@ -48,7 +48,7 @@ namespace flight::types { struct SpatialIndexBackend2D; }
 #include <flight/entity/entity.hpp>
 #include <flight/types/collision.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/physics2_d.hpp>
+#include <flight/types/physics_2d.hpp>
 #include <flight/types/spatial.hpp>
 
 namespace flight::physics2d {
@@ -72,16 +72,16 @@ using flight::types::SpatialIndexBackend2D;
 
 inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DDebugGeometryOptions>>>> default_options = flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DDebugGeometryOptions>>>>(flight::row_field<flight::RowKey<"drawCentersOfMass">>(true), flight::row_field<flight::RowKey<"drawColliders">>(true), flight::row_field<flight::RowKey<"drawContacts">>(true), flight::row_field<flight::RowKey<"drawJoints">>(true), flight::row_field<flight::RowKey<"centerOfMassRadius">>(0.08), flight::row_field<flight::RowKey<"contactNormalLength">>(0.5), flight::row_field<flight::RowKey<"pointRadius">>(0.04));
 
-inline void initialize_physics2_ddebug_geometry(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DDebugGeometry>> out) {
+inline void initialize_physics_2d_debug_geometry(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DDebugGeometry>> out) {
   flight::row_set<flight::RowKey<"circles">>(out, flight::Array<flight::Ref<flight::types::Physics2DDebugCircle>>{});
   flight::row_set<flight::RowKey<"circleCount">>(out, 0.0);
   flight::row_set<flight::RowKey<"lines">>(out, flight::Array<flight::Ref<flight::types::Physics2DDebugLine>>{});
   flight::row_set<flight::RowKey<"lineCount">>(out, 0.0);
 }
 
-inline flight::Ref<flight::types::Physics2DDebugGeometry> create_physics2_ddebug_geometry() {
+inline flight::Ref<flight::types::Physics2DDebugGeometry> create_physics_2d_debug_geometry() {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DDebugGeometry>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics2DDebugGeometry>>();
-  initialize_physics2_ddebug_geometry(out);
+  initialize_physics_2d_debug_geometry(out);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics2DDebugGeometry>>(out);
 }
 
@@ -378,7 +378,7 @@ inline void write_collider(flight::Ref<flight::types::Physics2DDebugGeometry> ou
 
 void write_joint(flight::Ref<flight::types::Physics2DDebugGeometry> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJoint>>>> joint);
 
-inline void write_physics2_ddebug_geometry(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world, flight::Ref<flight::types::Physics2DDebugGeometry> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::Physics2DDebugGeometryOptions>>>>>> options = std::nullopt) {
+inline void write_physics_2d_debug_geometry(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world, flight::Ref<flight::types::Physics2DDebugGeometry> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::Physics2DDebugGeometryOptions>>>>>> options = std::nullopt) {
   options = options.value_or(default_options);
   (out->line_count = 0.0);
   (out->circle_count = 0.0);

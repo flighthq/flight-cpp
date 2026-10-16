@@ -14,7 +14,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/spatial.hpp>
 
-#include <flight/types/physics3_d.hpp>
+#include <flight/types/physics_3d.hpp>
 
 #include <flight/types/collision.hpp>
 
@@ -67,9 +67,9 @@ using flight::types::SpatialIndexingExplanation;
 struct Physics3DIntakeScratch;
 } // namespace flight::physics3d
 
-#include <flight/collision/contact_manifold3_d.hpp>
+#include <flight/collision/contact_manifold_3d.hpp>
 #include <flight/types/collision.hpp>
-#include <flight/types/physics3_d.hpp>
+#include <flight/types/physics_3d.hpp>
 #include <flight/types/spatial.hpp>
 #include <flight/types/spatial_indexing.hpp>
 #include <flight/physics3d/broadphase.hpp>
@@ -82,7 +82,7 @@ struct Physics3DIntakeScratch;
 
 namespace flight::physics3d {
 
-inline double compare_physics3_dcontacts(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DContact>>>> left, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DContact>>>> right) {
+inline double compare_physics_3d_contacts(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DContact>>>> left, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DContact>>>> right) {
   if ((flight::row_get<flight::RowKey<"bodyA">>(left) != flight::row_get<flight::RowKey<"bodyA">>(right))) {
     return (flight::row_get<flight::RowKey<"bodyA">>(left) - flight::row_get<flight::RowKey<"bodyA">>(right));
   }
@@ -95,7 +95,7 @@ inline double compare_physics3_dcontacts(flight::StructuralRef<flight::RowReadon
   return (flight::row_get<flight::RowKey<"colliderB">>(left) - flight::row_get<flight::RowKey<"colliderB">>(right));
 }
 
-inline bool has_physics3_dsensor_collider(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body) {
+inline bool has_physics_3d_sensor_collider(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body) {
   {
     double collider_index = 0.0;
     while ((collider_index < static_cast<double>(flight::row_get<flight::RowKey<"colliders">>(body).size()))) {
@@ -119,7 +119,7 @@ inline bool is_physics3_dcollider_pair_enabled_flight_value_function_is_u000050_
   return ((flight::bitwise_and(filter_a->mask_bits, filter_b->category_bits) != 0.0) && (flight::bitwise_and(filter_b->mask_bits, filter_a->category_bits) != 0.0));
 }
 
-inline flight::Array<double> write_physics3_dbody_center(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world, double index, flight::Array<double> out) {
+inline flight::Array<double> write_physics_3d_body_center(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world, double index, flight::Array<double> out) {
   auto body = flight::row_get<flight::RowKey<"bodyByIndex">>(world).get(index);
   if (!body.has_value()) {
     (out.element(0.0) = 0.0);
@@ -127,7 +127,7 @@ inline flight::Array<double> write_physics3_dbody_center(flight::StructuralRef<f
     (out.element(2.0) = 0.0);
     return out;
   }
-  flight::physics3d::write_rigid_body3_dworld_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body.value())), out);
+  flight::physics3d::write_rigid_body_3d_world_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body.value())), out);
   return out;
 }
 
@@ -136,31 +136,31 @@ struct Physics3DIntakeScratch : public flight::ReferenceEnabled {
   flight::Ref<flight::types::CollisionContactManifold3D> manifold;
 };
 
-inline flight::Ref<Physics3DIntakeScratch> create_physics3_dintake_scratch() {
-  return flight::make_ref<Physics3DIntakeScratch>(Physics3DIntakeScratch{.pairs = flight::Array<flight::Ref<flight::types::SpatialPair>>{}, .manifold = flight::collision::create_collision_contact_manifold3_d()});
+inline flight::Ref<Physics3DIntakeScratch> create_physics_3d_intake_scratch() {
+  return flight::make_ref<Physics3DIntakeScratch>(Physics3DIntakeScratch{.pairs = flight::Array<flight::Ref<flight::types::SpatialPair>>{}, .manifold = flight::collision::create_collision_contact_manifold_3d()});
 }
 
-inline flight::Array<flight::Ref<Physics3DIntakeScratch>> physics3_dintake_scratch_pool = flight::Array<flight::Ref<Physics3DIntakeScratch>>{create_physics3_dintake_scratch()};
+inline flight::Array<flight::Ref<Physics3DIntakeScratch>> physics_3d_intake_scratch_pool = flight::Array<flight::Ref<Physics3DIntakeScratch>>{create_physics_3d_intake_scratch()};
 
-inline flight::Ref<Physics3DIntakeScratch> acquire_physics3_dintake_scratch() {
-  return ([&]() -> flight::Ref<Physics3DIntakeScratch> { auto nullish_coalesce_left = physics3_dintake_scratch_pool.pop(); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_physics3_dintake_scratch(); }());
+inline flight::Ref<Physics3DIntakeScratch> acquire_physics_3d_intake_scratch() {
+  return ([&]() -> flight::Ref<Physics3DIntakeScratch> { auto nullish_coalesce_left = physics_3d_intake_scratch_pool.pop(); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_physics_3d_intake_scratch(); }());
 }
 
-inline void release_physics3_dintake_scratch(flight::Ref<Physics3DIntakeScratch> scratch) {
-  physics3_dintake_scratch_pool.push(scratch);
+inline void release_physics_3d_intake_scratch(flight::Ref<Physics3DIntakeScratch> scratch) {
+  physics_3d_intake_scratch_pool.push(scratch);
 }
 
-inline std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>)>> physics3_dintake_guard = std::nullopt;
+inline std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>)>> physics_3d_intake_guard = std::nullopt;
 
-inline void set_physics3_dcontact_intake_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>)>> guard) {
-  (physics3_dintake_guard = guard);
+inline void set_physics_3d_contact_intake_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>)>> guard) {
+  (physics_3d_intake_guard = guard);
 }
 
 inline flight::Array<double> scratch_center_a = flight::Array<double>{0.0, 0.0, 0.0};
 
 inline flight::Array<double> scratch_center_b = flight::Array<double>{0.0, 0.0, 0.0};
 
-inline void merge_physics3_dcontact(flight::Ref<flight::types::Physics3DWorld> world, double body_a, double body_b, double collider_a, double collider_b, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionContactManifold3D>>>> manifold, bool sensor, double friction, double restitution, bool preserve_overrides) {
+inline void merge_physics_3d_contact(flight::Ref<flight::types::Physics3DWorld> world, double body_a, double body_b, double collider_a, double collider_b, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionContactManifold3D>>>> manifold, bool sensor, double friction, double restitution, bool preserve_overrides) {
   std::optional<flight::Ref<flight::types::Physics3DContact>> contact = std::nullopt;
   {
     double contact_index = 0.0;
@@ -177,7 +177,7 @@ inline void merge_physics3_dcontact(flight::Ref<flight::types::Physics3DWorld> w
   }
   const bool existing_2 = contact.has_value();
   if (!contact.has_value()) {
-    (contact = std::optional<flight::Ref<flight::types::Physics3DContact>>{flight::physics3d::create_physics3_dcontact(body_a, body_b, collider_a, collider_b)});
+    (contact = std::optional<flight::Ref<flight::types::Physics3DContact>>{flight::physics3d::create_physics_3d_contact(body_a, body_b, collider_a, collider_b)});
     (contact.value()->friction = friction);
     (contact.value()->restitution = restitution);
     (contact.value()->sensor = sensor);
@@ -196,10 +196,10 @@ inline void merge_physics3_dcontact(flight::Ref<flight::types::Physics3DWorld> w
   }
   (contact.value()->touching = true);
   while ((static_cast<double>(contact.value()->points.size()) < flight::row_get<flight::RowKey<"pointCount">>(manifold))) {
-    contact.value()->points.push(flight::physics3d::create_physics3_dcontact_point());
+    contact.value()->points.push(flight::physics3d::create_physics_3d_contact_point());
   }
-  flight::Array<double> center_a = write_physics3_dbody_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), body_a, scratch_center_a);
-  flight::Array<double> center_b = write_physics3_dbody_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), body_b, scratch_center_b);
+  flight::Array<double> center_a = write_physics_3d_body_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), body_a, scratch_center_a);
+  flight::Array<double> center_b = write_physics_3d_body_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), body_b, scratch_center_b);
   {
     double i = 0.0;
     while ((i < flight::row_get<flight::RowKey<"pointCount">>(manifold))) {
@@ -224,7 +224,7 @@ inline void merge_physics3_dcontact(flight::Ref<flight::types::Physics3DWorld> w
   (contact.value()->point_count = flight::row_get<flight::RowKey<"pointCount">>(manifold));
 }
 
-inline void build_physics3_dcontacts_with_scratch(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<Physics3DIntakeScratch> scratch, bool clear_events, bool preserve_overrides) {
+inline void build_physics_3d_contacts_with_scratch(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<Physics3DIntakeScratch> scratch, bool clear_events, bool preserve_overrides) {
   world->index->query_spatial_pairs(scratch->pairs);
   if (clear_events) {
     ([&]() { auto&& assignment_receiver = world->events->began; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
@@ -251,15 +251,15 @@ inline void build_physics3_dcontacts_with_scratch(flight::Ref<flight::types::Phy
           continue;
         }
         const bool both_immovable = ((first.value()->inverse_mass == 0.0) && (second.value()->inverse_mass == 0.0));
-        if (((both_immovable && !has_physics3_dsensor_collider(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(first.value())))) && !has_physics3_dsensor_collider(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(second.value()))))) {
+        if (((both_immovable && !has_physics_3d_sensor_collider(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(first.value())))) && !has_physics_3d_sensor_collider(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(second.value()))))) {
           (pair_index += 1.0);
           continue;
         }
-        if (flight::physics3d::is_physics3_dpair_joint_suppressed(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), first.value()->index, second.value()->index)) {
+        if (flight::physics3d::is_physics_3d_pair_joint_suppressed(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), first.value()->index, second.value()->index)) {
           (pair_index += 1.0);
           continue;
         }
-        const bool ordered = flight::physics3d::is_physics3_dpair_ordered(first.value()->index, second.value()->index);
+        const bool ordered = flight::physics3d::is_physics_3d_pair_ordered(first.value()->index, second.value()->index);
         auto body_a = (ordered ? first.value() : second.value());
         auto body_b = (ordered ? second.value() : first.value());
         {
@@ -281,11 +281,11 @@ inline void build_physics3_dcontacts_with_scratch(flight::Ref<flight::types::Phy
                       (j += 1.0);
                       continue;
                     }
-                    if (!flight::physics3d::collide_physics3_dcollider_shapes(collider_a->world, collider_b->world, scratch->manifold)) {
+                    if (!flight::physics3d::collide_physics_3d_collider_shapes(collider_a->world, collider_b->world, scratch->manifold)) {
                       (j += 1.0);
                       continue;
                     }
-                    merge_physics3_dcontact(world, body_a->index, body_b->index, i, j, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionContactManifold3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::CollisionContactManifold3D>>>>(scratch->manifold)), sensor_pair, flight::physics3d::mix_physics3_dfriction(collider_a->material->friction, collider_b->material->friction), flight::physics3d::mix_physics3_drestitution(collider_a->material->restitution, collider_b->material->restitution), preserve_overrides);
+                    merge_physics_3d_contact(world, body_a->index, body_b->index, i, j, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CollisionContactManifold3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::CollisionContactManifold3D>>>>(scratch->manifold)), sensor_pair, flight::physics3d::mix_physics_3d_friction(collider_a->material->friction, collider_b->material->friction), flight::physics3d::mix_physics_3d_restitution(collider_a->material->restitution, collider_b->material->restitution), preserve_overrides);
                   }
                   (j += 1.0);
                 }
@@ -311,30 +311,30 @@ inline void build_physics3_dcontacts_with_scratch(flight::Ref<flight::types::Phy
       (i_2 -= 1.0);
     }
   }
-  world->contacts.sort(compare_physics3_dcontacts);
+  world->contacts.sort(compare_physics_3d_contacts);
 }
 
-inline void rebuild_physics3_dcontacts(flight::Ref<flight::types::Physics3DWorld> world, bool clear_events, bool preserve_overrides) {
-  ([&]() { auto optional_chain_receiver = physics3_dintake_guard; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(world); }());
-  flight::physics3d::synchronize_physics3_dbroadphase(world);
-  auto scratch = acquire_physics3_dintake_scratch();
+inline void rebuild_physics_3d_contacts(flight::Ref<flight::types::Physics3DWorld> world, bool clear_events, bool preserve_overrides) {
+  ([&]() { auto optional_chain_receiver = physics_3d_intake_guard; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(world); }());
+  flight::physics3d::synchronize_physics_3d_broadphase(world);
+  auto scratch = acquire_physics_3d_intake_scratch();
   std::exception_ptr finally_exception;
   try {
-    build_physics3_dcontacts_with_scratch(world, scratch, clear_events, preserve_overrides);
+    build_physics_3d_contacts_with_scratch(world, scratch, clear_events, preserve_overrides);
   }
   catch (...) {
     finally_exception = std::current_exception();
   }
-  release_physics3_dintake_scratch(scratch);
+  release_physics_3d_intake_scratch(scratch);
   if (finally_exception) std::rethrow_exception(finally_exception);
 }
 
-inline void build_physics3_dcontacts(flight::Ref<flight::types::Physics3DWorld> world) {
-  rebuild_physics3_dcontacts(world, true, false);
+inline void build_physics_3d_contacts(flight::Ref<flight::types::Physics3DWorld> world) {
+  rebuild_physics_3d_contacts(world, true, false);
 }
 
-inline void refresh_physics3_dcontacts(flight::Ref<flight::types::Physics3DWorld> world) {
-  rebuild_physics3_dcontacts(world, false, true);
+inline void refresh_physics_3d_contacts(flight::Ref<flight::types::Physics3DWorld> world) {
+  rebuild_physics_3d_contacts(world, false, true);
 }
 
 } // namespace flight::physics3d

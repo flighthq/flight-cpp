@@ -21,7 +21,7 @@ struct Timeline;
 
 #include <flight/types/entity.hpp>
 #include <flight/types/frame_script.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/timeline_cue.hpp>
 #include <flight/types/timeline_play_mode.hpp>
 #include <flight/types/timeline_signals.hpp>

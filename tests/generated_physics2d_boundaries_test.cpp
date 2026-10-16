@@ -46,7 +46,7 @@ void register_cases(flight::upstream_test::Runner& runner) {
 
   runner.describe("createPhysics2DColliderWorldShape", [&] {
     runner.it("allocates a point world shape at the local point, and a segment at its endpoints", [] {
-      auto point = p::create_physics2_dcollider_world_shape(t::point(2, 3));
+      auto point = p::create_physics_2d_collider_world_shape(t::point(2, 3));
       expect_true(kind_of(point) == flight::String("point"), "a point local shape stays a point");
       std::visit(
           [](const auto& arm) {
@@ -56,7 +56,7 @@ void register_cases(flight::upstream_test::Runner& runner) {
             }
           },
           point);
-      auto segment = p::create_physics2_dcollider_world_shape(t::segment(1, 2, 3, 4));
+      auto segment = p::create_physics_2d_collider_world_shape(t::segment(1, 2, 3, 4));
       expect_true(kind_of(segment) == flight::String("segment"), "a segment local shape stays a segment");
     });
   });
@@ -64,12 +64,12 @@ void register_cases(flight::upstream_test::Runner& runner) {
   runner.describe("writePhysics2DColliderBounds", [&] {
     runner.it("bounds an area-less point and segment by their own coordinates", [] {
       auto bounds = flight::make_ref<types::SpatialAabb2D>();
-      p::write_physics2_dcollider_bounds(t::view(t::collider(t::point(2, 3))), bounds);
+      p::write_physics_2d_collider_bounds(t::view(t::collider(t::point(2, 3))), bounds);
       expect(bounds->min_x).to_be(2.0);
       expect(bounds->max_x).to_be(2.0);
       expect(bounds->min_y).to_be(3.0);
       expect(bounds->max_y).to_be(3.0);
-      p::write_physics2_dcollider_bounds(t::view(t::collider(t::segment(1, 2, 3, -1))), bounds);
+      p::write_physics_2d_collider_bounds(t::view(t::collider(t::segment(1, 2, 3, -1))), bounds);
       expect(bounds->min_x).to_be(1.0);
       expect(bounds->min_y).to_be(-1.0);
       expect(bounds->max_x).to_be(3.0);
@@ -82,7 +82,7 @@ void register_cases(flight::upstream_test::Runner& runner) {
       auto unknown = t::collider(t::point(4, 5));
       unknown->world = shape;
       auto bounds = flight::make_ref<types::SpatialAabb2D>(types::SpatialAabb2D{.min_x = 7, .min_y = 7, .max_x = 7, .max_y = 7});
-      p::write_physics2_dcollider_bounds(t::view(unknown), bounds);
+      p::write_physics_2d_collider_bounds(t::view(unknown), bounds);
       expect(bounds->min_x).to_be(0.0);
       expect(bounds->min_y).to_be(0.0);
       expect(bounds->max_x).to_be(0.0);
@@ -101,9 +101,9 @@ void register_cases(flight::upstream_test::Runner& runner) {
   runner.describe("physics2DSolveIslandForBody", [&] {
     runner.it("answers -1 for a missing body and for an awake dynamic body no island has been built for", [] {
       auto world = t::world();
-      expect(p::physics2_dsolve_island_for_body(world, 99)).to_be(-1.0);
-      auto body = p::add_physics2_dbody(world, t::body("dynamic", 0, 0));
-      expect(p::physics2_dsolve_island_for_body(world, body->index)).to_be(-1.0);
+      expect(p::physics_2d_solve_island_for_body(world, 99)).to_be(-1.0);
+      auto body = p::add_physics_2d_body(world, t::body("dynamic", 0, 0));
+      expect(p::physics_2d_solve_island_for_body(world, body->index)).to_be(-1.0);
     });
   });
 
@@ -112,11 +112,11 @@ void register_cases(flight::upstream_test::Runner& runner) {
       auto world = t::world(0, 0);
       auto line = t::body("static", 0, 0);
       line->colliders.push(t::collider(t::segment(-2, 0, 2, 0)));
-      p::add_physics2_dbody(world, line);
+      p::add_physics_2d_body(world, line);
       auto box = t::body("static", 0, 0);
       box->colliders.push(t::collider(t::obb(0, 0, 0.5, 0.5, 0.3), t::material(), true));
-      p::add_physics2_dbody(world, box);
-      p::step_physics2_d(world, 1.0 / 60);
+      p::add_physics_2d_body(world, box);
+      p::step_physics_2d(world, 1.0 / 60);
       expect(world->events->began.size()).to_be(static_cast<std::size_t>(1));
       expect(world->contacts.element(0)->sensor).to_be(true);
     });
@@ -129,10 +129,10 @@ void register_cases(flight::upstream_test::Runner& runner) {
       first->colliders.push(t::collider(t::circle(0, 0, 1)));
       auto second = t::body("static", 5, 0);
       second->colliders.push(t::collider(t::circle(0, 0, 1)));
-      p::add_physics2_dbody(world, first);
-      p::add_physics2_dbody(world, second);
-      auto out = p::create_physics2_dray_result();
-      p::query_physics2_dray_closest(world, 0, 0, 1, 0, out);
+      p::add_physics_2d_body(world, first);
+      p::add_physics_2d_body(world, second);
+      auto out = p::create_physics_2d_ray_result();
+      p::query_physics_2d_ray_closest(world, 0, 0, 1, 0, out);
       expect(out->hit_count).to_be(1.0);
       expect_true(out->hits.element(0)->body == first, "the lower body index wins the tie");
     });

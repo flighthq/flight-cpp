@@ -11,7 +11,7 @@ namespace flight::types { struct HasTransform2D; }
 namespace flight::types { struct HasTransform2DRuntime; }
 namespace flight::types { struct Matrix; }
 
-#include <flight/types/has_transform2_d.hpp>
+#include <flight/types/has_transform_2d.hpp>
 #include <flight/types/matrix.hpp>
 #include <flight/types/methods_of.hpp>
 
@@ -23,7 +23,7 @@ struct anonymous_3e6b344a3b6bd77e : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_NODE_ANONYMOUS_3E6B344A3B6BD77E
 
-inline void init_transform2_druntime_trait(flight::Ref<flight::types::HasTransform2DRuntime> target, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<anonymous_3e6b344a3b6bd77e>>>>>> methods = std::nullopt) {
+inline void init_transform_2d_runtime_trait(flight::Ref<flight::types::HasTransform2DRuntime> target, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<anonymous_3e6b344a3b6bd77e>>>>>> methods = std::nullopt) {
   (target->local_matrix = std::nullopt);
   (target->rotation_angle = 0.0);
   (target->rotation_cosine = 1.0);
@@ -31,7 +31,7 @@ inline void init_transform2_druntime_trait(flight::Ref<flight::types::HasTransfo
   (target->world_matrix = std::nullopt);
 }
 
-inline void init_transform2_dtrait(flight::Ref<flight::types::HasTransform2D> target, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::HasTransform2D>>>>>> obj = std::nullopt) {
+inline void init_transform_2d_trait(flight::Ref<flight::types::HasTransform2D> target, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::HasTransform2D>>>>>> obj = std::nullopt) {
   (target->pivot_x = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"pivotX">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
   (target->pivot_y = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"pivotY">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
   (target->rotation = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"rotation">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));

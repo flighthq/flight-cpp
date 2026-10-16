@@ -6,7 +6,7 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/physics3_d.hpp>
+#include <flight/types/physics_3d.hpp>
 
 namespace flight::types { struct Node3D; }
 namespace flight::types { struct Quaternion; }
@@ -20,7 +20,7 @@ namespace flight::physics3d {
 
 using flight::types::RigidBody3D;
 
-inline void sync_physics3_dbody_to_node3_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body, flight::Ref<flight::types::Node3D> node) {
+inline void sync_physics_3d_body_to_node_3d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body, flight::Ref<flight::types::Node3D> node) {
   (node->position->x = flight::row_get<flight::RowKey<"x">>(body));
   (node->position->y = flight::row_get<flight::RowKey<"y">>(body));
   (node->position->z = flight::row_get<flight::RowKey<"z">>(body));

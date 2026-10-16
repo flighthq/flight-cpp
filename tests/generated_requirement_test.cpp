@@ -148,7 +148,7 @@ void test_merge_unions_facts_and_intersects_completeness() {
 
 // collectScene2DRequirements: deterministic distinct requirements and the facets the collector inspects.
 void test_collector_declares_the_facets_it_inspects() {
-  const auto set = flight::requirement::collect_scene2_drequirements([](flight::Array<Requirement> sink) {
+  const auto set = flight::requirement::collect_scene_2d_requirements([](flight::Array<Requirement> sink) {
     flight::requirement::report_requirement(sink, scene_node_kind(), flight::String("Shape"));
     flight::requirement::report_requirement(sink, scene_blend_mode(), flight::String("Multiply"));
     flight::requirement::report_requirement(sink, scene_node_kind(), flight::String("Shape"));

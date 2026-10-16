@@ -79,11 +79,11 @@ using Segment = types::x0_y0_x1_y1_kind_d4f616534491406f;
 using Point = types::x_y_kind_35ad667397176b0f;
 
 void update(const pt::Collider& collider, const pt::Body& body) {
-  p2::update_physics2_dcollider_world_shape(collider, pt::view(body));
+  p2::update_physics_2d_collider_world_shape(collider, pt::view(body));
 }
 
 void write_bounds(const pt::Collider& collider, const flight::Ref<types::SpatialAabb2D>& out) {
-  p2::write_physics2_dcollider_bounds(pt::view(collider), out);
+  p2::write_physics_2d_collider_bounds(pt::view(collider), out);
 }
 
 // --- colliderTransform -------------------------------------------------------------------------------------
@@ -96,17 +96,17 @@ flight::String variant_kind(const Variant& value) {
 void collider_transform(Runner& runner) {
   runner.describe("createPhysics2DColliderWorldShape", [&] {
     runner.it("promotes an axis-aligned box to an oriented box, since a rotated box is not axis-aligned", [] {
-      expect(variant_kind(p2::create_physics2_dcollider_world_shape(pt::aabb(0, 0, 1, 1)))).to_be(flight::String("obb"));
+      expect(variant_kind(p2::create_physics_2d_collider_world_shape(pt::aabb(0, 0, 1, 1)))).to_be(flight::String("obb"));
     });
     runner.it("keeps the kind for shapes a rigid transform preserves", [] {
-      expect(variant_kind(p2::create_physics2_dcollider_world_shape(pt::circle(0, 0, 1)))).to_be(flight::String("circle"));
-      expect(variant_kind(p2::create_physics2_dcollider_world_shape(pt::polygon({0, 0, 1, 0, 0, 1})))).to_be(flight::String("polygon"));
-      expect(variant_kind(p2::create_physics2_dcollider_world_shape(pt::segment(0, 0, 1, 0)))).to_be(flight::String("segment"));
-      expect(variant_kind(p2::create_physics2_dcollider_world_shape(pt::point(0, 0)))).to_be(flight::String("point"));
+      expect(variant_kind(p2::create_physics_2d_collider_world_shape(pt::circle(0, 0, 1)))).to_be(flight::String("circle"));
+      expect(variant_kind(p2::create_physics_2d_collider_world_shape(pt::polygon({0, 0, 1, 0, 0, 1})))).to_be(flight::String("polygon"));
+      expect(variant_kind(p2::create_physics_2d_collider_world_shape(pt::segment(0, 0, 1, 0)))).to_be(flight::String("segment"));
+      expect(variant_kind(p2::create_physics_2d_collider_world_shape(pt::point(0, 0)))).to_be(flight::String("point"));
     });
     runner.it("gives a polygon its own points array so the per-step transform cannot write through to the local shape", [] {
       auto local = pt::polygon({0, 0, 1, 0, 0, 1});
-      auto world = p2::create_physics2_dcollider_world_shape(local);
+      auto world = p2::create_physics_2d_collider_world_shape(local);
       bool separate = false;
       bool entity = false;
       std::visit(
@@ -256,7 +256,7 @@ flight::Ref<types::Physics2DMassData> mass_data() {
 }
 
 void compute(const pt::Collider& collider, const flight::Ref<types::Physics2DMassData>& out) {
-  p2::compute_physics2_dcollider_mass_data(pt::view(collider), out);
+  p2::compute_physics_2d_collider_mass_data(pt::view(collider), out);
 }
 
 struct Integrated {
@@ -396,7 +396,7 @@ void mass_properties(Runner& runner) {
   runner.describe("updateRigidBody2DMassData", [&] {
     runner.it("combines two colliders into one centre of mass and shifts their inertia onto it", [] {
       auto target = mass_body({mass_collider(pt::aabb(-3, -1, -1, 1)), mass_collider(pt::aabb(1, -1, 3, 1))});
-      p2::update_rigid_body2_dmass_data(target);
+      p2::update_rigid_body_2d_mass_data(target);
       expect(target->mass).to_be_close_to(8);
       expect(target->center_x).to_be_close_to(0);
       expect(target->center_y).to_be_close_to(0);
@@ -406,7 +406,7 @@ void mass_properties(Runner& runner) {
     });
     runner.it("gives a static body zero inverse mass and inertia while keeping its centre", [] {
       auto ground = mass_body({mass_collider(pt::aabb(-5, -1, 5, 0))}, "static");
-      p2::update_rigid_body2_dmass_data(ground);
+      p2::update_rigid_body_2d_mass_data(ground);
       expect(ground->inverse_mass).to_be(0.0);
       expect(ground->inverse_inertia).to_be(0.0);
       expect(ground->mass).to_be(0.0);
@@ -415,14 +415,14 @@ void mass_properties(Runner& runner) {
     });
     runner.it("gives a kinematic body zero inverse mass even though it moves", [] {
       auto platform = mass_body({mass_collider(pt::aabb(0, 0, 4, 1))}, "kinematic");
-      p2::update_rigid_body2_dmass_data(platform);
+      p2::update_rigid_body_2d_mass_data(platform);
       expect(platform->inverse_mass).to_be(0.0);
       expect(platform->inverse_inertia).to_be(0.0);
     });
     runner.it("gives fixed rotation zero inverse inertia without discarding derived inertia or linear mass", [] {
       auto target = mass_body({mass_collider(pt::aabb(-2, -1, 2, 1))});
       target->fixed_rotation = true;
-      p2::update_rigid_body2_dmass_data(target);
+      p2::update_rigid_body_2d_mass_data(target);
       expect(target->mass).to_be_greater_than(0.0);
       expect(target->inverse_mass).to_be_greater_than(0.0);
       expect(target->inertia).to_be_greater_than(0.0);
@@ -430,7 +430,7 @@ void mass_properties(Runner& runner) {
     });
     runner.it("leaves a dynamic body with no area finite rather than dividing by its zero mass", [] {
       auto ghost = mass_body({mass_collider(pt::point(0, 0))});
-      p2::update_rigid_body2_dmass_data(ghost);
+      p2::update_rigid_body_2d_mass_data(ghost);
       expect(ghost->inverse_mass).to_be(0.0);
       expect(ghost->inverse_inertia).to_be(0.0);
       expect(std::isfinite(ghost->center_x)).to_be(true);
@@ -438,8 +438,8 @@ void mass_properties(Runner& runner) {
     runner.it("scales mass with density but leaves the centre of mass where it was", [] {
       auto light = mass_body({mass_collider(pt::aabb(0, 0, 2, 2), 1)});
       auto heavy = mass_body({mass_collider(pt::aabb(0, 0, 2, 2), 7)});
-      p2::update_rigid_body2_dmass_data(light);
-      p2::update_rigid_body2_dmass_data(heavy);
+      p2::update_rigid_body_2d_mass_data(light);
+      p2::update_rigid_body_2d_mass_data(heavy);
       expect(heavy->mass).to_be_close_to(light->mass * 7);
       expect(heavy->inertia).to_be_close_to(light->inertia * 7);
       expect(heavy->center_x).to_be_close_to(light->center_x);
@@ -452,24 +452,24 @@ void mass_properties(Runner& runner) {
 void material(Runner& runner) {
   runner.describe("mixPhysics2DFriction", [&] {
     runner.it("keeps a pair frictionless when either surface has zero friction", [] {
-      expect(p2::mix_physics2_dfriction(0, 1)).to_be(0.0);
-      expect(p2::mix_physics2_dfriction(1, 0)).to_be(0.0);
+      expect(p2::mix_physics_2d_friction(0, 1)).to_be(0.0);
+      expect(p2::mix_physics_2d_friction(1, 0)).to_be(0.0);
     });
     runner.it("is symmetric and leaves equal coefficients unchanged", [] {
-      expect(p2::mix_physics2_dfriction(0.25, 1)).to_be(p2::mix_physics2_dfriction(1, 0.25));
-      expect(p2::mix_physics2_dfriction(0.36, 0.36)).to_be_close_to(0.36);
+      expect(p2::mix_physics_2d_friction(0.25, 1)).to_be(p2::mix_physics_2d_friction(1, 0.25));
+      expect(p2::mix_physics_2d_friction(0.36, 0.36)).to_be_close_to(0.36);
     });
     runner.it("does not overflow while the geometric mean remains finite", [] {
       const double max = std::numeric_limits<double>::max();
-      const double mixed = p2::mix_physics2_dfriction(max, max);
+      const double mixed = p2::mix_physics_2d_friction(max, max);
       expect(std::isfinite(mixed)).to_be(true);
       expect(mixed / max).to_be_close_to(1);
     });
   });
   runner.describe("mixPhysics2DRestitution", [&] {
     runner.it("uses the bouncier surface symmetrically", [] {
-      expect(p2::mix_physics2_drestitution(0.2, 0.8)).to_be(0.8);
-      expect(p2::mix_physics2_drestitution(0.8, 0.2)).to_be(0.8);
+      expect(p2::mix_physics_2d_restitution(0.2, 0.8)).to_be(0.8);
+      expect(p2::mix_physics_2d_restitution(0.8, 0.2)).to_be(0.8);
     });
   });
 }
@@ -482,24 +482,24 @@ void node_sync(Runner& runner) {
   runner.describe("syncPhysics2DBodyToNode2D", [&] {
     runner.it("copies position from body to node", [] {
       auto node = flight::scene2d::create_display_object();
-      p2::sync_physics2_dbody_to_node2_d(pt::view(stub_body(5, -3, 0)), node);
+      p2::sync_physics_2d_body_to_node_2d(pt::view(stub_body(5, -3, 0)), node);
       expect(flight::row_get<flight::RowKey<"x">>(node)).to_be(5.0);
       expect(flight::row_get<flight::RowKey<"y">>(node)).to_be(-3.0);
     });
     runner.it("converts angle from radians to degrees", [] {
       auto node = flight::scene2d::create_display_object();
-      p2::sync_physics2_dbody_to_node2_d(pt::view(stub_body(0, 0, PI)), node);
+      p2::sync_physics_2d_body_to_node_2d(pt::view(stub_body(0, 0, PI)), node);
       expect(flight::row_get<flight::RowKey<"rotation">>(node)).to_be_close_to(180, 10);
     });
     runner.it("converts a quarter turn", [] {
       auto node = flight::scene2d::create_display_object();
-      p2::sync_physics2_dbody_to_node2_d(pt::view(stub_body(0, 0, PI / 2)), node);
+      p2::sync_physics_2d_body_to_node_2d(pt::view(stub_body(0, 0, PI / 2)), node);
       expect(flight::row_get<flight::RowKey<"rotation">>(node)).to_be_close_to(90, 10);
     });
     runner.it("handles zero angle", [] {
       auto node = flight::scene2d::create_display_object();
       flight::row_set<flight::RowKey<"rotation">>(node, 45.0);
-      p2::sync_physics2_dbody_to_node2_d(pt::view(stub_body(1, 2, 0)), node);
+      p2::sync_physics_2d_body_to_node_2d(pt::view(stub_body(1, 2, 0)), node);
       expect(flight::row_get<flight::RowKey<"rotation">>(node)).to_be(0.0);
     });
   });
@@ -516,7 +516,7 @@ BodyWorld body_world() {
   auto world = pt::world();
   auto body = pt::body("dynamic", 0, 0);
   body->colliders.push(pt::collider(pt::circle(0, 0, 1), stone()));
-  p2::add_physics2_dbody(world, body);
+  p2::add_physics_2d_body(world, body);
   return {body, world};
 }
 
@@ -545,80 +545,80 @@ void step_validation(Runner& runner) {
   runner.describe("isPhysics2DBodyStateValid", [&] {
     runner.it("accepts coherent world bodies and rejects invalid numeric or lookup state", [] {
       auto [body, world] = body_world();
-      expect(p2::is_physics2_dbody_state_valid(pt::view(world))).to_be(true);
+      expect(p2::is_physics_2d_body_state_valid(pt::view(world))).to_be(true);
       body->linear_damping = -1;
-      expect(p2::is_physics2_dbody_state_valid(pt::view(world))).to_be(false);
+      expect(p2::is_physics_2d_body_state_valid(pt::view(world))).to_be(false);
       body->linear_damping = 0;
       // fixedRotation / bullet / sleepEnabled = undefined: not expressible on bool members.
       static_cast<void>(world->body_by_index.erase(body->index));
-      expect(p2::is_physics2_dbody_state_valid(pt::view(world))).to_be(false);
+      expect(p2::is_physics_2d_body_state_valid(pt::view(world))).to_be(false);
     });
   });
   runner.describe("isPhysics2DContactStateValid", [&] {
     runner.it("accepts an empty cache and rejects a non-finite cached contact", [] {
       auto world = pt::world();
-      expect(p2::is_physics2_dcontact_state_valid(pt::view(world))).to_be(true);
+      expect(p2::is_physics_2d_contact_state_valid(pt::view(world))).to_be(true);
       world->contacts.push(contact_row(std::nan("")));
-      expect(p2::is_physics2_dcontact_state_valid(pt::view(world))).to_be(false);
+      expect(p2::is_physics_2d_contact_state_valid(pt::view(world))).to_be(false);
     });
   });
   runner.describe("isPhysics2DContactValid", [&] {
     runner.it("accepts a finite contact and rejects an invalid hook-authored coefficient", [] {
       auto contact = contact_row(0);
-      expect(p2::is_physics2_dcontact_valid(pt::view(contact))).to_be(true);
+      expect(p2::is_physics_2d_contact_valid(pt::view(contact))).to_be(true);
       contact->friction = std::nan("");
-      expect(p2::is_physics2_dcontact_valid(pt::view(contact))).to_be(false);
+      expect(p2::is_physics_2d_contact_valid(pt::view(contact))).to_be(false);
     });
   });
   runner.describe("isPhysics2DGravityValid", [&] {
     runner.it("requires finite world acceleration", [] {
       auto world = pt::world();
-      expect(p2::is_physics2_dgravity_valid(pt::view(world))).to_be(true);
+      expect(p2::is_physics_2d_gravity_valid(pt::view(world))).to_be(true);
       world->gravity_y = std::numeric_limits<double>::infinity();
-      expect(p2::is_physics2_dgravity_valid(pt::view(world))).to_be(false);
+      expect(p2::is_physics_2d_gravity_valid(pt::view(world))).to_be(false);
     });
   });
   runner.describe("isPhysics2DJointStateValid", [&] {
     runner.it("rejects a non-finite authored or accumulated joint number", [] {
       auto [body, world] = body_world();
-      auto joint = p2::add_physics2_djoint(world, entity_joint(flight::String("Unknown"), body->index, body->index, false));
-      expect(p2::is_physics2_djoint_state_valid(pt::view(world))).to_be(true);
+      auto joint = p2::add_physics_2d_joint(world, entity_joint(flight::String("Unknown"), body->index, body->index, false));
+      expect(p2::is_physics_2d_joint_state_valid(pt::view(world))).to_be(true);
       joint->impulse0 = std::nan("");
-      expect(p2::is_physics2_djoint_state_valid(pt::view(world))).to_be(false);
+      expect(p2::is_physics_2d_joint_state_valid(pt::view(world))).to_be(false);
     });
   });
   runner.describe("isPhysics2DPreviousTimestepValid", [&] {
     runner.it("accepts the initial sentinel and a positive finite completed step", [] {
       auto world = pt::world();
-      expect(p2::is_physics2_dprevious_timestep_valid(pt::view(world))).to_be(true);
+      expect(p2::is_physics_2d_previous_timestep_valid(pt::view(world))).to_be(true);
       world->previous_timestep = 1.0 / 60;
-      expect(p2::is_physics2_dprevious_timestep_valid(pt::view(world))).to_be(true);
+      expect(p2::is_physics_2d_previous_timestep_valid(pt::view(world))).to_be(true);
       world->previous_timestep = -1;
-      expect(p2::is_physics2_dprevious_timestep_valid(pt::view(world))).to_be(false);
+      expect(p2::is_physics_2d_previous_timestep_valid(pt::view(world))).to_be(false);
     });
   });
   runner.describe("isPhysics2DSolverConfigValid", [&] {
     runner.it("rejects unsafe ranges and non-finite solver coefficients", [] {
       auto world = pt::world();
-      expect(p2::is_physics2_dsolver_config_valid(pt::view(world->config))).to_be(true);
+      expect(p2::is_physics_2d_solver_config_valid(pt::view(world->config))).to_be(true);
       world->config->position_correction = 2;
-      expect(p2::is_physics2_dsolver_config_valid(pt::view(world->config))).to_be(false);
+      expect(p2::is_physics_2d_solver_config_valid(pt::view(world->config))).to_be(false);
       world->config->position_correction = 0.2;
       world->config->penetration_slop = std::nan("");
-      expect(p2::is_physics2_dsolver_config_valid(pt::view(world->config))).to_be(false);
+      expect(p2::is_physics_2d_solver_config_valid(pt::view(world->config))).to_be(false);
       world->config->penetration_slop = 0.005;
       world->config->max_ccd_substeps = -1;
-      expect(p2::is_physics2_dsolver_config_valid(pt::view(world->config))).to_be(false);
+      expect(p2::is_physics_2d_solver_config_valid(pt::view(world->config))).to_be(false);
       world->config->max_ccd_substeps = 8;
       world->config->max_ccd_rotation_substeps = -1;
-      expect(p2::is_physics2_dsolver_config_valid(pt::view(world->config))).to_be(false);
+      expect(p2::is_physics_2d_solver_config_valid(pt::view(world->config))).to_be(false);
     });
   });
   runner.describe("isPhysics2DTimestepValid", [&] {
     runner.it("accepts only positive finite intervals", [] {
-      expect(p2::is_physics2_dtimestep_valid(1.0 / 60)).to_be(true);
-      expect(p2::is_physics2_dtimestep_valid(0)).to_be(false);
-      expect(p2::is_physics2_dtimestep_valid(std::nan(""))).to_be(false);
+      expect(p2::is_physics_2d_timestep_valid(1.0 / 60)).to_be(true);
+      expect(p2::is_physics_2d_timestep_valid(0)).to_be(false);
+      expect(p2::is_physics_2d_timestep_valid(std::nan(""))).to_be(false);
     });
   });
 }
@@ -644,24 +644,24 @@ void joint_rows(Runner& runner) {
   runner.describe("writePhysics2DSoftRowParameters", [&] {
     runner.it("returns the hard parameters unchanged when no frequency was authored", [] {
       auto out = triple(9, 9, 9);
-      p2::write_physics2_dsoft_row_parameters(4, 0, 0.7, 1.0 / 60, 12, out);
+      p2::write_physics_2d_soft_row_parameters(4, 0, 0.7, 1.0 / 60, 12, out);
       expect(values(out)).to_equal(std::vector<double>{4, 12, 0});
     });
     runner.it("returns the hard parameters unchanged for a negative or NaN frequency", [] {
       auto out = triple(9, 9, 9);
-      p2::write_physics2_dsoft_row_parameters(4, -3, 0.7, 1.0 / 60, 12, out);
+      p2::write_physics_2d_soft_row_parameters(4, -3, 0.7, 1.0 / 60, 12, out);
       expect(values(out)).to_equal(std::vector<double>{4, 12, 0});
-      p2::write_physics2_dsoft_row_parameters(4, std::nan(""), 0.7, 1.0 / 60, 12, out);
+      p2::write_physics_2d_soft_row_parameters(4, std::nan(""), 0.7, 1.0 / 60, 12, out);
       expect(values(out)).to_equal(std::vector<double>{4, 12, 0});
     });
     runner.it("returns the hard parameters unchanged for a non-positive timestep", [] {
       auto out = triple(9, 9, 9);
-      p2::write_physics2_dsoft_row_parameters(4, 2, 0.7, 0, 12, out);
+      p2::write_physics_2d_soft_row_parameters(4, 2, 0.7, 0, 12, out);
       expect(values(out)).to_equal(std::vector<double>{4, 12, 0});
     });
     runner.it("matches the stiffness-and-damping derivation it stands for", [] {
       auto out = triple(0, 0, 0);
-      p2::write_physics2_dsoft_row_parameters(2.5, 3, 0.4, 1.0 / 120, 0, out);
+      p2::write_physics_2d_soft_row_parameters(2.5, 3, 0.4, 1.0 / 120, 0, out);
       const auto expected = expected_soft_row(2.5, 3, 0.4, 1.0 / 120);
       expect(out.element(0.0)).to_be_close_to(expected[0], 12);
       expect(out.element(1.0)).to_be_close_to(expected[1], 12);
@@ -670,8 +670,8 @@ void joint_rows(Runner& runner) {
     runner.it("produces a bias factor that does not depend on the mass being moved", [] {
       auto light = triple(0, 0, 0);
       auto heavy = triple(0, 0, 0);
-      p2::write_physics2_dsoft_row_parameters(0.25, 2, 0.3, 1.0 / 60, 0, light);
-      p2::write_physics2_dsoft_row_parameters(400, 2, 0.3, 1.0 / 60, 0, heavy);
+      p2::write_physics_2d_soft_row_parameters(0.25, 2, 0.3, 1.0 / 60, 0, light);
+      p2::write_physics_2d_soft_row_parameters(400, 2, 0.3, 1.0 / 60, 0, heavy);
       expect(light.element(1.0)).to_be_close_to(heavy.element(1.0), 12);
       const double omega = TAU * 2;
       expect(light.element(1.0)).to_be_close_to((omega * omega) / (2 * 0.3 * omega + (omega * omega) / 60), 12);
@@ -679,28 +679,28 @@ void joint_rows(Runner& runner) {
     runner.it("scales gamma and the softened mass with the mass, which the bias factor hides", [] {
       auto light = triple(0, 0, 0);
       auto heavy = triple(0, 0, 0);
-      p2::write_physics2_dsoft_row_parameters(1, 2, 0.3, 1.0 / 60, 0, light);
-      p2::write_physics2_dsoft_row_parameters(4, 2, 0.3, 1.0 / 60, 0, heavy);
+      p2::write_physics_2d_soft_row_parameters(1, 2, 0.3, 1.0 / 60, 0, light);
+      p2::write_physics_2d_soft_row_parameters(4, 2, 0.3, 1.0 / 60, 0, heavy);
       expect(heavy.element(2.0)).to_be_close_to(light.element(2.0) / 4, 12);
       expect(heavy.element(0.0)).to_be_greater_than(light.element(0.0));
     });
     runner.it("softens rather than stiffens, since compliance adds to the inverse mass", [] {
       auto out = triple(0, 0, 0);
-      p2::write_physics2_dsoft_row_parameters(5, 1.5, 0.5, 1.0 / 60, 0, out);
+      p2::write_physics_2d_soft_row_parameters(5, 1.5, 0.5, 1.0 / 60, 0, out);
       expect(out.element(0.0)).to_be_greater_than(0.0);
       expect(out.element(0.0)).to_be_less_than(5.0);
       expect(out.element(2.0)).to_be_greater_than(0.0);
     });
     runner.it("yields a fully compliant row for a massless constraint instead of dividing by zero", [] {
       auto out = triple(9, 9, 9);
-      p2::write_physics2_dsoft_row_parameters(0, 2, 0.3, 1.0 / 60, 7, out);
+      p2::write_physics_2d_soft_row_parameters(0, 2, 0.3, 1.0 / 60, 7, out);
       expect(values(out)).to_equal(std::vector<double>{0, 0, 0});
     });
     runner.it("overwrites every slot of a reused out array", [] {
       auto out = triple(0, 0, 0);
-      p2::write_physics2_dsoft_row_parameters(3, 4, 0.6, 1.0 / 60, 0, out);
+      p2::write_physics_2d_soft_row_parameters(3, 4, 0.6, 1.0 / 60, 0, out);
       const auto soft = values(out);
-      p2::write_physics2_dsoft_row_parameters(3, 0, 0.6, 1.0 / 60, 11, out);
+      p2::write_physics_2d_soft_row_parameters(3, 0, 0.6, 1.0 / 60, 11, out);
       expect(values(out)).to_equal(std::vector<double>{3, 11, 0});
       expect(soft[2]).to_be_greater_than(0.0);
     });
@@ -733,23 +733,23 @@ void joint_collision_suppression(Runner& runner) {
       flight::Map<double, double> inner;
       inner.set(7, 1);
       world->joint_collision_suppressions.set(2, inner);
-      expect(p2::is_physics2_dpair_joint_suppressed(pt::view(world), 2, 7)).to_be(true);
-      expect(p2::is_physics2_dpair_joint_suppressed(pt::view(world), 7, 2)).to_be(true);
+      expect(p2::is_physics_2d_pair_joint_suppressed(pt::view(world), 2, 7)).to_be(true);
+      expect(p2::is_physics_2d_pair_joint_suppressed(pt::view(world), 7, 2)).to_be(true);
       world->joint_collision_suppressions.clear();
-      expect(p2::is_physics2_dpair_joint_suppressed(pt::view(world), 2, 7)).to_be(false);
+      expect(p2::is_physics_2d_pair_joint_suppressed(pt::view(world), 2, 7)).to_be(false);
     });
   });
   runner.describe("rebuildPhysics2DJointCollisionSuppressions", [&] {
     runner.it("counts every active suppressing joint while ignoring unknown and one-body kinds", [] {
       auto world = pt::world();
-      p2::register_physics2_djoint_solver(world, flight::String("two-body"), noop_solver());
-      p2::register_physics2_djoint_solver(world, flight::String("one-body"), noop_solver(false));
+      p2::register_physics_2d_joint_solver(world, flight::String("two-body"), noop_solver());
+      p2::register_physics_2d_joint_solver(world, flight::String("one-body"), noop_solver(false));
       world->joints.push(joint_row("two-body", 9, 3, false));
       world->joints.push(joint_row("two-body", 3, 9, false));
       world->joints.push(joint_row("two-body", 3, 9, true));
       world->joints.push(joint_row("unknown", 3, 9, false));
       world->joints.push(joint_row("one-body", 3, 9, false));
-      p2::rebuild_physics2_djoint_collision_suppressions(world);
+      p2::rebuild_physics_2d_joint_collision_suppressions(world);
       auto row = world->joint_collision_suppressions.get(3);
       require(row.has_value(), "body 3 has a suppression row");
       expect(row->get(9).value_or(-1)).to_be(2.0);

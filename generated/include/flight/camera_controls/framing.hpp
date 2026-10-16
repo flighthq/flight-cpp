@@ -23,7 +23,7 @@ namespace flight::types { struct Vector3; }
 
 #include <flight/math/clamp.hpp>
 #include <flight/types/bounding_sphere.hpp>
-#include <flight/types/camera3_d.hpp>
+#include <flight/types/camera_3d.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/orbit_camera_controller.hpp>

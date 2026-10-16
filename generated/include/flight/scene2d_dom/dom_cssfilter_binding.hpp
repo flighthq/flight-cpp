@@ -8,7 +8,7 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 
 #include <flight/types/dom_render_state.hpp>
 
@@ -36,7 +36,7 @@ inline void enable_dom_css_filter_support(flight::Ref<flight::types::DomRenderSt
 }
 
 inline void set_dom_css_filter(flight::Ref<flight::types::DomRenderState> state, flight::types::Node2D node, std::optional<flight::String> filter) {
-  flight::Ref<flight::types::RenderProxy2D> render_proxy = flight::render::get_or_create_render_proxy2_d(state, node);
+  flight::Ref<flight::types::RenderProxy2D> render_proxy = flight::render::get_or_create_render_proxy_2d(state, node);
   if (!filter.has_value()) {
     css_filter_bindings.erase(render_proxy);
     return;

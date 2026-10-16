@@ -20,8 +20,8 @@ namespace flight::types { struct Scene3DDocument; }
 #include <flight/types/material.hpp>
 #include <flight/types/obj_material_handler.hpp>
 #include <flight/types/obj_schema.hpp>
-#include <flight/types/scene3_d.hpp>
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d.hpp>
+#include <flight/types/scene_3d_document.hpp>
 #include <flight/scene3d_formats/obj_material_registry.hpp>
 #include <flight/scene3d_formats/obj_parse.hpp>
 
@@ -37,8 +37,8 @@ inline flight::Ref<flight::types::Scene3DDocument> parse_obj(flight::String sour
   return flight::scene3d_formats::parse_obj_with_material_handlers(source, materials, diagnostics, ([&]() -> flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterialHandler>>>>> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterialHandler>>>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"materialHandlers">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::scene3d_formats::obj_all_material_handlers; }()));
 }
 
-inline flight::Ref<flight::types::Scene3D> create_scene3_dfrom_obj(flight::String source, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterialLibrary>>>>> materials = std::nullopt, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjImportOptions>>>>> options = std::nullopt) {
-  return flight::scene3d::create_scene3_dfrom_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(parse_obj(source, materials, diagnostics, options))), std::nullopt);
+inline flight::Ref<flight::types::Scene3D> create_scene_3d_from_obj(flight::String source, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterialLibrary>>>>> materials = std::nullopt, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjImportOptions>>>>> options = std::nullopt) {
+  return flight::scene3d::create_scene_3d_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(parse_obj(source, materials, diagnostics, options))), std::nullopt);
 }
 
 } // namespace flight::scene3d_formats

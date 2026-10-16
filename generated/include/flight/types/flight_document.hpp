@@ -40,19 +40,19 @@ struct FlightDocumentScene3DMaterialization;
 using FlightDocumentScene = std::variant<flight::Ref<FlightDocumentScene3D>, flight::Ref<FlightDocumentScene2D>>;
 } // namespace flight::types
 
-#include <flight/types/camera3_d.hpp>
+#include <flight/types/camera_3d.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/flight_document_field_schema.hpp>
 #include <flight/types/flight_document_interactive_state.hpp>
 #include <flight/types/flight_document_layout.hpp>
 #include <flight/types/flight_document_resource.hpp>
 #include <flight/types/flight_document_token.hpp>
-#include <flight/types/node2_d.hpp>
-#include <flight/types/node3_d.hpp>
-#include <flight/types/scene2_d.hpp>
-#include <flight/types/scene3_d.hpp>
-#include <flight/types/scene3_ddocument.hpp>
-#include <flight/types/scene3_dlights.hpp>
+#include <flight/types/node_2d.hpp>
+#include <flight/types/node_3d.hpp>
+#include <flight/types/scene_2d.hpp>
+#include <flight/types/scene_3d.hpp>
+#include <flight/types/scene_3d_document.hpp>
+#include <flight/types/scene_3d_lights.hpp>
 #include <flight/types/entity.hpp>
 
 namespace flight::types {

@@ -13,7 +13,7 @@ struct WgpuAdapterCapabilities : public flight::ReferenceEnabled {
   bool supports_float32_filterable;
   bool supports_timestamp_query;
   double max_sample_count;
-  double max_texture_dimension2_d;
+  double max_texture_dimension_2d;
 };
 
 } // namespace flight::types

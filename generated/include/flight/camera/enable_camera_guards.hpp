@@ -16,22 +16,22 @@ namespace flight::types { struct Camera3D; }
 namespace flight::types { struct Camera3DViewExplanation; }
 
 #include <flight/log/log.hpp>
-#include <flight/types/camera2_d.hpp>
-#include <flight/types/camera3_d.hpp>
-#include <flight/types/camera3_dview_explanation.hpp>
+#include <flight/types/camera_2d.hpp>
+#include <flight/types/camera_3d.hpp>
+#include <flight/types/camera_3d_view_explanation.hpp>
 #include <flight/types/log.hpp>
 #include <flight/camera/camera.hpp>
-#include <flight/camera/explain_camera3_dview.hpp>
+#include <flight/camera/explain_camera_3d_view.hpp>
 #include <flight/camera/visible_bounds.hpp>
 
 namespace flight::camera {
 
-inline void warn_on_degenerate_camera2_dvisible_bounds(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>> camera) {
+inline void warn_on_degenerate_camera_2d_visible_bounds(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>> camera) {
   flight::log::log_once(flight::String("camera:degenerate-visible-bounds:") + flight::to_string(flight::row_get<flight::RowKey<"zoom">>(camera)) + flight::String(""), flight::types::LogLevel::Warn, flight::types::LogData{std::in_place_type<flight::Record<flight::String, flight::Any>>, flight::Record<flight::String, flight::Any>{{flight::String("message"), flight::String("getCamera2DVisibleBounds: the view matrix has no inverse, so the visible rectangle is unbounded and nothing is culled — a zoom of 0 is the usual cause; set a non-zero zoom.")}, {flight::String("zoom"), flight::row_get<flight::RowKey<"zoom">>(camera)}}}, std::nullopt);
 }
 
-inline void warn_on_non_orthonormal_camera3_dview(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
-  auto explanation = flight::camera::explain_camera3_dview(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(camera));
+inline void warn_on_non_orthonormal_camera_3d_view(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
+  auto explanation = flight::camera::explain_camera_3d_view(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(camera));
   if (explanation->is_orthonormal) {
     return;
   }
@@ -45,14 +45,14 @@ inline bool are_camera_guards_enabled() {
 }
 
 inline void disable_camera_guards() {
-  flight::camera::set_camera3_dview_guard(std::nullopt);
-  flight::camera::set_camera2_dvisible_bounds_guard(std::nullopt);
+  flight::camera::set_camera_3d_view_guard(std::nullopt);
+  flight::camera::set_camera_2d_visible_bounds_guard(std::nullopt);
   (camera_guards_enabled = false);
 }
 
 inline void enable_camera_guards() {
-  flight::camera::set_camera3_dview_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>)>>{warn_on_non_orthonormal_camera3_dview});
-  flight::camera::set_camera2_dvisible_bounds_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>)>>{warn_on_degenerate_camera2_dvisible_bounds});
+  flight::camera::set_camera_3d_view_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>)>>{warn_on_non_orthonormal_camera_3d_view});
+  flight::camera::set_camera_2d_visible_bounds_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>)>>{warn_on_degenerate_camera_2d_visible_bounds});
   (camera_guards_enabled = true);
 }
 

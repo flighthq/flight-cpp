@@ -12,7 +12,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/vector3.hpp>
 
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 
 #include <flight/types/matrix4.hpp>
 
@@ -72,7 +72,7 @@ inline void accumulate_world_bounds(flight::Ref<flight::types::AabbLike> out, fl
   }
 }
 
-inline void get_node3_dworld_bounds(flight::Ref<flight::types::AabbLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>> node) {
+inline void get_node_3d_world_bounds(flight::Ref<flight::types::AabbLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>> node) {
   flight::geometry::set_aabb(out, std::numeric_limits<double>::infinity(), std::numeric_limits<double>::infinity(), std::numeric_limits<double>::infinity(), -std::numeric_limits<double>::infinity(), -std::numeric_limits<double>::infinity(), -std::numeric_limits<double>::infinity());
   accumulate_world_bounds(out, node);
 }

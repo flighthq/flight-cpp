@@ -16,18 +16,18 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/node/bounds_rectangle.hpp>
 #include <flight/node/bounds_rectangle_access.hpp>
 #include <flight/types/has_bounds_rectangle.hpp>
-#include <flight/types/has_transform2_d.hpp>
+#include <flight/types/has_transform_2d.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/rectangle.hpp>
 
 namespace flight::interaction {
 
-inline bool contains_node2_d(flight::types::Node2D outer, flight::types::Node2D inner) {
+inline bool contains_node_2d(flight::types::Node2D outer, flight::types::Node2D inner) {
   return flight::geometry::encloses_rectangle(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(flight::node::get_node_world_bounds_rectangle(outer)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(flight::node::get_node_world_bounds_rectangle(inner)));
 }
 
-inline flight::Ref<flight::types::Rectangle> get_node2_doverlap_rectangle(flight::types::Node2D source, flight::types::Node2D other, flight::Ref<flight::types::Rectangle> out) {
+inline flight::Ref<flight::types::Rectangle> get_node_2d_overlap_rectangle(flight::types::Node2D source, flight::types::Node2D other, flight::Ref<flight::types::Rectangle> out) {
   flight::geometry::compute_rectangle_intersection(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(flight::node::get_node_world_bounds_rectangle(source)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(flight::node::get_node_world_bounds_rectangle(other)));
   return out;
 }

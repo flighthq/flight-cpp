@@ -30,7 +30,7 @@ struct ProgressBarControllerFields;
 #include <flight/types/entity.hpp>
 #include <flight/types/gui_controller.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/node_interactive_state_binding.hpp>
 #include <flight/types/progress_bar_controller.hpp>
 #include <flight/gui/gui_controller.hpp>

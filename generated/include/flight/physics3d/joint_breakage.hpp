@@ -23,7 +23,7 @@ namespace flight::types { struct RigidBody3D; }
 namespace flight::types { struct SpatialIndexBackend3D; }
 
 #include <flight/types/collision.hpp>
-#include <flight/types/physics3_d.hpp>
+#include <flight/types/physics_3d.hpp>
 #include <flight/types/spatial.hpp>
 #include <flight/physics3d/joint_reaction.hpp>
 
@@ -39,7 +39,7 @@ using flight::types::Physics3DWorld;
 using flight::types::RigidBody3D;
 using flight::types::SpatialIndexBackend3D;
 
-inline void break_physics3_djoint(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<flight::types::Physics3DJoint> joint) {
+inline void break_physics_3d_joint(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<flight::types::Physics3DJoint> joint) {
   if (joint->broken) {
     return;
   }
@@ -47,25 +47,25 @@ inline void break_physics3_djoint(flight::Ref<flight::types::Physics3DWorld> wor
   world->joint_events->broke.push(joint);
 }
 
-inline bool is_physics3_djoint_breakable(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>> joint) {
+inline bool is_physics_3d_joint_breakable(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>> joint) {
   return (std::isfinite(flight::row_get<flight::RowKey<"breakForce">>(joint)) || std::isfinite(flight::row_get<flight::RowKey<"breakTorque">>(joint)));
 }
 
-inline flight::Ref<flight::types::Physics3DJointReaction> breakage_reaction = flight::physics3d::create_physics3_djoint_reaction();
+inline flight::Ref<flight::types::Physics3DJointReaction> breakage_reaction = flight::physics3d::create_physics_3d_joint_reaction();
 
-inline void evaluate_physics3_djoint_breakage(flight::Ref<flight::types::Physics3DWorld> world, double dt) {
+inline void evaluate_physics_3d_joint_breakage(flight::Ref<flight::types::Physics3DWorld> world, double dt) {
   for (auto joint : world->joints) {
     if (joint->broken) {
       continue;
     }
-    if (!is_physics3_djoint_breakable(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>>(joint)))) {
+    if (!is_physics_3d_joint_breakable(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>>(joint)))) {
       continue;
     }
-    if (!flight::physics3d::write_physics3_djoint_reaction(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>>(joint)), dt, breakage_reaction)) {
+    if (!flight::physics3d::write_physics_3d_joint_reaction(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>>(joint)), dt, breakage_reaction)) {
       continue;
     }
-    if (((flight::physics3d::get_physics3_djoint_reaction_force(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointReaction>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DJointReaction>>>>(breakage_reaction))) > joint->break_force) || (flight::physics3d::get_physics3_djoint_reaction_torque(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointReaction>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DJointReaction>>>>(breakage_reaction))) > joint->break_torque))) {
-      break_physics3_djoint(world, joint);
+    if (((flight::physics3d::get_physics_3d_joint_reaction_force(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointReaction>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DJointReaction>>>>(breakage_reaction))) > joint->break_force) || (flight::physics3d::get_physics_3d_joint_reaction_torque(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointReaction>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DJointReaction>>>>(breakage_reaction))) > joint->break_torque))) {
+      break_physics_3d_joint(world, joint);
     }
   }
 }

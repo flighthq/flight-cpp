@@ -14,12 +14,12 @@ namespace flight::types { struct WgpuRenderState; }
 
 #include <flight/types/batch_format.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/render_proxy.hpp>
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 #include <flight/types/render_state.hpp>
 #include <flight/types/renderer_data.hpp>
-#include <flight/types/scene2_drenderer.hpp>
+#include <flight/types/scene_2d_renderer.hpp>
 #include <flight/types/wgpu_render_state.hpp>
 #include <flight/scene2d_wgpu/wgpu_mesh_shape_renderer.hpp>
 #include <flight/scene2d_wgpu/wgpu_raster_shape_renderer.hpp>

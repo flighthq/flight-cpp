@@ -56,7 +56,7 @@ inline flight::host_sdl::WebGlTexture upload_lut_texture(flight::host_sdl::WebGl
     (cache->texture = std::optional<flight::host_sdl::WebGlTexture>{texture.value()});
   }
   gl.bind_texture(gl.texture_3_d, texture.value());
-  gl.tex_image3_d(gl.texture_3_d, 0.0, gl.rgba8, n, n, n, 0.0, gl.rgba, gl.unsigned_byte, data);
+  gl.tex_image_3d(gl.texture_3_d, 0.0, gl.rgba8, n, n, n, 0.0, gl.rgba, gl.unsigned_byte, data);
   gl.tex_parameteri(gl.texture_3_d, gl.texture_min_filter, gl.linear);
   gl.tex_parameteri(gl.texture_3_d, gl.texture_mag_filter, gl.linear);
   gl.tex_parameteri(gl.texture_3_d, gl.texture_wrap_s, gl.clamp_to_edge);

@@ -17,7 +17,7 @@ namespace flight::types { struct RawProjection; }
 namespace flight::types { struct Vector2; }
 
 #include <flight/geometry/matrix4.hpp>
-#include <flight/types/camera3_d.hpp>
+#include <flight/types/camera_3d.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/plane.hpp>
@@ -48,7 +48,7 @@ inline void apply_oblique_near_clip_plane(flight::types::Matrix4Like projection,
 
 inline flight::Ref<flight::types::Matrix4> scratch_reflection = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
-inline void reflect_camera3_dby_plane(flight::Ref<flight::types::Camera3D> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::PlaneLike>>> plane) {
+inline void reflect_camera_3d_by_plane(flight::Ref<flight::types::Camera3D> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::PlaneLike>>> plane) {
   const double pa = flight::row_get<flight::RowKey<"a">>(plane);
   const double pb = flight::row_get<flight::RowKey<"b">>(plane);
   const double pc = flight::row_get<flight::RowKey<"c">>(plane);

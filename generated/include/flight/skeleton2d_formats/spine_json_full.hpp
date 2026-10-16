@@ -12,7 +12,7 @@ namespace flight::types { struct Skeleton2DImport; }
 namespace flight::types { struct SpineJsonRegistry; }
 
 #include <flight/types/import_diagnostic.hpp>
-#include <flight/types/skeleton2_dimport.hpp>
+#include <flight/types/skeleton_2d_import.hpp>
 #include <flight/types/spine_json_registry.hpp>
 #include <flight/skeleton2d_formats/spine_json_handlers.hpp>
 #include <flight/skeleton2d_formats/spine_json_registry.hpp>

@@ -15,7 +15,7 @@ struct StandardMaterial;
 using StandardMaterialKind = flight::String;
 } // namespace flight::types
 
-#include <flight/types/material2_d.hpp>
+#include <flight/types/material_2d.hpp>
 #include <flight/types/entity.hpp>
 
 namespace flight::types {

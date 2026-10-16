@@ -12,13 +12,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/scene2_drenderer.hpp>
+#include <flight/types/scene_2d_renderer.hpp>
 
 #include <flight/types/scale9_shape.hpp>
 
 #include <flight/types/scale9_mapper.hpp>
 
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 
 #include <flight/types/rectangle.hpp>
 
@@ -47,7 +47,7 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/render/renderer.hpp>
 #include <flight/shape/scale9_shape_commands.hpp>
 #include <flight/types/contract.hpp>
-#include <flight/scene2d_canvas/canvas_node2_d.hpp>
+#include <flight/scene2d_canvas/canvas_node_2d.hpp>
 #include <flight/scene2d_canvas/canvas_render_state.hpp>
 #include <flight/scene2d_canvas/canvas_scale9_mapper.hpp>
 #include <flight/scene2d_canvas/canvas_shape.hpp>
@@ -81,7 +81,7 @@ inline void apply_stripped_transform_flight_value_function_apply_u000053_tripped
 }
 
 inline void draw_canvas_scale9_shape(flight::Ref<flight::types::CanvasRenderState> state, flight::Ref<flight::types::RenderProxy2D> render_proxy) {
-  flight::scene2d_canvas::draw_canvas_scene2_d(state, render_proxy);
+  flight::scene2d_canvas::draw_canvas_scene_2d(state, render_proxy);
   flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scale9Shape>>>> source = flight::structural_ref_cast<flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scale9Shape>>>>>(render_proxy->source);
   auto object_pattern_value = flight::row_get<flight::RowKey<"data">>(source);
   flight::Array<flight::types::ShapeCommandToken> commands = object_pattern_value->commands;
@@ -97,11 +97,11 @@ inline void draw_canvas_scale9_shape(flight::Ref<flight::types::CanvasRenderStat
   const double scale_y = object_pattern_value_2->scale_y;
   auto mapper = flight::scene2d_canvas::build_scale9_mapper(commands, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(scale9_grid), scale_x, scale_y);
   if (!mapper.has_value()) {
-    flight::scene2d_canvas::set_canvas_transform(state, context, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(render_proxy->transform2_d)));
+    flight::scene2d_canvas::set_canvas_transform(state, context, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(render_proxy->transform_2d)));
     flight::scene2d_canvas::render_canvas_shape_commands(context, state, commands, flight::scene2d_canvas::get_canvas_render_state_texture_resolvers(state));
   }
   else {
-    apply_stripped_transform_flight_value_function_apply_u000053_tripped_u000054_ransform_flight_private_6a2946b7fd4343e3(state, context, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(render_proxy->transform2_d)), scale_x, scale_y);
+    apply_stripped_transform_flight_value_function_apply_u000053_tripped_u000054_ransform_flight_private_6a2946b7fd4343e3(state, context, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(render_proxy->transform_2d)), scale_x, scale_y);
     flight::shape::map_scale9_shape_commands(remapped_commands, commands, mapper.value());
     flight::scene2d_canvas::render_canvas_shape_commands(context, state, remapped_commands, flight::scene2d_canvas::get_canvas_render_state_texture_resolvers(state));
   }

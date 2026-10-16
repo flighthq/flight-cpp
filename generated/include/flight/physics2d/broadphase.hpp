@@ -15,7 +15,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/spatial.hpp>
 
-#include <flight/types/physics2_d.hpp>
+#include <flight/types/physics_2d.hpp>
 
 namespace flight::types { struct Physics2DCollider; }
 namespace flight::types { struct Physics2DContact; }
@@ -47,7 +47,7 @@ struct Physics2DBroadphaseScratch;
 } // namespace flight::physics2d
 
 #include <flight/types/collision.hpp>
-#include <flight/types/physics2_d.hpp>
+#include <flight/types/physics_2d.hpp>
 #include <flight/types/spatial.hpp>
 #include <flight/types/spatial_indexing.hpp>
 #include <flight/physics2d/collider_transform.hpp>
@@ -66,7 +66,7 @@ struct Physics2DBroadphaseScratch : public flight::ReferenceEnabled {
   flight::Ref<flight::types::SpatialAabb2D> body_bounds;
 };
 
-inline void synchronize_physics2_dbroadphase_bounds_with_scratch(flight::Ref<flight::types::Physics2DWorld> world, double dt, flight::Ref<Physics2DBroadphaseScratch> scratch) {
+inline void synchronize_physics_2d_broadphase_bounds_with_scratch(flight::Ref<flight::types::Physics2DWorld> world, double dt, flight::Ref<Physics2DBroadphaseScratch> scratch) {
   for (auto body : world->bodies) {
     double min_x = std::numeric_limits<double>::infinity();
     double min_y = std::numeric_limits<double>::infinity();
@@ -74,8 +74,8 @@ inline void synchronize_physics2_dbroadphase_bounds_with_scratch(flight::Ref<fli
     double max_y = -std::numeric_limits<double>::infinity();
     double rotation_radius_squared = 0.0;
     for (auto collider : body->colliders) {
-      flight::physics2d::update_physics2_dcollider_world_shape(collider, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body)));
-      flight::physics2d::write_physics2_dcollider_bounds(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>(collider)), scratch->bounds);
+      flight::physics2d::update_physics_2d_collider_world_shape(collider, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body)));
+      flight::physics2d::write_physics_2d_collider_bounds(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>(collider)), scratch->bounds);
       if ((scratch->bounds->min_x < min_x)) {
         (min_x = scratch->bounds->min_x);
       }
@@ -136,39 +136,39 @@ inline void synchronize_physics2_dbroadphase_bounds_with_scratch(flight::Ref<fli
   }
 }
 
-inline flight::Ref<Physics2DBroadphaseScratch> create_physics2_dbroadphase_scratch() {
+inline flight::Ref<Physics2DBroadphaseScratch> create_physics_2d_broadphase_scratch() {
   return flight::make_ref<Physics2DBroadphaseScratch>(Physics2DBroadphaseScratch{.bounds = flight::make_ref<flight::types::SpatialAabb2D>(flight::types::SpatialAabb2D{.min_x = 0.0, .min_y = 0.0, .max_x = 0.0, .max_y = 0.0}), .body_bounds = flight::make_ref<flight::types::SpatialAabb2D>(flight::types::SpatialAabb2D{.min_x = 0.0, .min_y = 0.0, .max_x = 0.0, .max_y = 0.0})});
 }
 
-inline flight::Array<flight::Ref<Physics2DBroadphaseScratch>> physics2_dbroadphase_scratch_pool = flight::Array<flight::Ref<Physics2DBroadphaseScratch>>{create_physics2_dbroadphase_scratch()};
+inline flight::Array<flight::Ref<Physics2DBroadphaseScratch>> physics_2d_broadphase_scratch_pool = flight::Array<flight::Ref<Physics2DBroadphaseScratch>>{create_physics_2d_broadphase_scratch()};
 
-inline flight::Ref<Physics2DBroadphaseScratch> acquire_physics2_dbroadphase_scratch() {
-  return ([&]() -> flight::Ref<Physics2DBroadphaseScratch> { auto nullish_coalesce_left = physics2_dbroadphase_scratch_pool.pop(); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_physics2_dbroadphase_scratch(); }());
+inline flight::Ref<Physics2DBroadphaseScratch> acquire_physics_2d_broadphase_scratch() {
+  return ([&]() -> flight::Ref<Physics2DBroadphaseScratch> { auto nullish_coalesce_left = physics_2d_broadphase_scratch_pool.pop(); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_physics_2d_broadphase_scratch(); }());
 }
 
-inline void release_physics2_dbroadphase_scratch(flight::Ref<Physics2DBroadphaseScratch> scratch) {
-  physics2_dbroadphase_scratch_pool.push(scratch);
+inline void release_physics_2d_broadphase_scratch(flight::Ref<Physics2DBroadphaseScratch> scratch) {
+  physics_2d_broadphase_scratch_pool.push(scratch);
 }
 
-inline void synchronize_physics2_dbroadphase_bounds(flight::Ref<flight::types::Physics2DWorld> world, double dt) {
-  auto scratch = acquire_physics2_dbroadphase_scratch();
+inline void synchronize_physics_2d_broadphase_bounds(flight::Ref<flight::types::Physics2DWorld> world, double dt) {
+  auto scratch = acquire_physics_2d_broadphase_scratch();
   std::exception_ptr finally_exception;
   try {
-    synchronize_physics2_dbroadphase_bounds_with_scratch(world, dt, scratch);
+    synchronize_physics_2d_broadphase_bounds_with_scratch(world, dt, scratch);
   }
   catch (...) {
     finally_exception = std::current_exception();
   }
-  release_physics2_dbroadphase_scratch(scratch);
+  release_physics_2d_broadphase_scratch(scratch);
   if (finally_exception) std::rethrow_exception(finally_exception);
 }
 
-inline void synchronize_physics2_dbroadphase(flight::Ref<flight::types::Physics2DWorld> world) {
-  synchronize_physics2_dbroadphase_bounds(world, 0.0);
+inline void synchronize_physics_2d_broadphase(flight::Ref<flight::types::Physics2DWorld> world) {
+  synchronize_physics_2d_broadphase_bounds(world, 0.0);
 }
 
-inline void synchronize_physics2_dswept_broadphase(flight::Ref<flight::types::Physics2DWorld> world, double dt) {
-  synchronize_physics2_dbroadphase_bounds(world, dt);
+inline void synchronize_physics_2d_swept_broadphase(flight::Ref<flight::types::Physics2DWorld> world, double dt) {
+  synchronize_physics_2d_broadphase_bounds(world, dt);
 }
 
 } // namespace flight::physics2d

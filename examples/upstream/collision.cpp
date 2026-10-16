@@ -3,8 +3,8 @@
 
 #include "sdl_host.hpp"
 
-#include <flight/collision/manifold2_d.hpp>
-#include <flight/collision/shape_collision2_d.hpp>
+#include <flight/collision/manifold_2d.hpp>
+#include <flight/collision/shape_collision_2d.hpp>
 
 #include <algorithm>
 #include <cmath>
@@ -114,17 +114,17 @@ using Collider = std::variant<CircleCollider, AabbCollider, PolygonCollider>;
   using namespace flight::collision;
   if (const auto* circle_a = std::get_if<CircleCollider>(&a)) {
     if (const auto* circle_b = std::get_if<CircleCollider>(&b)) {
-      return test_circle_circle_collision2_d(circle_a->collider, circle_b->collider, out);
+      return test_circle_circle_collision_2d(circle_a->collider, circle_b->collider, out);
     }
     if (const auto* aabb_b = std::get_if<AabbCollider>(&b)) {
-      return test_circle_aabb_collision2_d(circle_a->collider, aabb_b->collider, out);
+      return test_circle_aabb_collision_2d(circle_a->collider, aabb_b->collider, out);
     }
-    return test_circle_polygon_collision2_d(
+    return test_circle_polygon_collision_2d(
         circle_a->collider, std::get<PolygonCollider>(b).collider, out);
   }
   if (const auto* aabb_a = std::get_if<AabbCollider>(&a)) {
     if (const auto* circle_b = std::get_if<CircleCollider>(&b)) {
-      const bool result = test_circle_aabb_collision2_d(circle_b->collider, aabb_a->collider, out);
+      const bool result = test_circle_aabb_collision_2d(circle_b->collider, aabb_a->collider, out);
       if (result) {
         out->normal_x = -out->normal_x;
         out->normal_y = -out->normal_y;
@@ -132,15 +132,15 @@ using Collider = std::variant<CircleCollider, AabbCollider, PolygonCollider>;
       return result;
     }
     if (const auto* aabb_b = std::get_if<AabbCollider>(&b)) {
-      return test_aabb_aabb_collision2_d(aabb_a->collider, aabb_b->collider, out);
+      return test_aabb_aabb_collision_2d(aabb_a->collider, aabb_b->collider, out);
     }
-    return test_aabb_polygon_collision2_d(
+    return test_aabb_polygon_collision_2d(
         aabb_a->collider, std::get<PolygonCollider>(b).collider, out);
   }
 
   const auto& polygon_a = std::get<PolygonCollider>(a);
   if (const auto* circle_b = std::get_if<CircleCollider>(&b)) {
-    const bool result = test_circle_polygon_collision2_d(
+    const bool result = test_circle_polygon_collision_2d(
         circle_b->collider, polygon_a.collider, out);
     if (result) {
       out->normal_x = -out->normal_x;
@@ -149,7 +149,7 @@ using Collider = std::variant<CircleCollider, AabbCollider, PolygonCollider>;
     return result;
   }
   if (const auto* aabb_b = std::get_if<AabbCollider>(&b)) {
-    const bool result = test_aabb_polygon_collision2_d(
+    const bool result = test_aabb_polygon_collision_2d(
         aabb_b->collider, polygon_a.collider, out);
     if (result) {
       out->normal_x = -out->normal_x;
@@ -157,7 +157,7 @@ using Collider = std::variant<CircleCollider, AabbCollider, PolygonCollider>;
     }
     return result;
   }
-  return test_polygon_polygon_collision2_d(
+  return test_polygon_polygon_collision_2d(
       polygon_a.collider, std::get<PolygonCollider>(b).collider, out);
 }
 
@@ -222,7 +222,7 @@ class CollisionExample final {
             rectangle(500.0, 310.0, 70.0, 55.0),
             regular_polygon(545.0, 325.0, 60.0, 5),
         },
-        manifold_(flight::collision::create_collision_manifold2_d()) {}
+        manifold_(flight::collision::create_collision_manifold_2d()) {}
 
   void frame(const Frame& frame) {
     handle_drag(frame);

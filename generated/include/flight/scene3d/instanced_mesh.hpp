@@ -18,7 +18,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/vector3.hpp>
 
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 
 #include <flight/types/matrix4.hpp>
 
@@ -79,7 +79,7 @@ using flight::types::Vector3;
 using flight::types::entity_runtime_key;
 
 inline flight::Ref<flight::types::InstancedMeshRuntime> create_instanced_mesh_runtime() {
-  flight::Ref<flight::types::InstancedMeshRuntime> out = flight::make_ref<flight::types::InstancedMeshRuntime>(*flight::scene3d::create_node3_druntime());
+  flight::Ref<flight::types::InstancedMeshRuntime> out = flight::make_ref<flight::types::InstancedMeshRuntime>(*flight::scene3d::create_node_3d_runtime());
   return out;
 }
 
@@ -311,7 +311,7 @@ inline flight::Ref<flight::types::InstancedMesh> create_instanced_mesh(flight::R
     }
   }
   flight::types::EntityConstruction<flight::Ref<flight::types::InstancedMesh>> node = flight::entity::allocate_entity<flight::Ref<flight::types::InstancedMesh>>();
-  flight::scene3d::initialize_node3_d<flight::Ref<flight::types::InstancedMeshRuntime>>(node, kind.value(), std::nullopt, [](std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::InstancedMeshRuntime>>>>>> contextual_callable_argument0) -> flight::Ref<flight::types::InstancedMeshRuntime> { return create_instanced_mesh_runtime(); });
+  flight::scene3d::initialize_node_3d<flight::Ref<flight::types::InstancedMeshRuntime>>(node, kind.value(), std::nullopt, [](std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::InstancedMeshRuntime>>>>>> contextual_callable_argument0) -> flight::Ref<flight::types::InstancedMeshRuntime> { return create_instanced_mesh_runtime(); });
   flight::row_set<flight::RowKey<"geometry">>(node, geometry);
   flight::row_set<flight::RowKey<"instanceColors">>(node, std::nullopt);
   flight::row_set<flight::RowKey<"instanceCount">>(node, 0.0);

@@ -51,9 +51,9 @@ using RiveWeightedPointKind = flight::String;
 #include <flight/types/entity.hpp>
 #include <flight/types/image_resource_reference.hpp>
 #include <flight/types/layout.hpp>
-#include <flight/types/scene2_ddocument.hpp>
+#include <flight/types/scene_2d_document.hpp>
 #include <flight/types/shape_command.hpp>
-#include <flight/types/skeleton2_d.hpp>
+#include <flight/types/skeleton_2d.hpp>
 #include <flight/types/entity.hpp>
 
 namespace flight::types {

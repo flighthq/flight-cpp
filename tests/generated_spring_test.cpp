@@ -10,8 +10,8 @@
 // the solver's coefficient matrix, to 12 digits -- values here are O(10), so that leaves about three
 // orders of magnitude above double-precision rounding for the dozen operations either side performs.
 #include <flight/spring/spring.hpp>
-#include <flight/spring/spring2_d.hpp>
-#include <flight/spring/spring3_d.hpp>
+#include <flight/spring/spring_2d.hpp>
+#include <flight/spring/spring_3d.hpp>
 #include <flight/spring/spring_config.hpp>
 
 #include <cmath>
@@ -281,7 +281,7 @@ void closed_form_reference() {
 
 void vector_lifecycle() {
   {
-    auto s = spring::create_spring2_d();
+    auto s = spring::create_spring_2d();
     // Upstream asserts Object.hasOwn(spring, EntityRuntimeKey): allocateEntity writes the key with the value
     // undefined. An optional member cannot tell "own key holding undefined" from "absent" -- the runtime
     // answers presence of a computed cell by its engagement -- so the port asserts what is observable: every
@@ -290,89 +290,89 @@ void vector_lifecycle() {
               !s->x->entity_runtime_key.has_value() && !s->y->entity_runtime_key.has_value(),
           "Spring2D and each axis are entities whose runtime cell is still undefined");
     check(s->x->value == 0 && s->x->velocity == 0 && s->y->value == 0 && s->y->velocity == 0, "Spring2D defaults to rest at 0");
-    auto set = spring::create_spring2_d(1.0, 2.0, 3.0, 4.0);
+    auto set = spring::create_spring_2d(1.0, 2.0, 3.0, 4.0);
     check(set->x->value == 1 && set->y->value == 2 && set->x->velocity == 3 && set->y->velocity == 4, "Spring2D takes per-axis value and velocity");
-    auto impulse = spring::create_spring2_d(10.0, 20.0, 1.0, 2.0);
-    spring::add_spring_impulse2_d(impulse, 3.0, -5.0);
+    auto impulse = spring::create_spring_2d(10.0, 20.0, 1.0, 2.0);
+    spring::add_spring_impulse_2d(impulse, 3.0, -5.0);
     check(impulse->x->value == 10 && impulse->x->velocity == 4 && impulse->y->value == 20 && impulse->y->velocity == -3,
           "addSpringImpulse2D adds each velocity component, values unchanged");
-    auto reset = spring::create_spring2_d(1.0, 2.0, 3.0, 4.0);
+    auto reset = spring::create_spring_2d(1.0, 2.0, 3.0, 4.0);
     const auto x = reset->x, y = reset->y;
-    spring::reset_spring2_d(reset, 10.0, 20.0, 30.0, 40.0);
+    spring::reset_spring_2d(reset, 10.0, 20.0, 30.0, 40.0);
     check(reset->x == x && reset->y == y && x->value == 10 && x->velocity == 30 && y->value == 20 && y->velocity == 40,
           "resetSpring2D writes into the same axis springs");
-    spring::reset_spring2_d(reset, -10.0, -20.0);
+    spring::reset_spring_2d(reset, -10.0, -20.0);
     check(x->value == -10 && x->velocity == 0 && y->value == -20 && y->velocity == 0, "and defaults the velocities to 0");
   }
   {
-    auto s = spring::create_spring2_d(0.0, 0.0);
+    auto s = spring::create_spring_2d(0.0, 0.0);
     const auto config = view(spring::create_spring_config(4.0, 1.0));
-    check(!spring::is_spring2_dsettled(view(s), 10.0, -6.0), "Spring2D is not settled before moving");
-    for (int i = 0; i < 600; ++i) spring::update_spring2_d(s, 10.0, -6.0, config, 1.0 / 60.0);
-    check(spring::is_spring2_dsettled(view(s), 10.0, -6.0), "and settles once both axes rest at their targets");
+    check(!spring::is_spring_2d_settled(view(s), 10.0, -6.0), "Spring2D is not settled before moving");
+    for (int i = 0; i < 600; ++i) spring::update_spring_2d(s, 10.0, -6.0, config, 1.0 / 60.0);
+    check(spring::is_spring_2d_settled(view(s), 10.0, -6.0), "and settles once both axes rest at their targets");
     s->y->velocity = 0.4;
-    check(!spring::is_spring2_dsettled(view(s), 10.0, -6.0) && spring::is_spring2_dsettled(view(s), 10.0, -6.0, 0.5, 0.5),
+    check(!spring::is_spring_2d_settled(view(s), 10.0, -6.0) && spring::is_spring_2d_settled(view(s), 10.0, -6.0, 0.5, 0.5),
           "one moving axis keeps it unsettled, and the epsilons reach both axes");
   }
   {
-    auto s = spring::create_spring2_d(0.0, 0.0);
-    spring::update_spring2_d(s, 10.0, -20.0, view(spring::create_spring_config(2.0, 1.0)), 1.0 / 60.0);
+    auto s = spring::create_spring_2d(0.0, 0.0);
+    spring::update_spring_2d(s, 10.0, -20.0, view(spring::create_spring_config(2.0, 1.0)), 1.0 / 60.0);
     check(s->x->value > 0 && s->y->value < 0, "updateSpring2D moves both components toward their targets");
-    auto independent = spring::create_spring2_d(0.0, 0.0);
-    for (int i = 0; i < 30; ++i) spring::update_spring2_d(independent, 10.0, 5.0, view(spring::create_spring_config(2.0, 0.8)), 1.0 / 60.0);
+    auto independent = spring::create_spring_2d(0.0, 0.0);
+    for (int i = 0; i < 30; ++i) spring::update_spring_2d(independent, 10.0, 5.0, view(spring::create_spring_config(2.0, 0.8)), 1.0 / 60.0);
     check(!close(independent->x->value, independent->y->value, 3), "the axes are driven independently");
   }
   {
-    auto s = spring::create_spring3_d();
+    auto s = spring::create_spring_3d();
     check(declares_runtime(s) && declares_runtime(s->z) && !s->entity_runtime_key.has_value() && !s->x->entity_runtime_key.has_value() &&
               !s->y->entity_runtime_key.has_value() && !s->z->entity_runtime_key.has_value(),
           "Spring3D and each axis are entities whose runtime cell is still undefined");
     check(s->x->value == 0 && s->y->value == 0 && s->z->value == 0 && s->x->velocity == 0 && s->y->velocity == 0 && s->z->velocity == 0,
           "Spring3D defaults to rest at 0");
-    auto set = spring::create_spring3_d(1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
+    auto set = spring::create_spring_3d(1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
     check(set->x->value == 1 && set->y->value == 2 && set->z->value == 3 && set->x->velocity == 4 && set->y->velocity == 5 &&
               set->z->velocity == 6,
           "Spring3D takes per-axis value and velocity");
-    auto impulse = spring::create_spring3_d(10.0, 20.0, 30.0, 1.0, 2.0, 3.0);
-    spring::add_spring_impulse3_d(impulse, 3.0, -5.0, 7.0);
+    auto impulse = spring::create_spring_3d(10.0, 20.0, 30.0, 1.0, 2.0, 3.0);
+    spring::add_spring_impulse_3d(impulse, 3.0, -5.0, 7.0);
     check(impulse->x->velocity == 4 && impulse->y->velocity == -3 && impulse->z->velocity == 10 && impulse->x->value == 10 &&
               impulse->y->value == 20 && impulse->z->value == 30,
           "addSpringImpulse3D adds each velocity component, values unchanged");
-    auto reset = spring::create_spring3_d(1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
+    auto reset = spring::create_spring_3d(1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
     const auto x = reset->x, y = reset->y, z = reset->z;
-    spring::reset_spring3_d(reset, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0);
+    spring::reset_spring_3d(reset, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0);
     check(reset->x == x && reset->y == y && reset->z == z && z->value == 30 && z->velocity == 60 && x->velocity == 40,
           "resetSpring3D writes into the same axis springs");
-    spring::reset_spring3_d(reset, -10.0, -20.0, -30.0);
+    spring::reset_spring_3d(reset, -10.0, -20.0, -30.0);
     check(x->velocity == 0 && y->velocity == 0 && z->velocity == 0 && z->value == -30, "and defaults the velocities to 0");
   }
   {
-    auto s = spring::create_spring3_d(0.0, 0.0, 0.0);
+    auto s = spring::create_spring_3d(0.0, 0.0, 0.0);
     const auto config = view(spring::create_spring_config(4.0, 1.0));
-    check(!spring::is_spring3_dsettled(view(s), 10.0, -6.0, 3.0), "Spring3D is not settled before moving");
-    spring::update_spring3_d(s, 10.0, -20.0, 30.0, view(spring::create_spring_config(2.0, 1.0)), 1.0 / 60.0);
+    check(!spring::is_spring_3d_settled(view(s), 10.0, -6.0, 3.0), "Spring3D is not settled before moving");
+    spring::update_spring_3d(s, 10.0, -20.0, 30.0, view(spring::create_spring_config(2.0, 1.0)), 1.0 / 60.0);
     check(s->x->value > 0 && s->y->value < 0 && s->z->value > 0, "updateSpring3D moves all three components toward their targets");
-    spring::reset_spring3_d(s, 0.0, 0.0, 0.0);
-    for (int i = 0; i < 600; ++i) spring::update_spring3_d(s, 10.0, -6.0, 3.0, config, 1.0 / 60.0);
-    check(spring::is_spring3_dsettled(view(s), 10.0, -6.0, 3.0), "and settles once all three axes rest at their targets");
+    spring::reset_spring_3d(s, 0.0, 0.0, 0.0);
+    for (int i = 0; i < 600; ++i) spring::update_spring_3d(s, 10.0, -6.0, 3.0, config, 1.0 / 60.0);
+    check(spring::is_spring_3d_settled(view(s), 10.0, -6.0, 3.0), "and settles once all three axes rest at their targets");
     s->z->value = 3.4;
-    check(!spring::is_spring3_dsettled(view(s), 10.0, -6.0, 3.0), "one displaced axis keeps it unsettled");
+    check(!spring::is_spring_3d_settled(view(s), 10.0, -6.0, 3.0), "one displaced axis keeps it unsettled");
   }
 }
 
 void vectors() {
   const auto config = view(spring::create_spring_config(3.0, 0.6));
-  auto v2 = spring::create_spring2_d(1.0, -2.0, 0.5, 4.0);
+  auto v2 = spring::create_spring_2d(1.0, -2.0, 0.5, 4.0);
   auto x = spring::create_spring(1.0, 0.5), y = spring::create_spring(-2.0, 4.0);
-  spring::update_spring2_d(v2, 6.0, 9.0, config, 1.0 / 30.0);
+  spring::update_spring_2d(v2, 6.0, 9.0, config, 1.0 / 30.0);
   spring::update_spring(x, 6.0, config, 1.0 / 30.0);
   spring::update_spring(y, 9.0, config, 1.0 / 30.0);
   check(v2->x->value == x->value && v2->x->velocity == x->velocity && v2->y->value == y->value && v2->y->velocity == y->velocity,
         "Spring2D matches the scalar solver per axis");
 
-  auto v3 = spring::create_spring3_d(1.0, 2.0, 3.0, 0.0, 0.0, 0.0);
+  auto v3 = spring::create_spring_3d(1.0, 2.0, 3.0, 0.0, 0.0, 0.0);
   auto z = spring::create_spring(3.0, 0.0);
-  spring::update_spring3_d(v3, 4.0, 5.0, -6.0, config, 1.0 / 30.0);
+  spring::update_spring_3d(v3, 4.0, 5.0, -6.0, config, 1.0 / 30.0);
   spring::update_spring(z, -6.0, config, 1.0 / 30.0);
   check(v3->z->value == z->value && v3->z->velocity == z->velocity, "Spring3D matches the scalar solver per axis");
 }

@@ -23,47 +23,47 @@ namespace flight::types { struct SpatialPair; }
 
 namespace flight::spatial {
 
-inline void clear_spatial_index2_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndex2D>>>> index) {
+inline void clear_spatial_index_2d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndex2D>>>> index) {
   flight::row_get<flight::RowKey<"runtime">>(index)->backend->clear_spatial_index();
 }
 
-inline bool insert_spatial_object2_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndex2D>>>> index, double id, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialAabb2D>>>> bounds) {
+inline bool insert_spatial_object_2d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndex2D>>>> index, double id, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialAabb2D>>>> bounds) {
   return flight::row_get<flight::RowKey<"runtime">>(index)->backend->insert_spatial_object(id, bounds);
 }
 
-inline void query_spatial_pairs2_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndex2D>>>> index, flight::Array<flight::Ref<flight::types::SpatialPair>> out) {
+inline void query_spatial_pairs_2d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndex2D>>>> index, flight::Array<flight::Ref<flight::types::SpatialPair>> out) {
   flight::row_get<flight::RowKey<"runtime">>(index)->backend->query_spatial_pairs(out);
 }
 
-inline void query_spatial_point2_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndex2D>>>> index, double x, double y, flight::Array<double> out) {
+inline void query_spatial_point_2d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndex2D>>>> index, double x, double y, flight::Array<double> out) {
   flight::row_get<flight::RowKey<"runtime">>(index)->backend->query_spatial_point(x, y, out);
 }
 
-inline void query_spatial_ray2_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndex2D>>>> index, double x, double y, double dx, double dy, flight::Array<double> out) {
+inline void query_spatial_ray_2d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndex2D>>>> index, double x, double y, double dx, double dy, flight::Array<double> out) {
   flight::row_get<flight::RowKey<"runtime">>(index)->backend->query_spatial_ray(x, y, dx, dy, out);
 }
 
-inline void query_spatial_region2_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndex2D>>>> index, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialAabb2D>>>> region, flight::Array<double> out) {
+inline void query_spatial_region_2d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndex2D>>>> index, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialAabb2D>>>> region, flight::Array<double> out) {
   flight::row_get<flight::RowKey<"runtime">>(index)->backend->query_spatial_region(region, out);
 }
 
-inline void remove_spatial_object2_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndex2D>>>> index, double id) {
+inline void remove_spatial_object_2d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndex2D>>>> index, double id) {
   flight::row_get<flight::RowKey<"runtime">>(index)->backend->remove_spatial_object(id);
 }
 
-inline bool update_spatial_object2_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndex2D>>>> index, double id, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialAabb2D>>>> bounds) {
+inline bool update_spatial_object_2d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndex2D>>>> index, double id, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialAabb2D>>>> bounds) {
   return flight::row_get<flight::RowKey<"runtime">>(index)->backend->update_spatial_object(id, bounds);
 }
 
 inline const double default_spatial_cell_size = 128.0;
 
-inline void initialize_spatial_index2_d(flight::types::EntityConstruction<flight::Ref<flight::types::SpatialIndex2D>> out, std::optional<flight::Ref<flight::types::SpatialIndexBackend2D>> backend = std::nullopt) {
-  flight::row_set<flight::RowKey<"runtime">>(out, flight::make_ref<flight::types::SpatialIndexRuntime2D>(flight::types::SpatialIndexRuntime2D{.backend = (backend.has_value() ? backend.value() : flight::spatial::create_uniform_grid_spatial_backend2_d(default_spatial_cell_size))}));
+inline void initialize_spatial_index_2d(flight::types::EntityConstruction<flight::Ref<flight::types::SpatialIndex2D>> out, std::optional<flight::Ref<flight::types::SpatialIndexBackend2D>> backend = std::nullopt) {
+  flight::row_set<flight::RowKey<"runtime">>(out, flight::make_ref<flight::types::SpatialIndexRuntime2D>(flight::types::SpatialIndexRuntime2D{.backend = (backend.has_value() ? backend.value() : flight::spatial::create_uniform_grid_spatial_backend_2d(default_spatial_cell_size))}));
 }
 
-inline flight::Ref<flight::types::SpatialIndex2D> create_spatial_index2_d(std::optional<flight::Ref<flight::types::SpatialIndexBackend2D>> backend = std::nullopt) {
+inline flight::Ref<flight::types::SpatialIndex2D> create_spatial_index_2d(std::optional<flight::Ref<flight::types::SpatialIndexBackend2D>> backend = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::SpatialIndex2D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SpatialIndex2D>>();
-  initialize_spatial_index2_d(out, backend);
+  initialize_spatial_index_2d(out, backend);
   return flight::entity::finish_entity<flight::Ref<flight::types::SpatialIndex2D>>(out);
 }
 

@@ -53,11 +53,11 @@ inline flight::Ref<flight::types::Scene2DClipHooks> webgl_clip_hooks = flight::m
     return;
   }
   if (!clip.value()->contours.has_value()) {
-    flight::scene2d_gl::push_gl_clip_rectangle(state, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(clip.value()->rect)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(data->transform2_d)));
+    flight::scene2d_gl::push_gl_clip_rectangle(state, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(clip.value()->rect)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(data->transform_2d)));
     runtime->clip_forms.push(flight::String("rect"));
   }
   else {
-    flight::scene2d_gl::push_gl_clip_contours(state, clip.value()->contours.value(), clip.value()->winding, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(data->transform2_d)));
+    flight::scene2d_gl::push_gl_clip_contours(state, clip.value()->contours.value(), clip.value()->winding, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(data->transform_2d)));
     runtime->clip_forms.push(flight::String("contour"));
   }
 }});

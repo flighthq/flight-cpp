@@ -2,7 +2,7 @@
 
 #include <flight/runtime.hpp>
 #include <flight/types/matrix4.hpp>
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 
 namespace flight::node {
 

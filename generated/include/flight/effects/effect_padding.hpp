@@ -42,7 +42,7 @@ namespace flight::types { template <typename K> struct CanvasShapeCommand; }
 #include <flight/types/path.hpp>
 #include <flight/types/path_mesh.hpp>
 #include <flight/types/render_proxy.hpp>
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 #include <flight/types/render_proxy_adapter.hpp>
 #include <flight/types/render_registry_signals.hpp>
 #include <flight/types/render_state.hpp>

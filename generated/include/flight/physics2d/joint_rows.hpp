@@ -12,7 +12,7 @@ namespace flight::physics2d {
 
 inline const double tau = (2.0 * flight::pi);
 
-inline void write_physics2_dsoft_row_parameters(double mass, double frequency_hz, double damping_ratio, double dt, double hard_bias_factor, flight::Array<double> out) {
+inline void write_physics_2d_soft_row_parameters(double mass, double frequency_hz, double damping_ratio, double dt, double hard_bias_factor, flight::Array<double> out) {
   if ((!(frequency_hz > 0.0) || !(dt > 0.0))) {
     (out.element(0.0) = mass);
     (out.element(1.0) = hard_bias_factor);

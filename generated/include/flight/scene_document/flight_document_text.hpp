@@ -50,11 +50,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d_document.hpp>
 
-#include <flight/types/scene3_d.hpp>
+#include <flight/types/scene_3d.hpp>
 
-#include <flight/types/scene2_d.hpp>
+#include <flight/types/scene_2d.hpp>
 
 #include <flight/types/flight_document_refusal_explanation.hpp>
 
@@ -199,7 +199,7 @@ inline void append_vector3(flight::Array<flight::String> lines, flight::Structur
   lines.push(prefix + flight::String("z: ") + format_number(flight::row_get<flight::RowKey<"z">>(value)));
 }
 
-inline void append_transform3_d(flight::Array<flight::String> lines, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Transform3D>>>> transform, double indent) {
+inline void append_transform_3d(flight::Array<flight::String> lines, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Transform3D>>>> transform, double indent) {
   const flight::String prefix = flight::String(" ").repeat(indent);
   lines.push(prefix + flight::String("position:"));
   append_vector3(lines, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<FlightDocumentTextVector3>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(flight::row_get<flight::RowKey<"position">>(transform))), (indent + 2.0));
@@ -800,7 +800,7 @@ inline void append_camera(flight::Array<flight::String> lines, flight::Structura
   lines.push(flight::String("        projection:"));
   append_projection(lines, flight::row_get<flight::RowKey<"projection">>(camera), 10.0);
   lines.push(flight::String("        transform:"));
-  append_transform3_d(lines, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Transform3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Transform3D>>>>(flight::row_get<flight::RowKey<"transform">>(camera))), 10.0);
+  append_transform_3d(lines, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Transform3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Transform3D>>>>(flight::row_get<flight::RowKey<"transform">>(camera))), 10.0);
 }
 
 inline flight::String format_scalar(std::optional<std::variant<bool, double, flight::String>> value) {
@@ -928,7 +928,7 @@ inline void append_light(flight::Array<flight::String> lines, flight::Structural
     lines.push(flight::String("        node: ") + format_number(flight::row_get<flight::RowKey<"node">>(light).value()));
   }
   lines.push(flight::String("        transform:"));
-  append_transform3_d(lines, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Transform3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Transform3D>>>>(flight::row_get<flight::RowKey<"transform">>(light))), 10.0);
+  append_transform_3d(lines, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Transform3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Transform3D>>>>(flight::row_get<flight::RowKey<"transform">>(light))), 10.0);
 }
 
 inline void append_interactive_state(flight::Array<flight::String> lines, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::FlightDocumentInteractiveState>>>> state, double indent) {
@@ -1320,7 +1320,7 @@ inline flight::Array<flight::String> vector_3_keys = flight::Array<flight::Strin
 // Accept a concrete declared object type at this boundary (or a Record when keyed storage is intended); the
 // compiler will not cast, copy, or materialize an owner to make the access possible
 
-inline std::optional<flight::Ref<flight::types::FlightDocumentScene3D>> read_scene3_d(flight::Record<flight::String, flight::Any> mapping, flight::String path, flight::Ref<FlightDocumentTextReadContext> context) {
+inline std::optional<flight::Ref<flight::types::FlightDocumentScene3D>> read_scene_3d(flight::Record<flight::String, flight::Any> mapping, flight::String path, flight::Ref<FlightDocumentTextReadContext> context) {
   if (!has_only_keys_flight_value_function_has_u00004f_nly_u00004b_eys_flight_private_ee653c4acf7c3176(mapping, scene_3_d_keys)) {
     return ([&]() -> std::optional<flight::Ref<flight::types::FlightDocumentScene3D>> { (void)refuse(context, path); return std::nullopt; }());
   }

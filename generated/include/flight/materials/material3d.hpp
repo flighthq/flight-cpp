@@ -16,19 +16,19 @@ namespace flight::types { struct Material3DOptions; }
 
 namespace flight::materials {
 
-inline flight::types::MaterialAlphaMode get_material3_dalpha_mode(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material3D>>>> source) {
+inline flight::types::MaterialAlphaMode get_material_3d_alpha_mode(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material3D>>>> source) {
   return flight::row_get<flight::RowKey<"alphaMode">>(source);
 }
 
-inline bool is_material3_dblended(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material3D>>>> source) {
+inline bool is_material_3d_blended(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material3D>>>> source) {
   return (flight::row_get<flight::RowKey<"alphaMode">>(source) == flight::String("blend"));
 }
 
-inline bool is_material3_dmasked(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material3D>>>> source) {
+inline bool is_material_3d_masked(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material3D>>>> source) {
   return (flight::row_get<flight::RowKey<"alphaMode">>(source) == flight::String("mask"));
 }
 
-inline bool is_material3_dopaque(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material3D>>>> source) {
+inline bool is_material_3d_opaque(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material3D>>>> source) {
   return (flight::row_get<flight::RowKey<"alphaMode">>(source) == flight::String("opaque"));
 }
 
@@ -39,7 +39,7 @@ inline flight::types::MaterialAlphaMode default_alpha_mode = flight::String("opa
 inline const bool default_double_sided = false;
 
 template <typename T = flight::Ref<flight::types::Material3D>>
-inline T create_material3_d(flight::String kind, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material3DOptions>>>>> opts = std::nullopt) {
+inline T create_material_3d(flight::String kind, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material3DOptions>>>>> opts = std::nullopt) {
   T material = flight::materials::create_material<T>(kind);
   (material->alpha_cutoff = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"alphaCutoff">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return default_alpha_cutoff; }()));
   (material->alpha_mode = ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::types::MaterialAlphaMode> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"alphaMode">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return default_alpha_mode; }()));

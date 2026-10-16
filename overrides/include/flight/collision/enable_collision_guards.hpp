@@ -4,10 +4,10 @@
 #include <optional>
 #include <variant>
 
-#include <flight/collision/collision_shape_validation2_d.hpp>
-#include <flight/collision/collision_shape_validation3_d.hpp>
-#include <flight/collision/test_collision2_d.hpp>
-#include <flight/collision/test_collision3_d.hpp>
+#include <flight/collision/collision_shape_validation_2d.hpp>
+#include <flight/collision/collision_shape_validation_3d.hpp>
+#include <flight/collision/test_collision_2d.hpp>
+#include <flight/collision/test_collision_3d.hpp>
 #include <flight/log/contract.hpp>
 #include <flight/runtime.hpp>
 #include <flight/types/collision.hpp>
@@ -82,7 +82,7 @@ inline void warn_on_invalid_collision_shape(
 inline void warn_on_invalid_collision_shapes(
     flight::types::CollisionShape2D first,
     flight::types::CollisionShape2D second) {
-  const auto first_status = get_collision_shape_validation_status2_d(first);
+  const auto first_status = get_collision_shape_validation_status_2d(first);
   if (is_warnable_collision_status(first_status)) {
     warn_on_invalid_collision_shape(
         std::visit([](const auto& value) { return value->kind; }, first),
@@ -91,7 +91,7 @@ inline void warn_on_invalid_collision_shapes(
         flight::String("2D"));
     return;
   }
-  const auto second_status = get_collision_shape_validation_status2_d(second);
+  const auto second_status = get_collision_shape_validation_status_2d(second);
   if (is_warnable_collision_status(second_status)) {
     warn_on_invalid_collision_shape(
         std::visit([](const auto& value) { return value->kind; }, second),
@@ -101,10 +101,10 @@ inline void warn_on_invalid_collision_shapes(
   }
 }
 
-inline void warn_on_invalid_collision_shapes3_d(
+inline void warn_on_invalid_collision_shapes_3d(
     flight::types::CollisionShape3D first,
     flight::types::CollisionShape3D second) {
-  const auto first_status = get_collision_shape_validation_status3_d(first);
+  const auto first_status = get_collision_shape_validation_status_3d(first);
   if (is_warnable_collision_status(first_status)) {
     warn_on_invalid_collision_shape(
         std::visit([](const auto& value) { return value->kind; }, first),
@@ -113,7 +113,7 @@ inline void warn_on_invalid_collision_shapes3_d(
         flight::String("3D"));
     return;
   }
-  const auto second_status = get_collision_shape_validation_status3_d(second);
+  const auto second_status = get_collision_shape_validation_status_3d(second);
   if (is_warnable_collision_status(second_status)) {
     warn_on_invalid_collision_shape(
         std::visit([](const auto& value) { return value->kind; }, second),
@@ -126,14 +126,14 @@ inline void warn_on_invalid_collision_shapes3_d(
 inline bool are_collision_guards_enabled() { return collision_guards_enabled; }
 
 inline void disable_collision_guards() {
-  set_collision_test_guard2_d(std::nullopt);
-  set_collision_test_guard3_d(std::nullopt);
+  set_collision_test_guard_2d(std::nullopt);
+  set_collision_test_guard_3d(std::nullopt);
   collision_guards_enabled = false;
 }
 
 inline void enable_collision_guards() {
-  set_collision_test_guard2_d(warn_on_invalid_collision_shapes);
-  set_collision_test_guard3_d(warn_on_invalid_collision_shapes3_d);
+  set_collision_test_guard_2d(warn_on_invalid_collision_shapes);
+  set_collision_test_guard_3d(warn_on_invalid_collision_shapes_3d);
   collision_guards_enabled = true;
 }
 

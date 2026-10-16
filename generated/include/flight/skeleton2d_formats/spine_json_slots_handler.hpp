@@ -23,15 +23,15 @@ namespace flight::types { struct SpineJsonSectionContext; }
 namespace flight::types { struct SpineJsonTimelineContext; }
 namespace flight::types { struct TransformInherit2D; }
 
-#include <flight/types/attachment2_d.hpp>
-#include <flight/types/attachment_skin2_d.hpp>
-#include <flight/types/bone2_d.hpp>
+#include <flight/types/attachment_2d.hpp>
+#include <flight/types/attachment_skin_2d.hpp>
+#include <flight/types/bone_2d.hpp>
 #include <flight/types/import_diagnostic.hpp>
-#include <flight/types/skeleton2_dimport.hpp>
-#include <flight/types/skeleton2_dslot_deform.hpp>
-#include <flight/types/slot2_d.hpp>
+#include <flight/types/skeleton_2d_import.hpp>
+#include <flight/types/skeleton_2d_slot_deform.hpp>
+#include <flight/types/slot_2d.hpp>
 #include <flight/types/spine_json_registry.hpp>
-#include <flight/types/transform_inherit2_d.hpp>
+#include <flight/types/transform_inherit_2d.hpp>
 
 namespace flight::skeleton2d_formats {
 

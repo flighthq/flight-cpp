@@ -14,7 +14,7 @@ namespace flight::types {
 using FrameScript = std::function<void(flight::StructuralRef<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<Node2DTraits>>>>, flight::RowOf<flight::Ref<Node2DTraits>>>>, double)>;
 } // namespace flight::types
 
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 
 namespace flight::types {
 

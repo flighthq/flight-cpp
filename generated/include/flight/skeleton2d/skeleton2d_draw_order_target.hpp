@@ -19,7 +19,7 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/skeleton2_ddraw_order_animation_target.hpp>
+#include <flight/types/skeleton_2d_draw_order_animation_target.hpp>
 
 #include <flight/types/node_order_list.hpp>
 
@@ -53,21 +53,21 @@ using flight::types::NodeTraits;
 using flight::types::Skeleton2DDrawOrderAnimationTarget;
 
 template <typename Traits = flight::Ref<flight::types::NodeTraits>>
-inline void initialize_skeleton2_ddraw_order_animation_target(flight::types::EntityConstruction<flight::Ref<flight::types::Skeleton2DDrawOrderAnimationTarget<Traits>>> out, flight::Array<std::optional<std::shared_ptr<flight::types::Node<Traits>>>> nodes, std::shared_ptr<flight::types::NodeOrderList<Traits>> order_list) {
-  flight::row_set<flight::RowKey<"kind">>(out, flight::types::skeleton2_danimation_target_kind->draw_order);
+inline void initialize_skeleton_2d_draw_order_animation_target(flight::types::EntityConstruction<flight::Ref<flight::types::Skeleton2DDrawOrderAnimationTarget<Traits>>> out, flight::Array<std::optional<std::shared_ptr<flight::types::Node<Traits>>>> nodes, std::shared_ptr<flight::types::NodeOrderList<Traits>> order_list) {
+  flight::row_set<flight::RowKey<"kind">>(out, flight::types::skeleton_2d_animation_target_kind->draw_order);
   flight::row_set<flight::RowKey<"nodes">>(out, nodes);
   flight::row_set<flight::RowKey<"orderList">>(out, order_list);
 }
 
 template <typename Traits = flight::Ref<flight::types::NodeTraits>>
-inline flight::Ref<flight::types::Skeleton2DDrawOrderAnimationTarget<Traits>> create_skeleton2_ddraw_order_animation_target(flight::Array<std::optional<std::shared_ptr<flight::types::Node<Traits>>>> nodes, std::shared_ptr<flight::types::NodeOrderList<Traits>> order_list) {
+inline flight::Ref<flight::types::Skeleton2DDrawOrderAnimationTarget<Traits>> create_skeleton_2d_draw_order_animation_target(flight::Array<std::optional<std::shared_ptr<flight::types::Node<Traits>>>> nodes, std::shared_ptr<flight::types::NodeOrderList<Traits>> order_list) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Skeleton2DDrawOrderAnimationTarget<Traits>>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Skeleton2DDrawOrderAnimationTarget<Traits>>>();
-  initialize_skeleton2_ddraw_order_animation_target<Traits>(out, nodes, order_list);
+  initialize_skeleton_2d_draw_order_animation_target<Traits>(out, nodes, order_list);
   return flight::entity::finish_entity<flight::Ref<flight::types::Skeleton2DDrawOrderAnimationTarget<Traits>>>(out);
 }
 
-inline void unregister_skeleton2_ddraw_order_animation_binder() {
-  flight::skeleton2d::unregister_skeleton2_danimation_target_binder(flight::types::skeleton2_danimation_target_kind->draw_order);
+inline void unregister_skeleton_2d_draw_order_animation_binder() {
+  flight::skeleton2d::unregister_skeleton_2d_animation_target_binder(flight::types::skeleton_2d_animation_target_kind->draw_order);
 }
 
 inline const flight::String draw_order_subject_flight_value_variable__u000044__u000052__u000041__u000057__u00005f__u00004f__u000052__u000044__u000045__u000052__u00005f__u000053__u000055__u000042__u00004a__u000045__u000043__u000054__flight_private_0c9ca4b98d27e915 = flight::String("DrawOrder");
@@ -89,7 +89,7 @@ struct times_values_components_interpolation_quaternion_easing_segment_easings_e
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON2D_TIMES_VALUES_COMPONENTS_INTERPOLATION_QUATERNION_EASING_SEGMENT_EASINGS_ED1E92120ADCD6D6
 
 template <typename Traits = flight::Ref<flight::types::NodeTraits>>
-inline std::optional<flight::Ref<flight::types::AnimationChannel>> create_skeleton2_ddraw_order_channel(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DDrawOrderTimeline>>>> timeline, flight::Array<std::optional<std::shared_ptr<flight::types::Node<Traits>>>> nodes, std::shared_ptr<flight::types::NodeOrderList<Traits>> order_list) {
+inline std::optional<flight::Ref<flight::types::AnimationChannel>> create_skeleton_2d_draw_order_channel(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DDrawOrderTimeline>>>> timeline, flight::Array<std::optional<std::shared_ptr<flight::types::Node<Traits>>>> nodes, std::shared_ptr<flight::types::NodeOrderList<Traits>> order_list) {
   const double keyframes = static_cast<double>(flight::row_get<flight::RowKey<"times">>(timeline).size());
   if ((keyframes == 0.0)) {
     return std::nullopt;
@@ -98,7 +98,7 @@ inline std::optional<flight::Ref<flight::types::AnimationChannel>> create_skelet
   if ((!flight::is_integer(slot_count) || (slot_count == 0.0))) {
     return std::nullopt;
   }
-  return std::optional<flight::Ref<flight::types::AnimationChannel>>{flight::animation::create_animation_channel(flight::animation::create_animation_track(([&]() { auto object_member_components = std::optional<double>{slot_count}; auto object_member_interpolation = std::optional<flight::String>{step_interpolation_flight_value_variable__u000053__u000054__u000045__u000050__u00005f__u000049__u00004e__u000054__u000045__u000052__u000050__u00004f__u00004c__u000041__u000054__u000049__u00004f__u00004e__flight_private_0c9ca4b98d27e915}; auto object_member_times = flight::row_get<flight::RowKey<"times">>(timeline); auto object_member_values = flight::row_get<flight::RowKey<"orderings">>(timeline); return flight::make_ref<times_values_components_interpolation_quaternion_easing_segment_easings_ed1e92120adcd6d6<Traits>>(times_values_components_interpolation_quaternion_easing_segment_easings_ed1e92120adcd6d6<Traits>{.times = object_member_times, .values = object_member_values, .components = object_member_components, .interpolation = object_member_interpolation}); }())), flight::Any::object(create_skeleton2_ddraw_order_animation_target<Traits>(nodes, order_list)))};
+  return std::optional<flight::Ref<flight::types::AnimationChannel>>{flight::animation::create_animation_channel(flight::animation::create_animation_track(([&]() { auto object_member_components = std::optional<double>{slot_count}; auto object_member_interpolation = std::optional<flight::String>{step_interpolation_flight_value_variable__u000053__u000054__u000045__u000050__u00005f__u000049__u00004e__u000054__u000045__u000052__u000050__u00004f__u00004c__u000041__u000054__u000049__u00004f__u00004e__flight_private_0c9ca4b98d27e915}; auto object_member_times = flight::row_get<flight::RowKey<"times">>(timeline); auto object_member_values = flight::row_get<flight::RowKey<"orderings">>(timeline); return flight::make_ref<times_values_components_interpolation_quaternion_easing_segment_easings_ed1e92120adcd6d6<Traits>>(times_values_components_interpolation_quaternion_easing_segment_easings_ed1e92120adcd6d6<Traits>{.times = object_member_times, .values = object_member_values, .components = object_member_components, .interpolation = object_member_interpolation}); }())), flight::Any::object(create_skeleton_2d_draw_order_animation_target<Traits>(nodes, order_list)))};
 }
 
 
@@ -144,8 +144,8 @@ inline std::optional<flight::Ref<flight::types::AnimationChannel>> create_skelet
 // checked row projection. Preserve the represented row through the assertion, or keep the API typed to the
 // structural source before erasure; the compiler will not cast, copy, or materialize a replacement row
 
-inline void register_skeleton2_ddraw_order_animation_binder() {
-  flight::skeleton2d::register_skeleton2_danimation_target_binder(flight::types::skeleton2_danimation_target_kind->draw_order, bind_skeleton2_ddraw_order_channel);
+inline void register_skeleton_2d_draw_order_animation_binder() {
+  flight::skeleton2d::register_skeleton_2d_animation_target_binder(flight::types::skeleton_2d_animation_target_kind->draw_order, bind_skeleton_2d_draw_order_channel);
 }
 
 } // namespace flight::skeleton2d

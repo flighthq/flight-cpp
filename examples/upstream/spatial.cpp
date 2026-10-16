@@ -81,8 +81,8 @@ class SpatialExample final {
   explicit SpatialExample(bool capture_mode)
       : capture_mode_(capture_mode),
         active_mode_(capture_mode ? Mode::region : Mode::pairs),
-        index_(flight::spatial::create_spatial_index2_d(
-            flight::spatial::create_uniform_grid_spatial_backend2_d(100.0))) {
+        index_(flight::spatial::create_spatial_index_2d(
+            flight::spatial::create_uniform_grid_spatial_backend_2d(100.0))) {
     Random random(capture_mode);
     for (int index = 0; index < 20; ++index) {
       const double object_width = random.range(30.0, 80.0);
@@ -103,7 +103,7 @@ class SpatialExample final {
           .velocity_x = moving ? random.range(-30.0, 30.0) : 0.0,
           .velocity_y = moving ? random.range(-30.0, 30.0) : 0.0,
       });
-      if (flight::spatial::insert_spatial_object2_d(index_, static_cast<double>(index), bounds)) {
+      if (flight::spatial::insert_spatial_object_2d(index_, static_cast<double>(index), bounds)) {
         ++inserted_count_;
       }
     }
@@ -115,7 +115,7 @@ class SpatialExample final {
     std::vector<bool> highlighted(objects_.size());
     int results{};
     if (active_mode_ == Mode::pairs) {
-      flight::spatial::query_spatial_pairs2_d(index_, pairs_out_);
+      flight::spatial::query_spatial_pairs_2d(index_, pairs_out_);
       results = static_cast<int>(pairs_out_.size());
       for (const auto& pair : pairs_out_) {
         highlight(pair->a, highlighted);
@@ -123,9 +123,9 @@ class SpatialExample final {
       }
     } else {
       if (active_mode_ == Mode::point) {
-        flight::spatial::query_spatial_point2_d(index_, mouse_x_, mouse_y_, ids_out_);
+        flight::spatial::query_spatial_point_2d(index_, mouse_x_, mouse_y_, ids_out_);
       } else if (active_mode_ == Mode::ray) {
-        flight::spatial::query_spatial_ray2_d(
+        flight::spatial::query_spatial_ray_2d(
             index_, 0.0, height / 2.0, mouse_x_, mouse_y_ - height / 2.0, ids_out_);
       } else {
         const auto region = flight::make_ref<flight::types::SpatialAabb2D>(
@@ -135,7 +135,7 @@ class SpatialExample final {
                 .max_x = mouse_x_ + 50.0,
                 .max_y = mouse_y_ + 50.0,
             });
-        flight::spatial::query_spatial_region2_d(index_, region, ids_out_);
+        flight::spatial::query_spatial_region_2d(index_, region, ids_out_);
       }
       results = static_cast<int>(ids_out_.size());
       for (const double id : ids_out_) {
@@ -195,7 +195,7 @@ class SpatialExample final {
         bounds.min_y = height - object_height;
         object.velocity_y = -std::abs(object.velocity_y);
       }
-      if (flight::spatial::update_spatial_object2_d(index_, object.id, object.bounds)) {
+      if (flight::spatial::update_spatial_object_2d(index_, object.id, object.bounds)) {
         ++updated_count;
       }
     }
@@ -258,17 +258,17 @@ class SpatialExample final {
     const auto& first = *objects_.front().bounds;
     const double first_x = (first.min_x + first.max_x) * 0.5;
     const double first_y = (first.min_y + first.max_y) * 0.5;
-    flight::spatial::query_spatial_point2_d(index_, first_x, first_y, probe_ids);
+    flight::spatial::query_spatial_point_2d(index_, first_x, first_y, probe_ids);
     if (!probe_ids.includes(objects_.front().id)) {
       throw std::runtime_error("spatial point query did not observe the generated index");
     }
-    flight::spatial::query_spatial_ray2_d(index_, 0.0, 0.0, first_x, first_y, probe_ids);
+    flight::spatial::query_spatial_ray_2d(index_, 0.0, 0.0, first_x, first_y, probe_ids);
     if (!probe_ids.includes(objects_.front().id)) {
       throw std::runtime_error("spatial ray query did not observe the generated index");
     }
 
     flight::Array<flight::Ref<flight::types::SpatialPair>> probe_pairs;
-    flight::spatial::query_spatial_pairs2_d(index_, probe_pairs);
+    flight::spatial::query_spatial_pairs_2d(index_, probe_pairs);
     std::set<std::pair<std::size_t, std::size_t>> candidate_pairs;
     for (const auto& pair : probe_pairs) {
       const auto first_index = static_cast<std::size_t>(pair->a);

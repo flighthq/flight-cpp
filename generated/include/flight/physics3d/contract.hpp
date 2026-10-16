@@ -12,10 +12,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/physics3d/contacts.hpp>
 #include <flight/physics3d/continuous.hpp>
 #include <flight/physics3d/debug_geometry.hpp>
-#include <flight/physics3d/enable_physics3_dguards.hpp>
-#include <flight/physics3d/explain_physics3_dcollision.hpp>
-#include <flight/physics3d/explain_physics3_djoints.hpp>
-#include <flight/physics3d/explain_physics3_dstep.hpp>
+#include <flight/physics3d/enable_physics_3d_guards.hpp>
+#include <flight/physics3d/explain_physics_3d_collision.hpp>
+#include <flight/physics3d/explain_physics_3d_joints.hpp>
+#include <flight/physics3d/explain_physics_3d_step.hpp>
 #include <flight/physics3d/integrate.hpp>
 #include <flight/physics3d/islands.hpp>
 #include <flight/physics3d/joint_breakage.hpp>
@@ -30,9 +30,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/physics3d/material.hpp>
 #include <flight/physics3d/node_sync.hpp>
 #include <flight/physics3d/ownership.hpp>
-#include <flight/physics3d/physics3_dbroadphase_publication.hpp>
-#include <flight/physics3d/physics3_dspatial_indexing_guards.hpp>
-#include <flight/physics3d/register_built_in_physics3_djoint_solvers.hpp>
+#include <flight/physics3d/physics_3d_broadphase_publication.hpp>
+#include <flight/physics3d/physics_3d_spatial_indexing_guards.hpp>
+#include <flight/physics3d/register_built_in_physics_3d_joint_solvers.hpp>
 #include <flight/physics3d/solver.hpp>
 #include <flight/physics3d/step.hpp>
 #include <flight/physics3d/step_validation.hpp>

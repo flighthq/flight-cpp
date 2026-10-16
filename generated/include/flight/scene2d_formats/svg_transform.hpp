@@ -21,8 +21,8 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/geometry/transform2d.hpp>
 #include <flight/types/matrix.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node2_d.hpp>
-#include <flight/types/transform2_d.hpp>
+#include <flight/types/node_2d.hpp>
+#include <flight/types/transform_2d.hpp>
 #include <flight/types/xml_element.hpp>
 #include <flight/scene2d_formats/svg_xml.hpp>
 
@@ -48,8 +48,8 @@ inline void apply_svg_transform(flight::types::Node2D target, std::optional<flig
   if (!matrix.has_value()) {
     return;
   }
-  auto transform = flight::geometry::create_transform2_d(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
-  flight::geometry::decompose_matrix_to_transform2_d(transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(matrix.value())));
+  auto transform = flight::geometry::create_transform_2d(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
+  flight::geometry::decompose_matrix_to_transform_2d(transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(matrix.value())));
   assign_svg_transform(target, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Transform2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Transform2D>>>>(transform)));
 }
 

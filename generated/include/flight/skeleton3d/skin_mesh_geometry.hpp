@@ -25,8 +25,8 @@ namespace flight::types { struct VertexAttributeLayout; }
 #include <flight/types/mesh_geometry.hpp>
 #include <flight/types/mesh_morph_bind_pose.hpp>
 #include <flight/types/mesh_skin_bind_pose.hpp>
-#include <flight/types/node3_d.hpp>
-#include <flight/types/skeleton3_d.hpp>
+#include <flight/types/node_3d.hpp>
+#include <flight/types/skeleton_3d.hpp>
 #include <flight/skeleton3d/skin_vertices.hpp>
 
 namespace flight::skeleton3d {

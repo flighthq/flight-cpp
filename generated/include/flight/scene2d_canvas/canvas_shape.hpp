@@ -17,13 +17,13 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/shape.hpp>
 
-#include <flight/types/scene2_drenderer.hpp>
+#include <flight/types/scene_2d_renderer.hpp>
 
 #include <flight/types/render_state.hpp>
 
 #include <flight/types/render_registry_signals.hpp>
 
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 
 #include <flight/types/matrix.hpp>
 
@@ -57,7 +57,7 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/render/render_state.hpp>
 #include <flight/render/renderer.hpp>
 #include <flight/types/contract.hpp>
-#include <flight/scene2d_canvas/canvas_node2_d.hpp>
+#include <flight/scene2d_canvas/canvas_node_2d.hpp>
 #include <flight/scene2d_canvas/canvas_render_state.hpp>
 #include <flight/scene2d_canvas/canvas_shape_registry.hpp>
 #include <flight/scene2d_canvas/canvas_transform.hpp>
@@ -163,7 +163,7 @@ inline void render_canvas_shape_commands(flight::CanvasRenderingContext2D contex
 }
 
 inline void draw_canvas_shape(flight::Ref<flight::types::CanvasRenderState> state, flight::Ref<flight::types::RenderProxy2D> render_proxy) {
-  flight::scene2d_canvas::draw_canvas_scene2_d(state, render_proxy);
+  flight::scene2d_canvas::draw_canvas_scene_2d(state, render_proxy);
   flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Shape>>>> source = flight::structural_ref_cast<flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Shape>>>>>(render_proxy->source);
   auto object_pattern_value = flight::row_get<flight::RowKey<"data">>(source);
   flight::Array<flight::types::ShapeCommandToken> commands = object_pattern_value->commands;
@@ -173,7 +173,7 @@ inline void draw_canvas_shape(flight::Ref<flight::types::CanvasRenderState> stat
   flight::CanvasRenderingContext2D context = state->context;
   ([&]() { auto optional_chain_receiver = state->apply_blend_mode; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(state, render_proxy->blend_mode); }());
   flight::scene2d_canvas::set_canvas_global_alpha(state, render_proxy->alpha);
-  flight::scene2d_canvas::set_canvas_transform(state, context, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(render_proxy->transform2_d)));
+  flight::scene2d_canvas::set_canvas_transform(state, context, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(render_proxy->transform_2d)));
   render_canvas_shape_commands(context, state, commands, flight::scene2d_canvas::get_canvas_render_state_texture_resolvers(state));
 }
 

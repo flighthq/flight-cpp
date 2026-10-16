@@ -26,15 +26,15 @@ namespace flight::types { struct TransformInherit2D; }
 
 #include <flight/entity/entity.hpp>
 #include <flight/geometry/matrix.hpp>
-#include <flight/types/attachment2_d.hpp>
-#include <flight/types/attachment_skin2_d.hpp>
-#include <flight/types/bone2_d.hpp>
+#include <flight/types/attachment_2d.hpp>
+#include <flight/types/attachment_skin_2d.hpp>
+#include <flight/types/bone_2d.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/matrix.hpp>
-#include <flight/types/skeleton2_d.hpp>
-#include <flight/types/skeleton2_dslot_deform.hpp>
-#include <flight/types/slot2_d.hpp>
-#include <flight/types/transform_inherit2_d.hpp>
+#include <flight/types/skeleton_2d.hpp>
+#include <flight/types/skeleton_2d_slot_deform.hpp>
+#include <flight/types/slot_2d.hpp>
+#include <flight/types/transform_inherit_2d.hpp>
 
 namespace flight::skeleton2d {
 
@@ -49,7 +49,7 @@ inline const double deg_to_rad = (flight::pi / 180.0);
 
 inline const double matrix_stride = 6.0;
 
-inline void compute_skeleton2_dbone_world_transform(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton, double bone_index) {
+inline void compute_skeleton_2d_bone_world_transform(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton, double bone_index) {
   flight::Array<flight::Ref<flight::types::Bone2D>> bones = flight::row_get<flight::RowKey<"bones">>(skeleton);
   flight::Float32Array world = flight::row_get<flight::RowKey<"worldMatrices">>(skeleton);
   if (((bone_index < 0.0) || (bone_index >= static_cast<double>(bones.size())))) {
@@ -133,23 +133,23 @@ inline void compute_skeleton2_dbone_world_transform(flight::StructuralRef<flight
   }
 }
 
-inline void compute_skeleton2_dworld_transforms(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton) {
+inline void compute_skeleton_2d_world_transforms(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton) {
   const double count = static_cast<double>(flight::row_get<flight::RowKey<"bones">>(skeleton).size());
   {
     double i = 0.0;
     while ((i < count)) {
-      compute_skeleton2_dbone_world_transform(skeleton, i);
+      compute_skeleton_2d_bone_world_transform(skeleton, i);
       (i += 1.0);
     }
   }
 }
 
-inline void dispose_skeleton2_d(flight::Ref<flight::types::Skeleton2D> skeleton) {
+inline void dispose_skeleton_2d(flight::Ref<flight::types::Skeleton2D> skeleton) {
   (skeleton->bones = flight::Array<flight::Ref<flight::types::Bone2D>>{});
   (skeleton->slots = std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null});
 }
 
-inline bool equals_skeleton2_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> b) {
+inline bool equals_skeleton_2d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> b) {
   if ((a == b)) {
     return true;
   }
@@ -172,7 +172,7 @@ inline bool equals_skeleton2_d(flight::StructuralRef<flight::RowReadonly<flight:
   return true;
 }
 
-inline double get_skeleton2_dbone_index_by_name(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton, flight::String name) {
+inline double get_skeleton_2d_bone_index_by_name(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton, flight::String name) {
   flight::Array<flight::Ref<flight::types::Bone2D>> bones = flight::row_get<flight::RowKey<"bones">>(skeleton);
   {
     double i = 0.0;
@@ -189,7 +189,7 @@ inline double get_skeleton2_dbone_index_by_name(flight::StructuralRef<flight::Ro
   return -1.0;
 }
 
-inline std::optional<flight::Ref<flight::types::AttachmentSkin2D>> get_skeleton2_dskin(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton, flight::String name) {
+inline std::optional<flight::Ref<flight::types::AttachmentSkin2D>> get_skeleton_2d_skin(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton, flight::String name) {
   std::variant<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>, flight::Null, flight::Undefined> skins = ([&]() -> std::variant<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>, flight::Null, flight::Undefined> { auto optional_property_2 = flight::row_get<flight::RowKey<"skins">>(skeleton); if (std::holds_alternative<flight::Undefined>(optional_property_2)) return std::variant<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property_2)) return std::variant<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>>, std::get<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>>(optional_property_2)}; }());
   if ((std::holds_alternative<flight::Undefined>(skins) || std::holds_alternative<flight::Null>(skins))) {
     return std::nullopt;
@@ -202,7 +202,7 @@ inline std::optional<flight::Ref<flight::types::AttachmentSkin2D>> get_skeleton2
   return std::nullopt;
 }
 
-inline void initialize_skeleton2_d(flight::types::EntityConstruction<flight::Ref<flight::types::Skeleton2D>> out, flight::Float32Array bone_matrices, flight::Array<flight::Ref<flight::types::Bone2D>> bones, flight::Float32Array inverse_bind_matrices, std::variant<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>, flight::Null, flight::Undefined> skins, std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined> slots, flight::Float32Array world_matrices) {
+inline void initialize_skeleton_2d(flight::types::EntityConstruction<flight::Ref<flight::types::Skeleton2D>> out, flight::Float32Array bone_matrices, flight::Array<flight::Ref<flight::types::Bone2D>> bones, flight::Float32Array inverse_bind_matrices, std::variant<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>, flight::Null, flight::Undefined> skins, std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined> slots, flight::Float32Array world_matrices) {
   flight::row_set<flight::RowKey<"boneMatrices">>(out, bone_matrices);
   flight::row_set<flight::RowKey<"bones">>(out, bones);
   flight::row_set<flight::RowKey<"inverseBindMatrices">>(out, inverse_bind_matrices);
@@ -211,21 +211,21 @@ inline void initialize_skeleton2_d(flight::types::EntityConstruction<flight::Ref
   flight::row_set<flight::RowKey<"worldMatrices">>(out, world_matrices);
 }
 
-inline flight::Ref<flight::types::Skeleton2D> clone_skeleton2_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton) {
+inline flight::Ref<flight::types::Skeleton2D> clone_skeleton_2d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Skeleton2D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Skeleton2D>>();
-  initialize_skeleton2_d(out, flight::row_get<flight::RowKey<"boneMatrices">>(skeleton).slice(), flight::row_get<flight::RowKey<"bones">>(skeleton).map([=](flight::Ref<flight::types::Bone2D> bone) { return flight::make_ref<flight::types::Bone2D>(*bone); }), flight::row_get<flight::RowKey<"inverseBindMatrices">>(skeleton).slice(), ([&]() -> std::variant<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>, flight::Null, flight::Undefined> { auto optional_property_3 = flight::row_get<flight::RowKey<"skins">>(skeleton); if (std::holds_alternative<flight::Undefined>(optional_property_3)) return std::variant<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property_3)) return std::variant<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>>, std::get<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>>(optional_property_3)}; }()), ((std::holds_alternative<flight::Null>(flight::row_get<flight::RowKey<"slots">>(skeleton)) || std::holds_alternative<flight::Undefined>(flight::row_get<flight::RowKey<"slots">>(skeleton))) ? ([&]() -> std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined> { auto optional_property_4 = flight::row_get<flight::RowKey<"slots">>(skeleton); if (std::holds_alternative<flight::Undefined>(optional_property_4)) return std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property_4)) return std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<flight::Ref<flight::types::Slot2D>>>, std::get<flight::Array<flight::Ref<flight::types::Slot2D>>>(optional_property_4)}; }()) : std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<flight::Ref<flight::types::Slot2D>>>, std::get<flight::Array<flight::Ref<flight::types::Slot2D>>>(flight::row_get<flight::RowKey<"slots">>(skeleton)).map([=](flight::Ref<flight::types::Slot2D> s) { return flight::make_ref<flight::types::Slot2D>(*s); })}), flight::row_get<flight::RowKey<"worldMatrices">>(skeleton).slice());
+  initialize_skeleton_2d(out, flight::row_get<flight::RowKey<"boneMatrices">>(skeleton).slice(), flight::row_get<flight::RowKey<"bones">>(skeleton).map([=](flight::Ref<flight::types::Bone2D> bone) { return flight::make_ref<flight::types::Bone2D>(*bone); }), flight::row_get<flight::RowKey<"inverseBindMatrices">>(skeleton).slice(), ([&]() -> std::variant<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>, flight::Null, flight::Undefined> { auto optional_property_3 = flight::row_get<flight::RowKey<"skins">>(skeleton); if (std::holds_alternative<flight::Undefined>(optional_property_3)) return std::variant<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property_3)) return std::variant<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>>, std::get<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>>(optional_property_3)}; }()), ((std::holds_alternative<flight::Null>(flight::row_get<flight::RowKey<"slots">>(skeleton)) || std::holds_alternative<flight::Undefined>(flight::row_get<flight::RowKey<"slots">>(skeleton))) ? ([&]() -> std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined> { auto optional_property_4 = flight::row_get<flight::RowKey<"slots">>(skeleton); if (std::holds_alternative<flight::Undefined>(optional_property_4)) return std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property_4)) return std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<flight::Ref<flight::types::Slot2D>>>, std::get<flight::Array<flight::Ref<flight::types::Slot2D>>>(optional_property_4)}; }()) : std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<flight::Ref<flight::types::Slot2D>>>, std::get<flight::Array<flight::Ref<flight::types::Slot2D>>>(flight::row_get<flight::RowKey<"slots">>(skeleton)).map([=](flight::Ref<flight::types::Slot2D> s) { return flight::make_ref<flight::types::Slot2D>(*s); })}), flight::row_get<flight::RowKey<"worldMatrices">>(skeleton).slice());
   return flight::entity::finish_entity<flight::Ref<flight::types::Skeleton2D>>(out);
 }
 
-inline flight::Ref<flight::types::Skeleton2D> create_skeleton2_d(flight::Array<flight::Ref<flight::types::Bone2D>> bones, std::optional<std::optional<flight::Array<flight::Ref<flight::types::Slot2D>>>> slots = std::nullopt) {
+inline flight::Ref<flight::types::Skeleton2D> create_skeleton_2d(flight::Array<flight::Ref<flight::types::Bone2D>> bones, std::optional<std::optional<flight::Array<flight::Ref<flight::types::Slot2D>>>> slots = std::nullopt) {
   slots = slots.value_or(std::nullopt);
   const double count = static_cast<double>(bones.size());
   flight::types::EntityConstruction<flight::Ref<flight::types::Skeleton2D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Skeleton2D>>();
-  initialize_skeleton2_d(out, flight::Float32Array((count * matrix_stride)), bones, flight::Float32Array((count * matrix_stride)), std::variant<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}, ([&]() -> std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined> { auto contextual_union_source = slots.value(); if (!contextual_union_source.has_value()) return std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<flight::Ref<flight::types::Slot2D>>>, contextual_union_source.value()}; }()), flight::Float32Array((count * matrix_stride)));
+  initialize_skeleton_2d(out, flight::Float32Array((count * matrix_stride)), bones, flight::Float32Array((count * matrix_stride)), std::variant<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}, ([&]() -> std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined> { auto contextual_union_source = slots.value(); if (!contextual_union_source.has_value()) return std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<flight::Ref<flight::types::Slot2D>>>, contextual_union_source.value()}; }()), flight::Float32Array((count * matrix_stride)));
   return flight::entity::finish_entity<flight::Ref<flight::types::Skeleton2D>>(out);
 }
 
-inline void reset_skeleton2_dto_setup(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> setup, flight::Ref<flight::types::Skeleton2D> pose) {
+inline void reset_skeleton_2d_to_setup(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> setup, flight::Ref<flight::types::Skeleton2D> pose) {
   if ((setup == flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>>(pose))) {
     throw flight::Error(flight::String("resetSkeleton2DToSetup: setup and pose must be distinct skeletons"));
   }
@@ -251,7 +251,7 @@ inline void reset_skeleton2_dto_setup(flight::StructuralRef<flight::RowReadonly<
   }
 }
 
-inline void set_skeleton2_dskin(flight::Ref<flight::types::Skeleton2D> skeleton, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AttachmentSkin2D>>>> skin) {
+inline void set_skeleton_2d_skin(flight::Ref<flight::types::Skeleton2D> skeleton, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AttachmentSkin2D>>>> skin) {
   std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined> slots = ([&]() -> std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined> { auto optional_property_5 = skeleton->slots; if (std::holds_alternative<flight::Undefined>(optional_property_5)) return std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property_5)) return std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Array<flight::Ref<flight::types::Slot2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<flight::Ref<flight::types::Slot2D>>>, std::get<flight::Array<flight::Ref<flight::types::Slot2D>>>(optional_property_5)}; }());
   if ((std::holds_alternative<flight::Undefined>(slots) || std::holds_alternative<flight::Null>(slots))) {
     return;
@@ -263,7 +263,7 @@ inline void set_skeleton2_dskin(flight::Ref<flight::types::Skeleton2D> skeleton,
   }
 }
 
-inline std::optional<flight::String> validate_skeleton2_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton) {
+inline std::optional<flight::String> validate_skeleton_2d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton) {
   const double count = static_cast<double>(flight::row_get<flight::RowKey<"bones">>(skeleton).size());
   const double expected = (count * matrix_stride);
   if ((static_cast<double>(flight::row_get<flight::RowKey<"worldMatrices">>(skeleton).size()) != expected)) {
@@ -302,7 +302,7 @@ inline void read_matrix(flight::types::MatrixLike out, flight::Float32Array buff
   (out->ty = buffer.get_index((offset + 5.0)));
 }
 
-inline bool get_skeleton2_dbone_world_matrix(flight::types::MatrixLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton, double bone_index) {
+inline bool get_skeleton_2d_bone_world_matrix(flight::types::MatrixLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton, double bone_index) {
   if (((bone_index < 0.0) || (bone_index >= static_cast<double>(flight::row_get<flight::RowKey<"bones">>(skeleton).size())))) {
     return false;
   }
@@ -332,7 +332,7 @@ inline flight::Ref<flight::types::Matrix> scratch_a = flight::make_ref<flight::t
 
 inline flight::Ref<flight::types::Matrix> scratch_b = flight::make_ref<flight::types::Matrix>(flight::types::Matrix{.a = 1.0, .b = 0.0, .c = 0.0, .d = 1.0, .tx = 0.0, .ty = 0.0});
 
-inline void set_skeleton2_dbind_pose(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton) {
+inline void set_skeleton_2d_bind_pose(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton) {
   flight::Float32Array world = flight::row_get<flight::RowKey<"worldMatrices">>(skeleton);
   flight::Float32Array out = flight::row_get<flight::RowKey<"inverseBindMatrices">>(skeleton);
   const double count = static_cast<double>(flight::row_get<flight::RowKey<"bones">>(skeleton).size());
@@ -354,7 +354,7 @@ inline void set_skeleton2_dbind_pose(flight::StructuralRef<flight::RowReadonly<f
 
 inline flight::Ref<flight::types::Matrix> scratch_c = flight::make_ref<flight::types::Matrix>(flight::types::Matrix{.a = 1.0, .b = 0.0, .c = 0.0, .d = 1.0, .tx = 0.0, .ty = 0.0});
 
-inline void compute_skeleton2_dbone_matrices(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton) {
+inline void compute_skeleton_2d_bone_matrices(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton) {
   flight::Float32Array world = flight::row_get<flight::RowKey<"worldMatrices">>(skeleton);
   flight::Float32Array inv_bind = flight::row_get<flight::RowKey<"inverseBindMatrices">>(skeleton);
   flight::Float32Array out = flight::row_get<flight::RowKey<"boneMatrices">>(skeleton);

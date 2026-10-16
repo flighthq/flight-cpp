@@ -16,7 +16,7 @@
 #include <flight/types/gl_render_pass.hpp>
 #include <flight/types/gl_render_target.hpp>
 #include <flight/types/matrix.hpp>
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 #include <flight/types/render_target.hpp>
 
 namespace flight::render_gl {
@@ -285,7 +285,7 @@ inline flight::host_sdl::WebGlTexture allocate_gl_texture_render_target_storage(
     const auto mapped = map_gl_format(gl, target->color_formats.element(index));
     const auto texture = gl.create_texture();
     gl.bind_texture(gl.texture_2_d, texture);
-    gl.tex_image2_d(
+    gl.tex_image_2d(
         gl.texture_2_d, 0, static_cast<int>(mapped->internal_format),
         static_cast<int>(target->width), static_cast<int>(target->height), 0,
         mapped->format, mapped->type, nullptr);
@@ -294,7 +294,7 @@ inline flight::host_sdl::WebGlTexture allocate_gl_texture_render_target_storage(
     gl.tex_parameteri(gl.texture_2_d, gl.texture_mag_filter, filter);
     gl.tex_parameteri(gl.texture_2_d, gl.texture_wrap_s, gl.clamp_to_edge);
     gl.tex_parameteri(gl.texture_2_d, gl.texture_wrap_t, gl.clamp_to_edge);
-    gl.framebuffer_texture2_d(
+    gl.framebuffer_texture_2d(
         gl.framebuffer,
         static_cast<std::uint32_t>(static_cast<double>(gl.color_attachment0) + index),
         gl.texture_2_d, texture, 0);
@@ -330,14 +330,14 @@ inline flight::host_sdl::WebGlTexture allocate_gl_texture_render_target_storage(
     if (sampled) {
       const auto depth_texture = gl.create_texture();
       gl.bind_texture(gl.texture_2_d, depth_texture);
-      gl.tex_image2_d(
+      gl.tex_image_2d(
           gl.texture_2_d, 0, static_cast<int>(gl.depth24_stencil8),
           static_cast<int>(target->width), static_cast<int>(target->height), 0,
           gl.depth_stencil, gl.unsigned_int_24_8, nullptr);
       gl.tex_parameteri(gl.texture_2_d, gl.texture_min_filter, gl.nearest);
       gl.tex_parameteri(gl.texture_2_d, gl.texture_mag_filter, gl.nearest);
       gl.bind_framebuffer(gl.framebuffer, target->framebuffer);
-      gl.framebuffer_texture2_d(
+      gl.framebuffer_texture_2d(
           gl.framebuffer, gl.depth_stencil_attachment, gl.texture_2_d,
           depth_texture, 0);
       target->depth_texture = depth_texture;
@@ -616,7 +616,7 @@ inline void draw_gl_texture_render_target_result(
           .straight_alpha = false,
           .texture = flight::row_get<flight::RowKey<"texture">>(target)}));
   const auto quad_transform = flight::geometry::acquire_matrix();
-  flight::geometry::multiply_matrix(quad_transform, render_proxy->transform2_d, transform);
+  flight::geometry::multiply_matrix(quad_transform, render_proxy->transform_2d, transform);
   set_gl_attributes(gl, locations);
   set_gl_matrix_from_transform(
       gl, locations, runtime->matrix_array, quad_transform,

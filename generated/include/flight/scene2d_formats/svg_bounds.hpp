@@ -36,11 +36,11 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/shape/shape.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/has_bounds_rectangle.hpp>
-#include <flight/types/has_transform2_d.hpp>
+#include <flight/types/has_transform_2d.hpp>
 #include <flight/types/import_diagnostic.hpp>
 #include <flight/types/matrix.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/rectangle.hpp>
 #include <flight/types/rich_text.hpp>
 #include <flight/types/shape.hpp>
@@ -102,7 +102,7 @@ inline bool copy_non_empty_svg_bounds(flight::Ref<flight::types::Rectangle> out,
   return true;
 }
 
-inline std::optional<flight::Ref<flight::types::Rectangle>> create_svg_node2_dbounds(flight::types::Node2D target, flight::Ref<flight::types::SvgImportContext> context) {
+inline std::optional<flight::Ref<flight::types::Rectangle>> create_svg_node_2d_bounds(flight::types::Node2D target, flight::Ref<flight::types::SvgImportContext> context) {
   if (((flight::row_get<flight::RowKey<"kind">>(target) == flight::types::text_label_kind) || (flight::row_get<flight::RowKey<"kind">>(target) == flight::types::rich_text_kind))) {
     return std::nullopt;
   }
@@ -131,7 +131,7 @@ inline std::optional<flight::Ref<flight::types::Rectangle>> create_svg_node2_dbo
           (index += 1.0);
           continue;
         }
-        auto child_bounds = create_svg_node2_dbounds(child.value(), context);
+        auto child_bounds = create_svg_node_2d_bounds(child.value(), context);
         if (!child_bounds.has_value()) {
           (has_unresolved_child_bounds = true);
           {

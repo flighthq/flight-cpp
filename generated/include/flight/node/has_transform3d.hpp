@@ -15,7 +15,7 @@ namespace flight::types { struct Vector3; }
 
 #include <flight/geometry/quaternion.hpp>
 #include <flight/geometry/vector3.hpp>
-#include <flight/types/has_transform3_d.hpp>
+#include <flight/types/has_transform_3d.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/quaternion.hpp>
 #include <flight/types/vector3.hpp>
@@ -24,13 +24,13 @@ namespace flight::node {
 
 using flight::types::Matrix4;
 
-inline void init_transform3_druntime_trait(flight::Ref<flight::types::HasTransform3DRuntime> target) {
+inline void init_transform_3d_runtime_trait(flight::Ref<flight::types::HasTransform3DRuntime> target) {
   (target->local_matrix4 = std::nullopt);
   (target->local_matrix4_detached = false);
   (target->world_matrix4 = std::nullopt);
 }
 
-inline void init_transform3_dtrait(flight::Ref<flight::types::HasTransform3D> target, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::HasTransform3D>>>>>> obj = std::nullopt) {
+inline void init_transform_3d_trait(flight::Ref<flight::types::HasTransform3D> target, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::HasTransform3D>>>>>> obj = std::nullopt) {
   auto position = ([&]() -> std::optional<flight::Ref<flight::types::Vector3>> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"position">>(optional_chain_receiver.value()); }());
   auto rotation = ([&]() -> std::optional<flight::Ref<flight::types::Quaternion>> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"rotation">>(optional_chain_receiver.value()); }());
   auto scale = ([&]() -> std::optional<flight::Ref<flight::types::Vector3>> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"scale">>(optional_chain_receiver.value()); }());

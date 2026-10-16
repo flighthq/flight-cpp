@@ -61,7 +61,7 @@ inline flight::Ref<flight::types::GlBitmapShader> resolve_gl_shader(flight::Ref<
 }
 
 inline void set_gl_shader(flight::Ref<flight::types::GlRenderState> state, flight::types::Node2D node, std::optional<flight::Ref<entity_runtime_key_program_bind_locations_045bf20012f68d3c>> shader) {
-  flight::Ref<flight::types::RenderProxy2D> render_proxy = flight::render::get_or_create_render_proxy2_d(state, node);
+  flight::Ref<flight::types::RenderProxy2D> render_proxy = flight::render::get_or_create_render_proxy_2d(state, node);
   if (!shader.has_value()) {
     shader_bindings.erase(render_proxy);
     return;

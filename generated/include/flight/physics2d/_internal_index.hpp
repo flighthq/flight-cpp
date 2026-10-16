@@ -8,10 +8,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/physics2d/broadphase.hpp>
 #include <flight/physics2d/collider_transform.hpp>
 #include <flight/physics2d/debug_geometry.hpp>
-#include <flight/physics2d/enable_physics2_dguards.hpp>
-#include <flight/physics2d/explain_physics2_dcollision.hpp>
-#include <flight/physics2d/explain_physics2_djoints.hpp>
-#include <flight/physics2d/explain_physics2_dstep.hpp>
+#include <flight/physics2d/enable_physics_2d_guards.hpp>
+#include <flight/physics2d/explain_physics_2d_collision.hpp>
+#include <flight/physics2d/explain_physics_2d_joints.hpp>
+#include <flight/physics2d/explain_physics_2d_step.hpp>
 #include <flight/physics2d/islands.hpp>
 #include <flight/physics2d/joint_collision_suppression.hpp>
 #include <flight/physics2d/joint_factories.hpp>
@@ -23,7 +23,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/physics2d/material.hpp>
 #include <flight/physics2d/node_sync.hpp>
 #include <flight/physics2d/ownership.hpp>
-#include <flight/physics2d/register_built_in_physics2_djoint_solvers.hpp>
+#include <flight/physics2d/register_built_in_physics_2d_joint_solvers.hpp>
 #include <flight/physics2d/solver.hpp>
 #include <flight/physics2d/step.hpp>
 #include <flight/physics2d/step_validation.hpp>

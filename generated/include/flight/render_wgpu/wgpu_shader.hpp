@@ -140,15 +140,15 @@ inline void set_wgpu_matrix_from_transform(flight::Float32Array matrix_array, fl
   ([&]() { auto&& typed_array_9 = matrix_array; const auto typed_index_9 = 8.0; const auto typed_value_9 = 1.0; return typed_array_9.set_index(typed_index_9, typed_value_9); }());
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_ALPHA_TRANSFORM2_D_A8BA525868E5A424
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_ALPHA_TRANSFORM2_D_A8BA525868E5A424
-struct alpha_transform2_d_a8ba525868e5a424 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_ALPHA_TRANSFORM_2D_A8BA525868E5A424
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_ALPHA_TRANSFORM_2D_A8BA525868E5A424
+struct alpha_transform_2d_a8ba525868e5a424 : public flight::ReferenceEnabled {
   double alpha;
-  flight::Ref<a_b_c_d_tx_ty_d975cba1d9c9e6b5> transform2_d;
+  flight::Ref<a_b_c_d_tx_ty_d975cba1d9c9e6b5> transform_2d;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_ALPHA_TRANSFORM2_D_A8BA525868E5A424
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_ALPHA_TRANSFORM_2D_A8BA525868E5A424
 
-inline double write_wgpu_quad_uniforms(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<alpha_transform2_d_a8ba525868e5a424> render_proxy, std::optional<flight::Ref<flight::types::ColorScaleBias>> color_scale_bias, double x0, double y0, double x1, double y1, double u0, double v0, double u1, double v1, std::optional<bool> straight_texture_alpha = std::nullopt) {
+inline double write_wgpu_quad_uniforms(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<alpha_transform_2d_a8ba525868e5a424> render_proxy, std::optional<flight::Ref<flight::types::ColorScaleBias>> color_scale_bias, double x0, double y0, double x1, double y1, double u0, double v0, double u1, double v1, std::optional<bool> straight_texture_alpha = std::nullopt) {
   straight_texture_alpha = straight_texture_alpha.value_or(false);
   auto runtime = flight::render_wgpu::get_wgpu_render_state_runtime(state);
   const double byte_offset = runtime->uniform_offset;
@@ -158,7 +158,7 @@ inline double write_wgpu_quad_uniforms(flight::Ref<flight::types::WgpuRenderStat
   flight::Uint32Array uniform_data_u32 = object_pattern_value->uniform_data_u32;
   flight::Float32Array matrix_array = object_pattern_value->matrix_array;
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuRenderPassViewport>>>> viewport = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuRenderPassViewport>>>>>(flight::render_wgpu::get_wgpu_render_pass_viewport(state));
-  set_wgpu_matrix_from_transform(matrix_array, render_proxy->transform2_d, viewport);
+  set_wgpu_matrix_from_transform(matrix_array, render_proxy->transform_2d, viewport);
   ([&]() { auto&& typed_array_10 = uniform_data; const auto typed_index_10 = (float_base + 0.0); const auto typed_value_10 = matrix_array.get_index(0.0); return typed_array_10.set_index(typed_index_10, typed_value_10); }());
   ([&]() { auto&& typed_array_11 = uniform_data; const auto typed_index_11 = (float_base + 1.0); const auto typed_value_11 = matrix_array.get_index(1.0); return typed_array_11.set_index(typed_index_11, typed_value_11); }());
   ([&]() { auto&& typed_array_12 = uniform_data; const auto typed_index_12 = (float_base + 2.0); const auto typed_value_12 = matrix_array.get_index(2.0); return typed_array_12.set_index(typed_index_12, typed_value_12); }());
@@ -196,7 +196,7 @@ inline double write_wgpu_quad_uniforms(flight::Ref<flight::types::WgpuRenderStat
 }
 
 inline double write_wgpu_matrix_only_uniforms(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::RenderProxy> render_proxy, flight::Ref<a_b_c_d_tx_ty_d975cba1d9c9e6b5> transform, double x0, double y0, double x1, double y1, double u0, double v0, double u1, double v1) {
-  return write_wgpu_quad_uniforms(state, flight::make_ref<alpha_transform2_d_a8ba525868e5a424>(alpha_transform2_d_a8ba525868e5a424{.alpha = render_proxy->alpha, .transform2_d = transform}), std::nullopt, x0, y0, x1, y1, u0, v0, u1, v1, std::nullopt);
+  return write_wgpu_quad_uniforms(state, flight::make_ref<alpha_transform_2d_a8ba525868e5a424>(alpha_transform_2d_a8ba525868e5a424{.alpha = render_proxy->alpha, .transform_2d = transform}), std::nullopt, x0, y0, x1, y1, u0, v0, u1, v1, std::nullopt);
 }
 
 inline flight::host_sdl::WgpuBlendState create_wgpu_blend_state(flight::String src_factor, flight::String dst_factor, std::optional<flight::String> operation = std::nullopt) {

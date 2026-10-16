@@ -492,12 +492,12 @@ void test_create_matrix4() {
     check(equal(from(m->m), {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}), "createMatrix4 maps constructor arguments to correct column-major indices");
   }
 
-  check(geo::create_matrix4_from2_d(1, 0, 0, 1, 10, 20) != nullptr, "createMatrix4From2D creates a Matrix4 instance");
-  check(equal(from(geo::create_matrix4_from2_d(1, 2, 3, 4, 5, 6)->m), {1, 2, 0, 0, 3, 4, 0, 0, 0, 0, 1, 0, 5, 6, 0, 1}),
+  check(geo::create_matrix4_from_2d(1, 0, 0, 1, 10, 20) != nullptr, "createMatrix4From2D creates a Matrix4 instance");
+  check(equal(from(geo::create_matrix4_from_2d(1, 2, 3, 4, 5, 6)->m), {1, 2, 0, 0, 3, 4, 0, 0, 0, 0, 1, 0, 5, 6, 0, 1}),
         "createMatrix4From2D initializes the matrix using set2D semantics");
   {
-    const auto a = geo::create_matrix4_from2_d(1, 0, 0, 1, 0, 0);
-    const auto b = geo::create_matrix4_from2_d(1, 0, 0, 1, 0, 0);
+    const auto a = geo::create_matrix4_from_2d(1, 0, 0, 1, 0, 0);
+    const auto b = geo::create_matrix4_from_2d(1, 0, 0, 1, 0, 0);
     b->m[0] = 42;
     check(same(a->m[0], 1) && same(b->m[0], 42), "createMatrix4From2D does not share internal storage with other matrices");
   }
@@ -735,7 +735,7 @@ void test_inverse_matrix4() {
 
 void test_is_affine_matrix4() {
   check(geo::is_affine_matrix4(geo::create_matrix4()) == true, "isAffineMatrix4 returns true for the identity matrix");
-  check(geo::is_affine_matrix4(geo::create_matrix4_from2_d(1, 0, 0, 1, 10, 20)) == true, "isAffineMatrix4 returns true for a 2D transform matrix");
+  check(geo::is_affine_matrix4(geo::create_matrix4_from_2d(1, 0, 0, 1, 10, 20)) == true, "isAffineMatrix4 returns true for a 2D transform matrix");
   const std::vector<std::pair<int, float>> cases = {{3, 1}, {7, 1}, {11, 1}, {15, 0}};
   const std::vector<std::string> titles = {"returns false if m[3] is non-zero", "returns false if m[7] is non-zero", "returns false if m[11] is non-zero",
                                            "returns false if m[15] is not 1"};
@@ -812,7 +812,7 @@ void test_matrix4_transform() {
 void test_multiply_matrix4() {
   {
     const auto identity = geo::create_matrix4();
-    const auto t = geo::create_matrix4_from2_d(1, 0, 0, 1, 10, 20);
+    const auto t = geo::create_matrix4_from_2d(1, 0, 0, 1, 10, 20);
     const auto out = geo::create_matrix4();
     geo::multiply_matrix4(out, identity, t);
     check(geo::equals_matrix4(out, t) == true, "multiplyMatrix4 multiply (identity) returns the right-hand operand when left is identity");
@@ -1145,22 +1145,22 @@ void test_set_matrix4() {
 
   {
     const auto m = geo::create_matrix4();
-    geo::set_matrix4_from2_d(m, 1, 2, 3, 4, 5, 6);
+    geo::set_matrix4_from_2d(m, 1, 2, 3, 4, 5, 6);
     check(equal(from(m->m), {1, 2, 0, 0, 3, 4, 0, 0, 0, 0, 1, 0, 5, 6, 0, 1}), "setMatrix4From2D sets a 2D transform with translation");
   }
   {
     const auto m = geo::create_matrix4();
-    geo::set_matrix4_from2_d(m, 7, 8, 9, 10);
+    geo::set_matrix4_from_2d(m, 7, 8, 9, 10);
     check(same(m->m[12], 0) && same(m->m[13], 0), "setMatrix4From2D defaults tx and ty to 0 when omitted");
   }
   {
     const auto m = geo::create_matrix4();
-    geo::set_matrix4_from2_d(m, 1, 0, 0, 1, 0, 0);
+    geo::set_matrix4_from_2d(m, 1, 0, 0, 1, 0, 0);
     check(geo::is_affine_matrix4(m) == true, "setMatrix4From2D produces an affine matrix");
   }
   {
     const auto m = geo::create_matrix4();
-    geo::set_matrix4_from2_d(m, 1, 2, 3, 4);
+    geo::set_matrix4_from_2d(m, 1, 2, 3, 4);
     check(same(m->m[10], 1) && same(m->m[2], 0) && same(m->m[6], 0) && same(m->m[14], 0), "setMatrix4From2D sets Z axis to identity");
   }
 
@@ -1982,33 +1982,33 @@ void test_typedarray() {
 
 void test_transform3d() {
   {
-    const auto t = geo::create_transform3_d();
+    const auto t = geo::create_transform_3d();
     t->position = geo::create_vector3(4, 5, 6);
     t->scale = geo::create_vector3(2, 2, 2);
     const auto out = geo::create_matrix4();
-    geo::compose_matrix4_from_transform3_d(out, t);
+    geo::compose_matrix4_from_transform_3d(out, t);
     check(close(out->m[0], 2) && close(out->m[5], 2) && close(out->m[10], 2) && close(out->m[12], 4) && close(out->m[13], 5) && close(out->m[14], 6),
           "composeMatrix4FromTransform3D composes translation, rotation, and scale into a matrix");
   }
   {
-    const auto t = geo::create_transform3_d();
+    const auto t = geo::create_transform_3d();
     check(vec3_equal(t->position, 0, 0, 0) && same(t->rotation->x, 0) && same(t->rotation->y, 0) && same(t->rotation->z, 0) && same(t->rotation->w, 1) &&
               vec3_equal(t->scale, 1, 1, 1),
           "createTransform3D defaults to identity: zero translation, identity rotation, unit scale");
   }
   {
-    const auto source = geo::create_transform3_d();
+    const auto source = geo::create_transform_3d();
     source->position = geo::create_vector3(1, 2, 3);
     source->rotation = geo::create_quaternion(0, 0, 0, 1);
     source->scale = geo::create_vector3(2, 3, 4);
     const auto m = geo::create_matrix4();
-    geo::compose_matrix4_from_transform3_d(m, source);
-    const auto out = geo::create_transform3_d();
-    geo::decompose_matrix4_to_transform3_d(out, m);
+    geo::compose_matrix4_from_transform_3d(m, source);
+    const auto out = geo::create_transform_3d();
+    geo::decompose_matrix4_to_transform_3d(out, m);
     check(vec3_equal(out->position, 1, 2, 3) && close(out->scale->x, 2) && close(out->scale->y, 3) && close(out->scale->z, 4),
           "decomposeMatrix4ToTransform3D round-trips a shear-free compose");
   }
-  static_assert(std::is_function_v<decltype(geo::initialize_transform3_d)>, "initializeTransform3D is the construction initializer of createTransform3D");
+  static_assert(std::is_function_v<decltype(geo::initialize_transform_3d)>, "initializeTransform3D is the construction initializer of createTransform3D");
 }
 
 }  // namespace

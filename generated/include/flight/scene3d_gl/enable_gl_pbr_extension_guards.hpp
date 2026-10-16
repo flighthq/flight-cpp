@@ -38,24 +38,24 @@ namespace flight::types { struct Scene3DRenderProxy; }
 #include <flight/types/gl_pbr_transmission_scene_color.hpp>
 #include <flight/types/gl_render_state.hpp>
 #include <flight/types/gl_render_target.hpp>
-#include <flight/types/gl_scene3_druntime.hpp>
+#include <flight/types/gl_scene_3d_runtime.hpp>
 #include <flight/types/gl_skin_palette_texture.hpp>
 #include <flight/types/log.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/mesh.hpp>
 #include <flight/types/mesh_geometry.hpp>
 #include <flight/types/pbr_extension.hpp>
-#include <flight/types/scene3_dlight_block.hpp>
-#include <flight/types/scene3_dlights.hpp>
-#include <flight/types/scene3_drender_proxy.hpp>
+#include <flight/types/scene_3d_light_block.hpp>
+#include <flight/types/scene_3d_lights.hpp>
+#include <flight/types/scene_3d_render_proxy.hpp>
 #include <flight/types/texture.hpp>
 #include <flight/scene3d_gl/gl_pbr_extension_registry.hpp>
-#include <flight/scene3d_gl/gl_scene3_druntime.hpp>
+#include <flight/scene3d_gl/gl_scene_3d_runtime.hpp>
 
 namespace flight::scene3d_gl {
 
 inline bool are_gl_pbr_extension_guards_enabled(flight::Ref<flight::types::GlRenderState> state) {
-  return !(std::holds_alternative<flight::Null>(flight::scene3d_gl::get_gl_scene3_druntime(state)->pbr_extension_guard));
+  return !(std::holds_alternative<flight::Null>(flight::scene3d_gl::get_gl_scene_3d_runtime(state)->pbr_extension_guard));
 }
 
 inline flight::String get_gl_pbr_extension_issue_message(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlPbrExtensionIssue>>>> issue) {
@@ -95,7 +95,7 @@ inline void warn_gl_pbr_extension_issues(flight::Ref<flight::types::GlRenderStat
 }
 
 inline void enable_gl_pbr_extension_guards(flight::Ref<flight::types::GlRenderState> state) {
-  (flight::scene3d_gl::get_gl_scene3_druntime(state)->pbr_extension_guard = std::variant<std::function<void(flight::Array<flight::Ref<flight::types::PbrExtension>>)>, flight::Null, flight::Undefined>{std::in_place_type<std::function<void(flight::Array<flight::Ref<flight::types::PbrExtension>>)>>, [=](flight::Array<flight::Ref<flight::types::PbrExtension>> extensions) {
+  (flight::scene3d_gl::get_gl_scene_3d_runtime(state)->pbr_extension_guard = std::variant<std::function<void(flight::Array<flight::Ref<flight::types::PbrExtension>>)>, flight::Null, flight::Undefined>{std::in_place_type<std::function<void(flight::Array<flight::Ref<flight::types::PbrExtension>>)>>, [=](flight::Array<flight::Ref<flight::types::PbrExtension>> extensions) {
   warn_gl_pbr_extension_issues(state, extensions);
 }});
 }

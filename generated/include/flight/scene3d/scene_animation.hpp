@@ -14,7 +14,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/quaternion.hpp>
 
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 
 namespace flight::types { struct AnimationChannel; }
 namespace flight::types { struct AnimationClip; }
@@ -48,7 +48,7 @@ struct SceneAnimationMorphProbe : public flight::ReferenceEnabled {
 
 inline flight::Array<double> scratch = flight::Array<double>{0.0, 0.0, 0.0, 0.0};
 
-inline void apply_animation_clip_to_scene3_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationClip>>>> clip, double time) {
+inline void apply_animation_clip_to_scene_3d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationClip>>>> clip, double time) {
   flight::Array<flight::Ref<flight::types::AnimationChannel>> channels = flight::row_get<flight::RowKey<"channels">>(clip);
   {
     double i = 0.0;

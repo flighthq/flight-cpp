@@ -7,11 +7,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/scene3d/billboard.hpp>
 #include <flight/scene3d/billboard_camera.hpp>
-#include <flight/scene3d/clone_node3_dsubtree.hpp>
-#include <flight/scene3d/enable_scene3_dguards.hpp>
+#include <flight/scene3d/clone_node_3d_subtree.hpp>
+#include <flight/scene3d/enable_scene_3d_guards.hpp>
 #include <flight/scene3d/instanced_mesh.hpp>
 #include <flight/scene3d/mesh.hpp>
-#include <flight/scene3d/prepare_scene3_dmorph.hpp>
+#include <flight/scene3d/prepare_scene_3d_morph.hpp>
 #include <flight/scene3d/scene.hpp>
 #include <flight/scene3d/scene_animation.hpp>
 #include <flight/scene3d/scene_document.hpp>

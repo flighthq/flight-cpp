@@ -15,7 +15,7 @@ namespace flight::types { struct RequirementSet; }
 
 namespace flight::requirement {
 
-inline flight::Ref<flight::types::RequirementSet> collect_scene2_drequirements(std::function<void(flight::Array<flight::Ref<flight::types::Requirement>>)> run) {
+inline flight::Ref<flight::types::RequirementSet> collect_scene_2d_requirements(std::function<void(flight::Array<flight::Ref<flight::types::Requirement>>)> run) {
   flight::Array<flight::Ref<flight::types::Requirement>> requirements = flight::Array<flight::Ref<flight::types::Requirement>>{};
   run(requirements);
   return flight::requirement::create_requirement_set(flight::Array<flight::types::RequirementFacet>{flight::types::requirement_facet->scene_blend_mode, flight::types::requirement_facet->scene_material_kind, flight::types::requirement_facet->scene_node_kind, flight::types::requirement_facet->scene_shape_command}, requirements);

@@ -31,9 +31,9 @@ namespace flight::types { struct Vector3; }
 #include <flight/types/light_layer_mask.hpp>
 #include <flight/types/light_unit.hpp>
 #include <flight/types/point_light.hpp>
-#include <flight/types/scene3_dforward_light_selection.hpp>
-#include <flight/types/scene3_dlight_block.hpp>
-#include <flight/types/scene3_dlights.hpp>
+#include <flight/types/scene_3d_forward_light_selection.hpp>
+#include <flight/types/scene_3d_light_block.hpp>
+#include <flight/types/scene_3d_lights.hpp>
 #include <flight/types/spot_light.hpp>
 #include <flight/types/vector3.hpp>
 #include <flight/lighting/light_analysis.hpp>
@@ -208,7 +208,7 @@ inline flight::Float64Array scratch_selected_spot_scores = flight::Float64Array(
 
 inline flight::Float64Array scratch_selected_spot_priorities = flight::Float64Array(flight::types::max_forward_lights);
 
-inline void select_scene3_dforward_lights(flight::Ref<flight::types::Scene3DForwardLightSelection> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Scene3DLightsLike>>> lights, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>> bounds, std::optional<double> receiver_layer_mask = std::nullopt) {
+inline void select_scene_3d_forward_lights(flight::Ref<flight::types::Scene3DForwardLightSelection> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Scene3DLightsLike>>> lights, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>> bounds, std::optional<double> receiver_layer_mask = std::nullopt) {
   receiver_layer_mask = receiver_layer_mask.value_or(flight::types::all_light_layers);
   std::optional<flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PointLight>>>>>> points = flight::row_get<flight::RowKey<"point">>(lights);
   std::optional<flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpotLight>>>>>> spots = flight::row_get<flight::RowKey<"spot">>(lights);

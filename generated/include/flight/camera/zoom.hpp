@@ -11,7 +11,7 @@ namespace flight::types { struct Camera2D; }
 namespace flight::types { struct Vector2; }
 
 #include <flight/geometry/vector2.hpp>
-#include <flight/types/camera2_d.hpp>
+#include <flight/types/camera_2d.hpp>
 #include <flight/types/vector2.hpp>
 #include <flight/camera/projection2d.hpp>
 
@@ -21,10 +21,10 @@ inline flight::Ref<flight::types::Vector2> scratch_after = flight::geometry::cre
 
 inline flight::Ref<flight::types::Vector2> scratch_before = flight::geometry::create_vector2(std::nullopt, std::nullopt);
 
-inline void zoom_camera2_dat_screen_point(flight::Ref<flight::types::Camera2D> camera, double viewport_width, double viewport_height, double screen_x, double screen_y, double zoom) {
-  flight::camera::unproject_camera2_dpoint(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>(camera)), viewport_width, viewport_height, screen_x, screen_y, scratch_before);
+inline void zoom_camera_2d_at_screen_point(flight::Ref<flight::types::Camera2D> camera, double viewport_width, double viewport_height, double screen_x, double screen_y, double zoom) {
+  flight::camera::unproject_camera_2d_point(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>(camera)), viewport_width, viewport_height, screen_x, screen_y, scratch_before);
   (camera->zoom = zoom);
-  flight::camera::unproject_camera2_dpoint(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>(camera)), viewport_width, viewport_height, screen_x, screen_y, scratch_after);
+  flight::camera::unproject_camera_2d_point(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Camera2D>>>>(camera)), viewport_width, viewport_height, screen_x, screen_y, scratch_after);
   (camera->x += (scratch_before->x - scratch_after->x));
   (camera->y += (scratch_before->y - scratch_after->y));
 }

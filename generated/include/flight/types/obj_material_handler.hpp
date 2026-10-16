@@ -21,7 +21,7 @@ struct ObjImportOptions;
 #include <flight/types/import_diagnostic.hpp>
 #include <flight/types/material.hpp>
 #include <flight/types/obj_schema.hpp>
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d_document.hpp>
 
 namespace flight::types {
 

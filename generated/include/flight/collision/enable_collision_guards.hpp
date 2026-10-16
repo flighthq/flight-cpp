@@ -34,10 +34,10 @@ namespace flight::types { struct CollisionVendorShape3D; }
 
 #include <flight/types/collision.hpp>
 #include <flight/types/log.hpp>
-#include <flight/collision/collision_shape_validation2_d.hpp>
-#include <flight/collision/collision_shape_validation3_d.hpp>
-#include <flight/collision/test_collision2_d.hpp>
-#include <flight/collision/test_collision3_d.hpp>
+#include <flight/collision/collision_shape_validation_2d.hpp>
+#include <flight/collision/collision_shape_validation_3d.hpp>
+#include <flight/collision/test_collision_2d.hpp>
+#include <flight/collision/test_collision_3d.hpp>
 
 namespace flight::collision {
 
@@ -73,7 +73,7 @@ struct overlapping_degenerate_shape_non_convex_polygon_separated_unsupported_sha
 
 inline flight::Ref<overlapping_degenerate_shape_non_convex_polygon_separated_unsupported_shape_kind_2a9ad948525a5ad4> collision_guard_messages = flight::make_ref<overlapping_degenerate_shape_non_convex_polygon_separated_unsupported_shape_kind_2a9ad948525a5ad4>(overlapping_degenerate_shape_non_convex_polygon_separated_unsupported_shape_kind_2a9ad948525a5ad4{.degenerate_shape = std::optional<flight::String>{flight::String("testCollision2D: a shape is degenerate and cannot produce a manifold — call explainCollisionTest2D(a, b) and replace the reported shape with a finite positive-area collider.")}, .non_convex_polygon = std::optional<flight::String>{flight::String("testCollision2D: a polygon is non-convex and cannot produce a supported manifold — call explainCollisionTest2D(a, b) and replace the reported shape with a convex polygon.")}, .unsupported_shape_kind = std::optional<flight::String>{flight::String("testCollision2D: a shape kind has no manifold path and was reported as not overlapping — call explainCollisionTest2D(a, b) for the kind. Segments and points are area-less by design and answer the boolean testSegment*Collision and getCollisionShapeContainsPoint2D lanes instead.")}});
 
-inline flight::Ref<overlapping_degenerate_shape_non_convex_polygon_separated_unsupported_shape_kind_2a9ad948525a5ad4> collision_guard_messages3_d = flight::make_ref<overlapping_degenerate_shape_non_convex_polygon_separated_unsupported_shape_kind_2a9ad948525a5ad4>(overlapping_degenerate_shape_non_convex_polygon_separated_unsupported_shape_kind_2a9ad948525a5ad4{.degenerate_shape = std::optional<flight::String>{flight::String("testCollision3D: a shape is degenerate and cannot produce a manifold — call explainCollisionTest3D(a, b) and replace the reported shape with a finite collider of positive extent.")}, .unsupported_shape_kind = std::optional<flight::String>{flight::String("testCollision3D: a shape kind has no registered support function and was reported as not overlapping — call registerBuiltInCollisionSupports3D() once at startup, or registerCollisionSupport3D(kind, support) for a vendor kind. Call explainCollisionTest3D(a, b) for which shape it was.")}});
+inline flight::Ref<overlapping_degenerate_shape_non_convex_polygon_separated_unsupported_shape_kind_2a9ad948525a5ad4> collision_guard_messages_3d = flight::make_ref<overlapping_degenerate_shape_non_convex_polygon_separated_unsupported_shape_kind_2a9ad948525a5ad4>(overlapping_degenerate_shape_non_convex_polygon_separated_unsupported_shape_kind_2a9ad948525a5ad4{.degenerate_shape = std::optional<flight::String>{flight::String("testCollision3D: a shape is degenerate and cannot produce a manifold — call explainCollisionTest3D(a, b) and replace the reported shape with a finite collider of positive extent.")}, .unsupported_shape_kind = std::optional<flight::String>{flight::String("testCollision3D: a shape kind has no registered support function and was reported as not overlapping — call registerBuiltInCollisionSupports3D() once at startup, or registerCollisionSupport3D(kind, support) for a vendor kind. Call explainCollisionTest3D(a, b) for which shape it was.")}});
 
 
 // NOT GENERATED: function warnOnInvalidCollisionShape -- source line 86
@@ -108,24 +108,24 @@ inline flight::Ref<overlapping_degenerate_shape_non_convex_polygon_separated_uns
 // where the code only reads
 
 inline void warn_on_invalid_collision_shapes(flight::types::CollisionShape2D a, flight::types::CollisionShape2D b) {
-  const std::optional<flight::String> status_a = flight::collision::get_collision_shape_validation_status2_d(a);
+  const std::optional<flight::String> status_a = flight::collision::get_collision_shape_validation_status_2d(a);
   if (is_warnable_collision_status(status_a)) {
     warn_on_invalid_collision_shape({.kind = std::optional<flight::String>{std::visit([](const auto& value) { return value->kind; }, a)}, .overlapping = false, .shape_index = std::optional<double>{0.0}, .status = status_a.value()}, flight::String("2D"));
     return;
   }
-  const std::optional<flight::String> status_b = flight::collision::get_collision_shape_validation_status2_d(b);
+  const std::optional<flight::String> status_b = flight::collision::get_collision_shape_validation_status_2d(b);
   if (is_warnable_collision_status(status_b)) {
     warn_on_invalid_collision_shape({.kind = std::optional<flight::String>{std::visit([](const auto& value) { return value->kind; }, b)}, .overlapping = false, .shape_index = std::optional<double>{1.0}, .status = status_b.value()}, flight::String("2D"));
   }
 }
 
-inline void warn_on_invalid_collision_shapes3_d(flight::types::CollisionShape3D a, flight::types::CollisionShape3D b) {
-  const std::optional<flight::String> status_a = flight::collision::get_collision_shape_validation_status3_d(a);
+inline void warn_on_invalid_collision_shapes_3d(flight::types::CollisionShape3D a, flight::types::CollisionShape3D b) {
+  const std::optional<flight::String> status_a = flight::collision::get_collision_shape_validation_status_3d(a);
   if (is_warnable_collision_status(status_a)) {
     warn_on_invalid_collision_shape({.kind = std::optional<flight::String>{std::visit([](const auto& value) { return value->kind; }, a)}, .overlapping = false, .shape_index = std::optional<double>{0.0}, .status = status_a.value()}, flight::String("3D"));
     return;
   }
-  const std::optional<flight::String> status_b = flight::collision::get_collision_shape_validation_status3_d(b);
+  const std::optional<flight::String> status_b = flight::collision::get_collision_shape_validation_status_3d(b);
   if (is_warnable_collision_status(status_b)) {
     warn_on_invalid_collision_shape({.kind = std::optional<flight::String>{std::visit([](const auto& value) { return value->kind; }, b)}, .overlapping = false, .shape_index = std::optional<double>{1.0}, .status = status_b.value()}, flight::String("3D"));
   }
@@ -138,14 +138,14 @@ inline bool are_collision_guards_enabled() {
 }
 
 inline void disable_collision_guards() {
-  flight::collision::set_collision_test_guard2_d(std::nullopt);
-  flight::collision::set_collision_test_guard3_d(std::nullopt);
+  flight::collision::set_collision_test_guard_2d(std::nullopt);
+  flight::collision::set_collision_test_guard_3d(std::nullopt);
   (collision_guards_enabled = false);
 }
 
 inline void enable_collision_guards() {
-  flight::collision::set_collision_test_guard2_d(std::optional<std::function<void(flight::types::CollisionShape2D, flight::types::CollisionShape2D)>>{warn_on_invalid_collision_shapes});
-  flight::collision::set_collision_test_guard3_d(std::optional<std::function<void(flight::types::CollisionShape3D, flight::types::CollisionShape3D)>>{warn_on_invalid_collision_shapes3_d});
+  flight::collision::set_collision_test_guard_2d(std::optional<std::function<void(flight::types::CollisionShape2D, flight::types::CollisionShape2D)>>{warn_on_invalid_collision_shapes});
+  flight::collision::set_collision_test_guard_3d(std::optional<std::function<void(flight::types::CollisionShape3D, flight::types::CollisionShape3D)>>{warn_on_invalid_collision_shapes_3d});
   (collision_guards_enabled = true);
 }
 

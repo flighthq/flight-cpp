@@ -25,9 +25,9 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/types/animation_clip_event.hpp>
 #include <flight/types/animation_track.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node2_d.hpp>
-#include <flight/types/node2_danimation_path.hpp>
-#include <flight/types/node2_danimation_target.hpp>
+#include <flight/types/node_2d.hpp>
+#include <flight/types/node_2d_animation_path.hpp>
+#include <flight/types/node_2d_animation_target.hpp>
 
 namespace flight::scene2d {
 
@@ -59,7 +59,7 @@ inline void invalidate_animation_node_transform(flight::types::Node2D node) {
   runtime->local_transform_id = flight::unsigned_right_shift(runtime->local_transform_id + 1.0, 0.0);
 }
 
-inline void apply_animation_clip_to_node2_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationClip>>>> clip, double time) {
+inline void apply_animation_clip_to_node_2d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationClip>>>> clip, double time) {
   for (auto channel : flight::row_get<flight::RowKey<"channels">>(clip)) {
     auto target = ([&]() -> std::optional<flight::Ref<flight::types::Node2DAnimationTarget>> { const auto& erased_value = channel->target_ref; if (static_cast<bool>(erased_value.object_if<flight::types::Node2DAnimationTarget>())) return std::optional<flight::Ref<flight::types::Node2DAnimationTarget>>{erased_value.object_if<flight::types::Node2DAnimationTarget>()}; if (erased_value.is_nullish()) return std::nullopt; throw std::logic_error("erased value holds no alternative this union represents"); }());
     if (((!target.has_value() || (flight::String("object") != flight::String("object"))) || false)) {

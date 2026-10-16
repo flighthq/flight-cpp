@@ -34,11 +34,11 @@ using GizmoTransformMode = flight::String;
 using GizmoMode = flight::String;
 } // namespace flight::types
 
-#include <flight/types/camera2_d.hpp>
+#include <flight/types/camera_2d.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/hierarchy_node.hpp>
 #include <flight/types/rectangle.hpp>
-#include <flight/types/scene2_d.hpp>
+#include <flight/types/scene_2d.hpp>
 #include <flight/types/selection_state.hpp>
 #include <flight/types/signal.hpp>
 #include <flight/types/vector2.hpp>

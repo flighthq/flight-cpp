@@ -34,7 +34,7 @@ namespace flight::types { struct Vector3; }
 #include <flight/render_gl/gl_cube_render_target.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/scene3d_gl/gl_environment_skybox.hpp>
-#include <flight/scene3d_gl/render_gl_scene3_d.hpp>
+#include <flight/scene3d_gl/render_gl_scene_3d.hpp>
 
 namespace flight::scene3d_gl {
 
@@ -51,7 +51,7 @@ inline flight::WeakMap<flight::Ref<flight::types::GlRenderState>, flight::Ref<fl
 inline flight::Ref<flight::types::Camera3D> get_gl_environment_capture_camera(flight::Ref<flight::types::GlRenderState> state) {
   std::optional<flight::Ref<flight::types::Camera3D>> camera = gl_environment_capture_cameras.get(state);
   if (!camera.has_value()) {
-    (camera = std::optional<flight::Ref<flight::types::Camera3D>>{flight::camera::create_camera3_d(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3DOptions>>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3DOptions>>>>(flight::row_field<flight::RowKey<"far">>(default_environment_capture_far), flight::row_field<flight::RowKey<"near">>(default_environment_capture_near), flight::row_field<flight::RowKey<"projection">>(std::variant<flight::Ref<flight::types::OrthographicProjection>, flight::Ref<flight::types::PerspectiveProjection>, flight::Ref<flight::types::RawProjection>>{std::in_place_type<flight::Ref<flight::types::PerspectiveProjection>>, flight::camera::create_perspective_projection(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PerspectiveProjectionOptions>>>>(flight::row_field<flight::RowKey<"aspect">>(std::optional<double>{1.0}), flight::row_field<flight::RowKey<"fovY">>((flight::pi * 0.5))))}))))});
+    (camera = std::optional<flight::Ref<flight::types::Camera3D>>{flight::camera::create_camera_3d(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3DOptions>>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3DOptions>>>>(flight::row_field<flight::RowKey<"far">>(default_environment_capture_far), flight::row_field<flight::RowKey<"near">>(default_environment_capture_near), flight::row_field<flight::RowKey<"projection">>(std::variant<flight::Ref<flight::types::OrthographicProjection>, flight::Ref<flight::types::PerspectiveProjection>, flight::Ref<flight::types::RawProjection>>{std::in_place_type<flight::Ref<flight::types::PerspectiveProjection>>, flight::camera::create_perspective_projection(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PerspectiveProjectionOptions>>>>(flight::row_field<flight::RowKey<"aspect">>(std::optional<double>{1.0}), flight::row_field<flight::RowKey<"fovY">>((flight::pi * 0.5))))}))))});
     gl_environment_capture_cameras.set(state, camera.value());
   }
   return camera.value();
@@ -75,14 +75,14 @@ inline void render_gl_environment_capture(flight::Ref<flight::types::GlRenderSta
       double face = 0.0;
       while ((face < 6.0)) {
         {
-          flight::camera::get_cube_capture_face_camera3_d(camera, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(position), face);
+          flight::camera::get_cube_capture_face_camera_3d(camera, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(position), face);
           auto pass = flight::render_gl::begin_gl_cube_render_face(state, cube_target, face);
           std::exception_ptr finally_exception_2;
           try {
             if (flight::to_boolean(environment)) {
               flight::scene3d_gl::render_gl_environment_skybox(state, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Environment>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Environment>>>>(environment.value())), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>(camera)), 1.0);
             }
-            flight::scene3d_gl::render_gl_scene3_d(pass, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>>>(scene), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>(camera)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Scene3DLightsLike>>>>(lights), std::nullopt);
+            flight::scene3d_gl::render_gl_scene_3d(pass, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>>>(scene), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>(camera)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Scene3DLightsLike>>>>(lights), std::nullopt);
           }
           catch (...) {
             finally_exception_2 = std::current_exception();

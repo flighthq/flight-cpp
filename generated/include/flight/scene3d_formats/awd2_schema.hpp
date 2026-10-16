@@ -167,20 +167,20 @@ inline const double awd2_stream_joint_weights = 7.0;
 
 inline const double awd2_root_joint_parent = 65535.0;
 
-inline const double awd2_data_int8 = 1.0;
+inline const double awd_2data_int8 = 1.0;
 
-inline const double awd2_data_int16 = 2.0;
+inline const double awd_2data_int16 = 2.0;
 
-inline const double awd2_data_int32 = 3.0;
+inline const double awd_2data_int32 = 3.0;
 
-inline const double awd2_data_uint8 = 4.0;
+inline const double awd_2data_uint8 = 4.0;
 
-inline const double awd2_data_uint16 = 5.0;
+inline const double awd_2data_uint16 = 5.0;
 
-inline const double awd2_data_uint32 = 6.0;
+inline const double awd_2data_uint32 = 6.0;
 
-inline const double awd2_data_float32 = 7.0;
+inline const double awd_2data_float32 = 7.0;
 
-inline const double awd2_data_float64 = 8.0;
+inline const double awd_2data_float64 = 8.0;
 
 } // namespace flight::scene3d_formats

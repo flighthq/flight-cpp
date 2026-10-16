@@ -16,13 +16,13 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/node_signals.hpp>
 
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 
 #include <flight/types/matrix4.hpp>
 
 #include <flight/types/entity.hpp>
 
-#include <flight/types/camera3_d.hpp>
+#include <flight/types/camera_3d.hpp>
 
 #include <flight/types/billboard.hpp>
 
@@ -231,8 +231,8 @@ inline void apply_billboard_facing(flight::Ref<flight::types::Billboard> billboa
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>> world = flight::node::get_node_world_matrix4(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<flight::types::HasTransform3D>>, flight::RowOf<flight::Ref<entity_runtime_key_657c769387d763e7>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Billboard>>>>(billboard)));
   flight::geometry::decompose_matrix4(position, rotation_scratch, scale, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(world));
   write_billboard_facing_matrix(facing_world, billboard->mode);
-  std::optional<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node3DTraits>>>> parent = ([&]() -> std::optional<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node3DTraits>>>> { auto contextual_union_source = flight::scene3d::get_node3_druntime(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Billboard>>>>(billboard)))->parent; if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node3DTraits>>>>{flight::structural_ref_cast<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node3DTraits>>>>(contextual_union_source.value())}; }());
-  if ((!parent.has_value() || !flight::scene3d::is_node3_d(parent.value()))) {
+  std::optional<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node3DTraits>>>> parent = ([&]() -> std::optional<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node3DTraits>>>> { auto contextual_union_source = flight::scene3d::get_node_3d_runtime(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Billboard>>>>(billboard)))->parent; if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node3DTraits>>>>{flight::structural_ref_cast<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node3DTraits>>>>(contextual_union_source.value())}; }());
+  if ((!parent.has_value() || !flight::scene3d::is_node_3d(parent.value()))) {
     flight::geometry::copy_matrix4(local_scratch, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(facing_world)));
   }
   else {
@@ -303,7 +303,7 @@ inline bool orient_billboard_to_camera(flight::Ref<flight::types::Billboard> bil
   return true;
 }
 
-inline bool orient_scene3_dbillboards_to_camera(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>> scene, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
+inline bool orient_scene_3d_billboards_to_camera(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>> scene, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
   if (!set_billboard_camera_basis(camera)) {
     return false;
   }

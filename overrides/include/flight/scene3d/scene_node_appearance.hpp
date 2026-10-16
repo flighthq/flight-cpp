@@ -5,15 +5,15 @@
 
 #include <flight/runtime.hpp>
 #include <flight/scene3d/scene_node.hpp>
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 
 namespace flight::scene3d {
 
-inline void set_node3_dalpha(
+inline void set_node_3d_alpha(
     flight::Ref<flight::types::Node3D> source,
     double alpha) {
   source->alpha = alpha;
-  auto runtime = get_node3_druntime(source);
+  auto runtime = get_node_3d_runtime(source);
   runtime->appearance_id = flight::unsigned_right_shift(
       runtime->appearance_id + 1.0, 0.0);
 }
@@ -21,14 +21,14 @@ inline void set_node3_dalpha(
 inline double world_appearance_revision_counter = 0.0;
 
 template <typename Source>
-inline void ensure_node3_dworld_alpha(const Source& source) {
-  auto runtime = get_node3_druntime(source);
+inline void ensure_node_3d_world_alpha(const Source& source) {
+  auto runtime = get_node_3d_runtime(source);
   double parent_world_alpha = 1.0;
   double parent_world_appearance_id = 0.0;
   if (runtime->parent.has_value()) {
     const auto& parent = runtime->parent.value();
-    ensure_node3_dworld_alpha(parent);
-    const auto parent_runtime = get_node3_druntime(parent);
+    ensure_node_3d_world_alpha(parent);
+    const auto parent_runtime = get_node_3d_runtime(parent);
     parent_world_alpha = parent_runtime->world_alpha.value_or(1.0);
     parent_world_appearance_id = parent_runtime->world_appearance_id;
   }
@@ -52,9 +52,9 @@ inline void ensure_node3_dworld_alpha(const Source& source) {
 }
 
 template <typename Source>
-inline double get_node3_dworld_alpha(const Source& source) {
-  ensure_node3_dworld_alpha(source);
-  return get_node3_druntime(source)->world_alpha.value_or(1.0);
+inline double get_node_3d_world_alpha(const Source& source) {
+  ensure_node_3d_world_alpha(source);
+  return get_node_3d_runtime(source)->world_alpha.value_or(1.0);
 }
 
 } // namespace flight::scene3d

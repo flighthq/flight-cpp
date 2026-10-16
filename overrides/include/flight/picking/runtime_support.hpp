@@ -5,7 +5,7 @@
 #include <flight/runtime.hpp>
 #include <flight/scene3d/scene_node.hpp>
 #include <flight/types/matrix4.hpp>
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 
 namespace flight::picking::detail {
 
@@ -32,13 +32,13 @@ inline void ensure_node_local_matrix4(
 
 inline void ensure_node_world_matrix4(
     const flight::scene3d::Node3DView& node) {
-  const auto runtime = flight::scene3d::get_node3_druntime(node);
+  const auto runtime = flight::scene3d::get_node_3d_runtime(node);
   const auto parent = flight::scene3d::get_node3_dparent(node);
   flight::Ref<flight::types::Node3DRuntime> parent_runtime;
   double parent_world_transform_id = 0.0;
   if (parent.has_value()) {
     ensure_node_world_matrix4(parent.value());
-    parent_runtime = flight::scene3d::get_node3_druntime(parent.value());
+    parent_runtime = flight::scene3d::get_node_3d_runtime(parent.value());
     parent_world_transform_id = parent_runtime->world_transform_id;
   }
 
@@ -75,7 +75,7 @@ template <typename Value>
     const std::shared_ptr<Value>& node) {
   const auto view = flight::scene3d::node3_dview(node);
   ensure_node_world_matrix4(view);
-  return flight::scene3d::get_node3_druntime(view)->world_matrix4.value();
+  return flight::scene3d::get_node_3d_runtime(view)->world_matrix4.value();
 }
 
 }  // namespace flight::picking::detail

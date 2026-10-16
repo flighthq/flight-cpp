@@ -44,7 +44,7 @@ namespace flight::types { struct Vector3; }
 #include <flight/types/ambient_light.hpp>
 #include <flight/types/animation_track.hpp>
 #include <flight/types/area_light.hpp>
-#include <flight/types/camera3_d.hpp>
+#include <flight/types/camera_3d.hpp>
 #include <flight/types/directional_light.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/environment.hpp>
@@ -59,13 +59,13 @@ namespace flight::types { struct Vector3; }
 #include <flight/types/morph_target.hpp>
 #include <flight/types/point_light.hpp>
 #include <flight/types/quaternion.hpp>
-#include <flight/types/scene3_danimation_path.hpp>
-#include <flight/types/scene3_ddocument.hpp>
-#include <flight/types/scene3_dlights.hpp>
-#include <flight/types/scene3_dmetadata.hpp>
+#include <flight/types/scene_3d_animation_path.hpp>
+#include <flight/types/scene_3d_document.hpp>
+#include <flight/types/scene_3d_lights.hpp>
+#include <flight/types/scene_3d_metadata.hpp>
 #include <flight/types/spot_light.hpp>
 #include <flight/types/texture.hpp>
-#include <flight/types/transform3_d.hpp>
+#include <flight/types/transform_3d.hpp>
 #include <flight/types/vector3.hpp>
 
 namespace flight::scene3d {
@@ -86,7 +86,7 @@ inline void transform_document_light_position(flight::types::Vector3Like out, fl
   (out->z += flight::row_get<flight::RowKey<"position">>(transform)->z);
 }
 
-inline flight::Ref<flight::types::Scene3DLights> create_scene3_dlights_from_document(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>> document) {
+inline flight::Ref<flight::types::Scene3DLights> create_scene_3d_lights_from_document(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>> document) {
   std::optional<flight::Ref<flight::types::AmbientLight>> ambient = std::nullopt;
   std::optional<flight::Ref<flight::types::DirectionalLight>> directional = std::nullopt;
   flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HemisphereLight>>>>> hemisphere = flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HemisphereLight>>>>>{};
@@ -143,7 +143,7 @@ inline flight::Ref<flight::types::Scene3DLights> create_scene3_dlights_from_docu
       (i += 1.0);
     }
   }
-  return flight::lighting::create_scene3_dlights(flight::make_structural_ref<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::types::Scene3DLightsLike>>>>(flight::row_field<flight::RowKey<"ambient">>(([&]() -> std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AmbientLight>>>>, flight::Null, flight::Undefined> { auto contextual_union_source = ambient; if (!contextual_union_source.has_value()) return std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AmbientLight>>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AmbientLight>>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AmbientLight>>>>>, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AmbientLight>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AmbientLight>>>>(contextual_union_source.value()))}; }())), flight::row_field<flight::RowKey<"directional">>(([&]() -> std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::DirectionalLight>>>>, flight::Null, flight::Undefined> { auto contextual_union_source_2 = directional; if (!contextual_union_source_2.has_value()) return std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::DirectionalLight>>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::DirectionalLight>>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::DirectionalLight>>>>>, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::DirectionalLight>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::DirectionalLight>>>>(contextual_union_source_2.value()))}; }())), flight::row_field<flight::RowKey<"hemisphere">>(std::optional<flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HemisphereLight>>>>>>{hemisphere}), flight::row_field<flight::RowKey<"point">>(std::optional<flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PointLight>>>>>>{point}), flight::row_field<flight::RowKey<"spot">>(std::optional<flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpotLight>>>>>>{spot})));
+  return flight::lighting::create_scene_3d_lights(flight::make_structural_ref<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::types::Scene3DLightsLike>>>>(flight::row_field<flight::RowKey<"ambient">>(([&]() -> std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AmbientLight>>>>, flight::Null, flight::Undefined> { auto contextual_union_source = ambient; if (!contextual_union_source.has_value()) return std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AmbientLight>>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AmbientLight>>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AmbientLight>>>>>, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AmbientLight>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AmbientLight>>>>(contextual_union_source.value()))}; }())), flight::row_field<flight::RowKey<"directional">>(([&]() -> std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::DirectionalLight>>>>, flight::Null, flight::Undefined> { auto contextual_union_source_2 = directional; if (!contextual_union_source_2.has_value()) return std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::DirectionalLight>>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::DirectionalLight>>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::DirectionalLight>>>>>, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::DirectionalLight>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::DirectionalLight>>>>(contextual_union_source_2.value()))}; }())), flight::row_field<flight::RowKey<"hemisphere">>(std::optional<flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HemisphereLight>>>>>>{hemisphere}), flight::row_field<flight::RowKey<"point">>(std::optional<flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PointLight>>>>>>{point}), flight::row_field<flight::RowKey<"spot">>(std::optional<flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpotLight>>>>>>{spot})));
 }
 
 } // namespace flight::scene3d

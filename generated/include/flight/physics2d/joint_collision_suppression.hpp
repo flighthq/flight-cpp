@@ -23,7 +23,7 @@ namespace flight::types { struct RigidBody2D; }
 namespace flight::types { struct SpatialIndexBackend2D; }
 
 #include <flight/types/collision.hpp>
-#include <flight/types/physics2_d.hpp>
+#include <flight/types/physics_2d.hpp>
 #include <flight/types/spatial.hpp>
 
 namespace flight::physics2d {
@@ -37,13 +37,13 @@ using flight::types::Physics2DWorld;
 using flight::types::RigidBody2D;
 using flight::types::SpatialIndexBackend2D;
 
-inline bool is_physics2_dpair_joint_suppressed(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world, double body_a, double body_b) {
+inline bool is_physics_2d_pair_joint_suppressed(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world, double body_a, double body_b) {
   const double first = flight::minimum(body_a, body_b);
   const double second = flight::maximum(body_a, body_b);
   return (([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"jointCollisionSuppressions">>(world).get(first); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().get(second); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()) > 0.0);
 }
 
-inline void rebuild_physics2_djoint_collision_suppressions(flight::Ref<flight::types::Physics2DWorld> world) {
+inline void rebuild_physics_2d_joint_collision_suppressions(flight::Ref<flight::types::Physics2DWorld> world) {
   flight::Map<double, flight::Map<double, double>> suppressions = world->joint_collision_suppressions;
   suppressions.clear();
   for (auto joint : world->joints) {

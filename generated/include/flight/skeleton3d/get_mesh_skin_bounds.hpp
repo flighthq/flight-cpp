@@ -21,8 +21,8 @@ namespace flight::types { struct Vector3; }
 #include <flight/types/aabb.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/mesh_skin_bind_pose.hpp>
-#include <flight/types/node3_d.hpp>
-#include <flight/types/skeleton3_d.hpp>
+#include <flight/types/node_3d.hpp>
+#include <flight/types/skeleton_3d.hpp>
 #include <flight/types/vector3.hpp>
 #include <flight/skeleton3d/skin_vertices.hpp>
 

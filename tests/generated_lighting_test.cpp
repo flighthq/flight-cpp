@@ -339,7 +339,7 @@ int main(int argc, char** argv) {
   check(lighting::get_light_luminance(environment) == 0.0,
         "environment analysis intentionally reports no packed-color luminance");
 
-  const auto scene = lighting::create_scene3_dlights();
+  const auto scene = lighting::create_scene_3d_lights();
   check(!scene->ambient.has_value() && !scene->directional.has_value() &&
             scene->hemisphere.has_value() && scene->hemisphere->empty() &&
             scene->point.has_value() && scene->point->empty() &&
@@ -379,7 +379,7 @@ int main(int argc, char** argv) {
   selection->indices = {};
   selection->point = {};
   selection->spot = {};
-  lighting::select_scene3_dforward_lights(selection, readonly(scene),
+  lighting::select_scene_3d_forward_lights(selection, readonly(scene),
                                           readonly(sphere(0, 0, 0, 0)), 0b01);
   if (mutation == "--mutate-order") {
     selection->point.element(0) = ordered_points.element(2);

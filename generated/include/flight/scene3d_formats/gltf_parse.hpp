@@ -36,15 +36,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/vector3.hpp>
 
-#include <flight/types/transform3_d.hpp>
+#include <flight/types/transform_3d.hpp>
 
 #include <flight/types/texture.hpp>
 
 #include <flight/types/standard_pbr_material.hpp>
 
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d_document.hpp>
 
-#include <flight/types/scene3_d.hpp>
+#include <flight/types/scene_3d.hpp>
 
 #include <flight/types/quaternion.hpp>
 
@@ -254,7 +254,7 @@ inline double get_gltf_core_feature_length(flight::StructuralRef<flight::RowRead
 }
 
 inline flight::Ref<flight::types::Transform3D> clone_gltf_transform(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Transform3D>>>> source) {
-  auto transform = flight::geometry::create_transform3_d();
+  auto transform = flight::geometry::create_transform_3d();
   (transform->position->x = flight::row_get<flight::RowKey<"position">>(source)->x);
   (transform->position->y = flight::row_get<flight::RowKey<"position">>(source)->y);
   (transform->position->z = flight::row_get<flight::RowKey<"position">>(source)->z);
@@ -273,13 +273,13 @@ inline flight::Null build_gltf_metadata(flight::StructuralRef<flight::RowReadonl
 }
 
 inline flight::Ref<flight::types::Transform3D> create_identity_transform() {
-  return flight::geometry::create_transform3_d();
+  return flight::geometry::create_transform_3d();
 }
 
 inline flight::Ref<flight::types::Transform3D> gltf_node_transform(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfNode>>>> gltf_node) {
-  auto transform = flight::geometry::create_transform3_d();
+  auto transform = flight::geometry::create_transform_3d();
   if (flight::row_get<flight::RowKey<"matrix">>(gltf_node).has_value()) {
-    flight::geometry::decompose_matrix4_to_transform3_d(transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>(flight::row_field<flight::RowKey<"m">>(flight::Float32Array(flight::row_get<flight::RowKey<"matrix">>(gltf_node).value())))));
+    flight::geometry::decompose_matrix4_to_transform_3d(transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>(flight::row_field<flight::RowKey<"m">>(flight::Float32Array(flight::row_get<flight::RowKey<"matrix">>(gltf_node).value())))));
     return transform;
   }
   std::optional<flight::Array<double>> t = flight::row_get<flight::RowKey<"translation">>(gltf_node);
@@ -707,7 +707,7 @@ inline flight::Array<flight::Ref<flight::types::Transform3D>> build_gltf_node_wo
   }
   flight::Array<flight::Ref<flight::types::Matrix4>> local_matrices = nodes.map([=](flight::Ref<flight::types::GltfNode> node) {
   auto matrix = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
-  flight::geometry::compose_matrix4_from_transform3_d(matrix, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Transform3DLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Transform3D>>>>(gltf_node_transform(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfNode>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GltfNode>>>>(node))))));
+  flight::geometry::compose_matrix4_from_transform_3d(matrix, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Transform3DLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Transform3D>>>>(gltf_node_transform(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfNode>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GltfNode>>>>(node))))));
   return matrix;
 });
   flight::Array<flight::Ref<flight::types::Matrix4>> world_matrices = nodes.map([=]() { return flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt); });
@@ -763,8 +763,8 @@ inline flight::Array<flight::Ref<flight::types::Transform3D>> build_gltf_node_wo
     double node_2 = 0.0;
     while ((node_2 < static_cast<double>(nodes.size()))) {
       {
-        auto transform = flight::geometry::create_transform3_d();
-        flight::geometry::decompose_matrix4_to_transform3_d(transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(world_matrices.element(node_2))));
+        auto transform = flight::geometry::create_transform_3d();
+        flight::geometry::decompose_matrix4_to_transform_3d(transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(world_matrices.element(node_2))));
         transforms.push(transform);
       }
       (node_2 += 1.0);
@@ -1715,20 +1715,20 @@ inline std::optional<flight::Ref<data_b5d55667a3cd4df3>> read_optional_gltf_attr
 // holes; use an explicit fill value, build the array with push, or use Array.from when every element should be
 // present
 
-inline flight::Ref<flight::types::Scene3D> create_scene3_dfrom_glb_with_core_feature_handlers(flight::Uint8Array bytes, flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>> core_feature_handlers, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfImportOptions>>>>> options = std::nullopt) {
+inline flight::Ref<flight::types::Scene3D> create_scene_3d_from_glb_with_core_feature_handlers(flight::Uint8Array bytes, flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>> core_feature_handlers, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfImportOptions>>>>> options = std::nullopt) {
   auto container = read_glb_container(bytes, diagnostics);
   if (!container.has_value()) {
-    return flight::scene3d::create_scene3_dfrom_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(create_empty_gltf_document())), std::nullopt);
+    return flight::scene3d::create_scene_3d_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(create_empty_gltf_document())), std::nullopt);
   }
-  return flight::scene3d::create_scene3_dfrom_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(build_gltf_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>(container.value()->document)), container.value()->binary, core_feature_handlers, options, diagnostics))), ([&]() -> double { auto nullish_coalesce_left = container.value()->document->scene; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  return flight::scene3d::create_scene_3d_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(build_gltf_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>(container.value()->document)), container.value()->binary, core_feature_handlers, options, diagnostics))), ([&]() -> double { auto nullish_coalesce_left = container.value()->document->scene; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
 }
 
-inline flight::Ref<flight::types::Scene3D> create_scene3_dfrom_gltf_with_core_feature_handlers(std::variant<flight::Ref<flight::types::GltfDocument>, flight::String> source, flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>> core_feature_handlers, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfImportOptions>>>>> options = std::nullopt) {
+inline flight::Ref<flight::types::Scene3D> create_scene_3d_from_gltf_with_core_feature_handlers(std::variant<flight::Ref<flight::types::GltfDocument>, flight::String> source, flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>> core_feature_handlers, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfImportOptions>>>>> options = std::nullopt) {
   auto doc = parse_gltf_source(source, diagnostics);
   if (!doc.has_value()) {
-    return flight::scene3d::create_scene3_dfrom_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(create_empty_gltf_document())), std::nullopt);
+    return flight::scene3d::create_scene_3d_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(create_empty_gltf_document())), std::nullopt);
   }
-  return flight::scene3d::create_scene3_dfrom_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(build_gltf_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>(doc.value())), std::nullopt, core_feature_handlers, options, diagnostics))), ([&]() -> double { auto nullish_coalesce_left = doc.value()->scene; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  return flight::scene3d::create_scene_3d_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(build_gltf_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>(doc.value())), std::nullopt, core_feature_handlers, options, diagnostics))), ([&]() -> double { auto nullish_coalesce_left = doc.value()->scene; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
 }
 
 inline flight::Ref<flight::types::Scene3DDocument> parse_glb_with_core_feature_handlers(flight::Uint8Array bytes, flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>> core_feature_handlers, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfImportOptions>>>>> options = std::nullopt) {

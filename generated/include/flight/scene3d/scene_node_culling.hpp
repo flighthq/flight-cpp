@@ -9,7 +9,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/vector3.hpp>
 
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 
 #include <flight/types/matrix4.hpp>
 
@@ -40,7 +40,7 @@ using flight::types::Matrix4;
 using flight::types::Node3D;
 using flight::types::Vector3;
 
-inline void build_scene3_dfrustum(flight::types::FrustumLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> view_projection) {
+inline void build_scene_3d_frustum(flight::types::FrustumLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>> view_projection) {
   flight::geometry::set_frustum_from_matrix4(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(view_projection));
 }
 
@@ -87,7 +87,7 @@ inline void cull_node(flight::Array<flight::Ref<flight::types::Node3D>> out, fli
   }
 }
 
-inline flight::Array<flight::Ref<flight::types::Node3D>> cull_node3_dby_frustum(flight::Array<flight::Ref<flight::types::Node3D>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>> root, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::FrustumLike>>> frustum) {
+inline flight::Array<flight::Ref<flight::types::Node3D>> cull_node_3d_by_frustum(flight::Array<flight::Ref<flight::types::Node3D>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>> root, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::FrustumLike>>> frustum) {
   cull_node(out, root, frustum);
   return out;
 }

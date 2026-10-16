@@ -466,7 +466,7 @@ inline bool reparent_node(flight::types::Transform2DNode<Traits> child, flight::
     flight::geometry::multiply_matrix(local_m, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(local_m)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(old_world)));
     const double pivot_x = flight::row_get<flight::RowKey<"pivotX">>(child);
     const double pivot_y = flight::row_get<flight::RowKey<"pivotY">>(child);
-    flight::geometry::decompose_matrix_to_transform2_d(child, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(local_m)));
+    flight::geometry::decompose_matrix_to_transform_2d(child, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(local_m)));
     flight::row_set<flight::RowKey<"pivotX">>(child, pivot_x);
     flight::row_set<flight::RowKey<"pivotY">>(child, pivot_y);
     flight::row_set<flight::RowKey<"x">>(child, (local_m->tx + ((local_m->a * pivot_x) + (local_m->c * pivot_y))));

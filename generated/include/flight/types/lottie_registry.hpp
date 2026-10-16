@@ -66,7 +66,7 @@ using LottieShapeItemHandler = std::function<void(flight::Ref<LottieShapeItemCon
 #include <flight/types/image_resource.hpp>
 #include <flight/types/import_diagnostic.hpp>
 #include <flight/types/lottie_document.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/path.hpp>
 #include <flight/types/shape.hpp>
 

@@ -185,18 +185,18 @@ void test_hash() {
   }
 
   {
-    const double h = math::hash2_d(3, 7);
+    const double h = math::hash_2d(3, 7);
     check(h >= 0 && is_integer(h), "hash2D returns a non-negative integer");
   }
-  check(math::hash2_d(5, 10) == math::hash2_d(5, 10), "hash2D is deterministic");
-  check(math::hash2_d(0, 0) != math::hash2_d(1, 0) && math::hash2_d(0, 0) != math::hash2_d(0, 1), "hash2D differs for different inputs");
+  check(math::hash_2d(5, 10) == math::hash_2d(5, 10), "hash2D is deterministic");
+  check(math::hash_2d(0, 0) != math::hash_2d(1, 0) && math::hash_2d(0, 0) != math::hash_2d(0, 1), "hash2D differs for different inputs");
 
   {
-    const double h = math::hash3_d(1, 2, 3);
+    const double h = math::hash_3d(1, 2, 3);
     check(h >= 0 && is_integer(h), "hash3D returns a non-negative integer");
   }
-  check(math::hash3_d(1, 2, 3) == math::hash3_d(1, 2, 3), "hash3D is deterministic");
-  check(math::hash3_d(0, 0, 0) != math::hash3_d(1, 0, 0) && math::hash3_d(0, 0, 0) != math::hash3_d(0, 0, 1), "hash3D differs for different inputs");
+  check(math::hash_3d(1, 2, 3) == math::hash_3d(1, 2, 3), "hash3D is deterministic");
+  check(math::hash_3d(0, 0, 0) != math::hash_3d(1, 0, 0) && math::hash_3d(0, 0, 0) != math::hash_3d(0, 0, 1), "hash3D differs for different inputs");
 
   static_assert(std::is_same_v<decltype(math::hash_combine(1, 2)), double>, "hashCombine returns a number");
   check(math::hash_combine(100, 200) == math::hash_combine(100, 200), "hashCombine is deterministic");

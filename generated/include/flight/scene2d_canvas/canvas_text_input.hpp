@@ -17,7 +17,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/text_selection_rectangle.hpp>
 
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 
 #include <flight/types/matrix.hpp>
 
@@ -91,7 +91,7 @@ inline void draw_canvas_text_input_overlay(flight::Ref<flight::types::CanvasRend
   const double scroll_xoffset = flight::row_get<flight::RowKey<"data">>(source)->scroll_h;
   flight::CanvasRenderingContext2D context = state->context;
   context.save();
-  flight::scene2d_canvas::set_canvas_transform(state, context, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(render_proxy->transform2_d)));
+  flight::scene2d_canvas::set_canvas_transform(state, context, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(render_proxy->transform_2d)));
   context.begin_path();
   context.rect(0.0, 0.0, field_w, field_h);
   context.clip();

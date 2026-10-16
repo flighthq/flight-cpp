@@ -19,7 +19,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/node_interaction_state.hpp>
 
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 
 #include <flight/types/node.hpp>
 
@@ -139,7 +139,7 @@ inline std::optional<N> find_spatial_interaction_target(flight::Ref<flight::type
   if ((!nodes.has_value() || (static_cast<double>(nodes.value().size()) == 0.0))) {
     return std::nullopt;
   }
-  flight::spatial::query_spatial_point2_d(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndex2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SpatialIndex2D>>>>(index.value())), x, y, spatial_query_out);
+  flight::spatial::query_spatial_point_2d(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialIndex2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SpatialIndex2D>>>>(index.value())), x, y, spatial_query_out);
   std::optional<N> best = std::nullopt;
   double best_rank = std::numeric_limits<double>::infinity();
   {

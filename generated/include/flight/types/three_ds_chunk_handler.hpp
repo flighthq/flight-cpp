@@ -26,7 +26,7 @@ using ThreeDsChunkDispatch = flight::Map<double, flight::StructuralRef<flight::R
 } // namespace flight::types
 
 #include <flight/types/import_diagnostic.hpp>
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d_document.hpp>
 #include <flight/types/three_ds_schema.hpp>
 
 namespace flight::types {

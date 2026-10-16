@@ -143,7 +143,7 @@ int main() {
   window->height = 4.6;
   window->device_pixel_ratio = 2.0;
   const auto render_state = flight::render::create_render_state();
-  render_state->render_transform2_d = flight::geometry::create_matrix();
+  render_state->render_transform_2d = flight::geometry::create_matrix();
   const auto render_target = flight::make_ref<RenderTargetDimensions>(
       RenderTargetDimensions{.height = 0.0, .width = 0.0});
   const auto viewport = flight::node::create_viewport();
@@ -160,8 +160,8 @@ int main() {
                  render_target->height == 9.0 && viewport->width == 21.0 &&
                  viewport->height == 9.0 && viewport->device_pixel_ratio == 2.0 &&
                  render_state->pixel_ratio == 2.0 &&
-                 render_state->render_transform2_d.value()->a == 2.0 &&
-                 render_state->render_transform2_d.value()->d == 2.0,
+                 render_state->render_transform_2d.value()->a == 2.0 &&
+                 render_state->render_transform_2d.value()->d == 2.0,
              "AppRenderView creation did not perform the upstream synchronization")) {
     return 1;
   }

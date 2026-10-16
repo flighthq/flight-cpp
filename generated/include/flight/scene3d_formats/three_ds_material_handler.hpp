@@ -23,7 +23,7 @@ namespace flight::types { struct ThreeDsMesh; }
 namespace flight::types { struct ThreeDsParseState; }
 
 #include <flight/types/import_diagnostic.hpp>
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d_document.hpp>
 #include <flight/types/three_ds_chunk_handler.hpp>
 #include <flight/types/three_ds_schema.hpp>
 #include <flight/scene3d_formats/three_ds_parse.hpp>

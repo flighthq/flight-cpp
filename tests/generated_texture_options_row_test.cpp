@@ -89,7 +89,7 @@ int main() {
   const auto two_d_row = flight::make_structural_ref<texture::CreateTexture2DOptionsRow::schema_type>(
       flight::row_field<flight::RowKey<"colorSpace">>(
           std::optional<flight::String>{flight::String("linear")}));
-  const auto two_d = texture::create_texture2_d(two_d_row);
+  const auto two_d = texture::create_texture_2d(two_d_row);
   check(two_d->dimension == flight::String("2d") &&
             two_d->color_space == flight::String("linear") && !two_d->source,
         "the shared readonly helper retains 2D construction and absence");

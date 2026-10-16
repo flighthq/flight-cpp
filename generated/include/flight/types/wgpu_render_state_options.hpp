@@ -66,7 +66,7 @@ using WgpuTextureResolver = std::function<std::optional<flight::Ref<flight::type
 #include <flight/types/wgpu_quad_material_renderer.hpp>
 #include <flight/types/wgpu_render_options.hpp>
 #include <flight/types/wgpu_render_state.hpp>
-#include <flight/types/wgpu_scene3_druntime.hpp>
+#include <flight/types/wgpu_scene_3d_runtime.hpp>
 #include <flight/types/wgpu_skinning_adapter.hpp>
 #include <flight/types/wgpu_texture_resolver.hpp>
 #include <flight/types/wgpu_velocity_writer.hpp>

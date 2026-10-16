@@ -106,18 +106,18 @@ using GlColorAdjustmentMaterialFeatureGuard = std::function<void(flight::Ref<GlR
 #include <flight/types/gl_render_pass.hpp>
 #include <flight/types/gl_render_target.hpp>
 #include <flight/types/gl_render_texture.hpp>
-#include <flight/types/gl_scene3_druntime.hpp>
+#include <flight/types/gl_scene_3d_runtime.hpp>
 #include <flight/types/gl_shader_locations.hpp>
 #include <flight/types/gl_shape_mesh.hpp>
 #include <flight/types/gl_texture_resolver.hpp>
 #include <flight/types/gl_velocity_writer.hpp>
 #include <flight/types/material.hpp>
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 #include <flight/types/render_state.hpp>
 #include <flight/types/sampler.hpp>
 #include <flight/types/shape_rasterizer.hpp>
 #include <flight/types/tint_material_data.hpp>
-#include <flight/types/scene2_drenderer.hpp>
+#include <flight/types/scene_2d_renderer.hpp>
 #include <flight/types/host_canvas.hpp>
 #include <flight/types/image_resource.hpp>
 #include <flight/types/node.hpp>
@@ -133,7 +133,7 @@ using GlColorAdjustmentMaterialFeatureGuard = std::function<void(flight::Ref<GlR
 #include <flight/types/blend_mode.hpp>
 #include <flight/types/render_state.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 
 namespace flight::types {
 

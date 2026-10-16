@@ -41,11 +41,11 @@ namespace flight::types { struct Physics3DWorld; }
 namespace flight::types { struct RigidBody3D; }
 namespace flight::types { struct SpatialIndexBackend3D; }
 
-#include <flight/collision/convex_hull3_d.hpp>
+#include <flight/collision/convex_hull_3d.hpp>
 #include <flight/entity/entity.hpp>
 #include <flight/types/collision.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/physics3_d.hpp>
+#include <flight/types/physics_3d.hpp>
 #include <flight/types/spatial.hpp>
 #include <flight/physics3d/world.hpp>
 
@@ -63,16 +63,16 @@ using flight::types::Physics3DWorld;
 using flight::types::RigidBody3D;
 using flight::types::SpatialIndexBackend3D;
 
-inline void initialize_physics3_ddebug_geometry(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DDebugGeometry>> out) {
+inline void initialize_physics_3d_debug_geometry(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DDebugGeometry>> out) {
   flight::row_set<flight::RowKey<"lines">>(out, flight::Array<flight::Ref<flight::types::Physics3DDebugLine>>{});
   flight::row_set<flight::RowKey<"lineCount">>(out, 0.0);
   flight::row_set<flight::RowKey<"spheres">>(out, flight::Array<flight::Ref<flight::types::Physics3DDebugSphere>>{});
   flight::row_set<flight::RowKey<"sphereCount">>(out, 0.0);
 }
 
-inline flight::Ref<flight::types::Physics3DDebugGeometry> create_physics3_ddebug_geometry() {
+inline flight::Ref<flight::types::Physics3DDebugGeometry> create_physics_3d_debug_geometry() {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DDebugGeometry>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics3DDebugGeometry>>();
-  initialize_physics3_ddebug_geometry(out);
+  initialize_physics_3d_debug_geometry(out);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics3DDebugGeometry>>(out);
 }
 
@@ -345,7 +345,7 @@ inline void write_collider(flight::Ref<flight::types::Physics3DDebugGeometry> ou
     else if (switch_value == flight::String("convex")) {
       {
         flight::Array<double> points = std::get<4>(shape)->points;
-        const double triangle_count = flight::collision::write_collision_convex_hull_faces3_d(points, scratch_hull_faces_flight_value_variable_scratch_u000048_ull_u000046_aces_flight_private_946df17f6d11350b);
+        const double triangle_count = flight::collision::write_collision_convex_hull_faces_3d(points, scratch_hull_faces_flight_value_variable_scratch_u000048_ull_u000046_aces_flight_private_946df17f6d11350b);
         if ((triangle_count == 0.0)) {
           {
             double i = 0.0;
@@ -394,7 +394,7 @@ inline void write_collider(flight::Ref<flight::types::Physics3DDebugGeometry> ou
   }
 }
 
-inline void write_physics3_ddebug_geometry(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world, flight::Ref<flight::types::Physics3DDebugGeometry> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::Physics3DDebugGeometryOptions>>>>>> options = std::nullopt) {
+inline void write_physics_3d_debug_geometry(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world, flight::Ref<flight::types::Physics3DDebugGeometry> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::Physics3DDebugGeometryOptions>>>>>> options = std::nullopt) {
   options = options.value_or(default_options);
   (out->line_count = 0.0);
   (out->sphere_count = 0.0);
@@ -438,7 +438,7 @@ inline void write_physics3_ddebug_geometry(flight::StructuralRef<flight::RowRead
   if (([&]() -> bool { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"drawCentersOfMass">>(options.value()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::row_get<flight::RowKey<"drawCentersOfMass">>(default_options); }())) {
     const double radius = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"centerOfMassRadius">>(options.value()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::row_get<flight::RowKey<"centerOfMassRadius">>(default_options); }());
     for (auto body_2 : flight::row_get<flight::RowKey<"bodies">>(world)) {
-      flight::physics3d::write_rigid_body3_dworld_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_2)), scratch_center_flight_value_variable_scratch_u000043_enter_flight_private_946df17f6d11350b);
+      flight::physics3d::write_rigid_body_3d_world_center(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>>(body_2)), scratch_center_flight_value_variable_scratch_u000043_enter_flight_private_946df17f6d11350b);
       write_sphere(out, flight::String("center-of-mass"), body_2->index, -1.0, scratch_center_flight_value_variable_scratch_u000043_enter_flight_private_946df17f6d11350b.element(0.0), scratch_center_flight_value_variable_scratch_u000043_enter_flight_private_946df17f6d11350b.element(1.0), scratch_center_flight_value_variable_scratch_u000043_enter_flight_private_946df17f6d11350b.element(2.0), radius);
     }
   }

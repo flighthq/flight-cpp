@@ -44,14 +44,14 @@ struct Transform3DProbe;
 namespace flight::node {
 
 template <typename Traits>
-inline void get_node_transform3_d(flight::types::Transform3DLike out, flight::types::Transform3DNode<Traits> source) {
+inline void get_node_transform_3d(flight::types::Transform3DLike out, flight::types::Transform3DNode<Traits> source) {
   flight::geometry::copy_vector3(out->position, flight::row_get<flight::RowKey<"position">>(source));
   flight::geometry::copy_quaternion(out->rotation, flight::row_get<flight::RowKey<"rotation">>(source));
   flight::geometry::copy_vector3(out->scale, flight::row_get<flight::RowKey<"scale">>(source));
 }
 
 template <typename Traits>
-inline void set_node_transform3_d(flight::types::Transform3DNode<Traits> target, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Transform3DLike>>> source) {
+inline void set_node_transform_3d(flight::types::Transform3DNode<Traits> target, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Transform3DLike>>> source) {
   flight::geometry::copy_vector3(flight::row_get<flight::RowKey<"position">>(target), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(flight::row_get<flight::RowKey<"position">>(source))));
   flight::geometry::copy_quaternion(flight::row_get<flight::RowKey<"rotation">>(target), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Quaternion>>>>(flight::row_get<flight::RowKey<"rotation">>(source))));
   flight::geometry::copy_vector3(flight::row_get<flight::RowKey<"scale">>(target), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(flight::row_get<flight::RowKey<"scale">>(source))));
@@ -69,7 +69,7 @@ struct binding_uid_color_adjustments_color_adjustments_unsupported_resolved_colo
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_NODE_BINDING_UID_COLOR_ADJUSTMENTS_COLOR_ADJUSTMENTS_UNSUPPORTED_RESOLVED_COLOR_MATRIX_RESOLVED_COLOR_SCALE_BIAS_APPEARANCE_ID_BOUNDS_USING_LOCAL_BOUNDS_ID_BOUNDS_USING_LOCAL_TRANSFORM_ID_CAN_ADD_CHILD_CHILDREN_CHILDREN_ID_TRAITS_INTERACTION_SIGNALS_LOCAL_BOUNDS_ID_LOCAL_BOUNDS_USING_LOCAL_BOUNDS_ID_LOCAL_CONTENT_ID_LOCAL_TRANSFORM_ID_LOCAL_TRANSFORM_USING_LOCAL_TRANSFORM_ID_NODE_SIGNALS_INTERACTION_STATE_PARENT_PARENT_REFERENCE_ID_WORLD_BOUNDS_USING_LOCAL_BOUNDS_ID_WORLD_BOUNDS_USING_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_USING_LOCAL_TRANSFORM_ID_WORLD_TRANSFORM_USING_PARENT_TRANSFORM_ID_LOCAL_MATRIX4_LOCAL_MATRIX4_DETACHED_WORLD_MATRIX4_D70682E3F5D984AF
 
 template <typename Traits>
-inline void recompute_local_transform3_d(flight::types::Transform3DNode<Traits> target, flight::Ref<binding_uid_color_adjustments_color_adjustments_unsupported_resolved_color_matrix_resolved_color_scale_bias_appearance_id_bounds_using_local_bounds_id_bounds_using_local_transform_id_can_add_child_children_children_id_traits_interaction_signals_local_bounds_id_local_bounds_using_local_bounds_id_local_content_id_local_transform_id_local_transform_using_local_transform_id_node_signals_interaction_state_parent_parent_reference_id_world_bounds_using_local_bounds_id_world_bounds_using_world_transform_id_world_transform_id_world_transform_using_local_transform_id_world_transform_using_parent_transform_id_local_matrix4_local_matrix4_detached_world_matrix4_d70682e3f5d984af<Traits>> runtime) {
+inline void recompute_local_transform_3d(flight::types::Transform3DNode<Traits> target, flight::Ref<binding_uid_color_adjustments_color_adjustments_unsupported_resolved_color_matrix_resolved_color_scale_bias_appearance_id_bounds_using_local_bounds_id_bounds_using_local_transform_id_can_add_child_children_children_id_traits_interaction_signals_local_bounds_id_local_bounds_using_local_bounds_id_local_content_id_local_transform_id_local_transform_using_local_transform_id_node_signals_interaction_state_parent_parent_reference_id_world_bounds_using_local_bounds_id_world_bounds_using_world_transform_id_world_transform_id_world_transform_using_local_transform_id_world_transform_using_parent_transform_id_local_matrix4_local_matrix4_detached_world_matrix4_d70682e3f5d984af<Traits>> runtime) {
   if (!runtime->local_matrix4.has_value()) {
     (runtime->local_matrix4 = std::optional<flight::Ref<flight::types::Matrix4>>{flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt)});
   }
@@ -112,7 +112,7 @@ template <typename Traits>
 inline void ensure_node_local_matrix4(flight::types::Transform3DNode<Traits> target) {
   auto runtime = get_transform3_druntime<Traits>(target);
   if ((!runtime->local_matrix4.has_value() || (runtime->local_transform_using_local_transform_id != runtime->local_transform_id))) {
-    recompute_local_transform3_d<Traits>(target, runtime);
+    recompute_local_transform_3d<Traits>(target, runtime);
   }
 }
 
@@ -141,7 +141,7 @@ inline void set_node_local_matrix4(flight::types::Transform3DNode<Traits> target
 }
 
 template <typename Traits>
-inline void sync_node_transform3_dfrom_matrix4(flight::types::Transform3DNode<Traits> target) {
+inline void sync_node_transform_3d_from_matrix4(flight::types::Transform3DNode<Traits> target) {
   auto runtime = get_transform3_druntime<Traits>(target);
   ensure_node_local_matrix4<Traits>(target);
   flight::geometry::decompose_matrix4(flight::row_get<flight::RowKey<"position">>(target), flight::row_get<flight::RowKey<"rotation">>(target), flight::row_get<flight::RowKey<"scale">>(target), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(runtime->local_matrix4.value())));
@@ -159,7 +159,7 @@ struct binding_uid_color_adjustments_color_adjustments_unsupported_resolved_colo
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_NODE_BINDING_UID_COLOR_ADJUSTMENTS_COLOR_ADJUSTMENTS_UNSUPPORTED_RESOLVED_COLOR_MATRIX_RESOLVED_COLOR_SCALE_BIAS_APPEARANCE_ID_BOUNDS_USING_LOCAL_BOUNDS_ID_BOUNDS_USING_LOCAL_TRANSFORM_ID_CAN_ADD_CHILD_CHILDREN_CHILDREN_ID_TRAITS_INTERACTION_SIGNALS_LOCAL_BOUNDS_ID_LOCAL_BOUNDS_USING_LOCAL_BOUNDS_ID_LOCAL_CONTENT_ID_LOCAL_TRANSFORM_ID_LOCAL_TRANSFORM_USING_LOCAL_TRANSFORM_ID_NODE_SIGNALS_INTERACTION_STATE_PARENT_PARENT_REFERENCE_ID_WORLD_BOUNDS_USING_LOCAL_BOUNDS_ID_WORLD_BOUNDS_USING_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_USING_LOCAL_TRANSFORM_ID_WORLD_TRANSFORM_USING_PARENT_TRANSFORM_ID_LOCAL_MATRIX4_LOCAL_MATRIX4_DETACHED_WORLD_MATRIX4_419495FC66D06D70
 
 template <typename Traits>
-inline void recompute_world_transform3_d(flight::types::Transform3DNode<Traits> target, flight::Ref<binding_uid_color_adjustments_color_adjustments_unsupported_resolved_color_matrix_resolved_color_scale_bias_appearance_id_bounds_using_local_bounds_id_bounds_using_local_transform_id_can_add_child_children_children_id_traits_interaction_signals_local_bounds_id_local_bounds_using_local_bounds_id_local_content_id_local_transform_id_local_transform_using_local_transform_id_node_signals_interaction_state_parent_parent_reference_id_world_bounds_using_local_bounds_id_world_bounds_using_world_transform_id_world_transform_id_world_transform_using_local_transform_id_world_transform_using_parent_transform_id_local_matrix4_local_matrix4_detached_world_matrix4_419495fc66d06d70<Traits>> runtime, std::optional<flight::Ref<binding_uid_color_adjustments_color_adjustments_unsupported_resolved_color_matrix_resolved_color_scale_bias_appearance_id_bounds_using_local_bounds_id_bounds_using_local_transform_id_can_add_child_children_children_id_traits_interaction_signals_local_bounds_id_local_bounds_using_local_bounds_id_local_content_id_local_transform_id_local_transform_using_local_transform_id_node_signals_interaction_state_parent_parent_reference_id_world_bounds_using_local_bounds_id_world_bounds_using_world_transform_id_world_transform_id_world_transform_using_local_transform_id_world_transform_using_parent_transform_id_local_matrix4_local_matrix4_detached_world_matrix4_419495fc66d06d70<Traits>>> parent_runtime = std::nullopt) {
+inline void recompute_world_transform_3d(flight::types::Transform3DNode<Traits> target, flight::Ref<binding_uid_color_adjustments_color_adjustments_unsupported_resolved_color_matrix_resolved_color_scale_bias_appearance_id_bounds_using_local_bounds_id_bounds_using_local_transform_id_can_add_child_children_children_id_traits_interaction_signals_local_bounds_id_local_bounds_using_local_bounds_id_local_content_id_local_transform_id_local_transform_using_local_transform_id_node_signals_interaction_state_parent_parent_reference_id_world_bounds_using_local_bounds_id_world_bounds_using_world_transform_id_world_transform_id_world_transform_using_local_transform_id_world_transform_using_parent_transform_id_local_matrix4_local_matrix4_detached_world_matrix4_419495fc66d06d70<Traits>> runtime, std::optional<flight::Ref<binding_uid_color_adjustments_color_adjustments_unsupported_resolved_color_matrix_resolved_color_scale_bias_appearance_id_bounds_using_local_bounds_id_bounds_using_local_transform_id_can_add_child_children_children_id_traits_interaction_signals_local_bounds_id_local_bounds_using_local_bounds_id_local_content_id_local_transform_id_local_transform_using_local_transform_id_node_signals_interaction_state_parent_parent_reference_id_world_bounds_using_local_bounds_id_world_bounds_using_world_transform_id_world_transform_id_world_transform_using_local_transform_id_world_transform_using_parent_transform_id_local_matrix4_local_matrix4_detached_world_matrix4_419495fc66d06d70<Traits>>> parent_runtime = std::nullopt) {
   if (!runtime->world_matrix4.has_value()) {
     (runtime->world_matrix4 = std::optional<flight::Ref<flight::types::Matrix4>>{flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt)});
   }
@@ -179,7 +179,7 @@ struct Transform3DProbe : public flight::ReferenceEnabled {
 };
 
 template <typename Traits>
-inline bool is_transform3_dnode(std::shared_ptr<flight::types::Node<Traits>> node) {
+inline bool is_transform_3d_node(std::shared_ptr<flight::types::Node<Traits>> node) {
   flight::Ref<Transform3DProbe> candidate = node;
   return candidate->position.has_value();
 }
@@ -201,14 +201,14 @@ inline void ensure_node_world_matrix4(flight::types::Transform3DNode<Traits> tar
   std::optional<flight::Ref<binding_uid_color_adjustments_color_adjustments_unsupported_resolved_color_matrix_resolved_color_scale_bias_appearance_id_bounds_using_local_bounds_id_bounds_using_local_transform_id_can_add_child_children_children_id_traits_interaction_signals_local_bounds_id_local_bounds_using_local_bounds_id_local_content_id_local_transform_id_local_transform_using_local_transform_id_node_signals_interaction_state_parent_parent_reference_id_world_bounds_using_local_bounds_id_world_bounds_using_world_transform_id_world_transform_id_world_transform_using_local_transform_id_world_transform_using_parent_transform_id_local_matrix4_local_matrix4_detached_world_matrix4_fd8b10eae90d3e6e<Traits>>> parent_runtime;
   double parent_world_transform_id = 0.0;
   if (parent.has_value()) {
-    if (is_transform3_dnode<Traits>(parent.value())) {
+    if (is_transform_3d_node<Traits>(parent.value())) {
       ensure_node_world_matrix4(flight::structural_ref_cast<flight::types::Transform3DNode<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>>(parent.value())));
       (parent_runtime = std::optional<flight::Ref<binding_uid_color_adjustments_color_adjustments_unsupported_resolved_color_matrix_resolved_color_scale_bias_appearance_id_bounds_using_local_bounds_id_bounds_using_local_transform_id_can_add_child_children_children_id_traits_interaction_signals_local_bounds_id_local_bounds_using_local_bounds_id_local_content_id_local_transform_id_local_transform_using_local_transform_id_node_signals_interaction_state_parent_parent_reference_id_world_bounds_using_local_bounds_id_world_bounds_using_world_transform_id_world_transform_id_world_transform_using_local_transform_id_world_transform_using_parent_transform_id_local_matrix4_local_matrix4_detached_world_matrix4_fd8b10eae90d3e6e<Traits>>>{get_transform3_druntime<Traits>(parent.value())});
       (parent_world_transform_id = parent_runtime.value()->world_transform_id);
     }
   }
   if (((runtime->world_transform_using_local_transform_id != runtime->local_transform_id) || (runtime->world_transform_using_parent_transform_id != parent_world_transform_id))) {
-    recompute_world_transform3_d<Traits>(target, runtime, parent_runtime);
+    recompute_world_transform_3d<Traits>(target, runtime, parent_runtime);
   }
 }
 

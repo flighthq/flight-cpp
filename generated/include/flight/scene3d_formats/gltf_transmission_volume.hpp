@@ -64,9 +64,9 @@ namespace flight::types { struct TransmissionVolumePbrExtension; }
 #include <flight/types/import_diagnostic.hpp>
 #include <flight/types/linear_color.hpp>
 #include <flight/types/pbr_extension.hpp>
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d_document.hpp>
 #include <flight/types/texture.hpp>
-#include <flight/types/transform3_d.hpp>
+#include <flight/types/transform_3d.hpp>
 #include <flight/types/transmission_volume_pbr_extension.hpp>
 
 namespace flight::scene3d_formats {

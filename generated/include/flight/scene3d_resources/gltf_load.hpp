@@ -49,11 +49,11 @@ namespace flight::types { template <typename T> struct Signal; }
 #include <flight/types/gltf_schema.hpp>
 #include <flight/types/import_diagnostic.hpp>
 #include <flight/types/net.hpp>
-#include <flight/types/scene3_ddocument.hpp>
-#include <flight/types/scene3_dresources.hpp>
+#include <flight/types/scene_3d_document.hpp>
+#include <flight/types/scene_3d_resources.hpp>
 #include <flight/types/signal.hpp>
 #include <flight/types/texture.hpp>
-#include <flight/types/transform3_d.hpp>
+#include <flight/types/transform_3d.hpp>
 #include <flight/scene3d_resources/scene_document_source.hpp>
 
 namespace flight::scene3d_resources {
@@ -66,12 +66,12 @@ using flight::types::ImportDiagnostic;
 using flight::types::Scene3DDocument;
 using flight::types::Scene3DDocumentLoadOptions;
 
-inline flight::Task<std::optional<flight::Ref<flight::types::Scene3DDocument>>> load_scene3_ddocument_from_glb_url_with_core_feature_handlers(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>> host_net, flight::String url, flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>> core_feature_handlers, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfScene3DDocumentLoadOptions>>>>> options = std::nullopt) {
-  std::optional<flight::Uint8Array> bytes = co_await flight::scene3d_resources::load_scene3_ddocument_bytes_from_url(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>>>(host_net), url, options);
+inline flight::Task<std::optional<flight::Ref<flight::types::Scene3DDocument>>> load_scene_3d_document_from_glb_url_with_core_feature_handlers(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>> host_net, flight::String url, flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>> core_feature_handlers, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfScene3DDocumentLoadOptions>>>>> options = std::nullopt) {
+  std::optional<flight::Uint8Array> bytes = co_await flight::scene3d_resources::load_scene_3d_document_bytes_from_url(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>>>(host_net), url, options);
   if (!bytes.has_value()) {
     co_return std::nullopt;
   }
-  co_return std::optional<flight::Ref<flight::types::Scene3DDocument>>{flight::scene3d_formats::parse_glb_with_core_feature_handlers(bytes.value(), core_feature_handlers, ([&]() -> std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"diagnostics">>(optional_chain_receiver.value()); }()), flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfImportOptions>>>>(flight::row_field<flight::RowKey<"basePath">>(([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto contextual_union_source = flight::scene3d_resources::get_scene3_ddocument_base_path_from_url(url); if (!contextual_union_source.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, contextual_union_source.value()}; }())), flight::row_field<flight::RowKey<"extensionHandlers">>(([&]() -> std::optional<flight::Array<flight::Ref<flight::types::GltfExtensionHandler>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"extensionHandlers">>(optional_chain_receiver.value()); }()))))};
+  co_return std::optional<flight::Ref<flight::types::Scene3DDocument>>{flight::scene3d_formats::parse_glb_with_core_feature_handlers(bytes.value(), core_feature_handlers, ([&]() -> std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"diagnostics">>(optional_chain_receiver.value()); }()), flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfImportOptions>>>>(flight::row_field<flight::RowKey<"basePath">>(([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto contextual_union_source = flight::scene3d_resources::get_scene_3d_document_base_path_from_url(url); if (!contextual_union_source.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, contextual_union_source.value()}; }())), flight::row_field<flight::RowKey<"extensionHandlers">>(([&]() -> std::optional<flight::Array<flight::Ref<flight::types::GltfExtensionHandler>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"extensionHandlers">>(optional_chain_receiver.value()); }()))))};
 }
 
 inline flight::String resolve_gltf_buffer_url(flight::String uri, std::optional<flight::String> base_path) {
@@ -91,7 +91,7 @@ inline flight::Task<std::optional<flight::Record<flight::String, flight::Uint8Ar
   }
   flight::Record<flight::String, flight::Uint8Array> external_buffers = flight::Record<flight::String, flight::Uint8Array>{};
   flight::Array<flight::String> entries = ([&]() { flight::Array<flight::String> array_spread_result; for (const auto& array_spread_item : uris) { array_spread_result.push(array_spread_item); } return array_spread_result; }());
-  flight::Array<std::optional<flight::Uint8Array>> bytes = co_await flight::all_tasks(entries.map([=](flight::String uri) { return flight::scene3d_resources::load_scene3_ddocument_bytes_from_url(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>>>(host_net), resolve_gltf_buffer_url(uri, base_path), options); }));
+  flight::Array<std::optional<flight::Uint8Array>> bytes = co_await flight::all_tasks(entries.map([=](flight::String uri) { return flight::scene3d_resources::load_scene_3d_document_bytes_from_url(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>>>(host_net), resolve_gltf_buffer_url(uri, base_path), options); }));
   {
     double i = 0.0;
     while ((i < static_cast<double>(entries.size()))) {

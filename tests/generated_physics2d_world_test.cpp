@@ -27,9 +27,9 @@
 
 #include <flight/log/log.hpp>
 #include <flight/physics2d/broadphase.hpp>
-#include <flight/physics2d/enable_physics2_dguards.hpp>
-#include <flight/physics2d/explain_physics2_dcollision.hpp>
-#include <flight/physics2d/explain_physics2_dstep.hpp>
+#include <flight/physics2d/enable_physics_2d_guards.hpp>
+#include <flight/physics2d/explain_physics_2d_collision.hpp>
+#include <flight/physics2d/explain_physics_2d_step.hpp>
 #include <flight/physics2d/islands.hpp>
 #include <flight/physics2d/joint_registry.hpp>
 #include <flight/physics2d/ownership.hpp>
@@ -80,7 +80,7 @@ bool throws_with(const std::function<void()>& run, const std::string& fragment) 
 flight::Ref<types::Physics2DMaterial> stone() { return pt::material(1, 0.3, 0); }
 
 // createPhysics2DWorld() with no arguments, for the cases that depend on its default gravity.
-pt::World default_world() { return p2::create_physics2_dworld(); }
+pt::World default_world() { return p2::create_physics_2d_world(); }
 
 pt::Body box_body(double x, double y) {
   auto body = pt::body("dynamic", x, y);
@@ -88,7 +88,7 @@ pt::Body box_body(double x, double y) {
   return body;
 }
 
-pt::Body add(const pt::World& world, const pt::Body& body) { return p2::add_physics2_dbody(world, body); }
+pt::Body add(const pt::World& world, const pt::Body& body) { return p2::add_physics_2d_body(world, body); }
 
 std::vector<double> query_point(const pt::World& world, double x, double y) {
   flight::Array<double> found;
@@ -109,7 +109,7 @@ std::vector<std::pair<double, double>> query_pairs(const pt::World& world) {
   return out;
 }
 
-void step(const pt::World& world, double dt = DT) { p2::step_physics2_d(world, dt); }
+void step(const pt::World& world, double dt = DT) { p2::step_physics_2d(world, dt); }
 
 flight::Ref<types::Physics2DJointSolver> solver(std::optional<bool> uses_body_a = std::nullopt,
                                                 std::optional<bool> keeps_bodies_awake = std::nullopt) {
@@ -184,7 +184,7 @@ void world_cases(Runner& runner) {
       auto world = default_world();
       auto first = add(world, box_body(0, 0));
       auto second = add(world, box_body(1, 0));
-      p2::remove_physics2_dbody(world, pt::view(first));
+      p2::remove_physics_2d_body(world, pt::view(first));
       auto third = add(world, box_body(2, 0));
       expect(second->index).to_be(1.0);
       expect(third->index).to_be(2.0);
@@ -207,10 +207,10 @@ void world_cases(Runner& runner) {
       auto second_world = default_world();
       auto first = add(first_world, pt::body("dynamic", 0, 0));
       auto second = add(first_world, pt::body("dynamic", 2, 0));
-      auto collider = p2::add_physics2_dcollider(first_world, first, pt::collider(pt::circle(0, 0, 1), stone()));
-      expect(throws([&] { p2::add_physics2_dcollider(first_world, first, collider); })).to_be(true);
-      expect(throws([&] { p2::add_physics2_dcollider(first_world, second, collider); })).to_be(true);
-      expect(throws([&] { p2::add_physics2_dcollider(second_world, first, pt::collider(pt::circle(0, 0, 2), stone())); }))
+      auto collider = p2::add_physics_2d_collider(first_world, first, pt::collider(pt::circle(0, 0, 1), stone()));
+      expect(throws([&] { p2::add_physics_2d_collider(first_world, first, collider); })).to_be(true);
+      expect(throws([&] { p2::add_physics_2d_collider(first_world, second, collider); })).to_be(true);
+      expect(throws([&] { p2::add_physics_2d_collider(second_world, first, pt::collider(pt::circle(0, 0, 2), stone())); }))
           .to_be(true);
       require(first->colliders.size() == 1 && first->colliders.element(0.0) == collider, "first holds [collider]");
       expect(second->colliders.size()).to_be(std::size_t{0});
@@ -221,7 +221,7 @@ void world_cases(Runner& runner) {
       body->sleeping = true;
       body->sleep_timer = 5;
       auto collider = pt::collider(pt::circle(0, 0, 1), stone());
-      expect(p2::add_physics2_dcollider(world, body, collider) == collider).to_be(true);
+      expect(p2::add_physics_2d_collider(world, body, collider) == collider).to_be(true);
       const auto found = query_point(world, 3, 4);
       expect(body->mass).to_be_close_to(PI);
       expect(body->sleeping).to_be(false);
@@ -236,7 +236,7 @@ void world_cases(Runner& runner) {
       expect(world->events->began.size()).to_be(std::size_t{1});
       first->sleeping = true;
       second->sleeping = true;
-      p2::add_physics2_dcollider(world, first, pt::collider(pt::circle(2, 0, 0.25), stone()));
+      p2::add_physics_2d_collider(world, first, pt::collider(pt::circle(2, 0, 0.25), stone()));
       expect(world->contacts.size()).to_be(std::size_t{0});
       expect(world->events->began.size()).to_be(std::size_t{0});
       expect(first->sleeping).to_be(false);
@@ -245,7 +245,7 @@ void world_cases(Runner& runner) {
     runner.it("can author a body before insertion without assigning world identity", [] {
       auto world = default_world();
       auto body = pt::body("dynamic", 0, 0);
-      p2::add_physics2_dcollider(world, body, pt::collider(pt::circle(0, 0, 1), stone()));
+      p2::add_physics_2d_collider(world, body, pt::collider(pt::circle(0, 0, 1), stone()));
       expect(body->index).to_be(-1.0);
       expect(body->mass).to_be_close_to(PI);
       expect(world->bodies.size()).to_be(std::size_t{0});
@@ -258,7 +258,7 @@ void world_cases(Runner& runner) {
       auto body = add(world, box_body(10, 20));
       body->sleeping = true;
       body->sleep_timer = 5;
-      expect(p2::apply_physics2_dforce(body, 3, 4)).to_be(true);
+      expect(p2::apply_physics_2d_force(body, 3, 4)).to_be(true);
       expect(body->force_x).to_be(3.0);
       expect(body->force_y).to_be(4.0);
       expect(body->sleeping).to_be(false);
@@ -266,7 +266,7 @@ void world_cases(Runner& runner) {
     });
     runner.it("reports a rejected non-dynamic force without mutating the body", [] {
       auto body = pt::body("static", 0, 0);
-      expect(p2::apply_physics2_dforce(body, 1, 2)).to_be(false);
+      expect(p2::apply_physics_2d_force(body, 1, 2)).to_be(false);
       expect(body->force_x).to_be(0.0);
     });
   });
@@ -274,7 +274,7 @@ void world_cases(Runner& runner) {
     runner.it("accumulates force and its moment from a world-space point", [] {
       auto world = pt::world(0, 0);
       auto body = add(world, box_body(10, 20));
-      expect(p2::apply_physics2_dforce_at_point(body, 2, 0, 10, 21)).to_be(true);
+      expect(p2::apply_physics_2d_force_at_point(body, 2, 0, 10, 21)).to_be(true);
       expect(body->force_x).to_be(2.0);
       expect(body->torque).to_be_close_to(-2);
     });
@@ -283,7 +283,7 @@ void world_cases(Runner& runner) {
     runner.it("changes linear velocity immediately from derived inverse mass", [] {
       auto world = pt::world(0, 0);
       auto body = add(world, box_body(0, 0));
-      expect(p2::apply_physics2_dlinear_impulse(body, 1, 2)).to_be(true);
+      expect(p2::apply_physics_2d_linear_impulse(body, 1, 2)).to_be(true);
       expect(body->velocity_x).to_be_close_to(1);
       expect(body->velocity_y).to_be_close_to(2);
     });
@@ -292,7 +292,7 @@ void world_cases(Runner& runner) {
     runner.it("changes linear and angular velocity from a world-space point", [] {
       auto world = pt::world(0, 0);
       auto body = add(world, box_body(10, 20));
-      expect(p2::apply_physics2_dlinear_impulse_at_point(body, 1, 0, 10, 21)).to_be(true);
+      expect(p2::apply_physics_2d_linear_impulse_at_point(body, 1, 0, 10, 21)).to_be(true);
       expect(body->velocity_x).to_be_close_to(1);
       expect(body->angular_velocity).to_be_close_to(-6);
     });
@@ -302,7 +302,7 @@ void world_cases(Runner& runner) {
       auto body = pt::body("dynamic", 0, 0);
       body->sleeping = true;
       body->sleep_timer = 5;
-      expect(p2::apply_physics2_dtorque(body, 3)).to_be(true);
+      expect(p2::apply_physics_2d_torque(body, 3)).to_be(true);
       expect(body->torque).to_be(3.0);
       expect(body->sleeping).to_be(false);
       expect(body->sleep_timer).to_be(0.0);
@@ -311,7 +311,7 @@ void world_cases(Runner& runner) {
 
   runner.describe("createPhysics2DSolverConfig", [&] {
     runner.it("defaults to a tuning that converges for game-scale stacks", [] {
-      auto config = p2::create_physics2_dsolver_config();
+      auto config = p2::create_physics_2d_solver_config();
       expect(config->velocity_iterations).to_be_greater_than_or_equal(8.0);
       expect(config->warm_starting).to_be(true);
       expect(config->penetration_slop).to_be_greater_than(0.0);
@@ -349,15 +349,15 @@ void world_cases(Runner& runner) {
       auto world = default_world();
       auto first = add(world, box_body(0, 0));
       auto second = add(world, box_body(1, 0));
-      expect(p2::find_physics2_dbody(pt::view(world), first->index).value() == first).to_be(true);
-      expect(p2::find_physics2_dbody(pt::view(world), second->index).value() == second).to_be(true);
+      expect(p2::find_physics_2d_body(pt::view(world), first->index).value() == first).to_be(true);
+      expect(p2::find_physics_2d_body(pt::view(world), second->index).value() == second).to_be(true);
     });
     runner.it("reports null once the body is gone rather than resurrecting a slot", [] {
       auto world = default_world();
       auto first = add(world, box_body(0, 0));
       add(world, box_body(1, 0));
-      p2::remove_physics2_dbody(world, pt::view(first));
-      expect(p2::find_physics2_dbody(pt::view(world), first->index).has_value()).to_be(false);
+      p2::remove_physics_2d_body(world, pt::view(first));
+      expect(p2::find_physics_2d_body(pt::view(world), first->index).has_value()).to_be(false);
       expect(world->body_by_index.has(first->index)).to_be(false);
     });
   });
@@ -374,9 +374,9 @@ void world_cases(Runner& runner) {
         body->fixed_rotation = true;
         body->sleep_enabled = false;
 
-        expect(p2::hydrate_physics2_dworld(world)).to_be(true);
+        expect(p2::hydrate_physics_2d_world(world)).to_be(true);
 
-        expect(world->version).to_be(p2::physics2_dworld_version);
+        expect(world->version).to_be(p2::physics_2d_world_version);
         expect(world->config->continuous_collision).to_be(false);
         expect(world->config->max_ccd_substeps).to_be(3.0);
         expect(world->config->max_ccd_rotation_substeps).to_be(5.0);
@@ -391,21 +391,21 @@ void world_cases(Runner& runner) {
       auto current = default_world();
       current->config->continuous_collision = false;
       current->config->max_ccd_substeps = 2;
-      expect(p2::hydrate_physics2_dworld(current)).to_be(true);
+      expect(p2::hydrate_physics_2d_world(current)).to_be(true);
       expect(current->config->continuous_collision).to_be(false);
       expect(current->config->max_ccd_substeps).to_be(2.0);
 
       auto future = default_world();
-      future->version = p2::physics2_dworld_version + 1;
-      expect(p2::hydrate_physics2_dworld(future)).to_be(false);
-      expect(future->version).to_be(p2::physics2_dworld_version + 1);
+      future->version = p2::physics_2d_world_version + 1;
+      expect(p2::hydrate_physics_2d_world(future)).to_be(false);
+      expect(future->version).to_be(p2::physics_2d_world_version + 1);
     });
 
     runner.it("rejects a version that is not a non-negative safe integer and leaves it untouched", [] {
       for (double bad : {-1.0, 1.5, std::nan(""), INF, 9007199254740992.0}) {
         auto world = default_world();
         world->version = bad;
-        expect(p2::hydrate_physics2_dworld(world)).to_be(false);
+        expect(p2::hydrate_physics_2d_world(world)).to_be(false);
         if (std::isnan(bad)) {
           require(std::isnan(world->version), "a NaN version stays NaN");
         } else {
@@ -420,11 +420,11 @@ void world_cases(Runner& runner) {
       world->version = 0;
       const auto config = world->config;
       const auto index = world->index;
-      expect(p2::hydrate_physics2_dworld(world)).to_be(true);
+      expect(p2::hydrate_physics_2d_world(world)).to_be(true);
       require(world->config == config, "the same config object, not a replacement");
       require(world->index == index, "the same broadphase index");
       require(world->bodies.size() == 1 && world->bodies.element(0) == body, "the same body object");
-      require(p2::find_physics2_dbody(pt::view(world), body->index).value() == body, "still found by its index");
+      require(p2::find_physics_2d_body(pt::view(world), body->index).value() == body, "still found by its index");
     });
 
     runner.it("refuses to hydrate a world while it is stepping", [] {
@@ -432,7 +432,7 @@ void world_cases(Runner& runner) {
       world->version = 0;
       bool threw_inside = false;
       world->contact_hooks->pre_solve = [&](flight::Ref<flight::types::Physics2DWorld> stepping, flight::Ref<flight::types::Physics2DContact>) {
-        threw_inside = throws([&] { static_cast<void>(p2::hydrate_physics2_dworld(stepping)); });
+        threw_inside = throws([&] { static_cast<void>(p2::hydrate_physics_2d_world(stepping)); });
       };
       auto a = add(world, box_body(0, 0));
       auto b = add(world, box_body(0.5, 0));
@@ -449,10 +449,10 @@ void world_cases(Runner& runner) {
       auto world = default_world();
       auto first = add(world, box_body(0, 0));
       auto second = add(world, box_body(1, 0));
-      expect(p2::is_physics2_dpair_ordered(pt::view(first), pt::view(second))).to_be(true);
-      expect(p2::is_physics2_dpair_ordered(pt::view(second), pt::view(first))).to_be(false);
+      expect(p2::is_physics_2d_pair_ordered(pt::view(first), pt::view(second))).to_be(true);
+      expect(p2::is_physics_2d_pair_ordered(pt::view(second), pt::view(first))).to_be(false);
       first->x = 100;
-      expect(p2::is_physics2_dpair_ordered(pt::view(first), pt::view(second))).to_be(true);
+      expect(p2::is_physics_2d_pair_ordered(pt::view(first), pt::view(second))).to_be(true);
     });
   });
 
@@ -461,7 +461,7 @@ void world_cases(Runner& runner) {
       auto world = default_world();
       auto body = add(world, box_body(0, 0));
       const double first_index = body->index;
-      p2::remove_physics2_dbody(world, pt::view(body));
+      p2::remove_physics_2d_body(world, pt::view(body));
       add(world, body);
       expect(first_index).to_be(0.0);
       expect(body->index).to_be(1.0);
@@ -476,20 +476,20 @@ void world_cases(Runner& runner) {
       auto crate = add(world, box_body(0, 0.4));
       step(world);
       expect(world->contacts.size()).to_be_greater_than(std::size_t{0});
-      expect(p2::remove_physics2_dbody(world, pt::view(crate))).to_be(true);
+      expect(p2::remove_physics_2d_body(world, pt::view(crate))).to_be(true);
       expect(world->contacts.size()).to_be(std::size_t{0});
       expect(world->bodies.size()).to_be(std::size_t{1});
     });
     runner.it("reports false for a body the world does not hold", [] {
-      expect(p2::remove_physics2_dbody(default_world(), pt::view(box_body(0, 0)))).to_be(false);
+      expect(p2::remove_physics_2d_body(default_world(), pt::view(box_body(0, 0)))).to_be(false);
     });
     runner.it("retains a one-body joint when only its unused bodyA placeholder is removed", [] {
       auto world = default_world();
-      p2::register_physics2_djoint_solver(world, flight::String("OneBody"), solver(false));
+      p2::register_physics_2d_joint_solver(world, flight::String("OneBody"), solver(false));
       auto placeholder = add(world, box_body(0, 0));
       auto constrained = add(world, box_body(2, 0));
-      auto joint = p2::add_physics2_djoint(world, entity_joint("OneBody", placeholder->index, constrained->index, false));
-      p2::remove_physics2_dbody(world, pt::view(placeholder));
+      auto joint = p2::add_physics_2d_joint(world, entity_joint("OneBody", placeholder->index, constrained->index, false));
+      p2::remove_physics_2d_body(world, pt::view(placeholder));
       require(world->joints.size() == 1 && world->joints.element(0.0) == joint, "world keeps [joint]");
     });
     runner.it("wakes a sleeping body when its supporting contact is removed with the other body", [] {
@@ -501,7 +501,7 @@ void world_cases(Runner& runner) {
       for (int i = 0; i < 180; i++) step(world);
       expect(crate->sleeping).to_be(true);
       const double resting_y = crate->y;
-      p2::remove_physics2_dbody(world, pt::view(floor));
+      p2::remove_physics_2d_body(world, pt::view(floor));
       expect(crate->sleeping).to_be(false);
       expect(crate->sleep_timer).to_be(0.0);
       step(world);
@@ -517,7 +517,7 @@ void world_cases(Runner& runner) {
       expect(world->contacts.element(0.0)->sensor).to_be(true);
       crate->sleeping = true;
       crate->sleep_timer = 5;
-      p2::remove_physics2_dbody(world, pt::view(trigger));
+      p2::remove_physics_2d_body(world, pt::view(trigger));
       expect(crate->sleeping).to_be(true);
       expect(crate->sleep_timer).to_be(5.0);
     });
@@ -533,7 +533,7 @@ void world_cases(Runner& runner) {
       body->colliders.push(right);
       add(world, body);
       const double original_mass = body->mass;
-      expect(p2::remove_physics2_dcollider(world, body, pt::view(left))).to_be(true);
+      expect(p2::remove_physics_2d_collider(world, body, pt::view(left))).to_be(true);
       const auto removed = query_point(world, -4, 0);
       const auto retained = query_point(world, 4, 0);
       require(body->colliders.size() == 1 && body->colliders.element(0.0) == right, "body keeps [right]");
@@ -546,7 +546,7 @@ void world_cases(Runner& runner) {
       auto body = add(world, box_body(0, 0));
       const double mass = body->mass;
       auto absent = pt::collider(pt::circle(0, 0, 1), stone());
-      expect(p2::remove_physics2_dcollider(world, body, pt::view(absent))).to_be(false);
+      expect(p2::remove_physics_2d_collider(world, body, pt::view(absent))).to_be(false);
       expect(body->mass).to_be(mass);
     });
   });
@@ -557,13 +557,13 @@ void world_cases(Runner& runner) {
       auto body = add(world, box_body(0, 0));
       body->sleeping = true;
       body->sleep_timer = 5;
-      expect(p2::set_physics2_dbody_bullet(world, body, true)).to_be(true);
+      expect(p2::set_physics_2d_body_bullet(world, body, true)).to_be(true);
       expect(body->bullet).to_be(true);
       expect(body->sleeping).to_be(false);
       expect(body->sleep_timer).to_be(0.0);
     });
     runner.it("reports false for a body outside the world", [] {
-      expect(p2::set_physics2_dbody_bullet(default_world(), box_body(0, 0), true)).to_be(false);
+      expect(p2::set_physics_2d_body_bullet(default_world(), box_body(0, 0), true)).to_be(false);
     });
   });
   runner.describe("setPhysics2DBodyFixedRotation", [&] {
@@ -576,7 +576,7 @@ void world_cases(Runner& runner) {
       body->torque = 7;
       const double mass = body->mass;
       other->sleeping = true;
-      expect(p2::set_physics2_dbody_fixed_rotation(world, body, true)).to_be(true);
+      expect(p2::set_physics_2d_body_fixed_rotation(world, body, true)).to_be(true);
       expect(body->mass).to_be(mass);
       expect(body->inverse_mass).to_be_greater_than(0.0);
       expect(body->inverse_inertia).to_be(0.0);
@@ -584,21 +584,21 @@ void world_cases(Runner& runner) {
       expect(body->torque).to_be(0.0);
       expect(world->contacts.size()).to_be(std::size_t{0});
       expect(other->sleeping).to_be(false);
-      expect(p2::apply_physics2_dtorque(body, 10)).to_be(false);
-      expect(p2::apply_physics2_dforce_at_point(body, 1, 0, body->x, body->y + 1)).to_be(true);
+      expect(p2::apply_physics_2d_torque(body, 10)).to_be(false);
+      expect(p2::apply_physics_2d_force_at_point(body, 1, 0, body->x, body->y + 1)).to_be(true);
       expect(body->torque).to_be(0.0);
-      expect(p2::apply_physics2_dlinear_impulse_at_point(body, 1, 0, body->x, body->y + 1)).to_be(true);
+      expect(p2::apply_physics_2d_linear_impulse_at_point(body, 1, 0, body->x, body->y + 1)).to_be(true);
       expect(body->angular_velocity).to_be(0.0);
       body->angular_velocity = 100;
       const double angle = body->angle;
       step(world);
       expect(body->angle).to_be(angle);
       expect(body->angular_velocity).to_be(0.0);
-      expect(p2::set_physics2_dbody_fixed_rotation(world, body, false)).to_be(true);
+      expect(p2::set_physics_2d_body_fixed_rotation(world, body, false)).to_be(true);
       expect(body->inverse_inertia).to_be_greater_than(0.0);
     });
     runner.it("reports false for a body outside the world", [] {
-      expect(p2::set_physics2_dbody_fixed_rotation(default_world(), box_body(0, 0), true)).to_be(false);
+      expect(p2::set_physics_2d_body_fixed_rotation(default_world(), box_body(0, 0), true)).to_be(false);
     });
   });
   runner.describe("setPhysics2DBodySleepEnabled", [&] {
@@ -607,33 +607,33 @@ void world_cases(Runner& runner) {
       auto body = add(world, box_body(0, 0));
       body->sleeping = true;
       body->sleep_timer = 5;
-      expect(p2::set_physics2_dbody_sleep_enabled(world, body, false)).to_be(true);
+      expect(p2::set_physics_2d_body_sleep_enabled(world, body, false)).to_be(true);
       expect(body->sleep_enabled).to_be(false);
       expect(body->sleeping).to_be(false);
       expect(body->sleep_timer).to_be(0.0);
       body->sleep_timer = 5;
-      expect(p2::set_physics2_dbody_sleep_enabled(world, body, true)).to_be(true);
+      expect(p2::set_physics_2d_body_sleep_enabled(world, body, true)).to_be(true);
       expect(body->sleep_enabled).to_be(true);
       expect(body->sleep_timer).to_be(0.0);
     });
     runner.it("reports false for a body outside the world", [] {
-      expect(p2::set_physics2_dbody_sleep_enabled(default_world(), box_body(0, 0), false)).to_be(false);
+      expect(p2::set_physics_2d_body_sleep_enabled(default_world(), box_body(0, 0), false)).to_be(false);
     });
   });
   runner.describe("setPhysics2DBodyTransform", [&] {
     runner.it("invalidates pose caches, wakes connected bodies, and republishes bounds", [] {
       auto world = pt::world(0, 0);
-      p2::register_physics2_djoint_solver(world, flight::String("Cached"), solver());
+      p2::register_physics_2d_joint_solver(world, flight::String("Cached"), solver());
       auto first = add(world, box_body(0, 0));
       auto second = add(world, box_body(0.75, 0));
-      auto joint = p2::add_physics2_djoint(world, entity_joint("Cached", first->index, second->index, true, 3, 4, 5));
+      auto joint = p2::add_physics_2d_joint(world, entity_joint("Cached", first->index, second->index, true, 3, 4, 5));
       step(world);
       joint->impulse0 = 3;
       joint->impulse1 = 4;
       joint->impulse2 = 5;
       first->sleeping = true;
       second->sleeping = true;
-      expect(p2::set_physics2_dbody_transform(world, first, 4, 2, 0.25)).to_be(true);
+      expect(p2::set_physics_2d_body_transform(world, first, 4, 2, 0.25)).to_be(true);
       const auto moved = query_point(world, 4, 2);
       expect(world->contacts.size()).to_be(std::size_t{0});
       expect(world->events->began.size()).to_be(std::size_t{0});
@@ -645,8 +645,8 @@ void world_cases(Runner& runner) {
     runner.it("reports invalid transforms without changing the body", [] {
       auto world = default_world();
       auto body = add(world, box_body(1, 2));
-      expect(p2::set_physics2_dbody_transform(world, body, std::nan(""), 3, 0)).to_be(false);
-      expect(p2::set_physics2_dbody_transform(default_world(), body, 4, 5, 0)).to_be(false);
+      expect(p2::set_physics_2d_body_transform(world, body, std::nan(""), 3, 0)).to_be(false);
+      expect(p2::set_physics_2d_body_transform(default_world(), body, 4, 5, 0)).to_be(false);
       expect(std::vector<double>{body->x, body->y, body->angle}).to_equal(std::vector<double>{1, 2, 0});
     });
   });
@@ -663,19 +663,19 @@ void world_cases(Runner& runner) {
       body->force_y = 6;
       body->torque = 7;
       other->sleeping = true;
-      expect(p2::set_physics2_dbody_type(world, body, flight::String("static"))).to_be(true);
+      expect(p2::set_physics_2d_body_type(world, body, flight::String("static"))).to_be(true);
       expect(body->mass).to_be(0.0);
       expect(body->inverse_mass).to_be(0.0);
       expect(std::vector<double>{body->velocity_x, body->velocity_y, body->angular_velocity}).to_equal(std::vector<double>{0, 0, 0});
       expect(std::vector<double>{body->force_x, body->force_y, body->torque}).to_equal(std::vector<double>{0, 0, 0});
       expect(world->contacts.size()).to_be(std::size_t{0});
       expect(other->sleeping).to_be(false);
-      expect(p2::set_physics2_dbody_type(world, body, flight::String("dynamic"))).to_be(true);
+      expect(p2::set_physics_2d_body_type(world, body, flight::String("dynamic"))).to_be(true);
       expect(body->mass).to_be_close_to(1);
       expect(body->inverse_mass).to_be_close_to(1);
     });
     runner.it("reports false for a body outside the world", [] {
-      expect(p2::set_physics2_dbody_type(default_world(), box_body(0, 0), flight::String("static"))).to_be(false);
+      expect(p2::set_physics_2d_body_type(default_world(), box_body(0, 0), flight::String("static"))).to_be(false);
     });
   });
 }
@@ -713,16 +713,16 @@ void islands(Runner& runner) {
       auto second = still(world, 1);
       auto third = still(world, 10);
       link(world, first, second);
-      p2::update_physics2_dsleep(world, 0.016);
-      p2::build_physics2_dsolve_islands(world);
+      p2::update_physics_2d_sleep(world, 0.016);
+      p2::build_physics_2d_solve_islands(world);
       expect(world->solve_island_roots.size()).to_be(std::size_t{2});
       expect(list(world->solve_island_body_counts)).to_equal(std::vector<double>{2, 1});
       expect(list(world->solve_island_contact_counts)).to_equal(std::vector<double>{1, 0});
       expect(list(world->solve_island_body_indices)).to_equal(std::vector<double>{0, 1, 2});
       expect(list(world->solve_island_contact_indices)).to_equal(std::vector<double>{0});
       world->contacts.resize(0.0);
-      p2::update_physics2_dsleep(world, 0.016);
-      p2::build_physics2_dsolve_islands(world);
+      p2::update_physics_2d_sleep(world, 0.016);
+      p2::build_physics_2d_solve_islands(world);
       expect(world->solve_island_body_indices.identity() == body_indices.identity()).to_be(true);
       expect(world->solve_island_contact_indices.identity() == contact_indices.identity()).to_be(true);
       expect(list(world->solve_island_body_counts)).to_equal(std::vector<double>{1, 1, 1});
@@ -733,8 +733,8 @@ void islands(Runner& runner) {
       auto ground = add(world, pt::body("static", 0, 0));
       auto settled = still(world);
       link(world, ground, settled);
-      p2::update_physics2_dsleep(world, world->config->time_to_sleep + 0.01);
-      p2::build_physics2_dsolve_islands(world);
+      p2::update_physics_2d_sleep(world, world->config->time_to_sleep + 0.01);
+      p2::build_physics_2d_solve_islands(world);
       expect(settled->sleeping).to_be(true);
       expect(world->solve_island_roots.size()).to_be(std::size_t{0});
       expect(world->solve_island_body_indices.size()).to_be(std::size_t{0});
@@ -747,7 +747,7 @@ void islands(Runner& runner) {
       auto world = default_world();
       auto anchor = add(world, pt::body("static", 0, 0));
       auto crate = still(world);
-      expect(p2::is_rigid_body2_dpair_awake(pt::view(anchor), pt::view(crate))).to_be(true);
+      expect(p2::is_rigid_body_2d_pair_awake(pt::view(anchor), pt::view(crate))).to_be(true);
     });
     runner.it("reports a pair asleep when both ends are sleeping", [] {
       auto world = default_world();
@@ -755,14 +755,14 @@ void islands(Runner& runner) {
       auto second = still(world, 1);
       first->sleeping = true;
       second->sleeping = true;
-      expect(p2::is_rigid_body2_dpair_awake(pt::view(first), pt::view(second))).to_be(false);
+      expect(p2::is_rigid_body_2d_pair_awake(pt::view(first), pt::view(second))).to_be(false);
     });
     runner.it("reports a sleeper anchored to static scenery asleep", [] {
       auto world = default_world();
       auto anchor = add(world, pt::body("static", 0, 0));
       auto crate = still(world);
       crate->sleeping = true;
-      expect(p2::is_rigid_body2_dpair_awake(pt::view(anchor), pt::view(crate))).to_be(false);
+      expect(p2::is_rigid_body_2d_pair_awake(pt::view(anchor), pt::view(crate))).to_be(false);
     });
   });
 
@@ -774,14 +774,14 @@ void islands(Runner& runner) {
       auto first = still(world, 0);
       auto second = still(world, 1);
       link(world, first, second);
-      p2::update_physics2_dsleep(world, 0.1);
+      p2::update_physics_2d_sleep(world, 0.1);
       // toBe on the two maps: the captured handles still see what the world's maps hold.
       expect(world->island_parents.size()).to_be(parents.size());
       expect(world->island_sleep_timers.size()).to_be(timers.size());
       expect(parents.size()).to_be_greater_than(std::size_t{0});
       expect(timers.size()).to_be_greater_than(std::size_t{0});
       world->contacts.resize(0.0);
-      p2::update_physics2_dsleep(world, 0.1);
+      p2::update_physics_2d_sleep(world, 0.1);
       expect(world->island_parents.size()).to_be(parents.size());
       expect(world->island_sleep_timers.size()).to_be(timers.size());
       expect(parents.size()).to_be(std::size_t{0});
@@ -790,31 +790,31 @@ void islands(Runner& runner) {
     runner.it("sleeps a body that has been still for the full timeToSleep", [] {
       auto world = default_world();
       auto crate = still(world);
-      p2::update_physics2_dsleep(world, world->config->time_to_sleep + 0.01);
+      p2::update_physics_2d_sleep(world, world->config->time_to_sleep + 0.01);
       expect(crate->sleeping).to_be(true);
     });
     runner.it("leaves a still body awake until timeToSleep has elapsed", [] {
       auto world = default_world();
       auto crate = still(world);
-      p2::update_physics2_dsleep(world, world->config->time_to_sleep - 0.01);
+      p2::update_physics_2d_sleep(world, world->config->time_to_sleep - 0.01);
       expect(crate->sleeping).to_be(false);
       expect(crate->sleep_timer).to_be_close_to(world->config->time_to_sleep - 0.01);
     });
     runner.it("resets the timer of a body moving faster than the linear threshold", [] {
       auto world = default_world();
       auto crate = still(world);
-      p2::update_physics2_dsleep(world, 0.4);
+      p2::update_physics_2d_sleep(world, 0.4);
       crate->velocity_x = world->config->sleep_linear_threshold * 10;
-      p2::update_physics2_dsleep(world, 0.4);
+      p2::update_physics_2d_sleep(world, 0.4);
       expect(crate->sleep_timer).to_be(0.0);
       expect(crate->sleeping).to_be(false);
     });
     runner.it("resets the timer of a body spinning faster than the angular threshold", [] {
       auto world = default_world();
       auto crate = still(world);
-      p2::update_physics2_dsleep(world, 0.4);
+      p2::update_physics_2d_sleep(world, 0.4);
       crate->angular_velocity = world->config->sleep_angular_threshold * 10;
-      p2::update_physics2_dsleep(world, 0.4);
+      p2::update_physics_2d_sleep(world, 0.4);
       expect(crate->sleep_timer).to_be(0.0);
       expect(crate->sleeping).to_be(false);
     });
@@ -822,7 +822,7 @@ void islands(Runner& runner) {
       auto world = default_world();
       auto crate = still(world);
       crate->force_x = 100;
-      p2::update_physics2_dsleep(world, world->config->time_to_sleep + 0.01);
+      p2::update_physics_2d_sleep(world, world->config->time_to_sleep + 0.01);
       expect(crate->sleeping).to_be(false);
       expect(crate->sleep_timer).to_be(0.0);
     });
@@ -830,7 +830,7 @@ void islands(Runner& runner) {
       auto world = default_world();
       auto crate = still(world);
       crate->torque = 100;
-      p2::update_physics2_dsleep(world, world->config->time_to_sleep + 0.01);
+      p2::update_physics_2d_sleep(world, world->config->time_to_sleep + 0.01);
       expect(crate->sleeping).to_be(false);
     });
     runner.it("zeroes the velocity of a body it puts to sleep", [] {
@@ -838,7 +838,7 @@ void islands(Runner& runner) {
       auto crate = still(world);
       crate->velocity_x = world->config->sleep_linear_threshold / 2;
       crate->angular_velocity = world->config->sleep_angular_threshold / 2;
-      p2::update_physics2_dsleep(world, world->config->time_to_sleep + 0.01);
+      p2::update_physics_2d_sleep(world, world->config->time_to_sleep + 0.01);
       expect(crate->sleeping).to_be(true);
       expect(crate->velocity_x).to_be(0.0);
       expect(crate->angular_velocity).to_be(0.0);
@@ -848,7 +848,7 @@ void islands(Runner& runner) {
       auto settled = still(world, 0);
       auto shoved = moving(world, 1);
       link(world, settled, shoved);
-      p2::update_physics2_dsleep(world, world->config->time_to_sleep + 0.01);
+      p2::update_physics_2d_sleep(world, world->config->time_to_sleep + 0.01);
       expect(shoved->sleeping).to_be(false);
       expect(settled->sleeping).to_be(false);
     });
@@ -859,35 +859,35 @@ void islands(Runner& runner) {
       auto shoved = moving(world, 2);
       link(world, settled, middle);
       link(world, middle, shoved);
-      p2::update_physics2_dsleep(world, world->config->time_to_sleep + 0.01);
+      p2::update_physics_2d_sleep(world, world->config->time_to_sleep + 0.01);
       expect(settled->sleeping).to_be(false);
     });
     runner.it("keeps a joint island awake while any one member is moving", [] {
       auto world = default_world();
-      p2::register_physics2_djoint_solver(world, flight::String("test"), solver());
+      p2::register_physics_2d_joint_solver(world, flight::String("test"), solver());
       auto settled = still(world, 0);
       auto shoved = moving(world, 1);
       world->joints.push(joint_row("test", settled->index, shoved->index, false));
-      p2::update_physics2_dsleep(world, world->config->time_to_sleep + 0.01);
+      p2::update_physics_2d_sleep(world, world->config->time_to_sleep + 0.01);
       expect(settled->sleeping).to_be(false);
     });
     runner.it("does not island-connect a one-body joint through its unused bodyA", [] {
       auto world = default_world();
-      p2::register_physics2_djoint_solver(world, flight::String("one-body"), solver(false));
+      p2::register_physics_2d_joint_solver(world, flight::String("one-body"), solver(false));
       auto settled = still(world, 0);
       auto shoved = moving(world, 1);
       world->joints.push(joint_row("one-body", shoved->index, settled->index, false, INF, INF));
-      p2::update_physics2_dsleep(world, world->config->time_to_sleep + 0.01);
+      p2::update_physics_2d_sleep(world, world->config->time_to_sleep + 0.01);
       expect(settled->sleeping).to_be(true);
       expect(shoved->sleeping).to_be(false);
     });
     runner.it("keeps only participating endpoints awake for an externally driven joint", [] {
       auto world = default_world();
-      p2::register_physics2_djoint_solver(world, flight::String("external"), solver(false, true));
+      p2::register_physics_2d_joint_solver(world, flight::String("external"), solver(false, true));
       auto unused = still(world, 0);
       auto driven = still(world, 1);
       world->joints.push(joint_row("external", unused->index, driven->index, false, INF, INF));
-      p2::update_physics2_dsleep(world, world->config->time_to_sleep + 0.01);
+      p2::update_physics_2d_sleep(world, world->config->time_to_sleep + 0.01);
       expect(unused->sleeping).to_be(true);
       expect(driven->sleeping).to_be(false);
       expect(driven->sleep_timer).to_be(0.0);
@@ -899,7 +899,7 @@ void islands(Runner& runner) {
       auto shoved = moving(world, 20);
       link(world, ground, settled);
       link(world, ground, shoved);
-      p2::update_physics2_dsleep(world, world->config->time_to_sleep + 0.01);
+      p2::update_physics_2d_sleep(world, world->config->time_to_sleep + 0.01);
       expect(settled->sleeping).to_be(true);
       expect(shoved->sleeping).to_be(false);
     });
@@ -908,23 +908,23 @@ void islands(Runner& runner) {
       auto settled = still(world, 0);
       auto shoved = moving(world, 1);
       link(world, settled, shoved, true);
-      p2::update_physics2_dsleep(world, world->config->time_to_sleep + 0.01);
+      p2::update_physics_2d_sleep(world, world->config->time_to_sleep + 0.01);
       expect(settled->sleeping).to_be(true);
     });
     runner.it("leaves static bodies neither asleep nor accumulating a timer", [] {
       auto world = default_world();
       auto ground = add(world, pt::body("static", 0, 0));
-      p2::update_physics2_dsleep(world, world->config->time_to_sleep + 0.01);
+      p2::update_physics_2d_sleep(world, world->config->time_to_sleep + 0.01);
       expect(ground->sleeping).to_be(false);
       expect(ground->sleep_timer).to_be(0.0);
     });
     runner.it("wakes everything already asleep when allowSleeping is turned off", [] {
       auto world = default_world();
       auto crate = still(world);
-      p2::update_physics2_dsleep(world, world->config->time_to_sleep + 0.01);
+      p2::update_physics_2d_sleep(world, world->config->time_to_sleep + 0.01);
       expect(crate->sleeping).to_be(true);
       world->config->allow_sleeping = false;
-      p2::update_physics2_dsleep(world, 0.016);
+      p2::update_physics_2d_sleep(world, 0.016);
       expect(crate->sleeping).to_be(false);
       expect(crate->sleep_timer).to_be(0.0);
     });
@@ -934,7 +934,7 @@ void islands(Runner& runner) {
       auto controlled = still(world, 1);
       controlled->sleep_enabled = false;
       link(world, first, controlled);
-      p2::update_physics2_dsleep(world, world->config->time_to_sleep + 0.01);
+      p2::update_physics_2d_sleep(world, world->config->time_to_sleep + 0.01);
       expect(controlled->sleeping).to_be(false);
       expect(controlled->sleep_timer).to_be(0.0);
       expect(first->sleeping).to_be(false);
@@ -942,11 +942,11 @@ void islands(Runner& runner) {
     runner.it("clears the timer of a body it wakes so rest has to be earned again", [] {
       auto world = default_world();
       auto settled = still(world, 0);
-      p2::update_physics2_dsleep(world, world->config->time_to_sleep + 0.01);
+      p2::update_physics_2d_sleep(world, world->config->time_to_sleep + 0.01);
       expect(settled->sleeping).to_be(true);
       auto shoved = moving(world, 1);
       link(world, settled, shoved);
-      p2::update_physics2_dsleep(world, 0.016);
+      p2::update_physics_2d_sleep(world, 0.016);
       expect(settled->sleeping).to_be(false);
       expect(settled->sleep_timer).to_be(0.0);
     });
@@ -956,8 +956,8 @@ void islands(Runner& runner) {
     runner.it("clears both the sleeping flag and the stillness timer", [] {
       auto world = default_world();
       auto crate = still(world);
-      p2::update_physics2_dsleep(world, world->config->time_to_sleep + 0.01);
-      p2::wake_physics2_dbody(crate);
+      p2::update_physics_2d_sleep(world, world->config->time_to_sleep + 0.01);
+      p2::wake_physics_2d_body(crate);
       expect(crate->sleeping).to_be(false);
       expect(crate->sleep_timer).to_be(0.0);
     });
@@ -998,7 +998,7 @@ void solver_cases(Runner& runner) {
       auto world = default_world();
       auto a = add(world, solver_body("dynamic", 0, 0));
       auto b = add(world, solver_body("dynamic", 0, 1));
-      p2::apply_physics2_dimpulse(a, b, 0, 0, 0, 0, 0, 1);
+      p2::apply_physics_2d_impulse(a, b, 0, 0, 0, 0, 0, 1);
       expect(a->velocity_y).to_be_greater_than(0.0);
       expect(b->velocity_y).to_be_less_than(0.0);
     });
@@ -1006,14 +1006,14 @@ void solver_cases(Runner& runner) {
       auto world = default_world();
       auto a = add(world, solver_body("dynamic", 0, 0));
       auto b = add(world, solver_body("dynamic", 0, 1));
-      p2::apply_physics2_dimpulse(a, b, 0.5, 0, 0, 0, 0, 1);
+      p2::apply_physics_2d_impulse(a, b, 0.5, 0, 0, 0, 0, 1);
       expect(a->angular_velocity != 0).to_be(true);
     });
     runner.it("leaves a static body untouched through its zero inverse mass, with no branch", [] {
       auto world = default_world();
       auto floor = add(world, solver_body("static", 0, 0));
       auto crate = add(world, solver_body("dynamic", 0, 1));
-      p2::apply_physics2_dimpulse(floor, crate, 0.3, 0.2, 0, 0, 5, 7);
+      p2::apply_physics_2d_impulse(floor, crate, 0.3, 0.2, 0, 0, 5, 7);
       expect(floor->velocity_x).to_be(0.0);
       expect(floor->velocity_y).to_be(0.0);
       expect(floor->angular_velocity).to_be(0.0);
@@ -1044,10 +1044,10 @@ void solver_cases(Runner& runner) {
       auto [world, crate] = resting_world();
       step(world);
       crate->velocity_y = -5;
-      p2::solve_physics2_dcontact_indices_once(world, flight::Array<double>{0}, 0, 1);
+      p2::solve_physics_2d_contact_indices_once(world, flight::Array<double>{0}, 0, 1);
       expect(crate->velocity_y).to_be_greater_than(-5.0);
       const double after_selected = crate->velocity_y;
-      p2::solve_physics2_dcontact_indices_once(world, flight::Array<double>{0}, 1, 0);
+      p2::solve_physics_2d_contact_indices_once(world, flight::Array<double>{0}, 1, 0);
       expect(crate->velocity_y).to_be(after_selected);
     });
   });
@@ -1100,7 +1100,7 @@ void solver_cases(Runner& runner) {
       expect(world->contacts.element(0.0)->points.element(0.0)->tangent_impulse).to_be(0.0);
     });
     runner.it("does nothing for a world with no contacts", [] {
-      expect(throws([] { p2::solve_physics2_dcontacts(default_world()); })).to_be(false);
+      expect(throws([] { p2::solve_physics_2d_contacts(default_world()); })).to_be(false);
     });
   });
   runner.describe("solvePhysics2DContactsOnce", [&] {
@@ -1109,11 +1109,11 @@ void solver_cases(Runner& runner) {
       crate->velocity_y = -5;
       step(world);
       const double before = crate->velocity_y;
-      p2::solve_physics2_dcontacts_once(world);
+      p2::solve_physics_2d_contacts_once(world);
       expect(crate->velocity_y != before).to_be(true);
     });
     runner.it("does nothing for a world with no contacts", [] {
-      expect(throws([] { p2::solve_physics2_dcontacts_once(default_world()); })).to_be(false);
+      expect(throws([] { p2::solve_physics_2d_contacts_once(default_world()); })).to_be(false);
     });
   });
   runner.describe("warmStartPhysics2DContactIndices", [&] {
@@ -1123,7 +1123,7 @@ void solver_cases(Runner& runner) {
       expect(world->contacts.element(0.0)->points.element(0.0)->normal_impulse).to_be_greater_than(0.0);
       crate->velocity_x = 0;
       crate->velocity_y = 0;
-      p2::warm_start_physics2_dcontact_indices(world, flight::Array<double>{0}, 0, 1);
+      p2::warm_start_physics_2d_contact_indices(world, flight::Array<double>{0}, 0, 1);
       expect(crate->velocity_y != 0).to_be(true);
     });
   });
@@ -1146,7 +1146,7 @@ void solver_cases(Runner& runner) {
       expect(warm_top).to_be_greater_than_or_equal(cold_top - 1e-9);
     });
     runner.it("does nothing for a world with no contacts", [] {
-      expect(throws([] { p2::warm_start_physics2_dcontacts(default_world()); })).to_be(false);
+      expect(throws([] { p2::warm_start_physics_2d_contacts(default_world()); })).to_be(false);
     });
   });
 }
@@ -1169,14 +1169,14 @@ void broadphase(Runner& runner) {
       world->index->update_spatial_object =
           [&](double, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<types::SpatialAabb2D>>>> bounds) {
             nested_calls++;
-            p2::synchronize_physics2_dbroadphase(nested_world);
+            p2::synchronize_physics_2d_broadphase(nested_world);
             published[0] = flight::row_get<flight::RowKey<"minX">>(bounds);
             published[1] = flight::row_get<flight::RowKey<"minY">>(bounds);
             published[2] = flight::row_get<flight::RowKey<"maxX">>(bounds);
             published[3] = flight::row_get<flight::RowKey<"maxY">>(bounds);
             return true;
           };
-      p2::synchronize_physics2_dbroadphase(world);
+      p2::synchronize_physics_2d_broadphase(world);
       expect(nested_calls).to_be(1);
       expect(published[0]).to_be(1.0);
       expect(published[1]).to_be(2.0);
@@ -1188,7 +1188,7 @@ void broadphase(Runner& runner) {
       auto body = pt::body("dynamic", 2, 3);
       body->colliders.push(pt::collider(pt::circle(0, 0, 1), stone()));
       add(world, body);
-      p2::synchronize_physics2_dbroadphase(world);
+      p2::synchronize_physics_2d_broadphase(world);
       expect(query_point(world, 2, 3)).to_equal(std::vector<double>{body->index});
     });
     runner.it("keeps zero-area shapes and inclusive upper edges queryable", [] {
@@ -1196,7 +1196,7 @@ void broadphase(Runner& runner) {
       auto body = pt::body("dynamic", 2, 3);
       body->colliders.push(pt::collider(pt::point(1, 1), stone()));
       add(world, body);
-      p2::synchronize_physics2_dbroadphase(world);
+      p2::synchronize_physics_2d_broadphase(world);
       expect(query_point(world, 3, 4)).to_equal(std::vector<double>{body->index});
     });
   });
@@ -1211,9 +1211,9 @@ void broadphase(Runner& runner) {
       second->velocity_x = -10;
       second->colliders.push(pt::collider(pt::circle(0, 0, 0.5), stone()));
       add(world, second);
-      p2::synchronize_physics2_dbroadphase(world);
+      p2::synchronize_physics_2d_broadphase(world);
       expect(query_pairs(world).size()).to_be(std::size_t{0});
-      p2::synchronize_physics2_dswept_broadphase(world, 0.5);
+      p2::synchronize_physics_2d_swept_broadphase(world, 0.5);
       const auto pairs = query_pairs(world);
       require(pairs.size() == 1 && pairs[0].first == first->index && pairs[0].second == second->index, "one swept pair");
     });
@@ -1226,9 +1226,9 @@ void broadphase(Runner& runner) {
       auto obstacle = pt::body("static", 0, 1.5);
       obstacle->colliders.push(pt::collider(pt::circle(0, 0, 0.1), stone()));
       add(world, obstacle);
-      p2::synchronize_physics2_dbroadphase(world);
+      p2::synchronize_physics_2d_broadphase(world);
       expect(query_pairs(world).size()).to_be(std::size_t{0});
-      p2::synchronize_physics2_dswept_broadphase(world, 0.5);
+      p2::synchronize_physics_2d_swept_broadphase(world, 0.5);
       const auto pairs = query_pairs(world);
       require(pairs.size() == 1 && pairs[0].first == rod->index && pairs[0].second == obstacle->index, "one rotation pair");
     });
@@ -1243,11 +1243,11 @@ void ownership(Runner& runner) {
       auto world = default_world();
       auto owned = add(world, pt::body("dynamic", 0, 0));
       auto detached = pt::body("dynamic", 0, 0);
-      p2::stepping_physics2_dworlds.add(world);
+      p2::stepping_physics_2d_worlds.add(world);
       const bool owned_throws =
-          throws_with([&] { p2::assert_physics2_dbody_not_stepping(pt::view(owned)); }, "while it is stepping");
-      const bool detached_throws = throws([&] { p2::assert_physics2_dbody_not_stepping(pt::view(detached)); });
-      static_cast<void>(p2::stepping_physics2_dworlds.erase(world));
+          throws_with([&] { p2::assert_physics_2d_body_not_stepping(pt::view(owned)); }, "while it is stepping");
+      const bool detached_throws = throws([&] { p2::assert_physics_2d_body_not_stepping(pt::view(detached)); });
+      static_cast<void>(p2::stepping_physics_2d_worlds.erase(world));
       expect(owned_throws).to_be(true);
       expect(detached_throws).to_be(false);
     });
@@ -1255,13 +1255,13 @@ void ownership(Runner& runner) {
   runner.describe("assertPhysics2DWorldNotStepping", [&] {
     runner.it("rejects an active world and accepts it again after the step boundary is released", [] {
       auto world = default_world();
-      expect(throws([&] { p2::assert_physics2_dworld_not_stepping(pt::view(world)); })).to_be(false);
-      p2::stepping_physics2_dworlds.add(world);
+      expect(throws([&] { p2::assert_physics_2d_world_not_stepping(pt::view(world)); })).to_be(false);
+      p2::stepping_physics_2d_worlds.add(world);
       const bool active_throws =
-          throws_with([&] { p2::assert_physics2_dworld_not_stepping(pt::view(world)); }, "while it is stepping");
-      static_cast<void>(p2::stepping_physics2_dworlds.erase(world));
+          throws_with([&] { p2::assert_physics_2d_world_not_stepping(pt::view(world)); }, "while it is stepping");
+      static_cast<void>(p2::stepping_physics_2d_worlds.erase(world));
       expect(active_throws).to_be(true);
-      expect(throws([&] { p2::assert_physics2_dworld_not_stepping(pt::view(world)); })).to_be(false);
+      expect(throws([&] { p2::assert_physics_2d_world_not_stepping(pt::view(world)); })).to_be(false);
     });
   });
 }
@@ -1275,7 +1275,7 @@ pt::World world_with(std::vector<pt::Shape> shapes) {
     auto collider = pt::collider(shape, stone());
     body->colliders.push(collider);
     add(world, body);
-    p2::update_physics2_dcollider_world_shape(collider, pt::view(body));
+    p2::update_physics_2d_collider_world_shape(collider, pt::view(body));
   }
   return world;
 }
@@ -1289,25 +1289,25 @@ std::vector<std::string> strings(const flight::Array<flight::String>& values) {
 void explain(Runner& runner) {
   runner.describe("explainPhysics2DCollision", [&] {
     runner.it("reports ready for a world of shapes the dispatcher answers for", [] {
-      auto explanation = p2::explain_physics2_dcollision(pt::view(world_with(
+      auto explanation = p2::explain_physics_2d_collision(pt::view(world_with(
           {pt::circle(0, 0, 1), pt::aabb(-1, -1, 1, 1), pt::capsule(0, 0, 1, 0, 0.5), pt::polygon({0, 0, 1, 0, 1, 1})})));
       expect(explanation->status).to_be(flight::String("ready"));
       expect(explanation->unsupported_kinds.size()).to_be(std::size_t{0});
     });
     runner.it("reports ready for an empty world, which has nothing that can fail", [] {
-      expect(p2::explain_physics2_dcollision(pt::view(pt::world(0, -10)))->status).to_be(flight::String("ready"));
+      expect(p2::explain_physics_2d_collision(pt::view(pt::world(0, -10)))->status).to_be(flight::String("ready"));
     });
     runner.it("reports ready for a capsule, which the dispatcher now answers for", [] {
-      auto explanation = p2::explain_physics2_dcollision(pt::view(world_with({pt::capsule(0, 0, 1, 0, 0.5)})));
+      auto explanation = p2::explain_physics_2d_collision(pt::view(world_with({pt::capsule(0, 0, 1, 0, 0.5)})));
       expect(explanation->status).to_be(flight::String("ready"));
       expect(explanation->unsupported_kinds.size()).to_be(std::size_t{0});
     });
     runner.it("names the area-less kinds too, since they are equally invisible to the solver", [] {
-      auto explanation = p2::explain_physics2_dcollision(pt::view(world_with({pt::segment(0, 0, 1, 0), pt::point(0, 0)})));
+      auto explanation = p2::explain_physics_2d_collision(pt::view(world_with({pt::segment(0, 0, 1, 0), pt::point(0, 0)})));
       expect(strings(explanation->unsupported_kinds)).to_equal(std::vector<std::string>{"point", "segment"});
     });
     runner.it("reports each kind once however many colliders carry it, and in a stable order", [] {
-      auto explanation = p2::explain_physics2_dcollision(pt::view(
+      auto explanation = p2::explain_physics_2d_collision(pt::view(
           world_with({pt::point(0, 0), pt::segment(0, 0, 1, 0), pt::segment(2, 0, 3, 0), pt::circle(0, 0, 1)})));
       expect(strings(explanation->unsupported_kinds)).to_equal(std::vector<std::string>{"point", "segment"});
     });
@@ -1315,7 +1315,7 @@ void explain(Runner& runner) {
 
   runner.describe("explainPhysics2DStep", [&] {
     runner.it("reports a valid step as ready", [] {
-      auto e = p2::explain_physics2_dstep(pt::view(default_world()), DT);
+      auto e = p2::explain_physics_2d_step(pt::view(default_world()), DT);
       require(e->body_state_valid && e->contact_state_valid && e->gravity_valid && e->joint_state_valid &&
                   e->position_iterations_valid && e->previous_timestep_valid && e->solver_config_valid &&
                   e->status == flight::String("ready") && e->timestep_valid && e->velocity_iterations_valid,
@@ -1325,7 +1325,7 @@ void explain(Runner& runner) {
       auto world = default_world();
       world->config->velocity_iterations = INF;
       world->config->position_iterations = 1.5;
-      auto e = p2::explain_physics2_dstep(pt::view(world), std::nan(""));
+      auto e = p2::explain_physics_2d_step(pt::view(world), std::nan(""));
       require(e->body_state_valid && e->contact_state_valid && e->gravity_valid && e->joint_state_valid &&
                   !e->position_iterations_valid && e->previous_timestep_valid && e->solver_config_valid &&
                   e->status == flight::String("invalid-step") && !e->timestep_valid && !e->velocity_iterations_valid,
@@ -1346,7 +1346,7 @@ void explain(Runner& runner) {
       auto joint = joint_row("Test", 0, 0, false);
       joint->impulse0 = std::nan("");
       world->joints.push(joint);
-      auto e = p2::explain_physics2_dstep(pt::view(world), DT);
+      auto e = p2::explain_physics_2d_step(pt::view(world), DT);
       require(!e->body_state_valid && !e->contact_state_valid && !e->gravity_valid && !e->joint_state_valid &&
                   !e->previous_timestep_valid && !e->solver_config_valid && e->status == flight::String("invalid-step"),
               "all six state faults reported at once");
@@ -1400,7 +1400,7 @@ pt::World unregistered_joint_world() {
   auto world = pt::world(0, -10);
   auto anchor = ball(world, "static", 0, 0);
   auto bob = ball(world, "dynamic", 0, -3);
-  p2::add_physics2_djoint(world, entity_joint("Distance", anchor->index, bob->index, false));
+  p2::add_physics_2d_joint(world, entity_joint("Distance", anchor->index, bob->index, false));
   return world;
 }
 
@@ -1419,26 +1419,26 @@ void guards(Runner& runner) {
       try {
         body();
       } catch (...) {
-        p2::disable_physics2_dguards();
+        p2::disable_physics_2d_guards();
         throw;
       }
-      p2::disable_physics2_dguards();
+      p2::disable_physics_2d_guards();
     };
   };
 
   runner.describe("arePhysics2DGuardsEnabled", [&] {
     runner.it("reports the current module guard state", each([] {
-      expect(p2::are_physics2_dguards_enabled()).to_be(false);
-      p2::enable_physics2_dguards();
-      expect(p2::are_physics2_dguards_enabled()).to_be(true);
-      p2::disable_physics2_dguards();
-      expect(p2::are_physics2_dguards_enabled()).to_be(false);
+      expect(p2::are_physics_2d_guards_enabled()).to_be(false);
+      p2::enable_physics_2d_guards();
+      expect(p2::are_physics_2d_guards_enabled()).to_be(true);
+      p2::disable_physics_2d_guards();
+      expect(p2::are_physics_2d_guards_enabled()).to_be(false);
     }));
   });
   runner.describe("disablePhysics2DGuards", [&] {
     runner.it("removes both seams so a declined step and an unsolved joint are silent again", each([] {
-      p2::enable_physics2_dguards();
-      p2::disable_physics2_dguards();
+      p2::enable_physics_2d_guards();
+      p2::disable_physics_2d_guards();
       auto declining = pt::world(0, -10);
       declining->config->position_iterations = -3;
       auto entries = capture_log([&] {
@@ -1450,7 +1450,7 @@ void guards(Runner& runner) {
   });
   runner.describe("enablePhysics2DGuards", [&] {
     runner.it("reports an area-less collider used as a body shape", each([] {
-      p2::enable_physics2_dguards();
+      p2::enable_physics_2d_guards();
       auto world = pt::world(0, -10);
       auto body = pt::body("dynamic", 0, 0);
       body->colliders.push(pt::collider(pt::segment(0, 0, 1, 0), stone()));
@@ -1463,7 +1463,7 @@ void guards(Runner& runner) {
       expect(field_string(entry, "message").find("no area") != std::string::npos).to_be(true);
     }));
     runner.it("says nothing about a capsule, which the dispatcher answers for", each([] {
-      p2::enable_physics2_dguards();
+      p2::enable_physics_2d_guards();
       auto world = pt::world(0, -10);
       auto body = pt::body("dynamic", 0, 0);
       body->colliders.push(pt::collider(pt::capsule(0, 0, 1, 0, 0.4), stone()));
@@ -1471,7 +1471,7 @@ void guards(Runner& runner) {
       expect(capture_log([&] { step(world); }).size()).to_be(std::size_t{0});
     }));
     runner.it("says nothing about colliders the dispatcher does answer for", each([] {
-      p2::enable_physics2_dguards();
+      p2::enable_physics_2d_guards();
       auto world = pt::world(0, -10);
       auto body = pt::body("dynamic", 0, 0);
       body->colliders.push(pt::collider(pt::circle(0, 0, 0.5), stone()));
@@ -1479,14 +1479,14 @@ void guards(Runner& runner) {
       expect(capture_log([&] { step(world); }).size()).to_be(std::size_t{0});
     }));
     runner.it("says nothing while a healthy world steps", each([] {
-      p2::enable_physics2_dguards();
+      p2::enable_physics_2d_guards();
       auto world = pt::world(0, -10);
       ball(world, "static", 0, 0);
       ball(world, "dynamic", 0, 2);
       expect(capture_log([&] { step(world); }).size()).to_be(std::size_t{0});
     }));
     if (run_known_defects) runner.it("names every failing precondition at once, not only the first", each([] {
-      p2::enable_physics2_dguards();
+      p2::enable_physics_2d_guards();
       auto world = pt::world(std::nan(""), -10);
       world->config->position_iterations = -3;
       auto entries = capture_log([&] { step(world); });
@@ -1498,7 +1498,7 @@ void guards(Runner& runner) {
       expect(std::find(failing.begin(), failing.end(), "positionIterationsValid") != failing.end()).to_be(true);
     }));
     runner.it("reports a joint whose kind has no registered solver, on a step that otherwise succeeds", each([] {
-      p2::enable_physics2_dguards();
+      p2::enable_physics_2d_guards();
       auto world = unregistered_joint_world();
       auto entries = capture_log([&] { step(world); });
       expect(entries.size()).to_be(std::size_t{1});
@@ -1509,12 +1509,12 @@ void guards(Runner& runner) {
       expect(world->bodies.element(1.0)->velocity_y).to_be_less_than(0.0);
     }));
     runner.it("collapses many identically broken joints into one report", each([] {
-      p2::enable_physics2_dguards();
+      p2::enable_physics_2d_guards();
       auto world = unregistered_joint_world();
       for (int extra = 0; extra < 11; extra++) {
         auto copy = flight::make_ref<types::Physics2DJoint>(*world->joints.element(0.0));
         copy->impulse0 = 0;
-        p2::add_physics2_djoint(world, copy);
+        p2::add_physics_2d_joint(world, copy);
       }
       expect(world->joints.size()).to_be(std::size_t{12});
       auto entries = capture_log([&] { step(world); });
@@ -1523,7 +1523,7 @@ void guards(Runner& runner) {
       expect(field_string(entries.element(0.0), "message").find("12 of 12") != std::string::npos).to_be(true);
     }));
     runner.it("warns once for a repeated fault rather than once per frame", each([] {
-      p2::enable_physics2_dguards();
+      p2::enable_physics_2d_guards();
       auto world = unregistered_joint_world();
       auto entries = capture_log([&] {
         for (int i = 0; i < 60; i++) step(world);
@@ -1531,7 +1531,7 @@ void guards(Runner& runner) {
       expect(entries.size()).to_be(std::size_t{1});
     }));
     if (run_known_defects) runner.it("does not add the joint complaint on top of a declined step", each([] {
-      p2::enable_physics2_dguards();
+      p2::enable_physics_2d_guards();
       auto world = unregistered_joint_world();
       world->config->velocity_iterations = -1;
       auto entries = capture_log([&] { step(world); });

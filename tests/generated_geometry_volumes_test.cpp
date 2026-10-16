@@ -528,20 +528,20 @@ void test_capsule() {
   }
   FLIGHT_EXPECT_FUNCTION(g::initialize_capsule);
   const auto unit = [] { return g::create_capsule(0, -1, 0, 0, 1, 0, 1); };
-  check(close(g::intersect_ray3_dcapsule(g::create_ray3_d(5, 0, 0, -1, 0, 0), unit()), 4, 5), "intersectRay3DCapsule hits a unit capsule from the side");
-  check(same(g::intersect_ray3_dcapsule(g::create_ray3_d(5, 0, 0, 1, 0, 0), unit()), -1), "intersectRay3DCapsule returns -1 for a ray pointing away from the capsule");
-  check(same(g::intersect_ray3_dcapsule(g::create_ray3_d(0, 0, 0, 1, 0, 0), unit()), 0), "intersectRay3DCapsule returns 0 for a ray starting inside the capsule");
-  check(close(g::intersect_ray3_dcapsule(g::create_ray3_d(0, 5, 0, 0, -1, 0), g::create_capsule(0, 0, 0, 0, 0, 0, 1)), 4, 5), "intersectRay3DCapsule hits the end cap from above");
-  check(same(g::intersect_ray3_dcapsule(g::create_ray3_d(0, 0, 0, 0, 0, 0), unit()), -1) && same(g::intersect_ray3_dcapsule(g::create_ray3_d(9, 9, 9, 0, 0, 0), unit()), -1),
+  check(close(g::intersect_ray_3d_capsule(g::create_ray_3d(5, 0, 0, -1, 0, 0), unit()), 4, 5), "intersectRay3DCapsule hits a unit capsule from the side");
+  check(same(g::intersect_ray_3d_capsule(g::create_ray_3d(5, 0, 0, 1, 0, 0), unit()), -1), "intersectRay3DCapsule returns -1 for a ray pointing away from the capsule");
+  check(same(g::intersect_ray_3d_capsule(g::create_ray_3d(0, 0, 0, 1, 0, 0), unit()), 0), "intersectRay3DCapsule returns 0 for a ray starting inside the capsule");
+  check(close(g::intersect_ray_3d_capsule(g::create_ray_3d(0, 5, 0, 0, -1, 0), g::create_capsule(0, 0, 0, 0, 0, 0, 1)), 4, 5), "intersectRay3DCapsule hits the end cap from above");
+  check(same(g::intersect_ray_3d_capsule(g::create_ray_3d(0, 0, 0, 0, 0, 0), unit()), -1) && same(g::intersect_ray_3d_capsule(g::create_ray_3d(9, 9, 9, 0, 0, 0), unit()), -1),
         "intersectRay3DCapsule returns -1 for a ray with no direction");
-  check(same(g::intersect_ray3_dcapsule(g::create_ray3_d(5, 0, 0, -1, 0, 0), g::create_capsule(0, -1, 0, 0, 1, 0, -1)), -1), "intersectRay3DCapsule returns -1 for an empty capsule with a negative radius");
-  check(same(g::intersect_ray3_dcapsule(g::create_ray3_d(5, 0, 5, -1, 0, 0), unit()), -1), "intersectRay3DCapsule returns -1 for a ray that passes wide of the capsule");
-  check(close(g::intersect_ray3_dcapsule(g::create_ray3_d(0, 5, 0, 0, -1, 0), unit()), 3, 5), "intersectRay3DCapsule hits a cap when the ray runs along the capsule axis");
-  check(same(g::intersect_ray3_dcapsule(g::create_ray3_d(0, 1.5, 0, 0, 1, 0), unit()), 0), "intersectRay3DCapsule returns 0 for a ray starting inside a cap and pointing away");
-  check(close(g::intersect_ray3_dcapsule(g::create_ray3_d(5, 1.8, 0, -1, 0, 0), unit()), 4.4, 5) && close(g::intersect_ray3_dcapsule(g::create_ray3_d(5, -1.8, 0, -1, 0, 0), unit()), 4.4, 5) &&
-            same(g::intersect_ray3_dcapsule(g::create_ray3_d(5, 2.5, 0, -1, 0, 0), unit()), -1),
+  check(same(g::intersect_ray_3d_capsule(g::create_ray_3d(5, 0, 0, -1, 0, 0), g::create_capsule(0, -1, 0, 0, 1, 0, -1)), -1), "intersectRay3DCapsule returns -1 for an empty capsule with a negative radius");
+  check(same(g::intersect_ray_3d_capsule(g::create_ray_3d(5, 0, 5, -1, 0, 0), unit()), -1), "intersectRay3DCapsule returns -1 for a ray that passes wide of the capsule");
+  check(close(g::intersect_ray_3d_capsule(g::create_ray_3d(0, 5, 0, 0, -1, 0), unit()), 3, 5), "intersectRay3DCapsule hits a cap when the ray runs along the capsule axis");
+  check(same(g::intersect_ray_3d_capsule(g::create_ray_3d(0, 1.5, 0, 0, 1, 0), unit()), 0), "intersectRay3DCapsule returns 0 for a ray starting inside a cap and pointing away");
+  check(close(g::intersect_ray_3d_capsule(g::create_ray_3d(5, 1.8, 0, -1, 0, 0), unit()), 4.4, 5) && close(g::intersect_ray_3d_capsule(g::create_ray_3d(5, -1.8, 0, -1, 0, 0), unit()), 4.4, 5) &&
+            same(g::intersect_ray_3d_capsule(g::create_ray_3d(5, 2.5, 0, -1, 0, 0), unit()), -1),
         "intersectRay3DCapsule falls back to a cap when the body hit lands past the end of the axis");
-  check(same(g::intersect_ray3_dcapsule(g::create_ray3_d(0, 3, 0, 1, 1, 0), unit()), -1), "intersectRay3DCapsule returns -1 from inside the infinite cylinder but past the end cap");
+  check(same(g::intersect_ray_3d_capsule(g::create_ray_3d(0, 3, 0, 1, 1, 0), unit()), -1), "intersectRay3DCapsule returns -1 from inside the infinite cylinder but past the end cap");
 
   check(g::is_capsule_intersecting_aabb(g::create_capsule(-5, 0, 0, 5, 0, 0, 0.5), read(g::create_aabb(-1, -1, -1, 1, 1, 1))) == true, "isCapsuleIntersectingAabb returns true when the capsule segment passes through the AABB");
   check(g::is_capsule_intersecting_aabb(g::create_capsule(0, 2, 0, 0, 2, 0, 1.5), read(g::create_aabb(-1, -1, -1, 1, 1, 1))) == true, "isCapsuleIntersectingAabb returns true when the capsule radius reaches the AABB");
@@ -884,18 +884,18 @@ void test_obb() {
     check(close(p->x, 1, 6), "getClosestPointOnObb supports out === point");
   }
   FLIGHT_EXPECT_FUNCTION(g::initialize_obb);
-  check(close(g::intersect_ray3_dobb(g::create_ray3_d(5, 0, 0, -1, 0, 0), obb(0, 0, 0, 1, 1, 1, identity)), 4, 6), "intersectRay3DObb hits a unit OBB at the expected t from outside");
-  check(same(g::intersect_ray3_dobb(g::create_ray3_d(5, 0, 0, 1, 0, 0), obb(0, 0, 0, 1, 1, 1, identity)), -1), "intersectRay3DObb returns -1 for a ray pointing away from the OBB");
-  check(same(g::intersect_ray3_dobb(g::create_ray3_d(0, 0, 0, 0, 0, 1), obb(0, 0, 0, 2, 2, 2, identity)), 0), "intersectRay3DObb returns 0 for a ray starting inside the OBB");
-  check(same(g::intersect_ray3_dobb(g::create_ray3_d(0, 0, 0, 1, 0, 0), obb(10, 10, 10, 1, 1, 1, identity)), -1), "intersectRay3DObb returns -1 for a ray that misses an off-center OBB");
+  check(close(g::intersect_ray_3d_obb(g::create_ray_3d(5, 0, 0, -1, 0, 0), obb(0, 0, 0, 1, 1, 1, identity)), 4, 6), "intersectRay3DObb hits a unit OBB at the expected t from outside");
+  check(same(g::intersect_ray_3d_obb(g::create_ray_3d(5, 0, 0, 1, 0, 0), obb(0, 0, 0, 1, 1, 1, identity)), -1), "intersectRay3DObb returns -1 for a ray pointing away from the OBB");
+  check(same(g::intersect_ray_3d_obb(g::create_ray_3d(0, 0, 0, 0, 0, 1), obb(0, 0, 0, 2, 2, 2, identity)), 0), "intersectRay3DObb returns 0 for a ray starting inside the OBB");
+  check(same(g::intersect_ray_3d_obb(g::create_ray_3d(0, 0, 0, 1, 0, 0), obb(10, 10, 10, 1, 1, 1, identity)), -1), "intersectRay3DObb returns -1 for a ray that misses an off-center OBB");
   {
     const auto o = obb(0, 0, 0, 1, 1, 1, identity);
-    check(same(g::intersect_ray3_dobb(g::create_ray3_d(0.5, 0.5, 0.5, 0, 0, 0), o), -1) && same(g::intersect_ray3_dobb(g::create_ray3_d(5, 0, 0, 0, 0, 0), o), -1),
+    check(same(g::intersect_ray_3d_obb(g::create_ray_3d(0.5, 0.5, 0.5, 0, 0, 0), o), -1) && same(g::intersect_ray_3d_obb(g::create_ray_3d(5, 0, 0, 0, 0, 0), o), -1),
           "intersectRay3DObb returns -1 for a ray with no direction, inside the box or out");
   }
   {
     const auto o = obb(0, 0, 0, 0, 1, 1, identity);
-    check(close(g::intersect_ray3_dobb(g::create_ray3_d(5, 0, 0, -1, 0, 0), o), 5, 6) && same(g::intersect_ray3_dobb(g::create_ray3_d(5, 3, 0, -1, 0, 0), o), -1),
+    check(close(g::intersect_ray_3d_obb(g::create_ray_3d(5, 0, 0, -1, 0, 0), o), 5, 6) && same(g::intersect_ray_3d_obb(g::create_ray_3d(5, 3, 0, -1, 0, 0), o), -1),
           "intersectRay3DObb hits a flat OBB whose half-extent along one axis is zero");
   }
   check(g::is_obb_intersecting_aabb(obb(0, 0, 0, 1, 1, 1, identity), read(g::create_aabb(-1, -1, -1, 1, 1, 1))) == true, "isObbIntersectingAabb returns true for coincident OBB and AABB");
@@ -1025,205 +1025,205 @@ const std::array<std::array<double, 7>, 6> rays_into_lopsided_box = {{
 }};
 
 void test_ray3d() {
-  check(ray_fields(g::create_ray3_d(), 0, 0, 0, 0, 0, 1), "createRay3D creates a ray at the origin pointing in +Z by default");
-  check(ray_fields(g::create_ray3_d(1, 2, 3, 0, 1, 0), 1, 2, 3, 0, 1, 0), "createRay3D creates a ray with explicit origin and direction");
+  check(ray_fields(g::create_ray_3d(), 0, 0, 0, 0, 0, 1), "createRay3D creates a ray at the origin pointing in +Z by default");
+  check(ray_fields(g::create_ray_3d(1, 2, 3, 0, 1, 0), 1, 2, 3, 0, 1, 0), "createRay3D creates a ray with explicit origin and direction");
   {
     const auto pa = v3();
     const auto pb = v3();
-    g::get_closest_point_between_ray3_ds(pa, pb, g::create_ray3_d(0, 0, 0, 1, 0, 0), g::create_ray3_d(2, 0, 1, 0, 1, 0));
+    g::get_closest_point_between_ray3_ds(pa, pb, g::create_ray_3d(0, 0, 0, 1, 0, 0), g::create_ray_3d(2, 0, 1, 0, 1, 0));
     check(close(pa->x, 2, 6) && close(pa->y, 0, 6) && close(pa->z, 0, 6) && close(pb->x, 2, 6) && close(pb->y, 0, 6) && close(pb->z, 1, 6),
           "getClosestPointBetweenRay3Ds finds the closest points between two skew rays");
   }
   {
     const auto pa = v3();
     const auto pb = v3();
-    g::get_closest_point_between_ray3_ds(pa, pb, g::create_ray3_d(0, 0, 0, 1, 0, 0), g::create_ray3_d(-1, 1, 0, -1, 0, 0));
+    g::get_closest_point_between_ray3_ds(pa, pb, g::create_ray_3d(0, 0, 0, 1, 0, 0), g::create_ray_3d(-1, 1, 0, -1, 0, 0));
     check(close(pa->x, 0, 6) && close(pa->y, 0, 6) && close(pb->x, -1, 6) && close(pb->y, 1, 6), "getClosestPointBetweenRay3Ds clamps to the origins when both rays point away from each other");
   }
   {
     const auto pa = v3();
     const auto pb = v3();
-    g::get_closest_point_between_ray3_ds(pa, pb, g::create_ray3_d(0, 0, 0, 1, 0, 0), g::create_ray3_d(0, 2, 0, 1, 0, 0));
+    g::get_closest_point_between_ray3_ds(pa, pb, g::create_ray_3d(0, 0, 0, 1, 0, 0), g::create_ray_3d(0, 2, 0, 1, 0, 0));
     check(close(std::hypot(pa->x - pb->x, pa->y - pb->y, pa->z - pb->z), 2, 6), "getClosestPointBetweenRay3Ds handles parallel rays by anchoring on ray a");
   }
   {
     const auto pa = v3();
     const auto pb = v3();
-    g::get_closest_point_between_ray3_ds(pa, pb, g::create_ray3_d(0, 0, 0, 1, 0, 0), g::create_ray3_d(-5, 1, 0, 0, 0, 1));
+    g::get_closest_point_between_ray3_ds(pa, pb, g::create_ray_3d(0, 0, 0, 1, 0, 0), g::create_ray_3d(-5, 1, 0, 0, 0, 1));
     check(close(pa->x, 0, 6) && close(pa->y, 0, 6) && close(pa->z, 0, 6) && close(pb->x, -5, 6) && close(pb->y, 1, 6) && close(pb->z, 0, 6),
           "getClosestPointBetweenRay3Ds clamps to the origin of the first ray when its nearest approach is behind it");
   }
   {
     const auto pa = v3();
     const auto pb = v3();
-    g::get_closest_point_between_ray3_ds(pa, pb, g::create_ray3_d(5, 0, 0, 1, 0, 0), g::create_ray3_d(0, 3, 0, 0, 1, 0));
+    g::get_closest_point_between_ray3_ds(pa, pb, g::create_ray_3d(5, 0, 0, 1, 0, 0), g::create_ray_3d(0, 3, 0, 0, 1, 0));
     check(close(pa->x, 5, 6) && close(pa->y, 0, 6) && close(pb->x, 0, 6) && close(pb->y, 3, 6), "getClosestPointBetweenRay3Ds clamps both rays to their origins when each nearest approach is behind the other");
   }
   {
     const auto pa = v3();
     const auto pb = v3();
-    g::get_closest_point_between_ray3_ds(pa, pb, g::create_ray3_d(0, 0, 0, 1, 0, 0), g::create_ray3_d(5, 1, 0, 0, 0, 0));
+    g::get_closest_point_between_ray3_ds(pa, pb, g::create_ray_3d(0, 0, 0, 1, 0, 0), g::create_ray_3d(5, 1, 0, 0, 0, 0));
     bool ok = finite3(pa) && same(pb->x, 5) && same(pb->y, 1);
-    g::get_closest_point_between_ray3_ds(pa, pb, g::create_ray3_d(0, 0, 0, 0, 0, 0), g::create_ray3_d(0, 0, 5, 0, 0, 1));
+    g::get_closest_point_between_ray3_ds(pa, pb, g::create_ray_3d(0, 0, 0, 0, 0, 0), g::create_ray_3d(0, 0, 5, 0, 0, 1));
     ok = ok && xyz(pa, 0, 0, 0) && finite3(pb);
     check(ok, "getClosestPointBetweenRay3Ds writes finite points when either direction has no length");
   }
   {
     const auto out = v3();
-    g::get_closest_point_on_ray3_d(out, g::create_ray3_d(0, 0, 0, 1, 0, 0), v3(3, 4, 0));
+    g::get_closest_point_on_ray_3d(out, g::create_ray_3d(0, 0, 0, 1, 0, 0), v3(3, 4, 0));
     check(close(out->x, 3, 6) && close(out->y, 0, 6) && close(out->z, 0, 6), "getClosestPointOnRay3D projects a point onto the ray");
   }
   {
     const auto out = v3();
-    g::get_closest_point_on_ray3_d(out, g::create_ray3_d(0, 0, 0, 1, 0, 0), v3(-5, 2, 0));
+    g::get_closest_point_on_ray_3d(out, g::create_ray_3d(0, 0, 0, 1, 0, 0), v3(-5, 2, 0));
     check(close(out->x, 0, 6) && close(out->y, 0, 6) && close(out->z, 0, 6), "getClosestPointOnRay3D clamps to the origin when the point projects behind it");
   }
   {
     const auto out = v3();
-    g::get_closest_point_on_ray3_d(out, g::create_ray3_d(0, 0, 0, 2, 0, 0), v3(3, 7, 0));
+    g::get_closest_point_on_ray_3d(out, g::create_ray_3d(0, 0, 0, 2, 0, 0), v3(3, 7, 0));
     check(close(out->x, 3, 6) && close(out->y, 0, 6), "getClosestPointOnRay3D works with a non-normalized direction");
   }
   {
     const auto p = v3(5, 4, 1);
-    g::get_closest_point_on_ray3_d(p, g::create_ray3_d(0, 0, 0, 0, 1, 0), p);
+    g::get_closest_point_on_ray_3d(p, g::create_ray_3d(0, 0, 0, 0, 1, 0), p);
     check(close(p->x, 0, 6) && close(p->y, 4, 6) && close(p->z, 0, 6), "getClosestPointOnRay3D supports out === point");
   }
   {
     const auto out = v3();
-    g::get_closest_point_on_ray3_d(out, g::create_ray3_d(1, 2, 3, 0, 0, 0), v3(9, 9, 9));
+    g::get_closest_point_on_ray_3d(out, g::create_ray_3d(1, 2, 3, 0, 0, 0), v3(9, 9, 9));
     check(xyz(out, 1, 2, 3), "getClosestPointOnRay3D writes the origin for a ray with no direction");
   }
   {
     const auto out = v3();
-    g::get_ray3_dpoint_at(out, g::create_ray3_d(1, 2, 3, 0, 0, 1), 0);
+    g::get_ray_3d_point_at(out, g::create_ray_3d(1, 2, 3, 0, 0, 1), 0);
     check(xyz(out, 1, 2, 3), "getRay3DPointAt returns the origin when t=0");
-    g::get_ray3_dpoint_at(out, g::create_ray3_d(0, 0, 0, 1, 0, 0), 5);
+    g::get_ray_3d_point_at(out, g::create_ray_3d(0, 0, 0, 1, 0, 0), 5);
     check(xyz(out, 5, 0, 0), "getRay3DPointAt advances along the direction by t");
-    const auto ray = g::create_ray3_d(1, 2, 3, 0, 1, 0);
-    g::get_ray3_dpoint_at(ray->origin, ray, 3);
+    const auto ray = g::create_ray_3d(1, 2, 3, 0, 1, 0);
+    g::get_ray_3d_point_at(ray->origin, ray, 3);
     check(xyz(ray->origin, 1, 5, 3), "getRay3DPointAt is safe when out aliases ray.origin");
   }
-  FLIGHT_EXPECT_FUNCTION(g::initialize_ray3_d);
+  FLIGHT_EXPECT_FUNCTION(g::initialize_ray_3d);
   const auto unit_box = [] { return read(g::create_aabb(-1, -1, -1, 1, 1, 1)); };
-  check(same(g::intersect_ray3_daabb(g::create_ray3_d(0, 0, 0, 0, 0, 1), unit_box()), 0), "intersectRay3DAabb returns t=0 when the ray origin is inside the box");
-  check(close(g::intersect_ray3_daabb(g::create_ray3_d(0, 0, -5, 0, 0, 1), unit_box()), 4), "intersectRay3DAabb returns the entry t for a ray hitting the box from outside");
-  check(same(g::intersect_ray3_daabb(g::create_ray3_d(5, 0, -5, 0, 0, 1), unit_box()), -1), "intersectRay3DAabb returns -1 when the ray misses the box");
-  check(same(g::intersect_ray3_daabb(g::create_ray3_d(0, 0, 5, 0, 0, 1), unit_box()), -1), "intersectRay3DAabb returns -1 when the ray points away from the box");
-  check(close(g::intersect_ray3_daabb(g::create_ray3_d(-5, 0, 0, 1, 0, 0), unit_box()), 4), "intersectRay3DAabb handles axis-aligned rays");
+  check(same(g::intersect_ray_3d_aabb(g::create_ray_3d(0, 0, 0, 0, 0, 1), unit_box()), 0), "intersectRay3DAabb returns t=0 when the ray origin is inside the box");
+  check(close(g::intersect_ray_3d_aabb(g::create_ray_3d(0, 0, -5, 0, 0, 1), unit_box()), 4), "intersectRay3DAabb returns the entry t for a ray hitting the box from outside");
+  check(same(g::intersect_ray_3d_aabb(g::create_ray_3d(5, 0, -5, 0, 0, 1), unit_box()), -1), "intersectRay3DAabb returns -1 when the ray misses the box");
+  check(same(g::intersect_ray_3d_aabb(g::create_ray_3d(0, 0, 5, 0, 0, 1), unit_box()), -1), "intersectRay3DAabb returns -1 when the ray points away from the box");
+  check(close(g::intersect_ray_3d_aabb(g::create_ray_3d(-5, 0, 0, 1, 0, 0), unit_box()), 4), "intersectRay3DAabb handles axis-aligned rays");
   {
     const struct {
       const char* axis;
       Ray ray;
       Aabb empty;
     } cases[] = {
-        {"x", g::create_ray3_d(5, 1.5, 1.5, -1, 0, 0), g::create_aabb(2, 1, 1, 1, 2, 2)},
-        {"y", g::create_ray3_d(1.5, 5, 1.5, 0, -1, 0), g::create_aabb(1, 2, 1, 2, 1, 2)},
-        {"z", g::create_ray3_d(1.5, 1.5, 5, 0, 0, -1), g::create_aabb(1, 1, 2, 2, 2, 1)},
+        {"x", g::create_ray_3d(5, 1.5, 1.5, -1, 0, 0), g::create_aabb(2, 1, 1, 1, 2, 2)},
+        {"y", g::create_ray_3d(1.5, 5, 1.5, 0, -1, 0), g::create_aabb(1, 2, 1, 2, 1, 2)},
+        {"z", g::create_ray_3d(1.5, 1.5, 5, 0, 0, -1), g::create_aabb(1, 1, 2, 2, 2, 1)},
     };
-    for (const auto& c : cases) check(same(g::intersect_ray3_daabb(c.ray, read(c.empty)), -1), std::string("intersectRay3DAabb returns -1 for an AABB empty on ") + c.axis);
+    for (const auto& c : cases) check(same(g::intersect_ray_3d_aabb(c.ray, read(c.empty)), -1), std::string("intersectRay3DAabb returns -1 for an AABB empty on ") + c.axis);
   }
-  check(same(g::intersect_ray3_daabb(g::create_ray3_d(0, 0, 0, 0, 0, 0), unit_box()), -1) && same(g::intersect_ray3_daabb(g::create_ray3_d(5, 0, 0, 0, 0, 0), unit_box()), -1),
+  check(same(g::intersect_ray_3d_aabb(g::create_ray_3d(0, 0, 0, 0, 0, 0), unit_box()), -1) && same(g::intersect_ray_3d_aabb(g::create_ray_3d(5, 0, 0, 0, 0, 0), unit_box()), -1),
         "intersectRay3DAabb returns -1 for a ray with no direction, inside the box or out");
   {
     const auto lopsided = g::create_aabb(-1, -4, -6, 2, 3, 5);
     bool entering = true, away = true;
     for (const auto& r : rays_into_lopsided_box) {
-      entering = entering && close(g::intersect_ray3_daabb(g::create_ray3_d(r[0], r[1], r[2], r[3], r[4], r[5]), read(lopsided)), r[6], 6);
-      away = away && same(g::intersect_ray3_daabb(g::create_ray3_d(r[0], r[1], r[2], -r[3], -r[4], -r[5]), read(lopsided)), -1);
+      entering = entering && close(g::intersect_ray_3d_aabb(g::create_ray_3d(r[0], r[1], r[2], r[3], r[4], r[5]), read(lopsided)), r[6], 6);
+      away = away && same(g::intersect_ray_3d_aabb(g::create_ray_3d(r[0], r[1], r[2], -r[3], -r[4], -r[5]), read(lopsided)), -1);
     }
     check(entering, "intersectRay3DAabb enters each of the six sides at that side's own distance");
     check(away, "intersectRay3DAabb returns -1 for a ray aimed away from the box along any axis");
-    check(same(g::intersect_ray3_daabb(g::create_ray3_d(10, 0, 0, 0, 1, 0), read(lopsided)), -1) && same(g::intersect_ray3_daabb(g::create_ray3_d(0, 10, 0, 0, 0, 1), read(lopsided)), -1) &&
-              same(g::intersect_ray3_daabb(g::create_ray3_d(0, 0, 10, 1, 0, 0), read(lopsided)), -1),
+    check(same(g::intersect_ray_3d_aabb(g::create_ray_3d(10, 0, 0, 0, 1, 0), read(lopsided)), -1) && same(g::intersect_ray_3d_aabb(g::create_ray_3d(0, 10, 0, 0, 0, 1), read(lopsided)), -1) &&
+              same(g::intersect_ray_3d_aabb(g::create_ray_3d(0, 0, 10, 1, 0, 0), read(lopsided)), -1),
           "intersectRay3DAabb returns -1 for a ray running alongside the box on any axis");
   }
-  check(close(g::intersect_ray3_dplane(g::create_ray3_d(0, 0, -3, 0, 0, 1), g::create_plane(0, 0, 1, 0)), 3), "intersectRay3DPlane returns the t of a simple XY-plane intersection");
-  check(same(g::intersect_ray3_dplane(g::create_ray3_d(0, 0, 1, 1, 0, 0), g::create_plane(0, 0, 1, 0)), -1), "intersectRay3DPlane returns -1 when ray is parallel to the plane");
-  check(same(g::intersect_ray3_dplane(g::create_ray3_d(0, 0, 3, 0, 0, 1), g::create_plane(0, 0, 1, 0)), -1), "intersectRay3DPlane returns -1 when intersection is behind the origin");
+  check(close(g::intersect_ray_3d_plane(g::create_ray_3d(0, 0, -3, 0, 0, 1), g::create_plane(0, 0, 1, 0)), 3), "intersectRay3DPlane returns the t of a simple XY-plane intersection");
+  check(same(g::intersect_ray_3d_plane(g::create_ray_3d(0, 0, 1, 1, 0, 0), g::create_plane(0, 0, 1, 0)), -1), "intersectRay3DPlane returns -1 when ray is parallel to the plane");
+  check(same(g::intersect_ray_3d_plane(g::create_ray_3d(0, 0, 3, 0, 0, 1), g::create_plane(0, 0, 1, 0)), -1), "intersectRay3DPlane returns -1 when intersection is behind the origin");
   for (const double scale : {1.0, 1e-6, 1e-12})
-    check(close(g::intersect_ray3_dplane(g::create_ray3_d(0, 0, -6, 0, 0, 2), g::create_plane(0, 0, scale, 3 * scale)), 1.5, 10),
+    check(close(g::intersect_ray_3d_plane(g::create_ray_3d(0, 0, -6, 0, 0, 2), g::create_plane(0, 0, scale, 3 * scale)), 1.5, 10),
           "intersectRay3DPlane is invariant when the plane equation is scaled by " + std::to_string(scale));
-  check(same(g::intersect_ray3_dplane(g::create_ray3_d(0, 0, -3, 0, 0, 1), g::create_plane()), -1) && same(g::intersect_ray3_dplane(g::create_ray3_d(0, 0, -3, 0, 0, 0), g::create_plane(0, 0, 1, 0)), -1),
+  check(same(g::intersect_ray_3d_plane(g::create_ray_3d(0, 0, -3, 0, 0, 1), g::create_plane()), -1) && same(g::intersect_ray_3d_plane(g::create_ray_3d(0, 0, -3, 0, 0, 0), g::create_plane(0, 0, 1, 0)), -1),
         "intersectRay3DPlane returns -1 for a zero normal or zero direction");
-  check(close(g::intersect_ray3_dsphere(g::create_ray3_d(0, 0, -5, 0, 0, 1), g::create_bounding_sphere(0, 0, 0, 1)), 4), "intersectRay3DSphere returns the near t for a ray hitting the sphere");
-  check(same(g::intersect_ray3_dsphere(g::create_ray3_d(0, 0, 0, 0, 0, 1), g::create_bounding_sphere(0, 0, 0, 2)), 0), "intersectRay3DSphere returns 0 when the ray origin is inside the sphere");
-  check(same(g::intersect_ray3_dsphere(g::create_ray3_d(5, 0, -5, 0, 0, 1), g::create_bounding_sphere(0, 0, 0, 1)), -1), "intersectRay3DSphere returns -1 when the ray misses the sphere");
-  check(same(g::intersect_ray3_dsphere(g::create_ray3_d(0, 0, -5, 0, 0, 1), g::create_bounding_sphere(0, 0, 0, -1)), -1), "intersectRay3DSphere returns -1 for an empty sphere (radius < 0)");
-  check(same(g::intersect_ray3_dsphere(g::create_ray3_d(5, 0, 0, 1, 0, 0), g::create_bounding_sphere(0, 0, 0, 1)), -1), "intersectRay3DSphere returns -1 when the sphere is squarely behind the ray");
-  check(same(g::intersect_ray3_dsphere(g::create_ray3_d(0, 0, 0, 0, 0, 0), g::create_bounding_sphere(0, 0, 0, 1)), -1), "intersectRay3DSphere returns -1 for a ray with no direction");
+  check(close(g::intersect_ray_3d_sphere(g::create_ray_3d(0, 0, -5, 0, 0, 1), g::create_bounding_sphere(0, 0, 0, 1)), 4), "intersectRay3DSphere returns the near t for a ray hitting the sphere");
+  check(same(g::intersect_ray_3d_sphere(g::create_ray_3d(0, 0, 0, 0, 0, 1), g::create_bounding_sphere(0, 0, 0, 2)), 0), "intersectRay3DSphere returns 0 when the ray origin is inside the sphere");
+  check(same(g::intersect_ray_3d_sphere(g::create_ray_3d(5, 0, -5, 0, 0, 1), g::create_bounding_sphere(0, 0, 0, 1)), -1), "intersectRay3DSphere returns -1 when the ray misses the sphere");
+  check(same(g::intersect_ray_3d_sphere(g::create_ray_3d(0, 0, -5, 0, 0, 1), g::create_bounding_sphere(0, 0, 0, -1)), -1), "intersectRay3DSphere returns -1 for an empty sphere (radius < 0)");
+  check(same(g::intersect_ray_3d_sphere(g::create_ray_3d(5, 0, 0, 1, 0, 0), g::create_bounding_sphere(0, 0, 0, 1)), -1), "intersectRay3DSphere returns -1 when the sphere is squarely behind the ray");
+  check(same(g::intersect_ray_3d_sphere(g::create_ray_3d(0, 0, 0, 0, 0, 0), g::create_bounding_sphere(0, 0, 0, 1)), -1), "intersectRay3DSphere returns -1 for a ray with no direction");
   {
     const auto a = v3(-1, 0, 0);
     const auto b = v3(1, 0, 0);
     const auto c = v3(0, 1, 0);
-    check(close(g::intersect_ray3_dtriangle(g::create_ray3_d(0, 0.3, -3, 0, 0, 1), a, b, c), 3), "intersectRay3DTriangle returns the t for a ray hitting the triangle");
-    check(same(g::intersect_ray3_dtriangle(g::create_ray3_d(5, 5, -3, 0, 0, 1), a, b, c), -1), "intersectRay3DTriangle returns -1 when the ray misses the triangle");
-    check(same(g::intersect_ray3_dtriangle(g::create_ray3_d(0, 0.3, 3, 0, 0, 1), a, b, c), -1), "intersectRay3DTriangle returns -1 when the ray hits behind the origin");
-    check(close(g::intersect_ray3_dtriangle(g::create_ray3_d(0, 0.3, 3, 0, 0, -1), a, b, c), 3), "intersectRay3DTriangle tests both sides of the triangle (no back-face culling)");
+    check(close(g::intersect_ray_3d_triangle(g::create_ray_3d(0, 0.3, -3, 0, 0, 1), a, b, c), 3), "intersectRay3DTriangle returns the t for a ray hitting the triangle");
+    check(same(g::intersect_ray_3d_triangle(g::create_ray_3d(5, 5, -3, 0, 0, 1), a, b, c), -1), "intersectRay3DTriangle returns -1 when the ray misses the triangle");
+    check(same(g::intersect_ray_3d_triangle(g::create_ray_3d(0, 0.3, 3, 0, 0, 1), a, b, c), -1), "intersectRay3DTriangle returns -1 when the ray hits behind the origin");
+    check(close(g::intersect_ray_3d_triangle(g::create_ray_3d(0, 0.3, 3, 0, 0, -1), a, b, c), 3), "intersectRay3DTriangle tests both sides of the triangle (no back-face culling)");
     {
       const auto p = v3(0, 0, 0);
-      check(same(g::intersect_ray3_dtriangle(g::create_ray3_d(0, 0, -1, 0, 0, 1), p, p, p), -1), "intersectRay3DTriangle returns -1 for a degenerate (zero-area) triangle");
+      check(same(g::intersect_ray_3d_triangle(g::create_ray_3d(0, 0, -1, 0, 0, 1), p, p, p), -1), "intersectRay3DTriangle returns -1 for a degenerate (zero-area) triangle");
     }
     for (const double scale : {1.0, 1e-6, 1e-12})
-      check(close(g::intersect_ray3_dtriangle(g::create_ray3_d(0, 0.3, -3, 0, 0, scale), a, b, c) * scale, 3, 10),
+      check(close(g::intersect_ray_3d_triangle(g::create_ray_3d(0, 0.3, -3, 0, 0, scale), a, b, c) * scale, 3, 10),
             "intersectRay3DTriangle accepts a non-normalized direction scaled by " + std::to_string(scale));
     for (const double scale : {1.0, 1e-3, 1e-6})
-      check(close(g::intersect_ray3_dtriangle(g::create_ray3_d(0, 0.3 * scale, -3, 0, 0, 1), v3(-scale, 0, 0), v3(scale, 0, 0), v3(0, scale, 0)), 3, 10),
+      check(close(g::intersect_ray_3d_triangle(g::create_ray_3d(0, 0.3 * scale, -3, 0, 0, 1), v3(-scale, 0, 0), v3(scale, 0, 0), v3(0, scale, 0)), 3, 10),
             "intersectRay3DTriangle does not treat a triangle scaled by " + std::to_string(scale) + " as degenerate");
-    check(same(g::intersect_ray3_dtriangle(g::create_ray3_d(0, 0.3, -3, 0, 0, 0), a, b, c), -1), "intersectRay3DTriangle returns -1 for a zero direction");
-    check(same(g::intersect_ray3_dtriangle(g::create_ray3_d(-1, 0.3, -1e-12, 1, 0, 1e-12), a, b, c), -1), "intersectRay3DTriangle returns -1 for a nonzero direction nearly parallel to the triangle");
-    check(same(g::intersect_ray3_dtriangle(g::create_ray3_d(0.9, 0.9, -3, 0, 0, 1), a, b, c), -1), "intersectRay3DTriangle returns -1 for points inside the triangle's span but past its far edge");
-    check(same(g::intersect_ray3_dtriangle(g::create_ray3_d(0, -0.5, -3, 0, 0, 1), a, b, c), -1), "intersectRay3DTriangle returns -1 for points on the far side of the base");
-    check(same(g::intersect_ray3_dtriangle(g::create_ray3_d(3, 0, -3, 0, 0, 1), a, b, c), -1) && same(g::intersect_ray3_dtriangle(g::create_ray3_d(0, 3, -3, 0, 0, 1), a, b, c), -1),
+    check(same(g::intersect_ray_3d_triangle(g::create_ray_3d(0, 0.3, -3, 0, 0, 0), a, b, c), -1), "intersectRay3DTriangle returns -1 for a zero direction");
+    check(same(g::intersect_ray_3d_triangle(g::create_ray_3d(-1, 0.3, -1e-12, 1, 0, 1e-12), a, b, c), -1), "intersectRay3DTriangle returns -1 for a nonzero direction nearly parallel to the triangle");
+    check(same(g::intersect_ray_3d_triangle(g::create_ray_3d(0.9, 0.9, -3, 0, 0, 1), a, b, c), -1), "intersectRay3DTriangle returns -1 for points inside the triangle's span but past its far edge");
+    check(same(g::intersect_ray_3d_triangle(g::create_ray_3d(0, -0.5, -3, 0, 0, 1), a, b, c), -1), "intersectRay3DTriangle returns -1 for points on the far side of the base");
+    check(same(g::intersect_ray_3d_triangle(g::create_ray_3d(3, 0, -3, 0, 0, 1), a, b, c), -1) && same(g::intersect_ray_3d_triangle(g::create_ray_3d(0, 3, -3, 0, 0, 1), a, b, c), -1),
           "intersectRay3DTriangle returns -1 for points beyond either end of the first edge");
   }
   for (const double scale : {1.0, 1e-6, 1e-12}) {
-    const auto ray = g::create_ray3_d(5, 0, 0, -scale, 0, 0);
+    const auto ray = g::create_ray_3d(5, 0, 0, -scale, 0, 0);
     const double hits[] = {
-        g::intersect_ray3_daabb(ray, unit_box()),
-        g::intersect_ray3_dsphere(ray, g::create_bounding_sphere(0, 0, 0, 1)),
-        g::intersect_ray3_dcapsule(ray, g::create_capsule(0, -1, 0, 0, 1, 0, 1)),
-        g::intersect_ray3_dobb(ray, g::create_obb(0, 0, 0, 1, 1, 1, 0, 0, 0, 1)),
-        g::intersect_ray3_dplane(ray, g::create_plane(1, 0, 0, -1)),
-        g::intersect_ray3_dtriangle(ray, v3(1, -1, -1), v3(1, 1, -1), v3(1, 0, 1)),
+        g::intersect_ray_3d_aabb(ray, unit_box()),
+        g::intersect_ray_3d_sphere(ray, g::create_bounding_sphere(0, 0, 0, 1)),
+        g::intersect_ray_3d_capsule(ray, g::create_capsule(0, -1, 0, 0, 1, 0, 1)),
+        g::intersect_ray_3d_obb(ray, g::create_obb(0, 0, 0, 1, 1, 1, 0, 0, 0, 1)),
+        g::intersect_ray_3d_plane(ray, g::create_plane(1, 0, 0, -1)),
+        g::intersect_ray_3d_triangle(ray, v3(1, -1, -1), v3(1, 1, -1), v3(1, 0, 1)),
     };
     bool ok = true;
     for (const double t : hits) ok = ok && close(t * scale, 4, 10);
     check(ok, "ray-shape direction scale parity preserves the hit point across all six shapes at scale " + std::to_string(scale));
   }
   {
-    const auto ray = g::create_ray3_d();
-    g::set_ray3_d(ray, v3(4, 5, 6), v3(0, 0, -1));
+    const auto ray = g::create_ray_3d();
+    g::set_ray_3d(ray, v3(4, 5, 6), v3(0, 0, -1));
     check(ray_fields(ray, 4, 5, 6, 0, 0, -1), "setRay3D writes origin and direction into an existing ray");
   }
   {
-    const auto ray = g::create_ray3_d(1, 2, 3, 0, 1, 0);
-    g::set_ray3_d(ray, ray->origin, v3(1, 0, 0));
+    const auto ray = g::create_ray_3d(1, 2, 3, 0, 1, 0);
+    g::set_ray_3d(ray, ray->origin, v3(1, 0, 0));
     check(ray_fields(ray, 1, 2, 3, 1, 0, 0), "setRay3D is safe when origin aliases the ray origin");
   }
   {
-    const auto ray = g::create_ray3_d(0, 0, 0, 0, 1, 0);
-    g::set_ray3_d(ray, v3(5, 6, 7), ray->direction);
+    const auto ray = g::create_ray_3d(0, 0, 0, 0, 1, 0);
+    g::set_ray_3d(ray, v3(5, 6, 7), ray->direction);
     check(ray_fields(ray, 5, 6, 7, 0, 1, 0), "setRay3D is safe when direction aliases the ray direction");
   }
   {
-    const auto out = g::create_ray3_d();
-    g::transform_ray3_dby_matrix4(out, g::create_ray3_d(1, 2, 3, 0, 0, 1), g::create_matrix4());
+    const auto out = g::create_ray_3d();
+    g::transform_ray_3d_by_matrix4(out, g::create_ray_3d(1, 2, 3, 0, 0, 1), g::create_matrix4());
     check(close(out->origin->x, 1) && close(out->origin->y, 2) && close(out->origin->z, 3) && close(out->direction->x, 0) && close(out->direction->y, 0) && close(out->direction->z, 1),
           "transformRay3DByMatrix4 leaves the ray unchanged under the identity matrix");
   }
   {
     const auto m = g::create_matrix4();
     g::translate_matrix4(m, m, 5, 6, 7);
-    const auto out = g::create_ray3_d();
-    g::transform_ray3_dby_matrix4(out, g::create_ray3_d(0, 0, 0, 0, 1, 0), m);
+    const auto out = g::create_ray_3d();
+    g::transform_ray_3d_by_matrix4(out, g::create_ray_3d(0, 0, 0, 0, 1, 0), m);
     check(close(out->origin->x, 5) && close(out->origin->y, 6) && close(out->origin->z, 7) && close(out->direction->x, 0) && close(out->direction->y, 1) && close(out->direction->z, 0),
           "transformRay3DByMatrix4 translates the origin but not the direction");
   }
   {
     const auto m = g::create_matrix4();
     g::translate_matrix4(m, m, 10, 0, 0);
-    const auto ray = g::create_ray3_d(1, 0, 0, 0, 0, 1);
-    g::transform_ray3_dby_matrix4(ray, ray, m);
+    const auto ray = g::create_ray_3d(1, 0, 0, 0, 0, 1);
+    g::transform_ray_3d_by_matrix4(ray, ray, m);
     check(close(ray->origin->x, 11) && close(ray->origin->y, 0) && close(ray->origin->z, 0) && close(ray->direction->x, 0) && close(ray->direction->y, 0) && close(ray->direction->z, 1),
           "transformRay3DByMatrix4 is alias-safe when out is the same ray");
   }

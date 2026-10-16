@@ -149,7 +149,7 @@ void validate_gl_resource_path(const flight::host_sdl::WebGl2Context& gl) {
           gl.get_parameter(flight::host_sdl::WebGl2Context::unpack_premultiply_alpha_webgl))) {
     throw std::runtime_error("WebGL premultiply unpack state was not retained");
   }
-  gl.tex_image2_d(
+  gl.tex_image_2d(
       flight::host_sdl::WebGl2Context::texture_2_d,
       0,
       flight::host_sdl::WebGl2Context::rgba,
@@ -157,7 +157,7 @@ void validate_gl_resource_path(const flight::host_sdl::WebGl2Context& gl) {
       flight::host_sdl::WebGl2Context::unsigned_byte,
       image);
   gl.pixel_storei(flight::host_sdl::WebGl2Context::unpack_premultiply_alpha_webgl, 0);
-  gl.tex_image2_d(
+  gl.tex_image_2d(
       flight::host_sdl::WebGl2Context::texture_2_d,
       0,
       flight::host_sdl::WebGl2Context::rgba8,
@@ -167,7 +167,7 @@ void validate_gl_resource_path(const flight::host_sdl::WebGl2Context& gl) {
       flight::host_sdl::WebGl2Context::rgba,
       flight::host_sdl::WebGl2Context::unsigned_byte,
       flight::ArrayBufferView(pixels));
-  gl.tex_sub_image2_d(
+  gl.tex_sub_image_2d(
       flight::host_sdl::WebGl2Context::texture_2_d,
       0,
       0,
@@ -189,7 +189,7 @@ void validate_gl_resource_path(const flight::host_sdl::WebGl2Context& gl) {
   if (!queried_framebuffer || *queried_framebuffer != framebuffer) {
     throw std::runtime_error("WebGL framebuffer binding did not preserve object identity");
   }
-  gl.framebuffer_texture2_d(
+  gl.framebuffer_texture_2d(
       flight::host_sdl::WebGl2Context::framebuffer,
       flight::host_sdl::WebGl2Context::color_attachment0,
       flight::host_sdl::WebGl2Context::texture_2_d,
@@ -222,7 +222,7 @@ void validate_gl_resource_path(const flight::host_sdl::WebGl2Context& gl) {
   auto volume_texture = gl.create_texture();
   const flight::Uint8Array volume_pixels(32);
   gl.bind_texture(flight::host_sdl::WebGl2Context::texture_3_d, volume_texture);
-  gl.tex_image3_d(
+  gl.tex_image_3d(
       flight::host_sdl::WebGl2Context::texture_3_d,
       0,
       flight::host_sdl::WebGl2Context::rgba8,
@@ -237,7 +237,7 @@ void validate_gl_resource_path(const flight::host_sdl::WebGl2Context& gl) {
 
   auto array_texture = gl.create_texture();
   gl.bind_texture(flight::host_sdl::WebGl2Context::texture_2_d_array, array_texture);
-  gl.tex_storage3_d(
+  gl.tex_storage_3d(
       flight::host_sdl::WebGl2Context::texture_2_d_array,
       1,
       flight::host_sdl::WebGl2Context::rgba8,

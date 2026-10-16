@@ -49,8 +49,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/scene2d_formats/rive_import_registry.hpp>
 #include <flight/scene2d_formats/rive_layout.hpp>
 #include <flight/scene2d_formats/rive_object_graph.hpp>
-#include <flight/scene2d_formats/rive_scene2_d.hpp>
-#include <flight/scene2d_formats/rive_scene2_ddocument.hpp>
+#include <flight/scene2d_formats/rive_scene_2d.hpp>
+#include <flight/scene2d_formats/rive_scene_2d_document.hpp>
 #include <flight/scene2d_formats/rive_registrars.hpp>
 #include <flight/scene2d_formats/rive_requirements.hpp>
 #include <flight/scene2d_formats/rive_shape_node.hpp>

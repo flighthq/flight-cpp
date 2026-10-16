@@ -17,7 +17,7 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/geometry/matrix.hpp>
 #include <flight/node/hierarchy.hpp>
 #include <flight/node/node_transform2d.hpp>
-#include <flight/types/has_transform2_d.hpp>
+#include <flight/types/has_transform_2d.hpp>
 #include <flight/types/matrix.hpp>
 #include <flight/types/node.hpp>
 #include <flight/types/velocity.hpp>

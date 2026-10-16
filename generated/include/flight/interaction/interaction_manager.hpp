@@ -506,13 +506,13 @@ inline bool is_pointer_signal_needed(flight::Ref<flight::types::InteractionManag
   return false;
 }
 
-inline bool has_transform2_druntime(flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::NodeTraits>>>>>> runtime) {
+inline bool has_transform_2d_runtime(flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::NodeTraits>>>>>> runtime) {
   return (flight::String("worldMatrix") in runtime);
 }
 
-inline bool is_transform2_dnode(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::NodeAny>>> source) {
+inline bool is_transform_2d_node(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::NodeAny>>> source) {
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::NodeTraits>>>>>> runtime = flight::node::get_node_runtime<flight::Ref<flight::types::NodeTraits>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::NodeTraits>>>>>>::from_owner(source.shared_owner()));
-  return has_transform2_druntime(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::NodeTraits>>>>>>>(runtime));
+  return has_transform_2d_runtime(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::NodeTraits>>>>>>>(runtime));
 }
 
 using KeyboardSignalName = flight::String;
@@ -714,7 +714,7 @@ inline void set_keyboard_data(flight::String key, double key_code, std::optional
 inline flight::Ref<flight::types::Vector2> local_point = flight::make_ref<flight::types::Vector2>(flight::types::Vector2{.x = 0.0, .y = 0.0});
 
 inline void set_pointer_data_local_position(flight::Ref<flight::types::PointerEventData> data, flight::types::NodeAny current_target) {
-  if (!is_transform2_dnode(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::NodeAny>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::types::NodeAny>>>(current_target)))) {
+  if (!is_transform_2d_node(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::NodeAny>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::types::NodeAny>>>(current_target)))) {
     (data->local_x = data->world_x);
     (data->local_y = data->world_y);
     return;

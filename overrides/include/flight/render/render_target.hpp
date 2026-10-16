@@ -22,7 +22,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/rectangle.hpp>
 
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 
 #include <flight/types/matrix.hpp>
 
@@ -188,7 +188,7 @@ inline flight::Ref<Matrix> resolve_node_local_matrix(flight::Ref<Node2D> source)
   return temp_local;
 }
 
-inline void compute_scene2_drender_target_transform(flight::Ref<MatrixLike> out_render_transform, flight::Ref<Node2D> source, flight::Ref<RectangleLike> bounds, std::optional<double> content_x = std::nullopt, std::optional<double> content_y = std::nullopt) {
+inline void compute_scene_2d_render_target_transform(flight::Ref<MatrixLike> out_render_transform, flight::Ref<Node2D> source, flight::Ref<RectangleLike> bounds, std::optional<double> content_x = std::nullopt, std::optional<double> content_y = std::nullopt) {
   content_x = content_x.value_or(0.0);
   content_y = content_y.value_or(0.0);
   flight::Ref<Matrix> local_transform = resolve_node_local_matrix(source);

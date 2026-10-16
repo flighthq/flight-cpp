@@ -59,7 +59,7 @@ inline flight::Float32Array shape_mesh_matrix(flight::Ref<flight::types::GlRende
   auto viewport = flight::render_gl::get_gl_render_state_runtime(state)->render_target_viewport;
   const double iw = (2.0 / ([&]() -> double { auto logical_or_value = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = viewport; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->width; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return state->gl.drawing_buffer_width; }()); if (flight::to_boolean(logical_or_value)) return logical_or_value; return 1.0; }()));
   const double ih = (2.0 / ([&]() -> double { auto logical_or_value_2 = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = viewport; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->height; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return state->gl.drawing_buffer_height; }()); if (flight::to_boolean(logical_or_value_2)) return logical_or_value_2; return 1.0; }()));
-  auto t = render_proxy->transform2_d;
+  auto t = render_proxy->transform_2d;
   return flight::Float32Array(flight::Array{(t->a * iw), (-t->b * ih), 0.0, (t->c * iw), (-t->d * ih), 0.0, ((t->tx * iw) - 1.0), ((-t->ty * ih) + 1.0), 1.0});
 }
 

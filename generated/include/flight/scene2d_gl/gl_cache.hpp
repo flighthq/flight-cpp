@@ -36,7 +36,7 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/render/render_target.hpp>
 #include <flight/render/renderer.hpp>
 #include <flight/types/contract.hpp>
-#include <flight/scene2d_gl/gl_node2_d.hpp>
+#include <flight/scene2d_gl/gl_node_2d.hpp>
 #include <flight/scene2d_gl/gl_quad_batch_writer.hpp>
 
 namespace flight::scene2d_gl {
@@ -153,17 +153,17 @@ inline bool refresh_gl_render_cache(flight::Ref<flight::types::GlRenderState> ow
   auto existing = get_gl_render_cache_target(owner_state, cache);
   const bool resized = ((!existing.has_value() || (existing.value()->width != width)) || (existing.value()->height != height));
   auto target = ensure_gl_render_cache_target(owner_state, cache, width, height);
-  flight::render::compute_scene2_drender_target_transform(render_transform, source, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(bounds)), padding, padding);
+  flight::render::compute_scene_2d_render_target_transform(render_transform, source, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(bounds)), padding, padding);
   flight::render::compute_render_cache_transform(cache->transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(bounds)), padding, padding);
   auto pass = flight::render_gl::begin_gl_render_pass(cache_state, target, std::nullopt, std::nullopt);
   bool dirty = false;
   std::exception_ptr finally_exception;
   try {
-    (dirty = flight::render::prepare_scene2_drender(cache_state, source));
+    (dirty = flight::render::prepare_scene_2d_render(cache_state, source));
     if ((dirty || resized)) {
       cache_state->gl.clear_color(0.0, 0.0, 0.0, 0.0);
       cache_state->gl.clear(cache_state->gl.color_buffer_bit);
-      flight::scene2d_gl::render_gl_scene2_d(pass, source, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(render_transform))});
+      flight::scene2d_gl::render_gl_scene_2d(pass, source, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(render_transform))});
     }
   }
   catch (...) {

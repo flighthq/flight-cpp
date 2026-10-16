@@ -201,7 +201,7 @@ inline flight::Ref<Texture2D> create_video_texture(
       ? decltype(snapshot.common->source){std::in_place_type<flight::Ref<ImageResource>>, *image}
       : decltype(snapshot.common->source){std::in_place_type<flight::Null>, flight::null};
   snapshot.common->version = image ? (*image)->version : initial_video_version;
-  return create_texture2_d(std::optional<flight::Ref<CreateTexture2DOptions>>{snapshot.common});
+  return create_texture_2d(std::optional<flight::Ref<CreateTexture2DOptions>>{snapshot.common});
 }
 
 template <typename Row>
@@ -235,7 +235,7 @@ inline flight::Ref<Texture2D> create_video_texture(
             std::in_place_type<flight::Ref<ImageResource>>, *image}
       : decltype(create_options->source){
             std::in_place_type<flight::Null>, flight::null};
-  return create_texture2_d(
+  return create_texture_2d(
       std::optional<flight::Ref<CreateTexture2DOptions>>{std::move(create_options)});
 }
 

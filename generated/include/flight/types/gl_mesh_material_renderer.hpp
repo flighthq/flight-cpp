@@ -35,12 +35,12 @@ namespace flight::types {
 struct GlMeshMaterialRenderer;
 } // namespace flight::types
 
-#include <flight/types/camera3_d.hpp>
+#include <flight/types/camera_3d.hpp>
 #include <flight/types/gl_render_state.hpp>
 #include <flight/types/material3_dvalue.hpp>
 #include <flight/types/mesh_geometry.hpp>
-#include <flight/types/scene3_dlight_block.hpp>
-#include <flight/types/scene3_drender_proxy.hpp>
+#include <flight/types/scene_3d_light_block.hpp>
+#include <flight/types/scene_3d_render_proxy.hpp>
 
 namespace flight::types {
 

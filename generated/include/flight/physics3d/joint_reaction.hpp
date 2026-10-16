@@ -28,7 +28,7 @@ namespace flight::types { struct SpatialIndexBackend3D; }
 #include <flight/entity/entity.hpp>
 #include <flight/types/collision.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/physics3_d.hpp>
+#include <flight/types/physics_3d.hpp>
 #include <flight/types/spatial.hpp>
 
 namespace flight::physics3d {
@@ -43,7 +43,7 @@ using flight::types::Physics3DWorld;
 using flight::types::RigidBody3D;
 using flight::types::SpatialIndexBackend3D;
 
-inline void accumulate_physics3_djoint_row_reaction(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>> joint, flight::Array<double> state, double offset, double impulse, flight::Ref<flight::types::Physics3DJointReaction> out) {
+inline void accumulate_physics_3d_joint_row_reaction(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>> joint, flight::Array<double> state, double offset, double impulse, flight::Ref<flight::types::Physics3DJointReaction> out) {
   if ((impulse == 0.0)) {
     return;
   }
@@ -61,7 +61,7 @@ inline void accumulate_physics3_djoint_row_reaction(flight::StructuralRef<flight
   (out->torque_z += ((state.element((offset + 8.0)) - lever_z) * impulse));
 }
 
-inline void clear_physics3_djoint_reaction(flight::Ref<flight::types::Physics3DJointReaction> out) {
+inline void clear_physics_3d_joint_reaction(flight::Ref<flight::types::Physics3DJointReaction> out) {
   (out->force_x = 0.0);
   (out->force_y = 0.0);
   (out->force_z = 0.0);
@@ -70,15 +70,15 @@ inline void clear_physics3_djoint_reaction(flight::Ref<flight::types::Physics3DJ
   (out->torque_z = 0.0);
 }
 
-inline double get_physics3_djoint_reaction_force(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointReaction>>>> reaction) {
+inline double get_physics_3d_joint_reaction_force(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointReaction>>>> reaction) {
   return std::sqrt((((flight::row_get<flight::RowKey<"forceX">>(reaction) * flight::row_get<flight::RowKey<"forceX">>(reaction)) + (flight::row_get<flight::RowKey<"forceY">>(reaction) * flight::row_get<flight::RowKey<"forceY">>(reaction))) + (flight::row_get<flight::RowKey<"forceZ">>(reaction) * flight::row_get<flight::RowKey<"forceZ">>(reaction))));
 }
 
-inline double get_physics3_djoint_reaction_torque(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointReaction>>>> reaction) {
+inline double get_physics_3d_joint_reaction_torque(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointReaction>>>> reaction) {
   return std::sqrt((((flight::row_get<flight::RowKey<"torqueX">>(reaction) * flight::row_get<flight::RowKey<"torqueX">>(reaction)) + (flight::row_get<flight::RowKey<"torqueY">>(reaction) * flight::row_get<flight::RowKey<"torqueY">>(reaction))) + (flight::row_get<flight::RowKey<"torqueZ">>(reaction) * flight::row_get<flight::RowKey<"torqueZ">>(reaction))));
 }
 
-inline void initialize_physics3_djoint_reaction(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DJointReaction>> out) {
+inline void initialize_physics_3d_joint_reaction(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DJointReaction>> out) {
   flight::row_set<flight::RowKey<"forceX">>(out, 0.0);
   flight::row_set<flight::RowKey<"forceY">>(out, 0.0);
   flight::row_set<flight::RowKey<"forceZ">>(out, 0.0);
@@ -87,14 +87,14 @@ inline void initialize_physics3_djoint_reaction(flight::types::EntityConstructio
   flight::row_set<flight::RowKey<"torqueZ">>(out, 0.0);
 }
 
-inline flight::Ref<flight::types::Physics3DJointReaction> create_physics3_djoint_reaction() {
+inline flight::Ref<flight::types::Physics3DJointReaction> create_physics_3d_joint_reaction() {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DJointReaction>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics3DJointReaction>>();
-  initialize_physics3_djoint_reaction(out);
+  initialize_physics_3d_joint_reaction(out);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics3DJointReaction>>(out);
 }
 
-inline bool write_physics3_djoint_reaction(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>> joint, double dt, flight::Ref<flight::types::Physics3DJointReaction> out) {
-  clear_physics3_djoint_reaction(out);
+inline bool write_physics_3d_joint_reaction(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>> joint, double dt, flight::Ref<flight::types::Physics3DJointReaction> out) {
+  clear_physics_3d_joint_reaction(out);
   if (!(dt > 0.0)) {
     return false;
   }

@@ -24,7 +24,7 @@ namespace flight::types { struct Vector3; }
 #include <flight/math/angle.hpp>
 #include <flight/math/clamp.hpp>
 #include <flight/math/interpolation_advanced.hpp>
-#include <flight/types/camera3_d.hpp>
+#include <flight/types/camera_3d.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/orbit_camera_controller.hpp>
 #include <flight/types/vector3.hpp>
@@ -168,7 +168,7 @@ inline void update_orbit_camera_controller(flight::Ref<flight::types::OrbitCamer
   (scratch_eye->x = (target->x + ((controller->distance * sin_azimuth) * cos_polar)));
   (scratch_eye->y = (target->y + (controller->distance * sin_polar)));
   (scratch_eye->z = (target->z + ((controller->distance * cos_azimuth) * cos_polar)));
-  flight::camera::set_camera3_dview_matrix4_from_look_at(camera, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(scratch_eye)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(target)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(world_up_flight_value_variable__u000057__u00004f__u000052__u00004c__u000044__u00005f__u000055__u000050__flight_private_55a2f4d1b804e3a5)));
+  flight::camera::set_camera_3d_view_matrix4_from_look_at(camera, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(scratch_eye)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(target)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(world_up_flight_value_variable__u000057__u00004f__u000052__u00004c__u000044__u00005f__u000055__u000050__flight_private_55a2f4d1b804e3a5)));
 }
 
 } // namespace flight::camera_controls

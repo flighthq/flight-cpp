@@ -27,7 +27,7 @@ namespace flight::types { struct VertexAttributeLayout; }
 
 #include <flight/mesh/mesh_geometry.hpp>
 #include <flight/types/contract.hpp>
-#include <flight/scene3d_gl/gl_scene3_druntime.hpp>
+#include <flight/scene3d_gl/gl_scene_3d_runtime.hpp>
 
 namespace flight::scene3d_gl {
 
@@ -160,7 +160,7 @@ inline double get_gl_mesh_indices_length_flight_value_function_get_u000047_l_u00
 inline flight::Ref<flight::types::GlMeshUpload> ensure_gl_mesh_upload(flight::Ref<flight::types::GlRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>> geometry, std::optional<bool> gpu_skinned = std::nullopt) {
   gpu_skinned = gpu_skinned.value_or(false);
   flight::host_sdl::WebGl2Context gl = state->gl;
-  flight::WeakMap<flight::Ref<flight::types::MeshGeometry>, flight::Ref<flight::types::GlMeshUpload>> cache = flight::scene3d_gl::get_gl_scene3_druntime(state)->upload_cache;
+  flight::WeakMap<flight::Ref<flight::types::MeshGeometry>, flight::Ref<flight::types::GlMeshUpload>> cache = flight::scene3d_gl::get_gl_scene_3d_runtime(state)->upload_cache;
   std::optional<flight::Ref<flight::types::GlMeshUpload>> upload = cache.get(flight::structural_ref_cast<flight::Ref<flight::types::MeshGeometry>>(geometry));
   const double primitive_mode = get_gl_primitive_mode(gl, flight::row_get<flight::RowKey<"topology">>(geometry));
   const bool morphed = flight::mesh::get_mesh_geometry_morph_bind_pose(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(geometry)).has_value();

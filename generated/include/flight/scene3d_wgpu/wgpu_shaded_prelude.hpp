@@ -48,8 +48,8 @@ struct ShadedBinding;
 #include <flight/scene3d_wgpu/shaded_wgpu_mesh_material_renderer.hpp>
 #include <flight/scene3d_wgpu/wgpu_classic_prelude.hpp>
 #include <flight/scene3d_wgpu/wgpu_mesh_pipeline.hpp>
-#include <flight/scene3d_wgpu/wgpu_scene3_druntime.hpp>
-#include <flight/scene3d_wgpu/wgpu_scene3_dtime.hpp>
+#include <flight/scene3d_wgpu/wgpu_scene_3d_runtime.hpp>
+#include <flight/scene3d_wgpu/wgpu_scene_3d_time.hpp>
 #include <flight/scene3d_wgpu/wgpu_shaded_modifier_snippet.hpp>
 
 namespace flight::scene3d_wgpu {
@@ -609,7 +609,7 @@ inline flight::String build_wgpu_shaded_cache_key(flight::Ref<ShadedMaterial> ma
 }
 
 inline flight::Ref<ShadedModifierPlan> get_cached_modifier_plan(flight::Ref<WgpuRenderState> state, flight::Ref<ShadedMaterial> material, WgpuModifierSnippetSource registry, std::optional<flight::String> define_key = std::nullopt) {
-  flight::WeakMap<flight::Ref<ShadedMaterial>, flight::Ref<CachedShadedPlan>> plans = static_cast<flight::WeakMap<flight::Ref<ShadedMaterial>, flight::Ref<CachedShadedPlan>>>(get_wgpu_scene3_druntime(state)->shaded_material_plan_cache);
+  flight::WeakMap<flight::Ref<ShadedMaterial>, flight::Ref<CachedShadedPlan>> plans = static_cast<flight::WeakMap<flight::Ref<ShadedMaterial>, flight::Ref<CachedShadedPlan>>>(get_wgpu_scene_3d_runtime(state)->shaded_material_plan_cache);
   auto cached = plans.get(material);
   if (((((cached.has_value() && (cached.value()->modifiers == material->modifiers)) && (cached.value()->registry == registry)) && (!define_key.has_value() || (cached.value()->define_key == define_key.value()))) && has_current_snippets(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<ShadedModifierPlan>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<ShadedModifierPlan>>>>(cached.value()->plan)), registry))) {
     return cached.value()->plan;

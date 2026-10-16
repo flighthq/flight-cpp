@@ -18,11 +18,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/skeleton3d/runtime_access.hpp>
 
-#include <flight/types/skeleton3_dvalidation_diagnostic.hpp>
+#include <flight/types/skeleton_3d_validation_diagnostic.hpp>
 
-#include <flight/types/skeleton3_d.hpp>
+#include <flight/types/skeleton_3d.hpp>
 
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 
 #include <flight/types/matrix4.hpp>
 
@@ -42,7 +42,7 @@ using flight::types::Node3D;
 using flight::types::Skeleton3D;
 using flight::types::Skeleton3DValidationDiagnostic;
 
-inline void dispose_skeleton3_d(flight::Ref<Skeleton3D> skeleton) {
+inline void dispose_skeleton_3d(flight::Ref<Skeleton3D> skeleton) {
   ([&]() { auto&& assignment_receiver = skeleton->joints; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
   (skeleton->names = nullptr);
 }
@@ -98,7 +98,7 @@ inline std::variant<flight::Array<flight::String>, flight::Null, flight::Undefin
   return std::variant<flight::Array<flight::String>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<flight::String>>, std::get<0>(names).slice()};
 }
 
-inline bool get_skeleton3_djoint_world_matrix(flight::Ref<Matrix4Like> out, flight::Ref<Skeleton3D> skeleton, double joint_index) {
+inline bool get_skeleton_3d_joint_world_matrix(flight::Ref<Matrix4Like> out, flight::Ref<Skeleton3D> skeleton, double joint_index) {
   flight::Ref<Skeleton3D> object_pattern_value = skeleton;
   flight::Array<flight::Ref<Node3D>> joints = object_pattern_value->joints;
   if (((joint_index < 0.0) || (joint_index >= static_cast<double>(joints.size())))) {
@@ -108,11 +108,11 @@ inline bool get_skeleton3_djoint_world_matrix(flight::Ref<Matrix4Like> out, flig
   return true;
 }
 
-inline bool get_skeleton3_djoint_world_matrix_by_name(flight::Ref<Matrix4Like> out, flight::Ref<Skeleton3D> skeleton, flight::String name) {
-  return get_skeleton3_djoint_world_matrix(out, skeleton, get_skeleton3_djoint_index_by_name(skeleton, name));
+inline bool get_skeleton_3d_joint_world_matrix_by_name(flight::Ref<Matrix4Like> out, flight::Ref<Skeleton3D> skeleton, flight::String name) {
+  return get_skeleton_3d_joint_world_matrix(out, skeleton, get_skeleton_3d_joint_index_by_name(skeleton, name));
 }
 
-inline void initialize_skeleton3_d(flight::Ref<EntityConstruction<flight::Ref<Skeleton3D>>> out, flight::Float32Array inverse_bind_matrices, flight::Float32Array joint_matrices, flight::Array<flight::Ref<Node3D>> joints, std::variant<flight::Array<flight::String>, flight::Null, flight::Undefined> names, flight::Float32Array normal_matrices) {
+inline void initialize_skeleton_3d(flight::Ref<EntityConstruction<flight::Ref<Skeleton3D>>> out, flight::Float32Array inverse_bind_matrices, flight::Float32Array joint_matrices, flight::Array<flight::Ref<Node3D>> joints, std::variant<flight::Array<flight::String>, flight::Null, flight::Undefined> names, flight::Float32Array normal_matrices) {
   (out->inverse_bind_matrices = inverse_bind_matrices);
   (out->joint_matrices = joint_matrices);
   (out->joints = joints);
@@ -188,7 +188,7 @@ inline void initialize_skeleton3_d(flight::Ref<EntityConstruction<flight::Ref<Sk
 // cpp emission failed for @flighthq/skeleton3d/packages/skeleton3d/src/skeleton3d.ts: a presence test against
 // null has no absence channel in the emitted C++ storage for identifier
 
-inline std::optional<flight::Ref<Skeleton3DValidationDiagnostic>> validate_skeleton3_d(flight::Ref<Skeleton3D> skeleton) {
+inline std::optional<flight::Ref<Skeleton3DValidationDiagnostic>> validate_skeleton_3d(flight::Ref<Skeleton3D> skeleton) {
   const double joint_count = static_cast<double>(skeleton->joints.size());
   const double expected_inverse_bind_matrices_length = (joint_count * 16.0);
   const double inverse_bind_matrices_length = static_cast<double>(skeleton->inverse_bind_matrices.size());
@@ -204,7 +204,7 @@ inline flight::Ref<Matrix4> result = create_matrix4(std::nullopt, std::nullopt, 
 
 inline flight::Ref<Matrix3> normal = create_matrix3(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
-inline void compute_skeleton3_djoint_matrices(flight::Ref<Skeleton3D> skeleton) {
+inline void compute_skeleton_3d_joint_matrices(flight::Ref<Skeleton3D> skeleton) {
   flight::Ref<Skeleton3D> object_pattern_value = skeleton;
   flight::Float32Array inverse_bind_matrices = object_pattern_value->inverse_bind_matrices;
   flight::Float32Array joint_matrices = object_pattern_value->joint_matrices;
@@ -245,9 +245,9 @@ inline void compute_skeleton3_djoint_matrices(flight::Ref<Skeleton3D> skeleton) 
   }
 }
 
-inline std::optional<std::function<void(flight::Ref<Skeleton3D>, double)>> skeleton3_dbind_pose_guard = std::nullopt;
+inline std::optional<std::function<void(flight::Ref<Skeleton3D>, double)>> skeleton_3d_bind_pose_guard = std::nullopt;
 
-inline void set_skeleton3_dbind_pose(flight::Ref<Skeleton3D> skeleton) {
+inline void set_skeleton_3d_bind_pose(flight::Ref<Skeleton3D> skeleton) {
   flight::Ref<Skeleton3D> object_pattern_value = skeleton;
   flight::Float32Array inverse_bind_matrices = object_pattern_value->inverse_bind_matrices;
   flight::Array<flight::Ref<Node3D>> joints = object_pattern_value->joints;
@@ -261,7 +261,7 @@ inline void set_skeleton3_dbind_pose(flight::Ref<Skeleton3D> skeleton) {
         else {
           set_matrix4_identity(result);
           inverse_bind_matrices.set(result->m, (j * 16.0));
-          ([&]() { auto optional_chain_receiver = skeleton3_dbind_pose_guard; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(skeleton, j); }());
+          ([&]() { auto optional_chain_receiver = skeleton_3d_bind_pose_guard; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(skeleton, j); }());
         }
       }
       (j += 1.0);
@@ -269,18 +269,18 @@ inline void set_skeleton3_dbind_pose(flight::Ref<Skeleton3D> skeleton) {
   }
 }
 
-inline flight::Ref<Skeleton3D> create_skeleton3_d(flight::Array<flight::Ref<Node3D>> joints, std::optional<flight::Float32Array> inverse_bind_matrices = std::nullopt, std::optional<std::optional<flight::Array<flight::String>>> names = std::nullopt) {
+inline flight::Ref<Skeleton3D> create_skeleton_3d(flight::Array<flight::Ref<Node3D>> joints, std::optional<flight::Float32Array> inverse_bind_matrices = std::nullopt, std::optional<std::optional<flight::Array<flight::String>>> names = std::nullopt) {
   const double count = static_cast<double>(joints.size());
   flight::Ref<EntityConstruction<flight::Ref<Skeleton3D>>> skeleton = allocate_entity<flight::Ref<Skeleton3D>>();
-  initialize_skeleton3_d(skeleton, (inverse_bind_matrices.has_value() ? inverse_bind_matrices.value() : flight::Float32Array((count * 16.0))), flight::Float32Array((count * 16.0)), joints, ([&]() -> std::variant<flight::Array<flight::String>, flight::Null, flight::Undefined> { auto contextual_union_source = ([&]() -> std::optional<flight::Array<flight::String>> { auto nullish_coalesce_left = names; if (nullish_coalesce_left.has_value()) return std::optional<flight::Array<flight::String>>{nullish_coalesce_left.value()}; return std::nullopt; }()); if (!contextual_union_source.has_value()) return std::variant<flight::Array<flight::String>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Array<flight::String>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<flight::String>>, contextual_union_source.value()}; }()), flight::Float32Array((count * 12.0)));
+  initialize_skeleton_3d(skeleton, (inverse_bind_matrices.has_value() ? inverse_bind_matrices.value() : flight::Float32Array((count * 16.0))), flight::Float32Array((count * 16.0)), joints, ([&]() -> std::variant<flight::Array<flight::String>, flight::Null, flight::Undefined> { auto contextual_union_source = ([&]() -> std::optional<flight::Array<flight::String>> { auto nullish_coalesce_left = names; if (nullish_coalesce_left.has_value()) return std::optional<flight::Array<flight::String>>{nullish_coalesce_left.value()}; return std::nullopt; }()); if (!contextual_union_source.has_value()) return std::variant<flight::Array<flight::String>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Array<flight::String>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<flight::String>>, contextual_union_source.value()}; }()), flight::Float32Array((count * 12.0)));
   if (!inverse_bind_matrices.has_value()) {
-    set_skeleton3_dbind_pose(skeleton);
+    set_skeleton_3d_bind_pose(skeleton);
   }
   return skeleton;
 }
 
-inline void set_skeleton3_dbind_pose_guard(std::optional<std::function<void(flight::Ref<Skeleton3D>, double)>> guard) {
-  (skeleton3_dbind_pose_guard = guard);
+inline void set_skeleton_3d_bind_pose_guard(std::optional<std::function<void(flight::Ref<Skeleton3D>, double)>> guard) {
+  (skeleton_3d_bind_pose_guard = guard);
 }
 
 } // namespace flight::skeleton3d

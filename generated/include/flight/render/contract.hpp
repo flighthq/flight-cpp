@@ -8,10 +8,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/render/enable_color_adjustment_guards.hpp>
 #include <flight/render/enable_color_adjustments.hpp>
 #include <flight/render/enable_scene_render_guards.hpp>
-#include <flight/render/explain_scene2_dcoverage.hpp>
-#include <flight/render/explain_scene2_dpipeline_coverage.hpp>
-#include <flight/render/explain_scene2_drender.hpp>
-#include <flight/render/explain_scene3_dpipeline_coverage.hpp>
+#include <flight/render/explain_scene_2d_coverage.hpp>
+#include <flight/render/explain_scene_2d_pipeline_coverage.hpp>
+#include <flight/render/explain_scene_2d_render.hpp>
+#include <flight/render/explain_scene_3d_pipeline_coverage.hpp>
 #include <flight/render/image_surface.hpp>
 #include <flight/render/merge_render_options.hpp>
 #include <flight/render/render_appearance.hpp>

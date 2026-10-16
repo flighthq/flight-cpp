@@ -72,7 +72,7 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/types/gl_render_state.hpp>
 #include <flight/types/gl_render_state_options.hpp>
 #include <flight/types/gl_render_target.hpp>
-#include <flight/types/gl_scene3_druntime.hpp>
+#include <flight/types/gl_scene_3d_runtime.hpp>
 #include <flight/types/gl_texture_resolver.hpp>
 #include <flight/types/gl_velocity_writer.hpp>
 #include <flight/types/host_canvas.hpp>

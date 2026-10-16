@@ -34,7 +34,7 @@ namespace flight::types { struct Physics2DWheelJointOptions; }
 
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/physics2_d.hpp>
+#include <flight/types/physics_2d.hpp>
 #include <flight/physics2d/joints.hpp>
 
 namespace flight::physics2d {
@@ -60,22 +60,22 @@ inline void init_joint_base(flight::Ref<flight::types::Physics2DJoint> out, flig
   (out->r_by = 0.0);
 }
 
-inline void initialize_physics2_ddistance_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DDistanceJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DDistanceJointOptions>>>> options) {
-  flight::row_set<flight::RowKey<"kind">>(out, flight::physics2d::physics2_ddistance_joint_kind);
+inline void initialize_physics_2d_distance_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DDistanceJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DDistanceJointOptions>>>> options) {
+  flight::row_set<flight::RowKey<"kind">>(out, flight::physics2d::physics_2d_distance_joint_kind);
   init_joint_base(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJointOptions>>>>>(options));
   flight::row_set<flight::RowKey<"length">>(out, flight::row_get<flight::RowKey<"length">>(options));
   flight::row_set<flight::RowKey<"frequencyHz">>(out, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"frequencyHz">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
   flight::row_set<flight::RowKey<"dampingRatio">>(out, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"dampingRatio">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
 }
 
-inline flight::Ref<flight::types::Physics2DDistanceJoint> create_physics2_ddistance_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DDistanceJointOptions>>>> options) {
+inline flight::Ref<flight::types::Physics2DDistanceJoint> create_physics_2d_distance_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DDistanceJointOptions>>>> options) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DDistanceJoint>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics2DDistanceJoint>>();
-  initialize_physics2_ddistance_joint(out, options);
+  initialize_physics_2d_distance_joint(out, options);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics2DDistanceJoint>>(out);
 }
 
-inline void initialize_physics2_dgear_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DGearJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DGearJointOptions>>>> options) {
-  flight::row_set<flight::RowKey<"kind">>(out, flight::physics2d::physics2_dgear_joint_kind);
+inline void initialize_physics_2d_gear_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DGearJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DGearJointOptions>>>> options) {
+  flight::row_set<flight::RowKey<"kind">>(out, flight::physics2d::physics_2d_gear_joint_kind);
   init_joint_base(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJointOptions>>>>>(options));
   flight::row_set<flight::RowKey<"coordinateA">>(out, flight::row_get<flight::RowKey<"coordinateA">>(options));
   flight::row_set<flight::RowKey<"coordinateB">>(out, flight::row_get<flight::RowKey<"coordinateB">>(options));
@@ -87,14 +87,14 @@ inline void initialize_physics2_dgear_joint(flight::types::EntityConstruction<fl
   flight::row_set<flight::RowKey<"constant">>(out, flight::row_get<flight::RowKey<"constant">>(options));
 }
 
-inline flight::Ref<flight::types::Physics2DGearJoint> create_physics2_dgear_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DGearJointOptions>>>> options) {
+inline flight::Ref<flight::types::Physics2DGearJoint> create_physics_2d_gear_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DGearJointOptions>>>> options) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DGearJoint>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics2DGearJoint>>();
-  initialize_physics2_dgear_joint(out, options);
+  initialize_physics_2d_gear_joint(out, options);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics2DGearJoint>>(out);
 }
 
-inline void initialize_physics2_dmouse_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DMouseJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DMouseJointOptions>>>> options) {
-  flight::row_set<flight::RowKey<"kind">>(out, flight::physics2d::physics2_dmouse_joint_kind);
+inline void initialize_physics_2d_mouse_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DMouseJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DMouseJointOptions>>>> options) {
+  flight::row_set<flight::RowKey<"kind">>(out, flight::physics2d::physics_2d_mouse_joint_kind);
   flight::row_set<flight::RowKey<"bodyA">>(out, flight::row_get<flight::RowKey<"body">>(options));
   flight::row_set<flight::RowKey<"bodyB">>(out, flight::row_get<flight::RowKey<"body">>(options));
   flight::row_set<flight::RowKey<"localAnchorAX">>(out, 0.0);
@@ -118,14 +118,14 @@ inline void initialize_physics2_dmouse_joint(flight::types::EntityConstruction<f
   flight::row_set<flight::RowKey<"dampingRatio">>(out, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"dampingRatio">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.7; }()));
 }
 
-inline flight::Ref<flight::types::Physics2DMouseJoint> create_physics2_dmouse_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DMouseJointOptions>>>> options) {
+inline flight::Ref<flight::types::Physics2DMouseJoint> create_physics_2d_mouse_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DMouseJointOptions>>>> options) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DMouseJoint>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics2DMouseJoint>>();
-  initialize_physics2_dmouse_joint(out, options);
+  initialize_physics_2d_mouse_joint(out, options);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics2DMouseJoint>>(out);
 }
 
-inline void initialize_physics2_dprismatic_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DPrismaticJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DPrismaticJointOptions>>>> options) {
-  flight::row_set<flight::RowKey<"kind">>(out, flight::physics2d::physics2_dprismatic_joint_kind);
+inline void initialize_physics_2d_prismatic_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DPrismaticJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DPrismaticJointOptions>>>> options) {
+  flight::row_set<flight::RowKey<"kind">>(out, flight::physics2d::physics_2d_prismatic_joint_kind);
   init_joint_base(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJointOptions>>>>>(options));
   flight::row_set<flight::RowKey<"localAxisAX">>(out, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"localAxisAX">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()));
   flight::row_set<flight::RowKey<"localAxisAY">>(out, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"localAxisAY">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
@@ -142,14 +142,14 @@ inline void initialize_physics2_dprismatic_joint(flight::types::EntityConstructi
   flight::row_set<flight::RowKey<"limitDampingRatio">>(out, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"limitDampingRatio">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
 }
 
-inline flight::Ref<flight::types::Physics2DPrismaticJoint> create_physics2_dprismatic_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DPrismaticJointOptions>>>> options) {
+inline flight::Ref<flight::types::Physics2DPrismaticJoint> create_physics_2d_prismatic_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DPrismaticJointOptions>>>> options) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DPrismaticJoint>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics2DPrismaticJoint>>();
-  initialize_physics2_dprismatic_joint(out, options);
+  initialize_physics_2d_prismatic_joint(out, options);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics2DPrismaticJoint>>(out);
 }
 
-inline void initialize_physics2_dpulley_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DPulleyJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DPulleyJointOptions>>>> options) {
-  flight::row_set<flight::RowKey<"kind">>(out, flight::physics2d::physics2_dpulley_joint_kind);
+inline void initialize_physics_2d_pulley_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DPulleyJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DPulleyJointOptions>>>> options) {
+  flight::row_set<flight::RowKey<"kind">>(out, flight::physics2d::physics_2d_pulley_joint_kind);
   init_joint_base(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJointOptions>>>>>(options));
   flight::row_set<flight::RowKey<"groundAnchorAX">>(out, flight::row_get<flight::RowKey<"groundAnchorAX">>(options));
   flight::row_set<flight::RowKey<"groundAnchorAY">>(out, flight::row_get<flight::RowKey<"groundAnchorAY">>(options));
@@ -159,14 +159,14 @@ inline void initialize_physics2_dpulley_joint(flight::types::EntityConstruction<
   flight::row_set<flight::RowKey<"constant">>(out, flight::row_get<flight::RowKey<"constant">>(options));
 }
 
-inline flight::Ref<flight::types::Physics2DPulleyJoint> create_physics2_dpulley_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DPulleyJointOptions>>>> options) {
+inline flight::Ref<flight::types::Physics2DPulleyJoint> create_physics_2d_pulley_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DPulleyJointOptions>>>> options) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DPulleyJoint>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics2DPulleyJoint>>();
-  initialize_physics2_dpulley_joint(out, options);
+  initialize_physics_2d_pulley_joint(out, options);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics2DPulleyJoint>>(out);
 }
 
-inline void initialize_physics2_drevolute_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DRevoluteJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DRevoluteJointOptions>>>> options) {
-  flight::row_set<flight::RowKey<"kind">>(out, flight::physics2d::physics2_drevolute_joint_kind);
+inline void initialize_physics_2d_revolute_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DRevoluteJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DRevoluteJointOptions>>>> options) {
+  flight::row_set<flight::RowKey<"kind">>(out, flight::physics2d::physics_2d_revolute_joint_kind);
   init_joint_base(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJointOptions>>>>>(options));
   flight::row_set<flight::RowKey<"enableMotor">>(out, ([&]() -> bool { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"enableMotor">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return false; }()));
   flight::row_set<flight::RowKey<"motorSpeed">>(out, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"motorSpeed">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
@@ -181,38 +181,38 @@ inline void initialize_physics2_drevolute_joint(flight::types::EntityConstructio
   flight::row_set<flight::RowKey<"limitDampingRatio">>(out, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"limitDampingRatio">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
 }
 
-inline flight::Ref<flight::types::Physics2DRevoluteJoint> create_physics2_drevolute_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DRevoluteJointOptions>>>> options) {
+inline flight::Ref<flight::types::Physics2DRevoluteJoint> create_physics_2d_revolute_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DRevoluteJointOptions>>>> options) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DRevoluteJoint>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics2DRevoluteJoint>>();
-  initialize_physics2_drevolute_joint(out, options);
+  initialize_physics_2d_revolute_joint(out, options);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics2DRevoluteJoint>>(out);
 }
 
-inline void initialize_physics2_drope_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DRopeJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DRopeJointOptions>>>> options) {
-  flight::row_set<flight::RowKey<"kind">>(out, flight::physics2d::physics2_drope_joint_kind);
+inline void initialize_physics_2d_rope_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DRopeJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DRopeJointOptions>>>> options) {
+  flight::row_set<flight::RowKey<"kind">>(out, flight::physics2d::physics_2d_rope_joint_kind);
   init_joint_base(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJointOptions>>>>>(options));
   flight::row_set<flight::RowKey<"maxLength">>(out, flight::row_get<flight::RowKey<"maxLength">>(options));
 }
 
-inline flight::Ref<flight::types::Physics2DRopeJoint> create_physics2_drope_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DRopeJointOptions>>>> options) {
+inline flight::Ref<flight::types::Physics2DRopeJoint> create_physics_2d_rope_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DRopeJointOptions>>>> options) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DRopeJoint>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics2DRopeJoint>>();
-  initialize_physics2_drope_joint(out, options);
+  initialize_physics_2d_rope_joint(out, options);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics2DRopeJoint>>(out);
 }
 
-inline void initialize_physics2_dweld_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DWeldJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWeldJointOptions>>>> options) {
-  flight::row_set<flight::RowKey<"kind">>(out, flight::physics2d::physics2_dweld_joint_kind);
+inline void initialize_physics_2d_weld_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DWeldJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWeldJointOptions>>>> options) {
+  flight::row_set<flight::RowKey<"kind">>(out, flight::physics2d::physics_2d_weld_joint_kind);
   init_joint_base(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJointOptions>>>>>(options));
   flight::row_set<flight::RowKey<"referenceAngle">>(out, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"referenceAngle">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
 }
 
-inline flight::Ref<flight::types::Physics2DWeldJoint> create_physics2_dweld_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWeldJointOptions>>>> options) {
+inline flight::Ref<flight::types::Physics2DWeldJoint> create_physics_2d_weld_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWeldJointOptions>>>> options) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DWeldJoint>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics2DWeldJoint>>();
-  initialize_physics2_dweld_joint(out, options);
+  initialize_physics_2d_weld_joint(out, options);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics2DWeldJoint>>(out);
 }
 
-inline void initialize_physics2_dwheel_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DWheelJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWheelJointOptions>>>> options) {
-  flight::row_set<flight::RowKey<"kind">>(out, flight::physics2d::physics2_dwheel_joint_kind);
+inline void initialize_physics_2d_wheel_joint(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DWheelJoint>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWheelJointOptions>>>> options) {
+  flight::row_set<flight::RowKey<"kind">>(out, flight::physics2d::physics_2d_wheel_joint_kind);
   init_joint_base(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJointOptions>>>>>(options));
   flight::row_set<flight::RowKey<"localAxisAX">>(out, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"localAxisAX">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
   flight::row_set<flight::RowKey<"localAxisAY">>(out, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"localAxisAY">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()));
@@ -225,9 +225,9 @@ inline void initialize_physics2_dwheel_joint(flight::types::EntityConstruction<f
   flight::row_set<flight::RowKey<"motorImpulse">>(out, 0.0);
 }
 
-inline flight::Ref<flight::types::Physics2DWheelJoint> create_physics2_dwheel_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWheelJointOptions>>>> options) {
+inline flight::Ref<flight::types::Physics2DWheelJoint> create_physics_2d_wheel_joint(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWheelJointOptions>>>> options) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DWheelJoint>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics2DWheelJoint>>();
-  initialize_physics2_dwheel_joint(out, options);
+  initialize_physics_2d_wheel_joint(out, options);
   return flight::entity::finish_entity<flight::Ref<flight::types::Physics2DWheelJoint>>(out);
 }
 

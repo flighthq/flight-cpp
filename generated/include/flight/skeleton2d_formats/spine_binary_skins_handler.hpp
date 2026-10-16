@@ -16,19 +16,19 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/spine_binary_registry.hpp>
 
-#include <flight/types/skin2_d.hpp>
+#include <flight/types/skin_2d.hpp>
 
-#include <flight/types/region_attachment2_d.hpp>
+#include <flight/types/region_attachment_2d.hpp>
 
-#include <flight/types/mesh_attachment2_d.hpp>
+#include <flight/types/mesh_attachment_2d.hpp>
 
 #include <flight/types/import_diagnostic.hpp>
 
 #include <flight/types/byte_reader.hpp>
 
-#include <flight/types/attachment_skin2_d.hpp>
+#include <flight/types/attachment_skin_2d.hpp>
 
-#include <flight/types/attachment2_d.hpp>
+#include <flight/types/attachment_2d.hpp>
 
 namespace flight::types { struct Attachment2D; }
 namespace flight::types { struct AttachmentSkin2D; }
@@ -42,7 +42,7 @@ namespace flight::types { struct SpineBinarySectionContext; }
 
 #include <flight/entity/entity.hpp>
 #include <flight/importdiagnostics/import_diagnostic_collector.hpp>
-#include <flight/skeleton2d/skin2_d.hpp>
+#include <flight/skeleton2d/skin_2d.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/skeleton2d_formats/spine_binary_parse_helpers.hpp>
 #include <flight/skeleton2d_formats/spine_binary_reader.hpp>
@@ -100,7 +100,7 @@ inline flight::Ref<skin_vertices_b2c7bbaabcbbd2e6> read_spine_binary_vertices(fl
       (v += 1.0);
     }
   }
-  return flight::make_ref<skin_vertices_b2c7bbaabcbbd2e6>(skin_vertices_b2c7bbaabcbbd2e6{.skin = std::optional<flight::Ref<flight::types::Skin2D>>{flight::skeleton2d::create_skin2_d(influence_counts, flight::Float32Array(influences))}, .vertices = std::nullopt});
+  return flight::make_ref<skin_vertices_b2c7bbaabcbbd2e6>(skin_vertices_b2c7bbaabcbbd2e6{.skin = std::optional<flight::Ref<flight::types::Skin2D>>{flight::skeleton2d::create_skin_2d(influence_counts, flight::Float32Array(influences))}, .vertices = std::nullopt});
 }
 
 inline void skip_spine_binary_vertices(flight::Ref<flight::types::ByteReader> reader, double vertex_count) {
@@ -131,7 +131,7 @@ inline flight::Ref<flight::types::MeshAttachment2D> reject_spine_binary_mesh(fli
   flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("spine.binary-count-unsatisfiable"), flight::String("readSpineBinaryMeshAttachment"), {{flight::String("attachment"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, (name.has_value() ? name.value() : flight::String(""))}}, {flight::String("declared"), std::variant<bool, double, flight::String>{std::in_place_type<double>, declared}}, {flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, field}}, {flight::String("remaining"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (static_cast<double>(reader->view.byte_length) - reader->offset)}}});
   flight::skeleton2d_formats::skip_spine_binary_bytes(reader, (static_cast<double>(reader->view.byte_length) + 1.0));
   flight::types::EntityConstruction<flight::Ref<flight::types::MeshAttachment2D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::MeshAttachment2D>>();
-  initialize_mesh_attachment2_d_flight_value_function_initialize_u00004d_esh_u000041_ttachment2_u000044__flight_private_0e8203fe1cfeaf12(out, flight::types::mesh_attachment2_dkind, ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto contextual_union_source = name; if (!contextual_union_source.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, contextual_union_source.value()}; }()), std::variant<flight::Ref<flight::types::Skin2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}, flight::Uint16Array(), flight::Float32Array(), 0.0, std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null});
+  initialize_mesh_attachment2_d_flight_value_function_initialize_u00004d_esh_u000041_ttachment2_u000044__flight_private_0e8203fe1cfeaf12(out, flight::types::mesh_attachment_2d_kind, ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto contextual_union_source = name; if (!contextual_union_source.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, contextual_union_source.value()}; }()), std::variant<flight::Ref<flight::types::Skin2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}, flight::Uint16Array(), flight::Float32Array(), 0.0, std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null});
   return flight::entity::finish_entity<flight::Ref<flight::types::MeshAttachment2D>>(out);
 }
 
@@ -170,7 +170,7 @@ inline flight::Ref<flight::types::MeshAttachment2D> read_spine_binary_mesh_attac
     flight::skeleton2d_formats::skip_spine_binary_bytes(reader, ((edges * 2.0) + 8.0));
   }
   flight::types::EntityConstruction<flight::Ref<flight::types::MeshAttachment2D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::MeshAttachment2D>>();
-  initialize_mesh_attachment2_d_flight_value_function_initialize_u00004d_esh_u000041_ttachment2_u000044__flight_private_0e8203fe1cfeaf12(out, flight::types::mesh_attachment2_dkind, ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto contextual_union_source_2 = name; if (!contextual_union_source_2.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, contextual_union_source_2.value()}; }()), ([&]() -> std::variant<flight::Ref<flight::types::Skin2D>, flight::Null, flight::Undefined> { auto contextual_union_source_3 = geometry->skin; if (!contextual_union_source_3.has_value()) return std::variant<flight::Ref<flight::types::Skin2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Ref<flight::types::Skin2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::Skin2D>>, contextual_union_source_3.value()}; }()), triangles, uvs, vertex_count, ([&]() -> std::variant<flight::Float32Array, flight::Null, flight::Undefined> { auto contextual_union_source_4 = geometry->vertices; if (!contextual_union_source_4.has_value()) return std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Float32Array>, contextual_union_source_4.value()}; }()));
+  initialize_mesh_attachment2_d_flight_value_function_initialize_u00004d_esh_u000041_ttachment2_u000044__flight_private_0e8203fe1cfeaf12(out, flight::types::mesh_attachment_2d_kind, ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto contextual_union_source_2 = name; if (!contextual_union_source_2.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, contextual_union_source_2.value()}; }()), ([&]() -> std::variant<flight::Ref<flight::types::Skin2D>, flight::Null, flight::Undefined> { auto contextual_union_source_3 = geometry->skin; if (!contextual_union_source_3.has_value()) return std::variant<flight::Ref<flight::types::Skin2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Ref<flight::types::Skin2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::Skin2D>>, contextual_union_source_3.value()}; }()), triangles, uvs, vertex_count, ([&]() -> std::variant<flight::Float32Array, flight::Null, flight::Undefined> { auto contextual_union_source_4 = geometry->vertices; if (!contextual_union_source_4.has_value()) return std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Float32Array>, contextual_union_source_4.value()}; }()));
   return flight::entity::finish_entity<flight::Ref<flight::types::MeshAttachment2D>>(out);
 }
 
@@ -198,7 +198,7 @@ inline flight::Ref<flight::types::RegionAttachment2D> read_spine_binary_region_a
   flight::skeleton2d_formats::skip_spine_binary_bytes(reader, flight::skeleton2d_formats::spine_binary_color_bytes);
   skip_spine_binary_sequence(reader);
   flight::types::EntityConstruction<flight::Ref<flight::types::RegionAttachment2D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::RegionAttachment2D>>();
-  initialize_region_attachment2_d_flight_value_function_initialize_u000052_egion_u000041_ttachment2_u000044__flight_private_0e8203fe1cfeaf12(out, height, flight::types::region_attachment2_dkind, ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto contextual_union_source_5 = name; if (!contextual_union_source_5.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, contextual_union_source_5.value()}; }()), rotation, scale_x, scale_y, width, x, y);
+  initialize_region_attachment2_d_flight_value_function_initialize_u000052_egion_u000041_ttachment2_u000044__flight_private_0e8203fe1cfeaf12(out, height, flight::types::region_attachment_2d_kind, ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto contextual_union_source_5 = name; if (!contextual_union_source_5.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, contextual_union_source_5.value()}; }()), rotation, scale_x, scale_y, width, x, y);
   return flight::entity::finish_entity<flight::Ref<flight::types::RegionAttachment2D>>(out);
 }
 

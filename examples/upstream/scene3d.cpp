@@ -23,8 +23,8 @@
 #include <flight/scene3d/mesh.hpp>
 #include <flight/scene3d/scene_node.hpp>
 #include <flight/scene3d_gl/gl_shadow_map.hpp>
-#include <flight/scene3d_gl/render_gl_scene3_d.hpp>
-#include <flight/scene3d_gl/scene3_dgl_pipeline.hpp>
+#include <flight/scene3d_gl/render_gl_scene_3d.hpp>
+#include <flight/scene3d_gl/scene_3d_gl_pipeline.hpp>
 
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_keycode.h>
@@ -126,7 +126,7 @@ material_list(const flight::Ref<flight::types::StandardPbrMaterial>& material) {
   options->projection = flight::types::Projection{
       std::in_place_type<flight::Ref<flight::types::PerspectiveProjection>>,
       projection};
-  return flight::camera::create_camera3_d(readonly(options));
+  return flight::camera::create_camera_3d(readonly(options));
 }
 
 [[nodiscard]] flight::Ref<flight::types::Camera3D> shadow_camera(
@@ -144,9 +144,9 @@ material_list(const flight::Ref<flight::types::StandardPbrMaterial>& material) {
   options->projection = flight::types::Projection{
       std::in_place_type<flight::Ref<flight::types::OrthographicProjection>>,
       projection};
-  auto camera = flight::camera::create_camera3_d(readonly(options));
+  auto camera = flight::camera::create_camera_3d(readonly(options));
   auto bounds = flight::geometry::create_aabb(-3.5, -0.8, -2.5, 3.5, 1.0, 2.5);
-  flight::camera::configure_directional_shadow_camera3_d(
+  flight::camera::configure_directional_shadow_camera_3d(
       camera, readonly(light_direction), readonly(bounds));
   return camera;
 }
@@ -172,7 +172,7 @@ struct Scene final {
   const auto gray_metallic_material = pbr_material(0xaaaaaaffU, 1.0, 0.3);
   const auto blue_material = pbr_material(0x3366ccffU, 0.0, 0.5);
 
-  auto root = flight::scene3d::create_node3_d(flight::types::node3_dkind);
+  auto root = flight::scene3d::create_node_3d(flight::types::node_3d_kind);
 
   auto ground = flight::scene3d::create_mesh(
       flight::mesh::create_plane_mesh_geometry(7.0, 5.0, 7.0, 5.0),
@@ -273,7 +273,7 @@ class Scene3DExample final {
     gl_.make_current();
 
     auto render_options = flight::make_ref<flight::types::GlRenderStateOptions>(
-        *flight::scene3d_gl::gl_scene3_drender_preset);
+        *flight::scene3d_gl::gl_scene_3d_render_preset);
     render_options->pixel_ratio = 1.0;
     state_ = flight::render_gl::create_gl_render_state(gl_, readonly(render_options));
 
@@ -433,7 +433,7 @@ class Scene3DExample final {
       first_render_controller_updates_ = controller_updates_;
     }
     require_no_gl_error("initialization or previous frame");
-    auto render_list = flight::render::prepare_scene3_drender(
+    auto render_list = flight::render::prepare_scene_3d_render(
         state_, scene_.root, scene_.camera, scene_.lights);
     if (verify_subject) {
       const auto light_block = render_list->lights
@@ -453,7 +453,7 @@ class Scene3DExample final {
       }
       ++subject_verified_frames_;
     }
-    flight::scene3d_gl::draw_gl_scene3_dshadow_map(
+    flight::scene3d_gl::draw_gl_scene_3d_shadow_map(
         state_, readonly(scene_.root), readonly(scene_.shadow_camera),
         std::optional<Readonly<flight::types::DirectionalLight>>{
             readonly(scene_.directional_light)});
@@ -471,7 +471,7 @@ class Scene3DExample final {
     gl_.depth_mask(true);
     gl_.clear_depth(1.0);
     gl_.clear(gl_.depth_buffer_bit);
-    flight::scene3d_gl::render_gl_scene3_d(
+    flight::scene3d_gl::render_gl_scene_3d(
         pass, readonly(scene_.root), readonly(scene_.camera),
         readonly(scene_.lights));
     require_no_gl_error("main Scene3D pass");

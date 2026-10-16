@@ -17,9 +17,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d_document.hpp>
 
-#include <flight/types/scene3_d.hpp>
+#include <flight/types/scene_3d.hpp>
 
 #include <flight/types/import_diagnostic.hpp>
 
@@ -254,8 +254,8 @@ inline flight::Ref<flight::types::Scene3DDocument> parse_awd2(flight::Uint8Array
   return state->document;
 }
 
-inline flight::Ref<flight::types::Scene3D> create_scene3_dfrom_awd2(flight::Uint8Array bytes, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2ParseOptions>>>> options, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
-  return flight::scene3d::create_scene3_dfrom_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(parse_awd2(bytes, options, diagnostics))), std::nullopt);
+inline flight::Ref<flight::types::Scene3D> create_scene_3d_from_awd2(flight::Uint8Array bytes, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2ParseOptions>>>> options, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
+  return flight::scene3d::create_scene_3d_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(parse_awd2(bytes, options, diagnostics))), std::nullopt);
 }
 
 } // namespace flight::scene3d_formats

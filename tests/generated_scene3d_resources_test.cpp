@@ -2,8 +2,8 @@
 // The package remains partial: loader coroutines, resolver construction/streaming, resource-to-
 // reference lookup, material registration, and guard installation are refused. These tests exercise
 // only emitted behavior, using exact resource owners rather than substitute loaders or registries.
-#include <flight/scene3d_resources/enable_scene3_dresource_failure_guards.hpp>
-#include <flight/scene3d_resources/get_scene3_dresource_textures.hpp>
+#include <flight/scene3d_resources/enable_scene_3d_resource_failure_guards.hpp>
+#include <flight/scene3d_resources/get_scene_3d_resource_textures.hpp>
 #include <flight/scene3d_resources/image_resource_fetch.hpp>
 #include <flight/scene3d_resources/scene_document_source.hpp>
 #include <flight/scene3d_resources/scene_resource_signals.hpp>
@@ -69,13 +69,13 @@ void image_uri_resolution() {
 }
 
 void document_base_path_parsing() {
-  const auto nested = resources::get_scene3_ddocument_base_path_from_url(
+  const auto nested = resources::get_scene_3d_document_base_path_from_url(
       flight::String("models/ships/main.gltf?cache=1#ignored"));
-  const auto absolute = resources::get_scene3_ddocument_base_path_from_url(
+  const auto absolute = resources::get_scene_3d_document_base_path_from_url(
       flight::String("https://cdn.test/models/main.glb#node"));
-  const auto bare = resources::get_scene3_ddocument_base_path_from_url(
+  const auto bare = resources::get_scene_3d_document_base_path_from_url(
       flight::String("main.obj?cache=1"));
-  const auto root = resources::get_scene3_ddocument_base_path_from_url(
+  const auto root = resources::get_scene_3d_document_base_path_from_url(
       flight::String("/main.3ds"));
   bool exact = nested == std::optional<flight::String>{"models/ships"} &&
                absolute ==
@@ -130,7 +130,7 @@ void resource_sidecar_identity_order_and_optionality() {
   flight::Array<types::Texture> out{texture_3d(stale)};
   const auto external_owner = external;
   const auto embedded_owner = embedded;
-  resources::get_scene3_dresource_textures(out, readonly_view(scene));
+  resources::get_scene_3d_resource_textures(out, readonly_view(scene));
 
   bool exact = out.size() == 2 &&
                std::get<flight::Ref<types::Texture2D>>(out.element(0.0)) ==
@@ -142,7 +142,7 @@ void resource_sidecar_identity_order_and_optionality() {
                embedded->textures->size() == 1;
 
   scene->resources = {};
-  resources::get_scene3_dresource_textures(out, readonly_view(scene));
+  resources::get_scene_3d_resource_textures(out, readonly_view(scene));
   exact = exact && out.empty();
   if (inject_resource_identity_mutation) exact = false;
   check(exact,
@@ -157,15 +157,15 @@ void resource_signal_identity_and_lifecycle() {
   const auto runtime = flight::make_ref<types::Scene3DResourceResolverRuntime>();
   const auto resolver =
       flight::make_ref<types::Scene3DResourceResolverWithRuntime>();
-  resolver->scene3_dresource_resolver_runtime_key = runtime;
+  resolver->scene_3d_resource_resolver_runtime_key = runtime;
 
   bool exact =
-      !resources::get_scene3_dresource_signals(readonly_view(resolver))
+      !resources::get_scene_3d_resource_signals(readonly_view(resolver))
            .has_value();
-  const auto first = resources::enable_scene3_dresource_signals(resolver);
-  const auto second = resources::enable_scene3_dresource_signals(resolver);
+  const auto first = resources::enable_scene_3d_resource_signals(resolver);
+  const auto second = resources::enable_scene_3d_resource_signals(resolver);
   const auto stored =
-      resources::get_scene3_dresource_signals(readonly_view(resolver));
+      resources::get_scene_3d_resource_signals(readonly_view(resolver));
   exact = exact && first == second && stored.has_value() && *stored == first &&
           !first->entity_runtime_key.has_value() &&
           first->on_resource_failed != first->on_resource_resolved;
@@ -185,10 +185,10 @@ void resource_signal_identity_and_lifecycle() {
   first->on_resource_resolved->emit(readonly_view(event));
   exact = exact && received == 1 &&
           !first->on_resource_resolved->data.has_value() &&
-          resources::get_scene3_dresource_signals(readonly_view(resolver)) ==
+          resources::get_scene_3d_resource_signals(readonly_view(resolver)) ==
               stored;
 
-  const auto independent = resources::create_scene3_dresource_signals();
+  const auto independent = resources::create_scene_3d_resource_signals();
   exact = exact && independent != first &&
           independent->on_resource_resolved != first->on_resource_resolved &&
           independent->on_resource_failed != first->on_resource_failed;
@@ -201,14 +201,14 @@ void absent_failure_guard_disable() {
   const auto runtime = flight::make_ref<types::Scene3DResourceResolverRuntime>();
   const auto resolver =
       flight::make_ref<types::Scene3DResourceResolverWithRuntime>();
-  resolver->scene3_dresource_resolver_runtime_key = runtime;
+  resolver->scene_3d_resource_resolver_runtime_key = runtime;
   bool exact =
-      !resources::are_scene3_dresource_failure_guards_enabled(
+      !resources::are_scene_3d_resource_failure_guards_enabled(
           readonly_view(resolver)) &&
       !runtime->signals.has_value();
-  resources::disable_scene3_dresource_failure_guards(resolver);
+  resources::disable_scene_3d_resource_failure_guards(resolver);
   exact = exact &&
-          !resources::are_scene3_dresource_failure_guards_enabled(
+          !resources::are_scene_3d_resource_failure_guards_enabled(
               readonly_view(resolver)) &&
           !runtime->signals.has_value();
   if (inject_guard_disable_mutation) exact = false;

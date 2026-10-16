@@ -5,42 +5,42 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/collision/capsule_contact2_d.hpp>
-#include <flight/collision/collide_contact_manifold2_d.hpp>
-#include <flight/collision/collide_contact_manifold3_d.hpp>
-#include <flight/collision/collision_face3_d.hpp>
-#include <flight/collision/collision_shape_validation2_d.hpp>
-#include <flight/collision/collision_shape_validation3_d.hpp>
-#include <flight/collision/collision_support2_d.hpp>
-#include <flight/collision/collision_support3_d.hpp>
+#include <flight/collision/capsule_contact_2d.hpp>
+#include <flight/collision/collide_contact_manifold_2d.hpp>
+#include <flight/collision/collide_contact_manifold_3d.hpp>
+#include <flight/collision/collision_face_3d.hpp>
+#include <flight/collision/collision_shape_validation_2d.hpp>
+#include <flight/collision/collision_shape_validation_3d.hpp>
+#include <flight/collision/collision_support_2d.hpp>
+#include <flight/collision/collision_support_3d.hpp>
 #include <flight/collision/contact_feature_id.hpp>
-#include <flight/collision/contact_manifold2_d.hpp>
-#include <flight/collision/contact_manifold3_d.hpp>
-#include <flight/collision/convex_hull3_d.hpp>
-#include <flight/collision/convex_vertices2_d.hpp>
+#include <flight/collision/contact_manifold_2d.hpp>
+#include <flight/collision/contact_manifold_3d.hpp>
+#include <flight/collision/convex_hull_3d.hpp>
+#include <flight/collision/convex_vertices_2d.hpp>
 #include <flight/collision/enable_collision_guards.hpp>
-#include <flight/collision/explain_collision_test2_d.hpp>
-#include <flight/collision/explain_collision_test3_d.hpp>
-#include <flight/collision/gjk2_d.hpp>
-#include <flight/collision/gjk3_d.hpp>
-#include <flight/collision/gjk_distance3_d.hpp>
-#include <flight/collision/manifold2_d.hpp>
-#include <flight/collision/manifold3_d.hpp>
-#include <flight/collision/point_containment2_d.hpp>
-#include <flight/collision/point_containment3_d.hpp>
-#include <flight/collision/raycast_collision_shape2_d.hpp>
-#include <flight/collision/raycast_collision_shape3_d.hpp>
-#include <flight/collision/register_built_in_collision_pair_tests2_d.hpp>
-#include <flight/collision/register_built_in_collision_pair_tests3_d.hpp>
-#include <flight/collision/segment_collision2_d.hpp>
-#include <flight/collision/shape_collision2_d.hpp>
-#include <flight/collision/shape_collision3_d.hpp>
-#include <flight/collision/shape_contact2_d.hpp>
-#include <flight/collision/sweep_collision_shape2_d.hpp>
-#include <flight/collision/sweep_collision_shape3_d.hpp>
-#include <flight/collision/test_collision2_d.hpp>
-#include <flight/collision/test_collision3_d.hpp>
-#include <flight/collision/triangle_mesh3_d.hpp>
+#include <flight/collision/explain_collision_test_2d.hpp>
+#include <flight/collision/explain_collision_test_3d.hpp>
+#include <flight/collision/gjk_2d.hpp>
+#include <flight/collision/gjk_3d.hpp>
+#include <flight/collision/gjk_distance_3d.hpp>
+#include <flight/collision/manifold_2d.hpp>
+#include <flight/collision/manifold_3d.hpp>
+#include <flight/collision/point_containment_2d.hpp>
+#include <flight/collision/point_containment_3d.hpp>
+#include <flight/collision/raycast_collision_shape_2d.hpp>
+#include <flight/collision/raycast_collision_shape_3d.hpp>
+#include <flight/collision/register_built_in_collision_pair_tests_2d.hpp>
+#include <flight/collision/register_built_in_collision_pair_tests_3d.hpp>
+#include <flight/collision/segment_collision_2d.hpp>
+#include <flight/collision/shape_collision_2d.hpp>
+#include <flight/collision/shape_collision_3d.hpp>
+#include <flight/collision/shape_contact_2d.hpp>
+#include <flight/collision/sweep_collision_shape_2d.hpp>
+#include <flight/collision/sweep_collision_shape_3d.hpp>
+#include <flight/collision/test_collision_2d.hpp>
+#include <flight/collision/test_collision_3d.hpp>
+#include <flight/collision/triangle_mesh_3d.hpp>
 
 namespace flight::collision {
 

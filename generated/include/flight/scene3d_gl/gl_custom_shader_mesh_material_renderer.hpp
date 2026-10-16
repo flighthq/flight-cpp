@@ -88,7 +88,7 @@ inline flight::Ref<GlCustomShaderProgram> compile_gl_custom_shader_program(fligh
 }
 
 inline flight::Ref<GlCustomShaderProgram> ensure_gl_custom_shader_program(flight::Ref<flight::types::GlRenderState> state, flight::String shader_key, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlCustomMaterialShaderSource>>>> source) {
-  return flight::scene3d_gl::ensure_gl_scene3_dprogram<flight::Ref<GlCustomShaderProgram>>(state, flight::String("custom:") + flight::to_string(shader_key) + flight::String(""), [=](flight::host_sdl::WebGl2Context gl) { return compile_gl_custom_shader_program(gl, source); });
+  return flight::scene3d_gl::ensure_gl_scene_3d_program<flight::Ref<GlCustomShaderProgram>>(state, flight::String("custom:") + flight::to_string(shader_key) + flight::String(""), [=](flight::host_sdl::WebGl2Context gl) { return compile_gl_custom_shader_program(gl, source); });
 }
 
 inline void upload_custom_shader_material_uniforms(flight::host_sdl::WebGl2Context gl, flight::host_sdl::WebGlProgram program, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CustomShaderMaterial>>>> material) {

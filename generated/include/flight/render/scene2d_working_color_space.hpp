@@ -9,6 +9,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::render {
 
-inline flight::types::RenderTargetColorSpace scene2_d_working_color_space = flight::String("srgb");
+inline flight::types::RenderTargetColorSpace scene_2d_working_color_space = flight::String("srgb");
 
 } // namespace flight::render

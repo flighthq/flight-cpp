@@ -36,7 +36,7 @@ struct RiveTendonBone;
 
 #include <flight/geometry/matrix.hpp>
 #include <flight/importdiagnostics/import_diagnostic_collector.hpp>
-#include <flight/skeleton2d/skin2_d.hpp>
+#include <flight/skeleton2d/skin_2d.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/scene2d_formats/rive_core_types.hpp>
 
@@ -187,7 +187,7 @@ inline flight::Ref<flight::types::Vector2> bind_space = flight::make_ref<flight:
 
 inline flight::Ref<flight::types::Vector2> bone_space = flight::make_ref<flight::types::Vector2>(flight::types::Vector2{.x = 0.0, .y = 0.0});
 
-inline std::optional<flight::Ref<flight::types::Skin2D>> create_rive_skin2_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveArtboardGraph>>>> artboard, double skinnable_index, flight::Array<double> bone_indices, flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveWeightedPoint>>>>> points, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
+inline std::optional<flight::Ref<flight::types::Skin2D>> create_rive_skin_2d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveArtboardGraph>>>> artboard, double skinnable_index, flight::Array<double> bone_indices, flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveWeightedPoint>>>>> points, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
   const double skin_index = find_rive_skin(artboard, skinnable_index);
   if ((skin_index < 0.0)) {
     return std::nullopt;
@@ -244,7 +244,7 @@ inline std::optional<flight::Ref<flight::types::Skin2D>> create_rive_skin2_d(fli
       (position += 1.0);
     }
   }
-  return std::optional<flight::Ref<flight::types::Skin2D>>{flight::skeleton2d::create_skin2_d(influence_counts, flight::Float32Array(influences))};
+  return std::optional<flight::Ref<flight::types::Skin2D>>{flight::skeleton2d::create_skin_2d(influence_counts, flight::Float32Array(influences))};
 }
 
 } // namespace flight::scene2d_formats

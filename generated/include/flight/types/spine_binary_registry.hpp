@@ -30,13 +30,13 @@ using SpineBinaryTimelineHandler = std::function<void(flight::Ref<SpineBinaryTim
 } // namespace flight::types
 
 #include <flight/types/animation_channel.hpp>
-#include <flight/types/attachment_skin2_d.hpp>
-#include <flight/types/bone2_d.hpp>
+#include <flight/types/attachment_skin_2d.hpp>
+#include <flight/types/bone_2d.hpp>
 #include <flight/types/byte_reader.hpp>
 #include <flight/types/import_diagnostic.hpp>
-#include <flight/types/skeleton2_ddraw_order_timeline.hpp>
-#include <flight/types/skeleton2_dimport.hpp>
-#include <flight/types/slot2_d.hpp>
+#include <flight/types/skeleton_2d_draw_order_timeline.hpp>
+#include <flight/types/skeleton_2d_import.hpp>
+#include <flight/types/slot_2d.hpp>
 
 namespace flight::types {
 

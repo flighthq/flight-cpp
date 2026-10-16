@@ -6,8 +6,8 @@ static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-cont
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
 #include <flight/spring/spring.hpp>
-#include <flight/spring/spring2_d.hpp>
-#include <flight/spring/spring3_d.hpp>
+#include <flight/spring/spring_2d.hpp>
+#include <flight/spring/spring_3d.hpp>
 #include <flight/spring/spring_config.hpp>
 
 namespace flight::spring {

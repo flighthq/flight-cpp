@@ -17,8 +17,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/scene2d_canvas/canvas_image_source.hpp>
 #include <flight/scene2d_canvas/canvas_image_texture_resolver.hpp>
 #include <flight/scene2d_canvas/canvas_materials.hpp>
-#include <flight/scene2d_canvas/canvas_node2_d.hpp>
-#include <flight/scene2d_canvas/canvas_particle_emitter2_d.hpp>
+#include <flight/scene2d_canvas/canvas_node_2d.hpp>
+#include <flight/scene2d_canvas/canvas_particle_emitter_2d.hpp>
 #include <flight/scene2d_canvas/canvas_pipeline.hpp>
 #include <flight/scene2d_canvas/canvas_quad_batch.hpp>
 #include <flight/scene2d_canvas/canvas_quad_material_registry.hpp>
@@ -50,9 +50,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/scene2d_canvas/canvas_tilemap.hpp>
 #include <flight/scene2d_canvas/canvas_transform.hpp>
 #include <flight/scene2d_canvas/enable_canvas_texture_resolver_guards.hpp>
-#include <flight/scene2d_canvas/explain_canvas_scene2_dcoverage.hpp>
+#include <flight/scene2d_canvas/explain_canvas_scene_2d_coverage.hpp>
 #include <flight/scene2d_canvas/explain_canvas_texture_resolution.hpp>
-#include <flight/scene2d_canvas/scene2_dcanvas_pipeline.hpp>
+#include <flight/scene2d_canvas/scene_2d_canvas_pipeline.hpp>
 
 namespace flight::scene2d_canvas {
 

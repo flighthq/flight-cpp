@@ -14,7 +14,7 @@ struct GlEnvironmentCaptureOptions;
 } // namespace flight::types
 
 #include <flight/types/environment.hpp>
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 
 namespace flight::types {
 

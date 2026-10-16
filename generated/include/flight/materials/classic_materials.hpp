@@ -22,7 +22,7 @@ namespace flight::types { struct TextureCube; }
 namespace flight::materials {
 
 inline flight::Ref<flight::types::BlinnPhongMaterial> create_blinn_phong_material(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::BlinnPhongMaterial>>>>>> opts = std::nullopt) {
-  auto material = flight::materials::create_material3_d<flight::Ref<flight::types::BlinnPhongMaterial>>(flight::types::blinn_phong_material_kind, opts);
+  auto material = flight::materials::create_material_3d<flight::Ref<flight::types::BlinnPhongMaterial>>(flight::types::blinn_phong_material_kind, opts);
   (material->alpha_map = ([&]() -> std::optional<flight::types::Texture> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"alphaMap">>(optional_chain_receiver.value()); }()));
   (material->diffuse = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"diffuse">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 4294967295.0; }()));
   (material->diffuse_map = ([&]() -> std::optional<flight::types::Texture> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"diffuseMap">>(optional_chain_receiver.value()); }()));
@@ -35,7 +35,7 @@ inline flight::Ref<flight::types::BlinnPhongMaterial> create_blinn_phong_materia
 }
 
 inline flight::Ref<flight::types::LambertMaterial> create_lambert_material(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::LambertMaterial>>>>>> opts = std::nullopt) {
-  auto material = flight::materials::create_material3_d<flight::Ref<flight::types::LambertMaterial>>(flight::types::lambert_material_kind, opts);
+  auto material = flight::materials::create_material_3d<flight::Ref<flight::types::LambertMaterial>>(flight::types::lambert_material_kind, opts);
   (material->diffuse = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"diffuse">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 4294967295.0; }()));
   (material->diffuse_map = ([&]() -> std::optional<flight::types::Texture> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"diffuseMap">>(optional_chain_receiver.value()); }()));
   (material->emissive = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"emissive">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 255.0; }()));
@@ -44,7 +44,7 @@ inline flight::Ref<flight::types::LambertMaterial> create_lambert_material(std::
 }
 
 inline flight::Ref<flight::types::PhongMaterial> create_phong_material(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::PhongMaterial>>>>>> opts = std::nullopt) {
-  auto material = flight::materials::create_material3_d<flight::Ref<flight::types::PhongMaterial>>(flight::types::phong_material_kind, opts);
+  auto material = flight::materials::create_material_3d<flight::Ref<flight::types::PhongMaterial>>(flight::types::phong_material_kind, opts);
   (material->diffuse = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"diffuse">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 4294967295.0; }()));
   (material->diffuse_map = ([&]() -> std::optional<flight::types::Texture> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"diffuseMap">>(optional_chain_receiver.value()); }()));
   (material->normal_map = ([&]() -> std::optional<flight::types::Texture> { auto optional_chain_receiver = opts; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"normalMap">>(optional_chain_receiver.value()); }()));

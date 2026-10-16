@@ -10,11 +10,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::physics3d {
 
-inline double mix_physics3_dfriction(double first, double second) {
+inline double mix_physics_3d_friction(double first, double second) {
   return (std::sqrt(first) * std::sqrt(second));
 }
 
-inline double mix_physics3_drestitution(double first, double second) {
+inline double mix_physics_3d_restitution(double first, double second) {
   return flight::maximum(first, second);
 }
 

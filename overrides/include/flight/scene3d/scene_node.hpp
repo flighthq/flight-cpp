@@ -13,12 +13,12 @@
 #include <flight/runtime.hpp>
 #include <flight/signals/emitter.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 #include <flight/types/node_signals.hpp>
 
 namespace flight::scene3d {
 
-using flight::types::node3_dkind;
+using flight::types::node_3d_kind;
 
 using Node3DTraits = flight::Ref<flight::types::Node3DTraits>;
 using Node3DView = flight::types::NodeOf<Node3DTraits>;
@@ -156,7 +156,7 @@ inline void bind_base_runtime_alias(const std::shared_ptr<Value>& source,
 }  // namespace detail
 
 template <typename Runtime>
-inline void initialize_node3_druntime(const std::shared_ptr<Runtime>& runtime) {
+inline void initialize_node_3d_runtime(const std::shared_ptr<Runtime>& runtime) {
   runtime->binding = std::nullopt;
   runtime->uid = std::nullopt;
   runtime->color_adjustments = std::nullopt;
@@ -169,7 +169,7 @@ inline void initialize_node3_druntime(const std::shared_ptr<Runtime>& runtime) {
   runtime->can_add_child = [](const auto&, const auto&) { return true; };
   runtime->children = std::nullopt;
   runtime->children_id = 0.0;
-  runtime->traits = flight::types::node3_dtraits_key;
+  runtime->traits = flight::types::node_3d_traits_key;
   runtime->interaction_signals = std::nullopt;
   runtime->local_bounds_id = 0.0;
   runtime->local_bounds_using_local_bounds_id = -1.0;
@@ -194,14 +194,14 @@ inline void initialize_node3_druntime(const std::shared_ptr<Runtime>& runtime) {
   runtime->world_matrix4 = std::nullopt;
 }
 
-inline flight::Ref<flight::types::Node3DRuntime> create_node3_druntime() {
+inline flight::Ref<flight::types::Node3DRuntime> create_node_3d_runtime() {
   auto runtime = flight::make_ref<flight::types::Node3DRuntime>();
-  initialize_node3_druntime(runtime);
+  initialize_node_3d_runtime(runtime);
   return runtime;
 }
 
 template <typename Runtime, typename Out, typename Options, typename Factory>
-inline void initialize_node3_d(const Out& out, flight::String kind,
+inline void initialize_node_3d(const Out& out, flight::String kind,
                                const Options& options, Factory create_runtime) {
   // The current emitter gives runtime factories one optional traits argument.
   // Older generated callers and the exact-owner factories have zero arguments.
@@ -235,9 +235,9 @@ inline void initialize_node3_d(const Out& out, flight::String kind,
 }
 
 template <typename Options>
-inline flight::Ref<flight::types::Node3D> create_node3_d(
+inline flight::Ref<flight::types::Node3D> create_node_3d(
     flight::String kind, const Options& options) {
-  auto runtime = create_node3_druntime();
+  auto runtime = create_node_3d_runtime();
   auto out = flight::make_ref<flight::types::Node3D>(flight::types::Node3D{
       .data = std::nullopt,
       .enabled = detail::option_enabled(options).value_or(true),
@@ -256,11 +256,11 @@ inline flight::Ref<flight::types::Node3D> create_node3_d(
   return out;
 }
 
-inline flight::Ref<flight::types::Node3D> create_node3_d(
+inline flight::Ref<flight::types::Node3D> create_node_3d(
     std::optional<flight::String> kind = std::nullopt,
     std::optional<flight::Ref<enabled_name_alpha_visible_6eed4c0384cbbf3f>>
         options = std::nullopt) {
-  return create_node3_d(kind.value_or(flight::types::node3_dkind), options);
+  return create_node_3d(kind.value_or(flight::types::node_3d_kind), options);
 }
 
 template <typename Value>
@@ -282,7 +282,7 @@ inline Node3DView node3_dview(const std::shared_ptr<Value>& source) {
 inline Node3DView node3_dview(const Node3DView& source) { return source; }
 
 template <typename Schema>
-inline flight::Ref<flight::types::Node3DRuntime> get_node3_druntime(
+inline flight::Ref<flight::types::Node3DRuntime> get_node_3d_runtime(
     const flight::StructuralRef<Schema>& source) {
   const auto runtime = flight::row_get<std::optional<Node3DBaseRuntimeOwner>>(
       source, flight::types::entity_runtime_key);
@@ -294,15 +294,15 @@ inline flight::Ref<flight::types::Node3DRuntime> get_node3_druntime(
 }
 
 template <typename Value>
-inline flight::Ref<flight::types::Node3DRuntime> get_node3_druntime(
+inline flight::Ref<flight::types::Node3DRuntime> get_node_3d_runtime(
     const std::shared_ptr<Value>& source) {
-  return get_node3_druntime(node3_dview(source));
+  return get_node_3d_runtime(node3_dview(source));
 }
 
 template <typename Source>
-inline flight::Ref<flight::types::NodeSignals> enable_node3_dsignals(
+inline flight::Ref<flight::types::NodeSignals> enable_node_3d_signals(
     const Source& source) {
-  auto runtime = get_node3_druntime(source);
+  auto runtime = get_node_3d_runtime(source);
   if (!runtime->node_signals.has_value()) {
     runtime->node_signals = flight::node::create_node_signals();
   }
@@ -311,18 +311,18 @@ inline flight::Ref<flight::types::NodeSignals> enable_node3_dsignals(
 
 template <typename Source>
 inline std::optional<flight::Ref<flight::types::NodeSignals>>
-get_node3_dsignals(const Source& source) {
-  return get_node3_druntime(source)->node_signals;
+get_node_3d_signals(const Source& source) {
+  return get_node_3d_runtime(source)->node_signals;
 }
 
 template <typename Source>
 inline std::optional<Node3DView> get_node3_dparent(const Source& source) {
-  return get_node3_druntime(source)->parent;
+  return get_node_3d_runtime(source)->parent;
 }
 
 template <typename Source>
 inline double get_node3_dchild_count(const Source& source) {
-  const auto& children = get_node3_druntime(source)->children;
+  const auto& children = get_node_3d_runtime(source)->children;
   return children.has_value() ? static_cast<double>(children.value().size())
                               : 0.0;
 }
@@ -330,7 +330,7 @@ inline double get_node3_dchild_count(const Source& source) {
 template <typename Source>
 inline std::optional<Node3DView> get_node3_dchild_at(const Source& source,
                                                     double index) {
-  const auto& children = get_node3_druntime(source)->children;
+  const auto& children = get_node_3d_runtime(source)->children;
   if (!children.has_value() || index < 0.0 ||
       index >= static_cast<double>(children.value().size())) {
     return std::nullopt;
@@ -339,7 +339,7 @@ inline std::optional<Node3DView> get_node3_dchild_at(const Source& source,
 }
 
 template <typename Value>
-inline bool is_node3_d(const std::shared_ptr<Value>& source) {
+inline bool is_node_3d(const std::shared_ptr<Value>& source) {
   return static_cast<bool>(source) && requires { source->position; source->rotation;
                                                  source->scale; };
 }
@@ -354,7 +354,7 @@ inline flight::types::NodeAny node3_dany(const Node3DView& source) {
 inline void invalidate_node3_dworld_bounds(const Node3DView& source) {
   auto current = std::optional<Node3DView>{source};
   while (current.has_value()) {
-    const auto runtime = get_node3_druntime(current.value());
+    const auto runtime = get_node_3d_runtime(current.value());
     runtime->world_bounds_using_world_transform_id = -1.0;
     runtime->world_bounds_using_local_bounds_id = -1.0;
     current = runtime->parent;
@@ -365,8 +365,8 @@ inline Node3DView remove_node3_dchild(const Node3DView& target,
                                      const Node3DView& child) {
   if (!child) return child;
 
-  const auto target_runtime = get_node3_druntime(target);
-  const auto child_runtime = get_node3_druntime(child);
+  const auto target_runtime = get_node_3d_runtime(target);
+  const auto child_runtime = get_node_3d_runtime(child);
   if (!target_runtime->children.has_value() ||
       !child_runtime->parent.has_value() ||
       child_runtime->parent.value() != target) {
@@ -411,14 +411,14 @@ inline Node3DView add_node3_dchild_at(const Node3DView& target,
         flight::String("An object cannot be added as a child of itself"));
   }
   for (auto current = std::optional<Node3DView>{target}; current.has_value();
-       current = get_node3_druntime(current.value())->parent) {
+       current = get_node_3d_runtime(current.value())->parent) {
     if (current.value() == child) {
       throw flight::TypeError(flight::String(
           "An ancestor cannot be added as a child of its descendant"));
     }
   }
 
-  const auto target_runtime = get_node3_druntime(target);
+  const auto target_runtime = get_node_3d_runtime(target);
   const double child_count = target_runtime->children.has_value()
                                  ? static_cast<double>(
                                        target_runtime->children.value().size())
@@ -436,7 +436,7 @@ inline Node3DView add_node3_dchild_at(const Node3DView& target,
   }
 
   auto& children = target_runtime->children.value();
-  const auto child_runtime = get_node3_druntime(child);
+  const auto child_runtime = get_node_3d_runtime(child);
   const auto previous_parent = child_runtime->parent;
   bool was_child = false;
   if (previous_parent.has_value() && previous_parent.value() == target) {

@@ -62,7 +62,7 @@ int main(int argc, char** argv) {
       flight::RowOf<flight::Ref<types::CreateTexture2DOptions>>>>(
       flight::row_field<flight::RowKey<"sampler">>(
           std::optional<flight::Ref<types::Sampler>>{defaults->sampler}));
-  const auto structural = texture::create_texture2_d(structural_options);
+  const auto structural = texture::create_texture_2d(structural_options);
   check(structural->dimension == flight::String("2d"),
         "the structural 2D constructor selects 2D");
   check(structural->sampler != defaults->sampler,
@@ -97,7 +97,7 @@ int main(int argc, char** argv) {
   options->version = 7.0;
   options->resource = decltype(types::CreateTexture2DOptions::resource){
       std::in_place_type<flight::Ref<types::ExternalImageResourceReference>>, resource};
-  const auto two_d = texture::create_texture2_d(options);
+  const auto two_d = texture::create_texture_2d(options);
   check(two_d->source.has_value() &&
             std::get<flight::Ref<types::TextureSource>>(two_d->source.value()) == source,
         "2D construction retains the source owner");
@@ -180,7 +180,7 @@ int main(int argc, char** argv) {
   auto construction =
       flight::entity::allocate_entity<flight::Ref<types::Texture2D>>();
   const auto construction_owner = construction.shared_owner();
-  texture::initialize_texture2_d(
+  texture::initialize_texture_2d(
       construction,
       std::optional<flight::Ref<types::CreateTexture2DOptions>>{initialize_options});
   const auto initialized =
@@ -218,7 +218,7 @@ int main(int argc, char** argv) {
   copy_options->uv_rotation = 1.0;
   copy_options->uv_scale = scale;
   copy_options->version = 21.0;
-  const auto copy_source = texture::create_texture2_d(copy_options);
+  const auto copy_source = texture::create_texture_2d(copy_options);
   const auto copy_out = texture::create_texture();
   const auto copy_out_sampler = copy_out->sampler;
   const auto copy_out_offset = copy_out->uv_offset;
@@ -248,7 +248,7 @@ int main(int argc, char** argv) {
       std::in_place_type<flight::Ref<types::TextureSource>>, source};
   alias_options->uv_rotation = 2.0;
   alias_options->uv_scale = flight::geometry::create_vector2(7.0, 8.0);
-  const auto alias_texture = texture::create_texture2_d(alias_options);
+  const auto alias_texture = texture::create_texture_2d(alias_options);
   const auto alias_sampler = alias_texture->sampler;
   const auto alias_offset = alias_texture->uv_offset;
   const auto alias_scale = alias_texture->uv_scale;
@@ -671,7 +671,7 @@ int main(int argc, char** argv) {
       std::in_place_type<flight::Ref<types::TextureSource>>, view_source};
   view_options->uv_scale = flight::geometry::create_vector2(0.3, 0.2);
   view_options->uv_rotation = -flight::pi / 2.0;
-  const auto view_texture = texture::create_texture2_d(view_options);
+  const auto view_texture = texture::create_texture_2d(view_options);
   const types::TextureLike view_texture_like{
       std::in_place_type<flight::Ref<types::Texture2D>>, view_texture};
   const auto view_size = flight::geometry::create_vector2();
@@ -721,7 +721,7 @@ int main(int argc, char** argv) {
   const auto invalid_options = flight::make_ref<types::CreateTexture2DOptions>();
   invalid_options->source = decltype(types::CreateTexture2DOptions::source){
       std::in_place_type<flight::Ref<types::TextureSource>>, invalid_source};
-  const auto invalid_texture = texture::create_texture2_d(invalid_options);
+  const auto invalid_texture = texture::create_texture_2d(invalid_options);
   const types::TextureLike invalid_texture_view{
       std::in_place_type<flight::Ref<types::Texture2D>>, invalid_texture};
   const auto invalid_view_size = flight::geometry::create_vector2(4.0, 5.0);
@@ -1027,7 +1027,7 @@ int main(int argc, char** argv) {
   reset_options->uv_rotation = flight::pi;
   reset_options->uv_scale = flight::geometry::create_vector2(5.0, 7.0);
   reset_options->version = 9.0;
-  const auto reset_texture = texture::create_texture2_d(reset_options);
+  const auto reset_texture = texture::create_texture_2d(reset_options);
   types::TextureLike reset_view{
       std::in_place_type<flight::Ref<types::Texture2D>>, reset_texture};
   const auto reset_offset_owner = reset_texture->uv_offset;
@@ -1063,7 +1063,7 @@ int main(int argc, char** argv) {
   rect_options->source = decltype(types::CreateTexture2DOptions::source){
       std::in_place_type<flight::Ref<types::TextureSource>>, rect_source};
   rect_options->version = 6.0;
-  const auto rect_texture = texture::create_texture2_d(rect_options);
+  const auto rect_texture = texture::create_texture_2d(rect_options);
   types::TextureLike rect_view{
       std::in_place_type<flight::Ref<types::Texture2D>>, rect_texture};
   const auto rect_offset_owner = rect_texture->uv_offset;
@@ -1384,8 +1384,8 @@ int main(int argc, char** argv) {
   equality_options->source = decltype(types::CreateTexture2DOptions::source){
       std::in_place_type<flight::Ref<types::TextureSource>>, source};
   equality_options->uv_rotation = 0.5;
-  const auto equal_texture_a = texture::create_texture2_d(equality_options);
-  const auto equal_texture_b = texture::create_texture2_d(equality_options);
+  const auto equal_texture_a = texture::create_texture_2d(equality_options);
+  const auto equal_texture_b = texture::create_texture_2d(equality_options);
   if (mutation == "--mutate-texture-equality") equal_texture_b->uv_rotation = 0.0;
   check(texture::equals_texture(equal_texture_a, equal_texture_b),
         "texture equality compares identical state and shared source identity by value");

@@ -32,7 +32,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/path.hpp>
 
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 
 #include <flight/types/node.hpp>
 
@@ -74,10 +74,10 @@ struct GuiControllerRuntime;
 #include <flight/types/entity.hpp>
 #include <flight/types/gui_controller.hpp>
 #include <flight/types/has_bounds_rectangle.hpp>
-#include <flight/types/has_transform2_d.hpp>
+#include <flight/types/has_transform_2d.hpp>
 #include <flight/types/interaction_signals.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/node_interaction.hpp>
 #include <flight/types/node_interactive_state_binding.hpp>
 #include <flight/types/path.hpp>

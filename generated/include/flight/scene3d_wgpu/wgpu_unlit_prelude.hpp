@@ -35,7 +35,7 @@ namespace flight::types { struct WgpuUnlitPipeline; }
 #include <flight/types/contract.hpp>
 #include <flight/scene3d_wgpu/wgpu_mesh_fragment_tail.hpp>
 #include <flight/scene3d_wgpu/wgpu_mesh_pipeline.hpp>
-#include <flight/scene3d_wgpu/wgpu_scene3_druntime.hpp>
+#include <flight/scene3d_wgpu/wgpu_scene_3d_runtime.hpp>
 
 namespace flight::scene3d_wgpu {
 
@@ -60,7 +60,7 @@ inline flight::String build_wgpu_unlit_define_key(flight::StructuralRef<flight::
 inline const double unlit_uniform_bytes = 32.0;
 
 inline flight::Ref<flight::types::WgpuMaterialBinding> ensure_wgpu_unlit_binding(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuUnlitPipeline>>>> pipeline, flight::Ref<void> material_key, flight::host_sdl::WgpuSampler sampler, flight::host_sdl::WgpuTextureView view) {
-  auto scene = flight::scene3d_wgpu::get_wgpu_scene3_druntime(state);
+  auto scene = flight::scene3d_wgpu::get_wgpu_scene_3d_runtime(state);
   std::optional<flight::Ref<flight::types::WgpuMaterialBinding>> binding = scene->material_bind_groups.get(material_key);
   if (!binding.has_value()) {
     auto buffer = state->device.create_buffer({.size = unlit_uniform_bytes, .usage = flight::bitwise_or(flight::host_sdl::wgpu_buffer_usage_uniform, flight::host_sdl::wgpu_buffer_usage_copy_dst)});
@@ -126,7 +126,7 @@ inline flight::Ref<flight::types::WgpuUnlitPipeline> compile_wgpu_unlit_pipeline
 }
 
 inline flight::Ref<flight::types::WgpuUnlitPipeline> ensure_wgpu_unlit_pipeline(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuUnlitDefineKey>>>> key, flight::String format) {
-  return flight::scene3d_wgpu::ensure_wgpu_scene3_dpipeline<flight::Ref<flight::types::WgpuUnlitPipeline>>(state, flight::String("unlit:") + flight::to_string(format) + flight::String("|") + flight::to_string(build_wgpu_unlit_define_key(key)) + flight::String(""), [=](bool blended, bool skinned) { return compile_wgpu_unlit_pipeline(state, key, format, blended, skinned); });
+  return flight::scene3d_wgpu::ensure_wgpu_scene_3d_pipeline<flight::Ref<flight::types::WgpuUnlitPipeline>>(state, flight::String("unlit:") + flight::to_string(format) + flight::String("|") + flight::to_string(build_wgpu_unlit_define_key(key)) + flight::String(""), [=](bool blended, bool skinned) { return compile_wgpu_unlit_pipeline(state, key, format, blended, skinned); });
 }
 
 inline flight::Float32Array scratch_flight_value_variable__u00005f_scratch_flight_private_3a814ee703f07f83 = flight::Float32Array((unlit_uniform_bytes / 4.0));

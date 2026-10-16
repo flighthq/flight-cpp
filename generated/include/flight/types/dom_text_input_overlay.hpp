@@ -14,7 +14,7 @@ using DomTextInputOverlay = std::function<void(flight::Ref<flight::types::DomRen
 } // namespace flight::types
 
 #include <flight/types/dom_render_state.hpp>
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 
 namespace flight::types {
 

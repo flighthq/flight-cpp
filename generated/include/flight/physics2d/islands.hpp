@@ -27,7 +27,7 @@ namespace flight::types { struct RigidBody2D; }
 namespace flight::types { struct SpatialIndexBackend2D; }
 
 #include <flight/types/collision.hpp>
-#include <flight/types/physics2_d.hpp>
+#include <flight/types/physics_2d.hpp>
 #include <flight/types/spatial.hpp>
 #include <flight/physics2d/ownership.hpp>
 #include <flight/physics2d/world.hpp>
@@ -45,8 +45,8 @@ using flight::types::Physics2DWorld;
 using flight::types::RigidBody2D;
 using flight::types::SpatialIndexBackend2D;
 
-inline void wake_physics2_dbody(flight::Ref<flight::types::RigidBody2D> body) {
-  flight::physics2d::assert_physics2_dbody_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body)));
+inline void wake_physics_2d_body(flight::Ref<flight::types::RigidBody2D> body) {
+  flight::physics2d::assert_physics_2d_body_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body)));
   (body->sleeping = false);
   (body->sleep_timer = 0.0);
 }
@@ -55,7 +55,7 @@ inline bool is_body_live(flight::StructuralRef<flight::RowReadonly<flight::RowOf
   return ((flight::row_get<flight::RowKey<"type">>(body) != flight::String("static")) && !flight::row_get<flight::RowKey<"sleeping">>(body));
 }
 
-inline bool is_rigid_body2_dpair_awake(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>> b) {
+inline bool is_rigid_body_2d_pair_awake(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>> b) {
   return (is_body_live(a) || is_body_live(b));
 }
 
@@ -70,14 +70,14 @@ inline bool is_body_still(flight::StructuralRef<flight::RowReadonly<flight::RowO
   return (std::abs(flight::row_get<flight::RowKey<"angularVelocity">>(body)) <= angular_threshold);
 }
 
-inline void keep_physics2_dbody_awake(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world, double body_index) {
-  auto body = flight::physics2d::find_physics2_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(world), body_index);
+inline void keep_physics_2d_body_awake(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>> world, double body_index) {
+  auto body = flight::physics2d::find_physics_2d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(world), body_index);
   if ((body.has_value() && (body.value()->type != flight::String("static")))) {
     (body.value()->sleep_timer = 0.0);
   }
 }
 
-inline void prepare_physics2_disland_slices(flight::Array<double> starts, flight::Array<double> counts, flight::Array<double> cursors) {
+inline void prepare_physics_2d_island_slices(flight::Array<double> starts, flight::Array<double> counts, flight::Array<double> cursors) {
   ([&]() { auto&& assignment_receiver = starts; const auto assignment_value = static_cast<double>(counts.size()); assignment_receiver.resize(assignment_value); return assignment_value; }());
   ([&]() { auto&& assignment_receiver = cursors; const auto assignment_value = static_cast<double>(counts.size()); assignment_receiver.resize(assignment_value); return assignment_value; }());
   double start = 0.0;
@@ -93,7 +93,7 @@ inline void prepare_physics2_disland_slices(flight::Array<double> starts, flight
   }
 }
 
-inline void copy_physics2_disland_starts(flight::Array<double> cursors, flight::Array<double> starts) {
+inline void copy_physics_2d_island_starts(flight::Array<double> cursors, flight::Array<double> starts) {
   ([&]() { auto&& assignment_receiver = cursors; const auto assignment_value = static_cast<double>(starts.size()); assignment_receiver.resize(assignment_value); return assignment_value; }());
   {
     double i = 0.0;
@@ -104,7 +104,7 @@ inline void copy_physics2_disland_starts(flight::Array<double> cursors, flight::
   }
 }
 
-inline double physics2_disland_item_count(flight::Array<double> starts, flight::Array<double> counts) {
+inline double physics_2d_island_item_count(flight::Array<double> starts, flight::Array<double> counts) {
   const double last = (static_cast<double>(counts.size()) - 1.0);
   return ((last < 0.0) ? 0.0 : (starts.element(last) + counts.element(last)));
 }
@@ -138,23 +138,23 @@ inline double island_root_of(flight::Map<double, double> parents, double index) 
   return root;
 }
 
-inline double physics2_dsolve_island_for_body(flight::Ref<flight::types::Physics2DWorld> world, double body_index) {
-  auto body = flight::physics2d::find_physics2_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), body_index);
+inline double physics_2d_solve_island_for_body(flight::Ref<flight::types::Physics2DWorld> world, double body_index) {
+  auto body = flight::physics2d::find_physics_2d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), body_index);
   if (((!body.has_value() || (body.value()->type == flight::String("static"))) || body.value()->sleeping)) {
     return -1.0;
   }
   return ([&]() -> double { auto nullish_coalesce_left = world->solve_island_by_root.get(island_root_of(world->island_parents, body.value()->index)); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return -1.0; }());
 }
 
-inline double physics2_dsolve_island_for_pair(flight::Ref<flight::types::Physics2DWorld> world, double body_a, double body_b) {
-  const double island_a = physics2_dsolve_island_for_body(world, body_a);
+inline double physics_2d_solve_island_for_pair(flight::Ref<flight::types::Physics2DWorld> world, double body_a, double body_b) {
+  const double island_a = physics_2d_solve_island_for_body(world, body_a);
   if ((island_a >= 0.0)) {
     return island_a;
   }
-  return physics2_dsolve_island_for_body(world, body_b);
+  return physics_2d_solve_island_for_body(world, body_b);
 }
 
-inline void build_physics2_dsolve_islands(flight::Ref<flight::types::Physics2DWorld> world) {
+inline void build_physics_2d_solve_islands(flight::Ref<flight::types::Physics2DWorld> world) {
   flight::Array<double> roots = world->solve_island_roots;
   flight::Map<double, double> by_root = world->solve_island_by_root;
   flight::Array<double> body_counts = world->solve_island_body_counts;
@@ -185,7 +185,7 @@ inline void build_physics2_dsolve_islands(flight::Ref<flight::types::Physics2DWo
     if ((!contact->enabled || contact->sensor)) {
       continue;
     }
-    const double island_2 = physics2_dsolve_island_for_pair(world, contact->body_a, contact->body_b);
+    const double island_2 = physics_2d_solve_island_for_pair(world, contact->body_a, contact->body_b);
     if ((island_2 >= 0.0)) {
       contact_counts.element(island_2)++;
     }
@@ -195,18 +195,18 @@ inline void build_physics2_dsolve_islands(flight::Ref<flight::types::Physics2DWo
     if (!solver.has_value()) {
       continue;
     }
-    const double island_3 = ((solver.value()->uses_body_a == false) ? physics2_dsolve_island_for_body(world, joint->body_b) : physics2_dsolve_island_for_pair(world, joint->body_a, joint->body_b));
+    const double island_3 = ((solver.value()->uses_body_a == false) ? physics_2d_solve_island_for_body(world, joint->body_b) : physics_2d_solve_island_for_pair(world, joint->body_a, joint->body_b));
     if ((island_3 >= 0.0)) {
       joint_counts.element(island_3)++;
     }
   }
-  prepare_physics2_disland_slices(world->solve_island_body_starts, body_counts, world->solve_island_cursors);
-  prepare_physics2_disland_slices(world->solve_island_contact_starts, contact_counts, world->solve_island_cursors);
-  prepare_physics2_disland_slices(world->solve_island_joint_starts, joint_counts, world->solve_island_cursors);
-  ([&]() { auto&& assignment_receiver = world->solve_island_body_indices; const auto assignment_value = physics2_disland_item_count(world->solve_island_body_starts, body_counts); assignment_receiver.resize(assignment_value); return assignment_value; }());
-  ([&]() { auto&& assignment_receiver = world->solve_island_contact_indices; const auto assignment_value = physics2_disland_item_count(world->solve_island_contact_starts, contact_counts); assignment_receiver.resize(assignment_value); return assignment_value; }());
-  ([&]() { auto&& assignment_receiver = world->solve_island_joint_indices; const auto assignment_value = physics2_disland_item_count(world->solve_island_joint_starts, joint_counts); assignment_receiver.resize(assignment_value); return assignment_value; }());
-  copy_physics2_disland_starts(world->solve_island_cursors, world->solve_island_body_starts);
+  prepare_physics_2d_island_slices(world->solve_island_body_starts, body_counts, world->solve_island_cursors);
+  prepare_physics_2d_island_slices(world->solve_island_contact_starts, contact_counts, world->solve_island_cursors);
+  prepare_physics_2d_island_slices(world->solve_island_joint_starts, joint_counts, world->solve_island_cursors);
+  ([&]() { auto&& assignment_receiver = world->solve_island_body_indices; const auto assignment_value = physics_2d_island_item_count(world->solve_island_body_starts, body_counts); assignment_receiver.resize(assignment_value); return assignment_value; }());
+  ([&]() { auto&& assignment_receiver = world->solve_island_contact_indices; const auto assignment_value = physics_2d_island_item_count(world->solve_island_contact_starts, contact_counts); assignment_receiver.resize(assignment_value); return assignment_value; }());
+  ([&]() { auto&& assignment_receiver = world->solve_island_joint_indices; const auto assignment_value = physics_2d_island_item_count(world->solve_island_joint_starts, joint_counts); assignment_receiver.resize(assignment_value); return assignment_value; }());
+  copy_physics_2d_island_starts(world->solve_island_cursors, world->solve_island_body_starts);
   {
     double i = 0.0;
     while ((i < static_cast<double>(world->bodies.size()))) {
@@ -224,7 +224,7 @@ inline void build_physics2_dsolve_islands(flight::Ref<flight::types::Physics2DWo
       (i += 1.0);
     }
   }
-  copy_physics2_disland_starts(world->solve_island_cursors, world->solve_island_contact_starts);
+  copy_physics_2d_island_starts(world->solve_island_cursors, world->solve_island_contact_starts);
   {
     double i_2 = 0.0;
     while ((i_2 < static_cast<double>(world->contacts.size()))) {
@@ -234,7 +234,7 @@ inline void build_physics2_dsolve_islands(flight::Ref<flight::types::Physics2DWo
           (i_2 += 1.0);
           continue;
         }
-        const double island_5 = physics2_dsolve_island_for_pair(world, contact_2->body_a, contact_2->body_b);
+        const double island_5 = physics_2d_solve_island_for_pair(world, contact_2->body_a, contact_2->body_b);
         if ((island_5 >= 0.0)) {
           (world->solve_island_contact_indices.element(world->solve_island_cursors.element(island_5)++) = i_2);
         }
@@ -242,7 +242,7 @@ inline void build_physics2_dsolve_islands(flight::Ref<flight::types::Physics2DWo
       (i_2 += 1.0);
     }
   }
-  copy_physics2_disland_starts(world->solve_island_cursors, world->solve_island_joint_starts);
+  copy_physics_2d_island_starts(world->solve_island_cursors, world->solve_island_joint_starts);
   {
     double i_3 = 0.0;
     while ((i_3 < static_cast<double>(world->joints.size()))) {
@@ -253,7 +253,7 @@ inline void build_physics2_dsolve_islands(flight::Ref<flight::types::Physics2DWo
           (i_3 += 1.0);
           continue;
         }
-        const double island_6 = ((solver_2.value()->uses_body_a == false) ? physics2_dsolve_island_for_body(world, joint_2->body_b) : physics2_dsolve_island_for_pair(world, joint_2->body_a, joint_2->body_b));
+        const double island_6 = ((solver_2.value()->uses_body_a == false) ? physics_2d_solve_island_for_body(world, joint_2->body_b) : physics_2d_solve_island_for_pair(world, joint_2->body_a, joint_2->body_b));
         if ((island_6 >= 0.0)) {
           (world->solve_island_joint_indices.element(world->solve_island_cursors.element(island_6)++) = i_3);
         }
@@ -264,8 +264,8 @@ inline void build_physics2_dsolve_islands(flight::Ref<flight::types::Physics2DWo
 }
 
 inline void union_dynamic_pair(flight::Ref<flight::types::Physics2DWorld> world, flight::Map<double, double> parents, double a, double b) {
-  auto first = flight::physics2d::find_physics2_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), a);
-  auto second = flight::physics2d::find_physics2_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), b);
+  auto first = flight::physics2d::find_physics_2d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), a);
+  auto second = flight::physics2d::find_physics_2d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), b);
   if ((!first.has_value() || !second.has_value())) {
     return;
   }
@@ -279,7 +279,7 @@ inline void union_dynamic_pair(flight::Ref<flight::types::Physics2DWorld> world,
   }
 }
 
-inline void update_physics2_dsleep(flight::Ref<flight::types::Physics2DWorld> world, double dt) {
+inline void update_physics_2d_sleep(flight::Ref<flight::types::Physics2DWorld> world, double dt) {
   auto config = world->config;
   flight::Array<flight::Ref<flight::types::RigidBody2D>> bodies = world->bodies;
   flight::Map<double, double> parents = world->island_parents;
@@ -328,9 +328,9 @@ inline void update_physics2_dsleep(flight::Ref<flight::types::Physics2DWorld> wo
       continue;
     }
     if ((solver_2.value()->uses_body_a != false)) {
-      keep_physics2_dbody_awake(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), joint_2->body_a);
+      keep_physics_2d_body_awake(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), joint_2->body_a);
     }
-    keep_physics2_dbody_awake(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), joint_2->body_b);
+    keep_physics_2d_body_awake(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), joint_2->body_b);
   }
   for (auto body_3 : bodies) {
     if ((body_3->type == flight::String("static"))) {

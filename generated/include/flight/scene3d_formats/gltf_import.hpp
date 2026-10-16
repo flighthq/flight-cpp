@@ -19,8 +19,8 @@ namespace flight::types { struct Scene3DDocument; }
 #include <flight/types/gltf_extension.hpp>
 #include <flight/types/gltf_schema.hpp>
 #include <flight/types/import_diagnostic.hpp>
-#include <flight/types/scene3_d.hpp>
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d.hpp>
+#include <flight/types/scene_3d_document.hpp>
 #include <flight/scene3d_formats/gltf_parse.hpp>
 #include <flight/scene3d_formats/register_gltf_animation_handlers.hpp>
 #include <flight/scene3d_formats/register_gltf_camera_handlers.hpp>
@@ -43,12 +43,12 @@ inline flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>> get_ful
   return handlers;
 }
 
-inline flight::Ref<flight::types::Scene3D> create_scene3_dfrom_glb(flight::Uint8Array bytes, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfImportOptions>>>>> options = std::nullopt) {
-  return flight::scene3d_formats::create_scene3_dfrom_glb_with_core_feature_handlers(bytes, get_full_gltf_core_feature_handlers(), diagnostics, options);
+inline flight::Ref<flight::types::Scene3D> create_scene_3d_from_glb(flight::Uint8Array bytes, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfImportOptions>>>>> options = std::nullopt) {
+  return flight::scene3d_formats::create_scene_3d_from_glb_with_core_feature_handlers(bytes, get_full_gltf_core_feature_handlers(), diagnostics, options);
 }
 
-inline flight::Ref<flight::types::Scene3D> create_scene3_dfrom_gltf(std::variant<flight::Ref<flight::types::GltfDocument>, flight::String> source, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfImportOptions>>>>> options = std::nullopt) {
-  return flight::scene3d_formats::create_scene3_dfrom_gltf_with_core_feature_handlers(source, get_full_gltf_core_feature_handlers(), diagnostics, options);
+inline flight::Ref<flight::types::Scene3D> create_scene_3d_from_gltf(std::variant<flight::Ref<flight::types::GltfDocument>, flight::String> source, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfImportOptions>>>>> options = std::nullopt) {
+  return flight::scene3d_formats::create_scene_3d_from_gltf_with_core_feature_handlers(source, get_full_gltf_core_feature_handlers(), diagnostics, options);
 }
 
 inline flight::Ref<flight::types::Scene3DDocument> parse_glb(flight::Uint8Array bytes, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfImportOptions>>>>> options = std::nullopt) {

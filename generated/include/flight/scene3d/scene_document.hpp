@@ -18,17 +18,17 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/vector3.hpp>
 
-#include <flight/types/transform3_d.hpp>
+#include <flight/types/transform_3d.hpp>
 
-#include <flight/types/skeleton3_d.hpp>
+#include <flight/types/skeleton_3d.hpp>
 
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d_document.hpp>
 
-#include <flight/types/scene3_d.hpp>
+#include <flight/types/scene_3d.hpp>
 
 #include <flight/types/quaternion.hpp>
 
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 
 #include <flight/types/matrix4.hpp>
 
@@ -90,7 +90,7 @@ namespace flight::scene3d {
 
 using Scene3DDocumentNodeValue = std::variant<flight::Ref<flight::types::Mesh>, flight::Ref<flight::types::Node3D>>;
 
-inline void assign_skeleton3_dfields(flight::types::EntityConstruction<flight::Ref<flight::types::Skeleton3D>> out, flight::Float32Array inverse_bind_matrices, flight::Float32Array joint_matrices, flight::Array<flight::Ref<flight::types::Node3D>> joints, std::variant<flight::Array<flight::String>, flight::Null, flight::Undefined> names, flight::Float32Array normal_matrices) {
+inline void assign_skeleton_3d_fields(flight::types::EntityConstruction<flight::Ref<flight::types::Skeleton3D>> out, flight::Float32Array inverse_bind_matrices, flight::Float32Array joint_matrices, flight::Array<flight::Ref<flight::types::Node3D>> joints, std::variant<flight::Array<flight::String>, flight::Null, flight::Undefined> names, flight::Float32Array normal_matrices) {
   flight::row_set<flight::RowKey<"inverseBindMatrices">>(out, inverse_bind_matrices);
   flight::row_set<flight::RowKey<"jointMatrices">>(out, joint_matrices);
   flight::row_set<flight::RowKey<"joints">>(out, joints);
@@ -282,11 +282,11 @@ inline bool is_document_mesh(Scene3DDocumentNodeValue node) {
 // them without changing representation. Declare the collection over the exact source union, or narrow and
 // explicitly convert to one element carrier before push
 
-inline flight::Ref<flight::types::Scene3D> create_scene3_dfrom_document(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>> document, std::optional<double> scene_index = std::nullopt) {
+inline flight::Ref<flight::types::Scene3D> create_scene_3d_from_document(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>> document, std::optional<double> scene_index = std::nullopt) {
   scene_index = scene_index.value_or(0.0);
   flight::Array<Scene3DDocumentNodeValue> nodes = build_document_nodes(document);
   apply_document_skins(document, nodes);
-  auto scene = flight::scene3d::create_scene3_d(std::nullopt);
+  auto scene = flight::scene3d::create_scene_3d(std::nullopt);
   flight::Array<double> roots = ([&]() -> flight::Array<double> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<double>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"scenes">>(document).get(scene_index.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->root_nodes; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<double>{}; }());
   {
     double r = 0.0;
@@ -314,7 +314,7 @@ inline flight::Array<flight::Ref<flight::types::Scene3D>> create_scene3_ds_from_
     double s = 0.0;
     while ((s < static_cast<double>(flight::row_get<flight::RowKey<"scenes">>(document).size()))) {
       {
-        auto scene = flight::scene3d::create_scene3_d(std::nullopt);
+        auto scene = flight::scene3d::create_scene_3d(std::nullopt);
         flight::Array<double> roots = flight::row_get<flight::RowKey<"scenes">>(document).element(s)->root_nodes;
         {
           double r = 0.0;

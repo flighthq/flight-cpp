@@ -10,7 +10,7 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/transform_mode2_d.hpp>
+#include <flight/types/transform_mode_2d.hpp>
 
 #include <flight/types/spine_binary_registry.hpp>
 
@@ -18,7 +18,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/byte_reader.hpp>
 
-#include <flight/types/bone2_d.hpp>
+#include <flight/types/bone_2d.hpp>
 
 namespace flight::types { struct Bone2D; }
 namespace flight::types { struct ByteReader; }
@@ -37,7 +37,7 @@ using flight::types::ByteReader;
 using flight::types::ImportDiagnostic;
 using flight::types::SpineBinarySectionContext;
 
-inline flight::Array<flight::Any> spine_binary_transform_modes = flight::Array<flight::Any>{flight::Any::object(flight::types::transform_mode2_d->normal), flight::Any::object(flight::types::transform_mode2_d->only_translation), flight::Any::object(flight::types::transform_mode2_d->no_rotation_or_reflection), flight::Any::object(flight::types::transform_mode2_d->no_scale), flight::Any::object(flight::types::transform_mode2_d->no_scale_or_reflection)};
+inline flight::Array<flight::Any> spine_binary_transform_modes = flight::Array<flight::Any>{flight::Any::object(flight::types::transform_mode_2d->normal), flight::Any::object(flight::types::transform_mode_2d->only_translation), flight::Any::object(flight::types::transform_mode_2d->no_rotation_or_reflection), flight::Any::object(flight::types::transform_mode_2d->no_scale), flight::Any::object(flight::types::transform_mode_2d->no_scale_or_reflection)};
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON2D_FORMATS_REFLECTION_ROTATION_SCALE_TRANSLATION_9DFF6858EECB0EB4
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON2D_FORMATS_REFLECTION_ROTATION_SCALE_TRANSLATION_9DFF6858EECB0EB4
@@ -45,7 +45,7 @@ using reflection_rotation_scale_translation_9dff6858eecb0eb4 = flight::types::re
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON2D_FORMATS_REFLECTION_ROTATION_SCALE_TRANSLATION_9DFF6858EECB0EB4
 
 inline flight::Ref<reflection_rotation_scale_translation_9dff6858eecb0eb4> spine_binary_transform_mode(double ordinal) {
-  return (((ordinal >= 0.0) && (ordinal < static_cast<double>(spine_binary_transform_modes.size()))) ? spine_binary_transform_modes.element(ordinal) : flight::types::transform_mode2_d->normal);
+  return (((ordinal >= 0.0) && (ordinal < static_cast<double>(spine_binary_transform_modes.size()))) ? spine_binary_transform_modes.element(ordinal) : flight::types::transform_mode_2d->normal);
 }
 
 inline flight::Array<flight::Ref<flight::types::Bone2D>> parse_spine_binary_bones(flight::Ref<flight::types::ByteReader> reader, bool nonessential, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {

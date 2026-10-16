@@ -95,7 +95,7 @@ inline flight::host_sdl::WebGlTexture upload_lut_texture(
   if (!cache->texture.has_value()) cache->texture = gl.create_texture();
   const auto texture = cache->texture.value();
   gl.bind_texture(gl.texture_3_d, texture);
-  gl.tex_image3_d(
+  gl.tex_image_3d(
       gl.texture_3_d, 0, gl.rgba8, static_cast<int>(size), static_cast<int>(size),
       static_cast<int>(size), 0, gl.rgba, gl.unsigned_byte, flight::ArrayBufferView(data));
   gl.tex_parameteri(gl.texture_3_d, gl.texture_min_filter, gl.linear);

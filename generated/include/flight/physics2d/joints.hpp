@@ -40,7 +40,7 @@ namespace flight::types { struct Physics2DWorld; }
 namespace flight::types { struct RigidBody2D; }
 
 #include <flight/types/collision.hpp>
-#include <flight/types/physics2_d.hpp>
+#include <flight/types/physics_2d.hpp>
 #include <flight/physics2d/solver.hpp>
 
 namespace flight::physics2d {
@@ -51,25 +51,25 @@ using flight::types::Physics2DJointReaction;
 using flight::types::Physics2DWorld;
 using flight::types::RigidBody2D;
 
-inline const flight::String physics2_ddistance_joint_kind = flight::String("Distance");
+inline const flight::String physics_2d_distance_joint_kind = flight::String("Distance");
 
-inline const flight::String physics2_dgear_joint_kind = flight::String("Gear");
+inline const flight::String physics_2d_gear_joint_kind = flight::String("Gear");
 
-inline const flight::String physics2_dmouse_joint_kind = flight::String("Mouse");
+inline const flight::String physics_2d_mouse_joint_kind = flight::String("Mouse");
 
-inline const flight::String physics2_dprismatic_joint_kind = flight::String("Prismatic");
+inline const flight::String physics_2d_prismatic_joint_kind = flight::String("Prismatic");
 
-inline const flight::String physics2_dpulley_joint_kind = flight::String("Pulley");
+inline const flight::String physics_2d_pulley_joint_kind = flight::String("Pulley");
 
-inline const flight::String physics2_drevolute_joint_kind = flight::String("Revolute");
+inline const flight::String physics_2d_revolute_joint_kind = flight::String("Revolute");
 
-inline const flight::String physics2_drope_joint_kind = flight::String("Rope");
+inline const flight::String physics_2d_rope_joint_kind = flight::String("Rope");
 
-inline const flight::String physics2_dwheel_joint_kind = flight::String("Wheel");
+inline const flight::String physics_2d_wheel_joint_kind = flight::String("Wheel");
 
-inline const flight::String physics2_dweld_joint_kind = flight::String("Weld");
+inline const flight::String physics_2d_weld_joint_kind = flight::String("Weld");
 
-inline bool write_physics2_dreaction_from_impulses(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJoint>>>> joint, double linear_x, double linear_y, double angular, double inverse_timestep, flight::Ref<flight::types::Physics2DJointReaction> out) {
+inline bool write_physics_2d_reaction_from_impulses(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJoint>>>> joint, double linear_x, double linear_y, double angular, double inverse_timestep, flight::Ref<flight::types::Physics2DJointReaction> out) {
   (out->force_x = (linear_x * inverse_timestep));
   (out->force_y = (linear_y * inverse_timestep));
   (out->torque = (angular * inverse_timestep));
@@ -158,12 +158,12 @@ inline void solve_point_constraint(flight::Ref<flight::types::RigidBody2D> body_
   const double velocity_x = axis_relative_velocity(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body_b)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJoint>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DJoint>>>>(joint)), 1.0, 0.0);
   const double lambda_x = ((inverse_mass_x > 0.0) ? (-(velocity_x + bias_x) / inverse_mass_x) : 0.0);
   (joint->impulse0 += lambda_x);
-  flight::physics2d::apply_physics2_dimpulse(body_a, body_b, joint->r_ax, joint->r_ay, joint->r_bx, joint->r_by, -lambda_x, 0.0);
+  flight::physics2d::apply_physics_2d_impulse(body_a, body_b, joint->r_ax, joint->r_ay, joint->r_bx, joint->r_by, -lambda_x, 0.0);
   const double inverse_mass_y = axis_inverse_effective_mass(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body_b)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJoint>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DJoint>>>>(joint)), 0.0, 1.0);
   const double velocity_y = axis_relative_velocity(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body_b)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DJoint>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DJoint>>>>(joint)), 0.0, 1.0);
   const double lambda_y = ((inverse_mass_y > 0.0) ? (-(velocity_y + bias_y) / inverse_mass_y) : 0.0);
   (joint->impulse1 += lambda_y);
-  flight::physics2d::apply_physics2_dimpulse(body_a, body_b, joint->r_ax, joint->r_ay, joint->r_bx, joint->r_by, 0.0, -lambda_y);
+  flight::physics2d::apply_physics_2d_impulse(body_a, body_b, joint->r_ax, joint->r_ay, joint->r_bx, joint->r_by, 0.0, -lambda_y);
 }
 
 inline flight::WeakMap<flight::Ref<flight::types::Physics2DJoint>, flight::Array<double>> joint_solve_states = flight::WeakMap<flight::Ref<flight::types::Physics2DJoint>, flight::Array<double>>();

@@ -18,11 +18,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/slot2_d.hpp>
+#include <flight/types/slot_2d.hpp>
 
 #include <flight/types/import_diagnostic.hpp>
 
-#include <flight/types/bone2_d.hpp>
+#include <flight/types/bone_2d.hpp>
 
 namespace flight::types { struct Bone2D; }
 namespace flight::types { struct ImportDiagnostic; }

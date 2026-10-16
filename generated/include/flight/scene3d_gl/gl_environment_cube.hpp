@@ -27,12 +27,12 @@ namespace flight::types { struct VoxelGrid; }
 
 #include <flight/render_gl/gl_texture_upload.hpp>
 #include <flight/types/contract.hpp>
-#include <flight/scene3d_gl/gl_scene3_druntime.hpp>
+#include <flight/scene3d_gl/gl_scene_3d_runtime.hpp>
 
 namespace flight::scene3d_gl {
 
 inline void destroy_gl_environment_source_cube(flight::Ref<flight::types::GlRenderState> state) {
-  auto runtime = flight::scene3d_gl::get_gl_scene3_druntime(state);
+  auto runtime = flight::scene3d_gl::get_gl_scene_3d_runtime(state);
   std::optional<flight::host_sdl::WebGlTexture> texture = runtime->environment_source_cube;
   if (!texture.has_value()) {
     return;
@@ -101,7 +101,7 @@ inline void upload_gl_environment_image(flight::host_sdl::WebGl2Context gl, doub
 }
 
 inline std::optional<flight::host_sdl::WebGlTexture> ensure_gl_environment_source_cube(flight::Ref<flight::types::GlRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Environment>>>> environment) {
-  auto runtime = flight::scene3d_gl::get_gl_scene3_druntime(state);
+  auto runtime = flight::scene3d_gl::get_gl_scene_3d_runtime(state);
   std::optional<flight::types::Texture> candidate = flight::row_get<flight::RowKey<"environment">>(environment);
   if ((!candidate.has_value() || (std::visit([](const auto& value) { return value->dimension; }, candidate.value()) != flight::String("cube")))) {
     if (runtime->environment_source_cube.has_value()) {
@@ -153,7 +153,7 @@ inline std::optional<flight::host_sdl::WebGlTexture> ensure_gl_environment_sourc
 }
 
 inline bool update_gl_environment_cube_face(flight::Ref<flight::types::GlRenderState> state, double face, flight::types::TextureSourceValue image) {
-  auto runtime = flight::scene3d_gl::get_gl_scene3_druntime(state);
+  auto runtime = flight::scene3d_gl::get_gl_scene_3d_runtime(state);
   std::optional<flight::host_sdl::WebGlTexture> texture = runtime->environment_source_cube;
   if (!texture.has_value()) {
     return false;

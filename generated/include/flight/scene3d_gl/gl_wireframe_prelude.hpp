@@ -33,20 +33,20 @@ namespace flight::types { struct Scene3DRenderProxy; }
 #include <flight/types/gl_pbr_transmission_scene_color.hpp>
 #include <flight/types/gl_render_state.hpp>
 #include <flight/types/gl_render_target.hpp>
-#include <flight/types/gl_scene3_druntime.hpp>
+#include <flight/types/gl_scene_3d_runtime.hpp>
 #include <flight/types/gl_skin_palette_texture.hpp>
 #include <flight/types/gl_wireframe_program.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/mesh.hpp>
 #include <flight/types/mesh_geometry.hpp>
 #include <flight/types/pbr_extension.hpp>
-#include <flight/types/scene3_dlight_block.hpp>
-#include <flight/types/scene3_dlights.hpp>
-#include <flight/types/scene3_drender_proxy.hpp>
+#include <flight/types/scene_3d_light_block.hpp>
+#include <flight/types/scene_3d_lights.hpp>
+#include <flight/types/scene_3d_render_proxy.hpp>
 #include <flight/types/texture.hpp>
 #include <flight/scene3d_gl/gl_mesh_fragment_tail.hpp>
 #include <flight/scene3d_gl/gl_mesh_program.hpp>
-#include <flight/scene3d_gl/gl_scene3_druntime.hpp>
+#include <flight/scene3d_gl/gl_scene_3d_runtime.hpp>
 
 namespace flight::scene3d_gl {
 
@@ -81,9 +81,9 @@ inline flight::Ref<flight::types::GlWireframeProgram> compile_gl_wireframe_progr
 
 inline flight::Ref<flight::types::GlWireframeProgram> ensure_gl_wireframe_program(flight::Ref<flight::types::GlRenderState> state, std::optional<bool> alpha_mask_enabled = std::nullopt) {
   alpha_mask_enabled = alpha_mask_enabled.value_or(false);
-  const bool skinned = flight::scene3d_gl::get_gl_scene3_druntime(state)->active_skinned_run;
-  return flight::scene3d_gl::ensure_gl_scene3_dprogram<flight::Ref<flight::types::GlWireframeProgram>>(state, flight::String("wireframe:") + flight::to_string((alpha_mask_enabled.value() ? flight::String("mask") : flight::String("base"))) + flight::String("|") + flight::to_string((skinned ? flight::String("skin") : flight::String("rigid"))) + flight::String(""), [=](flight::host_sdl::WebGl2Context gl) {
-  return compile_gl_wireframe_program(gl, alpha_mask_enabled.value(), skinned, ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = flight::scene3d_gl::get_gl_scene3_druntime(state)->mesh_skin_feature; if (!std::holds_alternative<flight::Ref<flight::types::GlMeshSkinFeature>>(optional_chain_receiver)) return std::nullopt; return std::get<flight::Ref<flight::types::GlMeshSkinFeature>>(optional_chain_receiver)->vertex_declarations_glsl; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }()));
+  const bool skinned = flight::scene3d_gl::get_gl_scene_3d_runtime(state)->active_skinned_run;
+  return flight::scene3d_gl::ensure_gl_scene_3d_program<flight::Ref<flight::types::GlWireframeProgram>>(state, flight::String("wireframe:") + flight::to_string((alpha_mask_enabled.value() ? flight::String("mask") : flight::String("base"))) + flight::String("|") + flight::to_string((skinned ? flight::String("skin") : flight::String("rigid"))) + flight::String(""), [=](flight::host_sdl::WebGl2Context gl) {
+  return compile_gl_wireframe_program(gl, alpha_mask_enabled.value(), skinned, ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = flight::scene3d_gl::get_gl_scene_3d_runtime(state)->mesh_skin_feature; if (!std::holds_alternative<flight::Ref<flight::types::GlMeshSkinFeature>>(optional_chain_receiver)) return std::nullopt; return std::get<flight::Ref<flight::types::GlMeshSkinFeature>>(optional_chain_receiver)->vertex_declarations_glsl; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }()));
 });
 }
 

@@ -21,12 +21,12 @@ namespace flight::render_gl {
 
 inline void upload_gl_texture_data(flight::host_sdl::WebGl2Context gl, double target, double width, double height, flight::Uint8ClampedArray data, std::optional<double> internal_format = std::nullopt) {
   internal_format = internal_format.value_or(gl.rgba);
-  gl.tex_image2_d(target, 0.0, internal_format.value(), width, height, 0.0, gl.rgba, gl.unsigned_byte, data);
+  gl.tex_image_2d(target, 0.0, internal_format.value(), width, height, 0.0, gl.rgba, gl.unsigned_byte, data);
 }
 
 inline void upload_gl_texture_element(flight::host_sdl::WebGl2Context gl, double target, flight::host_sdl::ImageSource source, std::optional<double> internal_format = std::nullopt) {
   internal_format = internal_format.value_or(gl.rgba);
-  gl.tex_image2_d(target, 0.0, internal_format.value(), gl.rgba, gl.unsigned_byte, source);
+  gl.tex_image_2d(target, 0.0, internal_format.value(), gl.rgba, gl.unsigned_byte, source);
 }
 
 inline void upload_gl_texture_image_resource(flight::host_sdl::WebGl2Context gl, double target, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ImageResource>>>> image, std::optional<double> internal_format = std::nullopt) {

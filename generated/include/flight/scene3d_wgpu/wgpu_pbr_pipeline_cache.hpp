@@ -28,7 +28,7 @@ namespace flight::types { struct WgpuSkinningAdapter; }
 #include <flight/types/contract.hpp>
 #include <flight/scene3d_wgpu/wgpu_mesh_pipeline.hpp>
 #include <flight/scene3d_wgpu/wgpu_pbr_prelude.hpp>
-#include <flight/scene3d_wgpu/wgpu_scene3_druntime.hpp>
+#include <flight/scene3d_wgpu/wgpu_scene_3d_runtime.hpp>
 
 namespace flight::scene3d_wgpu {
 
@@ -75,8 +75,8 @@ inline flight::Ref<flight::types::WgpuPbrPipeline> compile_wgpu_pbr_pipeline(fli
 }
 
 inline flight::Ref<flight::types::WgpuPbrPipeline> ensure_wgpu_pbr_pipeline(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuPbrDefineKey>>>> key, flight::String format) {
-  auto full_key = flight::make_ref<flight::types::WgpuPbrDefineKey>(flight::types::WgpuPbrDefineKey{.has_color_adjustment = std::optional<bool>{flight::scene3d_wgpu::get_wgpu_scene3_druntime(state)->active_color_adjustment_run}, .has_color_matrix = std::optional<bool>{flight::scene3d_wgpu::get_wgpu_scene3_druntime(state)->active_color_matrix_run}});
-  return flight::scene3d_wgpu::ensure_wgpu_scene3_dpipeline<flight::Ref<flight::types::WgpuPbrPipeline>>(state, flight::String("pbr:") + flight::to_string(format) + flight::String("|") + flight::to_string(flight::scene3d_wgpu::build_wgpu_pbr_define_key(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuPbrDefineKey>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::WgpuPbrDefineKey>>>>(full_key)))) + flight::String(""), [=](bool blended, bool skinned) { return compile_wgpu_pbr_pipeline(state, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuPbrDefineKey>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::WgpuPbrDefineKey>>>>(full_key)), format, blended, skinned, flight::render_wgpu::get_wgpu_color_adjustment_material_feature(state)); });
+  auto full_key = flight::make_ref<flight::types::WgpuPbrDefineKey>(flight::types::WgpuPbrDefineKey{.has_color_adjustment = std::optional<bool>{flight::scene3d_wgpu::get_wgpu_scene_3d_runtime(state)->active_color_adjustment_run}, .has_color_matrix = std::optional<bool>{flight::scene3d_wgpu::get_wgpu_scene_3d_runtime(state)->active_color_matrix_run}});
+  return flight::scene3d_wgpu::ensure_wgpu_scene_3d_pipeline<flight::Ref<flight::types::WgpuPbrPipeline>>(state, flight::String("pbr:") + flight::to_string(format) + flight::String("|") + flight::to_string(flight::scene3d_wgpu::build_wgpu_pbr_define_key(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuPbrDefineKey>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::WgpuPbrDefineKey>>>>(full_key)))) + flight::String(""), [=](bool blended, bool skinned) { return compile_wgpu_pbr_pipeline(state, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuPbrDefineKey>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::WgpuPbrDefineKey>>>>(full_key)), format, blended, skinned, flight::render_wgpu::get_wgpu_color_adjustment_material_feature(state)); });
 }
 
 } // namespace flight::scene3d_wgpu

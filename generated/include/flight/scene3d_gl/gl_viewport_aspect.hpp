@@ -16,7 +16,7 @@ namespace flight::types { struct GlViewportRect; }
 
 namespace flight::scene3d_gl {
 
-inline double get_gl_scene3_dviewport_aspect(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlRenderState>>>> state) {
+inline double get_gl_scene_3d_viewport_aspect(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlRenderState>>>> state) {
   auto viewport = flight::render_gl::get_gl_render_state_runtime(flight::structural_ref_cast<flight::Ref<flight::types::GlRenderState>>(state))->render_target_viewport;
   const double width = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = viewport; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->width; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::row_get<flight::RowKey<"gl">>(state).drawing_buffer_width; }());
   const double height = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = viewport; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->height; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::row_get<flight::RowKey<"gl">>(state).drawing_buffer_height; }());

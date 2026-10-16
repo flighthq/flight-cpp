@@ -30,7 +30,7 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/types/entity.hpp>
 #include <flight/types/frame_script.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/signal.hpp>
 #include <flight/types/timeline.hpp>
 #include <flight/types/timeline_cue.hpp>

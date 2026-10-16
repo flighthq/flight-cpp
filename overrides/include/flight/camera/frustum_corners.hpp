@@ -13,7 +13,7 @@ namespace flight::types { struct Matrix4; }
 namespace flight::types { struct Vector3; }
 
 #include <flight/geometry/matrix4.hpp>
-#include <flight/types/camera3_d.hpp>
+#include <flight/types/camera_3d.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/vector3.hpp>
@@ -25,8 +25,8 @@ inline flight::Ref<flight::types::Matrix4> scratch_view_projection_flight_value_
 
 inline flight::Ref<flight::types::Matrix4> scratch_inverse_vp_flight_value_variable__u00005f__u00005f_scratch_u000049_nverse_u000056__u000050__flight_private_cc5695174ab66e2b = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
-inline bool get_camera3_dfrustum_corners(flight::Array<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, double aspect) {
-  flight::camera::get_camera3_dview_projection_matrix4(scratch_view_projection_flight_value_variable__u00005f__u00005f_scratch_u000056_iew_u000050_rojection_flight_private_cc5695174ab66e2b, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(camera), aspect);
+inline bool get_camera_3d_frustum_corners(flight::Array<flight::types::Vector3Like> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, double aspect) {
+  flight::camera::get_camera_3d_view_projection_matrix4(scratch_view_projection_flight_value_variable__u00005f__u00005f_scratch_u000056_iew_u000050_rojection_flight_private_cc5695174ab66e2b, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(camera), aspect);
   if (!flight::geometry::inverse_matrix4(scratch_inverse_vp_flight_value_variable__u00005f__u00005f_scratch_u000049_nverse_u000056__u000050__flight_private_cc5695174ab66e2b, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(scratch_view_projection_flight_value_variable__u00005f__u00005f_scratch_u000056_iew_u000050_rojection_flight_private_cc5695174ab66e2b)))) {
     return false;
   }

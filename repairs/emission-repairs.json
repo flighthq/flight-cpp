@@ -69,7 +69,7 @@
       "replacement": "Matrix",
       "canonicalInclude": "flight/types/matrix.hpp",
       "sourceDeclaration": "packages/render-gl/src/glShader.ts -- setGlMatrixFromTransform receives Pick<Matrix, 'a' | 'b' | 'c' | 'd' | 'tx' | 'ty'> and callers pass RenderProxy2D.transform2D, whose owner is Matrix",
-      "diagnostic": "could not convert RenderProxy2D::transform2_d from Ref<Matrix> to Ref<a_b_c_d_tx_ty_d975cba1d9c9e6b5>",
+      "diagnostic": "could not convert RenderProxy2D::transform_2d from Ref<Matrix> to Ref<a_b_c_d_tx_ty_d975cba1d9c9e6b5>",
       "defect": "The emitter reifies a Pick<Matrix> parameter as an unrelated anonymous owner, although the source passes the same Matrix object by reference. Aliasing the six-field projection to Matrix preserves that identity and the exact accessed fields.",
       "expectedWhen": "always",
       "expires": "when Pick projections retain their named reference owner at call boundaries; sdk:check fails if this repair matches no header."
@@ -334,7 +334,7 @@
           "name": "Matrix"
         },
         {
-          "include": "flight/types/node2_d.hpp",
+          "include": "flight/types/node_2d.hpp",
           "name": "Node2D"
         },
         {
@@ -823,11 +823,11 @@
           "name": "Node"
         },
         {
-          "include": "flight/types/node2_d.hpp",
+          "include": "flight/types/node_2d.hpp",
           "name": "Node2D"
         },
         {
-          "include": "flight/types/node2_d.hpp",
+          "include": "flight/types/node_2d.hpp",
           "name": "Node2DTraits"
         },
         {
@@ -851,15 +851,15 @@
           "name": "Renderable"
         },
         {
-          "include": "flight/types/scene2_d.hpp",
+          "include": "flight/types/scene_2d.hpp",
           "name": "Scene2D"
         },
         {
-          "include": "flight/types/scene2_d.hpp",
+          "include": "flight/types/scene_2d.hpp",
           "name": "Scene2DRuntime"
         },
         {
-          "include": "flight/types/scene2_dsignals.hpp",
+          "include": "flight/types/scene_2d_signals.hpp",
           "name": "Scene2DSignals"
         },
         {
@@ -871,8 +871,8 @@
           "name": "entity_runtime_key"
         },
         {
-          "include": "flight/types/node2_d.hpp",
-          "name": "node2_dtraits_key"
+          "include": "flight/types/node_2d.hpp",
+          "name": "node_2d_traits_key"
         }
       ],
       "diagnostic": "'AnimationInterpolation' was not declared in this scope; did you mean 'flight::types::AnimationInterpolation'?",
@@ -1247,7 +1247,7 @@
       ],
       "sourceDeclaration": "packages/node/src/hasClip.ts -- target.clip = obj?.clip ?? null, where clip: ClipRegion | null on a possibly-absent receiver row, lowered against a declared std::variant<flight::Ref<ClipRegion>, flight::Null, flight::Undefined>",
       "diagnostic": "could not convert 'flight::row_get<RowKey<FixedString<5>{\"clip\"}>, RowReadonly<RowPartial<RowOf<std::shared_ptr<types::HasClip> > > > >(...)' from 'std::optional<std::shared_ptr<flight::types::ClipRegion>>' to 'std::variant<std::shared_ptr<flight::types::ClipRegion>, flight::Null, flight::Undefined>'",
-      "defect": "The emitter has two lowerings for this construct and emits the short one here: it returns the std::optional straight into a position it declared as the three-state variant, which has no conversion. The long one, which it emits correctly in scene2d_formats/svg_document.hpp, binds the read to a local, maps !has_value() to flight::Null, and returns the value alternative otherwise. The repair writes that long form, so the absence mapping is the emitter's own rather than ours -- at every long-form site in the tree nullopt maps to flight::Null and never to Undefined, and the Undefined channel is already supplied by the receiver check that precedes the read. Anchored to this header and these keys because the three cases that produce this identical diagnostic are separated by the SUBJECT's member declaration, which is in another file: matched by text alone the same transform breaks scene2d_resources/scene2_ddocument_source.hpp, which already compiles.",
+      "defect": "The emitter has two lowerings for this construct and emits the short one here: it returns the std::optional straight into a position it declared as the three-state variant, which has no conversion. The long one, which it emits correctly in scene2d_formats/svg_document.hpp, binds the read to a local, maps !has_value() to flight::Null, and returns the value alternative otherwise. The repair writes that long form, so the absence mapping is the emitter's own rather than ours -- at every long-form site in the tree nullopt maps to flight::Null and never to Undefined, and the Undefined channel is already supplied by the receiver check that precedes the read. Anchored to this header and these keys because the three cases that produce this identical diagnostic are separated by the SUBJECT's member declaration, which is in another file: matched by text alone the same transform breaks scene2d_resources/scene_2d_document_source.hpp, which already compiles.",
       "expectedWhen": "always",
       "expires": "when the emitter uses its long-form lowering at every partial row_get in a three-state position; sdk:check fails if this repair matches no header."
     },
@@ -1323,11 +1323,11 @@
       "id": "particleemitter-declare-refused-create-2d",
       "kind": "declare-refused-function",
       "appliesTo": "flight/particleemitter/particle_emitter.hpp",
-      "symbol": "create_particle_emitter2_d",
+      "symbol": "create_particle_emitter_2d",
       "refusedFunction": "createParticleEmitter2D",
-      "declaration": "flight::Ref<flight::types::ParticleEmitter2D> create_particle_emitter2_d(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_578a7c2cb5b86b30>>>>> obj = std::nullopt);",
+      "declaration": "flight::Ref<flight::types::ParticleEmitter2D> create_particle_emitter_2d(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_578a7c2cb5b86b30>>>>> obj = std::nullopt);",
       "sourceDeclaration": "packages/particleemitter/src/particleEmitter.ts -- createParticleEmitter2D(obj?: Readonly<PartialNode<ParticleEmitter2D>>), refused; cloneParticleEmitter2D calls it",
-      "diagnostic": "use of undeclared identifier 'create_particle_emitter2_d'",
+      "diagnostic": "use of undeclared identifier 'create_particle_emitter_2d'",
       "defect": "The emitter refuses createParticleEmitter2D -- its construction asserts a scene2d node runtime to the module's runtime subtype, which has no C++ heritage (docs/compiler-requests/asserted-erased-runtime-owner.md), and scene2d's own node construction is itself refused or supplied only for its base kind -- but retains cloneParticleEmitter2D, which calls it, so the whole header fails to compile on an undeclared name. The declaration's signature is the emitter's own: the retained call constructs exactly this parameter carrier for createParticleEmitter2D's declared `obj?: Readonly<PartialNode<ParticleEmitter2D>>`. Declaration only: cloneParticleEmitter2D and any other caller compile, and calling it fails to link -- creation stays unusable, never substituted.",
       "expectedWhen": "always",
       "expires": "when createParticleEmitter2D emits (the NOT GENERATED marker disappears and this repair matches nothing); sdk:check fails if this repair matches no header."
@@ -1335,12 +1335,12 @@
     {
       "id": "particleemitter-declare-refused-create-3d",
       "kind": "declare-refused-function",
-      "appliesTo": "flight/particleemitter/particle_emitter3_d.hpp",
-      "symbol": "create_particle_emitter3_d",
+      "appliesTo": "flight/particleemitter/particle_emitter_3d.hpp",
+      "symbol": "create_particle_emitter_3d",
       "refusedFunction": "createParticleEmitter3D",
-      "declaration": "flight::Ref<flight::types::ParticleEmitter3D> create_particle_emitter3_d(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_position_rotation_scale_blend_mode_0944bc601f2d30b4>>>>> obj = std::nullopt);",
+      "declaration": "flight::Ref<flight::types::ParticleEmitter3D> create_particle_emitter_3d(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_position_rotation_scale_blend_mode_0944bc601f2d30b4>>>>> obj = std::nullopt);",
       "sourceDeclaration": "packages/particleemitter/src/particleEmitter3D.ts -- createParticleEmitter3D(obj?: Readonly<PartialNode<ParticleEmitter3D>>), refused; cloneParticleEmitter3D calls it",
-      "diagnostic": "use of undeclared identifier 'create_particle_emitter3_d'",
+      "diagnostic": "use of undeclared identifier 'create_particle_emitter_3d'",
       "defect": "The emitter refuses createParticleEmitter3D -- its construction asserts a scene3d node runtime to the module's runtime subtype, which has no C++ heritage (docs/compiler-requests/asserted-erased-runtime-owner.md), and scene3d's own node construction is itself refused or supplied only for its base kind -- but retains cloneParticleEmitter3D, which calls it, so the whole header fails to compile on an undeclared name. The declaration's signature is the emitter's own: the retained call constructs exactly this parameter carrier for createParticleEmitter3D's declared `obj?: Readonly<PartialNode<ParticleEmitter3D>>`. Declaration only: cloneParticleEmitter3D and any other caller compile, and calling it fails to link -- creation stays unusable, never substituted.",
       "expectedWhen": "always",
       "expires": "when createParticleEmitter3D emits (the NOT GENERATED marker disappears and this repair matches nothing); sdk:check fails if this repair matches no header."
@@ -1532,7 +1532,7 @@
           "name": "AmbientLight"
         },
         {
-          "include": "flight/types/camera3_d.hpp",
+          "include": "flight/types/camera_3d.hpp",
           "name": "Camera3D"
         },
         {
@@ -1588,11 +1588,11 @@
           "name": "Node"
         },
         {
-          "include": "flight/types/node2_d.hpp",
+          "include": "flight/types/node_2d.hpp",
           "name": "Node2D"
         },
         {
-          "include": "flight/types/node3_d.hpp",
+          "include": "flight/types/node_3d.hpp",
           "name": "Node3D"
         },
         {
@@ -1624,7 +1624,7 @@
           "name": "RenderProxy"
         },
         {
-          "include": "flight/types/render_proxy2_d.hpp",
+          "include": "flight/types/render_proxy_2d.hpp",
           "name": "RenderProxy2D"
         },
         {
@@ -1660,15 +1660,15 @@
           "name": "RenderStateRuntime"
         },
         {
-          "include": "flight/types/scene3_dlight_block.hpp",
+          "include": "flight/types/scene_3d_light_block.hpp",
           "name": "Scene3DLightBlock"
         },
         {
-          "include": "flight/types/scene3_dlights.hpp",
+          "include": "flight/types/scene_3d_lights.hpp",
           "name": "Scene3DLightsLike"
         },
         {
-          "include": "flight/types/scene3_drender_list.hpp",
+          "include": "flight/types/scene_3d_render_list.hpp",
           "name": "Scene3DRenderList"
         },
         {
@@ -1688,19 +1688,19 @@
           "name": "render_cache_kind"
         },
         {
-          "include": "flight/types/scene3_dlight_block.hpp",
+          "include": "flight/types/scene_3d_light_block.hpp",
           "name": "scene_light_ambient_radiance_offset"
         },
         {
-          "include": "flight/types/scene3_dlight_block.hpp",
+          "include": "flight/types/scene_3d_light_block.hpp",
           "name": "scene_light_block_floats"
         },
         {
-          "include": "flight/types/scene3_dlight_block.hpp",
+          "include": "flight/types/scene_3d_light_block.hpp",
           "name": "scene_light_directional_direction_offset"
         },
         {
-          "include": "flight/types/scene3_dlight_block.hpp",
+          "include": "flight/types/scene_3d_light_block.hpp",
           "name": "scene_light_directional_radiance_offset"
         }
       ],
@@ -1812,7 +1812,7 @@
           "name": "GuiTransitionDescriptor"
         },
         {
-          "include": "flight/types/node2_d.hpp",
+          "include": "flight/types/node_2d.hpp",
           "name": "Node2D"
         },
         {
@@ -1880,107 +1880,107 @@
           "name": "EntityConstruction"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DBodyType"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DCollider"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DCollisionExplanation"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DCollisionFilter"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DConeTwistJoint"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DContact"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DContactConstraint"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DGeneric6DofJoint"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DJoint"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DJointEvents"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DJointExplanation"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DJointReaction"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DJointSolver"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DMassData"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DMaterial"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DQueryFilter"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DQueryHit"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DQueryResult"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DRayHit"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DRayResult"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DSequentialImpulseConfig"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DShapeCastResult"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DSolverConfig"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DStepExplanation"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DWorld"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "RigidBody3D"
         },
         {
@@ -2212,7 +2212,7 @@
           "name": "MutableNumberArray"
         },
         {
-          "include": "flight/types/node3_d.hpp",
+          "include": "flight/types/node_3d.hpp",
           "name": "Node3D"
         },
         {
@@ -2240,7 +2240,7 @@
           "name": "PrimitiveTopology"
         },
         {
-          "include": "flight/types/camera3_d.hpp",
+          "include": "flight/types/camera_3d.hpp",
           "name": "Projection"
         },
         {
@@ -2252,47 +2252,47 @@
           "name": "QuaternionLike"
         },
         {
-          "include": "flight/types/scene3_d.hpp",
+          "include": "flight/types/scene_3d.hpp",
           "name": "Scene3D"
         },
         {
-          "include": "flight/types/scene3_danimation_path.hpp",
+          "include": "flight/types/scene_3d_animation_path.hpp",
           "name": "Scene3DAnimationPath"
         },
         {
-          "include": "flight/types/scene3_ddocument.hpp",
+          "include": "flight/types/scene_3d_document.hpp",
           "name": "Scene3DDocument"
         },
         {
-          "include": "flight/types/scene3_ddocument.hpp",
+          "include": "flight/types/scene_3d_document.hpp",
           "name": "Scene3DDocumentAnimation"
         },
         {
-          "include": "flight/types/scene3_ddocument.hpp",
+          "include": "flight/types/scene_3d_document.hpp",
           "name": "Scene3DDocumentAnimationChannel"
         },
         {
-          "include": "flight/types/scene3_ddocument.hpp",
+          "include": "flight/types/scene_3d_document.hpp",
           "name": "Scene3DDocumentCamera"
         },
         {
-          "include": "flight/types/scene3_ddocument.hpp",
+          "include": "flight/types/scene_3d_document.hpp",
           "name": "Scene3DDocumentLight"
         },
         {
-          "include": "flight/types/scene3_ddocument.hpp",
+          "include": "flight/types/scene_3d_document.hpp",
           "name": "Scene3DDocumentMesh"
         },
         {
-          "include": "flight/types/scene3_ddocument.hpp",
+          "include": "flight/types/scene_3d_document.hpp",
           "name": "Scene3DDocumentNode"
         },
         {
-          "include": "flight/types/scene3_ddocument.hpp",
+          "include": "flight/types/scene_3d_document.hpp",
           "name": "Scene3DDocumentScene"
         },
         {
-          "include": "flight/types/scene3_ddocument.hpp",
+          "include": "flight/types/scene_3d_document.hpp",
           "name": "Scene3DDocumentSkin"
         },
         {
@@ -2344,7 +2344,7 @@
           "name": "ThreeDsMesh"
         },
         {
-          "include": "flight/types/transform3_d.hpp",
+          "include": "flight/types/transform_3d.hpp",
           "name": "Transform3D"
         },
         {
@@ -2384,8 +2384,8 @@
           "name": "import_diagnostic_severity"
         },
         {
-          "include": "flight/types/node3_d.hpp",
-          "name": "node3_dkind"
+          "include": "flight/types/node_3d.hpp",
+          "name": "node_3d_kind"
         },
         {
           "include": "flight/types/three_ds_schema.hpp",
@@ -2580,7 +2580,7 @@
           "name": "Node"
         },
         {
-          "include": "flight/types/node2_d.hpp",
+          "include": "flight/types/node_2d.hpp",
           "name": "Node2DTraits"
         },
         {
@@ -2716,7 +2716,7 @@
           "name": "Node"
         },
         {
-          "include": "flight/types/node2_d.hpp",
+          "include": "flight/types/node_2d.hpp",
           "name": "Node2DTraits"
         },
         {
@@ -2724,11 +2724,11 @@
           "name": "PartialNode"
         },
         {
-          "include": "flight/types/particle_emitter2_d.hpp",
+          "include": "flight/types/particle_emitter_2d.hpp",
           "name": "ParticleEmitter2D"
         },
         {
-          "include": "flight/types/particle_emitter2_d.hpp",
+          "include": "flight/types/particle_emitter_2d.hpp",
           "name": "ParticleEmitterData"
         },
         {
@@ -2744,7 +2744,7 @@
           "name": "Vector2Like"
         },
         {
-          "include": "flight/types/node2_d.hpp",
+          "include": "flight/types/node_2d.hpp",
           "name": "Node2DTraits"
         }
       ],
@@ -2756,7 +2756,7 @@
     {
       "id": "particleemitter-reexported-callbacks-type",
       "kind": "insert-using-declaration",
-      "appliesTo": "flight/particleemitter/update_particle_emitter2_d.hpp",
+      "appliesTo": "flight/particleemitter/update_particle_emitter_2d.hpp",
       "symbol": "ParticleEmitterCallbacks",
       "declaration": "using flight::types::ParticleEmitterCallbacks;",
       "diagnostic": "'ParticleEmitterCallbacks' is not a member of 'flight::particleemitter'; did you mean 'ParticleEmitterData'?",
@@ -2792,7 +2792,7 @@
           "name": "BillboardRuntime"
         },
         {
-          "include": "flight/types/camera3_d.hpp",
+          "include": "flight/types/camera_3d.hpp",
           "name": "Camera3D"
         },
         {
@@ -2836,7 +2836,7 @@
           "name": "Modifier"
         },
         {
-          "include": "flight/types/node3_d.hpp",
+          "include": "flight/types/node_3d.hpp",
           "name": "Node3D"
         },
         {
@@ -2848,23 +2848,23 @@
           "name": "Quaternion"
         },
         {
-          "include": "flight/types/scene3_d.hpp",
+          "include": "flight/types/scene_3d.hpp",
           "name": "Scene3D"
         },
         {
-          "include": "flight/types/scene3_ddocument.hpp",
+          "include": "flight/types/scene_3d_document.hpp",
           "name": "Scene3DDocument"
         },
         {
-          "include": "flight/types/scene3_ddocument.hpp",
+          "include": "flight/types/scene_3d_document.hpp",
           "name": "Scene3DDocumentNode"
         },
         {
-          "include": "flight/types/scene3_dkind_usage.hpp",
+          "include": "flight/types/scene_3d_kind_usage.hpp",
           "name": "Scene3DKindUsage"
         },
         {
-          "include": "flight/types/skeleton3_d.hpp",
+          "include": "flight/types/skeleton_3d.hpp",
           "name": "Skeleton3D"
         },
         {
@@ -2872,11 +2872,11 @@
           "name": "TextureSourceKind"
         },
         {
-          "include": "flight/types/transform3_d.hpp",
+          "include": "flight/types/transform_3d.hpp",
           "name": "Transform3D"
         },
         {
-          "include": "flight/types/transform3_d.hpp",
+          "include": "flight/types/transform_3d.hpp",
           "name": "Transform3DLike"
         },
         {
@@ -2924,7 +2924,7 @@
           "name": "GltfImportOptions"
         },
         {
-          "include": "flight/types/scene3_dresources.hpp",
+          "include": "flight/types/scene_3d_resources.hpp",
           "name": "GltfScene3DDocumentLoadOptions"
         },
         {
@@ -2964,7 +2964,7 @@
           "name": "Material"
         },
         {
-          "include": "flight/types/node3_d.hpp",
+          "include": "flight/types/node_3d.hpp",
           "name": "Node3D"
         },
         {
@@ -2976,59 +2976,59 @@
           "name": "ResourceResolutionState"
         },
         {
-          "include": "flight/types/scene3_d.hpp",
+          "include": "flight/types/scene_3d.hpp",
           "name": "Scene3D"
         },
         {
-          "include": "flight/types/scene3_ddocument.hpp",
+          "include": "flight/types/scene_3d_document.hpp",
           "name": "Scene3DDocument"
         },
         {
-          "include": "flight/types/scene3_dresources.hpp",
+          "include": "flight/types/scene_3d_resources.hpp",
           "name": "Scene3DDocumentLoadOptions"
         },
         {
-          "include": "flight/types/scene3_dresources.hpp",
+          "include": "flight/types/scene_3d_resources.hpp",
           "name": "Scene3DMaterialTextureLister"
         },
         {
-          "include": "flight/types/scene3_dresources.hpp",
+          "include": "flight/types/scene_3d_resources.hpp",
           "name": "Scene3DMaterialTextureRegistry"
         },
         {
-          "include": "flight/types/scene3_dresources.hpp",
+          "include": "flight/types/scene_3d_resources.hpp",
           "name": "Scene3DPbrExtensionTextureLister"
         },
         {
-          "include": "flight/types/scene3_dresources.hpp",
+          "include": "flight/types/scene_3d_resources.hpp",
           "name": "Scene3DResourceEvent"
         },
         {
-          "include": "flight/types/scene3_dresources.hpp",
+          "include": "flight/types/scene_3d_resources.hpp",
           "name": "Scene3DResourceInFlight"
         },
         {
-          "include": "flight/types/scene3_dresources.hpp",
+          "include": "flight/types/scene_3d_resources.hpp",
           "name": "Scene3DResourceResolver"
         },
         {
-          "include": "flight/types/scene3_dresources.hpp",
+          "include": "flight/types/scene_3d_resources.hpp",
           "name": "Scene3DResourceResolverRuntime"
         },
         {
-          "include": "flight/types/scene3_dresources.hpp",
+          "include": "flight/types/scene_3d_resources.hpp",
           "name": "Scene3DResourceResolverWithRuntime"
         },
         {
-          "include": "flight/types/scene3_dresources.hpp",
+          "include": "flight/types/scene_3d_resources.hpp",
           "name": "Scene3DResourceSignals"
         },
         {
-          "include": "flight/types/scene3_dresources.hpp",
+          "include": "flight/types/scene_3d_resources.hpp",
           "name": "Scene3DResourceWorkingSet"
         },
         {
-          "include": "flight/types/scene3_dresources.hpp",
+          "include": "flight/types/scene_3d_resources.hpp",
           "name": "Scene3DResources"
         },
         {
@@ -3040,7 +3040,7 @@
           "name": "TextureSource"
         },
         {
-          "include": "flight/types/scene3_dresources.hpp",
+          "include": "flight/types/scene_3d_resources.hpp",
           "name": "UpdateScene3DResourceStreamingOptions"
         },
         {
@@ -3052,8 +3052,8 @@
           "name": "resource_resolution_state"
         },
         {
-          "include": "flight/types/scene3_dresources.hpp",
-          "name": "scene3_dresource_resolver_runtime_key"
+          "include": "flight/types/scene_3d_resources.hpp",
+          "name": "scene_3d_resource_resolver_runtime_key"
         },
         {
           "include": "flight/types/standard_pbr_material.hpp",
@@ -3088,15 +3088,15 @@
           "name": "AnimationTrack"
         },
         {
-          "include": "flight/types/attachment2_d.hpp",
+          "include": "flight/types/attachment_2d.hpp",
           "name": "Attachment2D"
         },
         {
-          "include": "flight/types/attachment_skin2_d.hpp",
+          "include": "flight/types/attachment_skin_2d.hpp",
           "name": "AttachmentSkin2D"
         },
         {
-          "include": "flight/types/bone2_d.hpp",
+          "include": "flight/types/bone_2d.hpp",
           "name": "Bone2D"
         },
         {
@@ -3120,43 +3120,43 @@
           "name": "KeyedTable"
         },
         {
-          "include": "flight/types/mesh_attachment2_d.hpp",
+          "include": "flight/types/mesh_attachment_2d.hpp",
           "name": "MeshAttachment2D"
         },
         {
-          "include": "flight/types/region_attachment2_d.hpp",
+          "include": "flight/types/region_attachment_2d.hpp",
           "name": "RegionAttachment2D"
         },
         {
-          "include": "flight/types/skeleton2_d.hpp",
+          "include": "flight/types/skeleton_2d.hpp",
           "name": "Skeleton2D"
         },
         {
-          "include": "flight/types/skeleton2_danimation_path.hpp",
+          "include": "flight/types/skeleton_2d_animation_path.hpp",
           "name": "Skeleton2DAnimationPath"
         },
         {
-          "include": "flight/types/skeleton2_ddraw_order_timeline.hpp",
+          "include": "flight/types/skeleton_2d_draw_order_timeline.hpp",
           "name": "Skeleton2DDrawOrderTimeline"
         },
         {
-          "include": "flight/types/skeleton2_dimport.hpp",
+          "include": "flight/types/skeleton_2d_import.hpp",
           "name": "Skeleton2DImport"
         },
         {
-          "include": "flight/types/skeleton2_dimport.hpp",
+          "include": "flight/types/skeleton_2d_import.hpp",
           "name": "Skeleton2DImportAnimation"
         },
         {
-          "include": "flight/types/skin2_d.hpp",
+          "include": "flight/types/skin_2d.hpp",
           "name": "Skin2D"
         },
         {
-          "include": "flight/types/attachment_skin2_d.hpp",
+          "include": "flight/types/attachment_skin_2d.hpp",
           "name": "SkinAttachment2D"
         },
         {
-          "include": "flight/types/slot2_d.hpp",
+          "include": "flight/types/slot_2d.hpp",
           "name": "Slot2D"
         },
         {
@@ -3180,7 +3180,7 @@
           "name": "SpineBinaryTimelineKind"
         },
         {
-          "include": "flight/types/transform_inherit2_d.hpp",
+          "include": "flight/types/transform_inherit_2d.hpp",
           "name": "TransformInherit2D"
         },
         {
@@ -3196,20 +3196,20 @@
           "name": "import_diagnostic_severity"
         },
         {
-          "include": "flight/types/mesh_attachment2_d.hpp",
-          "name": "mesh_attachment2_dkind"
+          "include": "flight/types/mesh_attachment_2d.hpp",
+          "name": "mesh_attachment_2d_kind"
         },
         {
-          "include": "flight/types/region_attachment2_d.hpp",
-          "name": "region_attachment2_dkind"
+          "include": "flight/types/region_attachment_2d.hpp",
+          "name": "region_attachment_2d_kind"
         },
         {
-          "include": "flight/types/skeleton2_danimation_path.hpp",
-          "name": "skeleton2_danimation_path"
+          "include": "flight/types/skeleton_2d_animation_path.hpp",
+          "name": "skeleton_2d_animation_path"
         },
         {
-          "include": "flight/types/transform_mode2_d.hpp",
-          "name": "transform_mode2_d"
+          "include": "flight/types/transform_mode_2d.hpp",
+          "name": "transform_mode_2d"
         }
       ],
       "diagnostic": "'Attachment2D' was not declared in this scope; did you mean 'flight::types::Attachment2D'? -- and the same for 22 further flight::types name(s) in this package",
@@ -3320,15 +3320,15 @@
           "name": "AnimationTrack"
         },
         {
-          "include": "flight/types/attachment2_d.hpp",
+          "include": "flight/types/attachment_2d.hpp",
           "name": "Attachment2D"
         },
         {
-          "include": "flight/types/attachment_skin2_d.hpp",
+          "include": "flight/types/attachment_skin_2d.hpp",
           "name": "AttachmentSkin2D"
         },
         {
-          "include": "flight/types/bone2_d.hpp",
+          "include": "flight/types/bone_2d.hpp",
           "name": "Bone2D"
         },
         {
@@ -3348,7 +3348,7 @@
           "name": "Node"
         },
         {
-          "include": "flight/types/node2_d.hpp",
+          "include": "flight/types/node_2d.hpp",
           "name": "Node2DTraits"
         },
         {
@@ -3376,64 +3376,64 @@
           "name": "PathWinding"
         },
         {
-          "include": "flight/types/skeleton2_d.hpp",
+          "include": "flight/types/skeleton_2d.hpp",
           "name": "Skeleton2D"
         },
         {
-          "include": "flight/types/skeleton2_danimation_path.hpp",
+          "include": "flight/types/skeleton_2d_animation_path.hpp",
           "name": "Skeleton2DAnimationPath"
         },
         {
-          "include": "flight/types/skeleton2_danimation_target.hpp",
+          "include": "flight/types/skeleton_2d_animation_target.hpp",
           "name": "Skeleton2DAnimationTarget"
         },
         {
-          "include": "flight/types/skeleton2_danimation_target_binder.hpp",
+          "include": "flight/types/skeleton_2d_animation_target_binder.hpp",
           "name": "Skeleton2DAnimationTargetBinder"
         },
         {
-          "include": "flight/types/skeleton2_danimation_target_kind.hpp",
+          "include": "flight/types/skeleton_2d_animation_target_kind.hpp",
           "name": "Skeleton2DAnimationTargetKind"
         },
         {
-          "include": "flight/types/skeleton2_ddraw_order_animation_target.hpp",
+          "include": "flight/types/skeleton_2d_draw_order_animation_target.hpp",
           "name": "Skeleton2DDrawOrderAnimationTarget"
         },
         {
-          "include": "flight/types/skeleton2_dik_constraint.hpp",
+          "include": "flight/types/skeleton_2d_ik_constraint.hpp",
           "name": "Skeleton2DIkConstraint"
         },
         {
-          "include": "flight/types/skeleton2_dpath_constraint.hpp",
+          "include": "flight/types/skeleton_2d_path_constraint.hpp",
           "name": "Skeleton2DPathConstraint"
         },
         {
-          "include": "flight/types/skeleton2_dslot_animation_target.hpp",
+          "include": "flight/types/skeleton_2d_slot_animation_target.hpp",
           "name": "Skeleton2DSlotAnimationPath"
         },
         {
-          "include": "flight/types/skeleton2_dslot_animation_target.hpp",
+          "include": "flight/types/skeleton_2d_slot_animation_target.hpp",
           "name": "Skeleton2DSlotAnimationTarget"
         },
         {
-          "include": "flight/types/slot2_d.hpp",
+          "include": "flight/types/slot_2d.hpp",
           "name": "Slot2D"
         },
         {
-          "include": "flight/types/transform_inherit2_d.hpp",
+          "include": "flight/types/transform_inherit_2d.hpp",
           "name": "TransformInherit2D"
         },
         {
-          "include": "flight/types/skeleton2_danimation_target_kind.hpp",
-          "name": "skeleton2_danimation_target_kind"
+          "include": "flight/types/skeleton_2d_animation_target_kind.hpp",
+          "name": "skeleton_2d_animation_target_kind"
         },
         {
-          "include": "flight/types/skeleton2_dconstraint.hpp",
-          "name": "skeleton2_dconstraint_kind"
+          "include": "flight/types/skeleton_2d_constraint.hpp",
+          "name": "skeleton_2d_constraint_kind"
         },
         {
-          "include": "flight/types/skeleton2_dpath_constraint.hpp",
-          "name": "skeleton2_dpath_spacing_mode"
+          "include": "flight/types/skeleton_2d_path_constraint.hpp",
+          "name": "skeleton_2d_path_spacing_mode"
         }
       ],
       "diagnostic": "'AttachmentSkin2D' was not declared in this scope; did you mean 'flight::types::AttachmentSkin2D'?",
@@ -3720,7 +3720,7 @@
           "name": "MatrixLike"
         },
         {
-          "include": "flight/types/node2_d.hpp",
+          "include": "flight/types/node_2d.hpp",
           "name": "Node2D"
         },
         {
@@ -3740,7 +3740,7 @@
           "name": "RenderCacheRefreshOptions"
         },
         {
-          "include": "flight/types/render_proxy2_d.hpp",
+          "include": "flight/types/render_proxy_2d.hpp",
           "name": "RenderProxy2D"
         },
         {
@@ -3768,7 +3768,7 @@
           "name": "Scale9ShapeData"
         },
         {
-          "include": "flight/types/scene2_drenderer.hpp",
+          "include": "flight/types/scene_2d_renderer.hpp",
           "name": "Scene2DRenderer"
         },
         {
@@ -3944,11 +3944,11 @@
           "name": "Matrix"
         },
         {
-          "include": "flight/types/node2_d.hpp",
+          "include": "flight/types/node_2d.hpp",
           "name": "Node2D"
         },
         {
-          "include": "flight/types/node2_danimation_path.hpp",
+          "include": "flight/types/node_2d_animation_path.hpp",
           "name": "Node2DAnimationPath"
         },
         {
@@ -4056,7 +4056,7 @@
           "name": "Texture2D"
         },
         {
-          "include": "flight/types/transform2_d.hpp",
+          "include": "flight/types/transform_2d.hpp",
           "name": "Transform2D"
         },
         {
@@ -4352,7 +4352,7 @@
       "namespace": "flight::types",
       "symbols": [
         {
-          "include": "flight/types/camera3_d.hpp",
+          "include": "flight/types/camera_3d.hpp",
           "name": "Camera3D"
         },
         {
@@ -4452,11 +4452,11 @@
           "name": "Kind"
         },
         {
-          "include": "flight/types/node2_d.hpp",
+          "include": "flight/types/node_2d.hpp",
           "name": "Node2D"
         },
         {
-          "include": "flight/types/node3_d.hpp",
+          "include": "flight/types/node_3d.hpp",
           "name": "Node3D"
         },
         {
@@ -4472,19 +4472,19 @@
           "name": "NodeTraits"
         },
         {
-          "include": "flight/types/scene2_d.hpp",
+          "include": "flight/types/scene_2d.hpp",
           "name": "Scene2D"
         },
         {
-          "include": "flight/types/scene3_d.hpp",
+          "include": "flight/types/scene_3d.hpp",
           "name": "Scene3D"
         },
         {
-          "include": "flight/types/scene3_ddocument.hpp",
+          "include": "flight/types/scene_3d_document.hpp",
           "name": "Scene3DDocumentLight"
         },
         {
-          "include": "flight/types/scene3_dlights.hpp",
+          "include": "flight/types/scene_3d_lights.hpp",
           "name": "Scene3DLights"
         },
         {
@@ -4500,12 +4500,12 @@
           "name": "flight_document_refusal_reason"
         },
         {
-          "include": "flight/types/node2_d.hpp",
-          "name": "node2_dtraits_key"
+          "include": "flight/types/node_2d.hpp",
+          "name": "node_2d_traits_key"
         },
         {
-          "include": "flight/types/node3_d.hpp",
-          "name": "node3_dtraits_key"
+          "include": "flight/types/node_3d.hpp",
+          "name": "node_3d_traits_key"
         }
       ],
       "diagnostic": "'FlightDocumentInteractiveStates' was not declared in this scope",
@@ -4520,7 +4520,7 @@
       "namespace": "flight::types",
       "symbols": [
         {
-          "include": "flight/types/particle_emitter3_d.hpp",
+          "include": "flight/types/particle_emitter_3d.hpp",
           "name": "ParticleEmitter3D"
         },
         {
@@ -4585,9 +4585,9 @@
       "id": "physics2d-collision-sweep-include-order",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/physics2d/",
-      "symbol": "sweep_collision_shape2_d",
-      "declaration": "using flight::collision::sweep_collision_shape2_d; // repair: defining include precedes the emitter's early using-declaration",
-      "include": "flight/collision/sweep_collision_shape2_d.hpp",
+      "symbol": "sweep_collision_shape_2d",
+      "declaration": "using flight::collision::sweep_collision_shape_2d; // repair: defining include precedes the emitter's early using-declaration",
+      "include": "flight/collision/sweep_collision_shape_2d.hpp",
       "diagnostic": "'flight::collision' has not been declared",
       "defect": "world_queries.hpp emits a using-declaration for sweepCollisionShape2D in its forward-declaration block but includes the defining collision header only after that block. Hoisting the same defining include and repeating the legal using-declaration restores declaration order without changing behavior.",
       "expectedWhen": "always",
@@ -4664,15 +4664,15 @@
           "name": "registry_entry_state"
         },
         {
-          "include": "flight/types/node2_d.hpp",
+          "include": "flight/types/node_2d.hpp",
           "name": "Node2D"
         },
         {
-          "include": "flight/types/render_proxy2_d.hpp",
+          "include": "flight/types/render_proxy_2d.hpp",
           "name": "RenderProxy2D"
         },
         {
-          "include": "flight/types/scene2_drenderer.hpp",
+          "include": "flight/types/scene_2d_renderer.hpp",
           "name": "Scene2DRenderer"
         },
         {
@@ -4792,119 +4792,119 @@
           "name": "EntityConstruction"
         },
         {
-          "include": "flight/types/physics3_dabi.hpp",
+          "include": "flight/types/physics_3d_abi.hpp",
           "name": "Physics3DAbi"
         },
         {
-          "include": "flight/types/physics3_dabi.hpp",
+          "include": "flight/types/physics_3d_abi.hpp",
           "name": "Physics3DAbiBodyBuffer"
         },
         {
-          "include": "flight/types/physics3_dabi.hpp",
+          "include": "flight/types/physics_3d_abi.hpp",
           "name": "Physics3DAbiCommandBuffer"
         },
         {
-          "include": "flight/types/physics3_dabi.hpp",
+          "include": "flight/types/physics_3d_abi.hpp",
           "name": "Physics3DAbiContactBuffer"
         },
         {
-          "include": "flight/types/physics3_dabi.hpp",
+          "include": "flight/types/physics_3d_abi.hpp",
           "name": "Physics3DAbiContactHooks"
         },
         {
-          "include": "flight/types/physics3_dabi.hpp",
+          "include": "flight/types/physics_3d_abi.hpp",
           "name": "Physics3DAbiContactSelection"
         },
         {
-          "include": "flight/types/physics3_dabi.hpp",
+          "include": "flight/types/physics_3d_abi.hpp",
           "name": "Physics3DAbiExecutionResult"
         },
         {
-          "include": "flight/types/physics3_dabi.hpp",
+          "include": "flight/types/physics_3d_abi.hpp",
           "name": "Physics3DAbiExecutionStatus"
         },
         {
-          "include": "flight/types/physics3_dabi.hpp",
+          "include": "flight/types/physics_3d_abi.hpp",
           "name": "Physics3DAbiJointBuffer"
         },
         {
-          "include": "flight/types/physics3_dabi.hpp",
+          "include": "flight/types/physics_3d_abi.hpp",
           "name": "Physics3DAbiObjectId"
         },
         {
-          "include": "flight/types/physics3_dabi.hpp",
+          "include": "flight/types/physics_3d_abi.hpp",
           "name": "Physics3DAbiQueryBuffer"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DBodyType"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DCollider"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DCollisionFilter"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DContact"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DContactCallback"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DContactPoint"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DJoint"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DJointReaction"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DMassData"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DMaterial"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DQueryHit"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DQueryResult"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DRayHit"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DRayResult"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DShapeCastResult"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DSolverConfig"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "Physics3DWorld"
         },
         {
-          "include": "flight/types/physics3_d.hpp",
+          "include": "flight/types/physics_3d.hpp",
           "name": "RigidBody3D"
         }
       ],
@@ -4928,115 +4928,115 @@
           "name": "EntityConstruction"
         },
         {
-          "include": "flight/types/physics2_dabi.hpp",
+          "include": "flight/types/physics_2d_abi.hpp",
           "name": "Physics2DAbi"
         },
         {
-          "include": "flight/types/physics2_dabi.hpp",
+          "include": "flight/types/physics_2d_abi.hpp",
           "name": "Physics2DAbiBodyBuffer"
         },
         {
-          "include": "flight/types/physics2_dabi.hpp",
+          "include": "flight/types/physics_2d_abi.hpp",
           "name": "Physics2DAbiCommandBuffer"
         },
         {
-          "include": "flight/types/physics2_dabi.hpp",
+          "include": "flight/types/physics_2d_abi.hpp",
           "name": "Physics2DAbiContactBuffer"
         },
         {
-          "include": "flight/types/physics2_dabi.hpp",
+          "include": "flight/types/physics_2d_abi.hpp",
           "name": "Physics2DAbiContactHooks"
         },
         {
-          "include": "flight/types/physics2_dabi.hpp",
+          "include": "flight/types/physics_2d_abi.hpp",
           "name": "Physics2DAbiContactSelection"
         },
         {
-          "include": "flight/types/physics2_dabi.hpp",
+          "include": "flight/types/physics_2d_abi.hpp",
           "name": "Physics2DAbiExecutionResult"
         },
         {
-          "include": "flight/types/physics2_dabi.hpp",
+          "include": "flight/types/physics_2d_abi.hpp",
           "name": "Physics2DAbiExecutionStatus"
         },
         {
-          "include": "flight/types/physics2_dabi.hpp",
+          "include": "flight/types/physics_2d_abi.hpp",
           "name": "Physics2DAbiJointBuffer"
         },
         {
-          "include": "flight/types/physics2_dabi.hpp",
+          "include": "flight/types/physics_2d_abi.hpp",
           "name": "Physics2DAbiObjectId"
         },
         {
-          "include": "flight/types/physics2_dabi.hpp",
+          "include": "flight/types/physics_2d_abi.hpp",
           "name": "Physics2DAbiQueryBuffer"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DBodyType"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DCollider"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DCollisionFilter"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DContact"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DContactCallback"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DContactPoint"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DJoint"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DJointReaction"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DMaterial"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DQueryHit"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DQueryResult"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DRayHit"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DRayResult"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DShapeCastResult"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DSolverConfig"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DWorld"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "RigidBody2D"
         }
       ],
@@ -5324,7 +5324,7 @@
       "namespace": "flight::types",
       "symbols": [
         {
-          "include": "flight/types/has_transform2_d.hpp",
+          "include": "flight/types/has_transform_2d.hpp",
           "name": "Transform2DNode"
         },
         {
@@ -5424,7 +5424,7 @@
           "name": "TilemapSignals"
         },
         {
-          "include": "flight/types/node2_d.hpp",
+          "include": "flight/types/node_2d.hpp",
           "name": "Node2DTraits"
         },
         {
@@ -5632,15 +5632,15 @@
           "name": "Matrix4Like"
         },
         {
-          "include": "flight/types/node3_d.hpp",
+          "include": "flight/types/node_3d.hpp",
           "name": "Node3D"
         },
         {
-          "include": "flight/types/skeleton3_d.hpp",
+          "include": "flight/types/skeleton_3d.hpp",
           "name": "Skeleton3D"
         },
         {
-          "include": "flight/types/skeleton3_dvalidation_diagnostic.hpp",
+          "include": "flight/types/skeleton_3d_validation_diagnostic.hpp",
           "name": "Skeleton3DValidationDiagnostic"
         }
       ],
@@ -5864,7 +5864,7 @@
           "name": "Aabb"
         },
         {
-          "include": "flight/types/camera3_d.hpp",
+          "include": "flight/types/camera_3d.hpp",
           "name": "Camera3D"
         },
         {
@@ -5880,19 +5880,19 @@
           "name": "Mesh"
         },
         {
-          "include": "flight/types/node3_d.hpp",
+          "include": "flight/types/node_3d.hpp",
           "name": "Node3D"
         },
         {
-          "include": "flight/types/ray3_d.hpp",
+          "include": "flight/types/ray_3d.hpp",
           "name": "Ray3D"
         },
         {
-          "include": "flight/types/scene3_dhit.hpp",
+          "include": "flight/types/scene_3d_hit.hpp",
           "name": "Scene3DHit"
         },
         {
-          "include": "flight/types/scene3_dpick_options.hpp",
+          "include": "flight/types/scene_3d_pick_options.hpp",
           "name": "Scene3DPickOptions"
         },
         {
@@ -5932,91 +5932,91 @@
           "name": "EntityConstruction"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DBodyType"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DBrokenJoint"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DCollider"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DCollisionFilter"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DContact"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DContactIntakeGuard"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DContactPoint"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DDebugCircle"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DDebugFeature"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DDebugGeometry"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DDebugGeometryOptions"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DDebugLine"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DGearCoordinateKind"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DJoint"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DJointReaction"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DJointResolutionGuard"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DJointSolver"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DMaterial"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DSolverConfig"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DStepGuard"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "Physics2DWorld"
         },
         {
-          "include": "flight/types/physics2_d.hpp",
+          "include": "flight/types/physics_2d.hpp",
           "name": "RigidBody2D"
         },
         {
@@ -6484,7 +6484,7 @@
           "name": "GizmoTransformMode"
         },
         {
-          "include": "flight/types/camera2_d.hpp",
+          "include": "flight/types/camera_2d.hpp",
           "name": "Camera2D"
         },
         {
@@ -6512,7 +6512,7 @@
           "name": "GizmoState"
         },
         {
-          "include": "flight/types/node2_d.hpp",
+          "include": "flight/types/node_2d.hpp",
           "name": "Node2D"
         },
         {
@@ -6520,7 +6520,7 @@
           "name": "Rectangle"
         },
         {
-          "include": "flight/types/scene2_d.hpp",
+          "include": "flight/types/scene_2d.hpp",
           "name": "Scene2D"
         },
         {
@@ -6536,7 +6536,7 @@
           "name": "Vector2Like"
         },
         {
-          "include": "flight/types/node2_d.hpp",
+          "include": "flight/types/node_2d.hpp",
           "name": "Node2DTraits"
         }
       ],
@@ -6852,7 +6852,7 @@
           "name": "Node"
         },
         {
-          "include": "flight/types/node2_d.hpp",
+          "include": "flight/types/node_2d.hpp",
           "name": "Node2DTraits"
         },
         {
@@ -7428,23 +7428,23 @@
       "namespace": "flight::collision",
       "symbols": [
         {
-          "include": "flight/collision/collide_contact_manifold2_d.hpp",
-          "name": "collide_contact_manifold2_d"
+          "include": "flight/collision/collide_contact_manifold_2d.hpp",
+          "name": "collide_contact_manifold_2d"
         },
         {
-          "include": "flight/collision/contact_manifold2_d.hpp",
-          "name": "create_collision_contact_manifold2_d"
+          "include": "flight/collision/contact_manifold_2d.hpp",
+          "name": "create_collision_contact_manifold_2d"
         },
         {
-          "include": "flight/collision/sweep_collision_shape2_d.hpp",
-          "name": "create_collision_time_of_impact2_d"
+          "include": "flight/collision/sweep_collision_shape_2d.hpp",
+          "name": "create_collision_time_of_impact_2d"
         },
         {
-          "include": "flight/collision/sweep_collision_shape2_d.hpp",
-          "name": "sweep_collision_shape2_d"
+          "include": "flight/collision/sweep_collision_shape_2d.hpp",
+          "name": "sweep_collision_shape_2d"
         }
       ],
-      "diagnostic": "'collide_contact_manifold2_d' was not declared in this scope",
+      "diagnostic": "'collide_contact_manifold_2d' was not declared in this scope",
       "defect": "The emitter writes 4 function name(s) owned by flight::collision unqualified inside namespace flight::physics2d. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
@@ -7753,11 +7753,11 @@
       "namespace": "flight::physics2d_abi",
       "symbols": [
         {
-          "include": "flight/physics2d_abi/physics2_dabi_command.hpp",
+          "include": "flight/physics2d_abi/physics_2d_abi_command.hpp",
           "name": "get_shape_byte_length"
         },
         {
-          "include": "flight/physics2d_abi/physics2_dabi_command.hpp",
+          "include": "flight/physics2d_abi/physics_2d_abi_command.hpp",
           "name": "write_shape"
         }
       ],
@@ -8433,11 +8433,11 @@
     {
       "id": "scene2d-canvas-particle-emitter-draw-forward-declaration",
       "kind": "insert-forward-declaration",
-      "appliesTo": "flight/scene2d_canvas/canvas_particle_emitter2_d.hpp",
-      "symbol": "draw_canvas_particle_emitter2_d",
-      "declaration": "namespace flight::types { struct CanvasRenderState; struct RenderProxy2D; } namespace flight::scene2d_canvas { inline void draw_canvas_particle_emitter2_d(flight::Ref<flight::types::CanvasRenderState> state, flight::Ref<flight::types::RenderProxy2D> render_proxy); }",
+      "appliesTo": "flight/scene2d_canvas/canvas_particle_emitter_2d.hpp",
+      "symbol": "draw_canvas_particle_emitter_2d",
+      "declaration": "namespace flight::types { struct CanvasRenderState; struct RenderProxy2D; } namespace flight::scene2d_canvas { inline void draw_canvas_particle_emitter_2d(flight::Ref<flight::types::CanvasRenderState> state, flight::Ref<flight::types::RenderProxy2D> render_proxy); }",
       "sourceDeclaration": "packages/scene2d-canvas/src/canvasParticleEmitter2D.ts -- export function drawCanvasParticleEmitter2D(state: CanvasRenderState, renderProxy: RenderProxy2D): void",
-      "diagnostic": "draw_canvas_particle_emitter2_d was not declared in this scope",
+      "diagnostic": "draw_canvas_particle_emitter_2d was not declared in this scope",
       "defect": "The emitter refuses the particle draw implementation at a contextual optional construction but retains the exported default renderer value that stores the exact callback boundary.",
       "expectedWhen": "always",
       "expires": "when refused declarations referenced by retained exported bindings receive declarations automatically; sdk:check fails if this repair matches no header."
@@ -8445,11 +8445,11 @@
     {
       "id": "scene2d-canvas-particle-emitter-submit-render-state-adapter",
       "kind": "respell-reference-member-access",
-      "appliesTo": "flight/scene2d_canvas/canvas_particle_emitter2_d.hpp",
-      "from": ".submit = draw_canvas_particle_emitter2_d",
-      "to": ".submit = [](flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::RenderProxy2D> node) { draw_canvas_particle_emitter2_d(std::reinterpret_pointer_cast<flight::types::CanvasRenderState>(state), node); }",
+      "appliesTo": "flight/scene2d_canvas/canvas_particle_emitter_2d.hpp",
+      "from": ".submit = draw_canvas_particle_emitter_2d",
+      "to": ".submit = [](flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::RenderProxy2D> node) { draw_canvas_particle_emitter_2d(std::reinterpret_pointer_cast<flight::types::CanvasRenderState>(state), node); }",
       "sourceDeclaration": "packages/scene2d-canvas/src/canvasParticleEmitter2D.ts -- the renderer is installed only in CanvasRenderState and drawCanvasParticleEmitter2D narrows the generic SpriteRenderer submit state to that backend",
-      "diagnostic": "draw_canvas_particle_emitter2_d's CanvasRenderState parameter cannot convert to SpriteRenderer.submit's RenderState parameter",
+      "diagnostic": "draw_canvas_particle_emitter_2d's CanvasRenderState parameter cannot convert to SpriteRenderer.submit's RenderState parameter",
       "defect": "The emitter retains the narrowed backend callback as a bare function reference instead of contextually adapting the generic renderer state parameter to the Canvas state that owns this renderer. Canvas registers this callback only on an object allocated as CanvasRenderState; the flattened RenderState view and CanvasRenderState owner therefore name the same allocation, and reinterpret_pointer_cast preserves its shared control block rather than constructing or copying state.",
       "expectedWhen": "always",
       "expires": "when contextually assigned callbacks preserve safe backend state narrowing at renderer registration boundaries; sdk:check fails if this repair matches no header."
@@ -8566,10 +8566,10 @@
       "id": "render-proxy-update-2d-forward-declaration",
       "kind": "insert-forward-declaration",
       "appliesTo": "flight/render/render_proxy.hpp",
-      "symbol": "update_render_proxy2_d",
-      "declaration": "namespace flight::types { struct RenderProxy2D; struct RenderState; } namespace flight::render { inline void update_render_proxy2_d(flight::Ref<flight::types::RenderState> state, flight::types::NodeAny source, flight::Ref<flight::types::RenderProxy2D> data, std::optional<flight::Ref<flight::types::RenderProxy2D>> parent_data); }",
+      "symbol": "update_render_proxy_2d",
+      "declaration": "namespace flight::types { struct RenderProxy2D; struct RenderState; } namespace flight::render { inline void update_render_proxy_2d(flight::Ref<flight::types::RenderState> state, flight::types::NodeAny source, flight::Ref<flight::types::RenderProxy2D> data, std::optional<flight::Ref<flight::types::RenderProxy2D>> parent_data); }",
       "sourceDeclaration": "packages/render/src/renderProxy.ts -- export function updateRenderProxy2D(state: RenderState, source: NodeAny, data: RenderProxy2D, parentData: RenderProxy2D | undefined): void",
-      "diagnostic": "update_render_proxy2_d was not declared in this scope",
+      "diagnostic": "update_render_proxy_2d was not declared in this scope",
       "defect": "The emitter refuses updateRenderProxy2D (cpp-reference-assertion-without-heritage, its `source as Node` read) but retains prepareScene2DRender, which passes that exact declared visitor to walkNode.",
       "expectedWhen": "always",
       "expires": "when refused declarations referenced by retained exported functions receive declarations automatically; sdk:check fails if this repair matches no header.",
@@ -8583,7 +8583,7 @@
       "appliesTo": "flight/render/render_proxy.hpp",
       "symbol": "walk_node",
       "includes": [
-        "flight/types/node2_d.hpp",
+        "flight/types/node_2d.hpp",
         "flight/types/render_proxy_visitor.hpp"
       ],
       "declaration": "namespace flight::types { struct RenderState; } namespace flight::render { inline bool walk_node(flight::Ref<flight::types::RenderState> state, flight::types::Node2D root, flight::types::RenderProxyVisitor visit); }",
@@ -8612,12 +8612,12 @@
       "id": "render-proxy-get-or-create-2d-declaration",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/render/render_proxy.hpp",
-      "symbol": "get_or_create_render_proxy2_d",
+      "symbol": "get_or_create_render_proxy_2d",
       "requiredText": "// NOT GENERATED: function getOrCreateRenderProxy2D -- source line 73",
-      "include": "flight/types/node2_d.hpp",
-      "declaration": "inline flight::Ref<flight::types::RenderProxy2D> get_or_create_render_proxy2_d(flight::Ref<flight::types::RenderState> state, flight::types::Node2D source);",
+      "include": "flight/types/node_2d.hpp",
+      "declaration": "inline flight::Ref<flight::types::RenderProxy2D> get_or_create_render_proxy_2d(flight::Ref<flight::types::RenderState> state, flight::types::Node2D source);",
       "sourceDeclaration": "packages/render/src/renderProxy.ts -- export function getOrCreateRenderProxy2D(state: RenderState, source: Node2D): RenderProxy2D",
-      "diagnostic": "get_or_create_render_proxy2_d was not declared in this scope",
+      "diagnostic": "get_or_create_render_proxy_2d was not declared in this scope",
       "defect": "The emitter refuses the exported render-proxy cache accessor getOrCreateRenderProxy2D (cpp-type-assertion-unidentified) while the canvas CSS-filter, GL shader and WGPU shader bindings retain calls to that exact declared boundary.",
       "expectedWhen": "always",
       "expires": "when refused exported declarations referenced across packages receive declarations automatically; sdk:check fails if this repair matches no header."
@@ -8626,11 +8626,11 @@
       "id": "scene2d-canvas-render-proxy-accessor",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/scene2d_canvas/",
-      "symbol": "get_or_create_render_proxy2_d",
-      "declaration": "using flight::render::get_or_create_render_proxy2_d;",
+      "symbol": "get_or_create_render_proxy_2d",
+      "declaration": "using flight::render::get_or_create_render_proxy_2d;",
       "include": "flight/render/render_proxy.hpp",
       "sourceDeclaration": "packages/scene2d-canvas/src/canvasCSSFilterBinding.ts imports getOrCreateRenderProxy2D from @flighthq/render/contract",
-      "diagnostic": "get_or_create_render_proxy2_d was not declared in namespace flight::scene2d_canvas",
+      "diagnostic": "get_or_create_render_proxy_2d was not declared in namespace flight::scene2d_canvas",
       "defect": "The emitter drops both the defining cross-package include and namespace qualification for the imported render-proxy accessor.",
       "expectedWhen": "always",
       "expires": "when imported cross-package functions retain their defining header and namespace; sdk:check fails if this repair matches no header."

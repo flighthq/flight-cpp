@@ -32,7 +32,7 @@ namespace flight::types { struct RigidBody3D; }
 namespace flight::types { struct SpatialIndexBackend3D; }
 
 #include <flight/types/collision.hpp>
-#include <flight/types/physics3_d.hpp>
+#include <flight/types/physics_3d.hpp>
 #include <flight/types/spatial.hpp>
 #include <flight/physics3d/contact_intake.hpp>
 #include <flight/physics3d/continuous.hpp>
@@ -114,22 +114,22 @@ inline void for_each_solve_island_joint(flight::Ref<flight::types::Physics3DWorl
 }
 
 inline void for_each_solve_island_pose(flight::Ref<flight::types::Physics3DWorld> world, double dt) {
-  if ((world->config->continuous_collision && flight::physics3d::has_active_physics3_dbullet(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world))))) {
-    flight::physics3d::integrate_physics3_dcontinuous(world, dt);
+  if ((world->config->continuous_collision && flight::physics3d::has_active_physics_3d_bullet(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world))))) {
+    flight::physics3d::integrate_physics_3d_continuous(world, dt);
     return;
   }
-  for_each_solve_island_body(world, [=](flight::Ref<flight::types::RigidBody3D> body) { return flight::physics3d::integrate_rigid_body3_dpose(body, dt); });
-  for_each_solve_island_body(world, flight::physics3d::refresh_rigid_body3_dworld_inertia);
+  for_each_solve_island_body(world, [=](flight::Ref<flight::types::RigidBody3D> body) { return flight::physics3d::integrate_rigid_body_3d_pose(body, dt); });
+  for_each_solve_island_body(world, flight::physics3d::refresh_rigid_body_3d_world_inertia);
 }
 
-inline void step_physics3_dinterval(flight::Ref<flight::types::Physics3DWorld> world, double dt) {
+inline void step_physics_3d_interval(flight::Ref<flight::types::Physics3DWorld> world, double dt) {
   auto sequential = world->config->sequential_impulse;
-  for_each_solve_island_body(world, flight::physics3d::refresh_rigid_body3_dworld_inertia);
-  for_each_solve_island_body(world, [=](flight::Ref<flight::types::RigidBody3D> body) { return flight::physics3d::integrate_rigid_body3_dvelocity(body, world->gravity_x, world->gravity_y, world->gravity_z, dt); });
-  flight::physics3d::prepare_physics3_dcontact_constraints(world);
+  for_each_solve_island_body(world, flight::physics3d::refresh_rigid_body_3d_world_inertia);
+  for_each_solve_island_body(world, [=](flight::Ref<flight::types::RigidBody3D> body) { return flight::physics3d::integrate_rigid_body_3d_velocity(body, world->gravity_x, world->gravity_y, world->gravity_z, dt); });
+  flight::physics3d::prepare_physics_3d_contact_constraints(world);
   for_each_solve_island_joint(world, [=](flight::Ref<flight::types::Physics3DJoint> joint, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointSolver>>>> solver) { return flight::row_get<flight::RowKey<"prepare">>(solver)(world, joint, dt); });
   if (sequential->warm_starting) {
-    flight::physics3d::warm_start_physics3_dcontacts(world);
+    flight::physics3d::warm_start_physics_3d_contacts(world);
     for_each_solve_island_joint(world, [=](flight::Ref<flight::types::Physics3DJoint> joint, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointSolver>>>> solver) {
   if (flight::row_get<flight::RowKey<"warmStart">>(solver).has_value()) {
     flight::row_get<flight::RowKey<"warmStart">>(solver).value()(world, joint);
@@ -147,18 +147,18 @@ inline void step_physics3_dinterval(flight::Ref<flight::types::Physics3DWorld> w
     while ((iteration < sequential->velocity_iterations)) {
       {
         for_each_solve_island_joint(world, [=](flight::Ref<flight::types::Physics3DJoint> joint, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJointSolver>>>> solver) { return flight::row_get<flight::RowKey<"solve">>(solver)(world, joint, dt); });
-        flight::physics3d::solve_physics3_dcontact_velocities(world);
+        flight::physics3d::solve_physics_3d_contact_velocities(world);
       }
       (iteration += 1.0);
     }
   }
-  flight::physics3d::evaluate_physics3_djoint_breakage(world, dt);
+  flight::physics3d::evaluate_physics_3d_joint_breakage(world, dt);
   for_each_solve_island_pose(world, dt);
   {
     double iteration_2 = 0.0;
     while ((iteration_2 < sequential->position_iterations)) {
       {
-        flight::physics3d::solve_physics3_dcontact_positions(world);
+        flight::physics3d::solve_physics_3d_contact_positions(world);
       }
       (iteration_2 += 1.0);
     }
@@ -172,7 +172,7 @@ inline void restore_contact_hook_fields(flight::Ref<flight::types::Physics3DCont
   (contact->sensor = sensor);
 }
 
-inline void run_physics3_dcontact_hook(flight::Ref<flight::types::Physics3DWorld> world, std::optional<std::function<void(flight::Ref<flight::types::Physics3DWorld>, flight::Ref<flight::types::Physics3DContact>)>> hook, flight::String phase) {
+inline void run_physics_3d_contact_hook(flight::Ref<flight::types::Physics3DWorld> world, std::optional<std::function<void(flight::Ref<flight::types::Physics3DWorld>, flight::Ref<flight::types::Physics3DContact>)>> hook, flight::String phase) {
   if (!hook.has_value()) {
     return;
   }
@@ -196,7 +196,7 @@ inline void run_physics3_dcontact_hook(flight::Ref<flight::types::Physics3DWorld
           restore_contact_hook_fields(contact, friction, restitution, enabled, sensor);
           throw error;
         }
-        if (!flight::physics3d::is_physics3_dcontact_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DContact>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DContact>>>>(contact)))) {
+        if (!flight::physics3d::is_physics_3d_contact_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DContact>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DContact>>>>(contact)))) {
           restore_contact_hook_fields(contact, friction, restitution, enabled, sensor);
           throw flight::Error(flight::String("Physics3D ") + flight::to_string(phase) + flight::String(" hook produced invalid contact state"));
         }
@@ -206,7 +206,7 @@ inline void run_physics3_dcontact_hook(flight::Ref<flight::types::Physics3DWorld
   }
 }
 
-inline void scale_physics3_dwarm_start_caches(flight::Ref<flight::types::Physics3DWorld> world, double dt) {
+inline void scale_physics_3d_warm_start_caches(flight::Ref<flight::types::Physics3DWorld> world, double dt) {
   const double previous = world->previous_timestep;
   if ((!(previous > 0.0) || (previous == dt))) {
     return;
@@ -252,7 +252,7 @@ inline void scale_physics3_dwarm_start_caches(flight::Ref<flight::types::Physics
   }
 }
 
-inline double compare_physics3_dcontact_identity(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DContact>>>> left, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DContact>>>> right) {
+inline double compare_physics_3d_contact_identity(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DContact>>>> left, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DContact>>>> right) {
   if ((flight::row_get<flight::RowKey<"bodyA">>(left) != flight::row_get<flight::RowKey<"bodyA">>(right))) {
     return (flight::row_get<flight::RowKey<"bodyA">>(left) - flight::row_get<flight::RowKey<"bodyA">>(right));
   }
@@ -265,24 +265,24 @@ inline double compare_physics3_dcontact_identity(flight::StructuralRef<flight::R
   return (flight::row_get<flight::RowKey<"colliderB">>(left) - flight::row_get<flight::RowKey<"colliderB">>(right));
 }
 
-inline void step_validated_physics3_d(flight::Ref<flight::types::Physics3DWorld> world, double dt) {
+inline void step_validated_physics_3d(flight::Ref<flight::types::Physics3DWorld> world, double dt) {
   const double substep_dt = (dt / world->config->substeps);
   ([&]() { auto&& assignment_receiver = world->joint_events->broke; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
-  flight::physics3d::build_physics3_dcontacts(world);
-  run_physics3_dcontact_hook(world, world->contact_hooks->pre_solve, flight::String("pre-solve"));
-  scale_physics3_dwarm_start_caches(world, substep_dt);
-  flight::physics3d::update_physics3_dsleep(world, dt);
-  flight::physics3d::build_physics3_dsolve_islands(world);
+  flight::physics3d::build_physics_3d_contacts(world);
+  run_physics_3d_contact_hook(world, world->contact_hooks->pre_solve, flight::String("pre-solve"));
+  scale_physics_3d_warm_start_caches(world, substep_dt);
+  flight::physics3d::update_physics_3d_sleep(world, dt);
+  flight::physics3d::build_physics_3d_solve_islands(world);
   {
     double substep = 0.0;
     while ((substep < world->config->substeps)) {
       {
         if ((substep > 0.0)) {
-          flight::physics3d::refresh_physics3_dcontacts(world);
-          flight::physics3d::update_physics3_dsleep(world, 0.0);
-          flight::physics3d::build_physics3_dsolve_islands(world);
+          flight::physics3d::refresh_physics_3d_contacts(world);
+          flight::physics3d::update_physics_3d_sleep(world, 0.0);
+          flight::physics3d::build_physics_3d_solve_islands(world);
         }
-        step_physics3_dinterval(world, substep_dt);
+        step_physics_3d_interval(world, substep_dt);
       }
       (substep += 1.0);
     }
@@ -291,42 +291,42 @@ inline void step_validated_physics3_d(flight::Ref<flight::types::Physics3DWorld>
     double body_index = 0.0;
     while ((body_index < static_cast<double>(world->bodies.size()))) {
       {
-        flight::physics3d::clear_rigid_body3_dforces(world->bodies.element(body_index));
+        flight::physics3d::clear_rigid_body_3d_forces(world->bodies.element(body_index));
       }
       (body_index += 1.0);
     }
   }
-  if ((world->config->continuous_collision && flight::physics3d::has_active_physics3_dbullet(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world))))) {
-    world->contacts.sort(compare_physics3_dcontact_identity);
+  if ((world->config->continuous_collision && flight::physics3d::has_active_physics_3d_bullet(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world))))) {
+    world->contacts.sort(compare_physics_3d_contact_identity);
   }
   (world->previous_timestep = substep_dt);
-  run_physics3_dcontact_hook(world, world->contact_hooks->post_solve, flight::String("post-solve"));
+  run_physics_3d_contact_hook(world, world->contact_hooks->post_solve, flight::String("post-solve"));
 }
 
-inline std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>, double)>> physics3_dstep_guard = std::nullopt;
+inline std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>, double)>> physics_3d_step_guard = std::nullopt;
 
-inline void set_physics3_dstep_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>, double)>> guard) {
-  (physics3_dstep_guard = guard);
+inline void set_physics_3d_step_guard(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>, double)>> guard) {
+  (physics_3d_step_guard = guard);
 }
 
-inline void step_physics3_d(flight::Ref<flight::types::Physics3DWorld> world, double dt) {
-  if (flight::physics3d::stepping_physics3_dworlds.has(world)) {
+inline void step_physics_3d(flight::Ref<flight::types::Physics3DWorld> world, double dt) {
+  if (flight::physics3d::stepping_physics_3d_worlds.has(world)) {
     throw flight::Error(flight::String("Cannot step a physics world recursively"));
   }
   auto config = world->config;
-  if ((((((((((!flight::physics3d::is_physics3_dtimestep_valid(dt) || !flight::physics3d::is_physics3_dsubsteps_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DSolverConfig>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DSolverConfig>>>>(config)))) || !flight::physics3d::is_physics3_dvelocity_iterations_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DSolverConfig>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DSolverConfig>>>>(config)))) || !flight::physics3d::is_physics3_dposition_iterations_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DSolverConfig>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DSolverConfig>>>>(config)))) || !flight::physics3d::is_physics3_dsolver_config_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DSolverConfig>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DSolverConfig>>>>(config)))) || !flight::physics3d::is_physics3_dgravity_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)))) || !flight::physics3d::is_physics3_dbody_state_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)))) || !flight::physics3d::is_physics3_dcollider_state_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)))) || !flight::physics3d::is_physics3_dcontact_state_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)))) || !flight::physics3d::is_physics3_djoint_state_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world))))) {
-    ([&]() { auto optional_chain_receiver = physics3_dstep_guard; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(world, dt); }());
+  if ((((((((((!flight::physics3d::is_physics_3d_timestep_valid(dt) || !flight::physics3d::is_physics_3d_substeps_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DSolverConfig>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DSolverConfig>>>>(config)))) || !flight::physics3d::is_physics_3d_velocity_iterations_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DSolverConfig>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DSolverConfig>>>>(config)))) || !flight::physics3d::is_physics_3d_position_iterations_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DSolverConfig>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DSolverConfig>>>>(config)))) || !flight::physics3d::is_physics_3d_solver_config_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DSolverConfig>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DSolverConfig>>>>(config)))) || !flight::physics3d::is_physics_3d_gravity_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)))) || !flight::physics3d::is_physics_3d_body_state_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)))) || !flight::physics3d::is_physics_3d_collider_state_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)))) || !flight::physics3d::is_physics_3d_contact_state_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)))) || !flight::physics3d::is_physics_3d_joint_state_valid(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world))))) {
+    ([&]() { auto optional_chain_receiver = physics_3d_step_guard; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(world, dt); }());
     return;
   }
-  flight::physics3d::stepping_physics3_dworlds.add(world);
+  flight::physics3d::stepping_physics_3d_worlds.add(world);
   std::exception_ptr finally_exception;
   try {
-    step_validated_physics3_d(world, dt);
+    step_validated_physics_3d(world, dt);
   }
   catch (...) {
     finally_exception = std::current_exception();
   }
-  flight::physics3d::stepping_physics3_dworlds.delete_(world);
+  flight::physics3d::stepping_physics_3d_worlds.delete_(world);
   if (finally_exception) std::rethrow_exception(finally_exception);
 }
 

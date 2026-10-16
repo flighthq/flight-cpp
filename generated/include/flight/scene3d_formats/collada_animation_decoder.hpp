@@ -22,9 +22,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/vector3.hpp>
 
-#include <flight/types/transform3_d.hpp>
+#include <flight/types/transform_3d.hpp>
 
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d_document.hpp>
 
 #include <flight/types/quaternion.hpp>
 
@@ -173,8 +173,8 @@ inline void resolve_collada_animations(flight::Ref<flight::types::Scene3DDocumen
             const double offset = (k * 16.0);
             flight::Array<double> rv = ch->values;
             flight::geometry::set_matrix4(scratch_flight_value_variable__u00005f__u00005f_scratch_flight_private_6dd9a50245eb7f76, rv.element(offset), rv.element((offset + 4.0)), rv.element((offset + 8.0)), rv.element((offset + 12.0)), rv.element((offset + 1.0)), rv.element((offset + 5.0)), rv.element((offset + 9.0)), rv.element((offset + 13.0)), rv.element((offset + 2.0)), rv.element((offset + 6.0)), rv.element((offset + 10.0)), rv.element((offset + 14.0)), rv.element((offset + 3.0)), rv.element((offset + 7.0)), rv.element((offset + 11.0)), rv.element((offset + 15.0)));
-            auto trs = flight::geometry::create_transform3_d();
-            flight::geometry::decompose_matrix4_to_transform3_d(trs, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(scratch_flight_value_variable__u00005f__u00005f_scratch_flight_private_6dd9a50245eb7f76)));
+            auto trs = flight::geometry::create_transform_3d();
+            flight::geometry::decompose_matrix4_to_transform_3d(trs, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(scratch_flight_value_variable__u00005f__u00005f_scratch_flight_private_6dd9a50245eb7f76)));
             t_values.push(trs->position->x, trs->position->y, trs->position->z);
             r_values.push(trs->rotation->x, trs->rotation->y, trs->rotation->z, trs->rotation->w);
             s_values.push(trs->scale->x, trs->scale->y, trs->scale->z);

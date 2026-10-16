@@ -174,7 +174,7 @@ inline void update_gl_texture(flight::Ref<flight::types::GlRenderState> state, f
   flight::host_sdl::WebGl2Context gl = state->gl;
   bind_gl_texture_realization(state, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlTextureRealization>>>>>{flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlTextureRealization>>>>(flight::row_field<flight::RowKey<"straightAlpha">>(false), flight::row_field<flight::RowKey<"texture">>(texture))});
   gl.pixel_storei(gl.unpack_premultiply_alpha_webgl, true);
-  gl.tex_image2_d(gl.texture_2_d, 0.0, gl.rgba, gl.rgba, gl.unsigned_byte, canvas);
+  gl.tex_image_2d(gl.texture_2_d, 0.0, gl.rgba, gl.rgba, gl.unsigned_byte, canvas);
   if (flight::to_boolean(([&]() -> std::optional<bool> { auto optional_chain_receiver = runtime->context->mipmapped_textures; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().has(texture); }()))) {
     gl.generate_mipmap(gl.texture_2_d);
   }
@@ -587,7 +587,7 @@ inline flight::host_sdl::WebGlTexture bind_gl_texture(flight::Ref<GlRenderState>
     (texture = std::optional<flight::host_sdl::WebGlTexture>{gl.create_texture()});
     bind_gl_texture_realization(state, flight::make_ref<GlTextureRealization>(GlTextureRealization{.straight_alpha = false, .texture = texture.value()}));
     gl.pixel_storei(gl.unpack_premultiply_alpha_webgl, true);
-    gl.tex_image2_d(gl.texture_2_d, 0.0, gl.rgba, gl.rgba, gl.unsigned_byte, image_source);
+    gl.tex_image_2d(gl.texture_2_d, 0.0, gl.rgba, gl.rgba, gl.unsigned_byte, image_source);
     texture_cache.set(image_source, texture.value());
   }
   else {

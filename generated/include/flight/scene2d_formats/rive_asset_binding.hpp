@@ -27,7 +27,7 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/types/create_texture_options.hpp>
 #include <flight/types/display_object.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/partial_node.hpp>
 #include <flight/types/sampler.hpp>
 #include <flight/types/sprite.hpp>

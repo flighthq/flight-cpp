@@ -17,7 +17,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/scene2d_dom/dom_image_texture_resolver.hpp>
 #include <flight/scene2d_dom/dom_materials.hpp>
 #include <flight/scene2d_dom/dom_native_text.hpp>
-#include <flight/scene2d_dom/dom_node2_d.hpp>
+#include <flight/scene2d_dom/dom_node_2d.hpp>
 #include <flight/scene2d_dom/dom_reconcile.hpp>
 #include <flight/scene2d_dom/dom_render_state.hpp>
 #include <flight/scene2d_dom/dom_rich_text.hpp>
@@ -37,7 +37,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/scene2d_dom/enable_dom_texture_resolver_guards.hpp>
 #include <flight/scene2d_dom/explain_dom_texture_resolution.hpp>
 #include <flight/scene2d_dom/merge_dom_render_options.hpp>
-#include <flight/scene2d_dom/scene2_ddom_pipeline.hpp>
+#include <flight/scene2d_dom/scene_2d_dom_pipeline.hpp>
 
 namespace flight::scene2d_dom {
 

@@ -15,11 +15,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/vector3.hpp>
 
-#include <flight/types/transform3_d.hpp>
+#include <flight/types/transform_3d.hpp>
 
 #include <flight/types/three_ds_schema.hpp>
 
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d_document.hpp>
 
 #include <flight/types/quaternion.hpp>
 
@@ -102,7 +102,7 @@ inline const double three_ds_default_near = 1.0;
 
 inline void append_three_ds_camera_document(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsCamera>>>> camera, flight::Ref<flight::types::Scene3DDocument> document) {
   auto position = convert_three_ds_point_zup_to_yup_flight_value_function_convert_u000054_hree_u000044_s_u000050_oint_u00005a__u000055_p_u000054_o_u000059__u000055_p_flight_private_f5410c96e0f5d772(flight::row_get<flight::RowKey<"position">>(camera));
-  auto transform = flight::geometry::create_transform3_d();
+  auto transform = flight::geometry::create_transform_3d();
   (transform->position->x = position->x);
   (transform->position->y = position->y);
   (transform->position->z = position->z);

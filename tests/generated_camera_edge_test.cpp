@@ -10,7 +10,7 @@
 #include <flight/camera/cube_capture.hpp>
 #include <flight/camera/depth.hpp>
 #include <flight/camera/enable_camera_guards.hpp>
-#include <flight/camera/explain_camera3_dview.hpp>
+#include <flight/camera/explain_camera_3d_view.hpp>
 #include <flight/camera/intersection.hpp>
 #include <flight/camera/projection.hpp>
 #include <flight/camera/reflection.hpp>
@@ -90,7 +90,7 @@ flight::Ref<types::Camera3D> camera3d(types::Projection projection,
           .near = near,
           .projection = std::move(projection),
       });
-  return camera::create_camera3_d(readonly(options));
+  return camera::create_camera_3d(readonly(options));
 }
 
 void basis_and_cube_capture() {
@@ -98,17 +98,17 @@ void basis_and_cube_capture() {
   const auto eye = geometry::create_vector3(3.0, 4.0, 5.0);
   const auto target = geometry::create_vector3(0.0, 0.0, 0.0);
   const auto up_hint = geometry::create_vector3(0.0, 1.0, 0.0);
-  camera::set_camera3_dview_matrix4_from_look_at(
+  camera::set_camera_3d_view_matrix4_from_look_at(
       value, readonly(eye), readonly(target), readonly(up_hint));
 
   const auto forward = geometry::create_vector3();
   const auto position = geometry::create_vector3();
   const auto right = geometry::create_vector3();
   const auto up = geometry::create_vector3();
-  camera::get_camera3_dforward(forward, readonly(value));
-  camera::get_camera3_dposition(position, readonly(value));
-  camera::get_camera3_dright(right, readonly(value));
-  camera::get_camera3_dup(up, readonly(value));
+  camera::get_camera_3d_forward(forward, readonly(value));
+  camera::get_camera_3d_position(position, readonly(value));
+  camera::get_camera_3d_right(right, readonly(value));
+  camera::get_camera_3d_up(up, readonly(value));
   const double length = std::hypot(3.0, 4.0, 5.0);
   check_close(forward->x, -3.0 / length,
               "basis extracts the signed forward x component");
@@ -126,12 +126,12 @@ void basis_and_cube_capture() {
 
   const auto cube = camera3d(types::Projection{perspective()}, 0.25, 250.0);
   const auto cube_position = geometry::create_vector3(7.0, -2.0, 9.0);
-  camera::get_cube_capture_face_camera3_d(
+  camera::get_cube_capture_face_camera_3d(
       cube, readonly(cube_position), types::cube_face_positive_x);
   const auto cube_projection =
       std::get<flight::Ref<types::PerspectiveProjection>>(cube->projection);
-  camera::get_camera3_dposition(position, readonly(cube));
-  camera::get_camera3_dforward(forward, readonly(cube));
+  camera::get_camera_3d_position(position, readonly(cube));
+  camera::get_camera_3d_forward(forward, readonly(cube));
   check_close(cube_projection->aspect, 1.0,
               "cube capture always uses a square projection");
   check_close(cube_projection->fov_y, std::numbers::pi / 2.0,
@@ -147,7 +147,7 @@ void basis_and_cube_capture() {
 
 void view_diagnostics_and_projection_edges() {
   const auto value = camera3d(types::Projection{perspective()});
-  const auto rigid = camera::explain_camera3_dview(readonly(value));
+  const auto rigid = camera::explain_camera_3d_view(readonly(value));
   check(rigid->is_orthonormal && !rigid->is_reflection,
         "identity view is a proper orthonormal transform");
   check_close(rigid->determinant, 1.0,
@@ -156,8 +156,8 @@ void view_diagnostics_and_projection_edges() {
   const auto reflection = geometry::create_matrix4(
       -1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0,
       0.0, 0.0, 1.0, 0.0, 5.0, 7.0, 9.0, 1.0);
-  camera::set_camera3_dview_matrix4_from_matrix4(value, readonly(reflection));
-  const auto reflected = camera::explain_camera3_dview(readonly(value));
+  camera::set_camera_3d_view_matrix4_from_matrix4(value, readonly(reflection));
+  const auto reflected = camera::explain_camera_3d_view(readonly(value));
   check(reflected->is_orthonormal && reflected->is_reflection,
         "reflection view stays orthonormal and reports its handedness");
   check_close(reflected->determinant, -1.0,
@@ -166,8 +166,8 @@ void view_diagnostics_and_projection_edges() {
   const auto scaled = geometry::create_matrix4(
       2.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0,
       0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 0.0, 1.0);
-  camera::set_camera3_dview_matrix4_from_matrix4(value, readonly(scaled));
-  const auto non_rigid = camera::explain_camera3_dview(readonly(value));
+  camera::set_camera_3d_view_matrix4_from_matrix4(value, readonly(scaled));
+  const auto non_rigid = camera::explain_camera_3d_view(readonly(value));
   check(!non_rigid->is_orthonormal && non_rigid->scale_deviation == 1.0,
         "scaled view reports its non-orthonormal deviation");
 
@@ -178,7 +178,7 @@ void view_diagnostics_and_projection_edges() {
               "orthographic texel size selects the larger world footprint");
   const auto orthographic_camera =
       camera3d(types::Projection{projection});
-  camera::set_camera3_daspect(orthographic_camera, 1.5);
+  camera::set_camera_3d_aspect(orthographic_camera, 1.5);
   check_close(projection->half_width, 30.0,
               "orthographic aspect derives width from retained half-height");
 }
@@ -225,40 +225,40 @@ void intersection_failure_paths() {
   const auto eye = geometry::create_vector3(0.0, 0.0, 10.0);
   const auto target = geometry::create_vector3(0.0, 0.0, 0.0);
   const auto up = geometry::create_vector3(0.0, 1.0, 0.0);
-  camera::set_camera3_dview_matrix4_from_look_at(
+  camera::set_camera_3d_view_matrix4_from_look_at(
       value, readonly(eye), readonly(target), readonly(up));
 
   using SphereView = flight::StructuralRef<
       flight::RowReadonly<flight::RowOf<types::BoundingSphereLike>>>;
   const auto sphere = geometry::create_bounding_sphere(0.0, 0.0, 5.0, 1.0);
-  const auto ray = geometry::create_ray3_d();
-  check(camera::get_camera3_dray_through_bounding_sphere(
+  const auto ray = geometry::create_ray_3d();
+  check(camera::get_camera_3d_ray_through_bounding_sphere(
             ray, readonly(value), readonly_as<SphereView>(sphere), 1.0),
         "camera produces a ray through a non-empty visible sphere");
   check_close(ray->direction->x, 0.0, "sphere ray is centered on x");
   check_close(ray->direction->y, 0.0, "sphere ray is centered on y");
   check_close(ray->direction->z, -1.0, "sphere ray points toward the sphere");
   sphere->radius = -1.0;
-  check(!camera::get_camera3_dray_through_bounding_sphere(
+  check(!camera::get_camera_3d_ray_through_bounding_sphere(
              ray, readonly(value), readonly_as<SphereView>(sphere), 1.0),
         "camera rejects an empty bounding sphere");
   sphere->radius = 1.0;
   sphere->center->z = 15.0;
-  check(!camera::get_camera3_dray_through_bounding_sphere(
+  check(!camera::get_camera_3d_ray_through_bounding_sphere(
              ray, readonly(value), readonly_as<SphereView>(sphere), 1.0),
         "camera rejects a sphere center behind the view");
 
-  const auto parallel = geometry::create_ray3_d(0.0, 1.0, 0.0,
+  const auto parallel = geometry::create_ray_3d(0.0, 1.0, 0.0,
                                                 1.0, 0.0, 0.0);
   const auto plane = geometry::create_plane(0.0, 1.0, 0.0, -1.0);
   const auto hit = geometry::create_vector3();
-  check(!camera::intersect_camera3_dray_with_plane(
+  check(!camera::intersect_camera_3d_ray_with_plane(
              hit, readonly(parallel), readonly(plane)),
         "parallel ray and plane have no intersection");
-  const auto away = geometry::create_ray3_d(0.0, -5.0, 0.0,
+  const auto away = geometry::create_ray_3d(0.0, -5.0, 0.0,
                                             0.0, 1.0, 0.0);
   const auto lower_plane = geometry::create_plane(0.0, 1.0, 0.0, 10.0);
-  check(!camera::intersect_camera3_dray_with_plane(
+  check(!camera::intersect_camera_3d_ray_with_plane(
              hit, readonly(away), readonly(lower_plane)),
         "intersection behind the ray origin is rejected");
 }
@@ -266,22 +266,22 @@ void intersection_failure_paths() {
 void depth_shadow_and_oblique_projection() {
   const auto perspective_camera =
       camera3d(types::Projection{perspective()}, 1.0, 9.0);
-  check_close(camera::get_camera3_dlinear_depth(
+  check_close(camera::get_camera_3d_linear_depth(
                   readonly(perspective_camera), -1.0),
               -1.0, "perspective depth maps near NDC to negative near");
-  check_close(camera::get_camera3_dlinear_depth(
+  check_close(camera::get_camera_3d_linear_depth(
                   readonly(perspective_camera), 1.0),
               -9.0, "perspective depth maps far NDC to negative far");
-  check_close(camera::get_camera3_dlinear_depth(
+  check_close(camera::get_camera_3d_linear_depth(
                   readonly(perspective_camera), 0.0),
               -1.8, "perspective depth maps the NDC midpoint nonlinearly");
-  check_close(camera::get_camera3_dview_space_z(
+  check_close(camera::get_camera_3d_view_space_z(
                   readonly(perspective_camera), 0.0),
               1.8, "view-space z negates linear depth");
 
   const auto orthographic_camera =
       camera3d(types::Projection{orthographic(1.0, 1.0)}, 1.0, 9.0);
-  check_close(camera::get_camera3_dlinear_depth(
+  check_close(camera::get_camera_3d_linear_depth(
                   readonly(orthographic_camera), 0.0),
               -5.0, "orthographic depth maps the NDC midpoint linearly");
 
@@ -291,7 +291,7 @@ void depth_shadow_and_oblique_projection() {
                                              1.0, 1.0, 1.0);
   const auto light = geometry::create_vector3(0.0, -1.0, 0.0);
   const auto shadow = camera3d(types::Projection{perspective()});
-  camera::configure_directional_shadow_camera3_d(
+  camera::configure_directional_shadow_camera_3d(
       shadow, readonly(light), readonly_as<AabbView>(bounds));
   const auto shadow_projection =
       std::get<flight::Ref<types::OrthographicProjection>>(shadow->projection);
@@ -330,15 +330,15 @@ void depth_shadow_and_oblique_projection() {
 
 void installed_guard_callbacks() {
   camera::disable_camera_guards();
-  check(!camera::camera3_dview_guard.has_value() &&
+  check(!camera::camera_3d_view_guard.has_value() &&
             !camera::degenerate_visible_bounds_guard.has_value(),
         "disabled camera guards begin with both callbacks detached");
   camera::enable_camera_guards();
-  check(camera::camera3_dview_guard.has_value() &&
+  check(camera::camera_3d_view_guard.has_value() &&
             camera::degenerate_visible_bounds_guard.has_value(),
         "enabling camera guards installs both public callback seams");
   camera::disable_camera_guards();
-  check(!camera::camera3_dview_guard.has_value() &&
+  check(!camera::camera_3d_view_guard.has_value() &&
             !camera::degenerate_visible_bounds_guard.has_value(),
         "disabling camera guards detaches both public callback seams");
 }

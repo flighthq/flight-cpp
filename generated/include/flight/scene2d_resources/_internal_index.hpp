@@ -5,16 +5,16 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/scene2d_resources/built_in_scene2_ddocument_importers.hpp>
-#include <flight/scene2d_resources/enable_scene2_dresource_failure_guards.hpp>
-#include <flight/scene2d_resources/load_scene2_daudio_resources.hpp>
-#include <flight/scene2d_resources/load_scene2_dimage_resources.hpp>
-#include <flight/scene2d_resources/resolve_scene2_dresources.hpp>
-#include <flight/scene2d_resources/scene2_ddocument.hpp>
-#include <flight/scene2d_resources/scene2_ddocument_importer_registry.hpp>
-#include <flight/scene2d_resources/scene2_ddocument_source.hpp>
-#include <flight/scene2d_resources/scene2_dresource_diagnostics.hpp>
-#include <flight/scene2d_resources/scene2_dslot_reference.hpp>
+#include <flight/scene2d_resources/built_in_scene_2d_document_importers.hpp>
+#include <flight/scene2d_resources/enable_scene_2d_resource_failure_guards.hpp>
+#include <flight/scene2d_resources/load_scene_2d_audio_resources.hpp>
+#include <flight/scene2d_resources/load_scene_2d_image_resources.hpp>
+#include <flight/scene2d_resources/resolve_scene_2d_resources.hpp>
+#include <flight/scene2d_resources/scene_2d_document.hpp>
+#include <flight/scene2d_resources/scene_2d_document_importer_registry.hpp>
+#include <flight/scene2d_resources/scene_2d_document_source.hpp>
+#include <flight/scene2d_resources/scene_2d_resource_diagnostics.hpp>
+#include <flight/scene2d_resources/scene_2d_slot_reference.hpp>
 
 namespace flight::scene2d_resources {
 

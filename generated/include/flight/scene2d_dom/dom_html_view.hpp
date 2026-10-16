@@ -9,9 +9,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/scene2_drenderer.hpp>
+#include <flight/types/scene_2d_renderer.hpp>
 
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 
 #include <flight/types/dom_render_state.hpp>
 
@@ -51,7 +51,7 @@ inline void draw_dom_html_view(flight::Ref<flight::types::DomRenderState> state,
   }
   (element.value().style.width = flight::String("") + flight::to_string(data->width) + flight::String("px"));
   (element.value().style.height = flight::String("") + flight::to_string(data->height) + flight::String("px"));
-  flight::scene2d_dom::set_dom_transform(element.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(render_proxy->transform2_d)), state->round_pixels);
+  flight::scene2d_dom::set_dom_transform(element.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(render_proxy->transform_2d)), state->round_pixels);
   (element.value().style.opacity = ((render_proxy->alpha < 1.0) ? flight::to_string(render_proxy->alpha) : flight::String("")));
   ([&]() { auto optional_chain_receiver = state->apply_blend_mode; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(element.value(), render_proxy->blend_mode); }());
   flight::scene2d_dom::set_dom_renderer_element(state, element.value());

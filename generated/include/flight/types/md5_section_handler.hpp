@@ -24,7 +24,7 @@ struct Md5ImportOptions;
 
 #include <flight/types/import_diagnostic.hpp>
 #include <flight/types/md5_schema.hpp>
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d_document.hpp>
 
 namespace flight::types {
 

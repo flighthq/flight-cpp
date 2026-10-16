@@ -87,7 +87,7 @@ int main() {
         std::in_place_type<flight::Ref<types::Texture2D>>, texture}).value();
   };
   std::vector<types::TextureLike> input_arms{
-      types::TextureLike{std::in_place_type<flight::Ref<types::Texture2D>>, tex::create_texture2_d()},
+      types::TextureLike{std::in_place_type<flight::Ref<types::Texture2D>>, tex::create_texture_2d()},
       types::TextureLike{std::in_place_type<flight::Ref<types::TextureCube>>, tex::create_cube_texture()},
       types::TextureLike{std::in_place_type<flight::Ref<types::Texture2DArray>>,
           tex::create_texture(flight::make_ref<types::CreateTexture2DArrayOptions>())},

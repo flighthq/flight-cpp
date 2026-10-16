@@ -13,9 +13,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/scene3_d.hpp>
+#include <flight/types/scene_3d.hpp>
 
-#include <flight/types/scene2_d.hpp>
+#include <flight/types/scene_2d.hpp>
 
 #include <flight/types/flight_document_refusal_explanation.hpp>
 

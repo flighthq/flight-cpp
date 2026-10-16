@@ -21,7 +21,7 @@ namespace flight::types { struct RawProjectionOptions; }
 
 #include <flight/entity/entity.hpp>
 #include <flight/geometry/matrix4.hpp>
-#include <flight/types/camera3_d.hpp>
+#include <flight/types/camera_3d.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/orthographic_projection_options.hpp>

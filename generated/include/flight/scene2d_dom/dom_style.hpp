@@ -9,7 +9,7 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 
 #include <flight/types/dom_render_state.hpp>
 
@@ -29,7 +29,7 @@ using flight::types::DomRenderStateRuntime;
 using flight::types::RenderProxy2D;
 
 inline void apply_dom_style(flight::Ref<flight::types::DomRenderState> state, flight::host_sdl::HtmlElement element, flight::Ref<flight::types::RenderProxy2D> node) {
-  flight::scene2d_dom::set_dom_transform(element, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(node->transform2_d)), state->round_pixels);
+  flight::scene2d_dom::set_dom_transform(element, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(node->transform_2d)), state->round_pixels);
   (element.style.opacity = ((node->alpha < 1.0) ? flight::to_string(node->alpha) : flight::String("")));
   (element.style.image_rendering = (state->allow_smoothing ? flight::String("") : flight::String("pixelated")));
   if (state->dom_css_filter_resolver.has_value()) {

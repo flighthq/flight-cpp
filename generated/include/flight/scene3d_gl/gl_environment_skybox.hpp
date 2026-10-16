@@ -22,7 +22,7 @@ struct GlSkybox;
 #include <flight/render_gl/gl_program.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/scene3d_gl/gl_environment_cube.hpp>
-#include <flight/scene3d_gl/gl_scene3_druntime.hpp>
+#include <flight/scene3d_gl/gl_scene_3d_runtime.hpp>
 
 namespace flight::scene3d_gl {
 
@@ -65,7 +65,7 @@ inline flight::Ref<GlSkybox> ensure_gl_skybox(flight::Ref<flight::types::GlRende
   if (sky.has_value()) {
     return sky.value();
   }
-  flight::scene3d_gl::add_gl_scene3_dresource_cleanup(state, destroy_gl_environment_skybox);
+  flight::scene3d_gl::add_gl_scene_3d_resource_cleanup(state, destroy_gl_environment_skybox);
   flight::host_sdl::WebGlProgram program = link_gl_skybox_program(gl);
   flight::host_sdl::WebGlVertexArrayObject vao = gl.create_vertex_array();
   gl.bind_vertex_array(vao);
@@ -87,7 +87,7 @@ inline void render_gl_environment_skybox(flight::Ref<flight::types::GlRenderStat
   }
   flight::host_sdl::WebGl2Context gl = state->gl;
   auto sky = ensure_gl_skybox(state);
-  if (!flight::camera::update_camera3_dinverse_view_projection(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(camera), aspect)) {
+  if (!flight::camera::update_camera_3d_inverse_view_projection(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(camera), aspect)) {
     return;
   }
   const bool prev_depth_test = gl.is_enabled(gl.depth_test);

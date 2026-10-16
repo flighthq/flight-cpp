@@ -20,7 +20,7 @@ using MaterialNode = flight::StructuralRef<flight::RowMerge<flight::RowMerge<fli
 } // namespace flight::types
 
 #include <flight/types/material.hpp>
-#include <flight/types/material2_d.hpp>
+#include <flight/types/material_2d.hpp>
 #include <flight/types/node.hpp>
 
 namespace flight::types {

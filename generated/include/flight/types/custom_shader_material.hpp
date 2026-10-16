@@ -19,11 +19,11 @@ namespace flight::types {
 struct CustomShaderMaterial;
 } // namespace flight::types
 
-#include <flight/types/material3_d.hpp>
+#include <flight/types/material_3d.hpp>
 #include <flight/types/texture.hpp>
 #include <flight/types/blend_mode.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/material3_d.hpp>
+#include <flight/types/material_3d.hpp>
 
 namespace flight::types {
 

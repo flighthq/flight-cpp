@@ -16,7 +16,7 @@ struct RenderProxyAdapter;
 } // namespace flight::types
 
 #include <flight/types/node.hpp>
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 #include <flight/types/render_state.hpp>
 
 namespace flight::types {

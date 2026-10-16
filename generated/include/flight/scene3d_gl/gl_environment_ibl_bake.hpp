@@ -25,7 +25,7 @@ struct GlBakeProgram;
 #include <flight/render_gl/gl_program.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/scene3d_gl/gl_environment_cube.hpp>
-#include <flight/scene3d_gl/gl_scene3_druntime.hpp>
+#include <flight/scene3d_gl/gl_scene_3d_runtime.hpp>
 
 namespace flight::scene3d_gl {
 
@@ -71,7 +71,7 @@ inline flight::host_sdl::WebGlTexture create_gl_bake_cube(flight::host_sdl::WebG
           double face = 0.0;
           while ((face < 6.0)) {
             {
-              gl.tex_image2_d(flight::scene3d_gl::get_gl_cube_face_target(gl, face), mip, gl.rgba16_f, mip_size, mip_size, 0.0, gl.rgba, gl.half_float, nullptr);
+              gl.tex_image_2d(flight::scene3d_gl::get_gl_cube_face_target(gl, face), mip, gl.rgba16_f, mip_size, mip_size, 0.0, gl.rgba, gl.half_float, nullptr);
             }
             (face += 1.0);
           }
@@ -103,7 +103,7 @@ inline void render_gl_bake_cube_faces(flight::Ref<flight::types::GlRenderState> 
     double face = 0.0;
     while ((face < 6.0)) {
       {
-        gl.framebuffer_texture2_d(gl.framebuffer, gl.color_attachment0, flight::scene3d_gl::get_gl_cube_face_target(gl, face), cube, mip_level);
+        gl.framebuffer_texture_2d(gl.framebuffer, gl.color_attachment0, flight::scene3d_gl::get_gl_cube_face_target(gl, face), cube, mip_level);
         flight::Array<double> b = cube_face_basis.element(face);
         gl.uniform3f(program->loc_face_forward, b.element(0.0), b.element(1.0), b.element(2.0));
         gl.uniform3f(program->loc_face_right, b.element(3.0), b.element(4.0), b.element(5.0));
@@ -143,7 +143,7 @@ inline flight::Map<flight::String, flight::Ref<GlBakeProgram>> ensure_gl_bake_pr
   }
   auto created = flight::Map<flight::String, flight::Ref<GlBakeProgram>>();
   bake_programs.set(state, created);
-  flight::scene3d_gl::add_gl_scene3_dresource_cleanup(state, destroy_gl_environment_ibl_bake_programs);
+  flight::scene3d_gl::add_gl_scene_3d_resource_cleanup(state, destroy_gl_environment_ibl_bake_programs);
   return created;
 }
 
@@ -228,14 +228,14 @@ inline flight::host_sdl::WebGlTexture bake_gl_brdf_lut(flight::Ref<flight::types
   flight::host_sdl::WebGl2Context gl = state->gl;
   flight::host_sdl::WebGlTexture texture = gl.create_texture();
   gl.bind_texture(gl.texture_2_d, texture);
-  gl.tex_image2_d(gl.texture_2_d, 0.0, gl.rgba16_f, brdf_lut_size, brdf_lut_size, 0.0, gl.rgba, gl.half_float, nullptr);
+  gl.tex_image_2d(gl.texture_2_d, 0.0, gl.rgba16_f, brdf_lut_size, brdf_lut_size, 0.0, gl.rgba, gl.half_float, nullptr);
   gl.tex_parameteri(gl.texture_2_d, gl.texture_min_filter, gl.linear);
   gl.tex_parameteri(gl.texture_2_d, gl.texture_mag_filter, gl.linear);
   gl.tex_parameteri(gl.texture_2_d, gl.texture_wrap_s, gl.clamp_to_edge);
   gl.tex_parameteri(gl.texture_2_d, gl.texture_wrap_t, gl.clamp_to_edge);
   auto program = ensure_gl_bake_program(state, flight::String("brdf"), brdf_lut_fragment);
   gl.bind_framebuffer(gl.framebuffer, fbo);
-  gl.framebuffer_texture2_d(gl.framebuffer, gl.color_attachment0, gl.texture_2_d, texture, 0.0);
+  gl.framebuffer_texture_2d(gl.framebuffer, gl.color_attachment0, gl.texture_2_d, texture, 0.0);
   gl.viewport(0.0, 0.0, brdf_lut_size, brdf_lut_size);
   gl.use_program(program->program);
   draw_gl_bake_quad(state, program);
@@ -246,7 +246,7 @@ inline void bake_gl_environment_ibl_from_source(flight::Ref<flight::types::GlRen
   flight::host_sdl::WebGl2Context gl = state->gl;
   gl.get_extension(flight::String("EXT_color_buffer_float"));
   gl.get_extension(flight::String("OES_texture_float_linear"));
-  auto runtime = flight::scene3d_gl::get_gl_scene3_druntime(state);
+  auto runtime = flight::scene3d_gl::get_gl_scene_3d_runtime(state);
   if ((([&]() -> std::optional<double> { auto optional_chain_receiver = runtime->ibl; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->environment_source_revision; }()) == runtime->environment_source_revision)) {
     (runtime->ibl.value()->intensity = intensity);
     return;
@@ -290,7 +290,7 @@ inline void bake_gl_environment_ibl_from_source(flight::Ref<flight::types::GlRen
 
 inline void bake_gl_environment_capture_ibl(flight::Ref<flight::types::GlRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlCubeRenderTarget>>>> target, std::optional<double> intensity = std::nullopt) {
   intensity = intensity.value_or(1.0);
-  auto runtime = flight::scene3d_gl::get_gl_scene3_druntime(state);
+  auto runtime = flight::scene3d_gl::get_gl_scene_3d_runtime(state);
   (runtime->environment_source_revision = flight::unsigned_right_shift((runtime->environment_source_revision + 1.0), 0.0));
   bake_gl_environment_ibl_from_source(state, flight::row_get<flight::RowKey<"texture">>(target), intensity.value());
 }

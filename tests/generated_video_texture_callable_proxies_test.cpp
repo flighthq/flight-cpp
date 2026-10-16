@@ -67,7 +67,7 @@ int main(){
   reads.clear();const auto cloned=std::get<flight::Ref<y::Texture2D>>(clone(source));
   expect({"texture.colorSpace","texture.flipX","texture.flipY","texture.sampler","texture.uvOffset","texture.uvRotation","texture.uvScale","texture.version","texture.dimension","texture.source"},"clone canonical function value reads through pure readonly proxy in source order");
   check(cloned->sampler!=sampler&&std::get<flight::Ref<y::ImageResource>>(*cloned->source)==image,"proxy clone keeps source identity and independent sampler");
-  const auto output=t::create_texture2_d();reads.clear();copy(y::TextureLike{output},source);
+  const auto output=t::create_texture_2d();reads.clear();copy(y::TextureLike{output},source);
   expect({"texture.dimension","texture.colorSpace","texture.flipX","texture.flipY","texture.uvRotation","texture.version","texture.sampler","texture.uvOffset","texture.uvScale","texture.dimension","texture.source"},"copy canonical function value preserves repeated dimension reads through readonly proxy");
   const auto matrix=flight::make_ref<y::Matrix3>();matrix->m=flight::Float32Array(9);
   uv(matrix,source);

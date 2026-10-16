@@ -30,7 +30,7 @@ struct WgpuBakePrograms;
 } // namespace flight::scene3d_wgpu
 
 #include <flight/scene3d_wgpu/wgpu_environment_cube.hpp>
-#include <flight/scene3d_wgpu/wgpu_scene3_druntime.hpp>
+#include <flight/scene3d_wgpu/wgpu_scene_3d_runtime.hpp>
 
 namespace flight::scene3d_wgpu {
 

@@ -13,11 +13,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/transform_inherit2_d.hpp>
+#include <flight/types/transform_inherit_2d.hpp>
 
 #include <flight/types/import_diagnostic.hpp>
 
-#include <flight/types/bone2_d.hpp>
+#include <flight/types/bone_2d.hpp>
 
 namespace flight::types { struct Bone2D; }
 namespace flight::types { struct ImportDiagnostic; }
@@ -32,27 +32,27 @@ using flight::types::Bone2D;
 using flight::types::ImportDiagnostic;
 using flight::types::TransformInherit2D;
 
-inline flight::Ref<flight::types::Bone2D> create_placeholder_bone2_d() {
-  return flight::make_ref<flight::types::Bone2D>(flight::types::Bone2D{.length = 0.0, .name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}, .parent_index = -1.0, .rotation = 0.0, .scale_x = 1.0, .scale_y = 1.0, .shear_x = 0.0, .shear_y = 0.0, .transform_mode = flight::types::transform_mode2_d->normal, .x = 0.0, .y = 0.0});
+inline flight::Ref<flight::types::Bone2D> create_placeholder_bone_2d() {
+  return flight::make_ref<flight::types::Bone2D>(flight::types::Bone2D{.length = 0.0, .name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}, .parent_index = -1.0, .rotation = 0.0, .scale_x = 1.0, .scale_y = 1.0, .shear_x = 0.0, .shear_y = 0.0, .transform_mode = flight::types::transform_mode_2d->normal, .x = 0.0, .y = 0.0});
 }
 
 inline flight::Ref<flight::types::TransformInherit2D> spine_transform_mode(flight::Any value) {
   {
     auto switch_value = value;
     if (switch_value == flight::String("onlyTranslation")) {
-      return flight::types::transform_mode2_d->only_translation;
+      return flight::types::transform_mode_2d->only_translation;
     }
     else if (switch_value == flight::String("noRotationOrReflection")) {
-      return flight::types::transform_mode2_d->no_rotation_or_reflection;
+      return flight::types::transform_mode_2d->no_rotation_or_reflection;
     }
     else if (switch_value == flight::String("noScale")) {
-      return flight::types::transform_mode2_d->no_scale;
+      return flight::types::transform_mode_2d->no_scale;
     }
     else if (switch_value == flight::String("noScaleOrReflection")) {
-      return flight::types::transform_mode2_d->no_scale_or_reflection;
+      return flight::types::transform_mode_2d->no_scale_or_reflection;
     }
     else {
-      return flight::types::transform_mode2_d->normal;
+      return flight::types::transform_mode_2d->normal;
     }
   }
   throw std::logic_error("Flight function completed without a value");

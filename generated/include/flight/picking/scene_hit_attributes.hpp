@@ -18,9 +18,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/vector3.hpp>
 
-#include <flight/types/scene3_dhit.hpp>
+#include <flight/types/scene_3d_hit.hpp>
 
-#include <flight/types/ray3_d.hpp>
+#include <flight/types/ray_3d.hpp>
 
 #include <flight/types/mesh.hpp>
 
@@ -79,12 +79,12 @@ using flight::types::Vector3;
 // nullable union -- avoids the boundary altogether; closing it at the carrier needs either that runtime carrier
 // or interface structs emitted with the heritage as a C++ base relation.
 
-inline double get_scene3_dhit_subset_index(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DHit>>>> hit) {
+inline double get_scene_3d_hit_subset_index(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DHit>>>> hit) {
   auto node = flight::row_get<flight::RowKey<"node">>(hit);
   return (!node.has_value() ? -1.0 : flight::mesh::get_mesh_geometry_triangle_subset_index(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>(node.value()->geometry)), flight::row_get<flight::RowKey<"triangleIndex">>(hit)));
 }
 
-inline bool is_scene3_dhit_front_facing(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DHit>>>> hit, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Ray3D>>>> ray) {
+inline bool is_scene_3d_hit_front_facing(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DHit>>>> hit, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Ray3D>>>> ray) {
   return ((((flight::row_get<flight::RowKey<"direction">>(ray)->x * flight::row_get<flight::RowKey<"normalX">>(hit)) + (flight::row_get<flight::RowKey<"direction">>(ray)->y * flight::row_get<flight::RowKey<"normalY">>(hit))) + (flight::row_get<flight::RowKey<"direction">>(ray)->z * flight::row_get<flight::RowKey<"normalZ">>(hit))) <= 0.0);
 }
 
@@ -126,7 +126,7 @@ inline flight::Ref<w_x_y_z_5137f2b28145ccce> tangent2 = flight::make_ref<w_x_y_z
 
 inline flight::Ref<flight::types::MeshTriangleVertexIndices> triangle_flight_value_variable__u00005f_triangle_flight_private_f4fbd17575e0e859 = flight::make_ref<flight::types::MeshTriangleVertexIndices>(flight::types::MeshTriangleVertexIndices{.i0 = 0.0, .i1 = 0.0, .i2 = 0.0});
 
-inline bool get_scene3_dhit_vertex_normal(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DHit>>>> hit) {
+inline bool get_scene_3d_hit_vertex_normal(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DHit>>>> hit) {
   auto node = flight::row_get<flight::RowKey<"node">>(hit);
   if (!node.has_value()) {
     return false;
@@ -166,7 +166,7 @@ inline flight::Ref<x_y_8365950bd60f783f> uv1 = flight::make_ref<x_y_8365950bd60f
 
 inline flight::Ref<x_y_8365950bd60f783f> uv2 = flight::make_ref<x_y_8365950bd60f783f>(x_y_8365950bd60f783f{.x = 0.0, .y = 0.0});
 
-inline bool get_scene3_dhit_uv0(flight::types::Vector2Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DHit>>>> hit) {
+inline bool get_scene_3d_hit_uv0(flight::types::Vector2Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DHit>>>> hit) {
   auto node = flight::row_get<flight::RowKey<"node">>(hit);
   if (!node.has_value()) {
     return false;
@@ -191,7 +191,7 @@ inline bool get_scene3_dhit_uv0(flight::types::Vector2Like out, flight::Structur
 
 inline flight::Ref<flight::types::Vector3> world_normal_flight_value_variable__u00005f_world_u00004e_ormal_flight_private_f4fbd17575e0e859 = flight::geometry::create_vector3(std::nullopt, std::nullopt, std::nullopt);
 
-inline bool get_scene3_dhit_vertex_tangent(flight::Ref<w_x_y_z_5137f2b28145ccce> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DHit>>>> hit) {
+inline bool get_scene_3d_hit_vertex_tangent(flight::Ref<w_x_y_z_5137f2b28145ccce> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DHit>>>> hit) {
   auto node = flight::row_get<flight::RowKey<"node">>(hit);
   if (!node.has_value()) {
     return false;
@@ -209,7 +209,7 @@ inline bool get_scene3_dhit_vertex_tangent(flight::Ref<w_x_y_z_5137f2b28145ccce>
   if (!flight::mesh::get_mesh_geometry_vertex_tangent(tangent2, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>(geometry)), triangle_flight_value_variable__u00005f_triangle_flight_private_f4fbd17575e0e859->i2)) {
     return false;
   }
-  if (!get_scene3_dhit_vertex_normal(world_normal_flight_value_variable__u00005f_world_u00004e_ormal_flight_private_f4fbd17575e0e859, hit)) {
+  if (!get_scene_3d_hit_vertex_normal(world_normal_flight_value_variable__u00005f_world_u00004e_ormal_flight_private_f4fbd17575e0e859, hit)) {
     return false;
   }
   const double tx = (((flight::row_get<flight::RowKey<"u">>(hit) * tangent0->x) + (flight::row_get<flight::RowKey<"v">>(hit) * tangent1->x)) + (flight::row_get<flight::RowKey<"w">>(hit) * tangent2->x));

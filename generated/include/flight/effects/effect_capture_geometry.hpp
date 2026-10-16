@@ -27,10 +27,10 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/types/effect_capture_geometry.hpp>
 #include <flight/types/effect_padding.hpp>
 #include <flight/types/has_bounds_rectangle.hpp>
-#include <flight/types/has_transform2_d.hpp>
+#include <flight/types/has_transform_2d.hpp>
 #include <flight/types/matrix.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/rectangle.hpp>
 #include <flight/types/render_state.hpp>
 #include <flight/effects/effect_padding.hpp>
@@ -68,7 +68,7 @@ inline bool compute_effect_capture_geometry(flight::Ref<flight::types::EffectCap
   }
   flight::effects::compute_effect_padding(state, effects, padding);
   flight::render::compute_render_target_size(target_size, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(bounds)), std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::EffectPadding>>>>, double>{std::in_place_type<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::EffectPadding>>>>>, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::EffectPadding>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::EffectPadding>>>>(padding))}, std::nullopt, std::nullopt);
-  flight::render::compute_scene2_drender_target_transform(capture_transform, source, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(bounds)), padding->left, padding->top);
+  flight::render::compute_scene_2d_render_target_transform(capture_transform, source, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(bounds)), padding->left, padding->top);
   flight::geometry::copy_rectangle(out->bounds, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(bounds)));
   copy_padding(out->padding, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::EffectPadding>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::EffectPadding>>>>(padding)));
   flight::geometry::copy_matrix(out->capture_transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(capture_transform)));

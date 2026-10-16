@@ -23,7 +23,7 @@ namespace flight::types { struct ParticleObjectsUpdateOptions; }
 
 #include <flight/types/has_appearance.hpp>
 #include <flight/types/has_color_scale_bias.hpp>
-#include <flight/types/has_transform2_d.hpp>
+#include <flight/types/has_transform_2d.hpp>
 #include <flight/types/particle_curve.hpp>
 #include <flight/types/particle_emitter_callbacks.hpp>
 #include <flight/types/particle_emitter_config.hpp>

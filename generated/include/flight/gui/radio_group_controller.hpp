@@ -37,7 +37,7 @@ struct RadioGroupControllerFields;
 #include <flight/types/entity.hpp>
 #include <flight/types/gui_controller.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/radio_group_controller.hpp>
 #include <flight/types/signal.hpp>
 #include <flight/types/toggle_controller.hpp>

@@ -19,21 +19,21 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/shortcut/shortcut.hpp>
 
-#include <flight/types/slot2_d.hpp>
+#include <flight/types/slot_2d.hpp>
 
-#include <flight/types/skeleton2_dimport.hpp>
+#include <flight/types/skeleton_2d_import.hpp>
 
-#include <flight/types/skeleton2_ddraw_order_timeline.hpp>
+#include <flight/types/skeleton_2d_draw_order_timeline.hpp>
 
-#include <flight/types/skeleton2_d.hpp>
+#include <flight/types/skeleton_2d.hpp>
 
 #include <flight/types/import_diagnostic.hpp>
 
-#include <flight/types/bone2_d.hpp>
+#include <flight/types/bone_2d.hpp>
 
-#include <flight/types/attachment_skin2_d.hpp>
+#include <flight/types/attachment_skin_2d.hpp>
 
-#include <flight/types/attachment2_d.hpp>
+#include <flight/types/attachment_2d.hpp>
 
 namespace flight::types { struct Attachment2D; }
 namespace flight::types { struct AttachmentSkin2D; }
@@ -155,7 +155,7 @@ inline std::optional<flight::Ref<flight::types::Skeleton2DImport>> parse_spine_s
     entry->handle(context);
   }
   resolve_spine_setup_attachments(context->slots, context->attachment_names, context->skins);
-  auto skeleton = flight::skeleton2d::create_skeleton2_d(context->bones, std::optional<flight::Array<flight::Ref<flight::types::Slot2D>>>{context->slots});
+  auto skeleton = flight::skeleton2d::create_skeleton_2d(context->bones, std::optional<flight::Array<flight::Ref<flight::types::Slot2D>>>{context->slots});
   if ((static_cast<double>(context->skins.size()) > 0.0)) {
     (skeleton->skins = std::variant<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>>, context->skins});
   }

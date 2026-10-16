@@ -35,7 +35,7 @@ namespace flight::types { struct RigidBody3D; }
 namespace flight::types { struct SpatialIndexBackend3D; }
 
 #include <flight/types/collision.hpp>
-#include <flight/types/physics3_d.hpp>
+#include <flight/types/physics_3d.hpp>
 #include <flight/types/spatial.hpp>
 #include <flight/physics3d/joint_reaction.hpp>
 #include <flight/physics3d/joint_rows.hpp>
@@ -53,19 +53,19 @@ using flight::types::Physics3DWorld;
 using flight::types::RigidBody3D;
 using flight::types::SpatialIndexBackend3D;
 
-inline const flight::String physics3_dball_and_socket_joint_kind = flight::String("BallAndSocket");
+inline const flight::String physics_3d_ball_and_socket_joint_kind = flight::String("BallAndSocket");
 
-inline const flight::String physics3_dcone_twist_joint_kind = flight::String("ConeTwist");
+inline const flight::String physics_3d_cone_twist_joint_kind = flight::String("ConeTwist");
 
-inline const flight::String physics3_ddistance_joint_kind = flight::String("Distance");
+inline const flight::String physics_3d_distance_joint_kind = flight::String("Distance");
 
-inline const flight::String physics3_dfixed_joint_kind = flight::String("Fixed");
+inline const flight::String physics_3d_fixed_joint_kind = flight::String("Fixed");
 
-inline const flight::String physics3_dgeneric6_dof_joint_kind = flight::String("Generic6Dof");
+inline const flight::String physics_3d_generic6_dof_joint_kind = flight::String("Generic6Dof");
 
-inline const flight::String physics3_dhinge_joint_kind = flight::String("Hinge");
+inline const flight::String physics_3d_hinge_joint_kind = flight::String("Hinge");
 
-inline const flight::String physics3_dslider_joint_kind = flight::String("Slider");
+inline const flight::String physics_3d_slider_joint_kind = flight::String("Slider");
 
 inline double clamp(double value, double low, double high) {
   return flight::minimum(flight::maximum(value, low), high);
@@ -89,13 +89,13 @@ inline void write_point_block_force(flight::StructuralRef<flight::RowReadonly<fl
   (out->force_z += (flight::row_get<flight::RowKey<"impulse2">>(joint) * inverse_dt));
 }
 
-inline flight::Ref<flight::types::Physics3DJointSolver> physics3_dball_and_socket_joint_solver = ([]() { auto object_member_clear_accumulated_impulses = std::optional<std::function<void(flight::Ref<flight::types::Physics3DJoint>)>>{[](flight::Ref<flight::types::Physics3DJoint> joint) {
+inline flight::Ref<flight::types::Physics3DJointSolver> physics_3d_ball_and_socket_joint_solver = ([]() { auto object_member_clear_accumulated_impulses = std::optional<std::function<void(flight::Ref<flight::types::Physics3DJoint>)>>{[](flight::Ref<flight::types::Physics3DJoint> joint) {
   (joint->impulse0 = 0.0);
   (joint->impulse1 = 0.0);
   (joint->impulse2 = 0.0);
 }}; auto object_member_prepare = [](flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<flight::types::Physics3DJoint> joint, double dt) {
-  auto body_a = flight::physics3d::find_physics3_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), joint->body_a);
-  auto body_b = flight::physics3d::find_physics3_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), joint->body_b);
+  auto body_a = flight::physics3d::find_physics_3d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), joint->body_a);
+  auto body_b = flight::physics3d::find_physics_3d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), joint->body_b);
   if ((!body_a.has_value() || !body_b.has_value())) {
     flight::physics3d::clear_joint_solve(joint);
     return;
@@ -105,7 +105,7 @@ inline flight::Ref<flight::types::Physics3DJointSolver> physics3_dball_and_socke
   if (!flight::physics3d::get_joint_solve_state(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>>>(joint)).has_value()) {
     return false;
   }
-  flight::physics3d::clear_physics3_djoint_reaction(out);
+  flight::physics3d::clear_physics_3d_joint_reaction(out);
   write_point_block_force(joint, inverse_dt, out);
   return true;
 }}; auto object_member_solve = [](flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<flight::types::Physics3DJoint> joint, double ignored_callback_argument) {
@@ -114,15 +114,15 @@ inline flight::Ref<flight::types::Physics3DJointSolver> physics3_dball_and_socke
   if (!state.has_value()) {
     return;
   }
-  auto body_a = flight::physics3d::find_physics3_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), joint->body_a);
-  auto body_b = flight::physics3d::find_physics3_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), joint->body_b);
+  auto body_a = flight::physics3d::find_physics_3d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), joint->body_a);
+  auto body_b = flight::physics3d::find_physics_3d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), joint->body_b);
   if ((!body_a.has_value() || !body_b.has_value())) {
     return;
   }
   flight::physics3d::solve_point_block(body_a.value(), body_b.value(), joint, state.value());
 }; auto object_member_warm_start = std::optional<std::function<void(flight::Ref<flight::types::Physics3DWorld>, flight::Ref<flight::types::Physics3DJoint>)>>{[](flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<flight::types::Physics3DJoint> joint) {
-  auto body_a = flight::physics3d::find_physics3_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), joint->body_a);
-  auto body_b = flight::physics3d::find_physics3_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), joint->body_b);
+  auto body_a = flight::physics3d::find_physics_3d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), joint->body_a);
+  auto body_b = flight::physics3d::find_physics_3d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), joint->body_b);
   if ((!body_a.has_value() || !body_b.has_value())) {
     return;
   }
@@ -141,7 +141,7 @@ inline flight::Array<double> soft_row_scratch = flight::Array<double>{0.0, 0.0, 
 
 inline void write_limit_row_parameters(flight::Array<double> state, double mass_slot, double gamma_slot, double bias_slot, double row_mass, bool soft, double frequency_hz, double damping_ratio, double dt) {
   if ((soft && (frequency_hz > 0.0))) {
-    flight::physics3d::write_physics3_dsoft_row_parameters(row_mass, frequency_hz, damping_ratio, dt, (1.0 / dt), soft_row_scratch);
+    flight::physics3d::write_physics_3d_soft_row_parameters(row_mass, frequency_hz, damping_ratio, dt, (1.0 / dt), soft_row_scratch);
     (state.element(mass_slot) = soft_row_scratch.element(0.0));
     (state.element(bias_slot) = soft_row_scratch.element(1.0));
     (state.element(gamma_slot) = soft_row_scratch.element(2.0));

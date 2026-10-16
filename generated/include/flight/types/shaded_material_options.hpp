@@ -27,11 +27,11 @@ namespace flight::types {
 struct ShadedMaterialOptions;
 } // namespace flight::types
 
-#include <flight/types/material3_doptions.hpp>
+#include <flight/types/material_3d_options.hpp>
 #include <flight/types/modifier_value.hpp>
 #include <flight/types/shaded_material.hpp>
 #include <flight/types/texture.hpp>
-#include <flight/types/material3_d.hpp>
+#include <flight/types/material_3d.hpp>
 #include <flight/types/blend_mode.hpp>
 
 namespace flight::types {

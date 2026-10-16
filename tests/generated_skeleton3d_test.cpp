@@ -49,7 +49,7 @@ auto readonly_view(const Pointer& value) {
 }
 
 void invalidate_pose(const flight::Ref<types::Node3D>& node) {
-  auto runtime = scene3d::get_node3_druntime(node);
+  auto runtime = scene3d::get_node_3d_runtime(node);
   runtime->local_transform_id =
       flight::unsigned_right_shift(runtime->local_transform_id + 1.0, 0.0);
 }
@@ -92,7 +92,7 @@ void append_normal_identity(flight::Float32Array& values, double base) {
 flight::Ref<types::Skeleton3D> create_named_skeleton(
     flight::Array<flight::Ref<types::Node3D>> joints,
     flight::Array<flight::String> names) {
-  return skeleton3d::create_skeleton3_d(
+  return skeleton3d::create_skeleton_3d(
       std::move(joints), std::nullopt,
       std::optional<std::optional<flight::Array<flight::String>>>{
           std::optional<flight::Array<flight::String>>{std::move(names)}});
@@ -149,7 +149,7 @@ flight::Float32Array one_vertex(double x = 1.0, double y = 0.0,
 flight::Ref<types::Mesh> skinned_mesh(
     const flight::Ref<types::MeshGeometry>& geometry) {
   auto runtime = flight::make_ref<types::MeshRuntime>();
-  scene3d::initialize_node3_druntime<types::MeshRuntime>(runtime);
+  scene3d::initialize_node_3d_runtime<types::MeshRuntime>(runtime);
   runtime->deformed_local_bounds = decltype(runtime->deformed_local_bounds){
       std::in_place_type<flight::Undefined>, flight::undefined};
   return flight::make_ref<types::Mesh>(types::Mesh{
@@ -204,9 +204,9 @@ flight::Ref<types::MeshSkinBindPose> bind_pose(
 }
 
 void skeleton_construction_lookup_and_failures() {
-  const auto root = scene3d::create_node3_d();
-  const auto child = scene3d::create_node3_d();
-  const auto leaf = scene3d::create_node3_d();
+  const auto root = scene3d::create_node_3d();
+  const auto child = scene3d::create_node_3d();
+  const auto leaf = scene3d::create_node_3d();
   set_translation(root, 1.0, 0.0, 0.0);
   set_translation(child, 0.0, 2.0, 0.0);
   set_translation(leaf, 0.0, 0.0, 3.0);
@@ -223,30 +223,30 @@ void skeleton_construction_lookup_and_failures() {
   bool core = skeleton->inverse_bind_matrices.size() == 48 &&
               skeleton->joint_matrices.size() == 48 &&
               skeleton->normal_matrices.size() == 36 &&
-              skeleton3d::get_skeleton3_djoint_index_by_name(
+              skeleton3d::get_skeleton_3d_joint_index_by_name(
                   readonly_view(skeleton), flight::String("child")) == 1.0 &&
-              skeleton3d::get_skeleton3_djoint_index_by_name(
+              skeleton3d::get_skeleton_3d_joint_index_by_name(
                   readonly_view(skeleton), flight::String("missing")) == -1.0;
 
   const auto world = geometry::create_matrix4();
-  core = core && skeleton3d::get_skeleton3_djoint_world_matrix_by_name(
+  core = core && skeleton3d::get_skeleton_3d_joint_world_matrix_by_name(
                      world, readonly_view(skeleton), flight::String("leaf")) &&
          close(world->m.get_index(12.0), 1.0) &&
          close(world->m.get_index(13.0), 2.0) &&
          close(world->m.get_index(14.0), 3.0);
   world->m.set_index(12.0, 77.0);
-  core = core && !skeleton3d::get_skeleton3_djoint_world_matrix(
+  core = core && !skeleton3d::get_skeleton_3d_joint_world_matrix(
                      world, readonly_view(skeleton), -1.0) &&
-         !skeleton3d::get_skeleton3_djoint_world_matrix(
+         !skeleton3d::get_skeleton_3d_joint_world_matrix(
              world, readonly_view(skeleton), 3.0) &&
          world->m.get_index(12.0) == 77.0 &&
-         !skeleton3d::validate_skeleton3_d(readonly_view(skeleton)).has_value();
+         !skeleton3d::validate_skeleton_3d(readonly_view(skeleton)).has_value();
 
   const auto inverse_owner = skeleton->inverse_bind_matrices.buffer;
   const auto joint_owner = skeleton->joints.identity();
   skeleton->inverse_bind_matrices = flight::Float32Array(16.0);
   const auto diagnostic =
-      skeleton3d::validate_skeleton3_d(readonly_view(skeleton));
+      skeleton3d::validate_skeleton_3d(readonly_view(skeleton));
   core = core && diagnostic.has_value() &&
          diagnostic.value()->joint_count == 3.0 &&
          diagnostic.value()->expected_inverse_bind_matrices_length == 48.0 &&
@@ -254,13 +254,13 @@ void skeleton_construction_lookup_and_failures() {
          diagnostic.value()->message.includes(flight::String("does not match")) &&
          skeleton->joints.identity() == joint_owner;
   skeleton->inverse_bind_matrices = flight::Float32Array(48.0);
-  skeleton3d::set_skeleton3_dbind_pose(readonly_view(skeleton));
+  skeleton3d::set_skeleton_3d_bind_pose(readonly_view(skeleton));
   core = core && skeleton->inverse_bind_matrices.buffer != inverse_owner;
 
-  const auto unnamed = skeleton3d::create_skeleton3_d(
-      flight::Array<flight::Ref<types::Node3D>>{scene3d::create_node3_d()});
+  const auto unnamed = skeleton3d::create_skeleton_3d(
+      flight::Array<flight::Ref<types::Node3D>>{scene3d::create_node_3d()});
   core = core && std::holds_alternative<flight::Null>(unnamed->names) &&
-         skeleton3d::get_skeleton3_djoint_index_by_name(
+         skeleton3d::get_skeleton_3d_joint_index_by_name(
              readonly_view(unnamed), flight::String("root")) == -1.0;
 
   if (inject_failure_mutation) core = false;
@@ -269,10 +269,10 @@ void skeleton_construction_lookup_and_failures() {
 }
 
 void clone_hierarchy_order_and_ownership() {
-  const auto external = scene3d::create_node3_d();
-  const auto root = scene3d::create_node3_d();
-  const auto child = scene3d::create_node3_d();
-  const auto leaf = scene3d::create_node3_d();
+  const auto external = scene3d::create_node_3d();
+  const auto root = scene3d::create_node_3d();
+  const auto child = scene3d::create_node_3d();
+  const auto leaf = scene3d::create_node_3d();
   set_translation(root, 1.0, 0.0, 0.0);
   set_translation(child, 0.0, 2.0, 0.0);
   set_translation(leaf, 0.0, 0.0, 3.0);
@@ -288,11 +288,11 @@ void clone_hierarchy_order_and_ownership() {
                                     flight::String("child"),
                                     flight::String("leaf")});
   std::vector<double> callback_order;
-  const auto clone = skeleton3d::clone_skeleton3_djoint_hierarchy(
+  const auto clone = skeleton3d::clone_skeleton_3d_joint_hierarchy(
       readonly_view(source),
       [&](skeleton3d::ReadonlyNode3D joint, double index) {
         callback_order.push_back(index);
-        const auto out = scene3d::create_node3_d();
+        const auto out = scene3d::create_node_3d();
         const auto position =
             flight::row_get<flight::RowKey<"position">>(joint);
         set_translation(out, position->x, position->y, position->z);
@@ -328,8 +328,8 @@ void clone_hierarchy_order_and_ownership() {
           std::get<flight::Array<flight::String>>(source->names).identity();
 
   set_translation(clone->joints.element(0.0), 6.0, 0.0, 0.0);
-  skeleton3d::compute_skeleton3_djoint_matrices(readonly_view(source));
-  skeleton3d::compute_skeleton3_djoint_matrices(readonly_view(clone));
+  skeleton3d::compute_skeleton_3d_joint_matrices(readonly_view(source));
+  skeleton3d::compute_skeleton_3d_joint_matrices(readonly_view(clone));
   ownership = ownership &&
               close(source->joint_matrices.get_index(12.0), 0.0) &&
               close(source->joint_matrices.get_index(28.0), 0.0) &&
@@ -337,11 +337,11 @@ void clone_hierarchy_order_and_ownership() {
               close(clone->joint_matrices.get_index(28.0), 5.0) &&
               close(clone->joint_matrices.get_index(44.0), 5.0);
 
-  const auto shallow = skeleton3d::clone_skeleton3_d(readonly_view(source));
+  const auto shallow = skeleton3d::clone_skeleton_3d(readonly_view(source));
   ownership = ownership && shallow != source &&
               shallow->joints.identity() != source->joints.identity() &&
               shallow->joints.element(0.0) == source->joints.element(0.0) &&
-              skeleton3d::equals_skeleton3_d(readonly_view(source),
+              skeleton3d::equals_skeleton_3d(readonly_view(source),
                                              readonly_view(shallow));
   shallow->inverse_bind_matrices.set_index(0.0, 9.0);
   std::get<flight::Array<flight::String>>(shallow->names).element(0.0) =
@@ -350,7 +350,7 @@ void clone_hierarchy_order_and_ownership() {
       ownership && source->inverse_bind_matrices.get_index(0.0) != 9.0 &&
       std::get<flight::Array<flight::String>>(source->names).element(0.0) ==
           flight::String("root") &&
-      !skeleton3d::equals_skeleton3_d(readonly_view(source),
+      !skeleton3d::equals_skeleton_3d(readonly_view(source),
                                      readonly_view(shallow));
 
   if (inject_hierarchy_order_mutation) hierarchy_order = false;
@@ -362,16 +362,16 @@ void clone_hierarchy_order_and_ownership() {
 }
 
 void bind_pose_palette_and_guard() {
-  const auto root = scene3d::create_node3_d();
-  const auto child = scene3d::create_node3_d();
+  const auto root = scene3d::create_node_3d();
+  const auto child = scene3d::create_node_3d();
   scene3d::add_node3_dchild_at(scene3d::node3_dview(root),
                               scene3d::node3_dview(child), 0.0);
-  const auto skeleton = skeleton3d::create_skeleton3_d(
+  const auto skeleton = skeleton3d::create_skeleton_3d(
       flight::Array<flight::Ref<types::Node3D>>{root, child});
   set_translation(root, 4.0, 0.0, 0.0);
   set_translation(child, 0.0, 3.0, 0.0);
   set_scale(root, 2.0, 1.0, 1.0);
-  skeleton3d::compute_skeleton3_djoint_matrices(readonly_view(skeleton));
+  skeleton3d::compute_skeleton_3d_joint_matrices(readonly_view(skeleton));
 
   bool palette = close(skeleton->joint_matrices.get_index(0.0), 2.0) &&
                  close(skeleton->joint_matrices.get_index(12.0), 4.0) &&
@@ -384,21 +384,21 @@ void bind_pose_palette_and_guard() {
                  close(skeleton->normal_matrices.get_index(12.0), 0.5) &&
                  skeleton->normal_matrices.get_index(15.0) == 0.0;
 
-  const auto collapsed = scene3d::create_node3_d();
-  const auto healthy = scene3d::create_node3_d();
-  const auto guarded = skeleton3d::create_skeleton3_d(
+  const auto collapsed = scene3d::create_node_3d();
+  const auto healthy = scene3d::create_node_3d();
+  const auto guarded = skeleton3d::create_skeleton_3d(
       flight::Array<flight::Ref<types::Node3D>>{collapsed, healthy});
   set_scale(collapsed, 0.0, 0.0, 0.0);
   set_translation(healthy, 3.0, 0.0, 0.0);
   std::vector<double> guarded_indices;
-  skeleton3d::set_skeleton3_dbind_pose_guard(
+  skeleton3d::set_skeleton_3d_bind_pose_guard(
       std::optional<std::function<void(skeleton3d::ReadonlySkeleton3D,
                                        double)>>{
           [&](skeleton3d::ReadonlySkeleton3D, double index) {
             guarded_indices.push_back(index);
           }});
-  skeleton3d::set_skeleton3_dbind_pose(readonly_view(guarded));
-  skeleton3d::set_skeleton3_dbind_pose_guard(std::nullopt);
+  skeleton3d::set_skeleton_3d_bind_pose(readonly_view(guarded));
+  skeleton3d::set_skeleton_3d_bind_pose_guard(std::nullopt);
   palette = palette && guarded_indices == std::vector<double>({0.0}) &&
             close(guarded->inverse_bind_matrices.get_index(0.0), 1.0) &&
             close(guarded->inverse_bind_matrices.get_index(5.0), 1.0) &&
@@ -408,7 +408,7 @@ void bind_pose_palette_and_guard() {
   for (double value : guarded->inverse_bind_matrices) {
     palette = palette && std::isfinite(value);
   }
-  skeleton3d::compute_skeleton3_djoint_matrices(readonly_view(guarded));
+  skeleton3d::compute_skeleton_3d_joint_matrices(readonly_view(guarded));
   palette = palette && close(guarded->joint_matrices.get_index(28.0), 0.0);
 
   if (inject_palette_mutation) palette = false;
@@ -504,11 +504,11 @@ void geometry_capture_deformation_and_runtime_slots() {
                bind->weights.get_index(0.0) == 1.0 &&
                bind->positions.buffer != geometry->vertices.buffer;
 
-  const auto joint = scene3d::create_node3_d();
-  const auto skeleton = skeleton3d::create_skeleton3_d(
+  const auto joint = scene3d::create_node_3d();
+  const auto skeleton = skeleton3d::create_skeleton_3d(
       flight::Array<flight::Ref<types::Node3D>>{joint});
   set_translation(joint, 0.0, 5.0, 0.0);
-  skeleton3d::compute_skeleton3_djoint_matrices(readonly_view(skeleton));
+  skeleton3d::compute_skeleton_3d_joint_matrices(readonly_view(skeleton));
   const double version = geometry->version;
   skeleton3d::skin_mesh_geometry(geometry, readonly_view(skeleton),
                                  readonly_view(bind));
@@ -578,8 +578,8 @@ void morph_then_skin_composition_order() {
   });
   target->morph = decltype(target->morph){
       std::in_place_type<flight::Ref<types::MeshMorph>>, morph};
-  const auto joint = scene3d::create_node3_d();
-  const auto skeleton = skeleton3d::create_skeleton3_d(
+  const auto joint = scene3d::create_node_3d();
+  const auto skeleton = skeleton3d::create_skeleton_3d(
       flight::Array<flight::Ref<types::Node3D>>{joint});
   attach_skin(target, skeleton);
   set_translation(joint, 0.0, 5.0, 0.0);
@@ -609,9 +609,9 @@ void skin_bounds_exact_conservative_and_empty() {
                            1.0F, 0.0F, 0.0F, 0.0F,
                            1.0F, 0.0F, 0.0F, 0.0F,
                            1.0F, 0.0F, 0.0F, 0.0F});
-  const auto skeleton = skeleton3d::create_skeleton3_d(
+  const auto skeleton = skeleton3d::create_skeleton_3d(
       flight::Array<flight::Ref<types::Node3D>>{
-          scene3d::create_node3_d(), scene3d::create_node3_d()});
+          scene3d::create_node_3d(), scene3d::create_node_3d()});
   append_identity(skeleton->joint_matrices, 0.0);
   append_identity(skeleton->joint_matrices, 16.0);
   skeleton->joint_matrices.set_index(28.0, 10.0);
@@ -667,8 +667,8 @@ void skin_bounds_exact_conservative_and_empty() {
 }
 
 void prepare_mesh_and_scene_state() {
-  const auto joint = scene3d::create_node3_d();
-  const auto skeleton = skeleton3d::create_skeleton3_d(
+  const auto joint = scene3d::create_node_3d();
+  const auto skeleton = skeleton3d::create_skeleton_3d(
       flight::Array<flight::Ref<types::Node3D>>{joint});
   set_translation(joint, 0.0, 5.0, 0.0);
   const auto target = skinned_mesh(skinned_geometry(one_vertex()));
@@ -698,21 +698,21 @@ void prepare_mesh_and_scene_state() {
              std::holds_alternative<flight::Undefined>(
                  rigid->entity_runtime_key.value()->deformed_local_bounds);
 
-  const auto root = scene3d::create_node3_d();
+  const auto root = scene3d::create_node_3d();
   scene3d::add_node3_dchild_at(scene3d::node3_dview(root),
                               scene3d::node3_dview(target), 0.0);
-  const auto disabled = scene3d::create_node3_d();
+  const auto disabled = scene3d::create_node_3d();
   disabled->enabled = false;
   const auto hidden = skinned_mesh(skinned_geometry(one_vertex()));
-  attach_skin(hidden, skeleton3d::create_skeleton3_d(
+  attach_skin(hidden, skeleton3d::create_skeleton_3d(
                           flight::Array<flight::Ref<types::Node3D>>{
-                              scene3d::create_node3_d()}));
+                              scene3d::create_node_3d()}));
   scene3d::add_node3_dchild_at(scene3d::node3_dview(disabled),
                               scene3d::node3_dview(hidden), 0.0);
   scene3d::add_node3_dchild_at(scene3d::node3_dview(root),
                               scene3d::node3_dview(disabled), 1.0);
   mesh::set_mesh_geometry_skin_bind_pose(target->geometry, std::nullopt);
-  skeleton3d::prepare_scene3_dskinning(root);
+  skeleton3d::prepare_scene_3d_skinning(root);
   prepared = prepared &&
              mesh::get_mesh_geometry_skin_bind_pose(target->geometry)
                  .has_value() &&
@@ -727,15 +727,15 @@ void prepare_mesh_and_scene_state() {
 }
 
 void guard_reset_and_disposal() {
-  skeleton3d::disable_skeleton3_dguards();
-  bool lifecycle = !skeleton3d::are_skeleton3_dguards_enabled();
-  skeleton3d::enable_skeleton3_dguards();
-  lifecycle = lifecycle && skeleton3d::are_skeleton3_dguards_enabled();
-  skeleton3d::disable_skeleton3_dguards();
-  lifecycle = lifecycle && !skeleton3d::are_skeleton3_dguards_enabled();
+  skeleton3d::disable_skeleton_3d_guards();
+  bool lifecycle = !skeleton3d::are_skeleton_3d_guards_enabled();
+  skeleton3d::enable_skeleton_3d_guards();
+  lifecycle = lifecycle && skeleton3d::are_skeleton_3d_guards_enabled();
+  skeleton3d::disable_skeleton_3d_guards();
+  lifecycle = lifecycle && !skeleton3d::are_skeleton_3d_guards_enabled();
 
-  const auto first = scene3d::create_node3_d();
-  const auto second = scene3d::create_node3_d();
+  const auto first = scene3d::create_node_3d();
+  const auto second = scene3d::create_node_3d();
   const auto skeleton = create_named_skeleton(
       flight::Array<flight::Ref<types::Node3D>>{first, second},
       flight::Array<flight::String>{flight::String("a"),
@@ -743,7 +743,7 @@ void guard_reset_and_disposal() {
   const auto inverse_owner = skeleton->inverse_bind_matrices.buffer;
   const auto palette_owner = skeleton->joint_matrices.buffer;
   const auto normal_owner = skeleton->normal_matrices.buffer;
-  skeleton3d::dispose_skeleton3_d(skeleton);
+  skeleton3d::dispose_skeleton_3d(skeleton);
   lifecycle = lifecycle && skeleton->joints.empty() &&
               std::holds_alternative<flight::Null>(skeleton->names) &&
               skeleton->inverse_bind_matrices.buffer == inverse_owner &&
@@ -752,7 +752,7 @@ void guard_reset_and_disposal() {
               skeleton->inverse_bind_matrices.size() == 32 &&
               skeleton->joint_matrices.size() == 32 &&
               skeleton->normal_matrices.size() == 24;
-  skeleton3d::dispose_skeleton3_d(skeleton);
+  skeleton3d::dispose_skeleton_3d(skeleton);
   lifecycle = lifecycle && skeleton->joints.empty() &&
               std::holds_alternative<flight::Null>(skeleton->names);
 

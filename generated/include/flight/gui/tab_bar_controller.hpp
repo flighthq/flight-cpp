@@ -39,7 +39,7 @@ struct TabBarControllerFields;
 #include <flight/types/gui_controller.hpp>
 #include <flight/types/interaction_signals.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/node_interactive_state_binding.hpp>
 #include <flight/types/signal.hpp>
 #include <flight/types/tab_bar_controller.hpp>

@@ -72,7 +72,7 @@ struct NodeTraits : public flight::ReferenceEnabled {
 
 inline const flight::String node_kind = flight::String("Node");
 
-inline const flight::Symbol null_scene3_d = flight::Symbol(flight::String("NullScene3D"));
+inline const flight::Symbol null_scene_3d = flight::Symbol(flight::String("NullScene3D"));
 
 template <typename Traits>
 struct Node : public flight::ReferenceEnabled {

@@ -11,7 +11,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/node_signals.hpp>
 
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 
 #include <flight/types/entity.hpp>
 
@@ -35,7 +35,7 @@ using flight::types::Node3D;
 using flight::types::NodeSignals;
 using flight::types::entity_runtime_key;
 
-using flight::types::node3_dkind;
+using flight::types::node_3d_kind;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_ENTITY_RUNTIME_KEY_49FD6F1D74D9DA19
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_ENTITY_RUNTIME_KEY_49FD6F1D74D9DA19
@@ -57,7 +57,7 @@ struct enabled_name_alpha_visible_7311a0ee4a0ea19a : public flight::ReferenceEna
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_ENABLED_NAME_ALPHA_VISIBLE_7311A0EE4A0EA19A
 
 template <typename Runtime>
-inline void initialize_node3_d(flight::StructuralRef<flight::RowMerge<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Node3D>>>, flight::RowOf<flight::Ref<entity_runtime_key_49fd6f1d74d9da19<Runtime>>>>> out, flight::String kind, std::optional<flight::Ref<enabled_name_alpha_visible_7311a0ee4a0ea19a<Runtime>>> obj, flight::types::NodeRuntimeFactory<Runtime> create_runtime) {
+inline void initialize_node_3d(flight::StructuralRef<flight::RowMerge<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Node3D>>>, flight::RowOf<flight::Ref<entity_runtime_key_49fd6f1d74d9da19<Runtime>>>>> out, flight::String kind, std::optional<flight::Ref<enabled_name_alpha_visible_7311a0ee4a0ea19a<Runtime>>> obj, flight::types::NodeRuntimeFactory<Runtime> create_runtime) {
   const bool enabled = ([&]() -> bool { auto nullish_coalesce_left = ([&]() -> std::optional<bool> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->enabled; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return true; }());
   const std::optional<flight::String> name = ([&]() -> std::optional<flight::String> { auto nullish_coalesce_left = ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return optional_chain_receiver.value()->name; }()); if (const auto* alternative = std::get_if<flight::String>(&nullish_coalesce_left)) return std::optional<flight::String>{*alternative}; return std::nullopt; }());
   flight::row_set(out, flight::types::entity_runtime_key, create_runtime(std::nullopt));
@@ -66,13 +66,13 @@ inline void initialize_node3_d(flight::StructuralRef<flight::RowMerge<flight::Ro
   flight::row_set<flight::RowKey<"kind">>(out, kind);
   flight::row_set<flight::RowKey<"name">>(out, name);
   flight::node::init_appearance_trait(out, obj);
-  flight::node::init_transform3_dtrait(out, std::nullopt);
+  flight::node::init_transform_3d_trait(out, std::nullopt);
 }
 
-inline flight::Ref<flight::types::Node3DRuntime> create_node3_druntime() {
-  flight::Ref<flight::types::Node3DRuntime> out = ([&]() { auto object_member_local_matrix4 = std::nullopt; auto object_member_local_matrix4_detached = false; auto object_member_traits = std::optional<flight::Symbol>{flight::types::node3_dtraits_key}; auto object_member_world_alpha = std::nullopt; auto object_member_world_alpha_using_appearance_id = -1.0; auto object_member_world_alpha_using_parent_appearance_id = -1.0; auto object_member_world_appearance_id = 0.0; auto object_member_world_matrix4 = std::nullopt; return flight::make_ref<flight::types::Node3DRuntime>(flight::types::Node3DRuntime{.traits = object_member_traits, .world_alpha = object_member_world_alpha, .world_alpha_using_appearance_id = object_member_world_alpha_using_appearance_id, .world_alpha_using_parent_appearance_id = object_member_world_alpha_using_parent_appearance_id, .world_appearance_id = object_member_world_appearance_id, .local_matrix4 = object_member_local_matrix4, .local_matrix4_detached = object_member_local_matrix4_detached, .world_matrix4 = object_member_world_matrix4}); }());
+inline flight::Ref<flight::types::Node3DRuntime> create_node_3d_runtime() {
+  flight::Ref<flight::types::Node3DRuntime> out = ([&]() { auto object_member_local_matrix4 = std::nullopt; auto object_member_local_matrix4_detached = false; auto object_member_traits = std::optional<flight::Symbol>{flight::types::node_3d_traits_key}; auto object_member_world_alpha = std::nullopt; auto object_member_world_alpha_using_appearance_id = -1.0; auto object_member_world_alpha_using_parent_appearance_id = -1.0; auto object_member_world_appearance_id = 0.0; auto object_member_world_matrix4 = std::nullopt; return flight::make_ref<flight::types::Node3DRuntime>(flight::types::Node3DRuntime{.traits = object_member_traits, .world_alpha = object_member_world_alpha, .world_alpha_using_appearance_id = object_member_world_alpha_using_appearance_id, .world_alpha_using_parent_appearance_id = object_member_world_alpha_using_parent_appearance_id, .world_appearance_id = object_member_world_appearance_id, .local_matrix4 = object_member_local_matrix4, .local_matrix4_detached = object_member_local_matrix4_detached, .world_matrix4 = object_member_world_matrix4}); }());
   flight::node::init_appearance_runtime_trait(out);
-  flight::node::init_transform3_druntime_trait(out);
+  flight::node::init_transform_3d_runtime_trait(out);
   return out;
 }
 
@@ -86,28 +86,28 @@ struct enabled_name_alpha_visible_6eed4c0384cbbf3f : public flight::ReferenceEna
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_ENABLED_NAME_ALPHA_VISIBLE_6EED4C0384CBBF3F
 
-inline flight::Ref<flight::types::Node3D> create_node3_d(std::optional<flight::String> kind = std::nullopt, std::optional<flight::Ref<enabled_name_alpha_visible_6eed4c0384cbbf3f>> obj = std::nullopt) {
-  kind = kind.value_or(flight::types::node3_dkind);
+inline flight::Ref<flight::types::Node3D> create_node_3d(std::optional<flight::String> kind = std::nullopt, std::optional<flight::Ref<enabled_name_alpha_visible_6eed4c0384cbbf3f>> obj = std::nullopt) {
+  kind = kind.value_or(flight::types::node_3d_kind);
   flight::types::EntityConstruction<flight::Ref<flight::types::Node3D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Node3D>>();
-  initialize_node3_d<flight::Ref<flight::types::Node3DRuntime>>(out, kind.value(), obj, [](std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::Node3DRuntime>>>>>> contextual_callable_argument0) -> flight::Ref<flight::types::Node3DRuntime> { return create_node3_druntime(); });
+  initialize_node_3d<flight::Ref<flight::types::Node3DRuntime>>(out, kind.value(), obj, [](std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::Node3DRuntime>>>>>> contextual_callable_argument0) -> flight::Ref<flight::types::Node3DRuntime> { return create_node_3d_runtime(); });
   return flight::entity::finish_entity<flight::Ref<flight::types::Node3D>>(out);
 }
 
-inline flight::Ref<flight::types::NodeSignals> enable_node3_dsignals(flight::Ref<flight::types::Node3D> source) {
+inline flight::Ref<flight::types::NodeSignals> enable_node_3d_signals(flight::Ref<flight::types::Node3D> source) {
   return flight::node::enable_node_signals<flight::Ref<flight::types::NodeTraits>>(flight::structural_ref_cast<flight::types::NodeOf<flight::Ref<flight::types::NodeTraits>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Node3D>>>>(source)));
 }
 
-inline flight::Ref<flight::types::Node3DRuntime> get_node3_druntime(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>> source) {
+inline flight::Ref<flight::types::Node3DRuntime> get_node_3d_runtime(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>> source) {
   return flight::row_get<std::optional<flight::Ref<flight::types::Node3DRuntime>>>(source, flight::types::entity_runtime_key).value();
 }
 
-inline std::optional<flight::Ref<flight::types::NodeSignals>> get_node3_dsignals(flight::Ref<flight::types::Node3D> source) {
+inline std::optional<flight::Ref<flight::types::NodeSignals>> get_node_3d_signals(flight::Ref<flight::types::Node3D> source) {
   return flight::node::get_node_signals<flight::Ref<flight::types::NodeTraits>>(source);
 }
 
-inline bool is_node3_d(std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node3DTraits>>> source) {
+inline bool is_node_3d(std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node3DTraits>>> source) {
   auto runtime = source->entity_runtime_key;
-  return (runtime.has_value() && (runtime.value()->traits == flight::types::node3_dtraits_key));
+  return (runtime.has_value() && (runtime.value()->traits == flight::types::node_3d_traits_key));
 }
 
 } // namespace flight::scene3d

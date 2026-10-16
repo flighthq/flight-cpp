@@ -40,7 +40,7 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/types/entity.hpp>
 #include <flight/types/lottie_document.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/non_entity_create_result.hpp>
 
 namespace flight::scene2d_formats {

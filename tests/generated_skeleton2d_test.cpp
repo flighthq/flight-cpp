@@ -13,7 +13,7 @@
 // inherit modes are built here from the same four flags the presets declare.
 #include <flight/geometry/matrix.hpp>
 #include <flight/skeleton2d/skeleton2d.hpp>
-#include <flight/skeleton2d/slot_deform2_d.hpp>
+#include <flight/skeleton2d/slot_deform_2d.hpp>
 
 #include <cmath>
 #include <iostream>
@@ -87,14 +87,14 @@ flight::Array<flight::Ref<Bone2D>> bones(std::vector<BoneSpec> specs) {
 
 flight::Ref<flight::types::Matrix> world(const flight::Ref<Skeleton2D>& s, double index) {
   auto out = flight::geometry::create_matrix();
-  sk::get_skeleton2_dbone_world_matrix(out, view(s), index);
+  sk::get_skeleton_2d_bone_world_matrix(out, view(s), index);
   return out;
 }
 
 bool slotsAreNull(const flight::Ref<Skeleton2D>& s) { return std::holds_alternative<flight::Null>(s->slots); }
 
 void construction() {
-  auto s = sk::create_skeleton2_d(bones({{}, {.parent = 0}}));
+  auto s = sk::create_skeleton_2d(bones({{}, {.parent = 0}}));
   check(s->world_matrices.size() == 12 && s->inverse_bind_matrices.size() == 12 && s->bone_matrices.size() == 12,
         "buffers are sized 6 floats per bone");
   check(slotsAreNull(s), "a pure bone rig stores null slots, not undefined (defaulted slots)");
@@ -104,68 +104,68 @@ void construction() {
   auto slot = flight::make_ref<Slot2D>();
   slot->bone_index = 0;
   slots.push(slot);
-  auto drawable = sk::create_skeleton2_d(bones({{}}), slots);
+  auto drawable = sk::create_skeleton_2d(bones({{}}), slots);
   check(std::holds_alternative<flight::Array<flight::Ref<Slot2D>>>(drawable->slots) &&
             std::get<flight::Array<flight::Ref<Slot2D>>>(drawable->slots).element(0) == slot,
         "passed slots are stored with their identity");
-  auto explicitNull = sk::create_skeleton2_d(bones({{}}), std::optional<flight::Array<flight::Ref<Slot2D>>>{});
+  auto explicitNull = sk::create_skeleton_2d(bones({{}}), std::optional<flight::Array<flight::Ref<Slot2D>>>{});
   check(slotsAreNull(explicitNull), "explicit null slots store null");
 }
 
 void transforms() {
   {
-    auto s = sk::create_skeleton2_d(bones({{.x = 10, .rotation = 90}}));
-    sk::compute_skeleton2_dworld_transforms(view(s));
+    auto s = sk::create_skeleton_2d(bones({{.x = 10, .rotation = 90}}));
+    sk::compute_skeleton_2d_world_transforms(view(s));
     const auto& w = s->world_matrices;
     check(close(w[0], 0) && close(w[1], 1) && close(w[2], -1) && close(w[3], 0) && close(w[4], 10) && close(w[5], 0),
           "a root rotated 90 degrees at (10, 0)");
   }
   {
-    auto s = sk::create_skeleton2_d(bones({{.x = 10, .rotation = 90}, {.x = 2, .parent = 0}}));
-    sk::compute_skeleton2_dworld_transforms(view(s));
+    auto s = sk::create_skeleton_2d(bones({{.x = 10, .rotation = 90}, {.x = 2, .parent = 0}}));
+    sk::compute_skeleton_2d_world_transforms(view(s));
     auto m = world(s, 1);
     check(close(m->tx, 10) && close(m->ty, 2), "a child at parent x local");
   }
   {
-    auto s = sk::create_skeleton2_d(bones({{.rotation = 90}, {.x = 3, .parent = 0, .transform = onlyTranslation()}}));
-    sk::compute_skeleton2_dworld_transforms(view(s));
+    auto s = sk::create_skeleton_2d(bones({{.rotation = 90}, {.x = 3, .parent = 0, .transform = onlyTranslation()}}));
+    sk::compute_skeleton_2d_world_transforms(view(s));
     auto m = world(s, 1);
     check(close(m->a, 1) && close(m->b, 0) && close(m->c, 0) && close(m->d, 1), "OnlyTranslation keeps its own basis");
     check(close(m->tx, 0) && close(m->ty, 3), "OnlyTranslation follows the parent position");
   }
   {
-    auto s = sk::create_skeleton2_d(bones({{.rotation = 90, .scaleX = 2, .scaleY = 2}, {.x = 1, .parent = 0, .transform = noScale()}}));
-    sk::compute_skeleton2_dworld_transforms(view(s));
+    auto s = sk::create_skeleton_2d(bones({{.rotation = 90, .scaleX = 2, .scaleY = 2}, {.x = 1, .parent = 0, .transform = noScale()}}));
+    sk::compute_skeleton_2d_world_transforms(view(s));
     auto m = world(s, 1);
     check(close(std::hypot(m->a, m->b), 1) && close(m->a, 0) && close(m->b, 1), "NoScale keeps the parent rotation, strips its scale");
   }
   {
-    auto s = sk::create_skeleton2_d(bones({{}}));
+    auto s = sk::create_skeleton_2d(bones({{}}));
     auto out = flight::geometry::create_matrix(7, 7, 7, 7, 7, 7);
-    check(!sk::get_skeleton2_dbone_world_matrix(out, view(s), 3) && out->a == 7, "an out-of-range bone returns false and leaves out alone");
-    sk::compute_skeleton2_dbone_world_transform(view(s), 5);
+    check(!sk::get_skeleton_2d_bone_world_matrix(out, view(s), 3) && out->a == 7, "an out-of-range bone returns false and leaves out alone");
+    sk::compute_skeleton_2d_bone_world_transform(view(s), 5);
     check(s->world_matrices.size() == 6, "an out-of-range index writes nothing past the buffer");
   }
 }
 
 void lookup_clone_equality() {
-  auto s = sk::create_skeleton2_d(bones({{.name = "root"}, {.parent = 0, .name = "arm"}}));
-  check(sk::get_skeleton2_dbone_index_by_name(view(s), flight::String("arm")) == 1, "finds a named bone");
-  check(sk::get_skeleton2_dbone_index_by_name(view(s), flight::String("leg")) == -1, "-1 for a miss");
+  auto s = sk::create_skeleton_2d(bones({{.name = "root"}, {.parent = 0, .name = "arm"}}));
+  check(sk::get_skeleton_2d_bone_index_by_name(view(s), flight::String("arm")) == 1, "finds a named bone");
+  check(sk::get_skeleton_2d_bone_index_by_name(view(s), flight::String("leg")) == -1, "-1 for a miss");
 
   flight::Array<flight::Ref<Slot2D>> slots;
   auto slot = flight::make_ref<Slot2D>();
   slot->bone_index = 1;
   slot->color = 0x11223344;
   slots.push(slot);
-  auto rig = sk::create_skeleton2_d(bones({{.x = 1}, {.x = 2, .parent = 0}}), slots);
+  auto rig = sk::create_skeleton_2d(bones({{.x = 1}, {.x = 2, .parent = 0}}), slots);
   flight::Array<flight::Ref<flight::types::AttachmentSkin2D>> skins;
   auto skin = flight::make_ref<flight::types::AttachmentSkin2D>();
   skin->name = flight::String("goblin");
   skins.push(skin);
   rig->skins = skins;
 
-  auto copy = sk::clone_skeleton2_d(view(rig));
+  auto copy = sk::clone_skeleton_2d(view(rig));
   check(copy != rig && copy->bones.element(0) != rig->bones.element(0), "clone deep-copies bones");
   copy->bones.element(0)->x = 99;
   check(rig->bones.element(0)->x == 1, "the clone poses independently");
@@ -173,45 +173,45 @@ void lookup_clone_equality() {
   check(copiedSlots.size() == 1 && copiedSlots.element(0) != slot && copiedSlots.element(0)->bone_index == 1 &&
             copiedSlots.element(0)->color == slot->color,
         "clone copies each slot with its members (declared slot copy)");
-  auto found = sk::get_skeleton2_dskin(view(copy), flight::String("goblin"));
+  auto found = sk::get_skeleton_2d_skin(view(copy), flight::String("goblin"));
   check(found.has_value() && found.value() == skin, "clone shares skins, so getSkin works on it");
-  check(!sk::get_skeleton2_dskin(view(copy), flight::String("missing")).has_value(), "a missing skin is null");
-  check(!sk::get_skeleton2_dskin(view(sk::create_skeleton2_d(bones({{}}))), flight::String("goblin")).has_value(),
+  check(!sk::get_skeleton_2d_skin(view(copy), flight::String("missing")).has_value(), "a missing skin is null");
+  check(!sk::get_skeleton_2d_skin(view(sk::create_skeleton_2d(bones({{}}))), flight::String("goblin")).has_value(),
         "a rig with no wardrobe has no skin");
 
-  auto twin = sk::clone_skeleton2_d(view(s));
-  check(sk::equals_skeleton2_d(view(s), view(twin)), "a fresh clone is equal");
+  auto twin = sk::clone_skeleton_2d(view(s));
+  check(sk::equals_skeleton_2d(view(s), view(twin)), "a fresh clone is equal");
   twin->bones.element(1)->rotation = 5;
-  check(!sk::equals_skeleton2_d(view(s), view(twin)), "an edited bone is not equal");
+  check(!sk::equals_skeleton_2d(view(s), view(twin)), "an edited bone is not equal");
 }
 
 void setup_and_bind() {
-  auto setup = sk::create_skeleton2_d(bones({{.x = 1, .rotation = 10}, {.x = 2, .parent = 0}}));
-  auto pose = sk::clone_skeleton2_d(view(setup));
+  auto setup = sk::create_skeleton_2d(bones({{.x = 1, .rotation = 10}, {.x = 2, .parent = 0}}));
+  auto pose = sk::clone_skeleton_2d(view(setup));
   pose->bones.element(0)->x = 50;
   pose->bones.element(1)->rotation = 45;
-  sk::reset_skeleton2_dto_setup(view(setup), pose);
+  sk::reset_skeleton_2d_to_setup(view(setup), pose);
   check(pose->bones.element(0)->x == 1 && pose->bones.element(1)->rotation == 0, "reset copies the setup locals");
 
   bool threwAliased = false;
   try {
-    sk::reset_skeleton2_dto_setup(view(setup), setup);
+    sk::reset_skeleton_2d_to_setup(view(setup), setup);
   } catch (...) {
     threwAliased = true;
   }
   check(threwAliased, "reset rejects an aliased setup and pose");
   bool threwShape = false;
   try {
-    sk::reset_skeleton2_dto_setup(view(setup), sk::create_skeleton2_d(bones({{}})));
+    sk::reset_skeleton_2d_to_setup(view(setup), sk::create_skeleton_2d(bones({{}})));
   } catch (...) {
     threwShape = true;
   }
   check(threwShape, "reset rejects a different bone count");
 
-  auto s = sk::create_skeleton2_d(bones({{.x = 3, .rotation = 30}, {.x = 2, .parent = 0}}));
-  sk::compute_skeleton2_dworld_transforms(view(s));
-  sk::set_skeleton2_dbind_pose(view(s));
-  sk::compute_skeleton2_dbone_matrices(view(s));
+  auto s = sk::create_skeleton_2d(bones({{.x = 3, .rotation = 30}, {.x = 2, .parent = 0}}));
+  sk::compute_skeleton_2d_world_transforms(view(s));
+  sk::set_skeleton_2d_bind_pose(view(s));
+  sk::compute_skeleton_2d_bone_matrices(view(s));
   bool identity = true;
   for (int b = 0; b < 2; ++b) {
     const auto& p = s->bone_matrices;
@@ -220,22 +220,22 @@ void setup_and_bind() {
   }
   check(identity, "the palette is identity at the captured bind pose");
   s->bones.element(1)->rotation = 90;
-  sk::compute_skeleton2_dworld_transforms(view(s));
-  sk::compute_skeleton2_dbone_matrices(view(s));
+  sk::compute_skeleton_2d_world_transforms(view(s));
+  sk::compute_skeleton_2d_bone_matrices(view(s));
   check(!close(s->bone_matrices[6], 1), "the palette moves off identity once posed");
 }
 
 void validation_and_disposal() {
-  check(!sk::validate_skeleton2_d(view(sk::create_skeleton2_d(bones({{}, {.parent = 0}})))).has_value(),
+  check(!sk::validate_skeleton_2d(view(sk::create_skeleton_2d(bones({{}, {.parent = 0}})))).has_value(),
         "a parent-before-child skeleton is valid");
-  auto bad = sk::create_skeleton2_d(bones({{.parent = 1}, {}}));
-  auto message = sk::validate_skeleton2_d(view(bad));
+  auto bad = sk::create_skeleton_2d(bones({{.parent = 1}, {}}));
+  auto message = sk::validate_skeleton_2d(view(bad));
   check(message.has_value() && message.value().includes(flight::String("is not < its own index")), "reports a forward parent");
 
   flight::Array<flight::Ref<Slot2D>> slots;
   slots.push(flight::make_ref<Slot2D>());
-  auto s = sk::create_skeleton2_d(bones({{}, {.parent = 0}}), slots);
-  sk::dispose_skeleton2_d(s);
+  auto s = sk::create_skeleton_2d(bones({{}, {.parent = 0}}), slots);
+  sk::dispose_skeleton_2d(s);
   check(s->bones.size() == 0 && slotsAreNull(s), "dispose clears bones and slots");
 }
 
@@ -246,24 +246,24 @@ void slot_deform() {
   slot->attachment = attachment;
 
   flight::Float32Array source{1.5f, -2.0f, 3.25f};
-  auto record = sk::set_skeleton2_dslot_deform(slot, attachment, source);
+  auto record = sk::set_skeleton_2d_slot_deform(slot, attachment, source);
   check(record.has_value() && record.value()->offsets.size() == 3 && record.value()->offsets[1] == -2.0f, "stores the offsets");
   check(!(record.value()->offsets == source), "the stored offsets are a copy, not the caller's array");
   source[0] = 100.0f;
   check(record.value()->offsets[0] == 1.5f, "a later write to the source does not reach the record");
 
-  auto offsets = sk::get_skeleton2_dslot_deform_offsets(view(slot));
+  auto offsets = sk::get_skeleton_2d_slot_deform_offsets(view(slot));
   check(offsets.has_value() && offsets.value()[2] == 3.25f, "offsets read back for the attachment shown");
 
   flight::Float32Array next{4.0f, 5.0f, 6.0f};
-  auto reused = sk::set_skeleton2_dslot_deform(slot, attachment, next);
+  auto reused = sk::set_skeleton_2d_slot_deform(slot, attachment, next);
   check(reused.has_value() && reused.value() == record.value() && reused.value()->offsets[0] == 4.0f,
         "an equal-length write reuses the record and copies in");
 
   slot->attachment = flight::make_ref<flight::types::Attachment2D>();
-  check(!sk::get_skeleton2_dslot_deform_offsets(view(slot)).has_value(), "offsets authored for other art read as null");
+  check(!sk::get_skeleton_2d_slot_deform_offsets(view(slot)).has_value(), "offsets authored for other art read as null");
 
-  check(!sk::set_skeleton2_dslot_deform(slot, attachment, std::nullopt).has_value() &&
+  check(!sk::set_skeleton_2d_slot_deform(slot, attachment, std::nullopt).has_value() &&
             std::holds_alternative<flight::Null>(slot->deform),
         "null offsets clear the deform");
 }

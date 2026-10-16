@@ -209,7 +209,7 @@ inline void report_remaining_unsupported_svg_elements(flight::StructuralRef<flig
   }
 }
 
-inline flight::types::DisplayObject create_scene2_dfrom_svg_document_with_registry(flight::String source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgRegistry>>>> registry, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgDocumentImportOptions>>>>> options = std::nullopt) {
+inline flight::types::DisplayObject create_scene_2d_from_svg_document_with_registry(flight::String source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgRegistry>>>> registry, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgDocumentImportOptions>>>>> options = std::nullopt) {
   flight::types::DisplayObject out = flight::scene2d::create_display_object(std::nullopt);
   auto document = flight::xml::parse_xml_document(source);
   if ((!document.has_value() || (flight::scene2d_formats::svg_local_name(document.value()->name) != flight::String("svg")))) {

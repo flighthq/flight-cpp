@@ -11,9 +11,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/vector3.hpp>
 
-#include <flight/types/transform3_d.hpp>
+#include <flight/types/transform_3d.hpp>
 
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d_document.hpp>
 
 #include <flight/types/quaternion.hpp>
 
@@ -76,7 +76,7 @@ inline bool is_md5_joint_cycle(flight::Array<flight::Ref<flight::types::Md5Joint
 
 inline flight::Ref<flight::types::Scene3DDocumentSkin> build_md5_skeleton_document(flight::Array<flight::Ref<flight::types::Md5Joint>> joints, flight::Ref<flight::types::Scene3DDocument> document, std::optional<flight::Map<flight::String, flight::Ref<flight::types::Md5DropTally>>> md5_drops) {
   const double skeleton_root_index = static_cast<double>(document->nodes.size());
-  document->nodes.push(flight::make_ref<flight::types::Scene3DDocumentNode>(flight::types::Scene3DDocumentNode{.children = flight::Array<double>{}, .kind = flight::types::node3_dkind, .name = std::optional<flight::String>{flight::String("skeleton")}, .transform = flight::geometry::create_transform3_d()}));
+  document->nodes.push(flight::make_ref<flight::types::Scene3DDocumentNode>(flight::types::Scene3DDocumentNode{.children = flight::Array<double>{}, .kind = flight::types::node_3d_kind, .name = std::optional<flight::String>{flight::String("skeleton")}, .transform = flight::geometry::create_transform_3d()}));
   document->scenes.element(0.0)->root_nodes.push(skeleton_root_index);
   flight::Array<double> joint_positions = flight::Array<double>{};
   flight::Array<double> joint_orientations = flight::Array<double>{};
@@ -92,7 +92,7 @@ inline flight::Ref<flight::types::Scene3DDocumentSkin> build_md5_skeleton_docume
     while ((j < static_cast<double>(joints.size()))) {
       {
         joint_node_indices.push(static_cast<double>(document->nodes.size()));
-        document->nodes.push(flight::make_ref<flight::types::Scene3DDocumentNode>(flight::types::Scene3DDocumentNode{.children = flight::Array<double>{}, .kind = flight::types::node3_dkind, .name = std::optional<flight::String>{joints.element(j)->name}, .transform = flight::geometry::create_transform3_d()}));
+        document->nodes.push(flight::make_ref<flight::types::Scene3DDocumentNode>(flight::types::Scene3DDocumentNode{.children = flight::Array<double>{}, .kind = flight::types::node_3d_kind, .name = std::optional<flight::String>{joints.element(j)->name}, .transform = flight::geometry::create_transform_3d()}));
       }
       (j += 1.0);
     }

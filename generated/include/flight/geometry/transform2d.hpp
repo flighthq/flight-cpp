@@ -18,11 +18,11 @@ namespace flight::types { struct Transform2D; }
 #include <flight/math/constants.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/matrix.hpp>
-#include <flight/types/transform2_d.hpp>
+#include <flight/types/transform_2d.hpp>
 
 namespace flight::geometry {
 
-inline void decompose_matrix_to_transform2_d(flight::types::Transform2DLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> source) {
+inline void decompose_matrix_to_transform_2d(flight::types::Transform2DLike out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> source) {
   const double a = flight::row_get<flight::RowKey<"a">>(source);
   const double b = flight::row_get<flight::RowKey<"b">>(source);
   const double c = flight::row_get<flight::RowKey<"c">>(source);
@@ -50,7 +50,7 @@ inline void decompose_matrix_to_transform2_d(flight::types::Transform2DLike out,
   (out->y = flight::row_get<flight::RowKey<"ty">>(source));
 }
 
-inline void initialize_transform2_d(flight::types::EntityConstruction<flight::Ref<flight::types::Transform2D>> out, double x, double y, double rotation, double scale_x, double scale_y, double skew_x, double skew_y, double pivot_x, double pivot_y) {
+inline void initialize_transform_2d(flight::types::EntityConstruction<flight::Ref<flight::types::Transform2D>> out, double x, double y, double rotation, double scale_x, double scale_y, double skew_x, double skew_y, double pivot_x, double pivot_y) {
   flight::row_set<flight::RowKey<"x">>(out, x);
   flight::row_set<flight::RowKey<"y">>(out, y);
   flight::row_set<flight::RowKey<"rotation">>(out, rotation);
@@ -62,9 +62,9 @@ inline void initialize_transform2_d(flight::types::EntityConstruction<flight::Re
   flight::row_set<flight::RowKey<"pivotY">>(out, pivot_y);
 }
 
-inline flight::Ref<flight::types::Transform2D> create_transform2_d(std::optional<double> x = std::nullopt, std::optional<double> y = std::nullopt, std::optional<double> rotation = std::nullopt, std::optional<double> scale_x = std::nullopt, std::optional<double> scale_y = std::nullopt, std::optional<double> skew_x = std::nullopt, std::optional<double> skew_y = std::nullopt, std::optional<double> pivot_x = std::nullopt, std::optional<double> pivot_y = std::nullopt) {
+inline flight::Ref<flight::types::Transform2D> create_transform_2d(std::optional<double> x = std::nullopt, std::optional<double> y = std::nullopt, std::optional<double> rotation = std::nullopt, std::optional<double> scale_x = std::nullopt, std::optional<double> scale_y = std::nullopt, std::optional<double> skew_x = std::nullopt, std::optional<double> skew_y = std::nullopt, std::optional<double> pivot_x = std::nullopt, std::optional<double> pivot_y = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Transform2D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Transform2D>>();
-  initialize_transform2_d(out, (x.has_value() ? x.value() : 0.0), (y.has_value() ? y.value() : 0.0), (rotation.has_value() ? rotation.value() : 0.0), (scale_x.has_value() ? scale_x.value() : 1.0), (scale_y.has_value() ? scale_y.value() : 1.0), (skew_x.has_value() ? skew_x.value() : 0.0), (skew_y.has_value() ? skew_y.value() : 0.0), (pivot_x.has_value() ? pivot_x.value() : 0.0), (pivot_y.has_value() ? pivot_y.value() : 0.0));
+  initialize_transform_2d(out, (x.has_value() ? x.value() : 0.0), (y.has_value() ? y.value() : 0.0), (rotation.has_value() ? rotation.value() : 0.0), (scale_x.has_value() ? scale_x.value() : 1.0), (scale_y.has_value() ? scale_y.value() : 1.0), (skew_x.has_value() ? skew_x.value() : 0.0), (skew_y.has_value() ? skew_y.value() : 0.0), (pivot_x.has_value() ? pivot_x.value() : 0.0), (pivot_y.has_value() ? pivot_y.value() : 0.0));
   return flight::entity::finish_entity<flight::Ref<flight::types::Transform2D>>(out);
 }
 

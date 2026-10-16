@@ -21,10 +21,10 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/geometry/matrix4.hpp>
 #include <flight/node/node_transform3d.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/has_transform3_d.hpp>
+#include <flight/types/has_transform_3d.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 #include <flight/types/vector3.hpp>
 
 namespace flight::scene3d {
@@ -35,7 +35,7 @@ using flight::types::Vector3;
 
 inline flight::Ref<flight::types::Matrix4> scratch_matrix = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
-inline void set_node3_dlook_at(flight::Ref<flight::types::Node3D> node, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> eye, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> target, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> up) {
+inline void set_node_3d_look_at(flight::Ref<flight::types::Node3D> node, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> eye, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> target, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> up) {
   const double eye_x = flight::row_get<flight::RowKey<"x">>(eye);
   const double eye_y = flight::row_get<flight::RowKey<"y">>(eye);
   const double eye_z = flight::row_get<flight::RowKey<"z">>(eye);

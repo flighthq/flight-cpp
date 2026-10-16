@@ -9,7 +9,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/viewport.hpp>
 
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 
 #include <flight/types/rectangle.hpp>
 
@@ -49,11 +49,11 @@ inline flight::Ref<flight::types::Rectangle> scratch_bounds = flight::geometry::
 
 inline flight::Ref<flight::types::Rectangle> scratch_transformed = flight::geometry::create_rectangle(std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
-inline bool is_renderable_in_viewport(flight::types::Node2D source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Viewport>>>> viewport, std::optional<std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>> render_transform2_d = std::nullopt) {
+inline bool is_renderable_in_viewport(flight::types::Node2D source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Viewport>>>> viewport, std::optional<std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>> render_transform_2d = std::nullopt) {
   compute_render_proxy_world_bounds(scratch_bounds, source);
   flight::Ref<flight::types::Rectangle> bounds = scratch_bounds;
-  if (([&]() { const auto& presence_operand = render_transform2_d; return presence_operand.has_value() && presence_operand.value().has_value(); }())) {
-    flight::geometry::matrix_transform_rectangle(scratch_transformed, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(render_transform2_d.value()), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(scratch_bounds)));
+  if (([&]() { const auto& presence_operand = render_transform_2d; return presence_operand.has_value() && presence_operand.value().has_value(); }())) {
+    flight::geometry::matrix_transform_rectangle(scratch_transformed, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(render_transform_2d.value()), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(scratch_bounds)));
     (bounds = scratch_transformed);
   }
   const double obj_min_x = bounds->x;
@@ -67,8 +67,8 @@ inline bool is_renderable_in_viewport(flight::types::Node2D source, flight::Stru
   return !((((obj_max_x < vp_min_x) || (obj_min_x > vp_max_x)) || (obj_max_y < vp_min_y)) || (obj_min_y > vp_max_y));
 }
 
-inline bool is_render_proxy_in_viewport(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderProxy2D>>>> proxy, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Viewport>>>> viewport, std::optional<std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>> render_transform2_d = std::nullopt) {
-  return is_renderable_in_viewport(flight::row_get<flight::RowKey<"source">>(proxy), viewport, render_transform2_d);
+inline bool is_render_proxy_in_viewport(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderProxy2D>>>> proxy, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Viewport>>>> viewport, std::optional<std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>> render_transform_2d = std::nullopt) {
+  return is_renderable_in_viewport(flight::row_get<flight::RowKey<"source">>(proxy), viewport, render_transform_2d);
 }
 
 } // namespace flight::render

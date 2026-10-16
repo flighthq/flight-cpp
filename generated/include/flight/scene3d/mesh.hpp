@@ -12,7 +12,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/node_signals.hpp>
 
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 
 #include <flight/types/matrix4.hpp>
 
@@ -63,7 +63,7 @@ using flight::types::entity_runtime_key;
 using flight::types::mesh_kind;
 
 inline flight::Ref<flight::types::MeshRuntime> create_mesh_runtime() {
-  flight::Ref<flight::types::MeshRuntime> out = flight::make_ref<flight::types::MeshRuntime>(*flight::scene3d::create_node3_druntime());
+  flight::Ref<flight::types::MeshRuntime> out = flight::make_ref<flight::types::MeshRuntime>(*flight::scene3d::create_node_3d_runtime());
   return out;
 }
 
@@ -80,7 +80,7 @@ struct enabled_name_alpha_visible_6eed4c0384cbbf3f : public flight::ReferenceEna
 inline flight::Ref<flight::types::Mesh> create_mesh(flight::Ref<flight::types::MeshGeometry> geometry, flight::Array<std::optional<flight::types::Material3DValue>> materials, std::optional<flight::String> kind = std::nullopt, std::optional<flight::Ref<enabled_name_alpha_visible_6eed4c0384cbbf3f>> obj = std::nullopt) {
   kind = kind.value_or(flight::types::mesh_kind);
   flight::types::EntityConstruction<flight::Ref<flight::types::Mesh>> mesh = flight::entity::allocate_entity<flight::Ref<flight::types::Mesh>>();
-  flight::scene3d::initialize_node3_d<flight::Ref<flight::types::MeshRuntime>>(mesh, kind.value(), obj, [](std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::MeshRuntime>>>>>> contextual_callable_argument0) -> flight::Ref<flight::types::MeshRuntime> { return create_mesh_runtime(); });
+  flight::scene3d::initialize_node_3d<flight::Ref<flight::types::MeshRuntime>>(mesh, kind.value(), obj, [](std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::MeshRuntime>>>>>> contextual_callable_argument0) -> flight::Ref<flight::types::MeshRuntime> { return create_mesh_runtime(); });
   flight::row_set<flight::RowKey<"geometry">>(mesh, geometry);
   flight::row_set<flight::RowKey<"materials">>(mesh, materials);
   return flight::entity::finish_entity<flight::Ref<flight::types::Mesh>>(mesh);
@@ -91,7 +91,7 @@ inline flight::Ref<flight::types::Mesh> clone_mesh(flight::StructuralRef<flight:
   auto geometry = (has_deformation ? flight::mesh::clone_mesh_geometry_for_deformation(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>(flight::row_get<flight::RowKey<"geometry">>(source)))) : flight::row_get<flight::RowKey<"geometry">>(source));
   auto clone = create_mesh(geometry, flight::row_get<flight::RowKey<"materials">>(source).slice(), flight::row_get<flight::RowKey<"kind">>(source), flight::make_ref<enabled_name_alpha_visible_6eed4c0384cbbf3f>(enabled_name_alpha_visible_6eed4c0384cbbf3f{.enabled = std::optional<bool>{flight::row_get<flight::RowKey<"enabled">>(source)}, .name = ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto contextual_union_source = flight::row_get<flight::RowKey<"name">>(source); if (!contextual_union_source.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, contextual_union_source.value()}; }())}));
   (clone->alpha = flight::row_get<flight::RowKey<"alpha">>(source));
-  flight::node::set_node_transform3_d(flight::structural_ref_cast<flight::types::Transform3DNode<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Mesh>>>>(clone)), source);
+  flight::node::set_node_transform_3d(flight::structural_ref_cast<flight::types::Transform3DNode<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Mesh>>>>(clone)), source);
   if (flight::node::is_node_local_matrix4_detached(source)) {
     flight::node::set_node_local_matrix4(flight::structural_ref_cast<flight::types::Transform3DNode<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Mesh>>>>(clone)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::node::get_node_local_matrix4(source)));
   }

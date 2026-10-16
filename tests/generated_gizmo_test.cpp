@@ -177,7 +177,7 @@ flight::Ref<types::Scene2D> create_overlay() {
 
 Context create_context() {
   Context context;
-  context.camera = camera::create_camera2_d();
+  context.camera = camera::create_camera_2d();
   context.overlay = create_overlay();
   context.selection = selection::create_selection_state<Node>();
   context.node_features = std::make_shared<std::vector<NodeFeatures>>();

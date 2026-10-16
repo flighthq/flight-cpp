@@ -22,7 +22,7 @@ namespace flight::types { struct RigidBody3D; }
 namespace flight::types { struct SpatialIndexBackend3D; }
 
 #include <flight/types/collision.hpp>
-#include <flight/types/physics3_d.hpp>
+#include <flight/types/physics_3d.hpp>
 #include <flight/types/spatial.hpp>
 #include <flight/physics3d/joint_collision_suppression.hpp>
 #include <flight/physics3d/ownership.hpp>
@@ -40,20 +40,20 @@ using flight::types::Physics3DWorld;
 using flight::types::RigidBody3D;
 using flight::types::SpatialIndexBackend3D;
 
-inline std::optional<flight::Ref<flight::types::Physics3DJointSolver>> get_physics3_djoint_solver(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world, flight::String kind) {
+inline std::optional<flight::Ref<flight::types::Physics3DJointSolver>> get_physics_3d_joint_solver(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world, flight::String kind) {
   return flight::row_get<flight::RowKey<"jointSolvers">>(world).get(kind);
 }
 
-inline bool is_physics3_dpair_ordered(double a, double b) {
+inline bool is_physics_3d_pair_ordered(double a, double b) {
   return (a <= b);
 }
 
 inline void canonicalize_joint_ends(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world, flight::Ref<flight::types::Physics3DJoint> joint) {
-  auto solver = get_physics3_djoint_solver(world, joint->kind);
+  auto solver = get_physics_3d_joint_solver(world, joint->kind);
   if ((([&]() -> std::optional<bool> { auto optional_chain_receiver = solver; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->uses_body_a; }()) == false)) {
     return;
   }
-  if (is_physics3_dpair_ordered(joint->body_a, joint->body_b)) {
+  if (is_physics_3d_pair_ordered(joint->body_a, joint->body_b)) {
     return;
   }
   if (!([&]() -> bool { auto nullish_coalesce_left = ([&]() -> std::optional<bool> { auto optional_chain_receiver = ([&]() -> std::optional<std::function<bool(flight::Ref<flight::types::Physics3DJoint>)>> { auto optional_chain_receiver = solver; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->swap_ends; }()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()(joint); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return true; }())) {
@@ -74,58 +74,58 @@ inline void canonicalize_joint_ends(flight::StructuralRef<flight::RowReadonly<fl
 }
 
 inline void wake_joint_bodies(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>> world, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>> joint) {
-  auto solver = get_physics3_djoint_solver(world, flight::row_get<flight::RowKey<"kind">>(joint));
+  auto solver = get_physics_3d_joint_solver(world, flight::row_get<flight::RowKey<"kind">>(joint));
   if (!solver.has_value()) {
     return;
   }
-  auto body_a = ((solver.value()->uses_body_a == false) ? std::nullopt : flight::physics3d::find_physics3_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(world), flight::row_get<flight::RowKey<"bodyA">>(joint)));
-  auto body_b = flight::physics3d::find_physics3_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(world), flight::row_get<flight::RowKey<"bodyB">>(joint));
+  auto body_a = ((solver.value()->uses_body_a == false) ? std::nullopt : flight::physics3d::find_physics_3d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(world), flight::row_get<flight::RowKey<"bodyA">>(joint)));
+  auto body_b = flight::physics3d::find_physics_3d_body(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(world), flight::row_get<flight::RowKey<"bodyB">>(joint));
   if (body_a.has_value()) {
-    flight::physics3d::wake_physics3_dbody(body_a.value());
+    flight::physics3d::wake_physics_3d_body(body_a.value());
   }
   if (body_b.has_value()) {
-    flight::physics3d::wake_physics3_dbody(body_b.value());
+    flight::physics3d::wake_physics_3d_body(body_b.value());
   }
 }
 
 template <typename T>
-inline T add_physics3_djoint(flight::Ref<flight::types::Physics3DWorld> world, T joint) {
-  flight::physics3d::assert_physics3_dworld_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)));
-  if ((flight::physics3d::physics3_djoint_owners.has(joint) || world->joints.includes(joint))) {
+inline T add_physics_3d_joint(flight::Ref<flight::types::Physics3DWorld> world, T joint) {
+  flight::physics3d::assert_physics_3d_world_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)));
+  if ((flight::physics3d::physics_3d_joint_owners.has(joint) || world->joints.includes(joint))) {
     throw flight::Error(flight::String("Cannot add a physics joint that already belongs to a physics world"));
   }
-  const bool active = get_physics3_djoint_solver(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), joint->kind).has_value();
+  const bool active = get_physics_3d_joint_solver(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), joint->kind).has_value();
   if (active) {
     canonicalize_joint_ends(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), joint);
   }
   world->joints.push(joint);
-  flight::physics3d::physics3_djoint_owners.set(joint, world);
-  flight::physics3d::rebuild_physics3_djoint_collision_suppressions(world);
+  flight::physics3d::physics_3d_joint_owners.set(joint, world);
+  flight::physics3d::rebuild_physics_3d_joint_collision_suppressions(world);
   if (active) {
     wake_joint_bodies(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), joint);
   }
   return joint;
 }
 
-inline bool invalidate_physics3_djoint(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<flight::types::Physics3DJoint> joint) {
-  flight::physics3d::assert_physics3_dworld_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)));
-  if (((flight::physics3d::physics3_djoint_owners.get(joint) != world) || !world->joints.includes(joint))) {
+inline bool invalidate_physics_3d_joint(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<flight::types::Physics3DJoint> joint) {
+  flight::physics3d::assert_physics_3d_world_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)));
+  if (((flight::physics3d::physics_3d_joint_owners.get(joint) != world) || !world->joints.includes(joint))) {
     return false;
   }
-  ([&]() { auto optional_chain_receiver = ([&]() -> std::optional<std::function<void(flight::Ref<flight::types::Physics3DJoint>)>> { auto optional_chain_receiver = get_physics3_djoint_solver(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), joint->kind); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->clear_accumulated_impulses; }()); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(joint); }());
+  ([&]() { auto optional_chain_receiver = ([&]() -> std::optional<std::function<void(flight::Ref<flight::types::Physics3DJoint>)>> { auto optional_chain_receiver = get_physics_3d_joint_solver(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), joint->kind); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->clear_accumulated_impulses; }()); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(joint); }());
   (joint->impulse0 = 0.0);
   (joint->impulse1 = 0.0);
   (joint->impulse2 = 0.0);
   (joint->impulse3 = 0.0);
   (joint->impulse4 = 0.0);
   (joint->impulse5 = 0.0);
-  flight::physics3d::rebuild_physics3_djoint_collision_suppressions(world);
+  flight::physics3d::rebuild_physics_3d_joint_collision_suppressions(world);
   wake_joint_bodies(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>>(joint)));
   return true;
 }
 
-inline void register_physics3_djoint_solver(flight::Ref<flight::types::Physics3DWorld> world, flight::String kind, flight::Ref<flight::types::Physics3DJointSolver> solver) {
-  flight::physics3d::assert_physics3_dworld_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)));
+inline void register_physics_3d_joint_solver(flight::Ref<flight::types::Physics3DWorld> world, flight::String kind, flight::Ref<flight::types::Physics3DJointSolver> solver) {
+  flight::physics3d::assert_physics_3d_world_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)));
   world->joint_solvers.set(kind, solver);
   for (auto joint : world->joints) {
     if ((joint->kind != kind)) {
@@ -134,21 +134,21 @@ inline void register_physics3_djoint_solver(flight::Ref<flight::types::Physics3D
     canonicalize_joint_ends(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), joint);
     wake_joint_bodies(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>>(joint)));
   }
-  flight::physics3d::rebuild_physics3_djoint_collision_suppressions(world);
+  flight::physics3d::rebuild_physics_3d_joint_collision_suppressions(world);
 }
 
-inline bool remove_physics3_djoint(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<flight::types::Physics3DJoint> joint) {
-  flight::physics3d::assert_physics3_dworld_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)));
+inline bool remove_physics_3d_joint(flight::Ref<flight::types::Physics3DWorld> world, flight::Ref<flight::types::Physics3DJoint> joint) {
+  flight::physics3d::assert_physics_3d_world_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)));
   const double at = world->joints.index_of(joint);
   if ((at < 0.0)) {
     return false;
   }
-  if (get_physics3_djoint_solver(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), joint->kind).has_value()) {
+  if (get_physics_3d_joint_solver(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), joint->kind).has_value()) {
     wake_joint_bodies(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DWorld>>>>(world)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DJoint>>>>(joint)));
   }
   world->joints.splice(at, 1.0);
-  flight::physics3d::physics3_djoint_owners.erase(joint);
-  flight::physics3d::rebuild_physics3_djoint_collision_suppressions(world);
+  flight::physics3d::physics_3d_joint_owners.erase(joint);
+  flight::physics3d::rebuild_physics_3d_joint_collision_suppressions(world);
   return true;
 }
 

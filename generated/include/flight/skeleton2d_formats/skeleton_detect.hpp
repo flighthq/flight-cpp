@@ -11,7 +11,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/shortcut/shortcut.hpp>
 
-#include <flight/types/skeleton2_dimport.hpp>
+#include <flight/types/skeleton_2d_import.hpp>
 
 #include <flight/types/import_diagnostic.hpp>
 
@@ -31,7 +31,7 @@ struct RegisteredSkeletonFormat;
 #include <flight/registry/registry_table.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/import_diagnostic.hpp>
-#include <flight/types/skeleton2_dimport.hpp>
+#include <flight/types/skeleton_2d_import.hpp>
 #include <flight/skeleton2d_formats/dragon_bones_full.hpp>
 #include <flight/skeleton2d_formats/spine_json_full.hpp>
 
@@ -75,7 +75,7 @@ struct detect_parse_27a036006ac561bc : public flight::ReferenceEnabled {
 
 inline flight::Map<flight::String, flight::Ref<RegisteredSkeletonFormat>> get_registry();
 
-inline void bind_skeleton2_dformat(flight::String kind, std::function<bool(flight::String)> detect, std::function<std::optional<flight::Ref<flight::types::Skeleton2DImport>>(flight::String, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>)> parse);
+inline void bind_skeleton_2d_format(flight::String kind, std::function<bool(flight::String)> detect, std::function<std::optional<flight::Ref<flight::types::Skeleton2DImport>>(flight::String, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>)> parse);
 
 
 inline flight::Map<flight::String, flight::Ref<RegisteredSkeletonFormat>> get_registry() {
@@ -83,34 +83,34 @@ inline flight::Map<flight::String, flight::Ref<RegisteredSkeletonFormat>> get_re
     return registry.value();
   }
   (registry = std::optional<flight::Map<flight::String, flight::Ref<RegisteredSkeletonFormat>>>{flight::Map<flight::String, flight::Ref<RegisteredSkeletonFormat>>()});
-  bind_skeleton2_dformat(flight::String("Spine"), detect_spine, [=](flight::String text, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics) -> std::optional<flight::Ref<flight::types::Skeleton2DImport>> { return flight::skeleton2d_formats::parse_spine_skeleton(text, diagnostics); });
-  bind_skeleton2_dformat(flight::String("DragonBones"), detect_dragon_bones, [=](flight::String text, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics) -> std::optional<flight::Ref<flight::types::Skeleton2DImport>> { return flight::skeleton2d_formats::parse_dragon_bones_skeleton(text, diagnostics); });
+  bind_skeleton_2d_format(flight::String("Spine"), detect_spine, [=](flight::String text, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics) -> std::optional<flight::Ref<flight::types::Skeleton2DImport>> { return flight::skeleton2d_formats::parse_spine_skeleton(text, diagnostics); });
+  bind_skeleton_2d_format(flight::String("DragonBones"), detect_dragon_bones, [=](flight::String text, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics) -> std::optional<flight::Ref<flight::types::Skeleton2DImport>> { return flight::skeleton2d_formats::parse_dragon_bones_skeleton(text, diagnostics); });
   return registry.value();
 }
 
-inline void bind_skeleton2_dformat(flight::String kind, std::function<bool(flight::String)> detect, std::function<std::optional<flight::Ref<flight::types::Skeleton2DImport>>(flight::String, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>)> parse) {
+inline void bind_skeleton_2d_format(flight::String kind, std::function<bool(flight::String)> detect, std::function<std::optional<flight::Ref<flight::types::Skeleton2DImport>>(flight::String, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>)> parse) {
   flight::Map<flight::String, flight::Ref<RegisteredSkeletonFormat>> registry_2 = get_registry();
   auto current = registry_2.get(kind);
   (registry = std::optional<flight::Map<flight::String, flight::Ref<RegisteredSkeletonFormat>>>{flight::registry::with_kind_map_entry<flight::Ref<RegisteredSkeletonFormat>>(registry_2, kind, flight::make_ref<RegisteredSkeletonFormat>(RegisteredSkeletonFormat{.entry = flight::make_ref<SkeletonFormatEntry>(SkeletonFormatEntry{.detect = detect, .parse = parse}), .order = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = current; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->order; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return next_format_order++; }())}))});
 }
 
-inline flight::Array<flight::String> get_skeleton2_dformat_kinds() {
+inline flight::Array<flight::String> get_skeleton_2d_format_kinds() {
   flight::Array<flight::String> kinds = flight::Array<flight::String>{};
   flight::registry::get_kind_map_keys(kinds, get_registry());
   return kinds;
 }
 
-inline void register_skeleton2_dformat(flight::String kind, std::function<bool(flight::String)> detect, std::function<std::optional<flight::Ref<flight::types::Skeleton2DImport>>(flight::String, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>)> parse) {
-  bind_skeleton2_dformat(kind, detect, parse);
+inline void register_skeleton_2d_format(flight::String kind, std::function<bool(flight::String)> detect, std::function<std::optional<flight::Ref<flight::types::Skeleton2DImport>>(flight::String, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>)> parse) {
+  bind_skeleton_2d_format(kind, detect, parse);
 }
 
-inline void unregister_skeleton2_dformat(flight::String kind) {
+inline void unregister_skeleton_2d_format(flight::String kind) {
   (registry = std::optional<flight::Map<flight::String, flight::Ref<RegisteredSkeletonFormat>>>{flight::registry::without_kind_map_entry<flight::Ref<RegisteredSkeletonFormat>>(get_registry(), kind)});
 }
 
-inline flight::Array<flight::Ref<RegisteredSkeletonFormat>> get_skeleton2_dformats_in_detection_order() {
+inline flight::Array<flight::Ref<RegisteredSkeletonFormat>> get_skeleton_2d_formats_in_detection_order() {
   flight::Array<flight::Ref<RegisteredSkeletonFormat>> formats = flight::Array<flight::Ref<RegisteredSkeletonFormat>>{};
-  for (auto kind : get_skeleton2_dformat_kinds()) {
+  for (auto kind : get_skeleton_2d_format_kinds()) {
     auto registered = get_registry().get(kind);
     if (registered.has_value()) {
       formats.push(registered.value());
@@ -120,8 +120,8 @@ inline flight::Array<flight::Ref<RegisteredSkeletonFormat>> get_skeleton2_dforma
   return formats;
 }
 
-inline std::optional<flight::Ref<flight::types::Skeleton2DImport>> parse_skeleton2_d(flight::String text, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
-  for (auto registered : get_skeleton2_dformats_in_detection_order()) {
+inline std::optional<flight::Ref<flight::types::Skeleton2DImport>> parse_skeleton_2d(flight::String text, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
+  for (auto registered : get_skeleton_2d_formats_in_detection_order()) {
     if (registered->entry->detect(text)) {
       return registered->entry->parse(text, diagnostics);
     }

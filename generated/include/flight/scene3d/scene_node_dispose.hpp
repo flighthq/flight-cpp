@@ -12,13 +12,13 @@ namespace flight::types { template <typename Traits> struct Node; }
 
 #include <flight/node/node.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node3_d.hpp>
+#include <flight/types/node_3d.hpp>
 
 namespace flight::scene3d {
 
 using flight::types::Node3D;
 
-inline void dispose_node3_d(flight::Ref<flight::types::Node3D> node) {
+inline void dispose_node_3d(flight::Ref<flight::types::Node3D> node) {
   flight::node::dispose_node<flight::Ref<flight::types::NodeTraits>>(flight::structural_ref_cast<flight::StructuralRef<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::NodeTraits>>>>, flight::RowOf<flight::Ref<flight::types::NodeTraits>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Node3D>>>>(node)));
 }
 

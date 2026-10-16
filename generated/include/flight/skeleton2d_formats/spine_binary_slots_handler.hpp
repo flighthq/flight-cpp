@@ -11,7 +11,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/spine_binary_registry.hpp>
 
-#include <flight/types/slot2_d.hpp>
+#include <flight/types/slot_2d.hpp>
 
 #include <flight/types/import_diagnostic.hpp>
 

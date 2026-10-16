@@ -13,9 +13,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/scene3_dresources.hpp>
+#include <flight/types/scene_3d_resources.hpp>
 
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d_document.hpp>
 
 #include <flight/types/net.hpp>
 
@@ -43,7 +43,7 @@ using flight::types::LoadOptions;
 using flight::types::Scene3DDocument;
 using flight::types::Scene3DDocumentLoadOptions;
 
-inline std::optional<flight::String> get_scene3_ddocument_base_path_from_url(flight::String url) {
+inline std::optional<flight::String> get_scene_3d_document_base_path_from_url(flight::String url) {
   const double query = url.search(flight::RegExp(flight::String("[?#]"), flight::String("")));
   const flight::String source = ((query >= 0.0) ? url.slice(0.0, query) : url);
   const double slash = source.last_index_of(flight::String("/"));

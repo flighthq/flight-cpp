@@ -571,7 +571,7 @@ struct insert_spatial_object_update_spatial_object_remove_spatial_object_clear_s
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPATIAL_INSERT_SPATIAL_OBJECT_UPDATE_SPATIAL_OBJECT_REMOVE_SPATIAL_OBJECT_CLEAR_SPATIAL_INDEX_EXPLAIN_SPATIAL_INDEXING_QUERY_SPATIAL_PAIRS_QUERY_SPATIAL_REGION_QUERY_SPATIAL_POINT_QUERY_SPATIAL_RAY_ENTITY_RUNTIME_KEY_B4BC8F7C171AE210
 
-inline void initialize_uniform_grid_spatial_backend2_d(flight::types::EntityConstruction<flight::Ref<insert_spatial_object_update_spatial_object_remove_spatial_object_clear_spatial_index_explain_spatial_indexing_query_spatial_pairs_query_spatial_region_query_spatial_point_query_spatial_ray_entity_runtime_key_b4bc8f7c171ae210>> out, flight::Ref<UniformGrid> grid) {
+inline void initialize_uniform_grid_spatial_backend_2d(flight::types::EntityConstruction<flight::Ref<insert_spatial_object_update_spatial_object_remove_spatial_object_clear_spatial_index_explain_spatial_indexing_query_spatial_pairs_query_spatial_region_query_spatial_point_query_spatial_ray_entity_runtime_key_b4bc8f7c171ae210>> out, flight::Ref<UniformGrid> grid) {
   flight::row_set<flight::RowKey<"clearSpatialIndex">>(out, [=]() {
   grid->cells.clear();
   grid->bounds.clear();
@@ -604,10 +604,10 @@ inline void initialize_uniform_grid_spatial_backend2_d(flight::types::EntityCons
   flight::row_set<flight::RowKey<"updateSpatialObject">>(out, [=](double id, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialAabb2D>>>> bounds) { return update_grid_object(grid, id, bounds); });
 }
 
-inline flight::Ref<insert_spatial_object_update_spatial_object_remove_spatial_object_clear_spatial_index_explain_spatial_indexing_query_spatial_pairs_query_spatial_region_query_spatial_point_query_spatial_ray_entity_runtime_key_b4bc8f7c171ae210> create_uniform_grid_spatial_backend2_d(double cell_size) {
+inline flight::Ref<insert_spatial_object_update_spatial_object_remove_spatial_object_clear_spatial_index_explain_spatial_indexing_query_spatial_pairs_query_spatial_region_query_spatial_point_query_spatial_ray_entity_runtime_key_b4bc8f7c171ae210> create_uniform_grid_spatial_backend_2d(double cell_size) {
   flight::Ref<UniformGrid> grid = flight::make_ref<UniformGrid>(UniformGrid{.cell_size = cell_size, .cells = flight::Map<flight::String, flight::Ref<GridCell>>(), .bounds = flight::Map<double, flight::Ref<flight::types::SpatialAabb2D>>(), .overflow = flight::Set<double>(), .declined = flight::Map<double, flight::types::SpatialDeclineReason>(), .min_cell_x = 0.0, .min_cell_y = 0.0, .max_cell_x = 0.0, .max_cell_y = 0.0, .seen = flight::Set<double>(), .pair_ids = flight::Array<double>{}});
   flight::types::EntityConstruction<flight::Ref<insert_spatial_object_update_spatial_object_remove_spatial_object_clear_spatial_index_explain_spatial_indexing_query_spatial_pairs_query_spatial_region_query_spatial_point_query_spatial_ray_entity_runtime_key_b4bc8f7c171ae210>> out = flight::entity::allocate_entity<flight::Ref<insert_spatial_object_update_spatial_object_remove_spatial_object_clear_spatial_index_explain_spatial_indexing_query_spatial_pairs_query_spatial_region_query_spatial_point_query_spatial_ray_entity_runtime_key_b4bc8f7c171ae210>>();
-  initialize_uniform_grid_spatial_backend2_d(out, grid);
+  initialize_uniform_grid_spatial_backend_2d(out, grid);
   return flight::entity::finish_entity<flight::Ref<insert_spatial_object_update_spatial_object_remove_spatial_object_clear_spatial_index_explain_spatial_indexing_query_spatial_pairs_query_spatial_region_query_spatial_point_query_spatial_ray_entity_runtime_key_b4bc8f7c171ae210>>(out);
 }
 

@@ -27,7 +27,7 @@ namespace flight::types { struct WgpuWireframePipeline; }
 #include <flight/types/contract.hpp>
 #include <flight/scene3d_wgpu/wgpu_mesh_fragment_tail.hpp>
 #include <flight/scene3d_wgpu/wgpu_mesh_pipeline.hpp>
-#include <flight/scene3d_wgpu/wgpu_scene3_druntime.hpp>
+#include <flight/scene3d_wgpu/wgpu_scene_3d_runtime.hpp>
 
 namespace flight::scene3d_wgpu {
 
@@ -89,7 +89,7 @@ inline flight::Ref<flight::types::WgpuWireframePipeline> compile_wgpu_wireframe_
 
 inline flight::Ref<flight::types::WgpuWireframePipeline> ensure_wgpu_wireframe_pipeline(flight::Ref<flight::types::WgpuRenderState> state, flight::String format, std::optional<bool> alpha_mask_enabled = std::nullopt) {
   alpha_mask_enabled = alpha_mask_enabled.value_or(false);
-  return flight::scene3d_wgpu::ensure_wgpu_scene3_dpipeline<flight::Ref<flight::types::WgpuWireframePipeline>>(state, flight::String("wireframe:") + flight::to_string(format) + flight::String("|") + flight::to_string((alpha_mask_enabled.value() ? flight::String("mask") : flight::String("base"))) + flight::String(""), [=](bool blended, bool skinned) {
+  return flight::scene3d_wgpu::ensure_wgpu_scene_3d_pipeline<flight::Ref<flight::types::WgpuWireframePipeline>>(state, flight::String("wireframe:") + flight::to_string(format) + flight::String("|") + flight::to_string((alpha_mask_enabled.value() ? flight::String("mask") : flight::String("base"))) + flight::String(""), [=](bool blended, bool skinned) {
   return compile_wgpu_wireframe_pipeline(state, format, blended, alpha_mask_enabled.value(), skinned);
 });
 }
@@ -113,7 +113,7 @@ struct binding_resource_a5b79d316bf17db5 : public flight::ReferenceEnabled {
 
 inline flight::host_sdl::WgpuBindGroup bind_wgpu_wireframe_color(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuWireframePipeline>>>> pipeline, flight::Ref<void> material_key, flight::types::LinearColor color, std::optional<double> alpha_cutoff = std::nullopt) {
   alpha_cutoff = alpha_cutoff.value_or(0.5);
-  auto scene = flight::scene3d_wgpu::get_wgpu_scene3_druntime(state);
+  auto scene = flight::scene3d_wgpu::get_wgpu_scene_3d_runtime(state);
   std::optional<flight::Ref<flight::types::WgpuMaterialBinding>> binding = scene->material_bind_groups.get(material_key);
   if (!binding.has_value()) {
     auto buffer = state->device.create_buffer({.size = wireframe_uniform_bytes, .usage = flight::bitwise_or(flight::host_sdl::wgpu_buffer_usage_uniform, flight::host_sdl::wgpu_buffer_usage_copy_dst)});

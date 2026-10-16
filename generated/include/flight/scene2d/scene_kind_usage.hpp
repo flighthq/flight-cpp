@@ -10,9 +10,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/scene2_d.hpp>
+#include <flight/types/scene_2d.hpp>
 
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 
 #include <flight/types/node.hpp>
 
@@ -48,20 +48,20 @@ struct blend_modes_material_kinds_node_kinds_shape_command_keys_entity_runtime_k
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_BLEND_MODES_MATERIAL_KINDS_NODE_KINDS_SHAPE_COMMAND_KEYS_ENTITY_RUNTIME_KEY_4C05078A75391036
 
-inline void initialize_scene2_dkind_usage(flight::types::EntityConstruction<flight::Ref<blend_modes_material_kinds_node_kinds_shape_command_keys_entity_runtime_key_4c05078a75391036>> out) {
+inline void initialize_scene_2d_kind_usage(flight::types::EntityConstruction<flight::Ref<blend_modes_material_kinds_node_kinds_shape_command_keys_entity_runtime_key_4c05078a75391036>> out) {
   flight::row_set<flight::RowKey<"blendModes">>(out, flight::Array<flight::String>{});
   flight::row_set<flight::RowKey<"materialKinds">>(out, flight::Array<flight::String>{});
   flight::row_set<flight::RowKey<"nodeKinds">>(out, flight::Array<flight::String>{});
   flight::row_set<flight::RowKey<"shapeCommandKeys">>(out, flight::Array<flight::String>{});
 }
 
-inline flight::Ref<blend_modes_material_kinds_node_kinds_shape_command_keys_entity_runtime_key_4c05078a75391036> create_scene2_dkind_usage() {
+inline flight::Ref<blend_modes_material_kinds_node_kinds_shape_command_keys_entity_runtime_key_4c05078a75391036> create_scene_2d_kind_usage() {
   flight::types::EntityConstruction<flight::Ref<blend_modes_material_kinds_node_kinds_shape_command_keys_entity_runtime_key_4c05078a75391036>> out = flight::entity::allocate_entity<flight::Ref<blend_modes_material_kinds_node_kinds_shape_command_keys_entity_runtime_key_4c05078a75391036>>();
-  initialize_scene2_dkind_usage(out);
+  initialize_scene_2d_kind_usage(out);
   return flight::entity::finish_entity<flight::Ref<blend_modes_material_kinds_node_kinds_shape_command_keys_entity_runtime_key_4c05078a75391036>>(out);
 }
 
-inline void add_scene2_dused_kind(flight::Array<flight::String> kinds, flight::String kind) {
+inline void add_scene_2d_used_kind(flight::Array<flight::String> kinds, flight::String kind) {
   {
     double i = 0.0;
     while ((i < static_cast<double>(kinds.size()))) {
@@ -83,19 +83,19 @@ struct commands_d4fb489325854bc7 : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_COMMANDS_D4FB489325854BC7
 
-inline void get_scene2_dkind_usage(flight::Ref<flight::types::Scene2DKindUsage> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene2D>>>> scene) {
+inline void get_scene_2d_kind_usage(flight::Ref<flight::types::Scene2DKindUsage> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene2D>>>> scene) {
   const auto out_capture = flight::make_binding_cell(flight::Ref<flight::types::Scene2DKindUsage>{out});
   ([&]() { auto&& assignment_receiver = out_capture.read_binding()->blend_modes; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
   ([&]() { auto&& assignment_receiver = out_capture.read_binding()->material_kinds; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
   ([&]() { auto&& assignment_receiver = out_capture.read_binding()->node_kinds; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
   ([&]() { auto&& assignment_receiver = out_capture.read_binding()->shape_command_keys; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
   std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>>>)> visit = [=](flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>>> node) {
-  add_scene2_dused_kind(out_capture.read_binding()->node_kinds, flight::row_get<flight::RowKey<"kind">>(node));
+  add_scene_2d_used_kind(out_capture.read_binding()->node_kinds, flight::row_get<flight::RowKey<"kind">>(node));
   if ((flight::row_get<flight::RowKey<"blendMode">>(node).has_value() && (flight::row_get<flight::RowKey<"blendMode">>(node) != flight::types::blend_mode->normal))) {
-    add_scene2_dused_kind(out_capture.read_binding()->blend_modes, flight::row_get<flight::RowKey<"blendMode">>(node));
+    add_scene_2d_used_kind(out_capture.read_binding()->blend_modes, flight::row_get<flight::RowKey<"blendMode">>(node));
   }
   if (flight::row_get<flight::RowKey<"material">>(node).has_value()) {
-    add_scene2_dused_kind(out_capture.read_binding()->material_kinds, flight::row_get<flight::RowKey<"material">>(node)->kind);
+    add_scene_2d_used_kind(out_capture.read_binding()->material_kinds, flight::row_get<flight::RowKey<"material">>(node)->kind);
   }
   std::optional<flight::Array<flight::types::ShapeCommandToken>> commands = ([&]() -> std::optional<flight::Array<flight::types::ShapeCommandToken>> { auto optional_chain_receiver = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<commands_d4fb489325854bc7>>>>>> { auto partial_structural_source = flight::row_get<flight::RowKey<"data">>(node); if (!partial_structural_source.has_value()) return std::nullopt; return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<commands_d4fb489325854bc7>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Node2DData>>>>(partial_structural_source.value())); }()); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"commands">>(optional_chain_receiver.value()); }());
   if (!commands.has_value()) {
@@ -103,7 +103,7 @@ inline void get_scene2_dkind_usage(flight::Ref<flight::types::Scene2DKindUsage> 
   }
   double i = 0.0;
   while ((i < static_cast<double>(commands.value().size()))) {
-    add_scene2_dused_kind(out_capture.read_binding()->shape_command_keys, std::get<flight::String>(commands.value().element(i).value()));
+    add_scene_2d_used_kind(out_capture.read_binding()->shape_command_keys, std::get<flight::String>(commands.value().element(i).value()));
     (i += (std::get<double>(commands.value().element((i + 1.0)).value()) + 2.0));
   }
 };

@@ -29,7 +29,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/wgpu_render_state.hpp>
 
-#include <flight/scene3d_wgpu/wgpu_scene3_druntime.hpp>
+#include <flight/scene3d_wgpu/wgpu_scene_3d_runtime.hpp>
 
 namespace flight::scene3d_wgpu {
 
@@ -448,7 +448,7 @@ inline flight::Ref<WgpuSkinningAdapter> default_wgpu_skinning_adapter = flight::
 inline void register_wgpu_gpu_skinning(flight::Ref<WgpuRenderState> state) {
   flight::Ref<WgpuRenderStateRuntime> runtime = get_wgpu_render_state_runtime(state);
   (runtime->registries.gpu_skinning = {.entry = {.state = registry_entry_state.bound, .value = default_wgpu_skinning_adapter}});
-  (get_wgpu_scene3_druntime(state)->skinning_adapter = default_wgpu_skinning_adapter);
+  (get_wgpu_scene_3d_runtime(state)->skinning_adapter = default_wgpu_skinning_adapter);
 }
 
 } // namespace flight::scene3d_wgpu

@@ -23,7 +23,7 @@ namespace flight::types { struct Vector2; }
 namespace flight::types { struct Vector3; }
 
 #include <flight/geometry/matrix4.hpp>
-#include <flight/types/camera3_d.hpp>
+#include <flight/types/camera_3d.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/perspective_projection_options.hpp>
@@ -42,7 +42,7 @@ inline flight::Ref<flight::types::Vector3> target_flight_value_variable__u00005f
 
 inline flight::Ref<flight::types::Vector3> up = flight::make_ref<flight::types::Vector3>(flight::types::Vector3{.x = 0.0, .y = 0.0, .z = 0.0});
 
-inline void get_cube_capture_face_camera3_d(flight::Ref<flight::types::Camera3D> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> position, double face) {
+inline void get_cube_capture_face_camera_3d(flight::Ref<flight::types::Camera3D> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> position, double face) {
   const double px = flight::row_get<flight::RowKey<"x">>(position);
   const double py = flight::row_get<flight::RowKey<"y">>(position);
   const double pz = flight::row_get<flight::RowKey<"z">>(position);

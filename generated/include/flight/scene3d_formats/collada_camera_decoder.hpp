@@ -18,9 +18,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/xml_element.hpp>
 
-#include <flight/types/transform3_d.hpp>
+#include <flight/types/transform_3d.hpp>
 
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d_document.hpp>
 
 #include <flight/types/perspective_projection_options.hpp>
 
@@ -158,8 +158,8 @@ inline void resolve_collada_cameras(flight::Ref<flight::types::Scene3DDocument> 
     if (([&](const auto& presence_operand) { if constexpr (flight::detail::optional_traits<std::remove_cvref_t<decltype(presence_operand.value())>>::optional) { return !presence_operand.has_value() || !presence_operand.value().has_value(); } else { return !presence_operand.has_value(); } }(world_matrix))) {
       continue;
     }
-    auto transform = flight::geometry::create_transform3_d();
-    flight::geometry::decompose_matrix4_to_transform3_d(transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::types::Matrix4Like>>>(world_matrix.value())));
+    auto transform = flight::geometry::create_transform_3d();
+    flight::geometry::decompose_matrix4_to_transform_3d(transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::types::Matrix4Like>>>(world_matrix.value())));
     flight::Ref<flight::types::Scene3DDocumentCamera> camera;
     if ((std::visit([](const auto& value) { return value->kind; }, ([&]() -> std::variant<flight::Ref<flight::types::ColladaOrthographicCameraDefinition>, flight::Ref<flight::types::ColladaPerspectiveCameraDefinition>> { const auto& present_union_source = definition; if (const auto* alternative = std::get_if<flight::Ref<flight::types::ColladaOrthographicCameraDefinition>>(&present_union_source)) return std::variant<flight::Ref<flight::types::ColladaOrthographicCameraDefinition>, flight::Ref<flight::types::ColladaPerspectiveCameraDefinition>>{std::in_place_type<flight::Ref<flight::types::ColladaOrthographicCameraDefinition>>, *alternative}; if (const auto* alternative = std::get_if<flight::Ref<flight::types::ColladaPerspectiveCameraDefinition>>(&present_union_source)) return std::variant<flight::Ref<flight::types::ColladaOrthographicCameraDefinition>, flight::Ref<flight::types::ColladaPerspectiveCameraDefinition>>{std::in_place_type<flight::Ref<flight::types::ColladaPerspectiveCameraDefinition>>, *alternative}; throw std::logic_error("present union holds an absent or excluded alternative"); }())) == flight::String("perspective"))) {
       (camera = flight::make_ref<flight::types::Scene3DDocumentCamera>(flight::types::Scene3DDocumentCamera{.far = std::get<1>(definition)->far, .near = std::get<1>(definition)->near, .node = std::optional<double>{binding->node_index}, .projection = std::variant<flight::Ref<flight::types::OrthographicProjection>, flight::Ref<flight::types::PerspectiveProjection>, flight::Ref<flight::types::RawProjection>>{std::in_place_type<flight::Ref<flight::types::PerspectiveProjection>>, flight::camera::create_perspective_projection(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PerspectiveProjectionOptions>>>>(flight::row_field<flight::RowKey<"aspect">>(std::optional<double>{std::get<1>(definition)->aspect}), flight::row_field<flight::RowKey<"fovY">>(std::get<1>(definition)->fov_y)))}, .transform = transform}));

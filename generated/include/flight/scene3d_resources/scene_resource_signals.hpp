@@ -29,7 +29,7 @@ namespace flight::types { template <typename T> struct Signal; }
 #include <flight/types/material.hpp>
 #include <flight/types/pbr_extension.hpp>
 #include <flight/types/resource_loader.hpp>
-#include <flight/types/scene3_dresources.hpp>
+#include <flight/types/scene_3d_resources.hpp>
 #include <flight/types/signal.hpp>
 #include <flight/types/texture.hpp>
 #include <flight/types/texture_source.hpp>
@@ -43,29 +43,29 @@ using flight::types::Scene3DResourceResolverRuntime;
 using flight::types::Scene3DResourceResolverWithRuntime;
 using flight::types::Scene3DResourceSignals;
 using flight::types::TextureSource;
-using flight::types::scene3_dresource_resolver_runtime_key;
+using flight::types::scene_3d_resource_resolver_runtime_key;
 
-inline std::optional<flight::Ref<flight::types::Scene3DResourceSignals>> get_scene3_dresource_signals(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DResourceResolverWithRuntime>>>> resolver) {
-  return flight::row_get<flight::Ref<flight::types::Scene3DResourceResolverRuntime>>(resolver, flight::types::scene3_dresource_resolver_runtime_key)->signals;
+inline std::optional<flight::Ref<flight::types::Scene3DResourceSignals>> get_scene_3d_resource_signals(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DResourceResolverWithRuntime>>>> resolver) {
+  return flight::row_get<flight::Ref<flight::types::Scene3DResourceResolverRuntime>>(resolver, flight::types::scene_3d_resource_resolver_runtime_key)->signals;
 }
 
-inline void initialize_scene3_dresource_signals(flight::types::EntityConstruction<flight::Ref<flight::types::Scene3DResourceSignals>> out) {
+inline void initialize_scene_3d_resource_signals(flight::types::EntityConstruction<flight::Ref<flight::types::Scene3DResourceSignals>> out) {
   flight::row_set<flight::RowKey<"onResourceFailed">>(out, flight::signals::create_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DResourceEvent>>>>)>>());
   flight::row_set<flight::RowKey<"onResourceResolved">>(out, flight::signals::create_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DResourceEvent>>>>)>>());
 }
 
-inline flight::Ref<flight::types::Scene3DResourceSignals> create_scene3_dresource_signals() {
+inline flight::Ref<flight::types::Scene3DResourceSignals> create_scene_3d_resource_signals() {
   flight::types::EntityConstruction<flight::Ref<flight::types::Scene3DResourceSignals>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Scene3DResourceSignals>>();
-  initialize_scene3_dresource_signals(out);
+  initialize_scene_3d_resource_signals(out);
   return flight::entity::finish_entity<flight::Ref<flight::types::Scene3DResourceSignals>>(out);
 }
 
-inline flight::Ref<flight::types::Scene3DResourceSignals> enable_scene3_dresource_signals(flight::Ref<flight::types::Scene3DResourceResolverWithRuntime> resolver) {
-  auto runtime = resolver->scene3_dresource_resolver_runtime_key;
+inline flight::Ref<flight::types::Scene3DResourceSignals> enable_scene_3d_resource_signals(flight::Ref<flight::types::Scene3DResourceResolverWithRuntime> resolver) {
+  auto runtime = resolver->scene_3d_resource_resolver_runtime_key;
   if (runtime->signals.has_value()) {
     return runtime->signals.value();
   }
-  auto signals = create_scene3_dresource_signals();
+  auto signals = create_scene_3d_resource_signals();
   (runtime->signals = std::optional<flight::Ref<flight::types::Scene3DResourceSignals>>{signals});
   return signals;
 }

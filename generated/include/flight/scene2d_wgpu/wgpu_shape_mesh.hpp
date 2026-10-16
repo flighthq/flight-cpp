@@ -168,7 +168,7 @@ inline void shape_mesh_matrix(flight::Ref<flight::types::WgpuRenderState> state,
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuRenderPassViewport>>>> viewport = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuRenderPassViewport>>>>>(flight::render_wgpu::get_wgpu_render_pass_viewport(state));
   const double iw = (2.0 / ([&]() -> double { auto logical_or_value = flight::row_get<flight::RowKey<"width">>(viewport); if (flight::to_boolean(logical_or_value)) return logical_or_value; return 1.0; }()));
   const double ih = (2.0 / ([&]() -> double { auto logical_or_value_2 = flight::row_get<flight::RowKey<"height">>(viewport); if (flight::to_boolean(logical_or_value_2)) return logical_or_value_2; return 1.0; }()));
-  auto t = render_proxy->transform2_d;
+  auto t = render_proxy->transform_2d;
   ([&]() { auto&& typed_array = out; const auto typed_index = 0.0; const auto typed_value = (t->a * iw); return typed_array.set_index(typed_index, typed_value); }());
   ([&]() { auto&& typed_array_2 = out; const auto typed_index_2 = 1.0; const auto typed_value_2 = (-t->b * ih); return typed_array_2.set_index(typed_index_2, typed_value_2); }());
   ([&]() { auto&& typed_array_3 = out; const auto typed_index_3 = 2.0; const auto typed_value_3 = 0.0; return typed_array_3.set_index(typed_index_3, typed_value_3); }());

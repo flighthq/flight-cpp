@@ -44,7 +44,7 @@ namespace flight::types { struct WireframeMaterial; }
 #include <flight/scene3d_gl/gl_mesh_program.hpp>
 #include <flight/scene3d_gl/gl_pbr_program_cache.hpp>
 #include <flight/scene3d_gl/gl_pbr_standard_block.hpp>
-#include <flight/scene3d_gl/gl_scene3_druntime.hpp>
+#include <flight/scene3d_gl/gl_scene_3d_runtime.hpp>
 
 namespace flight::scene3d_gl {
 
@@ -59,7 +59,7 @@ inline flight::Ref<flight::types::GlMeshMaterialRenderer> gl_standard_pbr_mesh_m
   flight::scene3d_gl::bind_gl_pbr_standard_block(state, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlPbrProgram>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlPbrProgram>>>>(program)), std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::StandardPbrMaterialProperties>>>>>(pbr));
   gl.uniform1f(program->loc_alpha_cutoff, (pbr.has_value() ? flight::row_get<flight::RowKey<"alphaCutoff">>(pbr.value()) : 0.5));
 }, .draw = [](flight::Ref<flight::types::GlRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DRenderProxy>>>> proxy, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>> geometry) {
-  auto program = flight::scene3d_gl::get_gl_scene3_druntime(state)->active_mesh_program;
+  auto program = flight::scene3d_gl::get_gl_scene_3d_runtime(state)->active_mesh_program;
   if (!program.has_value()) {
     return;
   }

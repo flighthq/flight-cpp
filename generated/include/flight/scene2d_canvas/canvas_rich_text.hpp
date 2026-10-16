@@ -15,13 +15,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 
 #include <flight/types/text_selection_rectangle.hpp>
 
-#include <flight/types/scene2_drenderer.hpp>
+#include <flight/types/scene_2d_renderer.hpp>
 
-#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_proxy_2d.hpp>
 
 #include <flight/types/matrix.hpp>
 
@@ -59,7 +59,7 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/textlayout/text_layout.hpp>
 #include <flight/textlayout/text_layout_runtime.hpp>
 #include <flight/types/contract.hpp>
-#include <flight/scene2d_canvas/canvas_node2_d.hpp>
+#include <flight/scene2d_canvas/canvas_node_2d.hpp>
 #include <flight/scene2d_canvas/canvas_transform.hpp>
 
 
@@ -74,7 +74,7 @@ using flight::types::TextSelectionRectangle;
 using flight::types::entity_runtime_key;
 
 inline void draw_canvas_rich_text_mask(flight::Ref<flight::types::CanvasRenderState> state, flight::Ref<flight::types::RenderProxy2D> data) {
-  flight::scene2d_canvas::draw_canvas_scene2_d(state, data);
+  flight::scene2d_canvas::draw_canvas_scene_2d(state, data);
 }
 
 inline const flight::String bullet_char = flight::String("Ã¢â‚¬Â¢");
@@ -130,13 +130,13 @@ using entity_runtime_key_2a5696294f4ba375 = flight::types::entity_runtime_key_2a
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_ENTITY_RUNTIME_KEY_2A5696294F4BA375
 
 inline void draw_canvas_rich_text_field(flight::Ref<flight::types::CanvasRenderState> state, flight::Ref<flight::types::RenderProxy2D> render_proxy) {
-  flight::scene2d_canvas::draw_canvas_scene2_d(state, render_proxy);
+  flight::scene2d_canvas::draw_canvas_scene_2d(state, render_proxy);
   flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>> source = flight::structural_ref_cast<flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(render_proxy->source);
   auto data = flight::row_get<flight::RowKey<"data">>(source);
   const auto context_capture = flight::make_binding_cell(flight::CanvasRenderingContext2D{state->context});
   ([&]() { auto optional_chain_receiver = state->apply_blend_mode; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(state, render_proxy->blend_mode); }());
   context_capture.update_binding([&](auto& binding_value) { return (binding_value.global_alpha = render_proxy->alpha); });
-  flight::scene2d_canvas::set_canvas_transform(state, context_capture.read_binding(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(render_proxy->transform2_d)));
+  flight::scene2d_canvas::set_canvas_transform(state, context_capture.read_binding(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(render_proxy->transform_2d)));
   flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichTextRuntime>>>> rich_text_runtime = flight::structural_ref_cast<flight::Ref<flight::types::RichTextRuntime>>(flight::text::get_rich_text_runtime(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source))));
   auto content = flight::textlayout::get_rich_text_content(rich_text_runtime);
   flight::textlayout::compute_rich_text_content(content, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichTextData>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichTextData>>>>(data)), flight::text::get_rich_text_password_character(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source))));

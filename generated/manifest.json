@@ -223,12 +223,12 @@
         "flight/midi/midi_subscription.hpp",
         "flight/net/net.hpp",
         "flight/notification/notification.hpp",
-        "flight/particleemitter/update_particle_emitter2_d.hpp",
-        "flight/particleemitter/update_particle_emitter3_d.hpp",
+        "flight/particleemitter/update_particle_emitter_2d.hpp",
+        "flight/particleemitter/update_particle_emitter_3d.hpp",
         "flight/power/power.hpp",
         "flight/preferences/storage.hpp",
         "flight/render/render_cache.hpp",
-        "flight/scene2d_resources/scene2_ddocument_source.hpp",
+        "flight/scene2d_resources/scene_2d_document_source.hpp",
         "flight/scene3d_resources/scene_document_source.hpp",
         "flight/signals/emitter.hpp",
         "flight/signals/safe.hpp",
@@ -279,9 +279,9 @@
         "flight/types/render_registry_signals.hpp",
         "flight/types/resource_loader.hpp",
         "flight/types/resource_loader_item_signals.hpp",
-        "flight/types/scene2_dresources.hpp",
-        "flight/types/scene2_dsignals.hpp",
-        "flight/types/scene3_dresources.hpp",
+        "flight/types/scene_2d_resources.hpp",
+        "flight/types/scene_2d_signals.hpp",
+        "flight/types/scene_3d_resources.hpp",
         "flight/types/screen_signals.hpp",
         "flight/types/scroll_bar_controller.hpp",
         "flight/types/scroll_view_controller.hpp",
@@ -376,11 +376,11 @@
         "flight/node/stage_fit.hpp",
         "flight/node/traversal.hpp",
         "flight/particleemitter/particle_emitter.hpp",
-        "flight/particleemitter/update_particle_emitter3_d.hpp",
+        "flight/particleemitter/update_particle_emitter_3d.hpp",
         "flight/quadbatch/quad_batch.hpp",
         "flight/render/enable_color_adjustments.hpp",
-        "flight/render/explain_scene2_dpipeline_coverage.hpp",
-        "flight/render/explain_scene3_dpipeline_coverage.hpp",
+        "flight/render/explain_scene_2d_pipeline_coverage.hpp",
+        "flight/render/explain_scene_3d_pipeline_coverage.hpp",
         "flight/render/render_appearance.hpp",
         "flight/render/render_material.hpp",
         "flight/render/render_proxy.hpp",
@@ -396,12 +396,12 @@
         "flight/scene2d_formats/rive_asset_binding.hpp",
         "flight/scene2d_formats/svg_container_element.hpp",
         "flight/scene2d_gl/gl_velocity.hpp",
-        "flight/scene2d_resources/resolve_scene2_dresources.hpp",
+        "flight/scene2d_resources/resolve_scene_2d_resources.hpp",
         "flight/scene2d_wgpu/wgpu_cache.hpp",
         "flight/scene3d/billboard.hpp",
         "flight/scene3d/billboard_camera.hpp",
-        "flight/scene3d/clone_node3_dsubtree.hpp",
-        "flight/scene3d/prepare_scene3_dmorph.hpp",
+        "flight/scene3d/clone_node_3d_subtree.hpp",
+        "flight/scene3d/prepare_scene_3d_morph.hpp",
         "flight/scene3d/scene_kind_usage.hpp",
         "flight/scene3d/scene_material.hpp",
         "flight/scene3d/scene_node.hpp",
@@ -409,9 +409,9 @@
         "flight/scene3d/scene_node_bounds.hpp",
         "flight/scene3d/scene_node_culling.hpp",
         "flight/scene3d/scene_node_dispose.hpp",
-        "flight/scene3d_gl/gl_particle_emitter3_d.hpp",
+        "flight/scene3d_gl/gl_particle_emitter_3d.hpp",
         "flight/skeleton2d/skeleton2d_draw_order_target.hpp",
-        "flight/skeleton3d/prepare_scene3_dskinning.hpp",
+        "flight/skeleton3d/prepare_scene_3d_skinning.hpp",
         "flight/swf/swf_define_morph_shape_handler.hpp",
         "flight/swf/swf_document.hpp",
         "flight/swf/swf_edit_text_handler.hpp",
@@ -432,8 +432,8 @@
         "flight/types/has_clip.hpp",
         "flight/types/has_color_scale_bias.hpp",
         "flight/types/has_material.hpp",
-        "flight/types/has_transform2_d.hpp",
-        "flight/types/has_transform3_d.hpp",
+        "flight/types/has_transform_2d.hpp",
+        "flight/types/has_transform_3d.hpp",
         "flight/types/hierarchy_node.hpp",
         "flight/types/hit_test_function.hpp",
         "flight/types/html_view.hpp",
@@ -443,24 +443,24 @@
         "flight/types/movie_clip.hpp",
         "flight/types/native_text.hpp",
         "flight/types/node.hpp",
-        "flight/types/node2_d.hpp",
+        "flight/types/node_2d.hpp",
         "flight/types/node_descendant_visitor.hpp",
         "flight/types/node_interaction.hpp",
         "flight/types/node_interactive_state_binding.hpp",
         "flight/types/node_order_list.hpp",
-        "flight/types/particle_emitter2_d.hpp",
+        "flight/types/particle_emitter_2d.hpp",
         "flight/types/pointer_event_data.hpp",
         "flight/types/quad_batch.hpp",
         "flight/types/render_proxy.hpp",
-        "flight/types/render_proxy2_d.hpp",
+        "flight/types/render_proxy_2d.hpp",
         "flight/types/render_proxy_visitor.hpp",
         "flight/types/render_state.hpp",
         "flight/types/rich_text.hpp",
         "flight/types/scale9_shape.hpp",
         "flight/types/scale9_sprite.hpp",
-        "flight/types/scene2_dresources.hpp",
+        "flight/types/scene_2d_resources.hpp",
         "flight/types/shape.hpp",
-        "flight/types/skeleton2_ddraw_order_animation_target.hpp",
+        "flight/types/skeleton_2d_draw_order_animation_target.hpp",
         "flight/types/sprite.hpp",
         "flight/types/svg_registry.hpp",
         "flight/types/text_label.hpp",
@@ -498,9 +498,9 @@
         "flight/types/movie_clip.hpp",
         "flight/types/native_text.hpp",
         "flight/types/node.hpp",
-        "flight/types/node2_d.hpp",
-        "flight/types/node3_d.hpp",
-        "flight/types/particle_emitter2_d.hpp",
+        "flight/types/node_2d.hpp",
+        "flight/types/node_3d.hpp",
+        "flight/types/particle_emitter_2d.hpp",
         "flight/types/quad_batch.hpp",
         "flight/types/rich_text.hpp",
         "flight/types/scale9_shape.hpp",
@@ -517,7 +517,7 @@
         "flight/node/node_order_list.hpp",
         "flight/scene2d_formats/rive_draw_order.hpp",
         "flight/skeleton2d/skeleton2d_draw_order_target.hpp",
-        "flight/types/skeleton2_ddraw_order_animation_target.hpp"
+        "flight/types/skeleton_2d_draw_order_animation_target.hpp"
       ],
       "id": "respell-reference-alias-nodeorderlist"
     },
@@ -530,7 +530,7 @@
     {
       "files": [
         "flight/effects_wgpu/wgpu_render_effect_registry.hpp",
-        "flight/scene3d_wgpu/scene3_dwgpu_pipeline.hpp",
+        "flight/scene3d_wgpu/scene_3d_wgpu_pipeline.hpp",
         "flight/scene3d_wgpu/wgpu_mesh_material_registry.hpp",
         "flight/scene3d_wgpu/wgpu_shaded_modifier_snippet.hpp",
         "flight/scene3d_wgpu/wgpu_shaded_prelude.hpp"
@@ -653,14 +653,14 @@
         "flight/scene2d_formats/lottie_test_fixtures.hpp",
         "flight/scene2d_gl/enable_gl_color_adjustment_guards.hpp",
         "flight/scene2d_wgpu/enable_wgpu_color_adjustment_guards.hpp",
-        "flight/scene3d/enable_scene3_dguards.hpp",
-        "flight/scene3d_gl/enable_gl_scene3_dcolor_space_guards.hpp",
-        "flight/scene3d_gl/enable_gl_scene3_dcustom_shader_guards.hpp",
-        "flight/scene3d_gl/enable_gl_scene3_ddeform_guards.hpp",
-        "flight/scene3d_gl/enable_gl_scene3_dforward_light_selection_guards.hpp",
-        "flight/scene3d_wgpu/enable_wgpu_scene3_dforward_light_selection_guards.hpp",
-        "flight/skeleton2d/enable_skeleton2_dguards.hpp",
-        "flight/skeleton3d/enable_skeleton3_dguards.hpp",
+        "flight/scene3d/enable_scene_3d_guards.hpp",
+        "flight/scene3d_gl/enable_gl_scene_3d_color_space_guards.hpp",
+        "flight/scene3d_gl/enable_gl_scene_3d_custom_shader_guards.hpp",
+        "flight/scene3d_gl/enable_gl_scene_3d_deform_guards.hpp",
+        "flight/scene3d_gl/enable_gl_scene_3d_forward_light_selection_guards.hpp",
+        "flight/scene3d_wgpu/enable_wgpu_scene_3d_forward_light_selection_guards.hpp",
+        "flight/skeleton2d/enable_skeleton_2d_guards.hpp",
+        "flight/skeleton3d/enable_skeleton_3d_guards.hpp",
         "flight/snapshot/enable_snapshot_guards.hpp",
         "flight/swf/enable_swf_guards.hpp",
         "flight/text/enable_text_label_guards.hpp",
@@ -791,13 +791,13 @@
         "flight/render_wgpu/enable_wgpu_texture_resolver_guards.hpp",
         "flight/scene2d_gl/enable_gl_color_adjustment_guards.hpp",
         "flight/scene2d_wgpu/enable_wgpu_color_adjustment_guards.hpp",
-        "flight/scene3d_gl/enable_gl_scene3_dcolor_space_guards.hpp",
-        "flight/scene3d_gl/enable_gl_scene3_dcustom_shader_guards.hpp",
-        "flight/scene3d_gl/enable_gl_scene3_ddeform_guards.hpp",
-        "flight/scene3d_gl/enable_gl_scene3_dforward_light_selection_guards.hpp",
-        "flight/scene3d_wgpu/enable_wgpu_scene3_dforward_light_selection_guards.hpp",
-        "flight/skeleton2d/enable_skeleton2_dguards.hpp",
-        "flight/skeleton3d/enable_skeleton3_dguards.hpp",
+        "flight/scene3d_gl/enable_gl_scene_3d_color_space_guards.hpp",
+        "flight/scene3d_gl/enable_gl_scene_3d_custom_shader_guards.hpp",
+        "flight/scene3d_gl/enable_gl_scene_3d_deform_guards.hpp",
+        "flight/scene3d_gl/enable_gl_scene_3d_forward_light_selection_guards.hpp",
+        "flight/scene3d_wgpu/enable_wgpu_scene_3d_forward_light_selection_guards.hpp",
+        "flight/skeleton2d/enable_skeleton_2d_guards.hpp",
+        "flight/skeleton3d/enable_skeleton_3d_guards.hpp",
         "flight/snapshot/enable_snapshot_guards.hpp",
         "flight/swf/enable_swf_guards.hpp",
         "flight/text/enable_text_label_guards.hpp",
@@ -882,8 +882,8 @@
         "flight/particles_formats/particle_designer_parse.hpp",
         "flight/path_boolean/martinez_kernel.hpp",
         "flight/permissions/permission.hpp",
-        "flight/physics2d_abi/reference_physics2_dabi.hpp",
-        "flight/physics3d_abi/reference_physics3_dabi.hpp",
+        "flight/physics2d_abi/reference_physics_2d_abi.hpp",
+        "flight/physics3d_abi/reference_physics_3d_abi.hpp",
         "flight/render/render_cache.hpp",
         "flight/render_gl/gl_compressed_texture.hpp",
         "flight/render_wgpu/wgpu_external_texture.hpp",
@@ -898,13 +898,13 @@
         "flight/scene3d_gl/gl_emissive_mesh_material_renderer.hpp",
         "flight/scene3d_gl/gl_lambert_mesh_material_renderer.hpp",
         "flight/scene3d_gl/gl_mesh_upload.hpp",
-        "flight/scene3d_gl/gl_particle_emitter3_d.hpp",
+        "flight/scene3d_gl/gl_particle_emitter_3d.hpp",
         "flight/scene3d_gl/gl_phong_mesh_material_renderer.hpp",
         "flight/scene3d_gl/gl_shaded_mesh_material_renderer.hpp",
         "flight/scene3d_gl/gl_toon_mesh_material_renderer.hpp",
-        "flight/scene3d_gl/render_gl_scene3_d.hpp",
-        "flight/scene3d_resources/reveal_scene3_dresources_on_resolve.hpp",
-        "flight/scene3d_wgpu/render_wgpu_scene3_d.hpp",
+        "flight/scene3d_gl/render_gl_scene_3d.hpp",
+        "flight/scene3d_resources/reveal_scene_3d_resources_on_resolve.hpp",
+        "flight/scene3d_wgpu/render_wgpu_scene_3d.hpp",
         "flight/scene3d_wgpu/wgpu_mesh_pipeline.hpp",
         "flight/skeleton2d_formats/spine_binary_parse_helpers.hpp",
         "flight/skeleton2d_formats/spine_binary_section_counts.hpp",
@@ -931,12 +931,12 @@
         "flight/host/enable_host_guards.hpp",
         "flight/materials/enable_material_conversion_guards.hpp",
         "flight/net/enable_net_guards.hpp",
-        "flight/physics2d/enable_physics2_dguards.hpp",
-        "flight/physics3d/enable_physics3_dguards.hpp",
+        "flight/physics2d/enable_physics_2d_guards.hpp",
+        "flight/physics3d/enable_physics_3d_guards.hpp",
         "flight/render/render_registry_guards.hpp",
-        "flight/scene2d_resources/enable_scene2_dresource_failure_guards.hpp",
+        "flight/scene2d_resources/enable_scene_2d_resource_failure_guards.hpp",
         "flight/scene3d_gl/enable_gl_pbr_extension_guards.hpp",
-        "flight/scene3d_wgpu/enable_wgpu_scene3_dcustom_shader_guards.hpp",
+        "flight/scene3d_wgpu/enable_wgpu_scene_3d_custom_shader_guards.hpp",
         "flight/shape/enable_shape_bounds_guards.hpp",
         "flight/socket/enable_socket_guards.hpp"
       ],
@@ -945,7 +945,7 @@
     {
       "files": [
         "flight/bitmap/bitmap_warp.hpp",
-        "flight/collision/convex_hull3_d.hpp",
+        "flight/collision/convex_hull_3d.hpp",
         "flight/effects_gl/gl_effect_state.hpp",
         "flight/path/path.hpp",
         "flight/path/stroke_path_geometry.hpp",
@@ -1011,11 +1011,11 @@
     },
     {
       "files": [
-        "flight/spatial/bvh3_d.hpp",
+        "flight/spatial/bvh_3d.hpp",
         "flight/spatial/format_spatial_indexing_notice.hpp",
         "flight/spatial/spatial_indexing_guard.hpp",
         "flight/spatial/uniform_grid.hpp",
-        "flight/spatial/uniform_grid3_d.hpp"
+        "flight/spatial/uniform_grid_3d.hpp"
       ],
       "id": "spatial-spatialindexingnotice-using-declaration"
     },
@@ -1109,10 +1109,10 @@
         "flight/render/enable_color_adjustment_guards.hpp",
         "flight/render/enable_color_adjustments.hpp",
         "flight/render/enable_scene_render_guards.hpp",
-        "flight/render/explain_scene2_dcoverage.hpp",
-        "flight/render/explain_scene2_dpipeline_coverage.hpp",
-        "flight/render/explain_scene2_drender.hpp",
-        "flight/render/explain_scene3_dpipeline_coverage.hpp",
+        "flight/render/explain_scene_2d_coverage.hpp",
+        "flight/render/explain_scene_2d_pipeline_coverage.hpp",
+        "flight/render/explain_scene_2d_render.hpp",
+        "flight/render/explain_scene_3d_pipeline_coverage.hpp",
         "flight/render/merge_render_options.hpp",
         "flight/render/render_appearance.hpp",
         "flight/render/render_cache.hpp",
@@ -1182,10 +1182,10 @@
         "flight/physics3d/contacts.hpp",
         "flight/physics3d/continuous.hpp",
         "flight/physics3d/debug_geometry.hpp",
-        "flight/physics3d/enable_physics3_dguards.hpp",
-        "flight/physics3d/explain_physics3_dcollision.hpp",
-        "flight/physics3d/explain_physics3_djoints.hpp",
-        "flight/physics3d/explain_physics3_dstep.hpp",
+        "flight/physics3d/enable_physics_3d_guards.hpp",
+        "flight/physics3d/explain_physics_3d_collision.hpp",
+        "flight/physics3d/explain_physics_3d_joints.hpp",
+        "flight/physics3d/explain_physics_3d_step.hpp",
         "flight/physics3d/integrate.hpp",
         "flight/physics3d/islands.hpp",
         "flight/physics3d/joint_breakage.hpp",
@@ -1199,9 +1199,9 @@
         "flight/physics3d/mass_properties.hpp",
         "flight/physics3d/node_sync.hpp",
         "flight/physics3d/ownership.hpp",
-        "flight/physics3d/physics3_dbroadphase_publication.hpp",
-        "flight/physics3d/physics3_dspatial_indexing_guards.hpp",
-        "flight/physics3d/register_built_in_physics3_djoint_solvers.hpp",
+        "flight/physics3d/physics_3d_broadphase_publication.hpp",
+        "flight/physics3d/physics_3d_spatial_indexing_guards.hpp",
+        "flight/physics3d/register_built_in_physics_3d_joint_solvers.hpp",
         "flight/physics3d/solver.hpp",
         "flight/physics3d/step.hpp",
         "flight/physics3d/step_validation.hpp",
@@ -1212,7 +1212,7 @@
     },
     {
       "files": [
-        "flight/scene3d_formats/_internal_scene3_dformats_test_helper.hpp",
+        "flight/scene3d_formats/_internal_scene_3d_formats_test_helper.hpp",
         "flight/scene3d_formats/awd2_block_census.hpp",
         "flight/scene3d_formats/awd2_block_dispatch.hpp",
         "flight/scene3d_formats/awd2_camera_handler.hpp",
@@ -1319,15 +1319,15 @@
     },
     {
       "files": [
-        "flight/particleemitter/emit_particle_burst2_d.hpp",
-        "flight/particleemitter/emit_particle_burst3_d.hpp",
+        "flight/particleemitter/emit_particle_burst_2d.hpp",
+        "flight/particleemitter/emit_particle_burst_3d.hpp",
         "flight/particleemitter/particle_emitter.hpp",
-        "flight/particleemitter/particle_emitter3_d.hpp",
-        "flight/particleemitter/prewarm_particle_emitter2_d.hpp",
-        "flight/particleemitter/step_particle_emitter2_d.hpp",
-        "flight/particleemitter/step_particle_emitter3_d.hpp",
-        "flight/particleemitter/update_particle_emitter2_d.hpp",
-        "flight/particleemitter/update_particle_emitter3_d.hpp"
+        "flight/particleemitter/particle_emitter_3d.hpp",
+        "flight/particleemitter/prewarm_particle_emitter_2d.hpp",
+        "flight/particleemitter/step_particle_emitter_2d.hpp",
+        "flight/particleemitter/step_particle_emitter_3d.hpp",
+        "flight/particleemitter/update_particle_emitter_2d.hpp",
+        "flight/particleemitter/update_particle_emitter_3d.hpp"
       ],
       "id": "particleemitter-unqualified-types-names"
     },
@@ -1335,8 +1335,8 @@
       "files": [
         "flight/scene3d/billboard.hpp",
         "flight/scene3d/billboard_camera.hpp",
-        "flight/scene3d/clone_node3_dsubtree.hpp",
-        "flight/scene3d/enable_scene3_dguards.hpp",
+        "flight/scene3d/clone_node_3d_subtree.hpp",
+        "flight/scene3d/enable_scene_3d_guards.hpp",
         "flight/scene3d/instanced_mesh.hpp",
         "flight/scene3d/mesh.hpp",
         "flight/scene3d/scene.hpp",
@@ -1356,31 +1356,31 @@
     },
     {
       "files": [
-        "flight/scene3d_resources/anisotropy_pbr_scene3_dmaterial_textures.hpp",
+        "flight/scene3d_resources/anisotropy_pbr_scene_3d_material_textures.hpp",
         "flight/scene3d_resources/awd2_load.hpp",
-        "flight/scene3d_resources/clearcoat_pbr_scene3_dmaterial_textures.hpp",
-        "flight/scene3d_resources/enable_scene3_dresource_failure_guards.hpp",
-        "flight/scene3d_resources/explain_scene3_dresource_coverage.hpp",
-        "flight/scene3d_resources/get_scene3_dresource_textures.hpp",
+        "flight/scene3d_resources/clearcoat_pbr_scene_3d_material_textures.hpp",
+        "flight/scene3d_resources/enable_scene_3d_resource_failure_guards.hpp",
+        "flight/scene3d_resources/explain_scene_3d_resource_coverage.hpp",
+        "flight/scene3d_resources/get_scene_3d_resource_textures.hpp",
         "flight/scene3d_resources/gltf_load.hpp",
         "flight/scene3d_resources/gltf_load_import.hpp",
-        "flight/scene3d_resources/iridescence_pbr_scene3_dmaterial_textures.hpp",
+        "flight/scene3d_resources/iridescence_pbr_scene_3d_material_textures.hpp",
         "flight/scene3d_resources/md2_load.hpp",
         "flight/scene3d_resources/md5_load.hpp",
         "flight/scene3d_resources/obj_load.hpp",
-        "flight/scene3d_resources/resolve_scene3_dresources.hpp",
-        "flight/scene3d_resources/reveal_scene3_dresources_on_resolve.hpp",
+        "flight/scene3d_resources/resolve_scene_3d_resources.hpp",
+        "flight/scene3d_resources/reveal_scene_3d_resources_on_resolve.hpp",
         "flight/scene3d_resources/scene_document_source.hpp",
         "flight/scene3d_resources/scene_material_texture_registry.hpp",
         "flight/scene3d_resources/scene_resource_recovery.hpp",
         "flight/scene3d_resources/scene_resource_resolver.hpp",
         "flight/scene3d_resources/scene_resource_signals.hpp",
-        "flight/scene3d_resources/shaded_scene3_dmaterial_textures.hpp",
-        "flight/scene3d_resources/sheen_pbr_scene3_dmaterial_textures.hpp",
-        "flight/scene3d_resources/specular_pbr_scene3_dmaterial_textures.hpp",
+        "flight/scene3d_resources/shaded_scene_3d_material_textures.hpp",
+        "flight/scene3d_resources/sheen_pbr_scene_3d_material_textures.hpp",
+        "flight/scene3d_resources/specular_pbr_scene_3d_material_textures.hpp",
         "flight/scene3d_resources/three_ds_load.hpp",
-        "flight/scene3d_resources/transmission_volume_pbr_scene3_dmaterial_textures.hpp",
-        "flight/scene3d_resources/wrapped_diffuse_pbr_scene3_dmaterial_textures.hpp"
+        "flight/scene3d_resources/transmission_volume_pbr_scene_3d_material_textures.hpp",
+        "flight/scene3d_resources/wrapped_diffuse_pbr_scene_3d_material_textures.hpp"
       ],
       "id": "scene3d-resources-unqualified-types-names"
     },
@@ -1587,8 +1587,8 @@
     {
       "files": [
         "flight/scene_document/scene_document_refusal.hpp",
-        "flight/scene_document/scene_document_scene2_dmaterialization.hpp",
-        "flight/scene_document/scene_document_scene3_dmaterialization.hpp"
+        "flight/scene_document/scene_document_scene_2d_materialization.hpp",
+        "flight/scene_document/scene_document_scene_3d_materialization.hpp"
       ],
       "id": "scene-document-unqualified-entity-names"
     },
@@ -1660,24 +1660,24 @@
     },
     {
       "files": [
-        "flight/skeleton2d/apply_animation_clip_to_skeleton2_d.hpp",
-        "flight/skeleton2d/bounding_box_attachment2_d.hpp",
-        "flight/skeleton2d/clipping_attachment2_d.hpp",
-        "flight/skeleton2d/deform_animation_target2_d.hpp",
-        "flight/skeleton2d/deform_mesh_attachment2_d.hpp",
-        "flight/skeleton2d/deform_path_attachment2_d.hpp",
-        "flight/skeleton2d/explain_skeleton2_dchannel.hpp",
-        "flight/skeleton2d/ik_constraint2_d.hpp",
-        "flight/skeleton2d/path_constraint2_d.hpp",
-        "flight/skeleton2d/point_attachment2_d.hpp",
-        "flight/skeleton2d/region_attachment2_d.hpp",
+        "flight/skeleton2d/apply_animation_clip_to_skeleton_2d.hpp",
+        "flight/skeleton2d/bounding_box_attachment_2d.hpp",
+        "flight/skeleton2d/clipping_attachment_2d.hpp",
+        "flight/skeleton2d/deform_animation_target_2d.hpp",
+        "flight/skeleton2d/deform_mesh_attachment_2d.hpp",
+        "flight/skeleton2d/deform_path_attachment_2d.hpp",
+        "flight/skeleton2d/explain_skeleton_2d_channel.hpp",
+        "flight/skeleton2d/ik_constraint_2d.hpp",
+        "flight/skeleton2d/path_constraint_2d.hpp",
+        "flight/skeleton2d/point_attachment_2d.hpp",
+        "flight/skeleton2d/region_attachment_2d.hpp",
         "flight/skeleton2d/skeleton2d.hpp",
         "flight/skeleton2d/skeleton2d_animation_target.hpp",
         "flight/skeleton2d/skeleton2d_constraint.hpp",
         "flight/skeleton2d/skeleton2d_draw_order_target.hpp",
-        "flight/skeleton2d/skin_attachment2_dpoints.hpp",
-        "flight/skeleton2d/slot_deform2_d.hpp",
-        "flight/skeleton2d/transform_constraint2_d.hpp"
+        "flight/skeleton2d/skin_attachment_2d_points.hpp",
+        "flight/skeleton2d/slot_deform_2d.hpp",
+        "flight/skeleton2d/transform_constraint_2d.hpp"
       ],
       "id": "skeleton2d-unqualified-types-names"
     },
@@ -1813,8 +1813,8 @@
         "flight/scene2d_canvas/canvas_fill_pattern.hpp",
         "flight/scene2d_canvas/canvas_image_texture_resolver.hpp",
         "flight/scene2d_canvas/canvas_materials.hpp",
-        "flight/scene2d_canvas/canvas_node2_d.hpp",
-        "flight/scene2d_canvas/canvas_particle_emitter2_d.hpp",
+        "flight/scene2d_canvas/canvas_node_2d.hpp",
+        "flight/scene2d_canvas/canvas_particle_emitter_2d.hpp",
         "flight/scene2d_canvas/canvas_quad_batch.hpp",
         "flight/scene2d_canvas/canvas_quad_material_registry.hpp",
         "flight/scene2d_canvas/canvas_render_pass.hpp",
@@ -1841,9 +1841,9 @@
         "flight/scene2d_canvas/canvas_tilemap.hpp",
         "flight/scene2d_canvas/canvas_transform.hpp",
         "flight/scene2d_canvas/enable_canvas_texture_resolver_guards.hpp",
-        "flight/scene2d_canvas/explain_canvas_scene2_dcoverage.hpp",
+        "flight/scene2d_canvas/explain_canvas_scene_2d_coverage.hpp",
         "flight/scene2d_canvas/explain_canvas_texture_resolution.hpp",
-        "flight/scene2d_canvas/scene2_dcanvas_pipeline.hpp"
+        "flight/scene2d_canvas/scene_2d_canvas_pipeline.hpp"
       ],
       "id": "scene2d-canvas-unqualified-types-names"
     },
@@ -1884,8 +1884,8 @@
         "flight/scene2d_formats/rive_object_graph.hpp",
         "flight/scene2d_formats/rive_registrars.hpp",
         "flight/scene2d_formats/rive_requirements.hpp",
-        "flight/scene2d_formats/rive_scene2_d.hpp",
-        "flight/scene2d_formats/rive_scene2_ddocument.hpp",
+        "flight/scene2d_formats/rive_scene_2d.hpp",
+        "flight/scene2d_formats/rive_scene_2d_document.hpp",
         "flight/scene2d_formats/rive_shape_node.hpp",
         "flight/scene2d_formats/rive_shape_paint.hpp",
         "flight/scene2d_formats/rive_shape_path.hpp",
@@ -1958,28 +1958,28 @@
         "flight/scene_document/scene_document_layout_bindings.hpp",
         "flight/scene_document/scene_document_materialization_selection.hpp",
         "flight/scene_document/scene_document_refusal.hpp",
-        "flight/scene_document/scene_document_scene2_dmaterialization.hpp",
-        "flight/scene_document/scene_document_scene3_dmaterialization.hpp"
+        "flight/scene_document/scene_document_scene_2d_materialization.hpp",
+        "flight/scene_document/scene_document_scene_3d_materialization.hpp"
       ],
       "id": "scene-document-unqualified-types-names"
     },
     {
       "files": [
-        "flight/scene3d_wgpu/_internal_wgpu_scene3_dtest_helper.hpp",
+        "flight/scene3d_wgpu/_internal_wgpu_scene_3d_test_helper.hpp",
         "flight/scene3d_wgpu/blinn_phong_wgpu_mesh_material_renderer.hpp",
         "flight/scene3d_wgpu/custom_shader_wgpu_mesh_material_renderer.hpp",
         "flight/scene3d_wgpu/depth_wgpu_mesh_material_renderer.hpp",
         "flight/scene3d_wgpu/emissive_wgpu_mesh_material_renderer.hpp",
-        "flight/scene3d_wgpu/enable_wgpu_scene3_dcustom_shader_guards.hpp",
-        "flight/scene3d_wgpu/enable_wgpu_scene3_dforward_light_selection_guards.hpp",
-        "flight/scene3d_wgpu/explain_wgpu_scene3_dcoverage.hpp",
+        "flight/scene3d_wgpu/enable_wgpu_scene_3d_custom_shader_guards.hpp",
+        "flight/scene3d_wgpu/enable_wgpu_scene_3d_forward_light_selection_guards.hpp",
+        "flight/scene3d_wgpu/explain_wgpu_scene_3d_coverage.hpp",
         "flight/scene3d_wgpu/lambert_wgpu_mesh_material_renderer.hpp",
         "flight/scene3d_wgpu/matcap_wgpu_mesh_material_renderer.hpp",
         "flight/scene3d_wgpu/normal_wgpu_mesh_material_renderer.hpp",
         "flight/scene3d_wgpu/phong_wgpu_mesh_material_renderer.hpp",
-        "flight/scene3d_wgpu/prepare_wgpu_scene3_dforward_lights.hpp",
+        "flight/scene3d_wgpu/prepare_wgpu_scene_3d_forward_lights.hpp",
         "flight/scene3d_wgpu/register_wgpu_standard_pbr_material.hpp",
-        "flight/scene3d_wgpu/render_wgpu_scene3_d.hpp",
+        "flight/scene3d_wgpu/render_wgpu_scene_3d.hpp",
         "flight/scene3d_wgpu/shaded_wgpu_mesh_material_renderer.hpp",
         "flight/scene3d_wgpu/specular_glossiness_pbr_wgpu_mesh_material_renderer.hpp",
         "flight/scene3d_wgpu/standard_pbr_wgpu_mesh_material_renderer.hpp",
@@ -1995,11 +1995,11 @@
         "flight/scene3d_wgpu/wgpu_mesh_material_registry.hpp",
         "flight/scene3d_wgpu/wgpu_mesh_pipeline.hpp",
         "flight/scene3d_wgpu/wgpu_mesh_upload.hpp",
-        "flight/scene3d_wgpu/wgpu_particle_emitter3_d.hpp",
+        "flight/scene3d_wgpu/wgpu_particle_emitter_3d.hpp",
         "flight/scene3d_wgpu/wgpu_pbr_pipeline_cache.hpp",
         "flight/scene3d_wgpu/wgpu_pbr_prelude.hpp",
-        "flight/scene3d_wgpu/wgpu_scene3_druntime.hpp",
-        "flight/scene3d_wgpu/wgpu_scene3_dtime.hpp",
+        "flight/scene3d_wgpu/wgpu_scene_3d_runtime.hpp",
+        "flight/scene3d_wgpu/wgpu_scene_3d_time.hpp",
         "flight/scene3d_wgpu/wgpu_shaded_modifier_snippet.hpp",
         "flight/scene3d_wgpu/wgpu_shaded_prelude.hpp",
         "flight/scene3d_wgpu/wgpu_shadow_map.hpp",
@@ -2016,7 +2016,7 @@
       "files": [
         "flight/scene2d_wgpu/enable_wgpu_color_adjustment_guards.hpp",
         "flight/scene2d_wgpu/enable_wgpu_stroke_path_tessellation.hpp",
-        "flight/scene2d_wgpu/scene2_dwgpu_pipeline.hpp",
+        "flight/scene2d_wgpu/scene_2d_wgpu_pipeline.hpp",
         "flight/scene2d_wgpu/wgpu_bitmap_text.hpp",
         "flight/scene2d_wgpu/wgpu_cache.hpp",
         "flight/scene2d_wgpu/wgpu_clip.hpp",
@@ -2024,8 +2024,8 @@
         "flight/scene2d_wgpu/wgpu_clip_rectangle.hpp",
         "flight/scene2d_wgpu/wgpu_color_adjustment_material_feature.hpp",
         "flight/scene2d_wgpu/wgpu_mesh_shape_renderer.hpp",
-        "flight/scene2d_wgpu/wgpu_node2_d.hpp",
-        "flight/scene2d_wgpu/wgpu_particle_emitter2_d.hpp",
+        "flight/scene2d_wgpu/wgpu_node_2d.hpp",
+        "flight/scene2d_wgpu/wgpu_particle_emitter_2d.hpp",
         "flight/scene2d_wgpu/wgpu_quad_batch.hpp",
         "flight/scene2d_wgpu/wgpu_quad_batch_writer.hpp",
         "flight/scene2d_wgpu/wgpu_raster_shape_renderer.hpp",
@@ -2067,11 +2067,11 @@
     },
     {
       "files": [
-        "flight/scene2d_resources/built_in_scene2_ddocument_importers.hpp",
-        "flight/scene2d_resources/load_scene2_daudio_resources.hpp",
-        "flight/scene2d_resources/load_scene2_dimage_resources.hpp",
-        "flight/scene2d_resources/scene2_ddocument.hpp",
-        "flight/scene2d_resources/scene2_dresource_diagnostics.hpp"
+        "flight/scene2d_resources/built_in_scene_2d_document_importers.hpp",
+        "flight/scene2d_resources/load_scene_2d_audio_resources.hpp",
+        "flight/scene2d_resources/load_scene_2d_image_resources.hpp",
+        "flight/scene2d_resources/scene_2d_document.hpp",
+        "flight/scene2d_resources/scene_2d_resource_diagnostics.hpp"
       ],
       "id": "scene2d-resources-unqualified-types-names"
     },
@@ -2085,7 +2085,7 @@
         "flight/scene2d_dom/dom_image_texture_resolver.hpp",
         "flight/scene2d_dom/dom_materials.hpp",
         "flight/scene2d_dom/dom_native_text.hpp",
-        "flight/scene2d_dom/dom_node2_d.hpp",
+        "flight/scene2d_dom/dom_node_2d.hpp",
         "flight/scene2d_dom/dom_render_state.hpp",
         "flight/scene2d_dom/dom_scale9_shape.hpp",
         "flight/scene2d_dom/dom_scale9_sprite.hpp",
@@ -2098,7 +2098,7 @@
         "flight/scene2d_dom/enable_dom_texture_resolver_guards.hpp",
         "flight/scene2d_dom/explain_dom_texture_resolution.hpp",
         "flight/scene2d_dom/merge_dom_render_options.hpp",
-        "flight/scene2d_dom/scene2_ddom_pipeline.hpp"
+        "flight/scene2d_dom/scene_2d_dom_pipeline.hpp"
       ],
       "id": "scene2d-dom-unqualified-types-names"
     },
@@ -2141,21 +2141,21 @@
     },
     {
       "files": [
-        "flight/physics3d_abi/physics3_dabi.hpp",
-        "flight/physics3d_abi/physics3_dabi_buffer.hpp",
-        "flight/physics3d_abi/physics3_dabi_command.hpp",
-        "flight/physics3d_abi/physics3_dabi_query.hpp",
-        "flight/physics3d_abi/reference_physics3_dabi.hpp"
+        "flight/physics3d_abi/physics_3d_abi.hpp",
+        "flight/physics3d_abi/physics_3d_abi_buffer.hpp",
+        "flight/physics3d_abi/physics_3d_abi_command.hpp",
+        "flight/physics3d_abi/physics_3d_abi_query.hpp",
+        "flight/physics3d_abi/reference_physics_3d_abi.hpp"
       ],
       "id": "physics3d-abi-unqualified-types-names"
     },
     {
       "files": [
-        "flight/physics2d_abi/physics2_dabi.hpp",
-        "flight/physics2d_abi/physics2_dabi_buffer.hpp",
-        "flight/physics2d_abi/physics2_dabi_command.hpp",
-        "flight/physics2d_abi/physics2_dabi_query.hpp",
-        "flight/physics2d_abi/reference_physics2_dabi.hpp"
+        "flight/physics2d_abi/physics_2d_abi.hpp",
+        "flight/physics2d_abi/physics_2d_abi_buffer.hpp",
+        "flight/physics2d_abi/physics_2d_abi_command.hpp",
+        "flight/physics2d_abi/physics_2d_abi_query.hpp",
+        "flight/physics2d_abi/reference_physics_2d_abi.hpp"
       ],
       "id": "physics2d-abi-unqualified-types-names"
     },
@@ -2290,9 +2290,9 @@
     },
     {
       "files": [
-        "flight/skeleton3d/enable_skeleton3_dguards.hpp",
+        "flight/skeleton3d/enable_skeleton_3d_guards.hpp",
         "flight/skeleton3d/get_mesh_skin_bounds.hpp",
-        "flight/skeleton3d/prepare_scene3_dskinning.hpp",
+        "flight/skeleton3d/prepare_scene_3d_skinning.hpp",
         "flight/skeleton3d/skeleton3d.hpp",
         "flight/skeleton3d/skin_mesh_geometry.hpp",
         "flight/skeleton3d/update_mesh_skin.hpp"
@@ -2337,7 +2337,7 @@
     },
     {
       "files": [
-        "flight/picking/pick_scene3_d.hpp",
+        "flight/picking/pick_scene_3d.hpp",
         "flight/picking/scene_hit_attributes.hpp"
       ],
       "id": "picking-unqualified-types-names"
@@ -2347,10 +2347,10 @@
         "flight/physics2d/broadphase.hpp",
         "flight/physics2d/collider_transform.hpp",
         "flight/physics2d/debug_geometry.hpp",
-        "flight/physics2d/enable_physics2_dguards.hpp",
-        "flight/physics2d/explain_physics2_dcollision.hpp",
-        "flight/physics2d/explain_physics2_djoints.hpp",
-        "flight/physics2d/explain_physics2_dstep.hpp",
+        "flight/physics2d/enable_physics_2d_guards.hpp",
+        "flight/physics2d/explain_physics_2d_collision.hpp",
+        "flight/physics2d/explain_physics_2d_joints.hpp",
+        "flight/physics2d/explain_physics_2d_step.hpp",
         "flight/physics2d/islands.hpp",
         "flight/physics2d/joint_collision_suppression.hpp",
         "flight/physics2d/joint_factories.hpp",
@@ -2360,7 +2360,7 @@
         "flight/physics2d/mass_properties.hpp",
         "flight/physics2d/node_sync.hpp",
         "flight/physics2d/ownership.hpp",
-        "flight/physics2d/register_built_in_physics2_djoint_solvers.hpp",
+        "flight/physics2d/register_built_in_physics_2d_joint_solvers.hpp",
         "flight/physics2d/solver.hpp",
         "flight/physics2d/step.hpp",
         "flight/physics2d/step_validation.hpp",
@@ -3111,7 +3111,7 @@
     },
     {
       "files": [
-        "flight/physics3d_abi/physics3_dabi_command.hpp"
+        "flight/physics3d_abi/physics_3d_abi_command.hpp"
       ],
       "id": "physics3d-abi-unqualified-physics2d-abi-names"
     },
@@ -3226,8 +3226,8 @@
     {
       "files": [
         "flight/scene_document/scene_document_refusal.hpp",
-        "flight/scene_document/scene_document_scene2_dmaterialization.hpp",
-        "flight/scene_document/scene_document_scene3_dmaterialization.hpp"
+        "flight/scene_document/scene_document_scene_2d_materialization.hpp",
+        "flight/scene_document/scene_document_scene_3d_materialization.hpp"
       ],
       "id": "scene-document-unqualified-registry-names"
     },
@@ -3364,13 +3364,13 @@
     },
     {
       "files": [
-        "flight/scene2d_resources/scene2_dslot_reference.hpp"
+        "flight/scene2d_resources/scene_2d_slot_reference.hpp"
       ],
       "id": "scene2d-resources-node-hierarchy-access"
     },
     {
       "files": [
-        "flight/scene2d_resources/scene2_dslot_reference.hpp"
+        "flight/scene2d_resources/scene_2d_slot_reference.hpp"
       ],
       "id": "scene2d-resources-node-remove-access"
     },
@@ -3398,13 +3398,13 @@
     },
     {
       "files": [
-        "flight/scene2d_resources/load_scene2_daudio_resources.hpp"
+        "flight/scene2d_resources/load_scene_2d_audio_resources.hpp"
       ],
       "id": "scene2d-resources-readonly-audio-fetch-parameter"
     },
     {
       "files": [
-        "flight/scene2d_resources/load_scene2_dimage_resources.hpp"
+        "flight/scene2d_resources/load_scene_2d_image_resources.hpp"
       ],
       "id": "scene2d-resources-readonly-image-fetch-parameter"
     },
@@ -3752,7 +3752,7 @@
     },
     {
       "files": [
-        "flight/collision/sweep_collision_shape2_d.hpp",
+        "flight/collision/sweep_collision_shape_2d.hpp",
         "flight/effects_canvas/canvas_effect_state.hpp",
         "flight/scene2d_canvas/canvas_render_texture.hpp",
         "flight/scene3d_gl/gl_environment_cube.hpp",
@@ -3795,7 +3795,7 @@
     },
     {
       "files": [
-        "flight/scene2d_canvas/canvas_particle_emitter2_d.hpp"
+        "flight/scene2d_canvas/canvas_particle_emitter_2d.hpp"
       ],
       "id": "scene2d-canvas-particle-emitter-draw-forward-declaration"
     },
@@ -3805,7 +3805,7 @@
     },
     {
       "files": [
-        "flight/scene2d_canvas/canvas_particle_emitter2_d.hpp"
+        "flight/scene2d_canvas/canvas_particle_emitter_2d.hpp"
       ],
       "id": "scene2d-canvas-particle-emitter-submit-render-state-adapter"
     },
@@ -4527,13 +4527,13 @@
     },
     {
       "files": [
-        "flight/particleemitter/particle_emitter3_d.hpp"
+        "flight/particleemitter/particle_emitter_3d.hpp"
       ],
       "id": "particleemitter-declare-refused-create-3d"
     },
     {
       "files": [
-        "flight/particleemitter/update_particle_emitter2_d.hpp"
+        "flight/particleemitter/update_particle_emitter_2d.hpp"
       ],
       "id": "particleemitter-reexported-callbacks-type"
     },
@@ -5926,17 +5926,17 @@
       "flight/adjustments/color_matrix_adjustment.hpp",
       "flight/app/app_window.hpp",
       "flight/bitmapfont/bitmap_font_from_glyph_atlas.hpp",
-      "flight/camera/explain_camera3_dview.hpp",
-      "flight/collision/collide_contact_manifold2_d.hpp",
-      "flight/collision/collide_contact_manifold3_d.hpp",
-      "flight/collision/collision_shape_validation2_d.hpp",
-      "flight/collision/collision_shape_validation3_d.hpp",
-      "flight/collision/gjk2_d.hpp",
-      "flight/collision/gjk3_d.hpp",
-      "flight/collision/gjk_distance3_d.hpp",
-      "flight/collision/raycast_collision_shape2_d.hpp",
-      "flight/collision/test_collision2_d.hpp",
-      "flight/collision/test_collision3_d.hpp",
+      "flight/camera/explain_camera_3d_view.hpp",
+      "flight/collision/collide_contact_manifold_2d.hpp",
+      "flight/collision/collide_contact_manifold_3d.hpp",
+      "flight/collision/collision_shape_validation_2d.hpp",
+      "flight/collision/collision_shape_validation_3d.hpp",
+      "flight/collision/gjk_2d.hpp",
+      "flight/collision/gjk_3d.hpp",
+      "flight/collision/gjk_distance_3d.hpp",
+      "flight/collision/raycast_collision_shape_2d.hpp",
+      "flight/collision/test_collision_2d.hpp",
+      "flight/collision/test_collision_3d.hpp",
       "flight/effects/effect_capture_geometry.hpp",
       "flight/effects_canvas/canvas_effect_state.hpp",
       "flight/effects_gl/gl_contact_shadows_effect.hpp",
@@ -5949,7 +5949,7 @@
       "flight/mesh/mesh_geometry_attributes.hpp",
       "flight/midi/midi_access.hpp",
       "flight/notification/notification.hpp",
-      "flight/particleemitter/particle_emitter3_d.hpp",
+      "flight/particleemitter/particle_emitter_3d.hpp",
       "flight/particles_formats/libgdx_parse.hpp",
       "flight/particles_formats/libgdx_serialize.hpp",
       "flight/particles_formats/particle_designer_parse.hpp",
@@ -5962,17 +5962,17 @@
       "flight/path_formats/svg_path_data.hpp",
       "flight/permissions/permission.hpp",
       "flight/physics2d/debug_geometry.hpp",
-      "flight/physics2d/explain_physics2_dcollision.hpp",
+      "flight/physics2d/explain_physics_2d_collision.hpp",
       "flight/physics2d/step.hpp",
       "flight/physics2d/world_queries.hpp",
-      "flight/physics2d_abi/physics2_dabi_command.hpp",
-      "flight/physics2d_abi/reference_physics2_dabi.hpp",
+      "flight/physics2d_abi/physics_2d_abi_command.hpp",
+      "flight/physics2d_abi/reference_physics_2d_abi.hpp",
       "flight/physics3d/collider_collision.hpp",
-      "flight/physics3d/explain_physics3_dcollision.hpp",
+      "flight/physics3d/explain_physics_3d_collision.hpp",
       "flight/physics3d/step_validation.hpp",
       "flight/physics3d/world.hpp",
-      "flight/physics3d_abi/physics3_dabi_command.hpp",
-      "flight/physics3d_abi/reference_physics3_dabi.hpp",
+      "flight/physics3d_abi/physics_3d_abi_command.hpp",
+      "flight/physics3d_abi/reference_physics_3d_abi.hpp",
       "flight/picking/scene_hit_attributes.hpp",
       "flight/render/render_cache.hpp",
       "flight/render/render_registry_signals.hpp",
@@ -5989,9 +5989,9 @@
       "flight/scene2d_gl/gl_scale9_shape.hpp",
       "flight/scene2d_gl/gl_shape_data.hpp",
       "flight/scene2d_gl/gl_text_label.hpp",
-      "flight/scene2d_wgpu/scene2_dwgpu_pipeline.hpp",
+      "flight/scene2d_wgpu/scene_2d_wgpu_pipeline.hpp",
       "flight/scene2d_wgpu/wgpu_color_adjustment_material_feature.hpp",
-      "flight/scene2d_wgpu/wgpu_particle_emitter2_d.hpp",
+      "flight/scene2d_wgpu/wgpu_particle_emitter_2d.hpp",
       "flight/scene2d_wgpu/wgpu_quad_batch_writer.hpp",
       "flight/scene3d_formats/awd2_skeleton_handler.hpp",
       "flight/scene3d_formats/collada_animation_decoder.hpp",
@@ -6005,7 +6005,7 @@
       "flight/scene3d_formats/gltf_specular.hpp",
       "flight/scene3d_formats/gltf_transmission_volume.hpp",
       "flight/scene3d_formats/md2_animation_handler.hpp",
-      "flight/scene3d_wgpu/render_wgpu_scene3_d.hpp",
+      "flight/scene3d_wgpu/render_wgpu_scene_3d.hpp",
       "flight/scene3d_wgpu/wgpu_classic_prelude.hpp",
       "flight/scene3d_wgpu/wgpu_debug_prelude.hpp",
       "flight/scene3d_wgpu/wgpu_matcap_prelude.hpp",
@@ -6020,9 +6020,9 @@
       "flight/shape/shape_stroke.hpp",
       "flight/shape/shape_stroke_outline.hpp",
       "flight/shortcut/shortcut_explicit_dependency.hpp",
-      "flight/skeleton2d/ik_constraint2_d.hpp",
-      "flight/skeleton2d/path_constraint2_d.hpp",
-      "flight/skeleton2d/transform_constraint2_d.hpp",
+      "flight/skeleton2d/ik_constraint_2d.hpp",
+      "flight/skeleton2d/path_constraint_2d.hpp",
+      "flight/skeleton2d/transform_constraint_2d.hpp",
       "flight/skeleton2d_formats/spine_binary_bones_handler.hpp",
       "flight/swf/_internal_swf_tag_stream_test_helper.hpp",
       "flight/swf/swf_bounded_definition.hpp",
@@ -6193,21 +6193,21 @@
       "flight/scene2d_formats/svg_style.hpp",
       "flight/scene2d_formats/svg_text_element.hpp",
       "flight/scene2d_formats/svg_use_element.hpp",
-      "flight/scene2d_resources/load_scene2_daudio_resources.hpp",
-      "flight/scene2d_resources/load_scene2_dimage_resources.hpp",
+      "flight/scene2d_resources/load_scene_2d_audio_resources.hpp",
+      "flight/scene2d_resources/load_scene_2d_image_resources.hpp",
       "flight/scene3d_resources/contract.hpp",
-      "flight/scene3d_wgpu/_internal_wgpu_scene3_dtest_helper.hpp",
+      "flight/scene3d_wgpu/_internal_wgpu_scene_3d_test_helper.hpp",
       "flight/scene3d_wgpu/blinn_phong_wgpu_mesh_material_renderer.hpp",
       "flight/scene3d_wgpu/custom_shader_wgpu_mesh_material_renderer.hpp",
       "flight/scene3d_wgpu/depth_wgpu_mesh_material_renderer.hpp",
       "flight/scene3d_wgpu/emissive_wgpu_mesh_material_renderer.hpp",
-      "flight/scene3d_wgpu/enable_wgpu_scene3_dcustom_shader_guards.hpp",
+      "flight/scene3d_wgpu/enable_wgpu_scene_3d_custom_shader_guards.hpp",
       "flight/scene3d_wgpu/lambert_wgpu_mesh_material_renderer.hpp",
       "flight/scene3d_wgpu/matcap_wgpu_mesh_material_renderer.hpp",
       "flight/scene3d_wgpu/normal_wgpu_mesh_material_renderer.hpp",
       "flight/scene3d_wgpu/phong_wgpu_mesh_material_renderer.hpp",
-      "flight/scene3d_wgpu/render_wgpu_scene3_d.hpp",
-      "flight/scene3d_wgpu/scene3_dwgpu_pipeline.hpp",
+      "flight/scene3d_wgpu/render_wgpu_scene_3d.hpp",
+      "flight/scene3d_wgpu/scene_3d_wgpu_pipeline.hpp",
       "flight/scene3d_wgpu/shaded_wgpu_mesh_material_renderer.hpp",
       "flight/scene3d_wgpu/specular_glossiness_pbr_wgpu_mesh_material_renderer.hpp",
       "flight/scene3d_wgpu/standard_pbr_wgpu_mesh_material_renderer.hpp",
@@ -6230,8 +6230,8 @@
       "flight/scene3d_wgpu/wireframe_wgpu_mesh_material_renderer.hpp",
       "flight/scene_document/scene_document_layout_bindings.hpp",
       "flight/scene_document/scene_document_materialization_selection.hpp",
-      "flight/scene_document/scene_document_scene2_dmaterialization.hpp",
-      "flight/scene_document/scene_document_scene3_dmaterialization.hpp",
+      "flight/scene_document/scene_document_scene_2d_materialization.hpp",
+      "flight/scene_document/scene_document_scene_3d_materialization.hpp",
       "flight/shading/register_built_in_modifiers.hpp",
       "flight/shape/morph_shape.hpp",
       "flight/shape/scale9_shape.hpp",

@@ -14,7 +14,7 @@ namespace flight::types { struct MaterialData; }
 
 #include <flight/types/has_material.hpp>
 #include <flight/types/material.hpp>
-#include <flight/types/material2_d.hpp>
+#include <flight/types/material_2d.hpp>
 
 namespace flight::node {
 

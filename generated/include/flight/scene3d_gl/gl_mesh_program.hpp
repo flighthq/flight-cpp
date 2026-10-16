@@ -47,14 +47,14 @@ namespace flight::types { struct TextureCube; }
 #include <flight/render_gl/gl_skin_palette_texture.hpp>
 #include <flight/texture/texture.hpp>
 #include <flight/types/contract.hpp>
-#include <flight/scene3d_gl/gl_scene3_druntime.hpp>
+#include <flight/scene3d_gl/gl_scene_3d_runtime.hpp>
 #include <flight/scene3d_gl/gl_viewport_aspect.hpp>
 
 namespace flight::scene3d_gl {
 
 inline void begin_gl_mesh_draw(flight::Ref<flight::types::GlRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlMeshProgram>>>> program, bool double_sided) {
   flight::host_sdl::WebGl2Context gl = state->gl;
-  auto runtime = flight::scene3d_gl::get_gl_scene3_druntime(state);
+  auto runtime = flight::scene3d_gl::get_gl_scene_3d_runtime(state);
   (runtime->active_mesh_program = std::optional<flight::Ref<flight::types::GlMeshProgram>>{flight::structural_ref_cast<flight::Ref<flight::types::GlMeshProgram>>(program)});
   gl.use_program(flight::row_get<flight::RowKey<"program">>(program));
   gl.enable(gl.depth_test);
@@ -78,8 +78,8 @@ inline void destroy_gl_mesh_program(flight::Ref<flight::types::GlRenderState> st
 }
 
 template <typename T>
-inline T ensure_gl_scene3_dprogram(flight::Ref<flight::types::GlRenderState> state, flight::String key, std::function<T(flight::host_sdl::WebGl2Context)> compile) {
-  auto runtime = flight::scene3d_gl::get_gl_scene3_druntime(state);
+inline T ensure_gl_scene_3d_program(flight::Ref<flight::types::GlRenderState> state, flight::String key, std::function<T(flight::host_sdl::WebGl2Context)> compile) {
+  auto runtime = flight::scene3d_gl::get_gl_scene_3d_runtime(state);
   if (runtime->program_cache.has(key)) {
     return flight::erased_ref_as<typename T::element_type>(runtime->program_cache.get(key));
   }
@@ -220,14 +220,14 @@ inline const flight::String gl_instance_vertex_declarations_glsl = flight::Strin
 inline flight::Ref<flight::types::Matrix4> scratch_view_projection = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
 inline void set_gl_mesh_view_projection(flight::Ref<flight::types::GlRenderState> state, std::optional<flight::host_sdl::WebGlUniformLocation> loc_view_projection, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
-  flight::camera::get_camera3_dview_projection_matrix4(scratch_view_projection, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(camera), flight::scene3d_gl::get_gl_scene3_dviewport_aspect(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlRenderState>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlRenderState>>>>(state))));
+  flight::camera::get_camera_3d_view_projection_matrix4(scratch_view_projection, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(camera), flight::scene3d_gl::get_gl_scene_3d_viewport_aspect(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlRenderState>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlRenderState>>>>(state))));
   state->gl.uniform_matrix4fv(loc_view_projection, false, scratch_view_projection->m, std::nullopt, std::nullopt);
 }
 
 inline flight::Ref<flight::types::Vector3> scratch_camera_position = flight::make_ref<flight::types::Vector3>(flight::types::Vector3{.x = 0.0, .y = 0.0, .z = 0.0});
 
 inline void set_gl_mesh_camera_position(flight::host_sdl::WebGl2Context gl, std::optional<flight::host_sdl::WebGlUniformLocation> loc_camera_position, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera) {
-  flight::camera::get_camera3_dposition(scratch_camera_position, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(camera));
+  flight::camera::get_camera_3d_position(scratch_camera_position, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(camera));
   gl.uniform3f(loc_camera_position, scratch_camera_position->x, scratch_camera_position->y, scratch_camera_position->z);
 }
 

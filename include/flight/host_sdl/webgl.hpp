@@ -519,7 +519,7 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
   void clear_depth(float depth) const;
   void color_mask(bool red, bool green, bool blue, bool alpha) const;
   void compile_shader(const std::optional<WebGlShader>& shader) const;
-  void compressed_tex_image2_d(
+  void compressed_tex_image_2d(
       std::uint32_t target,
       int level,
       std::uint32_t internal_format,
@@ -529,7 +529,7 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
       const ArrayBufferView& source,
       std::size_t source_offset = 0,
       std::optional<std::size_t> source_length = std::nullopt) const;
-  void compressed_tex_sub_image3_d(
+  void compressed_tex_sub_image_3d(
       std::uint32_t target,
       int level,
       int x_offset,
@@ -576,7 +576,7 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
       std::uint32_t attachment,
       std::uint32_t renderbuffer_target,
       const std::optional<WebGlRenderbuffer>& renderbuffer) const;
-  void framebuffer_texture2_d(
+  void framebuffer_texture_2d(
       std::uint32_t target,
       std::uint32_t attachment,
       std::uint32_t texture_target,
@@ -640,7 +640,7 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
       std::uint32_t fail,
       std::uint32_t depth_fail,
       std::uint32_t depth_pass) const;
-  void tex_image2_d(
+  void tex_image_2d(
       std::uint32_t target,
       int level,
       int internal_format,
@@ -650,7 +650,7 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
       std::uint32_t format,
       std::uint32_t type,
       const ArrayBufferView& pixels) const;
-  void tex_image2_d(
+  void tex_image_2d(
       std::uint32_t target,
       int level,
       int internal_format,
@@ -660,14 +660,14 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
       std::uint32_t format,
       std::uint32_t type,
       std::nullptr_t) const;
-  void tex_image2_d(
+  void tex_image_2d(
       std::uint32_t target,
       int level,
       int internal_format,
       std::uint32_t format,
       std::uint32_t type,
       const GlImageSource& source) const;
-  void tex_image3_d(
+  void tex_image_3d(
       std::uint32_t target,
       int level,
       int internal_format,
@@ -678,7 +678,7 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
       std::uint32_t format,
       std::uint32_t type,
       const ArrayBufferView& pixels) const;
-  void tex_image3_d(
+  void tex_image_3d(
       std::uint32_t target,
       int level,
       int internal_format,
@@ -691,14 +691,14 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
       std::nullptr_t) const;
   void tex_parameterf(std::uint32_t target, std::uint32_t parameter, float value) const;
   void tex_parameteri(std::uint32_t target, std::uint32_t parameter, int value) const;
-  void tex_storage3_d(
+  void tex_storage_3d(
       std::uint32_t target,
       int levels,
       std::uint32_t internal_format,
       int width,
       int height,
       int depth) const;
-  void tex_sub_image2_d(
+  void tex_sub_image_2d(
       std::uint32_t target,
       int level,
       int x_offset,

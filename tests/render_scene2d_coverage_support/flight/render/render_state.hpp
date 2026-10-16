@@ -5,7 +5,7 @@
 namespace flight::render {
 
 // The builder seed still has the pre-a627849 render implementation, which includes removed
-// Renderer types before explain_scene2_dcoverage.hpp can be parsed. Keep this focused test at the
+// Renderer types before explain_scene_2d_coverage.hpp can be parsed. Keep this focused test at the
 // live module boundary: the real accessor has the same owner read, while the unrelated stale
 // implementation remains outside this override's test graph.
 inline flight::Ref<flight::types::RenderStateRuntime> get_render_state_runtime(

@@ -7,7 +7,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/scene2d_wgpu/enable_wgpu_color_adjustment_guards.hpp>
 #include <flight/scene2d_wgpu/enable_wgpu_stroke_path_tessellation.hpp>
-#include <flight/scene2d_wgpu/scene2_dwgpu_pipeline.hpp>
+#include <flight/scene2d_wgpu/scene_2d_wgpu_pipeline.hpp>
 #include <flight/scene2d_wgpu/wgpu_bitmap_text.hpp>
 #include <flight/scene2d_wgpu/wgpu_cache.hpp>
 #include <flight/scene2d_wgpu/wgpu_clip.hpp>
@@ -15,8 +15,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/scene2d_wgpu/wgpu_clip_rectangle.hpp>
 #include <flight/scene2d_wgpu/wgpu_color_adjustment_material_feature.hpp>
 #include <flight/scene2d_wgpu/wgpu_mesh_shape_renderer.hpp>
-#include <flight/scene2d_wgpu/wgpu_node2_d.hpp>
-#include <flight/scene2d_wgpu/wgpu_particle_emitter2_d.hpp>
+#include <flight/scene2d_wgpu/wgpu_node_2d.hpp>
+#include <flight/scene2d_wgpu/wgpu_particle_emitter_2d.hpp>
 #include <flight/scene2d_wgpu/wgpu_quad_batch.hpp>
 #include <flight/scene2d_wgpu/wgpu_quad_batch_writer.hpp>
 #include <flight/scene2d_wgpu/wgpu_raster_shape_renderer.hpp>

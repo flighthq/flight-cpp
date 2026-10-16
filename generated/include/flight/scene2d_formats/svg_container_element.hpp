@@ -23,7 +23,7 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/types/display_object.hpp>
 #include <flight/types/import_diagnostic.hpp>
 #include <flight/types/matrix.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/rectangle.hpp>
 #include <flight/types/shape_command.hpp>
 #include <flight/types/svg_document_import.hpp>

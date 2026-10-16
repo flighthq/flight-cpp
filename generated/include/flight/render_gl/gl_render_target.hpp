@@ -166,7 +166,7 @@ inline void draw_gl_texture_render_target_result(flight::Ref<flight::types::GlRe
   auto locations = runtime->context->current_shader.value()->locations.value();
   flight::render_gl::bind_gl_texture_realization(state, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlTextureRealization>>>>>{flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlTextureRealization>>>>(flight::row_field<flight::RowKey<"straightAlpha">>(false), flight::row_field<flight::RowKey<"texture">>(flight::row_get<flight::RowKey<"texture">>(target)))});
   auto quad_transform = flight::geometry::acquire_matrix();
-  flight::geometry::multiply_matrix(quad_transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(render_proxy->transform2_d)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(transform));
+  flight::geometry::multiply_matrix(quad_transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(render_proxy->transform_2d)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(transform));
   flight::render_gl::set_gl_attributes(gl, locations);
   flight::render_gl::set_gl_matrix_from_transform(gl, locations, matrix_array, quad_transform, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = runtime->render_target_viewport; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->width; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return gl.drawing_buffer_width(); }()), ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = runtime->render_target_viewport; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->height; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return gl.drawing_buffer_height(); }()));
   flight::render_gl::set_gl_base_uniforms(gl, locations, render_proxy);
@@ -399,13 +399,13 @@ inline flight::host_sdl::WebGlTexture allocate_gl_texture_render_target_storage(
         auto gf = map_gl_format(gl, fmt);
         flight::host_sdl::WebGlTexture texture = gl.create_texture();
         gl.bind_texture(gl.texture_2_d, texture);
-        gl.tex_image2_d(gl.texture_2_d, 0.0, gf->internal_format, w, h, 0.0, gf->format, gf->type, nullptr);
+        gl.tex_image_2d(gl.texture_2_d, 0.0, gf->internal_format, w, h, 0.0, gf->format, gf->type, nullptr);
         const double filter = (state->allow_smoothing ? gl.linear : gl.nearest);
         gl.tex_parameteri(gl.texture_2_d, gl.texture_min_filter, filter);
         gl.tex_parameteri(gl.texture_2_d, gl.texture_mag_filter, filter);
         gl.tex_parameteri(gl.texture_2_d, gl.texture_wrap_s, gl.clamp_to_edge);
         gl.tex_parameteri(gl.texture_2_d, gl.texture_wrap_t, gl.clamp_to_edge);
-        gl.framebuffer_texture2_d(gl.framebuffer, (gl.color_attachment0 + i), gl.texture_2_d, texture, 0.0);
+        gl.framebuffer_texture_2d(gl.framebuffer, (gl.color_attachment0 + i), gl.texture_2_d, texture, 0.0);
         target->textures.push(texture);
       }
       (i += 1.0);
@@ -441,11 +441,11 @@ inline flight::host_sdl::WebGlTexture allocate_gl_texture_render_target_storage(
     if (sampled) {
       flight::host_sdl::WebGlTexture depth_texture = gl.create_texture();
       gl.bind_texture(gl.texture_2_d, depth_texture);
-      gl.tex_image2_d(gl.texture_2_d, 0.0, gl.depth24_stencil8, w, h, 0.0, gl.depth_stencil, gl.unsigned_int_24_8, nullptr);
+      gl.tex_image_2d(gl.texture_2_d, 0.0, gl.depth24_stencil8, w, h, 0.0, gl.depth_stencil, gl.unsigned_int_24_8, nullptr);
       gl.tex_parameteri(gl.texture_2_d, gl.texture_min_filter, gl.nearest);
       gl.tex_parameteri(gl.texture_2_d, gl.texture_mag_filter, gl.nearest);
       gl.bind_framebuffer(gl.framebuffer, target->framebuffer);
-      gl.framebuffer_texture2_d(gl.framebuffer, gl.depth_stencil_attachment, gl.texture_2_d, depth_texture, 0.0);
+      gl.framebuffer_texture_2d(gl.framebuffer, gl.depth_stencil_attachment, gl.texture_2_d, depth_texture, 0.0);
       (target->depth_texture = std::optional<flight::host_sdl::WebGlTexture>{depth_texture});
     }
     else {

@@ -11,7 +11,7 @@
 #include <flight/types/cursor.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/node.hpp>
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 #include <flight/types/node_interaction.hpp>
 #include <flight/types/node_interaction_state.hpp>
 

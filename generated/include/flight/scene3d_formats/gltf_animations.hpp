@@ -14,7 +14,7 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/scene3_ddocument.hpp>
+#include <flight/types/scene_3d_document.hpp>
 
 #include <flight/types/morph_target.hpp>
 
@@ -55,7 +55,7 @@ using flight::types::Scene3DDocumentAnimationChannel;
 using flight::types::Scene3DDocumentMesh;
 using flight::types::Scene3DDocumentNode;
 
-inline flight::Record<flight::String, std::optional<flight::String>> gltf_animation_paths = {{flight::String("rotation"), std::optional<flight::String>{flight::types::scene3_danimation_path_rotation}}, {flight::String("scale"), std::optional<flight::String>{flight::types::scene3_danimation_path_scale}}, {flight::String("translation"), std::optional<flight::String>{flight::types::scene3_danimation_path_translation}}};
+inline flight::Record<flight::String, std::optional<flight::String>> gltf_animation_paths = {{flight::String("rotation"), std::optional<flight::String>{flight::types::scene_3d_animation_path_rotation}}, {flight::String("scale"), std::optional<flight::String>{flight::types::scene_3d_animation_path_scale}}, {flight::String("translation"), std::optional<flight::String>{flight::types::scene_3d_animation_path_translation}}};
 
 inline flight::Record<flight::String, std::optional<flight::String>> gltf_animation_output_types = {{flight::String("rotation"), std::optional<flight::String>{flight::String("VEC4")}}, {flight::String("scale"), std::optional<flight::String>{flight::String("VEC3")}}, {flight::String("translation"), std::optional<flight::String>{flight::String("VEC3")}}, {flight::String("weights"), std::optional<flight::String>{flight::String("SCALAR")}}};
 

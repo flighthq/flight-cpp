@@ -19,17 +19,17 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/shortcut/shortcut.hpp>
 
-#include <flight/types/slot2_d.hpp>
+#include <flight/types/slot_2d.hpp>
 
-#include <flight/types/skeleton2_dimport.hpp>
+#include <flight/types/skeleton_2d_import.hpp>
 
-#include <flight/types/skeleton2_d.hpp>
+#include <flight/types/skeleton_2d.hpp>
 
 #include <flight/types/import_diagnostic.hpp>
 
-#include <flight/types/bone2_d.hpp>
+#include <flight/types/bone_2d.hpp>
 
-#include <flight/types/attachment_skin2_d.hpp>
+#include <flight/types/attachment_skin_2d.hpp>
 
 namespace flight::types { struct AttachmentSkin2D; }
 namespace flight::types { struct Bone2D; }

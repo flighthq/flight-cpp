@@ -43,9 +43,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/animation/animation_clip.hpp>
 
-#include <flight/types/node2_danimation_path.hpp>
+#include <flight/types/node_2d_animation_path.hpp>
 
-#include <flight/types/node2_d.hpp>
+#include <flight/types/node_2d.hpp>
 
 #include <flight/types/lottie_document_import.hpp>
 

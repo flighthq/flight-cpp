@@ -16,7 +16,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/texture.hpp>
 
-#include <flight/types/scene3_dresources.hpp>
+#include <flight/types/scene_3d_resources.hpp>
 
 #include <flight/types/material.hpp>
 
@@ -47,26 +47,26 @@ using flight::types::Material;
 using flight::types::Scene3DMaterialTextureRegistry;
 using flight::types::Texture;
 
-inline flight::Ref<flight::types::Scene3DMaterialTextureRegistry> create_scene3_dmaterial_texture_registry() {
+inline flight::Ref<flight::types::Scene3DMaterialTextureRegistry> create_scene_3d_material_texture_registry() {
   return flight::make_ref<flight::types::Scene3DMaterialTextureRegistry>(flight::types::Scene3DMaterialTextureRegistry{.extension_listers = flight::Map<flight::String, flight::types::Scene3DPbrExtensionTextureLister>(), .listers = flight::Map<flight::String, flight::types::Scene3DMaterialTextureLister>()});
 }
 
-inline void get_scene3_dmaterial_textures(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DMaterialTextureRegistry>>>> registry, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>> material, flight::Array<flight::types::Texture> out) {
+inline void get_scene_3d_material_textures(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DMaterialTextureRegistry>>>> registry, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>> material, flight::Array<flight::types::Texture> out) {
   std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>>, flight::Array<flight::types::Texture>)>> lister = flight::row_get<flight::RowKey<"listers">>(registry).get(flight::row_get<flight::RowKey<"kind">>(material));
   if (lister.has_value()) {
     lister.value()(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>>>(material), out);
   }
 }
 
-inline bool has_scene3_dmaterial_texture_lister(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DMaterialTextureRegistry>>>> registry, flight::String kind) {
+inline bool has_scene_3d_material_texture_lister(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DMaterialTextureRegistry>>>> registry, flight::String kind) {
   return flight::row_get<flight::RowKey<"listers">>(registry).has(kind);
 }
 
-inline void register_scene3_dmaterial_textures(flight::Ref<flight::types::Scene3DMaterialTextureRegistry> registry, flight::String kind, flight::types::Scene3DMaterialTextureLister lister) {
+inline void register_scene_3d_material_textures(flight::Ref<flight::types::Scene3DMaterialTextureRegistry> registry, flight::String kind, flight::types::Scene3DMaterialTextureLister lister) {
   registry->listers.set(kind, lister);
 }
 
-inline void register_scene3_dpbr_extension_textures(flight::Ref<flight::types::Scene3DMaterialTextureRegistry> registry, flight::String kind, flight::types::Scene3DPbrExtensionTextureLister lister) {
+inline void register_scene_3d_pbr_extension_textures(flight::Ref<flight::types::Scene3DMaterialTextureRegistry> registry, flight::String kind, flight::types::Scene3DPbrExtensionTextureLister lister) {
   registry->extension_listers.set(kind, lister);
 }
 
@@ -158,8 +158,8 @@ inline void list_standard_pbr_properties_textures(flight::StructuralRef<flight::
 // base-typed slot erased it -- rather than asserting past flight::Ref<flight::types::Material>. The compiler
 // will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.
 
-inline void register_standard_pbr_scene3_dmaterial_textures(flight::Ref<flight::types::Scene3DMaterialTextureRegistry> registry) {
-  register_scene3_dmaterial_textures(registry, flight::types::standard_pbr_material_kind, list_standard_pbr_material_textures);
+inline void register_standard_pbr_scene_3d_material_textures(flight::Ref<flight::types::Scene3DMaterialTextureRegistry> registry) {
+  register_scene_3d_material_textures(registry, flight::types::standard_pbr_material_kind, list_standard_pbr_material_textures);
 }
 
 
@@ -191,8 +191,8 @@ inline void register_standard_pbr_scene3_dmaterial_textures(flight::Ref<flight::
 // base-typed slot erased it -- rather than asserting past flight::Ref<flight::types::Material>. The compiler
 // will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.
 
-inline void register_unlit_scene3_dmaterial_textures(flight::Ref<flight::types::Scene3DMaterialTextureRegistry> registry) {
-  register_scene3_dmaterial_textures(registry, flight::types::unlit_material_kind, list_unlit_material_textures);
+inline void register_unlit_scene_3d_material_textures(flight::Ref<flight::types::Scene3DMaterialTextureRegistry> registry) {
+  register_scene_3d_material_textures(registry, flight::types::unlit_material_kind, list_unlit_material_textures);
 }
 
 } // namespace flight::scene3d_resources
