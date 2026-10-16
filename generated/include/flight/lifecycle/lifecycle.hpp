@@ -3,115 +3,88 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function explainLifecycleOperation -- source line 85
-//   missing: function getAppLaunchKind -- source line 97
 //   missing: variable (binding) -- source line 152
 //   missing: function attachAppLifecycle -- source line 22
 #include <flight/any.hpp>
 #include <flight/record.hpp>
+#include <flight/structural_ref.hpp>
 #include <flight/weak_map.hpp>
 #include <functional>
 #include <optional>
+#include <stdexcept>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/signals/emitter.hpp>
-
-#include <flight/signals/signal.hpp>
-
-#include <flight/types/lifecycle.hpp>
+namespace flight::types { struct AppLifecycle; }
+namespace flight::types { struct BackendOperationExplanation; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct HostLifecycleCapability; }
+namespace flight::types { template <typename T> struct Signal; }
+namespace flight::types { template <typename T> struct SignalData; }
 
 #include <flight/entity/entity.hpp>
+#include <flight/signals/emitter.hpp>
+#include <flight/signals/signal.hpp>
+#include <flight/types/backend_operation_explanation.hpp>
+#include <flight/types/entity.hpp>
+#include <flight/types/lifecycle.hpp>
+#include <flight/types/signal.hpp>
 
 namespace flight::lifecycle {
 
-using flight::signals::emit_signal;
-
 using flight::signals::create_signal;
 
-using flight::types::AppLifecycleState;
-
-using flight::entity::allocate_entity;
-using flight::entity::finish_entity;
-
-
-// NOT GENERATED: function explainLifecycleOperation -- source line 85
-// refusal: cpp-typeof-runtime-domain-unrepresented [source-portability]
-//
-// The source it stood for:
-//   export function explainLifecycleOperation(
-//     hostLifecycle: Readonly<HostLifecycleCapability>,
-//     operation: LifecycleOperation,
-//   ): BackendOperationExplanation {
-//     const implemented = typeof hostLifecycle[operation] === 'function';
-//     return { implemented, layer: implemented ? 'host' : 'sentinel', operation };
-//   }
-//   
-//   // Returns the kind of launch — 'cold' (fresh process) or 'warm' (resumed from background). The web
-//   // provider approximates this via PerformanceNavigationTiming.type ('back_forward' → 'warm', all
-//   // others → 'cold'). Returns 'warm' as a safe fallback when the provider does not implement
-//   // getLaunchKind (legacy or minimal providers that pre-date the optional method).
-// cpp emission failed for @flighthq/lifecycle/packages/lifecycle/src/lifecycle.ts: typeof requires closed
-// runtime type evidence: the declared type does not decide it, and the target cannot ask a value it stores as a
-// concrete carrier. State the type where the value is read: a closed union whose alternatives are
-// distinguishable is lowered as a variant test, and a value the runtime owns -- a parameter declared `unknown`
-// or `any` -- is answered by the runtime's own `typeof`
-
-
-// NOT GENERATED: function getAppLaunchKind -- source line 97
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function getAppLaunchKind(hostLifecycle: Readonly<HostLifecycleCapability>): AppLaunchKind {
-//     const backend = hostLifecycle;
-//     return backend.getLaunchKind !== undefined ? backend.getLaunchKind() : 'warm';
-//   }
-//   
-//   // Returns the current application lifecycle state from the supplied provider.
-// cpp emission failed for @flighthq/lifecycle/packages/lifecycle/src/lifecycle.ts: a presence test against
-// undefined has no absence channel in the emitted C++ storage for property
-
-inline flight::Ref<AppLifecycleState> get_app_lifecycle_state(flight::Ref<HostLifecycleCapability> host_lifecycle) {
-  return host_lifecycle->get_state();
+inline flight::Ref<flight::types::BackendOperationExplanation> explain_lifecycle_operation(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostLifecycleCapability>>>> host_lifecycle, flight::types::LifecycleOperation operation) {
+  const bool implemented = (([&]() -> flight::String { const auto& typeof_receiver = host_lifecycle; const auto typeof_key = operation; if (typeof_key == flight::String("subscribe")) return flight::String("function"); if (typeof_key == flight::String("getState")) return flight::String("function"); if (typeof_key == flight::String("getLaunchKind")) return typeof_receiver->get_launch_kind.has_value() ? flight::String("function") : flight::String("undefined"); if (typeof_key == flight::String("subscribeMemoryWarning")) return typeof_receiver->subscribe_memory_warning.has_value() ? flight::String("function") : flight::String("undefined"); throw std::logic_error("Flight finite-key typeof reached no member"); }()) == flight::String("function"));
+  return flight::make_ref<flight::types::BackendOperationExplanation>(flight::types::BackendOperationExplanation{.implemented = implemented, .layer = (implemented ? flight::String("host") : flight::String("sentinel")), .operation = operation});
 }
 
-inline bool has_lifecycle_operation(flight::Ref<HostLifecycleCapability> host_lifecycle, flight::Ref<LifecycleOperation> operation) {
+inline flight::types::AppLaunchKind get_app_launch_kind(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostLifecycleCapability>>>> host_lifecycle) {
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostLifecycleCapability>>>> backend = host_lifecycle;
+  return (flight::row_get<flight::RowKey<"getLaunchKind">>(backend).has_value() ? flight::row_get<flight::RowKey<"getLaunchKind">>(backend).value()() : flight::String("warm"));
+}
+
+inline flight::types::AppLifecycleState get_app_lifecycle_state(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostLifecycleCapability>>>> host_lifecycle) {
+  return flight::row_get<flight::RowKey<"getState">>(host_lifecycle)();
+}
+
+inline bool has_lifecycle_operation(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostLifecycleCapability>>>> host_lifecycle, flight::types::LifecycleOperation operation) {
   return explain_lifecycle_operation(host_lifecycle, operation)->implemented;
 }
 
-inline void initialize_app_lifecycle(flight::Ref<EntityConstruction<flight::Ref<AppLifecycle>>> out) {
-  (out->on_state_change = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_state_change)>::element_type>>());
-  (out->on_resume = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_resume)>::element_type>>());
-  (out->on_pause = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_pause)>::element_type>>());
-  (out->on_back_button = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_back_button)>::element_type>>());
-  (out->on_memory_warning = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_memory_warning)>::element_type>>());
-  (out->on_save_state = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_save_state)>::element_type>>());
-  (out->on_restore_state = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_restore_state)>::element_type>>());
+inline void initialize_app_lifecycle(flight::types::EntityConstruction<flight::Ref<flight::types::AppLifecycle>> out) {
+  flight::row_set<flight::RowKey<"onStateChange">>(out, flight::signals::create_signal<std::function<void(flight::types::AppLifecycleState)>>());
+  flight::row_set<flight::RowKey<"onResume">>(out, flight::signals::create_signal<std::function<void()>>());
+  flight::row_set<flight::RowKey<"onPause">>(out, flight::signals::create_signal<std::function<void()>>());
+  flight::row_set<flight::RowKey<"onBackButton">>(out, flight::signals::create_signal<std::function<void()>>());
+  flight::row_set<flight::RowKey<"onMemoryWarning">>(out, flight::signals::create_signal<std::function<void(flight::types::AppMemoryPressure)>>());
+  flight::row_set<flight::RowKey<"onSaveState">>(out, flight::signals::create_signal<std::function<void(flight::Record<flight::String, flight::Any>)>>());
+  flight::row_set<flight::RowKey<"onRestoreState">>(out, flight::signals::create_signal<std::function<void(flight::Record<flight::String, flight::Any>)>>());
 }
 
-inline flight::Ref<AppLifecycle> create_app_lifecycle() {
-  flight::Ref<EntityConstruction<flight::Ref<AppLifecycle>>> out = allocate_entity<flight::Ref<AppLifecycle>>();
+inline flight::Ref<flight::types::AppLifecycle> create_app_lifecycle() {
+  flight::types::EntityConstruction<flight::Ref<flight::types::AppLifecycle>> out = flight::entity::allocate_entity<flight::Ref<flight::types::AppLifecycle>>();
   initialize_app_lifecycle(out);
-  return finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::AppLifecycle>>(out);
 }
 
-inline bool is_app_active(flight::Ref<HostLifecycleCapability> host_lifecycle) {
-  return (host_lifecycle->get_state() == flight::String("active"));
+inline bool is_app_active(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostLifecycleCapability>>>> host_lifecycle) {
+  return (flight::row_get<flight::RowKey<"getState">>(host_lifecycle)() == flight::String("active"));
 }
 
-inline bool is_app_background(flight::Ref<HostLifecycleCapability> host_lifecycle) {
-  return (host_lifecycle->get_state() == flight::String("background"));
+inline bool is_app_background(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostLifecycleCapability>>>> host_lifecycle) {
+  return (flight::row_get<flight::RowKey<"getState">>(host_lifecycle)() == flight::String("background"));
 }
 
-inline bool is_app_inactive(flight::Ref<HostLifecycleCapability> host_lifecycle) {
-  return (host_lifecycle->get_state() == flight::String("inactive"));
+inline bool is_app_inactive(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostLifecycleCapability>>>> host_lifecycle) {
+  return (flight::row_get<flight::RowKey<"getState">>(host_lifecycle)() == flight::String("inactive"));
 }
 
-inline bool request_app_back(flight::Ref<AppLifecycle> app) {
-  emit_signal(app->on_back_button);
-  return (([&]() -> std::optional<bool> { auto optional_chain_receiver = app->on_back_button.data; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->cancelled; }()) != true);
+inline bool request_app_back(flight::Ref<flight::types::AppLifecycle> app) {
+  flight::signals::emit_signal<std::function<void()>>(app->on_back_button);
+  return (([&]() -> std::optional<bool> { auto optional_chain_receiver = app->on_back_button->data; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->cancelled; }()) != true);
 }
 
 
@@ -123,9 +96,9 @@ inline bool request_app_back(flight::Ref<AppLifecycle> app) {
 // cpp emission failed for @flighthq/lifecycle/packages/lifecycle/src/lifecycle.ts: flight-cpp WeakMap value
 // requires a proven C++ representation
 
-inline flight::WeakMap<flight::Ref<AppLifecycle>, std::function<void()>> subscriptions = flight::WeakMap<flight::Ref<AppLifecycle>, std::function<void()>>();
+inline flight::WeakMap<flight::Ref<flight::types::AppLifecycle>, std::function<void()>> subscriptions = flight::WeakMap<flight::Ref<flight::types::AppLifecycle>, std::function<void()>>();
 
-inline void detach_app_lifecycle(flight::Ref<AppLifecycle> app) {
+inline void detach_app_lifecycle(flight::Ref<flight::types::AppLifecycle> app) {
   std::optional<std::function<void()>> unsubscribe = subscriptions.get(app);
   if (unsubscribe.has_value()) {
     unsubscribe.value()();
@@ -180,7 +153,7 @@ inline void detach_app_lifecycle(flight::Ref<AppLifecycle> app) {
 // cpp emission failed for @flighthq/lifecycle/packages/lifecycle/src/lifecycle.ts: shared mutable capture
 // unsubscribeMemory requires explicit initial storage
 
-inline void dispose_app_lifecycle(flight::Ref<AppLifecycle> app) {
+inline void dispose_app_lifecycle(flight::Ref<flight::types::AppLifecycle> app) {
   detach_app_lifecycle(app);
   saved_state.erase(app);
 }

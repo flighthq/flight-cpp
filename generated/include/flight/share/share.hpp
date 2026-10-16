@@ -114,7 +114,7 @@ inline flight::Task<flight::Ref<flight::types::ShareResult>> share_content_with_
 
 inline std::optional<flight::Ref<flight::types::ShareFilesContent>> files_content(flight::Array<flight::Ref<flight::types::ShareFile>> files) {
   std::optional<flight::Ref<flight::types::ShareFile>> first = files.get(0.0);
-  return ((!first.has_value() || !files.every(is_share_file_valid)) ? std::nullopt : std::optional<flight::Ref<flight::types::ShareFilesContent>>{flight::make_ref<flight::types::ShareFilesContent>(flight::types::ShareFilesContent{.files = ([&]() { flight::Array<flight::Ref<flight::types::ShareFile>> array_spread_result; array_spread_result.push(first.value()); for (const auto& array_spread_item : files.slice(1.0)) { array_spread_result.push(array_spread_item); } return array_spread_result; }())})});
+  return ((([&]() { const auto& presence_operand = first; return !presence_operand.has_value(); }()) || !files.every(is_share_file_valid)) ? std::nullopt : std::optional<flight::Ref<flight::types::ShareFilesContent>>{flight::make_ref<flight::types::ShareFilesContent>(flight::types::ShareFilesContent{.files = ([&]() { flight::Array<flight::Ref<flight::types::ShareFile>> array_spread_result; array_spread_result.push(first.value()); for (const auto& array_spread_item : files.slice(1.0)) { array_spread_result.push(array_spread_item); } return array_spread_result; }())})});
 }
 
 inline bool can_share_files(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostShareFilesCapability>>>> host_share_files, flight::Array<flight::Ref<flight::types::ShareFile>> files) {

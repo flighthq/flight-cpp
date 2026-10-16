@@ -20,8 +20,6 @@ namespace flight::types { struct Shape; }
 
 namespace flight::scene2d_formats {
 
-using flight::path::dash_path;
-
 using flight::types::Path;
 using flight::types::Shape;
 

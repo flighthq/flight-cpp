@@ -15,23 +15,23 @@ namespace flight::types { struct BlendEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_BACKDROP_KEY_OPACITY_D231BD4C0F621160
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_BACKDROP_KEY_OPACITY_D231BD4C0F621160
-struct backdrop_key_opacity_d231bd4c0f621160 : public flight::ReferenceEnabled {
-  std::optional<flight::String> backdrop_key;
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_OPACITY_BACKDROP_KEY_A5C034B887B26CBC
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_OPACITY_BACKDROP_KEY_A5C034B887B26CBC
+struct opacity_backdrop_key_a5c034b887b26cbc : public flight::ReferenceEnabled {
   std::optional<double> opacity;
+  std::optional<flight::String> backdrop_key;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_BACKDROP_KEY_OPACITY_D231BD4C0F621160
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_OPACITY_BACKDROP_KEY_A5C034B887B26CBC
 
-inline void initialize_blend_effect(flight::types::EntityConstruction<flight::Ref<flight::types::BlendEffect>> out, flight::String mode, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<backdrop_key_opacity_d231bd4c0f621160>>>> options) {
+inline void initialize_blend_effect(flight::types::EntityConstruction<flight::Ref<flight::types::BlendEffect>> out, flight::String mode, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<opacity_backdrop_key_a5c034b887b26cbc>>>> options) {
   flight::effects::initialize_effect<flight::Ref<flight::types::BlendEffect>>(out, flight::String("BlendEffect"));
   flight::row_set<flight::RowKey<"mode">>(out, mode);
   flight::row_set<flight::RowKey<"backdropKey">>(out, flight::row_get<flight::RowKey<"backdropKey">>(options));
   flight::row_set<flight::RowKey<"opacity">>(out, flight::row_get<flight::RowKey<"opacity">>(options));
 }
 
-inline flight::Ref<flight::types::BlendEffect> create_blend_effect(flight::String mode, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<backdrop_key_opacity_d231bd4c0f621160>>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<backdrop_key_opacity_d231bd4c0f621160>>>>());
+inline flight::Ref<flight::types::BlendEffect> create_blend_effect(flight::String mode, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<opacity_backdrop_key_a5c034b887b26cbc>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<opacity_backdrop_key_a5c034b887b26cbc>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::BlendEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::BlendEffect>>();
   initialize_blend_effect(out, mode, options.value());
   return flight::entity::finish_entity<flight::Ref<flight::types::BlendEffect>>(out);

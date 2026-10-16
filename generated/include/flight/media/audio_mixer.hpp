@@ -3,25 +3,13 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: interface AudioMixerRuntime -- source line 260
-//   missing: function createAudioMixer -- source line 46
-//   missing: function fadeAudioBusGain -- source line 90
-//   missing: function getAudioMixerActiveChannels -- source line 107
-//   missing: function pauseAllAudioMixerChannels -- source line 120
-//   missing: function resumeAllAudioMixerChannels -- source line 132
-//   missing: function setAudioMixerMasterGain -- source line 215
-//   missing: function setAudioMixerMasterMuted -- source line 228
-//   missing: function stopAllAudioMixerChannels -- source line 241
 //   missing: function registerBusInReverseMap -- source line 278
-//   missing: function addAudioBusToMixer -- source line 26
-//   missing: function routeAudioChannelToMixerBus -- source line 146
-//   missing: function unregisterBusFromReverseMap -- source line 289
-//   missing: function destroyAudioMixer -- source line 68
-//   missing: function unrouteAudioChannelFromMixerBus -- source line 296
-//   missing: function updateBusGainNode -- source line 321
-//   missing: function updateBusPannerNode -- source line 332
+#include <flight/array.hpp>
+#include <flight/structural_ref.hpp>
 #include <flight/weak_map.hpp>
+#include <functional>
 #include <optional>
+#include <tuple>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -29,251 +17,168 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/host_audio_mixer.hpp>
 
-#include <flight/types/entity.hpp>
-
 #include <flight/types/audio_bus.hpp>
 
-#include <flight/entity/entity.hpp>
+namespace flight::types { struct AudioBus; }
+namespace flight::types { struct AudioBusOptions; }
+namespace flight::types { struct AudioChannel; }
+namespace flight::types { struct AudioMixer; }
+namespace flight::types { struct AudioMixerOptions; }
+namespace flight::types { struct AudioResource; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct HostAudioMixerCapability; }
+namespace flight::types { template <typename T> struct Signal; }
 
 namespace flight::media {
 
 using flight::types::AudioBus;
 using flight::types::AudioBusOptions;
-using flight::types::AudioBusMixerGuard;
-using flight::types::AudioBusMixerOperation;
 using flight::types::AudioMixer;
-using flight::types::EntityConstruction;
 using flight::types::HostAudioMixerCapability;
-
-using flight::entity::allocate_entity;
-using flight::entity::finish_entity;
 struct AudioMixerRuntime;
 } // namespace flight::media
 
+#include <flight/entity/entity.hpp>
+#include <flight/math/clamp.hpp>
+#include <flight/types/audio_bus.hpp>
+#include <flight/types/audio_device_handle.hpp>
+#include <flight/types/audio_resource.hpp>
+#include <flight/types/entity.hpp>
+#include <flight/types/host_audio_mixer.hpp>
+#include <flight/types/signal.hpp>
 #include <flight/media/audio_channel.hpp>
 
 namespace flight::media {
 
-inline void initialize_audio_bus(flight::Ref<EntityConstruction<flight::Ref<AudioBus>>> out, std::optional<flight::Ref<AudioBusOptions>> options = std::nullopt) {
-  (out->gain = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->gain; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()));
-  (out->muted = ([&]() -> bool { auto nullish_coalesce_left = ([&]() -> std::optional<bool> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->muted; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return false; }()));
-  (out->name = ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->name; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }()));
-  (out->pan = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->pan; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+inline void initialize_audio_bus(flight::types::EntityConstruction<flight::Ref<flight::types::AudioBus>> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioBusOptions>>>>> options = std::nullopt) {
+  flight::row_set<flight::RowKey<"gain">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"gain">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()));
+  flight::row_set<flight::RowKey<"muted">>(out, ([&]() -> bool { auto nullish_coalesce_left = ([&]() -> std::optional<bool> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"muted">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return false; }()));
+  flight::row_set<flight::RowKey<"name">>(out, ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"name">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }()));
+  flight::row_set<flight::RowKey<"pan">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"pan">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
 }
 
-inline flight::Ref<AudioBus> create_audio_bus(std::optional<flight::Ref<AudioBusOptions>> options = std::nullopt) {
-  flight::Ref<EntityConstruction<flight::Ref<AudioBus>>> out = allocate_entity<flight::Ref<AudioBus>>();
+inline flight::Ref<flight::types::AudioBus> create_audio_bus(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioBusOptions>>>>> options = std::nullopt) {
+  flight::types::EntityConstruction<flight::Ref<flight::types::AudioBus>> out = flight::entity::allocate_entity<flight::Ref<flight::types::AudioBus>>();
   initialize_audio_bus(out, options);
-  return finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::AudioBus>>(out);
 }
 
+struct AudioMixerRuntime : public flight::ReferenceEnabled {
+  flight::Set<flight::Ref<flight::types::AudioChannel>> active_channels;
+  flight::Set<flight::Ref<flight::types::AudioChannel>> channels_paused_by_mixer;
+  flight::Map<flight::String, flight::Ref<flight::types::AudioBus>> buses;
+  flight::Map<flight::Ref<flight::types::AudioBus>, flight::types::AudioBusNodeHandle> bus_nodes;
+  flight::WeakMap<flight::Ref<flight::types::AudioChannel>, flight::Ref<flight::types::AudioBus>> channel_to_bus;
+  flight::types::AudioMixerGraphHandle graph;
+};
 
-// NOT GENERATED: interface AudioMixerRuntime -- source line 260
-// refusal: cpp-weak-map-value-representation-unproven [source-portability]
-//
-// The source it stood for:
-//   interface AudioMixerRuntime {
-//     activeChannels: Set<AudioChannel>;
-//     // The channels this mixer itself paused, so a mixer-wide resume restores exactly those and leaves a
-//     // channel the caller paused on its own still paused.
-//     channelsPausedByMixer: Set<AudioChannel>;
-//     buses: Map<string, AudioBus>;
-//     busNodes: Map<AudioBus, AudioBusNodeHandle>;
-//     channelToBus: WeakMap<AudioChannel, AudioBus>;
-//     graph: AudioMixerGraphHandle;
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/audioMixer.ts: flight-cpp WeakMap value requires a
-// proven C++ representation
-struct AudioMixerRuntime;
+inline flight::WeakMap<flight::Ref<flight::types::AudioMixer>, flight::Ref<AudioMixerRuntime>> mixer_runtimes = flight::WeakMap<flight::Ref<flight::types::AudioMixer>, flight::Ref<AudioMixerRuntime>>();
 
-inline flight::WeakMap<flight::Ref<AudioMixer>, flight::Ref<AudioMixerRuntime>> mixer_runtimes = flight::WeakMap<flight::Ref<AudioMixer>, flight::Ref<AudioMixerRuntime>>();
+inline flight::Ref<flight::types::AudioMixer> create_audio_mixer(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostAudioMixerCapability>>>> host_audio_mixer, flight::types::AudioDeviceHandle device, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioMixerOptions>>>>> options = std::nullopt) {
+  const double master_gain = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"masterGain">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }());
+  const bool master_muted = ([&]() -> bool { auto nullish_coalesce_left = ([&]() -> std::optional<bool> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"masterMuted">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return false; }());
+  flight::types::AudioMixerGraphHandle graph = flight::row_get<flight::RowKey<"createMixerGraph">>(host_audio_mixer)(device, (master_muted ? 0.0 : master_gain));
+  flight::types::EntityConstruction<flight::Ref<flight::types::AudioMixer>> mixer = flight::entity::allocate_entity<flight::Ref<flight::types::AudioMixer>>();
+  flight::row_set<flight::RowKey<"masterGain">>(mixer, master_gain);
+  flight::row_set<flight::RowKey<"masterMuted">>(mixer, master_muted);
+  mixer_runtimes.set(flight::structural_ref_cast<flight::Ref<flight::types::AudioMixer>>(mixer), flight::make_ref<AudioMixerRuntime>(AudioMixerRuntime{.active_channels = flight::Set<flight::Ref<flight::types::AudioChannel>>(), .channels_paused_by_mixer = flight::Set<flight::Ref<flight::types::AudioChannel>>(), .buses = flight::Map<flight::String, flight::Ref<flight::types::AudioBus>>(), .bus_nodes = flight::Map<flight::Ref<flight::types::AudioBus>, flight::types::AudioBusNodeHandle>(), .channel_to_bus = flight::WeakMap<flight::Ref<flight::types::AudioChannel>, flight::Ref<flight::types::AudioBus>>(), .graph = graph}));
+  return flight::structural_ref_cast<flight::Ref<flight::types::AudioMixer>>(mixer);
+}
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MEDIA_ACTIVE_CHANNELS_CHANNELS_PAUSED_BY_MIXER_BUSES_BUS_NODES_CHANNEL_TO_BUS_GRAPH_6738B3976AA8C03B
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MEDIA_ACTIVE_CHANNELS_CHANNELS_PAUSED_BY_MIXER_BUSES_BUS_NODES_CHANNEL_TO_BUS_GRAPH_6738B3976AA8C03B
+struct active_channels_channels_paused_by_mixer_buses_bus_nodes_channel_to_bus_graph_6738b3976aa8c03b : public flight::ReferenceEnabled {
+  flight::Set<flight::Ref<flight::types::AudioChannel>> active_channels;
+  flight::Set<flight::Ref<flight::types::AudioChannel>> channels_paused_by_mixer;
+  flight::Map<flight::String, flight::Ref<flight::types::AudioBus>> buses;
+  flight::Map<flight::Ref<flight::types::AudioBus>, flight::types::AudioBusNodeHandle> bus_nodes;
+  flight::WeakMap<flight::Ref<flight::types::AudioChannel>, flight::Ref<flight::types::AudioBus>> channel_to_bus;
+  flight::types::AudioMixerGraphHandle graph;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MEDIA_ACTIVE_CHANNELS_CHANNELS_PAUSED_BY_MIXER_BUSES_BUS_NODES_CHANNEL_TO_BUS_GRAPH_6738B3976AA8C03B
 
-// NOT GENERATED: function createAudioMixer -- source line 46
-// refusal: cpp-weak-map-value-representation-unproven [source-portability]
-//
-// The source it stood for:
-//   export function createAudioMixer(
-//     hostAudioMixer: Readonly<HostAudioMixerCapability>,
-//     device: AudioDeviceHandle,
-//     options?: Readonly<AudioMixerOptions>,
-//   ): AudioMixer {
-//     const masterGain = options?.masterGain ?? 1;
-//     const masterMuted = options?.masterMuted ?? false;
-//     const graph = hostAudioMixer.createMixerGraph(device, masterMuted ? 0 : masterGain);
-//     const mixer = allocateEntity<AudioMixer>();
-//     mixer.masterGain = masterGain;
-//     mixer.masterMuted = masterMuted;
-//     mixerRuntimes.set(mixer, {
-//       activeChannels: new Set(),
-//       channelsPausedByMixer: new Set(),
-//       buses: new Map(),
-//       busNodes: new Map(),
-//       channelToBus: new WeakMap(),
-//       graph,
-//     });
-//     return mixer;
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/audioMixer.ts: flight-cpp WeakMap value requires a
-// proven C++ representation
+inline void fade_audio_bus_gain(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostAudioMixerCapability>>>> host_audio_mixer, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioMixer>>>> mixer, flight::Ref<flight::types::AudioBus> bus, double target_gain, double duration_ms) {
+  auto runtime = mixer_runtimes.get(flight::structural_ref_cast<flight::Ref<flight::types::AudioMixer>>(mixer));
+  std::optional<double> bus_node = ([&]() -> std::optional<flight::types::AudioBusNodeHandle> { auto optional_chain_receiver = ([&]() -> std::optional<flight::Map<flight::Ref<flight::types::AudioBus>, flight::types::AudioBusNodeHandle>> { auto optional_chain_receiver = runtime; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->bus_nodes; }()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().get(bus); }());
+  if ((!runtime.has_value() || !bus_node.has_value())) {
+    (bus->gain = target_gain);
+    return;
+  }
+  flight::row_get<flight::RowKey<"fadeBusNodeGain">>(host_audio_mixer)(runtime.value()->graph, bus_node.value(), (bus->muted ? 0.0 : target_gain), duration_ms);
+  (bus->gain = target_gain);
+}
 
+inline flight::Array<flight::Ref<flight::types::AudioChannel>> get_audio_mixer_active_channels(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioMixer>>>> mixer) {
+  auto runtime = mixer_runtimes.get(flight::structural_ref_cast<flight::Ref<flight::types::AudioMixer>>(mixer));
+  if (!runtime.has_value()) {
+    return flight::Array<flight::Ref<flight::types::AudioChannel>>{};
+  }
+  return flight::array_from(runtime.value()->active_channels);
+}
 
-// NOT GENERATED: function fadeAudioBusGain -- source line 90
-// refusal: cpp-weak-map-value-representation-unproven [source-portability]
-//
-// The source it stood for:
-//   export function fadeAudioBusGain(
-//     hostAudioMixer: Readonly<HostAudioMixerCapability>,
-//     mixer: Readonly<AudioMixer>,
-//     bus: AudioBus,
-//     targetGain: number,
-//     durationMs: number,
-//   ): void {
-//     const runtime = mixerRuntimes.get(mixer);
-//     const busNode = runtime?.busNodes.get(bus);
-//     if (runtime === undefined || busNode === undefined) {
-//       bus.gain = targetGain;
-//       return;
-//     }
-//     hostAudioMixer.fadeBusNodeGain(runtime.graph, busNode, bus.muted ? 0 : targetGain, durationMs);
-//     bus.gain = targetGain;
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/audioMixer.ts: flight-cpp WeakMap value requires a
-// proven C++ representation
+inline void pause_all_audio_mixer_channels(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioMixer>>>> mixer) {
+  auto runtime = mixer_runtimes.get(flight::structural_ref_cast<flight::Ref<flight::types::AudioMixer>>(mixer));
+  if (!runtime.has_value()) {
+    return;
+  }
+  for (auto channel : runtime.value()->active_channels) {
+    if ((channel->state != flight::String("playing"))) {
+      continue;
+    }
+    flight::media::pause_audio_channel(channel);
+    runtime.value()->channels_paused_by_mixer.add(channel);
+  }
+}
 
+inline void resume_all_audio_mixer_channels(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioMixer>>>> mixer) {
+  auto runtime = mixer_runtimes.get(flight::structural_ref_cast<flight::Ref<flight::types::AudioMixer>>(mixer));
+  if (!runtime.has_value()) {
+    return;
+  }
+  for (auto channel : runtime.value()->channels_paused_by_mixer) {
+    if ((channel->state == flight::String("paused"))) {
+      flight::media::resume_audio_channel(channel);
+    }
+  }
+  runtime.value()->channels_paused_by_mixer.clear();
+}
 
-// NOT GENERATED: function getAudioMixerActiveChannels -- source line 107
-// refusal: cpp-weak-map-value-representation-unproven [source-portability]
-//
-// The source it stood for:
-//   export function getAudioMixerActiveChannels(mixer: Readonly<AudioMixer>): readonly AudioChannel[] {
-//     const runtime = mixerRuntimes.get(mixer);
-//     if (runtime === undefined) return [];
-//     return Array.from(runtime.activeChannels);
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/audioMixer.ts: flight-cpp WeakMap value requires a
-// proven C++ representation
+inline double set_audio_mixer_master_gain(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostAudioMixerCapability>>>> host_audio_mixer, flight::Ref<flight::types::AudioMixer> mixer, double value) {
+  (mixer->master_gain = value);
+  auto runtime = mixer_runtimes.get(mixer);
+  if (runtime.has_value()) {
+    flight::row_get<flight::RowKey<"setMasterGain">>(host_audio_mixer)(runtime.value()->graph, (mixer->master_muted ? 0.0 : value));
+  }
+  return mixer->master_gain;
+}
 
+inline bool set_audio_mixer_master_muted(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostAudioMixerCapability>>>> host_audio_mixer, flight::Ref<flight::types::AudioMixer> mixer, bool muted) {
+  (mixer->master_muted = muted);
+  auto runtime = mixer_runtimes.get(mixer);
+  if (runtime.has_value()) {
+    flight::row_get<flight::RowKey<"setMasterGain">>(host_audio_mixer)(runtime.value()->graph, (muted ? 0.0 : mixer->master_gain));
+  }
+  return mixer->master_muted;
+}
 
-// NOT GENERATED: function pauseAllAudioMixerChannels -- source line 120
-// refusal: cpp-weak-map-value-representation-unproven [source-portability]
-//
-// The source it stood for:
-//   export function pauseAllAudioMixerChannels(mixer: Readonly<AudioMixer>): void {
-//     const runtime = mixerRuntimes.get(mixer);
-//     if (runtime === undefined) return;
-//     // Actually release each active source (not just flip the flag) so audio halts on pause. Only channels
-//     // that were playing are recorded: one already paused by the caller is not this mixer's to resume.
-//     for (const channel of runtime.activeChannels) {
-//       if (channel.state !== 'playing') continue;
-//       pauseAudioChannel(channel);
-//       runtime.channelsPausedByMixer.add(channel);
-//     }
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/audioMixer.ts: flight-cpp WeakMap value requires a
-// proven C++ representation
+inline void stop_all_audio_mixer_channels(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioMixer>>>> mixer) {
+  auto runtime = mixer_runtimes.get(flight::structural_ref_cast<flight::Ref<flight::types::AudioMixer>>(mixer));
+  if (!runtime.has_value()) {
+    return;
+  }
+  flight::Array<flight::Ref<flight::types::AudioChannel>> stopping = ([&]() { flight::Array<flight::Ref<flight::types::AudioChannel>> array_spread_result; for (const auto& array_spread_item : runtime.value()->active_channels) { array_spread_result.push(array_spread_item); } return array_spread_result; }());
+  runtime.value()->active_channels.clear();
+  for (auto channel : stopping) {
+    flight::media::stop_audio_channel(channel);
+  }
+  runtime.value()->channels_paused_by_mixer.clear();
+}
 
-
-// NOT GENERATED: function resumeAllAudioMixerChannels -- source line 132
-// refusal: cpp-weak-map-value-representation-unproven [source-portability]
-//
-// The source it stood for:
-//   export function resumeAllAudioMixerChannels(mixer: Readonly<AudioMixer>): void {
-//     const runtime = mixerRuntimes.get(mixer);
-//     if (runtime === undefined) return;
-//     // Restart the source for channels this mixer paused; the channel reapplies its opaque bus route after
-//     // every replacement source handle is created. Resuming every paused channel
-//     // instead would resurrect one the caller had deliberately paused on its own — a mixer-wide pause and
-//     // resume around a menu would silently un-pause it. The state re-check covers a channel resumed or
-//     // stopped individually while the mixer was paused.
-//     for (const channel of runtime.channelsPausedByMixer) {
-//       if (channel.state === 'paused') resumeAudioChannel(channel);
-//     }
-//     runtime.channelsPausedByMixer.clear();
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/audioMixer.ts: flight-cpp WeakMap value requires a
-// proven C++ representation
-
-
-// NOT GENERATED: function setAudioMixerMasterGain -- source line 215
-// refusal: cpp-weak-map-value-representation-unproven [source-portability]
-//
-// The source it stood for:
-//   export function setAudioMixerMasterGain(
-//     hostAudioMixer: Readonly<HostAudioMixerCapability>,
-//     mixer: AudioMixer,
-//     value: number,
-//   ): number {
-//     mixer.masterGain = value;
-//     const runtime = mixerRuntimes.get(mixer);
-//     if (runtime !== undefined) {
-//       hostAudioMixer.setMasterGain(runtime.graph, mixer.masterMuted ? 0 : value);
-//     }
-//     return mixer.masterGain;
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/audioMixer.ts: flight-cpp WeakMap value requires a
-// proven C++ representation
-
-
-// NOT GENERATED: function setAudioMixerMasterMuted -- source line 228
-// refusal: cpp-weak-map-value-representation-unproven [source-portability]
-//
-// The source it stood for:
-//   export function setAudioMixerMasterMuted(
-//     hostAudioMixer: Readonly<HostAudioMixerCapability>,
-//     mixer: AudioMixer,
-//     muted: boolean,
-//   ): boolean {
-//     mixer.masterMuted = muted;
-//     const runtime = mixerRuntimes.get(mixer);
-//     if (runtime !== undefined) {
-//       hostAudioMixer.setMasterGain(runtime.graph, muted ? 0 : mixer.masterGain);
-//     }
-//     return mixer.masterMuted;
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/audioMixer.ts: flight-cpp WeakMap value requires a
-// proven C++ representation
-
-
-// NOT GENERATED: function stopAllAudioMixerChannels -- source line 241
-// refusal: cpp-weak-map-value-representation-unproven [source-portability]
-//
-// The source it stood for:
-//   export function stopAllAudioMixerChannels(mixer: Readonly<AudioMixer>): void {
-//     const runtime = mixerRuntimes.get(mixer);
-//     if (runtime === undefined) return;
-//     // Delegating rather than flipping the fields by hand is the fix: the previous version set state and
-//     // currentTime directly and never stopped the source, so every channel reported 'stopped' while its
-//     // host source kept emitting. The snapshot is defensive rather than load-bearing —
-//     // stopAudioChannel does not currently reach into activeChannels, and destroyAudioMixer iterates the
-//     // live set for the same walk — but it makes this loop safe if that stops being true.
-//     const stopping = [...runtime.activeChannels];
-//     runtime.activeChannels.clear();
-//     for (const channel of stopping) {
-//       stopAudioChannel(channel);
-//     }
-//     // Bookkeeping, not a behavioural guard: resume already re-checks that a channel is still paused, so
-//     // a stopped channel would be skipped anyway. Clearing keeps the record from retaining channels the
-//     // mixer no longer owns for the rest of its life.
-//     runtime.channelsPausedByMixer.clear();
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/audioMixer.ts: flight-cpp WeakMap value requires a
-// proven C++ representation
-
-inline flight::Map<flight::Ref<AudioBus>, flight::Set<flight::Ref<AudioMixerRuntime>>> bus_to_mixer_runtimes = flight::Map<flight::Ref<AudioBus>, flight::Set<flight::Ref<AudioMixerRuntime>>>();
+inline flight::Map<flight::Ref<flight::types::AudioBus>, flight::Set<flight::Ref<AudioMixerRuntime>>> bus_to_mixer_runtimes = flight::Map<flight::Ref<flight::types::AudioBus>, flight::Set<flight::Ref<AudioMixerRuntime>>>();
 
 
 // NOT GENERATED: function registerBusInReverseMap -- source line 278
-// refusal: cpp-weak-map-value-representation-unproven [source-portability]
+// refusal: cpp-contextual-union-inequivalent [source-portability]
 //
 // The source it stood for:
 //   function registerBusInReverseMap(bus: AudioBus, runtime: AudioMixerRuntime): void {
@@ -287,206 +192,151 @@ inline flight::Map<flight::Ref<AudioBus>, flight::Set<flight::Ref<AudioMixerRunt
 //   
 //   // Drop a runtime from a bus's reverse-map entry, deleting the entry entirely once no runtime
 //   // references the bus. This keeps busToMixerRuntimes bounded as mixers are destroyed.
-// cpp emission failed for @flighthq/media/packages/media/src/audioMixer.ts: flight-cpp WeakMap value requires a
-// proven C++ representation
+// cpp emission failed for @flighthq/media/packages/media/src/audioMixer.ts: contextual C++ union conversion
+// requires equivalent source union evidence: target optionalSingle carriers
+// [flight::Set<flight::Ref<active_channels_channels_paused_by_mixer_buses_bus_nodes_channel_to_bus_graph_6738b3976aa8c03b>>]
+// from call source optionalSingle carriers [flight::Set<flight::Ref<AudioMixerRuntime>>]. Narrow or convert the
+// source expression so each of its alternatives names exactly one destination union alternative. The carrier
+// lists show which alternatives lack an exact carrier; preserve the declared collection or member union alias
+// before flow expansion. For a Map or WeakMap lookup followed by a rebind, ensure every rebound member already
+// has the declared value owner member's carrier -- a Readonly structural view does not become a mutable nominal
+// Ref.
 
+inline void add_audio_bus_to_mixer(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostAudioMixerCapability>>>> host_audio_mixer, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioMixer>>>> mixer, flight::Ref<flight::types::AudioBus> bus) {
+  auto runtime = mixer_runtimes.get(flight::structural_ref_cast<flight::Ref<flight::types::AudioMixer>>(mixer));
+  if (!runtime.has_value()) {
+    return;
+  }
+  if (runtime.value()->bus_nodes.has(bus)) {
+    return;
+  }
+  flight::types::AudioBusNodeHandle bus_node = flight::row_get<flight::RowKey<"createBusNode">>(host_audio_mixer)(runtime.value()->graph, (bus->muted ? 0.0 : bus->gain), bus->pan);
+  runtime.value()->bus_nodes.set(bus, bus_node);
+  runtime.value()->buses.set(bus->name, bus);
+  register_bus_in_reverse_map(bus, runtime.value());
+}
 
-// NOT GENERATED: function addAudioBusToMixer -- source line 26
-// refusal: cpp-weak-map-value-representation-unproven [source-portability]
-//
-// The source it stood for:
-//   export function addAudioBusToMixer(
-//     hostAudioMixer: Readonly<HostAudioMixerCapability>,
-//     mixer: Readonly<AudioMixer>,
-//     bus: AudioBus,
-//   ): void {
-//     const runtime = mixerRuntimes.get(mixer);
-//     if (runtime === undefined) return;
-//     if (runtime.busNodes.has(bus)) return;
-//     const busNode = hostAudioMixer.createBusNode(runtime.graph, bus.muted ? 0 : bus.gain, bus.pan);
-//     runtime.busNodes.set(bus, busNode);
-//     runtime.buses.set(bus.name, bus);
-//     registerBusInReverseMap(bus, runtime);
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/audioMixer.ts: flight-cpp WeakMap value requires a
-// proven C++ representation
+inline void route_audio_channel_to_mixer_bus(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostAudioMixerCapability>>>> host_audio_mixer, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioMixer>>>> mixer, flight::Ref<flight::types::AudioChannel> channel, flight::Ref<flight::types::AudioBus> bus) {
+  auto runtime = mixer_runtimes.get(flight::structural_ref_cast<flight::Ref<flight::types::AudioMixer>>(mixer));
+  if (!runtime.has_value()) {
+    return;
+  }
+  add_audio_bus_to_mixer(host_audio_mixer, mixer, bus);
+  runtime.value()->active_channels.add(channel);
+  runtime.value()->channel_to_bus.set(channel, bus);
+  std::optional<double> bus_node = runtime.value()->bus_nodes.get(bus);
+  if (bus_node.has_value()) {
+    flight::media::set_audio_channel_source_route(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioChannel>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AudioChannel>>>>(channel)), std::optional<std::function<void(flight::types::AudioSourceHandle)>>{[=](double source) {
+  flight::row_get<flight::RowKey<"routeSourceToBus">>(host_audio_mixer)(runtime.value()->graph, source, bus_node.value());
+}});
+  }
+}
 
+inline void unregister_bus_from_reverse_map(flight::Ref<flight::types::AudioBus> bus, flight::Ref<AudioMixerRuntime> runtime) {
+  auto runtimes = bus_to_mixer_runtimes.get(bus);
+  if (!runtimes.has_value()) {
+    return;
+  }
+  runtimes.value().erase(runtime);
+  if ((static_cast<double>(runtimes.value().size()) == 0.0)) {
+    bus_to_mixer_runtimes.erase(bus);
+  }
+}
 
-// NOT GENERATED: function routeAudioChannelToMixerBus -- source line 146
-// refusal: cpp-weak-map-value-representation-unproven [source-portability]
-//
-// The source it stood for:
-//   export function routeAudioChannelToMixerBus(
-//     hostAudioMixer: Readonly<HostAudioMixerCapability>,
-//     mixer: Readonly<AudioMixer>,
-//     channel: AudioChannel,
-//     bus: AudioBus,
-//   ): void {
-//     const runtime = mixerRuntimes.get(mixer);
-//     if (runtime === undefined) return;
-//     addAudioBusToMixer(hostAudioMixer, mixer, bus);
-//     runtime.activeChannels.add(channel);
-//     runtime.channelToBus.set(channel, bus);
-//     const busNode = runtime.busNodes.get(bus);
-//     if (busNode !== undefined) {
-//       setAudioChannelSourceRoute(channel, (source) => {
-//         hostAudioMixer.routeSourceToBus(runtime.graph, source, busNode);
-//       });
-//     }
-//   }
-//   
-//   // Sets the bus gain and pushes it to the bus node of every mixer holding this bus, found by reverse
-//   // lookup through busToMixerRuntimes.
-//   //
-//   // A bus that belongs to NO mixer has no node to push to, so the new value is stored and returned while
-//   // nothing becomes audible. That is a silent no-op the return value cannot express — it reports the value
-//   // that was set, not whether anything is listening — so it routes through the guard seam instead of relying
-//   // on a comment telling callers to add the bus first.
-// cpp emission failed for @flighthq/media/packages/media/src/audioMixer.ts: flight-cpp WeakMap value requires a
-// proven C++ representation
+inline void destroy_audio_mixer(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostAudioMixerCapability>>>> host_audio_mixer, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioMixer>>>> mixer) {
+  auto runtime = mixer_runtimes.get(flight::structural_ref_cast<flight::Ref<flight::types::AudioMixer>>(mixer));
+  if (!runtime.has_value()) {
+    return;
+  }
+  for (auto channel : runtime.value()->active_channels) {
+    flight::media::stop_audio_channel(channel);
+    flight::media::set_audio_channel_source_route(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioChannel>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AudioChannel>>>>(channel)), std::nullopt);
+  }
+  runtime.value()->active_channels.clear();
+  for (auto array_pattern_value : runtime.value()->bus_nodes) {
+    auto bus = std::get<0>(array_pattern_value);
+    flight::types::AudioBusNodeHandle bus_node = std::get<1>(array_pattern_value);
+    unregister_bus_from_reverse_map(bus, runtime.value());
+    flight::row_get<flight::RowKey<"destroyBusNode">>(host_audio_mixer)(runtime.value()->graph, bus_node);
+  }
+  flight::row_get<flight::RowKey<"destroyMixerGraph">>(host_audio_mixer)(runtime.value()->graph);
+  runtime.value()->bus_nodes.clear();
+  runtime.value()->buses.clear();
+  mixer_runtimes.erase(flight::structural_ref_cast<flight::Ref<flight::types::AudioMixer>>(mixer));
+}
 
+inline void unroute_audio_channel_from_mixer_bus(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostAudioMixerCapability>>>> host_audio_mixer, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioMixer>>>> mixer, flight::Ref<flight::types::AudioChannel> channel) {
+  auto runtime = mixer_runtimes.get(flight::structural_ref_cast<flight::Ref<flight::types::AudioMixer>>(mixer));
+  if (!runtime.has_value()) {
+    return;
+  }
+  runtime.value()->active_channels.erase(channel);
+  runtime.value()->channels_paused_by_mixer.erase(channel);
+  runtime.value()->channel_to_bus.erase(channel);
+  flight::media::set_audio_channel_source_route(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioChannel>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AudioChannel>>>>(channel)), std::nullopt);
+  double source = flight::media::get_audio_channel_source_handle(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioChannel>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AudioChannel>>>>(channel)));
+  flight::row_get<flight::RowKey<"unrouteSource">>(host_audio_mixer)(runtime.value()->graph, source);
+  flight::row_get<flight::RowKey<"routeSourceToDefault">>(host_audio_mixer)(runtime.value()->graph, source);
+}
 
-// NOT GENERATED: function unregisterBusFromReverseMap -- source line 289
-// refusal: cpp-weak-map-value-representation-unproven [source-portability]
-//
-// The source it stood for:
-//   function unregisterBusFromReverseMap(bus: AudioBus, runtime: AudioMixerRuntime): void {
-//     const runtimes = busToMixerRuntimes.get(bus);
-//     if (runtimes === undefined) return;
-//     runtimes.delete(runtime);
-//     if (runtimes.size === 0) busToMixerRuntimes.delete(bus);
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/audioMixer.ts: flight-cpp WeakMap value requires a
-// proven C++ representation
+inline std::optional<std::function<void(flight::types::AudioBusMixerOperation, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioBus>>>>)>> unmixed_bus_guard = std::nullopt;
 
-
-// NOT GENERATED: function destroyAudioMixer -- source line 68
-// refusal: cpp-weak-map-value-representation-unproven [source-portability]
-//
-// The source it stood for:
-//   export function destroyAudioMixer(
-//     hostAudioMixer: Readonly<HostAudioMixerCapability>,
-//     mixer: Readonly<AudioMixer>,
-//   ): void {
-//     const runtime = mixerRuntimes.get(mixer);
-//     if (runtime === undefined) return;
-//     // Stop every routed channel and reset its transport state.
-//     for (const channel of runtime.activeChannels) {
-//       stopAudioChannel(channel);
-//       setAudioChannelSourceRoute(channel, null);
-//     }
-//     runtime.activeChannels.clear();
-//     for (const [bus, busNode] of runtime.busNodes) {
-//       unregisterBusFromReverseMap(bus, runtime);
-//       hostAudioMixer.destroyBusNode(runtime.graph, busNode);
-//     }
-//     hostAudioMixer.destroyMixerGraph(runtime.graph);
-//     runtime.busNodes.clear();
-//     runtime.buses.clear();
-//     mixerRuntimes.delete(mixer);
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/audioMixer.ts: flight-cpp WeakMap value requires a
-// proven C++ representation
-
-
-// NOT GENERATED: function unrouteAudioChannelFromMixerBus -- source line 296
-// refusal: cpp-weak-map-value-representation-unproven [source-portability]
-//
-// The source it stood for:
-//   export function unrouteAudioChannelFromMixerBus(
-//     hostAudioMixer: Readonly<HostAudioMixerCapability>,
-//     mixer: Readonly<AudioMixer>,
-//     channel: AudioChannel,
-//   ): void {
-//     const runtime = mixerRuntimes.get(mixer);
-//     if (runtime === undefined) return;
-//     runtime.activeChannels.delete(channel);
-//     runtime.channelsPausedByMixer.delete(channel);
-//     runtime.channelToBus.delete(channel);
-//     setAudioChannelSourceRoute(channel, null);
-//     const source = getAudioChannelSourceHandle(channel);
-//     hostAudioMixer.unrouteSource(runtime.graph, source);
-//     hostAudioMixer.routeSourceToDefault(runtime.graph, source);
-//   }
-//   
-//   // Reports a write to a bus that belongs to no mixer. Cheap by construction — the Map lookup happens only
-//   // when a guard is installed.
-// cpp emission failed for @flighthq/media/packages/media/src/audioMixer.ts: flight-cpp WeakMap value requires a
-// proven C++ representation
-
-inline std::optional<flight::Ref<AudioBusMixerGuard>> unmixed_bus_guard = std::nullopt;
-
-inline void set_audio_bus_mixer_guard(std::optional<flight::Ref<AudioBusMixerGuard>> guard) {
+inline void set_audio_bus_mixer_guard(std::optional<std::function<void(flight::types::AudioBusMixerOperation, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioBus>>>>)>> guard) {
   (unmixed_bus_guard = guard);
 }
 
-inline void report_unmixed_bus(flight::Ref<AudioBus> bus, flight::Ref<AudioBusMixerOperation> operation) {
+inline void report_unmixed_bus(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioBus>>>> bus, flight::types::AudioBusMixerOperation operation) {
   if (!unmixed_bus_guard.has_value()) {
     return;
   }
-  if (!bus_to_mixer_runtimes.get(bus).has_value()) {
-    unmixed_bus_guard.value()(operation, bus);
+  if (!bus_to_mixer_runtimes.get(flight::structural_ref_cast<flight::Ref<flight::types::AudioBus>>(bus)).has_value()) {
+    unmixed_bus_guard.value()(operation, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioBus>>>>>(bus));
   }
 }
 
+inline void update_bus_gain_node(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostAudioMixerCapability>>>> host_audio_mixer, flight::Ref<flight::types::AudioBus> bus) {
+  auto runtimes = bus_to_mixer_runtimes.get(bus);
+  if (!runtimes.has_value()) {
+    return;
+  }
+  for (auto runtime : runtimes.value()) {
+    std::optional<double> bus_node = runtime->bus_nodes.get(bus);
+    if (bus_node.has_value()) {
+      flight::row_get<flight::RowKey<"setBusNodeGain">>(host_audio_mixer)(runtime->graph, bus_node.value(), (bus->muted ? 0.0 : bus->gain));
+    }
+  }
+}
 
-// NOT GENERATED: function updateBusGainNode -- source line 321
-// refusal: cpp-weak-map-value-representation-unproven [source-portability]
-//
-// The source it stood for:
-//   function updateBusGainNode(hostAudioMixer: Readonly<HostAudioMixerCapability>, bus: AudioBus): void {
-//     const runtimes = busToMixerRuntimes.get(bus);
-//     if (runtimes === undefined) return;
-//     for (const runtime of runtimes) {
-//       const busNode = runtime.busNodes.get(bus);
-//       if (busNode !== undefined) {
-//         hostAudioMixer.setBusNodeGain(runtime.graph, busNode, bus.muted ? 0 : bus.gain);
-//       }
-//     }
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/audioMixer.ts: flight-cpp WeakMap value requires a
-// proven C++ representation
-
-inline double set_audio_bus_gain(flight::Ref<HostAudioMixerCapability> host_audio_mixer, flight::Ref<AudioBus> bus, double value) {
+inline double set_audio_bus_gain(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostAudioMixerCapability>>>> host_audio_mixer, flight::Ref<flight::types::AudioBus> bus, double value) {
   (bus->gain = value);
-  report_unmixed_bus(bus, flight::String("gain"));
+  report_unmixed_bus(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioBus>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AudioBus>>>>(bus)), flight::String("gain"));
   update_bus_gain_node(host_audio_mixer, bus);
   return bus->gain;
 }
 
-inline bool set_audio_bus_muted(flight::Ref<HostAudioMixerCapability> host_audio_mixer, flight::Ref<AudioBus> bus, bool muted) {
+inline bool set_audio_bus_muted(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostAudioMixerCapability>>>> host_audio_mixer, flight::Ref<flight::types::AudioBus> bus, bool muted) {
   (bus->muted = muted);
-  report_unmixed_bus(bus, flight::String("mute"));
+  report_unmixed_bus(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioBus>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AudioBus>>>>(bus)), flight::String("mute"));
   update_bus_gain_node(host_audio_mixer, bus);
   return bus->muted;
 }
 
+inline void update_bus_panner_node(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostAudioMixerCapability>>>> host_audio_mixer, flight::Ref<flight::types::AudioBus> bus) {
+  auto runtimes = bus_to_mixer_runtimes.get(bus);
+  if (!runtimes.has_value()) {
+    return;
+  }
+  for (auto runtime : runtimes.value()) {
+    std::optional<double> bus_node = runtime->bus_nodes.get(bus);
+    if (bus_node.has_value()) {
+      flight::row_get<flight::RowKey<"setBusNodePan">>(host_audio_mixer)(runtime->graph, bus_node.value(), bus->pan);
+    }
+  }
+}
 
-// NOT GENERATED: function updateBusPannerNode -- source line 332
-// refusal: cpp-weak-map-value-representation-unproven [source-portability]
-//
-// The source it stood for:
-//   function updateBusPannerNode(hostAudioMixer: Readonly<HostAudioMixerCapability>, bus: AudioBus): void {
-//     const runtimes = busToMixerRuntimes.get(bus);
-//     if (runtimes === undefined) return;
-//     for (const runtime of runtimes) {
-//       const busNode = runtime.busNodes.get(bus);
-//       if (busNode !== undefined) {
-//         hostAudioMixer.setBusNodePan(runtime.graph, busNode, bus.pan);
-//       }
-//     }
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/audioMixer.ts: flight-cpp WeakMap value requires a
-// proven C++ representation
-
-inline double set_audio_bus_pan(flight::Ref<HostAudioMixerCapability> host_audio_mixer, flight::Ref<AudioBus> bus, double value) {
-  (bus->pan = clamp(value, -1.0, 1.0));
-  report_unmixed_bus(bus, flight::String("pan"));
+inline double set_audio_bus_pan(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostAudioMixerCapability>>>> host_audio_mixer, flight::Ref<flight::types::AudioBus> bus, double value) {
+  (bus->pan = flight::math::clamp(value, -1.0, 1.0));
+  report_unmixed_bus(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AudioBus>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AudioBus>>>>(bus)), flight::String("pan"));
   update_bus_panner_node(host_audio_mixer, bus);
   return bus->pan;
 }

@@ -1,16 +1,16 @@
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-index fae6209..ff7ed31 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-@@ -435,6 +435,17 @@ export function createCppCompilerBackend(): CompilerBackend<CppCompilerBackendOp
-       const targetNameMaps = createCppTargetNameMaps(modules);
-       const anonymousStructNaming = createCppAnonymousStructNaming(targetNameMaps);
-       const unionArmIdentities = new Map<string, CppUnionArmIdentity[]>();
+@@ -458,6 +458,18 @@
+       // graph, and every module asks it the same question about its own imports.
+       const moduleImporterIndex = createCppModuleImporterIndex(modules, referenceRepresentationPlanner);
+       const cAbi = options.cAbi;
 +      const graph: CppRefusalPlaceholderGraph = {
 +        anonymousStructNaming,
 +        directBindingOwners,
 +        importBindingOwners,
 +        interfaceInheritancePass,
++        moduleImporterIndex,
 +        moduleResolution,
 +        modules,
 +        referenceRepresentationPlanner,
@@ -20,17 +20,17 @@ index fae6209..ff7ed31 100644
        return Object.freeze({
          emitModule(module: Readonly<IrModule>) {
            return [
-@@ -453,6 +464,9 @@ export function createCppCompilerBackend(): CompilerBackend<CppCompilerBackendOp
-             ),
-           ];
-         },
+@@ -501,6 +513,9 @@
+               },
+             }
+           : {}),
 +        emitRefusalPlaceholder(module: Readonly<IrModule>, refusal: Readonly<CompilerRefusalPlaceholderRequest>) {
 +          return emitCppRefusalPlaceholder(module, refusal, options, graph);
 +        },
        });
      },
      emitModule(module, { moduleResolution, modules, options }) {
-@@ -755,6 +769,9 @@ function emitIrModuleCppWithContext(
+@@ -815,6 +830,9 @@
      .map((declaration) => {
        const existingAnonymousStructs = new Set(context.anonymousStructs.keys());
        const earlyPublicationMaterializedOwners = new Set<string>();
@@ -40,7 +40,7 @@ index fae6209..ff7ed31 100644
        const lines = (() => {
          try {
            return emitDeclaration(declaration, {
-@@ -779,6 +796,13 @@ function emitIrModuleCppWithContext(
+@@ -839,6 +857,13 @@
                : { sourceLines: sliceCppSalvagedDeclarationSourceCpp(module, declaration, salvage.sourceText) }),
            };
            salvage.failures.push(failure);
@@ -54,7 +54,7 @@ index fae6209..ff7ed31 100644
            return renderCppSalvagedDeclarationCpp(failure);
          }
        })();
-@@ -800,7 +824,13 @@ function emitIrModuleCppWithContext(
+@@ -860,7 +885,13 @@
    // out, and that names a type whose module has to be included. Collected any later and the include
    // is dropped on the floor while the declaration that needed it is still emitted.
    const forwardDeclarations = emitCppForwardDeclarations(module, context);
@@ -69,7 +69,7 @@ index fae6209..ff7ed31 100644
    const importedFunctionForwardDeclarations = emitCppImportedFunctionForwardDeclarations(context);
    const reexports = emitReexportsCpp(module, context);
    const namespaceName = getCppCompilerPackageNamespace(module.packageName, options.packageTargets);
-@@ -24948,6 +24978,29 @@ function collectIrModuleDeclarationDependenciesCpp(
+@@ -26292,6 +26323,29 @@
    return dependencies;
  }
  
@@ -99,7 +99,7 @@ index fae6209..ff7ed31 100644
  function collectCppMutuallyRecursiveFunctionGroups(
    module: Readonly<IrModule>,
    dependencies: ReadonlyMap<Readonly<IrDeclaration>, ReadonlySet<Readonly<IrDeclaration>>>,
-@@ -29044,9 +29097,23 @@ function isCppGenericStructuralSequenceParameterCpp(parameter: Readonly<IrParame
+@@ -30634,9 +30688,23 @@
    return Boolean(array?.readonly && array.element.kind === 'object');
  }
  
@@ -125,7 +125,7 @@ index fae6209..ff7ed31 100644
      ...module.exports.flatMap((item) =>
        item.kind === 'all' || item.kind === 'namespace' || item.kind === 'reexport' ? [item.specifier] : [],
      ),
-@@ -29175,10 +29242,25 @@ interface CppSalvageRequest {
+@@ -30765,10 +30833,26 @@
  // It carries no `#error` and declares nothing it cannot justify -- no member, no base, no body -- so a build
  // failure downstream of this file is a failure about what is genuinely missing rather than about an artifact the
  // compiler deliberately poisoned. Everything in it is meant to be deleted by the hand edit that replaces it.
@@ -139,6 +139,7 @@ index fae6209..ff7ed31 100644
 +  readonly moduleResolution: Readonly<CompilerModuleResolutionPlan> | undefined;
 +  readonly modules: readonly Readonly<IrModule>[];
 +  readonly referenceRepresentationPlanner: CompilerCppReferenceRepresentationPlanner;
++  readonly moduleImporterIndex: ReturnType<typeof createCppModuleImporterIndex>;
 +  readonly targetNameMaps: ReturnType<typeof createCppTargetNameMaps>;
 +  readonly unionArmIdentities: Map<string, CppUnionArmIdentity[]>;
 +}
@@ -151,11 +152,12 @@ index fae6209..ff7ed31 100644
  ): EmittedFile {
    // SALVAGE FIRST. The module usually lowered fine and failed on one declaration, so the useful answer is the
    // module with that declaration marked missing rather than a file that carries only a description of it. A
-@@ -29192,15 +29274,15 @@ function emitCppRefusalPlaceholder(
+@@ -30782,16 +30866,16 @@
      return emitIrModuleCppWithContext(
        module,
        options,
 -      [module],
+-      undefined,
 -      undefined,
 -      undefined,
 -      undefined,
@@ -173,12 +175,12 @@ index fae6209..ff7ed31 100644
 +      graph?.targetNameMaps,
 +      graph?.anonymousStructNaming,
 +      graph?.unionArmIdentities,
++      graph?.moduleImporterIndex,
        salvage,
      );
    } catch {
 diff --git a/packages/compiler-backend-cpp/src/cppRefusalPlaceholderQualification.test.ts b/packages/compiler-backend-cpp/src/cppRefusalPlaceholderQualification.test.ts
 new file mode 100644
-index 0000000..196df92
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppRefusalPlaceholderQualification.test.ts
 @@ -0,0 +1,123 @@
@@ -306,11 +308,10 @@ index 0000000..196df92
 +  });
 +});
 diff --git a/packages/compiler-orchestration/src/compilerPackageCompilation.ts b/packages/compiler-orchestration/src/compilerPackageCompilation.ts
-index a2e9a61..dd553d3 100644
 --- a/packages/compiler-orchestration/src/compilerPackageCompilation.ts
 +++ b/packages/compiler-orchestration/src/compilerPackageCompilation.ts
-@@ -238,7 +238,15 @@ export function compileTypeScriptPackageGraph<BackendOptions>(
-   const placeholderFiles: EmittedFile[] = [];
+@@ -260,7 +260,15 @@
+   const placeholderFileOwners: { file: EmittedFile; packageName: string }[] = [];
    const placeholderPaths = new Map<string, string>();
    if (bestEffort && options.backend.emitRefusalPlaceholder) {
 -    const emitPlaceholder = options.backend.emitRefusalPlaceholder;
@@ -327,13 +328,12 @@ index a2e9a61..dd553d3 100644
        const record = records.get(key)!;
        if (!isCompilerPackageGraphModuleSelectedByEmitPaths(record.module, emitPathPrefixes)) continue;
 diff --git a/packages/compiler-types/src/compilerBackendContract.ts b/packages/compiler-types/src/compilerBackendContract.ts
-index 14f92ba..e88615b 100644
 --- a/packages/compiler-types/src/compilerBackendContract.ts
 +++ b/packages/compiler-types/src/compilerBackendContract.ts
-@@ -70,6 +70,15 @@ export interface CompilerBackend<Options = Record<string, never>> {
- 
- export interface CompilerBackendEmissionSession {
-   readonly emitModule: (module: Readonly<IrModule>) => readonly EmittedFile[];
+@@ -99,6 +99,15 @@
+    * this once per module or narrow that context with an output-path filter.
+    */
+   readonly finalizePackageGraph?: (() => readonly CompilerBackendPackageFile[]) | undefined;
 +  /**
 +   * The session-scoped form of `CompilerBackend.emitRefusalPlaceholder`. A placeholder salvages the
 +   * declarations its module could lower, and those must be emitted with the same graph-wide context as

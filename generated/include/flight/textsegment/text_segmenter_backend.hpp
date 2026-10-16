@@ -6,15 +6,18 @@
 //   missing: function hasIntlSegmenter -- source line 67
 //   missing: function getCachedSegmenter -- source line 49
 #include <flight/intl.hpp>
+#include <flight/structural_ref.hpp>
 #include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/text_segment.hpp>
+namespace flight::types { struct HostTextSegmenterCapability; }
+namespace flight::types { struct TextSegment; }
+namespace flight::types { struct TextSegmenterExplanation; }
 
-#include <flight/textsegment/text_segment_guards.hpp>
+#include <flight/types/text_segment.hpp>
 
 namespace flight::textsegment {
 
@@ -39,13 +42,6 @@ inline const double segmenter_cache_capacity = 64.0;
 // it stores as a concrete carrier. State the type where the value is read: a closed union whose alternatives are
 // distinguishable is lowered as a variant test, and a value the runtime owns -- a parameter declared `unknown`
 // or `any` -- is answered by the runtime's own `typeof`
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTSEGMENT_GRANULARITY_D1745D5DCB55C801
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTSEGMENT_GRANULARITY_D1745D5DCB55C801
-struct granularity_d1745d5dcb55c801 : public flight::ReferenceEnabled {
-  flight::Ref<TextSegmentGranularity> granularity;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTSEGMENT_GRANULARITY_D1745D5DCB55C801
 
 
 // NOT GENERATED: function getCachedSegmenter -- source line 49
@@ -72,25 +68,25 @@ struct granularity_d1745d5dcb55c801 : public flight::ReferenceEnabled {
 // cpp emission failed for @flighthq/textsegment/packages/textsegment/src/textSegmenterBackend.ts: ambient value
 // Intl member Segmenter has no C++ binding
 
-inline flight::Array<flight::Ref<TextSegment>> segment_with_intl_segmenter(flight::String text, flight::Ref<TextSegmentGranularity> granularity, std::optional<flight::String> locale = std::nullopt) {
+inline flight::Array<flight::Ref<flight::types::TextSegment>> segment_with_intl_segmenter(flight::String text, flight::types::TextSegmentGranularity granularity, std::optional<flight::String> locale = std::nullopt) {
   std::optional<flight::IntlSegmenter> segmenter = get_cached_segmenter(locale, granularity);
   if (!segmenter.has_value()) {
-    return flight::Array<flight::Ref<TextSegment>>{};
+    return flight::Array<flight::Ref<flight::types::TextSegment>>{};
   }
-  flight::Array<flight::Ref<TextSegment>> out = flight::Array<flight::Ref<TextSegment>>{};
+  flight::Array<flight::Ref<flight::types::TextSegment>> out = flight::Array<flight::Ref<flight::types::TextSegment>>{};
   const bool is_word_granularity = (granularity == flight::String("word"));
   for (auto data : segmenter.value().segment(text)) {
     const double start = data.index;
-    flight::Ref<TextSegment> record = flight::make_ref<TextSegment>(TextSegment{.start = start, .end = (start + static_cast<double>(data.segment.length())), .text = data.segment});
+    flight::Ref<flight::types::TextSegment> record = flight::make_ref<flight::types::TextSegment>(flight::types::TextSegment{.start = start, .end = (start + static_cast<double>(data.segment.length())), .text = data.segment});
     if (is_word_granularity) {
-      (record->is_word_like = data.is_word_like.value_or(false));
+      (record->is_word_like = std::optional<bool>{data.is_word_like.value_or(false)});
     }
     out.push(record);
   }
   return out;
 }
 
-inline void initialize_web_text_segmenter_backend(flight::Ref<HostTextSegmenterCapability> out) {
+inline void initialize_web_text_segmenter_backend(flight::Ref<flight::types::HostTextSegmenterCapability> out) {
   (out->segment = segment_with_intl_segmenter);
 }
 
@@ -100,18 +96,18 @@ struct anonymous_3e6b344a3b6bd77e : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTSEGMENT_ANONYMOUS_3E6B344A3B6BD77E
 
-inline flight::Ref<HostTextSegmenterCapability> create_web_text_segmenter_backend() {
-  flight::Ref<HostTextSegmenterCapability> out = flight::make_ref<HostTextSegmenterCapability>(HostTextSegmenterCapability{});
+inline flight::Ref<flight::types::HostTextSegmenterCapability> create_web_text_segmenter_backend() {
+  auto out = flight::make_ref<flight::types::HostTextSegmenterCapability>(flight::types::HostTextSegmenterCapability{});
   initialize_web_text_segmenter_backend(out);
   return out;
 }
 
-inline flight::Ref<HostTextSegmenterCapability> web_text_segmenter_backend = create_web_text_segmenter_backend();
+inline flight::Ref<flight::types::HostTextSegmenterCapability> web_text_segmenter_backend = create_web_text_segmenter_backend();
 
-inline flight::Ref<TextSegmenterExplanation> explain_text_segmenter_backend(flight::Ref<HostTextSegmenterCapability> text_segmenter) {
-  const bool web = (text_segmenter == web_text_segmenter_backend);
+inline flight::Ref<flight::types::TextSegmenterExplanation> explain_text_segmenter_backend(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostTextSegmenterCapability>>>> text_segmenter) {
+  const bool web = (text_segmenter == flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostTextSegmenterCapability>>>>(web_text_segmenter_backend));
   const bool intl_segmenter_available = has_intl_segmenter();
-  return flight::make_ref<TextSegmenterExplanation>(TextSegmenterExplanation{.available = (!web || intl_segmenter_available), .backend = (web ? flight::String("web-intl") : flight::String("custom")), .intl_segmenter_available = intl_segmenter_available});
+  return flight::make_ref<flight::types::TextSegmenterExplanation>(flight::types::TextSegmenterExplanation{.available = (!web || intl_segmenter_available), .backend = (web ? flight::String("web-intl") : flight::String("custom")), .intl_segmenter_available = intl_segmenter_available});
 }
 
 } // namespace flight::textsegment

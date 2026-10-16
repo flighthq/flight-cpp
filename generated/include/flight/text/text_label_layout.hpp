@@ -5,6 +5,7 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function ensureTextLayout -- source line 11
 //   missing: function getTextLayout -- source line 35
+#include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
 #include <flight/runtime.hpp>
@@ -12,21 +13,37 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/textlayout/text_metrics.hpp>
-
 #include <flight/types/text_metrics.hpp>
 
 #include <flight/types/text_layout.hpp>
 
 #include <flight/types/text_label.hpp>
 
+#include <flight/types/text_format.hpp>
+
+namespace flight::types { struct Node2DRuntime; }
+namespace flight::types { struct TextFormat; }
+namespace flight::types { struct TextLabel; }
+namespace flight::types { struct TextLabelData; }
+namespace flight::types { struct TextLabelRuntime; }
+namespace flight::types { struct TextLayoutParams; }
+namespace flight::types { struct TextLayoutResult; }
+namespace flight::types { struct TextMetrics; }
+
+#include <flight/textlayout/text_layout.hpp>
+#include <flight/textlayout/text_layout_measure.hpp>
+#include <flight/textlayout/text_layout_runtime.hpp>
+#include <flight/textlayout/text_metrics.hpp>
+#include <flight/types/contract.hpp>
+
 namespace flight::text {
 
 std::optional<flight::Ref<flight::types::TextLayoutResult>> get_text_layout(flight::Ref<flight::types::TextLabel> source);
 
-using flight::textlayout::get_text_metrics;
-
+using flight::types::TextFormat;
 using flight::types::TextLabel;
+using flight::types::TextLabelData;
+using flight::types::TextLayoutParams;
 using flight::types::TextLayoutResult;
 using flight::types::TextMetrics;
 
@@ -34,7 +51,7 @@ inline std::optional<std::function<void(flight::String, flight::String)>> text_l
 
 
 // NOT GENERATED: function ensureTextLayout -- source line 11
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function ensureTextLayout(source: Readonly<TextLabel>): void {
@@ -61,17 +78,28 @@ inline std::optional<std::function<void(flight::String, flight::String)>> text_l
 //     runtime.textLayoutUsingText = source.data.text;
 //   }
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/textLabelLayout.ts: a reference assertion from
-// flight::Ref<Node2DRuntime> to flight::Ref<TextLabelRuntime> has no heritage to cast along: the declarations
-// share no emitted C++ class-heritage path (source interface and intersection relationships flatten into
-// independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// cpp emission failed for @flighthq/text/packages/text/src/textLabelLayout.ts: a structural assertion from the
+// readonly row Readonly<Node2DRuntime> to the writable row TextLabelRuntime claims mutation the source refused:
+// a readonly row never becomes writable, because the boundary the value came through said its subject must not
+// be mutated through it, and no cast, copy, or re-view can carry a capability the source withheld. Assert to the
+// readonly row where the value is only read, or declare the source -- its parameter, slot, or accessor result --
+// as the writable type where that object may really be mutated. Choosing between those two repairs is the
+// question this assertion was answering, so ask it of the value's ROLE rather than of its spelling: a RUNTIME
+// OWNER that the mutating paths must write needs a mutable-source accessor returning the full writable owner
+// from the typed runtime slot, with the readonly accessor kept for reads, because the capability has to exist on
+// the storage and accessor that establish those cells; a NODE that the read paths only traverse and never mutate
+// needs the two authorities separated instead, with a readonly view on every read path and a separate mutable
+// entry point for the paths that really mutate, because laundering a writable node out of a readonly boundary
+// grants mutation no caller asked for. Both repairs keep the exact Traits or generic specialization the retained
+// row carries; neither adds cells to a row that does not declare them. Making only that boundary writable is
+// insufficient here: the source owner does not declare buildTextLayoutParams, textLayout,
+// textLayoutUsingContentId and textLayoutUsingText, so it has no cells for the asserted row to mutate. Declare
+// both the storage slot and the accessor result as the full writable TextLabelRuntime row where initialization
+// establishes those cells, rather than widening Readonly<Node2DRuntime> at the use site.
 
 
 // NOT GENERATED: function getTextLayout -- source line 35
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function getTextLayout(source: Readonly<TextLabel>): TextLayoutResult | null {
@@ -79,18 +107,34 @@ inline std::optional<std::function<void(flight::String, flight::String)>> text_l
 //     return (getNode2DRuntime(source) as TextLabelRuntime).textLayout;
 //   }
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/textLabelLayout.ts: contextual optionalSingle
-// construction requires expression type evidence
+// cpp emission failed for @flighthq/text/packages/text/src/textLabelLayout.ts: a structural assertion from the
+// readonly row Readonly<Node2DRuntime> to the writable row TextLabelRuntime claims mutation the source refused:
+// a readonly row never becomes writable, because the boundary the value came through said its subject must not
+// be mutated through it, and no cast, copy, or re-view can carry a capability the source withheld. Assert to the
+// readonly row where the value is only read, or declare the source -- its parameter, slot, or accessor result --
+// as the writable type where that object may really be mutated. Choosing between those two repairs is the
+// question this assertion was answering, so ask it of the value's ROLE rather than of its spelling: a RUNTIME
+// OWNER that the mutating paths must write needs a mutable-source accessor returning the full writable owner
+// from the typed runtime slot, with the readonly accessor kept for reads, because the capability has to exist on
+// the storage and accessor that establish those cells; a NODE that the read paths only traverse and never mutate
+// needs the two authorities separated instead, with a readonly view on every read path and a separate mutable
+// entry point for the paths that really mutate, because laundering a writable node out of a readonly boundary
+// grants mutation no caller asked for. Both repairs keep the exact Traits or generic specialization the retained
+// row carries; neither adds cells to a row that does not declare them. Making only that boundary writable is
+// insufficient here: the source owner does not declare buildTextLayoutParams, textLayout,
+// textLayoutUsingContentId and textLayoutUsingText, so it has no cells for the asserted row to mutate. Declare
+// both the storage slot and the accessor result as the full writable TextLabelRuntime row where initialization
+// establishes those cells, rather than widening Readonly<Node2DRuntime> at the use site.
 
-inline void get_text_layout_metrics(flight::Ref<TextMetrics> out, flight::Ref<TextLabel> source) {
-  std::optional<flight::Ref<TextLayoutResult>> layout = get_text_layout(source);
+inline void get_text_layout_metrics(flight::Ref<flight::types::TextMetrics> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLabel>>>> source) {
+  auto layout = get_text_layout(source);
   if (!layout.has_value()) {
     (out->height = 0.0);
     (out->num_lines = 0.0);
     (out->width = 0.0);
     return;
   }
-  get_text_metrics(out, layout.value());
+  flight::textlayout::get_text_metrics(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>(layout.value())));
 }
 
 inline void set_text_label_guard(std::optional<std::function<void(flight::String, flight::String)>> guard) {

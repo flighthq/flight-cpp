@@ -3,13 +3,12 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function readRiveNumber -- source line 179
-//   missing: function readRiveFlag -- source line 184
 //   missing: function createRiveRelativeTransforms -- source line 121
 //   missing: function registerRiveClippingHandlers -- source line 110
 #include <cmath>
 #include <cstdint>
 #include <flight/map.hpp>
+#include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
 #include <random>
@@ -19,18 +18,6 @@
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
-
-#include <flight/path_boolean/simplify_path.hpp>
-
-#include <flight/path_boolean/boolean_paths.hpp>
-
-#include <flight/path/path.hpp>
-
-#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
-
-#include <flight/geometry/matrix.hpp>
-
-#include <flight/clip/clip_region.hpp>
 
 #include <flight/types/rive_import_registry.hpp>
 
@@ -46,111 +33,97 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/import_diagnostic.hpp>
 
-#include <flight/types/display_object.hpp>
+#include <flight/types/clip_region.hpp>
 
-#include <flight/scene2d_formats/rive_core_types.hpp>
-#include <flight/scene2d_formats/rive_import_registry.hpp>
+namespace flight::types { struct ClipRegion; }
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct Path; }
+namespace flight::types { struct PathBooleanKernel; }
+namespace flight::types { struct PathBooleanOptions; }
+namespace flight::types { struct RiveArtboardGraph; }
+namespace flight::types { struct RiveArtboardImportContext; }
+namespace flight::types { struct RiveCoreObject; }
+namespace flight::types { struct RiveCoreObjectHandler; }
+namespace flight::types { struct RiveImportRegistry; }
+namespace flight::types { struct RivePathRecord; }
+namespace flight::types { struct RiveProperty; }
+
+#include <flight/clip/clip_region.hpp>
+#include <flight/geometry/matrix.hpp>
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+#include <flight/path_boolean/boolean_paths.hpp>
+#include <flight/path_boolean/simplify_path.hpp>
+#include <flight/path/path.hpp>
+#include <flight/types/contract.hpp>
 
 namespace flight::scene2d_formats {
 
-using flight::path_boolean::intersect_paths;
-using flight::path_boolean::simplify_path;
-
-using flight::path::create_path;
-
-using flight::importdiagnostics::report_import_diagnostic;
-
-using flight::geometry::create_matrix;
-using flight::geometry::inverse_matrix;
-using flight::geometry::multiply_matrix;
-
-using flight::clip::create_clip_region_from_path;
-
-using flight::types::DisplayObject;
+using flight::types::ClipRegion;
 using flight::types::ImportDiagnostic;
 using flight::types::Matrix;
 using flight::types::Path;
 using flight::types::PathBooleanKernel;
 using flight::types::PathBooleanOptions;
 using flight::types::RiveArtboardGraph;
+using flight::types::RiveArtboardImportContext;
 using flight::types::RiveCoreObject;
+using flight::types::RiveCoreObjectHandler;
 using flight::types::RiveImportRegistry;
 using flight::types::RivePathRecord;
-using flight::types::import_diagnostic_severity;
+using flight::types::RiveProperty;
 
+inline double read_rive_number_flight_value_function_read_u000052_ive_u00004e_umber_flight_private_6321ae4334e1497f(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>> source, double key, double fallback) {
+  auto property = flight::row_get<flight::RowKey<"properties">>(source).find([=](flight::Ref<flight::types::RiveProperty> candidate) { return (candidate->key == key); });
+  return ((!property.has_value() || !(std::holds_alternative<double>(property.value()->value))) ? fallback : std::get<1>(property.value()->value));
+}
 
-// NOT GENERATED: function readRiveNumber -- source line 179
-// refusal: cpp-typeof-runtime-domain-unrepresented [source-portability]
-//
-// The source it stood for:
-//   function readRiveNumber(source: Readonly<RiveCoreObject>, key: number, fallback: number): number {
-//     const property = source.properties.find((candidate) => candidate.key === key);
-//     return property === undefined || typeof property.value !== 'number' ? fallback : property.value;
-//   }
-//   
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveClipping.ts: typeof
-// requires closed runtime type evidence: the declared type does not decide it, and the target cannot ask a value
-// it stores as a concrete carrier. State the type where the value is read: a closed union whose alternatives are
-// distinguishable is lowered as a variant test, and a value the runtime owns -- a parameter declared `unknown`
-// or `any` -- is answered by the runtime's own `typeof`
+inline bool read_rive_flag_flight_value_function_read_u000052_ive_u000046_lag_flight_private_6321ae4334e1497f(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>> source, double key, bool fallback) {
+  auto property = flight::row_get<flight::RowKey<"properties">>(source).find([=](flight::Ref<flight::types::RiveProperty> candidate) { return (candidate->key == key); });
+  return ((!property.has_value() || !(std::holds_alternative<double>(property.value()->value))) ? fallback : (std::get<1>(property.value()->value) != 0.0));
+}
 
-
-// NOT GENERATED: function readRiveFlag -- source line 184
-// refusal: cpp-typeof-runtime-domain-unrepresented [source-portability]
-//
-// The source it stood for:
-//   function readRiveFlag(source: Readonly<RiveCoreObject>, key: number, fallback: boolean): boolean {
-//     const property = source.properties.find((candidate) => candidate.key === key);
-//     return property === undefined || typeof property.value !== 'number' ? fallback : property.value !== 0;
-//   }
-//   
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveClipping.ts: typeof
-// requires closed runtime type evidence: the declared type does not decide it, and the target cannot ask a value
-// it stores as a concrete carrier. State the type where the value is read: a closed union whose alternatives are
-// distinguishable is lowered as a variant test, and a value the runtime owns -- a parameter declared `unknown`
-// or `any` -- is answered by the runtime's own `typeof`
-
-inline const double rive_node_type_key = 2.0;
+inline const double rive_node_type_key_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u00004e__u00004f__u000044__u000045__u00005f__u000054__u000059__u000050__u000045__u00005f__u00004b__u000045__u000059__flight_private_6321ae4334e1497f = 2.0;
 
 inline const double rive_clipping_shape = 42.0;
 
-inline const double rive_x_legacy = 9.0;
+inline const double rive_x_legacy_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u000058__u00005f__u00004c__u000045__u000047__u000041__u000043__u000059__flight_private_6321ae4334e1497f = 9.0;
 
-inline const double rive_y_legacy = 10.0;
+inline const double rive_y_legacy_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u000059__u00005f__u00004c__u000045__u000047__u000041__u000043__u000059__flight_private_6321ae4334e1497f = 10.0;
 
-inline const double rive_x = 13.0;
+inline const double rive_x_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u000058__flight_private_6321ae4334e1497f = 13.0;
 
-inline const double rive_y = 14.0;
+inline const double rive_y_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u000059__flight_private_6321ae4334e1497f = 14.0;
 
-inline const double rive_rotation = 15.0;
+inline const double rive_rotation_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u000052__u00004f__u000054__u000041__u000054__u000049__u00004f__u00004e__flight_private_6321ae4334e1497f = 15.0;
 
-inline const double rive_scale_x = 16.0;
+inline const double rive_scale_x_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u000053__u000043__u000041__u00004c__u000045__u00005f__u000058__flight_private_6321ae4334e1497f = 16.0;
 
-inline const double rive_scale_y = 17.0;
+inline const double rive_scale_y_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u000053__u000043__u000041__u00004c__u000045__u00005f__u000059__flight_private_6321ae4334e1497f = 17.0;
 
-inline flight::Ref<Matrix> create_rive_local_matrix(flight::Ref<RiveCoreObject> source) {
-  const double rotation = read_rive_number(source, rive_rotation, 0.0);
-  const double scale_x = read_rive_number(source, rive_scale_x, 1.0);
-  const double scale_y = read_rive_number(source, rive_scale_y, 1.0);
+inline flight::Ref<flight::types::Matrix> create_rive_local_matrix(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>> source) {
+  const double rotation = read_rive_number_flight_value_function_read_u000052_ive_u00004e_umber_flight_private_6321ae4334e1497f(source, rive_rotation_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u000052__u00004f__u000054__u000041__u000054__u000049__u00004f__u00004e__flight_private_6321ae4334e1497f, 0.0);
+  const double scale_x = read_rive_number_flight_value_function_read_u000052_ive_u00004e_umber_flight_private_6321ae4334e1497f(source, rive_scale_x_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u000053__u000043__u000041__u00004c__u000045__u00005f__u000058__flight_private_6321ae4334e1497f, 1.0);
+  const double scale_y = read_rive_number_flight_value_function_read_u000052_ive_u00004e_umber_flight_private_6321ae4334e1497f(source, rive_scale_y_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u000053__u000043__u000041__u00004c__u000045__u00005f__u000059__flight_private_6321ae4334e1497f, 1.0);
   const double cosine = std::cos(rotation);
   const double sine = std::sin(rotation);
-  return create_matrix((cosine * scale_x), (sine * scale_x), (-sine * scale_y), (cosine * scale_y), read_rive_number(source, rive_x, read_rive_number(source, rive_x_legacy, 0.0)), read_rive_number(source, rive_y, read_rive_number(source, rive_y_legacy, 0.0)));
+  return flight::geometry::create_matrix((cosine * scale_x), (sine * scale_x), (-sine * scale_y), (cosine * scale_y), read_rive_number_flight_value_function_read_u000052_ive_u00004e_umber_flight_private_6321ae4334e1497f(source, rive_x_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u000058__flight_private_6321ae4334e1497f, read_rive_number_flight_value_function_read_u000052_ive_u00004e_umber_flight_private_6321ae4334e1497f(source, rive_x_legacy_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u000058__u00005f__u00004c__u000045__u000047__u000041__u000043__u000059__flight_private_6321ae4334e1497f, 0.0)), read_rive_number_flight_value_function_read_u000052_ive_u00004e_umber_flight_private_6321ae4334e1497f(source, rive_y_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u000059__flight_private_6321ae4334e1497f, read_rive_number_flight_value_function_read_u000052_ive_u00004e_umber_flight_private_6321ae4334e1497f(source, rive_y_legacy_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u000059__u00005f__u00004c__u000045__u000047__u000041__u000043__u000059__flight_private_6321ae4334e1497f, 0.0)));
 }
 
 inline const double rive_clip_source_id = 92.0;
 
 inline const double rive_clip_fill_rule = 93.0;
 
-inline flight::Ref<Path> create_rive_clip_path(flight::Ref<PathBooleanKernel> path_boolean_kernel, flight::Array<flight::Ref<RivePathRecord>> paths, flight::Ref<Matrix> clipped, flight::Ref<Matrix> source, flight::Ref<RiveCoreObject> clipping) {
-  flight::Ref<Matrix> into = create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
-  flight::Ref<Matrix> combined = create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
-  if (inverse_matrix(into, clipped)) {
-    multiply_matrix(combined, into, source);
+inline flight::Ref<flight::types::Path> create_rive_clip_path(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathBooleanKernel>>>> path_boolean_kernel, flight::Array<flight::Ref<flight::types::RivePathRecord>> paths, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>> clipped, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>> clipping) {
+  auto into = flight::geometry::create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
+  auto combined = flight::geometry::create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
+  if (flight::geometry::inverse_matrix(into, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(clipped))) {
+    flight::geometry::multiply_matrix(combined, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(into)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(source));
   }
   else {
-    multiply_matrix(combined, create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt), source);
+    flight::geometry::multiply_matrix(combined, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(flight::geometry::create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt))), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(source));
   }
-  flight::Ref<Path> path = create_path(((read_rive_number(clipping, rive_clip_fill_rule, 0.0) == 1.0) ? flight::String("evenOdd") : flight::String("nonZero")));
+  auto path = flight::path::create_path(((read_rive_number_flight_value_function_read_u000052_ive_u00004e_umber_flight_private_6321ae4334e1497f(clipping, rive_clip_fill_rule, 0.0) == 1.0) ? flight::String("evenOdd") : flight::String("nonZero")));
   for (auto record : paths) {
     for (auto command : record->commands) {
       path->commands.push(command);
@@ -167,12 +140,12 @@ inline flight::Ref<Path> create_rive_clip_path(flight::Ref<PathBooleanKernel> pa
       }
     }
   }
-  return simplify_path(path_boolean_kernel, path, flight::make_ref<PathBooleanOptions>(PathBooleanOptions{.fill_rule = path->winding}), std::nullopt);
+  return flight::path_boolean::simplify_path(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathBooleanKernel>>>>>(path_boolean_kernel), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Path>>>>(path)), flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathBooleanOptions>>>>(flight::row_field<flight::RowKey<"fillRule">>(std::optional<flight::String>{path->winding})), std::nullopt);
 }
 
 inline const double rive_clip_is_visible = 94.0;
 
-inline const double rive_no_parent = -1.0;
+inline const double rive_no_parent_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u00004e__u00004f__u00005f__u000050__u000041__u000052__u000045__u00004e__u000054__flight_private_6321ae4334e1497f = -1.0;
 
 inline const double rive_transform_resolving = 1.0;
 
@@ -230,54 +203,54 @@ inline const double rive_transform_resolved = 2.0;
 // holes; use an explicit fill value, build the array with push, or use Array.from when every element should be
 // present
 
-inline void apply_rive_clipping(flight::Ref<PathBooleanKernel> path_boolean_kernel, flight::Array<std::optional<flight::Ref<DisplayObject>>> nodes, flight::Ref<RiveArtboardGraph> artboard, flight::Map<double, flight::Array<flight::Ref<RivePathRecord>>> shape_paths, std::optional<flight::Array<flight::Ref<ImportDiagnostic>>> diagnostics) {
-  flight::Array<flight::Ref<Matrix>> relative = create_rive_relative_transforms(artboard);
-  auto clips = flight::Map<flight::Ref<DisplayObject>, flight::Ref<Path>>();
+inline void apply_rive_clipping(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathBooleanKernel>>>> path_boolean_kernel, flight::Array<std::optional<flight::types::DisplayObject>> nodes, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveArtboardGraph>>>> artboard, flight::Map<double, flight::Array<flight::Ref<flight::types::RivePathRecord>>> shape_paths, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics) {
+  flight::Array<flight::Ref<flight::types::Matrix>> relative = create_rive_relative_transforms(artboard);
+  auto clips = flight::Map<flight::types::DisplayObject, flight::Ref<flight::types::Path>>();
   {
     double index = 1.0;
-    while ((index < static_cast<double>(artboard->objects.size()))) {
+    while ((index < static_cast<double>(flight::row_get<flight::RowKey<"objects">>(artboard).size()))) {
       {
-        flight::Ref<RiveCoreObject> object = artboard->objects.element(index);
+        auto object = flight::row_get<flight::RowKey<"objects">>(artboard).element(index);
         if ((object->type_key != rive_clipping_shape)) {
           (index += 1.0);
           continue;
         }
-        if (!read_rive_flag(object, rive_clip_is_visible, true)) {
+        if (!read_rive_flag_flight_value_function_read_u000052_ive_u000046_lag_flight_private_6321ae4334e1497f(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(object)), rive_clip_is_visible, true)) {
           (index += 1.0);
           continue;
         }
-        const double owner = artboard->parent_indices.element(index);
-        std::optional<flight::Ref<DisplayObject>> target = ((owner >= 0.0) ? std::optional{nodes.element(owner)} : std::nullopt);
+        const double owner = flight::row_get<flight::RowKey<"parentIndices">>(artboard).element(index);
+        std::optional<flight::types::DisplayObject> target = ((owner >= 0.0) ? std::optional{nodes.element(owner)} : std::nullopt);
         if ((!target.has_value() || !target.value().has_value())) {
           (index += 1.0);
           continue;
         }
-        const double source = read_rive_number(object, rive_clip_source_id, -1.0);
-        std::optional<flight::Array<flight::Ref<RivePathRecord>>> paths = shape_paths.get(source);
+        const double source = read_rive_number_flight_value_function_read_u000052_ive_u00004e_umber_flight_private_6321ae4334e1497f(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(object)), rive_clip_source_id, -1.0);
+        std::optional<flight::Array<flight::Ref<flight::types::RivePathRecord>>> paths = shape_paths.get(source);
         if ((!paths.has_value() || (static_cast<double>(paths.value().size()) == 0.0))) {
-          report_import_diagnostic(diagnostics, import_diagnostic_severity.drop, flight::String("rive.unresolved-clipping-source"), flight::String("applyRiveClipping"), {{flight::String("index"), std::variant<bool, double, flight::String>{std::in_place_type<double>, index}}, {flight::String("source"), std::variant<bool, double, flight::String>{std::in_place_type<double>, source}}});
+          flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("rive.unresolved-clipping-source"), flight::String("applyRiveClipping"), {{flight::String("index"), std::variant<bool, double, flight::String>{std::in_place_type<double>, index}}, {flight::String("source"), std::variant<bool, double, flight::String>{std::in_place_type<double>, source}}});
           {
             (index += 1.0);
             continue;
           }
         }
-        flight::Ref<Path> next = create_rive_clip_path(path_boolean_kernel, paths.value(), relative.element(owner), relative.element(source), object);
-        std::optional<flight::Ref<Path>> current = clips.get(target.value());
-        clips.set(target.value(), (!current.has_value() ? next : intersect_paths(path_boolean_kernel, current.value(), next, std::nullopt, std::nullopt)));
+        auto next = create_rive_clip_path(path_boolean_kernel, paths.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(relative.element(owner))), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(relative.element(source))), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(object)));
+        auto current = clips.get(target.value());
+        clips.set(target.value(), (!current.has_value() ? next : flight::path_boolean::intersect_paths(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathBooleanKernel>>>>>(path_boolean_kernel), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Path>>>>(current.value())), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Path>>>>(next)), std::nullopt, std::nullopt)));
       }
       (index += 1.0);
     }
   }
   for (auto array_pattern_value : clips) {
-    flight::Ref<DisplayObject> target_2 = std::get<0>(array_pattern_value);
-    flight::Ref<Path> path = std::get<1>(array_pattern_value);
-    (target_2->clip = create_clip_region_from_path(path));
+    flight::types::DisplayObject target_2 = std::get<0>(array_pattern_value);
+    auto path = std::get<1>(array_pattern_value);
+    flight::row_set<flight::RowKey<"clip">>(target_2, std::optional<flight::Ref<flight::types::ClipRegion>>{flight::clip::create_clip_region_from_path(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Path>>>>(path)), std::nullopt)});
   }
 }
 
 
 // NOT GENERATED: function registerRiveClippingHandlers -- source line 110
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
+// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
 //   export function registerRiveClippingHandlers(
@@ -292,6 +265,11 @@ inline void apply_rive_clipping(flight::Ref<PathBooleanKernel> path_boolean_kern
 //   }
 //   
 // cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveClipping.ts: contextual
-// optionalSingle construction requires expression type evidence
+// union callable value type std::function<flight::Null()> agrees with no alternative's signature: the
+// destination holds
+// [std::function<std::optional<flight::types::DisplayObject>(flight::Ref<flight::types::RiveArtboardImportContext>,
+// double)>]. A callable is a represented domain, so the obstacle is that the destination's signature cannot call
+// this one. Declare the value's parameters so the destination's signature supplies them, and its result as one
+// the destination holds
 
 } // namespace flight::scene2d_formats

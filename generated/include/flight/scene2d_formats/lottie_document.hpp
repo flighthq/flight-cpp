@@ -3,23 +3,15 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
+//   missing: function isAnimatedLottieProperty -- source line 656
 //   missing: function initialLottieValue -- source line 639
 //   missing: function lottieNumericValue -- source line 754
-//   missing: function createLottieSpatialTrackValues -- source line 433
-//   missing: function isSeparatedPosition -- source line 764
 //   missing: function handleVaries -- source line 789
-//   missing: function hasComponentSpecificLottieEasing -- source line 609
-//   missing: function createLottieSegmentEasing -- source line 529
-//   missing: function applyLottieLayerVisibility -- source line 668
-//   missing: function applyAnimationClipToLottieDocument -- source line 75
-//   missing: function createLottieTrack -- source line 386
+//   missing: function bindMutableLottieNumericProperty -- source line 154
 //   missing: function applyVectorProperty -- source line 181
 //   missing: function applyScalarProperty -- source line 208
 //   missing: function createLottiePositionSampler -- source line 329
 //   missing: function applyLottieTransform -- source line 104
-//   missing: function createLottieLayerNode -- source line 131
-//   missing: function appendLottieLayers -- source line 52
-//   missing: function createScene2DFromLottieDocumentWithRegistry -- source line 558
 #include <cmath>
 #include <cstdint>
 #include <flight/any.hpp>
@@ -27,21 +19,19 @@
 #include <flight/json.hpp>
 #include <flight/number.hpp>
 #include <flight/record.hpp>
+#include <flight/sequence_view.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <limits>
 #include <optional>
 #include <random>
+#include <stdexcept>
 #include <tuple>
 #include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
-
-#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
-
-#include <flight/animation/animation_clip.hpp>
 
 #include <flight/types/node_2d_animation_path.hpp>
 
@@ -53,33 +43,47 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/import_diagnostic.hpp>
 
-#include <flight/types/entity.hpp>
-
-#include <flight/types/easing_function.hpp>
-
-#include <flight/types/display_object.hpp>
-
-#include <flight/types/blend_mode.hpp>
-
 #include <flight/types/animation_track.hpp>
 
 #include <flight/types/animation_clip.hpp>
 
-#include <flight/types/advanced_blend_mode.hpp>
+#include <flight/types/animation_channel.hpp>
 
-#include <flight/node/revision.hpp>
+namespace flight::types { struct AnimationChannel; }
+namespace flight::types { struct AnimationClip; }
+namespace flight::types { struct AnimationClipEvent; }
+namespace flight::types { struct AnimationTrack; }
+namespace flight::types { struct ImageResource; }
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct LottieAdvancedBlend; }
+namespace flight::types { struct LottieBezierHandle; }
+namespace flight::types { struct LottieDocument; }
+namespace flight::types { struct LottieDocumentImportOptions; }
+namespace flight::types { struct LottieDocumentImportResult; }
+namespace flight::types { struct LottieImageAsset; }
+namespace flight::types { struct LottieImportContext; }
+namespace flight::types { struct LottieLayer; }
+namespace flight::types { struct LottieLayerContext; }
+namespace flight::types { struct LottieMarker; }
+namespace flight::types { struct LottieMask; }
+namespace flight::types { struct LottieMaskContext; }
+namespace flight::types { struct LottieMutableAnimationTarget; }
+namespace flight::types { struct LottiePrecompositionAsset; }
+namespace flight::types { struct LottieRegistry; }
+namespace flight::types { struct LottieSeparatedPositionProperty; }
+namespace flight::types { struct LottieTransform; }
+namespace flight::types { struct Node2DAnimationTarget; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { template <typename T> struct LottieAnimatedProperty; }
+namespace flight::types { template <typename T> struct LottieKeyframe; }
+namespace flight::types { template <typename T> struct LottieStaticProperty; }
+namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::scene2d_formats {
 
-using flight::importdiagnostics::report_import_diagnostic;
-
-using flight::animation::create_animation_channel;
-
+using flight::types::AnimationChannel;
 using flight::types::AnimationClip;
 using flight::types::AnimationTrack;
-using flight::types::DisplayObject;
-using flight::types::EasingFunction;
-using flight::types::EntityConstruction;
 using flight::types::ImportDiagnostic;
 using flight::types::LottieAdvancedBlend;
 using flight::types::LottieAnimatable;
@@ -91,31 +95,36 @@ using flight::types::LottieLayer;
 using flight::types::LottiePositionProperty;
 using flight::types::Node2D;
 using flight::types::Node2DAnimationPath;
-using flight::types::advanced_blend_mode;
-using flight::types::blend_mode;
-using flight::types::import_diagnostic_severity;
-
-using flight::node::invalidate_node_local_transform;
 struct LottiePositionSampler;
 } // namespace flight::scene2d_formats
 
+#include <flight/animation/animation_clip.hpp>
+#include <flight/animation/animation_track.hpp>
+#include <flight/easing/ease_cubic_bezier.hpp>
+#include <flight/entity/entity.hpp>
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+#include <flight/node/hierarchy.hpp>
+#include <flight/node/revision.hpp>
+#include <flight/scene2d/display_object.hpp>
+#include <flight/scene2d/display_object_animation.hpp>
+#include <flight/types/contract.hpp>
 #include <flight/scene2d_formats/lottie_registry.hpp>
 
 namespace flight::scene2d_formats {
 
-inline void apply_lottie_mask_family(flight::Ref<Node2D> target, flight::Array<flight::Ref<LottieMask>> masks, flight::Ref<LottieImportContext> context) {
-  flight::Array<flight::Ref<LottieMask>> active = masks.filter([=](flight::Ref<LottieMask> mask) { return (mask->mode != flight::String("n")); });
+inline void apply_lottie_mask_family(flight::types::Node2D target, flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieMask>>>>> masks, flight::Ref<flight::types::LottieImportContext> context) {
+  flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieMask>>>>> active = masks.filter([=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieMask>>>> mask) { return (flight::row_get<flight::RowKey<"mode">>(mask) != flight::String("n")); });
   if ((static_cast<double>(active.size()) == 0.0)) {
     return;
   }
-  std::optional<flight::Ref<LottieMaskHandler>> handler = get_lottie_mask_handler(context->registry, active.element(0.0)->mode);
+  std::optional<std::function<void(flight::Ref<flight::types::LottieMaskContext>)>> handler = flight::scene2d_formats::get_lottie_mask_handler(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieRegistry>>>>>(context->registry), flight::row_get<flight::RowKey<"mode">>(active.element(0.0)));
   if (handler.has_value()) {
-    handler.value()(flight::make_ref<LottieMaskContext>(LottieMaskContext{.import = context, .masks = active, .target = target}));
+    handler.value()(flight::make_ref<flight::types::LottieMaskContext>(flight::types::LottieMaskContext{.import = context, .masks = active, .target = target}));
   }
 }
 
 struct LottiePositionSampler : public flight::ReferenceEnabled {
-  flight::Ref<AnimationTrack> carrier;
+  flight::Ref<flight::types::AnimationTrack> carrier;
   double first_time;
   double last_time;
   std::function<void(flight::Array<double>, double)> sample;
@@ -129,7 +138,7 @@ inline flight::Array<double> sample_lottie_spatial_bezier(flight::Array<double> 
   return start.map([=](double value, double component) { return ((((flight::number_power(inverse, 3.0) * value) + (((3.0 * flight::number_power(inverse, 2.0)) * time) * (value + outgoing.element(component)))) + (((3.0 * inverse) * flight::number_power(time, 2.0)) * (end.element(component) + incoming.element(component)))) + (flight::number_power(time, 3.0) * end.element(component))); });
 }
 
-inline flight::Ref<EasingFunction> create_lottie_spatial_segment_easing(std::optional<flight::Ref<EasingFunction>> temporal, flight::Array<double> start, flight::Array<double> end, flight::Array<double> outgoing, flight::Array<double> incoming) {
+inline flight::types::EasingFunction create_lottie_spatial_segment_easing(std::optional<std::function<double(double)>> temporal, flight::Array<double> start, flight::Array<double> end, flight::Array<double> outgoing, flight::Array<double> incoming) {
   const auto lengths_capture = flight::make_binding_cell(flight::Array<double>(lottie_spatial_curve_samples).fill(0.0));
   flight::Array<double> previous = start;
   {
@@ -180,26 +189,33 @@ inline flight::Ref<EasingFunction> create_lottie_spatial_segment_easing(std::opt
 };
 }
 
-inline void initialize_lottie_document_import_result(flight::Ref<EntityConstruction<flight::Ref<LottieDocumentImportResult>>> out, flight::Ref<DisplayObject> root, flight::Array<flight::Ref<LottieAdvancedBlend>> advanced_blends, flight::Ref<AnimationClip> clip, double duration, double frame_rate) {
-  (out->advanced_blends = advanced_blends);
-  (out->clip = clip);
-  (out->duration = duration);
-  (out->frame_rate = frame_rate);
-  (out->root = root);
+inline void initialize_lottie_document_import_result(flight::types::EntityConstruction<flight::Ref<flight::types::LottieDocumentImportResult>> out, flight::types::DisplayObject root, flight::Array<flight::Ref<flight::types::LottieAdvancedBlend>> advanced_blends, flight::Ref<flight::types::AnimationClip> clip, double duration, double frame_rate) {
+  flight::row_set<flight::RowKey<"advancedBlends">>(out, advanced_blends);
+  flight::row_set<flight::RowKey<"clip">>(out, clip);
+  flight::row_set<flight::RowKey<"duration">>(out, duration);
+  flight::row_set<flight::RowKey<"frameRate">>(out, frame_rate);
+  flight::row_set<flight::RowKey<"root">>(out, root);
 }
 
-template <typename T>
-inline bool is_animated_lottie_property(flight::Ref<LottieAnimatable<T>> property) {
-  if ((!flight::is_array(property->k) || (property->k.length == 0.0))) {
-    return false;
-  }
-  auto first = property->k.get(0.0);
-  return (((([&]() -> flight::String { const auto& typeof_value = first; if (!typeof_value.has_value()) return flight::String("undefined"); return typeof_value.value().type_of(); }()) == flight::String("object")) && first.has_value()) && (flight::String("t") in flight::named_properties(first)));
-}
+
+// NOT GENERATED: function isAnimatedLottieProperty -- source line 656
+// refusal: cpp-union-member-access-unguarded [compiler-restriction]
+//
+// The source it stood for:
+//   export function isAnimatedLottieProperty<T>(
+//     property: Readonly<LottieAnimatable<T>>,
+//   ): property is Readonly<{ a: 1; k: LottieKeyframe<T>[]; x?: string }> {
+//     if (!Array.isArray(property.k) || property.k.length === 0) return false;
+//     const first: unknown = property.k[0];
+//     return typeof first === 'object' && first !== null && 't' in (first as Record<string, unknown>);
+//   }
+//   
+// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts: property
+// length on a C++ variant requires proven union member access
 
 
 // NOT GENERATED: function initialLottieValue -- source line 639
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
+// refusal: cpp-contextual-union-inequivalent [source-portability]
 //
 // The source it stood for:
 //   export function initialLottieValue<T>(property: Readonly<LottieAnimatable<T>> | undefined): T | undefined {
@@ -207,7 +223,7 @@ inline bool is_animated_lottie_property(flight::Ref<LottieAnimatable<T>> propert
 //     if (!isAnimatedLottieProperty(property)) return property.k;
 //     return property.k[0]?.s ?? property.k[0]?.e;
 //   }
-//
+//   
 //   /**
 //    * Whether a property carries keyframes, decided by its **structure** rather than its `a` flag.
 //    *
@@ -220,7 +236,13 @@ inline bool is_animated_lottie_property(flight::Ref<LottieAnimatable<T>> propert
 //    * value is a number, an array of numbers, or a bare path object.
 //    */
 // cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts: contextual
-// optionalSingle construction requires expression type evidence
+// C++ union conversion requires equivalent source union evidence: target optionalSingle carriers [T] from
+// property source multiVariant carriers [flight::Array<flight::Ref<flight::types::LottieKeyframe<T>>>, T].
+// Narrow or convert the source expression so each of its alternatives names exactly one destination union
+// alternative. The carrier lists show which alternatives lack an exact carrier; preserve the declared collection
+// or member union alias before flow expansion. For a Map or WeakMap lookup followed by a rebind, ensure every
+// rebound member already has the declared value owner member's carrier -- a Readonly structural view does not
+// become a mutable nominal Ref.
 
 inline double lottie_clamp(double value, double minimum, double maximum) {
   return flight::minimum(maximum, flight::maximum(minimum, value));
@@ -230,56 +252,56 @@ inline double lottie_degrees_to_radians(double value) {
   return ((value * flight::pi) / 180.0);
 }
 
-inline void apply_display_sample(flight::Ref<Node2D> target, flight::Ref<Node2DAnimationPath> path, flight::Array<double> sample) {
+inline void apply_display_sample(flight::types::Node2D target, flight::types::Node2DAnimationPath path, flight::Array<double> sample) {
   if ((path == flight::String("Position"))) {
-    (target->x = sample.element(0.0));
-    (target->y = sample.element(1.0));
+    flight::row_set<flight::RowKey<"x">>(target, sample.element(0.0));
+    flight::row_set<flight::RowKey<"y">>(target, sample.element(1.0));
   }
   else {
     if ((path == flight::String("X"))) {
-      (target->x = sample.element(0.0));
+      flight::row_set<flight::RowKey<"x">>(target, sample.element(0.0));
     }
     else {
       if ((path == flight::String("Y"))) {
-        (target->y = sample.element(0.0));
+        flight::row_set<flight::RowKey<"y">>(target, sample.element(0.0));
       }
       else {
         if ((path == flight::String("Pivot"))) {
-          (target->pivot_x = sample.element(0.0));
-          (target->pivot_y = sample.element(1.0));
+          flight::row_set<flight::RowKey<"pivotX">>(target, sample.element(0.0));
+          flight::row_set<flight::RowKey<"pivotY">>(target, sample.element(1.0));
         }
         else {
           if ((path == flight::String("PivotX"))) {
-            (target->pivot_x = sample.element(0.0));
+            flight::row_set<flight::RowKey<"pivotX">>(target, sample.element(0.0));
           }
           else {
             if ((path == flight::String("PivotY"))) {
-              (target->pivot_y = sample.element(0.0));
+              flight::row_set<flight::RowKey<"pivotY">>(target, sample.element(0.0));
             }
             else {
               if ((path == flight::String("Scale"))) {
-                (target->scale_x = sample.element(0.0));
-                (target->scale_y = sample.element(1.0));
+                flight::row_set<flight::RowKey<"scaleX">>(target, sample.element(0.0));
+                flight::row_set<flight::RowKey<"scaleY">>(target, sample.element(1.0));
               }
               else {
                 if ((path == flight::String("ScaleX"))) {
-                  (target->scale_x = sample.element(0.0));
+                  flight::row_set<flight::RowKey<"scaleX">>(target, sample.element(0.0));
                 }
                 else {
                   if ((path == flight::String("ScaleY"))) {
-                    (target->scale_y = sample.element(0.0));
+                    flight::row_set<flight::RowKey<"scaleY">>(target, sample.element(0.0));
                   }
                   else {
                     if ((path == flight::String("Rotation"))) {
-                      (target->rotation = sample.element(0.0));
+                      flight::row_set<flight::RowKey<"rotation">>(target, sample.element(0.0));
                     }
                     else {
                       if ((path == flight::String("SkewX"))) {
-                        (target->skew_x = sample.element(0.0));
+                        flight::row_set<flight::RowKey<"skewX">>(target, sample.element(0.0));
                       }
                       else {
                         if ((path == flight::String("Alpha"))) {
-                          (target->alpha = sample.element(0.0));
+                          flight::row_set<flight::RowKey<"alpha">>(target, sample.element(0.0));
                         }
                       }
                     }
@@ -294,20 +316,20 @@ inline void apply_display_sample(flight::Ref<Node2D> target, flight::Ref<Node2DA
   }
 }
 
-inline std::optional<flight::Ref<LottieDocument>> parse_lottie_document(std::variant<flight::Ref<LottieDocument>, flight::String> source) {
+inline std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieDocument>>>>> parse_lottie_document(std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieDocument>>>>, flight::String> source) {
   if (!(source.index() == 1)) {
-    return std::optional<flight::Ref<LottieDocument>>{std::get<0>(source)};
+    return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieDocument>>>>>{std::get<0>(source)};
   }
   try {
-    return std::optional<flight::Ref<LottieDocument>>{static_cast<flight::Ref<LottieDocument>>(flight::Json::parse(std::get<1>(source)))};
+    return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieDocument>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::LottieDocument>>>>(static_cast<flight::Ref<flight::types::LottieDocument>>(flight::Json::parse(std::get<1>(source)))))};
   }
   catch (...) {
     return std::nullopt;
   }
 }
 
-inline bool is_valid_lottie_document(flight::Ref<LottieDocument> document) {
-  return (((((((std::isfinite(document->fr) && (document->fr > 0.0)) && std::isfinite(document->ip)) && std::isfinite(document->op)) && (document->op >= document->ip)) && std::isfinite(document->w)) && std::isfinite(document->h)) && flight::is_array(document->layers));
+inline bool is_valid_lottie_document(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieDocument>>>> document) {
+  return (((((((std::isfinite(flight::row_get<flight::RowKey<"fr">>(document)) && (flight::row_get<flight::RowKey<"fr">>(document) > 0.0)) && std::isfinite(flight::row_get<flight::RowKey<"ip">>(document))) && std::isfinite(flight::row_get<flight::RowKey<"op">>(document))) && (flight::row_get<flight::RowKey<"op">>(document) >= flight::row_get<flight::RowKey<"ip">>(document))) && std::isfinite(flight::row_get<flight::RowKey<"w">>(document))) && std::isfinite(flight::row_get<flight::RowKey<"h">>(document))) && flight::is_array(flight::row_get<flight::RowKey<"layers">>(document)));
 }
 
 
@@ -324,7 +346,7 @@ inline bool is_valid_lottie_document(flight::Ref<LottieDocument> document) {
 //     }
 //     return out;
 //   }
-//
+//   
 // cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts:
 // Array.isArray narrows an erased value in the source, but flight::Any has no array alternative or checked
 // exact-array extraction for the guarded value. Keep the value in its exact array type before the erased
@@ -338,69 +360,63 @@ inline std::optional<flight::Array<double>> spatial_tangent(std::optional<flight
   return std::optional<flight::Array<double>>{lottie_numeric_value(value, components).map(tangent_of)};
 }
 
+template <typename T>
+inline flight::Array<double> create_lottie_spatial_track_values(flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieKeyframe<T>>>>>> keyframes, flight::Array<flight::Array<double>> samples, flight::Array<double> times, double components, std::function<double(double, double)> tangent_of) {
+  flight::Array<flight::Array<double>> incoming = samples.map([=]() { return flight::Array<double>(components).fill(0.0); });
+  flight::Array<flight::Array<double>> outgoing = samples.map([=]() { return flight::Array<double>(components).fill(0.0); });
+  {
+    double index = 0.0;
+    while ((index < (static_cast<double>(samples.size()) - 1.0))) {
+      {
+        const double dt = (times.element((index + 1.0)) - times.element(index));
+        std::optional<flight::Array<double>> spatial_out = spatial_tangent(flight::row_get<flight::RowKey<"to">>(keyframes.element(index)), components, tangent_of);
+        std::optional<flight::Array<double>> spatial_in = spatial_tangent(flight::row_get<flight::RowKey<"ti">>(keyframes.element(index)), components, tangent_of);
+        {
+          double component = 0.0;
+          while ((component < components)) {
+            {
+              if ((spatial_out.has_value() && spatial_in.has_value())) {
+                (outgoing.element(index).element(component) = ((3.0 * spatial_out.value().element(component)) / dt));
+                (incoming.element((index + 1.0)).element(component) = ((-3.0 * spatial_in.value().element(component)) / dt));
+              }
+              else {
+                const double slope = ((samples.element((index + 1.0)).element(component) - samples.element(index).element(component)) / dt);
+                (outgoing.element(index).element(component) = slope);
+                (incoming.element((index + 1.0)).element(component) = slope);
+              }
+            }
+            (component += 1.0);
+          }
+        }
+      }
+      (index += 1.0);
+    }
+  }
+  flight::Array<double> values = flight::Array<double>{};
+  {
+    double index_2 = 0.0;
+    while ((index_2 < static_cast<double>(samples.size()))) {
+      {
+        ([&]() { auto&& array_push_receiver = values; const auto array_push_arguments = ([&]() { flight::Array<double> array_spread_result; for (const auto& array_spread_item : incoming.element(index_2)) { array_spread_result.push(array_spread_item); } for (const auto& array_spread_item : samples.element(index_2)) { array_spread_result.push(array_spread_item); } for (const auto& array_spread_item : outgoing.element(index_2)) { array_spread_result.push(array_spread_item); } return array_spread_result; }()); for (const auto& array_push_item : array_push_arguments) { array_push_receiver.push(array_push_item); } return static_cast<double>(array_push_receiver.size()); }());
+      }
+      (index_2 += 1.0);
+    }
+  }
+  return values;
+}
 
-// NOT GENERATED: function createLottieSpatialTrackValues -- source line 433
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   function createLottieSpatialTrackValues<T>(
-//     keyframes: readonly Readonly<LottieKeyframe<T>>[],
-//     samples: readonly number[][],
-//     times: readonly number[],
-//     components: number,
-//     tangentOf: (value: number, component: number) => number,
-//   ): number[] {
-//     const incoming = samples.map(() => new Array<number>(components).fill(0));
-//     const outgoing = samples.map(() => new Array<number>(components).fill(0));
-//     for (let index = 0; index < samples.length - 1; index++) {
-//       const dt = times[index + 1] - times[index];
-//       const spatialOut = spatialTangent(keyframes[index].to, components, tangentOf);
-//       const spatialIn = spatialTangent(keyframes[index].ti, components, tangentOf);
-//       for (let component = 0; component < components; component++) {
-//         if (spatialOut !== null && spatialIn !== null) {
-//           outgoing[index][component] = (3 * spatialOut[component]) / dt;
-//           incoming[index + 1][component] = (-3 * spatialIn[component]) / dt;
-//         } else {
-//           const slope = (samples[index + 1][component] - samples[index][component]) / dt;
-//           outgoing[index][component] = slope;
-//           incoming[index + 1][component] = slope;
-//         }
-//       }
-//     }
-//     const values: number[] = [];
-//     for (let index = 0; index < samples.length; index++) {
-//       values.push(...incoming[index], ...samples[index], ...outgoing[index]);
-//     }
-//     return values;
-//   }
-//
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts: contextual
-// optionalSingle construction requires expression type evidence
-
-
-// NOT GENERATED: function isSeparatedPosition -- source line 764
-//
-// The source it stood for:
-//   function isSeparatedPosition(property: Readonly<LottiePositionProperty> | undefined): property is Readonly<{
-//     s: true;
-//     x: LottieAnimatable<number>;
-//     y: LottieAnimatable<number>;
-//     z?: LottieAnimatable<number>;
-//   }> {
-//     return property !== undefined && 's' in property && property.s === true && 'x' in property && 'y' in property;
-//   }
-//
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts: union member
-// test must identify exactly one C++ optional value alternative
+inline bool is_separated_position(std::optional<flight::types::LottiePositionProperty> property) {
+  return ((((property.has_value() && (property.has_value() && property.value().index() == 2)) && (flight::row_get<flight::RowKey<"s">>(std::get<2>(property.value())) == true)) && (property.has_value() && property.value().index() == 2)) && (property.has_value() && property.value().index() == 2));
+}
 
 inline double lottie_rgba(flight::Array<double> color) {
   return flight::unsigned_right_shift(flight::bitwise_or(flight::bitwise_or(flight::bitwise_or(flight::left_shift(flight::round((lottie_clamp(([&]() -> double { auto nullish_coalesce_left = color.get(0.0); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()), 0.0, 1.0) * 255.0)), 24.0), flight::left_shift(flight::round((lottie_clamp(([&]() -> double { auto nullish_coalesce_left = color.get(1.0); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()), 0.0, 1.0) * 255.0)), 16.0)), flight::left_shift(flight::round((lottie_clamp(([&]() -> double { auto nullish_coalesce_left = color.get(2.0); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()), 0.0, 1.0) * 255.0)), 8.0)), 255.0), 0.0);
 }
 
 template <typename T>
-inline bool has_spatial_tangents(flight::Array<flight::Ref<LottieKeyframe<T>>> keyframes) {
-  return keyframes.some([=](flight::Ref<LottieKeyframe<T>> keyframe, double index) {
-  return (((index < (static_cast<double>(keyframes.size()) - 1.0)) && flight::is_array(keyframe->to)) && flight::is_array(keyframe->ti));
+inline bool has_spatial_tangents(flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieKeyframe<T>>>>>> keyframes) {
+  return keyframes.some([=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieKeyframe<T>>>>> keyframe, double index) {
+  return (((index < (static_cast<double>(keyframes.size()) - 1.0)) && flight::is_array(flight::row_get<flight::RowKey<"to">>(keyframe))) && flight::is_array(flight::row_get<flight::RowKey<"ti">>(keyframe)));
 });
 }
 
@@ -416,225 +432,172 @@ inline bool has_spatial_tangents(flight::Array<flight::Ref<LottieKeyframe<T>>> k
 //     }
 //     return false;
 //   }
-//
+//   
 // cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts: property
 // length on a C++ variant requires proven union member access
 
-
-// NOT GENERATED: function hasComponentSpecificLottieEasing -- source line 609
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function hasComponentSpecificLottieEasing<T>(
-//     keyframes: readonly Readonly<LottieKeyframe<T>>[],
-//     components: number,
-//   ): boolean {
-//     if (components < 2) return false;
-//     for (let index = 0; index < keyframes.length - 1; index++) {
-//       const current = keyframes[index];
-//       for (const handle of [current.o, current.i]) {
-//         if (handle === undefined) continue;
-//         if (handleVaries(handle.x, components) || handleVaries(handle.y, components)) return true;
-//       }
-//     }
-//     return false;
-//   }
-//
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts: contextual
-// optionalSingle construction requires expression type evidence
+template <typename T>
+inline bool has_component_specific_lottie_easing(flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieKeyframe<T>>>>>> keyframes, double components) {
+  if ((components < 2.0)) {
+    return false;
+  }
+  {
+    double index = 0.0;
+    while ((index < (static_cast<double>(keyframes.size()) - 1.0))) {
+      {
+        flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieKeyframe<T>>>>> current = keyframes.element(index);
+        for (auto handle : flight::Array<std::optional<flight::Ref<flight::types::LottieBezierHandle>>>{flight::row_get<flight::RowKey<"o">>(current), flight::row_get<flight::RowKey<"i">>(current)}) {
+          if (!handle.has_value()) {
+            continue;
+          }
+          if ((handle_varies(handle.value()->x, components) || handle_varies(handle.value()->y, components))) {
+            return true;
+          }
+        }
+      }
+      (index += 1.0);
+    }
+  }
+  return false;
+}
 
 inline double handle_component(std::variant<flight::Array<double>, double> value, double component) {
   return (std::visit([](const auto& value) { return flight::is_array(value); }, value) ? ([&]() -> double { auto nullish_coalesce_left = std::get<0>(value).get(component); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return std::get<0>(value).element(0.0); }()) : std::get<1>(value));
 }
 
-
-// NOT GENERATED: function createLottieSegmentEasing -- source line 529
-// refusal: cpp-contextual-union-missing-expression-type:multiVariant [compiler-restriction]
-//
-// The source it stood for:
-//   function createLottieSegmentEasing(
-//     outgoing: Readonly<LottieBezierHandle> | undefined,
-//     incoming: Readonly<LottieBezierHandle> | undefined,
-//     component: number,
-//   ): EasingFunction | null {
-//     if (outgoing === undefined || incoming === undefined) return null;
-//     return easeCubicBezier(
-//       handleComponent(outgoing.x, component),
-//       handleComponent(outgoing.y, component),
-//       handleComponent(incoming.x, component),
-//       handleComponent(incoming.y, component),
-//     );
-//   }
-//
-//   /**
-//    * The Lottie import, over a handler registry it is GIVEN rather than one it resolves.
-//    *
-//    * ★ THIS MODULE MUST NOT KNOW THE DEFAULT FAMILY. `createScene2DFromLottieDocument` in `lottieImport.ts` owns that
-//    * edge, which is what keeps this module free of the fifteen feature modules and of the path, text and image code
-//    * behind them. A `?? _defaultLayerHandlers()` here would name every handler from the orchestrator, and a caller
-//    * asking for null and solid layers alone would link all of it anyway — the property the registry exists to provide.
-//    *
-//    * Everything else is unchanged: JSON validation and its reject diagnostic, the context, the layer walk, the marker
-//    * events, and the clip the result carries.
-//    */
-//   /**
-//    * Imports a Bodymovin/Lottie document into a display subtree and target-bound AnimationClip.
-//    * Playback remains explicit: call applyAnimationClipToLottieDocument with the returned clip.
-//    */
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts: contextual
-// multiVariant construction requires expression type evidence
-
-inline double frame_to_seconds(double frame, flight::Ref<LottieImportContext> context) {
-  return (((context->frame_offset + (frame * context->frame_scale)) - context->document.ip) / context->document.fr);
+inline std::optional<std::function<double(double)>> create_lottie_segment_easing(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieBezierHandle>>>>> outgoing, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieBezierHandle>>>>> incoming, double component) {
+  if ((!outgoing.has_value() || !incoming.has_value())) {
+    return std::nullopt;
+  }
+  return std::optional<std::function<double(double)>>{flight::easing::ease_cubic_bezier(handle_component(flight::row_get<flight::RowKey<"x">>(outgoing.value()), component), handle_component(flight::row_get<flight::RowKey<"y">>(outgoing.value()), component), handle_component(flight::row_get<flight::RowKey<"x">>(incoming.value()), component), handle_component(flight::row_get<flight::RowKey<"y">>(incoming.value()), component))};
 }
 
-
-// NOT GENERATED: function applyLottieLayerVisibility -- source line 668
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
-//
-// The source it stood for:
-//   function applyLottieLayerVisibility(target: Node2D, layer: Readonly<LottieLayer>, context: LottieImportContext): void {
-//     const start = frameToSeconds(layer.ip ?? context.document.ip, context);
-//     const end = frameToSeconds(layer.op ?? context.document.op, context);
-//     target.visible = start <= 0 && end > 0;
-//     const duration = Math.max(0, (context.document.op - context.document.ip) / context.document.fr);
-//     const times = [0, lottieClamp(start, 0, duration), lottieClamp(end, 0, duration), duration].filter(
-//       (time, index, all) => index === 0 || time > all[index - 1],
-//     );
-//     if (times.length < 2) return;
-//     const values = times.map((time) => (time >= start && time < end ? 1 : 0));
-//     context.channels.push(
-//       createAnimationChannel(createAnimationTrack({ interpolation: 'Step', times, values }), {
-//         node: target,
-//         path: 'Visible',
-//       } satisfies Node2DAnimationTarget),
-//     );
-//   }
-//
-//   /**
-//    * Splits a layer's blend mode across Flight's two tiers.
-//    *
-//    * `BlendMode` is the fixed-function set that folds into blend state; the destination-reading and
-//    * non-separable modes are `AdvancedBlendMode`, realized through a `BlendEffect` the caller applies.
-//    * Neither tier is a place to guess: Bodymovin numbers overlay as 3, darken as 4 and lighten as 5, and
-//    * an earlier reading of this table put Add at 3 and darken/lighten at 8 and 9 — so an overlay layer
-//    * rendered as additive while the two modes Flight can express fell through unmapped.
-//    */
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts: contextual
-// union value type flight::String is not a represented runtime domain
-
-inline void report_lottie_drop(flight::Ref<LottieImportContext> context, flight::String kind, flight::String origin, std::optional<flight::Record<flight::String, std::variant<double, flight::String>>> detail = std::nullopt) {
-  report_import_diagnostic(context->diagnostics, import_diagnostic_severity.drop, kind, origin, detail);
+inline double frame_to_seconds(double frame, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieImportContext>>>> context) {
+  return (((flight::row_get<flight::RowKey<"frameOffset">>(context) + (frame * flight::row_get<flight::RowKey<"frameScale">>(context))) - flight::row_get<flight::RowKey<"ip">>(flight::row_get<flight::RowKey<"document">>(context))) / flight::row_get<flight::RowKey<"fr">>(flight::row_get<flight::RowKey<"document">>(context)));
 }
 
-inline flight::Array<double> sample_scratch = flight::Array<double>(256.0).fill(0.0);
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_TIMES_VALUES_COMPONENTS_INTERPOLATION_QUATERNION_EASING_SEGMENT_EASINGS_9B0EADFED5E06042
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_TIMES_VALUES_COMPONENTS_INTERPOLATION_QUATERNION_EASING_SEGMENT_EASINGS_9B0EADFED5E06042
+using times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042 = flight::animation::times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_TIMES_VALUES_COMPONENTS_INTERPOLATION_QUATERNION_EASING_SEGMENT_EASINGS_9B0EADFED5E06042
 
+inline void apply_lottie_layer_visibility(flight::types::Node2D target, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieLayer>>>> layer, flight::Ref<flight::types::LottieImportContext> context) {
+  const double start = frame_to_seconds(([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"ip">>(layer); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::row_get<flight::RowKey<"ip">>(context->document); }()), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieImportContext>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::LottieImportContext>>>>(context)));
+  const double end = frame_to_seconds(([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"op">>(layer); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::row_get<flight::RowKey<"op">>(context->document); }()), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieImportContext>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::LottieImportContext>>>>(context)));
+  flight::row_set<flight::RowKey<"visible">>(target, ((start <= 0.0) && (end > 0.0)));
+  const double duration = flight::maximum(0.0, ((flight::row_get<flight::RowKey<"op">>(context->document) - flight::row_get<flight::RowKey<"ip">>(context->document)) / flight::row_get<flight::RowKey<"fr">>(context->document)));
+  flight::Array<double> times = flight::Array{0.0, lottie_clamp(start, 0.0, duration), lottie_clamp(end, 0.0, duration), duration}.filter([=](double time, double index, flight::Any all) { return ((index == 0.0) || (time > all[static_cast<size_t>((index - 1.0))])); });
+  if ((static_cast<double>(times.size()) < 2.0)) {
+    return;
+  }
+  flight::Array<double> values = times.map([=](double time) -> double { return (((time >= start) && (time < end)) ? 1.0 : 0.0); });
+  context->channels.push(flight::animation::create_animation_channel(flight::animation::create_animation_track(([&]() { auto object_member_interpolation = std::optional<flight::String>{flight::String("Step")}; auto object_member_times = times; auto object_member_values = values; return flight::make_ref<times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042>(times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042{.times = object_member_times, .values = object_member_values, .interpolation = object_member_interpolation}); }())), flight::Any::object(flight::make_ref<flight::types::Node2DAnimationTarget>(flight::types::Node2DAnimationTarget{.node = target, .path = flight::String("Visible")}))));
+}
 
-// NOT GENERATED: function applyAnimationClipToLottieDocument -- source line 75
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function applyAnimationClipToLottieDocument(clip: Readonly<AnimationClip>, time: number): void {
-//     applyAnimationClipToNode2D(clip, time);
-//     for (const channel of clip.channels) {
-//       const target = channel.targetRef as LottieMutableAnimationTarget | null;
-//       if (target === null || typeof target !== 'object' || target.lottieApply === undefined) continue;
-//       sampleAnimationTrack(_sampleScratch, channel.track, time);
-//       target.lottieApply(_sampleScratch, time);
-//     }
-//   }
-//
-//   /**
-//    * Dispatches a layer's masks to the registered mask family.
-//    *
-//    * ★ THE CORE PICKS THE KEY AND NOTHING ELSE. Disabled masks are dropped here because `mode: 'n'` is the format saying
-//    * "not a mask", so it cannot be the dispatch key; everything else — which compositions can be carried, what happens to
-//    * an inverted one — belongs to the handler. An unregistered mode is silently unmasked, exactly as an uncarried
-//    * composition was before masks became a family, so no document gains or loses a diagnostic.
-//    */
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts: a presence
-// test against undefined has no absence channel in the emitted C++ storage for property
+inline void report_lottie_drop(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieImportContext>>>> context, flight::String kind, flight::String origin, std::optional<flight::Record<flight::String, std::variant<double, flight::String>>> detail = std::nullopt) {
+  flight::importdiagnostics::report_import_diagnostic(flight::row_get<flight::RowKey<"diagnostics">>(context), flight::types::import_diagnostic_severity->drop, kind, origin, detail);
+}
+
+inline flight::Array<double> sample_scratch_flight_value_variable__u00005f_sample_u000053_cratch_flight_private_3aa60f67837496d3 = flight::Array<double>(256.0).fill(0.0);
+
+inline void apply_animation_clip_to_lottie_document(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationClip>>>> clip, double time) {
+  flight::scene2d::apply_animation_clip_to_node_2d(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationClip>>>>>(clip), time);
+  for (auto channel : flight::row_get<flight::RowKey<"channels">>(clip)) {
+    auto target = ([&]() -> std::optional<flight::Ref<flight::types::LottieMutableAnimationTarget>> { const auto& erased_value = channel->target_ref; if (static_cast<bool>(erased_value.object_if<flight::types::LottieMutableAnimationTarget>())) return std::optional<flight::Ref<flight::types::LottieMutableAnimationTarget>>{erased_value.object_if<flight::types::LottieMutableAnimationTarget>()}; if (erased_value.is_nullish()) return std::nullopt; throw std::logic_error("erased value holds no alternative this union represents"); }());
+    if (((!target.has_value() || (flight::String("object") != flight::String("object"))) || false)) {
+      continue;
+    }
+    flight::animation::sample_animation_track(std::variant<flight::Array<double>, flight::Float32Array>{std::in_place_type<flight::Array<double>>, sample_scratch_flight_value_variable__u00005f_sample_u000053_cratch_flight_private_3aa60f67837496d3}, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationTrack>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AnimationTrack>>>>(channel->track)), time);
+    target.value()->lottie_apply(std::variant<flight::Array<double>, flight::Float32Array>{std::in_place_type<flight::Array<double>>, sample_scratch_flight_value_variable__u00005f_sample_u000053_cratch_flight_private_3aa60f67837496d3}, time);
+  }
+}
 
 inline flight::Array<double> auto_orient_rotation_scratch = flight::Array<double>{0.0};
 
 inline flight::Array<double> auto_orient_scalar_scratch = flight::Array<double>{0.0};
 
-inline flight::Ref<EasingFunction> hold_easing = []() { return 0.0; };
+inline flight::types::EasingFunction hold_easing_flight_value_variable__u00005f_hold_u000045_asing_flight_private_3aa60f67837496d3 = [](double ignored_callback_argument) { (void)ignored_callback_argument; return 0.0; };
 
-
-// NOT GENERATED: function createLottieTrack -- source line 386
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function createLottieTrack<T>(
-//     keyframes: readonly Readonly<LottieKeyframe<T>>[],
-//     components: number,
-//     context: LottieImportContext,
-//     valueOf: (value: T | undefined, keyframe: number) => number[],
-//     easingComponent: number,
-//     spatialTangents = false,
-//     tangentOf: (value: number, component: number) => number = (value) => value,
-//   ): AnimationTrack {
-//     const times: number[] = [];
-//     const samples: number[][] = [];
-//     const retained: Array<Readonly<LottieKeyframe<T>>> = [];
-//     for (let index = 0; index < keyframes.length; index++) {
-//       const keyframe = keyframes[index];
-//       const time = frameToSeconds(keyframe.t, context);
-//       if (times.length > 0 && time <= times[times.length - 1]) continue;
-//       times.push(time);
-//       retained.push(keyframe);
-//       const source = keyframe.s ?? keyframes[index - 1]?.e;
-//       samples.push(valueOf(source, index));
-//     }
-//     const spatial = spatialTangents && hasSpatialTangents(retained);
-//     const values = spatial
-//       ? createLottieSpatialTrackValues(retained, samples, times, components, tangentOf)
-//       : samples.flat();
-//     const segmentEasings: Array<EasingFunction | null> = [];
-//     for (let index = 0; index < retained.length - 1; index++) {
-//       const keyframe = retained[index];
-//       const temporal =
-//         keyframe.h === 1 ? _holdEasing : createLottieSegmentEasing(keyframe.o, keyframe.i, easingComponent);
-//       const outgoing = spatialTangent(keyframe.to, components, tangentOf);
-//       const incoming = spatialTangent(keyframe.ti, components, tangentOf);
-//       segmentEasings.push(
-//         spatial && outgoing !== null && incoming !== null
-//           ? createLottieSpatialSegmentEasing(temporal, samples[index], samples[index + 1], outgoing, incoming)
-//           : temporal,
-//       );
-//     }
-//     return createAnimationTrack({
-//       components,
-//       interpolation: spatial ? 'Cubic' : 'Linear',
-//       segmentEasings,
-//       times,
-//       values,
-//     });
-//   }
-//
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts: contextual
-// optionalSingle construction requires expression type evidence
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_TIMES_VALUES_COMPONENTS_INTERPOLATION_QUATERNION_EASING_SEGMENT_EASINGS_B66B1B11451A88FD
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_TIMES_VALUES_COMPONENTS_INTERPOLATION_QUATERNION_EASING_SEGMENT_EASINGS_B66B1B11451A88FD
+template <typename T>
+struct times_values_components_interpolation_quaternion_easing_segment_easings_b66b1b11451a88fd : public flight::ReferenceEnabled {
+  flight::SequenceView<double> times;
+  flight::SequenceView<double> values;
+  std::optional<double> components;
+  std::optional<flight::types::AnimationInterpolation> interpolation;
+  std::optional<bool> quaternion;
+  std::variant<std::function<double(double)>, flight::Null, flight::Undefined> easing = std::variant<std::function<double(double)>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Array<std::optional<std::function<double(double)>>>, flight::Null, flight::Undefined> segment_easings = std::variant<flight::Array<std::optional<std::function<double(double)>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_TIMES_VALUES_COMPONENTS_INTERPOLATION_QUATERNION_EASING_SEGMENT_EASINGS_B66B1B11451A88FD
 
 template <typename T>
-inline void append_numeric_property_channels(flight::Ref<LottieAnimatable<T>> property, double components, std::function<flight::Any(std::optional<double>)> target, std::function<double(double, double)> convert, flight::Ref<LottieImportContext> context, std::optional<bool> spatial_tangents = std::nullopt) {
+inline flight::Ref<flight::types::AnimationTrack> create_lottie_track(flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieKeyframe<T>>>>>> keyframes, double components, flight::Ref<flight::types::LottieImportContext> context, std::function<flight::Array<double>(std::optional<T>, double)> value_of, double easing_component, std::optional<bool> spatial_tangents = std::nullopt, std::optional<std::function<double(double, double)>> tangent_of = std::nullopt) {
+  spatial_tangents = spatial_tangents.value_or(false);
+  tangent_of = tangent_of.value_or([=](double value, double ignored_callback_argument_2) {
+  (void)ignored_callback_argument_2;
+  return value;
+});
+  flight::Array<double> times = flight::Array<double>{};
+  flight::Array<flight::Array<double>> samples = flight::Array<flight::Array<double>>{};
+  flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieKeyframe<T>>>>>> retained = flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieKeyframe<T>>>>>>{};
+  {
+    double index = 0.0;
+    while ((index < static_cast<double>(keyframes.size()))) {
+      {
+        flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieKeyframe<T>>>>> keyframe = keyframes.element(index);
+        const double time = frame_to_seconds(flight::row_get<flight::RowKey<"t">>(keyframe), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieImportContext>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::LottieImportContext>>>>(context)));
+        if (((static_cast<double>(times.size()) > 0.0) && (time <= times.element((static_cast<double>(times.size()) - 1.0))))) {
+          (index += 1.0);
+          continue;
+        }
+        times.push(time);
+        retained.push(keyframe);
+        std::optional<T> source = ([&]() -> std::optional<T> { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"s">>(keyframe); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return ([&]() -> std::optional<T> { auto optional_chain_receiver = keyframes.get((index - 1.0)); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"e">>(optional_chain_receiver.value()); }()); }());
+        samples.push(value_of(source, index));
+      }
+      (index += 1.0);
+    }
+  }
+  const bool spatial = (spatial_tangents.value() && has_spatial_tangents<T>(retained));
+  flight::Array<double> values = (spatial ? create_lottie_spatial_track_values<T>(retained, samples, times, components, tangent_of.value()) : samples.flat());
+  flight::Array<std::optional<std::function<double(double)>>> segment_easings = flight::Array<std::optional<std::function<double(double)>>>{};
+  {
+    double index_2 = 0.0;
+    while ((index_2 < (static_cast<double>(retained.size()) - 1.0))) {
+      {
+        flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieKeyframe<T>>>>> keyframe_2 = retained.element(index_2);
+        std::optional<std::function<double(double)>> temporal = ((flight::row_get<flight::RowKey<"h">>(keyframe_2) == 1.0) ? std::optional<std::function<double(double)>>{hold_easing_flight_value_variable__u00005f_hold_u000045_asing_flight_private_3aa60f67837496d3} : create_lottie_segment_easing(([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieBezierHandle>>>>> { auto contextual_union_source = flight::row_get<flight::RowKey<"o">>(keyframe_2); if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieBezierHandle>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieBezierHandle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::LottieBezierHandle>>>>(contextual_union_source.value()))}; }()), ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieBezierHandle>>>>> { auto contextual_union_source_2 = flight::row_get<flight::RowKey<"i">>(keyframe_2); if (!contextual_union_source_2.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieBezierHandle>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieBezierHandle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::LottieBezierHandle>>>>(contextual_union_source_2.value()))}; }()), easing_component));
+        std::optional<flight::Array<double>> outgoing = spatial_tangent(flight::row_get<flight::RowKey<"to">>(keyframe_2), components, tangent_of.value());
+        std::optional<flight::Array<double>> incoming = spatial_tangent(flight::row_get<flight::RowKey<"ti">>(keyframe_2), components, tangent_of.value());
+        segment_easings.push((((spatial && outgoing.has_value()) && incoming.has_value()) ? std::optional<std::function<double(double)>>{create_lottie_spatial_segment_easing(temporal, samples.element(index_2), samples.element((index_2 + 1.0)), outgoing.value(), incoming.value())} : temporal));
+      }
+      (index_2 += 1.0);
+    }
+  }
+  return flight::animation::create_animation_track(([&]() { auto object_member_components = std::optional<double>{components}; auto object_member_interpolation_2 = (spatial ? std::optional<flight::String>{flight::String("Cubic")} : std::optional<flight::String>{flight::String("Linear")}); auto object_member_segment_easings = std::variant<flight::Array<std::optional<std::function<double(double)>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<std::optional<std::function<double(double)>>>>, segment_easings}; auto object_member_times_2 = times; auto object_member_values_2 = values; return flight::make_ref<times_values_components_interpolation_quaternion_easing_segment_easings_b66b1b11451a88fd<T>>(times_values_components_interpolation_quaternion_easing_segment_easings_b66b1b11451a88fd<T>{.times = object_member_times_2, .values = object_member_values_2, .components = object_member_components, .interpolation = object_member_interpolation_2, .segment_easings = object_member_segment_easings}); }()));
+}
+
+template <typename T>
+inline void append_numeric_property_channels(flight::types::LottieAnimatable<T> property, double components, std::function<flight::Any(std::optional<double>)> target, std::function<double(double, double)> convert, flight::Ref<flight::types::LottieImportContext> context, std::optional<bool> spatial_tangents = std::nullopt) {
   spatial_tangents = spatial_tangents.value_or(false);
   if (!is_animated_lottie_property<T>(property)) {
     return;
   }
-  flight::Array<flight::Ref<LottieKeyframe<T>>> keyframes = property->k;
+  flight::Array<flight::Ref<flight::types::LottieKeyframe<T>>> keyframes = flight::row_get<flight::RowKey<"k">>(std::get<0>(property));
   if ((static_cast<double>(keyframes.size()) == 0.0)) {
     return;
   }
-  const bool spatial = (spatial_tangents.value() && has_spatial_tangents(keyframes));
-  const bool component_specific = (!spatial && has_component_specific_lottie_easing(keyframes, components));
+  const bool spatial = (spatial_tangents.value() && has_spatial_tangents<T>(keyframes));
+  const bool component_specific = (!spatial && has_component_specific_lottie_easing<T>(keyframes, components));
   if ((component_specific && (components > 1.0))) {
     {
       const auto component_capture = flight::make_binding_cell(double{0.0});
       while ((component_capture.read_binding() < components)) {
         {
-          context->channels.push(create_animation_channel(create_lottie_track(keyframes, 1.0, context, [=](std::optional<T> value, double ignored_callback_argument_2) {
-  (void)ignored_callback_argument_2;
+          context->channels.push(flight::animation::create_animation_channel(create_lottie_track<T>(keyframes, 1.0, context, [=](std::optional<T> value, double ignored_callback_argument_3) {
+  (void)ignored_callback_argument_3;
   return flight::Array<double>{convert(lottie_numeric_value(value, components).element(component_capture.read_binding()), component_capture.read_binding())};
 }, component_capture.read_binding(), std::nullopt, std::nullopt), target(std::optional<double>{component_capture.read_binding()})));
         }
@@ -643,40 +606,54 @@ inline void append_numeric_property_channels(flight::Ref<LottieAnimatable<T>> pr
     }
     return;
   }
-  context->channels.push(create_animation_channel(create_lottie_track(keyframes, components, context, [=](std::optional<T> value, double ignored_callback_argument_3) {
-  (void)ignored_callback_argument_3;
+  context->channels.push(flight::animation::create_animation_channel(create_lottie_track<T>(keyframes, components, context, [=](std::optional<T> value, double ignored_callback_argument_4) {
+  (void)ignored_callback_argument_4;
   return lottie_numeric_value(value, components).map(convert);
 }, 0.0, spatial, [=](double value, double component) {
   return (convert(value, component) - convert(0.0, component));
 }), target(std::nullopt)));
 }
 
-template <typename T>
-inline void bind_mutable_lottie_numeric_property(flight::Ref<LottieAnimatable<T>> property, flight::Array<double> current, std::function<double(double, double)> convert, std::function<void()> on_change, flight::Ref<LottieImportContext> context) {
-  const auto current_capture = flight::make_binding_cell(flight::Array<double>{current});
-  if (!is_animated_lottie_property<T>(property)) {
-    return;
-  }
-  append_numeric_property_channels(property, static_cast<double>(current_capture.read_binding().size()), [=](std::optional<double> component) { return flight::Any::object(flight::make_ref<LottieMutableAnimationTarget>(LottieMutableAnimationTarget{.lottie_apply = [=](std::variant<flight::Array<double>, flight::Float32Array> sample) {
-  if (!component.has_value()) {
-    {
-      double index = 0.0;
-      while ((index < static_cast<double>(current_capture.read_binding().size()))) {
-        (current_capture.read_binding().element(index) = ([&]() -> double { auto&& indexed_source = sample; const auto indexed_index = index; return std::visit([&](const auto& indexed_receiver) -> double { if constexpr (requires { indexed_receiver.get_index(indexed_index); }) return indexed_receiver.get_index(indexed_index); else return indexed_receiver.element(indexed_index); }, indexed_source); }()));
-        (index += 1.0);
-      }
-    }
-  }
-  else {
-    (current_capture.read_binding().element(component.value()) = ([&]() -> double { auto&& indexed_source_2 = sample; const auto indexed_index_2 = 0.0; return std::visit([&](const auto& indexed_receiver_2) -> double { if constexpr (requires { indexed_receiver_2.get_index(indexed_index_2); }) return indexed_receiver_2.get_index(indexed_index_2); else return indexed_receiver_2.element(indexed_index_2); }, indexed_source_2); }()));
-  }
-  on_change();
-}})); }, convert, context, std::nullopt);
-}
+
+// NOT GENERATED: function bindMutableLottieNumericProperty -- source line 154
+// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+//
+// The source it stood for:
+//   export function bindMutableLottieNumericProperty<T>(
+//     property: Readonly<LottieAnimatable<T>>,
+//     current: number[],
+//     convert: (value: number, component: number) => number,
+//     onChange: () => void,
+//     context: LottieImportContext,
+//   ): void {
+//     if (!isAnimatedLottieProperty(property)) return;
+//     appendNumericPropertyChannels(
+//       property,
+//       current.length,
+//       (component) =>
+//         ({
+//           lottieApply(sample) {
+//             if (component === null) {
+//               for (let index = 0; index < current.length; index++) current[index] = sample[index];
+//             } else {
+//               current[component] = sample[0];
+//             }
+//             onChange();
+//           },
+//         }) satisfies LottieMutableAnimationTarget,
+//       convert,
+//       context,
+//     );
+//   }
+//   
+// cpp emission failed for @flighthq/types/packages/types/src/LottieDocument.ts: contextual union value type
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieAnimatedProperty<T>>>>>
+// is not a represented runtime domain: the value's type resembles an alternative but is not the declaration it
+// names. Pass the declared type, or declare the destination union over the type the value has
 
 
 // NOT GENERATED: function applyVectorProperty -- source line 181
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+// refusal: cpp-contextual-union-inequivalent [target-runtime]
 //
 // The source it stood for:
 //   function applyVectorProperty(
@@ -705,13 +682,20 @@ inline void bind_mutable_lottie_numeric_property(flight::Ref<LottieAnimatable<T>
 //       vectorPath === 'Position',
 //     );
 //   }
-//
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts: contextual
-// union value type flight::Ref<LottieAnimatable<flight::Array<double>>> is not a represented runtime domain
+//   
+// cpp emission failed for @flighthq/types/packages/types/src/LottieDocument.ts: contextual C++ union conversion
+// requires equivalent source union evidence: target optionalVariant carriers
+// [flight::Ref<LottieAnimatedProperty<T>>, flight::Ref<LottieStaticProperty<T>>] from identifier source
+// multiVariant carriers [flight::Ref<LottieAnimatedProperty<flight::Array<double>>>,
+// flight::Ref<LottieStaticProperty<flight::Array<double>>>]. The alternatives match uniquely, but no checked
+// target-runtime conversion exists between their C++ carriers. Keep both sides on the same declared union alias;
+// for a Map or WeakMap lookup followed by a rebind, construct its declared value owner and ensure every rebound
+// member already has that owner member's carrier -- a Readonly structural view does not become a mutable nominal
+// Ref. Otherwise add an identity-preserving runtime conversion contract.
 
 
 // NOT GENERATED: function applyScalarProperty -- source line 208
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+// refusal: cpp-contextual-union-inequivalent [target-runtime]
 //
 // The source it stood for:
 //   function applyScalarProperty(
@@ -732,12 +716,20 @@ inline void bind_mutable_lottie_numeric_property(flight::Ref<LottieAnimatable<T>
 //       context,
 //     );
 //   }
-//
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts: contextual
-// union value type flight::Ref<LottieAnimatable<double>> is not a represented runtime domain
+//   
+// cpp emission failed for @flighthq/types/packages/types/src/LottieDocument.ts: contextual C++ union conversion
+// requires equivalent source union evidence: target optionalVariant carriers
+// [flight::Ref<LottieAnimatedProperty<T>>, flight::Ref<LottieStaticProperty<T>>] from identifier source
+// multiVariant carriers [flight::Ref<LottieAnimatedProperty<double>>,
+// flight::Ref<LottieStaticProperty<double>>]. The alternatives match uniquely, but no checked target-runtime
+// conversion exists between their C++ carriers. Keep both sides on the same declared union alias; for a Map or
+// WeakMap lookup followed by a rebind, construct its declared value owner and ensure every rebound member
+// already has that owner member's carrier -- a Readonly structural view does not become a mutable nominal Ref.
+// Otherwise add an identity-preserving runtime conversion contract.
 
 
 // NOT GENERATED: function createLottiePositionSampler -- source line 329
+// refusal: cpp-contextual-union-inequivalent [source-portability]
 //
 // The source it stood for:
 //   function createLottiePositionSampler(
@@ -796,20 +788,28 @@ inline void bind_mutable_lottie_numeric_property(flight::Ref<LottieAnimatable<T>
 //       separated: false,
 //     };
 //   }
-//
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts: narrowed
-// member structural switch case must identify one C++ variant alternative
+//   
+// cpp emission failed for @flighthq/types/packages/types/src/LottieDocument.ts: contextual C++ union conversion
+// requires equivalent source union evidence: target multiVariant carriers
+// [flight::Ref<LottieAnimatedProperty<T>>, flight::Ref<LottieStaticProperty<T>>] from property source
+// optionalVariant carriers [flight::Ref<LottieAnimatedProperty<double>>,
+// flight::Ref<LottieStaticProperty<double>>, flight::String]. Narrow or convert the source expression so each of
+// its alternatives names exactly one destination union alternative. The carrier lists show which alternatives
+// lack an exact carrier; preserve the declared collection or member union alias before flow expansion. For a Map
+// or WeakMap lookup followed by a rebind, ensure every rebound member already has the declared value owner
+// member's carrier -- a Readonly structural view does not become a mutable nominal Ref.
 
-inline void append_lottie_auto_orientation(flight::Ref<Node2D> target, std::optional<flight::Ref<LottiePositionProperty>> property, std::optional<flight::Ref<LottieAnimatable<double>>> rotation, flight::Ref<LottieImportContext> context) {
+inline void append_lottie_auto_orientation(flight::types::Node2D target, std::optional<flight::types::LottiePositionProperty> property, std::optional<flight::types::LottieAnimatable<double>> rotation, flight::Ref<flight::types::LottieImportContext> context) {
+  const auto target_capture = flight::make_binding_cell(flight::types::Node2D{target});
   auto sampler = create_lottie_position_sampler(property, context);
   if (!sampler.has_value()) {
     return;
   }
-  const double base_rotation = target->rotation;
-  std::optional<flight::Ref<AnimationTrack>> rotation_track = ((rotation.has_value() && is_animated_lottie_property<double>(rotation.value())) ? std::optional<flight::Ref<AnimationTrack>>{create_lottie_track(rotation.value()->k, 1.0, context, [=](std::optional<double> value, double ignored_callback_argument_4) { (void)ignored_callback_argument_4; return lottie_numeric_value(value, 1.0); }, 0.0, std::nullopt, std::nullopt)} : std::nullopt);
+  const double base_rotation = flight::row_get<flight::RowKey<"rotation">>(target_capture.read_binding());
+  std::optional<flight::Ref<flight::types::AnimationTrack>> rotation_track = ((rotation.has_value() && is_animated_lottie_property<double>(rotation.value())) ? std::optional<flight::Ref<flight::types::AnimationTrack>>{create_lottie_track<double>(flight::row_get<flight::RowKey<"k">>(std::get<0>(rotation.value())), 1.0, context, [=](std::optional<double> value, double ignored_callback_argument_5) { (void)ignored_callback_argument_5; return lottie_numeric_value(value, 1.0); }, 0.0, std::nullopt, std::nullopt)} : std::nullopt);
   flight::Array<double> previous = flight::Array<double>{0.0, 0.0};
   flight::Array<double> current = flight::Array<double>{0.0, 0.0};
-  const double frame_step = (std::abs(context->frame_scale) / context->document.fr);
+  const double frame_step = (std::abs(context->frame_scale) / flight::row_get<flight::RowKey<"fr">>(context->document));
   std::function<void(double)> apply_orientation = [=](double time) {
   double previous_time;
   double current_time;
@@ -831,20 +831,20 @@ inline void append_lottie_auto_orientation(flight::Ref<Node2D> target, std::opti
   sampler.value()->sample(current, current_time);
   const double orientation = ((std::atan2((current.element(1.0) - previous.element(1.0)), (current.element(0.0) - previous.element(0.0))) * 180.0) / flight::pi);
   if (rotation_track.has_value()) {
-    sample_animation_track(auto_orient_rotation_scratch, rotation_track.value(), time);
+    flight::animation::sample_animation_track(std::variant<flight::Array<double>, flight::Float32Array>{std::in_place_type<flight::Array<double>>, auto_orient_rotation_scratch}, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationTrack>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AnimationTrack>>>>(rotation_track.value())), time);
   }
-  (target->rotation = ((!rotation_track.has_value() ? base_rotation : auto_orient_rotation_scratch.element(0.0)) + orientation));
-  invalidate_node_local_transform(target);
+  flight::row_set<flight::RowKey<"rotation">>(target_capture.read_binding(), ((!rotation_track.has_value() ? base_rotation : auto_orient_rotation_scratch.element(0.0)) + orientation));
+  flight::node::invalidate_node_local_transform(target_capture.read_binding());
 };
   apply_orientation(sampler.value()->first_time);
-  context->channels.push(create_animation_channel(sampler.value()->carrier, flight::make_ref<LottieMutableAnimationTarget>(LottieMutableAnimationTarget{.lottie_apply = [=](std::variant<flight::Array<double>, flight::Float32Array> sample, double time) {
+  context->channels.push(flight::animation::create_animation_channel(sampler.value()->carrier, flight::Any::object(flight::make_ref<flight::types::LottieMutableAnimationTarget>(flight::types::LottieMutableAnimationTarget{.lottie_apply = [=](std::variant<flight::Array<double>, flight::Float32Array> sample, double time) {
   apply_orientation(time);
-}})));
+}}))));
 }
 
 
 // NOT GENERATED: function applyLottieTransform -- source line 104
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
+// refusal: cpp-member-projection-multiple-present-domains [compiler-restriction]
 //
 // The source it stood for:
 //   export function applyLottieTransform(
@@ -873,38 +873,38 @@ inline void append_lottie_auto_orientation(flight::Ref<Node2D> target, std::opti
 //     }
 //     if (autoOrient) appendLottieAutoOrientation(target, transform.p, transform.r ?? transform.rz, context);
 //   }
-//
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts: contextual
-// optionalSingle construction requires expression type evidence
+//   
+// cpp emission failed for @flighthq/types/packages/types/src/LottieDocument.ts: member x on optional C++ storage
+// requires one present payload domain
 
-inline flight::Map<double, flight::String> lottie_fixed_blend_modes = flight::Map<double, flight::String>({{0.0, blend_mode.normal}, {1.0, blend_mode.multiply}, {2.0, blend_mode.screen}, {4.0, blend_mode.darken}, {5.0, blend_mode.lighten}});
+inline flight::Map<double, flight::String> lottie_fixed_blend_modes = flight::Map<double, flight::String>({{0.0, flight::types::blend_mode->normal}, {1.0, flight::types::blend_mode->multiply}, {2.0, flight::types::blend_mode->screen}, {4.0, flight::types::blend_mode->darken}, {5.0, flight::types::blend_mode->lighten}});
 
-inline flight::Map<double, flight::String> lottie_advanced_blend_modes = flight::Map<double, flight::String>({{3.0, advanced_blend_mode.overlay}, {6.0, advanced_blend_mode.color_dodge}, {7.0, advanced_blend_mode.color_burn}, {8.0, advanced_blend_mode.hard_light}, {9.0, advanced_blend_mode.soft_light}, {10.0, advanced_blend_mode.difference}, {11.0, advanced_blend_mode.exclusion}, {12.0, advanced_blend_mode.hue}, {13.0, advanced_blend_mode.saturation}, {14.0, advanced_blend_mode.color}, {15.0, advanced_blend_mode.luminosity}});
+inline flight::Map<double, flight::String> lottie_advanced_blend_modes = flight::Map<double, flight::String>({{3.0, flight::types::advanced_blend_mode->overlay}, {6.0, flight::types::advanced_blend_mode->color_dodge}, {7.0, flight::types::advanced_blend_mode->color_burn}, {8.0, flight::types::advanced_blend_mode->hard_light}, {9.0, flight::types::advanced_blend_mode->soft_light}, {10.0, flight::types::advanced_blend_mode->difference}, {11.0, flight::types::advanced_blend_mode->exclusion}, {12.0, flight::types::advanced_blend_mode->hue}, {13.0, flight::types::advanced_blend_mode->saturation}, {14.0, flight::types::advanced_blend_mode->color}, {15.0, flight::types::advanced_blend_mode->luminosity}});
 
-inline void apply_lottie_blend_mode(flight::Ref<Node2D> target, flight::Ref<LottieLayer> layer, flight::Ref<LottieImportContext> context) {
-  const double mode = layer->bm.value_or(0.0);
+inline void apply_lottie_blend_mode(flight::types::Node2D target, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieLayer>>>> layer, flight::Ref<flight::types::LottieImportContext> context) {
+  const double mode = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"bm">>(layer); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
   const std::optional<flight::String> fixed = lottie_fixed_blend_modes.get(mode);
   if (fixed.has_value()) {
-    (target->blend_mode = fixed.value());
+    flight::row_set<flight::RowKey<"blendMode">>(target, std::optional<flight::String>{fixed.value()});
     return;
   }
-  (target->blend_mode = blend_mode.normal);
+  flight::row_set<flight::RowKey<"blendMode">>(target, std::optional<flight::String>{flight::types::blend_mode->normal});
   const std::optional<flight::String> advanced = lottie_advanced_blend_modes.get(mode);
   if (advanced.has_value()) {
-    context->advanced_blends.push(flight::make_ref<LottieAdvancedBlend>(LottieAdvancedBlend{.mode = advanced.value(), .node = target}));
+    context->advanced_blends.push(flight::make_ref<flight::types::LottieAdvancedBlend>(flight::types::LottieAdvancedBlend{.mode = advanced.value(), .node = target}));
   }
 }
 
-inline void report_lottie_skip(flight::Ref<LottieImportContext> context, flight::String kind, flight::String origin, std::optional<flight::Record<flight::String, std::variant<double, flight::String>>> detail = std::nullopt) {
-  report_import_diagnostic(context->diagnostics, import_diagnostic_severity.skip, kind, origin, detail);
+inline void report_lottie_skip(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieImportContext>>>> context, flight::String kind, flight::String origin, std::optional<flight::Record<flight::String, std::variant<double, flight::String>>> detail = std::nullopt) {
+  flight::importdiagnostics::report_import_diagnostic(flight::row_get<flight::RowKey<"diagnostics">>(context), flight::types::import_diagnostic_severity->skip, kind, origin, detail);
 }
 
-inline void report_lottie_expression(flight::Any value, flight::Ref<LottieImportContext> context) {
+inline void report_lottie_expression(flight::Any value, flight::Ref<flight::types::LottieImportContext> context) {
   if ((([&]() { const auto& presence_operand = value; return presence_operand.is_null(); }()) || (value.type_of() != flight::String("object")))) {
     return;
   }
   if (((flight::String("x") in value) && (flight::named_properties(value).get(flight::String("x")).type_of() == flight::String("string")))) {
-    report_lottie_skip(context, flight::String("lottie.unsupported-expression"), flight::String("reportLottieExpression"), std::nullopt);
+    report_lottie_skip(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieImportContext>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::LottieImportContext>>>>(context)), flight::String("lottie.unsupported-expression"), flight::String("reportLottieExpression"), std::nullopt);
   }
   for (auto child : ([&]() { const auto named_view = flight::named_properties(value); flight::Array<flight::Any> named_entries; for (const auto& named_key : named_view.keys()) { named_entries.push(named_view.get(named_key)); } return named_entries; }())) {
     if ((child != value)) {
@@ -913,133 +913,78 @@ inline void report_lottie_expression(flight::Any value, flight::Ref<LottieImport
   }
 }
 
-
-// NOT GENERATED: function createLottieLayerNode -- source line 131
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   function createLottieLayerNode(layer: Readonly<LottieLayer>, context: LottieImportContext): DisplayObject {
-//     const container = createDisplayObject({ name: layer.nm ?? null });
-//     const hidden = layer.hd === true;
-//     // A hidden layer still contributes its spatial transform when another layer parents to it. Its
-//     // opacity, visibility window, paint, and masks affect only its own content, so none may leak onto
-//     // the referencing child through Flight's hierarchy.
-//     applyLottieTransform(container, layer.ks, context, !hidden, layer.ao === 1);
-//     reportLottieExpression(layer.ks, context);
-//     if (hidden) return container;
-//     applyLottieLayerVisibility(container, layer, context);
-//     applyLottieBlendMode(container, layer, context);
-//
-//     const layerHandler = getLottieLayerHandler(context.registry, layer.ty);
-//     if (layerHandler !== null) {
-//       layerHandler({ container, import: context, layer });
-//     } else if (layer.ty !== 6 && layer.ty !== 13) {
-//       reportLottieSkip(context, 'lottie.unsupported-layer', 'createLottieLayerNode', { layerType: layer.ty });
-//     }
-//
-//     applyLottieMaskFamily(container, layer.masksProperties ?? [], context);
-//     return container;
-//   }
-//
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts: contextual
-// optionalSingle construction requires expression type evidence
+inline flight::types::DisplayObject create_lottie_layer_node(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieLayer>>>> layer, flight::Ref<flight::types::LottieImportContext> context) {
+  flight::types::DisplayObject container = flight::scene2d::create_display_object(flight::make_structural_ref<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::types::DisplayObject>>>>(flight::row_field<flight::RowKey<"name">>(([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto contextual_union_source_3 = ([&]() -> std::optional<flight::String> { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"nm">>(layer); if (nullish_coalesce_left.has_value()) return std::optional<flight::String>{nullish_coalesce_left.value()}; return std::nullopt; }()); if (!contextual_union_source_3.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, contextual_union_source_3.value()}; }()))));
+  const bool hidden = (flight::row_get<flight::RowKey<"hd">>(layer) == true);
+  apply_lottie_transform(container, ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieTransform>>>>> { auto contextual_union_source_4 = flight::row_get<flight::RowKey<"ks">>(layer); if (!contextual_union_source_4.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieTransform>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieTransform>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::LottieTransform>>>>(contextual_union_source_4.value()))}; }()), context, !hidden, (flight::row_get<flight::RowKey<"ao">>(layer) == 1.0));
+  report_lottie_expression(flight::row_get<flight::RowKey<"ks">>(layer), context);
+  if (hidden) {
+    return container;
+  }
+  apply_lottie_layer_visibility(container, layer, context);
+  apply_lottie_blend_mode(container, layer, context);
+  std::optional<std::function<void(flight::Ref<flight::types::LottieLayerContext>)>> layer_handler = flight::scene2d_formats::get_lottie_layer_handler(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieRegistry>>>>>(context->registry), flight::row_get<flight::RowKey<"ty">>(layer));
+  if (layer_handler.has_value()) {
+    layer_handler.value()(flight::make_ref<flight::types::LottieLayerContext>(flight::types::LottieLayerContext{.container = container, .import = context, .layer = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieLayer>>>>>(layer)}));
+  }
+  else {
+    if (((flight::row_get<flight::RowKey<"ty">>(layer) != 6.0) && (flight::row_get<flight::RowKey<"ty">>(layer) != 13.0))) {
+      report_lottie_skip(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieImportContext>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::LottieImportContext>>>>(context)), flight::String("lottie.unsupported-layer"), flight::String("createLottieLayerNode"), {{flight::String("layerType"), std::variant<double, flight::String>{std::in_place_type<double>, flight::row_get<flight::RowKey<"ty">>(layer)}}});
+    }
+  }
+  apply_lottie_mask_family(container, ([&]() -> flight::Array<flight::Ref<flight::types::LottieMask>> { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"masksProperties">>(layer); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieMask>>>>>{}; }()), context);
+  return container;
+}
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_LAYER_NODE_6DB80AB44F391EC0
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_LAYER_NODE_6DB80AB44F391EC0
 struct layer_node_6db80ab44f391ec0 : public flight::ReferenceEnabled {
-  flight::Ref<LottieLayer> layer;
-  flight::Ref<DisplayObject> node;
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieLayer>>>> layer;
+  flight::types::DisplayObject node;
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_LAYER_NODE_6DB80AB44F391EC0
 
+inline void append_lottie_layers(flight::types::DisplayObject root, flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieLayer>>>>> layers, flight::Ref<flight::types::LottieImportContext> context) {
+  auto nodes = flight::Map<double, flight::types::DisplayObject>();
+  flight::Array<flight::Ref<layer_node_6db80ab44f391ec0>> ordered = flight::Array<flight::Ref<layer_node_6db80ab44f391ec0>>{};
+  for (auto layer : layers) {
+    flight::types::DisplayObject node = create_lottie_layer_node(layer, context);
+    ordered.push(flight::make_ref<layer_node_6db80ab44f391ec0>(layer_node_6db80ab44f391ec0{.layer = layer, .node = node}));
+    if (flight::row_get<flight::RowKey<"ind">>(layer).has_value()) {
+      nodes.set(flight::row_get<flight::RowKey<"ind">>(layer).value(), node);
+    }
+  }
+  {
+    double index = (static_cast<double>(ordered.size()) - 1.0);
+    while ((index >= 0.0)) {
+      {
+        auto object_pattern_value = ordered.element(index);
+        flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieLayer>>>> layer_2 = object_pattern_value->layer;
+        flight::types::DisplayObject node_2 = object_pattern_value->node;
+        std::optional<flight::types::DisplayObject> parent = (!flight::row_get<flight::RowKey<"parent">>(layer_2).has_value() ? std::nullopt : nodes.get(flight::row_get<flight::RowKey<"parent">>(layer_2).value()));
+        flight::node::add_node_child((parent.has_value() ? parent.value() : root), node_2);
+      }
+      (index -= 1.0);
+    }
+  }
+}
 
-// NOT GENERATED: function appendLottieLayers -- source line 52
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function appendLottieLayers(
-//     root: DisplayObject,
-//     layers: readonly Readonly<LottieLayer>[],
-//     context: LottieImportContext,
-//   ): void {
-//     const nodes = new Map<number, DisplayObject>();
-//     const ordered: Array<{ layer: Readonly<LottieLayer>; node: DisplayObject }> = [];
-//     for (const layer of layers) {
-//       const node = createLottieLayerNode(layer, context);
-//       ordered.push({ layer, node });
-//       if (layer.ind !== undefined) nodes.set(layer.ind, node);
-//     }
-//     // Bodymovin stores the topmost layer first. Reverse insertion preserves that visual stacking in
-//     // Flight's back-to-front child order.
-//     for (let index = ordered.length - 1; index >= 0; index--) {
-//       const { layer, node } = ordered[index];
-//       const parent = layer.parent === undefined ? undefined : nodes.get(layer.parent);
-//       addNodeChild(parent ?? root, node);
-//     }
-//   }
-//
-//   // Applies both the shared Node2DAnimationTarget channels and the format-owned mutable-content
-//   // targets used by animated shape/paint/mask records.
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts: a presence
-// test against undefined has no absence channel in the emitted C++ storage for property
-
-
-// NOT GENERATED: function createScene2DFromLottieDocumentWithRegistry -- source line 558
-// refusal: cpp-call-argument-missing [compiler-restriction]
-//
-// The source it stood for:
-//   export function createScene2DFromLottieDocumentWithRegistry(
-//     source: string | Readonly<LottieDocument>,
-//     registry: Readonly<LottieRegistry>,
-//     diagnostics?: ImportDiagnostic[],
-//     options?: Readonly<LottieDocumentImportOptions>,
-//   ): LottieDocumentImportResult {
-//     const document = parseLottieDocument(source);
-//     const root = createDisplayObject();
-//     if (document === null || !isValidLottieDocument(document)) {
-//       reportImportDiagnostic(
-//         diagnostics,
-//         ImportDiagnosticSeverity.Reject,
-//         'lottie.invalid-document',
-//         'createScene2DFromLottieDocument',
-//       );
-//       const out = allocateEntity<LottieDocumentImportResult>();
-//       initializeLottieDocumentImportResult(out, root, [], createAnimationClip([]), 0, 0);
-//       return finishEntity(out);
-//     }
-//
-//     const context: LottieImportContext = {
-//       advancedBlends: [],
-//       assets: new Map((document.assets ?? []).map((asset) => [asset.id, asset])),
-//       channels: [],
-//       diagnostics,
-//       document,
-//       frameOffset: 0,
-//       frameScale: 1,
-//       registry,
-//       resolveImageResource: options?.resolveImageResource,
-//       resolvingPrecompositions: new Set(),
-//     };
-//     appendLottieLayers(root, document.layers, context);
-//     const duration = Math.max(0, (document.op - document.ip) / document.fr);
-//     const events = (document.markers ?? []).map((marker) =>
-//       createAnimationClipEvent(lottieClamp((marker.tm - document.ip) / document.fr, 0, duration), marker.cm, {
-//         duration: marker.dr / document.fr,
-//       }),
-//     );
-//     const out = allocateEntity<LottieDocumentImportResult>();
-//     initializeLottieDocumentImportResult(
-//       out,
-//       root,
-//       context.advancedBlends,
-//       createAnimationClip(context.channels, duration, events),
-//       duration,
-//       document.fr,
-//     );
-//     return finishEntity(out);
-//   }
-//
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts: missing
-// required call argument at position 2
+inline flight::Ref<flight::types::LottieDocumentImportResult> create_scene_2d_from_lottie_document_with_registry(std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieDocument>>>>, flight::String> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieRegistry>>>> registry, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieDocumentImportOptions>>>>> options = std::nullopt) {
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieDocument>>>>> document = parse_lottie_document(source);
+  flight::types::DisplayObject root = flight::scene2d::create_display_object(std::nullopt);
+  if ((!document.has_value() || !is_valid_lottie_document(document.value()))) {
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("lottie.invalid-document"), flight::String("createScene2DFromLottieDocument"), std::nullopt);
+    flight::types::EntityConstruction<flight::Ref<flight::types::LottieDocumentImportResult>> out = flight::entity::allocate_entity<flight::Ref<flight::types::LottieDocumentImportResult>>();
+    initialize_lottie_document_import_result(out, root, flight::Array<flight::Ref<flight::types::LottieAdvancedBlend>>{}, flight::animation::create_animation_clip(flight::Array<flight::Ref<flight::types::AnimationChannel>>{}, std::nullopt, std::nullopt), 0.0, 0.0);
+    return flight::entity::finish_entity<flight::Ref<flight::types::LottieDocumentImportResult>>(out);
+  }
+  flight::Ref<flight::types::LottieImportContext> context = flight::make_ref<flight::types::LottieImportContext>(flight::types::LottieImportContext{.advanced_blends = flight::Array<flight::Ref<flight::types::LottieAdvancedBlend>>{}, .assets = flight::Map<flight::String, flight::types::LottieAsset>(([&]() -> flight::Array<flight::types::LottieAsset> { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"assets">>(document.value()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<flight::types::LottieAsset>{}; }()).map([=](flight::types::LottieAsset asset) { return std::make_tuple(std::visit([](const auto& value) { return value->id; }, asset), asset); })), .channels = flight::Array<flight::Ref<flight::types::AnimationChannel>>{}, .diagnostics = diagnostics, .document = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieDocument>>>>>(document.value()), .frame_offset = 0.0, .frame_scale = 1.0, .registry = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieRegistry>>>>>(registry), .resolve_image_resource = ([&]() -> std::optional<std::function<std::optional<flight::Ref<flight::types::ImageResource>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieImageAsset>>>>)>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"resolveImageResource">>(optional_chain_receiver.value()); }()), .resolving_precompositions = flight::Set<flight::String>()});
+  append_lottie_layers(root, flight::row_get<flight::RowKey<"layers">>(document.value()), context);
+  const double duration = flight::maximum(0.0, ((flight::row_get<flight::RowKey<"op">>(document.value()) - flight::row_get<flight::RowKey<"ip">>(document.value())) / flight::row_get<flight::RowKey<"fr">>(document.value())));
+  flight::Array<flight::Ref<flight::types::AnimationClipEvent>> events = ([&]() -> flight::Array<flight::Ref<flight::types::LottieMarker>> { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"markers">>(document.value()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<flight::Ref<flight::types::LottieMarker>>{}; }()).map([=](flight::Ref<flight::types::LottieMarker> marker) { return flight::animation::create_animation_clip_event(lottie_clamp(((marker->tm - flight::row_get<flight::RowKey<"ip">>(document.value())) / flight::row_get<flight::RowKey<"fr">>(document.value())), 0.0, duration), marker->cm, {.duration = (marker->dr / flight::row_get<flight::RowKey<"fr">>(document.value()))}); });
+  flight::types::EntityConstruction<flight::Ref<flight::types::LottieDocumentImportResult>> out_2 = flight::entity::allocate_entity<flight::Ref<flight::types::LottieDocumentImportResult>>();
+  initialize_lottie_document_import_result(out_2, root, context->advanced_blends, flight::animation::create_animation_clip(context->channels, duration, events), duration, flight::row_get<flight::RowKey<"fr">>(document.value()));
+  return flight::entity::finish_entity<flight::Ref<flight::types::LottieDocumentImportResult>>(out_2);
+}
 
 } // namespace flight::scene2d_formats

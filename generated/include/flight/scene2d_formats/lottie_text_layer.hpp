@@ -4,35 +4,39 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function createLottieTextFormat -- source line 44
-//   missing: function appendLottieText -- source line 25
+#include <flight/structural_ref.hpp>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/text_label.hpp>
+
 #include <flight/types/lottie_document.hpp>
 
-#include <flight/types/display_object.hpp>
+#include <flight/types/blend_mode.hpp>
 
+namespace flight::types { struct LottieImportContext; }
+namespace flight::types { struct LottieLayer; }
+namespace flight::types { struct LottieLayerContext; }
+namespace flight::types { struct LottieTextData; }
+namespace flight::types { struct LottieTextDocument; }
+namespace flight::types { struct TextLabel; }
+namespace flight::types { template <typename T> struct LottieKeyframe; }
+
+#include <flight/node/hierarchy.hpp>
+#include <flight/text/text_label.hpp>
+#include <flight/types/contract.hpp>
 #include <flight/scene2d_formats/lottie_document.hpp>
 
 namespace flight::scene2d_formats {
 
-using flight::types::DisplayObject;
+using flight::types::LottieKeyframe;
 using flight::types::LottieLayer;
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ALIGN_COLOR_FONT_LEADING_LETTER_SPACING_SIZE_67A9C0332203F56F
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ALIGN_COLOR_FONT_LEADING_LETTER_SPACING_SIZE_67A9C0332203F56F
-struct align_color_font_leading_letter_spacing_size_67a9c0332203f56f : public flight::ReferenceEnabled {
-  flight::String align;
-  double color;
-  std::optional<flight::String> font;
-  std::optional<double> leading;
-  std::optional<double> letter_spacing;
-  std::optional<double> size;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ALIGN_COLOR_FONT_LEADING_LETTER_SPACING_SIZE_67A9C0332203F56F
+using flight::types::TextLabel;
+using flight::types::blend_mode;
 
 
 // NOT GENERATED: function createLottieTextFormat -- source line 44
@@ -57,35 +61,93 @@ struct align_color_font_leading_letter_spacing_size_67a9c0332203f56f : public fl
 // sentinel the test left reachable. Test both at once with `x != null`, or narrow the value into a present local
 // the same way
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_K_DBBAD269AB148D65
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_K_DBBAD269AB148D65
+struct k_dbbad269ab148d65 : public flight::ReferenceEnabled {
+  flight::Array<flight::Ref<flight::types::LottieKeyframe<flight::Ref<flight::types::LottieTextDocument>>>> k;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_K_DBBAD269AB148D65
 
-// NOT GENERATED: function appendLottieText -- source line 25
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   function appendLottieText(parent: DisplayObject, layer: Readonly<LottieLayer>, context: LottieImportContext): void {
-//     const textData = layer.t;
-//     const first = textData?.d.k[0]?.s;
-//     if (first === undefined) {
-//       reportLottieDrop(context, 'lottie.text-missing-document', 'appendLottieText', { layer: layer.nm ?? '' });
-//       return;
-//     }
-//     const label = createTextLabel({
-//       data: {
-//         autoSize: 'left',
-//         height: (first.s ?? 16) * 1.25,
-//         text: first.t,
-//         textFormat: createLottieTextFormat(first),
-//         width: context.document.w,
-//       },
-//     });
-//     addNodeChild(parent, label);
-//   }
-//   
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieTextLayer.ts: contextual
-// optionalSingle construction requires expression type evidence
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_K_4676B95D8BF2F899
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_K_4676B95D8BF2F899
+using k_4676b95d8bf2f899 = flight::types::k_4676b95d8bf2f899;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_K_4676B95D8BF2F899
 
-inline void lottie_text_layer_handler(flight::Ref<LottieLayerContext> context) {
-  append_lottie_text(context->container, context->layer, context->import);
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ENTITY_RUNTIME_KEY_AUTO_SIZE_HEIGHT_TEXT_TEXT_FORMAT_VERTICAL_ALIGN_WIDTH_517F4DB18E11EF05
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ENTITY_RUNTIME_KEY_AUTO_SIZE_HEIGHT_TEXT_TEXT_FORMAT_VERTICAL_ALIGN_WIDTH_517F4DB18E11EF05
+struct entity_runtime_key_auto_size_height_text_text_format_vertical_align_width_517f4db18e11ef05 : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+  std::optional<flight::types::TextAutoSize> auto_size;
+  std::optional<double> height;
+  std::optional<flight::String> text;
+  std::optional<flight::Ref<flight::types::TextFormat>> text_format;
+  std::optional<flight::types::TextVerticalAlign> vertical_align;
+  std::optional<double> width;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ENTITY_RUNTIME_KEY_AUTO_SIZE_HEIGHT_TEXT_TEXT_FORMAT_VERTICAL_ALIGN_WIDTH_517F4DB18E11EF05
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ALIGN_COLOR_FONT_LEADING_LETTER_SPACING_SIZE_67A9C0332203F56F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ALIGN_COLOR_FONT_LEADING_LETTER_SPACING_SIZE_67A9C0332203F56F
+struct align_color_font_leading_letter_spacing_size_67a9c0332203f56f : public flight::ReferenceEnabled {
+  flight::String align;
+  double color;
+  std::optional<flight::String> font;
+  std::optional<double> leading;
+  std::optional<double> letter_spacing;
+  std::optional<double> size;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ALIGN_COLOR_FONT_LEADING_LETTER_SPACING_SIZE_67A9C0332203F56F
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_AUTO_SIZE_HEIGHT_TEXT_TEXT_FORMAT_WIDTH_32522989FE49D0A5
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_AUTO_SIZE_HEIGHT_TEXT_TEXT_FORMAT_WIDTH_32522989FE49D0A5
+struct auto_size_height_text_text_format_width_32522989fe49d0a5 : public flight::ReferenceEnabled {
+  flight::String auto_size;
+  double height;
+  flight::String text;
+  flight::Ref<align_color_font_leading_letter_spacing_size_67a9c0332203f56f> text_format;
+  double width;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_AUTO_SIZE_HEIGHT_TEXT_TEXT_FORMAT_WIDTH_32522989FE49D0A5
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_2349C75ABEF30E86
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_2349C75ABEF30E86
+struct data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_2349c75abef30e86 : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<entity_runtime_key_auto_size_height_text_text_format_vertical_align_width_517f4db18e11ef05>> data;
+  std::optional<bool> enabled;
+  std::optional<flight::String> kind;
+  std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::optional<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node2DTraits>>>> entity_runtime_key;
+  std::optional<double> alpha;
+  std::optional<bool> visible;
+  std::variant<flight::String, flight::Null, flight::Undefined> blend_mode = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::ClipRegion>, flight::Null, flight::Undefined> clip = std::variant<flight::Ref<flight::types::ClipRegion>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::Material2D>, flight::Null, flight::Undefined> material = std::variant<flight::Ref<flight::types::Material2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::MaterialData>, flight::Null, flight::Undefined> material_data = std::variant<flight::Ref<flight::types::MaterialData>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::optional<double> pivot_x;
+  std::optional<double> pivot_y;
+  std::optional<double> rotation;
+  std::optional<double> scale_x;
+  std::optional<double> scale_y;
+  std::optional<double> skew_x;
+  std::optional<double> skew_y;
+  std::optional<double> x;
+  std::optional<double> y;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_2349C75ABEF30E86
+
+inline void append_lottie_text(flight::types::DisplayObject parent, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieLayer>>>> layer, flight::Ref<flight::types::LottieImportContext> context) {
+  auto text_data = flight::row_get<flight::RowKey<"t">>(layer);
+  auto first = ([&]() -> std::optional<flight::Ref<flight::types::LottieTextDocument>> { auto optional_chain_receiver = ([&]() -> std::optional<flight::Array<flight::Ref<flight::types::LottieKeyframe<flight::Ref<flight::types::LottieTextDocument>>>>> { auto optional_chain_receiver = ([&]() -> std::optional<flight::Ref<k_dbbad269ab148d65>> { auto optional_chain_receiver = text_data; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->d; }()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->k; }()).get(0.0); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->s; }());
+  if (!first.has_value()) {
+    flight::scene2d_formats::report_lottie_drop(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieImportContext>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::LottieImportContext>>>>(context)), flight::String("lottie.text-missing-document"), flight::String("appendLottieText"), {{flight::String("layer"), std::variant<double, flight::String>{std::in_place_type<flight::String>, ([&]() -> flight::String { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"nm">>(layer); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }())}}});
+    return;
+  }
+  auto label = flight::text::create_text_label(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_2349c75abef30e86>>>>(flight::row_field<flight::RowKey<"data">>(std::optional<flight::Ref<entity_runtime_key_auto_size_height_text_text_format_vertical_align_width_517f4db18e11ef05>>{flight::make_ref<auto_size_height_text_text_format_width_32522989fe49d0a5>(auto_size_height_text_text_format_width_32522989fe49d0a5{.auto_size = flight::String("left"), .height = (([&]() -> double { auto nullish_coalesce_left = first.value()->s; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 16.0; }()) * 1.25), .text = first.value()->t, .text_format = create_lottie_text_format(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieTextDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::LottieTextDocument>>>>(first.value()))), .width = flight::row_get<flight::RowKey<"w">>(context->document)})})));
+  flight::node::add_node_child(parent, flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLabel>>>>(label)));
+}
+
+inline void lottie_text_layer_handler(flight::Ref<flight::types::LottieLayerContext> context) {
+  append_lottie_text(context->container, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieLayer>>>>>(context->layer), context->import);
 }
 
 } // namespace flight::scene2d_formats

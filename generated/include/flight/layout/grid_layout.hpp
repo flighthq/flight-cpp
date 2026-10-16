@@ -71,7 +71,7 @@ inline double get_grid_ordinal(flight::StructuralRef<flight::RowReadonly<flight:
 //     if (item?.column !== undefined) return item.column;
 //     return getGridOrdinal(tree, parentIndex, childIndex) % columnCount;
 //   }
-//
+//   
 // cpp emission failed for @flighthq/layout/packages/layout/src/gridLayout.ts: type assertion target must
 // identify exactly one C++ variant alternative: target
 // std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GridLayoutItemStyle>>>>>
@@ -87,7 +87,7 @@ inline double get_grid_ordinal(flight::StructuralRef<flight::RowReadonly<flight:
 //     if (item?.row !== undefined) return item.row;
 //     return Math.floor(getGridOrdinal(tree, parentIndex, childIndex) / columnCount);
 //   }
-//
+//   
 // cpp emission failed for @flighthq/layout/packages/layout/src/gridLayout.ts: type assertion target must
 // identify exactly one C++ variant alternative: target
 // std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GridLayoutItemStyle>>>>>

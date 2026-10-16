@@ -4,7 +4,6 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function createSvgUseNode -- source line 38
-#include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <optional>
 #include <variant>
@@ -15,24 +14,32 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/xml_element.hpp>
 
-#include <flight/types/partial_node.hpp>
-
 #include <flight/types/node_2d.hpp>
 
 #include <flight/types/matrix.hpp>
 
-#include <flight/types/display_object.hpp>
+#include <flight/types/import_diagnostic.hpp>
 
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct SvgElementContext; }
+namespace flight::types { struct SvgImportContext; }
+namespace flight::types { struct SvgStyle; }
+namespace flight::types { struct XmlElement; }
+namespace flight::types { template <typename Traits> struct Node; }
+
+#include <flight/scene2d/display_object.hpp>
+#include <flight/types/contract.hpp>
 #include <flight/scene2d_formats/svg_document.hpp>
 #include <flight/scene2d_formats/svg_transform.hpp>
 #include <flight/scene2d_formats/svg_xml.hpp>
 
 namespace flight::scene2d_formats {
 
-using flight::types::DisplayObject;
+using flight::types::ImportDiagnostic;
 using flight::types::Matrix;
 using flight::types::Node2D;
-using flight::types::PartialNode;
 using flight::types::XmlElement;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_HEIGHT_WIDTH_X_Y_5730F1C255D33F2E
@@ -45,20 +52,20 @@ struct height_width_x_y_5730f1c255d33f2e : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_HEIGHT_WIDTH_X_Y_5730F1C255D33F2E
 
-inline flight::Ref<DisplayObject> create_svg_symbol_node(flight::Ref<XmlElement> element, flight::Ref<XmlElement> use_element, flight::Ref<SvgStyle> parent_style, flight::Ref<SvgImportContext> context) {
-  flight::Ref<DisplayObject> container = create_display_object(flight::make_ref<PartialNode<flight::Ref<DisplayObject>>>(PartialNode<flight::Ref<DisplayObject>>{.name = svg_attribute(element, flight::String("id"))}));
-  const std::optional<double> use_width = svg_optional_number_attribute(use_element, flight::String("width"));
-  const std::optional<double> use_height = svg_optional_number_attribute(use_element, flight::String("height"));
-  std::optional<flight::Ref<Matrix>> viewport = create_svg_viewport_matrix(element, flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<height_width_x_y_5730f1c255d33f2e>>>>(flight::row_field<flight::RowKey<"height">>(([&]() -> std::optional<double> { auto nullish_coalesce_left = use_height; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return std::nullopt; }())), flight::row_field<flight::RowKey<"width">>(([&]() -> std::optional<double> { auto nullish_coalesce_left = use_width; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return std::nullopt; }())), flight::row_field<flight::RowKey<"x">>(std::optional<double>{0.0}), flight::row_field<flight::RowKey<"y">>(std::optional<double>{0.0})));
-  flight::Ref<SvgStyle> style = apply_svg_element_appearance(container, element, parent_style, context, viewport, true);
-  append_svg_children(container, element, style, context);
-  apply_svg_element_clip_family(container, element, context);
+inline flight::types::DisplayObject create_svg_symbol_node(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>> element, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>> use_element, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>> parent_style, flight::Ref<flight::types::SvgImportContext> context) {
+  flight::types::DisplayObject container = flight::scene2d::create_display_object(flight::make_structural_ref<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::types::DisplayObject>>>>(flight::row_field<flight::RowKey<"name">>(([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto contextual_union_source = flight::scene2d_formats::svg_attribute(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(element), flight::String("id")); if (!contextual_union_source.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, contextual_union_source.value()}; }()))));
+  const std::optional<double> use_width = flight::scene2d_formats::svg_optional_number_attribute(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(use_element), flight::String("width"));
+  const std::optional<double> use_height = flight::scene2d_formats::svg_optional_number_attribute(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(use_element), flight::String("height"));
+  auto viewport = flight::scene2d_formats::create_svg_viewport_matrix(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(element), flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<height_width_x_y_5730f1c255d33f2e>>>>(flight::row_field<flight::RowKey<"height">>(([&]() -> std::optional<double> { auto nullish_coalesce_left = use_height; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return std::nullopt; }())), flight::row_field<flight::RowKey<"width">>(([&]() -> std::optional<double> { auto nullish_coalesce_left = use_width; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return std::nullopt; }())), flight::row_field<flight::RowKey<"x">>(std::optional<double>{0.0}), flight::row_field<flight::RowKey<"y">>(std::optional<double>{0.0})));
+  auto style = flight::scene2d_formats::apply_svg_element_appearance(container, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(element), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>>(parent_style), context, ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>> { auto contextual_union_source_2 = viewport; if (!contextual_union_source_2.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(contextual_union_source_2.value()))}; }()), true);
+  flight::scene2d_formats::append_svg_children(container, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(element), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>(style)), context);
+  flight::scene2d_formats::apply_svg_element_clip_family(container, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(element), context);
   return container;
 }
 
 
 // NOT GENERATED: function createSvgUseNode -- source line 38
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-value-type-unrepresented [source-portability]
 //
 // The source it stood for:
 //   function createSvgUseNode(
@@ -105,13 +112,16 @@ inline flight::Ref<DisplayObject> create_svg_symbol_node(flight::Ref<XmlElement>
 //     return container;
 //   }
 //   
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgUseElement.ts: intersection
-// types require C++ multiple-inheritance lowering: no shape for Node (argument Node2DTraits has no shape
-// either), Node2DTraits. Declare the object shape the code reads rather than intersecting a conjunct that has
-// none
+// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgUseElement.ts: contextual
+// union value type flight::types::DisplayObject is not a represented runtime domain: the value leaves a member
+// the destination requires optional or absent, or gives it an incompatible type, so it is not the shape an
+// alternative declares. The call has already selected a result owner from its arguments; the destination cannot
+// retroactively replace that generic or anonymous owner. Constrain the call with the declared destination type
+// where its type arguments are chosen, or change the called API to return the exact declared arm. The compiler
+// will not cast, copy, or materialize the call result into another owner.
 
-inline std::optional<flight::Ref<Node2D>> svg_use_element_handler(flight::Ref<SvgElementContext> context) {
-  return create_svg_use_node(context->element, context->parent_style, context->import);
+inline std::optional<flight::types::Node2D> svg_use_element_handler(flight::Ref<flight::types::SvgElementContext> context) {
+  return create_svg_use_node(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(context->element), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>>(context->parent_style), context->import);
 }
 
 } // namespace flight::scene2d_formats

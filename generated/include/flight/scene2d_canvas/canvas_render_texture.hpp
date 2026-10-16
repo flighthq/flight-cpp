@@ -49,11 +49,10 @@ namespace flight::types { struct Vector2; }
 
 namespace flight::scene2d_canvas {
 
-using flight::types::entity_runtime_key;
-
 using flight::types::CanvasRenderPass;
 using flight::types::CanvasRenderState;
 using flight::types::CanvasTextureRenderTarget;
+using flight::types::entity_runtime_key;
 
 inline flight::WeakMap<flight::Ref<flight::types::CanvasRenderState>, flight::Map<flight::Ref<flight::types::RenderTexture>, flight::Ref<flight::types::CanvasRenderTextureEntry>>> targets_by_state = flight::WeakMap<flight::Ref<flight::types::CanvasRenderState>, flight::Map<flight::Ref<flight::types::RenderTexture>, flight::Ref<flight::types::CanvasRenderTextureEntry>>>();
 

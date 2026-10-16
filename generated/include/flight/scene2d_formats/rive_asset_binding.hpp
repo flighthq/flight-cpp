@@ -61,13 +61,13 @@ inline std::optional<flight::types::Texture> get_rive_image_texture(flight::Stru
 
 inline flight::WeakMap<flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>>>, double> image_asset_indices = flight::WeakMap<flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>>>, double>();
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ENTITY_RUNTIME_KEY_TEXTURE_7EC41360A0A7304C
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ENTITY_RUNTIME_KEY_TEXTURE_7EC41360A0A7304C
-struct entity_runtime_key_texture_7ec41360a0a7304c : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ENTITY_RUNTIME_KEY_TEXTURE_2EE086BC1479C030
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ENTITY_RUNTIME_KEY_TEXTURE_2EE086BC1479C030
+struct entity_runtime_key_texture_2ee086bc1479c030 : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>, flight::Null, flight::Undefined> texture = std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ENTITY_RUNTIME_KEY_TEXTURE_7EC41360A0A7304C
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ENTITY_RUNTIME_KEY_TEXTURE_2EE086BC1479C030
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_TEXTURE_0A16028A299F5DFE
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_TEXTURE_0A16028A299F5DFE
@@ -76,14 +76,14 @@ struct texture_0a16028a299f5dfe : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_TEXTURE_0A16028A299F5DFE
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_C7EF2D5410C25CB0
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_C7EF2D5410C25CB0
-struct data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_c7ef2d5410c25cb0 : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<entity_runtime_key_texture_7ec41360a0a7304c>> data;
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_E5996B0F1E7F4273
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_E5996B0F1E7F4273
+struct data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_e5996b0f1e7f4273 : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<entity_runtime_key_texture_2ee086bc1479c030>> data;
   std::optional<bool> enabled;
   std::optional<flight::String> kind;
   std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::optional<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node2DTraits>>>> entity_runtime_key;
+  std::optional<flight::Ref<flight::types::SpriteRuntime>> entity_runtime_key;
   std::optional<double> alpha;
   std::optional<bool> visible;
   std::variant<flight::String, flight::Null, flight::Undefined> blend_mode = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
@@ -100,11 +100,11 @@ struct data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_m
   std::optional<double> x;
   std::optional<double> y;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_C7EF2D5410C25CB0
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_E5996B0F1E7F4273
 
 inline flight::types::DisplayObject create_rive_image_sprite(flight::String name, double asset_index) {
   auto texture = flight::texture::create_texture({.dimension = flight::String("2d"), .source = nullptr});
-  auto sprite = flight::scene2d::create_sprite(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_c7ef2d5410c25cb0>>>>(flight::row_field<flight::RowKey<"data">>(std::optional<flight::Ref<entity_runtime_key_texture_7ec41360a0a7304c>>{flight::make_ref<texture_0a16028a299f5dfe>(texture_0a16028a299f5dfe{.texture = texture})}), flight::row_field<flight::RowKey<"name">>(std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, name})));
+  auto sprite = flight::scene2d::create_sprite(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_e5996b0f1e7f4273>>>>(flight::row_field<flight::RowKey<"data">>(std::optional<flight::Ref<entity_runtime_key_texture_2ee086bc1479c030>>{flight::make_ref<texture_0a16028a299f5dfe>(texture_0a16028a299f5dfe{.texture = texture})}), flight::row_field<flight::RowKey<"name">>(std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, name})));
   image_textures.set(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Sprite>>>>(sprite)), std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, texture});
   image_asset_indices.set(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Sprite>>>>(sprite)), asset_index);
   return sprite;

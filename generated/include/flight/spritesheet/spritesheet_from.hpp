@@ -17,6 +17,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::types { struct GridSliceOptions; }
 namespace flight::types { struct Spritesheet; }
 namespace flight::types { struct SpritesheetAnimation; }
+namespace flight::types { struct SpritesheetData; }
 namespace flight::types { struct SpritesheetFrame; }
 namespace flight::types { struct Texture2D; }
 namespace flight::types { struct TextureAtlas; }

@@ -34,8 +34,6 @@ namespace flight::types { struct Slot2D; }
 
 namespace flight::skeleton2d_formats {
 
-using flight::easing::ease_cubic_bezier;
-
 using flight::types::Bone2D;
 using flight::types::ImportDiagnostic;
 using flight::types::Slot2D;

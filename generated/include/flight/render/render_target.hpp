@@ -3,13 +3,11 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function explainRenderTargetAxes -- source line 71
+//   missing: function resolveRenderTargetDescriptor -- source line 93
+//   missing: function explainRenderTargetAxes -- source line 72
 #include <cmath>
 #include <cstdint>
-#include <flight/any.hpp>
-#include <flight/array.hpp>
 #include <flight/structural_ref.hpp>
-#include <functional>
 #include <optional>
 #include <random>
 #include <variant>
@@ -77,14 +75,38 @@ inline flight::Ref<width_height_6a2b928b7d011b27> compute_render_target_size(fli
   return out;
 }
 
-inline flight::Ref<flight::types::ResolvedRenderTargetDescriptor> resolve_render_target_descriptor(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderTargetDescriptor>>>> descriptor) {
-  const double width = flight::maximum(1.0, std::ceil(flight::row_get<flight::RowKey<"width">>(descriptor)));
-  const double height = flight::maximum(1.0, std::ceil(flight::row_get<flight::RowKey<"height">>(descriptor)));
-  const double color_attachments = flight::maximum(1.0, std::ceil(([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"colorAttachments">>(descriptor); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }())));
-  flight::String default_format = ([&]() -> flight::String { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"format">>(descriptor); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("rgba8"); }());
-  flight::Array<flight::types::RenderTargetFormat> color_formats = flight::array_from({.length = color_attachments}, [=](flight::Any value, double index) -> flight::String { return ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"colorFormats">>(descriptor); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().get(index); }()).value_or(default_format); }, std::nullopt);
-  return flight::make_ref<flight::types::ResolvedRenderTargetDescriptor>(flight::types::ResolvedRenderTargetDescriptor{.width = width, .height = height, .format = color_formats.element(0.0), .color_attachments = color_attachments, .color_formats = color_formats, .sample_count = flight::maximum(1.0, std::ceil(([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"sampleCount">>(descriptor); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()))), .depth = ([&]() -> flight::String { auto nullish_coalesce_left_2 = flight::row_get<flight::RowKey<"depth">>(descriptor); if (nullish_coalesce_left_2.has_value()) return nullish_coalesce_left_2.value(); return flight::String("none"); }()), .color_space = ([&]() -> flight::String { auto nullish_coalesce_left_3 = flight::row_get<flight::RowKey<"colorSpace">>(descriptor); if (nullish_coalesce_left_3.has_value()) return nullish_coalesce_left_3.value(); return flight::String("srgb"); }())});
-}
+
+// NOT GENERATED: function resolveRenderTargetDescriptor -- source line 93
+// refusal: cpp-external-member-call-arity [compiler-restriction]
+//
+// The source it stood for:
+//   export function resolveRenderTargetDescriptor(
+//     descriptor: Readonly<RenderTargetDescriptor>,
+//   ): ResolvedRenderTargetDescriptor {
+//     const width = Math.max(1, Math.ceil(descriptor.width));
+//     const height = Math.max(1, Math.ceil(descriptor.height));
+//     const colorAttachments = Math.max(1, Math.ceil(descriptor.colorAttachments ?? 1));
+//     const defaultFormat = descriptor.format ?? 'rgba8';
+//     const colorFormats: ResolvedRenderTargetDescriptor['colorFormats'] = Array.from(
+//       { length: colorAttachments },
+//       (_, index) => descriptor.colorFormats?.[index] ?? defaultFormat,
+//     );
+//   
+//     return {
+//       width,
+//       height,
+//       format: colorFormats[0]!,
+//       colorAttachments,
+//       colorFormats,
+//       sampleCount: Math.max(1, Math.ceil(descriptor.sampleCount ?? 1)),
+//       depth: descriptor.depth ?? 'none',
+//       colorSpace: descriptor.colorSpace ?? 'srgb',
+//     };
+//   }
+//   
+// cpp emission failed for @flighthq/render/packages/render/src/renderTarget.ts: Array.from is represented for
+// exactly 1 argument(s), and this call passes 2; the mapper and thisArg forms have no declared target, so pass
+// only the source sequence
 
 inline flight::Ref<flight::types::Matrix> temp_inv_local = flight::geometry::create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
@@ -93,7 +115,7 @@ inline flight::Ref<flight::types::Matrix> temp_translation = flight::geometry::c
 inline void compute_scene_2d_render_target_transform(flight::types::MatrixLike out_render_transform, flight::types::Node2D source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>> bounds, std::optional<double> content_x = std::nullopt, std::optional<double> content_y = std::nullopt) {
   content_x = content_x.value_or(0.0);
   content_y = content_y.value_or(0.0);
-  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>> local_transform = flight::node::get_node_local_matrix(source);
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>> local_transform = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::node::get_node_local_matrix<flight::Ref<flight::types::Node2DTraits>>(source));
   flight::geometry::inverse_matrix(temp_inv_local, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(local_transform));
   (temp_translation->a = 1.0);
   (temp_translation->b = 0.0);
@@ -107,7 +129,7 @@ inline void compute_scene_2d_render_target_transform(flight::types::MatrixLike o
 inline flight::Array<flight::String> render_target_axis_order = flight::Array<flight::String>{flight::String("width"), flight::String("height"), flight::String("format"), flight::String("colorAttachments"), flight::String("colorFormats"), flight::String("sampleCount"), flight::String("depth"), flight::String("colorSpace")};
 
 
-// NOT GENERATED: function explainRenderTargetAxes -- source line 71
+// NOT GENERATED: function explainRenderTargetAxes -- source line 72
 // refusal: cpp-union-member-access-unguarded [compiler-restriction]
 //
 // The source it stood for:

@@ -9,6 +9,7 @@
 #include <flight/any.hpp>
 #include <flight/error.hpp>
 #include <flight/structural_ref.hpp>
+#include <functional>
 #include <optional>
 #include <variant>
 #include <flight/runtime.hpp>
@@ -71,7 +72,13 @@ inline flight::Task<std::optional<flight::Ref<flight::types::Bitmap>>> decode_em
   }
   signal.throw_if_aborted();
   const bool premultiplied = (flight::row_get<flight::RowKey<"alphaType">>(ref) == flight::String("premultiplied"));
-  std::optional<flight::Ref<flight::types::DecodedImage>> decoded = co_await (premultiplied ? flight::image_codec::decode_image_premultiplied(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostImageDecodeCapabilities>>>>>(image_decode), flight::row_get<flight::RowKey<"bytes">>(ref), ([&]() -> flight::String { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"mimeType">>(ref); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return std::nullopt; }())) : flight::image_codec::decode_image(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostImageDecodeCapabilities>>>>>(image_decode), flight::row_get<flight::RowKey<"bytes">>(ref), ([&]() -> flight::String { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"mimeType">>(ref); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return std::nullopt; }())));
+  std::optional<flight::Ref<flight::types::DecodedImage>> decoded = co_await (premultiplied ? flight::image_codec::decode_image_premultiplied(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostImageDecodeCapabilities>>>>>(image_decode), flight::row_get<flight::RowKey<"bytes">>(ref), ([=]() -> std::optional<flight::String> {
+  const std::optional<flight::String> mime_type = ([&]() -> std::optional<flight::String> { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"mimeType">>(ref); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return std::nullopt; }());
+  return mime_type;
+})()) : flight::image_codec::decode_image(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostImageDecodeCapabilities>>>>>(image_decode), flight::row_get<flight::RowKey<"bytes">>(ref), ([=]() -> std::optional<flight::String> {
+  const std::optional<flight::String> mime_type = ([&]() -> std::optional<flight::String> { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"mimeType">>(ref); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return std::nullopt; }());
+  return mime_type;
+})()));
   if (((!decoded.has_value() && fallback_decode.has_value()) && flight::row_get<flight::RowKey<"mimeType">>(ref).has_value())) {
     (decoded = co_await fallback_decode.value()(flight::row_get<flight::RowKey<"bytes">>(ref), flight::row_get<flight::RowKey<"mimeType">>(ref).value(), (premultiplied ? std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ImageDecodeOptions>>>>>{flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ImageDecodeOptions>>>>(flight::row_field<flight::RowKey<"premultiplyAlpha">>(std::optional<bool>{true}))} : std::nullopt)));
   }

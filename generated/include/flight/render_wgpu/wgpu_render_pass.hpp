@@ -38,7 +38,14 @@ namespace flight::types { struct WgpuTextureRenderTarget; }
 #include <flight/types/contract.hpp>
 #include <flight/render_wgpu/wgpu_render_state.hpp>
 
+namespace flight::render_wgpu { inline double get_wgpu_render_target_supersample_scale(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuRenderTarget>>>> target); }
+namespace flight::render_wgpu { inline flight::Ref<flight::types::WgpuRenderStateRuntime> get_wgpu_render_state_runtime(flight::Ref<flight::types::WgpuRenderState> state); }
+namespace flight::render_wgpu { inline void begin_wgpu_frame(flight::Ref<flight::types::WgpuRenderState> state); }
+namespace flight::render_wgpu { inline void submit_wgpu_frame(flight::Ref<flight::types::WgpuRenderState> state); }
+
 namespace flight::render_wgpu {
+
+using flight::render_wgpu::get_wgpu_render_state_runtime;
 
 using flight::types::WgpuRenderState;
 using flight::types::RenderTargetClear;

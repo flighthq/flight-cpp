@@ -6,8 +6,6 @@
 #include <flight/types/material.hpp>
 #include <optional>
 #include <stdexcept>
-#include <type_traits>
-#include <utility>
 #include <variant>
 #include <flight/runtime.hpp>
 
@@ -61,7 +59,7 @@ inline bool equals_material(flight::StructuralRef<flight::RowReadonly<flight::Ro
 }
 
 template <typename T>
-inline std::optional<T> get_material_of_kind(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>>> material, std::remove_cvref_t<decltype(std::declval<T&>()->kind)> kind) {
+inline std::optional<T> get_material_of_kind(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>>> material, flight::indexed_member_t<T, flight::RowKey<"kind">> kind) {
   return ((material.has_value() && (flight::row_get<flight::RowKey<"kind">>(material.value()) == kind)) ? std::optional<T>{flight::structural_ref_cast<T>(material.value())} : std::nullopt);
 }
 
@@ -91,7 +89,7 @@ inline void copy_material_fields(T dst, flight::StructuralRef<flight::RowReadonl
     }
     auto value = src_fields.get(key);
     if ((((key == flight::String("standard")) && value.has_value()) && (([&]() -> flight::String { const auto& typeof_value = value; if (!typeof_value.has_value()) return flight::String("undefined"); return typeof_value.value().type_of(); }()) == flight::String("object")))) {
-      ([&]() { const auto& named_write_receiver = dst; const auto named_write_key = key; auto assignment_value = clone_standard_pbr_material_properties(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::StandardPbrMaterialProperties>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::StandardPbrMaterialProperties>>>>(([&]() -> flight::Ref<flight::types::StandardPbrMaterialProperties> { const auto& erased_value = value.value(); auto erased_object = erased_value.template object_if<flight::types::StandardPbrMaterialProperties>(); if (!erased_object) throw std::logic_error("erased value does not hold the asserted object type"); return erased_object; }())))); if (!flight::named_properties(named_write_receiver).set(named_write_key, flight::Any::object(assignment_value))) throw std::logic_error("Flight named-property write rejected key or value"); return assignment_value; }());
+      ([&]() { const auto& named_write_receiver = dst; const auto named_write_key = key; auto assignment_value = clone_standard_pbr_material_properties(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::StandardPbrMaterialProperties>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::StandardPbrMaterialProperties>>>>(([&]() -> flight::Ref<flight::types::StandardPbrMaterialProperties> { const auto& erased_value = value.value(); auto erased_object = erased_value.object_if<flight::types::StandardPbrMaterialProperties>(); if (!erased_object) throw std::logic_error("erased value does not hold the asserted object type"); return erased_object; }())))); if (!flight::named_properties(named_write_receiver).set(named_write_key, flight::Any::object(assignment_value))) throw std::logic_error("Flight named-property write rejected key or value"); return assignment_value; }());
     }
     else {
       ([&]() { const auto& named_write_receiver_2 = dst; const auto named_write_key_2 = key; auto assignment_value_2 = value.value(); if (!flight::named_properties(named_write_receiver_2).set(named_write_key_2, assignment_value_2)) throw std::logic_error("Flight named-property write rejected key or value"); return assignment_value_2; }());

@@ -61,6 +61,9 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/types/contract.hpp>
 #include <flight/scene2d_canvas/canvas_texture_resolver.hpp>
 
+namespace flight::scene2d_canvas { inline flight::Ref<flight::types::CanvasTextureResolvers> create_canvas_texture_resolvers_flight_value_function_create_u000043_anvas_u000054_exture_u000052_esolvers_flight_source_41e38f9608b1baf2(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostCanvasCapability>>>> canvas_host); }
+namespace flight::scene2d_canvas { inline void destroy_canvas_texture_resolvers(flight::Ref<flight::types::CanvasTextureResolvers> resolvers); }
+
 namespace flight::scene2d_canvas {
 
 using flight::scene2d_canvas::get_canvas_render_state_runtime;

@@ -1,8 +1,7 @@
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-index 351d1f4..a91ee82 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-@@ -17497,14 +17497,40 @@ function getCppUnionAliasDeclarationOwnerCpp(
+@@ -17876,14 +17876,40 @@
    return directTargets[0] === context.module ? undefined : directTargets[0];
  }
  
@@ -44,15 +43,30 @@ index 351d1f4..a91ee82 100644
    const nextVisited = new Set(visited).add(key);
    const bindingIds = new Set([
      ...module.declarations.flatMap((declaration) =>
-@@ -17528,6 +17554,7 @@ function getCppExportedTypeDeclarationOwnersCpp(
+@@ -17907,6 +17933,7 @@
      }
      return [{ declaration, module }];
    });
 +  let truncated = false;
+   const localForwarded = module.exports.flatMap((exported): readonly CppTypeDeclarationOwner[] => {
+     if (exported.kind !== 'local' || exported.exported !== exportedName) return [];
+     const imported = module.imports.flatMap((item) =>
+@@ -17916,9 +17943,11 @@
+     )[0];
+     if (!imported || imported.binding.imported === '*') return [];
+     const moduleContext = module === context.module ? context : { ...context, module };
+-    return getCppResolvedImportModules(imported.specifier, moduleContext).flatMap((targetModule) =>
+-      getCppExportedTypeDeclarationOwnersCpp(targetModule, imported.binding.imported, context, nextVisited),
+-    );
++    return getCppResolvedImportModules(imported.specifier, moduleContext).flatMap((targetModule) => {
++      const answer = lookupCppExportedTypeDeclarationOwnersCpp(targetModule, imported.binding.imported, context, nextVisited);
++      truncated ||= answer.truncated;
++      return answer.owners;
++    });
+   });
    const forwarded = module.exports.flatMap((exported): readonly CppTypeDeclarationOwner[] => {
      const importedName =
-       exported.kind === 'all'
-@@ -17537,11 +17564,15 @@ function getCppExportedTypeDeclarationOwnersCpp(
+@@ -17929,11 +17958,15 @@
            : undefined;
      if (!importedName || (exported.kind !== 'all' && exported.kind !== 'reexport')) return [];
      const moduleContext = module === context.module ? context : { ...context, module };
@@ -65,8 +79,8 @@ index 351d1f4..a91ee82 100644
 +      return answer.owners;
 +    });
    });
--  return [...direct, ...forwarded];
-+  const owners = [...direct, ...forwarded];
+-  return [...direct, ...localForwarded, ...forwarded];
++  const owners = [...direct, ...localForwarded, ...forwarded];
 +  if (!truncated) cache.set(key, owners);
 +  return { owners, truncated };
  }
@@ -74,7 +88,6 @@ index 351d1f4..a91ee82 100644
  // Names the alternatives the declaring module minted, qualified by that module's namespace, so a
 diff --git a/packages/compiler-backend-cpp/src/cppExportedTypeOwnerCache.test.ts b/packages/compiler-backend-cpp/src/cppExportedTypeOwnerCache.test.ts
 new file mode 100644
-index 0000000..6403c8e
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppExportedTypeOwnerCache.test.ts
 @@ -0,0 +1,87 @@

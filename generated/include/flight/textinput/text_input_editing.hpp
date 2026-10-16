@@ -3,15 +3,13 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function getTextLayoutGroupAtIndex -- source line 727
 //   missing: function restrictTextInput -- source line 798
-//   missing: function replaceTextInput -- source line 439
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
-#include <flight/boolean.hpp>
 #include <flight/number.hpp>
 #include <flight/regexp.hpp>
+#include <flight/structural_ref.hpp>
 #include <functional>
 #include <limits>
 #include <optional>
@@ -39,16 +37,25 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/keyboard_event_data.hpp>
 
-#include <flight/types/key_code.hpp>
-
-#include <flight/textlayout/text_format_range.hpp>
-
-#include <flight/textlayout/rich_text_query.hpp>
-
-#include <flight/text/rich_text.hpp>
+namespace flight::types { struct HandleTextInputKeyboardOptions; }
+namespace flight::types { struct KeyboardEventData; }
+namespace flight::types { struct ReplaceTextInputOptions; }
+namespace flight::types { struct RichText; }
+namespace flight::types { struct RichTextData; }
+namespace flight::types { struct TextFormat; }
+namespace flight::types { struct TextFormatRange; }
+namespace flight::types { struct TextInputHistoryEntry; }
+namespace flight::types { struct TextInputState; }
+namespace flight::types { struct TextLayoutGroup; }
+namespace flight::types { struct TextLayoutResult; }
+namespace flight::types { struct TextSelectionRectangle; }
 
 #include <flight/node/revision.hpp>
-
+#include <flight/text/rich_text.hpp>
+#include <flight/textlayout/rich_text_query.hpp>
+#include <flight/textlayout/text_bounds.hpp>
+#include <flight/textlayout/text_format_range.hpp>
+#include <flight/types/contract.hpp>
 #include <flight/textinput/text_input.hpp>
 
 namespace flight::textinput {
@@ -65,27 +72,17 @@ using flight::types::TextInputState;
 using flight::types::TextLayoutGroup;
 using flight::types::TextLayoutResult;
 using flight::types::TextSelectionRectangle;
-using flight::types::key_code;
-
-using flight::textlayout::create_text_format_range;
-using flight::textlayout::get_rich_text_selection_rectangles;
-
-using flight::text::set_rich_text_scroll_h;
-using flight::text::set_rich_text_scroll_v;
-
-using flight::node::invalidate_node_appearance;
-using flight::node::invalidate_node_local_content;
 
 inline const double desired_caret_x_unset = -1.0;
 
-inline void adjust_text_format_ranges(flight::Array<flight::Ref<TextFormatRange>> ranges, flight::Ref<TextFormat> default_format, double begin_index, double end_index, double insert_length) {
+inline void adjust_text_format_ranges(flight::Array<flight::Ref<flight::types::TextFormatRange>> ranges, flight::Ref<flight::types::TextFormat> default_format, double begin_index, double end_index, double insert_length) {
   const double remove_length = (end_index - begin_index);
   const double offset = (insert_length - remove_length);
   {
     double i = 0.0;
     while ((i < static_cast<double>(ranges.size()))) {
       {
-        flight::Ref<TextFormatRange> range = ranges.element(i);
+        auto range = ranges.element(i);
         if ((begin_index == end_index)) {
           if ((range->end < begin_index)) {
             {
@@ -156,7 +153,7 @@ inline void adjust_text_format_ranges(flight::Array<flight::Ref<TextFormatRange>
     }
   }
   if (((static_cast<double>(ranges.size()) == 0.0) && (insert_length > 0.0))) {
-    ranges.push(create_text_format_range(flight::make_ref<TextFormat>(*default_format), begin_index, (begin_index + insert_length)));
+    ranges.push(flight::textlayout::create_text_format_range(flight::make_ref<flight::types::TextFormat>(*default_format), begin_index, (begin_index + insert_length)));
   }
 }
 
@@ -167,107 +164,107 @@ inline double clamp_index(double value, double length) {
   return flight::maximum(0.0, flight::minimum(length, std::trunc(value)));
 }
 
-inline void apply_history_record(flight::Ref<RichText> source, flight::Ref<TextInputState> state, flight::String text, double caret_index, double selection_index) {
-  (source->data.text = text);
+inline void apply_history_record(flight::Ref<flight::types::RichText> source, flight::Ref<flight::types::TextInputState> state, flight::String text, double caret_index, double selection_index) {
+  (source->data->text = text);
   (state->caret_index = clamp_index(caret_index, static_cast<double>(text.length())));
   (state->selection_index = clamp_index(selection_index, static_cast<double>(text.length())));
   (state->desired_caret_x = desired_caret_x_unset);
-  invalidate_node_local_content(source);
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
-inline double get_fallback_line_height(flight::Ref<TextLayoutResult> layout) {
-  return layout->line_heights.get(0.0).value_or(12.0);
+inline double get_fallback_line_height(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>> layout) {
+  return ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"lineHeights">>(layout).get(0.0); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 12.0; }());
 }
 
-inline flight::Ref<TextInputState> get_input_state(flight::Ref<RichText> source) {
-  std::optional<flight::Ref<TextInputState>> state = get_text_input_state(source);
+inline flight::Ref<flight::types::TextInputState> get_input_state(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source) {
+  auto state = flight::textinput::get_text_input_state(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(source));
   if (!state.has_value()) {
     throw flight::Error(flight::String("text input is not enabled on this RichText; call enableTextInput first"));
   }
   return state.value();
 }
 
-inline bool can_redo_text_input(flight::Ref<RichText> source) {
-  flight::Ref<TextInputState> state = get_input_state(source);
+inline bool can_redo_text_input(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source) {
+  auto state = get_input_state(source);
   return (state->history_index < (static_cast<double>(state->history.size()) - 1.0));
 }
 
-inline bool can_undo_text_input(flight::Ref<RichText> source) {
+inline bool can_undo_text_input(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source) {
   return (get_input_state(source)->history_index >= 0.0);
 }
 
-inline void clear_text_input_history(flight::Ref<RichText> source) {
-  flight::Ref<TextInputState> state = get_input_state(source);
-  (state->history = flight::Array<flight::Ref<TextInputHistoryEntry>>{});
+inline void clear_text_input_history(flight::Ref<flight::types::RichText> source) {
+  auto state = get_input_state(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
+  (state->history = flight::Array<flight::Ref<flight::types::TextInputHistoryEntry>>{});
   (state->history_index = -1.0);
 }
 
-inline double get_text_input_caret_index(flight::Ref<RichText> source) {
-  return clamp_index(get_input_state(source)->caret_index, static_cast<double>(source->data.text.length()));
+inline double get_text_input_caret_index(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source) {
+  return clamp_index(get_input_state(source)->caret_index, static_cast<double>(flight::row_get<flight::RowKey<"data">>(source)->text.length()));
 }
 
-inline flight::String get_text_input_display_text(flight::Ref<RichText> source) {
-  flight::Ref<TextInputState> state = get_input_state(source);
-  if (!flight::to_boolean(state->display_as_password)) {
-    return source->data.text;
+inline flight::String get_text_input_display_text(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source) {
+  auto state = get_input_state(source);
+  if (!state->display_as_password) {
+    return flight::row_get<flight::RowKey<"data">>(source)->text;
   }
   const flight::String password_character = ((static_cast<double>(state->password_character.length()) > 0.0) ? state->password_character.char_at(0.0) : flight::String("•"));
-  return password_character.repeat(static_cast<double>(source->data.text.length()));
+  return password_character.repeat(static_cast<double>(flight::row_get<flight::RowKey<"data">>(source)->text.length()));
 }
 
-inline double get_text_input_selection_begin_index(flight::Ref<RichText> source) {
-  flight::Ref<TextInputState> state = get_input_state(source);
-  return flight::minimum(clamp_index(state->caret_index, static_cast<double>(source->data.text.length())), clamp_index(state->selection_index, static_cast<double>(source->data.text.length())));
+inline double get_text_input_selection_begin_index(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source) {
+  auto state = get_input_state(source);
+  return flight::minimum(clamp_index(state->caret_index, static_cast<double>(flight::row_get<flight::RowKey<"data">>(source)->text.length())), clamp_index(state->selection_index, static_cast<double>(flight::row_get<flight::RowKey<"data">>(source)->text.length())));
 }
 
-inline double get_text_input_selection_end_index(flight::Ref<RichText> source) {
-  flight::Ref<TextInputState> state = get_input_state(source);
-  return flight::maximum(clamp_index(state->caret_index, static_cast<double>(source->data.text.length())), clamp_index(state->selection_index, static_cast<double>(source->data.text.length())));
+inline double get_text_input_selection_end_index(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source) {
+  auto state = get_input_state(source);
+  return flight::maximum(clamp_index(state->caret_index, static_cast<double>(flight::row_get<flight::RowKey<"data">>(source)->text.length())), clamp_index(state->selection_index, static_cast<double>(flight::row_get<flight::RowKey<"data">>(source)->text.length())));
 }
 
-inline void get_text_input_selection_rectangles(flight::Array<flight::Ref<TextSelectionRectangle>> out, flight::Ref<RichText> source, flight::Ref<TextLayoutResult> layout) {
-  get_rich_text_selection_rectangles(out, get_text_input_selection_begin_index(source), get_text_input_selection_end_index(source), layout);
+inline void get_text_input_selection_rectangles(flight::Array<flight::Ref<flight::types::TextSelectionRectangle>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>> layout) {
+  flight::textlayout::get_rich_text_selection_rectangles(out, get_text_input_selection_begin_index(source), get_text_input_selection_end_index(source), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>>(layout));
 }
 
-inline flight::String get_text_input_selection_text(flight::Ref<RichText> source) {
-  return source->data.text.slice(get_text_input_selection_begin_index(source), get_text_input_selection_end_index(source));
+inline flight::String get_text_input_selection_text(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source) {
+  return flight::row_get<flight::RowKey<"data">>(source)->text.slice(get_text_input_selection_begin_index(source), get_text_input_selection_end_index(source));
 }
 
-inline void move_text_input_caret(flight::Ref<RichText> source, double index, std::optional<bool> extend_selection = std::nullopt) {
+inline void move_text_input_caret(flight::Ref<flight::types::RichText> source, double index, std::optional<bool> extend_selection = std::nullopt) {
   extend_selection = extend_selection.value_or(false);
-  const double caret = clamp_index(index, static_cast<double>(source->data.text.length()));
-  flight::Ref<TextInputState> state = get_input_state(source);
+  const double caret = clamp_index(index, static_cast<double>(source->data->text.length()));
+  auto state = get_input_state(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
   (state->caret_index = caret);
   if (!extend_selection.value()) {
     (state->selection_index = caret);
   }
   (state->desired_caret_x = desired_caret_x_unset);
-  invalidate_node_appearance(source);
+  flight::node::invalidate_node_appearance(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
-inline void redo_text_input(flight::Ref<RichText> source) {
-  flight::Ref<TextInputState> state = get_input_state(source);
-  if (!can_redo_text_input(source)) {
+inline void redo_text_input(flight::Ref<flight::types::RichText> source) {
+  auto state = get_input_state(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
+  if (!can_redo_text_input(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)))) {
     return;
   }
   state->history_index++;
-  flight::Ref<TextInputHistoryEntry> record = state->history.element(state->history_index);
+  auto record = state->history.element(state->history_index);
   apply_history_record(source, state, record->text_after, record->caret_index_after, record->selection_index_after);
 }
 
-inline void set_text_input_selection(flight::Ref<RichText> source, double begin_index, double end_index) {
-  flight::Ref<TextInputState> state = get_input_state(source);
-  (state->selection_index = clamp_index(begin_index, static_cast<double>(source->data.text.length())));
-  (state->caret_index = clamp_index(end_index, static_cast<double>(source->data.text.length())));
-  invalidate_node_appearance(source);
+inline void set_text_input_selection(flight::Ref<flight::types::RichText> source, double begin_index, double end_index) {
+  auto state = get_input_state(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
+  (state->selection_index = clamp_index(begin_index, static_cast<double>(source->data->text.length())));
+  (state->caret_index = clamp_index(end_index, static_cast<double>(source->data->text.length())));
+  flight::node::invalidate_node_appearance(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
-inline void select_all_text_input(flight::Ref<RichText> source) {
-  set_text_input_selection(source, 0.0, static_cast<double>(source->data.text.length()));
+inline void select_all_text_input(flight::Ref<flight::types::RichText> source) {
+  set_text_input_selection(source, 0.0, static_cast<double>(source->data->text.length()));
 }
 
-inline void select_line_at_text_input_index(flight::Ref<RichText> source, double index) {
-  const flight::String text = source->data.text;
+inline void select_line_at_text_input_index(flight::Ref<flight::types::RichText> source, double index) {
+  const flight::String text = source->data->text;
   const double clamped = flight::maximum(0.0, flight::minimum(static_cast<double>(text.length()), index));
   double start = clamped;
   double end = clamped;
@@ -280,19 +277,19 @@ inline void select_line_at_text_input_index(flight::Ref<RichText> source, double
   set_text_input_selection(source, start, end);
 }
 
-inline void undo_text_input(flight::Ref<RichText> source) {
-  flight::Ref<TextInputState> state = get_input_state(source);
-  if (!can_undo_text_input(source)) {
+inline void undo_text_input(flight::Ref<flight::types::RichText> source) {
+  auto state = get_input_state(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
+  if (!can_undo_text_input(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)))) {
     return;
   }
-  flight::Ref<TextInputHistoryEntry> record = state->history.element(state->history_index);
+  auto record = state->history.element(state->history_index);
   state->history_index--;
   apply_history_record(source, state, record->text_before, record->caret_index_before, record->selection_index_before);
 }
 
-inline double get_line_end_index(flight::Ref<TextLayoutResult> layout, double line_index, double text_length) {
+inline double get_line_end_index(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>> layout, double line_index, double text_length) {
   double end = -1.0;
-  for (auto group : layout->groups) {
+  for (auto group : flight::row_get<flight::RowKey<"groups">>(layout)) {
     if (((group->line_index == line_index) && (group->end_index > end))) {
       (end = group->end_index);
     }
@@ -300,26 +297,26 @@ inline double get_line_end_index(flight::Ref<TextLayoutResult> layout, double li
   return ((end < 0.0) ? text_length : end);
 }
 
-inline double get_line_offset_y(flight::Ref<TextLayoutResult> layout, double line_index) {
-  for (auto group : layout->groups) {
+inline double get_line_offset_y(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>> layout, double line_index) {
+  for (auto group : flight::row_get<flight::RowKey<"groups">>(layout)) {
     if ((group->line_index == line_index)) {
       return group->offset_y;
     }
   }
-  double y = text_bounds_gutter;
+  double y = flight::textlayout::text_bounds_gutter;
   {
     double i = 0.0;
     while ((i < line_index)) {
-      (y += layout->line_heights.get(i).value_or(0.0));
+      (y += ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"lineHeights">>(layout).get(i); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
       (i += 1.0);
     }
   }
   return y;
 }
 
-inline double get_line_start_index(flight::Ref<TextLayoutResult> layout, double line_index) {
+inline double get_line_start_index(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>> layout, double line_index) {
   double start = -1.0;
-  for (auto group : layout->groups) {
+  for (auto group : flight::row_get<flight::RowKey<"groups">>(layout)) {
     if (((group->line_index == line_index) && ((start < 0.0) || (group->start_index < start)))) {
       (start = group->start_index);
     }
@@ -327,85 +324,76 @@ inline double get_line_start_index(flight::Ref<TextLayoutResult> layout, double 
   return ((start < 0.0) ? 0.0 : start);
 }
 
+inline std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutGroup>>>>> get_text_layout_group_at_index(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>> layout, double index) {
+  for (auto group : flight::row_get<flight::RowKey<"groups">>(layout)) {
+    if (((index >= group->start_index) && (index <= group->end_index))) {
+      return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutGroup>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutGroup>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLayoutGroup>>>>(group))};
+    }
+  }
+  return ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutGroup>>>>> { auto contextual_union_source = flight::row_get<flight::RowKey<"groups">>(layout).get((static_cast<double>(flight::row_get<flight::RowKey<"groups">>(layout).size()) - 1.0)); if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutGroup>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutGroup>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLayoutGroup>>>>(contextual_union_source.value()))}; }());
+}
 
-// NOT GENERATED: function getTextLayoutGroupAtIndex -- source line 727
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   function getTextLayoutGroupAtIndex(
-//     layout: Readonly<TextLayoutResult>,
-//     index: number,
-//   ): Readonly<TextLayoutGroup> | null {
-//     for (const group of layout.groups) {
-//       if (index >= group.startIndex && index <= group.endIndex) return group;
-//     }
-//     return layout.groups[layout.groups.length - 1] ?? null;
-//   }
-//   
-// cpp emission failed for @flighthq/textinput/packages/textinput/src/textInputEditing.ts: contextual
-// optionalSingle construction requires expression type evidence
-
-inline double get_text_layout_group_caret_x(flight::Ref<TextLayoutGroup> group, double index) {
-  double x = group->offset_x;
-  const double limit = flight::maximum(0.0, (flight::minimum(index, group->end_index) - group->start_index));
+inline double get_text_layout_group_caret_x(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutGroup>>>> group, double index) {
+  double x = flight::row_get<flight::RowKey<"offsetX">>(group);
+  const double limit = flight::maximum(0.0, (flight::minimum(index, flight::row_get<flight::RowKey<"endIndex">>(group)) - flight::row_get<flight::RowKey<"startIndex">>(group)));
   {
     double i = 0.0;
     while ((i < limit)) {
-      (x += group->positions.get(i).value_or(0.0));
+      (x += ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"positions">>(group).get(i); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
       (i += 1.0);
     }
   }
   return x;
 }
 
-inline void get_text_input_caret_rectangle(flight::Ref<TextSelectionRectangle> out, flight::Ref<RichText> source, flight::Ref<TextLayoutResult> layout) {
+inline void get_text_input_caret_rectangle(flight::Ref<flight::types::TextSelectionRectangle> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>> layout) {
   const double caret_index = get_text_input_caret_index(source);
-  std::optional<flight::Ref<TextLayoutGroup>> group = get_text_layout_group_at_index(layout, caret_index);
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutGroup>>>>> group = get_text_layout_group_at_index(layout, caret_index);
   if (!group.has_value()) {
-    (out->x = text_bounds_gutter);
-    (out->y = text_bounds_gutter);
+    (out->x = flight::textlayout::text_bounds_gutter);
+    (out->y = flight::textlayout::text_bounds_gutter);
     (out->width = 1.0);
     (out->height = get_fallback_line_height(layout));
     (out->line_index = 0.0);
     return;
   }
-  (out->x = get_text_layout_group_caret_x(group.value(), caret_index));
+  (out->x = get_text_layout_group_caret_x(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutGroup>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLayoutGroup>>>>(group.value())), caret_index));
   (out->y = group.value()->offset_y);
   (out->width = 1.0);
   (out->height = group.value()->height);
   (out->line_index = group.value()->line_index);
 }
 
-inline double get_text_layout_group_character_index_at_x(flight::Ref<TextLayoutGroup> group, double x) {
-  double current_x = group->offset_x;
+inline double get_text_layout_group_character_index_at_x(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutGroup>>>> group, double x) {
+  double current_x = flight::row_get<flight::RowKey<"offsetX">>(group);
   {
     double i = 0.0;
-    while ((i < static_cast<double>(group->positions.size()))) {
+    while ((i < static_cast<double>(flight::row_get<flight::RowKey<"positions">>(group).size()))) {
       {
-        const double advance = group->positions.get(i).value_or(0.0);
+        const double advance = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"positions">>(group).get(i); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
         if ((x < (current_x + (advance / 2.0)))) {
-          return (group->start_index + i);
+          return (flight::row_get<flight::RowKey<"startIndex">>(group) + i);
         }
         (current_x += advance);
       }
       (i += 1.0);
     }
   }
-  return group->end_index;
+  return flight::row_get<flight::RowKey<"endIndex">>(group);
 }
 
-inline double get_text_input_character_index_at_point(flight::Ref<RichText> source, flight::Ref<TextLayoutResult> layout, double x, double y) {
-  if ((static_cast<double>(layout->groups.size()) == 0.0)) {
+inline double get_text_input_character_index_at_point(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>> layout, double x, double y) {
+  if ((static_cast<double>(flight::row_get<flight::RowKey<"groups">>(layout).size()) == 0.0)) {
     return 0.0;
   }
   double closest_line_index = 0.0;
   double closest_line_distance = std::numeric_limits<double>::infinity();
   {
     double i = 0.0;
-    while ((i < static_cast<double>(layout->line_heights.size()))) {
+    while ((i < static_cast<double>(flight::row_get<flight::RowKey<"lineHeights">>(layout).size()))) {
       {
         const double line_top = get_line_offset_y(layout, i);
-        const double line_bottom = (line_top + layout->line_heights.element(i));
+        const double line_bottom = (line_top + flight::row_get<flight::RowKey<"lineHeights">>(layout).element(i));
         const double distance = ((y < line_top) ? (line_top - y) : ((y > line_bottom) ? (y - line_bottom) : 0.0));
         if ((distance < closest_line_distance)) {
           (closest_line_distance = distance);
@@ -415,9 +403,9 @@ inline double get_text_input_character_index_at_point(flight::Ref<RichText> sour
       (i += 1.0);
     }
   }
-  double line_start = static_cast<double>(source->data.text.length());
+  double line_start = static_cast<double>(flight::row_get<flight::RowKey<"data">>(source)->text.length());
   double line_end = 0.0;
-  for (auto group : layout->groups) {
+  for (auto group : flight::row_get<flight::RowKey<"groups">>(layout)) {
     if ((group->line_index != closest_line_index)) {
       continue;
     }
@@ -427,24 +415,24 @@ inline double get_text_input_character_index_at_point(flight::Ref<RichText> sour
       return group->start_index;
     }
     if ((x <= (group->offset_x + group->width))) {
-      return get_text_layout_group_character_index_at_x(group, x);
+      return get_text_layout_group_character_index_at_x(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutGroup>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLayoutGroup>>>>(group)), x);
     }
   }
   return ((line_end > 0.0) ? line_end : line_start);
 }
 
-inline void record_text_input_edit(flight::Ref<TextInputState> state, flight::String text_before, flight::String text_after, double caret_index_before, double selection_index_before, std::optional<flight::String> merge_kind) {
+inline void record_text_input_edit(flight::Ref<flight::types::TextInputState> state, flight::String text_before, flight::String text_after, double caret_index_before, double selection_index_before, std::optional<flight::String> merge_kind) {
   if ((state->history_index < (static_cast<double>(state->history.size()) - 1.0))) {
     ([&]() { auto&& assignment_receiver = state->history; const auto assignment_value = (state->history_index + 1.0); assignment_receiver.resize(assignment_value); return assignment_value; }());
   }
-  std::optional<flight::Ref<TextInputHistoryEntry>> previous = ((state->history_index >= 0.0) ? std::optional{state->history.element(state->history_index)} : std::nullopt);
+  std::optional<flight::Ref<flight::types::TextInputHistoryEntry>> previous = ((state->history_index >= 0.0) ? std::optional{state->history.element(state->history_index)} : std::nullopt);
   if (((previous.has_value() && merge_kind.has_value()) && (previous.value()->merge_kind == merge_kind.value()))) {
     (previous.value()->text_after = text_after);
     (previous.value()->caret_index_after = state->caret_index);
     (previous.value()->selection_index_after = state->selection_index);
     return;
   }
-  state->history.push(flight::make_ref<TextInputHistoryEntry>(TextInputHistoryEntry{.caret_index_after = state->caret_index, .caret_index_before = caret_index_before, .merge_kind = merge_kind, .selection_index_after = state->selection_index, .selection_index_before = selection_index_before, .text_after = text_after, .text_before = text_before}));
+  state->history.push(flight::make_ref<flight::types::TextInputHistoryEntry>(flight::types::TextInputHistoryEntry{.caret_index_after = state->caret_index, .caret_index_before = caret_index_before, .merge_kind = merge_kind, .selection_index_after = state->selection_index, .selection_index_before = selection_index_before, .text_after = text_after, .text_before = text_before}));
   (state->history_index = (static_cast<double>(state->history.size()) - 1.0));
   if ((static_cast<double>(state->history.size()) > state->history_limit)) {
     const double overflow = (static_cast<double>(state->history.size()) - state->history_limit);
@@ -554,9 +542,9 @@ inline flight::Ref<accepted_declined_f1c293c384b47e27> split_restrict_ranges(fli
 // cpp emission failed for @flighthq/textinput/packages/textinput/src/textInputEditing.ts: string for-of requires
 // a Unicode code-point iteration runtime contract
 
-inline flight::String apply_text_input_restriction(flight::Ref<RichText> source, flight::String text, std::optional<double> replace_length = std::nullopt) {
+inline flight::String apply_text_input_restriction(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source, flight::String text, std::optional<double> replace_length = std::nullopt) {
   replace_length = replace_length.value_or(0.0);
-  flight::Ref<RichTextData> data = source->data;
+  auto data = flight::row_get<flight::RowKey<"data">>(source);
   flight::String value = text;
   if (!data->multiline) {
     (value = value.replace(flight::RegExp(flight::String("[\\n\\r]+"), flight::String("g")), flight::String("")));
@@ -574,62 +562,41 @@ inline flight::String apply_text_input_restriction(flight::Ref<RichText> source,
   return value;
 }
 
-
-// NOT GENERATED: function replaceTextInput -- source line 439
-//
-// The source it stood for:
-//   export function replaceTextInput(
-//     source: RichText,
-//     beginIndex: number,
-//     endIndex: number,
-//     text: string,
-//     options?: Readonly<ReplaceTextInputOptions>,
-//   ): void {
-//     const data = source.data;
-//     let start = clampIndex(beginIndex, data.text.length);
-//     let end = clampIndex(endIndex, data.text.length);
-//     if (end < start) {
-//       const swap = start;
-//       start = end;
-//       end = swap;
-//     }
-//   
-//     const value = options?.applyInputRules === true ? applyTextInputRestriction(source, text, end - start) : text;
-//     if (value.length === 0 && start === end) return;
-//   
-//     const state = getInputState(source);
-//     const textBefore = data.text;
-//     const caretBefore = clampIndex(state.caretIndex, textBefore.length);
-//     const selectionBefore = clampIndex(state.selectionIndex, textBefore.length);
-//   
-//     data.text = textBefore.slice(0, start) + value + textBefore.slice(end);
-//     adjustTextFormatRanges(data.textFormatRanges, data.defaultTextFormat, start, end, value.length);
-//     // An edit changes the caret position, so any stored desired-x column is no longer valid.
-//     state.desiredCaretX = DESIRED_CARET_X_UNSET;
-//     setTextInputSelection(source, start + value.length, start + value.length);
-//   
-//     if (options?.skipHistory !== true && state.historyLimit > 0) {
-//       recordTextInputEdit(state, textBefore, data.text, caretBefore, selectionBefore, options?.mergeKind ?? null);
-//     }
-//   
-//     invalidateNodeLocalContent(source);
-//   }
-//   
-//   // Scrolls the text field so the caret is visible within the given viewport dimensions. Uses the
-//   // field's layout to locate the caret rectangle, then adjusts scrollV (vertical) and scrollH
-//   // (horizontal) as needed to bring the caret into the visible region with a small margin.
-//   // Pass the layout used to render this field and the display dimensions of the field's visible area.
-// cpp emission failed for @flighthq/textinput/packages/textinput/src/textInputEditing.ts: dual-sentinel optional
-// property result requires one represented member value domain
-
-inline void append_text_input(flight::Ref<RichText> source, flight::String text) {
-  replace_text_input(source, static_cast<double>(source->data.text.length()), static_cast<double>(source->data.text.length()), text, std::nullopt);
+inline void replace_text_input(flight::Ref<flight::types::RichText> source, double begin_index, double end_index, flight::String text, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ReplaceTextInputOptions>>>>> options = std::nullopt) {
+  auto data = source->data;
+  double start = clamp_index(begin_index, static_cast<double>(data->text.length()));
+  double end = clamp_index(end_index, static_cast<double>(data->text.length()));
+  if ((end < start)) {
+    const double swap = start;
+    (start = end);
+    (end = swap);
+  }
+  const flight::String value = ((([&]() -> std::optional<bool> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"applyInputRules">>(optional_chain_receiver.value()); }()) == true) ? apply_text_input_restriction(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)), text, (end - start)) : text);
+  if (((static_cast<double>(value.length()) == 0.0) && (start == end))) {
+    return;
+  }
+  auto state = get_input_state(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
+  const flight::String text_before = data->text;
+  const double caret_before = clamp_index(state->caret_index, static_cast<double>(text_before.length()));
+  const double selection_before = clamp_index(state->selection_index, static_cast<double>(text_before.length()));
+  (data->text = text_before.slice(0.0, start) + value + text_before.slice(end));
+  adjust_text_format_ranges(data->text_format_ranges, data->default_text_format, start, end, static_cast<double>(value.length()));
+  (state->desired_caret_x = desired_caret_x_unset);
+  set_text_input_selection(source, (start + static_cast<double>(value.length())), (start + static_cast<double>(value.length())));
+  if (((([&]() -> std::optional<bool> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"skipHistory">>(optional_chain_receiver.value()); }()) != true) && (state->history_limit > 0.0))) {
+    record_text_input_edit(state, text_before, data->text, caret_before, selection_before, ([&]() -> std::optional<flight::String> { auto nullish_coalesce_left = ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return flight::row_get<flight::RowKey<"mergeKind">>(optional_chain_receiver.value()); }()); if (const auto* alternative = std::get_if<flight::String>(&nullish_coalesce_left)) return std::optional<flight::String>{*alternative}; return std::nullopt; }()));
+  }
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
-inline void delete_text_input_backward(flight::Ref<RichText> source) {
-  flight::Ref<TextInputState> state = get_input_state(source);
-  const double start = get_text_input_selection_begin_index(source);
-  const double end = get_text_input_selection_end_index(source);
+inline void append_text_input(flight::Ref<flight::types::RichText> source, flight::String text) {
+  replace_text_input(source, static_cast<double>(source->data->text.length()), static_cast<double>(source->data->text.length()), text, std::nullopt);
+}
+
+inline void delete_text_input_backward(flight::Ref<flight::types::RichText> source) {
+  auto state = get_input_state(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
+  const double start = get_text_input_selection_begin_index(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
+  const double end = get_text_input_selection_end_index(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
   if ((start != end)) {
     replace_text_input(source, start, end, flight::String(""), std::nullopt);
   }
@@ -641,103 +608,103 @@ inline void delete_text_input_backward(flight::Ref<RichText> source) {
   (state->selection_index = state->caret_index);
 }
 
-inline void delete_text_input_forward(flight::Ref<RichText> source) {
-  const double start = get_text_input_selection_begin_index(source);
-  const double end = get_text_input_selection_end_index(source);
+inline void delete_text_input_forward(flight::Ref<flight::types::RichText> source) {
+  const double start = get_text_input_selection_begin_index(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
+  const double end = get_text_input_selection_end_index(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
   if ((start != end)) {
     replace_text_input(source, start, end, flight::String(""), std::nullopt);
   }
   else {
-    if ((start < static_cast<double>(source->data.text.length()))) {
+    if ((start < static_cast<double>(source->data->text.length()))) {
       replace_text_input(source, start, (start + 1.0), flight::String(""), std::nullopt);
     }
   }
 }
 
-inline void replace_selected_text_input(flight::Ref<RichText> source, flight::String text, std::optional<flight::Ref<ReplaceTextInputOptions>> options = std::nullopt) {
-  replace_text_input(source, get_text_input_selection_begin_index(source), get_text_input_selection_end_index(source), text, options);
+inline void replace_selected_text_input(flight::Ref<flight::types::RichText> source, flight::String text, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ReplaceTextInputOptions>>>>> options = std::nullopt) {
+  replace_text_input(source, get_text_input_selection_begin_index(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source))), get_text_input_selection_end_index(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source))), text, options);
 }
 
-inline void insert_text_input(flight::Ref<RichText> source, flight::String text) {
-  replace_selected_text_input(source, text, flight::make_ref<ReplaceTextInputOptions>(ReplaceTextInputOptions{.apply_input_rules = true}));
+inline void insert_text_input(flight::Ref<flight::types::RichText> source, flight::String text) {
+  replace_selected_text_input(source, text, flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ReplaceTextInputOptions>>>>(flight::row_field<flight::RowKey<"applyInputRules">>(std::optional<bool>{true})));
 }
 
 using KeyboardCommand = flight::String;
 
-inline KeyboardCommand get_keyboard_command(flight::Ref<KeyboardEventData> data) {
-  if ((data->ctrl_key || data->meta_key)) {
-    const flight::String key = data->key.to_lower();
-    if (((key == flight::String("a")) || (data->key_code == key_code.a))) {
+inline KeyboardCommand get_keyboard_command(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::KeyboardEventData>>>> data) {
+  if ((flight::row_get<flight::RowKey<"ctrlKey">>(data) || flight::row_get<flight::RowKey<"metaKey">>(data))) {
+    const flight::String key = flight::row_get<flight::RowKey<"key">>(data).to_lower();
+    if (((key == flight::String("a")) || (flight::row_get<flight::RowKey<"keyCode">>(data) == flight::types::key_code->a))) {
       return flight::String("selectAll");
     }
-    if (((key == flight::String("c")) || (data->key_code == key_code.c))) {
+    if (((key == flight::String("c")) || (flight::row_get<flight::RowKey<"keyCode">>(data) == flight::types::key_code->c))) {
       return flight::String("copy");
     }
-    if (((key == flight::String("v")) || (data->key_code == key_code.v))) {
+    if (((key == flight::String("v")) || (flight::row_get<flight::RowKey<"keyCode">>(data) == flight::types::key_code->v))) {
       return flight::String("paste");
     }
-    if (((key == flight::String("x")) || (data->key_code == key_code.x))) {
+    if (((key == flight::String("x")) || (flight::row_get<flight::RowKey<"keyCode">>(data) == flight::types::key_code->x))) {
       return flight::String("cut");
     }
-    if (((data->key_code == key_code.left) || (data->key == flight::String("ArrowLeft")))) {
+    if (((flight::row_get<flight::RowKey<"keyCode">>(data) == flight::types::key_code->left) || (flight::row_get<flight::RowKey<"key">>(data) == flight::String("ArrowLeft")))) {
       return flight::String("wordLeft");
     }
-    if (((data->key_code == key_code.right) || (data->key == flight::String("ArrowRight")))) {
+    if (((flight::row_get<flight::RowKey<"keyCode">>(data) == flight::types::key_code->right) || (flight::row_get<flight::RowKey<"key">>(data) == flight::String("ArrowRight")))) {
       return flight::String("wordRight");
     }
-    if (((data->key_code == key_code.backspace) || (data->key == flight::String("Backspace")))) {
+    if (((flight::row_get<flight::RowKey<"keyCode">>(data) == flight::types::key_code->backspace) || (flight::row_get<flight::RowKey<"key">>(data) == flight::String("Backspace")))) {
       return flight::String("deleteWordBackward");
     }
-    if (((data->key_code == key_code.delete_) || (data->key == flight::String("Delete")))) {
+    if (((flight::row_get<flight::RowKey<"keyCode">>(data) == flight::types::key_code->delete_) || (flight::row_get<flight::RowKey<"key">>(data) == flight::String("Delete")))) {
       return flight::String("deleteWordForward");
     }
-    if (((data->key_code == key_code.home) || (data->key == flight::String("Home")))) {
+    if (((flight::row_get<flight::RowKey<"keyCode">>(data) == flight::types::key_code->home) || (flight::row_get<flight::RowKey<"key">>(data) == flight::String("Home")))) {
       return flight::String("documentStart");
     }
-    if (((data->key_code == key_code.end) || (data->key == flight::String("End")))) {
+    if (((flight::row_get<flight::RowKey<"keyCode">>(data) == flight::types::key_code->end) || (flight::row_get<flight::RowKey<"key">>(data) == flight::String("End")))) {
       return flight::String("documentEnd");
     }
     return flight::String("none");
   }
-  if (flight::to_boolean(data->alt_key)) {
-    if (((data->key_code == key_code.left) || (data->key == flight::String("ArrowLeft")))) {
+  if (flight::row_get<flight::RowKey<"altKey">>(data)) {
+    if (((flight::row_get<flight::RowKey<"keyCode">>(data) == flight::types::key_code->left) || (flight::row_get<flight::RowKey<"key">>(data) == flight::String("ArrowLeft")))) {
       return flight::String("wordLeft");
     }
-    if (((data->key_code == key_code.right) || (data->key == flight::String("ArrowRight")))) {
+    if (((flight::row_get<flight::RowKey<"keyCode">>(data) == flight::types::key_code->right) || (flight::row_get<flight::RowKey<"key">>(data) == flight::String("ArrowRight")))) {
       return flight::String("wordRight");
     }
-    if (((data->key_code == key_code.backspace) || (data->key == flight::String("Backspace")))) {
+    if (((flight::row_get<flight::RowKey<"keyCode">>(data) == flight::types::key_code->backspace) || (flight::row_get<flight::RowKey<"key">>(data) == flight::String("Backspace")))) {
       return flight::String("deleteWordBackward");
     }
-    if (((data->key_code == key_code.delete_) || (data->key == flight::String("Delete")))) {
+    if (((flight::row_get<flight::RowKey<"keyCode">>(data) == flight::types::key_code->delete_) || (flight::row_get<flight::RowKey<"key">>(data) == flight::String("Delete")))) {
       return flight::String("deleteWordForward");
     }
   }
-  if (((data->key_code == key_code.backspace) || (data->key == flight::String("Backspace")))) {
+  if (((flight::row_get<flight::RowKey<"keyCode">>(data) == flight::types::key_code->backspace) || (flight::row_get<flight::RowKey<"key">>(data) == flight::String("Backspace")))) {
     return flight::String("backspace");
   }
-  if (((data->key_code == key_code.delete_) || (data->key == flight::String("Delete")))) {
+  if (((flight::row_get<flight::RowKey<"keyCode">>(data) == flight::types::key_code->delete_) || (flight::row_get<flight::RowKey<"key">>(data) == flight::String("Delete")))) {
     return flight::String("delete");
   }
-  if (((data->key_code == key_code.down) || (data->key == flight::String("ArrowDown")))) {
+  if (((flight::row_get<flight::RowKey<"keyCode">>(data) == flight::types::key_code->down) || (flight::row_get<flight::RowKey<"key">>(data) == flight::String("ArrowDown")))) {
     return flight::String("down");
   }
-  if (((data->key_code == key_code.end) || (data->key == flight::String("End")))) {
+  if (((flight::row_get<flight::RowKey<"keyCode">>(data) == flight::types::key_code->end) || (flight::row_get<flight::RowKey<"key">>(data) == flight::String("End")))) {
     return flight::String("end");
   }
-  if (((data->key_code == key_code.home) || (data->key == flight::String("Home")))) {
+  if (((flight::row_get<flight::RowKey<"keyCode">>(data) == flight::types::key_code->home) || (flight::row_get<flight::RowKey<"key">>(data) == flight::String("Home")))) {
     return flight::String("home");
   }
-  if (((data->key_code == key_code.left) || (data->key == flight::String("ArrowLeft")))) {
+  if (((flight::row_get<flight::RowKey<"keyCode">>(data) == flight::types::key_code->left) || (flight::row_get<flight::RowKey<"key">>(data) == flight::String("ArrowLeft")))) {
     return flight::String("left");
   }
-  if (((data->key_code == key_code.return_) || (data->key == flight::String("Enter")))) {
+  if (((flight::row_get<flight::RowKey<"keyCode">>(data) == flight::types::key_code->return_) || (flight::row_get<flight::RowKey<"key">>(data) == flight::String("Enter")))) {
     return flight::String("return");
   }
-  if (((data->key_code == key_code.right) || (data->key == flight::String("ArrowRight")))) {
+  if (((flight::row_get<flight::RowKey<"keyCode">>(data) == flight::types::key_code->right) || (flight::row_get<flight::RowKey<"key">>(data) == flight::String("ArrowRight")))) {
     return flight::String("right");
   }
-  if (((data->key_code == key_code.up) || (data->key == flight::String("ArrowUp")))) {
+  if (((flight::row_get<flight::RowKey<"keyCode">>(data) == flight::types::key_code->up) || (flight::row_get<flight::RowKey<"key">>(data) == flight::String("ArrowUp")))) {
     return flight::String("up");
   }
   return flight::String("none");
@@ -747,8 +714,8 @@ inline bool is_word_char(flight::String char_) {
   return flight::RegExp(flight::String("\\w"), flight::String("")).test(char_);
 }
 
-inline void select_word_at_text_input_index(flight::Ref<RichText> source, double index) {
-  const flight::String text = source->data.text;
+inline void select_word_at_text_input_index(flight::Ref<flight::types::RichText> source, double index) {
+  const flight::String text = source->data->text;
   const double clamped = flight::maximum(0.0, flight::minimum(static_cast<double>(text.length()), index));
   double start = clamped;
   double end = clamped;
@@ -780,14 +747,14 @@ inline double find_word_start_before(flight::String text, double index) {
   return i;
 }
 
-inline void delete_text_input_word_backward(flight::Ref<RichText> source) {
-  const double start = get_text_input_selection_begin_index(source);
-  const double end = get_text_input_selection_end_index(source);
+inline void delete_text_input_word_backward(flight::Ref<flight::types::RichText> source) {
+  const double start = get_text_input_selection_begin_index(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
+  const double end = get_text_input_selection_end_index(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
   if ((start != end)) {
     replace_text_input(source, start, end, flight::String(""), std::nullopt);
     return;
   }
-  const double word_start = find_word_start_before(source->data.text, start);
+  const double word_start = find_word_start_before(source->data->text, start);
   if ((word_start < start)) {
     replace_text_input(source, word_start, start, flight::String(""), std::nullopt);
   }
@@ -804,23 +771,23 @@ inline double find_word_end_after(flight::String text, double index) {
   return i;
 }
 
-inline void delete_text_input_word_forward(flight::Ref<RichText> source) {
-  const double start = get_text_input_selection_begin_index(source);
-  const double end = get_text_input_selection_end_index(source);
+inline void delete_text_input_word_forward(flight::Ref<flight::types::RichText> source) {
+  const double start = get_text_input_selection_begin_index(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
+  const double end = get_text_input_selection_end_index(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
   if ((start != end)) {
     replace_text_input(source, start, end, flight::String(""), std::nullopt);
     return;
   }
-  const double word_end = find_word_end_after(source->data.text, start);
+  const double word_end = find_word_end_after(source->data->text, start);
   if ((word_end > start)) {
     replace_text_input(source, start, word_end, flight::String(""), std::nullopt);
   }
 }
 
-inline void move_text_input_caret_by_word(flight::Ref<RichText> source, double direction, std::optional<bool> extend_selection = std::nullopt) {
+inline void move_text_input_caret_by_word(flight::Ref<flight::types::RichText> source, double direction, std::optional<bool> extend_selection = std::nullopt) {
   extend_selection = extend_selection.value_or(false);
-  const double caret_index = get_text_input_caret_index(source);
-  const flight::String text = source->data.text;
+  const double caret_index = get_text_input_caret_index(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
+  const flight::String text = source->data->text;
   double target;
   if ((direction < 0.0)) {
     (target = find_word_start_before(text, caret_index));
@@ -844,42 +811,42 @@ struct height_line_index_width_x_y_79abf8efbd3aefcb : public flight::ReferenceEn
 
 inline flight::Ref<height_line_index_width_x_y_79abf8efbd3aefcb> scratch_rect = flight::make_ref<height_line_index_width_x_y_79abf8efbd3aefcb>(height_line_index_width_x_y_79abf8efbd3aefcb{.height = 0.0, .line_index = 0.0, .width = 0.0, .x = 0.0, .y = 0.0});
 
-inline void move_text_input_caret_down(flight::Ref<RichText> source, std::variant<flight::Ref<TextLayoutResult>, flight::Null, flight::Undefined> layout, std::optional<bool> extend_selection = std::nullopt) {
+inline void move_text_input_caret_down(flight::Ref<flight::types::RichText> source, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>, flight::Null, flight::Undefined> layout, std::optional<bool> extend_selection = std::nullopt) {
   extend_selection = extend_selection.value_or(false);
   if ((std::holds_alternative<flight::Null>(layout) || std::holds_alternative<flight::Undefined>(layout))) {
-    move_text_input_caret(source, static_cast<double>(source->data.text.length()), extend_selection.value());
+    move_text_input_caret(source, static_cast<double>(source->data->text.length()), extend_selection.value());
     return;
   }
-  flight::Ref<TextInputState> state = get_input_state(source);
+  auto state = get_input_state(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
   auto out = scratch_rect;
-  get_text_input_caret_rectangle(out, source, std::get<0>(layout));
+  get_text_input_caret_rectangle(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)), std::get<0>(layout));
   if ((state->desired_caret_x == desired_caret_x_unset)) {
     (state->desired_caret_x = out->x);
   }
   const double target_line_index = (out->line_index + 1.0);
-  if ((target_line_index >= std::get<0>(layout)->num_lines)) {
-    move_text_input_caret(source, static_cast<double>(source->data.text.length()), extend_selection.value());
+  if ((target_line_index >= flight::row_get<flight::RowKey<"numLines">>(std::get<0>(layout)))) {
+    move_text_input_caret(source, static_cast<double>(source->data->text.length()), extend_selection.value());
     return;
   }
-  const double target_y = (get_line_offset_y(std::get<0>(layout), target_line_index) + (std::get<0>(layout)->line_heights.element(target_line_index) / 2.0));
-  const double target_index = get_text_input_character_index_at_point(source, std::get<0>(layout), state->desired_caret_x, target_y);
-  const double new_caret = clamp_index(target_index, static_cast<double>(source->data.text.length()));
+  const double target_y = (get_line_offset_y(std::get<0>(layout), target_line_index) + (flight::row_get<flight::RowKey<"lineHeights">>(std::get<0>(layout)).element(target_line_index) / 2.0));
+  const double target_index = get_text_input_character_index_at_point(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)), std::get<0>(layout), state->desired_caret_x, target_y);
+  const double new_caret = clamp_index(target_index, static_cast<double>(source->data->text.length()));
   (state->caret_index = new_caret);
   if (!extend_selection.value()) {
     (state->selection_index = new_caret);
   }
-  invalidate_node_appearance(source);
+  flight::node::invalidate_node_appearance(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
-inline void move_text_input_caret_up(flight::Ref<RichText> source, std::variant<flight::Ref<TextLayoutResult>, flight::Null, flight::Undefined> layout, std::optional<bool> extend_selection = std::nullopt) {
+inline void move_text_input_caret_up(flight::Ref<flight::types::RichText> source, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>, flight::Null, flight::Undefined> layout, std::optional<bool> extend_selection = std::nullopt) {
   extend_selection = extend_selection.value_or(false);
   if ((std::holds_alternative<flight::Null>(layout) || std::holds_alternative<flight::Undefined>(layout))) {
     move_text_input_caret(source, 0.0, extend_selection.value());
     return;
   }
-  flight::Ref<TextInputState> state = get_input_state(source);
+  auto state = get_input_state(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
   auto out = scratch_rect;
-  get_text_input_caret_rectangle(out, source, std::get<0>(layout));
+  get_text_input_caret_rectangle(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)), std::get<0>(layout));
   if ((state->desired_caret_x == desired_caret_x_unset)) {
     (state->desired_caret_x = out->x);
   }
@@ -888,33 +855,33 @@ inline void move_text_input_caret_up(flight::Ref<RichText> source, std::variant<
     move_text_input_caret(source, 0.0, extend_selection.value());
     return;
   }
-  const double target_y = (get_line_offset_y(std::get<0>(layout), target_line_index) + (std::get<0>(layout)->line_heights.element(target_line_index) / 2.0));
-  const double target_index = get_text_input_character_index_at_point(source, std::get<0>(layout), state->desired_caret_x, target_y);
-  const double new_caret = clamp_index(target_index, static_cast<double>(source->data.text.length()));
+  const double target_y = (get_line_offset_y(std::get<0>(layout), target_line_index) + (flight::row_get<flight::RowKey<"lineHeights">>(std::get<0>(layout)).element(target_line_index) / 2.0));
+  const double target_index = get_text_input_character_index_at_point(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)), std::get<0>(layout), state->desired_caret_x, target_y);
+  const double new_caret = clamp_index(target_index, static_cast<double>(source->data->text.length()));
   (state->caret_index = new_caret);
   if (!extend_selection.value()) {
     (state->selection_index = new_caret);
   }
-  invalidate_node_appearance(source);
+  flight::node::invalidate_node_appearance(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
-inline void scroll_text_input_caret_into_view(flight::Ref<RichText> source, flight::Ref<TextLayoutResult> layout, double viewport_width, double viewport_height) {
+inline void scroll_text_input_caret_into_view(flight::Ref<flight::types::RichText> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>> layout, double viewport_width, double viewport_height) {
   auto out = scratch_rect;
-  get_text_input_caret_rectangle(out, source, layout);
+  get_text_input_caret_rectangle(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)), layout);
   const double caret_top = out->y;
   const double caret_bottom = (out->y + out->height);
-  const double scroll_vline = (source->data.scroll_v.value_or(1.0) - 1.0);
+  const double scroll_vline = (source->data->scroll_v - 1.0);
   double view_top = 0.0;
   {
     double i = 0.0;
     while ((i < scroll_vline)) {
-      (view_top += layout->line_heights.get(i).value_or(0.0));
+      (view_top += ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"lineHeights">>(layout).get(i); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
       (i += 1.0);
     }
   }
   const double view_bottom = (view_top + viewport_height);
   if ((caret_top < view_top)) {
-    set_rich_text_scroll_v(source, (out->line_index + 1.0), layout);
+    flight::text::set_rich_text_scroll_v(source, (out->line_index + 1.0), layout);
   }
   else {
     if ((caret_bottom > view_bottom)) {
@@ -922,63 +889,63 @@ inline void scroll_text_input_caret_into_view(flight::Ref<RichText> source, flig
       double first_visible_line = 0.0;
       {
         double i_2 = 0.0;
-        while ((i_2 < layout->num_lines)) {
+        while ((i_2 < flight::row_get<flight::RowKey<"numLines">>(layout))) {
           {
-            if (((pixel_offset + layout->line_heights.element(i_2)) > (caret_bottom - viewport_height))) {
+            if (((pixel_offset + flight::row_get<flight::RowKey<"lineHeights">>(layout).element(i_2)) > (caret_bottom - viewport_height))) {
               (first_visible_line = i_2);
               break;
             }
-            (pixel_offset += layout->line_heights.element(i_2));
+            (pixel_offset += flight::row_get<flight::RowKey<"lineHeights">>(layout).element(i_2));
           }
           (i_2 += 1.0);
         }
       }
-      set_rich_text_scroll_v(source, (first_visible_line + 1.0), layout);
+      flight::text::set_rich_text_scroll_v(source, (first_visible_line + 1.0), layout);
     }
   }
   const double caret_scroll_margin = 8.0;
-  const double scroll_h = source->data.scroll_h.value_or(0.0);
+  const double scroll_h = source->data->scroll_h;
   const double caret_left = (out->x - scroll_h);
   const double caret_right = (caret_left + out->width);
   if ((caret_left < 0.0)) {
-    set_rich_text_scroll_h(source, flight::maximum(0.0, (out->x - caret_scroll_margin)), layout);
+    flight::text::set_rich_text_scroll_h(source, flight::maximum(0.0, (out->x - caret_scroll_margin)), layout);
   }
   else {
     if (((caret_right + caret_scroll_margin) > viewport_width)) {
-      set_rich_text_scroll_h(source, (((out->x + out->width) + caret_scroll_margin) - viewport_width), layout);
+      flight::text::set_rich_text_scroll_h(source, (((out->x + out->width) + caret_scroll_margin) - viewport_width), layout);
     }
   }
 }
 
-inline double get_caret_line_index(flight::Ref<RichText> source, flight::Ref<TextLayoutResult> layout) {
+inline double get_caret_line_index(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>> layout) {
   auto out = scratch_rect;
   get_text_input_caret_rectangle(out, source, layout);
   return out->line_index;
 }
 
-inline void move_text_input_caret_to_line_end(flight::Ref<RichText> source, std::variant<flight::Ref<TextLayoutResult>, flight::Null, flight::Undefined> layout, std::optional<bool> extend_selection = std::nullopt) {
+inline void move_text_input_caret_to_line_end(flight::Ref<flight::types::RichText> source, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>, flight::Null, flight::Undefined> layout, std::optional<bool> extend_selection = std::nullopt) {
   extend_selection = extend_selection.value_or(false);
   if ((std::holds_alternative<flight::Null>(layout) || std::holds_alternative<flight::Undefined>(layout))) {
-    move_text_input_caret(source, static_cast<double>(source->data.text.length()), extend_selection.value());
+    move_text_input_caret(source, static_cast<double>(source->data->text.length()), extend_selection.value());
     return;
   }
-  const double line_index = get_caret_line_index(source, std::get<0>(layout));
-  const double line_end = get_line_end_index(std::get<0>(layout), line_index, static_cast<double>(source->data.text.length()));
+  const double line_index = get_caret_line_index(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)), std::get<0>(layout));
+  const double line_end = get_line_end_index(std::get<0>(layout), line_index, static_cast<double>(source->data->text.length()));
   move_text_input_caret(source, line_end, extend_selection.value());
 }
 
-inline void move_text_input_caret_to_line_start(flight::Ref<RichText> source, std::variant<flight::Ref<TextLayoutResult>, flight::Null, flight::Undefined> layout, std::optional<bool> extend_selection = std::nullopt) {
+inline void move_text_input_caret_to_line_start(flight::Ref<flight::types::RichText> source, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>, flight::Null, flight::Undefined> layout, std::optional<bool> extend_selection = std::nullopt) {
   extend_selection = extend_selection.value_or(false);
   if ((std::holds_alternative<flight::Null>(layout) || std::holds_alternative<flight::Undefined>(layout))) {
     move_text_input_caret(source, 0.0, extend_selection.value());
     return;
   }
-  const double line_index = get_caret_line_index(source, std::get<0>(layout));
+  const double line_index = get_caret_line_index(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)), std::get<0>(layout));
   const double line_start = get_line_start_index(std::get<0>(layout), line_index);
   move_text_input_caret(source, line_start, extend_selection.value());
 }
 
-inline bool handle_text_input_keyboard(flight::Ref<RichText> source, flight::Ref<KeyboardEventData> data, std::optional<flight::Ref<HandleTextInputKeyboardOptions>> options = std::nullopt) {
+inline bool handle_text_input_keyboard(flight::Ref<flight::types::RichText> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::KeyboardEventData>>>> data, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HandleTextInputKeyboardOptions>>>>> options = std::nullopt) {
   KeyboardCommand command = get_keyboard_command(data);
   if ((command == flight::String("none"))) {
     return false;
@@ -991,18 +958,18 @@ inline bool handle_text_input_keyboard(flight::Ref<RichText> source, flight::Ref
     }
     else if (switch_value == flight::String("copy")) {
       {
-        const flight::String copy_text = get_text_input_selection_text(source);
+        const flight::String copy_text = get_text_input_selection_text(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
         if ((static_cast<double>(copy_text.length()) > 0.0)) {
-          ([&]() { auto optional_chain_receiver = ([&]() -> std::optional<std::function<void(flight::String)>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->on_copy; }()); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(copy_text); }());
+          ([&]() { auto optional_chain_receiver = ([&]() -> std::optional<std::function<void(flight::String)>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"onCopy">>(optional_chain_receiver.value()); }()); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(copy_text); }());
         }
         return true;
       }
     }
     else if (switch_value == flight::String("cut")) {
       {
-        const flight::String cut_text = get_text_input_selection_text(source);
+        const flight::String cut_text = get_text_input_selection_text(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
         if ((static_cast<double>(cut_text.length()) > 0.0)) {
-          ([&]() { auto optional_chain_receiver = ([&]() -> std::optional<std::function<void(flight::String)>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->on_copy; }()); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(cut_text); }());
+          ([&]() { auto optional_chain_receiver = ([&]() -> std::optional<std::function<void(flight::String)>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"onCopy">>(optional_chain_receiver.value()); }()); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(cut_text); }());
           replace_selected_text_input(source, flight::String(""), std::nullopt);
         }
         return true;
@@ -1021,42 +988,42 @@ inline bool handle_text_input_keyboard(flight::Ref<RichText> source, flight::Ref
       return true;
     }
     else if (switch_value == flight::String("documentEnd")) {
-      move_text_input_caret(source, static_cast<double>(source->data.text.length()), data->shift_key);
+      move_text_input_caret(source, static_cast<double>(source->data->text.length()), flight::row_get<flight::RowKey<"shiftKey">>(data));
       return true;
     }
     else if (switch_value == flight::String("documentStart")) {
-      move_text_input_caret(source, 0.0, data->shift_key);
+      move_text_input_caret(source, 0.0, flight::row_get<flight::RowKey<"shiftKey">>(data));
       return true;
     }
     else if (switch_value == flight::String("down")) {
-      move_text_input_caret_down(source, ([&]() -> std::optional<flight::Ref<TextLayoutResult>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->layout; }()), data->shift_key);
+      move_text_input_caret_down(source, ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"layout">>(optional_chain_receiver.value()); }()), flight::row_get<flight::RowKey<"shiftKey">>(data));
       return true;
     }
     else if (switch_value == flight::String("end")) {
-      move_text_input_caret_to_line_end(source, ([&]() -> std::optional<flight::Ref<TextLayoutResult>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->layout; }()), data->shift_key);
+      move_text_input_caret_to_line_end(source, ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"layout">>(optional_chain_receiver.value()); }()), flight::row_get<flight::RowKey<"shiftKey">>(data));
       return true;
     }
     else if (switch_value == flight::String("home")) {
-      move_text_input_caret_to_line_start(source, ([&]() -> std::optional<flight::Ref<TextLayoutResult>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->layout; }()), data->shift_key);
+      move_text_input_caret_to_line_start(source, ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"layout">>(optional_chain_receiver.value()); }()), flight::row_get<flight::RowKey<"shiftKey">>(data));
       return true;
     }
     else if (switch_value == flight::String("left")) {
-      move_text_input_caret(source, (get_text_input_caret_index(source) - 1.0), data->shift_key);
+      move_text_input_caret(source, (get_text_input_caret_index(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source))) - 1.0), flight::row_get<flight::RowKey<"shiftKey">>(data));
       return true;
     }
     else if (switch_value == flight::String("paste")) {
-      insert_text_input(source, ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->clipboard_text; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }()));
+      insert_text_input(source, ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"clipboardText">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }()));
       return true;
     }
     else if (switch_value == flight::String("return")) {
-      if (!flight::to_boolean(source->data.multiline)) {
+      if (!source->data->multiline) {
         return false;
       }
       insert_text_input(source, flight::String("\n"));
       return true;
     }
     else if (switch_value == flight::String("right")) {
-      move_text_input_caret(source, (get_text_input_caret_index(source) + 1.0), data->shift_key);
+      move_text_input_caret(source, (get_text_input_caret_index(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source))) + 1.0), flight::row_get<flight::RowKey<"shiftKey">>(data));
       return true;
     }
     else if (switch_value == flight::String("selectAll")) {
@@ -1064,15 +1031,15 @@ inline bool handle_text_input_keyboard(flight::Ref<RichText> source, flight::Ref
       return true;
     }
     else if (switch_value == flight::String("up")) {
-      move_text_input_caret_up(source, ([&]() -> std::optional<flight::Ref<TextLayoutResult>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->layout; }()), data->shift_key);
+      move_text_input_caret_up(source, ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"layout">>(optional_chain_receiver.value()); }()), flight::row_get<flight::RowKey<"shiftKey">>(data));
       return true;
     }
     else if (switch_value == flight::String("wordLeft")) {
-      move_text_input_caret_by_word(source, -1.0, data->shift_key);
+      move_text_input_caret_by_word(source, -1.0, flight::row_get<flight::RowKey<"shiftKey">>(data));
       return true;
     }
     else if (switch_value == flight::String("wordRight")) {
-      move_text_input_caret_by_word(source, 1.0, data->shift_key);
+      move_text_input_caret_by_word(source, 1.0, flight::row_get<flight::RowKey<"shiftKey">>(data));
       return true;
     }
   }

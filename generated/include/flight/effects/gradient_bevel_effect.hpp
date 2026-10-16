@@ -47,24 +47,24 @@ inline flight::Ref<flight::types::EffectPadding> get_gradient_bevel_effect_paddi
   return flight::effects::get_directional_effect_padding(([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"blurX">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 4.0; }()), ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"blurY">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 4.0; }()), (std::cos(angle) * distance), (std::sin(angle) * distance));
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_ANGLE_BEVEL_TYPE_BLUR_X_BLUR_Y_DISTANCE_QUALITY_SOURCE_MODE_ALPHAS_COLORS_RATIOS_6D9E97BD4E0E8F59
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_ANGLE_BEVEL_TYPE_BLUR_X_BLUR_Y_DISTANCE_QUALITY_SOURCE_MODE_ALPHAS_COLORS_RATIOS_6D9E97BD4E0E8F59
-struct strength_angle_bevel_type_blur_x_blur_y_distance_quality_source_mode_alphas_colors_ratios_6d9e97bd4e0e8f59 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_ANGLE_DISTANCE_BEVEL_TYPE_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_ALPHAS_COLORS_RATIOS_BF9034238BA34907
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_ANGLE_DISTANCE_BEVEL_TYPE_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_ALPHAS_COLORS_RATIOS_BF9034238BA34907
+struct strength_angle_distance_bevel_type_blur_x_blur_y_quality_source_mode_alphas_colors_ratios_bf9034238ba34907 : public flight::ReferenceEnabled {
   std::optional<double> strength;
   std::optional<double> angle;
+  std::optional<double> distance;
   std::optional<flight::String> bevel_type;
   std::optional<double> blur_x;
   std::optional<double> blur_y;
-  std::optional<double> distance;
   std::optional<double> quality;
   std::optional<flight::types::EffectSourceMode> source_mode;
   flight::Array<double> alphas;
   flight::Array<double> colors;
   flight::Array<double> ratios;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_ANGLE_BEVEL_TYPE_BLUR_X_BLUR_Y_DISTANCE_QUALITY_SOURCE_MODE_ALPHAS_COLORS_RATIOS_6D9E97BD4E0E8F59
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_ANGLE_DISTANCE_BEVEL_TYPE_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_ALPHAS_COLORS_RATIOS_BF9034238BA34907
 
-inline void initialize_gradient_bevel_effect(flight::types::EntityConstruction<flight::Ref<flight::types::GradientBevelEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_angle_bevel_type_blur_x_blur_y_distance_quality_source_mode_alphas_colors_ratios_6d9e97bd4e0e8f59>>>> options) {
+inline void initialize_gradient_bevel_effect(flight::types::EntityConstruction<flight::Ref<flight::types::GradientBevelEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_angle_distance_bevel_type_blur_x_blur_y_quality_source_mode_alphas_colors_ratios_bf9034238ba34907>>>> options) {
   flight::effects::initialize_effect<flight::Ref<flight::types::GradientBevelEffect>>(out, flight::String("GradientBevelEffect"));
   flight::row_set<flight::RowKey<"alphas">>(out, flight::row_get<flight::RowKey<"alphas">>(options));
   flight::row_set<flight::RowKey<"angle">>(out, flight::row_get<flight::RowKey<"angle">>(options));
@@ -79,7 +79,7 @@ inline void initialize_gradient_bevel_effect(flight::types::EntityConstruction<f
   flight::row_set<flight::RowKey<"strength">>(out, flight::row_get<flight::RowKey<"strength">>(options));
 }
 
-inline flight::Ref<flight::types::GradientBevelEffect> create_gradient_bevel_effect(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_angle_bevel_type_blur_x_blur_y_distance_quality_source_mode_alphas_colors_ratios_6d9e97bd4e0e8f59>>>> options) {
+inline flight::Ref<flight::types::GradientBevelEffect> create_gradient_bevel_effect(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_angle_distance_bevel_type_blur_x_blur_y_quality_source_mode_alphas_colors_ratios_bf9034238ba34907>>>> options) {
   flight::types::EntityConstruction<flight::Ref<flight::types::GradientBevelEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::GradientBevelEffect>>();
   initialize_gradient_bevel_effect(out, options);
   return flight::entity::finish_entity<flight::Ref<flight::types::GradientBevelEffect>>(out);

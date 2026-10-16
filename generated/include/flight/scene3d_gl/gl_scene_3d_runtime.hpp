@@ -3,8 +3,7 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function getGlScene3DRuntime -- source line 152
-//   missing: function addGlScene3DResourceCleanup -- source line 20
+//   missing: function addGlScene3DResourceCleanup -- source line 19
 #include <cstddef>
 #include <flight/erased_ref.hpp>
 #include <flight/host_sdl/webgl.hpp>
@@ -20,7 +19,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types { struct GlContextRuntime; }
 namespace flight::types { struct GlMeshProgram; }
-namespace flight::types { struct GlMeshUpload; }
 namespace flight::types { struct GlRenderState; }
 namespace flight::types { struct GlRenderStateRuntime; }
 namespace flight::types { struct GlScene3DDrawEntry; }
@@ -29,7 +27,6 @@ namespace flight::types { struct GlScene3DRuntime; }
 namespace flight::types { struct GlScene3DShadow; }
 namespace flight::types { struct GlSkinPaletteTexture; }
 namespace flight::types { struct GlTextureRenderTarget; }
-namespace flight::types { struct MeshGeometry; }
 namespace flight::types { struct Texture2D; }
 namespace flight::types { struct Texture2DArray; }
 namespace flight::types { struct Texture3D; }
@@ -109,68 +106,23 @@ inline void destroy_gl_scene_3d_runtime(flight::Ref<flight::types::GlRenderState
   ([&]() { auto&& assignment_receiver = scene.value()->opaque_pool; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
 }
 
-
-// NOT GENERATED: function getGlScene3DRuntime -- source line 152
-// refusal: cpp-weak-map-erased-ref-view-unsupported [compiler-restriction]
-//
-// The source it stood for:
-//   export function getGlScene3DRuntime(state: GlRenderState): GlScene3DRuntime {
-//     const stateRuntime = state[EntityRuntimeKey] as GlRenderStateRuntime;
-//     let scene = sceneRuntimes.get(state);
-//     if (scene === undefined) {
-//       // The runtime accessor routes this slot to the context tier. A derived state must retain the map
-//       // already installed by its primary instead of replacing it with a state-local upload identity.
-//       let uploadCache = stateRuntime.context.sceneMeshUploadCache as
-//         | WeakMap<MeshGeometry, GlMeshUpload>
-//         | null
-//         | undefined;
-//       if (uploadCache == null) {
-//         uploadCache = new WeakMap();
-//         stateRuntime.context.sceneMeshUploadCache = uploadCache as unknown as WeakMap<object, object>;
-//       }
-//       scene = {
-//         activeBlendedRun: false,
-//         activeColorAdjustmentRun: false,
-//         activeColorMatrixRun: false,
-//         activeInstancedRun: false,
-//         activeMeshProgram: null,
-//         activeSkinnedRun: false,
-//         blendedDrawList: [],
-//         blendedPool: [],
-//         environmentSourceCube: null,
-//         environmentSourceCubeColorSpace: 'linear',
-//         environmentSourceCubeFaceVersions: [],
-//         environmentSourceRevision: 0,
-//         environmentSourceTexture: null,
-//         environmentSourceTextureVersion: -1,
-//         ibl: null,
-//         iblBakeFramebuffer: null,
-//         opaqueDrawList: [],
-//         opaquePool: [],
-//         pbrExtensionGuard: null,
-//         pbrTransmissionSceneColor: null,
-//         programCache: new Map(),
-//         shadow: null,
-//         shadowTarget: null,
-//         instanceColorPalette: null,
-//         instancePalette: null,
-//         resourceCleanups: null,
-//         skinNormalPalette: null,
-//         skinPalette: null,
-//         time: 0,
-//         uploadCache,
-//       };
-//       sceneRuntimes.set(state, scene);
-//     }
-//     return scene;
-//   }
-//   
-// cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glScene3DRuntime.ts: flight-cpp
-// WeakMap<object, object> typed views require the runtime overload flight::checked_weak_map_view<Key,
-// Value>(flight::WeakMap<flight::Ref<void>, flight::ErasedRef>&)
+inline flight::Ref<flight::types::GlScene3DRuntime> get_gl_scene_3d_runtime(flight::Ref<flight::types::GlRenderState> state) {
+  auto state_runtime = state->entity_runtime_key.value();
+  std::optional<flight::Ref<flight::types::GlScene3DRuntime>> scene = scene_runtimes.get(state);
+  if (!scene.has_value()) {
+    std::variant<flight::WeakMap<flight::Ref<void>, flight::ErasedRef>, flight::Null, flight::Undefined> upload_cache = ([&]() -> std::variant<flight::WeakMap<flight::Ref<void>, flight::ErasedRef>, flight::Null, flight::Undefined> { auto optional_property_2 = state_runtime->context->scene_mesh_upload_cache; if (std::holds_alternative<flight::Undefined>(optional_property_2)) return std::variant<flight::WeakMap<flight::Ref<void>, flight::ErasedRef>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property_2)) return std::variant<flight::WeakMap<flight::Ref<void>, flight::ErasedRef>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::WeakMap<flight::Ref<void>, flight::ErasedRef>, flight::Null, flight::Undefined>{std::in_place_type<flight::WeakMap<flight::Ref<void>, flight::ErasedRef>>, std::get<flight::WeakMap<flight::Ref<void>, flight::ErasedRef>>(optional_property_2)}; }());
+    if ((std::holds_alternative<flight::Null>(upload_cache) || std::holds_alternative<flight::Undefined>(upload_cache))) {
+      (upload_cache = std::variant<flight::WeakMap<flight::Ref<void>, flight::ErasedRef>, flight::Null, flight::Undefined>{std::in_place_type<flight::WeakMap<flight::Ref<void>, flight::ErasedRef>>, flight::WeakMap<flight::Ref<void>, flight::ErasedRef>()});
+      (state_runtime->context->scene_mesh_upload_cache = std::variant<flight::WeakMap<flight::Ref<void>, flight::ErasedRef>, flight::Null, flight::Undefined>{std::in_place_type<flight::WeakMap<flight::Ref<void>, flight::ErasedRef>>, std::get<0>(upload_cache)});
+    }
+    (scene = std::optional<flight::Ref<flight::types::GlScene3DRuntime>>{([&]() { auto object_member_active_blended_run = false; auto object_member_active_color_adjustment_run = false; auto object_member_active_color_matrix_run = false; auto object_member_active_instanced_run = false; auto object_member_active_mesh_program = std::nullopt; auto object_member_active_skinned_run = false; auto object_member_blended_draw_list = flight::Array<flight::Ref<flight::types::GlScene3DDrawEntry>>{}; auto object_member_blended_pool = flight::Array<flight::Ref<flight::types::GlScene3DDrawEntry>>{}; auto object_member_environment_source_cube = std::nullopt; auto object_member_environment_source_cube_color_space = flight::String("linear"); auto object_member_environment_source_cube_face_versions = flight::Array<double>{}; auto object_member_environment_source_revision = 0.0; auto object_member_environment_source_texture = std::nullopt; auto object_member_environment_source_texture_version = -1.0; auto object_member_ibl = std::nullopt; auto object_member_ibl_bake_framebuffer = std::nullopt; auto object_member_opaque_draw_list = flight::Array<flight::Ref<flight::types::GlScene3DDrawEntry>>{}; auto object_member_opaque_pool = flight::Array<flight::Ref<flight::types::GlScene3DDrawEntry>>{}; auto object_member_pbr_extension_guard = std::variant<std::function<void(flight::Array<flight::types::PbrExtensionValue>)>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; auto object_member_pbr_transmission_scene_color = std::nullopt; auto object_member_program_cache = flight::Map<flight::String, flight::ErasedRef>(); auto object_member_shadow = std::nullopt; auto object_member_shadow_target = std::nullopt; auto object_member_instance_color_palette = std::nullopt; auto object_member_instance_palette = std::nullopt; auto object_member_resource_cleanups = std::variant<flight::Array<std::function<void(flight::Ref<flight::types::GlRenderState>)>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; auto object_member_skin_normal_palette = std::nullopt; auto object_member_skin_palette = std::nullopt; auto object_member_time = 0.0; auto object_member_upload_cache = std::get<0>(upload_cache); return flight::make_ref<flight::types::GlScene3DRuntime>(flight::types::GlScene3DRuntime{.active_blended_run = object_member_active_blended_run, .active_color_adjustment_run = object_member_active_color_adjustment_run, .active_color_matrix_run = object_member_active_color_matrix_run, .active_instanced_run = object_member_active_instanced_run, .active_mesh_program = object_member_active_mesh_program, .active_skinned_run = object_member_active_skinned_run, .blended_draw_list = object_member_blended_draw_list, .blended_pool = object_member_blended_pool, .environment_source_cube = object_member_environment_source_cube, .environment_source_cube_color_space = object_member_environment_source_cube_color_space, .environment_source_cube_face_versions = object_member_environment_source_cube_face_versions, .environment_source_revision = object_member_environment_source_revision, .environment_source_texture = object_member_environment_source_texture, .environment_source_texture_version = object_member_environment_source_texture_version, .ibl = object_member_ibl, .ibl_bake_framebuffer = object_member_ibl_bake_framebuffer, .opaque_draw_list = object_member_opaque_draw_list, .opaque_pool = object_member_opaque_pool, .pbr_extension_guard = object_member_pbr_extension_guard, .pbr_transmission_scene_color = object_member_pbr_transmission_scene_color, .program_cache = object_member_program_cache, .resource_cleanups = object_member_resource_cleanups, .shadow = object_member_shadow, .shadow_target = object_member_shadow_target, .instance_palette = object_member_instance_palette, .instance_color_palette = object_member_instance_color_palette, .skin_palette = object_member_skin_palette, .skin_normal_palette = object_member_skin_normal_palette, .time = object_member_time, .upload_cache = object_member_upload_cache}); }())});
+    scene_runtimes.set(state, scene.value());
+  }
+  return scene.value();
+}
 
 
-// NOT GENERATED: function addGlScene3DResourceCleanup -- source line 20
+// NOT GENERATED: function addGlScene3DResourceCleanup -- source line 19
 // refusal: cpp-member-projection-without-present-storage [compiler-restriction]
 //
 // The source it stood for:

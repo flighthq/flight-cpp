@@ -20,8 +20,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/screen.hpp>
 
-#include <flight/collision/collide_contact_manifold_2d.hpp>
-
 #include <flight/types/spatial.hpp>
 
 #include <flight/types/physics_2d.hpp>
@@ -61,8 +59,6 @@ namespace flight::types { struct SpatialIndexingExplanation; }
 namespace flight::types { struct SpatialPair; }
 
 namespace flight::physics2d {
-
-using flight::collision::collide_contact_manifold_2d;
 
 using flight::types::CollisionContactManifold2D;
 using flight::types::CollisionContactPoint2D;

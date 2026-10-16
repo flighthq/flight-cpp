@@ -45,24 +45,24 @@ inline flight::Ref<flight::types::EffectPadding> get_outline_effect_padding(flig
   return flight::make_ref<flight::types::EffectPadding>(flight::types::EffectPadding{.bottom = thickness, .left = thickness, .right = thickness, .top = thickness});
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_THRESHOLD_COLOR_THICKNESS_CB7E552A00A4BE66
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_THRESHOLD_COLOR_THICKNESS_CB7E552A00A4BE66
-struct threshold_color_thickness_cb7e552a00a4be66 : public flight::ReferenceEnabled {
-  std::optional<double> threshold;
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_COLOR_THRESHOLD_THICKNESS_853895725CEAFFFE
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_COLOR_THRESHOLD_THICKNESS_853895725CEAFFFE
+struct color_threshold_thickness_853895725ceafffe : public flight::ReferenceEnabled {
   std::optional<double> color;
+  std::optional<double> threshold;
   std::optional<double> thickness;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_THRESHOLD_COLOR_THICKNESS_CB7E552A00A4BE66
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_COLOR_THRESHOLD_THICKNESS_853895725CEAFFFE
 
-inline void initialize_outline_effect(flight::types::EntityConstruction<flight::Ref<flight::types::OutlineEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<threshold_color_thickness_cb7e552a00a4be66>>>> options) {
+inline void initialize_outline_effect(flight::types::EntityConstruction<flight::Ref<flight::types::OutlineEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<color_threshold_thickness_853895725ceafffe>>>> options) {
   flight::effects::initialize_effect<flight::Ref<flight::types::OutlineEffect>>(out, flight::String("OutlineEffect"));
   flight::row_set<flight::RowKey<"threshold">>(out, flight::row_get<flight::RowKey<"threshold">>(options));
   flight::row_set<flight::RowKey<"thickness">>(out, flight::row_get<flight::RowKey<"thickness">>(options));
   flight::row_set<flight::RowKey<"color">>(out, flight::row_get<flight::RowKey<"color">>(options));
 }
 
-inline flight::Ref<flight::types::OutlineEffect> create_outline_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<threshold_color_thickness_cb7e552a00a4be66>>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<threshold_color_thickness_cb7e552a00a4be66>>>>());
+inline flight::Ref<flight::types::OutlineEffect> create_outline_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<color_threshold_thickness_853895725ceafffe>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<color_threshold_thickness_853895725ceafffe>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::OutlineEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::OutlineEffect>>();
   initialize_outline_effect(out, options.value());
   return flight::entity::finish_entity<flight::Ref<flight::types::OutlineEffect>>(out);

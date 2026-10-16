@@ -18,7 +18,11 @@ namespace flight::types { struct HostCanvasCapability; }
 #include <flight/types/contract.hpp>
 #include <flight/scene2d_canvas/canvas_render_state.hpp>
 
+namespace flight::scene2d_canvas { inline flight::Ref<flight::types::CanvasRenderStateRuntime> get_canvas_render_state_runtime(flight::Ref<flight::types::CanvasRenderState> state); }
+
 namespace flight::scene2d_canvas {
+
+using flight::scene2d_canvas::get_canvas_render_state_runtime;
 
 using flight::types::CanvasRenderState;
 using flight::types::CanvasRenderStateRuntime;

@@ -12,9 +12,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AnisotropyPbrExtension; }
+namespace flight::types { struct ClearcoatPbrExtension; }
+namespace flight::types { struct ColorScaleBias; }
+namespace flight::types { struct GlMeshMaterialRenderer; }
 namespace flight::types { struct GlMeshProgram; }
 namespace flight::types { struct GlMeshSkinFeature; }
-namespace flight::types { struct GlMeshUpload; }
 namespace flight::types { struct GlPbrExtensionIssue; }
 namespace flight::types { struct GlPbrTransmissionSceneColor; }
 namespace flight::types { struct GlRenderState; }
@@ -24,15 +27,22 @@ namespace flight::types { struct GlScene3DRuntime; }
 namespace flight::types { struct GlScene3DShadow; }
 namespace flight::types { struct GlSkinPaletteTexture; }
 namespace flight::types { struct GlTextureRenderTarget; }
+namespace flight::types { struct IridescencePbrExtension; }
 namespace flight::types { struct Matrix4; }
 namespace flight::types { struct Mesh; }
-namespace flight::types { struct MeshGeometry; }
+namespace flight::types { struct MeshSubset; }
 namespace flight::types { struct PbrExtension; }
 namespace flight::types { struct Scene3DLightBlock; }
 namespace flight::types { struct Scene3DRenderProxy; }
+namespace flight::types { struct SheenPbrExtension; }
+namespace flight::types { struct SpecularPbrExtension; }
+namespace flight::types { struct TransmissionVolumePbrExtension; }
+namespace flight::types { struct WrappedDiffusePbrExtension; }
 
 #include <flight/log/log.hpp>
+#include <flight/types/color_scale_bias.hpp>
 #include <flight/types/entity.hpp>
+#include <flight/types/gl_mesh_material_renderer.hpp>
 #include <flight/types/gl_mesh_program.hpp>
 #include <flight/types/gl_pbr_extension_issue.hpp>
 #include <flight/types/gl_pbr_transmission_scene_color.hpp>
@@ -41,6 +51,7 @@ namespace flight::types { struct Scene3DRenderProxy; }
 #include <flight/types/gl_scene_3d_runtime.hpp>
 #include <flight/types/gl_skin_palette_texture.hpp>
 #include <flight/types/log.hpp>
+#include <flight/types/material_3d_value.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/mesh.hpp>
 #include <flight/types/mesh_geometry.hpp>
@@ -80,7 +91,7 @@ inline flight::String get_gl_pbr_extension_issue_message(flight::StructuralRef<f
   throw std::logic_error("Flight function completed without a value");
 }
 
-inline void warn_gl_pbr_extension_issues(flight::Ref<flight::types::GlRenderState> state, flight::Array<flight::Ref<flight::types::PbrExtension>> extensions) {
+inline void warn_gl_pbr_extension_issues(flight::Ref<flight::types::GlRenderState> state, flight::Array<flight::types::PbrExtensionValue> extensions) {
   flight::Array<flight::Ref<flight::types::GlPbrExtensionIssue>> issues = flight::scene3d_gl::explain_gl_pbr_extensions(state, extensions);
   {
     double i = 0.0;
@@ -95,7 +106,7 @@ inline void warn_gl_pbr_extension_issues(flight::Ref<flight::types::GlRenderStat
 }
 
 inline void enable_gl_pbr_extension_guards(flight::Ref<flight::types::GlRenderState> state) {
-  (flight::scene3d_gl::get_gl_scene_3d_runtime(state)->pbr_extension_guard = std::variant<std::function<void(flight::Array<flight::Ref<flight::types::PbrExtension>>)>, flight::Null, flight::Undefined>{std::in_place_type<std::function<void(flight::Array<flight::Ref<flight::types::PbrExtension>>)>>, [=](flight::Array<flight::Ref<flight::types::PbrExtension>> extensions) {
+  (flight::scene3d_gl::get_gl_scene_3d_runtime(state)->pbr_extension_guard = std::variant<std::function<void(flight::Array<flight::types::PbrExtensionValue>)>, flight::Null, flight::Undefined>{std::in_place_type<std::function<void(flight::Array<flight::types::PbrExtensionValue>)>>, [=](flight::Array<flight::types::PbrExtensionValue> extensions) {
   warn_gl_pbr_extension_issues(state, extensions);
 }});
 }

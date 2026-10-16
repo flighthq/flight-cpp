@@ -3,8 +3,7 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function applyGlSurfaceBlendMode -- source line 378
-//   missing: function renderGlScene3D -- source line 79
+//   missing: function renderGlScene3D -- source line 80
 #include <flight/erased_ref.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -15,8 +14,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct BlinnPhongMaterial; }
 namespace flight::types { struct Camera3D; }
 namespace flight::types { struct ColorScaleBias; }
+namespace flight::types { struct CustomShaderMaterial; }
+namespace flight::types { struct DepthMaterial; }
+namespace flight::types { struct EmissiveMaterial; }
+namespace flight::types { struct ExtendedPbrMaterial; }
 namespace flight::types { struct GlColorAdjustmentMaterialFeature; }
 namespace flight::types { struct GlMeshMaterialRenderer; }
 namespace flight::types { struct GlMeshSkinFeature; }
@@ -28,8 +32,9 @@ namespace flight::types { struct GlScene3DDrawEntry; }
 namespace flight::types { struct GlScene3DForwardLightList; }
 namespace flight::types { struct GlScene3DRuntime; }
 namespace flight::types { struct InstancedMesh; }
+namespace flight::types { struct LambertMaterial; }
+namespace flight::types { struct MatcapMaterial; }
 namespace flight::types { struct Material3D; }
-namespace flight::types { struct Material; }
 namespace flight::types { struct Matrix3; }
 namespace flight::types { struct Matrix4; }
 namespace flight::types { struct Mesh; }
@@ -37,14 +42,23 @@ namespace flight::types { struct MeshGeometry; }
 namespace flight::types { struct MeshSubset; }
 namespace flight::types { struct Node3D; }
 namespace flight::types { struct Node3DRuntime; }
+namespace flight::types { struct NormalMaterial; }
+namespace flight::types { struct PhongMaterial; }
 namespace flight::types { struct PointLight; }
 namespace flight::types { struct Scene3DLightBlock; }
 namespace flight::types { struct Scene3DLights; }
 namespace flight::types { struct Scene3DRenderList; }
 namespace flight::types { struct Scene3DRenderProxy; }
+namespace flight::types { struct ShadedMaterial; }
 namespace flight::types { struct Skeleton3D; }
 namespace flight::types { struct Skin; }
+namespace flight::types { struct SpecularGlossinessPbrMaterial; }
 namespace flight::types { struct SpotLight; }
+namespace flight::types { struct StandardPbrMaterial; }
+namespace flight::types { struct ToonMaterial; }
+namespace flight::types { struct UnlitMaterial; }
+namespace flight::types { struct VertexColorMaterial; }
+namespace flight::types { struct WireframeMaterial; }
 
 namespace flight::scene3d_gl {
 struct DrawEntry;
@@ -54,6 +68,9 @@ struct DrawEntry;
 #include <flight/geometry/matrix3.hpp>
 #include <flight/geometry/matrix4.hpp>
 #include <flight/mesh/mesh_geometry.hpp>
+#include <flight/render_gl/gl_draw.hpp>
+#include <flight/render_gl/gl_render_state.hpp>
+#include <flight/render_gl/gl_render_target.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/scene3d_gl/gl_scene_3d_runtime.hpp>
 
@@ -66,47 +83,24 @@ inline bool is_gpu_skinned_draw(flight::Ref<flight::types::GlRenderState> state,
   return (!((std::holds_alternative<flight::Null>(flight::row_get<flight::RowKey<"skin">>(mesh)) || std::holds_alternative<flight::Undefined>(flight::row_get<flight::RowKey<"skin">>(mesh)))) && flight::mesh::has_mesh_geometry_skin(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>(flight::row_get<flight::RowKey<"geometry">>(mesh)))));
 }
 
-inline bool is_blended_material(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material3D>>>> material) {
-  return (flight::row_get<flight::RowKey<"alphaMode">>(material) == flight::String("blend"));
+inline bool is_blended_material(flight::types::Material3DValue material) {
+  return (std::visit([](const auto& value) { return value->alpha_mode; }, material) == flight::String("blend"));
 }
 
-
-// NOT GENERATED: function applyGlSurfaceBlendMode -- source line 378
-// refusal: cpp-structural-assertion-owner-unproven [source-portability]
-//
-// The source it stood for:
-//   function applyGlSurfaceBlendMode(state: GlRenderState, material: Readonly<Material>): void {
-//     const surface = material as Readonly<Material3D>;
-//     const blendMode =
-//       surface.alphaMode === 'blend' && typeof surface.blendMode === 'string' ? surface.blendMode : BlendMode.Normal;
-//     if (state.applyBlendMode === null) enableGlBlendModeSupport(state);
-//     state.applyBlendMode!(state, blendMode);
-//   }
-//   
-// cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/renderGlScene3D.ts: the asserted row from
-// flight::Ref<flight::types::Material> to flight::Ref<flight::types::Material3D> reads alphaCutoff, alphaMode,
-// blendMode and doubleSided, which the source type does not declare, and a structural owner binds the members
-// and storage representations of the type the object was first reached as, so a member the source's own
-// declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back
-// from retained storage does not recover a wider owner: an assertion cannot add those cells, change their
-// representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type
-// through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or
-// tokens into storage that remains typed as Material3D, rather than storing an erased reference and asserting it
-// back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but
-// does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that
-// validates and returns the exact owner before dispatch. Declare the source as a type that declares alphaCutoff,
-// alphaMode, blendMode and doubleSided -- construct Material3D explicitly, then type the retaining slot and
-// every accessor result as Material3D wherever that concrete owner is known; changing only the accessor result
-// cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past
-// flight::Ref<flight::types::Material>. The compiler will not reinterpret the owner, cast it, copy or
-// materialize a replacement, or add side storage.
+inline void apply_gl_surface_blend_mode(flight::Ref<flight::types::GlRenderState> state, flight::types::Material3DValue material) {
+  const flight::String blend_mode_2 = (((std::visit([](const auto& value) { return value->alpha_mode; }, material) == flight::String("blend")) && (flight::String("string") == flight::String("string"))) ? std::visit([](const auto& value) { return value->blend_mode; }, material) : flight::types::blend_mode->normal);
+  if (!state->apply_blend_mode.has_value()) {
+    flight::render_gl::enable_gl_blend_mode_support(state);
+  }
+  state->apply_blend_mode.value()(state, std::optional<flight::String>{blend_mode_2});
+}
 
 inline bool has_excess_forward_lights(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Scene3DLightsLike>>> lights) {
   return ((([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"point">>(lights); if (!optional_chain_receiver.has_value()) return std::nullopt; return static_cast<double>(optional_chain_receiver.value().size()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()) > flight::types::max_forward_lights) || (([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"spot">>(lights); if (!optional_chain_receiver.has_value()) return std::nullopt; return static_cast<double>(optional_chain_receiver.value().size()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()) > flight::types::max_forward_lights));
 }
 
-inline std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material3D>>>>> resolve_subset_material(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Mesh>>>> mesh, double subset_index) {
-  flight::Array<std::optional<flight::Ref<flight::types::Material3D>>> materials = flight::row_get<flight::RowKey<"materials">>(mesh);
+inline std::optional<flight::types::Material3DValue> resolve_subset_material(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Mesh>>>> mesh, double subset_index) {
+  flight::Array<std::optional<flight::types::Material3DValue>> materials = flight::row_get<flight::RowKey<"materials">>(mesh);
   return ((subset_index < static_cast<double>(materials.size())) ? std::optional{materials.element(subset_index)} : std::nullopt);
 }
 
@@ -120,7 +114,7 @@ struct DrawEntry : public flight::ReferenceEnabled {
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorScaleBias>>>>> color_scale_bias;
   double depth;
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DLightBlock>>>> light_block;
-  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material3D>>>> material;
+  flight::types::Material3DValue material;
   flight::Ref<flight::types::Mesh> mesh;
   flight::Ref<flight::types::GlMeshMaterialRenderer> renderer;
   double sort_key;
@@ -147,16 +141,8 @@ struct alpha_cutoff_alpha_mode_blend_mode_double_sided_kind_2e738e386e98aee4 : p
 
 inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material3D>>>> default_material = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<alpha_cutoff_alpha_mode_blend_mode_double_sided_kind_2e738e386e98aee4>>>>(flight::make_ref<alpha_cutoff_alpha_mode_blend_mode_double_sided_kind_2e738e386e98aee4>(alpha_cutoff_alpha_mode_blend_mode_double_sided_kind_2e738e386e98aee4{.alpha_cutoff = 0.5, .alpha_mode = flight::String("opaque"), .blend_mode = flight::types::blend_mode->normal, .double_sided = false, .kind = flight::types::standard_material_kind})));
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_GL_INDEX_COUNT_INDEX_OFFSET_65B20BC46E6D7228
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_GL_INDEX_COUNT_INDEX_OFFSET_65B20BC46E6D7228
-struct index_count_index_offset_65b20bc46e6d7228 : public flight::ReferenceEnabled {
-  double index_count;
-  double index_offset;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_GL_INDEX_COUNT_INDEX_OFFSET_65B20BC46E6D7228
-
 inline flight::Ref<flight::types::GlScene3DDrawEntry> create_draw_entry() {
-  return flight::make_ref<flight::types::GlScene3DDrawEntry>(flight::types::GlScene3DDrawEntry{.alpha = 1.0, .color_matrix = std::nullopt, .color_scale_bias = std::nullopt, .depth = 0.0, .light_block = nullptr, .material = default_material.shared_object(), .mesh = nullptr, .renderer = nullptr, .sort_key = 0.0, .subset = flight::make_ref<index_count_index_offset_65b20bc46e6d7228>(index_count_index_offset_65b20bc46e6d7228{.index_count = 0.0, .index_offset = 0.0}), .world_matrix = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt)});
+  return flight::make_ref<flight::types::GlScene3DDrawEntry>(flight::types::GlScene3DDrawEntry{.alpha = 1.0, .color_matrix = std::nullopt, .color_scale_bias = std::nullopt, .depth = 0.0, .light_block = nullptr, .material = std::variant<flight::Ref<flight::types::SpecularGlossinessPbrMaterial>, flight::Ref<flight::types::VertexColorMaterial>, flight::Ref<flight::types::UnlitMaterial>, flight::Ref<flight::types::StandardPbrMaterial>, flight::Ref<flight::types::CustomShaderMaterial>, flight::Ref<flight::types::BlinnPhongMaterial>, flight::Ref<flight::types::LambertMaterial>, flight::Ref<flight::types::DepthMaterial>, flight::Ref<flight::types::ToonMaterial>, flight::Ref<flight::types::PhongMaterial>, flight::Ref<flight::types::ExtendedPbrMaterial>, flight::Ref<flight::types::Material3D>, flight::Ref<flight::types::EmissiveMaterial>, flight::Ref<flight::types::NormalMaterial>, flight::Ref<flight::types::MatcapMaterial>, flight::Ref<flight::types::ShadedMaterial>, flight::Ref<flight::types::WireframeMaterial>>{std::in_place_type<flight::Ref<flight::types::Material3D>>, flight::structural_ref_cast<flight::Ref<flight::types::Material3D>>(default_material)}, .mesh = nullptr, .renderer = nullptr, .sort_key = 0.0, .subset = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshSubset>>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshSubset>>>>(flight::row_field<flight::RowKey<"indexCount">>(0.0), flight::row_field<flight::RowKey<"indexOffset">>(0.0))), .world_matrix = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt)))});
 }
 
 inline flight::Ref<flight::types::GlScene3DDrawEntry> acquire_draw_entry(flight::Array<flight::Ref<flight::types::GlScene3DDrawEntry>> pool) {
@@ -166,7 +152,7 @@ inline flight::Ref<flight::types::GlScene3DDrawEntry> acquire_draw_entry(flight:
   return create_draw_entry();
 }
 
-inline flight::Ref<flight::types::Scene3DRenderProxy> proxy = ([]() { auto object_member_color_matrix = std::variant<flight::Array<double>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; auto object_member_color_scale_bias = std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorScaleBias>>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; auto object_member_joint_matrices = std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; auto object_member_normal_matrices = std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; auto object_member_material = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material3D>>>>>(default_material); auto object_member_normal_matrix = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix3>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix3>>>>(flight::geometry::create_matrix3(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt))); auto object_member_subset = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshSubset>>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshSubset>>>>(flight::row_field<flight::RowKey<"indexCount">>(0.0), flight::row_field<flight::RowKey<"indexOffset">>(0.0))); auto object_member_world_matrix = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt))); return flight::make_ref<flight::types::Scene3DRenderProxy>(flight::types::Scene3DRenderProxy{.color_scale_bias = object_member_color_scale_bias, .color_matrix = object_member_color_matrix, .joint_matrices = object_member_joint_matrices, .normal_matrices = object_member_normal_matrices, .material = object_member_material, .normal_matrix = object_member_normal_matrix, .subset = object_member_subset, .world_matrix = object_member_world_matrix}); }());
+inline flight::Ref<flight::types::Scene3DRenderProxy> proxy = ([]() { auto object_member_color_matrix = std::variant<flight::Array<double>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; auto object_member_color_scale_bias = std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorScaleBias>>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; auto object_member_joint_matrices = std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; auto object_member_normal_matrices = std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; auto object_member_material = std::variant<flight::Ref<flight::types::SpecularGlossinessPbrMaterial>, flight::Ref<flight::types::VertexColorMaterial>, flight::Ref<flight::types::UnlitMaterial>, flight::Ref<flight::types::StandardPbrMaterial>, flight::Ref<flight::types::CustomShaderMaterial>, flight::Ref<flight::types::BlinnPhongMaterial>, flight::Ref<flight::types::LambertMaterial>, flight::Ref<flight::types::DepthMaterial>, flight::Ref<flight::types::ToonMaterial>, flight::Ref<flight::types::PhongMaterial>, flight::Ref<flight::types::ExtendedPbrMaterial>, flight::Ref<flight::types::Material3D>, flight::Ref<flight::types::EmissiveMaterial>, flight::Ref<flight::types::NormalMaterial>, flight::Ref<flight::types::MatcapMaterial>, flight::Ref<flight::types::ShadedMaterial>, flight::Ref<flight::types::WireframeMaterial>>{std::in_place_type<flight::Ref<flight::types::Material3D>>, flight::structural_ref_cast<flight::Ref<flight::types::Material3D>>(default_material)}; auto object_member_normal_matrix = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix3>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix3>>>>(flight::geometry::create_matrix3(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt))); auto object_member_subset = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshSubset>>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshSubset>>>>(flight::row_field<flight::RowKey<"indexCount">>(0.0), flight::row_field<flight::RowKey<"indexOffset">>(0.0))); auto object_member_world_matrix = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt))); return flight::make_ref<flight::types::Scene3DRenderProxy>(flight::types::Scene3DRenderProxy{.color_scale_bias = object_member_color_scale_bias, .color_matrix = object_member_color_matrix, .joint_matrices = object_member_joint_matrices, .normal_matrices = object_member_normal_matrices, .material = object_member_material, .normal_matrix = object_member_normal_matrix, .subset = object_member_subset, .world_matrix = object_member_world_matrix}); }());
 
 inline double sort_key_counter = 0.0;
 
@@ -190,7 +176,7 @@ inline double compare_opaque_entries_by_sort_key(flight::Ref<flight::types::GlSc
   return (a->sort_key - b->sort_key);
 }
 
-inline std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material3D>>>>> resolve_instanced_mesh_subset_material(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::InstancedMesh>>>> mesh, double subset_index) {
+inline std::optional<flight::types::Material3DValue> resolve_instanced_mesh_subset_material(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::InstancedMesh>>>> mesh, double subset_index) {
   return ((subset_index < static_cast<double>(flight::row_get<flight::RowKey<"materials">>(mesh).size())) ? std::optional{flight::row_get<flight::RowKey<"materials">>(mesh).element(subset_index)} : std::nullopt);
 }
 
@@ -245,7 +231,7 @@ inline flight::Float32Array flatten_instanced_mesh_colors(flight::StructuralRef<
 inline flight::Ref<flight::types::Matrix3> scratch_normal_matrix = flight::geometry::create_matrix3(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
 
-// NOT GENERATED: function renderGlScene3D -- source line 79
+// NOT GENERATED: function renderGlScene3D -- source line 80
 // refusal: cpp-contextual-union-inequivalent [source-portability]
 //
 // The source it stood for:
@@ -346,7 +332,7 @@ inline flight::Ref<flight::types::Matrix3> scratch_normal_matrix = flight::geome
 //     if (opaqueDrawList.length > 1) opaqueDrawList.sort(compareOpaqueEntriesBySortKey);
 //   
 //     // Pass 1: opaque + mask subsets sorted by material. No blending; depth-write on (set by bind).
-//     let boundMaterial: Readonly<Material3D> | null | undefined = undefined;
+//     let boundMaterial: Readonly<Material3DValue> | null | undefined = undefined;
 //     let boundLightBlock: Readonly<Scene3DLightBlock> | null = null;
 //     let boundRenderer: GlMeshMaterialRenderer | null = null;
 //     let boundSkinned: boolean | undefined = undefined;
@@ -537,12 +523,31 @@ inline flight::Ref<flight::types::Matrix3> scratch_normal_matrix = flight::geome
 //   // kinds that do not carry a Material3D trailer) go through the opaque pass. Reads alphaMode
 //   // via structural duck-typing so any Material3D subtype triggers the blended pass without
 //   // requiring an import of Material3D here.
-// cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/renderGlScene3D.ts: contextual C++ union
-// conversion requires equivalent source union evidence: target optionalSingle carriers [flight::ErasedRef] from
-// identifier source optionalSingle carriers [flight::Array<double>]. Narrow or convert the source expression so
-// each of its alternatives names exactly one destination union alternative. The carrier lists show which
-// alternatives lack an exact carrier; preserve the declared collection or member union alias before flow
-// expansion. For a Map or WeakMap lookup followed by a rebind, ensure every rebound member already has the
-// declared value owner member's carrier -- a Readonly structural view does not become a mutable nominal Ref.
+// cpp emission failed for @flighthq/types/packages/types/src/Material3DValue.ts: contextual C++ union conversion
+// requires equivalent source union evidence: target multiVariant carriers
+// [flight::Ref<flight::types::SpecularGlossinessPbrMaterial>, flight::Ref<flight::types::VertexColorMaterial>,
+// flight::Ref<flight::types::UnlitMaterial>, flight::Ref<flight::types::StandardPbrMaterial>,
+// flight::Ref<flight::types::CustomShaderMaterial>, flight::Ref<flight::types::BlinnPhongMaterial>,
+// flight::Ref<flight::types::LambertMaterial>, flight::Ref<flight::types::DepthMaterial>,
+// flight::Ref<flight::types::ToonMaterial>, flight::Ref<flight::types::PhongMaterial>,
+// flight::Ref<flight::types::ExtendedPbrMaterial>, flight::Ref<flight::types::Material3D>,
+// flight::Ref<flight::types::EmissiveMaterial>, flight::Ref<flight::types::NormalMaterial>,
+// flight::Ref<flight::types::MatcapMaterial>, flight::Ref<flight::types::ShadedMaterial>,
+// flight::Ref<flight::types::WireframeMaterial>] from identifier source multiVariant carriers
+// [flight::Ref<flight::types::SpecularGlossinessPbrMaterial>, flight::Ref<flight::types::VertexColorMaterial>,
+// flight::Ref<flight::types::UnlitMaterial>, flight::Ref<flight::types::StandardPbrMaterial>,
+// flight::Ref<flight::types::CustomShaderMaterial>, flight::Ref<flight::types::BlinnPhongMaterial>,
+// flight::Ref<flight::types::LambertMaterial>, flight::Ref<flight::types::DepthMaterial>,
+// flight::Ref<flight::types::ToonMaterial>, flight::Ref<flight::types::PhongMaterial>,
+// flight::Ref<flight::types::ExtendedPbrMaterial>, flight::Ref<flight::types::Material3D>,
+// flight::Ref<flight::types::EmissiveMaterial>, flight::Ref<flight::types::NormalMaterial>,
+// flight::Ref<flight::types::MatcapMaterial>, flight::Ref<flight::types::ShadedMaterial>,
+// flight::Ref<flight::types::WireframeMaterial>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material3D>>>>]. Narrow or
+// convert the source expression so each of its alternatives names exactly one destination union alternative. The
+// carrier lists show which alternatives lack an exact carrier; preserve the declared collection or member union
+// alias before flow expansion. For a Map or WeakMap lookup followed by a rebind, ensure every rebound member
+// already has the declared value owner member's carrier -- a Readonly structural view does not become a mutable
+// nominal Ref.
 
 } // namespace flight::scene3d_gl

@@ -14,28 +14,29 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/path/path.hpp>
-
 #include <flight/types/path.hpp>
 
+namespace flight::types { struct LottieImportContext; }
+namespace flight::types { struct LottiePolystarShapeItem; }
+namespace flight::types { struct LottieShapeItemContext; }
+namespace flight::types { struct Path; }
+namespace flight::types { template <typename T> struct LottieAnimatedProperty; }
+namespace flight::types { template <typename T> struct LottieStaticProperty; }
+
+#include <flight/path/path.hpp>
+#include <flight/types/contract.hpp>
 #include <flight/scene2d_formats/lottie_document.hpp>
-#include <flight/scene2d_formats/lottie_shape_geometry.hpp>
 
 namespace flight::scene2d_formats {
 
-using flight::path::append_path_cubic_curve_to;
-using flight::path::append_path_move_to;
-using flight::path::append_path_polygon;
-using flight::path::create_path;
-
 using flight::types::Path;
 
-inline flight::Ref<Path> create_lottie_polystar_path(double kind, flight::Array<double> center, double point_count, double outer, double inner, double rotation_degrees, std::optional<double> outer_roundness = std::nullopt, std::optional<double> inner_roundness = std::nullopt) {
+inline flight::Ref<flight::types::Path> create_lottie_polystar_path(double kind, flight::Array<double> center, double point_count, double outer, double inner, double rotation_degrees, std::optional<double> outer_roundness = std::nullopt, std::optional<double> inner_roundness = std::nullopt) {
   outer_roundness = outer_roundness.value_or(0.0);
   inner_roundness = inner_roundness.value_or(0.0);
-  flight::Ref<Path> path = create_path();
+  auto path = flight::path::create_path(std::nullopt);
   const double points = flight::maximum(2.0, flight::round(point_count));
-  const double rotation = lottie_degrees_to_radians((rotation_degrees - 90.0));
+  const double rotation = flight::scene2d_formats::lottie_degrees_to_radians((rotation_degrees - 90.0));
   const double count = ((kind == 1.0) ? (points * 2.0) : points);
   const double step = ((flight::pi * 2.0) / count);
   const double handle_scale = ((4.0 / 3.0) * std::tan((step / 4.0)));
@@ -62,10 +63,10 @@ inline flight::Ref<Path> create_lottie_polystar_path(double kind, flight::Array<
   if (handles.every([=](double handle) {
   return (handle == 0.0);
 })) {
-    append_path_polygon(path, vertices);
+    flight::path::append_path_polygon(path, vertices);
     return path;
   }
-  append_path_move_to(path, vertices.element(0.0), vertices.element(1.0));
+  flight::path::append_path_move_to(path, vertices.element(0.0), vertices.element(1.0));
   {
     double index_2 = 0.0;
     while ((index_2 < count)) {
@@ -75,7 +76,7 @@ inline flight::Ref<Path> create_lottie_polystar_path(double kind, flight::Array<
         const double outgoing_y = (vertices.element(((index_2 * 2.0) + 1.0)) + (std::cos(angles.element(index_2)) * handles.element(index_2)));
         const double incoming_x = (vertices.element((next * 2.0)) + (std::sin(angles.element(next)) * handles.element(next)));
         const double incoming_y = (vertices.element(((next * 2.0) + 1.0)) - (std::cos(angles.element(next)) * handles.element(next)));
-        append_path_cubic_curve_to(path, outgoing_x, outgoing_y, incoming_x, incoming_y, vertices.element((next * 2.0)), vertices.element(((next * 2.0) + 1.0)));
+        flight::path::append_path_cubic_curve_to(path, outgoing_x, outgoing_y, incoming_x, incoming_y, vertices.element((next * 2.0)), vertices.element(((next * 2.0) + 1.0)));
       }
       (index_2 += 1.0);
     }
@@ -85,7 +86,7 @@ inline flight::Ref<Path> create_lottie_polystar_path(double kind, flight::Array<
 
 
 // NOT GENERATED: function lottiePolystarShapeItemHandler -- source line 77
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
+// refusal: cpp-type-assertion-unidentified [compiler-restriction]
 //
 // The source it stood for:
 //   export function lottiePolystarShapeItemHandler(context: LottieShapeItemContext): void {
@@ -134,7 +135,18 @@ inline flight::Ref<Path> create_lottie_polystar_path(double kind, flight::Array<
 //     }
 //   }
 //   
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottiePolystarShapeItem.ts: a
-// presence test against undefined has no absence channel in the emitted C++ storage for property
+// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottiePolystarShapeItem.ts:
+// type assertion target must identify exactly one C++ variant alternative: target
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottiePolystarShapeItem>>>>
+// against [flight::Ref<LottieRectangleShapeItem>, flight::Ref<LottieEllipseShapeItem>,
+// flight::Ref<LottieStrokeShapeItem>, flight::Ref<LottiePolystarShapeItem>, flight::Record<flight::String,
+// flight::Any>, flight::Ref<LottieFillShapeItem>, flight::Ref<LottieShapeGroup>,
+// flight::Ref<LottieRepeaterShapeItem>, flight::Ref<LottieTrimPathShapeItem>, flight::Ref<LottieShapePathItem>,
+// flight::Ref<LottieTransformShapeItem>, flight::Ref<LottieRoundedCornersShapeItem>,
+// flight::Ref<LottieGradientShapeItem>, flight::Ref<LottieMergePathShapeItem>]; the value holds the target
+// through an alternative whose members already satisfy it, but the two are separate flattened C++ structs with
+// no base relation between them, so there is no narrowing to follow -- a CLASS heritage pair narrows here,
+// because those structs really do inherit. Assert to the alternative the value actually holds and read this
+// target's members from it, or declare the slot as this target where the concrete type is known
 
 } // namespace flight::scene2d_formats

@@ -62,8 +62,6 @@ namespace flight::types { template <typename T> struct Tween; }
 
 namespace flight::scene3d_resources {
 
-using flight::types::resource_resolution_state;
-
 using flight::types::Material;
 using flight::types::Node3D;
 using flight::types::ResourceResolutionState;

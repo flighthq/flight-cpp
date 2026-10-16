@@ -3,8 +3,6 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function getRichTextContent -- source line 49
-//   missing: function createBaseFormat -- source line 128
 //   missing: function textFormatEquals -- source line 159
 #include <cmath>
 #include <cstddef>
@@ -12,6 +10,7 @@
 #include <flight/number.hpp>
 #include <flight/record.hpp>
 #include <flight/regexp.hpp>
+#include <flight/structural_ref.hpp>
 #include <functional>
 #include <limits>
 #include <optional>
@@ -21,52 +20,48 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/entity/entity.hpp>
+namespace flight::types { struct FontVariation; }
+namespace flight::types { struct RichTextContent; }
+namespace flight::types { struct RichTextData; }
+namespace flight::types { struct RichTextRuntime; }
+namespace flight::types { struct TextFormat; }
+namespace flight::types { struct TextFormatRange; }
 
+#include <flight/entity/entity.hpp>
+#include <flight/types/contract.hpp>
 #include <flight/textlayout/text_format.hpp>
 #include <flight/textlayout/text_format_range.hpp>
 
 namespace flight::textlayout {
 
-using flight::entity::allocate_entity;
-using flight::entity::finish_entity;
-
-inline void clear_rich_text_content(flight::Ref<RichTextRuntime> runtime) {
-  (runtime->rich_text_content = nullptr);
+inline void clear_rich_text_content(flight::Ref<flight::types::RichTextRuntime> runtime) {
+  (runtime->rich_text_content = std::nullopt);
 }
 
-inline void initialize_rich_text_content(flight::Ref<EntityConstruction<flight::Ref<RichTextContent>>> out) {
-  (out->format_ranges = flight::Array<flight::Ref<TextFormatRange>>{});
-  (out->text = flight::String(""));
+inline void initialize_rich_text_content(flight::types::EntityConstruction<flight::Ref<flight::types::RichTextContent>> out) {
+  flight::row_set<flight::RowKey<"formatRanges">>(out, flight::Array<flight::Ref<flight::types::TextFormatRange>>{});
+  flight::row_set<flight::RowKey<"text">>(out, flight::String(""));
 }
 
-inline flight::Ref<RichTextContent> create_rich_text_content() {
-  flight::Ref<EntityConstruction<flight::Ref<RichTextContent>>> out = allocate_entity<flight::Ref<RichTextContent>>();
+inline flight::Ref<flight::types::RichTextContent> create_rich_text_content() {
+  flight::types::EntityConstruction<flight::Ref<flight::types::RichTextContent>> out = flight::entity::allocate_entity<flight::Ref<flight::types::RichTextContent>>();
   initialize_rich_text_content(out);
-  return finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::RichTextContent>>(out);
 }
 
+inline flight::Ref<flight::types::RichTextContent> get_rich_text_content(flight::Ref<flight::types::RichTextRuntime> runtime) {
+  if (!runtime->rich_text_content.has_value()) {
+    (runtime->rich_text_content = std::optional<flight::Ref<flight::types::RichTextContent>>{create_rich_text_content()});
+  }
+  return runtime->rich_text_content.value();
+}
 
-// NOT GENERATED: function getRichTextContent -- source line 49
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function getRichTextContent(runtime: RichTextRuntime): RichTextContent {
-//     if (runtime.richTextContent === null) {
-//       runtime.richTextContent = createRichTextContent();
-//     }
-//     return runtime.richTextContent;
-//   }
-//   
-// cpp emission failed for @flighthq/textlayout/packages/textlayout/src/richTextContent.ts: a presence test
-// against null has no absence channel in the emitted C++ storage for property
-
-inline void clamp_ranges(flight::Array<flight::Ref<TextFormatRange>> ranges, double length) {
+inline void clamp_ranges(flight::Array<flight::Ref<flight::types::TextFormatRange>> ranges, double length) {
   {
     double i = (static_cast<double>(ranges.size()) - 1.0);
     while ((i >= 0.0)) {
       {
-        flight::Ref<TextFormatRange> range = ranges.element(i);
+        auto range = ranges.element(i);
         if ((range->start >= length)) {
           ranges.splice(i, 1.0);
         }
@@ -81,30 +76,25 @@ inline void clamp_ranges(flight::Array<flight::Ref<TextFormatRange>> ranges, dou
   }
 }
 
+inline flight::Ref<flight::types::TextFormat> create_base_format(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichTextData>>>> data) {
+  auto format = flight::textlayout::merge_text_format(flight::row_get<flight::RowKey<"defaultTextFormat">>(data), flight::row_get<flight::RowKey<"textFormat">>(data));
+  if (!format->color.has_value()) {
+    (format->color = std::optional<double>{flight::row_get<flight::RowKey<"textColor">>(data)});
+  }
+  return format;
+}
 
-// NOT GENERATED: function createBaseFormat -- source line 128
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   function createBaseFormat(data: Readonly<RichTextData>): TextFormat {
-//     const format = mergeTextFormat(data.defaultTextFormat, data.textFormat);
-//     if (format.color === undefined) format.color = data.textColor;
-//     return format;
-//   }
-//   
-// cpp emission failed for @flighthq/textlayout/packages/textlayout/src/richTextContent.ts: a presence test
-// against undefined has no absence channel in the emitted C++ storage for property
-
-inline flight::String get_renderable_source(flight::Ref<RichTextData> data, std::optional<flight::String> password_character) {
+inline flight::String get_renderable_source(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichTextData>>>> data, std::optional<flight::String> password_character) {
   if (!password_character.has_value()) {
-    return data->text;
+    return flight::row_get<flight::RowKey<"text">>(data);
   }
   const flight::String mask = ((static_cast<double>(password_character.value().length()) > 0.0) ? password_character.value().char_at(0.0) : flight::String("•"));
-  return mask.repeat(static_cast<double>(data->text.length()));
+  return mask.repeat(static_cast<double>(flight::row_get<flight::RowKey<"text">>(data).length()));
 }
 
 
 // NOT GENERATED: function textFormatEquals -- source line 159
+// refusal: cpp-optional-member-access-unproven [compiler-restriction]
 //
 // The source it stood for:
 //   function textFormatEquals(a: Readonly<TextFormat>, b: Readonly<TextFormat>): boolean {
@@ -126,52 +116,55 @@ inline flight::String get_renderable_source(flight::Ref<RichTextData> data, std:
 //     return true;
 //   }
 //   
-// cpp emission failed for @flighthq/textlayout/packages/textlayout/src/richTextContent.ts: keyof types require
-// C++ type computation lowering
+// cpp emission failed for @flighthq/textlayout/packages/textlayout/src/richTextContent.ts: property length on
+// C++ absence-carrying storage requires narrowed access: no present-value proof reaches this read. Guard this
+// exact receiver (bind a property or call result to a local first if evaluating it again would produce a
+// different value), then read the member only in the present branch. The compiler will not discard the absence
+// state or call value() without that proof
 
-inline void write_format_range(flight::Array<flight::Ref<TextFormatRange>> ranges, flight::Ref<TextFormat> format, double start, double end) {
+inline void write_format_range(flight::Array<flight::Ref<flight::types::TextFormatRange>> ranges, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>> format, double start, double end) {
   if ((start == end)) {
     return;
   }
-  std::optional<flight::Ref<TextFormatRange>> previous = ranges.get((static_cast<double>(ranges.size()) - 1.0));
-  if (((previous.has_value() && (previous.value()->end == start)) && text_format_equals(previous.value()->format, format))) {
+  std::optional<flight::Ref<flight::types::TextFormatRange>> previous = ranges.get((static_cast<double>(ranges.size()) - 1.0));
+  if (((([&]() { const auto& presence_operand = previous; return presence_operand.has_value(); }()) && (previous.value()->end == start)) && text_format_equals(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>(previous.value()->format)), format))) {
     (previous.value()->end = end);
   }
   else {
-    ranges.push(create_text_format_range(flight::make_ref<TextFormat>(*format), start, end));
+    ranges.push(flight::textlayout::create_text_format_range(flight::make_ref<flight::types::TextFormat>(*flight::structural_ref_cast<flight::Ref<flight::types::TextFormat>>(format)), start, end));
   }
 }
 
-inline void apply_text_format_ranges(flight::Ref<RichTextContent> out, flight::Array<flight::Ref<TextFormatRange>> overrides) {
+inline void apply_text_format_ranges(flight::Ref<flight::types::RichTextContent> out, flight::Array<flight::Ref<flight::types::TextFormatRange>> overrides) {
   if (((static_cast<double>(overrides.size()) == 0.0) || (static_cast<double>(out->text.length()) == 0.0))) {
     return;
   }
-  flight::Array<flight::Ref<TextFormatRange>> ranges = out->format_ranges;
+  flight::Array<flight::Ref<flight::types::TextFormatRange>> ranges = out->format_ranges;
   for (auto override : overrides) {
     const double start = flight::maximum(0.0, flight::minimum(static_cast<double>(out->text.length()), override->start));
     const double end = flight::maximum(start, flight::minimum(static_cast<double>(out->text.length()), override->end));
     if ((start == end)) {
       continue;
     }
-    flight::Array<flight::Ref<TextFormatRange>> next = flight::Array<flight::Ref<TextFormatRange>>{};
+    flight::Array<flight::Ref<flight::types::TextFormatRange>> next = flight::Array<flight::Ref<flight::types::TextFormatRange>>{};
     for (auto range : ranges) {
       if (((range->end <= start) || (range->start >= end))) {
-        write_format_range(next, range->format, range->start, range->end);
+        write_format_range(next, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>(range->format)), range->start, range->end);
         continue;
       }
       if ((range->start < start)) {
-        write_format_range(next, range->format, range->start, start);
+        write_format_range(next, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>(range->format)), range->start, start);
       }
-      write_format_range(next, merge_text_format(range->format, override->format), flight::maximum(range->start, start), flight::minimum(range->end, end));
+      write_format_range(next, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>(flight::textlayout::merge_text_format(range->format, override->format))), flight::maximum(range->start, start), flight::minimum(range->end, end));
       if ((range->end > end)) {
-        write_format_range(next, range->format, end, range->end);
+        write_format_range(next, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>(range->format)), end, range->end);
       }
     }
     (ranges = next);
   }
   ([&]() { auto&& assignment_receiver = out->format_ranges; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
   for (auto range_2 : ranges) {
-    write_format_range(out->format_ranges, range_2->format, range_2->start, range_2->end);
+    write_format_range(out->format_ranges, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>(range_2->format)), range_2->start, range_2->end);
   }
 }
 
@@ -190,7 +183,7 @@ inline flight::String decode_html_entities(flight::String value) {
 });
 }
 
-inline void append_text(flight::Ref<RichTextContent> out, flight::String text, flight::Ref<TextFormat> format, bool condense_white, double max_chars) {
+inline void append_text(flight::Ref<flight::types::RichTextContent> out, flight::String text, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>> format, bool condense_white, double max_chars) {
   flight::String value = decode_html_entities(text);
   if (condense_white) {
     (value = value.replace(flight::RegExp(flight::String("[ \\f\\n\\r\\t\\v]+"), flight::String("g")), flight::String(" ")));
@@ -216,18 +209,18 @@ inline void append_text(flight::Ref<RichTextContent> out, flight::String text, f
   write_format_range(out->format_ranges, format, start, static_cast<double>(out->text.length()));
 }
 
-inline void compute_rich_text_content(flight::Ref<RichTextContent> out, flight::Ref<RichTextData> data, std::optional<std::optional<flight::String>> password_character = std::nullopt) {
+inline void compute_rich_text_content(flight::Ref<flight::types::RichTextContent> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichTextData>>>> data, std::optional<std::optional<flight::String>> password_character = std::nullopt) {
   password_character = password_character.value_or(std::nullopt);
   (out->text = flight::String(""));
   ([&]() { auto&& assignment_receiver = out->format_ranges; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
-  flight::Ref<TextFormat> base_format = create_base_format(data);
+  auto base_format = create_base_format(data);
   const flight::String source = get_renderable_source(data, password_character.value());
   if ((static_cast<double>(source.length()) == 0.0)) {
     return;
   }
-  append_text(out, source, base_format, data->condense_white, data->max_chars);
+  append_text(out, source, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>(base_format)), flight::row_get<flight::RowKey<"condenseWhite">>(data), flight::row_get<flight::RowKey<"maxChars">>(data));
   clamp_ranges(out->format_ranges, static_cast<double>(out->text.length()));
-  apply_text_format_ranges(out, data->text_format_ranges);
+  apply_text_format_ranges(out, flight::row_get<flight::RowKey<"textFormatRanges">>(data));
 }
 
 } // namespace flight::textlayout

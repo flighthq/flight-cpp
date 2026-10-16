@@ -42,20 +42,20 @@ inline flight::Ref<flight::types::EffectPadding> get_outer_glow_effect_padding(f
   return flight::effects::get_gaussian_effect_padding(([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"blurX">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 6.0; }()), ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"blurY">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 6.0; }()));
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_COLOR_ALPHA_5C88D2EC088B0988
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_COLOR_ALPHA_5C88D2EC088B0988
-struct strength_blur_x_blur_y_quality_source_mode_color_alpha_5c88d2ec088b0988 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_COLOR_ALPHA_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_29228244A2528E00
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_COLOR_ALPHA_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_29228244A2528E00
+struct strength_color_alpha_blur_x_blur_y_quality_source_mode_29228244a2528e00 : public flight::ReferenceEnabled {
   std::optional<double> strength;
+  std::optional<double> color;
+  std::optional<double> alpha;
   std::optional<double> blur_x;
   std::optional<double> blur_y;
   std::optional<double> quality;
   std::optional<flight::types::EffectSourceMode> source_mode;
-  std::optional<double> color;
-  std::optional<double> alpha;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_COLOR_ALPHA_5C88D2EC088B0988
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_COLOR_ALPHA_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_29228244A2528E00
 
-inline void initialize_outer_glow_effect(flight::types::EntityConstruction<flight::Ref<flight::types::OuterGlowEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_blur_x_blur_y_quality_source_mode_color_alpha_5c88d2ec088b0988>>>> options) {
+inline void initialize_outer_glow_effect(flight::types::EntityConstruction<flight::Ref<flight::types::OuterGlowEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_color_alpha_blur_x_blur_y_quality_source_mode_29228244a2528e00>>>> options) {
   flight::effects::initialize_effect<flight::Ref<flight::types::OuterGlowEffect>>(out, flight::String("OuterGlowEffect"));
   flight::row_set<flight::RowKey<"alpha">>(out, flight::row_get<flight::RowKey<"alpha">>(options));
   flight::row_set<flight::RowKey<"blurX">>(out, flight::row_get<flight::RowKey<"blurX">>(options));
@@ -66,8 +66,8 @@ inline void initialize_outer_glow_effect(flight::types::EntityConstruction<fligh
   flight::row_set<flight::RowKey<"strength">>(out, flight::row_get<flight::RowKey<"strength">>(options));
 }
 
-inline flight::Ref<flight::types::OuterGlowEffect> create_outer_glow_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_blur_x_blur_y_quality_source_mode_color_alpha_5c88d2ec088b0988>>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<strength_blur_x_blur_y_quality_source_mode_color_alpha_5c88d2ec088b0988>>>>());
+inline flight::Ref<flight::types::OuterGlowEffect> create_outer_glow_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_color_alpha_blur_x_blur_y_quality_source_mode_29228244a2528e00>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<strength_color_alpha_blur_x_blur_y_quality_source_mode_29228244a2528e00>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::OuterGlowEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::OuterGlowEffect>>();
   initialize_outer_glow_effect(out, options.value());
   return flight::entity::finish_entity<flight::Ref<flight::types::OuterGlowEffect>>(out);

@@ -3,11 +3,10 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function getCacheKey -- source line 33
 //   missing: function getCached -- source line 13
 #include <flight/any.hpp>
 #include <flight/erased_ref.hpp>
-#include <functional>
+#include <flight/json.hpp>
 #include <optional>
 #include <flight/runtime.hpp>
 
@@ -18,22 +17,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::intl {
 
-using flight::types::LocaleInput;
+template <typename Options> flight::String get_cache_key(flight::String kind, flight::types::LocaleInput locale, Options options);
 
-
-// NOT GENERATED: function getCacheKey -- source line 33
-//
-// The source it stood for:
-//   export function getCacheKey(kind: string, locale: LocaleInput, options: Readonly<object> | undefined): string {
-//     const localeKey = typeof locale === 'string' ? locale : locale.join(',');
-//     return `${kind}|${localeKey}|${options === undefined ? '' : JSON.stringify(options)}`;
-//   }
-//   
-//   // Immutable `Intl.*` instances keyed by `kind|locale|options`. A Map preserves
-//   // insertion order, so the first key is the oldest and drives simple FIFO
-//   // eviction once the cache is full.
-// cpp emission failed for @flighthq/intl/packages/intl/src/cache.ts: union member test requires a C++ variant
-// binding
+inline flight::String get_cache_key(flight::String kind, flight::types::LocaleInput locale, std::optional<flight::ErasedRef> options) {
+  const flight::String locale_key = (locale.index() == 1 ? std::get<1>(locale) : std::get<0>(locale).join(flight::String(",")));
+  return flight::String("") + flight::to_string(kind) + flight::String("|") + flight::to_string(locale_key) + flight::String("|") + flight::to_string((!options.has_value() ? flight::String("") : flight::Json::stringify(options.value(), std::nullopt, std::nullopt))) + flight::String("");
+}
 
 inline flight::Map<flight::String, flight::Any> formatter_cache = flight::Map<flight::String, flight::Any>();
 

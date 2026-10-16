@@ -7,16 +7,16 @@
 //   missing: function tallyShapeItems -- source line 95
 //   missing: function collectLottieCounts -- source line 3
 #include <flight/any.hpp>
-#include <flight/json.hpp>
+#include <flight/array.hpp>
 #include <flight/record.hpp>
-#include <flight/structural_ref.hpp>
-#include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
 #include <flight/types/shape.hpp>
+
+#include <flight/types/contract.hpp>
 
 namespace flight::scene2d_formats {
 
@@ -26,7 +26,7 @@ inline bool is_lottie_document(flight::Record<flight::String, flight::Any> recor
   return ((((flight::is_array(record.get(flight::String("layers")).value()) && (record.get(flight::String("fr")).value().type_of() == flight::String("number"))) && (record.get(flight::String("fr")).value() > 0.0)) && (record.get(flight::String("ip")).value().type_of() == flight::String("number"))) && (record.get(flight::String("op")).value().type_of() == flight::String("number")));
 }
 
-inline flight::Map<double, flight::String> lottie_layer_features = flight::Map<double, flight::String>({{lottie_layer_kind.image, flight::String("layer.image")}, {lottie_layer_kind.null, flight::String("layer.null")}, {lottie_layer_kind.precomposition, flight::String("layer.precomposition")}, {lottie_layer_kind.shape, flight::String("layer.shape")}, {lottie_layer_kind.solid, flight::String("layer.solid")}, {lottie_layer_kind.text, flight::String("layer.text")}});
+inline flight::Map<double, flight::String> lottie_layer_features = flight::Map<double, flight::String>({{flight::types::lottie_layer_kind->image, flight::String("layer.image")}, {flight::types::lottie_layer_kind->null, flight::String("layer.null")}, {flight::types::lottie_layer_kind->precomposition, flight::String("layer.precomposition")}, {flight::types::lottie_layer_kind->shape, flight::String("layer.shape")}, {flight::types::lottie_layer_kind->solid, flight::String("layer.solid")}, {flight::types::lottie_layer_kind->text, flight::String("layer.text")}});
 
 inline const flight::String lottie_mask_inverted = flight::String("mask.inverted");
 
@@ -34,7 +34,7 @@ inline const flight::String lottie_mask_multiple = flight::String("mask.multiple
 
 inline flight::Array<flight::String> lottie_mask_condition_features = flight::Array<flight::String>{lottie_mask_inverted, lottie_mask_multiple};
 
-inline flight::Map<flight::String, flight::String> lottie_mask_features = flight::Map<flight::String, flight::String>({{lottie_mask_kind.additive, flight::String("mask.additive")}, {lottie_mask_kind.darken, flight::String("mask.darken")}, {lottie_mask_kind.difference, flight::String("mask.difference")}, {lottie_mask_kind.intersect, flight::String("mask.intersect")}, {lottie_mask_kind.lighten, flight::String("mask.lighten")}, {lottie_mask_kind.subtract, flight::String("mask.subtract")}});
+inline flight::Map<flight::String, flight::String> lottie_mask_features = flight::Map<flight::String, flight::String>({{flight::types::lottie_mask_kind->additive, flight::String("mask.additive")}, {flight::types::lottie_mask_kind->darken, flight::String("mask.darken")}, {flight::types::lottie_mask_kind->difference, flight::String("mask.difference")}, {flight::types::lottie_mask_kind->intersect, flight::String("mask.intersect")}, {flight::types::lottie_mask_kind->lighten, flight::String("mask.lighten")}, {flight::types::lottie_mask_kind->subtract, flight::String("mask.subtract")}});
 
 
 // NOT GENERATED: function tallyMasks -- source line 78
@@ -61,7 +61,7 @@ inline flight::Map<flight::String, flight::String> lottie_mask_features = flight
 // cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieCounts.ts: a presence
 // test against null has no absence channel in the emitted C++ storage for identifier
 
-inline flight::Map<flight::String, flight::String> lottie_shape_item_features = flight::Map<flight::String, flight::String>({{lottie_shape_item_kind.ellipse, flight::String("shape.ellipse")}, {lottie_shape_item_kind.fill, flight::String("shape.fill")}, {lottie_shape_item_kind.gradient_fill, flight::String("shape.gradientFill")}, {lottie_shape_item_kind.gradient_stroke, flight::String("shape.gradientStroke")}, {lottie_shape_item_kind.path, flight::String("shape.path")}, {lottie_shape_item_kind.polystar, flight::String("shape.polystar")}, {lottie_shape_item_kind.rectangle, flight::String("shape.rectangle")}, {lottie_shape_item_kind.stroke, flight::String("shape.stroke")}, {lottie_shape_item_kind.trim_path, flight::String("shape.trimPath")}});
+inline flight::Map<flight::String, flight::String> lottie_shape_item_features = flight::Map<flight::String, flight::String>({{flight::types::lottie_shape_item_kind->ellipse, flight::String("shape.ellipse")}, {flight::types::lottie_shape_item_kind->fill, flight::String("shape.fill")}, {flight::types::lottie_shape_item_kind->gradient_fill, flight::String("shape.gradientFill")}, {flight::types::lottie_shape_item_kind->gradient_stroke, flight::String("shape.gradientStroke")}, {flight::types::lottie_shape_item_kind->path, flight::String("shape.path")}, {flight::types::lottie_shape_item_kind->polystar, flight::String("shape.polystar")}, {flight::types::lottie_shape_item_kind->rectangle, flight::String("shape.rectangle")}, {flight::types::lottie_shape_item_kind->stroke, flight::String("shape.stroke")}, {flight::types::lottie_shape_item_kind->trim_path, flight::String("shape.trimPath")}});
 
 inline flight::Array<flight::String> get_lottie_feature_names() {
   return ([&]() { flight::Array<flight::String> array_spread_result; { auto&& array_spread_collection = lottie_layer_features; for (const auto& [array_spread_key, array_spread_mapped_value] : array_spread_collection) { static_cast<void>(array_spread_key); array_spread_result.push(array_spread_mapped_value); } } { auto&& array_spread_collection_2 = lottie_mask_features; for (const auto& [array_spread_key_2, array_spread_mapped_value_2] : array_spread_collection_2) { static_cast<void>(array_spread_key_2); array_spread_result.push(array_spread_mapped_value_2); } } for (const auto& array_spread_item : lottie_mask_condition_features) { array_spread_result.push(array_spread_item); } { auto&& array_spread_collection_3 = lottie_shape_item_features; for (const auto& [array_spread_key_3, array_spread_mapped_value_3] : array_spread_collection_3) { static_cast<void>(array_spread_key_3); array_spread_result.push(array_spread_mapped_value_3); } } return array_spread_result; }()).sort();

@@ -9,8 +9,6 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/path/transform_path.hpp>
-
 #include <flight/types/xml_element.hpp>
 
 #include <flight/types/rectangle.hpp>
@@ -36,8 +34,6 @@ namespace flight::types { struct XmlElement; }
 namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::scene2d_formats {
-
-using flight::path::transform_path;
 
 using flight::types::ClipRegion;
 using flight::types::ImportDiagnostic;

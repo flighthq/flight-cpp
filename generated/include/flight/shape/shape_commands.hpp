@@ -31,6 +31,7 @@ namespace flight::shape {
 using flight::types::Shape;
 
 using flight::types::PathCommand;
+using flight::types::path_command;
 
 inline void append_shape_begin_fill(flight::Ref<flight::types::Shape> shape, double color, std::optional<double> alpha = std::nullopt) {
   alpha = alpha.value_or(1.0);

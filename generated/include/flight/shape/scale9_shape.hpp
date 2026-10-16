@@ -5,18 +5,45 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function createScale9ShapeRuntime -- source line 36
 //   missing: function getScale9ShapeRuntime -- source line 40
-//   missing: function initializeScale9ShapeData -- source line 44
-//   missing: function createScale9ShapeData -- source line 27
-//   missing: function createScale9Shape -- source line 15
+#include <flight/structural_ref.hpp>
+#include <functional>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/shape/shape.hpp>
+namespace flight::types { struct Entity; }
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct Node2DData; }
+namespace flight::types { struct Node2DRuntime; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct Rectangle; }
+namespace flight::types { struct Scale9Shape; }
+namespace flight::types { struct Scale9ShapeData; }
+namespace flight::types { struct Scale9ShapeRuntime; }
+namespace flight::types { struct ShapeRuntime; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+namespace flight::types { template <typename Traits> struct Node; }
+
+#include <flight/entity/entity.hpp>
+#include <flight/scene2d/display_object.hpp>
+#include <flight/types/entity.hpp>
+#include <flight/types/node.hpp>
+#include <flight/types/node_2d.hpp>
+#include <flight/types/partial_node.hpp>
+#include <flight/types/rectangle.hpp>
+#include <flight/types/scale9_shape.hpp>
+#include <flight/types/shape.hpp>
+#include <flight/types/shape_command.hpp>
 
 namespace flight::shape {
+
+using flight::types::Rectangle;
 
 
 // NOT GENERATED: function createScale9ShapeRuntime -- source line 36
@@ -28,83 +55,108 @@ namespace flight::shape {
 //   }
 //   
 // cpp emission failed for @flighthq/shape/packages/shape/src/scale9Shape.ts: a reference assertion from
-// flight::Ref<ShapeRuntime> to flight::Ref<Scale9ShapeRuntime> has no heritage to cast along: the declarations
-// share no emitted C++ class-heritage path (source interface and intersection relationships flatten into
-// independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// flight::Ref<flight::types::ShapeRuntime> to flight::Ref<flight::types::Scale9ShapeRuntime> has no heritage to
+// cast along: the declarations share no emitted C++ class-heritage path (source interface and intersection
+// relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner
+// that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that
+// validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a
+// replacement row, or invent side storage
 
 
 // NOT GENERATED: function getScale9ShapeRuntime -- source line 40
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function getScale9ShapeRuntime(source: Readonly<Scale9Shape>): Readonly<Scale9ShapeRuntime> {
 //     return getNode2DRuntime(source) as Scale9ShapeRuntime;
 //   }
 //   
-// cpp emission failed for @flighthq/shape/packages/shape/src/scale9Shape.ts: a reference assertion from
-// flight::Ref<Node2DRuntime> to flight::Ref<Scale9ShapeRuntime> has no heritage to cast along: the declarations
-// share no emitted C++ class-heritage path (source interface and intersection relationships flatten into
-// independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// cpp emission failed for @flighthq/shape/packages/shape/src/scale9Shape.ts: a structural assertion from the
+// readonly row Readonly<Node2DRuntime> to the writable row Scale9ShapeRuntime claims mutation only to pass the
+// value to the readonly row Readonly<Scale9ShapeRuntime>. Spell the assertion as Readonly<Scale9ShapeRuntime> to
+// remove the writable-capability claim, but that alone cannot recover the derived owner: Readonly<Node2DRuntime>
+// does not declare shapeBoundsCommandRegistryRevision, so the retained row has no proven cells for those
+// members. No writable carrier is justified for this read-only call. Preserve Scale9ShapeRuntime in the callback
+// parameter through a named typed runner or carrier, or make an intentionally erased registry validate and
+// recover that owner before invoking the typed runner; a tag or registry key carried beside the value does not
+// prove which owner the reference retains. If mutation is intended elsewhere, the storage and accessor
+// themselves must retain writable Scale9ShapeRuntime capability rather than adding it with an assertion. The
+// compiler will not cast, copy, materialize, or create side storage for either missing proof.
 
+inline void initialize_scale9_shape_data(flight::types::EntityConstruction<flight::Ref<flight::types::Scale9ShapeData>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>> scale9_grid, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::Scale9ShapeData>>>>>> data = std::nullopt) {
+  flight::row_set<flight::RowKey<"commands">>(out, ([&]() -> flight::Array<flight::types::ShapeCommandToken> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::types::ShapeCommandToken>> { auto optional_chain_receiver = data; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"commands">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<flight::types::ShapeCommandToken>{}; }()));
+  flight::row_set<flight::RowKey<"scale9Grid">>(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(scale9_grid));
+}
 
-// NOT GENERATED: function initializeScale9ShapeData -- source line 44
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   export function initializeScale9ShapeData(
-//     out: EntityConstruction<Scale9ShapeData>,
-//     scale9Grid: Readonly<RectangleLike>,
-//     data?: Readonly<Partial<Scale9ShapeData>>,
-//   ): void {
-//     out.commands = data?.commands ?? [];
-//     out.scale9Grid = scale9Grid;
-//   }
-//   
-// cpp emission failed for @flighthq/shape/packages/shape/src/scale9Shape.ts: Partial<T> requires a statically
-// resolvable C++ object shape; T is named
+inline flight::Ref<flight::types::Scale9ShapeData> create_scale9_shape_data(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>> scale9_grid, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::Scale9ShapeData>>>>>> data = std::nullopt) {
+  flight::types::EntityConstruction<flight::Ref<flight::types::Scale9ShapeData>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Scale9ShapeData>>();
+  initialize_scale9_shape_data(out, scale9_grid, data);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Scale9ShapeData>>(out);
+}
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_COMMANDS_SCALE9_GRID_D09A8892B7BB5A26
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_COMMANDS_SCALE9_GRID_D09A8892B7BB5A26
+struct entity_runtime_key_commands_scale9_grid_d09a8892b7bb5a26 : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+  std::optional<flight::Array<flight::types::ShapeCommandToken>> commands;
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>> scale9_grid;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_COMMANDS_SCALE9_GRID_D09A8892B7BB5A26
 
-// NOT GENERATED: function createScale9ShapeData -- source line 27
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   export function createScale9ShapeData(
-//     scale9Grid: Readonly<RectangleLike>,
-//     data?: Readonly<Partial<Scale9ShapeData>>,
-//   ): Scale9ShapeData {
-//     const out = allocateEntity<Scale9ShapeData>();
-//     initializeScale9ShapeData(out, scale9Grid, data);
-//     return finishEntity(out);
-//   }
-//   
-// cpp emission failed for @flighthq/shape/packages/shape/src/scale9Shape.ts: Partial<T> requires a statically
-// resolvable C++ object shape; T is named
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_89D76F9069D4A7FC
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_89D76F9069D4A7FC
+struct data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_89d76f9069d4a7fc : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<entity_runtime_key_commands_scale9_grid_d09a8892b7bb5a26>> data;
+  std::optional<bool> enabled;
+  std::optional<flight::String> kind;
+  std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::optional<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node2DTraits>>>> entity_runtime_key;
+  std::optional<double> alpha;
+  std::optional<bool> visible;
+  std::variant<flight::String, flight::Null, flight::Undefined> blend_mode = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::ClipRegion>, flight::Null, flight::Undefined> clip = std::variant<flight::Ref<flight::types::ClipRegion>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::Material2D>, flight::Null, flight::Undefined> material = std::variant<flight::Ref<flight::types::Material2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::MaterialData>, flight::Null, flight::Undefined> material_data = std::variant<flight::Ref<flight::types::MaterialData>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::optional<double> pivot_x;
+  std::optional<double> pivot_y;
+  std::optional<double> rotation;
+  std::optional<double> scale_x;
+  std::optional<double> scale_y;
+  std::optional<double> skew_x;
+  std::optional<double> skew_y;
+  std::optional<double> x;
+  std::optional<double> y;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_89D76F9069D4A7FC
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_3A61F1199BE42DFD
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_3A61F1199BE42DFD
+struct data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_3a61f1199be42dfd : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<flight::types::Scale9ShapeData>> data;
+  std::optional<bool> enabled;
+  std::optional<flight::String> kind;
+  std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::optional<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node2DTraits>>>> entity_runtime_key;
+  std::optional<double> alpha;
+  std::optional<bool> visible;
+  std::variant<flight::String, flight::Null, flight::Undefined> blend_mode = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::ClipRegion>, flight::Null, flight::Undefined> clip = std::variant<flight::Ref<flight::types::ClipRegion>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::Material2D>, flight::Null, flight::Undefined> material = std::variant<flight::Ref<flight::types::Material2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::MaterialData>, flight::Null, flight::Undefined> material_data = std::variant<flight::Ref<flight::types::MaterialData>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::optional<double> pivot_x;
+  std::optional<double> pivot_y;
+  std::optional<double> rotation;
+  std::optional<double> scale_x;
+  std::optional<double> scale_y;
+  std::optional<double> skew_x;
+  std::optional<double> skew_y;
+  std::optional<double> x;
+  std::optional<double> y;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_3A61F1199BE42DFD
 
-// NOT GENERATED: function createScale9Shape -- source line 15
-// refusal: cpp-intersection-member-shapeless [source-portability]
-//
-// The source it stood for:
-//   export function createScale9Shape(
-//     scale9Grid: Readonly<RectangleLike>,
-//     obj?: Readonly<PartialNode<Scale9Shape>>,
-//   ): Scale9Shape {
-//     return createNode2D(
-//       Scale9ShapeKind,
-//       obj as Readonly<PartialNode<Scale9Shape>>,
-//       (data) => createScale9ShapeData(scale9Grid, data),
-//       createScale9ShapeRuntime,
-//     ) as Scale9Shape;
-//   }
-//   
-// cpp emission failed for @flighthq/shape/packages/shape/src/scale9Shape.ts: intersection types require C++
-// multiple-inheritance lowering: no shape for Node (argument Node2DTraits has no shape either), Node2DTraits.
-// Declare the object shape the code reads rather than intersecting a conjunct that has none
+inline flight::Ref<flight::types::Scale9Shape> create_scale9_shape(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>> scale9_grid, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_89d76f9069d4a7fc>>>>> obj = std::nullopt) {
+  return flight::structural_ref_cast<flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scale9Shape>>>>>(flight::scene2d::create_node_2d<flight::Ref<flight::types::Scale9ShapeRuntime>>(flight::types::scale9_shape_kind, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_89d76f9069d4a7fc>>>>>(obj), [=](std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::Node2DData>>>>>> data) { return create_scale9_shape_data(scale9_grid, data); }, std::optional<std::function<flight::Ref<flight::types::Scale9ShapeRuntime>(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::Scale9ShapeRuntime>>>>>>)>>{[](std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::Scale9ShapeRuntime>>>>>> contextual_callable_argument0) -> flight::Ref<flight::types::Scale9ShapeRuntime> { return create_scale9_shape_runtime(); }}));
+}
 
 } // namespace flight::shape

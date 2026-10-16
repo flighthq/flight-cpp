@@ -167,7 +167,7 @@ inline bool walk_node_descendants(flight::StructuralRef<flight::RowReadonly<flig
     while ((i < static_cast<double>(children.value().size()))) {
       {
         flight::types::NodeOf<Traits> child = children.value().element(i);
-        if (!visit(flight::structural_ref_cast<std::shared_ptr<flight::types::Node<Traits>>>(child))) {
+        if (!visit(child)) {
           return false;
         }
         if (!walk_node_descendants<Traits>(child, visit)) {

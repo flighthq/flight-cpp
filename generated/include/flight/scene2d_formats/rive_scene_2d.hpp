@@ -4,6 +4,7 @@
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
+#include <type_traits>
 #include <variant>
 #include <flight/runtime.hpp>
 
@@ -68,7 +69,7 @@ inline std::optional<flight::types::DisplayObject> find_rive_display_parent(flig
   double parent = parent_indices.element(index);
   while ((parent >= 0.0)) {
     std::optional<std::optional<flight::types::DisplayObject>> node = nodes.get(parent);
-    if ((node.has_value() && node.has_value())) {
+    if ((([&](const auto& presence_operand) { if constexpr (flight::detail::optional_traits<std::remove_cvref_t<decltype(presence_operand.value())>>::optional) { return presence_operand.has_value(); } else { return presence_operand.has_value(); } }(node)) && ([&](const auto& presence_operand) { if constexpr (flight::detail::optional_traits<std::remove_cvref_t<decltype(presence_operand.value())>>::optional) { return !presence_operand.has_value() || presence_operand.value().has_value(); } else { return presence_operand.has_value(); } }(node)))) {
       return std::optional<flight::types::DisplayObject>{node.value()};
     }
     (parent = parent_indices.element(parent));

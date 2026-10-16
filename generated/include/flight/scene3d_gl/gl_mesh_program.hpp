@@ -3,41 +3,59 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function isGlMeshAlphaCoverage -- source line 295
-//   missing: function bindGlInstancePalette -- source line 65
-//   missing: function bindGlInstanceColorPalette -- source line 47
-//   missing: function uploadGlMeshDrawAlpha -- source line 363
-//   missing: function bindGlUvTransform -- source line 89
-//   missing: function drawGlMeshSubset -- source line 119
+//   missing: function resolveGlInstanceColorPaletteLocation -- source line 72
+//   missing: function resolveGlInstancePaletteLocation -- source line 82
+//   missing: function resolveGlUvTransformLocation -- source line 92
+//   missing: function resolveGlObjectAlphaLocation -- source line 102
+//   missing: function resolveGlAlphaIsCoverageLocation -- source line 112
+//   missing: function resolveGlColorMatrix0Location -- source line 122
+//   missing: function resolveGlColorScaleLocation -- source line 136
 #include <flight/erased_ref.hpp>
 #include <flight/host_sdl/webgl.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
+#include <type_traits>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct BlinnPhongMaterial; }
 namespace flight::types { struct Camera3D; }
 namespace flight::types { struct ColorScaleBias; }
+namespace flight::types { struct CustomShaderMaterial; }
+namespace flight::types { struct DepthMaterial; }
+namespace flight::types { struct EmissiveMaterial; }
+namespace flight::types { struct ExtendedPbrMaterial; }
 namespace flight::types { struct GlMeshProgram; }
 namespace flight::types { struct GlMeshSkinFeature; }
 namespace flight::types { struct GlMeshUpload; }
 namespace flight::types { struct GlRenderState; }
 namespace flight::types { struct GlScene3DRuntime; }
 namespace flight::types { struct GlSkinPaletteTexture; }
+namespace flight::types { struct LambertMaterial; }
+namespace flight::types { struct MatcapMaterial; }
 namespace flight::types { struct Material3D; }
-namespace flight::types { struct Material; }
 namespace flight::types { struct Matrix3; }
 namespace flight::types { struct Matrix4; }
 namespace flight::types { struct MeshGeometry; }
 namespace flight::types { struct MeshSubset; }
+namespace flight::types { struct NormalMaterial; }
+namespace flight::types { struct PhongMaterial; }
 namespace flight::types { struct Scene3DRenderProxy; }
+namespace flight::types { struct ShadedMaterial; }
+namespace flight::types { struct SpecularGlossinessPbrMaterial; }
+namespace flight::types { struct StandardPbrMaterial; }
 namespace flight::types { struct Texture2D; }
 namespace flight::types { struct Texture2DArray; }
 namespace flight::types { struct Texture3D; }
 namespace flight::types { struct TextureCube; }
+namespace flight::types { struct ToonMaterial; }
+namespace flight::types { struct UnlitMaterial; }
+namespace flight::types { struct VertexColorMaterial; }
+namespace flight::types { struct WireframeMaterial; }
 
 #include <flight/camera/basis.hpp>
 #include <flight/camera/camera.hpp>
@@ -47,6 +65,7 @@ namespace flight::types { struct TextureCube; }
 #include <flight/render_gl/gl_skin_palette_texture.hpp>
 #include <flight/texture/texture.hpp>
 #include <flight/types/contract.hpp>
+#include <flight/scene3d_gl/gl_mesh_upload.hpp>
 #include <flight/scene3d_gl/gl_scene_3d_runtime.hpp>
 #include <flight/scene3d_gl/gl_viewport_aspect.hpp>
 
@@ -68,6 +87,181 @@ inline void begin_gl_mesh_draw(flight::Ref<flight::types::GlRenderState> state, 
     gl.cull_face(gl.back);
   }
 }
+
+inline std::optional<flight::host_sdl::WebGlUniformLocation> present_gl_mesh_uniform_location(std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined> location) {
+  if (!((std::holds_alternative<flight::Null>(location) || std::holds_alternative<flight::Undefined>(location)))) {
+    return std::optional<flight::host_sdl::WebGlUniformLocation>{std::get<0>(location)};
+  }
+  return std::nullopt;
+}
+
+inline std::optional<flight::Float32Array> present_gl_mesh_float32_array(std::variant<flight::Float32Array, flight::Null, flight::Undefined> value) {
+  if (!((std::holds_alternative<flight::Null>(value) || std::holds_alternative<flight::Undefined>(value)))) {
+    return std::optional<flight::Float32Array>{std::get<0>(value)};
+  }
+  return std::nullopt;
+}
+
+inline std::optional<flight::Array<double>> present_gl_mesh_number_array(std::variant<flight::Array<double>, flight::Null, flight::Undefined> value) {
+  if (!((std::holds_alternative<flight::Null>(value) || std::holds_alternative<flight::Undefined>(value)))) {
+    return std::optional<flight::Array<double>>{std::get<0>(value)};
+  }
+  return std::nullopt;
+}
+
+inline std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorScaleBias>>>>> present_gl_mesh_color_scale_bias(std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorScaleBias>>>>, flight::Null, flight::Undefined> value) {
+  if (!((std::holds_alternative<flight::Null>(value) || std::holds_alternative<flight::Undefined>(value)))) {
+    return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorScaleBias>>>>>{std::get<0>(value)};
+  }
+  return std::nullopt;
+}
+
+
+// NOT GENERATED: function resolveGlInstanceColorPaletteLocation -- source line 72
+// refusal: cpp-member-projection-without-present-storage [compiler-restriction]
+//
+// The source it stood for:
+//   function resolveGlInstanceColorPaletteLocation(
+//     gl: GlContext,
+//     program: Readonly<GlMeshProgram>,
+//   ): WebGLUniformLocation | null {
+//     if (program.locInstanceColorPalette !== undefined) return program.locInstanceColorPalette;
+//     const location: WebGLUniformLocation | null = gl.getUniformLocation(program.program, 'u_instanceColorPalette');
+//     (program as GlMeshProgram).locInstanceColorPalette = location;
+//     return location;
+//   }
+//   
+// cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glMeshProgram.ts: narrowed C++ union
+// projection requires proven present payload: the narrowing still admits absence, so nothing proved the payload
+// present and reading the value alternative here would unpack storage that may still be holding the sentinel the
+// test left reachable. Test both at once with `x != null`, or narrow the value into a present local the same way
+
+
+// NOT GENERATED: function resolveGlInstancePaletteLocation -- source line 82
+// refusal: cpp-member-projection-without-present-storage [compiler-restriction]
+//
+// The source it stood for:
+//   function resolveGlInstancePaletteLocation(
+//     gl: GlContext,
+//     program: Readonly<GlMeshProgram>,
+//   ): WebGLUniformLocation | null {
+//     if (program.locInstancePalette !== undefined) return program.locInstancePalette;
+//     const location: WebGLUniformLocation | null = gl.getUniformLocation(program.program, 'u_instancePalette');
+//     (program as GlMeshProgram).locInstancePalette = location;
+//     return location;
+//   }
+//   
+// cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glMeshProgram.ts: narrowed C++ union
+// projection requires proven present payload: the narrowing still admits absence, so nothing proved the payload
+// present and reading the value alternative here would unpack storage that may still be holding the sentinel the
+// test left reachable. Test both at once with `x != null`, or narrow the value into a present local the same way
+
+
+// NOT GENERATED: function resolveGlUvTransformLocation -- source line 92
+// refusal: cpp-member-projection-without-present-storage [compiler-restriction]
+//
+// The source it stood for:
+//   function resolveGlUvTransformLocation(
+//     gl: GlContext,
+//     program: Readonly<GlMeshProgram>,
+//   ): WebGLUniformLocation | null {
+//     if (program.locUvTransform !== undefined) return program.locUvTransform;
+//     const location: WebGLUniformLocation | null = gl.getUniformLocation(program.program, 'u_uvTransform');
+//     (program as GlMeshProgram).locUvTransform = location;
+//     return location;
+//   }
+//   
+// cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glMeshProgram.ts: narrowed C++ union
+// projection requires proven present payload: the narrowing still admits absence, so nothing proved the payload
+// present and reading the value alternative here would unpack storage that may still be holding the sentinel the
+// test left reachable. Test both at once with `x != null`, or narrow the value into a present local the same way
+
+
+// NOT GENERATED: function resolveGlObjectAlphaLocation -- source line 102
+// refusal: cpp-member-projection-without-present-storage [compiler-restriction]
+//
+// The source it stood for:
+//   function resolveGlObjectAlphaLocation(
+//     gl: GlContext,
+//     program: Readonly<GlMeshProgram>,
+//   ): WebGLUniformLocation | null {
+//     if (program.locObjectAlpha !== undefined) return program.locObjectAlpha;
+//     const location: WebGLUniformLocation | null = gl.getUniformLocation(program.program, 'u_objectAlpha');
+//     (program as GlMeshProgram).locObjectAlpha = location;
+//     return location;
+//   }
+//   
+// cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glMeshProgram.ts: narrowed C++ union
+// projection requires proven present payload: the narrowing still admits absence, so nothing proved the payload
+// present and reading the value alternative here would unpack storage that may still be holding the sentinel the
+// test left reachable. Test both at once with `x != null`, or narrow the value into a present local the same way
+
+
+// NOT GENERATED: function resolveGlAlphaIsCoverageLocation -- source line 112
+// refusal: cpp-member-projection-without-present-storage [compiler-restriction]
+//
+// The source it stood for:
+//   function resolveGlAlphaIsCoverageLocation(
+//     gl: GlContext,
+//     program: Readonly<GlMeshProgram>,
+//   ): WebGLUniformLocation | null {
+//     if (program.locAlphaIsCoverage !== undefined) return program.locAlphaIsCoverage;
+//     const location: WebGLUniformLocation | null = gl.getUniformLocation(program.program, 'u_alphaIsCoverage');
+//     (program as GlMeshProgram).locAlphaIsCoverage = location;
+//     return location;
+//   }
+//   
+// cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glMeshProgram.ts: narrowed C++ union
+// projection requires proven present payload: the narrowing still admits absence, so nothing proved the payload
+// present and reading the value alternative here would unpack storage that may still be holding the sentinel the
+// test left reachable. Test both at once with `x != null`, or narrow the value into a present local the same way
+
+
+// NOT GENERATED: function resolveGlColorMatrix0Location -- source line 122
+// refusal: cpp-member-projection-without-present-storage [compiler-restriction]
+//
+// The source it stood for:
+//   function resolveGlColorMatrix0Location(
+//     gl: GlContext,
+//     program: Readonly<GlMeshProgram>,
+//   ): WebGLUniformLocation | null {
+//     if (program.locColorMatrix0 !== undefined) return program.locColorMatrix0;
+//     const location: WebGLUniformLocation | null = gl.getUniformLocation(program.program, 'u_flightColorMatrix0');
+//     (program as GlMeshProgram).locColorMatrix0 = location;
+//     (program as GlMeshProgram).locColorMatrix1 = gl.getUniformLocation(program.program, 'u_flightColorMatrix1');
+//     (program as GlMeshProgram).locColorMatrix2 = gl.getUniformLocation(program.program, 'u_flightColorMatrix2');
+//     (program as GlMeshProgram).locColorMatrix3 = gl.getUniformLocation(program.program, 'u_flightColorMatrix3');
+//     (program as GlMeshProgram).locColorMatrixOffset = gl.getUniformLocation(program.program, 'u_flightColorMatrixOffset');
+//     return location;
+//   }
+//   
+// cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glMeshProgram.ts: narrowed C++ union
+// projection requires proven present payload: the narrowing still admits absence, so nothing proved the payload
+// present and reading the value alternative here would unpack storage that may still be holding the sentinel the
+// test left reachable. Test both at once with `x != null`, or narrow the value into a present local the same way
+
+
+// NOT GENERATED: function resolveGlColorScaleLocation -- source line 136
+// refusal: cpp-member-projection-without-present-storage [compiler-restriction]
+//
+// The source it stood for:
+//   function resolveGlColorScaleLocation(
+//     gl: GlContext,
+//     program: Readonly<GlMeshProgram>,
+//   ): WebGLUniformLocation | null {
+//     if (program.locColorScale !== undefined) return program.locColorScale;
+//     const location: WebGLUniformLocation | null = gl.getUniformLocation(program.program, 'u_flightColorScale');
+//     (program as GlMeshProgram).locColorScale = location;
+//     (program as GlMeshProgram).locColorBias = gl.getUniformLocation(program.program, 'u_flightColorBias');
+//     return location;
+//   }
+//   
+//   // Uploads and binds the per-instance linear RGBA colours consumed by a HAS_INSTANCES program. One texel
+//   // per instance, mirroring bindGlInstancePalette's four.
+// cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glMeshProgram.ts: narrowed C++ union
+// projection requires proven present payload: the narrowing still admits absence, so nothing proved the payload
+// present and reading the value alternative here would unpack storage that may still be holding the sentinel the
+// test left reachable. Test both at once with `x != null`, or narrow the value into a present local the same way
 
 inline flight::host_sdl::WebGlProgram compile_gl_program(flight::host_sdl::WebGl2Context gl, flight::String vertex_source, flight::String fragment_source) {
   return flight::render_gl::create_gl_program(gl, vertex_source, fragment_source, flight::String("Mesh"));
@@ -92,29 +286,9 @@ inline bool has_gl_uv_transform(std::optional<flight::types::TextureLike> textur
   return ((texture.has_value() && flight::texture::has_texture_source(texture.value())) && flight::texture::has_texture_uv_transform(texture.value()));
 }
 
-
-// NOT GENERATED: function isGlMeshAlphaCoverage -- source line 295
-// refusal: cpp-type-assertion-unidentified [compiler-restriction]
-//
-// The source it stood for:
-//   function isGlMeshAlphaCoverage(material: Readonly<Material> | null): boolean {
-//     return material !== null && (material as Readonly<Material3D>).alphaMode === 'blend';
-//   }
-//   
-//   // Vertex-scene2d GLSL every map-sampling family interpolates into its vertex body ahead of `main`: the
-//   // guarded u_uvTransform uniform and an applyUvTransform() the body calls on a_uv0 instead of passing
-//   // it through. HAS_UV_TRANSFORM — set by a family's define block only when its primary texture carries a
-//   // non-identity transform (see hasTextureUvTransform) — gates both the uniform and the mat3 multiply, so
-//   // an untiled surface compiles the identity branch (inlined away) and pays nothing: the assembly never
-//   // taxes the primitive. u_uvTransform is column-major (see bindGlUvTransform).
-// cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glMeshProgram.ts: type assertion target
-// must identify exactly one C++ variant alternative: target
-// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material3D>>>> against
-// [flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>>]; the value
-// holds the target through an alternative whose members already satisfy it, but the two are separate flattened
-// C++ structs with no base relation between them, so there is no narrowing to follow -- a CLASS heritage pair
-// narrows here, because those structs really do inherit. Assert to the alternative the value actually holds and
-// read this target's members from it, or declare the slot as this target where the concrete type is known
+inline bool is_gl_mesh_alpha_coverage(std::optional<flight::types::Material3DValue> material) {
+  return (material.has_value() && (std::visit([](const auto& value) { return value->alpha_mode; }, material.value()) == flight::String("blend")));
+}
 
 inline const flight::String gl_uv_transform_vertex_glsl = flight::String("\n#ifdef HAS_UV_TRANSFORM\nuniform mat3 u_uvTransform;\nvec2 applyUvTransform(vec2 uv) { return (u_uvTransform * vec3(uv, 1.0)).xy; }\n#else\nvec2 applyUvTransform(vec2 uv) { return uv; }\n#endif\n");
 
@@ -124,98 +298,42 @@ inline const double skin_normal_palette_texture_unit = 13.0;
 
 inline const double instance_palette_texture_unit = 14.0;
 
-
-// NOT GENERATED: function bindGlInstancePalette -- source line 65
-// refusal: cpp-external-binding-missing-optional-domain [compiler-restriction]
-//
-// The source it stood for:
-//   export function bindGlInstancePalette(
-//     state: GlRenderState,
-//     program: Readonly<GlMeshProgram>,
-//     instanceMatrices: Readonly<Float32Array>,
-//     instanceCount: number,
-//   ): void {
-//     const gl = state.gl;
-//     const palette = ensureGlInstancePalette(state);
-//     gl.activeTexture(gl.TEXTURE0 + INSTANCE_PALETTE_TEXTURE_UNIT);
-//     uploadGlSkinPaletteTexture(gl, palette, instanceMatrices, instanceCount);
-//     let loc = program.locInstancePalette;
-//     if (loc === undefined) {
-//       loc = gl.getUniformLocation(program.program, 'u_instancePalette');
-//       (program as GlMeshProgram).locInstancePalette = loc;
-//     }
-//     if (loc !== null) gl.uniform1i(loc, INSTANCE_PALETTE_TEXTURE_UNIT);
-//   }
-//   
-//   // Uploads a material's primary-texture uv transform to the HAS_UV_TRANSFORM vertex variant. Resolves
-//   // u_uvTransform lazily and caches it on the program (mirroring locObjectAlpha): a null location means
-//   // the compiled variant omits the uniform — the identity path — so this is a cheap no-op there, and a
-//   // null texture likewise skips. @flighthq/texture composes the KHR_texture_transform column-major, so
-//   // it uploads with transpose=false and `u_uvTransform * vec3(uv, 1.0)` matches the CPU
-//   // transformTextureUv reference.
-// cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glMeshProgram.ts: external binding
-// storage std::optional<flight::host_sdl::WebGlUniformLocation> requires one unresolved optional value domain
+inline void bind_gl_instance_palette(flight::Ref<flight::types::GlRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlMeshProgram>>>> program, flight::Float32Array instance_matrices, double instance_count) {
+  flight::host_sdl::WebGl2Context gl = state->gl;
+  auto palette = flight::scene3d_gl::ensure_gl_instance_palette(state);
+  gl.active_texture((gl.texture0 + instance_palette_texture_unit));
+  flight::render_gl::upload_gl_skin_palette_texture(gl, palette, instance_matrices, instance_count, std::nullopt);
+  std::optional<flight::host_sdl::WebGlUniformLocation> loc = resolve_gl_instance_palette_location(gl, program);
+  if (loc.has_value()) {
+    gl.uniform1i(loc.value(), instance_palette_texture_unit);
+  }
+}
 
 inline const double instance_color_palette_texture_unit = 15.0;
 
-
-// NOT GENERATED: function bindGlInstanceColorPalette -- source line 47
-// refusal: cpp-external-binding-missing-optional-domain [compiler-restriction]
-//
-// The source it stood for:
-//   export function bindGlInstanceColorPalette(
-//     state: GlRenderState,
-//     program: Readonly<GlMeshProgram>,
-//     instanceColors: Readonly<Float32Array>,
-//     instanceCount: number,
-//   ): void {
-//     const gl = state.gl;
-//     const palette = ensureGlInstanceColorPalette(state);
-//     gl.activeTexture(gl.TEXTURE0 + INSTANCE_COLOR_PALETTE_TEXTURE_UNIT);
-//     uploadGlSkinPaletteTexture(gl, palette, instanceColors, instanceCount, 1);
-//     let loc = program.locInstanceColorPalette;
-//     if (loc === undefined) {
-//       loc = gl.getUniformLocation(program.program, 'u_instanceColorPalette');
-//       (program as GlMeshProgram).locInstanceColorPalette = loc;
-//     }
-//     if (loc !== null) gl.uniform1i(loc, INSTANCE_COLOR_PALETTE_TEXTURE_UNIT);
-//   }
-//   
-// cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glMeshProgram.ts: external binding
-// storage std::optional<flight::host_sdl::WebGlUniformLocation> requires one unresolved optional value domain
+inline void bind_gl_instance_color_palette(flight::Ref<flight::types::GlRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlMeshProgram>>>> program, flight::Float32Array instance_colors, double instance_count) {
+  flight::host_sdl::WebGl2Context gl = state->gl;
+  auto palette = flight::scene3d_gl::ensure_gl_instance_color_palette(state);
+  gl.active_texture((gl.texture0 + instance_color_palette_texture_unit));
+  flight::render_gl::upload_gl_skin_palette_texture(gl, palette, instance_colors, instance_count, 1.0);
+  std::optional<flight::host_sdl::WebGlUniformLocation> loc = resolve_gl_instance_color_palette_location(gl, program);
+  if (loc.has_value()) {
+    gl.uniform1i(loc.value(), instance_color_palette_texture_unit);
+  }
+}
 
 inline const flight::String gl_instance_vertex_declarations_glsl = flight::String("\nuniform highp sampler2D u_instancePalette;\nuniform highp sampler2D u_instanceColorPalette;\n\n// One linear RGBA texel per instance. A batch carrying no per-instance colours uploads opaque white, so\n// this is an identity multiply there and the families need no second program variant for the tinted case.\nvec4 instanceColor() {\n  int id = gl_InstanceID;\n  int w = textureSize(u_instanceColorPalette, 0).x;\n  return texelFetch(u_instanceColorPalette, ivec2(id % w, id / w), 0);\n}\n\nmat4 instanceModelMatrix() {\n  int x = gl_InstanceID * 4;\n  int w = textureSize(u_instancePalette, 0).x;\n  return mat4(\n    texelFetch(u_instancePalette, ivec2(x % w, x / w), 0),\n    texelFetch(u_instancePalette, ivec2((x + 1) % w, (x + 1) / w), 0),\n    texelFetch(u_instancePalette, ivec2((x + 2) % w, (x + 2) / w), 0),\n    texelFetch(u_instancePalette, ivec2((x + 3) % w, (x + 3) / w), 0)\n  );\n}\n");
 
-
-// NOT GENERATED: function uploadGlMeshDrawAlpha -- source line 363
-// refusal: cpp-external-binding-missing-optional-domain [compiler-restriction]
-//
-// The source it stood for:
-//   export function uploadGlMeshDrawAlpha(
-//     gl: GlContext,
-//     program: Readonly<GlMeshProgram>,
-//     alpha: number,
-//     material: Readonly<Material> | null,
-//   ): void {
-//     let location = program.locObjectAlpha;
-//     if (location === undefined) {
-//       location = gl.getUniformLocation(program.program, 'u_objectAlpha');
-//       (program as GlMeshProgram).locObjectAlpha = location;
-//     }
-//     if (location !== null) gl.uniform1f(location, alpha);
-//   
-//     let coverageLocation = program.locAlphaIsCoverage;
-//     if (coverageLocation === undefined) {
-//       coverageLocation = gl.getUniformLocation(program.program, 'u_alphaIsCoverage');
-//       (program as GlMeshProgram).locAlphaIsCoverage = coverageLocation;
-//     }
-//     if (coverageLocation !== null) {
-//       gl.uniform1f(coverageLocation, isGlMeshAlphaCoverage(material) ? 1 : 0);
-//     }
-//   }
-//   
-// cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glMeshProgram.ts: external binding
-// storage std::optional<flight::host_sdl::WebGlUniformLocation> requires one unresolved optional value domain
+inline void upload_gl_mesh_draw_alpha(flight::host_sdl::WebGl2Context gl, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlMeshProgram>>>> program, double alpha, std::optional<flight::types::Material3DValue> material) {
+  std::optional<flight::host_sdl::WebGlUniformLocation> location = resolve_gl_object_alpha_location(gl, program);
+  if (location.has_value()) {
+    gl.uniform1f(location.value(), alpha);
+  }
+  std::optional<flight::host_sdl::WebGlUniformLocation> coverage_location = resolve_gl_alpha_is_coverage_location(gl, program);
+  if (coverage_location.has_value()) {
+    gl.uniform1f(coverage_location.value(), (is_gl_mesh_alpha_coverage(material) ? 1.0 : 0.0));
+  }
+}
 
 inline flight::Ref<flight::types::Matrix4> scratch_view_projection = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
@@ -233,166 +351,82 @@ inline void set_gl_mesh_camera_position(flight::host_sdl::WebGl2Context gl, std:
 
 inline flight::Ref<flight::types::Matrix3> scratch_uv_matrix_flight_value_variable_scratch_u000055_v_u00004d_atrix_flight_private_4abd45e74da445b3 = flight::geometry::create_matrix3(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
-
-// NOT GENERATED: function bindGlUvTransform -- source line 89
-// refusal: cpp-external-binding-missing-optional-domain [compiler-restriction]
-//
-// The source it stood for:
-//   export function bindGlUvTransform(
-//     gl: GlContext,
-//     program: Readonly<GlMeshProgram>,
-//     texture: Readonly<TextureLike> | null,
-//   ): void {
-//     let loc = program.locUvTransform;
-//     if (loc === undefined) {
-//       loc = gl.getUniformLocation(program.program, 'u_uvTransform');
-//       (program as GlMeshProgram).locUvTransform = loc;
-//     }
-//     if (loc === null || texture === null) return;
-//     getTextureUvMatrix(scratchUvMatrix, texture);
-//     gl.uniformMatrix3fv(loc, false, scratchUvMatrix.m);
-//   }
-//   
-//   // Compiles a vertex + fragment source pair into a linked GL program. Shared by every family's
-//   // program compile. Throws on a compile or link failure, which is a programmer error (a malformed
-//   // prelude), not an expected runtime condition — correct preludes always compile.
-// cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glMeshProgram.ts: external binding
-// storage std::optional<flight::host_sdl::WebGlUniformLocation> requires one unresolved optional value domain
+inline void bind_gl_uv_transform(flight::host_sdl::WebGl2Context gl, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlMeshProgram>>>> program, std::optional<flight::types::TextureLike> texture) {
+  std::optional<flight::host_sdl::WebGlUniformLocation> loc = resolve_gl_uv_transform_location(gl, program);
+  if ((!loc.has_value() || !texture.has_value())) {
+    return;
+  }
+  flight::texture::get_texture_uv_matrix(scratch_uv_matrix_flight_value_variable_scratch_u000055_v_u00004d_atrix_flight_private_4abd45e74da445b3, texture.value());
+  gl.uniform_matrix3fv(loc.value(), false, scratch_uv_matrix_flight_value_variable_scratch_u000055_v_u00004d_atrix_flight_private_4abd45e74da445b3->m, std::nullopt, std::nullopt);
+}
 
 inline bool is_mirroring_world_matrix(flight::Float32Array m) {
   return ((((m.get_index(0.0) * ((m.get_index(5.0) * m.get_index(10.0)) - (m.get_index(6.0) * m.get_index(9.0)))) - (m.get_index(4.0) * ((m.get_index(1.0) * m.get_index(10.0)) - (m.get_index(2.0) * m.get_index(9.0))))) + (m.get_index(8.0) * ((m.get_index(1.0) * m.get_index(6.0)) - (m.get_index(2.0) * m.get_index(5.0))))) < 0.0);
 }
 
-
-// NOT GENERATED: function drawGlMeshSubset -- source line 119
-// refusal: cpp-external-binding-missing-optional-domain [compiler-restriction]
-//
-// The source it stood for:
-//   export function drawGlMeshSubset(
-//     state: GlRenderState,
-//     program: Readonly<GlMeshProgram>,
-//     proxy: Readonly<Scene3DRenderProxy>,
-//     geometry: Readonly<MeshGeometry>,
-//   ): void {
-//     const gl = state.gl;
-//     gl.uniformMatrix4fv(program.locModel, false, proxy.worldMatrix.m);
-//     if (program.locNormalMatrix !== null) gl.uniformMatrix3fv(program.locNormalMatrix, false, proxy.normalMatrix.m);
-//   
-//     // A world matrix that MIRRORS (negative determinant) turns every triangle inside out on the way to
-//     // clip space: the exterior a mesh authored counter-clockwise arrives clockwise. With back-face
-//     // culling on, that culls the surface the viewer is supposed to see and shows the interior instead.
-//     // The winding itself is correct and must not be rewritten — what changes is which orientation
-//     // counts as front, so the fix is the front-face convention, per draw, not the geometry.
-//     // Restored to CCW immediately after the draw below: this is per-MESH state, and the render-effect
-//     // pipeline's own full-screen present pass is wound CCW. Leaving CW set behind a mirrored mesh culls
-//     // that pass and the whole frame comes back blank.
-//     gl.frontFace(isMirroringWorldMatrix(proxy.worldMatrix.m) ? gl.CW : gl.CCW);
-//   
-//     uploadGlMeshDrawAlpha(gl, program, proxy.alpha ?? 1, proxy.material);
-//   
-//     // A resolved per-object transform promotes only this draw run to the registered material-feature
-//     // variant. Resolve and cache its locations lazily so an untinted/base program performs no lookups
-//     // or uploads; the promoted Shaded/Phong/PBR fragments consume the same two affine vectors.
-//     const colorMatrix = proxy.colorMatrix;
-//     const colorScaleBias = proxy.colorScaleBias;
-//     if (colorMatrix != null) {
-//       let loc0 = program.locColorMatrix0;
-//       if (loc0 === undefined) {
-//         loc0 = gl.getUniformLocation(program.program, 'u_flightColorMatrix0');
-//         (program as GlMeshProgram).locColorMatrix0 = loc0;
-//         (program as GlMeshProgram).locColorMatrix1 = gl.getUniformLocation(program.program, 'u_flightColorMatrix1');
-//         (program as GlMeshProgram).locColorMatrix2 = gl.getUniformLocation(program.program, 'u_flightColorMatrix2');
-//         (program as GlMeshProgram).locColorMatrix3 = gl.getUniformLocation(program.program, 'u_flightColorMatrix3');
-//         (program as GlMeshProgram).locColorMatrixOffset = gl.getUniformLocation(
-//           program.program,
-//           'u_flightColorMatrixOffset',
-//         );
-//       }
-//       if (loc0 !== null) {
-//         gl.uniform4f(loc0, colorMatrix[0], colorMatrix[1], colorMatrix[2], colorMatrix[3]);
-//         gl.uniform4f(program.locColorMatrix1!, colorMatrix[5], colorMatrix[6], colorMatrix[7], colorMatrix[8]);
-//         gl.uniform4f(program.locColorMatrix2!, colorMatrix[10], colorMatrix[11], colorMatrix[12], colorMatrix[13]);
-//         gl.uniform4f(program.locColorMatrix3!, colorMatrix[15], colorMatrix[16], colorMatrix[17], colorMatrix[18]);
-//         gl.uniform4f(program.locColorMatrixOffset!, colorMatrix[4], colorMatrix[9], colorMatrix[14], colorMatrix[19]);
-//       }
-//     } else if (colorScaleBias != null) {
-//       let locColorScale = program.locColorScale;
-//       let locColorBias = program.locColorBias;
-//       if (locColorScale === undefined) {
-//         locColorScale = gl.getUniformLocation(program.program, 'u_flightColorScale');
-//         locColorBias = gl.getUniformLocation(program.program, 'u_flightColorBias');
-//         (program as GlMeshProgram).locColorScale = locColorScale;
-//         (program as GlMeshProgram).locColorBias = locColorBias;
-//       }
-//       if (locColorScale !== null && locColorBias != null) {
-//         gl.uniform4f(
-//           locColorScale,
-//           colorScaleBias.redScale,
-//           colorScaleBias.greenScale,
-//           colorScaleBias.blueScale,
-//           colorScaleBias.alphaScale,
-//         );
-//         gl.uniform4f(
-//           locColorBias,
-//           colorScaleBias.redBias,
-//           colorScaleBias.greenBias,
-//           colorScaleBias.blueBias,
-//           colorScaleBias.alphaBias,
-//         );
-//       }
-//     }
-//   
-//     const instanceCount = proxy.instanceCount ?? 0;
-//     const gpuInstanced = instanceCount > 0 && proxy.instanceMatrices != null;
-//     // Skinning is opt-in: with no capability registered there is no binder to call, and renderGlScene3D
-//     // has already left activeSkinnedRun false so the selected program carries no HAS_SKIN variant.
-//     const skinFeature = getGlScene3DRuntime(state).meshSkinFeature ?? null;
-//     const gpuSkinned =
-//       gpuInstanced || skinFeature === null ? false : skinFeature.bindMeshSkinPalette(state, program, proxy);
-//   
-//     if (gpuInstanced) {
-//       bindGlInstancePalette(state, program, proxy.instanceMatrices!, instanceCount);
-//       if (proxy.instanceColors != null) {
-//         bindGlInstanceColorPalette(state, program, proxy.instanceColors, instanceCount);
-//       }
-//     }
-//   
-//     // A GPU-skinned draw uploads the static bind pose (the shader deforms it via the palette), so the
-//     // per-frame CPU pose updateMeshSkin also writes to geometry.vertices is not re-applied on top.
-//     const upload = ensureGlMeshUpload(state, geometry, gpuSkinned);
-//     const subset = proxy.subset;
-//   
-//     if (upload.indexBuffer !== null) {
-//       const elementSize = upload.indexType === gl.UNSIGNED_INT ? 4 : 2;
-//       if (gpuInstanced) {
-//         gl.drawElementsInstanced(
-//           upload.primitiveMode,
-//           subset.indexCount,
-//           upload.indexType,
-//           subset.indexOffset * elementSize,
-//           instanceCount,
-//         );
-//       } else {
-//         gl.drawElements(upload.primitiveMode, subset.indexCount, upload.indexType, subset.indexOffset * elementSize);
-//       }
-//       gl.frontFace(gl.CCW);
-//     } else {
-//       if (gpuInstanced) {
-//         gl.drawArraysInstanced(upload.primitiveMode, subset.indexOffset, subset.indexCount, instanceCount);
-//       } else {
-//         gl.drawArrays(upload.primitiveMode, subset.indexOffset, subset.indexCount);
-//       }
-//       gl.frontFace(gl.CCW);
-//     }
-//   }
-//   
-//   // Resolves a compiled program for a string cache key, compiling it via the factory on first use and
-//   // caching it on the scene runtime's per-state programCache. Every family routes its program through
-//   // this one cache; the key is namespaced by family + define key (for example `unlit:b-`), so distinct
-//   // families and feature variants compile at most once per state and never collide. The factory returns
-//   // the family's program record (locations resolved at compile time); the cast is sound because the key
-//   // namespace guarantees a given key always maps to the same family's program shape.
-// cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glMeshProgram.ts: external binding
-// storage std::optional<flight::host_sdl::WebGlUniformLocation> requires one unresolved optional value domain
+inline void draw_gl_mesh_subset(flight::Ref<flight::types::GlRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlMeshProgram>>>> program, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DRenderProxy>>>> proxy, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>> geometry) {
+  flight::host_sdl::WebGl2Context gl = state->gl;
+  gl.uniform_matrix4fv(flight::row_get<flight::RowKey<"locModel">>(program), false, flight::row_get<flight::RowKey<"m">>(flight::row_get<flight::RowKey<"worldMatrix">>(proxy)), std::nullopt, std::nullopt);
+  if (flight::row_get<flight::RowKey<"locNormalMatrix">>(program).has_value()) {
+    gl.uniform_matrix3fv(flight::row_get<flight::RowKey<"locNormalMatrix">>(program).value(), false, flight::row_get<flight::RowKey<"m">>(flight::row_get<flight::RowKey<"normalMatrix">>(proxy)), std::nullopt, std::nullopt);
+  }
+  gl.front_face((is_mirroring_world_matrix(flight::row_get<flight::RowKey<"m">>(flight::row_get<flight::RowKey<"worldMatrix">>(proxy))) ? gl.cw : gl.ccw));
+  upload_gl_mesh_draw_alpha(gl, program, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"alpha">>(proxy); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()), std::visit([&](const auto& contextual_union_value) -> std::optional<std::variant<flight::Ref<flight::types::SpecularGlossinessPbrMaterial>, flight::Ref<flight::types::VertexColorMaterial>, flight::Ref<flight::types::UnlitMaterial>, flight::Ref<flight::types::StandardPbrMaterial>, flight::Ref<flight::types::CustomShaderMaterial>, flight::Ref<flight::types::BlinnPhongMaterial>, flight::Ref<flight::types::LambertMaterial>, flight::Ref<flight::types::DepthMaterial>, flight::Ref<flight::types::ToonMaterial>, flight::Ref<flight::types::PhongMaterial>, flight::Ref<flight::types::ExtendedPbrMaterial>, flight::Ref<flight::types::Material3D>, flight::Ref<flight::types::EmissiveMaterial>, flight::Ref<flight::types::NormalMaterial>, flight::Ref<flight::types::MatcapMaterial>, flight::Ref<flight::types::ShadedMaterial>, flight::Ref<flight::types::WireframeMaterial>>> { using contextual_union_value_type = std::decay_t<decltype(contextual_union_value)>; if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::SpecularGlossinessPbrMaterial>>) return std::optional<std::variant<flight::Ref<flight::types::SpecularGlossinessPbrMaterial>, flight::Ref<flight::types::VertexColorMaterial>, flight::Ref<flight::types::UnlitMaterial>, flight::Ref<flight::types::StandardPbrMaterial>, flight::Ref<flight::types::CustomShaderMaterial>, flight::Ref<flight::types::BlinnPhongMaterial>, flight::Ref<flight::types::LambertMaterial>, flight::Ref<flight::types::DepthMaterial>, flight::Ref<flight::types::ToonMaterial>, flight::Ref<flight::types::PhongMaterial>, flight::Ref<flight::types::ExtendedPbrMaterial>, flight::Ref<flight::types::Material3D>, flight::Ref<flight::types::EmissiveMaterial>, flight::Ref<flight::types::NormalMaterial>, flight::Ref<flight::types::MatcapMaterial>, flight::Ref<flight::types::ShadedMaterial>, flight::Ref<flight::types::WireframeMaterial>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::SpecularGlossinessPbrMaterial>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::VertexColorMaterial>>) return std::optional<std::variant<flight::Ref<flight::types::SpecularGlossinessPbrMaterial>, flight::Ref<flight::types::VertexColorMaterial>, flight::Ref<flight::types::UnlitMaterial>, flight::Ref<flight::types::StandardPbrMaterial>, flight::Ref<flight::types::CustomShaderMaterial>, flight::Ref<flight::types::BlinnPhongMaterial>, flight::Ref<flight::types::LambertMaterial>, flight::Ref<flight::types::DepthMaterial>, flight::Ref<flight::types::ToonMaterial>, flight::Ref<flight::types::PhongMaterial>, flight::Ref<flight::types::ExtendedPbrMaterial>, flight::Ref<flight::types::Material3D>, flight::Ref<flight::types::EmissiveMaterial>, flight::Ref<flight::types::NormalMaterial>, flight::Ref<flight::types::MatcapMaterial>, flight::Ref<flight::types::ShadedMaterial>, flight::Ref<flight::types::WireframeMaterial>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::VertexColorMaterial>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::UnlitMaterial>>) return std::optional<std::variant<flight::Ref<flight::types::SpecularGlossinessPbrMaterial>, flight::Ref<flight::types::VertexColorMaterial>, flight::Ref<flight::types::UnlitMaterial>, flight::Ref<flight::types::StandardPbrMaterial>, flight::Ref<flight::types::CustomShaderMaterial>, flight::Ref<flight::types::BlinnPhongMaterial>, flight::Ref<flight::types::LambertMaterial>, flight::Ref<flight::types::DepthMaterial>, flight::Ref<flight::types::ToonMaterial>, flight::Ref<flight::types::PhongMaterial>, flight::Ref<flight::types::ExtendedPbrMaterial>, flight::Ref<flight::types::Material3D>, flight::Ref<flight::types::EmissiveMaterial>, flight::Ref<flight::types::NormalMaterial>, flight::Ref<flight::types::MatcapMaterial>, flight::Ref<flight::types::ShadedMaterial>, flight::Ref<flight::types::WireframeMaterial>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::UnlitMaterial>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::StandardPbrMaterial>>) return std::optional<std::variant<flight::Ref<flight::types::SpecularGlossinessPbrMaterial>, flight::Ref<flight::types::VertexColorMaterial>, flight::Ref<flight::types::UnlitMaterial>, flight::Ref<flight::types::StandardPbrMaterial>, flight::Ref<flight::types::CustomShaderMaterial>, flight::Ref<flight::types::BlinnPhongMaterial>, flight::Ref<flight::types::LambertMaterial>, flight::Ref<flight::types::DepthMaterial>, flight::Ref<flight::types::ToonMaterial>, flight::Ref<flight::types::PhongMaterial>, flight::Ref<flight::types::ExtendedPbrMaterial>, flight::Ref<flight::types::Material3D>, flight::Ref<flight::types::EmissiveMaterial>, flight::Ref<flight::types::NormalMaterial>, flight::Ref<flight::types::MatcapMaterial>, flight::Ref<flight::types::ShadedMaterial>, flight::Ref<flight::types::WireframeMaterial>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::StandardPbrMaterial>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::CustomShaderMaterial>>) return std::optional<std::variant<flight::Ref<flight::types::SpecularGlossinessPbrMaterial>, flight::Ref<flight::types::VertexColorMaterial>, flight::Ref<flight::types::UnlitMaterial>, flight::Ref<flight::types::StandardPbrMaterial>, flight::Ref<flight::types::CustomShaderMaterial>, flight::Ref<flight::types::BlinnPhongMaterial>, flight::Ref<flight::types::LambertMaterial>, flight::Ref<flight::types::DepthMaterial>, flight::Ref<flight::types::ToonMaterial>, flight::Ref<flight::types::PhongMaterial>, flight::Ref<flight::types::ExtendedPbrMaterial>, flight::Ref<flight::types::Material3D>, flight::Ref<flight::types::EmissiveMaterial>, flight::Ref<flight::types::NormalMaterial>, flight::Ref<flight::types::MatcapMaterial>, flight::Ref<flight::types::ShadedMaterial>, flight::Ref<flight::types::WireframeMaterial>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::CustomShaderMaterial>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::BlinnPhongMaterial>>) return std::optional<std::variant<flight::Ref<flight::types::SpecularGlossinessPbrMaterial>, flight::Ref<flight::types::VertexColorMaterial>, flight::Ref<flight::types::UnlitMaterial>, flight::Ref<flight::types::StandardPbrMaterial>, flight::Ref<flight::types::CustomShaderMaterial>, flight::Ref<flight::types::BlinnPhongMaterial>, flight::Ref<flight::types::LambertMaterial>, flight::Ref<flight::types::DepthMaterial>, flight::Ref<flight::types::ToonMaterial>, flight::Ref<flight::types::PhongMaterial>, flight::Ref<flight::types::ExtendedPbrMaterial>, flight::Ref<flight::types::Material3D>, flight::Ref<flight::types::EmissiveMaterial>, flight::Ref<flight::types::NormalMaterial>, flight::Ref<flight::types::MatcapMaterial>, flight::Ref<flight::types::ShadedMaterial>, flight::Ref<flight::types::WireframeMaterial>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::BlinnPhongMaterial>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::LambertMaterial>>) return std::optional<std::variant<flight::Ref<flight::types::SpecularGlossinessPbrMaterial>, flight::Ref<flight::types::VertexColorMaterial>, flight::Ref<flight::types::UnlitMaterial>, flight::Ref<flight::types::StandardPbrMaterial>, flight::Ref<flight::types::CustomShaderMaterial>, flight::Ref<flight::types::BlinnPhongMaterial>, flight::Ref<flight::types::LambertMaterial>, flight::Ref<flight::types::DepthMaterial>, flight::Ref<flight::types::ToonMaterial>, flight::Ref<flight::types::PhongMaterial>, flight::Ref<flight::types::ExtendedPbrMaterial>, flight::Ref<flight::types::Material3D>, flight::Ref<flight::types::EmissiveMaterial>, flight::Ref<flight::types::NormalMaterial>, flight::Ref<flight::types::MatcapMaterial>, flight::Ref<flight::types::ShadedMaterial>, flight::Ref<flight::types::WireframeMaterial>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::LambertMaterial>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::DepthMaterial>>) return std::optional<std::variant<flight::Ref<flight::types::SpecularGlossinessPbrMaterial>, flight::Ref<flight::types::VertexColorMaterial>, flight::Ref<flight::types::UnlitMaterial>, flight::Ref<flight::types::StandardPbrMaterial>, flight::Ref<flight::types::CustomShaderMaterial>, flight::Ref<flight::types::BlinnPhongMaterial>, flight::Ref<flight::types::LambertMaterial>, flight::Ref<flight::types::DepthMaterial>, flight::Ref<flight::types::ToonMaterial>, flight::Ref<flight::types::PhongMaterial>, flight::Ref<flight::types::ExtendedPbrMaterial>, flight::Ref<flight::types::Material3D>, flight::Ref<flight::types::EmissiveMaterial>, flight::Ref<flight::types::NormalMaterial>, flight::Ref<flight::types::MatcapMaterial>, flight::Ref<flight::types::ShadedMaterial>, flight::Ref<flight::types::WireframeMaterial>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::DepthMaterial>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::ToonMaterial>>) return std::optional<std::variant<flight::Ref<flight::types::SpecularGlossinessPbrMaterial>, flight::Ref<flight::types::VertexColorMaterial>, flight::Ref<flight::types::UnlitMaterial>, flight::Ref<flight::types::StandardPbrMaterial>, flight::Ref<flight::types::CustomShaderMaterial>, flight::Ref<flight::types::BlinnPhongMaterial>, flight::Ref<flight::types::LambertMaterial>, flight::Ref<flight::types::DepthMaterial>, flight::Ref<flight::types::ToonMaterial>, flight::Ref<flight::types::PhongMaterial>, flight::Ref<flight::types::ExtendedPbrMaterial>, flight::Ref<flight::types::Material3D>, flight::Ref<flight::types::EmissiveMaterial>, flight::Ref<flight::types::NormalMaterial>, flight::Ref<flight::types::MatcapMaterial>, flight::Ref<flight::types::ShadedMaterial>, flight::Ref<flight::types::WireframeMaterial>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::ToonMaterial>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::PhongMaterial>>) return std::optional<std::variant<flight::Ref<flight::types::SpecularGlossinessPbrMaterial>, flight::Ref<flight::types::VertexColorMaterial>, flight::Ref<flight::types::UnlitMaterial>, flight::Ref<flight::types::StandardPbrMaterial>, flight::Ref<flight::types::CustomShaderMaterial>, flight::Ref<flight::types::BlinnPhongMaterial>, flight::Ref<flight::types::LambertMaterial>, flight::Ref<flight::types::DepthMaterial>, flight::Ref<flight::types::ToonMaterial>, flight::Ref<flight::types::PhongMaterial>, flight::Ref<flight::types::ExtendedPbrMaterial>, flight::Ref<flight::types::Material3D>, flight::Ref<flight::types::EmissiveMaterial>, flight::Ref<flight::types::NormalMaterial>, flight::Ref<flight::types::MatcapMaterial>, flight::Ref<flight::types::ShadedMaterial>, flight::Ref<flight::types::WireframeMaterial>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::PhongMaterial>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::ExtendedPbrMaterial>>) return std::optional<std::variant<flight::Ref<flight::types::SpecularGlossinessPbrMaterial>, flight::Ref<flight::types::VertexColorMaterial>, flight::Ref<flight::types::UnlitMaterial>, flight::Ref<flight::types::StandardPbrMaterial>, flight::Ref<flight::types::CustomShaderMaterial>, flight::Ref<flight::types::BlinnPhongMaterial>, flight::Ref<flight::types::LambertMaterial>, flight::Ref<flight::types::DepthMaterial>, flight::Ref<flight::types::ToonMaterial>, flight::Ref<flight::types::PhongMaterial>, flight::Ref<flight::types::ExtendedPbrMaterial>, flight::Ref<flight::types::Material3D>, flight::Ref<flight::types::EmissiveMaterial>, flight::Ref<flight::types::NormalMaterial>, flight::Ref<flight::types::MatcapMaterial>, flight::Ref<flight::types::ShadedMaterial>, flight::Ref<flight::types::WireframeMaterial>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::ExtendedPbrMaterial>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::Material3D>>) return std::optional<std::variant<flight::Ref<flight::types::SpecularGlossinessPbrMaterial>, flight::Ref<flight::types::VertexColorMaterial>, flight::Ref<flight::types::UnlitMaterial>, flight::Ref<flight::types::StandardPbrMaterial>, flight::Ref<flight::types::CustomShaderMaterial>, flight::Ref<flight::types::BlinnPhongMaterial>, flight::Ref<flight::types::LambertMaterial>, flight::Ref<flight::types::DepthMaterial>, flight::Ref<flight::types::ToonMaterial>, flight::Ref<flight::types::PhongMaterial>, flight::Ref<flight::types::ExtendedPbrMaterial>, flight::Ref<flight::types::Material3D>, flight::Ref<flight::types::EmissiveMaterial>, flight::Ref<flight::types::NormalMaterial>, flight::Ref<flight::types::MatcapMaterial>, flight::Ref<flight::types::ShadedMaterial>, flight::Ref<flight::types::WireframeMaterial>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::Material3D>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::EmissiveMaterial>>) return std::optional<std::variant<flight::Ref<flight::types::SpecularGlossinessPbrMaterial>, flight::Ref<flight::types::VertexColorMaterial>, flight::Ref<flight::types::UnlitMaterial>, flight::Ref<flight::types::StandardPbrMaterial>, flight::Ref<flight::types::CustomShaderMaterial>, flight::Ref<flight::types::BlinnPhongMaterial>, flight::Ref<flight::types::LambertMaterial>, flight::Ref<flight::types::DepthMaterial>, flight::Ref<flight::types::ToonMaterial>, flight::Ref<flight::types::PhongMaterial>, flight::Ref<flight::types::ExtendedPbrMaterial>, flight::Ref<flight::types::Material3D>, flight::Ref<flight::types::EmissiveMaterial>, flight::Ref<flight::types::NormalMaterial>, flight::Ref<flight::types::MatcapMaterial>, flight::Ref<flight::types::ShadedMaterial>, flight::Ref<flight::types::WireframeMaterial>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::EmissiveMaterial>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::NormalMaterial>>) return std::optional<std::variant<flight::Ref<flight::types::SpecularGlossinessPbrMaterial>, flight::Ref<flight::types::VertexColorMaterial>, flight::Ref<flight::types::UnlitMaterial>, flight::Ref<flight::types::StandardPbrMaterial>, flight::Ref<flight::types::CustomShaderMaterial>, flight::Ref<flight::types::BlinnPhongMaterial>, flight::Ref<flight::types::LambertMaterial>, flight::Ref<flight::types::DepthMaterial>, flight::Ref<flight::types::ToonMaterial>, flight::Ref<flight::types::PhongMaterial>, flight::Ref<flight::types::ExtendedPbrMaterial>, flight::Ref<flight::types::Material3D>, flight::Ref<flight::types::EmissiveMaterial>, flight::Ref<flight::types::NormalMaterial>, flight::Ref<flight::types::MatcapMaterial>, flight::Ref<flight::types::ShadedMaterial>, flight::Ref<flight::types::WireframeMaterial>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::NormalMaterial>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::MatcapMaterial>>) return std::optional<std::variant<flight::Ref<flight::types::SpecularGlossinessPbrMaterial>, flight::Ref<flight::types::VertexColorMaterial>, flight::Ref<flight::types::UnlitMaterial>, flight::Ref<flight::types::StandardPbrMaterial>, flight::Ref<flight::types::CustomShaderMaterial>, flight::Ref<flight::types::BlinnPhongMaterial>, flight::Ref<flight::types::LambertMaterial>, flight::Ref<flight::types::DepthMaterial>, flight::Ref<flight::types::ToonMaterial>, flight::Ref<flight::types::PhongMaterial>, flight::Ref<flight::types::ExtendedPbrMaterial>, flight::Ref<flight::types::Material3D>, flight::Ref<flight::types::EmissiveMaterial>, flight::Ref<flight::types::NormalMaterial>, flight::Ref<flight::types::MatcapMaterial>, flight::Ref<flight::types::ShadedMaterial>, flight::Ref<flight::types::WireframeMaterial>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::MatcapMaterial>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::ShadedMaterial>>) return std::optional<std::variant<flight::Ref<flight::types::SpecularGlossinessPbrMaterial>, flight::Ref<flight::types::VertexColorMaterial>, flight::Ref<flight::types::UnlitMaterial>, flight::Ref<flight::types::StandardPbrMaterial>, flight::Ref<flight::types::CustomShaderMaterial>, flight::Ref<flight::types::BlinnPhongMaterial>, flight::Ref<flight::types::LambertMaterial>, flight::Ref<flight::types::DepthMaterial>, flight::Ref<flight::types::ToonMaterial>, flight::Ref<flight::types::PhongMaterial>, flight::Ref<flight::types::ExtendedPbrMaterial>, flight::Ref<flight::types::Material3D>, flight::Ref<flight::types::EmissiveMaterial>, flight::Ref<flight::types::NormalMaterial>, flight::Ref<flight::types::MatcapMaterial>, flight::Ref<flight::types::ShadedMaterial>, flight::Ref<flight::types::WireframeMaterial>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::ShadedMaterial>>, contextual_union_value}; else return std::optional<std::variant<flight::Ref<flight::types::SpecularGlossinessPbrMaterial>, flight::Ref<flight::types::VertexColorMaterial>, flight::Ref<flight::types::UnlitMaterial>, flight::Ref<flight::types::StandardPbrMaterial>, flight::Ref<flight::types::CustomShaderMaterial>, flight::Ref<flight::types::BlinnPhongMaterial>, flight::Ref<flight::types::LambertMaterial>, flight::Ref<flight::types::DepthMaterial>, flight::Ref<flight::types::ToonMaterial>, flight::Ref<flight::types::PhongMaterial>, flight::Ref<flight::types::ExtendedPbrMaterial>, flight::Ref<flight::types::Material3D>, flight::Ref<flight::types::EmissiveMaterial>, flight::Ref<flight::types::NormalMaterial>, flight::Ref<flight::types::MatcapMaterial>, flight::Ref<flight::types::ShadedMaterial>, flight::Ref<flight::types::WireframeMaterial>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::WireframeMaterial>>, contextual_union_value}; }, flight::row_get<flight::RowKey<"material">>(proxy)));
+  std::optional<flight::Array<double>> color_matrix = present_gl_mesh_number_array(([&]() -> std::variant<flight::Array<double>, flight::Null, flight::Undefined> { auto optional_property = flight::row_get<flight::RowKey<"colorMatrix">>(proxy); if (std::holds_alternative<flight::Undefined>(optional_property)) return std::variant<flight::Array<double>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property)) return std::variant<flight::Array<double>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Array<double>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<double>>, std::get<flight::Array<double>>(optional_property)}; }()));
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorScaleBias>>>>> color_scale_bias = present_gl_mesh_color_scale_bias(flight::row_get<flight::RowKey<"colorScaleBias">>(proxy));
+  if (color_matrix.has_value()) {
+    std::optional<flight::host_sdl::WebGlUniformLocation> loc0 = resolve_gl_color_matrix0_location(gl, program);
+    if (loc0.has_value()) {
+      gl.uniform4f(loc0.value(), color_matrix.value().element(0.0), color_matrix.value().element(1.0), color_matrix.value().element(2.0), color_matrix.value().element(3.0));
+      gl.uniform4f(std::get<flight::host_sdl::WebGlUniformLocation>(flight::row_get<flight::RowKey<"locColorMatrix1">>(program)), color_matrix.value().element(5.0), color_matrix.value().element(6.0), color_matrix.value().element(7.0), color_matrix.value().element(8.0));
+      gl.uniform4f(std::get<flight::host_sdl::WebGlUniformLocation>(flight::row_get<flight::RowKey<"locColorMatrix2">>(program)), color_matrix.value().element(10.0), color_matrix.value().element(11.0), color_matrix.value().element(12.0), color_matrix.value().element(13.0));
+      gl.uniform4f(std::get<flight::host_sdl::WebGlUniformLocation>(flight::row_get<flight::RowKey<"locColorMatrix3">>(program)), color_matrix.value().element(15.0), color_matrix.value().element(16.0), color_matrix.value().element(17.0), color_matrix.value().element(18.0));
+      gl.uniform4f(std::get<flight::host_sdl::WebGlUniformLocation>(flight::row_get<flight::RowKey<"locColorMatrixOffset">>(program)), color_matrix.value().element(4.0), color_matrix.value().element(9.0), color_matrix.value().element(14.0), color_matrix.value().element(19.0));
+    }
+  }
+  else {
+    if (color_scale_bias.has_value()) {
+      std::optional<flight::host_sdl::WebGlUniformLocation> loc_color_scale = resolve_gl_color_scale_location(gl, program);
+      std::optional<flight::host_sdl::WebGlUniformLocation> loc_color_bias = present_gl_mesh_uniform_location(([&]() -> std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined> { auto optional_property_2 = flight::row_get<flight::RowKey<"locColorBias">>(program); if (std::holds_alternative<flight::Undefined>(optional_property_2)) return std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property_2)) return std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined>{std::in_place_type<flight::host_sdl::WebGlUniformLocation>, std::get<flight::host_sdl::WebGlUniformLocation>(optional_property_2)}; }()));
+      if ((loc_color_scale.has_value() && loc_color_bias.has_value())) {
+        gl.uniform4f(loc_color_scale.value(), flight::row_get<flight::RowKey<"redScale">>(color_scale_bias.value()), flight::row_get<flight::RowKey<"greenScale">>(color_scale_bias.value()), flight::row_get<flight::RowKey<"blueScale">>(color_scale_bias.value()), flight::row_get<flight::RowKey<"alphaScale">>(color_scale_bias.value()));
+        gl.uniform4f(loc_color_bias.value(), flight::row_get<flight::RowKey<"redBias">>(color_scale_bias.value()), flight::row_get<flight::RowKey<"greenBias">>(color_scale_bias.value()), flight::row_get<flight::RowKey<"blueBias">>(color_scale_bias.value()), flight::row_get<flight::RowKey<"alphaBias">>(color_scale_bias.value()));
+      }
+    }
+  }
+  const double instance_count = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"instanceCount">>(proxy); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
+  std::optional<flight::Float32Array> instance_matrices = present_gl_mesh_float32_array(([&]() -> std::variant<flight::Float32Array, flight::Null, flight::Undefined> { auto optional_property_3 = flight::row_get<flight::RowKey<"instanceMatrices">>(proxy); if (std::holds_alternative<flight::Undefined>(optional_property_3)) return std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property_3)) return std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Float32Array>, std::get<flight::Float32Array>(optional_property_3)}; }()));
+  const bool gpu_instanced = ((instance_count > 0.0) && instance_matrices.has_value());
+  auto skin_feature = ([&]() -> std::optional<flight::Ref<flight::types::GlMeshSkinFeature>> { auto nullish_coalesce_left = ([&]() -> std::variant<flight::Ref<flight::types::GlMeshSkinFeature>, flight::Null, flight::Undefined> { auto optional_property_4 = flight::scene3d_gl::get_gl_scene_3d_runtime(state)->mesh_skin_feature; if (std::holds_alternative<flight::Undefined>(optional_property_4)) return std::variant<flight::Ref<flight::types::GlMeshSkinFeature>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property_4)) return std::variant<flight::Ref<flight::types::GlMeshSkinFeature>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Ref<flight::types::GlMeshSkinFeature>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::GlMeshSkinFeature>>, std::get<flight::Ref<flight::types::GlMeshSkinFeature>>(optional_property_4)}; }()); if (const auto* alternative = std::get_if<flight::Ref<flight::types::GlMeshSkinFeature>>(&nullish_coalesce_left)) return std::optional<flight::Ref<flight::types::GlMeshSkinFeature>>{*alternative}; return std::nullopt; }());
+  const bool gpu_skinned = ((gpu_instanced || !skin_feature.has_value()) ? false : skin_feature.value()->bind_mesh_skin_palette(state, program, proxy));
+  if (gpu_instanced) {
+    bind_gl_instance_palette(state, program, instance_matrices.value(), instance_count);
+    std::optional<flight::Float32Array> instance_colors = present_gl_mesh_float32_array(([&]() -> std::variant<flight::Float32Array, flight::Null, flight::Undefined> { auto optional_property_5 = flight::row_get<flight::RowKey<"instanceColors">>(proxy); if (std::holds_alternative<flight::Undefined>(optional_property_5)) return std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property_5)) return std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Float32Array>, std::get<flight::Float32Array>(optional_property_5)}; }()));
+    if (instance_colors.has_value()) {
+      bind_gl_instance_color_palette(state, program, instance_colors.value(), instance_count);
+    }
+  }
+  auto upload = flight::scene3d_gl::ensure_gl_mesh_upload(state, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(geometry), gpu_skinned);
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshSubset>>>> subset = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshSubset>>>>>(flight::row_get<flight::RowKey<"subset">>(proxy));
+  if (upload->index_buffer.has_value()) {
+    const double element_size = ((upload->index_type == gl.unsigned_int) ? 4.0 : 2.0);
+    if (gpu_instanced) {
+      gl.draw_elements_instanced(upload->primitive_mode, flight::row_get<flight::RowKey<"indexCount">>(subset), upload->index_type, (flight::row_get<flight::RowKey<"indexOffset">>(subset) * element_size), instance_count);
+    }
+    else {
+      gl.draw_elements(upload->primitive_mode, flight::row_get<flight::RowKey<"indexCount">>(subset), upload->index_type, (flight::row_get<flight::RowKey<"indexOffset">>(subset) * element_size));
+    }
+    gl.front_face(gl.ccw);
+  }
+  else {
+    if (gpu_instanced) {
+      gl.draw_arrays_instanced(upload->primitive_mode, flight::row_get<flight::RowKey<"indexOffset">>(subset), flight::row_get<flight::RowKey<"indexCount">>(subset), instance_count);
+    }
+    else {
+      gl.draw_arrays(upload->primitive_mode, flight::row_get<flight::RowKey<"indexOffset">>(subset), flight::row_get<flight::RowKey<"indexCount">>(subset));
+    }
+    gl.front_face(gl.ccw);
+  }
+}
 
 } // namespace flight::scene3d_gl

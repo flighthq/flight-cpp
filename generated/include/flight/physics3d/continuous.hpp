@@ -162,7 +162,7 @@ inline bool is_physics_3d_ccd_pair_active(flight::StructuralRef<flight::RowReado
   return ((flight::row_get<flight::RowKey<"inverseMass">>(body_a) > 0.0) || (flight::row_get<flight::RowKey<"inverseMass">>(body_b) > 0.0));
 }
 
-inline bool is_physics3_dcollider_pair_enabled_flight_value_function_is_u000050_hysics3_u000044__u000043_ollider_u000050_air_u000045_nabled_flight_private_ff06f225606b7241(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>> collider_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>> collider_b) {
+inline bool is_physics_3d_collider_pair_enabled_flight_value_function_is_u000050_hysics3_u000044__u000043_ollider_u000050_air_u000045_nabled_flight_private_ff06f225606b7241(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>> collider_a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>> collider_b) {
   auto filter_a = flight::row_get<flight::RowKey<"filter">>(collider_a);
   auto filter_b = flight::row_get<flight::RowKey<"filter">>(collider_b);
   if (((filter_a->group_index != 0.0) && (filter_a->group_index == filter_b->group_index))) {
@@ -646,7 +646,7 @@ inline void report_physics_3d_sensor_impacts_before_fraction(flight::Ref<flight:
                       (collider_bindex += 1.0);
                       continue;
                     }
-                    if (!is_physics3_dcollider_pair_enabled_flight_value_function_is_u000050_hysics3_u000044__u000043_ollider_u000050_air_u000045_nabled_flight_private_ff06f225606b7241(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>(collider_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>(collider_b)))) {
+                    if (!is_physics_3d_collider_pair_enabled_flight_value_function_is_u000050_hysics3_u000044__u000043_ollider_u000050_air_u000045_nabled_flight_private_ff06f225606b7241(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>(collider_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>(collider_b)))) {
                       (collider_bindex += 1.0);
                       continue;
                     }
@@ -712,7 +712,7 @@ inline bool find_earliest_physics_3d_impact(flight::Ref<flight::types::Physics3D
               {
                 auto collider_a = body_a->colliders.element(i);
                 auto collider_b = body_b->colliders.element(j);
-                if (!is_physics3_dcollider_pair_enabled_flight_value_function_is_u000050_hysics3_u000044__u000043_ollider_u000050_air_u000045_nabled_flight_private_ff06f225606b7241(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>(collider_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>(collider_b)))) {
+                if (!is_physics_3d_collider_pair_enabled_flight_value_function_is_u000050_hysics3_u000044__u000043_ollider_u000050_air_u000045_nabled_flight_private_ff06f225606b7241(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>(collider_a)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics3DCollider>>>>(collider_b)))) {
                   (j += 1.0);
                   continue;
                 }

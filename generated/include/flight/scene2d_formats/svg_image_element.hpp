@@ -4,11 +4,9 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function createSvgImageNode -- source line 24
-#include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
-#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -18,41 +16,49 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/texture.hpp>
 
+#include <flight/types/svg_document_import.hpp>
+
 #include <flight/types/sprite.hpp>
+
+#include <flight/types/rectangle.hpp>
 
 #include <flight/types/node_2d.hpp>
 
-#include <flight/scene2d_formats/svg_document.hpp>
-#include <flight/scene2d_formats/svg_transform.hpp>
-#include <flight/scene2d_formats/svg_xml.hpp>
+#include <flight/types/matrix.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+namespace flight::types { struct ImageResource; }
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct Rectangle; }
+namespace flight::types { struct Sprite; }
+namespace flight::types { struct SvgDocumentImportOptions; }
+namespace flight::types { struct SvgElementContext; }
+namespace flight::types { struct SvgImportContext; }
+namespace flight::types { struct SvgStyle; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct TextureResourceOptions; }
+namespace flight::types { struct XmlElement; }
+namespace flight::types { template <typename Traits> struct Node; }
+
+#include <flight/types/contract.hpp>
 
 namespace flight::scene2d_formats {
 
+using flight::types::ImportDiagnostic;
+using flight::types::Matrix;
 using flight::types::Node2D;
+using flight::types::Rectangle;
 using flight::types::Sprite;
+using flight::types::SvgDocumentImportOptions;
 using flight::types::Texture2D;
 using flight::types::XmlElement;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_TEXTURE_3D8CC70925FAAABD
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_TEXTURE_3D8CC70925FAAABD
-struct texture_3d8cc70925faaabd : public flight::ReferenceEnabled {
-  flight::Ref<Texture2D> texture;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_TEXTURE_3D8CC70925FAAABD
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_HEIGHT_WIDTH_X_Y_06099478698611DC
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_HEIGHT_WIDTH_X_Y_06099478698611DC
-struct height_width_x_y_06099478698611dc : public flight::ReferenceEnabled {
-  double height;
-  double width;
-  double x;
-  double y;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_HEIGHT_WIDTH_X_Y_06099478698611DC
-
 
 // NOT GENERATED: function createSvgImageNode -- source line 24
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+// refusal: cpp-contextual-union-value-type-unrepresented [source-portability]
 //
 // The source it stood for:
 //   function createSvgImageNode(
@@ -111,10 +117,15 @@ struct height_width_x_y_06099478698611dc : public flight::ReferenceEnabled {
 //   }
 //   
 // cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgImageElement.ts: contextual
-// union value type flight::Ref<Sprite> is not a represented runtime domain
+// union value type flight::Ref<flight::types::Sprite> is not a represented runtime domain: the value leaves a
+// member the destination requires optional or absent, or gives it an incompatible type, so it is not the shape
+// an alternative declares. This expression refers to an existing owner. Keep the value in the declared
+// destination arm from the point it is created, or explicitly rebuild the declared result in source where
+// changing identity is intended. The compiler will not retype, copy, or materialize the existing object into a
+// sibling owner.
 
-inline std::optional<flight::Ref<Node2D>> svg_image_element_handler(flight::Ref<SvgElementContext> context) {
-  return create_svg_image_node(context->element, context->parent_style, context->import);
+inline std::optional<flight::types::Node2D> svg_image_element_handler(flight::Ref<flight::types::SvgElementContext> context) {
+  return create_svg_image_node(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(context->element), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>>(context->parent_style), context->import);
 }
 
 } // namespace flight::scene2d_formats

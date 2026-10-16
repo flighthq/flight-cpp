@@ -4,9 +4,8 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function appendLottieShapeItems -- source line 33
-#include <functional>
+#include <flight/structural_ref.hpp>
 #include <optional>
-#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -18,8 +17,28 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/display_object.hpp>
 
-#include <flight/scene2d_formats/lottie_document.hpp>
-#include <flight/scene2d_formats/lottie_registry.hpp>
+namespace flight::types { struct LottieEllipseShapeItem; }
+namespace flight::types { struct LottieFillShapeItem; }
+namespace flight::types { struct LottieGradientShapeItem; }
+namespace flight::types { struct LottieImportContext; }
+namespace flight::types { struct LottieLayerContext; }
+namespace flight::types { struct LottieMergePathShapeItem; }
+namespace flight::types { struct LottiePolystarShapeItem; }
+namespace flight::types { struct LottieRectangleShapeItem; }
+namespace flight::types { struct LottieRepeaterShapeItem; }
+namespace flight::types { struct LottieRoundedCornersShapeItem; }
+namespace flight::types { struct LottieShapeGroup; }
+namespace flight::types { struct LottieShapeItemContext; }
+namespace flight::types { struct LottieShapePathItem; }
+namespace flight::types { struct LottieStrokeShapeItem; }
+namespace flight::types { struct LottieTransform; }
+namespace flight::types { struct LottieTransformShapeItem; }
+namespace flight::types { struct LottieTrimPathShapeItem; }
+namespace flight::types { struct Path; }
+namespace flight::types { struct Shape; }
+
+#include <flight/shape/shape.hpp>
+#include <flight/types/contract.hpp>
 #include <flight/scene2d_formats/lottie_shape_paint.hpp>
 
 namespace flight::scene2d_formats {
@@ -28,13 +47,13 @@ using flight::types::DisplayObject;
 using flight::types::Path;
 using flight::types::Shape;
 
-inline void render_lottie_shape_state(flight::Array<flight::Ref<LottieShapePainter>> painters, flight::Array<flight::Ref<Path>> paths, flight::Ref<Shape> shape) {
-  clear_shape_commands(shape);
+inline void render_lottie_shape_state(flight::Array<flight::types::LottieShapePainter> painters, flight::Array<flight::Ref<flight::types::Path>> paths, flight::Ref<flight::types::Shape> shape) {
+  flight::shape::clear_shape_commands(shape);
   if ((static_cast<double>(paths.size()) == 0.0)) {
     return;
   }
   if ((static_cast<double>(painters.size()) == 0.0)) {
-    append_lottie_shape_paths(paths, shape, nullptr);
+    flight::scene2d_formats::append_lottie_shape_paths(paths, shape, std::nullopt);
     return;
   }
   for (auto painter : painters) {
@@ -44,7 +63,7 @@ inline void render_lottie_shape_state(flight::Array<flight::Ref<LottieShapePaint
 
 
 // NOT GENERATED: function appendLottieShapeItems -- source line 33
-// refusal: cpp-union-member-access-unguarded [compiler-restriction]
+// refusal: cpp-type-assertion-unidentified [compiler-restriction]
 //
 // The source it stood for:
 //   function appendLottieShapeItems(
@@ -107,11 +126,31 @@ inline void render_lottie_shape_state(flight::Array<flight::Ref<LottieShapePaint
 //    * (including shapes in nested groups), and repeated styles render in reverse order. That needs a scoped stack rather
 //    * than another field here.
 //    */
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapeLayer.ts: property
-// ty on a C++ variant requires proven union member access
+// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapeLayer.ts: type
+// assertion target must identify exactly one C++ variant alternative: target
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieTransform>>>> against
+// [flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieShapeGroup>>>>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieEllipseShapeItem>>>>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieFillShapeItem>>>>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieGradientShapeItem>>>>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieMergePathShapeItem>>>>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottiePolystarShapeItem>>>>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieRectangleShapeItem>>>>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieRepeaterShapeItem>>>>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieRoundedCornersShapeItem>>>>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieShapePathItem>>>>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieStrokeShapeItem>>>>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieTransformShapeItem>>>>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieTrimPathShapeItem>>>>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Record<flight::String, flight::Any>>>>]; the
+// value holds the target through an alternative whose members already satisfy it, but the two are separate
+// flattened C++ structs with no base relation between them, so there is no narrowing to follow -- a CLASS
+// heritage pair narrows here, because those structs really do inherit. Assert to the alternative the value
+// actually holds and read this target's members from it, or declare the slot as this target where the concrete
+// type is known
 
-inline void lottie_shape_layer_handler(flight::Ref<LottieLayerContext> context) {
-  append_lottie_shape_items(context->container, context->layer.shapes.value_or(flight::Array<flight::Ref<LottieShapeItem>>{}), context->import, std::nullopt);
+inline void lottie_shape_layer_handler(flight::Ref<flight::types::LottieLayerContext> context) {
+  append_lottie_shape_items(context->container, ([&]() -> flight::Array<flight::types::LottieShapeItem> { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"shapes">>(context->layer); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<flight::types::LottieShapeItem>{}; }()), context->import, std::nullopt);
 }
 
 } // namespace flight::scene2d_formats

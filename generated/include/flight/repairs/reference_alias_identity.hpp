@@ -9,8 +9,6 @@
 #include <memory>
 #include <flight/runtime.hpp>
 
-#include <flight/types/has_transform_2d.hpp>
-#include <flight/types/has_transform_3d.hpp>
 #include <flight/types/node.hpp>
 #include <flight/types/node_order_list.hpp>
 #include <flight/types/registry_table.hpp>
@@ -38,18 +36,3 @@ static_assert(std::same_as<flight::Ref<flight::types::NodeOrderList<flight::Any>
 // respell-reference-alias-ordinaltable
 static_assert(std::same_as<flight::Ref<flight::types::OrdinalTable<flight::Any>>, std::shared_ptr<flight::types::OrdinalTable<flight::Any>>>,
               "respell-reference-alias respell-reference-alias-ordinaltable claims the wrong expansion for OrdinalTable");
-// respell-reference-alias-keyedtable
-static_assert(std::same_as<flight::Ref<flight::types::KeyedTable<flight::Any>>, std::shared_ptr<flight::types::KeyedTable<flight::Any>>>,
-              "respell-reference-alias respell-reference-alias-keyedtable claims the wrong expansion for KeyedTable");
-// respell-reference-alias-slottable
-static_assert(std::same_as<flight::Ref<flight::types::SlotTable<flight::Any>>, std::shared_ptr<flight::types::SlotTable<flight::Any>>>,
-              "respell-reference-alias respell-reference-alias-slottable claims the wrong expansion for SlotTable");
-// respell-reference-alias-transform2dnode
-static_assert(std::same_as<flight::Ref<flight::types::Transform2DNode<flight::Any>>, flight::types::Transform2DNode<flight::Any>>,
-              "respell-reference-alias respell-reference-alias-transform2dnode claims the wrong expansion for Transform2DNode");
-// respell-reference-alias-transform3dnode
-static_assert(std::same_as<flight::Ref<flight::types::Transform3DNode<flight::Any>>, flight::types::Transform3DNode<flight::Any>>,
-              "respell-reference-alias respell-reference-alias-transform3dnode claims the wrong expansion for Transform3DNode");
-// respell-reference-alias-registrytable
-static_assert(std::same_as<flight::Ref<flight::types::RegistryTable<flight::Any>>, flight::types::RegistryTable<flight::Any>>,
-              "respell-reference-alias respell-reference-alias-registrytable claims the wrong expansion for RegistryTable");

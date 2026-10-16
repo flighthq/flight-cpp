@@ -17,22 +17,22 @@ namespace flight::types { struct HalftoneEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SCALE_ANGLE_FD7F0A17538312CB
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SCALE_ANGLE_FD7F0A17538312CB
-struct scale_angle_fd7f0a17538312cb : public flight::ReferenceEnabled {
-  std::optional<double> scale;
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_ANGLE_SCALE_72CFBEAD857DBFE9
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_ANGLE_SCALE_72CFBEAD857DBFE9
+struct angle_scale_72cfbead857dbfe9 : public flight::ReferenceEnabled {
   std::optional<double> angle;
+  std::optional<double> scale;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SCALE_ANGLE_FD7F0A17538312CB
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_ANGLE_SCALE_72CFBEAD857DBFE9
 
-inline void initialize_halftone_effect(flight::types::EntityConstruction<flight::Ref<flight::types::HalftoneEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<scale_angle_fd7f0a17538312cb>>>> options) {
+inline void initialize_halftone_effect(flight::types::EntityConstruction<flight::Ref<flight::types::HalftoneEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<angle_scale_72cfbead857dbfe9>>>> options) {
   flight::effects::initialize_effect<flight::Ref<flight::types::HalftoneEffect>>(out, flight::String("HalftoneEffect"));
   flight::row_set<flight::RowKey<"scale">>(out, flight::row_get<flight::RowKey<"scale">>(options));
   flight::row_set<flight::RowKey<"angle">>(out, flight::row_get<flight::RowKey<"angle">>(options));
 }
 
-inline flight::Ref<flight::types::HalftoneEffect> create_halftone_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<scale_angle_fd7f0a17538312cb>>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<scale_angle_fd7f0a17538312cb>>>>());
+inline flight::Ref<flight::types::HalftoneEffect> create_halftone_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<angle_scale_72cfbead857dbfe9>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<angle_scale_72cfbead857dbfe9>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::HalftoneEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::HalftoneEffect>>();
   initialize_halftone_effect(out, options.value());
   return flight::entity::finish_entity<flight::Ref<flight::types::HalftoneEffect>>(out);

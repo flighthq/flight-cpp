@@ -111,7 +111,7 @@ inline double world(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flig
   return flight::row_get<flight::RowKey<"worldMatrices">>(skeleton).get_index(offset);
 }
 
-inline double wrap_skeleton2_dangle_flight_value_function_wrap_u000053_keleton2_u000044__u000041_ngle_flight_private_9af8393347d3365f(double degrees) {
+inline double wrap_skeleton_2d_angle_flight_value_function_wrap_u000053_keleton2_u000044__u000041_ngle_flight_private_9af8393347d3365f(double degrees) {
   double value = std::fmod(degrees, 360.0);
   if ((value > 180.0)) {
     (value -= 360.0);
@@ -131,7 +131,7 @@ inline const double minimum_determinant_flight_value_variable__u00004d__u000049_
 using x_y_8365950bd60f783f = flight::types::x_y_8365950bd60f783f;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON2D_X_Y_8365950BD60F783F
 
-inline std::optional<flight::Ref<x_y_8365950bd60f783f>> to_skeleton2_dparent_space_flight_value_function_to_u000053_keleton2_u000044__u000050_arent_u000053_pace_flight_private_9af8393347d3365f(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton, double bone_index, double x, double y) {
+inline std::optional<flight::Ref<x_y_8365950bd60f783f>> to_skeleton_2d_parent_space_flight_value_function_to_u000053_keleton2_u000044__u000050_arent_u000053_pace_flight_private_9af8393347d3365f(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton, double bone_index, double x, double y) {
   const double parent_index = flight::row_get<flight::RowKey<"bones">>(skeleton).element(bone_index)->parent_index;
   if ((parent_index < 0.0)) {
     return std::optional<flight::Ref<x_y_8365950bd60f783f>>{flight::make_ref<x_y_8365950bd60f783f>(x_y_8365950bd60f783f{.x = x, .y = y})};

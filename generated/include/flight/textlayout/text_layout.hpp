@@ -442,7 +442,7 @@ inline void build_groups(flight::Array<flight::Ref<flight::types::TextLayoutGrou
           }
         }
         if (should_wrap) {
-          std::optional<flight::Ref<flight::types::TextLayoutGroup>> trim_target = std::optional<flight::Ref<flight::types::TextLayoutGroup>>{([&]() -> flight::Ref<flight::types::TextLayoutGroup> { auto nullish_coalesce_left = active_group_capture.read_binding(); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return ((static_cast<double>(groups.size()) > 0.0) ? groups.element((static_cast<double>(groups.size()) - 1.0)) : nullptr); }())};
+          auto trim_target = ([&]() -> std::optional<flight::Ref<flight::types::TextLayoutGroup>> { auto nullish_coalesce_left = active_group_capture.read_binding(); if (nullish_coalesce_left.has_value()) return std::optional<flight::Ref<flight::types::TextLayoutGroup>>{nullish_coalesce_left.value()}; return ((static_cast<double>(groups.size()) > 0.0) ? std::optional{groups.element((static_cast<double>(groups.size()) - 1.0))} : std::nullopt); }());
           if (flight::to_boolean(((trim_target && (static_cast<double>(trim_target.value()->positions.size()) > 0.0)) && (trim_target.value()->line_index == line_index_capture.read_binding())))) {
             const double trailing_w = trim_target.value()->positions.element((static_cast<double>(trim_target.value()->positions.size()) - 1.0));
             (trim_target.value()->width -= trailing_w);
@@ -620,7 +620,7 @@ inline void justify_lines(flight::Array<flight::Ref<flight::types::TextLayoutGro
 inline void apply_alignment(flight::Array<flight::Ref<flight::types::TextLayoutGroup>> groups, double container_width, flight::Array<double> line_widths, flight::types::TextDirection direction, flight::types::TextJustification justification, flight::Set<double> paragraph_last_lines_2, flight::String text) {
   for (auto g : groups) {
     const double line_w = line_widths.element(g->line_index);
-    flight::String align = ([&]() -> flight::String { auto nullish_coalesce_left = g->format->align; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("left"); }());
+    flight::String align = ([&]() -> flight::String { auto nullish_coalesce_left_2 = g->format->align; if (nullish_coalesce_left_2.has_value()) return nullish_coalesce_left_2.value(); return flight::String("left"); }());
     double shift = 0.0;
     const flight::String resolved = ((align == flight::String("start")) ? ((direction == flight::String("RightToLeft")) ? flight::String("right") : flight::String("left")) : ((align == flight::String("end")) ? ((direction == flight::String("RightToLeft")) ? flight::String("left") : flight::String("right")) : align));
     if ((resolved == flight::String("right"))) {

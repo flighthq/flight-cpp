@@ -69,7 +69,7 @@ inline flight::Ref<flight::types::AnimationTrack> create_animation_track(flight:
 
 
 // NOT GENERATED: function cloneNumberBuffer -- source line 203
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+// refusal: cpp-instanceof-operand-unresolved [source-portability]
 //
 // The source it stood for:
 //   function cloneNumberBuffer(src: ArrayLike<number>): number[] | Float32Array {
@@ -79,8 +79,9 @@ inline flight::Ref<flight::types::AnimationTrack> create_animation_track(flight:
 //     return out;
 //   }
 //   
-// cpp emission failed for @flighthq/animation/packages/animation/src/animationTrack.ts: contextual union value
-// type flight::SequenceView<double> is not a represented runtime domain
+// cpp emission failed for @flighthq/animation/packages/animation/src/animationTrack.ts: an instanceof test
+// against Float32Array answers from an erased carrier or from a union, and this operand's recorded type is
+// neither; declare the operand as the union its alternatives belong to
 
 inline flight::Ref<flight::types::AnimationTrack> clone_animation_track(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationTrack>>>> track) {
   flight::types::EntityConstruction<flight::Ref<flight::types::AnimationTrack>> out = flight::entity::allocate_entity<flight::Ref<flight::types::AnimationTrack>>();

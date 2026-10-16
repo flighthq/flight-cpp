@@ -5,21 +5,14 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function createMorphShapeRuntime -- source line 58
 //   missing: function getMorphShapeRuntime -- source line 62
-//   missing: function initializeMorphShapeData -- source line 66
-//   missing: function createMorphShapeData -- source line 49
-//   missing: function createMorphShape -- source line 40
+#include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
-
-#include <flight/path/path_morph.hpp>
-
-#include <flight/path/path.hpp>
-
-#include <flight/types/shape.hpp>
 
 #include <flight/types/path_morph.hpp>
 
@@ -27,38 +20,56 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/morph_shape.hpp>
 
-#include <flight/node/revision.hpp>
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct MorphShape; }
+namespace flight::types { struct MorphShapeColorPaintBinding; }
+namespace flight::types { struct MorphShapeData; }
+namespace flight::types { struct MorphShapeGradientPaintBinding; }
+namespace flight::types { struct MorphShapeLinePaintBinding; }
+namespace flight::types { struct MorphShapePathBinding; }
+namespace flight::types { struct MorphShapeRuntime; }
+namespace flight::types { struct MorphShapeTexturePaintBinding; }
+namespace flight::types { struct Node2DData; }
+namespace flight::types { struct Node2DRuntime; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct Path; }
+namespace flight::types { struct PathMorph; }
+namespace flight::types { struct ShapeRuntime; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+namespace flight::types { template <typename Traits> struct Node; }
 
+#include <flight/entity/entity.hpp>
+#include <flight/node/revision.hpp>
+#include <flight/path/path.hpp>
+#include <flight/path/path_morph.hpp>
+#include <flight/scene2d/display_object.hpp>
+#include <flight/types/contract.hpp>
 #include <flight/shape/morph_shape_paint.hpp>
-#include <flight/shape/shape.hpp>
 #include <flight/shape/shape_commands.hpp>
 
 namespace flight::shape {
-
-using flight::path::create_path;
-using flight::path::sample_path_morph;
 
 using flight::types::MorphShape;
 using flight::types::MorphShapePathBinding;
 using flight::types::Path;
 using flight::types::PathMorph;
-using flight::types::Shape;
 
-using flight::node::invalidate_content;
-
-inline flight::Ref<Path> append_morph_shape_path(flight::Ref<MorphShape> shape, std::optional<flight::Ref<PathMorph>> morph = std::nullopt) {
-  morph = morph.value_or(shape->data.morph);
-  std::optional<flight::Ref<MorphShapePathBinding>> binding = shape->data.path_bindings.find([=](flight::Ref<MorphShapePathBinding> candidate) {
+inline flight::Ref<flight::types::Path> append_morph_shape_path(flight::Ref<flight::types::MorphShape> shape, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathMorph>>>>> morph = std::nullopt) {
+  morph = morph.value_or(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathMorph>>>>>(shape->data->morph));
+  std::optional<flight::Ref<flight::types::MorphShapePathBinding>> binding = shape->data->path_bindings.find([=](flight::Ref<flight::types::MorphShapePathBinding> candidate) {
   return (candidate->morph == morph.value());
 });
   if (!binding.has_value()) {
-    flight::Ref<Path> path = create_path(morph.value()->winding);
-    sample_path_morph(path, morph.value(), shape->data.progress);
-    (binding = flight::make_ref<MorphShapePathBinding>(MorphShapePathBinding{.morph = morph.value(), .path = path}));
-    shape->data.path_bindings.push(binding.value());
+    auto path = flight::path::create_path(flight::row_get<flight::RowKey<"winding">>(morph.value()));
+    flight::path::sample_path_morph(path, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathMorph>>>>>(morph.value()), shape->data->progress);
+    (binding = std::optional<flight::Ref<flight::types::MorphShapePathBinding>>{flight::make_ref<flight::types::MorphShapePathBinding>(flight::types::MorphShapePathBinding{.morph = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathMorph>>>>>(morph.value()), .path = path})});
+    shape->data->path_bindings.push(binding.value());
   }
-  flight::Ref<Path> path_2 = binding.value()->path;
-  append_shape_path(shape, path_2->commands, path_2->data, path_2->winding);
+  auto path_2 = binding.value()->path;
+  flight::shape::append_shape_path(shape, path_2->commands, path_2->data, path_2->winding);
   return path_2;
 }
 
@@ -72,119 +83,136 @@ inline flight::Ref<Path> append_morph_shape_path(flight::Ref<MorphShape> shape, 
 //   }
 //   
 // cpp emission failed for @flighthq/shape/packages/shape/src/morphShape.ts: a reference assertion from
-// flight::Ref<ShapeRuntime> to flight::Ref<MorphShapeRuntime> has no heritage to cast along: the declarations
-// share no emitted C++ class-heritage path (source interface and intersection relationships flatten into
-// independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// flight::Ref<flight::types::ShapeRuntime> to flight::Ref<flight::types::MorphShapeRuntime> has no heritage to
+// cast along: the declarations share no emitted C++ class-heritage path (source interface and intersection
+// relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner
+// that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that
+// validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a
+// replacement row, or invent side storage
 
 
 // NOT GENERATED: function getMorphShapeRuntime -- source line 62
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function getMorphShapeRuntime(source: Readonly<MorphShape>): Readonly<MorphShapeRuntime> {
 //     return getNode2DRuntime(source) as MorphShapeRuntime;
 //   }
 //   
-// cpp emission failed for @flighthq/shape/packages/shape/src/morphShape.ts: a reference assertion from
-// flight::Ref<Node2DRuntime> to flight::Ref<MorphShapeRuntime> has no heritage to cast along: the declarations
-// share no emitted C++ class-heritage path (source interface and intersection relationships flatten into
-// independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// cpp emission failed for @flighthq/shape/packages/shape/src/morphShape.ts: a structural assertion from the
+// readonly row Readonly<Node2DRuntime> to the writable row MorphShapeRuntime claims mutation only to pass the
+// value to the readonly row Readonly<MorphShapeRuntime>. Spell the assertion as Readonly<MorphShapeRuntime> to
+// remove the writable-capability claim, but that alone cannot recover the derived owner: Readonly<Node2DRuntime>
+// does not declare shapeBoundsCommandRegistryRevision, so the retained row has no proven cells for those
+// members. No writable carrier is justified for this read-only call. Preserve MorphShapeRuntime in the callback
+// parameter through a named typed runner or carrier, or make an intentionally erased registry validate and
+// recover that owner before invoking the typed runner; a tag or registry key carried beside the value does not
+// prove which owner the reference retains. If mutation is intended elsewhere, the storage and accessor
+// themselves must retain writable MorphShapeRuntime capability rather than adding it with an assertion. The
+// compiler will not cast, copy, materialize, or create side storage for either missing proof.
 
-
-// NOT GENERATED: function initializeMorphShapeData -- source line 66
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   export function initializeMorphShapeData(
-//     out: EntityConstruction<MorphShapeData>,
-//     morph: Readonly<PathMorph>,
-//     data?: Readonly<Partial<MorphShapeData>>,
-//   ): void {
-//     const progress = data?.progress ?? 0;
-//     const path = data?.path ?? createPath(morph.winding);
-//     const pathBindings = [{ morph, path }];
-//     const inputPathBindings = data?.pathBindings ?? [];
-//     for (let i = 0; i < inputPathBindings.length; i++) {
-//       const binding = inputPathBindings[i];
-//       if (binding.morph !== morph && binding.path !== path) pathBindings.push(binding);
-//     }
-//     for (let i = 0; i < pathBindings.length; i++) {
-//       samplePathMorph(pathBindings[i].path, pathBindings[i].morph, progress);
-//     }
-//     out.commands = data?.commands ?? [];
-//     out.morph = morph;
-//     out.paintBindings = [...(data?.paintBindings ?? [])];
-//     out.path = path;
-//     out.pathBindings = pathBindings;
-//     out.progress = progress;
-//     finishEntity(out);
-//     sampleMorphShapePaintBindings(out, progress);
-//   }
-//   
-//   // Samples changed progress into every stable path and paint value retained by the command stream, then
-//   // invalidates Shape content once so bounds and every backend observe one atomic state change. Reapplying
-//   // the same value is a no-op; progress remains unclamped to preserve deliberate easing overshoot.
-// cpp emission failed for @flighthq/shape/packages/shape/src/morphShape.ts: Partial<T> requires a statically
-// resolvable C++ object shape; T is named
-
-
-// NOT GENERATED: function createMorphShapeData -- source line 49
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   export function createMorphShapeData(
-//     morph: Readonly<PathMorph>,
-//     data?: Readonly<Partial<MorphShapeData>>,
-//   ): MorphShapeData {
-//     const out = allocateEntity<MorphShapeData>();
-//     initializeMorphShapeData(out, morph, data);
-//     return out;
-//   }
-//   
-// cpp emission failed for @flighthq/shape/packages/shape/src/morphShape.ts: Partial<T> requires a statically
-// resolvable C++ object shape; T is named
-
-
-// NOT GENERATED: function createMorphShape -- source line 40
-// refusal: cpp-intersection-member-shapeless [source-portability]
-//
-// The source it stood for:
-//   export function createMorphShape(morph: Readonly<PathMorph>, obj?: Readonly<PartialNode<MorphShape>>): MorphShape {
-//     return createNode2D(
-//       MorphShapeKind,
-//       obj,
-//       (data) => createMorphShapeData(morph, data),
-//       createMorphShapeRuntime,
-//     ) as MorphShape;
-//   }
-//   
-// cpp emission failed for @flighthq/shape/packages/shape/src/morphShape.ts: intersection types require C++
-// multiple-inheritance lowering: no shape for Node (argument Node2DTraits has no shape either), Node2DTraits.
-// Declare the object shape the code reads rather than intersecting a conjunct that has none
-
-inline void set_morph_shape_progress(flight::Ref<MorphShape> shape, double progress) {
-  if ((shape->data.progress == progress)) {
-    return;
-  }
-  (shape->data.progress = progress);
+inline void initialize_morph_shape_data(flight::types::EntityConstruction<flight::Ref<flight::types::MorphShapeData>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathMorph>>>> morph, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::MorphShapeData>>>>>> data = std::nullopt) {
+  const double progress = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = data; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"progress">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
+  flight::Ref<flight::types::Path> path = ([&]() -> flight::Ref<flight::types::Path> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Ref<flight::types::Path>> { auto optional_chain_receiver = data; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"path">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::path::create_path(flight::row_get<flight::RowKey<"winding">>(morph)); }());
+  flight::Array<flight::Ref<flight::types::MorphShapePathBinding>> path_bindings = flight::Array<flight::Ref<flight::types::MorphShapePathBinding>>{flight::make_ref<flight::types::MorphShapePathBinding>(flight::types::MorphShapePathBinding{.morph = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathMorph>>>>>(morph), .path = path})};
+  flight::Array<flight::Ref<flight::types::MorphShapePathBinding>> input_path_bindings = ([&]() -> flight::Array<flight::Ref<flight::types::MorphShapePathBinding>> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::Ref<flight::types::MorphShapePathBinding>>> { auto optional_chain_receiver = data; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"pathBindings">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<flight::Ref<flight::types::MorphShapePathBinding>>{}; }());
   {
     double i = 0.0;
-    while ((i < static_cast<double>(shape->data.path_bindings.size()))) {
+    while ((i < static_cast<double>(input_path_bindings.size()))) {
       {
-        flight::Ref<MorphShapePathBinding> binding = shape->data.path_bindings.element(i);
-        sample_path_morph(binding->path, binding->morph, progress);
+        auto binding = input_path_bindings.element(i);
+        if (((binding->morph != morph) && (binding->path != path))) {
+          path_bindings.push(binding);
+        }
       }
       (i += 1.0);
     }
   }
-  sample_morph_shape_paint_bindings(shape->data, progress);
-  invalidate_content(shape);
+  {
+    double i_2 = 0.0;
+    while ((i_2 < static_cast<double>(path_bindings.size()))) {
+      {
+        flight::path::sample_path_morph(path_bindings.element(i_2)->path, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathMorph>>>>>(path_bindings.element(i_2)->morph), progress);
+      }
+      (i_2 += 1.0);
+    }
+  }
+  flight::row_set<flight::RowKey<"commands">>(out, ([&]() -> flight::Array<flight::types::ShapeCommandToken> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::types::ShapeCommandToken>> { auto optional_chain_receiver = data; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"commands">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<flight::types::ShapeCommandToken>{}; }()));
+  flight::row_set<flight::RowKey<"morph">>(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathMorph>>>>>(morph));
+  flight::row_set<flight::RowKey<"paintBindings">>(out, ([&]() { flight::Array<flight::types::MorphShapePaintBinding> array_spread_result; for (const auto& array_spread_item : ([&]() -> flight::Array<flight::types::MorphShapePaintBinding> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::types::MorphShapePaintBinding>> { auto optional_chain_receiver = data; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"paintBindings">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<flight::types::MorphShapePaintBinding>{}; }())) { array_spread_result.push(array_spread_item); } return array_spread_result; }()));
+  flight::row_set<flight::RowKey<"path">>(out, path);
+  flight::row_set<flight::RowKey<"pathBindings">>(out, path_bindings);
+  flight::row_set<flight::RowKey<"progress">>(out, progress);
+  flight::entity::finish_entity<flight::Ref<flight::types::MorphShapeData>>(out);
+  flight::shape::sample_morph_shape_paint_bindings(flight::structural_ref_cast<flight::Ref<flight::types::MorphShapeData>>(out), progress);
+}
+
+inline flight::Ref<flight::types::MorphShapeData> create_morph_shape_data(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathMorph>>>> morph, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::MorphShapeData>>>>>> data = std::nullopt) {
+  flight::types::EntityConstruction<flight::Ref<flight::types::MorphShapeData>> out = flight::entity::allocate_entity<flight::Ref<flight::types::MorphShapeData>>();
+  initialize_morph_shape_data(out, morph, data);
+  return flight::structural_ref_cast<flight::Ref<flight::types::MorphShapeData>>(out);
+}
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_COMMANDS_MORPH_PATH_PAINT_BINDINGS_PATH_BINDINGS_PROGRESS_B504C262A8C4CFA6
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_COMMANDS_MORPH_PATH_PAINT_BINDINGS_PATH_BINDINGS_PROGRESS_B504C262A8C4CFA6
+struct entity_runtime_key_commands_morph_path_paint_bindings_path_bindings_progress_b504c262a8c4cfa6 : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+  std::optional<flight::Array<flight::types::ShapeCommandToken>> commands;
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathMorph>>>>> morph;
+  std::optional<flight::Ref<flight::types::Path>> path;
+  std::optional<flight::Array<flight::types::MorphShapePaintBinding>> paint_bindings;
+  std::optional<flight::Array<flight::Ref<flight::types::MorphShapePathBinding>>> path_bindings;
+  std::optional<double> progress;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_COMMANDS_MORPH_PATH_PAINT_BINDINGS_PATH_BINDINGS_PROGRESS_B504C262A8C4CFA6
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_5D66702F6B7BB16B
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_5D66702F6B7BB16B
+struct data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_5d66702f6b7bb16b : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<entity_runtime_key_commands_morph_path_paint_bindings_path_bindings_progress_b504c262a8c4cfa6>> data;
+  std::optional<bool> enabled;
+  std::optional<flight::String> kind;
+  std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::optional<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node2DTraits>>>> entity_runtime_key;
+  std::optional<double> alpha;
+  std::optional<bool> visible;
+  std::variant<flight::String, flight::Null, flight::Undefined> blend_mode = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::ClipRegion>, flight::Null, flight::Undefined> clip = std::variant<flight::Ref<flight::types::ClipRegion>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::Material2D>, flight::Null, flight::Undefined> material = std::variant<flight::Ref<flight::types::Material2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::MaterialData>, flight::Null, flight::Undefined> material_data = std::variant<flight::Ref<flight::types::MaterialData>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::optional<double> pivot_x;
+  std::optional<double> pivot_y;
+  std::optional<double> rotation;
+  std::optional<double> scale_x;
+  std::optional<double> scale_y;
+  std::optional<double> skew_x;
+  std::optional<double> skew_y;
+  std::optional<double> x;
+  std::optional<double> y;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_5D66702F6B7BB16B
+
+inline flight::Ref<flight::types::MorphShape> create_morph_shape(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathMorph>>>> morph, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_5d66702f6b7bb16b>>>>> obj = std::nullopt) {
+  return flight::structural_ref_cast<flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MorphShape>>>>>(flight::scene2d::create_node_2d<flight::Ref<flight::types::MorphShapeRuntime>>(flight::types::morph_shape_kind, obj, [=](std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::Node2DData>>>>>> data) { return create_morph_shape_data(morph, data); }, std::optional<std::function<flight::Ref<flight::types::MorphShapeRuntime>(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::MorphShapeRuntime>>>>>>)>>{[](std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::MorphShapeRuntime>>>>>> contextual_callable_argument0) -> flight::Ref<flight::types::MorphShapeRuntime> { return create_morph_shape_runtime(); }}));
+}
+
+inline void set_morph_shape_progress(flight::Ref<flight::types::MorphShape> shape, double progress) {
+  if ((shape->data->progress == progress)) {
+    return;
+  }
+  (shape->data->progress = progress);
+  {
+    double i = 0.0;
+    while ((i < static_cast<double>(shape->data->path_bindings.size()))) {
+      {
+        auto binding = shape->data->path_bindings.element(i);
+        flight::path::sample_path_morph(binding->path, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathMorph>>>>>(binding->morph), progress);
+      }
+      (i += 1.0);
+    }
+  }
+  flight::shape::sample_morph_shape_paint_bindings(shape->data, progress);
+  flight::node::invalidate_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MorphShape>>>>(shape)));
 }
 
 } // namespace flight::shape

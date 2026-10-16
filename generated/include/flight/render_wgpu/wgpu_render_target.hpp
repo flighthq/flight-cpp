@@ -20,7 +20,11 @@ namespace flight::types { struct WgpuRenderTarget; }
 #include <flight/render_wgpu/wgpu_render_state.hpp>
 #include <flight/render_wgpu/wgpu_screen_render_target.hpp>
 
+namespace flight::render_wgpu { inline flight::Ref<flight::types::WgpuRenderStateRuntime> get_wgpu_render_state_runtime(flight::Ref<flight::types::WgpuRenderState> state); }
+
 namespace flight::render_wgpu {
+
+using flight::render_wgpu::get_wgpu_render_state_runtime;
 
 using flight::types::WgpuRenderState;
 using flight::types::WgpuRenderTarget;

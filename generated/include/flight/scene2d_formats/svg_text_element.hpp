@@ -6,19 +6,16 @@
 //   missing: function createSvgTextFormat -- source line 116
 #include <flight/record.hpp>
 #include <flight/regexp.hpp>
+#include <flight/sequence_view.hpp>
+#include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
+#include <utility>
 #include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
-
-#include <flight/textlayout/text_format_range.hpp>
-
-#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
-
-#include <flight/geometry/matrix.hpp>
 
 #include <flight/types/xml_element.hpp>
 
@@ -30,35 +27,45 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/rich_text.hpp>
 
-#include <flight/types/partial_node.hpp>
-
-#include <flight/types/node_2d.hpp>
-
 #include <flight/types/matrix.hpp>
 
 #include <flight/types/import_diagnostic.hpp>
 
+#include <flight/types/blend_mode.hpp>
+
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct RichText; }
+namespace flight::types { struct SvgColor; }
+namespace flight::types { struct SvgElementContext; }
+namespace flight::types { struct SvgImportContext; }
+namespace flight::types { struct SvgStyle; }
+namespace flight::types { struct TextFormat; }
+namespace flight::types { struct TextFormatRange; }
+namespace flight::types { struct TextLabel; }
+namespace flight::types { struct XmlElement; }
+namespace flight::types { template <typename Traits> struct Node; }
+
 namespace flight::scene2d_formats {
 
-using flight::textlayout::create_text_format_range;
-
-using flight::importdiagnostics::report_import_diagnostic;
-
-using flight::geometry::create_matrix;
-
+using flight::types::ImportDiagnostic;
 using flight::types::Matrix;
-using flight::types::Node2D;
-using flight::types::PartialNode;
 using flight::types::RichText;
 using flight::types::TextFormat;
 using flight::types::TextFormatRange;
 using flight::types::TextLabel;
 using flight::types::XmlElement;
-using flight::types::import_diagnostic_severity;
+using flight::types::blend_mode;
 struct SvgTextRun;
 } // namespace flight::scene2d_formats
 
-#include <flight/scene2d_formats/svg_color.hpp>
+#include <flight/geometry/matrix.hpp>
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+#include <flight/text/rich_text.hpp>
+#include <flight/text/text_label.hpp>
+#include <flight/textlayout/text_format_range.hpp>
+#include <flight/types/contract.hpp>
 #include <flight/scene2d_formats/svg_document.hpp>
 #include <flight/scene2d_formats/svg_style.hpp>
 #include <flight/scene2d_formats/svg_xml.hpp>
@@ -67,21 +74,13 @@ namespace flight::scene2d_formats {
 
 struct SvgTextRun : public flight::ReferenceEnabled {
   double opacity;
-  flight::Ref<SvgStyle> style;
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>> style;
   flight::String text;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ALPHA_RGB_A0D7C07F9D3147BB
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ALPHA_RGB_A0D7C07F9D3147BB
-struct alpha_rgb_a0d7c07f9d3147bb : public flight::ReferenceEnabled {
-  double alpha;
-  double rgb;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ALPHA_RGB_A0D7C07F9D3147BB
-
 
 // NOT GENERATED: function createSvgTextFormat -- source line 116
-// refusal: cpp-contextual-union-inequivalent [source-portability]
+// refusal: cpp-optional-member-access-unproven [compiler-restriction]
 //
 // The source it stood for:
 //   function createSvgTextFormat(style: Readonly<SvgStyle>, opacity = 1): TextFormat {
@@ -101,27 +100,24 @@ struct alpha_rgb_a0d7c07f9d3147bb : public flight::ReferenceEnabled {
 //     };
 //   }
 //   
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgTextElement.ts: contextual
-// C++ union conversion requires equivalent source union evidence: target multiVariant carriers
-// [flight::Ref<SvgColor>, flight::Ref<alpha_rgb_a0d7c07f9d3147bb>] from binary source optionalSingle carriers
-// [flight::Ref<SvgColor>]. Narrow or convert the source expression so each of its alternatives names exactly one
-// destination union alternative. The carrier lists show which alternatives lack an exact carrier; preserve the
-// declared collection or member union alias before flow expansion. For a Map or WeakMap lookup followed by a
-// rebind, ensure every rebound member already has the declared value owner member's carrier -- a Readonly
-// structural view does not become a mutable nominal Ref.
+// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgTextElement.ts: property rgb
+// on C++ absence-carrying storage requires narrowed access: no present-value proof reaches this read. Guard this
+// exact receiver (bind a property or call result to a local first if evaluating it again would produce a
+// different value), then read the member only in the present branch. The compiler will not discard the absence
+// state or call value() without that proof
 
-inline flight::Array<flight::Ref<XmlElement>> collect_svg_tspan_elements(flight::Ref<XmlElement> element) {
-  flight::Array<flight::Ref<XmlElement>> out = flight::Array<flight::Ref<XmlElement>>{};
-  for (auto child : element->children) {
-    if ((svg_local_name(child->name) == flight::String("tspan"))) {
+inline flight::Array<flight::Ref<flight::types::XmlElement>> collect_svg_tspan_elements(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>> element) {
+  flight::Array<flight::Ref<flight::types::XmlElement>> out = flight::Array<flight::Ref<flight::types::XmlElement>>{};
+  for (auto child : flight::row_get<flight::RowKey<"children">>(element)) {
+    if ((flight::scene2d_formats::svg_local_name(child->name) == flight::String("tspan"))) {
       out.push(child);
     }
-    ([&]() { auto&& array_push_receiver = out; const auto array_push_arguments = ([&]() { flight::Array<flight::Ref<XmlElement>> array_spread_result; for (const auto& array_spread_item : collect_svg_tspan_elements(child)) { array_spread_result.push(array_spread_item); } return array_spread_result; }()); for (const auto& array_push_item : array_push_arguments) { array_push_receiver.push(array_push_item); } return static_cast<double>(array_push_receiver.size()); }());
+    ([&]() { auto&& array_push_receiver = out; const auto array_push_arguments = ([&]() { flight::Array<flight::Ref<flight::types::XmlElement>> array_spread_result; for (const auto& array_spread_item : collect_svg_tspan_elements(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>(child)))) { array_spread_result.push(array_spread_item); } return array_spread_result; }()); for (const auto& array_push_item : array_push_arguments) { array_push_receiver.push(array_push_item); } return static_cast<double>(array_push_receiver.size()); }());
   }
   return out;
 }
 
-inline void append_svg_text_run(flight::Array<flight::Ref<SvgTextRun>> out, flight::Ref<SvgStyle> style, flight::String source, double opacity) {
+inline void append_svg_text_run(flight::Array<flight::Ref<SvgTextRun>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>> style, flight::String source, double opacity) {
   flight::String text = source.replace(flight::RegExp(flight::String("[\\n\\r]"), flight::String("g")), flight::String("")).replace(flight::RegExp(flight::String("\\t"), flight::String("g")), flight::String(" ")).replace(flight::RegExp(flight::String(" +"), flight::String("g")), flight::String(" "));
   if ((static_cast<double>(out.size()) == 0.0)) {
     (text = text.trim_start());
@@ -139,42 +135,42 @@ inline void append_svg_text_run(flight::Array<flight::Ref<SvgTextRun>> out, flig
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ATTRIBUTES_CHILDREN_CONTENT_NAME_TEXT_5F00001286F348A6
 struct attributes_children_content_name_text_5f00001286f348a6 : public flight::ReferenceEnabled {
   flight::Record<flight::String, flight::String> attributes;
-  flight::Array<flight::Ref<XmlElement>> children;
-  flight::Array<std::variant<flight::Ref<XmlElement>, flight::String>> content;
+  flight::Array<flight::Ref<flight::types::XmlElement>> children;
+  flight::Array<std::variant<flight::Ref<flight::types::XmlElement>, flight::String>> content;
   flight::String name;
   flight::String text;
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ATTRIBUTES_CHILDREN_CONTENT_NAME_TEXT_5F00001286F348A6
 
-inline void collect_svg_text_runs(flight::Ref<XmlElement> element, flight::Ref<SvgStyle> style, flight::Ref<SvgImportContext> context, flight::Array<flight::Ref<SvgTextRun>> out, std::optional<double> opacity = std::nullopt) {
+inline void collect_svg_text_runs(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>> element, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>> style, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgImportContext>>>> context, flight::Array<flight::Ref<SvgTextRun>> out, std::optional<double> opacity = std::nullopt) {
   opacity = opacity.value_or(1.0);
-  if ((style->display == flight::String("none"))) {
+  if ((flight::row_get<flight::RowKey<"display">>(style) == flight::String("none"))) {
     return;
   }
-  for (auto content : element->content) {
+  for (auto content : flight::row_get<flight::RowKey<"content">>(element)) {
     if (content.index() == 1) {
-      if ((style->visibility == flight::String("visible"))) {
+      if ((flight::row_get<flight::RowKey<"visibility">>(style) == flight::String("visible"))) {
         append_svg_text_run(out, style, std::get<1>(content), opacity.value());
       }
       continue;
     }
-    if ((svg_local_name(std::get<0>(content)->name) != flight::String("tspan"))) {
+    if ((flight::scene2d_formats::svg_local_name(std::get<0>(content)->name) != flight::String("tspan"))) {
       continue;
     }
-    flight::Ref<SvgStyle> child_style = resolve_svg_style(std::get<0>(content), style, context);
-    collect_svg_text_runs(std::get<0>(content), child_style, context, out, (opacity.value() * child_style->opacity));
+    auto child_style = flight::scene2d_formats::resolve_svg_style(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<attributes_children_content_name_text_5f00001286f348a6>>>>(std::get<0>(content))), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>>(style), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgImportContext>>>>>(context));
+    collect_svg_text_runs(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<attributes_children_content_name_text_5f00001286f348a6>>>>(std::get<0>(content))), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>(child_style)), context, out, (opacity.value() * child_style->opacity));
   }
 }
 
-inline bool has_flattened_svg_text_position(flight::Array<flight::Ref<XmlElement>> tspans, std::optional<flight::Ref<XmlElement>> first_tspan) {
-  return tspans.some([=](flight::Ref<XmlElement> tspan) { return flight::Array{flight::String("x"), flight::String("y"), flight::String("dx"), flight::String("dy"), flight::String("rotate"), flight::String("transform")}.some([=](flight::String name) { return (svg_attribute(tspan, name).has_value() && (((tspan != first_tspan) || (name == flight::String("rotate"))) || (name == flight::String("transform")))); }); });
+inline bool has_flattened_svg_text_position(flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>> tspans, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>> first_tspan) {
+  return tspans.some([=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>> tspan) { return flight::Array{flight::String("x"), flight::String("y"), flight::String("dx"), flight::String("dy"), flight::String("rotate"), flight::String("transform")}.some([=](flight::String name) { return (flight::scene2d_formats::svg_attribute(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(tspan), name).has_value() && (((tspan != first_tspan) || (name == flight::String("rotate"))) || (name == flight::String("transform")))); }); });
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_OPACITY_STYLE_TEXT_1E215AE1FA2AB6B5
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_OPACITY_STYLE_TEXT_1E215AE1FA2AB6B5
 struct opacity_style_text_1e215ae1fa2ab6b5 : public flight::ReferenceEnabled {
   double opacity;
-  flight::Ref<SvgStyle> style;
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>> style;
   flight::String text;
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_OPACITY_STYLE_TEXT_1E215AE1FA2AB6B5
@@ -188,68 +184,137 @@ struct alpha_name_visible_3e284966d2725e72 : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ALPHA_NAME_VISIBLE_3E284966D2725E72
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_AUTO_SIZE_HEIGHT_TEXT_TEXT_FORMAT_WIDTH_8B001F1C0BC03108
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_AUTO_SIZE_HEIGHT_TEXT_TEXT_FORMAT_WIDTH_8B001F1C0BC03108
-struct auto_size_height_text_text_format_width_8b001f1c0bc03108 : public flight::ReferenceEnabled {
-  flight::String auto_size;
-  double height;
-  flight::String text;
-  flight::Ref<TextFormat> text_format;
-  double width;
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ENTITY_RUNTIME_KEY_AUTO_SIZE_HEIGHT_TEXT_TEXT_FORMAT_VERTICAL_ALIGN_WIDTH_517F4DB18E11EF05
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ENTITY_RUNTIME_KEY_AUTO_SIZE_HEIGHT_TEXT_TEXT_FORMAT_VERTICAL_ALIGN_WIDTH_517F4DB18E11EF05
+struct entity_runtime_key_auto_size_height_text_text_format_vertical_align_width_517f4db18e11ef05 : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+  std::optional<flight::types::TextAutoSize> auto_size;
+  std::optional<double> height;
+  std::optional<flight::String> text;
+  std::optional<flight::Ref<flight::types::TextFormat>> text_format;
+  std::optional<flight::types::TextVerticalAlign> vertical_align;
+  std::optional<double> width;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_AUTO_SIZE_HEIGHT_TEXT_TEXT_FORMAT_WIDTH_8B001F1C0BC03108
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ENTITY_RUNTIME_KEY_AUTO_SIZE_HEIGHT_TEXT_TEXT_FORMAT_VERTICAL_ALIGN_WIDTH_517F4DB18E11EF05
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_AUTO_SIZE_DEFAULT_TEXT_FORMAT_HEIGHT_TEXT_TEXT_FORMAT_TEXT_FORMAT_RANGES_WIDTH_92E5291AAC70FF06
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_AUTO_SIZE_DEFAULT_TEXT_FORMAT_HEIGHT_TEXT_TEXT_FORMAT_TEXT_FORMAT_RANGES_WIDTH_92E5291AAC70FF06
-struct auto_size_default_text_format_height_text_text_format_text_format_ranges_width_92e5291aac70ff06 : public flight::ReferenceEnabled {
-  flight::String auto_size;
-  flight::Ref<TextFormat> default_text_format;
-  double height;
-  flight::String text;
-  flight::Ref<TextFormat> text_format;
-  flight::Array<flight::Ref<TextFormatRange>> text_format_ranges;
-  double width;
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_1E6E1BD508B15239
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_1E6E1BD508B15239
+struct data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_1e6e1bd508b15239 : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<entity_runtime_key_auto_size_height_text_text_format_vertical_align_width_517f4db18e11ef05>> data;
+  std::optional<bool> enabled;
+  std::optional<flight::String> kind;
+  std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::optional<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node2DTraits>>>> entity_runtime_key;
+  std::optional<double> alpha;
+  std::optional<bool> visible;
+  std::variant<flight::String, flight::Null, flight::Undefined> blend_mode = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::ClipRegion>, flight::Null, flight::Undefined> clip = std::variant<flight::Ref<flight::types::ClipRegion>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::Material2D>, flight::Null, flight::Undefined> material = std::variant<flight::Ref<flight::types::Material2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::MaterialData>, flight::Null, flight::Undefined> material_data = std::variant<flight::Ref<flight::types::MaterialData>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::optional<double> pivot_x;
+  std::optional<double> pivot_y;
+  std::optional<double> rotation;
+  std::optional<double> scale_x;
+  std::optional<double> scale_y;
+  std::optional<double> skew_x;
+  std::optional<double> skew_y;
+  std::optional<double> x;
+  std::optional<double> y;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_AUTO_SIZE_DEFAULT_TEXT_FORMAT_HEIGHT_TEXT_TEXT_FORMAT_TEXT_FORMAT_RANGES_WIDTH_92E5291AAC70FF06
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_1E6E1BD508B15239
 
-inline flight::Ref<Node2D> create_svg_text_node(flight::Ref<XmlElement> element, flight::Ref<SvgStyle> parent_style, flight::Ref<SvgImportContext> context) {
-  flight::Ref<SvgStyle> style = resolve_svg_style(element, parent_style, context);
-  flight::Ref<TextFormat> format = create_svg_text_format(style, std::nullopt);
-  flight::Array<flight::Ref<XmlElement>> direct_tspans = element->children.filter([=](flight::Ref<XmlElement> child) { return (svg_local_name(child->name) == flight::String("tspan")); });
-  flight::Array<flight::Ref<XmlElement>> tspans = collect_svg_tspan_elements(element);
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ENTITY_RUNTIME_KEY_AUTO_SIZE_HEIGHT_TEXT_TEXT_FORMAT_VERTICAL_ALIGN_WIDTH_BACKGROUND_BACKGROUND_COLOR_BORDER_BORDER_COLOR_CONDENSE_WHITE_DEFAULT_TEXT_FORMAT_MAX_CHARS_MOUSE_WHEEL_ENABLED_MULTILINE_SCROLL_H_SCROLL_V_SELECTABLE_TEXT_COLOR_TEXT_FORMAT_RANGES_WORD_WRAP_491C36E0EB5B95AC
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ENTITY_RUNTIME_KEY_AUTO_SIZE_HEIGHT_TEXT_TEXT_FORMAT_VERTICAL_ALIGN_WIDTH_BACKGROUND_BACKGROUND_COLOR_BORDER_BORDER_COLOR_CONDENSE_WHITE_DEFAULT_TEXT_FORMAT_MAX_CHARS_MOUSE_WHEEL_ENABLED_MULTILINE_SCROLL_H_SCROLL_V_SELECTABLE_TEXT_COLOR_TEXT_FORMAT_RANGES_WORD_WRAP_491C36E0EB5B95AC
+struct entity_runtime_key_auto_size_height_text_text_format_vertical_align_width_background_background_color_border_border_color_condense_white_default_text_format_max_chars_mouse_wheel_enabled_multiline_scroll_h_scroll_v_selectable_text_color_text_format_ranges_word_wrap_491c36e0eb5b95ac : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+  std::optional<flight::types::TextAutoSize> auto_size;
+  std::optional<double> height;
+  std::optional<flight::String> text;
+  std::optional<flight::Ref<flight::types::TextFormat>> text_format;
+  std::optional<flight::types::TextVerticalAlign> vertical_align;
+  std::optional<double> width;
+  std::optional<bool> background;
+  std::optional<double> background_color;
+  std::optional<bool> border;
+  std::optional<double> border_color;
+  std::optional<bool> condense_white;
+  std::optional<flight::Ref<flight::types::TextFormat>> default_text_format;
+  std::optional<double> max_chars;
+  std::optional<bool> mouse_wheel_enabled;
+  std::optional<bool> multiline;
+  std::optional<double> scroll_h;
+  std::optional<double> scroll_v;
+  std::optional<bool> selectable;
+  std::optional<double> text_color;
+  std::optional<flight::Array<flight::Ref<flight::types::TextFormatRange>>> text_format_ranges;
+  std::optional<bool> word_wrap;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ENTITY_RUNTIME_KEY_AUTO_SIZE_HEIGHT_TEXT_TEXT_FORMAT_VERTICAL_ALIGN_WIDTH_BACKGROUND_BACKGROUND_COLOR_BORDER_BORDER_COLOR_CONDENSE_WHITE_DEFAULT_TEXT_FORMAT_MAX_CHARS_MOUSE_WHEEL_ENABLED_MULTILINE_SCROLL_H_SCROLL_V_SELECTABLE_TEXT_COLOR_TEXT_FORMAT_RANGES_WORD_WRAP_491C36E0EB5B95AC
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_B9C938052A2CC8A9
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_B9C938052A2CC8A9
+struct data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_b9c938052a2cc8a9 : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<entity_runtime_key_auto_size_height_text_text_format_vertical_align_width_background_background_color_border_border_color_condense_white_default_text_format_max_chars_mouse_wheel_enabled_multiline_scroll_h_scroll_v_selectable_text_color_text_format_ranges_word_wrap_491c36e0eb5b95ac>> data;
+  std::optional<bool> enabled;
+  std::optional<flight::String> kind;
+  std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::optional<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node2DTraits>>>> entity_runtime_key;
+  std::optional<double> alpha;
+  std::optional<bool> visible;
+  std::variant<flight::String, flight::Null, flight::Undefined> blend_mode = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::ClipRegion>, flight::Null, flight::Undefined> clip = std::variant<flight::Ref<flight::types::ClipRegion>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::Material2D>, flight::Null, flight::Undefined> material = std::variant<flight::Ref<flight::types::Material2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::MaterialData>, flight::Null, flight::Undefined> material_data = std::variant<flight::Ref<flight::types::MaterialData>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::optional<double> pivot_x;
+  std::optional<double> pivot_y;
+  std::optional<double> rotation;
+  std::optional<double> scale_x;
+  std::optional<double> scale_y;
+  std::optional<double> skew_x;
+  std::optional<double> skew_y;
+  std::optional<double> x;
+  std::optional<double> y;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_B9C938052A2CC8A9
+
+inline flight::types::Node2D create_svg_text_node(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>> element, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>> parent_style, flight::Ref<flight::types::SvgImportContext> context) {
+  auto style = flight::scene2d_formats::resolve_svg_style(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(element), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>>(parent_style), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgImportContext>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SvgImportContext>>>>(context)));
+  auto format = create_svg_text_format(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>(style)), std::nullopt);
+  flight::Array<flight::Ref<flight::types::XmlElement>> direct_tspans = flight::row_get<flight::RowKey<"children">>(element).filter([=](flight::Ref<flight::types::XmlElement> child) { return (flight::scene2d_formats::svg_local_name(child->name) == flight::String("tspan")); });
+  flight::Array<flight::Ref<flight::types::XmlElement>> tspans = collect_svg_tspan_elements(element);
   flight::Array<flight::Ref<SvgTextRun>> runs = flight::Array<flight::Ref<SvgTextRun>>{};
-  collect_svg_text_runs(element, style, context, runs, std::nullopt);
+  collect_svg_text_runs(element, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>(style)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgImportContext>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SvgImportContext>>>>(context)), runs, std::nullopt);
   std::optional<flight::Ref<opacity_style_text_1e215ae1fa2ab6b5>> last_run = runs.get((static_cast<double>(runs.size()) - 1.0));
-  if (last_run.has_value()) {
+  if (([&]() { const auto& presence_operand = last_run; return presence_operand.has_value(); }())) {
     (last_run.value()->text = last_run.value()->text.trim_end());
   }
   const flight::String text = runs.map([=](flight::Ref<SvgTextRun> run) { return run->text; }).join(flight::String(""));
-  flight::Array<flight::Ref<TextFormatRange>> ranges = flight::Array<flight::Ref<TextFormatRange>>{};
+  flight::Array<flight::Ref<flight::types::TextFormatRange>> ranges = flight::Array<flight::Ref<flight::types::TextFormatRange>>{};
   double offset = 0.0;
   for (auto run : runs) {
     const double end = (offset + static_cast<double>(run->text.length()));
-    if ((run->style != style)) {
-      ranges.push(create_text_format_range(create_svg_text_format(run->style, run->opacity), offset, end));
+    if ((run->style != flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>(style))) {
+      ranges.push(flight::textlayout::create_text_format_range(create_svg_text_format(run->style, run->opacity), offset, end));
     }
     (offset = end);
   }
-  std::optional<flight::Ref<XmlElement>> first_tspan = direct_tspans.get(0.0);
-  flight::Ref<XmlElement> x_element = ((!svg_attribute(element, flight::String("x")).has_value() && first_tspan.has_value()) ? first_tspan.value() : element);
-  flight::Ref<XmlElement> y_element = ((!svg_attribute(element, flight::String("y")).has_value() && first_tspan.has_value()) ? first_tspan.value() : element);
-  const double x = ((svg_first_number(svg_attribute(x_element, flight::String("x")), 0.0) + svg_first_number(svg_attribute(element, flight::String("dx")), 0.0)) + ((x_element == element) ? 0.0 : svg_first_number(svg_attribute(x_element, flight::String("dx")), 0.0)));
-  const double y = (((svg_first_number(svg_attribute(y_element, flight::String("y")), 0.0) + svg_first_number(svg_attribute(element, flight::String("dy")), 0.0)) + ((y_element == element) ? 0.0 : svg_first_number(svg_attribute(y_element, flight::String("dy")), 0.0))) - style->font_size);
-  auto common = flight::make_ref<alpha_name_visible_3e284966d2725e72>(alpha_name_visible_3e284966d2725e72{.alpha = style->opacity, .name = svg_attribute(element, flight::String("id")), .visible = ((style->display != flight::String("none")) && (style->visibility == flight::String("visible")))});
-  flight::Ref<TextLabel> label = ((static_cast<double>(ranges.size()) == 0.0) ? create_text_label(flight::make_ref<PartialNode<flight::Ref<TextLabel>>>(PartialNode<flight::Ref<TextLabel>>{.data = flight::make_ref<auto_size_height_text_text_format_width_8b001f1c0bc03108>(auto_size_height_text_text_format_width_8b001f1c0bc03108{.auto_size = flight::String("left"), .height = (style->font_size * 1.25), .text = text, .text_format = format, .width = 10000.0})})) : create_rich_text(flight::make_ref<PartialNode<flight::Ref<RichText>>>(PartialNode<flight::Ref<RichText>>{.data = flight::make_ref<auto_size_default_text_format_height_text_text_format_text_format_ranges_width_92e5291aac70ff06>(auto_size_default_text_format_height_text_text_format_text_format_ranges_width_92e5291aac70ff06{.auto_size = flight::String("left"), .default_text_format = format, .height = (style->font_size * 1.25), .text = text, .text_format = format, .text_format_ranges = ranges, .width = 10000.0})})));
-  if (has_flattened_svg_text_position(tspans, std::optional<flight::Ref<XmlElement>>{first_tspan.value()})) {
-    report_import_diagnostic(context->diagnostics, import_diagnostic_severity.recover, flight::String("svg.tspan-position-flattened"), flight::String("createSvgTextNode"), {{flight::String("count"), std::variant<bool, double, flight::String>{std::in_place_type<double>, static_cast<double>(tspans.size())}}});
+  std::optional<flight::Ref<flight::types::XmlElement>> first_tspan = direct_tspans.get(0.0);
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>> x_element = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>(((!flight::scene2d_formats::svg_attribute(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(element), flight::String("x")).has_value() && ([&]() { const auto& presence_operand = first_tspan; return presence_operand.has_value(); }())) ? first_tspan : element)));
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>> y_element = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>(((!flight::scene2d_formats::svg_attribute(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(element), flight::String("y")).has_value() && ([&]() { const auto& presence_operand = first_tspan; return presence_operand.has_value(); }())) ? first_tspan : element)));
+  const double x = ((flight::scene2d_formats::svg_first_number(flight::scene2d_formats::svg_attribute(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(x_element), flight::String("x")), 0.0) + flight::scene2d_formats::svg_first_number(flight::scene2d_formats::svg_attribute(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(element), flight::String("dx")), 0.0)) + ((x_element == element) ? 0.0 : flight::scene2d_formats::svg_first_number(flight::scene2d_formats::svg_attribute(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(x_element), flight::String("dx")), 0.0)));
+  const double y = (((flight::scene2d_formats::svg_first_number(flight::scene2d_formats::svg_attribute(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(y_element), flight::String("y")), 0.0) + flight::scene2d_formats::svg_first_number(flight::scene2d_formats::svg_attribute(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(element), flight::String("dy")), 0.0)) + ((y_element == element) ? 0.0 : flight::scene2d_formats::svg_first_number(flight::scene2d_formats::svg_attribute(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(y_element), flight::String("dy")), 0.0))) - style->font_size);
+  auto common = flight::make_ref<alpha_name_visible_3e284966d2725e72>(alpha_name_visible_3e284966d2725e72{.alpha = style->opacity, .name = flight::scene2d_formats::svg_attribute(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(element), flight::String("id")), .visible = ((style->display != flight::String("none")) && (style->visibility == flight::String("visible")))});
+  auto label = ((static_cast<double>(ranges.size()) == 0.0) ? flight::text::create_text_label(([&]() { auto&& structural_spread_source = common; auto structural_spread_field_alpha = structural_spread_source->alpha; auto structural_spread_field_name = structural_spread_source->name; auto structural_spread_field_visible = structural_spread_source->visible; auto structural_spread_field_data = flight::make_ref<flight::types::TextLabelData>(flight::types::TextLabelData{.auto_size = flight::String("left"), .height = (style->font_size * 1.25), .text = text, .text_format = format, .width = 10000.0}); return flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_1e6e1bd508b15239>>>>(flight::row_field<flight::RowKey<"alpha">>(std::move(structural_spread_field_alpha)), flight::row_field<flight::RowKey<"name">>(std::move(structural_spread_field_name)), flight::row_field<flight::RowKey<"visible">>(std::move(structural_spread_field_visible)), flight::row_field<flight::RowKey<"data">>(std::move(structural_spread_field_data))); }())) : flight::text::create_rich_text(([&]() { auto&& structural_spread_source_2 = common; auto structural_spread_field_alpha_2 = structural_spread_source_2->alpha; auto structural_spread_field_name_2 = structural_spread_source_2->name; auto structural_spread_field_visible_2 = structural_spread_source_2->visible; auto structural_spread_field_data_2 = ([&]() { auto object_member_auto_size = flight::String("left"); auto object_member_default_text_format = format; auto object_member_height = (style->font_size * 1.25); auto object_member_text = text; auto object_member_text_format = format; auto object_member_text_format_ranges = ranges; auto object_member_width = 10000.0; return flight::make_ref<flight::types::RichTextData>(flight::types::RichTextData{.auto_size = object_member_auto_size, .height = object_member_height, .text = object_member_text, .text_format = object_member_text_format, .width = object_member_width, .default_text_format = object_member_default_text_format, .text_format_ranges = object_member_text_format_ranges}); }()); return flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_b9c938052a2cc8a9>>>>(flight::row_field<flight::RowKey<"alpha">>(std::move(structural_spread_field_alpha_2)), flight::row_field<flight::RowKey<"name">>(std::move(structural_spread_field_name_2)), flight::row_field<flight::RowKey<"visible">>(std::move(structural_spread_field_visible_2)), flight::row_field<flight::RowKey<"data">>(std::move(structural_spread_field_data_2))); }())));
+  if (has_flattened_svg_text_position(tspans, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>(first_tspan))})) {
+    flight::importdiagnostics::report_import_diagnostic(context->diagnostics, flight::types::import_diagnostic_severity->recover, flight::String("svg.tspan-position-flattened"), flight::String("createSvgTextNode"), {{flight::String("count"), std::variant<bool, double, flight::String>{std::in_place_type<double>, static_cast<double>(tspans.size())}}});
   }
-  apply_svg_element_appearance(label, element, parent_style, context, std::optional<flight::Ref<Matrix>>{create_matrix(1.0, 0.0, 0.0, 1.0, x, y)});
-  apply_svg_element_clip_family(label, element, context);
-  return label;
+  flight::scene2d_formats::apply_svg_element_appearance(flight::structural_ref_cast<flight::types::Node2D>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLabel>>>>(label)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(element), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>>(parent_style), context, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(flight::geometry::create_matrix(1.0, 0.0, 0.0, 1.0, x, y)))}, std::nullopt);
+  flight::scene2d_formats::apply_svg_element_clip_family(flight::structural_ref_cast<flight::types::Node2D>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLabel>>>>(label)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(element), context);
+  return flight::structural_ref_cast<flight::types::Node2D>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLabel>>>>(label));
 }
 
-inline std::optional<flight::Ref<Node2D>> svg_text_element_handler(flight::Ref<SvgElementContext> context) {
-  return std::optional<flight::Ref<Node2D>>{create_svg_text_node(context->element, context->parent_style, context->import)};
+inline std::optional<flight::types::Node2D> svg_text_element_handler(flight::Ref<flight::types::SvgElementContext> context) {
+  return std::optional<flight::StructuralRef<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>>>{create_svg_text_node(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(context->element), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>>(context->parent_style), context->import)};
 }
 
 } // namespace flight::scene2d_formats

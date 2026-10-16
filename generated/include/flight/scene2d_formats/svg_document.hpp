@@ -45,8 +45,6 @@ namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::scene2d_formats {
 
-using flight::shape::register_default_shape_bounds_commands;
-
 using flight::types::ImportDiagnostic;
 using flight::types::Matrix;
 using flight::types::SvgDocumentImportOptions;

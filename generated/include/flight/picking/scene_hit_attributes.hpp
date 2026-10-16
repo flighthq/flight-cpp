@@ -26,15 +26,31 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/matrix4.hpp>
 
+namespace flight::types { struct BlinnPhongMaterial; }
+namespace flight::types { struct CustomShaderMaterial; }
+namespace flight::types { struct DepthMaterial; }
+namespace flight::types { struct EmissiveMaterial; }
+namespace flight::types { struct ExtendedPbrMaterial; }
+namespace flight::types { struct LambertMaterial; }
+namespace flight::types { struct MatcapMaterial; }
 namespace flight::types { struct Material3D; }
 namespace flight::types { struct Material; }
 namespace flight::types { struct Matrix4; }
 namespace flight::types { struct Mesh; }
 namespace flight::types { struct MeshGeometry; }
+namespace flight::types { struct NormalMaterial; }
+namespace flight::types { struct PhongMaterial; }
 namespace flight::types { struct Ray3D; }
 namespace flight::types { struct Scene3DHit; }
+namespace flight::types { struct ShadedMaterial; }
+namespace flight::types { struct SpecularGlossinessPbrMaterial; }
+namespace flight::types { struct StandardPbrMaterial; }
+namespace flight::types { struct ToonMaterial; }
+namespace flight::types { struct UnlitMaterial; }
 namespace flight::types { struct Vector2; }
 namespace flight::types { struct Vector3; }
+namespace flight::types { struct VertexColorMaterial; }
+namespace flight::types { struct WireframeMaterial; }
 
 #include <flight/geometry/matrix4.hpp>
 #include <flight/geometry/vector3.hpp>
@@ -67,13 +83,13 @@ using flight::types::Vector3;
 //   // Returns the material/subset slot owning the hit triangle, or -1 when no declared subset contains
 //   // it. This is computed on demand so the nearest-hit core remains flat and small.
 // cpp emission failed for @flighthq/picking/packages/picking/src/sceneHitAttributes.ts: contextual nullable
-// interface conversion from Material3D to Material follows TypeScript interface heritage, but flight-cpp stores
-// those declarations in independent flight::Ref<flight::types::Material3D> and
-// flight::Ref<flight::types::Material> owner types: each interface struct is emitted flattened, so the heritage
-// is not a C++ base relation and no pointer cast exists to follow. A native pointer cast would claim C++
-// inheritance the emitted interface structs do not have, materializing the target would replace object identity,
-// and a structural row would change the declared result carrier. Preserve the exact source owner in the declared
-// result and explicitly represent both owners where the branches merge, or add an owner-preserving
+// interface conversion from SpecularGlossinessPbrMaterial to Material follows TypeScript interface heritage, but
+// flight-cpp stores those declarations in independent flight::Ref<flight::types::SpecularGlossinessPbrMaterial>
+// and flight::Ref<flight::types::Material> owner types: each interface struct is emitted flattened, so the
+// heritage is not a C++ base relation and no pointer cast exists to follow. A native pointer cast would claim
+// C++ inheritance the emitted interface structs do not have, materializing the target would replace object
+// identity, and a structural row would change the declared result carrier. Preserve the exact source owner in
+// the declared result and explicitly represent both owners where the branches merge, or add an owner-preserving
 // interface-heritage carrier to the runtime contract. Declaring the destination as the derived interface where
 // the concrete type is known -- or converting where the type is still concrete rather than widening it through a
 // nullable union -- avoids the boundary altogether; closing it at the carrier needs either that runtime carrier
@@ -126,6 +142,38 @@ inline flight::Ref<w_x_y_z_5137f2b28145ccce> tangent2 = flight::make_ref<w_x_y_z
 
 inline flight::Ref<flight::types::MeshTriangleVertexIndices> triangle_flight_value_variable__u00005f_triangle_flight_private_f4fbd17575e0e859 = flight::make_ref<flight::types::MeshTriangleVertexIndices>(flight::types::MeshTriangleVertexIndices{.i0 = 0.0, .i1 = 0.0, .i2 = 0.0});
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PICKING_BINDING_UID_COLOR_ADJUSTMENTS_COLOR_ADJUSTMENTS_UNSUPPORTED_RESOLVED_COLOR_MATRIX_RESOLVED_COLOR_SCALE_BIAS_APPEARANCE_ID_BOUNDS_USING_LOCAL_BOUNDS_ID_BOUNDS_USING_LOCAL_TRANSFORM_ID_CAN_ADD_CHILD_CHILDREN_CHILDREN_ID_TRAITS_INTERACTION_SIGNALS_LOCAL_BOUNDS_ID_LOCAL_BOUNDS_USING_LOCAL_BOUNDS_ID_LOCAL_CONTENT_ID_LOCAL_TRANSFORM_ID_LOCAL_TRANSFORM_USING_LOCAL_TRANSFORM_ID_NODE_SIGNALS_INTERACTION_STATE_PARENT_PARENT_REFERENCE_ID_WORLD_BOUNDS_USING_LOCAL_BOUNDS_ID_WORLD_BOUNDS_USING_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_USING_LOCAL_TRANSFORM_ID_WORLD_TRANSFORM_USING_PARENT_TRANSFORM_ID_LOCAL_MATRIX4_LOCAL_MATRIX4_DETACHED_WORLD_MATRIX4_1000946B62AD112F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PICKING_BINDING_UID_COLOR_ADJUSTMENTS_COLOR_ADJUSTMENTS_UNSUPPORTED_RESOLVED_COLOR_MATRIX_RESOLVED_COLOR_SCALE_BIAS_APPEARANCE_ID_BOUNDS_USING_LOCAL_BOUNDS_ID_BOUNDS_USING_LOCAL_TRANSFORM_ID_CAN_ADD_CHILD_CHILDREN_CHILDREN_ID_TRAITS_INTERACTION_SIGNALS_LOCAL_BOUNDS_ID_LOCAL_BOUNDS_USING_LOCAL_BOUNDS_ID_LOCAL_CONTENT_ID_LOCAL_TRANSFORM_ID_LOCAL_TRANSFORM_USING_LOCAL_TRANSFORM_ID_NODE_SIGNALS_INTERACTION_STATE_PARENT_PARENT_REFERENCE_ID_WORLD_BOUNDS_USING_LOCAL_BOUNDS_ID_WORLD_BOUNDS_USING_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_USING_LOCAL_TRANSFORM_ID_WORLD_TRANSFORM_USING_PARENT_TRANSFORM_ID_LOCAL_MATRIX4_LOCAL_MATRIX4_DETACHED_WORLD_MATRIX4_1000946B62AD112F
+struct binding_uid_color_adjustments_color_adjustments_unsupported_resolved_color_matrix_resolved_color_scale_bias_appearance_id_bounds_using_local_bounds_id_bounds_using_local_transform_id_can_add_child_children_children_id_traits_interaction_signals_local_bounds_id_local_bounds_using_local_bounds_id_local_content_id_local_transform_id_local_transform_using_local_transform_id_node_signals_interaction_state_parent_parent_reference_id_world_bounds_using_local_bounds_id_world_bounds_using_world_transform_id_world_transform_id_world_transform_using_local_transform_id_world_transform_using_parent_transform_id_local_matrix4_local_matrix4_detached_world_matrix4_1000946b62ad112f : public flight::types::NodeRuntime<Traits> {
+  std::optional<flight::Ref<flight::types::Matrix4>> local_matrix4;
+  bool local_matrix4_detached;
+  std::optional<flight::Ref<flight::types::Matrix4>> world_matrix4;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PICKING_BINDING_UID_COLOR_ADJUSTMENTS_COLOR_ADJUSTMENTS_UNSUPPORTED_RESOLVED_COLOR_MATRIX_RESOLVED_COLOR_SCALE_BIAS_APPEARANCE_ID_BOUNDS_USING_LOCAL_BOUNDS_ID_BOUNDS_USING_LOCAL_TRANSFORM_ID_CAN_ADD_CHILD_CHILDREN_CHILDREN_ID_TRAITS_INTERACTION_SIGNALS_LOCAL_BOUNDS_ID_LOCAL_BOUNDS_USING_LOCAL_BOUNDS_ID_LOCAL_CONTENT_ID_LOCAL_TRANSFORM_ID_LOCAL_TRANSFORM_USING_LOCAL_TRANSFORM_ID_NODE_SIGNALS_INTERACTION_STATE_PARENT_PARENT_REFERENCE_ID_WORLD_BOUNDS_USING_LOCAL_BOUNDS_ID_WORLD_BOUNDS_USING_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_USING_LOCAL_TRANSFORM_ID_WORLD_TRANSFORM_USING_PARENT_TRANSFORM_ID_LOCAL_MATRIX4_LOCAL_MATRIX4_DETACHED_WORLD_MATRIX4_1000946B62AD112F
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PICKING_ENTITY_RUNTIME_KEY_67C2EE9436F03380
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PICKING_ENTITY_RUNTIME_KEY_67C2EE9436F03380
+struct entity_runtime_key_67c2ee9436f03380 : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<binding_uid_color_adjustments_color_adjustments_unsupported_resolved_color_matrix_resolved_color_scale_bias_appearance_id_bounds_using_local_bounds_id_bounds_using_local_transform_id_can_add_child_children_children_id_traits_interaction_signals_local_bounds_id_local_bounds_using_local_bounds_id_local_content_id_local_transform_id_local_transform_using_local_transform_id_node_signals_interaction_state_parent_parent_reference_id_world_bounds_using_local_bounds_id_world_bounds_using_world_transform_id_world_transform_id_world_transform_using_local_transform_id_world_transform_using_parent_transform_id_local_matrix4_local_matrix4_detached_world_matrix4_1000946b62ad112f>> entity_runtime_key;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PICKING_ENTITY_RUNTIME_KEY_67C2EE9436F03380
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PICKING_BINDING_UID_COLOR_ADJUSTMENTS_COLOR_ADJUSTMENTS_UNSUPPORTED_RESOLVED_COLOR_MATRIX_RESOLVED_COLOR_SCALE_BIAS_APPEARANCE_ID_BOUNDS_USING_LOCAL_BOUNDS_ID_BOUNDS_USING_LOCAL_TRANSFORM_ID_CAN_ADD_CHILD_CHILDREN_CHILDREN_ID_TRAITS_INTERACTION_SIGNALS_LOCAL_BOUNDS_ID_LOCAL_BOUNDS_USING_LOCAL_BOUNDS_ID_LOCAL_CONTENT_ID_LOCAL_TRANSFORM_ID_LOCAL_TRANSFORM_USING_LOCAL_TRANSFORM_ID_NODE_SIGNALS_INTERACTION_STATE_PARENT_PARENT_REFERENCE_ID_WORLD_BOUNDS_USING_LOCAL_BOUNDS_ID_WORLD_BOUNDS_USING_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_USING_LOCAL_TRANSFORM_ID_WORLD_TRANSFORM_USING_PARENT_TRANSFORM_ID_LOCAL_MATRIX4_LOCAL_MATRIX4_DETACHED_WORLD_MATRIX4_A3EDBDD49EBD79C0
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PICKING_BINDING_UID_COLOR_ADJUSTMENTS_COLOR_ADJUSTMENTS_UNSUPPORTED_RESOLVED_COLOR_MATRIX_RESOLVED_COLOR_SCALE_BIAS_APPEARANCE_ID_BOUNDS_USING_LOCAL_BOUNDS_ID_BOUNDS_USING_LOCAL_TRANSFORM_ID_CAN_ADD_CHILD_CHILDREN_CHILDREN_ID_TRAITS_INTERACTION_SIGNALS_LOCAL_BOUNDS_ID_LOCAL_BOUNDS_USING_LOCAL_BOUNDS_ID_LOCAL_CONTENT_ID_LOCAL_TRANSFORM_ID_LOCAL_TRANSFORM_USING_LOCAL_TRANSFORM_ID_NODE_SIGNALS_INTERACTION_STATE_PARENT_PARENT_REFERENCE_ID_WORLD_BOUNDS_USING_LOCAL_BOUNDS_ID_WORLD_BOUNDS_USING_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_USING_LOCAL_TRANSFORM_ID_WORLD_TRANSFORM_USING_PARENT_TRANSFORM_ID_LOCAL_MATRIX4_LOCAL_MATRIX4_DETACHED_WORLD_MATRIX4_A3EDBDD49EBD79C0
+struct binding_uid_color_adjustments_color_adjustments_unsupported_resolved_color_matrix_resolved_color_scale_bias_appearance_id_bounds_using_local_bounds_id_bounds_using_local_transform_id_can_add_child_children_children_id_traits_interaction_signals_local_bounds_id_local_bounds_using_local_bounds_id_local_content_id_local_transform_id_local_transform_using_local_transform_id_node_signals_interaction_state_parent_parent_reference_id_world_bounds_using_local_bounds_id_world_bounds_using_world_transform_id_world_transform_id_world_transform_using_local_transform_id_world_transform_using_parent_transform_id_local_matrix4_local_matrix4_detached_world_matrix4_a3edbdd49ebd79c0 : public flight::types::NodeRuntime<Traits> {
+  std::optional<flight::Ref<flight::types::Matrix4>> local_matrix4;
+  bool local_matrix4_detached;
+  std::optional<flight::Ref<flight::types::Matrix4>> world_matrix4;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PICKING_BINDING_UID_COLOR_ADJUSTMENTS_COLOR_ADJUSTMENTS_UNSUPPORTED_RESOLVED_COLOR_MATRIX_RESOLVED_COLOR_SCALE_BIAS_APPEARANCE_ID_BOUNDS_USING_LOCAL_BOUNDS_ID_BOUNDS_USING_LOCAL_TRANSFORM_ID_CAN_ADD_CHILD_CHILDREN_CHILDREN_ID_TRAITS_INTERACTION_SIGNALS_LOCAL_BOUNDS_ID_LOCAL_BOUNDS_USING_LOCAL_BOUNDS_ID_LOCAL_CONTENT_ID_LOCAL_TRANSFORM_ID_LOCAL_TRANSFORM_USING_LOCAL_TRANSFORM_ID_NODE_SIGNALS_INTERACTION_STATE_PARENT_PARENT_REFERENCE_ID_WORLD_BOUNDS_USING_LOCAL_BOUNDS_ID_WORLD_BOUNDS_USING_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_USING_LOCAL_TRANSFORM_ID_WORLD_TRANSFORM_USING_PARENT_TRANSFORM_ID_LOCAL_MATRIX4_LOCAL_MATRIX4_DETACHED_WORLD_MATRIX4_A3EDBDD49EBD79C0
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PICKING_ENTITY_RUNTIME_KEY_657C769387D763E7
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PICKING_ENTITY_RUNTIME_KEY_657C769387D763E7
+struct entity_runtime_key_657c769387d763e7 : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<binding_uid_color_adjustments_color_adjustments_unsupported_resolved_color_matrix_resolved_color_scale_bias_appearance_id_bounds_using_local_bounds_id_bounds_using_local_transform_id_can_add_child_children_children_id_traits_interaction_signals_local_bounds_id_local_bounds_using_local_bounds_id_local_content_id_local_transform_id_local_transform_using_local_transform_id_node_signals_interaction_state_parent_parent_reference_id_world_bounds_using_local_bounds_id_world_bounds_using_world_transform_id_world_transform_id_world_transform_using_local_transform_id_world_transform_using_parent_transform_id_local_matrix4_local_matrix4_detached_world_matrix4_a3edbdd49ebd79c0>> entity_runtime_key;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PICKING_ENTITY_RUNTIME_KEY_657C769387D763E7
+
 inline bool get_scene_3d_hit_vertex_normal(flight::types::Vector3Like out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DHit>>>> hit) {
   auto node = flight::row_get<flight::RowKey<"node">>(hit);
   if (!node.has_value()) {
@@ -147,8 +195,8 @@ inline bool get_scene_3d_hit_vertex_normal(flight::types::Vector3Like out, fligh
   const double nx = (((flight::row_get<flight::RowKey<"u">>(hit) * normal0->x) + (flight::row_get<flight::RowKey<"v">>(hit) * normal1->x)) + (flight::row_get<flight::RowKey<"w">>(hit) * normal2->x));
   const double ny = (((flight::row_get<flight::RowKey<"u">>(hit) * normal0->y) + (flight::row_get<flight::RowKey<"v">>(hit) * normal1->y)) + (flight::row_get<flight::RowKey<"w">>(hit) * normal2->y));
   const double nz = (((flight::row_get<flight::RowKey<"u">>(hit) * normal0->z) + (flight::row_get<flight::RowKey<"v">>(hit) * normal1->z)) + (flight::row_get<flight::RowKey<"w">>(hit) * normal2->z));
-  flight::node::ensure_node_world_matrix4(flight::structural_ref_cast<flight::types::Transform3DNode<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Mesh>>>>(node.value())));
-  if (!flight::geometry::inverse_matrix4(inverse_world_flight_value_variable__u00005f_inverse_u000057_orld_flight_private_f4fbd17575e0e859, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::node::get_node_world_matrix4(flight::structural_ref_cast<flight::types::Transform3DNode<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Mesh>>>>(node.value())))))) {
+  flight::node::ensure_node_world_matrix4(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<flight::types::HasTransform3D>>, flight::RowOf<flight::Ref<entity_runtime_key_67c2ee9436f03380>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Mesh>>>>(node.value())));
+  if (!flight::geometry::inverse_matrix4(inverse_world_flight_value_variable__u00005f_inverse_u000057_orld_flight_private_f4fbd17575e0e859, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::node::get_node_world_matrix4(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<flight::types::HasTransform3D>>, flight::RowOf<flight::Ref<entity_runtime_key_657c769387d763e7>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Mesh>>>>(node.value())))))) {
     return false;
   }
   flight::Float32Array m = inverse_world_flight_value_variable__u00005f_inverse_u000057_orld_flight_private_f4fbd17575e0e859->m;
@@ -216,7 +264,7 @@ inline bool get_scene_3d_hit_vertex_tangent(flight::Ref<w_x_y_z_5137f2b28145ccce
   const double ty = (((flight::row_get<flight::RowKey<"u">>(hit) * tangent0->y) + (flight::row_get<flight::RowKey<"v">>(hit) * tangent1->y)) + (flight::row_get<flight::RowKey<"w">>(hit) * tangent2->y));
   const double tz = (((flight::row_get<flight::RowKey<"u">>(hit) * tangent0->z) + (flight::row_get<flight::RowKey<"v">>(hit) * tangent1->z)) + (flight::row_get<flight::RowKey<"w">>(hit) * tangent2->z));
   const double tw = (((flight::row_get<flight::RowKey<"u">>(hit) * tangent0->w) + (flight::row_get<flight::RowKey<"v">>(hit) * tangent1->w)) + (flight::row_get<flight::RowKey<"w">>(hit) * tangent2->w));
-  flight::Float32Array m = flight::row_get<flight::RowKey<"m">>(flight::node::get_node_world_matrix4(flight::structural_ref_cast<flight::types::Transform3DNode<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Mesh>>>>(node.value()))));
+  flight::Float32Array m = flight::row_get<flight::RowKey<"m">>(flight::node::get_node_world_matrix4(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<flight::types::HasTransform3D>>, flight::RowOf<flight::Ref<entity_runtime_key_657c769387d763e7>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Mesh>>>>(node.value()))));
   double wx = (((m.get_index(0.0) * tx) + (m.get_index(4.0) * ty)) + (m.get_index(8.0) * tz));
   double wy = (((m.get_index(1.0) * tx) + (m.get_index(5.0) * ty)) + (m.get_index(9.0) * tz));
   double wz = (((m.get_index(2.0) * tx) + (m.get_index(6.0) * ty)) + (m.get_index(10.0) * tz));

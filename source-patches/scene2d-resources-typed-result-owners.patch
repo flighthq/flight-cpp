@@ -1,0 +1,24 @@
+diff --git a/packages/scene2d-resources/src/loadScene2DAudioResources.ts b/packages/scene2d-resources/src/loadScene2DAudioResources.ts
+--- a/packages/scene2d-resources/src/loadScene2DAudioResources.ts
++++ b/packages/scene2d-resources/src/loadScene2DAudioResources.ts
+@@ -46,7 +46,7 @@
+     if (resources[i] === null) unresolved.push(selected[i]);
+     else resolved.push(selected[i]);
+   }
+-  const result = { document, resolved, unresolved };
++  const result: Scene2DAudioResources = { document, resolved, unresolved };
+   if (unresolved.length > 0) {
+     reportScene2DResourceFailure({
+       operation: 'loadScene2DAudioResources',
+diff --git a/packages/scene2d-resources/src/loadScene2DImageResources.ts b/packages/scene2d-resources/src/loadScene2DImageResources.ts
+--- a/packages/scene2d-resources/src/loadScene2DImageResources.ts
++++ b/packages/scene2d-resources/src/loadScene2DImageResources.ts
+@@ -53,7 +53,7 @@
+     bindScene2DImageResourceTextures(reference, source);
+     resolved.push(reference);
+   }
+-  const result = { document, resolved, unresolved };
++  const result: Scene2DImageResources = { document, resolved, unresolved };
+   if (unresolved.length > 0) {
+     reportScene2DResourceFailure({
+       operation: 'loadScene2DImageResources',

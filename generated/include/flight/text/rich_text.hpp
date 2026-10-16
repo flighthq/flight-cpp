@@ -21,8 +21,7 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
-#include <flight/any.hpp>
-#include <flight/erased_ref.hpp>
+#include <flight/structural_ref.hpp>
 #include <functional>
 #include <limits>
 #include <optional>
@@ -31,20 +30,6 @@
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
-
-#include <flight/textlayout/text_format_range.hpp>
-
-#include <flight/textlayout/rich_text_query.hpp>
-
-#include <flight/textlayout/rich_text_metrics.hpp>
-
-#include <flight/node/revision.hpp>
-
-#include <flight/signals/signal.hpp>
-
-#include <flight/entity/entity.hpp>
-
-#include <flight/types/text_vertical_align.hpp>
 
 #include <flight/types/text_line_metrics.hpp>
 
@@ -68,34 +53,49 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/node.hpp>
 
-#include <flight/types/entity.hpp>
+namespace flight::types { struct FontVariation; }
+namespace flight::types { struct HasBoundsRectangle; }
+namespace flight::types { struct Node2DData; }
+namespace flight::types { struct Node2DRuntime; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct Rectangle; }
+namespace flight::types { struct RichText; }
+namespace flight::types { struct RichTextContent; }
+namespace flight::types { struct RichTextData; }
+namespace flight::types { struct RichTextRuntime; }
+namespace flight::types { struct TextFieldChangeEvent; }
+namespace flight::types { struct TextFieldLinkEvent; }
+namespace flight::types { struct TextFieldScrollEvent; }
+namespace flight::types { struct TextFieldSignals; }
+namespace flight::types { struct TextFormat; }
+namespace flight::types { struct TextFormatRange; }
+namespace flight::types { struct TextInputState; }
+namespace flight::types { struct TextLabel; }
+namespace flight::types { struct TextLabelData; }
+namespace flight::types { struct TextLayoutParams; }
+namespace flight::types { struct TextLayoutResult; }
+namespace flight::types { struct TextLineMetrics; }
+namespace flight::types { template <typename T> struct Signal; }
+namespace flight::types { template <typename Traits> struct Node; }
 
-#include <flight/text/text_label.hpp>
+#include <flight/entity/entity.hpp>
+#include <flight/node/revision.hpp>
+#include <flight/signals/signal.hpp>
+#include <flight/textlayout/rich_text_content.hpp>
+#include <flight/textlayout/rich_text_metrics.hpp>
+#include <flight/textlayout/rich_text_query.hpp>
+#include <flight/textlayout/text_bounds.hpp>
+#include <flight/textlayout/text_format.hpp>
+#include <flight/textlayout/text_format_range.hpp>
+#include <flight/types/contract.hpp>
 #include <flight/text/text_label_layout.hpp>
 
 namespace flight::text {
 
 std::optional<flight::Ref<flight::types::TextLayoutResult>> get_text_layout(flight::Ref<flight::types::TextLabel> source);
 
-using flight::textlayout::compute_rich_text_bottom_scroll_v;
-using flight::textlayout::compute_rich_text_char_index_at_point;
-using flight::textlayout::compute_rich_text_line_count;
-using flight::textlayout::compute_rich_text_line_metrics;
-using flight::textlayout::compute_rich_text_max_scroll_h;
-using flight::textlayout::compute_rich_text_max_scroll_v;
-using flight::textlayout::compute_rich_text_text_height;
-using flight::textlayout::compute_rich_text_text_width;
-using flight::textlayout::create_text_format_range;
-
-using flight::node::invalidate_node_local_bounds;
-using flight::node::invalidate_node_local_content;
-
 using flight::signals::create_signal;
 
-using flight::entity::allocate_entity;
-using flight::entity::finish_entity;
-
-using flight::types::EntityConstruction;
 using flight::types::Node;
 using flight::types::Node2DTraits;
 using flight::types::Rectangle;
@@ -106,15 +106,15 @@ using flight::types::TextFieldSignals;
 using flight::types::TextFormat;
 using flight::types::TextFormatRange;
 using flight::types::TextLabel;
+using flight::types::TextLabelData;
 using flight::types::TextLayoutParams;
 using flight::types::TextLayoutResult;
 using flight::types::TextLineMetrics;
 using flight::types::TextMeasureFunction;
-using flight::types::TextVerticalAlign;
 
 
 // NOT GENERATED: function computeRichTextLocalBoundsRectangle -- source line 92
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function computeRichTextLocalBoundsRectangle(out: Rectangle, source: Readonly<BoundsNode<Node2DTraits>>): void {
@@ -141,17 +141,28 @@ using flight::types::TextVerticalAlign;
 //     computeTextBoundsRectangle(out, data, layout);
 //   }
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: a reference assertion from
-// flight::Ref<BoundsNode<flight::Ref<Node2DTraits>>> to flight::Ref<RichText> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: a structural assertion from the readonly
+// row Readonly<BoundsNode<Node2DTraits>> to the writable row RichText claims mutation the source refused: a
+// readonly row never becomes writable, because the boundary the value came through said its subject must not be
+// mutated through it, and no cast, copy, or re-view can carry a capability the source withheld. Assert to the
+// readonly row where the value is only read, or declare the source -- its parameter, slot, or accessor result --
+// as the writable type where that object may really be mutated. Choosing between those two repairs is the
+// question this assertion was answering, so ask it of the value's ROLE rather than of its spelling: a RUNTIME
+// OWNER that the mutating paths must write needs a mutable-source accessor returning the full writable owner
+// from the typed runtime slot, with the readonly accessor kept for reads, because the capability has to exist on
+// the storage and accessor that establish those cells; a NODE that the read paths only traverse and never mutate
+// needs the two authorities separated instead, with a readonly view on every read path and a separate mutable
+// entry point for the paths that really mutate, because laundering a writable node out of a readonly boundary
+// grants mutation no caller asked for. Both repairs keep the exact Traits or generic specialization the retained
+// row carries; neither adds cells to a row that does not declare them. Making only that boundary writable is
+// insufficient here: the source owner does not declare EntityRuntimeKey and data, so it has no cells for the
+// asserted row to mutate. Declare both the storage slot and the accessor result as the full writable RichText
+// row where initialization establishes those cells, rather than widening Readonly<BoundsNode<Node2DTraits>> at
+// the use site.
 
 
 // NOT GENERATED: function createRichTextData -- source line 120
-// refusal: cpp-partial-shape-unresolvable [source-portability]
+// refusal: cpp-reference-assertion-without-heritage [target-runtime]
 //
 // The source it stood for:
 //   export function createRichTextData(data?: Readonly<Partial<RichTextData>>): RichTextData {
@@ -176,12 +187,17 @@ using flight::types::TextVerticalAlign;
 //     return _data;
 //   }
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: Partial<T> requires a statically
-// resolvable C++ object shape; T is named
+// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: a reference assertion from
+// flight::Ref<flight::types::TextLabelData> to flight::Ref<flight::types::RichTextData> has no heritage to cast
+// along: the declarations share no emitted C++ class-heritage path (source interface and intersection
+// relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner
+// that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that
+// validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a
+// replacement row, or invent side storage
 
 
 // NOT GENERATED: function dispatchRichTextLinkAtPoint -- source line 171
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function dispatchRichTextLinkAtPoint(source: RichText, x: number, y: number): string | null {
@@ -199,33 +215,51 @@ using flight::types::TextVerticalAlign;
 //     return url;
 //   }
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: contextual optionalSingle construction
-// requires expression type evidence
+// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: a structural assertion from the readonly
+// row Readonly<Node2DRuntime> to the writable row RichTextRuntime claims mutation the source refused: a readonly
+// row never becomes writable, because the boundary the value came through said its subject must not be mutated
+// through it, and no cast, copy, or re-view can carry a capability the source withheld. Assert to the readonly
+// row where the value is only read, or declare the source -- its parameter, slot, or accessor result -- as the
+// writable type where that object may really be mutated. Choosing between those two repairs is the question this
+// assertion was answering, so ask it of the value's ROLE rather than of its spelling: a RUNTIME OWNER that the
+// mutating paths must write needs a mutable-source accessor returning the full writable owner from the typed
+// runtime slot, with the readonly accessor kept for reads, because the capability has to exist on the storage
+// and accessor that establish those cells; a NODE that the read paths only traverse and never mutate needs the
+// two authorities separated instead, with a readonly view on every read path and a separate mutable entry point
+// for the paths that really mutate, because laundering a writable node out of a readonly boundary grants
+// mutation no caller asked for. Both repairs keep the exact Traits or generic specialization the retained row
+// carries; neither adds cells to a row that does not declare them. Making only that boundary writable is
+// insufficient here: the source owner does not declare buildTextLayoutParams, input, richTextContent,
+// selectionBeginIndex, selectionEndIndex, textFieldSignals, textLayout, textLayoutUsingContentId and
+// textLayoutUsingText, so it has no cells for the asserted row to mutate. Declare both the storage slot and the
+// accessor result as the full writable RichTextRuntime row where initialization establishes those cells, rather
+// than widening Readonly<Node2DRuntime> at the use site.
 
-inline double get_rich_text_bottom_scroll_v(flight::Ref<RichText> source) {
-  ensure_text_layout(source);
-  std::optional<flight::Ref<TextLayoutResult>> layout = get_text_layout(source);
+inline double get_rich_text_bottom_scroll_v(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source) {
+  flight::text::ensure_text_layout(source);
+  auto layout = flight::text::get_text_layout(source);
   if (!layout.has_value()) {
     return 1.0;
   }
-  return compute_rich_text_bottom_scroll_v(source->data, layout.value());
+  return flight::textlayout::compute_rich_text_bottom_scroll_v(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichTextData>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichTextData>>>>(flight::row_get<flight::RowKey<"data">>(source))), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>(layout.value())));
 }
 
-inline double get_rich_text_char_index_at_point(flight::Ref<RichText> source, double x, double y) {
-  ensure_text_layout(source);
-  std::optional<flight::Ref<TextLayoutResult>> layout = get_text_layout(source);
+inline double get_rich_text_char_index_at_point(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source, double x, double y) {
+  flight::text::ensure_text_layout(source);
+  auto layout = flight::text::get_text_layout(source);
   if (!layout.has_value()) {
     return -1.0;
   }
-  return compute_rich_text_char_index_at_point(layout.value(), x, y);
+  return flight::textlayout::compute_rich_text_char_index_at_point(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>(layout.value())), x, y);
 }
 
-inline flight::Ref<TextFormat> get_rich_text_default_text_format(flight::Ref<RichText> source) {
-  return source->data.default_text_format;
+inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>> get_rich_text_default_text_format(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source) {
+  return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>(flight::row_get<flight::RowKey<"data">>(source)->default_text_format));
 }
 
 
 // NOT GENERATED: function getRichTextFormatRangeAt -- source line 215
+// refusal: cpp-named-properties-write-unsupported [target-runtime]
 //
 // The source it stood for:
 //   export function getRichTextFormatRangeAt(out: TextFormat, source: Readonly<RichText>, index: number): void {
@@ -242,12 +276,16 @@ inline flight::Ref<TextFormat> get_rich_text_default_text_format(flight::Ref<Ric
 //     }
 //   }
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: keyof types require C++ type computation
-// lowering
+// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: a dynamic named-property write through
+// the owner-preserving view requires target-runtime mutation support: flight::NamedProperties is deliberately
+// read-only, so the write cannot reach the owner it views. Keep the key as a finite union of declared member
+// names and assign through the typed object, or add an owner-preserving checked NamedProperties::set(String,
+// Any) contract. The compiler will not cast between owners, copy into replacement storage, materialize a
+// replacement owner, or add side storage
 
-inline bool get_rich_text_format_range_by_index(flight::Ref<TextFormatRange> out, flight::Ref<RichText> source, double i) {
-  std::optional<flight::Ref<TextFormatRange>> range = source->data.text_format_ranges.get(i);
-  if (!range.has_value()) {
+inline bool get_rich_text_format_range_by_index(flight::Ref<flight::types::TextFormatRange> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source, double i) {
+  std::optional<flight::Ref<flight::types::TextFormatRange>> range = flight::row_get<flight::RowKey<"data">>(source)->text_format_ranges.get(i);
+  if (([&]() { const auto& presence_operand = range; return !presence_operand.has_value(); }())) {
     return false;
   }
   (out->start = range.value()->start);
@@ -256,62 +294,62 @@ inline bool get_rich_text_format_range_by_index(flight::Ref<TextFormatRange> out
   return true;
 }
 
-inline double get_rich_text_format_range_count(flight::Ref<RichText> source) {
-  return static_cast<double>(source->data.text_format_ranges.size());
+inline double get_rich_text_format_range_count(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source) {
+  return static_cast<double>(flight::row_get<flight::RowKey<"data">>(source)->text_format_ranges.size());
 }
 
-inline void get_rich_text_format_ranges_in(flight::Array<flight::Ref<TextFormatRange>> out, flight::Ref<RichText> source, double begin_index, double end_index) {
+inline void get_rich_text_format_ranges_in(flight::Array<flight::Ref<flight::types::TextFormatRange>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source, double begin_index, double end_index) {
   ([&]() { auto&& assignment_receiver = out; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
-  for (auto range : source->data.text_format_ranges) {
+  for (auto range : flight::row_get<flight::RowKey<"data">>(source)->text_format_ranges) {
     if (((range->start < end_index) && (range->end > begin_index))) {
       out.push(range);
     }
   }
 }
 
-inline double get_rich_text_length(flight::Ref<RichText> source) {
-  return static_cast<double>(source->data.text.length());
+inline double get_rich_text_length(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source) {
+  return static_cast<double>(flight::row_get<flight::RowKey<"data">>(source)->text.length());
 }
 
-inline double get_rich_text_line_count(flight::Ref<RichText> source) {
-  ensure_text_layout(source);
-  std::optional<flight::Ref<TextLayoutResult>> layout = get_text_layout(source);
+inline double get_rich_text_line_count(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source) {
+  flight::text::ensure_text_layout(source);
+  auto layout = flight::text::get_text_layout(source);
   if (!layout.has_value()) {
     return 0.0;
   }
-  return compute_rich_text_line_count(layout.value());
+  return flight::textlayout::compute_rich_text_line_count(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>(layout.value())));
 }
 
-inline std::optional<flight::Ref<TextLineMetrics>> get_rich_text_line_metrics(flight::Ref<RichText> source, double line_index) {
-  ensure_text_layout(source);
-  std::optional<flight::Ref<TextLayoutResult>> layout = get_text_layout(source);
+inline std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLineMetrics>>>>> get_rich_text_line_metrics(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source, double line_index) {
+  flight::text::ensure_text_layout(source);
+  auto layout = flight::text::get_text_layout(source);
   if (!layout.has_value()) {
     return std::nullopt;
   }
-  return compute_rich_text_line_metrics(layout.value(), line_index);
+  return ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLineMetrics>>>>> { auto contextual_union_source = flight::textlayout::compute_rich_text_line_metrics(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>(layout.value())), line_index); if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLineMetrics>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLineMetrics>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLineMetrics>>>>(contextual_union_source.value()))}; }());
 }
 
-inline double get_rich_text_max_scroll_h(flight::Ref<RichText> source) {
-  ensure_text_layout(source);
-  std::optional<flight::Ref<TextLayoutResult>> layout = get_text_layout(source);
+inline double get_rich_text_max_scroll_h(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source) {
+  flight::text::ensure_text_layout(source);
+  auto layout = flight::text::get_text_layout(source);
   if (!layout.has_value()) {
     return 0.0;
   }
-  return compute_rich_text_max_scroll_h(source->data, layout.value());
+  return flight::textlayout::compute_rich_text_max_scroll_h(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichTextData>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichTextData>>>>(flight::row_get<flight::RowKey<"data">>(source))), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>(layout.value())));
 }
 
-inline double get_rich_text_max_scroll_v(flight::Ref<RichText> source) {
-  ensure_text_layout(source);
-  std::optional<flight::Ref<TextLayoutResult>> layout = get_text_layout(source);
+inline double get_rich_text_max_scroll_v(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source) {
+  flight::text::ensure_text_layout(source);
+  auto layout = flight::text::get_text_layout(source);
   if (!layout.has_value()) {
     return 1.0;
   }
-  return compute_rich_text_max_scroll_v(source->data, layout.value());
+  return flight::textlayout::compute_rich_text_max_scroll_v(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichTextData>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichTextData>>>>(flight::row_get<flight::RowKey<"data">>(source))), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>(layout.value())));
 }
 
 
 // NOT GENERATED: function getRichTextPasswordCharacter -- source line 296
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function getRichTextPasswordCharacter(source: Readonly<RichText>): string | null {
@@ -319,12 +357,29 @@ inline double get_rich_text_max_scroll_v(flight::Ref<RichText> source) {
 //     return input !== null && input.displayAsPassword ? input.passwordCharacter : null;
 //   }
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: contextual optionalSingle construction
-// requires expression type evidence
+// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: a structural assertion from the readonly
+// row Readonly<Node2DRuntime> to the writable row RichTextRuntime claims mutation the source refused: a readonly
+// row never becomes writable, because the boundary the value came through said its subject must not be mutated
+// through it, and no cast, copy, or re-view can carry a capability the source withheld. Assert to the readonly
+// row where the value is only read, or declare the source -- its parameter, slot, or accessor result -- as the
+// writable type where that object may really be mutated. Choosing between those two repairs is the question this
+// assertion was answering, so ask it of the value's ROLE rather than of its spelling: a RUNTIME OWNER that the
+// mutating paths must write needs a mutable-source accessor returning the full writable owner from the typed
+// runtime slot, with the readonly accessor kept for reads, because the capability has to exist on the storage
+// and accessor that establish those cells; a NODE that the read paths only traverse and never mutate needs the
+// two authorities separated instead, with a readonly view on every read path and a separate mutable entry point
+// for the paths that really mutate, because laundering a writable node out of a readonly boundary grants
+// mutation no caller asked for. Both repairs keep the exact Traits or generic specialization the retained row
+// carries; neither adds cells to a row that does not declare them. Making only that boundary writable is
+// insufficient here: the source owner does not declare buildTextLayoutParams, input, richTextContent,
+// selectionBeginIndex, selectionEndIndex, textFieldSignals, textLayout, textLayoutUsingContentId and
+// textLayoutUsingText, so it has no cells for the asserted row to mutate. Declare both the storage slot and the
+// accessor result as the full writable RichTextRuntime row where initialization establishes those cells, rather
+// than widening Readonly<Node2DRuntime> at the use site.
 
 
 // NOT GENERATED: function buildRichTextLayoutParams -- source line 61
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-owner-unproven [source-portability]
 //
 // The source it stood for:
 //   export function buildRichTextLayoutParams(source: Readonly<TextLabel>, measure: TextMeasureFunction): TextLayoutParams {
@@ -347,79 +402,112 @@ inline double get_rich_text_max_scroll_v(flight::Ref<RichText> source) {
 //     };
 //   }
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: a reference assertion from
-// flight::Ref<TextLabel> to flight::Ref<RichText> has no heritage to cast along: the declarations share no
-// emitted C++ class-heritage path (source interface and intersection relationships flatten into independent
-// owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the
-// exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target
-// owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
+// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: the asserted row from
+// flight::Ref<flight::types::TextLabel> to flight::Ref<flight::types::RichText> reads data, whose optionality or
+// value representation is not representation-equivalent to the source type's cells, and a structural owner binds
+// the members and storage representations of the type the object was first reached as, so a member the source's
+// own declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back
+// from retained storage does not recover a wider owner: an assertion cannot add those cells, change their
+// representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type
+// through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or
+// tokens into storage that remains typed as RichText, rather than storing an erased reference and asserting it
+// back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but
+// does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that
+// validates and returns the exact owner before dispatch. Declare the source as a type that carries data with the
+// asserted optionality and value representation -- construct RichText explicitly, then type the retaining slot
+// and every accessor result as RichText wherever that concrete owner is known; changing only the accessor result
+// cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past
+// flight::Ref<flight::types::TextLabel>. The compiler will not reinterpret the owner, cast it, copy or
+// materialize a replacement, or add side storage.
 
 
 // NOT GENERATED: function getRichTextRuntime -- source line 301
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function getRichTextRuntime(source: Readonly<RichText>): Readonly<RichTextRuntime> {
 //     return getNode2DRuntime(source) as RichTextRuntime;
 //   }
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: a reference assertion from
-// flight::Ref<Node2DRuntime> to flight::Ref<RichTextRuntime> has no heritage to cast along: the declarations
-// share no emitted C++ class-heritage path (source interface and intersection relationships flatten into
-// independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: a structural assertion from the readonly
+// row Readonly<Node2DRuntime> to the writable row RichTextRuntime claims mutation only to pass the value to the
+// readonly row Readonly<RichTextRuntime>. Spell the assertion as Readonly<RichTextRuntime> to remove the
+// writable-capability claim, but that alone cannot recover the derived owner: Readonly<Node2DRuntime> does not
+// declare buildTextLayoutParams, input, richTextContent, selectionBeginIndex, selectionEndIndex,
+// textFieldSignals, textLayout, textLayoutUsingContentId and textLayoutUsingText, so the retained row has no
+// proven cells for those members. No writable carrier is justified for this read-only call. Preserve
+// RichTextRuntime in the callback parameter through a named typed runner or carrier, or make an intentionally
+// erased registry validate and recover that owner before invoking the typed runner; a tag or registry key
+// carried beside the value does not prove which owner the reference retains. If mutation is intended elsewhere,
+// the storage and accessor themselves must retain writable RichTextRuntime capability rather than adding it with
+// an assertion. The compiler will not cast, copy, materialize, or create side storage for either missing proof.
 
-inline flight::String get_rich_text_string(flight::Ref<RichText> source) {
-  return source->data.text;
+inline flight::String get_rich_text_string(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source) {
+  return flight::row_get<flight::RowKey<"data">>(source)->text;
 }
 
-inline double get_rich_text_text_height(flight::Ref<RichText> source) {
-  ensure_text_layout(source);
-  std::optional<flight::Ref<TextLayoutResult>> layout = get_text_layout(source);
+inline double get_rich_text_text_height(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source) {
+  flight::text::ensure_text_layout(source);
+  auto layout = flight::text::get_text_layout(source);
   if (!layout.has_value()) {
     return 0.0;
   }
-  return compute_rich_text_text_height(layout.value());
+  return flight::textlayout::compute_rich_text_text_height(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>(layout.value())));
 }
 
-inline double get_rich_text_text_width(flight::Ref<RichText> source) {
-  ensure_text_layout(source);
-  std::optional<flight::Ref<TextLayoutResult>> layout = get_text_layout(source);
+inline double get_rich_text_text_width(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>> source) {
+  flight::text::ensure_text_layout(source);
+  auto layout = flight::text::get_text_layout(source);
   if (!layout.has_value()) {
     return 0.0;
   }
-  return compute_rich_text_text_width(layout.value());
+  return flight::textlayout::compute_rich_text_text_width(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>(layout.value())));
 }
 
 
 // NOT GENERATED: function getTextFieldSignals -- source line 323
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function getTextFieldSignals(source: Readonly<RichText>): TextFieldSignals | null {
 //     return (getNode2DRuntime(source) as RichTextRuntime).textFieldSignals;
 //   }
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: contextual optionalSingle construction
-// requires expression type evidence
+// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: a structural assertion from the readonly
+// row Readonly<Node2DRuntime> to the writable row RichTextRuntime claims mutation the source refused: a readonly
+// row never becomes writable, because the boundary the value came through said its subject must not be mutated
+// through it, and no cast, copy, or re-view can carry a capability the source withheld. Assert to the readonly
+// row where the value is only read, or declare the source -- its parameter, slot, or accessor result -- as the
+// writable type where that object may really be mutated. Choosing between those two repairs is the question this
+// assertion was answering, so ask it of the value's ROLE rather than of its spelling: a RUNTIME OWNER that the
+// mutating paths must write needs a mutable-source accessor returning the full writable owner from the typed
+// runtime slot, with the readonly accessor kept for reads, because the capability has to exist on the storage
+// and accessor that establish those cells; a NODE that the read paths only traverse and never mutate needs the
+// two authorities separated instead, with a readonly view on every read path and a separate mutable entry point
+// for the paths that really mutate, because laundering a writable node out of a readonly boundary grants
+// mutation no caller asked for. Both repairs keep the exact Traits or generic specialization the retained row
+// carries; neither adds cells to a row that does not declare them. Making only that boundary writable is
+// insufficient here: the source owner does not declare buildTextLayoutParams, input, richTextContent,
+// selectionBeginIndex, selectionEndIndex, textFieldSignals, textLayout, textLayoutUsingContentId and
+// textLayoutUsingText, so it has no cells for the asserted row to mutate. Declare both the storage slot and the
+// accessor result as the full writable RichTextRuntime row where initialization establishes those cells, rather
+// than widening Readonly<Node2DRuntime> at the use site.
 
-inline void initialize_text_field_signals(flight::Ref<EntityConstruction<flight::Ref<TextFieldSignals>>> out) {
-  (out->on_text_field_change = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_text_field_change)>::element_type>>());
-  (out->on_text_field_link = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_text_field_link)>::element_type>>());
-  (out->on_text_field_scroll = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_text_field_scroll)>::element_type>>());
+inline void initialize_text_field_signals(flight::types::EntityConstruction<flight::Ref<flight::types::TextFieldSignals>> out) {
+  flight::row_set<flight::RowKey<"onTextFieldChange">>(out, flight::signals::create_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFieldChangeEvent>>>>)>>());
+  flight::row_set<flight::RowKey<"onTextFieldLink">>(out, flight::signals::create_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFieldLinkEvent>>>>)>>());
+  flight::row_set<flight::RowKey<"onTextFieldScroll">>(out, flight::signals::create_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFieldScrollEvent>>>>)>>());
 }
 
-inline flight::Ref<TextFieldSignals> create_text_field_signals() {
-  flight::Ref<EntityConstruction<flight::Ref<TextFieldSignals>>> out = allocate_entity<flight::Ref<TextFieldSignals>>();
+inline flight::Ref<flight::types::TextFieldSignals> create_text_field_signals() {
+  flight::types::EntityConstruction<flight::Ref<flight::types::TextFieldSignals>> out = flight::entity::allocate_entity<flight::Ref<flight::types::TextFieldSignals>>();
   initialize_text_field_signals(out);
-  return finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::TextFieldSignals>>(out);
 }
 
 
 // NOT GENERATED: function enableTextFieldSignals -- source line 190
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function enableTextFieldSignals(source: RichText): TextFieldSignals {
@@ -427,107 +515,119 @@ inline flight::Ref<TextFieldSignals> create_text_field_signals() {
 //     return (runtime.textFieldSignals ??= createTextFieldSignals());
 //   }
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: a reference assertion from
-// flight::Ref<Node2DRuntime> to flight::Ref<RichTextRuntime> has no heritage to cast along: the declarations
-// share no emitted C++ class-heritage path (source interface and intersection relationships flatten into
-// independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: a structural assertion from the readonly
+// row Readonly<Node2DRuntime> to the writable row RichTextRuntime claims mutation the source refused: a readonly
+// row never becomes writable, because the boundary the value came through said its subject must not be mutated
+// through it, and no cast, copy, or re-view can carry a capability the source withheld. Assert to the readonly
+// row where the value is only read, or declare the source -- its parameter, slot, or accessor result -- as the
+// writable type where that object may really be mutated. Choosing between those two repairs is the question this
+// assertion was answering, so ask it of the value's ROLE rather than of its spelling: a RUNTIME OWNER that the
+// mutating paths must write needs a mutable-source accessor returning the full writable owner from the typed
+// runtime slot, with the readonly accessor kept for reads, because the capability has to exist on the storage
+// and accessor that establish those cells; a NODE that the read paths only traverse and never mutate needs the
+// two authorities separated instead, with a readonly view on every read path and a separate mutable entry point
+// for the paths that really mutate, because laundering a writable node out of a readonly boundary grants
+// mutation no caller asked for. Both repairs keep the exact Traits or generic specialization the retained row
+// carries; neither adds cells to a row that does not declare them. Making only that boundary writable is
+// insufficient here: the source owner does not declare buildTextLayoutParams, input, richTextContent,
+// selectionBeginIndex, selectionEndIndex, textFieldSignals, textLayout, textLayoutUsingContentId and
+// textLayoutUsingText, so it has no cells for the asserted row to mutate. Declare both the storage slot and the
+// accessor result as the full writable RichTextRuntime row where initialization establishes those cells, rather
+// than widening Readonly<Node2DRuntime> at the use site.
 
-inline void set_rich_text_background(flight::Ref<RichText> source, bool value) {
-  if ((source->data.background == value)) {
+inline void set_rich_text_background(flight::Ref<flight::types::RichText> source, bool value) {
+  if ((source->data->background == value)) {
     return;
   }
-  (source->data.background = value);
-  invalidate_node_local_content(source);
+  (source->data->background = value);
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
-inline void set_rich_text_background_color(flight::Ref<RichText> source, double value) {
-  if ((source->data.background_color == value)) {
+inline void set_rich_text_background_color(flight::Ref<flight::types::RichText> source, double value) {
+  if ((source->data->background_color == value)) {
     return;
   }
-  (source->data.background_color = value);
-  invalidate_node_local_content(source);
+  (source->data->background_color = value);
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
-inline void set_rich_text_border(flight::Ref<RichText> source, bool value) {
-  if ((source->data.border == value)) {
+inline void set_rich_text_border(flight::Ref<flight::types::RichText> source, bool value) {
+  if ((source->data->border == value)) {
     return;
   }
-  (source->data.border = value);
-  invalidate_node_local_content(source);
+  (source->data->border = value);
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
-inline void set_rich_text_border_color(flight::Ref<RichText> source, double value) {
-  if ((source->data.border_color == value)) {
+inline void set_rich_text_border_color(flight::Ref<flight::types::RichText> source, double value) {
+  if ((source->data->border_color == value)) {
     return;
   }
-  (source->data.border_color = value);
-  invalidate_node_local_content(source);
+  (source->data->border_color = value);
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
-inline void set_rich_text_height(flight::Ref<RichText> source, double value) {
-  if ((source->data.height == value)) {
+inline void set_rich_text_height(flight::Ref<flight::types::RichText> source, double value) {
+  if ((source->data->height == value)) {
     return;
   }
-  (source->data.height = value);
-  invalidate_node_local_content(source);
-  invalidate_node_local_bounds(source);
+  (source->data->height = value);
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
+  flight::node::invalidate_node_local_bounds(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
-inline void set_rich_text_max_chars(flight::Ref<RichText> source, double value) {
-  if ((source->data.max_chars == value)) {
+inline void set_rich_text_max_chars(flight::Ref<flight::types::RichText> source, double value) {
+  if ((source->data->max_chars == value)) {
     return;
   }
-  (source->data.max_chars = value);
-  invalidate_node_local_content(source);
+  (source->data->max_chars = value);
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
-inline void set_rich_text_mouse_wheel_enabled(flight::Ref<RichText> source, bool value) {
-  if ((source->data.mouse_wheel_enabled == value)) {
+inline void set_rich_text_mouse_wheel_enabled(flight::Ref<flight::types::RichText> source, bool value) {
+  if ((source->data->mouse_wheel_enabled == value)) {
     return;
   }
-  (source->data.mouse_wheel_enabled = value);
-  invalidate_node_local_content(source);
+  (source->data->mouse_wheel_enabled = value);
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
-inline void set_rich_text_selectable(flight::Ref<RichText> source, bool value) {
-  if ((source->data.selectable == value)) {
+inline void set_rich_text_selectable(flight::Ref<flight::types::RichText> source, bool value) {
+  if ((source->data->selectable == value)) {
     return;
   }
-  (source->data.selectable = value);
-  invalidate_node_local_content(source);
+  (source->data->selectable = value);
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
-inline void set_rich_text_text_color(flight::Ref<RichText> source, double value) {
-  if ((source->data.text_color == value)) {
+inline void set_rich_text_text_color(flight::Ref<flight::types::RichText> source, double value) {
+  if ((source->data->text_color == value)) {
     return;
   }
-  (source->data.text_color = value);
-  invalidate_node_local_content(source);
+  (source->data->text_color = value);
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
-inline void set_rich_text_vertical_align(flight::Ref<RichText> source, flight::Ref<TextVerticalAlign> value) {
-  if ((source->data.vertical_align == value)) {
+inline void set_rich_text_vertical_align(flight::Ref<flight::types::RichText> source, flight::types::TextVerticalAlign value) {
+  if ((source->data->vertical_align == value)) {
     return;
   }
-  (source->data.vertical_align = value);
-  invalidate_node_local_content(source);
+  (source->data->vertical_align = value);
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
-inline void set_rich_text_width(flight::Ref<RichText> source, double value) {
-  if ((source->data.width == value)) {
+inline void set_rich_text_width(flight::Ref<flight::types::RichText> source, double value) {
+  if ((source->data->width == value)) {
     return;
   }
-  (source->data.width = value);
-  invalidate_node_local_content(source);
-  invalidate_node_local_bounds(source);
+  (source->data->width = value);
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
+  flight::node::invalidate_node_local_bounds(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
 
 // NOT GENERATED: variable (binding) -- source line 582
-// refusal: cpp-partial-shape-unresolvable [source-portability]
+// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
 //   const defaultMethods: Partial<MethodsOf<RichTextRuntime>> = {
@@ -536,8 +636,19 @@ inline void set_rich_text_width(flight::Ref<RichText> source, double value) {
 //   
 //   // A content change always re-rasterizes the field. It only changes the field's bounds when autoSize
 //   // is active; a fixed field (autoSize 'none') keeps its user-set width/height, so bounds stay put.
-// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: Partial<T> requires a statically
-// resolvable C++ object shape; T is named
+// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: contextual union callable value type
+// std::function<void(flight::Ref<flight::types::Rectangle>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>,
+// flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>,
+// flight::RowOf<flight::Ref<flight::types::HasBoundsRectangle>>,
+// flight::RowOf<flight::Ref<entity_runtime_key_11176179379baed5>>>>>)> agrees with no alternative's signature:
+// the destination holds [std::function<void(flight::Ref<flight::types::Rectangle>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>,
+// flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>,
+// flight::RowOf<flight::Ref<flight::types::HasBoundsRectangle>>,
+// flight::RowOf<flight::Ref<entity_runtime_key_2a5696294f4ba375>>>>>)>]. A callable is a represented domain, so
+// the obstacle is that the destination's signature cannot call this one. Declare the value's parameters so the
+// destination's signature supplies them, and its result as one the destination holds
 
 
 // NOT GENERATED: function createRichTextRuntime -- source line 142
@@ -564,46 +675,50 @@ inline void set_rich_text_width(flight::Ref<RichText> source, double value) {
 //   }
 //   
 // cpp emission failed for @flighthq/text/packages/text/src/richText.ts: a reference assertion from
-// flight::Ref<Node2DRuntime> to flight::Ref<RichTextRuntime> has no heritage to cast along: the declarations
-// share no emitted C++ class-heritage path (source interface and intersection relationships flatten into
-// independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// flight::Ref<flight::types::Node2DRuntime> to flight::Ref<flight::types::RichTextRuntime> has no heritage to
+// cast along: the declarations share no emitted C++ class-heritage path (source interface and intersection
+// relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner
+// that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that
+// validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a
+// replacement row, or invent side storage
 
 
 // NOT GENERATED: function createRichText -- source line 116
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
 //   export function createRichText(obj?: Readonly<PartialNode<RichText>>): RichText {
 //     return createNode2D(RichTextKind, obj, createRichTextData, createRichTextRuntime) as RichText;
 //   }
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: intersection types require C++
-// multiple-inheritance lowering: no shape for Node (argument Node2DTraits has no shape either), Node2DTraits.
-// Declare the object shape the code reads rather than intersecting a conjunct that has none
+// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: contextual union callable value type
+// std::function<flight::Ref<flight::types::RichTextData>(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::RichTextData>>>>>>)>
+// agrees with no alternative's signature: the destination holds
+// [std::function<flight::Ref<flight::types::Node2DData>(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::Node2DData>>>>>>)>].
+// A callable is a represented domain, so the obstacle is that the destination's signature cannot call this one.
+// Declare the value's parameters so the destination's signature supplies them, and its result as one the
+// destination holds
 
-inline void invalidate_rich_text_content(flight::Ref<RichText> source) {
-  invalidate_node_local_content(source);
-  if ((source->data.auto_size != flight::String("none"))) {
-    invalidate_node_local_bounds(source);
+inline void invalidate_rich_text_content(flight::Ref<flight::types::RichText> source) {
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
+  if ((source->data->auto_size != flight::String("none"))) {
+    flight::node::invalidate_node_local_bounds(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
   }
 }
 
-inline void clear_rich_text_format_ranges(flight::Ref<RichText> source) {
-  ([&]() { auto&& assignment_receiver = source->data.text_format_ranges; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
+inline void clear_rich_text_format_ranges(flight::Ref<flight::types::RichText> source) {
+  ([&]() { auto&& assignment_receiver = source->data->text_format_ranges; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
   invalidate_rich_text_content(source);
 }
 
-inline void remove_rich_text_format_ranges_in(flight::Ref<RichText> source, double begin, double end) {
-  flight::Array<flight::Ref<TextFormatRange>> ranges = source->data.text_format_ranges;
+inline void remove_rich_text_format_ranges_in(flight::Ref<flight::types::RichText> source, double begin, double end) {
+  flight::Array<flight::Ref<flight::types::TextFormatRange>> ranges = source->data->text_format_ranges;
   bool changed = false;
   {
     double i = (static_cast<double>(ranges.size()) - 1.0);
     while ((i >= 0.0)) {
       {
-        flight::Ref<TextFormatRange> r = ranges.element(i);
+        auto r = ranges.element(i);
         if (((r->start < end) && (r->end > begin))) {
           ranges.splice(i, 1.0);
           (changed = true);
@@ -617,30 +732,30 @@ inline void remove_rich_text_format_ranges_in(flight::Ref<RichText> source, doub
   }
 }
 
-inline void set_rich_text_condense_white(flight::Ref<RichText> source, bool value) {
-  if ((source->data.condense_white == value)) {
+inline void set_rich_text_condense_white(flight::Ref<flight::types::RichText> source, bool value) {
+  if ((source->data->condense_white == value)) {
     return;
   }
-  (source->data.condense_white = value);
+  (source->data->condense_white = value);
   invalidate_rich_text_content(source);
 }
 
-inline void set_rich_text_multiline(flight::Ref<RichText> source, bool value) {
-  if ((source->data.multiline == value)) {
+inline void set_rich_text_multiline(flight::Ref<flight::types::RichText> source, bool value) {
+  if ((source->data->multiline == value)) {
     return;
   }
-  (source->data.multiline = value);
+  (source->data->multiline = value);
   invalidate_rich_text_content(source);
-  invalidate_node_local_bounds(source);
+  flight::node::invalidate_node_local_bounds(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
-inline void set_rich_text_word_wrap(flight::Ref<RichText> source, bool value) {
-  if ((source->data.word_wrap == value)) {
+inline void set_rich_text_word_wrap(flight::Ref<flight::types::RichText> source, bool value) {
+  if ((source->data->word_wrap == value)) {
     return;
   }
-  (source->data.word_wrap = value);
+  (source->data->word_wrap = value);
   invalidate_rich_text_content(source);
-  invalidate_node_local_bounds(source);
+  flight::node::invalidate_node_local_bounds(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
 
@@ -675,39 +790,39 @@ inline void set_rich_text_word_wrap(flight::Ref<RichText> source, bool value) {
 //     return true;
 //   }
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: keyof types require C++ type computation
-// lowering
+// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: ambient value Object member prototype
+// has no C++ binding
 
-inline void set_rich_text_default_text_format(flight::Ref<RichText> source, flight::Ref<TextFormat> value) {
-  if (equals_rich_text_format(source->data.default_text_format, value)) {
+inline void set_rich_text_default_text_format(flight::Ref<flight::types::RichText> source, flight::Ref<flight::types::TextFormat> value) {
+  if (equals_rich_text_format(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>(source->data->default_text_format)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>(value)))) {
     return;
   }
-  (source->data.default_text_format = value);
+  (source->data->default_text_format = value);
   invalidate_rich_text_content(source);
 }
 
-inline void set_rich_text_format_range(flight::Ref<RichText> source, flight::Ref<TextFormat> format, std::optional<double> start = std::nullopt, std::optional<double> end = std::nullopt) {
+inline void set_rich_text_format_range(flight::Ref<flight::types::RichText> source, flight::Ref<flight::types::TextFormat> format, std::optional<double> start = std::nullopt, std::optional<double> end = std::nullopt) {
   start = start.value_or(0.0);
-  end = end.value_or(static_cast<double>(source->data.text.length()));
-  std::optional<flight::Ref<TextFormatRange>> previous = source->data.text_format_ranges.get((static_cast<double>(source->data.text_format_ranges.size()) - 1.0));
-  if ((((previous.has_value() && (previous.value()->start == start.value())) && (previous.value()->end == end.value())) && equals_rich_text_format(previous.value()->format, format))) {
+  end = end.value_or(static_cast<double>(source->data->text.length()));
+  std::optional<flight::Ref<flight::types::TextFormatRange>> previous = source->data->text_format_ranges.get((static_cast<double>(source->data->text_format_ranges.size()) - 1.0));
+  if ((((([&]() { const auto& presence_operand = previous; return presence_operand.has_value(); }()) && (previous.value()->start == start.value())) && (previous.value()->end == end.value())) && equals_rich_text_format(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>(previous.value()->format)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>(format))))) {
     return;
   }
-  source->data.text_format_ranges.push(create_text_format_range(format, start.value(), end.value()));
+  source->data->text_format_ranges.push(flight::textlayout::create_text_format_range(format, start.value(), end.value()));
   invalidate_rich_text_content(source);
 }
 
-inline bool equals_rich_text_content(flight::Ref<RichTextData> data, flight::Ref<RichTextContent> content) {
-  if (((data->text != content->text) || (static_cast<double>(data->text_format_ranges.size()) != static_cast<double>(content->format_ranges.size())))) {
+inline bool equals_rich_text_content(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichTextData>>>> data, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichTextContent>>>> content) {
+  if (((flight::row_get<flight::RowKey<"text">>(data) != flight::row_get<flight::RowKey<"text">>(content)) || (static_cast<double>(flight::row_get<flight::RowKey<"textFormatRanges">>(data).size()) != static_cast<double>(flight::row_get<flight::RowKey<"formatRanges">>(content).size())))) {
     return false;
   }
   {
     double i = 0.0;
-    while ((i < static_cast<double>(data->text_format_ranges.size()))) {
+    while ((i < static_cast<double>(flight::row_get<flight::RowKey<"textFormatRanges">>(data).size()))) {
       {
-        flight::Ref<TextFormatRange> current = data->text_format_ranges.element(i);
-        flight::Ref<TextFormatRange> next = content->format_ranges.element(i);
-        if ((((current->start != next->start) || (current->end != next->end)) || !equals_rich_text_format(current->format, next->format))) {
+        auto current = flight::row_get<flight::RowKey<"textFormatRanges">>(data).element(i);
+        auto next = flight::row_get<flight::RowKey<"formatRanges">>(content).element(i);
+        if ((((current->start != next->start) || (current->end != next->end)) || !equals_rich_text_format(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>(current->format)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>(next->format))))) {
           return false;
         }
       }
@@ -717,32 +832,32 @@ inline bool equals_rich_text_content(flight::Ref<RichTextData> data, flight::Ref
   return true;
 }
 
-inline double compute_rich_text_max_scroll_hfrom_layout(flight::Ref<RichTextData> data, flight::Ref<TextLayoutResult> layout) {
-  const double field_w = (((data->auto_size == flight::String("none")) || data->word_wrap) ? data->width : (layout->text_width + 4.0));
-  return flight::maximum(0.0, std::ceil((layout->text_width - flight::maximum(0.0, (field_w - 4.0)))));
+inline double compute_rich_text_max_scroll_hfrom_layout(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichTextData>>>> data, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>> layout) {
+  const double field_w = (((flight::row_get<flight::RowKey<"autoSize">>(data) == flight::String("none")) || flight::row_get<flight::RowKey<"wordWrap">>(data)) ? flight::row_get<flight::RowKey<"width">>(data) : (flight::row_get<flight::RowKey<"textWidth">>(layout) + 4.0));
+  return flight::maximum(0.0, std::ceil((flight::row_get<flight::RowKey<"textWidth">>(layout) - flight::maximum(0.0, (field_w - 4.0)))));
 }
 
-inline double compute_rich_text_max_scroll_vfrom_layout(flight::Ref<RichTextData> data, flight::Ref<TextLayoutResult> layout) {
-  if ((layout->num_lines <= 1.0)) {
+inline double compute_rich_text_max_scroll_vfrom_layout(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichTextData>>>> data, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>> layout) {
+  if ((flight::row_get<flight::RowKey<"numLines">>(layout) <= 1.0)) {
     return 1.0;
   }
-  const double field_h = ((data->auto_size == flight::String("none")) ? data->height : (layout->text_height + 4.0));
+  const double field_h = ((flight::row_get<flight::RowKey<"autoSize">>(data) == flight::String("none")) ? flight::row_get<flight::RowKey<"height">>(data) : (flight::row_get<flight::RowKey<"textHeight">>(layout) + 4.0));
   const double visible_h = flight::maximum(0.0, (field_h - 4.0));
   double total = 0.0;
   double count = 0.0;
-  for (auto h : layout->line_heights) {
+  for (auto h : flight::row_get<flight::RowKey<"lineHeights">>(layout)) {
     if (((count > 0.0) && ((total + h) > visible_h))) {
       break;
     }
     (total += h);
     count++;
   }
-  return flight::maximum(1.0, ((layout->num_lines - flight::maximum(1.0, count)) + 1.0));
+  return flight::maximum(1.0, ((flight::row_get<flight::RowKey<"numLines">>(layout) - flight::maximum(1.0, count)) + 1.0));
 }
 
 
 // NOT GENERATED: function emitTextFieldChange -- source line 658
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   function emitTextFieldChange(source: Readonly<RichText>, previousText: string): void {
@@ -754,29 +869,46 @@ inline double compute_rich_text_max_scroll_vfrom_layout(flight::Ref<RichTextData
 //   
 //   // Emits onTextFieldScroll when the signals group is enabled. Callers must supply `previousScrollH`
 //   // and `previousScrollV` captured before the mutation.
-// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: contextual optionalSingle construction
-// requires expression type evidence
+// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: a structural assertion from the readonly
+// row Readonly<Node2DRuntime> to the writable row RichTextRuntime claims mutation the source refused: a readonly
+// row never becomes writable, because the boundary the value came through said its subject must not be mutated
+// through it, and no cast, copy, or re-view can carry a capability the source withheld. Assert to the readonly
+// row where the value is only read, or declare the source -- its parameter, slot, or accessor result -- as the
+// writable type where that object may really be mutated. Choosing between those two repairs is the question this
+// assertion was answering, so ask it of the value's ROLE rather than of its spelling: a RUNTIME OWNER that the
+// mutating paths must write needs a mutable-source accessor returning the full writable owner from the typed
+// runtime slot, with the readonly accessor kept for reads, because the capability has to exist on the storage
+// and accessor that establish those cells; a NODE that the read paths only traverse and never mutate needs the
+// two authorities separated instead, with a readonly view on every read path and a separate mutable entry point
+// for the paths that really mutate, because laundering a writable node out of a readonly boundary grants
+// mutation no caller asked for. Both repairs keep the exact Traits or generic specialization the retained row
+// carries; neither adds cells to a row that does not declare them. Making only that boundary writable is
+// insufficient here: the source owner does not declare buildTextLayoutParams, input, richTextContent,
+// selectionBeginIndex, selectionEndIndex, textFieldSignals, textLayout, textLayoutUsingContentId and
+// textLayoutUsingText, so it has no cells for the asserted row to mutate. Declare both the storage slot and the
+// accessor result as the full writable RichTextRuntime row where initialization establishes those cells, rather
+// than widening Readonly<Node2DRuntime> at the use site.
 
-inline void append_rich_text_string(flight::Ref<RichText> source, flight::String value) {
+inline void append_rich_text_string(flight::Ref<flight::types::RichText> source, flight::String value) {
   if ((static_cast<double>(value.length()) == 0.0)) {
     return;
   }
-  const flight::String previous_text = source->data.text;
-  (source->data.text += value);
+  const flight::String previous_text = source->data->text;
+  (source->data->text += value);
   invalidate_rich_text_content(source);
-  emit_text_field_change(source, previous_text);
+  emit_text_field_change(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)), previous_text);
 }
 
-inline void insert_rich_text_string(flight::Ref<RichText> source, double index, flight::String value) {
+inline void insert_rich_text_string(flight::Ref<flight::types::RichText> source, double index, flight::String value) {
   if ((static_cast<double>(value.length()) == 0.0)) {
     return;
   }
-  const flight::String text = source->data.text;
+  const flight::String text = source->data->text;
   const double clamped_index = flight::maximum(0.0, flight::minimum(static_cast<double>(text.length()), index));
   const flight::String previous_text = text;
-  (source->data.text = text.slice(0.0, clamped_index) + value + text.slice(clamped_index));
+  (source->data->text = text.slice(0.0, clamped_index) + value + text.slice(clamped_index));
   const double delta = static_cast<double>(value.length());
-  for (auto range : source->data.text_format_ranges) {
+  for (auto range : source->data->text_format_ranges) {
     if ((range->start >= clamped_index)) {
       (range->start += delta);
       (range->end += delta);
@@ -788,23 +920,23 @@ inline void insert_rich_text_string(flight::Ref<RichText> source, double index, 
     }
   }
   invalidate_rich_text_content(source);
-  emit_text_field_change(source, previous_text);
+  emit_text_field_change(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)), previous_text);
 }
 
-inline void replace_rich_text_string(flight::Ref<RichText> source, double begin_index, double end_index, flight::String value) {
-  const flight::String text = source->data.text;
+inline void replace_rich_text_string(flight::Ref<flight::types::RichText> source, double begin_index, double end_index, flight::String value) {
+  const flight::String text = source->data->text;
   const double start = flight::maximum(0.0, flight::minimum(static_cast<double>(text.length()), begin_index));
   const double end = flight::maximum(start, flight::minimum(static_cast<double>(text.length()), end_index));
   const flight::String previous_text = text;
-  (source->data.text = text.slice(0.0, start) + value + text.slice(end));
+  (source->data->text = text.slice(0.0, start) + value + text.slice(end));
   const double removed_length = (end - start);
   const double delta = (static_cast<double>(value.length()) - removed_length);
-  flight::Array<flight::Ref<TextFormatRange>> ranges = source->data.text_format_ranges;
+  flight::Array<flight::Ref<flight::types::TextFormatRange>> ranges = source->data->text_format_ranges;
   {
     double i = (static_cast<double>(ranges.size()) - 1.0);
     while ((i >= 0.0)) {
       {
-        flight::Ref<TextFormatRange> r = ranges.element(i);
+        auto r = ranges.element(i);
         if ((r->start >= end)) {
           (r->start += delta);
           (r->end += delta);
@@ -837,55 +969,37 @@ inline void replace_rich_text_string(flight::Ref<RichText> source, double begin_
     }
   }
   invalidate_rich_text_content(source);
-  if ((previous_text != source->data.text)) {
-    emit_text_field_change(source, previous_text);
+  if ((previous_text != source->data->text)) {
+    emit_text_field_change(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)), previous_text);
   }
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_BINDING_UID_06E64A362B012722
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_BINDING_UID_06E64A362B012722
-struct binding_uid_06e64a362b012722 : public flight::ReferenceEnabled {
-  std::optional<flight::ErasedRef> binding;
-  std::optional<flight::String> uid;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_BINDING_UID_06E64A362B012722
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_ENTITY_RUNTIME_KEY_END_FORMAT_START_E26AC8AD71C2AA41
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_ENTITY_RUNTIME_KEY_END_FORMAT_START_E26AC8AD71C2AA41
-struct entity_runtime_key_end_format_start_e26ac8ad71c2aa41 : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<binding_uid_06e64a362b012722>> entity_runtime_key;
-  double end;
-  flight::Ref<TextFormat> format;
-  double start;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_ENTITY_RUNTIME_KEY_END_FORMAT_START_E26AC8AD71C2AA41
-
-inline void set_rich_text_content(flight::Ref<RichText> source, flight::Ref<RichTextContent> content) {
-  const flight::String previous_text = source->data.text;
-  if (equals_rich_text_content(source->data, content)) {
+inline void set_rich_text_content(flight::Ref<flight::types::RichText> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichTextContent>>>> content) {
+  const flight::String previous_text = source->data->text;
+  if (equals_rich_text_content(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichTextData>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichTextData>>>>(source->data)), content)) {
     return;
   }
-  (source->data.text = content->text);
-  (source->data.text_format_ranges = content->format_ranges.map([=](flight::Ref<TextFormatRange> range) { return flight::Any::object(flight::make_ref<entity_runtime_key_end_format_start_e26ac8ad71c2aa41>(*range)); }));
+  (source->data->text = flight::row_get<flight::RowKey<"text">>(content));
+  (source->data->text_format_ranges = flight::row_get<flight::RowKey<"formatRanges">>(content).map([=](flight::Ref<flight::types::TextFormatRange> range) { return flight::make_ref<flight::types::TextFormatRange>(*range); }));
   invalidate_rich_text_content(source);
-  if ((previous_text != content->text)) {
-    emit_text_field_change(source, previous_text);
+  if ((previous_text != flight::row_get<flight::RowKey<"text">>(content))) {
+    emit_text_field_change(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)), previous_text);
   }
 }
 
-inline void set_rich_text_string(flight::Ref<RichText> source, flight::String value) {
-  const flight::String previous_text = source->data.text;
+inline void set_rich_text_string(flight::Ref<flight::types::RichText> source, flight::String value) {
+  const flight::String previous_text = source->data->text;
   if ((previous_text == value)) {
     return;
   }
-  (source->data.text = value);
+  (source->data->text = value);
   invalidate_rich_text_content(source);
-  emit_text_field_change(source, previous_text);
+  emit_text_field_change(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)), previous_text);
 }
 
 
 // NOT GENERATED: function emitTextFieldScroll -- source line 667
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   function emitTextFieldScroll(source: Readonly<RichText>, previousScrollH: number, previousScrollV: number): void {
@@ -900,37 +1014,54 @@ inline void set_rich_text_string(flight::Ref<RichText> source, flight::String va
 //     signals.onTextFieldScroll.emit(event);
 //   }
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: contextual optionalSingle construction
-// requires expression type evidence
+// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: a structural assertion from the readonly
+// row Readonly<Node2DRuntime> to the writable row RichTextRuntime claims mutation the source refused: a readonly
+// row never becomes writable, because the boundary the value came through said its subject must not be mutated
+// through it, and no cast, copy, or re-view can carry a capability the source withheld. Assert to the readonly
+// row where the value is only read, or declare the source -- its parameter, slot, or accessor result -- as the
+// writable type where that object may really be mutated. Choosing between those two repairs is the question this
+// assertion was answering, so ask it of the value's ROLE rather than of its spelling: a RUNTIME OWNER that the
+// mutating paths must write needs a mutable-source accessor returning the full writable owner from the typed
+// runtime slot, with the readonly accessor kept for reads, because the capability has to exist on the storage
+// and accessor that establish those cells; a NODE that the read paths only traverse and never mutate needs the
+// two authorities separated instead, with a readonly view on every read path and a separate mutable entry point
+// for the paths that really mutate, because laundering a writable node out of a readonly boundary grants
+// mutation no caller asked for. Both repairs keep the exact Traits or generic specialization the retained row
+// carries; neither adds cells to a row that does not declare them. Making only that boundary writable is
+// insufficient here: the source owner does not declare buildTextLayoutParams, input, richTextContent,
+// selectionBeginIndex, selectionEndIndex, textFieldSignals, textLayout, textLayoutUsingContentId and
+// textLayoutUsingText, so it has no cells for the asserted row to mutate. Declare both the storage slot and the
+// accessor result as the full writable RichTextRuntime row where initialization establishes those cells, rather
+// than widening Readonly<Node2DRuntime> at the use site.
 
-inline void set_rich_text_scroll_h(flight::Ref<RichText> source, double value, std::optional<flight::Ref<TextLayoutResult>> layout = std::nullopt) {
-  const double max = (layout.has_value() ? compute_rich_text_max_scroll_hfrom_layout(source->data, layout.value()) : std::numeric_limits<double>::infinity());
+inline void set_rich_text_scroll_h(flight::Ref<flight::types::RichText> source, double value, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>> layout = std::nullopt) {
+  const double max = (layout.has_value() ? compute_rich_text_max_scroll_hfrom_layout(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichTextData>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichTextData>>>>(source->data)), layout.value()) : std::numeric_limits<double>::infinity());
   const double clamped = flight::maximum(0.0, flight::minimum(max, flight::round(value)));
-  if ((source->data.scroll_h == clamped)) {
+  if ((source->data->scroll_h == clamped)) {
     return;
   }
-  const double previous_scroll_h = source->data.scroll_h;
-  const double previous_scroll_v = source->data.scroll_v;
-  (source->data.scroll_h = clamped);
-  invalidate_node_local_content(source);
-  emit_text_field_scroll(source, previous_scroll_h, previous_scroll_v);
+  const double previous_scroll_h = source->data->scroll_h;
+  const double previous_scroll_v = source->data->scroll_v;
+  (source->data->scroll_h = clamped);
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
+  emit_text_field_scroll(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)), previous_scroll_h, previous_scroll_v);
 }
 
-inline void set_rich_text_scroll_v(flight::Ref<RichText> source, double value, std::optional<flight::Ref<TextLayoutResult>> layout = std::nullopt) {
-  const double max = (layout.has_value() ? compute_rich_text_max_scroll_vfrom_layout(source->data, layout.value()) : std::numeric_limits<double>::infinity());
+inline void set_rich_text_scroll_v(flight::Ref<flight::types::RichText> source, double value, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>> layout = std::nullopt) {
+  const double max = (layout.has_value() ? compute_rich_text_max_scroll_vfrom_layout(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichTextData>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichTextData>>>>(source->data)), layout.value()) : std::numeric_limits<double>::infinity());
   const double clamped = flight::maximum(1.0, flight::minimum(max, flight::round(value)));
-  if ((source->data.scroll_v == clamped)) {
+  if ((source->data->scroll_v == clamped)) {
     return;
   }
-  const double previous_scroll_h = source->data.scroll_h;
-  const double previous_scroll_v = source->data.scroll_v;
-  (source->data.scroll_v = clamped);
-  invalidate_node_local_content(source);
-  emit_text_field_scroll(source, previous_scroll_h, previous_scroll_v);
+  const double previous_scroll_h = source->data->scroll_h;
+  const double previous_scroll_v = source->data->scroll_v;
+  (source->data->scroll_v = clamped);
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
+  emit_text_field_scroll(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)), previous_scroll_h, previous_scroll_v);
 }
 
-inline void dispatch_rich_text_wheel(flight::Ref<RichText> source, double delta_lines, std::optional<flight::Ref<TextLayoutResult>> layout = std::nullopt) {
-  set_rich_text_scroll_v(source, (source->data.scroll_v + flight::round(delta_lines)), layout);
+inline void dispatch_rich_text_wheel(flight::Ref<flight::types::RichText> source, double delta_lines, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>> layout = std::nullopt) {
+  set_rich_text_scroll_v(source, (source->data->scroll_v + flight::round(delta_lines)), layout);
 }
 
 } // namespace flight::text

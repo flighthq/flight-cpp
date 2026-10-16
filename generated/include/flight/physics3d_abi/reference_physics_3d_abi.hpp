@@ -6,6 +6,7 @@
 //   missing: function createJoint -- source line 759
 //   missing: function isShapeValid -- source line 978
 //   missing: function createReferenceWorld -- source line 273
+//   missing: function initializeReferencePhysics3DAbi -- source line 121
 #include <cmath>
 #include <cstdint>
 #include <exception>
@@ -19,7 +20,6 @@
 #include <random>
 #include <stdexcept>
 #include <tuple>
-#include <type_traits>
 #include <variant>
 #include <flight/runtime.hpp>
 
@@ -29,6 +29,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/physics_3d_abi.hpp>
 
 #include <flight/types/physics_3d.hpp>
+
+#include <flight/types/entity.hpp>
 
 #include <flight/types/collision.hpp>
 
@@ -89,6 +91,7 @@ namespace flight::types { struct SpatialIndexBackend3D; }
 namespace flight::physics3d_abi {
 
 using flight::types::CollisionColliderShape3D;
+using flight::types::EntityConstruction;
 using flight::types::Physics3DAbi;
 using flight::types::Physics3DAbiBodyBuffer;
 using flight::types::Physics3DAbiCommandBuffer;
@@ -1456,120 +1459,127 @@ inline bool execute_commands(flight::Ref<ReferencePhysics3DAbiWorld> state, flig
   return true;
 }
 
-inline void initialize_reference_physics_3d_abi(flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DAbi>> out) {
-  flight::collision::register_built_in_collision_supports_3d();
-  flight::collision::register_built_in_collision_pair_tests_3d();
-  flight::collision::register_built_in_collision_face_queries_3d();
-  auto worlds = flight::Map<double, flight::Ref<ReferencePhysics3DAbiWorld>>();
-  const auto next_world_handle_capture = flight::make_binding_cell(double{1.0});
-  flight::row_set<flight::RowKey<"version">>(out, flight::physics3d_abi::physics_3d_abi_version);
-  flight::row_set<flight::RowKey<"capabilities">>(out, flight::bitwise_or(flight::bitwise_or(flight::bitwise_or(flight::physics3d_abi::physics_3d_abi_capability->contact_hooks, flight::physics3d_abi::physics_3d_abi_capability->persistent_worlds), flight::physics3d_abi::physics_3d_abi_capability->queries), flight::physics3d_abi::physics_3d_abi_capability->selective_readback));
-  flight::row_set<flight::RowKey<"createWorld">>(out, [=]() {
-  if ((next_world_handle_capture.read_binding() > 4294967295.0)) {
-    return 0.0;
-  }
-  const double handle = next_world_handle_capture.read_binding();
-  next_world_handle_capture.update_binding([&](auto& binding_value) { binding_value += 1.0; return binding_value; });
-  auto world = flight::physics3d::create_physics_3d_world(std::nullopt);
-  flight::physics3d::register_built_in_physics_3d_joint_solvers(world);
-  worlds.set(handle, create_reference_world(world));
-  return handle;
-});
-  flight::row_set<flight::RowKey<"destroyWorld">>(out, [=](double handle) {
-  if ((([&]() -> std::optional<bool> { auto optional_chain_receiver = worlds.get(handle); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->stepping; }()) == true)) {
-    return false;
-  }
-  return worlds.erase(handle);
-});
-  flight::row_set<flight::RowKey<"getWorldStatus">>(out, [=](double handle) -> flight::String {
-  auto state = worlds.get(handle);
-  if (!state.has_value()) {
-    return flight::String("Stale");
-  }
-  return (state.value()->stepping ? flight::String("Busy") : flight::String("Ready"));
-});
-  flight::row_set<flight::RowKey<"execute">>(out, [=](double handle, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DAbiCommandBuffer>>>> commands, flight::Ref<flight::types::Physics3DAbiExecutionResult> out) {
-  auto state = worlds.get(handle);
-  if (!state.has_value()) {
-    return fail_execution(out, flight::String("StaleWorld"), 0.0, flight::physics3d_abi::physics_3d_abi_command_header_byte_length, 0.0);
-  }
-  if (state.value()->stepping) {
-    return fail_execution(out, flight::String("BusyWorld"), 0.0, flight::physics3d_abi::physics_3d_abi_command_header_byte_length, 0.0);
-  }
-  return execute_commands(state.value(), commands, out);
-});
-  flight::row_set<flight::RowKey<"step">>(out, [=](double handle, double dt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DAbiContactHooks>>>>> hooks) -> flight::String {
-  auto state = worlds.get(handle);
-  if (!state.has_value()) {
-    return flight::String("StaleWorld");
-  }
-  if (state.value()->stepping) {
-    return flight::String("BusyWorld");
-  }
-  return step_reference_world(state.value(), dt, hooks);
-});
-  flight::row_set<flight::RowKey<"readBodies">>(out, [=](double handle, std::optional<flight::Uint32Array> body_ids, flight::Ref<flight::types::Physics3DAbiBodyBuffer> out) {
-  auto state = worlds.get(handle);
-  if ((!state.has_value() || state.value()->stepping)) {
-    return false;
-  }
-  read_bodies(state.value(), body_ids, out);
-  return true;
-});
-  flight::row_set<flight::RowKey<"readContacts">>(out, [=](double handle, flight::types::Physics3DAbiContactSelection selection, flight::Ref<flight::types::Physics3DAbiContactBuffer> out) {
-  auto state = worlds.get(handle);
-  if ((!state.has_value() || state.value()->stepping)) {
-    return false;
-  }
-  read_contacts(state.value(), selection, out);
-  return true;
-});
-  flight::row_set<flight::RowKey<"readJoints">>(out, [=](double handle, flight::Ref<flight::types::Physics3DAbiJointBuffer> out) {
-  auto state = worlds.get(handle);
-  if ((!state.has_value() || state.value()->stepping)) {
-    return false;
-  }
-  read_joints(state.value(), out);
-  return true;
-});
-  flight::row_set<flight::RowKey<"queryPoint">>(out, [=](double handle, double x, double y, double z, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DQueryFilter>>>>> filter, flight::Ref<flight::types::Physics3DAbiQueryBuffer> out) {
-  auto state = worlds.get(handle);
-  if ((!state.has_value() || state.value()->stepping)) {
-    return false;
-  }
-  flight::physics3d::query_physics_3d_point(state.value()->world, x, y, z, state.value()->query, (filter.has_value() ? std::optional{filter.value()} : std::nullopt));
-  write_query_hits(state.value(), state.value()->query, out);
-  return true;
-});
-  flight::row_set<flight::RowKey<"queryRay">>(out, [=](double handle, double origin_x, double origin_y, double origin_z, double direction_x, double direction_y, double direction_z, double max_fraction, bool closest, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DQueryFilter>>>>> filter, flight::Ref<flight::types::Physics3DAbiQueryBuffer> out) {
-  auto state = worlds.get(handle);
-  if ((!state.has_value() || state.value()->stepping)) {
-    return false;
-  }
-  flight::Ref<flight::physics3d::QueryPhysics3DRayClosest> query = (closest ? flight::physics3d::query_physics_3d_ray_closest : flight::physics3d::query_physics_3d_ray);
-  query(state.value()->world, origin_x, origin_y, origin_z, direction_x, direction_y, direction_z, state.value()->ray, max_fraction, (filter.has_value() ? std::optional{filter.value()} : std::nullopt));
-  write_ray_hits(state.value(), out);
-  return true;
-});
-  flight::row_set<flight::RowKey<"queryRegion">>(out, [=](double handle, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialAabb3D>>>> region, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DQueryFilter>>>>> filter, flight::Ref<flight::types::Physics3DAbiQueryBuffer> out) {
-  auto state = worlds.get(handle);
-  if ((!state.has_value() || state.value()->stepping)) {
-    return false;
-  }
-  flight::physics3d::query_physics_3d_region(state.value()->world, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialAabb3D>>>>>(region), state.value()->query, (filter.has_value() ? std::optional{filter.value()} : std::nullopt));
-  write_query_hits(state.value(), state.value()->query, out);
-  return true;
-});
-  flight::row_set<flight::RowKey<"queryShapeCast">>(out, [=](double handle, std::variant<flight::Ref<flight::types::min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>, flight::Ref<flight::types::x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>, flight::Ref<flight::types::x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>, flight::Ref<flight::types::apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>, flight::Ref<flight::types::points_kind_35a8f5f2a3a8bd66>, flight::Ref<flight::types::x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>, flight::Ref<flight::types::x_y_z_radius_kind_b0bc53ca3f0e8006>> shape, double dx, double dy, double dz, double max_fraction, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics3DQueryFilter>>>>> filter, flight::Ref<flight::types::Physics3DAbiQueryBuffer> out) {
-  auto state = worlds.get(handle);
-  if ((!state.has_value() || state.value()->stepping)) {
-    return false;
-  }
-  flight::physics3d::query_physics_3d_shape_cast(state.value()->world, std::visit([&](const auto& contextual_union_value) -> std::variant<flight::Ref<flight::types::x_y_z_radius_kind_b0bc53ca3f0e8006>, flight::Ref<flight::types::apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>, flight::Ref<flight::types::x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>, flight::Ref<flight::types::min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>, flight::Ref<flight::types::points_kind_35a8f5f2a3a8bd66>, flight::Ref<flight::types::x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>, flight::Ref<flight::types::x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>> { using contextual_union_value_type = std::decay_t<decltype(contextual_union_value)>; if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>>) return std::variant<flight::Ref<flight::types::x_y_z_radius_kind_b0bc53ca3f0e8006>, flight::Ref<flight::types::apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>, flight::Ref<flight::types::x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>, flight::Ref<flight::types::min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>, flight::Ref<flight::types::points_kind_35a8f5f2a3a8bd66>, flight::Ref<flight::types::x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>, flight::Ref<flight::types::x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>>{std::in_place_type<flight::Ref<flight::types::min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>>) return std::variant<flight::Ref<flight::types::x_y_z_radius_kind_b0bc53ca3f0e8006>, flight::Ref<flight::types::apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>, flight::Ref<flight::types::x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>, flight::Ref<flight::types::min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>, flight::Ref<flight::types::points_kind_35a8f5f2a3a8bd66>, flight::Ref<flight::types::x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>, flight::Ref<flight::types::x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>>{std::in_place_type<flight::Ref<flight::types::x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>>) return std::variant<flight::Ref<flight::types::x_y_z_radius_kind_b0bc53ca3f0e8006>, flight::Ref<flight::types::apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>, flight::Ref<flight::types::x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>, flight::Ref<flight::types::min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>, flight::Ref<flight::types::points_kind_35a8f5f2a3a8bd66>, flight::Ref<flight::types::x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>, flight::Ref<flight::types::x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>>{std::in_place_type<flight::Ref<flight::types::x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>>) return std::variant<flight::Ref<flight::types::x_y_z_radius_kind_b0bc53ca3f0e8006>, flight::Ref<flight::types::apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>, flight::Ref<flight::types::x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>, flight::Ref<flight::types::min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>, flight::Ref<flight::types::points_kind_35a8f5f2a3a8bd66>, flight::Ref<flight::types::x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>, flight::Ref<flight::types::x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>>{std::in_place_type<flight::Ref<flight::types::apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::points_kind_35a8f5f2a3a8bd66>>) return std::variant<flight::Ref<flight::types::x_y_z_radius_kind_b0bc53ca3f0e8006>, flight::Ref<flight::types::apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>, flight::Ref<flight::types::x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>, flight::Ref<flight::types::min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>, flight::Ref<flight::types::points_kind_35a8f5f2a3a8bd66>, flight::Ref<flight::types::x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>, flight::Ref<flight::types::x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>>{std::in_place_type<flight::Ref<flight::types::points_kind_35a8f5f2a3a8bd66>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>>) return std::variant<flight::Ref<flight::types::x_y_z_radius_kind_b0bc53ca3f0e8006>, flight::Ref<flight::types::apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>, flight::Ref<flight::types::x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>, flight::Ref<flight::types::min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>, flight::Ref<flight::types::points_kind_35a8f5f2a3a8bd66>, flight::Ref<flight::types::x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>, flight::Ref<flight::types::x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>>{std::in_place_type<flight::Ref<flight::types::x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>>, contextual_union_value}; else return std::variant<flight::Ref<flight::types::x_y_z_radius_kind_b0bc53ca3f0e8006>, flight::Ref<flight::types::apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>, flight::Ref<flight::types::x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>, flight::Ref<flight::types::min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>, flight::Ref<flight::types::points_kind_35a8f5f2a3a8bd66>, flight::Ref<flight::types::x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>, flight::Ref<flight::types::x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>>{std::in_place_type<flight::Ref<flight::types::x_y_z_radius_kind_b0bc53ca3f0e8006>>, contextual_union_value}; }, shape), dx, dy, dz, state.value()->shape_cast, max_fraction, (filter.has_value() ? std::optional{filter.value()} : std::nullopt));
-  write_shape_cast_hit(state.value(), out);
-  return true;
-});
-}
+
+// NOT GENERATED: function initializeReferencePhysics3DAbi -- source line 121
+// refusal: cpp-imported-binding-no-export-target [compiler-restriction]
+//
+// The source it stood for:
+//   export function initializeReferencePhysics3DAbi(out: EntityConstruction<Physics3DAbi>): void {
+//     registerBuiltInCollisionSupports3D();
+//     registerBuiltInCollisionPairTests3D();
+//     registerBuiltInCollisionFaceQueries3D();
+//     const worlds = new Map<number, ReferencePhysics3DAbiWorld>();
+//     let nextWorldHandle = 1;
+//     out.version = Physics3DAbiVersion;
+//     out.capabilities =
+//       Physics3DAbiCapability.ContactHooks |
+//       Physics3DAbiCapability.PersistentWorlds |
+//       Physics3DAbiCapability.Queries |
+//       Physics3DAbiCapability.SelectiveReadback;
+//     out.createWorld = (): Physics3DAbiWorldHandle => {
+//       if (nextWorldHandle > 0xffffffff) return 0;
+//       const handle = nextWorldHandle;
+//       nextWorldHandle += 1;
+//       const world = createPhysics3DWorld();
+//       registerBuiltInPhysics3DJointSolvers(world);
+//       worlds.set(handle, createReferenceWorld(world));
+//       return handle;
+//     };
+//     out.destroyWorld = (handle): boolean => {
+//       if (worlds.get(handle)?.stepping === true) return false;
+//       return worlds.delete(handle);
+//     };
+//     out.getWorldStatus = (handle): Physics3DAbiWorldStatus => {
+//       const state = worlds.get(handle);
+//       if (state === undefined) return 'Stale';
+//       return state.stepping ? 'Busy' : 'Ready';
+//     };
+//     out.execute = (handle, commands, out): boolean => {
+//       const state = worlds.get(handle);
+//       if (state === undefined) return failExecution(out, 'StaleWorld', 0, Physics3DAbiCommandHeaderByteLength, 0);
+//       if (state.stepping) return failExecution(out, 'BusyWorld', 0, Physics3DAbiCommandHeaderByteLength, 0);
+//       return executeCommands(state, commands, out);
+//     };
+//     out.step = (handle, dt, hooks): Physics3DAbiStepStatus => {
+//       const state = worlds.get(handle);
+//       if (state === undefined) return 'StaleWorld';
+//       if (state.stepping) return 'BusyWorld';
+//       return stepReferenceWorld(state, dt, hooks);
+//     };
+//     out.readBodies = (handle, bodyIds, out): boolean => {
+//       const state = worlds.get(handle);
+//       if (state === undefined || state.stepping) return false;
+//       readBodies(state, bodyIds, out);
+//       return true;
+//     };
+//     out.readContacts = (handle, selection, out): boolean => {
+//       const state = worlds.get(handle);
+//       if (state === undefined || state.stepping) return false;
+//       readContacts(state, selection, out);
+//       return true;
+//     };
+//     out.readJoints = (handle, out): boolean => {
+//       const state = worlds.get(handle);
+//       if (state === undefined || state.stepping) return false;
+//       readJoints(state, out);
+//       return true;
+//     };
+//     out.queryPoint = (handle, x, y, z, filter, out): boolean => {
+//       const state = worlds.get(handle);
+//       if (state === undefined || state.stepping) return false;
+//       queryPhysics3DPoint(state.world, x, y, z, state.query, filter ?? undefined);
+//       writeQueryHits(state, state.query, out);
+//       return true;
+//     };
+//     out.queryRay = (
+//       handle,
+//       originX,
+//       originY,
+//       originZ,
+//       directionX,
+//       directionY,
+//       directionZ,
+//       maxFraction,
+//       closest,
+//       filter,
+//       out,
+//     ) => {
+//       const state = worlds.get(handle);
+//       if (state === undefined || state.stepping) return false;
+//       const query = closest ? queryPhysics3DRayClosest : queryPhysics3DRay;
+//       query(
+//         state.world,
+//         originX,
+//         originY,
+//         originZ,
+//         directionX,
+//         directionY,
+//         directionZ,
+//         state.ray,
+//         maxFraction,
+//         filter ?? undefined,
+//       );
+//       writeRayHits(state, out);
+//       return true;
+//     };
+//     out.queryRegion = (handle, region, filter, out): boolean => {
+//       const state = worlds.get(handle);
+//       if (state === undefined || state.stepping) return false;
+//       queryPhysics3DRegion(state.world, region, state.query, filter ?? undefined);
+//       writeQueryHits(state, state.query, out);
+//       return true;
+//     };
+//     out.queryShapeCast = (handle, shape, dx, dy, dz, maxFraction, filter, out): boolean => {
+//       const state = worlds.get(handle);
+//       if (state === undefined || state.stepping) return false;
+//       queryPhysics3DShapeCast(state.world, shape, dx, dy, dz, state.shapeCast, maxFraction, filter ?? undefined);
+//       writeShapeCastHit(state, out);
+//       return true;
+//     };
+//   }
+//   
+// cpp emission failed for @flighthq/physics3d-abi/packages/physics3d-abi/src/referencePhysics3DAbi.ts: imported
+// type binding queryPhysics3DRayClosest requires one exact exported declaration owner
 
 inline flight::Ref<flight::types::Physics3DAbi> create_reference_physics_3d_abi() {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics3DAbi>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics3DAbi>>();

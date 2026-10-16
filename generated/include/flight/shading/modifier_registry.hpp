@@ -2,27 +2,36 @@
 #pragma once
 #include <flight/structural_ref.hpp>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct GlModifierSnippet; }
 namespace flight::types { struct ModifierDefinition; }
 namespace flight::types { struct ModifierRegistry; }
+namespace flight::types { struct WgpuModifierSnippet; }
 
-#include <flight/types/contract.hpp>
+#include <flight/types/gl_modifier_snippet.hpp>
+#include <flight/types/modifier_definition.hpp>
+#include <flight/types/modifier_definition_value.hpp>
+#include <flight/types/modifier_kind.hpp>
+#include <flight/types/modifier_registry.hpp>
+#include <flight/types/non_entity_create_result.hpp>
+#include <flight/types/wgpu_modifier_snippet.hpp>
 
 namespace flight::shading {
 
 inline flight::Ref<flight::types::ModifierRegistry> create_modifier_registry() {
-  return flight::make_ref<flight::types::ModifierRegistry>(flight::types::ModifierRegistry{.definitions = flight::Map<flight::String, flight::Ref<flight::types::ModifierDefinition>>()});
+  return flight::make_ref<flight::types::ModifierRegistry>(flight::types::ModifierRegistry{.definitions = flight::Map<flight::String, flight::types::ModifierDefinitionValue>()});
 }
 
-inline void register_modifier(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>> registry, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierDefinition>>>> definition) {
-  flight::row_get<flight::RowKey<"definitions">>(registry).set(flight::row_get<flight::RowKey<"kind">>(definition), flight::structural_ref_cast<flight::Ref<flight::types::ModifierDefinition>>(definition));
+inline void register_modifier(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>> registry, flight::types::ModifierDefinitionValue definition) {
+  flight::row_get<flight::RowKey<"definitions">>(registry).set(std::visit([](const auto& value) { return value->kind; }, definition), definition);
 }
 
-inline std::optional<flight::Ref<flight::types::ModifierDefinition>> resolve_modifier(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>> registry, flight::String kind) {
+inline std::optional<flight::types::ModifierDefinitionValue> resolve_modifier(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>> registry, flight::String kind) {
   return flight::row_get<flight::RowKey<"definitions">>(registry).get(kind);
 }
 

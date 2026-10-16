@@ -27,7 +27,6 @@ namespace flight::scene3d_formats {
 
 using flight::types::Light;
 using flight::types::Texture;
-using flight::types::compression;
 
 inline flight::Map<double, flight::String> awd2_block_names = flight::Map<double, flight::String>({{flight::scene3d_formats::awd2_block_triangle_geometry, flight::String("TriangleGeometry")}, {flight::scene3d_formats::awd2_block_container, flight::String("Container")}, {flight::scene3d_formats::awd2_block_mesh_instance, flight::String("MeshInstance")}, {flight::scene3d_formats::awd2_block_light, flight::String("Light")}, {flight::scene3d_formats::awd2_block_camera, flight::String("Camera")}, {flight::scene3d_formats::awd2_block_light_picker, flight::String("LightPicker")}, {flight::scene3d_formats::awd2_block_material, flight::String("Material")}, {flight::scene3d_formats::awd2_block_texture, flight::String("Texture")}, {flight::scene3d_formats::awd2_block_skeleton, flight::String("Skeleton")}, {flight::scene3d_formats::awd2_block_skeleton_pose, flight::String("SkeletonPose")}, {flight::scene3d_formats::awd2_block_skeleton_animation, flight::String("SkeletonAnimation")}, {flight::scene3d_formats::awd2_block_skeleton_clip_node, flight::String("SkeletonClipNode")}, {flight::scene3d_formats::awd2_block_animation_set, flight::String("AnimationSet")}});
 

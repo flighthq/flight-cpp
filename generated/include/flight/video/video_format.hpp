@@ -44,7 +44,7 @@ inline std::optional<flight::String> infer_video_mime_type(flight::String url) {
   const flight::String path = url.split(flight::String("?")).element(0.0);
   flight::Array<flight::String> parts = path.split(flight::String("."));
   const std::optional<flight::String> tail = parts.get((static_cast<double>(parts.size()) - 1.0));
-  if (!tail.has_value()) {
+  if (([&]() { const auto& presence_operand = tail; return !presence_operand.has_value(); }())) {
     return std::nullopt;
   }
   const flight::String ext = tail.value().to_lower();

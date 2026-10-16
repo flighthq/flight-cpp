@@ -4,9 +4,8 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function rebuildRiveShapes -- source line 55
-//   missing: function readRiveShapeName -- source line 109
-//   missing: function importRiveNSlicedNodeComponent -- source line 26
 //   missing: function importRiveShapeComponent -- source line 42
+#include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
 #include <variant>
@@ -25,6 +24,20 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/display_object.hpp>
 
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct RiveArtboardGraph; }
+namespace flight::types { struct RiveArtboardImportContext; }
+namespace flight::types { struct RiveCoreObject; }
+namespace flight::types { struct RiveCoreObjectHandler; }
+namespace flight::types { struct RiveImportRegistry; }
+namespace flight::types { struct RivePathRecord; }
+namespace flight::types { struct RiveProperty; }
+namespace flight::types { struct Shape; }
+
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+#include <flight/scene2d/display_object.hpp>
+#include <flight/shape/shape.hpp>
+#include <flight/types/contract.hpp>
 #include <flight/scene2d_formats/rive_import_registry.hpp>
 #include <flight/scene2d_formats/rive_shape_paint.hpp>
 #include <flight/scene2d_formats/rive_shape_path.hpp>
@@ -33,37 +46,39 @@ namespace flight::scene2d_formats {
 
 using flight::types::DisplayObject;
 using flight::types::ImportDiagnostic;
+using flight::types::RiveArtboardGraph;
 using flight::types::RiveArtboardImportContext;
 using flight::types::RiveCoreObject;
 using flight::types::RiveCoreObjectHandler;
 using flight::types::RiveImportRegistry;
 using flight::types::RivePathRecord;
+using flight::types::RiveProperty;
 using flight::types::Shape;
 
-inline const double rive_shape = 3.0;
+inline const double rive_shape_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u000053__u000048__u000041__u000050__u000045__flight_private_62e72f9eacdc5a12 = 3.0;
 
-inline const double rive_shape_paint = 21.0;
+inline const double rive_shape_paint_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u000053__u000048__u000041__u000050__u000045__u00005f__u000050__u000041__u000049__u00004e__u000054__flight_private_62e72f9eacdc5a12 = 21.0;
 
-inline void rebuild_rive_shape(flight::Ref<RiveArtboardImportContext> context, double shape_index, flight::Ref<Shape> shape, std::optional<flight::Array<flight::Ref<ImportDiagnostic>>> diagnostics) {
-  flight::Array<flight::Ref<RivePathRecord>> records = flight::Array<flight::Ref<RivePathRecord>>{};
-  for (auto path_index : ([&]() -> flight::Array<double> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<double>> { auto optional_chain_receiver = context->shape_paths.get(shape_index); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().map([=](flight::Ref<RivePathRecord> record) { return record->path_index; }); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<double>{}; }())) {
-    std::optional<flight::Ref<RivePathRecord>> record = create_rive_path_record(context->artboard, path_index, std::nullopt);
+inline void rebuild_rive_shape(flight::Ref<flight::types::RiveArtboardImportContext> context, double shape_index, flight::Ref<flight::types::Shape> shape, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics) {
+  flight::Array<flight::Ref<flight::types::RivePathRecord>> records = flight::Array<flight::Ref<flight::types::RivePathRecord>>{};
+  for (auto path_index : ([&]() -> flight::Array<double> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<double>> { auto optional_chain_receiver = context->shape_paths.get(shape_index); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().map([=](flight::Ref<flight::types::RivePathRecord> record) { return record->path_index; }); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<double>{}; }())) {
+    auto record = flight::scene2d_formats::create_rive_path_record(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveArtboardGraph>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveArtboardGraph>>>>(context->artboard)), path_index, std::nullopt);
     if (record.has_value()) {
       records.push(record.value());
     }
   }
   context->shape_paths.set(shape_index, records);
-  clear_shape_commands(shape);
-  if (!get_rive_core_object_handler(context->registry, rive_shape_paint).has_value()) {
-    append_rive_shape_geometry(shape, records);
+  flight::shape::clear_shape_commands(shape);
+  if (!flight::scene2d_formats::get_rive_core_object_handler(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveImportRegistry>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveImportRegistry>>>>(context->registry)), rive_shape_paint_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u000053__u000048__u000041__u000050__u000045__u00005f__u000050__u000041__u000049__u00004e__u000054__flight_private_62e72f9eacdc5a12).has_value()) {
+    flight::scene2d_formats::append_rive_shape_geometry(shape, records);
     return;
   }
-  append_rive_shape_paint(shape, context->artboard, shape_index, records, diagnostics);
+  flight::scene2d_formats::append_rive_shape_paint(shape, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveArtboardGraph>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveArtboardGraph>>>>(context->artboard)), shape_index, records, diagnostics);
 }
 
 
 // NOT GENERATED: function rebuildRiveShapes -- source line 55
-// refusal: cpp-type-assertion-unidentified [source-portability]
+// refusal: cpp-type-assertion-unidentified [compiler-restriction]
 //
 // The source it stood for:
 //   export function rebuildRiveShapes(context: RiveArtboardImportContext): void {
@@ -88,56 +103,31 @@ inline void rebuild_rive_shape(flight::Ref<RiveArtboardImportContext> context, d
 //    * model they are paths, and they belong to the path family.
 //    */
 // cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveShapeNode.ts: type
-// assertion target must identify exactly one C++ variant alternative: target flight::Ref<Shape> against
-// [flight::Ref<DisplayObject>]
+// assertion target must identify exactly one C++ variant alternative: target flight::Ref<flight::types::Shape>
+// against [flight::types::DisplayObject]; the value holds the target through an alternative whose members
+// already satisfy it, but the two are separate flattened C++ structs with no base relation between them, so
+// there is no narrowing to follow -- a CLASS heritage pair narrows here, because those structs really do
+// inherit. Assert to the alternative the value actually holds and read this target's members from it, or declare
+// the slot as this target where the concrete type is known
 
 inline const double rive_nsliced_node = 508.0;
 
-inline const double rive_name = 4.0;
+inline const double rive_name_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u00004e__u000041__u00004d__u000045__flight_private_62e72f9eacdc5a12 = 4.0;
 
+inline flight::String read_rive_shape_name(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>> source) {
+  auto property = flight::row_get<flight::RowKey<"properties">>(source).find([=](flight::Ref<flight::types::RiveProperty> candidate) { return (candidate->key == rive_name_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u00004e__u000041__u00004d__u000045__flight_private_62e72f9eacdc5a12); });
+  return ((!property.has_value() || !(std::holds_alternative<flight::String>(property.value()->value))) ? flight::String("") : std::get<2>(property.value()->value));
+}
 
-// NOT GENERATED: function readRiveShapeName -- source line 109
-// refusal: cpp-typeof-runtime-domain-unrepresented [source-portability]
-//
-// The source it stood for:
-//   function readRiveShapeName(source: Readonly<RiveCoreObject>): string {
-//     const property = source.properties.find((candidate) => candidate.key === RIVE_NAME);
-//     return property === undefined || typeof property.value !== 'string' ? '' : property.value;
-//   }
-//   
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveShapeNode.ts: typeof
-// requires closed runtime type evidence: the declared type does not decide it, and the target cannot ask a value
-// it stores as a concrete carrier. State the type where the value is read: a closed union whose alternatives are
-// distinguishable is lowered as a variant test, and a value the runtime owns -- a parameter declared `unknown`
-// or `any` -- is answered by the runtime's own `typeof`
-
-
-// NOT GENERATED: function importRiveNSlicedNodeComponent -- source line 26
-// refusal: cpp-contextual-union-missing-expression-type:multiVariant [compiler-restriction]
-//
-// The source it stood for:
-//   export function importRiveNSlicedNodeComponent(
-//     context: RiveArtboardImportContext,
-//     index: number,
-//   ): DisplayObject | null {
-//     const object = context.artboard.objects[index];
-//     reportImportDiagnostic(
-//       context.diagnostics,
-//       ImportDiagnosticSeverity.Recover,
-//       'rive.nine-slice-substituted',
-//       'importRiveNSlicedNodeComponent',
-//       { substitutedAs: 'container', typeKey: object.typeKey },
-//     );
-//     return createDisplayObject({ name: readRiveShapeName(object) });
-//   }
-//   
-//   /** A shape carries its children's geometry as one command stream, filled once the artboard is read. */
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveShapeNode.ts: contextual
-// multiVariant construction requires expression type evidence
+inline std::optional<flight::types::DisplayObject> import_rive_nsliced_node_component(flight::Ref<flight::types::RiveArtboardImportContext> context, double index) {
+  auto object = context->artboard->objects.element(index);
+  flight::importdiagnostics::report_import_diagnostic(context->diagnostics, flight::types::import_diagnostic_severity->recover, flight::String("rive.nine-slice-substituted"), flight::String("importRiveNSlicedNodeComponent"), {{flight::String("substitutedAs"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("container")}}, {flight::String("typeKey"), std::variant<bool, double, flight::String>{std::in_place_type<double>, object->type_key}}});
+  return std::optional<flight::types::DisplayObject>{flight::scene2d::create_display_object(flight::make_structural_ref<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::types::DisplayObject>>>>(flight::row_field<flight::RowKey<"name">>(std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, read_rive_shape_name(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(object)))})))};
+}
 
 
 // NOT GENERATED: function importRiveShapeComponent -- source line 42
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+// refusal: cpp-contextual-union-value-type-unrepresented [source-portability]
 //
 // The source it stood for:
 //   export function importRiveShapeComponent(context: RiveArtboardImportContext, index: number): DisplayObject | null {
@@ -154,11 +144,16 @@ inline const double rive_name = 4.0;
 //    * the shape is built again from it, with nothing cached in between to invalidate.
 //    */
 // cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveShapeNode.ts: contextual
-// union value type flight::Ref<Shape> is not a represented runtime domain
+// union value type flight::Ref<flight::types::Shape> is not a represented runtime domain: the value leaves a
+// member the destination requires optional or absent, or gives it an incompatible type, so it is not the shape
+// an alternative declares. The call has already selected a result owner from its arguments; the destination
+// cannot retroactively replace that generic or anonymous owner. Constrain the call with the declared destination
+// type where its type arguments are chosen, or change the called API to return the exact declared arm. The
+// compiler will not cast, copy, or materialize the call result into another owner.
 
-inline void register_rive_shape_handlers(flight::Ref<RiveImportRegistry> registry) {
-  register_rive_core_object_handler(registry, rive_shape, flight::make_ref<RiveCoreObjectHandler>(RiveCoreObjectHandler{.apply_artboard = rebuild_rive_shapes, .import_component = import_rive_shape_component}));
-  register_rive_core_object_handler(registry, rive_nsliced_node, flight::make_ref<RiveCoreObjectHandler>(RiveCoreObjectHandler{.import_component = import_rive_nsliced_node_component}));
+inline void register_rive_shape_handlers(flight::Ref<flight::types::RiveImportRegistry> registry) {
+  flight::scene2d_formats::register_rive_core_object_handler(registry, rive_shape_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u000053__u000048__u000041__u000050__u000045__flight_private_62e72f9eacdc5a12, flight::make_ref<flight::types::RiveCoreObjectHandler>(flight::types::RiveCoreObjectHandler{.apply_artboard = std::optional<std::function<void(flight::Ref<flight::types::RiveArtboardImportContext>)>>{rebuild_rive_shapes}, .import_component = std::optional<std::function<std::optional<flight::types::DisplayObject>(flight::Ref<flight::types::RiveArtboardImportContext>, double)>>{import_rive_shape_component}}));
+  flight::scene2d_formats::register_rive_core_object_handler(registry, rive_nsliced_node, flight::make_ref<flight::types::RiveCoreObjectHandler>(flight::types::RiveCoreObjectHandler{.import_component = std::optional<std::function<std::optional<flight::types::DisplayObject>(flight::Ref<flight::types::RiveArtboardImportContext>, double)>>{import_rive_nsliced_node_component}}));
 }
 
 } // namespace flight::scene2d_formats

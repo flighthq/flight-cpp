@@ -7,23 +7,15 @@
 //   missing: function getNativeTextMeasuredWidth -- source line 68
 //   missing: function getNativeTextRuntime -- source line 72
 //   missing: function computeNativeTextLocalBoundsRectangle -- source line 28
-//   missing: function initializeNativeTextData -- source line 86
-//   missing: function createNativeTextData -- source line 50
-//   missing: function patchNativeTextStyle -- source line 100
 //   missing: variable (binding) -- source line 159
 //   missing: function createNativeTextRuntime -- source line 56
 //   missing: function createNativeText -- source line 46
+#include <flight/structural_ref.hpp>
 #include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
-
-#include <flight/node/revision.hpp>
-
-#include <flight/types/text_vertical_align.hpp>
-
-#include <flight/types/text_auto_size.hpp>
 
 #include <flight/types/rectangle.hpp>
 
@@ -33,77 +25,110 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/native_text.hpp>
 
-#include <flight/types/entity.hpp>
+namespace flight::types { struct HasBoundsRectangle; }
+namespace flight::types { struct NativeText; }
+namespace flight::types { struct NativeTextData; }
+namespace flight::types { struct NativeTextRuntime; }
+namespace flight::types { struct NativeTextStyle; }
+namespace flight::types { struct Node2DData; }
+namespace flight::types { struct Node2DRuntime; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct Rectangle; }
+namespace flight::types { template <typename Traits> struct Node; }
+
+#include <flight/entity/entity.hpp>
+#include <flight/node/revision.hpp>
+#include <flight/types/contract.hpp>
 
 namespace flight::text {
 
-using flight::node::invalidate_node_local_bounds;
-using flight::node::invalidate_node_local_content;
-
-using flight::types::EntityConstruction;
 using flight::types::NativeText;
 using flight::types::NativeTextData;
 using flight::types::NativeTextStyle;
 using flight::types::Node;
 using flight::types::Node2DTraits;
 using flight::types::Rectangle;
-using flight::types::TextAutoSize;
-using flight::types::TextVerticalAlign;
 
 
 // NOT GENERATED: function getNativeTextMeasuredHeight -- source line 64
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function getNativeTextMeasuredHeight(source: Readonly<NativeText>): number {
 //     return (getNode2DRuntime(source) as NativeTextRuntime).measuredHeight;
 //   }
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/nativeText.ts: a reference assertion from
-// flight::Ref<Node2DRuntime> to flight::Ref<NativeTextRuntime> has no heritage to cast along: the declarations
-// share no emitted C++ class-heritage path (source interface and intersection relationships flatten into
-// independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// cpp emission failed for @flighthq/text/packages/text/src/nativeText.ts: a structural assertion from the
+// readonly row Readonly<Node2DRuntime> to the writable row NativeTextRuntime claims mutation the source refused:
+// a readonly row never becomes writable, because the boundary the value came through said its subject must not
+// be mutated through it, and no cast, copy, or re-view can carry a capability the source withheld. Assert to the
+// readonly row where the value is only read, or declare the source -- its parameter, slot, or accessor result --
+// as the writable type where that object may really be mutated. Choosing between those two repairs is the
+// question this assertion was answering, so ask it of the value's ROLE rather than of its spelling: a RUNTIME
+// OWNER that the mutating paths must write needs a mutable-source accessor returning the full writable owner
+// from the typed runtime slot, with the readonly accessor kept for reads, because the capability has to exist on
+// the storage and accessor that establish those cells; a NODE that the read paths only traverse and never mutate
+// needs the two authorities separated instead, with a readonly view on every read path and a separate mutable
+// entry point for the paths that really mutate, because laundering a writable node out of a readonly boundary
+// grants mutation no caller asked for. Both repairs keep the exact Traits or generic specialization the retained
+// row carries; neither adds cells to a row that does not declare them. Making only that boundary writable is
+// insufficient here: the source owner does not declare element, measuredHeight and measuredWidth, so it has no
+// cells for the asserted row to mutate. Declare both the storage slot and the accessor result as the full
+// writable NativeTextRuntime row where initialization establishes those cells, rather than widening
+// Readonly<Node2DRuntime> at the use site.
 
 
 // NOT GENERATED: function getNativeTextMeasuredWidth -- source line 68
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function getNativeTextMeasuredWidth(source: Readonly<NativeText>): number {
 //     return (getNode2DRuntime(source) as NativeTextRuntime).measuredWidth;
 //   }
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/nativeText.ts: a reference assertion from
-// flight::Ref<Node2DRuntime> to flight::Ref<NativeTextRuntime> has no heritage to cast along: the declarations
-// share no emitted C++ class-heritage path (source interface and intersection relationships flatten into
-// independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// cpp emission failed for @flighthq/text/packages/text/src/nativeText.ts: a structural assertion from the
+// readonly row Readonly<Node2DRuntime> to the writable row NativeTextRuntime claims mutation the source refused:
+// a readonly row never becomes writable, because the boundary the value came through said its subject must not
+// be mutated through it, and no cast, copy, or re-view can carry a capability the source withheld. Assert to the
+// readonly row where the value is only read, or declare the source -- its parameter, slot, or accessor result --
+// as the writable type where that object may really be mutated. Choosing between those two repairs is the
+// question this assertion was answering, so ask it of the value's ROLE rather than of its spelling: a RUNTIME
+// OWNER that the mutating paths must write needs a mutable-source accessor returning the full writable owner
+// from the typed runtime slot, with the readonly accessor kept for reads, because the capability has to exist on
+// the storage and accessor that establish those cells; a NODE that the read paths only traverse and never mutate
+// needs the two authorities separated instead, with a readonly view on every read path and a separate mutable
+// entry point for the paths that really mutate, because laundering a writable node out of a readonly boundary
+// grants mutation no caller asked for. Both repairs keep the exact Traits or generic specialization the retained
+// row carries; neither adds cells to a row that does not declare them. Making only that boundary writable is
+// insufficient here: the source owner does not declare element, measuredHeight and measuredWidth, so it has no
+// cells for the asserted row to mutate. Declare both the storage slot and the accessor result as the full
+// writable NativeTextRuntime row where initialization establishes those cells, rather than widening
+// Readonly<Node2DRuntime> at the use site.
 
 
 // NOT GENERATED: function getNativeTextRuntime -- source line 72
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function getNativeTextRuntime(source: Readonly<NativeText>): Readonly<NativeTextRuntime> {
 //     return getNode2DRuntime(source) as NativeTextRuntime;
 //   }
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/nativeText.ts: a reference assertion from
-// flight::Ref<Node2DRuntime> to flight::Ref<NativeTextRuntime> has no heritage to cast along: the declarations
-// share no emitted C++ class-heritage path (source interface and intersection relationships flatten into
-// independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// cpp emission failed for @flighthq/text/packages/text/src/nativeText.ts: a structural assertion from the
+// readonly row Readonly<Node2DRuntime> to the writable row NativeTextRuntime claims mutation only to pass the
+// value to the readonly row Readonly<NativeTextRuntime>. Spell the assertion as Readonly<NativeTextRuntime> to
+// remove the writable-capability claim, but that alone cannot recover the derived owner: Readonly<Node2DRuntime>
+// does not declare element, measuredHeight and measuredWidth, so the retained row has no proven cells for those
+// members. No writable carrier is justified for this read-only call. Preserve NativeTextRuntime in the callback
+// parameter through a named typed runner or carrier, or make an intentionally erased registry validate and
+// recover that owner before invoking the typed runner; a tag or registry key carried beside the value does not
+// prove which owner the reference retains. If mutation is intended elsewhere, the storage and accessor
+// themselves must retain writable NativeTextRuntime capability rather than adding it with an assertion. The
+// compiler will not cast, copy, materialize, or create side storage for either missing proof.
 
 
 // NOT GENERATED: function computeNativeTextLocalBoundsRectangle -- source line 28
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function computeNativeTextLocalBoundsRectangle(
@@ -124,142 +149,135 @@ using flight::types::TextVerticalAlign;
 //     out.height = runtime.measuredHeight > 0 ? runtime.measuredHeight : data.height;
 //   }
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/nativeText.ts: a reference assertion from
-// flight::Ref<BoundsNode<flight::Ref<Node2DTraits>>> to flight::Ref<NativeText> has no heritage to cast along:
-// the declarations share no emitted C++ class-heritage path (source interface and intersection relationships
-// flatten into independent owners), and the source carrier does not retain a checked dynamic owner that can
-// recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that
-// validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a
-// replacement row, or invent side storage
+// cpp emission failed for @flighthq/text/packages/text/src/nativeText.ts: a structural assertion from the
+// readonly row Readonly<BoundsNode<Node2DTraits>> to the writable row NativeText claims mutation the source
+// refused: a readonly row never becomes writable, because the boundary the value came through said its subject
+// must not be mutated through it, and no cast, copy, or re-view can carry a capability the source withheld.
+// Assert to the readonly row where the value is only read, or declare the source -- its parameter, slot, or
+// accessor result -- as the writable type where that object may really be mutated. Choosing between those two
+// repairs is the question this assertion was answering, so ask it of the value's ROLE rather than of its
+// spelling: a RUNTIME OWNER that the mutating paths must write needs a mutable-source accessor returning the
+// full writable owner from the typed runtime slot, with the readonly accessor kept for reads, because the
+// capability has to exist on the storage and accessor that establish those cells; a NODE that the read paths
+// only traverse and never mutate needs the two authorities separated instead, with a readonly view on every read
+// path and a separate mutable entry point for the paths that really mutate, because laundering a writable node
+// out of a readonly boundary grants mutation no caller asked for. Both repairs keep the exact Traits or generic
+// specialization the retained row carries; neither adds cells to a row that does not declare them. Making only
+// that boundary writable is insufficient here: the source owner does not declare EntityRuntimeKey and data, so
+// it has no cells for the asserted row to mutate. Declare both the storage slot and the accessor result as the
+// full writable NativeText row where initialization establishes those cells, rather than widening
+// Readonly<BoundsNode<Node2DTraits>> at the use site.
 
-inline flight::String get_native_text_string(flight::Ref<NativeText> source) {
-  flight::Ref<NativeTextData> data = source->data;
+inline flight::String get_native_text_string(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::NativeText>>>> source) {
+  auto data = flight::row_get<flight::RowKey<"data">>(source);
   return data->text;
 }
 
-inline flight::Ref<NativeTextStyle> get_native_text_style(flight::Ref<NativeText> source) {
-  flight::Ref<NativeTextData> data = source->data;
-  return data->style;
+inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::NativeTextStyle>>>> get_native_text_style(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::NativeText>>>> source) {
+  auto data = flight::row_get<flight::RowKey<"data">>(source);
+  return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::NativeTextStyle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::NativeTextStyle>>>>(data->style));
 }
 
+inline void initialize_native_text_data(flight::types::EntityConstruction<flight::Ref<flight::types::NativeTextData>> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::NativeTextData>>>>>> data = std::nullopt) {
+  flight::row_set<flight::RowKey<"autoSize">>(out, ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::types::TextAutoSize> { auto optional_chain_receiver = data; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"autoSize">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("none"); }()));
+  flight::row_set<flight::RowKey<"height">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = data; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"height">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 100.0; }()));
+  flight::row_set<flight::RowKey<"style">>(out, ([&]() -> flight::Ref<flight::types::NativeTextStyle> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Ref<flight::types::NativeTextStyle>> { auto optional_chain_receiver = data; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"style">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::make_ref<flight::types::NativeTextStyle>(flight::types::NativeTextStyle{}); }()));
+  flight::row_set<flight::RowKey<"text">>(out, ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = data; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"text">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }()));
+  flight::row_set<flight::RowKey<"verticalAlign">>(out, ([&]() -> flight::String { auto nullish_coalesce_left_2 = ([&]() -> std::optional<flight::types::TextVerticalAlign> { auto optional_chain_receiver = data; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"verticalAlign">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left_2.has_value()) return nullish_coalesce_left_2.value(); return flight::String("top"); }()));
+  flight::row_set<flight::RowKey<"width">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = data; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"width">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 100.0; }()));
+}
 
-// NOT GENERATED: function initializeNativeTextData -- source line 86
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   export function initializeNativeTextData(
-//     out: EntityConstruction<NativeTextData>,
-//     data?: Readonly<Partial<NativeTextData>>,
-//   ): void {
-//     out.autoSize = data?.autoSize ?? 'none';
-//     out.height = data?.height ?? 100;
-//     out.style = data?.style ?? {};
-//     out.text = data?.text ?? '';
-//     out.verticalAlign = data?.verticalAlign ?? 'top';
-//     out.width = data?.width ?? 100;
-//   }
-//   
-//   // Merges individual style properties into the existing style without replacing the whole object.
-//   // Useful for single-property style changes that would otherwise force rebuilding the full NativeTextStyle.
-// cpp emission failed for @flighthq/text/packages/text/src/nativeText.ts: Partial<T> requires a statically
-// resolvable C++ object shape; T is named
+inline flight::Ref<flight::types::NativeTextData> create_native_text_data(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::NativeTextData>>>>>> data = std::nullopt) {
+  flight::types::EntityConstruction<flight::Ref<flight::types::NativeTextData>> out = flight::entity::allocate_entity<flight::Ref<flight::types::NativeTextData>>();
+  initialize_native_text_data(out, data);
+  return flight::entity::finish_entity<flight::Ref<flight::types::NativeTextData>>(out);
+}
 
+inline void patch_native_text_style(flight::Ref<flight::types::NativeText> source, flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::NativeTextStyle>>>>> patch) {
+  auto data = source->data;
+  (data->style = flight::make_ref<flight::types::NativeTextStyle>(flight::types::NativeTextStyle{}));
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::NativeText>>>>(source)));
+  flight::node::invalidate_node_local_bounds(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::NativeText>>>>(source)));
+}
 
-// NOT GENERATED: function createNativeTextData -- source line 50
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   export function createNativeTextData(data?: Readonly<Partial<NativeTextData>>): NativeTextData {
-//     const out = allocateEntity<NativeTextData>();
-//     initializeNativeTextData(out, data);
-//     return finishEntity(out);
-//   }
-//   
-// cpp emission failed for @flighthq/text/packages/text/src/nativeText.ts: Partial<T> requires a statically
-// resolvable C++ object shape; T is named
-
-
-// NOT GENERATED: function patchNativeTextStyle -- source line 100
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   export function patchNativeTextStyle(source: NativeText, patch: Readonly<Partial<NativeTextStyle>>): void {
-//     const data = source.data;
-//     data.style = { ...data.style, ...patch };
-//     invalidateNodeLocalContent(source);
-//     invalidateNodeLocalBounds(source);
-//   }
-//   
-// cpp emission failed for @flighthq/text/packages/text/src/nativeText.ts: Partial<T> requires a statically
-// resolvable C++ object shape; T is named
-
-inline void set_native_text_auto_size(flight::Ref<NativeText> source, flight::Ref<TextAutoSize> value) {
-  flight::Ref<NativeTextData> data = source->data;
+inline void set_native_text_auto_size(flight::Ref<flight::types::NativeText> source, flight::types::TextAutoSize value) {
+  auto data = source->data;
   if ((data->auto_size == value)) {
     return;
   }
   (data->auto_size = value);
-  invalidate_node_local_content(source);
-  invalidate_node_local_bounds(source);
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::NativeText>>>>(source)));
+  flight::node::invalidate_node_local_bounds(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::NativeText>>>>(source)));
 }
 
-inline void set_native_text_height(flight::Ref<NativeText> source, double value) {
-  flight::Ref<NativeTextData> data = source->data;
+inline void set_native_text_height(flight::Ref<flight::types::NativeText> source, double value) {
+  auto data = source->data;
   if ((data->height == value)) {
     return;
   }
   (data->height = value);
-  invalidate_node_local_content(source);
-  invalidate_node_local_bounds(source);
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::NativeText>>>>(source)));
+  flight::node::invalidate_node_local_bounds(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::NativeText>>>>(source)));
 }
 
-inline void set_native_text_string(flight::Ref<NativeText> source, flight::String value) {
-  flight::Ref<NativeTextData> data = source->data;
+inline void set_native_text_string(flight::Ref<flight::types::NativeText> source, flight::String value) {
+  auto data = source->data;
   if ((data->text == value)) {
     return;
   }
   (data->text = value);
-  invalidate_node_local_content(source);
-  invalidate_node_local_bounds(source);
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::NativeText>>>>(source)));
+  flight::node::invalidate_node_local_bounds(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::NativeText>>>>(source)));
 }
 
-inline void set_native_text_style(flight::Ref<NativeText> source, flight::Ref<NativeTextStyle> value) {
-  flight::Ref<NativeTextData> data = source->data;
+inline void set_native_text_style(flight::Ref<flight::types::NativeText> source, flight::Ref<flight::types::NativeTextStyle> value) {
+  auto data = source->data;
   (data->style = value);
-  invalidate_node_local_content(source);
-  invalidate_node_local_bounds(source);
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::NativeText>>>>(source)));
+  flight::node::invalidate_node_local_bounds(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::NativeText>>>>(source)));
 }
 
-inline void set_native_text_vertical_align(flight::Ref<NativeText> source, flight::Ref<TextVerticalAlign> value) {
-  flight::Ref<NativeTextData> data = source->data;
+inline void set_native_text_vertical_align(flight::Ref<flight::types::NativeText> source, flight::types::TextVerticalAlign value) {
+  auto data = source->data;
   if ((data->vertical_align == value)) {
     return;
   }
   (data->vertical_align = value);
-  invalidate_node_local_content(source);
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::NativeText>>>>(source)));
 }
 
-inline void set_native_text_width(flight::Ref<NativeText> source, double value) {
-  flight::Ref<NativeTextData> data = source->data;
+inline void set_native_text_width(flight::Ref<flight::types::NativeText> source, double value) {
+  auto data = source->data;
   if ((data->width == value)) {
     return;
   }
   (data->width = value);
-  invalidate_node_local_content(source);
-  invalidate_node_local_bounds(source);
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::NativeText>>>>(source)));
+  flight::node::invalidate_node_local_bounds(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::NativeText>>>>(source)));
 }
 
 
 // NOT GENERATED: variable (binding) -- source line 159
-// refusal: cpp-partial-shape-unresolvable [source-portability]
+// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
 //   const defaultMethods: Partial<MethodsOf<NativeTextRuntime>> = {
 //     computeLocalBoundsRectangle: computeNativeTextLocalBoundsRectangle,
 //   };
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/nativeText.ts: Partial<T> requires a statically
-// resolvable C++ object shape; T is named
+// cpp emission failed for @flighthq/text/packages/text/src/nativeText.ts: contextual union callable value type
+// std::function<void(flight::Ref<flight::types::Rectangle>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>,
+// flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>,
+// flight::RowOf<flight::Ref<flight::types::HasBoundsRectangle>>,
+// flight::RowOf<flight::Ref<entity_runtime_key_fcd05edefe399f2a>>>>>)> agrees with no alternative's signature:
+// the destination holds [std::function<void(flight::Ref<flight::types::Rectangle>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>,
+// flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>,
+// flight::RowOf<flight::Ref<flight::types::HasBoundsRectangle>>,
+// flight::RowOf<flight::Ref<entity_runtime_key_2a5696294f4ba375>>>>>)>]. A callable is a represented domain, so
+// the obstacle is that the destination's signature cannot call this one. Declare the value's parameters so the
+// destination's signature supplies them, and its result as one the destination holds
 
 
 // NOT GENERATED: function createNativeTextRuntime -- source line 56
@@ -275,24 +293,28 @@ inline void set_native_text_width(flight::Ref<NativeText> source, double value) 
 //   }
 //   
 // cpp emission failed for @flighthq/text/packages/text/src/nativeText.ts: a reference assertion from
-// flight::Ref<Node2DRuntime> to flight::Ref<NativeTextRuntime> has no heritage to cast along: the declarations
-// share no emitted C++ class-heritage path (source interface and intersection relationships flatten into
-// independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// flight::Ref<flight::types::Node2DRuntime> to flight::Ref<flight::types::NativeTextRuntime> has no heritage to
+// cast along: the declarations share no emitted C++ class-heritage path (source interface and intersection
+// relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner
+// that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that
+// validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a
+// replacement row, or invent side storage
 
 
 // NOT GENERATED: function createNativeText -- source line 46
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
 //   export function createNativeText(obj?: Readonly<PartialNode<NativeText>>): NativeText {
 //     return createNode2D(NativeTextKind, obj, createNativeTextData, createNativeTextRuntime) as NativeText;
 //   }
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/nativeText.ts: intersection types require C++
-// multiple-inheritance lowering: no shape for Node (argument Node2DTraits has no shape either), Node2DTraits.
-// Declare the object shape the code reads rather than intersecting a conjunct that has none
+// cpp emission failed for @flighthq/text/packages/text/src/nativeText.ts: contextual union callable value type
+// std::function<flight::Ref<flight::types::NativeTextData>(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::NativeTextData>>>>>>)>
+// agrees with no alternative's signature: the destination holds
+// [std::function<flight::Ref<flight::types::Node2DData>(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::Node2DData>>>>>>)>].
+// A callable is a represented domain, so the obstacle is that the destination's signature cannot call this one.
+// Declare the value's parameters so the destination's signature supplies them, and its result as one the
+// destination holds
 
 } // namespace flight::text

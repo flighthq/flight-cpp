@@ -37,8 +37,6 @@ namespace flight::types { struct SpineJsonTimelineContext; }
 
 namespace flight::skeleton2d_formats {
 
-using flight::types::skeleton_2d_animation_path;
-
 using flight::types::AnimationChannel;
 using flight::types::AnimationTrack;
 using flight::types::Bone2D;

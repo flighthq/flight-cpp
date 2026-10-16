@@ -1045,6 +1045,23 @@ add_test(
   COMMAND flight_cpp_generated_scene2d_resources_tests
 )
 
+add_executable(
+  flight_cpp_generated_scene2d_resource_loading_tests
+  generated_scene2d_resource_loading_test.cpp
+)
+target_include_directories(
+  flight_cpp_generated_scene2d_resource_loading_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(
+  flight_cpp_generated_scene2d_resource_loading_tests
+  PRIVATE Flight::Cpp Flight::SdkPreview
+)
+add_test(
+  NAME flight_cpp.generated_scene2d_resource_loading
+  COMMAND flight_cpp_generated_scene2d_resource_loading_tests
+)
+
 add_executable(flight_cpp_generated_clock_tests generated_clock_test.cpp)
 target_include_directories(
   flight_cpp_generated_clock_tests
@@ -1767,6 +1784,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_path path)
 flight_cpp_package_test_labels(flight_cpp.generated_path_formats path-formats)
 flight_cpp_package_test_labels(flight_cpp.generated_scene_document scene-document)
 flight_cpp_package_test_labels(flight_cpp.generated_scene2d_resources scene2d-resources)
+flight_cpp_package_test_labels(flight_cpp.generated_scene2d_resource_loading scene2d-resources)
 flight_cpp_package_test_labels(flight_cpp.generated_clock clock signals)
 flight_cpp_package_test_labels(flight_cpp.generated_movieclip movieclip signals timeline)
 flight_cpp_package_test_labels(flight_cpp.generated_swf_reader swf)

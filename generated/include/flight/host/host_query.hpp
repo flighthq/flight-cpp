@@ -308,115 +308,115 @@ namespace flight::types { template <typename Target> struct HostIpcTargetedSendC
 namespace flight::host {
 
 inline std::optional<flight::Ref<flight::types::HostAudioDeviceCapability>> get_host_audio_device(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"audio">>(host)->device;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostAudioDeviceCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"audio">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->device; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostAudioMixerCapability>> get_host_audio_mixer(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"audio">>(host)->mixer;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostAudioMixerCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"audio">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->mixer; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostBitmapEncodeCapability>> get_host_bitmap_encode(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"bitmap">>(host)->encode;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostBitmapEncodeCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"bitmap">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->encode; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostBitmapReadbackCapability>> get_host_bitmap_readback(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"bitmap">>(host)->readback;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostBitmapReadbackCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"bitmap">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->readback; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostClipboardFormatsCapability>> get_host_clipboard_formats(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"clipboard">>(host)->formats;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostClipboardFormatsCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"clipboard">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->formats; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostDeviceCapability>> get_host_device(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"device">>(host)->info;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostDeviceCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"device">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->info; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostFileSystemCapability>> get_host_file_system(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"fileSystem">>(host)->access;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostFileSystemCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"fileSystem">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->access; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostFontLoadingCapability>> get_host_font_loading(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"font">>(host)->loader;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostFontLoadingCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"font">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->loader; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostGeolocationCapability>> get_host_geolocation(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"geolocation">>(host)->position;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostGeolocationCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"geolocation">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->position; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostGlyphRasterizerCapability>> get_host_glyph_rasterizer(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"glyph">>(host)->rasterizer;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostGlyphRasterizerCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"glyph">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->rasterizer; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostHapticsCapability>> get_host_haptics(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"haptics">>(host)->engine;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostHapticsCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"haptics">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->engine; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostImageCapability>> get_host_image(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"image">>(host)->loader;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostImageCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"image">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->loader; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostInputIngressCapability>> get_host_input_ingress(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"input">>(host)->ingress;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostInputIngressCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"input">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->ingress; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostLifecycleCapability>> get_host_lifecycle(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"lifecycle">>(host)->state;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostLifecycleCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"lifecycle">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->state; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostNetCapability>> get_host_net(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"net">>(host)->http;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostNetCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"net">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->http; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostNotificationPermissionCapability>> get_host_notification_permission(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"notification">>(host)->permission;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostNotificationPermissionCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"notification">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->permission; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostPlatformCapability>> get_host_platform(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"platform">>(host)->info;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostPlatformCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"platform">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->info; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostPowerKeepAwakeCapability>> get_host_power_keep_awake(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"power">>(host)->keep_awake;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostPowerKeepAwakeCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"power">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->keep_awake; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostPreferencesCapability>> get_host_preferences(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"preferences">>(host)->local;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostPreferencesCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"preferences">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->local; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostPreferencesPersistenceQueryCapability>> get_host_preferences_persistence_query(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"preferences">>(host)->persistence_query;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostPreferencesPersistenceQueryCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"preferences">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->persistence_query; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostScreenQueryCapability>> get_host_screen_query(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"screen">>(host)->query;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostScreenQueryCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"screen">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->query; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostSensorsCapability>> get_host_sensors(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"sensors">>(host)->query;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostSensorsCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"sensors">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->query; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostSocketCapability>> get_host_socket(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"socket">>(host)->connection;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostSocketCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"socket">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->connection; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostSoftKeyboardInfoCapability>> get_host_soft_keyboard_info(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"softKeyboard">>(host)->info;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostSoftKeyboardInfoCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"softKeyboard">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->info; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostTextSegmenterCapability>> get_host_text_segmenter(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"textSegment">>(host)->segmenter;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostTextSegmenterCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"textSegment">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->segmenter; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostTextShaperCapability>> get_host_text_shaper(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"textShaper">>(host)->shaper;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostTextShaperCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"textShaper">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->shaper; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostVideoCapability>> get_host_video(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"video">>(host)->playback;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostVideoCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"video">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->playback; }());
 }
 
 inline std::optional<flight::Ref<flight::types::HostWgpuCapability>> get_host_wgpu(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {
-  return flight::row_get<flight::RowKey<"wgpu">>(host)->context;
+  return ([&]() -> std::optional<flight::Ref<flight::types::HostWgpuCapability>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"wgpu">>(host); if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->context; }());
 }
 
 inline bool has_host_audio_device(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Host>>>> host) {

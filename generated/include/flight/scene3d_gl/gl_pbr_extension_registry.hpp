@@ -16,6 +16,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AnisotropyPbrExtension; }
+namespace flight::types { struct ClearcoatPbrExtension; }
 namespace flight::types { struct GlCubeRenderTarget; }
 namespace flight::types { struct GlPbrExtensionBindContext; }
 namespace flight::types { struct GlPbrExtensionIssue; }
@@ -28,12 +30,17 @@ namespace flight::types { struct GlRenderState; }
 namespace flight::types { struct GlRenderStateRuntime; }
 namespace flight::types { struct GlRenderTarget; }
 namespace flight::types { struct GlScene3DRuntime; }
+namespace flight::types { struct IridescencePbrExtension; }
 namespace flight::types { struct Matrix3; }
 namespace flight::types { struct PbrExtension; }
+namespace flight::types { struct SheenPbrExtension; }
+namespace flight::types { struct SpecularPbrExtension; }
 namespace flight::types { struct Texture2D; }
 namespace flight::types { struct Texture2DArray; }
 namespace flight::types { struct Texture3D; }
 namespace flight::types { struct TextureCube; }
+namespace flight::types { struct TransmissionVolumePbrExtension; }
+namespace flight::types { struct WrappedDiffusePbrExtension; }
 
 #include <flight/color/pack_color.hpp>
 #include <flight/geometry/matrix3.hpp>
@@ -83,7 +90,7 @@ inline flight::Array<double> get_gl_pbr_extension_texture_units(flight::host_sdl
   return units;
 }
 
-inline flight::Array<flight::Ref<flight::types::GlPbrExtensionIssue>> explain_gl_pbr_extensions(flight::Ref<flight::types::GlRenderState> state, flight::Array<flight::Ref<flight::types::PbrExtension>> extensions) {
+inline flight::Array<flight::Ref<flight::types::GlPbrExtensionIssue>> explain_gl_pbr_extensions(flight::Ref<flight::types::GlRenderState> state, flight::Array<flight::types::PbrExtensionValue> extensions) {
   flight::Array<flight::Ref<flight::types::GlPbrExtensionIssue>> issues = flight::Array<flight::Ref<flight::types::GlPbrExtensionIssue>>{};
   auto kinds = flight::Set<flight::String>();
   flight::Map<flight::String, flight::Ref<flight::types::GlPbrExtensionRegistration>> entries = flight::render_gl::get_gl_render_state_runtime(state)->registries->pbr_extensions;
@@ -95,32 +102,32 @@ inline flight::Array<flight::Ref<flight::types::GlPbrExtensionIssue>> explain_gl
     while ((i < static_cast<double>(extensions.size()))) {
       {
         auto extension = extensions.element(i);
-        if (kinds.has(extension->kind)) {
-          issues.push(flight::make_ref<flight::types::GlPbrExtensionIssue>(flight::types::GlPbrExtensionIssue{.code = flight::String("duplicate-kind"), .kind = extension->kind}));
+        if (kinds.has(std::visit([](const auto& value) { return value->kind; }, extension))) {
+          issues.push(flight::make_ref<flight::types::GlPbrExtensionIssue>(flight::types::GlPbrExtensionIssue{.code = flight::String("duplicate-kind"), .kind = std::visit([](const auto& value) { return value->kind; }, extension)}));
           {
             (i += 1.0);
             continue;
           }
         }
-        kinds.add(extension->kind);
-        auto registration = entries.get(extension->kind);
+        kinds.add(std::visit([](const auto& value) { return value->kind; }, extension));
+        auto registration = entries.get(std::visit([](const auto& value) { return value->kind; }, extension));
         if (!registration.has_value()) {
-          issues.push(flight::make_ref<flight::types::GlPbrExtensionIssue>(flight::types::GlPbrExtensionIssue{.code = flight::String("missing-registration"), .kind = extension->kind}));
+          issues.push(flight::make_ref<flight::types::GlPbrExtensionIssue>(flight::types::GlPbrExtensionIssue{.code = flight::String("missing-registration"), .kind = std::visit([](const auto& value) { return value->kind; }, extension)}));
           {
             (i += 1.0);
             continue;
           }
         }
-        if (!registration.value()->is_supported(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PbrExtension>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::PbrExtension>>>>(extension)))) {
-          issues.push(flight::make_ref<flight::types::GlPbrExtensionIssue>(flight::types::GlPbrExtensionIssue{.code = flight::String("unsupported-extension"), .kind = extension->kind}));
+        if (!registration.value()->is_supported(extension)) {
+          issues.push(flight::make_ref<flight::types::GlPbrExtensionIssue>(flight::types::GlPbrExtensionIssue{.code = flight::String("unsupported-extension"), .kind = std::visit([](const auto& value) { return value->kind; }, extension)}));
           {
             (i += 1.0);
             continue;
           }
         }
-        auto contribution = registration.value()->create_shader_contribution(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlPbrExtensionShaderContext>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlPbrExtensionShaderContext>>>>(shader_context)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PbrExtension>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::PbrExtension>>>>(extension)));
+        auto contribution = registration.value()->create_shader_contribution(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlPbrExtensionShaderContext>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlPbrExtensionShaderContext>>>>(shader_context)), extension);
         if ((contribution->samples_transmission_scene_color == true)) {
-          (transmission_scene_color_kind = std::optional<flight::String>{extension->kind});
+          (transmission_scene_color_kind = std::optional<flight::String>{std::visit([](const auto& value) { return value->kind; }, extension)});
         }
         (texture_count += contribution->texture_count);
       }
@@ -138,7 +145,7 @@ inline flight::Array<flight::Ref<flight::types::GlPbrExtensionIssue>> explain_gl
   return issues;
 }
 
-inline std::optional<flight::Array<flight::Ref<flight::types::GlPbrExtensionShaderContribution>>> resolve_gl_pbr_extension_contributions(flight::Ref<flight::types::GlRenderState> state, flight::Array<flight::Ref<flight::types::PbrExtension>> extensions) {
+inline std::optional<flight::Array<flight::Ref<flight::types::GlPbrExtensionShaderContribution>>> resolve_gl_pbr_extension_contributions(flight::Ref<flight::types::GlRenderState> state, flight::Array<flight::types::PbrExtensionValue> extensions) {
   if ((static_cast<double>(explain_gl_pbr_extensions(state, extensions).size()) > 0.0)) {
     return std::nullopt;
   }
@@ -149,11 +156,11 @@ inline std::optional<flight::Array<flight::Ref<flight::types::GlPbrExtensionShad
     double i = 0.0;
     while ((i < static_cast<double>(extensions.size()))) {
       {
-        auto entry = entries.get(extensions.element(i)->kind);
+        auto entry = entries.get(std::visit([](const auto& value) { return value->kind; }, extensions.element(i)));
         if (!entry.has_value()) {
           return std::nullopt;
         }
-        contributions.push(entry.value()->create_shader_contribution(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlPbrExtensionShaderContext>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlPbrExtensionShaderContext>>>>(context)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PbrExtension>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::PbrExtension>>>>(extensions.element(i)))));
+        contributions.push(entry.value()->create_shader_contribution(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlPbrExtensionShaderContext>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlPbrExtensionShaderContext>>>>(context)), extensions.element(i)));
       }
       (i += 1.0);
     }
@@ -208,18 +215,18 @@ inline flight::Ref<flight::types::GlPbrExtensionBindContext> create_gl_pbr_exten
 }; return flight::make_ref<flight::types::GlPbrExtensionBindContext>(flight::types::GlPbrExtensionBindContext{.bind_transmission_scene_color = object_member_bind_transmission_scene_color, .bind_texture = object_member_bind_texture, .set_linear_color = object_member_set_linear_color, .set_float = object_member_set_float}); }());
 }
 
-inline bool bind_gl_pbr_extensions(flight::Ref<flight::types::GlRenderState> state, flight::host_sdl::WebGlProgram program, flight::Array<flight::Ref<flight::types::PbrExtension>> extensions) {
+inline bool bind_gl_pbr_extensions(flight::Ref<flight::types::GlRenderState> state, flight::host_sdl::WebGlProgram program, flight::Array<flight::types::PbrExtensionValue> extensions) {
   flight::Map<flight::String, flight::Ref<flight::types::GlPbrExtensionRegistration>> entries = flight::render_gl::get_gl_render_state_runtime(state)->registries->pbr_extensions;
   auto context = create_gl_pbr_extension_bind_context(state, program);
   {
     double i = 0.0;
     while ((i < static_cast<double>(extensions.size()))) {
       {
-        auto entry = entries.get(extensions.element(i)->kind);
+        auto entry = entries.get(std::visit([](const auto& value) { return value->kind; }, extensions.element(i)));
         if (!entry.has_value()) {
           return false;
         }
-        entry.value()->bind(context, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PbrExtension>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::PbrExtension>>>>(extensions.element(i))));
+        entry.value()->bind(context, extensions.element(i));
       }
       (i += 1.0);
     }

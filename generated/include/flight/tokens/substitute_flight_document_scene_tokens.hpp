@@ -3,14 +3,15 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function lookup -- source line 81
-//   missing: function substituteNode -- source line 52
+//   missing: function substituteFlightDocumentSceneTokens -- source line 30
 #include <cmath>
-#include <flight/erased_ref.hpp>
 #include <flight/object.hpp>
+#include <flight/record.hpp>
+#include <flight/structural_ref.hpp>
 #include <flight/symbol.hpp>
 #include <functional>
 #include <optional>
+#include <stdexcept>
 #include <type_traits>
 #include <variant>
 #include <flight/runtime.hpp>
@@ -18,114 +19,117 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/flight_document_field_schema.hpp>
+namespace flight::types { struct FlightDocumentInteractiveStateTransitionDescriptor; }
+namespace flight::types { struct FlightDocumentInteractiveStates; }
+namespace flight::types { struct FlightDocumentNode; }
+namespace flight::types { struct FlightDocumentRefusalExplanation; }
+namespace flight::types { struct FlightDocumentScene2D; }
+namespace flight::types { struct FlightDocumentScene3D; }
+namespace flight::types { struct FlightDocumentTokenResolution; }
 
 namespace flight::tokens {
-
-using flight::types::FlightDocumentValue;
 struct SceneSubstitutionResult;
 struct SceneSubstitutionState;
 } // namespace flight::tokens
 
+#include <flight/entity/entity.hpp>
+#include <flight/scene_document/flight_document_text.hpp>
+#include <flight/types/contract.hpp>
 #include <flight/tokens/flight_document_token_reference.hpp>
 
 namespace flight::tokens {
 
 struct SceneSubstitutionResult : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<FlightDocumentRefusalExplanation>> refusal;
-  std::optional<flight::Ref<FlightDocumentNode>> scene;
+  std::optional<flight::Ref<flight::types::FlightDocumentRefusalExplanation>> refusal;
+  std::optional<flight::Ref<flight::types::FlightDocumentNode>> scene;
 };
 
 struct SceneSubstitutionState : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<FlightDocumentRefusalExplanation>> refusal;
-  flight::Ref<FlightDocumentTokenResolution> resolution;
+  std::optional<flight::Ref<flight::types::FlightDocumentRefusalExplanation>> refusal;
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::FlightDocumentTokenResolution>>>> resolution;
 };
 
-inline void refuse(flight::Ref<SceneSubstitutionState> state, flight::Ref<FlightDocumentRefusalReason> reason, flight::String path, std::optional<flight::String> token_key) {
+inline void refuse_flight_value_function_refuse_flight_private_3d813c5d9b3f2421(flight::Ref<SceneSubstitutionState> state, flight::types::FlightDocumentRefusalReason reason, flight::String path, std::optional<flight::String> token_key) {
   const auto state_capture = flight::make_binding_cell(flight::Ref<SceneSubstitutionState>{state});
-  ([&]() { auto&& assignment_target = state_capture.read_binding()->refusal; if (!assignment_target.has_value()) assignment_target = std::optional<flight::Ref<FlightDocumentRefusalExplanation>>{([=]() {
-  flight::Ref<EntityConstruction<flight::Ref<FlightDocumentRefusalExplanation>>> out = allocate_entity<flight::Ref<FlightDocumentRefusalExplanation>>();
-  initialize_flight_document_refusal_explanation(out, nullptr, nullptr, nullptr, nullptr, nullptr, state_capture.read_binding()->resolution->mode, nullptr, path, reason, nullptr, token_key, nullptr);
-  return finish_entity(out);
+  ([&]() { auto&& assignment_target = state_capture.read_binding()->refusal; if (!assignment_target.has_value()) assignment_target = std::optional<flight::Ref<flight::types::FlightDocumentRefusalExplanation>>{([=]() {
+  flight::types::EntityConstruction<flight::Ref<flight::types::FlightDocumentRefusalExplanation>> out = flight::entity::allocate_entity<flight::Ref<flight::types::FlightDocumentRefusalExplanation>>();
+  flight::scene_document::initialize_flight_document_refusal_explanation(flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<flight::types::FlightDocumentRefusalExplanation>>>(out), std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::optional<flight::String>{flight::row_get<flight::RowKey<"mode">>(state_capture.read_binding()->resolution)}, std::nullopt, path, reason, std::nullopt, token_key, std::nullopt);
+  return flight::entity::finish_entity<flight::Ref<flight::types::FlightDocumentRefusalExplanation>>(out);
 })()}; return assignment_target.value(); }());
 }
 
+inline std::optional<std::variant<flight::Array<flight::types::FlightDocumentValue>, flight::Record<flight::String, flight::types::FlightDocumentValue>, bool, double, flight::String, flight::Symbol>> lookup(flight::String key, flight::String path, flight::Ref<SceneSubstitutionState> state) {
+  std::optional<flight::types::FlightDocumentValue> value = flight::row_get<flight::RowKey<"values">>(state->resolution).get(key);
+  if (!value.has_value()) {
+    refuse_flight_value_function_refuse_flight_private_3d813c5d9b3f2421(state, flight::types::flight_document_refusal_reason->token_unresolved, path, std::optional<flight::String>{key});
+    return std::optional<std::variant<flight::Array<flight::types::FlightDocumentValue>, flight::Record<flight::String, flight::types::FlightDocumentValue>, bool, double, flight::String, flight::Symbol>>{std::in_place, std::in_place_type<flight::Symbol>, flight::tokens::invalid_flight_document_token_value};
+  }
+  return ([&]() -> std::optional<std::variant<flight::Array<flight::types::FlightDocumentValue>, flight::Record<flight::String, flight::types::FlightDocumentValue>, bool, double, flight::String, flight::Symbol>> { const auto& converted_union = value.value(); if (!converted_union.has_value()) return std::nullopt; if (const auto* alternative = std::get_if<flight::Array<flight::types::FlightDocumentValue>>(&converted_union.value())) return std::optional<std::variant<flight::Array<flight::types::FlightDocumentValue>, flight::Record<flight::String, flight::types::FlightDocumentValue>, bool, double, flight::String, flight::Symbol>>{std::in_place, std::in_place_type<flight::Array<flight::types::FlightDocumentValue>>, *alternative}; if (const auto* alternative = std::get_if<flight::Record<flight::String, flight::types::FlightDocumentValue>>(&converted_union.value())) return std::optional<std::variant<flight::Array<flight::types::FlightDocumentValue>, flight::Record<flight::String, flight::types::FlightDocumentValue>, bool, double, flight::String, flight::Symbol>>{std::in_place, std::in_place_type<flight::Record<flight::String, flight::types::FlightDocumentValue>>, *alternative}; if (const auto* alternative = std::get_if<bool>(&converted_union.value())) return std::optional<std::variant<flight::Array<flight::types::FlightDocumentValue>, flight::Record<flight::String, flight::types::FlightDocumentValue>, bool, double, flight::String, flight::Symbol>>{std::in_place, std::in_place_type<bool>, *alternative}; if (const auto* alternative = std::get_if<double>(&converted_union.value())) return std::optional<std::variant<flight::Array<flight::types::FlightDocumentValue>, flight::Record<flight::String, flight::types::FlightDocumentValue>, bool, double, flight::String, flight::Symbol>>{std::in_place, std::in_place_type<double>, *alternative}; if (const auto* alternative = std::get_if<flight::String>(&converted_union.value())) return std::optional<std::variant<flight::Array<flight::types::FlightDocumentValue>, flight::Record<flight::String, flight::types::FlightDocumentValue>, bool, double, flight::String, flight::Symbol>>{std::in_place, std::in_place_type<flight::String>, *alternative}; throw std::logic_error("source union alternative is not one the destination stores"); }());
+}
 
-// NOT GENERATED: function lookup -- source line 81
-//
-// The source it stood for:
-//   function lookup(
-//     key: string,
-//     path: string,
-//     state: SceneSubstitutionState,
-//   ): FlightDocumentValue | typeof INVALID_FLIGHT_DOCUMENT_TOKEN_VALUE {
-//     const value = state.resolution.values[key];
-//     if (value === undefined) {
-//       refuse(state, FlightDocumentRefusalReason.TokenUnresolved, path, key);
-//       return INVALID_FLIGHT_DOCUMENT_TOKEN_VALUE;
-//     }
-//     return value;
-//   }
-//   
-// cpp emission failed for @flighthq/tokens/packages/tokens/src/substituteFlightDocumentSceneTokens.ts: typeOf
-// types require C++ type computation lowering
+inline std::optional<flight::Ref<flight::types::FlightDocumentNode>> substitute_node(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::FlightDocumentNode>>>> node, flight::String path, flight::Ref<SceneSubstitutionState> state) {
+  auto fields = flight::Record<flight::String, flight::types::FlightDocumentValue>{};
+  for (auto name : flight::object_keys(flight::row_get<flight::RowKey<"fields">>(node))) {
+    const flight::String field_path = flight::String("") + flight::to_string(path) + flight::String(".fields.") + flight::to_string(name) + flight::String("");
+    std::optional<std::variant<flight::Array<flight::types::FlightDocumentValue>, flight::Record<flight::String, flight::types::FlightDocumentValue>, bool, double, flight::String, flight::Symbol>> value = flight::tokens::substitute_flight_document_token_value(flight::row_get<flight::RowKey<"fields">>(node).get(name).value(), field_path, [=](flight::String key, flight::String at) -> std::optional<std::variant<flight::Array<flight::types::FlightDocumentValue>, flight::Record<flight::String, flight::types::FlightDocumentValue>, bool, double, flight::String, flight::Symbol>> { return lookup(key, at, state); }, [=](flight::String at) { return refuse_flight_value_function_refuse_flight_private_3d813c5d9b3f2421(state, flight::types::flight_document_refusal_reason->token_reference_invalid, at, std::nullopt); });
+    if ((value.has_value() && value.value().index() == 5)) {
+      return std::nullopt;
+    }
+    ([&]() { auto assignment_value = ([&]() -> flight::types::FlightDocumentValue { const auto& narrowed_union = value; if (!narrowed_union.has_value()) return std::nullopt; if (const auto* alternative = std::get_if<flight::Array<flight::types::FlightDocumentValue>>(&narrowed_union.value())) return flight::types::FlightDocumentValue{std::in_place, std::in_place_type<flight::Array<flight::types::FlightDocumentValue>>, *alternative}; if (const auto* alternative = std::get_if<flight::Record<flight::String, flight::types::FlightDocumentValue>>(&narrowed_union.value())) return flight::types::FlightDocumentValue{std::in_place, std::in_place_type<flight::Record<flight::String, flight::types::FlightDocumentValue>>, *alternative}; if (const auto* alternative = std::get_if<bool>(&narrowed_union.value())) return flight::types::FlightDocumentValue{std::in_place, std::in_place_type<bool>, *alternative}; if (const auto* alternative = std::get_if<double>(&narrowed_union.value())) return flight::types::FlightDocumentValue{std::in_place, std::in_place_type<double>, *alternative}; if (const auto* alternative = std::get_if<flight::String>(&narrowed_union.value())) return flight::types::FlightDocumentValue{std::in_place, std::in_place_type<flight::String>, *alternative}; throw std::logic_error("narrowed union holds an excluded alternative"); }()); fields.set(name, assignment_value); return assignment_value; }());
+  }
+  flight::Array<flight::Ref<flight::types::FlightDocumentNode>> children = flight::Array<flight::Ref<flight::types::FlightDocumentNode>>{};
+  {
+    double index = 0.0;
+    while ((index < static_cast<double>(flight::row_get<flight::RowKey<"children">>(node).size()))) {
+      {
+        auto child = substitute_node(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::FlightDocumentNode>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::FlightDocumentNode>>>>(flight::row_get<flight::RowKey<"children">>(node).element(index))), flight::String("") + flight::to_string(path) + flight::String(".children[") + flight::to_string(index) + flight::String("]"), state);
+        if (!child.has_value()) {
+          return std::nullopt;
+        }
+        children.push(child.value());
+      }
+      (index += 1.0);
+    }
+  }
+  return std::optional<flight::Ref<flight::types::FlightDocumentNode>>{flight::make_ref<flight::types::FlightDocumentNode>(flight::types::FlightDocumentNode{.children = children, .fields = fields, .kind = flight::row_get<flight::RowKey<"kind">>(node)})};
+}
 
-
-// NOT GENERATED: function substituteNode -- source line 52
-//
-// The source it stood for:
-//   function substituteNode(
-//     node: Readonly<FlightDocumentNode>,
-//     path: string,
-//     state: SceneSubstitutionState,
-//   ): FlightDocumentNode | null {
-//     const fields: FlightDocumentFields = {};
-//     for (const name of Object.keys(node.fields)) {
-//       const fieldPath = `${path}.fields.${name}`;
-//       const value = substituteFlightDocumentTokenValue(
-//         node.fields[name],
-//         fieldPath,
-//         (key, at) => lookup(key, at, state),
-//         (at) => refuse(state, FlightDocumentRefusalReason.TokenReferenceInvalid, at, null),
-//       );
-//       if (value === INVALID_FLIGHT_DOCUMENT_TOKEN_VALUE) return null;
-//       fields[name] = value;
-//     }
-//     const children: FlightDocumentNode[] = [];
-//     for (let index = 0; index < node.children.length; index++) {
-//       const child = substituteNode(node.children[index], `${path}.children[${index}]`, state);
-//       if (child === null) return null;
-//       children.push(child);
-//     }
-//     return { children, fields, kind: node.kind };
-//   }
-//   
-//   // A reference the resolution does not cover is a named refusal, never a `$…` string left in a field a
-//   // renderer will read as a number. Silent pass-through would make the file say one thing and the render
-//   // show another, with nothing reporting the difference.
-// cpp emission failed for @flighthq/tokens/packages/tokens/src/substituteFlightDocumentSceneTokens.ts: typeOf
-// types require C++ type computation lowering
-
-inline flight::Ref<SceneSubstitutionResult> read_substitution(flight::Ref<FlightDocumentScene> scene, flight::Ref<FlightDocumentTokenResolution> resolution) {
+inline flight::Ref<SceneSubstitutionResult> read_substitution(flight::types::FlightDocumentScene scene, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::FlightDocumentTokenResolution>>>> resolution) {
   flight::Ref<SceneSubstitutionState> state = flight::make_ref<SceneSubstitutionState>(SceneSubstitutionState{.resolution = resolution});
-  std::optional<flight::Ref<FlightDocumentNode>> root = substitute_node(scene->scene, flight::String("scene"), state);
+  auto root = substitute_node(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::FlightDocumentNode>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::FlightDocumentNode>>>>(std::visit([](const auto& value) { return value->scene; }, scene))), flight::String("scene"), state);
   if (!root.has_value()) {
     return flight::make_ref<SceneSubstitutionResult>(SceneSubstitutionResult{.refusal = state->refusal, .scene = std::nullopt});
   }
-  return flight::make_ref<SceneSubstitutionResult>(SceneSubstitutionResult{.refusal = std::nullopt, .scene = std::optional<flight::Ref<FlightDocumentNode>>{root.value()}});
+  return flight::make_ref<SceneSubstitutionResult>(SceneSubstitutionResult{.refusal = std::nullopt, .scene = std::optional<flight::Ref<flight::types::FlightDocumentNode>>{root.value()}});
 }
 
-inline std::optional<flight::Ref<FlightDocumentRefusalExplanation>> explain_flight_document_scene_token_substitution(flight::Ref<FlightDocumentScene> scene, flight::Ref<FlightDocumentTokenResolution> resolution) {
+inline std::optional<flight::Ref<flight::types::FlightDocumentRefusalExplanation>> explain_flight_document_scene_token_substitution(flight::types::FlightDocumentScene scene, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::FlightDocumentTokenResolution>>>> resolution) {
   return read_substitution(scene, resolution)->refusal;
 }
 
-template <typename T>
-inline std::optional<flight::Ref<FlightDocumentScene>> substitute_flight_document_scene_tokens(T scene, flight::Ref<FlightDocumentTokenResolution> resolution) {
-  auto substituted = read_substitution(scene, resolution);
-  if (!substituted->scene.has_value()) {
-    return std::nullopt;
-  }
-  return std::optional<flight::Ref<FlightDocumentScene>>{flight::erased_ref_as<typename T::element_type>({.scene = substituted->scene.value()})};
-}
+
+// NOT GENERATED: function substituteFlightDocumentSceneTokens -- source line 30
+// refusal: cpp-contextual-union-whole-value-domain-unrepresented [compiler-restriction]
+//
+// The source it stood for:
+//   export function substituteFlightDocumentSceneTokens<T extends Readonly<FlightDocumentScene>>(
+//     scene: T,
+//     resolution: Readonly<FlightDocumentTokenResolution>,
+//   ): T | null {
+//     const substituted = readSubstitution(scene, resolution);
+//     if (substituted.scene === null) return null;
+//     // The spread carries every scene-level section (layouts and tokens, plus backgroundColor or cameras
+//     // and lights) unchanged, and only `scene` is replaced; T is preserved by construction rather than by
+//     // narrowing, which no assertion in the language can express for a generic spread.
+//     return { ...scene, scene: substituted.scene } as T;
+//   }
+//   
+// cpp emission failed for @flighthq/types/packages/types/src/FlightDocument.ts: contextual nullable construction
+// resolves the value's type evidence to a complete closed union carrier, but that carrier is not the destination
+// variant and the expression does not select one declared alternative. This commonly occurs when a constrained
+// generic value or whole-union assertion preserves a structural subtype or orders alternatives differently from
+// the closed C++ variant. Keep the value in the exact declared union carrier, construct one declared arm before
+// the generic boundary, or add a checked dependent owner carrier to the runtime contract; the compiler will not
+// choose an arm with an unchecked cast, copy or materialize a replacement object, or add side storage.
 
 } // namespace flight::tokens

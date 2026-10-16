@@ -47,22 +47,22 @@ inline flight::Ref<flight::types::EffectPadding> get_drop_shadow_effect_padding(
   return flight::effects::get_directional_effect_padding(([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"blurX">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 4.0; }()), ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"blurY">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 4.0; }()), (std::cos(angle) * distance), (std::sin(angle) * distance));
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_ANGLE_BLUR_X_BLUR_Y_DISTANCE_QUALITY_SOURCE_MODE_COLOR_ALPHA_727A3F9C4DBD5768
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_ANGLE_BLUR_X_BLUR_Y_DISTANCE_QUALITY_SOURCE_MODE_COLOR_ALPHA_727A3F9C4DBD5768
-struct strength_angle_blur_x_blur_y_distance_quality_source_mode_color_alpha_727a3f9c4dbd5768 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_ANGLE_DISTANCE_COLOR_ALPHA_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_C8BA36B0FE10798C
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_ANGLE_DISTANCE_COLOR_ALPHA_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_C8BA36B0FE10798C
+struct strength_angle_distance_color_alpha_blur_x_blur_y_quality_source_mode_c8ba36b0fe10798c : public flight::ReferenceEnabled {
   std::optional<double> strength;
   std::optional<double> angle;
-  std::optional<double> blur_x;
-  std::optional<double> blur_y;
   std::optional<double> distance;
-  std::optional<double> quality;
-  std::optional<flight::types::EffectSourceMode> source_mode;
   std::optional<double> color;
   std::optional<double> alpha;
+  std::optional<double> blur_x;
+  std::optional<double> blur_y;
+  std::optional<double> quality;
+  std::optional<flight::types::EffectSourceMode> source_mode;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_ANGLE_BLUR_X_BLUR_Y_DISTANCE_QUALITY_SOURCE_MODE_COLOR_ALPHA_727A3F9C4DBD5768
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_ANGLE_DISTANCE_COLOR_ALPHA_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_C8BA36B0FE10798C
 
-inline void initialize_drop_shadow_effect(flight::types::EntityConstruction<flight::Ref<flight::types::DropShadowEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_angle_blur_x_blur_y_distance_quality_source_mode_color_alpha_727a3f9c4dbd5768>>>> options) {
+inline void initialize_drop_shadow_effect(flight::types::EntityConstruction<flight::Ref<flight::types::DropShadowEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_angle_distance_color_alpha_blur_x_blur_y_quality_source_mode_c8ba36b0fe10798c>>>> options) {
   flight::effects::initialize_effect<flight::Ref<flight::types::DropShadowEffect>>(out, flight::String("DropShadowEffect"));
   flight::row_set<flight::RowKey<"alpha">>(out, flight::row_get<flight::RowKey<"alpha">>(options));
   flight::row_set<flight::RowKey<"angle">>(out, flight::row_get<flight::RowKey<"angle">>(options));
@@ -75,8 +75,8 @@ inline void initialize_drop_shadow_effect(flight::types::EntityConstruction<flig
   flight::row_set<flight::RowKey<"strength">>(out, flight::row_get<flight::RowKey<"strength">>(options));
 }
 
-inline flight::Ref<flight::types::DropShadowEffect> create_drop_shadow_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_angle_blur_x_blur_y_distance_quality_source_mode_color_alpha_727a3f9c4dbd5768>>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<strength_angle_blur_x_blur_y_distance_quality_source_mode_color_alpha_727a3f9c4dbd5768>>>>());
+inline flight::Ref<flight::types::DropShadowEffect> create_drop_shadow_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_angle_distance_color_alpha_blur_x_blur_y_quality_source_mode_c8ba36b0fe10798c>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<strength_angle_distance_color_alpha_blur_x_blur_y_quality_source_mode_c8ba36b0fe10798c>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::DropShadowEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::DropShadowEffect>>();
   initialize_drop_shadow_effect(out, options.value());
   return flight::entity::finish_entity<flight::Ref<flight::types::DropShadowEffect>>(out);

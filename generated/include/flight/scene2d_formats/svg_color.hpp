@@ -8,7 +8,6 @@
 #include <cstdint>
 #include <flight/number.hpp>
 #include <flight/record.hpp>
-#include <flight/regexp.hpp>
 #include <limits>
 #include <optional>
 #include <random>
@@ -17,6 +16,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct SvgColor; }
+
+#include <flight/math/clamp.hpp>
+#include <flight/types/svg_registry.hpp>
 #include <flight/scene2d_formats/svg_xml.hpp>
 
 namespace flight::scene2d_formats {
@@ -26,7 +29,7 @@ inline double parse_css_alpha(flight::String value) {
   if (!std::isfinite(parsed)) {
     return std::numeric_limits<double>::quiet_NaN();
   }
-  return clamp((value.ends_with(flight::String("%")) ? (parsed / 100.0) : parsed), 0.0, 1.0);
+  return flight::math::clamp((value.ends_with(flight::String("%")) ? (parsed / 100.0) : parsed), 0.0, 1.0);
 }
 
 inline double parse_css_fraction(flight::String value) {
@@ -34,7 +37,7 @@ inline double parse_css_fraction(flight::String value) {
   if (!std::isfinite(parsed)) {
     return std::numeric_limits<double>::quiet_NaN();
   }
-  return clamp((value.ends_with(flight::String("%")) ? (parsed / 100.0) : parsed), 0.0, 1.0);
+  return flight::math::clamp((value.ends_with(flight::String("%")) ? (parsed / 100.0) : parsed), 0.0, 1.0);
 }
 
 inline double parse_css_hue(flight::String value) {
@@ -127,7 +130,7 @@ inline flight::Record<flight::String, double> svg_named_colors = {{flight::Strin
 // `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound
 // from the storage and tested the same way
 
-inline std::optional<flight::Ref<SvgColor>> resolve_svg_color(flight::String value, flight::String current_color) {
+inline std::optional<flight::Ref<flight::types::SvgColor>> resolve_svg_color(flight::String value, flight::String current_color) {
   return parse_svg_color(((value.trim().to_lower() == flight::String("currentcolor")) ? current_color : value));
 }
 

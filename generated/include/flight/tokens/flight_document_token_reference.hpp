@@ -4,9 +4,9 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function substituteFlightDocumentTokenValue -- source line 22
+#include <flight/record.hpp>
 #include <flight/regexp.hpp>
 #include <flight/symbol.hpp>
-#include <functional>
 #include <optional>
 #include <variant>
 #include <flight/runtime.hpp>
@@ -28,11 +28,11 @@ inline const flight::String reference_escape = flight::String("$$");
 
 inline const flight::String reference_sigil = flight::String("$");
 
-inline bool is_flight_document_token_reference(flight::Ref<FlightDocumentValue> value) {
-  if ((flight::String("object") != flight::String("string"))) {
+inline bool is_flight_document_token_reference(flight::types::FlightDocumentValue value) {
+  if (!(([&]() { const auto& typeof_value = value; return typeof_value.has_value() && typeof_value.value().index() == 4; }()))) {
     return false;
   }
-  const flight::String text = value;
+  const flight::String text = std::get<4>(value.value());
   return (text.starts_with(reference_sigil) && !text.starts_with(reference_escape));
 }
 
@@ -43,7 +43,7 @@ inline std::optional<flight::String> read_flight_document_token_reference_key(fl
 
 
 // NOT GENERATED: function substituteFlightDocumentTokenValue -- source line 22
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+// refusal: cpp-optional-member-access-unproven [compiler-restriction]
 //
 // The source it stood for:
 //   export function substituteFlightDocumentTokenValue(
@@ -82,7 +82,10 @@ inline std::optional<flight::String> read_flight_document_token_reference_key(fl
 //   }
 //   
 //   // A reference that could not be resolved. Distinct from null, which a document may legitimately hold.
-// cpp emission failed for @flighthq/tokens/packages/tokens/src/flightDocumentTokenReference.ts: contextual union
-// value type flight::String is not a represented runtime domain
+// cpp emission failed for @flighthq/tokens/packages/tokens/src/flightDocumentTokenReference.ts: property length
+// on C++ absence-carrying storage requires narrowed access: no present-value proof reaches this read. Guard this
+// exact receiver (bind a property or call result to a local first if evaluating it again would produce a
+// different value), then read the member only in the present branch. The compiler will not discard the absence
+// state or call value() without that proof
 
 } // namespace flight::tokens

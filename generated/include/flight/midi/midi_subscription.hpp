@@ -145,7 +145,7 @@ inline flight::Task<bool> release_midi_attachment(flight::Ref<flight::types::Mid
 //     runtime.ownerSubscriptions?.delete(subscription);
 //     runtime.ownerSubscriptions = null;
 //   }
-//
+//   
 // cpp emission failed for @flighthq/midi/packages/midi/src/midiSubscription.ts: optional property call delete
 // requires callable result evidence
 
@@ -188,7 +188,7 @@ inline flight::Task<bool> release_tracked_midi_attachment(flight::Ref<flight::ty
 //     }
 //     return { reason: 'ok' };
 //   }
-//
+//   
 // cpp emission failed for @flighthq/types/packages/types/src/Midi.ts: contextual union value type
 // flight::Task<flight::types::MidiSubscriptionDetachOutcome> is not a represented runtime domain
 

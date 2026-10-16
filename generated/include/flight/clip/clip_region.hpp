@@ -37,8 +37,6 @@ namespace flight::types { struct Rectangle; }
 
 namespace flight::clip {
 
-using flight::path::flatten_path;
-
 using flight::types::ClipRegion;
 using flight::types::ClipRegionContoursExplanation;
 using flight::types::Path;

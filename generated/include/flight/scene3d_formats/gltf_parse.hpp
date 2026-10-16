@@ -32,8 +32,6 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/image_codec/detect_image_mime_type.hpp>
-
 #include <flight/types/vector3.hpp>
 
 #include <flight/types/transform_3d.hpp>
@@ -138,8 +136,6 @@ namespace flight::types { struct Vector2; }
 namespace flight::types { struct Vector3; }
 
 namespace flight::scene3d_formats {
-
-using flight::image_codec::detect_image_mime_type;
 
 using flight::types::GltfAccessorData;
 using flight::types::GltfAccessorFault;

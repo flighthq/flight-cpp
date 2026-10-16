@@ -14,8 +14,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::mesh {
 
-using flight::types::VertexFormat;
-
 inline double get_vertex_format_byte_length(flight::types::VertexFormat format) {
   {
     auto switch_value = format;

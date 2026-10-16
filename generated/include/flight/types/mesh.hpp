@@ -52,7 +52,7 @@ struct MeshRuntime;
 
 #include <flight/types/aabb.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/material3_dvalue.hpp>
+#include <flight/types/material_3d_value.hpp>
 #include <flight/types/mesh_geometry.hpp>
 #include <flight/types/morph_target.hpp>
 #include <flight/types/node_3d.hpp>

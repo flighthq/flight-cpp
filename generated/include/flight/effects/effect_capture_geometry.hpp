@@ -56,7 +56,10 @@ inline flight::Ref<flight::types::EffectPadding> padding = flight::make_ref<flig
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WIDTH_HEIGHT_6A2B928B7D011B27
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WIDTH_HEIGHT_6A2B928B7D011B27
-using width_height_6a2b928b7d011b27 = flight::render::width_height_6a2b928b7d011b27;
+struct width_height_6a2b928b7d011b27 : public flight::ReferenceEnabled {
+  double width;
+  double height;
+};
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WIDTH_HEIGHT_6A2B928B7D011B27
 
 inline flight::Ref<width_height_6a2b928b7d011b27> target_size = ([]() { auto object_member_height = 0.0; auto object_member_width = 0.0; return flight::make_ref<width_height_6a2b928b7d011b27>(width_height_6a2b928b7d011b27{.width = object_member_width, .height = object_member_height}); }());

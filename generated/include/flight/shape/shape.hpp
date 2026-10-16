@@ -6,22 +6,19 @@
 //   missing: function clearShapeCommands -- source line 22
 //   missing: function copyShapeCommands -- source line 32
 //   missing: function getShapeBounds -- source line 63
-//   missing: function computeShapeLocalBoundsRectangle -- source line 28
 //   missing: function getShapeRuntime -- source line 91
-//   missing: function initializeShapeData -- source line 95
-//   missing: function createShapeData -- source line 51
 //   missing: function isShapeLocalBoundsRectangleValid -- source line 104
 //   missing: variable (binding) -- source line 109
 //   missing: function createShapeRuntime -- source line 57
 //   missing: function createShape -- source line 47
-#include <cstddef>
+#include <flight/structural_ref.hpp>
+#include <functional>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
-
-#include <flight/types/shape_command.hpp>
 
 #include <flight/types/shape_bounds.hpp>
 
@@ -31,8 +28,29 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/morph_shape.hpp>
 
-#include <flight/shape/shape_bounds.hpp>
-#include <flight/shape/shape_bounds_registry.hpp>
+namespace flight::types { struct HasBoundsRectangle; }
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct MorphShape; }
+namespace flight::types { struct MorphShapeColorPaintBinding; }
+namespace flight::types { struct MorphShapeData; }
+namespace flight::types { struct MorphShapeGradientPaintBinding; }
+namespace flight::types { struct MorphShapeLinePaintBinding; }
+namespace flight::types { struct MorphShapeTexturePaintBinding; }
+namespace flight::types { struct Node2DData; }
+namespace flight::types { struct Node2DRuntime; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct Rectangle; }
+namespace flight::types { struct Shape; }
+namespace flight::types { struct ShapeData; }
+namespace flight::types { struct ShapeRuntime; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+namespace flight::types { template <typename Traits> struct Node; }
+
+#include <flight/entity/entity.hpp>
+#include <flight/types/contract.hpp>
 
 namespace flight::shape {
 
@@ -40,7 +58,6 @@ using flight::types::MorphShape;
 using flight::types::Rectangle;
 using flight::types::Shape;
 using flight::types::ShapeBoundsMode;
-using flight::types::ShapeCommandToken;
 
 
 // NOT GENERATED: function clearShapeCommands -- source line 22
@@ -54,11 +71,12 @@ using flight::types::ShapeCommandToken;
 //   }
 //   
 // cpp emission failed for @flighthq/shape/packages/shape/src/shape.ts: a reference assertion from
-// flight::Ref<Shape> to flight::Ref<MorphShape> has no heritage to cast along: the declarations share no emitted
-// C++ class-heritage path (source interface and intersection relationships flatten into independent owners), and
-// the source carrier does not retain a checked dynamic owner that can recover the target. Keep the exact
-// declared owner at the API boundary, or add a runtime contract that validates and recovers the target owner;
-// the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
+// flight::Ref<flight::types::Shape> to flight::Ref<flight::types::MorphShape> has no heritage to cast along: the
+// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
+// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
+// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
+// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
+// invent side storage
 
 
 // NOT GENERATED: function copyShapeCommands -- source line 32
@@ -81,15 +99,16 @@ using flight::types::ShapeCommandToken;
 //   }
 //   
 // cpp emission failed for @flighthq/shape/packages/shape/src/shape.ts: a reference assertion from
-// flight::Ref<Shape> to flight::Ref<MorphShape> has no heritage to cast along: the declarations share no emitted
-// C++ class-heritage path (source interface and intersection relationships flatten into independent owners), and
-// the source carrier does not retain a checked dynamic owner that can recover the target. Keep the exact
-// declared owner at the API boundary, or add a runtime contract that validates and recovers the target owner;
-// the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
+// flight::Ref<flight::types::Shape> to flight::Ref<flight::types::MorphShape> has no heritage to cast along: the
+// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
+// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
+// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
+// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
+// invent side storage
 
 
 // NOT GENERATED: function getShapeBounds -- source line 63
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function getShapeBounds(out: Rectangle, source: Readonly<Shape>, mode: ShapeBoundsMode = 'ink'): boolean {
@@ -108,36 +127,79 @@ using flight::types::ShapeCommandToken;
 //   }
 //   
 //   // Returns the number of drawing commands in the shape's command stream.
-// cpp emission failed for @flighthq/shape/packages/shape/src/shape.ts: a reference assertion from
-// flight::Ref<Node2DRuntime> to flight::Ref<ShapeRuntime> has no heritage to cast along: the declarations share
-// no emitted C++ class-heritage path (source interface and intersection relationships flatten into independent
-// owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the
-// exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target
-// owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
+// cpp emission failed for @flighthq/shape/packages/shape/src/shape.ts: a structural assertion from the readonly
+// row Readonly<Node2DRuntime> to the writable row ShapeRuntime claims mutation the source refused: a readonly
+// row never becomes writable, because the boundary the value came through said its subject must not be mutated
+// through it, and no cast, copy, or re-view can carry a capability the source withheld. Assert to the readonly
+// row where the value is only read, or declare the source -- its parameter, slot, or accessor result -- as the
+// writable type where that object may really be mutated. Choosing between those two repairs is the question this
+// assertion was answering, so ask it of the value's ROLE rather than of its spelling: a RUNTIME OWNER that the
+// mutating paths must write needs a mutable-source accessor returning the full writable owner from the typed
+// runtime slot, with the readonly accessor kept for reads, because the capability has to exist on the storage
+// and accessor that establish those cells; a NODE that the read paths only traverse and never mutate needs the
+// two authorities separated instead, with a readonly view on every read path and a separate mutable entry point
+// for the paths that really mutate, because laundering a writable node out of a readonly boundary grants
+// mutation no caller asked for. Both repairs keep the exact Traits or generic specialization the retained row
+// carries; neither adds cells to a row that does not declare them. Making only that boundary writable is
+// insufficient here: the source owner does not declare shapeBoundsCommandRegistryRevision, so it has no cells
+// for the asserted row to mutate. Declare both the storage slot and the accessor result as the full writable
+// ShapeRuntime row where initialization establishes those cells, rather than widening Readonly<Node2DRuntime> at
+// the use site.
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_BINDING_UID_COLOR_ADJUSTMENTS_COLOR_ADJUSTMENTS_UNSUPPORTED_RESOLVED_COLOR_MATRIX_RESOLVED_COLOR_SCALE_BIAS_APPEARANCE_ID_BOUNDS_USING_LOCAL_BOUNDS_ID_BOUNDS_USING_LOCAL_TRANSFORM_ID_CAN_ADD_CHILD_CHILDREN_CHILDREN_ID_TRAITS_INTERACTION_SIGNALS_LOCAL_BOUNDS_ID_LOCAL_BOUNDS_USING_LOCAL_BOUNDS_ID_LOCAL_CONTENT_ID_LOCAL_TRANSFORM_ID_LOCAL_TRANSFORM_USING_LOCAL_TRANSFORM_ID_NODE_SIGNALS_INTERACTION_STATE_PARENT_PARENT_REFERENCE_ID_WORLD_BOUNDS_USING_LOCAL_BOUNDS_ID_WORLD_BOUNDS_USING_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_USING_LOCAL_TRANSFORM_ID_WORLD_TRANSFORM_USING_PARENT_TRANSFORM_ID_BOUNDS_RECTANGLE_COMPUTE_LOCAL_BOUNDS_RECTANGLE_IS_LOCAL_BOUNDS_RECTANGLE_VALID_LOCAL_BOUNDS_RECTANGLE_WORLD_BOUNDS_RECTANGLE_066D62436CAB0A67
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_BINDING_UID_COLOR_ADJUSTMENTS_COLOR_ADJUSTMENTS_UNSUPPORTED_RESOLVED_COLOR_MATRIX_RESOLVED_COLOR_SCALE_BIAS_APPEARANCE_ID_BOUNDS_USING_LOCAL_BOUNDS_ID_BOUNDS_USING_LOCAL_TRANSFORM_ID_CAN_ADD_CHILD_CHILDREN_CHILDREN_ID_TRAITS_INTERACTION_SIGNALS_LOCAL_BOUNDS_ID_LOCAL_BOUNDS_USING_LOCAL_BOUNDS_ID_LOCAL_CONTENT_ID_LOCAL_TRANSFORM_ID_LOCAL_TRANSFORM_USING_LOCAL_TRANSFORM_ID_NODE_SIGNALS_INTERACTION_STATE_PARENT_PARENT_REFERENCE_ID_WORLD_BOUNDS_USING_LOCAL_BOUNDS_ID_WORLD_BOUNDS_USING_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_USING_LOCAL_TRANSFORM_ID_WORLD_TRANSFORM_USING_PARENT_TRANSFORM_ID_BOUNDS_RECTANGLE_COMPUTE_LOCAL_BOUNDS_RECTANGLE_IS_LOCAL_BOUNDS_RECTANGLE_VALID_LOCAL_BOUNDS_RECTANGLE_WORLD_BOUNDS_RECTANGLE_066D62436CAB0A67
+struct binding_uid_color_adjustments_color_adjustments_unsupported_resolved_color_matrix_resolved_color_scale_bias_appearance_id_bounds_using_local_bounds_id_bounds_using_local_transform_id_can_add_child_children_children_id_traits_interaction_signals_local_bounds_id_local_bounds_using_local_bounds_id_local_content_id_local_transform_id_local_transform_using_local_transform_id_node_signals_interaction_state_parent_parent_reference_id_world_bounds_using_local_bounds_id_world_bounds_using_world_transform_id_world_transform_id_world_transform_using_local_transform_id_world_transform_using_parent_transform_id_bounds_rectangle_compute_local_bounds_rectangle_is_local_bounds_rectangle_valid_local_bounds_rectangle_world_bounds_rectangle_066d62436cab0a67 : public flight::types::NodeRuntime<flight::Ref<flight::types::Node2DTraits>> {
+  std::optional<flight::Ref<flight::types::Rectangle>> bounds_rectangle;
+  std::function<void(flight::Ref<flight::types::Rectangle>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundsNodeAny>>>>)> compute_local_bounds_rectangle;
+  std::optional<std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundsNodeAny>>>>)>> is_local_bounds_rectangle_valid;
+  std::optional<flight::Ref<flight::types::Rectangle>> local_bounds_rectangle;
+  std::optional<flight::Ref<flight::types::Rectangle>> world_bounds_rectangle;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_BINDING_UID_COLOR_ADJUSTMENTS_COLOR_ADJUSTMENTS_UNSUPPORTED_RESOLVED_COLOR_MATRIX_RESOLVED_COLOR_SCALE_BIAS_APPEARANCE_ID_BOUNDS_USING_LOCAL_BOUNDS_ID_BOUNDS_USING_LOCAL_TRANSFORM_ID_CAN_ADD_CHILD_CHILDREN_CHILDREN_ID_TRAITS_INTERACTION_SIGNALS_LOCAL_BOUNDS_ID_LOCAL_BOUNDS_USING_LOCAL_BOUNDS_ID_LOCAL_CONTENT_ID_LOCAL_TRANSFORM_ID_LOCAL_TRANSFORM_USING_LOCAL_TRANSFORM_ID_NODE_SIGNALS_INTERACTION_STATE_PARENT_PARENT_REFERENCE_ID_WORLD_BOUNDS_USING_LOCAL_BOUNDS_ID_WORLD_BOUNDS_USING_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_USING_LOCAL_TRANSFORM_ID_WORLD_TRANSFORM_USING_PARENT_TRANSFORM_ID_BOUNDS_RECTANGLE_COMPUTE_LOCAL_BOUNDS_RECTANGLE_IS_LOCAL_BOUNDS_RECTANGLE_VALID_LOCAL_BOUNDS_RECTANGLE_WORLD_BOUNDS_RECTANGLE_066D62436CAB0A67
 
-// NOT GENERATED: function computeShapeLocalBoundsRectangle -- source line 28
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
-//
-// The source it stood for:
-//   export function computeShapeLocalBoundsRectangle(out: Rectangle, source: Readonly<BoundsNode<Node2DTraits>>): void {
-//     getShapeBounds(out, source as Readonly<Shape>, 'ink');
-//   }
-//   
-// cpp emission failed for @flighthq/shape/packages/shape/src/shape.ts: a reference assertion from
-// flight::Ref<BoundsNode<flight::Ref<Node2DTraits>>> to flight::Ref<Shape> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_9B29896CFDBE0CA8
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_9B29896CFDBE0CA8
+struct entity_runtime_key_9b29896cfdbe0ca8 : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<binding_uid_color_adjustments_color_adjustments_unsupported_resolved_color_matrix_resolved_color_scale_bias_appearance_id_bounds_using_local_bounds_id_bounds_using_local_transform_id_can_add_child_children_children_id_traits_interaction_signals_local_bounds_id_local_bounds_using_local_bounds_id_local_content_id_local_transform_id_local_transform_using_local_transform_id_node_signals_interaction_state_parent_parent_reference_id_world_bounds_using_local_bounds_id_world_bounds_using_world_transform_id_world_transform_id_world_transform_using_local_transform_id_world_transform_using_parent_transform_id_bounds_rectangle_compute_local_bounds_rectangle_is_local_bounds_rectangle_valid_local_bounds_rectangle_world_bounds_rectangle_066d62436cab0a67>> entity_runtime_key;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_9B29896CFDBE0CA8
 
-inline double get_shape_command_count(flight::Ref<Shape> source) {
-  flight::Array<flight::Ref<ShapeCommandToken>> commands = source->data.commands;
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_7721A250093B8904
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_7721A250093B8904
+struct data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_7721a250093b8904 : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<flight::types::Node2DData>> data;
+  bool enabled;
+  flight::String kind;
+  std::optional<flight::String> name;
+  std::optional<flight::Ref<binding_uid_color_adjustments_color_adjustments_unsupported_resolved_color_matrix_resolved_color_scale_bias_appearance_id_bounds_using_local_bounds_id_bounds_using_local_transform_id_can_add_child_children_children_id_traits_interaction_signals_local_bounds_id_local_bounds_using_local_bounds_id_local_content_id_local_transform_id_local_transform_using_local_transform_id_node_signals_interaction_state_parent_parent_reference_id_world_bounds_using_local_bounds_id_world_bounds_using_world_transform_id_world_transform_id_world_transform_using_local_transform_id_world_transform_using_parent_transform_id_bounds_rectangle_compute_local_bounds_rectangle_is_local_bounds_rectangle_valid_local_bounds_rectangle_world_bounds_rectangle_066d62436cab0a67>> entity_runtime_key;
+  double alpha;
+  bool visible;
+  std::optional<flight::String> blend_mode;
+  std::optional<flight::Ref<flight::types::ClipRegion>> clip;
+  std::optional<flight::Ref<flight::types::Material2D>> material;
+  std::optional<flight::Ref<flight::types::MaterialData>> material_data;
+  double pivot_x;
+  double pivot_y;
+  double rotation;
+  double scale_x;
+  double scale_y;
+  double skew_x;
+  double skew_y;
+  double x;
+  double y;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_7721A250093B8904
+
+inline void compute_shape_local_bounds_rectangle(flight::Ref<flight::types::Rectangle> out, flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>, flight::RowOf<flight::Ref<flight::types::HasBoundsRectangle>>, flight::RowOf<flight::Ref<entity_runtime_key_9b29896cfdbe0ca8>>>>> source) {
+  get_shape_bounds(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Shape>>>>>>(source), flight::String("ink"));
+}
+
+inline double get_shape_command_count(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Shape>>>> source) {
+  flight::Array<flight::types::ShapeCommandToken> commands = flight::row_get<flight::RowKey<"data">>(source)->commands;
   double count = 0.0;
   double i = 0.0;
   while ((i < static_cast<double>(commands.size()))) {
-    const double arg_count = static_cast<double>(commands.element((i + 1.0)));
+    const double arg_count = std::get<double>(commands.element((i + 1.0)).value());
     count++;
     (i += (arg_count + 2.0));
   }
@@ -146,54 +208,42 @@ inline double get_shape_command_count(flight::Ref<Shape> source) {
 
 
 // NOT GENERATED: function getShapeRuntime -- source line 91
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function getShapeRuntime(source: Readonly<Shape>): Readonly<ShapeRuntime> {
 //     return getNode2DRuntime(source) as ShapeRuntime;
 //   }
 //   
-// cpp emission failed for @flighthq/shape/packages/shape/src/shape.ts: a reference assertion from
-// flight::Ref<Node2DRuntime> to flight::Ref<ShapeRuntime> has no heritage to cast along: the declarations share
-// no emitted C++ class-heritage path (source interface and intersection relationships flatten into independent
-// owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the
-// exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target
-// owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
+// cpp emission failed for @flighthq/shape/packages/shape/src/shape.ts: a structural assertion from the readonly
+// row Readonly<Node2DRuntime> to the writable row ShapeRuntime claims mutation only to pass the value to the
+// readonly row Readonly<ShapeRuntime>. Spell the assertion as Readonly<ShapeRuntime> to remove the
+// writable-capability claim, but that alone cannot recover the derived owner: Readonly<Node2DRuntime> does not
+// declare shapeBoundsCommandRegistryRevision, so the retained row has no proven cells for those members. No
+// writable carrier is justified for this read-only call. Preserve ShapeRuntime in the callback parameter through
+// a named typed runner or carrier, or make an intentionally erased registry validate and recover that owner
+// before invoking the typed runner; a tag or registry key carried beside the value does not prove which owner
+// the reference retains. If mutation is intended elsewhere, the storage and accessor themselves must retain
+// writable ShapeRuntime capability rather than adding it with an assertion. The compiler will not cast, copy,
+// materialize, or create side storage for either missing proof.
 
+inline void initialize_shape_data(flight::types::EntityConstruction<flight::Ref<flight::types::ShapeData>> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::ShapeData>>>>>> data = std::nullopt) {
+  flight::row_set<flight::RowKey<"commands">>(out, ([&]() -> flight::Array<flight::types::ShapeCommandToken> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::types::ShapeCommandToken>> { auto optional_chain_receiver = data; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"commands">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<flight::types::ShapeCommandToken>{}; }()));
+}
 
-// NOT GENERATED: function initializeShapeData -- source line 95
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   export function initializeShapeData(out: EntityConstruction<ShapeData>, data?: Readonly<Partial<ShapeData>>): void {
-//     out.commands = data?.commands ?? [];
-//   }
-//   
-//   // True when the shape has no drawing commands in its command stream.
-// cpp emission failed for @flighthq/shape/packages/shape/src/shape.ts: Partial<T> requires a statically
-// resolvable C++ object shape; T is named
+inline flight::Ref<flight::types::ShapeData> create_shape_data(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::ShapeData>>>>>> data = std::nullopt) {
+  flight::types::EntityConstruction<flight::Ref<flight::types::ShapeData>> out = flight::entity::allocate_entity<flight::Ref<flight::types::ShapeData>>();
+  initialize_shape_data(out, data);
+  return flight::entity::finish_entity<flight::Ref<flight::types::ShapeData>>(out);
+}
 
-
-// NOT GENERATED: function createShapeData -- source line 51
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   export function createShapeData(data?: Readonly<Partial<ShapeData>>): ShapeData {
-//     const out = allocateEntity<ShapeData>();
-//     initializeShapeData(out, data);
-//     return finishEntity(out);
-//   }
-//   
-// cpp emission failed for @flighthq/shape/packages/shape/src/shape.ts: Partial<T> requires a statically
-// resolvable C++ object shape; T is named
-
-inline bool is_shape_empty(flight::Ref<Shape> source) {
-  return (static_cast<double>(source->data.commands.size()) == 0.0);
+inline bool is_shape_empty(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Shape>>>> source) {
+  return (static_cast<double>(flight::row_get<flight::RowKey<"data">>(source)->commands.size()) == 0.0);
 }
 
 
 // NOT GENERATED: function isShapeLocalBoundsRectangleValid -- source line 104
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   function isShapeLocalBoundsRectangleValid(source: Readonly<BoundsNode<Node2DTraits>>): boolean {
@@ -201,16 +251,28 @@ inline bool is_shape_empty(flight::Ref<Shape> source) {
 //     return runtime.shapeBoundsCommandRegistryRevision === getShapeBoundsCommandRegistryRevision();
 //   }
 //   
-// cpp emission failed for @flighthq/shape/packages/shape/src/shape.ts: a reference assertion from
-// flight::Ref<Node2DRuntime> to flight::Ref<ShapeRuntime> has no heritage to cast along: the declarations share
-// no emitted C++ class-heritage path (source interface and intersection relationships flatten into independent
-// owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the
-// exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target
-// owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
+// cpp emission failed for @flighthq/shape/packages/shape/src/shape.ts: a structural assertion from the readonly
+// row Readonly<Node2DRuntime> to the writable row ShapeRuntime claims mutation the source refused: a readonly
+// row never becomes writable, because the boundary the value came through said its subject must not be mutated
+// through it, and no cast, copy, or re-view can carry a capability the source withheld. Assert to the readonly
+// row where the value is only read, or declare the source -- its parameter, slot, or accessor result -- as the
+// writable type where that object may really be mutated. Choosing between those two repairs is the question this
+// assertion was answering, so ask it of the value's ROLE rather than of its spelling: a RUNTIME OWNER that the
+// mutating paths must write needs a mutable-source accessor returning the full writable owner from the typed
+// runtime slot, with the readonly accessor kept for reads, because the capability has to exist on the storage
+// and accessor that establish those cells; a NODE that the read paths only traverse and never mutate needs the
+// two authorities separated instead, with a readonly view on every read path and a separate mutable entry point
+// for the paths that really mutate, because laundering a writable node out of a readonly boundary grants
+// mutation no caller asked for. Both repairs keep the exact Traits or generic specialization the retained row
+// carries; neither adds cells to a row that does not declare them. Making only that boundary writable is
+// insufficient here: the source owner does not declare shapeBoundsCommandRegistryRevision, so it has no cells
+// for the asserted row to mutate. Declare both the storage slot and the accessor result as the full writable
+// ShapeRuntime row where initialization establishes those cells, rather than widening Readonly<Node2DRuntime> at
+// the use site.
 
 
 // NOT GENERATED: variable (binding) -- source line 109
-// refusal: cpp-partial-shape-unresolvable [source-portability]
+// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
 //   const defaultMethods: Partial<MethodsOf<ShapeRuntime> & Pick<ShapeRuntime, 'isLocalBoundsRectangleValid'>> = {
@@ -218,8 +280,19 @@ inline bool is_shape_empty(flight::Ref<Shape> source) {
 //     isLocalBoundsRectangleValid: isShapeLocalBoundsRectangleValid,
 //   };
 //   
-// cpp emission failed for @flighthq/shape/packages/shape/src/shape.ts: Partial<T> requires a statically
-// resolvable C++ object shape; T is intersection
+// cpp emission failed for @flighthq/shape/packages/shape/src/shape.ts: contextual union callable value type
+// std::function<void(flight::Ref<flight::types::Rectangle>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>,
+// flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>,
+// flight::RowOf<flight::Ref<flight::types::HasBoundsRectangle>>,
+// flight::RowOf<flight::Ref<entity_runtime_key_9b29896cfdbe0ca8>>>>>)> agrees with no alternative's signature:
+// the destination holds [std::function<void(flight::Ref<flight::types::Rectangle>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>,
+// flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>,
+// flight::RowOf<flight::Ref<flight::types::HasBoundsRectangle>>,
+// flight::RowOf<flight::Ref<entity_runtime_key_2a5696294f4ba375>>>>>)>]. A callable is a represented domain, so
+// the obstacle is that the destination's signature cannot call this one. Declare the value's parameters so the
+// destination's signature supplies them, and its result as one the destination holds
 
 
 // NOT GENERATED: function createShapeRuntime -- source line 57
@@ -233,23 +306,28 @@ inline bool is_shape_empty(flight::Ref<Shape> source) {
 //   }
 //   
 // cpp emission failed for @flighthq/shape/packages/shape/src/shape.ts: a reference assertion from
-// flight::Ref<Node2DRuntime> to flight::Ref<ShapeRuntime> has no heritage to cast along: the declarations share
-// no emitted C++ class-heritage path (source interface and intersection relationships flatten into independent
-// owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the
-// exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target
-// owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
+// flight::Ref<flight::types::Node2DRuntime> to flight::Ref<flight::types::ShapeRuntime> has no heritage to cast
+// along: the declarations share no emitted C++ class-heritage path (source interface and intersection
+// relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner
+// that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that
+// validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a
+// replacement row, or invent side storage
 
 
 // NOT GENERATED: function createShape -- source line 47
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
 //   export function createShape(obj?: Readonly<PartialNode<Shape>>): Shape {
 //     return createNode2D(ShapeKind, obj, createShapeData, createShapeRuntime) as Shape;
 //   }
 //   
-// cpp emission failed for @flighthq/shape/packages/shape/src/shape.ts: intersection types require C++
-// multiple-inheritance lowering: no shape for Node (argument Node2DTraits has no shape either), Node2DTraits.
-// Declare the object shape the code reads rather than intersecting a conjunct that has none
+// cpp emission failed for @flighthq/shape/packages/shape/src/shape.ts: contextual union callable value type
+// std::function<flight::Ref<flight::types::ShapeData>(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::ShapeData>>>>>>)>
+// agrees with no alternative's signature: the destination holds
+// [std::function<flight::Ref<flight::types::Node2DData>(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::Node2DData>>>>>>)>].
+// A callable is a represented domain, so the obstacle is that the destination's signature cannot call this one.
+// Declare the value's parameters so the destination's signature supplies them, and its result as one the
+// destination holds
 
 } // namespace flight::shape

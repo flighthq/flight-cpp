@@ -57,8 +57,6 @@ namespace flight::types { struct Slot2D; }
 
 namespace flight::skeleton2d {
 
-using flight::types::skeleton_2d_animation_target_kind;
-
 using flight::types::AnimationChannel;
 using flight::types::AnimationTrack;
 using flight::types::Attachment2D;
@@ -278,7 +276,8 @@ inline void bind_skeleton_2d_slot_attachment(flight::StructuralRef<flight::RowRe
 //   }
 //   
 // cpp emission failed for @flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dAnimationTarget.ts: contextual
-// union value type flight::Map<flight::String, bind_skeleton_2d_bone_channel> is not a represented runtime domain
+// union value type flight::Map<flight::String, bind_skeleton_2d_bone_channel> is not a represented runtime
+// domain
 
 inline std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationChannel>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>>, flight::Ref<flight::types::Skeleton2D>, flight::Any, double)>> get_skeleton_2d_animation_target_binder(flight::String kind) {
   return get_skeleton_2d_animation_target_binder_registry().get(kind);

@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstdint>
 #include <flight/number.hpp>
+#include <flight/optional_variant.hpp>
 #include <flight/structural_ref.hpp>
 #include <limits>
 #include <optional>
@@ -589,7 +590,7 @@ inline void compute_mesh_geometry_tangents(flight::Ref<flight::types::MeshGeomet
     }
     (target_vertices = expanded);
     (out->vertices = expanded);
-    const bool needs_uint32 = (((source_indices.has_value() && source_indices.value().index() == 1) || (out->indices instanceof flight::Uint32Array)) || (output_vertex_count > uint16_max));
+    const bool needs_uint32 = (((source_indices.has_value() && source_indices.value().index() == 1) || (flight::union_kind_if<flight::Uint32Array>(out->indices) != nullptr)) || (output_vertex_count > uint16_max));
     (remapped_indices = (needs_uint32 ? std::optional<std::variant<flight::Uint16Array, flight::Uint32Array>>{std::in_place, std::in_place_type<flight::Uint32Array>, flight::Uint32Array(element_count)} : std::optional<std::variant<flight::Uint16Array, flight::Uint32Array>>{std::in_place, std::in_place_type<flight::Uint16Array>, flight::Uint16Array(element_count)}));
     {
       double element = 0.0;

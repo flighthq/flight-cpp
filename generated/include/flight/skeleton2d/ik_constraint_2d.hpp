@@ -39,7 +39,7 @@ using flight::types::Bone2D;
 using flight::types::Skeleton2D;
 using flight::types::Skeleton2DIkConstraint;
 
-inline double wrap_skeleton2_dangle_flight_value_function_wrap_u000053_keleton2_u000044__u000041_ngle_flight_private_281301963db99362(double degrees) {
+inline double wrap_skeleton_2d_angle_flight_value_function_wrap_u000053_keleton2_u000044__u000041_ngle_flight_private_281301963db99362(double degrees) {
   double value = std::fmod(degrees, 360.0);
   if ((value > 180.0)) {
     (value -= 360.0);
@@ -59,7 +59,7 @@ inline const double minimum_determinant_flight_value_variable__u00004d__u000049_
 using x_y_8365950bd60f783f = flight::types::x_y_8365950bd60f783f;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON2D_X_Y_8365950BD60F783F
 
-inline std::optional<flight::Ref<x_y_8365950bd60f783f>> to_skeleton2_dparent_space_flight_value_function_to_u000053_keleton2_u000044__u000050_arent_u000053_pace_flight_private_281301963db99362(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton, double bone_index, double x, double y) {
+inline std::optional<flight::Ref<x_y_8365950bd60f783f>> to_skeleton_2d_parent_space_flight_value_function_to_u000053_keleton2_u000044__u000050_arent_u000053_pace_flight_private_281301963db99362(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> skeleton, double bone_index, double x, double y) {
   const double parent_index = flight::row_get<flight::RowKey<"bones">>(skeleton).element(bone_index)->parent_index;
   if ((parent_index < 0.0)) {
     return std::optional<flight::Ref<x_y_8365950bd60f783f>>{flight::make_ref<x_y_8365950bd60f783f>(x_y_8365950bd60f783f{.x = x, .y = y})};
@@ -85,14 +85,14 @@ inline void solve_skeleton_2d_ik_chain1(flight::Ref<flight::types::Skeleton2D> s
     return;
   }
   auto bone = bones.element(bone_index);
-  auto local = to_skeleton2_dparent_space_flight_value_function_to_u000053_keleton2_u000044__u000050_arent_u000053_pace_flight_private_281301963db99362(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>>(skeleton)), bone_index, target_x, target_y);
+  auto local = to_skeleton_2d_parent_space_flight_value_function_to_u000053_keleton2_u000044__u000050_arent_u000053_pace_flight_private_281301963db99362(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>>(skeleton)), bone_index, target_x, target_y);
   if (!local.has_value()) {
     return;
   }
   const double dx = (local.value()->x - bone->x);
   const double dy = (local.value()->y - bone->y);
   const double rotation = ((std::atan2(dy, dx) * flight::math::rad_to_deg_flight_value_variable__u000052__u000041__u000044__u00005f__u000054__u00004f__u00005f__u000044__u000045__u000047__flight_source_ad5040a7d8c07bd3) - bone->shear_x);
-  (bone->rotation += (wrap_skeleton2_dangle_flight_value_function_wrap_u000053_keleton2_u000044__u000041_ngle_flight_private_281301963db99362((rotation - bone->rotation)) * flight::row_get<flight::RowKey<"mix">>(ik)));
+  (bone->rotation += (wrap_skeleton_2d_angle_flight_value_function_wrap_u000053_keleton2_u000044__u000041_ngle_flight_private_281301963db99362((rotation - bone->rotation)) * flight::row_get<flight::RowKey<"mix">>(ik)));
   if ((flight::row_get<flight::RowKey<"stretch">>(ik) || flight::row_get<flight::RowKey<"compress">>(ik))) {
     const double reach = std::hypot(dx, dy);
     const double length = (bone->length * std::abs(bone->scale_x));
@@ -120,7 +120,7 @@ inline void solve_skeleton_2d_ik_chain2(flight::Ref<flight::types::Skeleton2D> s
   if (((parent_length <= 0.0) || (child_length <= 0.0))) {
     return;
   }
-  auto local = to_skeleton2_dparent_space_flight_value_function_to_u000053_keleton2_u000044__u000050_arent_u000053_pace_flight_private_281301963db99362(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>>(skeleton)), parent_index, target_x, target_y);
+  auto local = to_skeleton_2d_parent_space_flight_value_function_to_u000053_keleton2_u000044__u000050_arent_u000053_pace_flight_private_281301963db99362(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>>(skeleton)), parent_index, target_x, target_y);
   if (!local.has_value()) {
     return;
   }
@@ -149,10 +149,10 @@ inline void solve_skeleton_2d_ik_chain2(flight::Ref<flight::types::Skeleton2D> s
   const double direction = (flight::row_get<flight::RowKey<"bendPositive">>(ik) ? 1.0 : -1.0);
   const double aim = std::atan2(dy, dx);
   const double parent_rotation = (((aim + (parent_offset * direction)) * flight::math::rad_to_deg_flight_value_variable__u000052__u000041__u000044__u00005f__u000054__u00004f__u00005f__u000044__u000045__u000047__flight_source_ad5040a7d8c07bd3) - parent->shear_x);
-  (parent->rotation += (wrap_skeleton2_dangle_flight_value_function_wrap_u000053_keleton2_u000044__u000041_ngle_flight_private_281301963db99362((parent_rotation - parent->rotation)) * flight::row_get<flight::RowKey<"mix">>(ik)));
+  (parent->rotation += (wrap_skeleton_2d_angle_flight_value_function_wrap_u000053_keleton2_u000044__u000041_ngle_flight_private_281301963db99362((parent_rotation - parent->rotation)) * flight::row_get<flight::RowKey<"mix">>(ik)));
   flight::skeleton2d::compute_skeleton_2d_bone_world_transform(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>>(skeleton)), parent_index);
   const double child_rotation = (((-bend_angle * direction) * flight::math::rad_to_deg_flight_value_variable__u000052__u000041__u000044__u00005f__u000054__u00004f__u00005f__u000044__u000045__u000047__flight_source_ad5040a7d8c07bd3) - child->shear_x);
-  (child->rotation += (wrap_skeleton2_dangle_flight_value_function_wrap_u000053_keleton2_u000044__u000041_ngle_flight_private_281301963db99362((child_rotation - child->rotation)) * flight::row_get<flight::RowKey<"mix">>(ik)));
+  (child->rotation += (wrap_skeleton_2d_angle_flight_value_function_wrap_u000053_keleton2_u000044__u000041_ngle_flight_private_281301963db99362((child_rotation - child->rotation)) * flight::row_get<flight::RowKey<"mix">>(ik)));
   flight::skeleton2d::compute_skeleton_2d_bone_world_transform(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>>(skeleton)), child_index);
 }
 

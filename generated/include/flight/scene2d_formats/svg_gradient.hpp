@@ -49,8 +49,6 @@ namespace flight::types { struct XmlElement; }
 
 namespace flight::scene2d_formats {
 
-using flight::path::get_path_bounds;
-
 using flight::types::ImportDiagnostic;
 using flight::types::Matrix;
 using flight::types::Path;

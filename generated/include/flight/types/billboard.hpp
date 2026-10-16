@@ -36,7 +36,7 @@ using BillboardMode = flight::String;
 using BillboardRuntime = flight::Ref<flight::types::Node3DRuntime>;
 } // namespace flight::types
 
-#include <flight/types/material3_dvalue.hpp>
+#include <flight/types/material_3d_value.hpp>
 #include <flight/types/mesh_geometry.hpp>
 #include <flight/types/node_3d.hpp>
 #include <flight/types/node.hpp>

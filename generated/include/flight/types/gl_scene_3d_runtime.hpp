@@ -75,7 +75,7 @@ using GlScene3DPass = std::function<void(flight::Ref<flight::types::GlRenderStat
 #include <flight/types/gl_render_state.hpp>
 #include <flight/types/gl_render_target.hpp>
 #include <flight/types/gl_skin_palette_texture.hpp>
-#include <flight/types/material3_dvalue.hpp>
+#include <flight/types/material_3d_value.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/mesh.hpp>
 #include <flight/types/mesh_geometry.hpp>

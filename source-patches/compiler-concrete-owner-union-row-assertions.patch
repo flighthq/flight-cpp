@@ -1,12 +1,10 @@
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
-index d30c0ce..7fa140c 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
-@@ -26651,6 +26651,79 @@ int main() {
-     );
+@@ -26969,6 +26969,79 @@
+     expect(emitted).toContain('static_cast<void>(render_proxy);');
    });
--
-+
+ 
 +  it('selects a redundant concrete reference arm beside an open base arm', () => {
 +    const result = lower(
 +      'open-reference-union-cast.ts',
@@ -84,10 +82,9 @@ index d30c0ce..7fa140c 100644
      const result = lower('tuple.ts', 'export function first(pair: [number, string]): number { return pair[0]; }');
      const emitted = emitIrModuleCpp(result.module);
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-index fae6209..aa2adc0 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-@@ -4401,6 +4401,12 @@ function emitExpression(
+@@ -4551,6 +4551,12 @@
          if (expression.expression.kind === 'object') {
            return emitExpression(expression.expression, context, expression.type);
          }
@@ -100,7 +97,7 @@ index fae6209..aa2adc0 100644
          if (!structuralSource && isCppErasedDynamicValueTypeCpp(structuralSourceType)) {
            if (representedErasedStructuralSource && representedErasedStructuralProjection) {
              const sourceName = describeDeclaredIrTypeForDiagnosticCpp(representedErasedStructuralSource.type);
-@@ -14407,7 +14413,10 @@ function emitUnionMemberAssertionCpp(
+@@ -14573,7 +14579,10 @@
        : getIrExpressionTypeEvidenceCpp(expression, context);
    const union = sourceType ? getIrUnionTypeCpp(sourceType, context, new Set()) : undefined;
    if (!union) return undefined;
@@ -112,7 +109,7 @@ index fae6209..aa2adc0 100644
    // The comparison below is between VALUE representations, and a TypeScript alias does not introduce
    // one: `type Slot = string | Runtime` and `type First = Second = Runtime` name the same alternative
    // the union already stores, so an assertion spelled through either has to match the slot it names.
-@@ -14425,6 +14434,43 @@ function emitUnionMemberAssertionCpp(
+@@ -14591,6 +14600,43 @@
    // refuses rather than emitting something that cannot compile.
    const assertedUnion = getIrUnionTypeCpp(assertedType, context, new Set());
    const assertedPlan = assertedUnion ? getCppUnionRepresentationPlan(assertedUnion, context) : undefined;
@@ -156,7 +153,7 @@ index fae6209..aa2adc0 100644
    const structuralAlternative = getCppStructuralUnionAssertionAlternativeCpp(plan, assertedPlan, assertedType, context);
    if (structuralAlternative) {
      emissionError(
-@@ -14469,6 +14498,7 @@ function emitUnionMemberAssertionCpp(
+@@ -14635,6 +14681,7 @@
        narrowing !== undefined ||
        structuralNarrowing ||
        partialStructuralNarrowing !== undefined ||
@@ -164,7 +161,7 @@ index fae6209..aa2adc0 100644
        slot.targetType === assertedTarget ||
        slot.sourceAlternatives.some((member) => isDeepStrictEqual(member, assertedType)) ||
        isCppNominalHeritageUnionSlotCpp(slot, assertedType, context),
-@@ -14588,12 +14618,9 @@ function emitUnionMemberAssertionCpp(
+@@ -14754,12 +14801,9 @@
      // lowered yet when what actually blocks it is identity the carrier never held.
      const projectedImplementor =
        !namesSourceUnion && isCppProjectedInterfaceImplementorAssertionCpp(assertedType, assertedPlan, plan, context);
@@ -180,7 +177,7 @@ index fae6209..aa2adc0 100644
      if (missingStructuralOwner) {
        refuseCppStructuralAssertionOwnerUnprovenCpp(
          context,
-@@ -14652,6 +14679,18 @@ function emitUnionMemberAssertionCpp(
+@@ -14818,6 +14862,18 @@
        const target = getCppSingleStructuralAliasUnionTargetTypeCpp(assertedPlan!, context);
        return `flight::structural_ref_cast<${target ?? assertedPlan!.valueSlots[0]!.targetType}>(${inner})`;
      }
@@ -199,7 +196,7 @@ index fae6209..aa2adc0 100644
      if (cast === undefined) return inner;
      context.includes.add('memory');
      return `std::static_pointer_cast<${cast}>(${inner})`;
-@@ -14661,6 +14700,20 @@ function emitUnionMemberAssertionCpp(
+@@ -14827,6 +14883,20 @@
      context.includes.add('optional');
      return `([&]() -> ${emitType(assertedType, context)} { auto ${source} = ${value}; if (!${source}.has_value()) return std::nullopt; return ${narrowed(`${source}.value()`)}; }())`;
    }

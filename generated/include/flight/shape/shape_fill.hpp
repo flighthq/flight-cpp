@@ -67,7 +67,7 @@ inline bool has_non_solid_shape_fill(flight::Array<flight::types::ShapeCommandTo
     if (((name == flight::String("beginGradientFill")) || (name == flight::String("beginTextureFill")))) {
       return true;
     }
-    if (((name == flight::String("drawTriangles")) && commands.get(((i + 2.0) + 2.0)).has_value())) {
+    if (((name == flight::String("drawTriangles")) && ([&]() { const auto& presence_operand = commands.get(((i + 2.0) + 2.0)); return !presence_operand.has_value() || presence_operand.value().has_value(); }()))) {
       return true;
     }
     (i += (2.0 + arg_count));

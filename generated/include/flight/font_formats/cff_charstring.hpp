@@ -4,17 +4,14 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function runCffCharstring -- source line 41
-#include <cmath>
-#include <cstddef>
 #include <flight/data_view.hpp>
-#include <flight/sequence_view.hpp>
-#include <flight/structural_ref.hpp>
-#include <functional>
 #include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
+
+namespace flight::types { struct Path; }
 
 namespace flight::font_formats {
 
@@ -65,25 +62,6 @@ inline std::optional<flight::Ref<cursor_value_154f29f92ab1835d>> read_cff_charst
   }
   return std::optional<flight::Ref<cursor_value_154f29f92ab1835d>>{flight::make_ref<cursor_value_154f29f92ab1835d>(cursor_value_154f29f92ab1835d{.cursor = (cursor + 4.0), .value = (view.get_int32(cursor) / 65536.0)})};
 }
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_FONT_FORMATS_END_START_5A7F0229CF226E65
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_FONT_FORMATS_END_START_5A7F0229CF226E65
-struct end_start_5a7f0229cf226e65 : public flight::ReferenceEnabled {
-  double end;
-  double start;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_FONT_FORMATS_END_START_5A7F0229CF226E65
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_FONT_FORMATS_OPEN_STEM_COUNT_WIDTH_PARSED_X_Y_0375DBBFD7689F6B
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_FONT_FORMATS_OPEN_STEM_COUNT_WIDTH_PARSED_X_Y_0375DBBFD7689F6B
-struct open_stem_count_width_parsed_x_y_0375dbbfd7689f6b : public flight::ReferenceEnabled {
-  bool open;
-  double stem_count;
-  bool width_parsed;
-  double x;
-  double y;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_FONT_FORMATS_OPEN_STEM_COUNT_WIDTH_PARSED_X_Y_0375DBBFD7689F6B
 
 
 // NOT GENERATED: function runCffCharstring -- source line 41

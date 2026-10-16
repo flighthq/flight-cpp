@@ -16,8 +16,6 @@ namespace flight::types { struct Path; }
 
 namespace flight::scene2d_formats {
 
-using flight::path::reverse_path;
-
 using flight::types::Path;
 
 inline flight::Ref<flight::types::Path> apply_lottie_shape_direction(flight::Ref<flight::types::Path> path, std::optional<double> direction) {

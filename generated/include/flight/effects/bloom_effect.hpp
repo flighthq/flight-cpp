@@ -57,17 +57,17 @@ inline flight::Ref<flight::types::EffectPadding> get_bloom_effect_padding(flight
   return flight::effects::get_gaussian_effect_padding(radius, radius);
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_INTENSITY_RADIUS_THRESHOLD_PASSES_4477E1190EB7EC65
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_INTENSITY_RADIUS_THRESHOLD_PASSES_4477E1190EB7EC65
-struct intensity_radius_threshold_passes_4477e1190eb7ec65 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_INTENSITY_PASSES_RADIUS_THRESHOLD_078D8D5FA4796CB3
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_INTENSITY_PASSES_RADIUS_THRESHOLD_078D8D5FA4796CB3
+struct intensity_passes_radius_threshold_078d8d5fa4796cb3 : public flight::ReferenceEnabled {
   std::optional<double> intensity;
+  std::optional<double> passes;
   std::optional<double> radius;
   std::optional<double> threshold;
-  std::optional<double> passes;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_INTENSITY_RADIUS_THRESHOLD_PASSES_4477E1190EB7EC65
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_INTENSITY_PASSES_RADIUS_THRESHOLD_078D8D5FA4796CB3
 
-inline void initialize_bloom_effect(flight::types::EntityConstruction<flight::Ref<flight::types::BloomEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_radius_threshold_passes_4477e1190eb7ec65>>>> options) {
+inline void initialize_bloom_effect(flight::types::EntityConstruction<flight::Ref<flight::types::BloomEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_passes_radius_threshold_078d8d5fa4796cb3>>>> options) {
   flight::effects::initialize_effect<flight::Ref<flight::types::BloomEffect>>(out, flight::String("BloomEffect"));
   flight::row_set<flight::RowKey<"threshold">>(out, flight::row_get<flight::RowKey<"threshold">>(options));
   flight::row_set<flight::RowKey<"intensity">>(out, flight::row_get<flight::RowKey<"intensity">>(options));
@@ -75,8 +75,8 @@ inline void initialize_bloom_effect(flight::types::EntityConstruction<flight::Re
   flight::row_set<flight::RowKey<"passes">>(out, flight::row_get<flight::RowKey<"passes">>(options));
 }
 
-inline flight::Ref<flight::types::BloomEffect> create_bloom_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_radius_threshold_passes_4477e1190eb7ec65>>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_radius_threshold_passes_4477e1190eb7ec65>>>>());
+inline flight::Ref<flight::types::BloomEffect> create_bloom_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_passes_radius_threshold_078d8d5fa4796cb3>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<intensity_passes_radius_threshold_078d8d5fa4796cb3>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::BloomEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::BloomEffect>>();
   initialize_bloom_effect(out, options.value());
   return flight::entity::finish_entity<flight::Ref<flight::types::BloomEffect>>(out);

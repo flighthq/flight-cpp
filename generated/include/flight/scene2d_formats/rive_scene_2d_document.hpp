@@ -124,7 +124,7 @@ inline void collect_rive_slots(flight::types::Node2D node, flight::SequenceView<
     slots.push(([=]() {
   flight::types::EntityConstruction<flight::Ref<flight::types::Scene2DSlotReference>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Scene2DSlotReference>>();
   flight::row_set<flight::RowKey<"content">>(out, std::nullopt);
-  flight::row_set<flight::RowKey<"linkage">>(out, (!target.has_value() ? std::nullopt : std::optional<flight::String>{flight::row_get<flight::RowKey<"name">>(target)}));
+  flight::row_set<flight::RowKey<"linkage">>(out, (([&]() { const auto& presence_operand = target; return !presence_operand.has_value(); }()) ? std::nullopt : std::optional<flight::String>{flight::row_get<flight::RowKey<"name">>(target)}));
   flight::row_set<flight::RowKey<"name">>(out, ((flight::row_get<flight::RowKey<"name">>(node).has_value() && (flight::row_get<flight::RowKey<"name">>(node) != flight::String(""))) ? flight::row_get<flight::RowKey<"name">>(node) : flight::row_get<flight::RowKey<"name">>(target)));
   flight::row_set<flight::RowKey<"required">>(out, false);
   flight::row_set<flight::RowKey<"target">>(out, node);

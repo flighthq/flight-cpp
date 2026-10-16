@@ -33,6 +33,7 @@ namespace flight::types { struct WgpuRenderStateRuntime; }
 
 namespace flight::render_wgpu { inline flight::Ref<flight::types::WgpuDeviceRuntimeResources> get_wgpu_render_state_device_resources(flight::Ref<flight::types::WgpuRenderState> state); }
 namespace flight::render_wgpu { inline flight::Ref<flight::types::WgpuRenderStateRuntime> get_wgpu_render_state_runtime(flight::Ref<flight::types::WgpuRenderState> state); }
+namespace flight::render_wgpu { inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuRenderPassViewport>>>> get_wgpu_render_pass_viewport(flight::Ref<flight::types::WgpuRenderState> state); }
 
 namespace flight::render_wgpu {
 

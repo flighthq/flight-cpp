@@ -387,13 +387,13 @@ struct binding_uid_color_adjustments_color_adjustments_unsupported_resolved_colo
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_NODE_BINDING_UID_COLOR_ADJUSTMENTS_COLOR_ADJUSTMENTS_UNSUPPORTED_RESOLVED_COLOR_MATRIX_RESOLVED_COLOR_SCALE_BIAS_APPEARANCE_ID_BOUNDS_USING_LOCAL_BOUNDS_ID_BOUNDS_USING_LOCAL_TRANSFORM_ID_CAN_ADD_CHILD_CHILDREN_CHILDREN_ID_TRAITS_INTERACTION_SIGNALS_LOCAL_BOUNDS_ID_LOCAL_BOUNDS_USING_LOCAL_BOUNDS_ID_LOCAL_CONTENT_ID_LOCAL_TRANSFORM_ID_LOCAL_TRANSFORM_USING_LOCAL_TRANSFORM_ID_NODE_SIGNALS_INTERACTION_STATE_PARENT_PARENT_REFERENCE_ID_WORLD_BOUNDS_USING_LOCAL_BOUNDS_ID_WORLD_BOUNDS_USING_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_USING_LOCAL_TRANSFORM_ID_WORLD_TRANSFORM_USING_PARENT_TRANSFORM_ID_BOUNDS_RECTANGLE_COMPUTE_LOCAL_BOUNDS_RECTANGLE_IS_LOCAL_BOUNDS_RECTANGLE_VALID_LOCAL_BOUNDS_RECTANGLE_WORLD_BOUNDS_RECTANGLE_LOCAL_MATRIX_ROTATION_ANGLE_ROTATION_COSINE_ROTATION_SINE_WORLD_MATRIX_3E9E9DF3AB2516EF
 
 template <typename Traits>
-inline flight::Ref<binding_uid_color_adjustments_color_adjustments_unsupported_resolved_color_matrix_resolved_color_scale_bias_appearance_id_bounds_using_local_bounds_id_bounds_using_local_transform_id_can_add_child_children_children_id_traits_interaction_signals_local_bounds_id_local_bounds_using_local_bounds_id_local_content_id_local_transform_id_local_transform_using_local_transform_id_node_signals_interaction_state_parent_parent_reference_id_world_bounds_using_local_bounds_id_world_bounds_using_world_transform_id_world_transform_id_world_transform_using_local_transform_id_world_transform_using_parent_transform_id_bounds_rectangle_compute_local_bounds_rectangle_is_local_bounds_rectangle_valid_local_bounds_rectangle_world_bounds_rectangle_local_matrix_rotation_angle_rotation_cosine_rotation_sine_world_matrix_3e9e9df3ab2516ef<Traits>> get_spatial2_druntime(flight::Ref<Spatial2DRuntimeOwner<Traits>> target) {
+inline flight::Ref<binding_uid_color_adjustments_color_adjustments_unsupported_resolved_color_matrix_resolved_color_scale_bias_appearance_id_bounds_using_local_bounds_id_bounds_using_local_transform_id_can_add_child_children_children_id_traits_interaction_signals_local_bounds_id_local_bounds_using_local_bounds_id_local_content_id_local_transform_id_local_transform_using_local_transform_id_node_signals_interaction_state_parent_parent_reference_id_world_bounds_using_local_bounds_id_world_bounds_using_world_transform_id_world_transform_id_world_transform_using_local_transform_id_world_transform_using_parent_transform_id_bounds_rectangle_compute_local_bounds_rectangle_is_local_bounds_rectangle_valid_local_bounds_rectangle_world_bounds_rectangle_local_matrix_rotation_angle_rotation_cosine_rotation_sine_world_matrix_3e9e9df3ab2516ef<Traits>> get_spatial_2d_runtime(flight::Ref<Spatial2DRuntimeOwner<Traits>> target) {
   return target->entity_runtime_key.value();
 }
 
 template <typename Traits>
 inline void ensure_node_parent_bounds_rectangle(flight::types::Spatial2DNode<Traits> target) {
-  auto runtime = get_spatial2_druntime(target);
+  auto runtime = get_spatial_2d_runtime(target);
   if (((!is_node_local_bounds_rectangle_valid(target, runtime) || (runtime->bounds_using_local_bounds_id != runtime->local_bounds_id)) || (runtime->bounds_using_local_transform_id != runtime->local_transform_id))) {
     recompute_node_bounds_rectangle<Traits>(target, runtime);
   }
@@ -501,7 +501,7 @@ inline void recompute_world_bounds_rectangle(flight::types::Spatial2DNode<Traits
 
 template <typename Traits>
 inline void ensure_node_world_bounds_rectangle(flight::types::Spatial2DNode<Traits> target) {
-  auto runtime = get_spatial2_druntime(target);
+  auto runtime = get_spatial_2d_runtime(target);
   const bool local_bounds_invalid = (!is_node_local_bounds_rectangle_valid(target, runtime) || (runtime->world_bounds_using_local_bounds_id != runtime->local_bounds_id));
   const bool has_children = (flight::node::get_node_child_count(target) != 0.0);
   bool force_recompute = false;
@@ -521,7 +521,7 @@ inline void ensure_node_world_bounds_rectangle(flight::types::Spatial2DNode<Trai
 template <typename Traits>
 inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>> get_node_world_bounds_rectangle(flight::types::Spatial2DNode<Traits> target) {
   ensure_node_world_bounds_rectangle<Traits>(target);
-  return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(get_spatial2_druntime(target)->world_bounds_rectangle.value()));
+  return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(get_spatial_2d_runtime(target)->world_bounds_rectangle.value()));
 }
 
 template <typename Traits>
@@ -536,7 +536,7 @@ inline bool ensure_node_child_world_bounds_rectangles(flight::types::Spatial2DNo
       continue;
     }
     flight::types::Spatial2DNode<Traits> child_node = flight::structural_ref_cast<flight::types::Spatial2DNode<Traits>>(child);
-    auto runtime = get_spatial2_druntime(child_node);
+    auto runtime = get_spatial_2d_runtime(child_node);
     auto previous = runtime->world_bounds_rectangle;
     const std::optional<double> previous_x = ([&]() -> std::optional<double> { auto optional_chain_receiver = previous; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->x; }());
     const std::optional<double> previous_y = ([&]() -> std::optional<double> { auto optional_chain_receiver = previous; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->y; }());
@@ -576,7 +576,7 @@ inline void recompute_world_bounds_rectangle(flight::types::Spatial2DNode<Traits
 template <typename Traits>
 inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>> get_node_parent_bounds_rectangle(flight::types::Spatial2DNode<Traits> target) {
   ensure_node_parent_bounds_rectangle<Traits>(target);
-  return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(get_spatial2_druntime(target)->bounds_rectangle.value()));
+  return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(get_spatial_2d_runtime(target)->bounds_rectangle.value()));
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_NODE_BINDING_UID_COLOR_ADJUSTMENTS_COLOR_ADJUSTMENTS_UNSUPPORTED_RESOLVED_COLOR_MATRIX_RESOLVED_COLOR_SCALE_BIAS_APPEARANCE_ID_BOUNDS_USING_LOCAL_BOUNDS_ID_BOUNDS_USING_LOCAL_TRANSFORM_ID_CAN_ADD_CHILD_CHILDREN_CHILDREN_ID_TRAITS_INTERACTION_SIGNALS_LOCAL_BOUNDS_ID_LOCAL_BOUNDS_USING_LOCAL_BOUNDS_ID_LOCAL_CONTENT_ID_LOCAL_TRANSFORM_ID_LOCAL_TRANSFORM_USING_LOCAL_TRANSFORM_ID_NODE_SIGNALS_INTERACTION_STATE_PARENT_PARENT_REFERENCE_ID_WORLD_BOUNDS_USING_LOCAL_BOUNDS_ID_WORLD_BOUNDS_USING_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_USING_LOCAL_TRANSFORM_ID_WORLD_TRANSFORM_USING_PARENT_TRANSFORM_ID_BOUNDS_RECTANGLE_COMPUTE_LOCAL_BOUNDS_RECTANGLE_IS_LOCAL_BOUNDS_RECTANGLE_VALID_LOCAL_BOUNDS_RECTANGLE_WORLD_BOUNDS_RECTANGLE_LOCAL_MATRIX_ROTATION_ANGLE_ROTATION_COSINE_ROTATION_SINE_WORLD_MATRIX_FA3629BB778B9257

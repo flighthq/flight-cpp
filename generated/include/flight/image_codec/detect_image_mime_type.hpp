@@ -41,7 +41,7 @@ inline bool is_avif_file_type_box(flight::Uint8Array bytes) {
 }
 
 inline std::optional<flight::String> detect_image_mime_type(std::variant<flight::ArrayBuffer, flight::Uint8Array> data) {
-  flight::Uint8Array b = (data.index() == 1 ? std::get<1>(data) : flight::Uint8Array(std::get<0>(data)));
+  flight::Uint8Array b = (data.index() == 1 ? std::get<1>(data) : flight::Uint8Array(data));
   if ((static_cast<double>(b.byte_length) < 4.0)) {
     return std::nullopt;
   }

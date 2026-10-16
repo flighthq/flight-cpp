@@ -2,7 +2,6 @@
 #pragma once
 #include <flight/boolean.hpp>
 #include <flight/structural_ref.hpp>
-#include <flight/types/contract.hpp>
 #include <optional>
 #include <flight/runtime.hpp>
 

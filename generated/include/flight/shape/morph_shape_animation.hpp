@@ -53,7 +53,7 @@ inline flight::Ref<flight::types::MorphShapeAnimationTarget> create_morph_shape_
 inline flight::Array<double> morph_shape_animation_scratch = flight::Array<double>{0.0};
 
 inline void apply_animation_clip_to_morph_shape(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationClip>>>> clip, double time) {
-  flight::animation::sample_animation_clip(std::variant<flight::Array<double>, flight::Float32Array>{std::in_place_type<flight::Array<double>>, morph_shape_animation_scratch}, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationClip>>>>>(clip), time, apply_morph_shape_animation_sample);
+  flight::animation::sample_animation_clip(std::variant<flight::Array<double>, flight::Float32Array>{std::in_place_type<flight::Array<double>>, morph_shape_animation_scratch}, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationClip>>>>>(clip), time, [](std::variant<flight::Array<double>, flight::Float32Array> contextual_callable_argument0, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationChannel>>>> contextual_callable_argument1, double contextual_callable_argument2) -> void { apply_morph_shape_animation_sample(contextual_callable_argument0, contextual_callable_argument1); });
 }
 
 } // namespace flight::shape

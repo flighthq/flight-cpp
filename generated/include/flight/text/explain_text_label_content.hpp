@@ -11,13 +11,20 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/text_label.hpp>
 
+namespace flight::types { struct Node2DRuntime; }
+namespace flight::types { struct TextLabel; }
+namespace flight::types { struct TextLabelContentExplanation; }
+namespace flight::types { struct TextLabelData; }
+namespace flight::types { struct TextLabelRuntime; }
+
 namespace flight::text {
 
 using flight::types::TextLabel;
+using flight::types::TextLabelData;
 
 
 // NOT GENERATED: function explainTextLabelContent -- source line 5
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function explainTextLabelContent(source: Readonly<TextLabel>): TextLabelContentExplanation {
@@ -33,12 +40,23 @@ using flight::types::TextLabel;
 //     };
 //   }
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/explainTextLabelContent.ts: a reference assertion
-// from flight::Ref<Node2DRuntime> to flight::Ref<TextLabelRuntime> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// cpp emission failed for @flighthq/text/packages/text/src/explainTextLabelContent.ts: a structural assertion
+// from the readonly row Readonly<Node2DRuntime> to the writable row TextLabelRuntime claims mutation the source
+// refused: a readonly row never becomes writable, because the boundary the value came through said its subject
+// must not be mutated through it, and no cast, copy, or re-view can carry a capability the source withheld.
+// Assert to the readonly row where the value is only read, or declare the source -- its parameter, slot, or
+// accessor result -- as the writable type where that object may really be mutated. Choosing between those two
+// repairs is the question this assertion was answering, so ask it of the value's ROLE rather than of its
+// spelling: a RUNTIME OWNER that the mutating paths must write needs a mutable-source accessor returning the
+// full writable owner from the typed runtime slot, with the readonly accessor kept for reads, because the
+// capability has to exist on the storage and accessor that establish those cells; a NODE that the read paths
+// only traverse and never mutate needs the two authorities separated instead, with a readonly view on every read
+// path and a separate mutable entry point for the paths that really mutate, because laundering a writable node
+// out of a readonly boundary grants mutation no caller asked for. Both repairs keep the exact Traits or generic
+// specialization the retained row carries; neither adds cells to a row that does not declare them. Making only
+// that boundary writable is insufficient here: the source owner does not declare buildTextLayoutParams,
+// textLayout, textLayoutUsingContentId and textLayoutUsingText, so it has no cells for the asserted row to
+// mutate. Declare both the storage slot and the accessor result as the full writable TextLabelRuntime row where
+// initialization establishes those cells, rather than widening Readonly<Node2DRuntime> at the use site.
 
 } // namespace flight::text

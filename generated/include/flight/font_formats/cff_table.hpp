@@ -72,7 +72,7 @@ inline std::optional<flight::Array<flight::Array<flight::Ref<flight::types::CffI
     while ((glyph < glyph_count)) {
       {
         std::optional<flight::Array<flight::Ref<flight::types::CffIndexEntry>>> pool = pools.get(select.value().get_index(glyph));
-        if (!pool.has_value()) {
+        if (([&]() { const auto& presence_operand = pool; return !presence_operand.has_value(); }())) {
           return std::nullopt;
         }
         by_glyph.push(pool.value());

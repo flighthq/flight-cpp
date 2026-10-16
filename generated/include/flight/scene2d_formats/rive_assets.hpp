@@ -3,8 +3,10 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function readRiveNumber -- source line 119
-//   missing: function readRiveText -- source line 124
+//   missing: function registerRiveAssetHandlers -- source line 99
+#include <flight/optional_variant.hpp>
+#include <flight/sequence_view.hpp>
+#include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
 #include <variant>
@@ -13,29 +15,32 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
-
 #include <flight/types/rive_import_registry.hpp>
 
 #include <flight/types/rive_document.hpp>
 
-#include <flight/types/partial_node.hpp>
-
 #include <flight/types/import_diagnostic.hpp>
 
-#include <flight/types/display_object.hpp>
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct RiveArtboardGraph; }
+namespace flight::types { struct RiveArtboardImportContext; }
+namespace flight::types { struct RiveCoreObject; }
+namespace flight::types { struct RiveCoreObjectHandler; }
+namespace flight::types { struct RiveDocumentImportContext; }
+namespace flight::types { struct RiveFileAsset; }
+namespace flight::types { struct RiveImportRegistry; }
+namespace flight::types { struct RiveProperty; }
 
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+#include <flight/scene2d/display_object.hpp>
+#include <flight/types/contract.hpp>
 #include <flight/scene2d_formats/rive_asset_binding.hpp>
 #include <flight/scene2d_formats/rive_core_types.hpp>
-#include <flight/scene2d_formats/rive_import_registry.hpp>
 
 namespace flight::scene2d_formats {
 
-using flight::importdiagnostics::report_import_diagnostic;
-
-using flight::types::DisplayObject;
 using flight::types::ImportDiagnostic;
-using flight::types::PartialNode;
+using flight::types::RiveArtboardGraph;
 using flight::types::RiveArtboardImportContext;
 using flight::types::RiveCoreObject;
 using flight::types::RiveCoreObjectHandler;
@@ -43,44 +48,21 @@ using flight::types::RiveDocumentImportContext;
 using flight::types::RiveFileAsset;
 using flight::types::RiveImportRegistry;
 using flight::types::RiveProperty;
-using flight::types::import_diagnostic_severity;
 
-inline std::optional<flight::Uint8Array> read_rive_bytes(flight::Ref<RiveCoreObject> source, double key) {
-  std::optional<flight::Ref<RiveProperty>> property = source->properties.find([=](flight::Ref<RiveProperty> candidate) { return (candidate->key == key); });
-  return ((!property.has_value() || !(property.value()->value instanceof flight::Uint8Array)) ? std::nullopt : std::optional<flight::Uint8Array>{property.value()->value});
+inline std::optional<flight::Uint8Array> read_rive_bytes_flight_value_function_read_u000052_ive_u000042_ytes_flight_private_c3a6f49ed54e0962(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>> source, double key) {
+  auto property = flight::row_get<flight::RowKey<"properties">>(source).find([=](flight::Ref<flight::types::RiveProperty> candidate) { return (candidate->key == key); });
+  return ((!property.has_value() || !(flight::union_kind_if<flight::Uint8Array>(property.value()->value) != nullptr)) ? std::nullopt : std::optional<flight::Uint8Array>{std::get<0>(property.value()->value)});
 }
 
+inline double read_rive_number_flight_value_function_read_u000052_ive_u00004e_umber_flight_private_c3a6f49ed54e0962(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>> source, double key, double fallback) {
+  auto property = flight::row_get<flight::RowKey<"properties">>(source).find([=](flight::Ref<flight::types::RiveProperty> candidate) { return (candidate->key == key); });
+  return ((!property.has_value() || !(std::holds_alternative<double>(property.value()->value))) ? fallback : std::get<1>(property.value()->value));
+}
 
-// NOT GENERATED: function readRiveNumber -- source line 119
-// refusal: cpp-typeof-runtime-domain-unrepresented [source-portability]
-//
-// The source it stood for:
-//   function readRiveNumber(source: Readonly<RiveCoreObject>, key: number, fallback: number): number {
-//     const property = source.properties.find((candidate) => candidate.key === key);
-//     return property === undefined || typeof property.value !== 'number' ? fallback : property.value;
-//   }
-//   
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssets.ts: typeof requires
-// closed runtime type evidence: the declared type does not decide it, and the target cannot ask a value it
-// stores as a concrete carrier. State the type where the value is read: a closed union whose alternatives are
-// distinguishable is lowered as a variant test, and a value the runtime owns -- a parameter declared `unknown`
-// or `any` -- is answered by the runtime's own `typeof`
-
-
-// NOT GENERATED: function readRiveText -- source line 124
-// refusal: cpp-typeof-runtime-domain-unrepresented [source-portability]
-//
-// The source it stood for:
-//   function readRiveText(source: Readonly<RiveCoreObject>, key: number, fallback: string): string {
-//     const property = source.properties.find((candidate) => candidate.key === key);
-//     return property === undefined || typeof property.value !== 'string' ? fallback : property.value;
-//   }
-//   
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssets.ts: typeof requires
-// closed runtime type evidence: the declared type does not decide it, and the target cannot ask a value it
-// stores as a concrete carrier. State the type where the value is read: a closed union whose alternatives are
-// distinguishable is lowered as a variant test, and a value the runtime owns -- a parameter declared `unknown`
-// or `any` -- is answered by the runtime's own `typeof`
+inline flight::String read_rive_text_flight_value_function_read_u000052_ive_u000054_ext_flight_private_c3a6f49ed54e0962(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>> source, double key, flight::String fallback) {
+  auto property = flight::row_get<flight::RowKey<"properties">>(source).find([=](flight::Ref<flight::types::RiveProperty> candidate) { return (candidate->key == key); });
+  return ((!property.has_value() || !(std::holds_alternative<flight::String>(property.value()->value))) ? fallback : std::get<2>(property.value()->value));
+}
 
 inline const double rive_nested_artboard = 92.0;
 
@@ -92,24 +74,24 @@ inline const double rive_file_asset = 103.0;
 
 inline const double rive_file_asset_contents = 106.0;
 
-inline const double rive_name = 4.0;
+inline const double rive_name_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u00004e__u000041__u00004d__u000045__flight_private_c3a6f49ed54e0962 = 4.0;
 
 inline const double rive_nested_artboard_id = 197.0;
 
-inline std::optional<flight::Ref<DisplayObject>> import_rive_nested_artboard_component(flight::Ref<RiveArtboardImportContext> context, double index) {
-  flight::Ref<RiveCoreObject> object = context->artboard.objects.element(index);
-  flight::Ref<DisplayObject> node = create_display_object(flight::make_ref<PartialNode<flight::Ref<DisplayObject>>>(PartialNode<flight::Ref<DisplayObject>>{.name = read_rive_text(object, rive_name, flight::String(""))}));
-  mark_rive_nested_artboard(node, read_rive_number(object, rive_nested_artboard_id, -1.0));
-  return std::optional<flight::Ref<DisplayObject>>{node};
+inline std::optional<flight::types::DisplayObject> import_rive_nested_artboard_component(flight::Ref<flight::types::RiveArtboardImportContext> context, double index) {
+  auto object = context->artboard->objects.element(index);
+  flight::types::DisplayObject node = flight::scene2d::create_display_object(flight::make_structural_ref<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::types::DisplayObject>>>>(flight::row_field<flight::RowKey<"name">>(std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, read_rive_text_flight_value_function_read_u000052_ive_u000054_ext_flight_private_c3a6f49ed54e0962(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(object)), rive_name_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u00004e__u000041__u00004d__u000045__flight_private_c3a6f49ed54e0962, flight::String(""))})));
+  flight::scene2d_formats::mark_rive_nested_artboard(node, read_rive_number_flight_value_function_read_u000052_ive_u00004e_umber_flight_private_c3a6f49ed54e0962(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(object)), rive_nested_artboard_id, -1.0));
+  return std::optional<flight::types::DisplayObject>{node};
 }
 
 inline const double rive_asset_name = 203.0;
 
 inline const double rive_image_asset_id = 206.0;
 
-inline std::optional<flight::Ref<DisplayObject>> import_rive_image_component(flight::Ref<RiveArtboardImportContext> context, double index) {
-  flight::Ref<RiveCoreObject> object = context->artboard.objects.element(index);
-  return std::optional<flight::Ref<DisplayObject>>{create_rive_image_sprite(read_rive_text(object, rive_name, flight::String("")), read_rive_number(object, rive_image_asset_id, -1.0))};
+inline std::optional<flight::types::DisplayObject> import_rive_image_component(flight::Ref<flight::types::RiveArtboardImportContext> context, double index) {
+  auto object = context->artboard->objects.element(index);
+  return std::optional<flight::types::DisplayObject>{flight::scene2d_formats::create_rive_image_sprite(read_rive_text_flight_value_function_read_u000052_ive_u000054_ext_flight_private_c3a6f49ed54e0962(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(object)), rive_name_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u00004e__u000041__u00004d__u000045__flight_private_c3a6f49ed54e0962, flight::String("")), read_rive_number_flight_value_function_read_u000052_ive_u00004e_umber_flight_private_c3a6f49ed54e0962(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(object)), rive_image_asset_id, -1.0))};
 }
 
 inline const double rive_asset_height = 207.0;
@@ -120,32 +102,51 @@ inline const double rive_asset_bytes = 212.0;
 
 inline const double rive_asset_cdn_base_url = 362.0;
 
-inline flight::Array<flight::Ref<RiveFileAsset>> create_rive_file_assets(flight::Array<flight::Ref<RiveCoreObject>> objects, std::optional<flight::Array<flight::Ref<ImportDiagnostic>>> diagnostics = std::nullopt) {
-  flight::Array<flight::Ref<RiveFileAsset>> assets = flight::Array<flight::Ref<RiveFileAsset>>{};
+inline flight::Array<flight::Ref<flight::types::RiveFileAsset>> create_rive_file_assets(flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>> objects, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
+  flight::Array<flight::Ref<flight::types::RiveFileAsset>> assets = flight::Array<flight::Ref<flight::types::RiveFileAsset>>{};
   for (auto object : objects) {
-    if (is_rive_core_type_derived_from(object->type_key, rive_file_asset)) {
-      assets.push(flight::make_ref<RiveFileAsset>(RiveFileAsset{.bytes = nullptr, .cdn_base_url = read_rive_text(object, rive_asset_cdn_base_url, flight::String("")), .height = read_rive_number(object, rive_asset_height, 0.0), .kind = ([&]() -> flight::String { auto nullish_coalesce_left = get_rive_core_type_name(object->type_key); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }()), .name = read_rive_text(object, rive_asset_name, flight::String("")), .width = read_rive_number(object, rive_asset_width, 0.0)}));
+    if (flight::scene2d_formats::is_rive_core_type_derived_from(flight::row_get<flight::RowKey<"typeKey">>(object), rive_file_asset)) {
+      assets.push(flight::make_ref<flight::types::RiveFileAsset>(flight::types::RiveFileAsset{.bytes = std::nullopt, .cdn_base_url = read_rive_text_flight_value_function_read_u000052_ive_u000054_ext_flight_private_c3a6f49ed54e0962(object, rive_asset_cdn_base_url, flight::String("")), .height = read_rive_number_flight_value_function_read_u000052_ive_u00004e_umber_flight_private_c3a6f49ed54e0962(object, rive_asset_height, 0.0), .kind = ([&]() -> flight::String { auto nullish_coalesce_left = flight::scene2d_formats::get_rive_core_type_name(flight::row_get<flight::RowKey<"typeKey">>(object)); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }()), .name = read_rive_text_flight_value_function_read_u000052_ive_u000054_ext_flight_private_c3a6f49ed54e0962(object, rive_asset_name, flight::String("")), .width = read_rive_number_flight_value_function_read_u000052_ive_u00004e_umber_flight_private_c3a6f49ed54e0962(object, rive_asset_width, 0.0)}));
       continue;
     }
-    if ((object->type_key != rive_file_asset_contents)) {
+    if ((flight::row_get<flight::RowKey<"typeKey">>(object) != rive_file_asset_contents)) {
       continue;
     }
     if ((static_cast<double>(assets.size()) == 0.0)) {
-      report_import_diagnostic(diagnostics, import_diagnostic_severity.drop, flight::String("rive.asset-contents-unowned"), flight::String("createRiveFileAssets"), {{flight::String("bytes"), std::variant<bool, double, flight::String>{std::in_place_type<double>, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = read_rive_bytes(object, rive_asset_bytes); if (!optional_chain_receiver.has_value()) return std::nullopt; return static_cast<double>(optional_chain_receiver.value().size()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }())}}});
+      flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("rive.asset-contents-unowned"), flight::String("createRiveFileAssets"), {{flight::String("bytes"), std::variant<bool, double, flight::String>{std::in_place_type<double>, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = read_rive_bytes_flight_value_function_read_u000052_ive_u000042_ytes_flight_private_c3a6f49ed54e0962(object, rive_asset_bytes); if (!optional_chain_receiver.has_value()) return std::nullopt; return static_cast<double>(optional_chain_receiver.value().size()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }())}}});
       continue;
     }
-    (assets.element((static_cast<double>(assets.size()) - 1.0))->bytes = read_rive_bytes(object, rive_asset_bytes));
+    (assets.element((static_cast<double>(assets.size()) - 1.0))->bytes = read_rive_bytes_flight_value_function_read_u000052_ive_u000042_ytes_flight_private_c3a6f49ed54e0962(object, rive_asset_bytes));
   }
   return assets;
 }
 
-inline void register_rive_asset_handlers(flight::Ref<RiveImportRegistry> registry) {
-  register_rive_core_object_handler(registry, rive_file_asset, flight::make_ref<RiveCoreObjectHandler>(RiveCoreObjectHandler{.apply_document = [=](flight::Ref<RiveDocumentImportContext> context) {
-  ([&]() { auto&& array_push_receiver = context->assets; const auto array_push_arguments = ([&]() { flight::Array<flight::Ref<RiveFileAsset>> array_spread_result; for (const auto& array_spread_item : create_rive_file_assets(context->objects, context->diagnostics)) { array_spread_result.push(array_spread_item); } return array_spread_result; }()); for (const auto& array_push_item : array_push_arguments) { array_push_receiver.push(array_push_item); } return static_cast<double>(array_push_receiver.size()); }());
-}}));
-  register_rive_core_object_handler(registry, rive_image, flight::make_ref<RiveCoreObjectHandler>(RiveCoreObjectHandler{.import_component = import_rive_image_component}));
-  register_rive_core_object_handler(registry, rive_nested_artboard, flight::make_ref<RiveCoreObjectHandler>(RiveCoreObjectHandler{.import_component = import_rive_nested_artboard_component}));
-  register_rive_core_object_handler(registry, rive_nested_animation, flight::make_ref<RiveCoreObjectHandler>(RiveCoreObjectHandler{.import_component = import_rive_core_object_as_data}));
-}
+
+// NOT GENERATED: function registerRiveAssetHandlers -- source line 99
+// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+//
+// The source it stood for:
+//   export function registerRiveAssetHandlers(registry: RiveImportRegistry): void {
+//     registerRiveCoreObjectHandler(registry, RIVE_FILE_ASSET, {
+//       applyDocument: (context) => {
+//         context.assets.push(...createRiveFileAssets(context.objects, context.diagnostics));
+//       },
+//     });
+//     registerRiveCoreObjectHandler(registry, RIVE_IMAGE, { importComponent: importRiveImageComponent });
+//     registerRiveCoreObjectHandler(registry, RIVE_NESTED_ARTBOARD, {
+//       importComponent: importRiveNestedArtboardComponent,
+//     });
+//     // A nested animation or state machine drives the artboard the site names; it is read with that
+//     // artboard rather than here, and contributes nothing to this one.
+//     registerRiveCoreObjectHandler(registry, RIVE_NESTED_ANIMATION, { importComponent: importRiveCoreObjectAsData });
+//   }
+//   
+// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssets.ts: contextual union
+// callable value type std::function<flight::Null()> agrees with no alternative's signature: the destination
+// holds
+// [std::function<std::optional<flight::types::DisplayObject>(flight::Ref<flight::types::RiveArtboardImportContext>,
+// double)>]. A callable is a represented domain, so the obstacle is that the destination's signature cannot call
+// this one. Declare the value's parameters so the destination's signature supplies them, and its result as one
+// the destination holds
 
 } // namespace flight::scene2d_formats

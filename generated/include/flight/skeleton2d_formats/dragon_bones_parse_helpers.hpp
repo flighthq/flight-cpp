@@ -29,8 +29,6 @@ namespace flight::types { struct ImportDiagnostic; }
 
 namespace flight::skeleton2d_formats {
 
-using flight::easing::ease_cubic_bezier;
-
 using flight::types::ImportDiagnostic;
 
 inline double number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(flight::Any value, double fallback) {

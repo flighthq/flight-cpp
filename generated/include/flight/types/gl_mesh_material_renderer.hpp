@@ -37,7 +37,7 @@ struct GlMeshMaterialRenderer;
 
 #include <flight/types/camera_3d.hpp>
 #include <flight/types/gl_render_state.hpp>
-#include <flight/types/material3_dvalue.hpp>
+#include <flight/types/material_3d_value.hpp>
 #include <flight/types/mesh_geometry.hpp>
 #include <flight/types/scene_3d_light_block.hpp>
 #include <flight/types/scene_3d_render_proxy.hpp>

@@ -46,21 +46,21 @@ inline flight::Ref<flight::types::EffectPadding> get_convolution_effect_padding(
   return flight::make_ref<flight::types::EffectPadding>(flight::types::EffectPadding{.bottom = offset_y, .left = flight::maximum(0.0, ((flight::row_get<flight::RowKey<"matrixX">>(effect) - 1.0) - offset_x)), .right = offset_x, .top = flight::maximum(0.0, ((flight::row_get<flight::RowKey<"matrixY">>(effect) - 1.0) - offset_y))});
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_MATRIX_CLAMP_MATRIX_X_MATRIX_Y_BIAS_COLOR_DIVISOR_PRESERVE_ALPHA_2DC6796A7A415226
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_MATRIX_CLAMP_MATRIX_X_MATRIX_Y_BIAS_COLOR_DIVISOR_PRESERVE_ALPHA_2DC6796A7A415226
-struct matrix_clamp_matrix_x_matrix_y_bias_color_divisor_preserve_alpha_2dc6796a7a415226 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_MATRIX_CLAMP_BIAS_DIVISOR_MATRIX_X_MATRIX_Y_PRESERVE_ALPHA_COLOR_403B8A3C5921E3E0
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_MATRIX_CLAMP_BIAS_DIVISOR_MATRIX_X_MATRIX_Y_PRESERVE_ALPHA_COLOR_403B8A3C5921E3E0
+struct matrix_clamp_bias_divisor_matrix_x_matrix_y_preserve_alpha_color_403b8a3c5921e3e0 : public flight::ReferenceEnabled {
   flight::Array<double> matrix;
   std::optional<bool> clamp;
+  std::optional<double> bias;
+  std::optional<double> divisor;
   double matrix_x;
   double matrix_y;
-  std::optional<double> bias;
-  std::optional<double> color;
-  std::optional<double> divisor;
   std::optional<bool> preserve_alpha;
+  std::optional<double> color;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_MATRIX_CLAMP_MATRIX_X_MATRIX_Y_BIAS_COLOR_DIVISOR_PRESERVE_ALPHA_2DC6796A7A415226
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_MATRIX_CLAMP_BIAS_DIVISOR_MATRIX_X_MATRIX_Y_PRESERVE_ALPHA_COLOR_403B8A3C5921E3E0
 
-inline void initialize_convolution_effect(flight::types::EntityConstruction<flight::Ref<flight::types::ConvolutionEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<matrix_clamp_matrix_x_matrix_y_bias_color_divisor_preserve_alpha_2dc6796a7a415226>>>> options) {
+inline void initialize_convolution_effect(flight::types::EntityConstruction<flight::Ref<flight::types::ConvolutionEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<matrix_clamp_bias_divisor_matrix_x_matrix_y_preserve_alpha_color_403b8a3c5921e3e0>>>> options) {
   flight::effects::initialize_effect<flight::Ref<flight::types::ConvolutionEffect>>(out, flight::String("ConvolutionEffect"));
   flight::row_set<flight::RowKey<"matrix">>(out, flight::row_get<flight::RowKey<"matrix">>(options));
   flight::row_set<flight::RowKey<"matrixX">>(out, flight::row_get<flight::RowKey<"matrixX">>(options));
@@ -72,7 +72,7 @@ inline void initialize_convolution_effect(flight::types::EntityConstruction<flig
   flight::row_set<flight::RowKey<"preserveAlpha">>(out, flight::row_get<flight::RowKey<"preserveAlpha">>(options));
 }
 
-inline flight::Ref<flight::types::ConvolutionEffect> create_convolution_effect(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<matrix_clamp_matrix_x_matrix_y_bias_color_divisor_preserve_alpha_2dc6796a7a415226>>>> options) {
+inline flight::Ref<flight::types::ConvolutionEffect> create_convolution_effect(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<matrix_clamp_bias_divisor_matrix_x_matrix_y_preserve_alpha_color_403b8a3c5921e3e0>>>> options) {
   flight::types::EntityConstruction<flight::Ref<flight::types::ConvolutionEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::ConvolutionEffect>>();
   initialize_convolution_effect(out, options);
   return flight::entity::finish_entity<flight::Ref<flight::types::ConvolutionEffect>>(out);

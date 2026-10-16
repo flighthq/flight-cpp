@@ -92,7 +92,7 @@ inline void initialize_glyph_outline_source_from_open_type_font(flight::types::E
   }
   if (cff.has_value()) {
     std::optional<flight::Ref<flight::types::CffIndexEntry>> charstring = cff.value()->charstrings.get(glyph_index);
-    if (!charstring.has_value()) {
+    if (([&]() { const auto& presence_operand = charstring; return !presence_operand.has_value(); }())) {
       return false;
     }
     flight::Array<flight::Ref<flight::types::CffIndexEntry>> local_subrs = ([&]() -> std::optional<flight::Array<flight::Ref<flight::types::CffIndexEntry>>> { auto optional_chain_receiver = cff.value()->local_subrs_by_glyph; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().get(glyph_index); }()).value_or(cff.value()->local_subrs);

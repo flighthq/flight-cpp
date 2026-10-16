@@ -46,8 +46,6 @@ namespace flight::types { struct SpineBinaryTimelineContext; }
 
 namespace flight::skeleton2d_formats {
 
-using flight::easing::ease_cubic_bezier;
-
 using flight::types::AnimationChannel;
 using flight::types::AnimationTrack;
 using flight::types::ByteReader;

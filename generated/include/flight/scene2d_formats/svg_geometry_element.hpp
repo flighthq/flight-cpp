@@ -6,6 +6,7 @@
 //   missing: function svgGeometryElementHandler -- source line 41
 #include <cmath>
 #include <cstdint>
+#include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
 #include <random>
@@ -15,17 +16,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/shape/shape_commands.hpp>
-
-#include <flight/path/path.hpp>
-
-#include <flight/path/dash_path.hpp>
-
-#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
-
 #include <flight/types/xml_element.hpp>
 
 #include <flight/types/shape.hpp>
+
+#include <flight/types/rectangle.hpp>
 
 #include <flight/types/path.hpp>
 
@@ -35,33 +30,41 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/import_diagnostic.hpp>
 
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct Path; }
+namespace flight::types { struct Rectangle; }
+namespace flight::types { struct Shape; }
+namespace flight::types { struct SvgColor; }
+namespace flight::types { struct SvgElementContext; }
+namespace flight::types { struct SvgGradient; }
+namespace flight::types { struct SvgGradientStop; }
+namespace flight::types { struct SvgImportContext; }
+namespace flight::types { struct SvgStyle; }
+namespace flight::types { struct XmlElement; }
+namespace flight::types { template <typename Traits> struct Node; }
+
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+#include <flight/path/dash_path.hpp>
+#include <flight/path/get_path_bounds.hpp>
+#include <flight/path/path.hpp>
+#include <flight/shape/shape.hpp>
+#include <flight/shape/shape_commands.hpp>
+#include <flight/types/contract.hpp>
 #include <flight/scene2d_formats/svg_color.hpp>
-#include <flight/scene2d_formats/svg_document.hpp>
-#include <flight/scene2d_formats/svg_geometry_path.hpp>
 #include <flight/scene2d_formats/svg_gradient.hpp>
-#include <flight/scene2d_formats/svg_style.hpp>
 #include <flight/scene2d_formats/svg_xml.hpp>
 
 namespace flight::scene2d_formats {
 
-using flight::shape::append_shape_begin_fill;
-using flight::shape::append_shape_begin_gradient_fill;
-using flight::shape::append_shape_end_fill;
-using flight::shape::append_shape_line_gradient_style;
-using flight::shape::append_shape_line_style;
-using flight::shape::append_shape_path;
-
-using flight::path::create_path;
-using flight::path::dash_path;
-
-using flight::importdiagnostics::report_import_diagnostic;
-
+using flight::types::ImportDiagnostic;
 using flight::types::Matrix;
 using flight::types::Node2D;
 using flight::types::Path;
+using flight::types::Rectangle;
 using flight::types::Shape;
 using flight::types::XmlElement;
-using flight::types::import_diagnostic_severity;
 
 inline flight::String map_svg_line_cap(flight::String value) {
   return ((value == flight::String("round")) ? flight::String("round") : ((value == flight::String("square")) ? flight::String("square") : flight::String("none")));
@@ -71,55 +74,55 @@ inline flight::String map_svg_line_join(flight::String value) {
   return ((value == flight::String("round")) ? flight::String("round") : ((value == flight::String("bevel")) ? flight::String("bevel") : flight::String("miter")));
 }
 
-inline void append_svg_shape_paint(flight::Ref<Shape> shape, flight::Ref<Path> path, flight::Ref<SvgStyle> style, flight::Ref<XmlElement> element, flight::Ref<SvgImportContext> context) {
-  std::optional<flight::Ref<SvgGradient>> fill_gradient = resolve_svg_gradient(style->fill, context);
-  std::optional<flight::Ref<SvgColor>> fill_color = resolve_svg_color(style->fill, style->color);
-  if ((fill_gradient.has_value() && has_zero_area_svg_gradient_box(fill_gradient.value(), path))) {
+inline void append_svg_shape_paint(flight::Ref<flight::types::Shape> shape, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>> path, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>> style, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>> element, flight::Ref<flight::types::SvgImportContext> context) {
+  auto fill_gradient = flight::scene2d_formats::resolve_svg_gradient(flight::row_get<flight::RowKey<"fill">>(style), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgImportContext>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SvgImportContext>>>>(context)));
+  auto fill_color = flight::scene2d_formats::resolve_svg_color(flight::row_get<flight::RowKey<"fill">>(style), flight::row_get<flight::RowKey<"color">>(style));
+  if ((fill_gradient.has_value() && flight::scene2d_formats::has_zero_area_svg_gradient_box(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgGradient>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SvgGradient>>>>(fill_gradient.value())), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(path)))) {
     return;
   }
   if (fill_gradient.has_value()) {
-    append_shape_begin_gradient_fill(shape, fill_gradient.value()->kind, fill_gradient.value()->stops.map([=](flight::Ref<SvgGradientStop> stop) { return flight::unsigned_right_shift(flight::bitwise_or(flight::left_shift(stop->color.rgb, 8.0), 255.0), 0.0); }), fill_gradient.value()->stops.map([=](flight::Ref<SvgGradientStop> stop) { return (stop->color.alpha * style->fill_opacity); }), fill_gradient.value()->stops.map([=](flight::Ref<SvgGradientStop> stop) { return flight::round((stop->offset * 255.0)); }), std::optional<flight::Ref<Matrix>>{create_svg_gradient_matrix(fill_gradient.value(), path)}, fill_gradient.value()->spread_method);
+    flight::shape::append_shape_begin_gradient_fill(shape, fill_gradient.value()->kind, fill_gradient.value()->stops.map([=](flight::Ref<flight::types::SvgGradientStop> stop) { return flight::unsigned_right_shift(flight::bitwise_or(flight::left_shift(stop->color->rgb, 8.0), 255.0), 0.0); }), fill_gradient.value()->stops.map([=](flight::Ref<flight::types::SvgGradientStop> stop) { return (stop->color->alpha * flight::row_get<flight::RowKey<"fillOpacity">>(style)); }), fill_gradient.value()->stops.map([=](flight::Ref<flight::types::SvgGradientStop> stop) { return flight::round((stop->offset * 255.0)); }), std::optional<flight::Ref<flight::types::Matrix>>{flight::scene2d_formats::create_svg_gradient_matrix(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgGradient>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SvgGradient>>>>(fill_gradient.value())), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(path))}, fill_gradient.value()->spread_method, std::nullopt, std::nullopt);
   }
   else {
     if (fill_color.has_value()) {
-      append_shape_begin_fill(shape, flight::unsigned_right_shift(flight::bitwise_or(flight::left_shift(fill_color.value()->rgb, 8.0), 255.0), 0.0), (fill_color.value()->alpha * style->fill_opacity));
+      flight::shape::append_shape_begin_fill(shape, flight::unsigned_right_shift(flight::bitwise_or(flight::left_shift(fill_color.value()->rgb, 8.0), 255.0), 0.0), (fill_color.value()->alpha * flight::row_get<flight::RowKey<"fillOpacity">>(style)));
     }
   }
   if ((fill_gradient.has_value() || fill_color.has_value())) {
-    append_shape_path(shape, path->commands.slice(), path->data.slice(), path->winding);
-    append_shape_end_fill(shape);
+    flight::shape::append_shape_path(shape, flight::row_get<flight::RowKey<"commands">>(path).slice(), flight::row_get<flight::RowKey<"data">>(path).slice(), flight::row_get<flight::RowKey<"winding">>(path));
+    flight::shape::append_shape_end_fill(shape);
   }
   else {
-    if (parse_url_reference(style->fill).has_value()) {
-      report_import_diagnostic(context->diagnostics, import_diagnostic_severity.drop, flight::String("svg.unresolved-fill-gradient"), flight::String("appendSvgShapePaint"), {{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, svg_local_name(element->name)}}});
+    if (flight::scene2d_formats::parse_url_reference(std::optional<flight::String>{flight::row_get<flight::RowKey<"fill">>(style)}).has_value()) {
+      flight::importdiagnostics::report_import_diagnostic(context->diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("svg.unresolved-fill-gradient"), flight::String("appendSvgShapePaint"), {{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::scene2d_formats::svg_local_name(flight::row_get<flight::RowKey<"name">>(element))}}});
     }
   }
-  std::optional<flight::Ref<SvgGradient>> stroke_gradient = resolve_svg_gradient(style->stroke, context);
-  std::optional<flight::Ref<SvgColor>> stroke_color = resolve_svg_color(style->stroke, style->color);
+  auto stroke_gradient = flight::scene2d_formats::resolve_svg_gradient(flight::row_get<flight::RowKey<"stroke">>(style), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgImportContext>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SvgImportContext>>>>(context)));
+  auto stroke_color = flight::scene2d_formats::resolve_svg_color(flight::row_get<flight::RowKey<"stroke">>(style), flight::row_get<flight::RowKey<"color">>(style));
   if ((!stroke_gradient.has_value() && !stroke_color.has_value())) {
-    if (parse_url_reference(style->stroke).has_value()) {
-      report_import_diagnostic(context->diagnostics, import_diagnostic_severity.drop, flight::String("svg.unresolved-stroke-gradient"), flight::String("appendSvgShapePaint"), {{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, svg_local_name(element->name)}}});
+    if (flight::scene2d_formats::parse_url_reference(std::optional<flight::String>{flight::row_get<flight::RowKey<"stroke">>(style)}).has_value()) {
+      flight::importdiagnostics::report_import_diagnostic(context->diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("svg.unresolved-stroke-gradient"), flight::String("appendSvgShapePaint"), {{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::scene2d_formats::svg_local_name(flight::row_get<flight::RowKey<"name">>(element))}}});
     }
     return;
   }
-  append_shape_line_style(shape, style->stroke_width, (stroke_color.has_value() ? flight::unsigned_right_shift(flight::bitwise_or(flight::left_shift(stroke_color.value()->rgb, 8.0), 255.0), 0.0) : 255.0), (([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = stroke_color; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->alpha; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()) * style->stroke_opacity), false, flight::String("normal"), map_svg_line_cap(style->stroke_linecap), map_svg_line_join(style->stroke_linejoin), style->stroke_miterlimit);
+  flight::shape::append_shape_line_style(shape, flight::row_get<flight::RowKey<"strokeWidth">>(style), (stroke_color.has_value() ? flight::unsigned_right_shift(flight::bitwise_or(flight::left_shift(stroke_color.value()->rgb, 8.0), 255.0), 0.0) : 255.0), (([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = stroke_color; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->alpha; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()) * flight::row_get<flight::RowKey<"strokeOpacity">>(style)), false, flight::String("normal"), map_svg_line_cap(flight::row_get<flight::RowKey<"strokeLinecap">>(style)), map_svg_line_join(flight::row_get<flight::RowKey<"strokeLinejoin">>(style)), flight::row_get<flight::RowKey<"strokeMiterlimit">>(style));
   if (stroke_gradient.has_value()) {
-    append_shape_line_gradient_style(shape, stroke_gradient.value()->kind, stroke_gradient.value()->stops.map([=](flight::Ref<SvgGradientStop> stop) { return flight::unsigned_right_shift(flight::bitwise_or(flight::left_shift(stop->color.rgb, 8.0), 255.0), 0.0); }), stroke_gradient.value()->stops.map([=](flight::Ref<SvgGradientStop> stop) { return (stop->color.alpha * style->stroke_opacity); }), stroke_gradient.value()->stops.map([=](flight::Ref<SvgGradientStop> stop) { return flight::round((stop->offset * 255.0)); }), std::optional<flight::Ref<Matrix>>{create_svg_gradient_matrix(stroke_gradient.value(), path)}, stroke_gradient.value()->spread_method);
+    flight::shape::append_shape_line_gradient_style(shape, stroke_gradient.value()->kind, stroke_gradient.value()->stops.map([=](flight::Ref<flight::types::SvgGradientStop> stop) { return flight::unsigned_right_shift(flight::bitwise_or(flight::left_shift(stop->color->rgb, 8.0), 255.0), 0.0); }), stroke_gradient.value()->stops.map([=](flight::Ref<flight::types::SvgGradientStop> stop) { return (stop->color->alpha * flight::row_get<flight::RowKey<"strokeOpacity">>(style)); }), stroke_gradient.value()->stops.map([=](flight::Ref<flight::types::SvgGradientStop> stop) { return flight::round((stop->offset * 255.0)); }), std::optional<flight::Ref<flight::types::Matrix>>{flight::scene2d_formats::create_svg_gradient_matrix(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgGradient>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SvgGradient>>>>(stroke_gradient.value())), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(path))}, stroke_gradient.value()->spread_method, std::nullopt, std::nullopt);
   }
-  flight::Ref<Path> stroke_path = path;
-  if ((style->stroke_dasharray != flight::String("none"))) {
-    flight::Array<double> dash = parse_svg_number_list(style->stroke_dasharray).filter([=](double value) { return (value >= 0.0); });
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>> stroke_path = path;
+  if ((flight::row_get<flight::RowKey<"strokeDasharray">>(style) != flight::String("none"))) {
+    flight::Array<double> dash = flight::scene2d_formats::parse_svg_number_list(flight::row_get<flight::RowKey<"strokeDasharray">>(style)).filter([=](double value) { return (value >= 0.0); });
     if ((static_cast<double>(dash.size()) > 0.0)) {
-      (stroke_path = create_path(path->winding));
-      dash_path(path, ((std::fmod(static_cast<double>(dash.size()), 2.0) == 0.0) ? dash : ([&]() { flight::Array<double> array_spread_result; for (const auto& array_spread_item : dash) { array_spread_result.push(array_spread_item); } for (const auto& array_spread_item : dash) { array_spread_result.push(array_spread_item); } return array_spread_result; }())), style->stroke_dashoffset, stroke_path);
+      (stroke_path = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Path>>>>(flight::path::create_path(flight::row_get<flight::RowKey<"winding">>(path)))));
+      flight::path::dash_path(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(path), ((std::fmod(static_cast<double>(dash.size()), 2.0) == 0.0) ? dash : ([&]() { flight::Array<double> array_spread_result; for (const auto& array_spread_item : dash) { array_spread_result.push(array_spread_item); } for (const auto& array_spread_item : dash) { array_spread_result.push(array_spread_item); } return array_spread_result; }())), flight::row_get<flight::RowKey<"strokeDashoffset">>(style), flight::structural_ref_cast<flight::Ref<flight::types::Path>>(stroke_path), std::nullopt);
     }
   }
-  append_shape_path(shape, stroke_path->commands.slice(), stroke_path->data.slice(), stroke_path->winding);
+  flight::shape::append_shape_path(shape, flight::row_get<flight::RowKey<"commands">>(stroke_path).slice(), flight::row_get<flight::RowKey<"data">>(stroke_path).slice(), flight::row_get<flight::RowKey<"winding">>(stroke_path));
 }
 
 
 // NOT GENERATED: function svgGeometryElementHandler -- source line 41
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+// refusal: cpp-contextual-union-value-type-unrepresented [source-portability]
 //
 // The source it stood for:
 //   export function svgGeometryElementHandler(context: SvgElementContext): Node2D | null {
@@ -139,6 +142,11 @@ inline void append_svg_shape_paint(flight::Ref<Shape> shape, flight::Ref<Path> p
 //   }
 //   
 // cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgGeometryElement.ts:
-// contextual union value type flight::Ref<Shape> is not a represented runtime domain
+// contextual union value type flight::Ref<flight::types::Shape> is not a represented runtime domain: the value
+// leaves a member the destination requires optional or absent, or gives it an incompatible type, so it is not
+// the shape an alternative declares. This expression refers to an existing owner. Keep the value in the declared
+// destination arm from the point it is created, or explicitly rebuild the declared result in source where
+// changing identity is intended. The compiler will not retype, copy, or materialize the existing object into a
+// sibling owner.
 
 } // namespace flight::scene2d_formats

@@ -5,30 +5,23 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function computeTextLabelLocalBoundsRectangle -- source line 54
 //   missing: function getTextLabelRuntime -- source line 104
-//   missing: function initializeTextLabelData -- source line 113
-//   missing: function createTextLabelData -- source line 82
 //   missing: variable (binding) -- source line 184
 //   missing: function createTextLabelRuntime -- source line 88
 //   missing: function createTextLabel -- source line 78
+#include <flight/structural_ref.hpp>
 #include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/textlayout/text_format_range.hpp>
-
-#include <flight/node/revision.hpp>
-
-#include <flight/types/text_vertical_align.hpp>
-
 #include <flight/types/text_layout.hpp>
 
 #include <flight/types/text_label.hpp>
 
-#include <flight/types/text_format.hpp>
+#include <flight/types/text_format_range.hpp>
 
-#include <flight/types/text_auto_size.hpp>
+#include <flight/types/text_format.hpp>
 
 #include <flight/types/rectangle.hpp>
 
@@ -36,37 +29,46 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/node.hpp>
 
-#include <flight/types/entity.hpp>
+namespace flight::types { struct HasBoundsRectangle; }
+namespace flight::types { struct Node2DData; }
+namespace flight::types { struct Node2DRuntime; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct Rectangle; }
+namespace flight::types { struct TextFormat; }
+namespace flight::types { struct TextFormatRange; }
+namespace flight::types { struct TextLabel; }
+namespace flight::types { struct TextLabelData; }
+namespace flight::types { struct TextLabelRuntime; }
+namespace flight::types { struct TextLayoutParams; }
+namespace flight::types { struct TextLayoutResult; }
+namespace flight::types { template <typename Traits> struct Node; }
 
-#include <flight/text/text_label_layout.hpp>
+#include <flight/entity/entity.hpp>
+#include <flight/node/revision.hpp>
+#include <flight/textlayout/text_bounds.hpp>
+#include <flight/textlayout/text_format_range.hpp>
+#include <flight/types/contract.hpp>
 
 namespace flight::text {
 
-using flight::textlayout::create_text_format_range;
-
-using flight::node::invalidate_node_local_bounds;
-using flight::node::invalidate_node_local_content;
-
-using flight::types::EntityConstruction;
 using flight::types::Node;
 using flight::types::Node2DTraits;
 using flight::types::Rectangle;
-using flight::types::TextAutoSize;
 using flight::types::TextFormat;
+using flight::types::TextFormatRange;
 using flight::types::TextLabel;
 using flight::types::TextLabelData;
 using flight::types::TextLayoutParams;
-using flight::types::TextMeasureFunction;
-using flight::types::TextVerticalAlign;
+using flight::types::TextLayoutResult;
 
-inline flight::Ref<TextLayoutParams> build_text_label_layout_params(flight::Ref<TextLabel> source, flight::Ref<TextMeasureFunction> measure) {
-  flight::Ref<TextLabelData> data = source->data;
-  return flight::make_ref<TextLayoutParams>(TextLayoutParams{.format_ranges = flight::Array{create_text_format_range(data->text_format, 0.0, static_cast<double>(data->text.length()))}, .height = data->height, .measure = measure, .text = data->text, .vertical_align = ((data->auto_size == flight::String("none")) ? data->vertical_align : flight::String("top")), .width = data->width});
+inline flight::Ref<flight::types::TextLayoutParams> build_text_label_layout_params(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLabel>>>> source, flight::types::TextMeasureFunction measure) {
+  auto data = flight::row_get<flight::RowKey<"data">>(source);
+  return flight::make_ref<flight::types::TextLayoutParams>(flight::types::TextLayoutParams{.format_ranges = flight::Array<flight::Ref<flight::types::TextFormatRange>>{flight::textlayout::create_text_format_range(data->text_format, 0.0, static_cast<double>(data->text.length()))}, .height = data->height, .measure = measure, .text = data->text, .vertical_align = ((data->auto_size == flight::String("none")) ? std::optional<flight::String>{data->vertical_align} : std::optional<flight::String>{flight::String("top")}), .width = data->width});
 }
 
 
 // NOT GENERATED: function computeTextLabelLocalBoundsRectangle -- source line 54
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function computeTextLabelLocalBoundsRectangle(out: Rectangle, source: Readonly<BoundsNode<Node2DTraits>>): void {
@@ -93,139 +95,136 @@ inline flight::Ref<TextLayoutParams> build_text_label_layout_params(flight::Ref<
 //     computeTextBoundsRectangle(out, data, layout);
 //   }
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/textLabel.ts: a reference assertion from
-// flight::Ref<BoundsNode<flight::Ref<Node2DTraits>>> to flight::Ref<TextLabel> has no heritage to cast along:
-// the declarations share no emitted C++ class-heritage path (source interface and intersection relationships
-// flatten into independent owners), and the source carrier does not retain a checked dynamic owner that can
-// recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that
-// validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a
-// replacement row, or invent side storage
+// cpp emission failed for @flighthq/text/packages/text/src/textLabel.ts: a structural assertion from the
+// readonly row Readonly<BoundsNode<Node2DTraits>> to the writable row TextLabel claims mutation the source
+// refused: a readonly row never becomes writable, because the boundary the value came through said its subject
+// must not be mutated through it, and no cast, copy, or re-view can carry a capability the source withheld.
+// Assert to the readonly row where the value is only read, or declare the source -- its parameter, slot, or
+// accessor result -- as the writable type where that object may really be mutated. Choosing between those two
+// repairs is the question this assertion was answering, so ask it of the value's ROLE rather than of its
+// spelling: a RUNTIME OWNER that the mutating paths must write needs a mutable-source accessor returning the
+// full writable owner from the typed runtime slot, with the readonly accessor kept for reads, because the
+// capability has to exist on the storage and accessor that establish those cells; a NODE that the read paths
+// only traverse and never mutate needs the two authorities separated instead, with a readonly view on every read
+// path and a separate mutable entry point for the paths that really mutate, because laundering a writable node
+// out of a readonly boundary grants mutation no caller asked for. Both repairs keep the exact Traits or generic
+// specialization the retained row carries; neither adds cells to a row that does not declare them. Making only
+// that boundary writable is insufficient here: the source owner does not declare EntityRuntimeKey and data, so
+// it has no cells for the asserted row to mutate. Declare both the storage slot and the accessor result as the
+// full writable TextLabel row where initialization establishes those cells, rather than widening
+// Readonly<BoundsNode<Node2DTraits>> at the use site.
 
-inline flight::Ref<TextFormat> get_text_label_format(flight::Ref<TextLabel> source) {
-  flight::Ref<TextLabelData> data = source->data;
-  return data->text_format;
+inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>> get_text_label_format(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLabel>>>> source) {
+  auto data = flight::row_get<flight::RowKey<"data">>(source);
+  return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>(data->text_format));
 }
 
 
 // NOT GENERATED: function getTextLabelRuntime -- source line 104
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function getTextLabelRuntime(source: Readonly<TextLabel>): Readonly<TextLabelRuntime> {
 //     return getNode2DRuntime(source) as TextLabelRuntime;
 //   }
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/textLabel.ts: a reference assertion from
-// flight::Ref<Node2DRuntime> to flight::Ref<TextLabelRuntime> has no heritage to cast along: the declarations
-// share no emitted C++ class-heritage path (source interface and intersection relationships flatten into
-// independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// cpp emission failed for @flighthq/text/packages/text/src/textLabel.ts: a structural assertion from the
+// readonly row Readonly<Node2DRuntime> to the writable row TextLabelRuntime claims mutation only to pass the
+// value to the readonly row Readonly<TextLabelRuntime>. Spell the assertion as Readonly<TextLabelRuntime> to
+// remove the writable-capability claim, but that alone cannot recover the derived owner: Readonly<Node2DRuntime>
+// does not declare buildTextLayoutParams, textLayout, textLayoutUsingContentId and textLayoutUsingText, so the
+// retained row has no proven cells for those members. No writable carrier is justified for this read-only call.
+// Preserve TextLabelRuntime in the callback parameter through a named typed runner or carrier, or make an
+// intentionally erased registry validate and recover that owner before invoking the typed runner; a tag or
+// registry key carried beside the value does not prove which owner the reference retains. If mutation is
+// intended elsewhere, the storage and accessor themselves must retain writable TextLabelRuntime capability
+// rather than adding it with an assertion. The compiler will not cast, copy, materialize, or create side storage
+// for either missing proof.
 
-inline flight::String get_text_label_string(flight::Ref<TextLabel> source) {
-  flight::Ref<TextLabelData> data = source->data;
+inline flight::String get_text_label_string(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLabel>>>> source) {
+  auto data = flight::row_get<flight::RowKey<"data">>(source);
   return data->text;
 }
 
+inline void initialize_text_label_data(flight::types::EntityConstruction<flight::Ref<flight::types::TextLabelData>> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::TextLabelData>>>>>> data = std::nullopt) {
+  flight::row_set<flight::RowKey<"autoSize">>(out, ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::types::TextAutoSize> { auto optional_chain_receiver = data; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"autoSize">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("none"); }()));
+  flight::row_set<flight::RowKey<"height">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = data; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"height">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 100.0; }()));
+  flight::row_set<flight::RowKey<"text">>(out, ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = data; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"text">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }()));
+  flight::row_set<flight::RowKey<"textFormat">>(out, ([&]() -> flight::Ref<flight::types::TextFormat> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Ref<flight::types::TextFormat>> { auto optional_chain_receiver = data; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"textFormat">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::make_ref<flight::types::TextFormat>(flight::types::TextFormat{}); }()));
+  flight::row_set<flight::RowKey<"verticalAlign">>(out, ([&]() -> flight::String { auto nullish_coalesce_left_2 = ([&]() -> std::optional<flight::types::TextVerticalAlign> { auto optional_chain_receiver = data; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"verticalAlign">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left_2.has_value()) return nullish_coalesce_left_2.value(); return flight::String("top"); }()));
+  flight::row_set<flight::RowKey<"width">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = data; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"width">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 100.0; }()));
+}
 
-// NOT GENERATED: function initializeTextLabelData -- source line 113
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   export function initializeTextLabelData(
-//     out: EntityConstruction<TextLabelData>,
-//     data?: Readonly<Partial<TextLabelData>>,
-//   ): void {
-//     out.autoSize = data?.autoSize ?? 'none';
-//     out.height = data?.height ?? 100;
-//     out.text = data?.text ?? '';
-//     out.textFormat = data?.textFormat ?? {};
-//     out.verticalAlign = data?.verticalAlign ?? 'top';
-//     out.width = data?.width ?? 100;
-//   }
-//   
-// cpp emission failed for @flighthq/text/packages/text/src/textLabel.ts: Partial<T> requires a statically
-// resolvable C++ object shape; T is named
+inline flight::Ref<flight::types::TextLabelData> create_text_label_data(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::TextLabelData>>>>>> data = std::nullopt) {
+  flight::types::EntityConstruction<flight::Ref<flight::types::TextLabelData>> out = flight::entity::allocate_entity<flight::Ref<flight::types::TextLabelData>>();
+  initialize_text_label_data(out, data);
+  return flight::entity::finish_entity<flight::Ref<flight::types::TextLabelData>>(out);
+}
 
-
-// NOT GENERATED: function createTextLabelData -- source line 82
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   export function createTextLabelData(data?: Readonly<Partial<TextLabelData>>): TextLabelData {
-//     const out = allocateEntity<TextLabelData>();
-//     initializeTextLabelData(out, data);
-//     return finishEntity(out);
-//   }
-//   
-// cpp emission failed for @flighthq/text/packages/text/src/textLabel.ts: Partial<T> requires a statically
-// resolvable C++ object shape; T is named
-
-inline void set_text_label_auto_size(flight::Ref<TextLabel> source, flight::Ref<TextAutoSize> value) {
-  flight::Ref<TextLabelData> data = source->data;
+inline void set_text_label_auto_size(flight::Ref<flight::types::TextLabel> source, flight::types::TextAutoSize value) {
+  auto data = source->data;
   if ((data->auto_size == value)) {
     return;
   }
   (data->auto_size = value);
-  invalidate_node_local_content(source);
-  invalidate_node_local_bounds(source);
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLabel>>>>(source)));
+  flight::node::invalidate_node_local_bounds(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLabel>>>>(source)));
 }
 
-inline void set_text_label_height(flight::Ref<TextLabel> source, double value) {
-  flight::Ref<TextLabelData> data = source->data;
+inline void set_text_label_height(flight::Ref<flight::types::TextLabel> source, double value) {
+  auto data = source->data;
   if ((data->height == value)) {
     return;
   }
   (data->height = value);
-  invalidate_node_local_content(source);
-  invalidate_node_local_bounds(source);
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLabel>>>>(source)));
+  flight::node::invalidate_node_local_bounds(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLabel>>>>(source)));
 }
 
-inline void set_text_label_vertical_align(flight::Ref<TextLabel> source, flight::Ref<TextVerticalAlign> value) {
-  flight::Ref<TextLabelData> data = source->data;
+inline void set_text_label_vertical_align(flight::Ref<flight::types::TextLabel> source, flight::types::TextVerticalAlign value) {
+  auto data = source->data;
   if ((data->vertical_align == value)) {
     return;
   }
   (data->vertical_align = value);
-  invalidate_node_local_content(source);
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLabel>>>>(source)));
 }
 
-inline void set_text_label_width(flight::Ref<TextLabel> source, double value) {
-  flight::Ref<TextLabelData> data = source->data;
+inline void set_text_label_width(flight::Ref<flight::types::TextLabel> source, double value) {
+  auto data = source->data;
   if ((data->width == value)) {
     return;
   }
   (data->width = value);
-  invalidate_node_local_content(source);
-  invalidate_node_local_bounds(source);
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLabel>>>>(source)));
+  flight::node::invalidate_node_local_bounds(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLabel>>>>(source)));
 }
 
-inline void invalidate_text_label_content(flight::Ref<TextLabel> source) {
-  flight::Ref<TextLabelData> data = source->data;
-  invalidate_node_local_content(source);
+inline void invalidate_text_label_content(flight::Ref<flight::types::TextLabel> source) {
+  auto data = source->data;
+  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLabel>>>>(source)));
   if ((data->auto_size != flight::String("none"))) {
-    invalidate_node_local_bounds(source);
+    flight::node::invalidate_node_local_bounds(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLabel>>>>(source)));
   }
 }
 
-inline void append_text_label_string(flight::Ref<TextLabel> source, flight::String value) {
+inline void append_text_label_string(flight::Ref<flight::types::TextLabel> source, flight::String value) {
   if ((static_cast<double>(value.length()) == 0.0)) {
     return;
   }
-  flight::Ref<TextLabelData> data = source->data;
+  auto data = source->data;
   (data->text += value);
   invalidate_text_label_content(source);
 }
 
-inline void set_text_label_format(flight::Ref<TextLabel> source, flight::Ref<TextFormat> value) {
-  flight::Ref<TextLabelData> data = source->data;
+inline void set_text_label_format(flight::Ref<flight::types::TextLabel> source, flight::Ref<flight::types::TextFormat> value) {
+  auto data = source->data;
   (data->text_format = value);
   invalidate_text_label_content(source);
 }
 
-inline void set_text_label_string(flight::Ref<TextLabel> source, flight::String value) {
-  flight::Ref<TextLabelData> data = source->data;
+inline void set_text_label_string(flight::Ref<flight::types::TextLabel> source, flight::String value) {
+  auto data = source->data;
   if ((data->text == value)) {
     return;
   }
@@ -235,15 +234,26 @@ inline void set_text_label_string(flight::Ref<TextLabel> source, flight::String 
 
 
 // NOT GENERATED: variable (binding) -- source line 184
-// refusal: cpp-partial-shape-unresolvable [source-portability]
+// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
 //   const defaultMethods: Partial<MethodsOf<TextLabelRuntime>> = {
 //     computeLocalBoundsRectangle: computeTextLabelLocalBoundsRectangle,
 //   };
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/textLabel.ts: Partial<T> requires a statically
-// resolvable C++ object shape; T is named
+// cpp emission failed for @flighthq/text/packages/text/src/textLabel.ts: contextual union callable value type
+// std::function<void(flight::Ref<flight::types::Rectangle>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>,
+// flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>,
+// flight::RowOf<flight::Ref<flight::types::HasBoundsRectangle>>,
+// flight::RowOf<flight::Ref<entity_runtime_key_9c0936b6be3f9232>>>>>)> agrees with no alternative's signature:
+// the destination holds [std::function<void(flight::Ref<flight::types::Rectangle>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>,
+// flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>,
+// flight::RowOf<flight::Ref<flight::types::HasBoundsRectangle>>,
+// flight::RowOf<flight::Ref<entity_runtime_key_2a5696294f4ba375>>>>>)>]. A callable is a represented domain, so
+// the obstacle is that the destination's signature cannot call this one. Declare the value's parameters so the
+// destination's signature supplies them, and its result as one the destination holds
 
 
 // NOT GENERATED: function createTextLabelRuntime -- source line 88
@@ -262,24 +272,28 @@ inline void set_text_label_string(flight::Ref<TextLabel> source, flight::String 
 //   }
 //   
 // cpp emission failed for @flighthq/text/packages/text/src/textLabel.ts: a reference assertion from
-// flight::Ref<Node2DRuntime> to flight::Ref<TextLabelRuntime> has no heritage to cast along: the declarations
-// share no emitted C++ class-heritage path (source interface and intersection relationships flatten into
-// independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// flight::Ref<flight::types::Node2DRuntime> to flight::Ref<flight::types::TextLabelRuntime> has no heritage to
+// cast along: the declarations share no emitted C++ class-heritage path (source interface and intersection
+// relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner
+// that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that
+// validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a
+// replacement row, or invent side storage
 
 
 // NOT GENERATED: function createTextLabel -- source line 78
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
 //   export function createTextLabel(obj?: Readonly<PartialNode<TextLabel>>): TextLabel {
 //     return createNode2D(TextLabelKind, obj, createTextLabelData, createTextLabelRuntime) as TextLabel;
 //   }
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/textLabel.ts: intersection types require C++
-// multiple-inheritance lowering: no shape for Node (argument Node2DTraits has no shape either), Node2DTraits.
-// Declare the object shape the code reads rather than intersecting a conjunct that has none
+// cpp emission failed for @flighthq/text/packages/text/src/textLabel.ts: contextual union callable value type
+// std::function<flight::Ref<flight::types::TextLabelData>(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::TextLabelData>>>>>>)>
+// agrees with no alternative's signature: the destination holds
+// [std::function<flight::Ref<flight::types::Node2DData>(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::Node2DData>>>>>>)>].
+// A callable is a represented domain, so the obstacle is that the destination's signature cannot call this one.
+// Declare the value's parameters so the destination's signature supplies them, and its result as one the
+// destination holds
 
 } // namespace flight::text

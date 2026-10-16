@@ -53,7 +53,7 @@ struct InstancedMeshRuntime;
 #include <flight/types/aabb.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/instanced_mesh_signals.hpp>
-#include <flight/types/material3_dvalue.hpp>
+#include <flight/types/material_3d_value.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/mesh_geometry.hpp>
 #include <flight/types/node_3d.hpp>

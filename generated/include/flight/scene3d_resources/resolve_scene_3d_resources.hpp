@@ -78,8 +78,6 @@ namespace flight::types { template <typename T> struct ResourceLoadItem; }
 
 namespace flight::scene3d_resources {
 
-using flight::types::resource_resolution_state;
-
 using flight::types::ImageResourceFailure;
 using flight::types::ImageResourceFailureKind;
 using flight::types::ImageResourceReference;

@@ -146,7 +146,7 @@ inline bool has_node_order_list_entry(flight::StructuralRef<flight::RowReadonly<
 
 template <typename Traits = flight::Ref<flight::types::NodeTraits>>
 inline void set_node_order_list_entry(std::shared_ptr<flight::types::NodeOrderList<Traits>> list, flight::types::NodeOf<Traits> node, double sort_key) {
-  const double index = find_node_order_list_entry_index(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeOrderList<Traits>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::NodeOrderList<Traits>>>>>(list)), node);
+  const double index = find_node_order_list_entry_index<Traits>(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeOrderList<Traits>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::NodeOrderList<Traits>>>>>(list)), node);
   if ((index == -1.0)) {
     add_node_order_list_entry<Traits>(list, node, sort_key);
     return;
@@ -203,7 +203,7 @@ inline void insert_node_order_list_entry_beside(std::shared_ptr<flight::types::N
   if ((find_node_order_list_entry_index<Traits>(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeOrderList<Traits>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::NodeOrderList<Traits>>>>>(list)), target) == -1.0)) {
     return;
   }
-  const double existing = find_node_order_list_entry_index(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeOrderList<Traits>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::NodeOrderList<Traits>>>>>(list)), node);
+  const double existing = find_node_order_list_entry_index<Traits>(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeOrderList<Traits>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::NodeOrderList<Traits>>>>>(list)), node);
   if ((existing != -1.0)) {
     remove_node_order_list_entry_at_index<Traits>(list, existing);
   }

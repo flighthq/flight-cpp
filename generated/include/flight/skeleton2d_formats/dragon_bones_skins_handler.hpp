@@ -77,7 +77,7 @@ inline double find_bone_pose_ordinal(flight::Array<double> bone_pose, double use
   return -1.0;
 }
 
-inline void initialize_mesh_attachment2_d_flight_value_function_initialize_u00004d_esh_u000041_ttachment2_u000044__flight_private_5a05e1ee3908b76a(flight::types::EntityConstruction<flight::Ref<flight::types::MeshAttachment2D>> out, flight::String kind, std::variant<flight::String, flight::Null, flight::Undefined> name, std::variant<flight::Ref<flight::types::Skin2D>, flight::Null, flight::Undefined> skin, flight::Uint16Array triangles, flight::Float32Array uvs, double vertex_count, std::variant<flight::Float32Array, flight::Null, flight::Undefined> vertices) {
+inline void initialize_mesh_attachment_2d_flight_value_function_initialize_u00004d_esh_u000041_ttachment2_u000044__flight_private_5a05e1ee3908b76a(flight::types::EntityConstruction<flight::Ref<flight::types::MeshAttachment2D>> out, flight::String kind, std::variant<flight::String, flight::Null, flight::Undefined> name, std::variant<flight::Ref<flight::types::Skin2D>, flight::Null, flight::Undefined> skin, flight::Uint16Array triangles, flight::Float32Array uvs, double vertex_count, std::variant<flight::Float32Array, flight::Null, flight::Undefined> vertices) {
   flight::row_set<flight::RowKey<"kind">>(out, kind);
   flight::row_set<flight::RowKey<"name">>(out, name);
   flight::row_set<flight::RowKey<"skin">>(out, skin);
@@ -87,7 +87,7 @@ inline void initialize_mesh_attachment2_d_flight_value_function_initialize_u0000
   flight::row_set<flight::RowKey<"vertices">>(out, vertices);
 }
 
-inline void initialize_region_attachment2_d_flight_value_function_initialize_u000052_egion_u000041_ttachment2_u000044__flight_private_5a05e1ee3908b76a(flight::types::EntityConstruction<flight::Ref<flight::types::RegionAttachment2D>> out, double height, flight::String kind, std::variant<flight::String, flight::Null, flight::Undefined> name, double rotation, double scale_x, double scale_y, double width, double x, double y) {
+inline void initialize_region_attachment_2d_flight_value_function_initialize_u000052_egion_u000041_ttachment2_u000044__flight_private_5a05e1ee3908b76a(flight::types::EntityConstruction<flight::Ref<flight::types::RegionAttachment2D>> out, double height, flight::String kind, std::variant<flight::String, flight::Null, flight::Undefined> name, double rotation, double scale_x, double scale_y, double width, double x, double y) {
   flight::row_set<flight::RowKey<"height">>(out, height);
   flight::row_set<flight::RowKey<"kind">>(out, kind);
   flight::row_set<flight::RowKey<"name">>(out, name);

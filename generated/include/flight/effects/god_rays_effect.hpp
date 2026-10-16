@@ -17,20 +17,20 @@ namespace flight::types { struct GodRaysEffect; }
 
 namespace flight::effects {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_EXPOSURE_SAMPLES_CENTER_X_CENTER_Y_DENSITY_DECAY_WEIGHT_F566B53181B25755
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_EXPOSURE_SAMPLES_CENTER_X_CENTER_Y_DENSITY_DECAY_WEIGHT_F566B53181B25755
-struct exposure_samples_center_x_center_y_density_decay_weight_f566b53181b25755 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_EXPOSURE_SAMPLES_WEIGHT_DECAY_CENTER_X_CENTER_Y_DENSITY_0F92475B54B33657
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_EXPOSURE_SAMPLES_WEIGHT_DECAY_CENTER_X_CENTER_Y_DENSITY_0F92475B54B33657
+struct exposure_samples_weight_decay_center_x_center_y_density_0f92475b54b33657 : public flight::ReferenceEnabled {
   std::optional<double> exposure;
   std::optional<double> samples;
+  std::optional<double> weight;
+  std::optional<double> decay;
   std::optional<double> center_x;
   std::optional<double> center_y;
   std::optional<double> density;
-  std::optional<double> decay;
-  std::optional<double> weight;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_EXPOSURE_SAMPLES_CENTER_X_CENTER_Y_DENSITY_DECAY_WEIGHT_F566B53181B25755
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_EXPOSURE_SAMPLES_WEIGHT_DECAY_CENTER_X_CENTER_Y_DENSITY_0F92475B54B33657
 
-inline void initialize_god_rays_effect(flight::types::EntityConstruction<flight::Ref<flight::types::GodRaysEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<exposure_samples_center_x_center_y_density_decay_weight_f566b53181b25755>>>> options) {
+inline void initialize_god_rays_effect(flight::types::EntityConstruction<flight::Ref<flight::types::GodRaysEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<exposure_samples_weight_decay_center_x_center_y_density_0f92475b54b33657>>>> options) {
   flight::effects::initialize_effect<flight::Ref<flight::types::GodRaysEffect>>(out, flight::String("GodRaysEffect"));
   flight::row_set<flight::RowKey<"centerX">>(out, flight::row_get<flight::RowKey<"centerX">>(options));
   flight::row_set<flight::RowKey<"centerY">>(out, flight::row_get<flight::RowKey<"centerY">>(options));
@@ -41,8 +41,8 @@ inline void initialize_god_rays_effect(flight::types::EntityConstruction<flight:
   flight::row_set<flight::RowKey<"samples">>(out, flight::row_get<flight::RowKey<"samples">>(options));
 }
 
-inline flight::Ref<flight::types::GodRaysEffect> create_god_rays_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<exposure_samples_center_x_center_y_density_decay_weight_f566b53181b25755>>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<exposure_samples_center_x_center_y_density_decay_weight_f566b53181b25755>>>>());
+inline flight::Ref<flight::types::GodRaysEffect> create_god_rays_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<exposure_samples_weight_decay_center_x_center_y_density_0f92475b54b33657>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<exposure_samples_weight_decay_center_x_center_y_density_0f92475b54b33657>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::GodRaysEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::GodRaysEffect>>();
   initialize_god_rays_effect(out, options.value());
   return flight::entity::finish_entity<flight::Ref<flight::types::GodRaysEffect>>(out);

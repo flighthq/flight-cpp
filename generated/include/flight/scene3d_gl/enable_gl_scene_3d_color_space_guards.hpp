@@ -10,9 +10,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct ColorScaleBias; }
+namespace flight::types { struct GlMeshMaterialRenderer; }
 namespace flight::types { struct GlMeshProgram; }
 namespace flight::types { struct GlMeshSkinFeature; }
-namespace flight::types { struct GlMeshUpload; }
 namespace flight::types { struct GlPbrTransmissionSceneColor; }
 namespace flight::types { struct GlRenderState; }
 namespace flight::types { struct GlScene3DDrawEntry; }
@@ -23,12 +24,13 @@ namespace flight::types { struct GlSkinPaletteTexture; }
 namespace flight::types { struct GlTextureRenderTarget; }
 namespace flight::types { struct Matrix4; }
 namespace flight::types { struct Mesh; }
-namespace flight::types { struct MeshGeometry; }
-namespace flight::types { struct PbrExtension; }
+namespace flight::types { struct MeshSubset; }
 namespace flight::types { struct Scene3DLightBlock; }
 namespace flight::types { struct Scene3DRenderProxy; }
 
 #include <flight/log/log.hpp>
+#include <flight/types/color_scale_bias.hpp>
+#include <flight/types/gl_mesh_material_renderer.hpp>
 #include <flight/types/gl_mesh_program.hpp>
 #include <flight/types/gl_pbr_transmission_scene_color.hpp>
 #include <flight/types/gl_render_state.hpp>
@@ -36,6 +38,7 @@ namespace flight::types { struct Scene3DRenderProxy; }
 #include <flight/types/gl_scene_3d_runtime.hpp>
 #include <flight/types/gl_skin_palette_texture.hpp>
 #include <flight/types/log.hpp>
+#include <flight/types/material_3d_value.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/mesh.hpp>
 #include <flight/types/mesh_geometry.hpp>

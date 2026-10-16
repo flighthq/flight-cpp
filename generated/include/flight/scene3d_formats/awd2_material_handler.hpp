@@ -56,8 +56,6 @@ namespace flight::types { struct TextureCube; }
 
 namespace flight::scene3d_formats {
 
-using flight::image_codec::detect_image_mime_type;
-
 using flight::types::ImageResourceReference;
 using flight::types::ImportDiagnostic;
 using flight::types::ImportDiagnosticSeverity;

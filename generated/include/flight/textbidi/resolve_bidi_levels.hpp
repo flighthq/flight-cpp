@@ -3,13 +3,11 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function strongBidiDirection -- source line 474
-//   missing: function applyExplicitLevels -- source line 92
-//   missing: function resolvePairedBrackets -- source line 407
 //   missing: function resolveBidiLevels -- source line 3
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <flight/array.hpp>
 #include <flight/boolean.hpp>
 #include <functional>
 #include <optional>
@@ -19,15 +17,19 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct BidiClassKernel; }
+
+#include <flight/types/bidi.hpp>
+
 namespace flight::textbidi {
 
-inline double compute_paragraph_level(flight::Array<flight::Ref<BidiClass>> types, double start, double end) {
+inline double compute_paragraph_level(flight::Array<flight::types::BidiClass> types, double start, double end) {
   double isolate_depth = 0.0;
   {
     double i = start;
     while ((i < end)) {
       {
-        flight::Ref<BidiClass> t = types.element(i);
+        flight::types::BidiClass t = types.element(i);
         if ((((t == flight::String("LRI")) || (t == flight::String("RLI"))) || (t == flight::String("FSI")))) {
           isolate_depth++;
         }
@@ -55,13 +57,13 @@ inline double compute_paragraph_level(flight::Array<flight::Ref<BidiClass>> type
   return 0.0;
 }
 
-inline void pair_isolates(flight::Array<flight::Ref<BidiClass>> types, flight::Int32Array matching_pdi, flight::Int32Array matching_initiator) {
+inline void pair_isolates(flight::Array<flight::types::BidiClass> types, flight::Int32Array matching_pdi, flight::Int32Array matching_initiator) {
   flight::Array<double> stack = flight::Array<double>{};
   {
     double i = 0.0;
     while ((i < static_cast<double>(types.size()))) {
       {
-        flight::Ref<BidiClass> t = types.element(i);
+        flight::types::BidiClass t = types.element(i);
         if ((((t == flight::String("LRI")) || (t == flight::String("RLI"))) || (t == flight::String("FSI")))) {
           stack.push(i);
         }
@@ -78,38 +80,31 @@ inline void pair_isolates(flight::Array<flight::Ref<BidiClass>> types, flight::I
   }
 }
 
+inline std::optional<flight::String> strong_bidi_direction(flight::types::BidiClass type) {
+  if ((type == flight::String("L"))) {
+    return std::optional<flight::String>{flight::String("L")};
+  }
+  if ((((type == flight::String("R")) || (type == flight::String("EN"))) || (type == flight::String("AN")))) {
+    return std::optional<flight::String>{flight::String("R")};
+  }
+  return std::nullopt;
+}
 
-// NOT GENERATED: function strongBidiDirection -- source line 474
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
-//
-// The source it stood for:
-//   function strongBidiDirection(type: BidiClass): BidiClass | null {
-//     if (type === 'L') return 'L';
-//     if (type === 'R' || type === 'EN' || type === 'AN') return 'R';
-//     return null;
-//   }
-//   
-//   // L1: reset the level of segment/paragraph separators, and of any whitespace / isolate-formatting /
-//   // removed run preceding a separator or the end of the paragraph, back to the paragraph level. Uses the
-//   // original types (the reset set is defined on them, before resolution).
-// cpp emission failed for @flighthq/textbidi/packages/textbidi/src/resolveBidiLevels.ts: contextual union value
-// type flight::String is not a represented runtime domain
-
-inline bool is_neutral_or_isolate(flight::Ref<BidiClass> t) {
+inline bool is_neutral_or_isolate(flight::types::BidiClass t) {
   return ((((((((t == flight::String("B")) || (t == flight::String("S"))) || (t == flight::String("WS"))) || (t == flight::String("ON"))) || (t == flight::String("FSI"))) || (t == flight::String("LRI"))) || (t == flight::String("RLI"))) || (t == flight::String("PDI")));
 }
 
-inline bool is_reset_type(flight::Ref<BidiClass> t) {
+inline bool is_reset_type(flight::types::BidiClass t) {
   return (((((((((((t == flight::String("WS")) || (t == flight::String("LRI"))) || (t == flight::String("RLI"))) || (t == flight::String("FSI"))) || (t == flight::String("PDI"))) || (t == flight::String("LRE"))) || (t == flight::String("RLE"))) || (t == flight::String("LRO"))) || (t == flight::String("RLO"))) || (t == flight::String("PDF"))) || (t == flight::String("BN")));
 }
 
-inline void apply_line_reset(flight::Array<flight::Ref<BidiClass>> original, flight::Array<double> level_array, double paragraph_level) {
+inline void apply_line_reset(flight::Array<flight::types::BidiClass> original, flight::Array<double> level_array, double paragraph_level) {
   const double length = static_cast<double>(original.size());
   {
     double i = 0.0;
     while ((i < length)) {
       {
-        flight::Ref<BidiClass> t = original.element(i);
+        flight::types::BidiClass t = original.element(i);
         if (((t == flight::String("B")) || (t == flight::String("S")))) {
           (level_array.element(i) = paragraph_level);
           {
@@ -133,7 +128,7 @@ inline void apply_line_reset(flight::Array<flight::Ref<BidiClass>> original, fli
   }
 }
 
-inline flight::String neutral_direction(flight::Ref<BidiClass> t) {
+inline flight::String neutral_direction(flight::types::BidiClass t) {
   return ((t == flight::String("L")) ? flight::String("L") : flight::String("R"));
 }
 
@@ -145,128 +140,203 @@ inline double next_odd(double level) {
   return flight::bitwise_or((level + 1.0), 1.0);
 }
 
-
-// NOT GENERATED: function applyExplicitLevels -- source line 92
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
-//
-// The source it stood for:
-//   function applyExplicitLevels(
-//     original: readonly BidiClass[],
-//     working: BidiClass[],
-//     levelArray: number[],
-//     matchingPdi: Int32Array,
-//     paragraphLevel: number,
-//   ): void {
-//     const MAX_DEPTH = 125;
-//     const stackLevel: number[] = [paragraphLevel];
-//     const stackOverride: (BidiClass | null)[] = [null];
-//     const stackIsolate: boolean[] = [false];
-//     let overflowIsolate = 0;
-//     let overflowEmbedding = 0;
-//     let validIsolate = 0;
-//   
-//     for (let i = 0; i < original.length; i++) {
-//       const t = original[i];
-//       const top = stackLevel.length - 1;
-//       switch (t) {
-//         case 'RLE':
-//         case 'LRE':
-//         case 'RLO':
-//         case 'LRO': {
-//           levelArray[i] = stackLevel[top];
-//           working[i] = 'BN';
-//           const newLevel = t === 'RLE' || t === 'RLO' ? nextOdd(stackLevel[top]) : nextEven(stackLevel[top]);
-//           if (newLevel <= MAX_DEPTH && overflowIsolate === 0 && overflowEmbedding === 0) {
-//             stackLevel.push(newLevel);
-//             stackOverride.push(t === 'RLO' ? 'R' : t === 'LRO' ? 'L' : null);
-//             stackIsolate.push(false);
-//           } else if (overflowIsolate === 0) {
-//             overflowEmbedding++;
-//           }
-//           break;
-//         }
-//         case 'RLI':
-//         case 'LRI':
-//         case 'FSI': {
-//           levelArray[i] = stackLevel[top];
-//           if (stackOverride[top] !== null) working[i] = stackOverride[top] as BidiClass;
-//           let asRtl = t === 'RLI';
-//           if (t === 'FSI') asRtl = computeParagraphLevel(original, i + 1, matchingPdi[i]) === 1;
-//           const newLevel = asRtl ? nextOdd(stackLevel[top]) : nextEven(stackLevel[top]);
-//           if (newLevel <= MAX_DEPTH && overflowIsolate === 0 && overflowEmbedding === 0) {
-//             validIsolate++;
-//             stackLevel.push(newLevel);
-//             stackOverride.push(null);
-//             stackIsolate.push(true);
-//           } else {
-//             overflowIsolate++;
-//           }
-//           break;
-//         }
-//         case 'PDI': {
-//           if (overflowIsolate > 0) {
-//             overflowIsolate--;
-//           } else if (validIsolate > 0) {
-//             overflowEmbedding = 0;
-//             while (!stackIsolate[stackLevel.length - 1]) {
-//               stackLevel.pop();
-//               stackOverride.pop();
-//               stackIsolate.pop();
-//             }
-//             stackLevel.pop();
-//             stackOverride.pop();
-//             stackIsolate.pop();
-//             validIsolate--;
-//           }
-//           const newTop = stackLevel.length - 1;
-//           levelArray[i] = stackLevel[newTop];
-//           if (stackOverride[newTop] !== null) working[i] = stackOverride[newTop] as BidiClass;
-//           break;
-//         }
-//         case 'PDF': {
-//           if (overflowIsolate > 0) {
-//             // isolate overflow shields embeddings; leave the stack alone
-//           } else if (overflowEmbedding > 0) {
-//             overflowEmbedding--;
-//           } else if (!stackIsolate[top] && stackLevel.length >= 2) {
-//             stackLevel.pop();
-//             stackOverride.pop();
-//             stackIsolate.pop();
-//           }
-//           levelArray[i] = stackLevel[stackLevel.length - 1];
-//           working[i] = 'BN';
-//           break;
-//         }
-//         case 'B': {
-//           // X8: a paragraph separator terminates all embeddings/isolates and takes the paragraph level.
-//           stackLevel.length = 1;
-//           stackOverride.length = 1;
-//           stackIsolate.length = 1;
-//           overflowIsolate = 0;
-//           overflowEmbedding = 0;
-//           validIsolate = 0;
-//           levelArray[i] = paragraphLevel;
-//           break;
-//         }
-//         case 'BN': {
-//           levelArray[i] = stackLevel[top];
-//           break;
-//         }
-//         default: {
-//           // X6: every other character takes the current level and, under an active override, its type.
-//           levelArray[i] = stackLevel[top];
-//           if (stackOverride[top] !== null) working[i] = stackOverride[top] as BidiClass;
-//           break;
-//         }
-//       }
-//     }
-//   }
-//   
-//   // X10 + BD13: form the isolating run sequences (level runs over the non-removed characters, chained
-//   // across matching isolate initiator/PDI pairs), compute each sequence's sos/eos boundary types, and
-//   // resolve its weak (W1–W7), neutral (N1–N2), and implicit (I1–I2) levels.
-// cpp emission failed for @flighthq/textbidi/packages/textbidi/src/resolveBidiLevels.ts: contextual union value
-// type flight::String is not a represented runtime domain
+inline void apply_explicit_levels(flight::Array<flight::types::BidiClass> original, flight::Array<flight::types::BidiClass> working, flight::Array<double> level_array, flight::Int32Array matching_pdi, double paragraph_level) {
+  const double max_depth = 125.0;
+  flight::Array<double> stack_level = flight::Array<double>{paragraph_level};
+  flight::Array<std::optional<flight::String>> stack_override = flight::Array<std::optional<flight::String>>{std::nullopt};
+  flight::Array<bool> stack_isolate = flight::Array<bool>{false};
+  double overflow_isolate = 0.0;
+  double overflow_embedding = 0.0;
+  double valid_isolate = 0.0;
+  {
+    double i = 0.0;
+    while ((i < static_cast<double>(original.size()))) {
+      {
+        flight::types::BidiClass t = original.element(i);
+        const double top = (static_cast<double>(stack_level.size()) - 1.0);
+        {
+          double switch_fallthrough_state = -1.0;
+          {
+            auto switch_value = t;
+            if (switch_value == flight::String("RLE")) {
+              (switch_fallthrough_state = 0.0);
+            }
+            else if (switch_value == flight::String("LRE")) {
+              (switch_fallthrough_state = 1.0);
+            }
+            else if (switch_value == flight::String("RLO")) {
+              (switch_fallthrough_state = 2.0);
+            }
+            else if (switch_value == flight::String("LRO")) {
+              (switch_fallthrough_state = 3.0);
+            }
+            else if (switch_value == flight::String("RLI")) {
+              (switch_fallthrough_state = 4.0);
+            }
+            else if (switch_value == flight::String("LRI")) {
+              (switch_fallthrough_state = 5.0);
+            }
+            else if (switch_value == flight::String("FSI")) {
+              (switch_fallthrough_state = 6.0);
+            }
+            else if (switch_value == flight::String("PDI")) {
+              (switch_fallthrough_state = 7.0);
+            }
+            else if (switch_value == flight::String("PDF")) {
+              (switch_fallthrough_state = 8.0);
+            }
+            else if (switch_value == flight::String("B")) {
+              (switch_fallthrough_state = 9.0);
+            }
+            else if (switch_value == flight::String("BN")) {
+              (switch_fallthrough_state = 10.0);
+            }
+            else {
+              (switch_fallthrough_state = 11.0);
+            }
+          }
+          while ((switch_fallthrough_state >= 0.0)) {
+            {
+              auto switch_value_2 = switch_fallthrough_state;
+              if (switch_value_2 == 0.0) {
+                (switch_fallthrough_state = 1.0);
+              }
+              else if (switch_value_2 == 1.0) {
+                (switch_fallthrough_state = 2.0);
+              }
+              else if (switch_value_2 == 2.0) {
+                (switch_fallthrough_state = 3.0);
+              }
+              else if (switch_value_2 == 3.0) {
+                {
+                  (level_array.element(i) = stack_level.element(top));
+                  (working.element(i) = flight::String("BN"));
+                  const double new_level = (((t == flight::String("RLE")) || (t == flight::String("RLO"))) ? next_odd(stack_level.element(top)) : next_even(stack_level.element(top)));
+                  if ((((new_level <= max_depth) && (overflow_isolate == 0.0)) && (overflow_embedding == 0.0))) {
+                    stack_level.push(new_level);
+                    stack_override.push(((t == flight::String("RLO")) ? std::optional<flight::String>{flight::String("R")} : ((t == flight::String("LRO")) ? std::optional<flight::String>{flight::String("L")} : std::nullopt)));
+                    stack_isolate.push(false);
+                  }
+                  else {
+                    if ((overflow_isolate == 0.0)) {
+                      overflow_embedding++;
+                    }
+                  }
+                }
+                (switch_fallthrough_state = -1.0);
+              }
+              else if (switch_value_2 == 4.0) {
+                (switch_fallthrough_state = 5.0);
+              }
+              else if (switch_value_2 == 5.0) {
+                (switch_fallthrough_state = 6.0);
+              }
+              else if (switch_value_2 == 6.0) {
+                {
+                  (level_array.element(i) = stack_level.element(top));
+                  if (([&]() { const auto& presence_operand = stack_override.get(top); return !presence_operand.has_value() || presence_operand.value().has_value(); }())) {
+                    (working.element(i) = stack_override.element(top).value());
+                  }
+                  bool as_rtl = (t == flight::String("RLI"));
+                  if ((t == flight::String("FSI"))) {
+                    (as_rtl = (compute_paragraph_level(original, (i + 1.0), matching_pdi.get_index(i)) == 1.0));
+                  }
+                  const double new_level_2 = (as_rtl ? next_odd(stack_level.element(top)) : next_even(stack_level.element(top)));
+                  if ((((new_level_2 <= max_depth) && (overflow_isolate == 0.0)) && (overflow_embedding == 0.0))) {
+                    valid_isolate++;
+                    stack_level.push(new_level_2);
+                    stack_override.push(std::nullopt);
+                    stack_isolate.push(true);
+                  }
+                  else {
+                    overflow_isolate++;
+                  }
+                }
+                (switch_fallthrough_state = -1.0);
+              }
+              else if (switch_value_2 == 7.0) {
+                {
+                  if ((overflow_isolate > 0.0)) {
+                    overflow_isolate--;
+                  }
+                  else {
+                    if ((valid_isolate > 0.0)) {
+                      (overflow_embedding = 0.0);
+                      while (!stack_isolate.element((static_cast<double>(stack_level.size()) - 1.0))) {
+                        stack_level.pop();
+                        stack_override.pop();
+                        stack_isolate.pop();
+                      }
+                      stack_level.pop();
+                      stack_override.pop();
+                      stack_isolate.pop();
+                      valid_isolate--;
+                    }
+                  }
+                  const double new_top = (static_cast<double>(stack_level.size()) - 1.0);
+                  (level_array.element(i) = stack_level.element(new_top));
+                  if (([&]() { const auto& presence_operand = stack_override.get(new_top); return !presence_operand.has_value() || presence_operand.value().has_value(); }())) {
+                    (working.element(i) = stack_override.element(new_top).value());
+                  }
+                }
+                (switch_fallthrough_state = -1.0);
+              }
+              else if (switch_value_2 == 8.0) {
+                {
+                  if ((overflow_isolate > 0.0)) {
+                  }
+                  else {
+                    if ((overflow_embedding > 0.0)) {
+                      overflow_embedding--;
+                    }
+                    else {
+                      if ((!stack_isolate.element(top) && (static_cast<double>(stack_level.size()) >= 2.0))) {
+                        stack_level.pop();
+                        stack_override.pop();
+                        stack_isolate.pop();
+                      }
+                    }
+                  }
+                  (level_array.element(i) = stack_level.element((static_cast<double>(stack_level.size()) - 1.0)));
+                  (working.element(i) = flight::String("BN"));
+                }
+                (switch_fallthrough_state = -1.0);
+              }
+              else if (switch_value_2 == 9.0) {
+                {
+                  ([&]() { auto&& assignment_receiver = stack_level; const auto assignment_value = 1.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
+                  ([&]() { auto&& assignment_receiver = stack_override; const auto assignment_value = 1.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
+                  ([&]() { auto&& assignment_receiver = stack_isolate; const auto assignment_value = 1.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
+                  (overflow_isolate = 0.0);
+                  (overflow_embedding = 0.0);
+                  (valid_isolate = 0.0);
+                  (level_array.element(i) = paragraph_level);
+                }
+                (switch_fallthrough_state = -1.0);
+              }
+              else if (switch_value_2 == 10.0) {
+                {
+                  (level_array.element(i) = stack_level.element(top));
+                }
+                (switch_fallthrough_state = -1.0);
+              }
+              else if (switch_value_2 == 11.0) {
+                {
+                  (level_array.element(i) = stack_level.element(top));
+                  if (([&]() { const auto& presence_operand = stack_override.get(top); return !presence_operand.has_value() || presence_operand.value().has_value(); }())) {
+                    (working.element(i) = stack_override.element(top).value());
+                  }
+                }
+                (switch_fallthrough_state = -1.0);
+              }
+            }
+          }
+        }
+      }
+      (i += 1.0);
+    }
+  }
+}
 
 inline flight::Array<double> bidi_bracket_pairs = flight::Array<double>{40.0, 41.0, 91.0, 93.0, 123.0, 125.0, 3898.0, 3899.0, 3900.0, 3901.0, 5787.0, 5788.0, 8261.0, 8262.0, 8317.0, 8318.0, 8333.0, 8334.0, 8968.0, 8969.0, 8970.0, 8971.0, 9001.0, 9002.0, 10088.0, 10089.0, 10090.0, 10091.0, 10092.0, 10093.0, 10094.0, 10095.0, 10096.0, 10097.0, 10098.0, 10099.0, 10100.0, 10101.0, 10181.0, 10182.0, 10214.0, 10215.0, 10216.0, 10217.0, 10218.0, 10219.0, 10220.0, 10221.0, 10222.0, 10223.0, 10627.0, 10628.0, 10629.0, 10630.0, 10631.0, 10632.0, 10633.0, 10634.0, 10635.0, 10636.0, 10637.0, 10640.0, 10638.0, 10639.0, 10641.0, 10642.0, 10643.0, 10644.0, 10645.0, 10646.0, 10647.0, 10648.0, 10712.0, 10713.0, 10714.0, 10715.0, 10748.0, 10749.0, 11810.0, 11811.0, 11812.0, 11813.0, 11814.0, 11815.0, 11816.0, 11817.0, 12296.0, 12297.0, 12298.0, 12299.0, 12300.0, 12301.0, 12302.0, 12303.0, 12304.0, 12305.0, 12308.0, 12309.0, 12310.0, 12311.0, 12312.0, 12313.0, 12314.0, 12315.0, 65113.0, 65114.0, 65115.0, 65116.0, 65117.0, 65118.0, 65288.0, 65289.0, 65339.0, 65341.0, 65371.0, 65373.0, 65375.0, 65376.0, 65378.0, 65379.0};
 
@@ -301,90 +371,112 @@ struct close_open_81643c227079c726 : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTBIDI_CLOSE_OPEN_81643C227079C726
 
+inline void resolve_paired_brackets(flight::Array<double> codepoints, flight::Array<double> sequence, flight::Array<flight::types::BidiClass> types, flight::types::BidiClass embedding_direction, flight::types::BidiClass sos) {
+  flight::Array<flight::Ref<close_position_375bfc973604d8e3>> stack = flight::Array<flight::Ref<close_position_375bfc973604d8e3>>{};
+  flight::Array<flight::Ref<close_open_81643c227079c726>> pairs = flight::Array<flight::Ref<close_open_81643c227079c726>>{};
+  {
+    double i = 0.0;
+    while ((i < static_cast<double>(sequence.size()))) {
+      {
+        if ((types.element(i) != flight::String("ON"))) {
+          (i += 1.0);
+          continue;
+        }
+        const double codepoint = codepoints.element(sequence.element(i));
+        const double closing = get_bidi_bracket_closing(codepoint);
+        if ((closing != -1.0)) {
+          if ((static_cast<double>(stack.size()) == 63.0)) {
+            break;
+          }
+          stack.push(flight::make_ref<close_position_375bfc973604d8e3>(close_position_375bfc973604d8e3{.close = closing, .position = i}));
+          {
+            (i += 1.0);
+            continue;
+          }
+        }
+        {
+          double s = (static_cast<double>(stack.size()) - 1.0);
+          while ((s >= 0.0)) {
+            {
+              if ((stack.element(s)->close != codepoint)) {
+                (s -= 1.0);
+                continue;
+              }
+              pairs.push(([&]() { auto object_member_open = stack.element(s)->position; auto object_member_close = i; return flight::make_ref<close_open_81643c227079c726>(close_open_81643c227079c726{.close = object_member_close, .open = object_member_open}); }()));
+              ([&]() { auto&& assignment_receiver = stack; const auto assignment_value = s; assignment_receiver.resize(assignment_value); return assignment_value; }());
+              break;
+            }
+            (s -= 1.0);
+          }
+        }
+      }
+      (i += 1.0);
+    }
+  }
+  pairs.sort([=](flight::Ref<close_open_81643c227079c726> a, flight::Ref<close_open_81643c227079c726> b) { return (a->open - b->open); });
+  flight::types::BidiClass opposite_direction = ((embedding_direction == flight::String("L")) ? flight::String("R") : flight::String("L"));
+  for (auto pair : pairs) {
+    bool contains_embedding_direction = false;
+    bool contains_opposite_direction = false;
+    {
+      double i_2 = (pair->open + 1.0);
+      while ((i_2 < pair->close)) {
+        {
+          std::optional<flight::String> direction = strong_bidi_direction(types.element(i_2));
+          if ((direction == embedding_direction)) {
+            (contains_embedding_direction = true);
+            break;
+          }
+          if ((direction == opposite_direction)) {
+            (contains_opposite_direction = true);
+          }
+        }
+        (i_2 += 1.0);
+      }
+    }
+    std::optional<flight::String> resolved = std::nullopt;
+    if (contains_embedding_direction) {
+      (resolved = std::optional<flight::String>{embedding_direction});
+    }
+    else {
+      if (contains_opposite_direction) {
+        flight::types::BidiClass preceding_direction = strong_bidi_direction(sos).value();
+        {
+          double i_3 = (pair->open - 1.0);
+          while ((i_3 >= 0.0)) {
+            {
+              std::optional<flight::String> direction_2 = strong_bidi_direction(types.element(i_3));
+              if (!direction_2.has_value()) {
+                (i_3 -= 1.0);
+                continue;
+              }
+              (preceding_direction = direction_2.value());
+              break;
+            }
+            (i_3 -= 1.0);
+          }
+        }
+        (resolved = ((preceding_direction == opposite_direction) ? std::optional<flight::String>{opposite_direction} : std::optional<flight::String>{embedding_direction}));
+      }
+    }
+    if (resolved.has_value()) {
+      (types.element(pair->open) = resolved.value());
+      (types.element(pair->close) = resolved.value());
+    }
+  }
+}
 
-// NOT GENERATED: function resolvePairedBrackets -- source line 407
-// refusal: cpp-contextual-union-inequivalent [source-portability]
-//
-// The source it stood for:
-//   function resolvePairedBrackets(
-//     codepoints: readonly number[],
-//     sequence: readonly number[],
-//     types: BidiClass[],
-//     embeddingDirection: BidiClass,
-//     sos: BidiClass,
-//   ): void {
-//     const stack: Array<{ close: number; position: number }> = [];
-//     const pairs: Array<{ close: number; open: number }> = [];
-//     for (let i = 0; i < sequence.length; i++) {
-//       if (types[i] !== 'ON') continue;
-//       const codepoint = codepoints[sequence[i]];
-//       const closing = getBidiBracketClosing(codepoint);
-//       if (closing !== -1) {
-//         if (stack.length === 63) break;
-//         stack.push({ close: closing, position: i });
-//         continue;
-//       }
-//       for (let s = stack.length - 1; s >= 0; s--) {
-//         if (stack[s].close !== codepoint) continue;
-//         pairs.push({ open: stack[s].position, close: i });
-//         stack.length = s;
-//         break;
-//       }
-//     }
-//   
-//     pairs.sort((a, b) => a.open - b.open);
-//     const oppositeDirection: BidiClass = embeddingDirection === 'L' ? 'R' : 'L';
-//     for (const pair of pairs) {
-//       let containsEmbeddingDirection = false;
-//       let containsOppositeDirection = false;
-//       for (let i = pair.open + 1; i < pair.close; i++) {
-//         const direction = strongBidiDirection(types[i]);
-//         if (direction === embeddingDirection) {
-//           containsEmbeddingDirection = true;
-//           break;
-//         }
-//         if (direction === oppositeDirection) containsOppositeDirection = true;
-//       }
-//   
-//       let resolved: BidiClass | null = null;
-//       if (containsEmbeddingDirection) {
-//         resolved = embeddingDirection;
-//       } else if (containsOppositeDirection) {
-//         let precedingDirection = strongBidiDirection(sos) as BidiClass;
-//         for (let i = pair.open - 1; i >= 0; i--) {
-//           const direction = strongBidiDirection(types[i]);
-//           if (direction === null) continue;
-//           precedingDirection = direction;
-//           break;
-//         }
-//         resolved = precedingDirection === oppositeDirection ? oppositeDirection : embeddingDirection;
-//       }
-//       if (resolved !== null) {
-//         types[pair.open] = resolved;
-//         types[pair.close] = resolved;
-//       }
-//     }
-//   }
-//   
-// cpp emission failed for @flighthq/textbidi/packages/textbidi/src/resolveBidiLevels.ts: contextual C++ union
-// conversion requires equivalent source union evidence: target optionalSingle carriers [flight::Ref<BidiClass>]
-// from identifier source singleValue carriers [flight::String]. Narrow or convert the source expression so each
-// of its alternatives names exactly one destination union alternative. The carrier lists show which alternatives
-// lack an exact carrier; preserve the declared collection or member union alias before flow expansion. For a Map
-// or WeakMap lookup followed by a rebind, ensure every rebound member already has the declared value owner
-// member's carrier -- a Readonly structural view does not become a mutable nominal Ref.
-
-inline void resolve_sequence(flight::Array<double> codepoints, flight::Array<flight::Ref<BidiClass>> original, flight::Array<flight::Ref<BidiClass>> working, flight::Array<double> level_array, flight::Array<double> kept, flight::Array<double> sequence, double kept_start, double kept_end, flight::Int32Array matching_pdi, double paragraph_level) {
+inline void resolve_sequence(flight::Array<double> codepoints, flight::Array<flight::types::BidiClass> original, flight::Array<flight::types::BidiClass> working, flight::Array<double> level_array, flight::Array<double> kept, flight::Array<double> sequence, double kept_start, double kept_end, flight::Int32Array matching_pdi, double paragraph_level) {
   const double seq_level = level_array.element(sequence.element(0.0));
   const double prev_level = ((kept_start > 0.0) ? level_array.element(kept.element((kept_start - 1.0))) : paragraph_level);
   const flight::String sos = ((std::fmod(flight::maximum(seq_level, prev_level), 2.0) == 1.0) ? flight::String("R") : flight::String("L"));
   const double last_idx = sequence.element((static_cast<double>(sequence.size()) - 1.0));
-  flight::Ref<BidiClass> last_type = original.element(last_idx);
+  flight::types::BidiClass last_type = original.element(last_idx);
   const bool ends_unmatched_isolate = ((((last_type == flight::String("LRI")) || (last_type == flight::String("RLI"))) || (last_type == flight::String("FSI"))) && (matching_pdi.get_index(last_idx) >= static_cast<double>(original.size())));
   const double next_level = (ends_unmatched_isolate ? paragraph_level : ((kept_end < static_cast<double>(kept.size())) ? level_array.element(kept.element(kept_end)) : paragraph_level));
   const flight::String eos = ((std::fmod(flight::maximum(seq_level, next_level), 2.0) == 1.0) ? flight::String("R") : flight::String("L"));
   const double len = static_cast<double>(sequence.size());
-  flight::Array<flight::Ref<BidiClass>> ty = flight::Array<flight::Ref<BidiClass>>(len);
+  flight::Array<flight::types::BidiClass> ty = flight::Array<flight::types::BidiClass>(len);
   {
     double k = 0.0;
     while ((k < len)) {
@@ -392,7 +484,7 @@ inline void resolve_sequence(flight::Array<double> codepoints, flight::Array<fli
       (k += 1.0);
     }
   }
-  flight::Ref<BidiClass> prev = sos;
+  flight::types::BidiClass prev = sos;
   {
     double k_2 = 0.0;
     while ((k_2 < len)) {
@@ -405,12 +497,12 @@ inline void resolve_sequence(flight::Array<double> codepoints, flight::Array<fli
       (k_2 += 1.0);
     }
   }
-  flight::Ref<BidiClass> strong = sos;
+  flight::types::BidiClass strong = sos;
   {
     double k_3 = 0.0;
     while ((k_3 < len)) {
       {
-        flight::Ref<BidiClass> c = ty.element(k_3);
+        flight::types::BidiClass c = ty.element(k_3);
         if ((((c == flight::String("L")) || (c == flight::String("R"))) || (c == flight::String("AL")))) {
           (strong = c);
         }
@@ -436,7 +528,7 @@ inline void resolve_sequence(flight::Array<double> codepoints, flight::Array<fli
     double k_5 = 1.0;
     while ((k_5 < (len - 1.0))) {
       {
-        flight::Ref<BidiClass> c_2 = ty.element(k_5);
+        flight::types::BidiClass c_2 = ty.element(k_5);
         if ((((c_2 == flight::String("ES")) && (ty.element((k_5 - 1.0)) == flight::String("EN"))) && (ty.element((k_5 + 1.0)) == flight::String("EN")))) {
           (ty.element(k_5) = flight::String("EN"));
         }
@@ -465,8 +557,8 @@ inline void resolve_sequence(flight::Array<double> codepoints, flight::Array<fli
           while (((j < len) && (ty.element(j) == flight::String("ET")))) {
             j++;
           }
-          flight::Ref<BidiClass> before = ((k_6 > 0.0) ? ty.element((k_6 - 1.0)) : sos);
-          flight::Ref<BidiClass> after = ((j < len) ? ty.element(j) : eos);
+          flight::types::BidiClass before = ((k_6 > 0.0) ? ty.element((k_6 - 1.0)) : sos);
+          flight::types::BidiClass after = ((j < len) ? ty.element(j) : eos);
           if (((before == flight::String("EN")) || (after == flight::String("EN")))) {
             double m = k_6;
             while ((m < j)) {
@@ -496,7 +588,7 @@ inline void resolve_sequence(flight::Array<double> codepoints, flight::Array<fli
     double k_8 = 0.0;
     while ((k_8 < len)) {
       {
-        flight::Ref<BidiClass> c_3 = ty.element(k_8);
+        flight::types::BidiClass c_3 = ty.element(k_8);
         if (((c_3 == flight::String("L")) || (c_3 == flight::String("R")))) {
           (strong = c_3);
         }
@@ -509,7 +601,7 @@ inline void resolve_sequence(flight::Array<double> codepoints, flight::Array<fli
       (k_8 += 1.0);
     }
   }
-  flight::Ref<BidiClass> embedding_dir = ((std::fmod(seq_level, 2.0) == 1.0) ? flight::String("R") : flight::String("L"));
+  flight::types::BidiClass embedding_dir = ((std::fmod(seq_level, 2.0) == 1.0) ? flight::String("R") : flight::String("L"));
   resolve_paired_brackets(codepoints, sequence, ty, embedding_dir, sos);
   {
     double k_9 = 0.0;
@@ -543,7 +635,7 @@ inline void resolve_sequence(flight::Array<double> codepoints, flight::Array<fli
     double k_10 = 0.0;
     while ((k_10 < len)) {
       {
-        flight::Ref<BidiClass> c_4 = ty.element(k_10);
+        flight::types::BidiClass c_4 = ty.element(k_10);
         double lvl = seq_level;
         if (even) {
           if ((c_4 == flight::String("R"))) {
@@ -576,7 +668,7 @@ struct indices_kept_start_kept_end_3ec40b0c934bdef8 : public flight::ReferenceEn
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTBIDI_INDICES_KEPT_START_KEPT_END_3EC40B0C934BDEF8
 
-inline void resolve_isolating_run_sequences(flight::Array<double> codepoints, flight::Array<flight::Ref<BidiClass>> original, flight::Array<flight::Ref<BidiClass>> working, flight::Array<double> level_array, flight::Int32Array matching_pdi, flight::Int32Array matching_initiator, double paragraph_level) {
+inline void resolve_isolating_run_sequences(flight::Array<double> codepoints, flight::Array<flight::types::BidiClass> original, flight::Array<flight::types::BidiClass> working, flight::Array<double> level_array, flight::Int32Array matching_pdi, flight::Int32Array matching_initiator, double paragraph_level) {
   const double length = static_cast<double>(original.size());
   flight::Array<double> kept = flight::Array<double>{};
   {
@@ -647,7 +739,7 @@ inline void resolve_isolating_run_sequences(flight::Array<double> codepoints, fl
               }
               (kept_end = run->kept_end);
               const double last_idx = run->indices.element((static_cast<double>(run->indices.size()) - 1.0));
-              flight::Ref<BidiClass> last_type = original.element(last_idx);
+              flight::types::BidiClass last_type = original.element(last_idx);
               if (((((last_type == flight::String("LRI")) || (last_type == flight::String("RLI"))) || (last_type == flight::String("FSI"))) && (matching_pdi.get_index(last_idx) < length))) {
                 const std::optional<double> next = run_by_first.get(matching_pdi.get_index(last_idx));
                 if (!next.has_value()) {

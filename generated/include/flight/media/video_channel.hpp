@@ -4,24 +4,11 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: variable (binding) -- source line 167
-//   missing: function getElement -- source line 170
-//   missing: function destroyVideoChannel -- source line 13
-//   missing: function getVideoChannelCurrentTime -- source line 29
-//   missing: function getVideoChannelHeight -- source line 39
-//   missing: function getVideoChannelWidth -- source line 44
-//   missing: function setVideoChannelCurrentTime -- source line 113
-//   missing: function setVideoChannelGain -- source line 124
-//   missing: function setVideoChannelMuted -- source line 131
-//   missing: function setVideoChannelPlaybackRate -- source line 138
-//   missing: function emitVideoChannelSignal -- source line 191
-//   missing: function pauseVideoChannel -- source line 57
-//   missing: function stopVideoChannel -- source line 149
-//   missing: function startVideoChannel -- source line 199
-//   missing: function resumeVideoChannel -- source line 107
-//   missing: function completeVideoChannel -- source line 174
+#include <flight/structural_ref.hpp>
 #include <flight/weak_map.hpp>
 #include <functional>
 #include <optional>
+#include <stdexcept>
 #include <variant>
 #include <flight/runtime.hpp>
 
@@ -36,6 +23,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/host_image_source.hpp>
 
+namespace flight::types { struct HostVideoCapability; }
+namespace flight::types { struct MediaChannelSignals; }
+namespace flight::types { struct VideoChannel; }
+namespace flight::types { struct VideoPlayOptions; }
+namespace flight::types { struct VideoResource; }
+namespace flight::types { struct VideoResourceLoadOptions; }
+namespace flight::types { template <typename T> struct Signal; }
+
 namespace flight::media {
 
 using flight::signals::create_signal;
@@ -48,19 +43,27 @@ using flight::types::VideoPlayOptions;
 struct VideoChannelRuntime;
 } // namespace flight::media
 
+#include <flight/math/clamp.hpp>
+#include <flight/signals/emitter.hpp>
+#include <flight/signals/signal.hpp>
+#include <flight/types/host_image_source.hpp>
+#include <flight/types/host_video.hpp>
+#include <flight/types/media_channel_signals.hpp>
+#include <flight/types/signal.hpp>
+#include <flight/types/video_resource.hpp>
 #include <flight/media/media_channel_signals.hpp>
 
 namespace flight::media {
 
-inline double get_video_channel_duration(flight::Ref<VideoChannel> channel) {
+inline double get_video_channel_duration(flight::Ref<flight::types::VideoChannel> channel) {
   return channel->length;
 }
 
-inline bool is_video_channel_muted(flight::Ref<VideoChannel> channel) {
-  return channel->muted;
+inline bool is_video_channel_muted(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoChannel>>>> channel) {
+  return flight::row_get<flight::RowKey<"muted">>(channel);
 }
 
-inline bool is_video_channel_playing(flight::Ref<VideoChannel> channel) {
+inline bool is_video_channel_playing(flight::Ref<flight::types::VideoChannel> channel) {
   return (channel->state == flight::String("playing"));
 }
 
@@ -78,287 +81,182 @@ struct VideoChannelRuntime : public flight::ReferenceEnabled {
 // cpp emission failed for @flighthq/media/packages/media/src/videoChannel.ts: flight-cpp WeakMap value requires
 // a proven C++ representation
 
-inline flight::WeakMap<flight::Ref<HostImageSource>, flight::Ref<VideoChannelRuntime>> video_channel_runtimes = flight::WeakMap<flight::Ref<HostImageSource>, flight::Ref<VideoChannelRuntime>>();
+inline flight::WeakMap<flight::types::HostImageSource, flight::Ref<VideoChannelRuntime>> video_channel_runtimes = flight::WeakMap<flight::types::HostImageSource, flight::Ref<VideoChannelRuntime>>();
 
+inline std::optional<flight::types::HostImageSource> get_element(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>> resource) {
+  return ([&]() -> std::optional<flight::types::HostImageSource> { auto nullish_coalesce_left = ([&]() -> std::variant<flight::types::HostImageSource, flight::Null, flight::Undefined> { auto optional_chain_receiver = resource; if (!optional_chain_receiver.has_value()) return std::variant<flight::types::HostImageSource, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return ([&]() -> std::variant<flight::types::HostImageSource, flight::Null, flight::Undefined> { auto optional_chain_projected = flight::row_get<flight::RowKey<"element">>(optional_chain_receiver.value()); if (!optional_chain_projected.has_value()) return std::variant<flight::types::HostImageSource, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::types::HostImageSource, flight::Null, flight::Undefined>{std::in_place_type<flight::types::HostImageSource>, optional_chain_projected.value()}; }()); }()); if (const auto* alternative = std::get_if<flight::types::HostImageSource>(&nullish_coalesce_left)) return std::optional<flight::types::HostImageSource>{*alternative}; return std::nullopt; }());
+}
 
-// NOT GENERATED: function getElement -- source line 170
-//
-// The source it stood for:
-//   function getElement(resource: Readonly<VideoResource> | null): HostImageSource | null {
-//     return resource?.element ?? null;
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/videoChannel.ts: dual-sentinel optional property
-// result requires one represented member value domain
+inline void destroy_video_channel(flight::Ref<flight::types::HostVideoCapability> host_video, flight::Ref<flight::types::VideoChannel> channel) {
+  std::optional<flight::types::HostImageSource> element = ([&]() -> std::optional<flight::types::HostImageSource> { auto nullish_coalesce_left = channel_elements.get(channel); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return get_element(([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>> { auto contextual_union_source = channel->source; if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>(contextual_union_source.value()))}; }())); }());
+  if (element.has_value()) {
+    auto runtime = video_channel_runtimes.get(element.value());
+    if (runtime.has_value()) {
+      host_video->remove_ended_listener.value()(element.value(), runtime.value()->on_ended);
+      video_channel_runtimes.erase(element.value());
+    }
+    host_video->pause.value()(element.value());
+    channel_elements.erase(channel);
+  }
+  (channel->source = std::nullopt);
+  (channel->state = flight::String("stopped"));
+  (channel->current_time = 0.0);
+}
 
+inline double get_video_channel_current_time(flight::Ref<flight::types::HostVideoCapability> host_video, flight::Ref<flight::types::VideoChannel> channel) {
+  auto element = get_element(([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>> { auto contextual_union_source_2 = channel->source; if (!contextual_union_source_2.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>(contextual_union_source_2.value()))}; }()));
+  if ((!element.has_value() || (channel->state != flight::String("playing")))) {
+    return channel->current_time;
+  }
+  return (host_video->get_current_time.value()(element.value()) * 1000.0);
+}
 
-// NOT GENERATED: function destroyVideoChannel -- source line 13
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function destroyVideoChannel(hostVideo: HostVideoCapability, channel: VideoChannel): void {
-//     const element = channelElements.get(channel) ?? getElement(channel.source);
-//     if (element !== null) {
-//       const runtime = videoChannelRuntimes.get(element);
-//       if (runtime !== undefined) {
-//         hostVideo.removeEndedListener!(element, runtime.onEnded);
-//         videoChannelRuntimes.delete(element);
-//       }
-//       hostVideo.pause!(element);
-//       channelElements.delete(channel);
-//     }
-//     channel.source = null;
-//     channel.state = 'stopped';
-//     channel.currentTime = 0;
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/videoChannel.ts: contextual optionalSingle
-// construction requires expression type evidence
+inline double get_video_channel_height(flight::Ref<flight::types::HostVideoCapability> host_video, flight::Ref<flight::types::VideoChannel> channel) {
+  auto element = get_element(([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>> { auto contextual_union_source_3 = channel->source; if (!contextual_union_source_3.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>(contextual_union_source_3.value()))}; }()));
+  return (element.has_value() ? host_video->get_height.value()(element.value()) : 0.0);
+}
 
+inline double get_video_channel_width(flight::Ref<flight::types::HostVideoCapability> host_video, flight::Ref<flight::types::VideoChannel> channel) {
+  auto element = get_element(([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>> { auto contextual_union_source_4 = channel->source; if (!contextual_union_source_4.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>(contextual_union_source_4.value()))}; }()));
+  return (element.has_value() ? host_video->get_width.value()(element.value()) : 0.0);
+}
 
-// NOT GENERATED: function getVideoChannelCurrentTime -- source line 29
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function getVideoChannelCurrentTime(hostVideo: HostVideoCapability, channel: VideoChannel): number {
-//     const element = getElement(channel.source);
-//     if (element === null || channel.state !== 'playing') return channel.currentTime;
-//     return hostVideo.getCurrentTime!(element) * 1000;
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/videoChannel.ts: contextual optionalSingle
-// construction requires expression type evidence
+inline double set_video_channel_current_time(flight::Ref<flight::types::HostVideoCapability> host_video, flight::Ref<flight::types::VideoChannel> channel, double value) {
+  (channel->current_time = flight::math::clamp(value, 0.0, channel->length));
+  auto element = get_element(([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>> { auto contextual_union_source_5 = channel->source; if (!contextual_union_source_5.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>(contextual_union_source_5.value()))}; }()));
+  if (element.has_value()) {
+    host_video->set_current_time.value()(element.value(), (channel->current_time / 1000.0));
+  }
+  return channel->current_time;
+}
 
+inline double set_video_channel_gain(flight::Ref<flight::types::HostVideoCapability> host_video, flight::Ref<flight::types::VideoChannel> channel, double value) {
+  (channel->gain = value);
+  auto element = get_element(([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>> { auto contextual_union_source_6 = channel->source; if (!contextual_union_source_6.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>(contextual_union_source_6.value()))}; }()));
+  if (element.has_value()) {
+    host_video->set_volume.value()(element.value(), value);
+  }
+  return channel->gain;
+}
 
-// NOT GENERATED: function getVideoChannelHeight -- source line 39
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function getVideoChannelHeight(hostVideo: HostVideoCapability, channel: VideoChannel): number {
-//     const element = getElement(channel.source);
-//     return element !== null ? hostVideo.getHeight!(element) : 0;
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/videoChannel.ts: contextual optionalSingle
-// construction requires expression type evidence
+inline bool set_video_channel_muted(flight::Ref<flight::types::HostVideoCapability> host_video, flight::Ref<flight::types::VideoChannel> channel, bool value) {
+  (channel->muted = value);
+  auto element = get_element(([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>> { auto contextual_union_source_7 = channel->source; if (!contextual_union_source_7.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>(contextual_union_source_7.value()))}; }()));
+  if (element.has_value()) {
+    host_video->set_muted.value()(element.value(), value);
+  }
+  return channel->muted;
+}
 
+inline double set_video_channel_playback_rate(flight::Ref<flight::types::HostVideoCapability> host_video, flight::Ref<flight::types::VideoChannel> channel, double value) {
+  (channel->playback_rate = value);
+  auto element = get_element(([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>> { auto contextual_union_source_8 = channel->source; if (!contextual_union_source_8.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>(contextual_union_source_8.value()))}; }()));
+  if (element.has_value()) {
+    host_video->set_playback_rate.value()(element.value(), value);
+  }
+  return channel->playback_rate;
+}
 
-// NOT GENERATED: function getVideoChannelWidth -- source line 44
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function getVideoChannelWidth(hostVideo: HostVideoCapability, channel: VideoChannel): number {
-//     const element = getElement(channel.source);
-//     return element !== null ? hostVideo.getWidth!(element) : 0;
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/videoChannel.ts: contextual optionalSingle
-// construction requires expression type evidence
+inline void emit_video_channel_signal(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoChannel>>>> channel, flight::String name) {
+  auto signals = flight::media::get_video_channel_signals(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoChannel>>>>>(channel));
+  if (signals.has_value()) {
+    flight::signals::emit_signal<std::function<void()>>(([&]() -> std::shared_ptr<flight::types::Signal<std::function<void()>>> { const auto& selection_receiver = signals.value(); const auto selection_key = name; if (selection_key == flight::String("onComplete")) return selection_receiver->on_complete; if (selection_key == flight::String("onPause")) return selection_receiver->on_pause; if (selection_key == flight::String("onLoop")) return selection_receiver->on_loop; if (selection_key == flight::String("onPlay")) return selection_receiver->on_play; if (selection_key == flight::String("onStop")) return selection_receiver->on_stop; throw std::logic_error("Flight finite-key selection reached no member"); }()));
+  }
+}
 
+inline void pause_video_channel(flight::Ref<flight::types::HostVideoCapability> host_video, flight::Ref<flight::types::VideoChannel> channel) {
+  if ((channel->state != flight::String("playing"))) {
+    return;
+  }
+  auto element = get_element(([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>> { auto contextual_union_source_9 = channel->source; if (!contextual_union_source_9.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>(contextual_union_source_9.value()))}; }()));
+  if (!element.has_value()) {
+    return;
+  }
+  (channel->current_time = get_video_channel_current_time(host_video, channel));
+  (channel->state = flight::String("paused"));
+  host_video->pause.value()(element.value());
+  emit_video_channel_signal(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoChannel>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VideoChannel>>>>(channel)), flight::String("onPause"));
+}
 
-// NOT GENERATED: function setVideoChannelCurrentTime -- source line 113
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function setVideoChannelCurrentTime(
-//     hostVideo: HostVideoCapability,
-//     channel: VideoChannel,
-//     value: number,
-//   ): number {
-//     channel.currentTime = clamp(value, 0, channel.length);
-//     const element = getElement(channel.source);
-//     if (element !== null) hostVideo.setCurrentTime!(element, channel.currentTime / 1000);
-//     return channel.currentTime;
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/videoChannel.ts: contextual optionalSingle
-// construction requires expression type evidence
+inline void stop_video_channel(flight::Ref<flight::types::HostVideoCapability> host_video, flight::Ref<flight::types::VideoChannel> channel) {
+  auto element = get_element(([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>> { auto contextual_union_source_10 = channel->source; if (!contextual_union_source_10.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>(contextual_union_source_10.value()))}; }()));
+  if (element.has_value()) {
+    auto runtime = video_channel_runtimes.get(element.value());
+    if (runtime.has_value()) {
+      host_video->remove_ended_listener.value()(element.value(), runtime.value()->on_ended);
+    }
+    host_video->pause.value()(element.value());
+    host_video->set_current_time.value()(element.value(), 0.0);
+  }
+  (channel->current_time = 0.0);
+  (channel->state = flight::String("stopped"));
+  emit_video_channel_signal(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoChannel>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VideoChannel>>>>(channel)), flight::String("onStop"));
+}
 
+inline void start_video_channel(flight::Ref<flight::types::HostVideoCapability> host_video, flight::Ref<flight::types::VideoChannel> channel) {
+  auto element = get_element(([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>> { auto contextual_union_source_11 = channel->source; if (!contextual_union_source_11.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>(contextual_union_source_11.value()))}; }()));
+  if (!element.has_value()) {
+    return;
+  }
+  host_video->set_current_time.value()(element.value(), (channel->current_time / 1000.0));
+  (channel->state = flight::String("playing"));
+  host_video->play.value()(element.value()).catch_error([=]() {
+  if ((channel->state == flight::String("playing"))) {
+    (channel->state = flight::String("stopped"));
+  }
+});
+}
 
-// NOT GENERATED: function setVideoChannelGain -- source line 124
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function setVideoChannelGain(hostVideo: HostVideoCapability, channel: VideoChannel, value: number): number {
-//     channel.gain = value;
-//     const element = getElement(channel.source);
-//     if (element !== null) hostVideo.setVolume!(element, value);
-//     return channel.gain;
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/videoChannel.ts: contextual optionalSingle
-// construction requires expression type evidence
+inline void resume_video_channel(flight::Ref<flight::types::HostVideoCapability> host_video, flight::Ref<flight::types::VideoChannel> channel) {
+  if (((channel->state == flight::String("playing")) || !get_element(([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>> { auto contextual_union_source_12 = channel->source; if (!contextual_union_source_12.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>(contextual_union_source_12.value()))}; }())).has_value())) {
+    return;
+  }
+  start_video_channel(host_video, channel);
+  emit_video_channel_signal(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoChannel>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VideoChannel>>>>(channel)), flight::String("onPlay"));
+}
 
+inline void complete_video_channel(flight::Ref<flight::types::HostVideoCapability> host_video, flight::Ref<flight::types::VideoChannel> channel) {
+  if ((channel->state != flight::String("playing"))) {
+    return;
+  }
+  auto element = get_element(([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>> { auto contextual_union_source_13 = channel->source; if (!contextual_union_source_13.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>(contextual_union_source_13.value()))}; }()));
+  auto runtime = (element.has_value() ? std::optional{video_channel_runtimes.get(element.value())} : std::nullopt);
+  if ((runtime.has_value() && (runtime.value()->loops_remaining != 0.0))) {
+    if ((runtime.value()->loops_remaining > 0.0)) {
+      runtime.value()->loops_remaining--;
+    }
+    (channel->current_time = 0.0);
+    emit_video_channel_signal(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoChannel>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VideoChannel>>>>(channel)), flight::String("onLoop"));
+    start_video_channel(host_video, channel);
+    return;
+  }
+  (channel->current_time = channel->length);
+  (channel->state = flight::String("complete"));
+  emit_video_channel_signal(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoChannel>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VideoChannel>>>>(channel)), flight::String("onComplete"));
+  flight::signals::emit_signal<std::function<void()>>(channel->on_complete);
+}
 
-// NOT GENERATED: function setVideoChannelMuted -- source line 131
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function setVideoChannelMuted(hostVideo: HostVideoCapability, channel: VideoChannel, value: boolean): boolean {
-//     channel.muted = value;
-//     const element = getElement(channel.source);
-//     if (element !== null) hostVideo.setMuted!(element, value);
-//     return channel.muted;
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/videoChannel.ts: contextual optionalSingle
-// construction requires expression type evidence
-
-
-// NOT GENERATED: function setVideoChannelPlaybackRate -- source line 138
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function setVideoChannelPlaybackRate(
-//     hostVideo: HostVideoCapability,
-//     channel: VideoChannel,
-//     value: number,
-//   ): number {
-//     channel.playbackRate = value;
-//     const element = getElement(channel.source);
-//     if (element !== null) hostVideo.setPlaybackRate!(element, value);
-//     return channel.playbackRate;
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/videoChannel.ts: contextual optionalSingle
-// construction requires expression type evidence
-
-
-// NOT GENERATED: function emitVideoChannelSignal -- source line 191
-// refusal: cpp-closed-key-access-without-object-storage [compiler-restriction]
-//
-// The source it stood for:
-//   function emitVideoChannelSignal(
-//     channel: Readonly<VideoChannel>,
-//     name: 'onComplete' | 'onLoop' | 'onPause' | 'onPlay' | 'onStop',
-//   ): void {
-//     const signals = getVideoChannelSignals(channel);
-//     if (signals !== null) emitSignal(signals[name]);
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/videoChannel.ts: closed-key element access over
-// MediaChannelSignals requires represented object storage: the finite key set proves which members may be
-// selected, but the receiver does not retain one exact flight::Ref owner whose shape defines those members.
-// Accept a concrete declared object type at this boundary (or a Record when keyed storage is intended); the
-// compiler will not cast, copy, or materialize an owner to make the access possible
-
-
-// NOT GENERATED: function pauseVideoChannel -- source line 57
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function pauseVideoChannel(hostVideo: HostVideoCapability, channel: VideoChannel): void {
-//     if (channel.state !== 'playing') return;
-//     const element = getElement(channel.source);
-//     if (element === null) return;
-//     channel.currentTime = getVideoChannelCurrentTime(hostVideo, channel);
-//     channel.state = 'paused';
-//     hostVideo.pause!(element);
-//     emitVideoChannelSignal(channel, 'onPause');
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/videoChannel.ts: contextual optionalSingle
-// construction requires expression type evidence
-
-
-// NOT GENERATED: function stopVideoChannel -- source line 149
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function stopVideoChannel(hostVideo: HostVideoCapability, channel: VideoChannel): void {
-//     const element = getElement(channel.source);
-//     if (element !== null) {
-//       const runtime = videoChannelRuntimes.get(element);
-//       if (runtime !== undefined) hostVideo.removeEndedListener!(element, runtime.onEnded);
-//       hostVideo.pause!(element);
-//       hostVideo.setCurrentTime!(element, 0);
-//     }
-//     channel.currentTime = 0;
-//     channel.state = 'stopped';
-//     emitVideoChannelSignal(channel, 'onStop');
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/videoChannel.ts: contextual optionalSingle
-// construction requires expression type evidence
-
-
-// NOT GENERATED: function startVideoChannel -- source line 199
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   function startVideoChannel(hostVideo: HostVideoCapability, channel: VideoChannel): void {
-//     const element = getElement(channel.source);
-//     if (element === null) return;
-//     hostVideo.setCurrentTime!(element, channel.currentTime / 1000);
-//     channel.state = 'playing';
-//     hostVideo.play!(element).catch(() => {
-//       if (channel.state === 'playing') channel.state = 'stopped';
-//     });
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/videoChannel.ts: contextual optionalSingle
-// construction requires expression type evidence
-
-
-// NOT GENERATED: function resumeVideoChannel -- source line 107
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function resumeVideoChannel(hostVideo: HostVideoCapability, channel: VideoChannel): void {
-//     if (channel.state === 'playing' || getElement(channel.source) === null) return;
-//     startVideoChannel(hostVideo, channel);
-//     emitVideoChannelSignal(channel, 'onPlay');
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/videoChannel.ts: contextual optionalSingle
-// construction requires expression type evidence
-
-
-// NOT GENERATED: function completeVideoChannel -- source line 174
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   function completeVideoChannel(hostVideo: HostVideoCapability, channel: VideoChannel): void {
-//     if (channel.state !== 'playing') return;
-//     const element = getElement(channel.source);
-//     const runtime = element !== null ? videoChannelRuntimes.get(element) : undefined;
-//     if (runtime !== undefined && runtime.loopsRemaining !== 0) {
-//       if (runtime.loopsRemaining > 0) runtime.loopsRemaining--;
-//       channel.currentTime = 0;
-//       emitVideoChannelSignal(channel, 'onLoop');
-//       startVideoChannel(hostVideo, channel);
-//       return;
-//     }
-//     channel.currentTime = channel.length;
-//     channel.state = 'complete';
-//     emitVideoChannelSignal(channel, 'onComplete');
-//     emitSignal(channel.onComplete);
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/videoChannel.ts: contextual optionalSingle
-// construction requires expression type evidence
-
-inline std::optional<flight::Ref<VideoChannel>> play_video_resource(flight::Ref<HostVideoCapability> host_video, flight::Ref<VideoResource> source, std::optional<flight::Ref<VideoPlayOptions>> options = std::nullopt) {
-  std::optional<flight::Ref<HostImageSource>> element = get_element(std::optional<flight::Ref<VideoResource>>{source});
+inline std::optional<flight::Ref<flight::types::VideoChannel>> play_video_resource(flight::Ref<flight::types::HostVideoCapability> host_video, flight::Ref<flight::types::VideoResource> source, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoPlayOptions>>>>> options = std::nullopt) {
+  auto element = get_element(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VideoResource>>>>(source))});
   if (!element.has_value()) {
     return std::nullopt;
   }
   auto runtime = video_channel_runtimes.get(element.value());
   if (runtime.has_value()) {
-    host_video->remove_ended_listener(element.value(), runtime.value()->on_ended);
+    host_video->remove_ended_listener.value()(element.value(), runtime.value()->on_ended);
   }
-  flight::Ref<VideoChannel> channel = flight::make_ref<VideoChannel>(VideoChannel{.current_time = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->current_time; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()), .gain = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->gain; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()), .length = (host_video->get_duration(element.value()) * 1000.0), .loops = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->loops; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()), .muted = false, .playback_rate = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->playback_rate; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()), .source = source, .state = flight::String("stopped"), .on_complete = create_signal()});
+  flight::Ref<flight::types::VideoChannel> channel = flight::make_ref<flight::types::VideoChannel>(flight::types::VideoChannel{.current_time = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"currentTime">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()), .gain = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"gain">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()), .length = (host_video->get_duration.value()(element.value()) * 1000.0), .loops = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"loops">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()), .muted = false, .playback_rate = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"playbackRate">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()), .source = std::optional<flight::Ref<flight::types::VideoResource>>{source}, .state = flight::String("stopped"), .on_complete = flight::signals::create_signal<std::function<void()>>()});
   std::function<void()> on_ended = [=]() { return complete_video_channel(host_video, channel); };
   video_channel_runtimes.set(element.value(), flight::make_ref<VideoChannelRuntime>(VideoChannelRuntime{.loops_remaining = channel->loops, .on_ended = on_ended}));
   channel_elements.set(channel, element.value());
-  host_video->set_current_time(element.value(), (channel->current_time / 1000.0));
-  host_video->set_volume(element.value(), channel->gain);
-  host_video->set_playback_rate(element.value(), channel->playback_rate);
-  host_video->set_loop(element.value(), false);
-  host_video->add_ended_listener(element.value(), on_ended);
+  host_video->set_current_time.value()(element.value(), (channel->current_time / 1000.0));
+  host_video->set_volume.value()(element.value(), channel->gain);
+  host_video->set_playback_rate.value()(element.value(), channel->playback_rate);
+  host_video->set_loop.value()(element.value(), false);
+  host_video->add_ended_listener.value()(element.value(), on_ended);
   start_video_channel(host_video, channel);
-  emit_video_channel_signal(channel, flight::String("onPlay"));
-  return std::optional<flight::Ref<VideoChannel>>{channel};
+  emit_video_channel_signal(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoChannel>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VideoChannel>>>>(channel)), flight::String("onPlay"));
+  return std::optional<flight::Ref<flight::types::VideoChannel>>{channel};
 }
 
 } // namespace flight::media

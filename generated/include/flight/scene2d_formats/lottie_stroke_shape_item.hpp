@@ -6,16 +6,29 @@
 //   missing: function mapLottieLineCap -- source line 104
 //   missing: function mapLottieLineJoin -- source line 108
 //   missing: function lottieStrokeShapeItemHandler -- source line 20
-#include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/scene2d_formats/lottie_document.hpp>
-#include <flight/scene2d_formats/lottie_shape_paint.hpp>
+#include <flight/types/shape.hpp>
+
+#include <flight/types/path.hpp>
+
+namespace flight::types { struct LottieDashEntry; }
+namespace flight::types { struct LottieImportContext; }
+namespace flight::types { struct LottieShapeItemContext; }
+namespace flight::types { struct LottieStrokePaint; }
+namespace flight::types { struct LottieStrokeShapeItem; }
+namespace flight::types { struct Path; }
+namespace flight::types { struct Shape; }
+namespace flight::types { template <typename T> struct LottieAnimatedProperty; }
+namespace flight::types { template <typename T> struct LottieStaticProperty; }
 
 namespace flight::scene2d_formats {
+
+using flight::types::Path;
+using flight::types::Shape;
 
 
 // NOT GENERATED: function mapLottieLineCap -- source line 104
@@ -49,7 +62,7 @@ namespace flight::scene2d_formats {
 
 
 // NOT GENERATED: function lottieStrokeShapeItemHandler -- source line 20
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
+// refusal: cpp-type-assertion-unidentified [compiler-restriction]
 //
 // The source it stood for:
 //   export function lottieStrokeShapeItemHandler(context: LottieShapeItemContext): void {
@@ -136,7 +149,18 @@ namespace flight::scene2d_formats {
 //     }
 //   }
 //   
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieStrokeShapeItem.ts: a
-// presence test against undefined has no absence channel in the emitted C++ storage for property
+// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieStrokeShapeItem.ts: type
+// assertion target must identify exactly one C++ variant alternative: target
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieStrokeShapeItem>>>>
+// against [flight::Ref<LottieRectangleShapeItem>, flight::Ref<LottieEllipseShapeItem>,
+// flight::Ref<LottieStrokeShapeItem>, flight::Ref<LottiePolystarShapeItem>, flight::Record<flight::String,
+// flight::Any>, flight::Ref<LottieFillShapeItem>, flight::Ref<LottieShapeGroup>,
+// flight::Ref<LottieRepeaterShapeItem>, flight::Ref<LottieTrimPathShapeItem>, flight::Ref<LottieShapePathItem>,
+// flight::Ref<LottieTransformShapeItem>, flight::Ref<LottieRoundedCornersShapeItem>,
+// flight::Ref<LottieGradientShapeItem>, flight::Ref<LottieMergePathShapeItem>]; the value holds the target
+// through an alternative whose members already satisfy it, but the two are separate flattened C++ structs with
+// no base relation between them, so there is no narrowing to follow -- a CLASS heritage pair narrows here,
+// because those structs really do inherit. Assert to the alternative the value actually holds and read this
+// target's members from it, or declare the slot as this target where the concrete type is known
 
 } // namespace flight::scene2d_formats

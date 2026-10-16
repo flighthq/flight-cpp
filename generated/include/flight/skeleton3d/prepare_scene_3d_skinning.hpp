@@ -55,16 +55,16 @@ inline void prepare_mesh_skinning(flight::Ref<flight::types::Mesh> mesh) {
   flight::skeleton3d::get_mesh_skin_conservative_bounds(std::get<0>(bounds), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshSkinBindPose>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MeshSkinBindPose>>>>(bind_pose.value())), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Skeleton3D>>>>(std::get<0>(skin)->skeleton)));
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON3D_GEOMETRY_ENABLED_E347BA72D784956E
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON3D_GEOMETRY_ENABLED_E347BA72D784956E
-struct geometry_enabled_e347ba72d784956e : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON3D_GEOMETRY_ENABLED_869B32E775D5849B
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON3D_GEOMETRY_ENABLED_869B32E775D5849B
+struct geometry_enabled_869b32e775d5849b : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::MeshGeometry>> geometry;
   std::optional<bool> enabled;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON3D_GEOMETRY_ENABLED_E347BA72D784956E
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON3D_GEOMETRY_ENABLED_869B32E775D5849B
 
 inline bool is_scene_skin_mesh(flight::types::NodeAny node) {
-  flight::Ref<geometry_enabled_e347ba72d784956e> candidate = node;
+  flight::Ref<geometry_enabled_869b32e775d5849b> candidate = node;
   return candidate->geometry.has_value();
 }
 

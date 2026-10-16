@@ -5,16 +5,19 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function getBoundarySegmenter -- source line 96
 #include <flight/intl.hpp>
+#include <flight/structural_ref.hpp>
 #include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/text_segment.hpp>
+namespace flight::types { struct HostTextSegmenterCapability; }
+namespace flight::types { struct TextSegment; }
+namespace flight::types { struct TextSegmentRange; }
 
+#include <flight/types/text_segment.hpp>
 #include <flight/textsegment/text_segmenter_backend.hpp>
-#include <flight/textsegment/text_segment_guards.hpp>
 
 namespace flight::textsegment {
 
@@ -31,7 +34,7 @@ inline double clamp_index(double index, double length) {
   return index;
 }
 
-inline double next_segment_boundary(flight::Array<flight::Ref<TextSegment>> segments, double index, double length) {
+inline double next_segment_boundary(flight::Array<flight::Ref<flight::types::TextSegment>> segments, double index, double length) {
   const double from = clamp_index(index, length);
   if ((from >= length)) {
     return length;
@@ -44,7 +47,7 @@ inline double next_segment_boundary(flight::Array<flight::Ref<TextSegment>> segm
   return length;
 }
 
-inline double previous_segment_boundary(flight::Array<flight::Ref<TextSegment>> segments, double index) {
+inline double previous_segment_boundary(flight::Array<flight::Ref<flight::types::TextSegment>> segments, double index) {
   const double length = ((static_cast<double>(segments.size()) == 0.0) ? 0.0 : segments.element((static_cast<double>(segments.size()) - 1.0))->end);
   const double from = clamp_index(index, length);
   if ((from <= 0.0)) {
@@ -92,13 +95,13 @@ inline const double boundary_segmenter_cache_capacity = 64.0;
 // distinguishable is lowered as a variant test, and a value the runtime owns -- a parameter declared `unknown`
 // or `any` -- is answered by the runtime's own `typeof`
 
-inline std::optional<flight::Ref<TextSegmentRange>> get_word_range_at(flight::Ref<HostTextSegmenterCapability> text_segmenter, flight::String text, double index, std::optional<flight::String> locale = std::nullopt) {
+inline std::optional<flight::Ref<flight::types::TextSegmentRange>> get_word_range_at(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostTextSegmenterCapability>>>> text_segmenter, flight::String text, double index, std::optional<flight::String> locale = std::nullopt) {
   if ((static_cast<double>(text.length()) == 0.0)) {
     return std::nullopt;
   }
   const double clamped = clamp_index(index, static_cast<double>(text.length()));
   const double lookup = ((clamped == static_cast<double>(text.length())) ? (static_cast<double>(text.length()) - 1.0) : clamped);
-  if ((text_segmenter == web_text_segmenter_backend)) {
+  if ((text_segmenter == flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostTextSegmenterCapability>>>>(flight::textsegment::web_text_segmenter_backend))) {
     std::optional<flight::IntlSegmenter> segmenter = get_boundary_segmenter(locale, flight::String("word"));
     if (!segmenter.has_value()) {
       return std::nullopt;
@@ -106,27 +109,27 @@ inline std::optional<flight::Ref<TextSegmentRange>> get_word_range_at(flight::Re
     for (auto segment : segmenter.value().segment(text)) {
       const double end = (segment.index + static_cast<double>(segment.segment.length()));
       if (((lookup >= segment.index) && (lookup < end))) {
-        return ((segment.is_word_like == true) ? std::optional<flight::Ref<TextSegmentRange>>{flight::make_ref<TextSegmentRange>(TextSegmentRange{.start = segment.index, .end = end})} : std::nullopt);
+        return ((segment.is_word_like == true) ? std::optional<flight::Ref<flight::types::TextSegmentRange>>{flight::make_ref<flight::types::TextSegmentRange>(flight::types::TextSegmentRange{.start = segment.index, .end = end})} : std::nullopt);
       }
     }
     return std::nullopt;
   }
-  flight::Array<flight::Ref<TextSegment>> segments = text_segmenter->segment(text, flight::String("word"), locale);
+  flight::Array<flight::Ref<flight::types::TextSegment>> segments = flight::row_get<flight::RowKey<"segment">>(text_segmenter)(text, flight::String("word"), locale);
   for (auto segment_2 : segments) {
     if (((lookup >= segment_2->start) && (lookup < segment_2->end))) {
-      return ((segment_2->is_word_like == true) ? std::optional<flight::Ref<TextSegmentRange>>{flight::make_ref<TextSegmentRange>(TextSegmentRange{.start = segment_2->start, .end = segment_2->end})} : std::nullopt);
+      return ((segment_2->is_word_like == true) ? std::optional<flight::Ref<flight::types::TextSegmentRange>>{flight::make_ref<flight::types::TextSegmentRange>(flight::types::TextSegmentRange{.start = segment_2->start, .end = segment_2->end})} : std::nullopt);
     }
   }
   return std::nullopt;
 }
 
-inline double get_next_text_segment_boundary(flight::Ref<HostTextSegmenterCapability> text_segmenter, flight::String text, double index, flight::Ref<TextSegmentGranularity> granularity, std::optional<flight::String> locale) {
+inline double get_next_text_segment_boundary(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostTextSegmenterCapability>>>> text_segmenter, flight::String text, double index, flight::types::TextSegmentGranularity granularity, std::optional<flight::String> locale) {
   const double from = clamp_index(index, static_cast<double>(text.length()));
   if ((from >= static_cast<double>(text.length()))) {
     return static_cast<double>(text.length());
   }
-  if ((text_segmenter != web_text_segmenter_backend)) {
-    return next_segment_boundary(text_segmenter->segment(text, granularity, locale), from, static_cast<double>(text.length()));
+  if ((text_segmenter != flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostTextSegmenterCapability>>>>(flight::textsegment::web_text_segmenter_backend))) {
+    return next_segment_boundary(flight::row_get<flight::RowKey<"segment">>(text_segmenter)(text, granularity, locale), from, static_cast<double>(text.length()));
   }
   std::optional<flight::IntlSegmenter> segmenter = get_boundary_segmenter(locale, granularity);
   if (!segmenter.has_value()) {
@@ -140,25 +143,25 @@ inline double get_next_text_segment_boundary(flight::Ref<HostTextSegmenterCapabi
   return static_cast<double>(text.length());
 }
 
-inline double get_next_grapheme_boundary(flight::Ref<HostTextSegmenterCapability> text_segmenter, flight::String text, double index, std::optional<flight::String> locale = std::nullopt) {
+inline double get_next_grapheme_boundary(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostTextSegmenterCapability>>>> text_segmenter, flight::String text, double index, std::optional<flight::String> locale = std::nullopt) {
   return get_next_text_segment_boundary(text_segmenter, text, index, flight::String("grapheme"), locale);
 }
 
-inline double get_next_sentence_boundary(flight::Ref<HostTextSegmenterCapability> text_segmenter, flight::String text, double index, std::optional<flight::String> locale = std::nullopt) {
+inline double get_next_sentence_boundary(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostTextSegmenterCapability>>>> text_segmenter, flight::String text, double index, std::optional<flight::String> locale = std::nullopt) {
   return get_next_text_segment_boundary(text_segmenter, text, index, flight::String("sentence"), locale);
 }
 
-inline double get_next_word_boundary(flight::Ref<HostTextSegmenterCapability> text_segmenter, flight::String text, double index, std::optional<flight::String> locale = std::nullopt) {
+inline double get_next_word_boundary(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostTextSegmenterCapability>>>> text_segmenter, flight::String text, double index, std::optional<flight::String> locale = std::nullopt) {
   return get_next_text_segment_boundary(text_segmenter, text, index, flight::String("word"), locale);
 }
 
-inline double get_previous_text_segment_boundary(flight::Ref<HostTextSegmenterCapability> text_segmenter, flight::String text, double index, flight::Ref<TextSegmentGranularity> granularity, std::optional<flight::String> locale) {
+inline double get_previous_text_segment_boundary(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostTextSegmenterCapability>>>> text_segmenter, flight::String text, double index, flight::types::TextSegmentGranularity granularity, std::optional<flight::String> locale) {
   const double from = clamp_index(index, static_cast<double>(text.length()));
   if ((from <= 0.0)) {
     return 0.0;
   }
-  if ((text_segmenter != web_text_segmenter_backend)) {
-    return previous_segment_boundary(text_segmenter->segment(text, granularity, locale), from);
+  if ((text_segmenter != flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostTextSegmenterCapability>>>>(flight::textsegment::web_text_segmenter_backend))) {
+    return previous_segment_boundary(flight::row_get<flight::RowKey<"segment">>(text_segmenter)(text, granularity, locale), from);
   }
   std::optional<flight::IntlSegmenter> segmenter = get_boundary_segmenter(locale, granularity);
   if (!segmenter.has_value()) {
@@ -174,15 +177,15 @@ inline double get_previous_text_segment_boundary(flight::Ref<HostTextSegmenterCa
   return previous;
 }
 
-inline double get_previous_grapheme_boundary(flight::Ref<HostTextSegmenterCapability> text_segmenter, flight::String text, double index, std::optional<flight::String> locale = std::nullopt) {
+inline double get_previous_grapheme_boundary(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostTextSegmenterCapability>>>> text_segmenter, flight::String text, double index, std::optional<flight::String> locale = std::nullopt) {
   return get_previous_text_segment_boundary(text_segmenter, text, index, flight::String("grapheme"), locale);
 }
 
-inline double get_previous_sentence_boundary(flight::Ref<HostTextSegmenterCapability> text_segmenter, flight::String text, double index, std::optional<flight::String> locale = std::nullopt) {
+inline double get_previous_sentence_boundary(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostTextSegmenterCapability>>>> text_segmenter, flight::String text, double index, std::optional<flight::String> locale = std::nullopt) {
   return get_previous_text_segment_boundary(text_segmenter, text, index, flight::String("sentence"), locale);
 }
 
-inline double get_previous_word_boundary(flight::Ref<HostTextSegmenterCapability> text_segmenter, flight::String text, double index, std::optional<flight::String> locale = std::nullopt) {
+inline double get_previous_word_boundary(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostTextSegmenterCapability>>>> text_segmenter, flight::String text, double index, std::optional<flight::String> locale = std::nullopt) {
   return get_previous_text_segment_boundary(text_segmenter, text, index, flight::String("word"), locale);
 }
 

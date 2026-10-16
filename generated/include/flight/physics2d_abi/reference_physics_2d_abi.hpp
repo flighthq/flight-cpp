@@ -6,6 +6,7 @@
 //   missing: function createJoint -- source line 726
 //   missing: function getColliderId -- source line 1156
 //   missing: function createReferenceWorld -- source line 253
+//   missing: function initializeReferencePhysics2DAbi -- source line 115
 #include <cmath>
 #include <cstdint>
 #include <exception>
@@ -18,7 +19,6 @@
 #include <optional>
 #include <random>
 #include <tuple>
-#include <type_traits>
 #include <variant>
 #include <flight/runtime.hpp>
 
@@ -28,6 +28,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/physics_2d_abi.hpp>
 
 #include <flight/types/physics_2d.hpp>
+
+#include <flight/types/entity.hpp>
 
 namespace flight::types { struct CollisionAabb2D; }
 namespace flight::types { struct CollisionCapsule2D; }
@@ -89,6 +91,7 @@ namespace flight::types { struct SpatialIndexBackend2D; }
 
 namespace flight::physics2d_abi {
 
+using flight::types::EntityConstruction;
 using flight::types::Physics2DAbi;
 using flight::types::Physics2DAbiBodyBuffer;
 using flight::types::Physics2DAbiCommandBuffer;
@@ -1307,117 +1310,101 @@ inline bool execute_commands(flight::Ref<ReferencePhysics2DAbiWorld> state, flig
   return true;
 }
 
-inline void initialize_reference_physics_2d_abi(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DAbi>> out) {
-  auto worlds = flight::Map<double, flight::Ref<ReferencePhysics2DAbiWorld>>();
-  const auto next_world_handle_capture = flight::make_binding_cell(double{1.0});
-  flight::row_set<flight::RowKey<"version">>(out, flight::physics2d_abi::physics_2d_abi_version);
-  flight::row_set<flight::RowKey<"capabilities">>(out, flight::bitwise_or(flight::bitwise_or(flight::bitwise_or(flight::physics2d_abi::physics_2d_abi_capability->contact_hooks, flight::physics2d_abi::physics_2d_abi_capability->persistent_worlds), flight::physics2d_abi::physics_2d_abi_capability->queries), flight::physics2d_abi::physics_2d_abi_capability->selective_readback));
-  flight::row_set<flight::RowKey<"createWorld">>(out, [=]() {
-  if ((next_world_handle_capture.read_binding() > 4294967295.0)) {
-    return 0.0;
-  }
-  const double handle = next_world_handle_capture.read_binding();
-  next_world_handle_capture.update_binding([&](auto& binding_value) { binding_value += 1.0; return binding_value; });
-  auto world = flight::physics2d::create_physics_2d_world(std::nullopt, std::nullopt, std::nullopt);
-  flight::physics2d::register_built_in_physics_2d_joint_solvers(world);
-  worlds.set(handle, create_reference_world(world));
-  return handle;
-});
-  flight::row_set<flight::RowKey<"destroyWorld">>(out, [=](double handle) {
-  if ((([&]() -> std::optional<bool> { auto optional_chain_receiver = worlds.get(handle); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->stepping; }()) == true)) {
-    return false;
-  }
-  return worlds.erase(handle);
-});
-  flight::row_set<flight::RowKey<"getWorldStatus">>(out, [=](double handle) -> flight::String {
-  auto state = worlds.get(handle);
-  if (!state.has_value()) {
-    return flight::String("Stale");
-  }
-  return (state.value()->stepping ? flight::String("Busy") : flight::String("Ready"));
-});
-  flight::row_set<flight::RowKey<"execute">>(out, [=](double handle, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DAbiCommandBuffer>>>> commands, flight::Ref<flight::types::Physics2DAbiExecutionResult> out) {
-  auto state = worlds.get(handle);
-  if (!state.has_value()) {
-    return fail_execution(out, flight::String("StaleWorld"), 0.0, flight::physics2d_abi::physics_2d_abi_command_header_byte_length, 0.0);
-  }
-  if (state.value()->stepping) {
-    return fail_execution(out, flight::String("BusyWorld"), 0.0, flight::physics2d_abi::physics_2d_abi_command_header_byte_length, 0.0);
-  }
-  return execute_commands(state.value(), commands, out);
-});
-  flight::row_set<flight::RowKey<"step">>(out, [=](double handle, double dt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DAbiContactHooks>>>>> hooks) -> flight::String {
-  auto state = worlds.get(handle);
-  if (!state.has_value()) {
-    return flight::String("StaleWorld");
-  }
-  if (state.value()->stepping) {
-    return flight::String("BusyWorld");
-  }
-  return step_reference_world(state.value(), dt, hooks);
-});
-  flight::row_set<flight::RowKey<"readBodies">>(out, [=](double handle, std::optional<flight::Uint32Array> body_ids, flight::Ref<flight::types::Physics2DAbiBodyBuffer> out) {
-  auto state = worlds.get(handle);
-  if ((!state.has_value() || state.value()->stepping)) {
-    return false;
-  }
-  read_bodies(state.value(), body_ids, out);
-  return true;
-});
-  flight::row_set<flight::RowKey<"readContacts">>(out, [=](double handle, flight::types::Physics2DAbiContactSelection selection, flight::Ref<flight::types::Physics2DAbiContactBuffer> out) {
-  auto state = worlds.get(handle);
-  if ((!state.has_value() || state.value()->stepping)) {
-    return false;
-  }
-  read_contacts(state.value(), selection, out);
-  return true;
-});
-  flight::row_set<flight::RowKey<"readJoints">>(out, [=](double handle, flight::Ref<flight::types::Physics2DAbiJointBuffer> out) {
-  auto state = worlds.get(handle);
-  if ((!state.has_value() || state.value()->stepping)) {
-    return false;
-  }
-  read_joints(state.value(), out);
-  return true;
-});
-  flight::row_set<flight::RowKey<"queryPoint">>(out, [=](double handle, double x, double y, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DQueryFilter>>>>> filter, flight::Ref<flight::types::Physics2DAbiQueryBuffer> out) {
-  auto state = worlds.get(handle);
-  if ((!state.has_value() || state.value()->stepping)) {
-    return false;
-  }
-  flight::physics2d::query_physics_2d_point(state.value()->world, x, y, state.value()->query, (filter.has_value() ? std::optional{filter.value()} : std::nullopt));
-  write_query_hits(state.value(), state.value()->query, out);
-  return true;
-});
-  flight::row_set<flight::RowKey<"queryRay">>(out, [=](double handle, double origin_x, double origin_y, double direction_x, double direction_y, double max_fraction, bool closest, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DQueryFilter>>>>> filter, flight::Ref<flight::types::Physics2DAbiQueryBuffer> out) {
-  auto state = worlds.get(handle);
-  if ((!state.has_value() || state.value()->stepping)) {
-    return false;
-  }
-  flight::Ref<flight::physics2d::QueryPhysics2DRayClosest> query = (closest ? flight::physics2d::query_physics_2d_ray_closest : flight::physics2d::query_physics_2d_ray);
-  query(state.value()->world, origin_x, origin_y, direction_x, direction_y, state.value()->ray, max_fraction, (filter.has_value() ? std::optional{filter.value()} : std::nullopt));
-  write_ray_hits(state.value(), out);
-  return true;
-});
-  flight::row_set<flight::RowKey<"queryRegion">>(out, [=](double handle, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialAabb2D>>>> region, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DQueryFilter>>>>> filter, flight::Ref<flight::types::Physics2DAbiQueryBuffer> out) {
-  auto state = worlds.get(handle);
-  if ((!state.has_value() || state.value()->stepping)) {
-    return false;
-  }
-  flight::physics2d::query_physics_2d_region(state.value()->world, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialAabb2D>>>>>(region), state.value()->query, (filter.has_value() ? std::optional{filter.value()} : std::nullopt));
-  write_query_hits(state.value(), state.value()->query, out);
-  return true;
-});
-  flight::row_set<flight::RowKey<"queryShapeCast">>(out, [=](double handle, std::variant<flight::Ref<flight::types::min_x_min_y_max_x_max_y_kind_329d6080b4f31db4>, flight::Ref<flight::types::x0_y0_x1_y1_radius_kind_768ba062d07f3ff6>, flight::Ref<flight::types::x_y_radius_kind_90fbb3b4c4569518>, flight::Ref<flight::types::x_y_half_w_half_h_rotation_kind_8ffcea5c657a2268>, flight::Ref<flight::types::x_y_kind_35ad667397176b0f>, flight::Ref<flight::types::points_kind_9b00ebdad27cdb4e>, flight::Ref<flight::types::x0_y0_x1_y1_kind_d4f616534491406f>> shape, double dx, double dy, double max_fraction, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DQueryFilter>>>>> filter, flight::Ref<flight::types::Physics2DAbiQueryBuffer> out) {
-  auto state = worlds.get(handle);
-  if ((!state.has_value() || state.value()->stepping)) {
-    return false;
-  }
-  flight::physics2d::query_physics_2d_shape_cast(state.value()->world, std::visit([&](const auto& contextual_union_value) -> std::variant<flight::Ref<flight::types::x_y_half_w_half_h_rotation_kind_8ffcea5c657a2268>, flight::Ref<flight::types::x0_y0_x1_y1_radius_kind_768ba062d07f3ff6>, flight::Ref<flight::types::x_y_radius_kind_90fbb3b4c4569518>, flight::Ref<flight::types::x_y_kind_35ad667397176b0f>, flight::Ref<flight::types::points_kind_9b00ebdad27cdb4e>, flight::Ref<flight::types::x0_y0_x1_y1_kind_d4f616534491406f>, flight::Ref<flight::types::min_x_min_y_max_x_max_y_kind_329d6080b4f31db4>> { using contextual_union_value_type = std::decay_t<decltype(contextual_union_value)>; if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::min_x_min_y_max_x_max_y_kind_329d6080b4f31db4>>) return std::variant<flight::Ref<flight::types::x_y_half_w_half_h_rotation_kind_8ffcea5c657a2268>, flight::Ref<flight::types::x0_y0_x1_y1_radius_kind_768ba062d07f3ff6>, flight::Ref<flight::types::x_y_radius_kind_90fbb3b4c4569518>, flight::Ref<flight::types::x_y_kind_35ad667397176b0f>, flight::Ref<flight::types::points_kind_9b00ebdad27cdb4e>, flight::Ref<flight::types::x0_y0_x1_y1_kind_d4f616534491406f>, flight::Ref<flight::types::min_x_min_y_max_x_max_y_kind_329d6080b4f31db4>>{std::in_place_type<flight::Ref<flight::types::min_x_min_y_max_x_max_y_kind_329d6080b4f31db4>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::x0_y0_x1_y1_radius_kind_768ba062d07f3ff6>>) return std::variant<flight::Ref<flight::types::x_y_half_w_half_h_rotation_kind_8ffcea5c657a2268>, flight::Ref<flight::types::x0_y0_x1_y1_radius_kind_768ba062d07f3ff6>, flight::Ref<flight::types::x_y_radius_kind_90fbb3b4c4569518>, flight::Ref<flight::types::x_y_kind_35ad667397176b0f>, flight::Ref<flight::types::points_kind_9b00ebdad27cdb4e>, flight::Ref<flight::types::x0_y0_x1_y1_kind_d4f616534491406f>, flight::Ref<flight::types::min_x_min_y_max_x_max_y_kind_329d6080b4f31db4>>{std::in_place_type<flight::Ref<flight::types::x0_y0_x1_y1_radius_kind_768ba062d07f3ff6>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::x_y_radius_kind_90fbb3b4c4569518>>) return std::variant<flight::Ref<flight::types::x_y_half_w_half_h_rotation_kind_8ffcea5c657a2268>, flight::Ref<flight::types::x0_y0_x1_y1_radius_kind_768ba062d07f3ff6>, flight::Ref<flight::types::x_y_radius_kind_90fbb3b4c4569518>, flight::Ref<flight::types::x_y_kind_35ad667397176b0f>, flight::Ref<flight::types::points_kind_9b00ebdad27cdb4e>, flight::Ref<flight::types::x0_y0_x1_y1_kind_d4f616534491406f>, flight::Ref<flight::types::min_x_min_y_max_x_max_y_kind_329d6080b4f31db4>>{std::in_place_type<flight::Ref<flight::types::x_y_radius_kind_90fbb3b4c4569518>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::x_y_half_w_half_h_rotation_kind_8ffcea5c657a2268>>) return std::variant<flight::Ref<flight::types::x_y_half_w_half_h_rotation_kind_8ffcea5c657a2268>, flight::Ref<flight::types::x0_y0_x1_y1_radius_kind_768ba062d07f3ff6>, flight::Ref<flight::types::x_y_radius_kind_90fbb3b4c4569518>, flight::Ref<flight::types::x_y_kind_35ad667397176b0f>, flight::Ref<flight::types::points_kind_9b00ebdad27cdb4e>, flight::Ref<flight::types::x0_y0_x1_y1_kind_d4f616534491406f>, flight::Ref<flight::types::min_x_min_y_max_x_max_y_kind_329d6080b4f31db4>>{std::in_place_type<flight::Ref<flight::types::x_y_half_w_half_h_rotation_kind_8ffcea5c657a2268>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::x_y_kind_35ad667397176b0f>>) return std::variant<flight::Ref<flight::types::x_y_half_w_half_h_rotation_kind_8ffcea5c657a2268>, flight::Ref<flight::types::x0_y0_x1_y1_radius_kind_768ba062d07f3ff6>, flight::Ref<flight::types::x_y_radius_kind_90fbb3b4c4569518>, flight::Ref<flight::types::x_y_kind_35ad667397176b0f>, flight::Ref<flight::types::points_kind_9b00ebdad27cdb4e>, flight::Ref<flight::types::x0_y0_x1_y1_kind_d4f616534491406f>, flight::Ref<flight::types::min_x_min_y_max_x_max_y_kind_329d6080b4f31db4>>{std::in_place_type<flight::Ref<flight::types::x_y_kind_35ad667397176b0f>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::points_kind_9b00ebdad27cdb4e>>) return std::variant<flight::Ref<flight::types::x_y_half_w_half_h_rotation_kind_8ffcea5c657a2268>, flight::Ref<flight::types::x0_y0_x1_y1_radius_kind_768ba062d07f3ff6>, flight::Ref<flight::types::x_y_radius_kind_90fbb3b4c4569518>, flight::Ref<flight::types::x_y_kind_35ad667397176b0f>, flight::Ref<flight::types::points_kind_9b00ebdad27cdb4e>, flight::Ref<flight::types::x0_y0_x1_y1_kind_d4f616534491406f>, flight::Ref<flight::types::min_x_min_y_max_x_max_y_kind_329d6080b4f31db4>>{std::in_place_type<flight::Ref<flight::types::points_kind_9b00ebdad27cdb4e>>, contextual_union_value}; else return std::variant<flight::Ref<flight::types::x_y_half_w_half_h_rotation_kind_8ffcea5c657a2268>, flight::Ref<flight::types::x0_y0_x1_y1_radius_kind_768ba062d07f3ff6>, flight::Ref<flight::types::x_y_radius_kind_90fbb3b4c4569518>, flight::Ref<flight::types::x_y_kind_35ad667397176b0f>, flight::Ref<flight::types::points_kind_9b00ebdad27cdb4e>, flight::Ref<flight::types::x0_y0_x1_y1_kind_d4f616534491406f>, flight::Ref<flight::types::min_x_min_y_max_x_max_y_kind_329d6080b4f31db4>>{std::in_place_type<flight::Ref<flight::types::x0_y0_x1_y1_kind_d4f616534491406f>>, contextual_union_value}; }, shape), dx, dy, state.value()->shape_cast, max_fraction, (filter.has_value() ? std::optional{filter.value()} : std::nullopt));
-  write_shape_cast_hit(state.value(), out);
-  return true;
-});
-}
+
+// NOT GENERATED: function initializeReferencePhysics2DAbi -- source line 115
+// refusal: cpp-imported-binding-no-export-target [compiler-restriction]
+//
+// The source it stood for:
+//   export function initializeReferencePhysics2DAbi(out: EntityConstruction<Physics2DAbi>): void {
+//     const worlds = new Map<number, ReferencePhysics2DAbiWorld>();
+//     let nextWorldHandle = 1;
+//     out.version = Physics2DAbiVersion;
+//     out.capabilities =
+//       Physics2DAbiCapability.ContactHooks |
+//       Physics2DAbiCapability.PersistentWorlds |
+//       Physics2DAbiCapability.Queries |
+//       Physics2DAbiCapability.SelectiveReadback;
+//     out.createWorld = (): Physics2DAbiWorldHandle => {
+//       if (nextWorldHandle > 0xffffffff) return 0;
+//       const handle = nextWorldHandle;
+//       nextWorldHandle += 1;
+//       const world = createPhysics2DWorld();
+//       registerBuiltInPhysics2DJointSolvers(world);
+//       worlds.set(handle, createReferenceWorld(world));
+//       return handle;
+//     };
+//     out.destroyWorld = (handle): boolean => {
+//       if (worlds.get(handle)?.stepping === true) return false;
+//       return worlds.delete(handle);
+//     };
+//     out.getWorldStatus = (handle): Physics2DAbiWorldStatus => {
+//       const state = worlds.get(handle);
+//       if (state === undefined) return 'Stale';
+//       return state.stepping ? 'Busy' : 'Ready';
+//     };
+//     out.execute = (handle, commands, out): boolean => {
+//       const state = worlds.get(handle);
+//       if (state === undefined) return failExecution(out, 'StaleWorld', 0, Physics2DAbiCommandHeaderByteLength, 0);
+//       if (state.stepping) return failExecution(out, 'BusyWorld', 0, Physics2DAbiCommandHeaderByteLength, 0);
+//       return executeCommands(state, commands, out);
+//     };
+//     out.step = (handle, dt, hooks): Physics2DAbiStepStatus => {
+//       const state = worlds.get(handle);
+//       if (state === undefined) return 'StaleWorld';
+//       if (state.stepping) return 'BusyWorld';
+//       return stepReferenceWorld(state, dt, hooks);
+//     };
+//     out.readBodies = (handle, bodyIds, out): boolean => {
+//       const state = worlds.get(handle);
+//       if (state === undefined || state.stepping) return false;
+//       readBodies(state, bodyIds, out);
+//       return true;
+//     };
+//     out.readContacts = (handle, selection, out): boolean => {
+//       const state = worlds.get(handle);
+//       if (state === undefined || state.stepping) return false;
+//       readContacts(state, selection, out);
+//       return true;
+//     };
+//     out.readJoints = (handle, out): boolean => {
+//       const state = worlds.get(handle);
+//       if (state === undefined || state.stepping) return false;
+//       readJoints(state, out);
+//       return true;
+//     };
+//     out.queryPoint = (handle, x, y, filter, out): boolean => {
+//       const state = worlds.get(handle);
+//       if (state === undefined || state.stepping) return false;
+//       queryPhysics2DPoint(state.world, x, y, state.query, filter ?? undefined);
+//       writeQueryHits(state, state.query, out);
+//       return true;
+//     };
+//     out.queryRay = (handle, originX, originY, directionX, directionY, maxFraction, closest, filter, out): boolean => {
+//       const state = worlds.get(handle);
+//       if (state === undefined || state.stepping) return false;
+//       const query = closest ? queryPhysics2DRayClosest : queryPhysics2DRay;
+//       query(state.world, originX, originY, directionX, directionY, state.ray, maxFraction, filter ?? undefined);
+//       writeRayHits(state, out);
+//       return true;
+//     };
+//     out.queryRegion = (handle, region, filter, out): boolean => {
+//       const state = worlds.get(handle);
+//       if (state === undefined || state.stepping) return false;
+//       queryPhysics2DRegion(state.world, region, state.query, filter ?? undefined);
+//       writeQueryHits(state, state.query, out);
+//       return true;
+//     };
+//     out.queryShapeCast = (handle, shape, dx, dy, maxFraction, filter, out): boolean => {
+//       const state = worlds.get(handle);
+//       if (state === undefined || state.stepping) return false;
+//       queryPhysics2DShapeCast(state.world, shape, dx, dy, state.shapeCast, maxFraction, filter ?? undefined);
+//       writeShapeCastHit(state, out);
+//       return true;
+//     };
+//   }
+//   
+// cpp emission failed for @flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts: imported
+// type binding queryPhysics2DRayClosest requires one exact exported declaration owner
 
 inline flight::Ref<flight::types::Physics2DAbi> create_reference_physics_2d_abi() {
   flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DAbi>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Physics2DAbi>>();

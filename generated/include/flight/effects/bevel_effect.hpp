@@ -47,25 +47,25 @@ inline flight::Ref<flight::types::EffectPadding> get_bevel_effect_padding(flight
   return flight::effects::get_directional_effect_padding(([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"blurX">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 4.0; }()), ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"blurY">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 4.0; }()), (std::cos(angle) * distance), (std::sin(angle) * distance));
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_ANGLE_BEVEL_TYPE_BLUR_X_BLUR_Y_DISTANCE_HIGHLIGHT_ALPHA_HIGHLIGHT_COLOR_QUALITY_SHADOW_ALPHA_SHADOW_COLOR_SOURCE_MODE_3314D9BFD4B7BC23
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_ANGLE_BEVEL_TYPE_BLUR_X_BLUR_Y_DISTANCE_HIGHLIGHT_ALPHA_HIGHLIGHT_COLOR_QUALITY_SHADOW_ALPHA_SHADOW_COLOR_SOURCE_MODE_3314D9BFD4B7BC23
-struct strength_angle_bevel_type_blur_x_blur_y_distance_highlight_alpha_highlight_color_quality_shadow_alpha_shadow_color_source_mode_3314d9bfd4b7bc23 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_ANGLE_DISTANCE_HIGHLIGHT_COLOR_SHADOW_COLOR_BEVEL_TYPE_BLUR_X_BLUR_Y_HIGHLIGHT_ALPHA_QUALITY_SHADOW_ALPHA_SOURCE_MODE_95D6E0659A0406F1
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_ANGLE_DISTANCE_HIGHLIGHT_COLOR_SHADOW_COLOR_BEVEL_TYPE_BLUR_X_BLUR_Y_HIGHLIGHT_ALPHA_QUALITY_SHADOW_ALPHA_SOURCE_MODE_95D6E0659A0406F1
+struct strength_angle_distance_highlight_color_shadow_color_bevel_type_blur_x_blur_y_highlight_alpha_quality_shadow_alpha_source_mode_95d6e0659a0406f1 : public flight::ReferenceEnabled {
   std::optional<double> strength;
   std::optional<double> angle;
+  std::optional<double> distance;
+  std::optional<double> highlight_color;
+  std::optional<double> shadow_color;
   std::optional<flight::String> bevel_type;
   std::optional<double> blur_x;
   std::optional<double> blur_y;
-  std::optional<double> distance;
   std::optional<double> highlight_alpha;
-  std::optional<double> highlight_color;
   std::optional<double> quality;
   std::optional<double> shadow_alpha;
-  std::optional<double> shadow_color;
   std::optional<flight::types::EffectSourceMode> source_mode;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_ANGLE_BEVEL_TYPE_BLUR_X_BLUR_Y_DISTANCE_HIGHLIGHT_ALPHA_HIGHLIGHT_COLOR_QUALITY_SHADOW_ALPHA_SHADOW_COLOR_SOURCE_MODE_3314D9BFD4B7BC23
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_STRENGTH_ANGLE_DISTANCE_HIGHLIGHT_COLOR_SHADOW_COLOR_BEVEL_TYPE_BLUR_X_BLUR_Y_HIGHLIGHT_ALPHA_QUALITY_SHADOW_ALPHA_SOURCE_MODE_95D6E0659A0406F1
 
-inline void initialize_bevel_effect(flight::types::EntityConstruction<flight::Ref<flight::types::BevelEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_angle_bevel_type_blur_x_blur_y_distance_highlight_alpha_highlight_color_quality_shadow_alpha_shadow_color_source_mode_3314d9bfd4b7bc23>>>> options) {
+inline void initialize_bevel_effect(flight::types::EntityConstruction<flight::Ref<flight::types::BevelEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_angle_distance_highlight_color_shadow_color_bevel_type_blur_x_blur_y_highlight_alpha_quality_shadow_alpha_source_mode_95d6e0659a0406f1>>>> options) {
   flight::effects::initialize_effect<flight::Ref<flight::types::BevelEffect>>(out, flight::String("BevelEffect"));
   flight::row_set<flight::RowKey<"angle">>(out, flight::row_get<flight::RowKey<"angle">>(options));
   flight::row_set<flight::RowKey<"bevelType">>(out, flight::row_get<flight::RowKey<"bevelType">>(options));
@@ -81,8 +81,8 @@ inline void initialize_bevel_effect(flight::types::EntityConstruction<flight::Re
   flight::row_set<flight::RowKey<"strength">>(out, flight::row_get<flight::RowKey<"strength">>(options));
 }
 
-inline flight::Ref<flight::types::BevelEffect> create_bevel_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_angle_bevel_type_blur_x_blur_y_distance_highlight_alpha_highlight_color_quality_shadow_alpha_shadow_color_source_mode_3314d9bfd4b7bc23>>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<strength_angle_bevel_type_blur_x_blur_y_distance_highlight_alpha_highlight_color_quality_shadow_alpha_shadow_color_source_mode_3314d9bfd4b7bc23>>>>());
+inline flight::Ref<flight::types::BevelEffect> create_bevel_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_angle_distance_highlight_color_shadow_color_bevel_type_blur_x_blur_y_highlight_alpha_quality_shadow_alpha_source_mode_95d6e0659a0406f1>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<strength_angle_distance_highlight_color_shadow_color_bevel_type_blur_x_blur_y_highlight_alpha_quality_shadow_alpha_source_mode_95d6e0659a0406f1>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::BevelEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::BevelEffect>>();
   initialize_bevel_effect(out, options.value());
   return flight::entity::finish_entity<flight::Ref<flight::types::BevelEffect>>(out);

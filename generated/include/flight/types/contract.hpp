@@ -786,7 +786,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/bitmap_histogram.hpp>
 #include <flight/types/material_2d.hpp>
 #include <flight/types/material_3d.hpp>
-#include <flight/types/material3_dvalue.hpp>
+#include <flight/types/material_3d_value.hpp>
 #include <flight/types/material_3d_options.hpp>
 #include <flight/types/bitmap_mismatch.hpp>
 #include <flight/types/bitmap_region.hpp>

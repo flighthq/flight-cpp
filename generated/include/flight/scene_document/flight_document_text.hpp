@@ -1092,15 +1092,15 @@ inline void append_scene(flight::Array<flight::String> lines, flight::types::Fli
     }
   }
   else {
-    if ((static_cast<double>(std::get<0>(scene)->cameras.size()) > 0.0)) {
+    if ((static_cast<double>(flight::row_get<flight::RowKey<"cameras">>(std::get<0>(scene)).size()) > 0.0)) {
       lines.push(flight::String("    cameras:"));
-      for (auto camera : std::get<0>(scene)->cameras) {
+      for (auto camera : flight::row_get<flight::RowKey<"cameras">>(std::get<0>(scene))) {
         append_camera(lines, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocumentCamera>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocumentCamera>>>>(camera)));
       }
     }
-    if ((static_cast<double>(std::get<0>(scene)->lights.size()) > 0.0)) {
+    if ((static_cast<double>(flight::row_get<flight::RowKey<"lights">>(std::get<0>(scene)).size()) > 0.0)) {
       lines.push(flight::String("    lights:"));
-      for (auto light : std::get<0>(scene)->lights) {
+      for (auto light : flight::row_get<flight::RowKey<"lights">>(std::get<0>(scene))) {
         append_light(lines, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocumentLight>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocumentLight>>>>(light)));
       }
     }

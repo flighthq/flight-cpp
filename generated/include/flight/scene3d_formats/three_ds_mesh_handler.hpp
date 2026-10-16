@@ -443,7 +443,7 @@ inline bool localize_three_ds_positions(flight::Array<double> positions, flight:
 
 
 // NOT GENERATED: function appendMeshDocument -- source line 357
-// refusal: cpp-member-projection-without-present-storage [compiler-restriction]
+// refusal: cpp-external-member-call-arity [compiler-restriction]
 //
 // The source it stood for:
 //   function appendMeshDocument(
@@ -652,13 +652,9 @@ inline bool localize_three_ds_positions(flight::Array<double> positions, flight:
 //   // transform, which is the pre-TRI_LOCAL behavior and still renders correctly. Returns whether the
 //   // localization actually ran, because a caller correcting for a mirrored placement must not correct for
 //   // one that was never applied.
-// cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsMeshHandler.ts: member
-// push on optional C++ storage requires proven present payload: nothing proved the payload present, so the read
-// would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or
-// narrow it into a present local first; the compiler will not call value() without that proof. Where the storage
-// carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and
-// `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound
-// from the storage and tested the same way
+// cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsMeshHandler.ts:
+// Array.from is represented for exactly 1 argument(s), and this call passes 2; the mapper and thisArg forms have
+// no declared target, so pass only the source sequence
 
 inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsChunkHandler>>>> three_ds_mesh_handler = flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsChunkHandler>>>>(flight::row_field<flight::RowKey<"chunkIds">>(flight::Array<double>{flight::types::three_ds_trimesh}), flight::row_field<flight::RowKey<"build">>(std::optional<std::function<void(flight::Ref<flight::types::ThreeDsParseState>)>>{[](flight::Ref<flight::types::ThreeDsParseState> state) {
   auto object_pattern_value = state;

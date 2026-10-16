@@ -1,0 +1,14 @@
+diff --git a/packages/image/src/imageResourceReference.ts b/packages/image/src/imageResourceReference.ts
+--- a/packages/image/src/imageResourceReference.ts
++++ b/packages/image/src/imageResourceReference.ts
+@@ -57,8 +57,8 @@
+   signal.throwIfAborted();
+   const premultiplied = ref.alphaType === 'premultiplied';
+   let decoded = await (premultiplied
+-    ? decodeImagePremultiplied(imageDecode, ref.bytes, ref.mimeType ?? undefined)
+-    : decodeImage(imageDecode, ref.bytes, ref.mimeType ?? undefined));
++    ? decodeImagePremultiplied(imageDecode, ref.bytes, ((): string | undefined => { const mimeType: string | undefined = ref.mimeType ?? undefined; return mimeType; })())
++    : decodeImage(imageDecode, ref.bytes, ((): string | undefined => { const mimeType: string | undefined = ref.mimeType ?? undefined; return mimeType; })()));
+   if (decoded === null && fallbackDecode !== undefined && ref.mimeType !== null) {
+     decoded = await fallbackDecode(ref.bytes, ref.mimeType, premultiplied ? { premultiplyAlpha: true } : undefined);
+   }

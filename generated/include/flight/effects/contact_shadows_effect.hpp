@@ -41,17 +41,17 @@ inline flight::Ref<flight::types::EffectPadding> get_contact_shadows_effect_padd
   return flight::make_ref<flight::types::EffectPadding>(flight::types::EffectPadding{.bottom = 0.0, .left = 0.0, .right = 0.0, .top = 0.0});
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SAMPLES_DISTANCE_OPACITY_SMOOTHNESS_2EE17E02772F5126
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SAMPLES_DISTANCE_OPACITY_SMOOTHNESS_2EE17E02772F5126
-struct samples_distance_opacity_smoothness_2ee17e02772f5126 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SAMPLES_OPACITY_DISTANCE_SMOOTHNESS_11FE6014514F5370
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SAMPLES_OPACITY_DISTANCE_SMOOTHNESS_11FE6014514F5370
+struct samples_opacity_distance_smoothness_11fe6014514f5370 : public flight::ReferenceEnabled {
   std::optional<double> samples;
-  std::optional<double> distance;
   std::optional<double> opacity;
+  std::optional<double> distance;
   std::optional<double> smoothness;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SAMPLES_DISTANCE_OPACITY_SMOOTHNESS_2EE17E02772F5126
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_SAMPLES_OPACITY_DISTANCE_SMOOTHNESS_11FE6014514F5370
 
-inline void initialize_contact_shadows_effect(flight::types::EntityConstruction<flight::Ref<flight::types::ContactShadowsEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<samples_distance_opacity_smoothness_2ee17e02772f5126>>>> options) {
+inline void initialize_contact_shadows_effect(flight::types::EntityConstruction<flight::Ref<flight::types::ContactShadowsEffect>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<samples_opacity_distance_smoothness_11fe6014514f5370>>>> options) {
   flight::effects::initialize_effect<flight::Ref<flight::types::ContactShadowsEffect>>(out, flight::String("ContactShadowsEffect"));
   flight::row_set<flight::RowKey<"distance">>(out, flight::row_get<flight::RowKey<"distance">>(options));
   flight::row_set<flight::RowKey<"opacity">>(out, flight::row_get<flight::RowKey<"opacity">>(options));
@@ -59,8 +59,8 @@ inline void initialize_contact_shadows_effect(flight::types::EntityConstruction<
   flight::row_set<flight::RowKey<"smoothness">>(out, flight::row_get<flight::RowKey<"smoothness">>(options));
 }
 
-inline flight::Ref<flight::types::ContactShadowsEffect> create_contact_shadows_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<samples_distance_opacity_smoothness_2ee17e02772f5126>>>>> options = std::nullopt) {
-  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<samples_distance_opacity_smoothness_2ee17e02772f5126>>>>());
+inline flight::Ref<flight::types::ContactShadowsEffect> create_contact_shadows_effect(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<samples_opacity_distance_smoothness_11fe6014514f5370>>>>> options = std::nullopt) {
+  options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<samples_opacity_distance_smoothness_11fe6014514f5370>>>>());
   flight::types::EntityConstruction<flight::Ref<flight::types::ContactShadowsEffect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::ContactShadowsEffect>>();
   initialize_contact_shadows_effect(out, options.value());
   return flight::entity::finish_entity<flight::Ref<flight::types::ContactShadowsEffect>>(out);

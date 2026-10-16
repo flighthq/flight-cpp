@@ -6,7 +6,6 @@
 #include <flight/boolean.hpp>
 #include <flight/error.hpp>
 #include <flight/structural_ref.hpp>
-#include <flight/types/contract.hpp>
 #include <flight/types/node.hpp>
 #include <functional>
 #include <optional>
@@ -36,12 +35,13 @@ namespace flight::types { template <typename Traits> struct NodeRuntime; }
 #include <flight/node/revision.hpp>
 
 namespace flight::node { template <typename Traits> inline std::shared_ptr<flight::types::NodeRuntime<Traits>> get_mutable_node_runtime(std::shared_ptr<flight::types::Node<Traits>> source); }
-namespace flight::node { template <typename Traits> inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>> get_node_runtime(flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>> source); }
-
-
-namespace flight::node { template <typename Traits> inline void ensure_node_world_matrix(flight::types::Transform2DNode<Traits> target); }
-
 namespace flight::node { template <typename Traits> inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>> get_node_world_matrix(flight::types::Transform2DNode<Traits> target); }
+namespace flight::node { template <typename Traits> inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>> get_node_runtime(flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>> source); }
+namespace flight::node { template <typename Traits> inline void ensure_node_world_matrix(flight::types::Transform2DNode<Traits> target); }
+namespace flight::node { template <typename Traits> inline void invalidate_node_local_transform(flight::types::NodeOf<Traits> target); }
+namespace flight::node { template <typename Traits> inline void invalidate_node_parent_reference(flight::types::NodeOf<Traits> target); }
+namespace flight::node { template <typename Traits> inline void invalidate_node_world_bounds(flight::types::NodeOf<Traits> target); }
+
 namespace flight::node {
 
 using flight::types::NodeRuntime;
@@ -297,7 +297,7 @@ inline flight::types::NodeOf<Traits> add_node_child_at(flight::types::NodeOf<Tra
       throw flight::TypeError(flight::String("An object cannot be added as a child of itself"));
     }
     else {
-      if (is_node_ancestor_of(child, target)) {
+      if (is_node_ancestor_of<Traits>(child, target)) {
         throw flight::TypeError(flight::String("An ancestor cannot be added as a child of its descendant"));
       }
       else {
@@ -356,7 +356,7 @@ inline flight::types::NodeOf<Traits> add_node_child_at(flight::types::NodeOf<Tra
 
 template <typename Traits>
 inline flight::types::NodeOf<Traits> add_node_child(flight::types::NodeOf<Traits> target, flight::types::NodeOf<Traits> child) {
-  return add_node_child_at<Traits>(target, child, get_node_child_count(target));
+  return add_node_child_at<Traits>(target, child, get_node_child_count<Traits>(target));
 }
 
 template <typename Traits>
@@ -397,7 +397,7 @@ inline void remove_node_children(flight::types::NodeOf<Traits> target, std::opti
 
 template <typename Traits>
 inline void replace_node_child(flight::types::NodeOf<Traits> target, flight::types::NodeOf<Traits> old_child, flight::types::NodeOf<Traits> new_child) {
-  const double index = get_node_child_index(target, old_child);
+  const double index = get_node_child_index<Traits>(target, old_child);
   if ((index == -1.0)) {
     return;
   }

@@ -6,7 +6,7 @@
 // refusal: cpp-indexed-access-unlowered [compiler-restriction]
 //
 // cpp emission failed for @flighthq/filesystem/packages/filesystem/src/filesystem.ts: indexedAccess types
-// require C++ type computation lowering: object is AbortSignalEventMap, index is unknown
+// require C++ type computation lowering: object is AbortSignalEventMap, index is K
 // stopped at: packages/filesystem/src/filesystem.ts
 
 // Declared here, for the replacement to supply:

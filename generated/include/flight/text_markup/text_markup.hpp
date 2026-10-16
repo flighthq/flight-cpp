@@ -4,20 +4,12 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function equalsMarkupFormat -- source line 137
-//   missing: function formatMarkupListTag -- source line 187
-//   missing: function formatMarkupTextformatTag -- source line 238
 //   missing: function normalizeMarkupTagResult -- source line 347
 //   missing: function isSafeMarkupHref -- source line 363
-//   missing: variable (binding) -- source line 458
 //   missing: function resolveMarkupFormatRuns -- source line 385
-//   missing: function formatMarkupAnchorTag -- source line 164
-//   missing: function formatMarkupFontTag -- source line 175
 //   missing: function parseMarkupAttributes -- source line 352
-//   missing: function handleMarkupToken -- source line 285
 //   missing: function parseTextMarkupInternal -- source line 79
-//   missing: function formatMarkupRun -- source line 192
 #include <cmath>
-#include <cstdint>
 #include <flight/number.hpp>
 #include <flight/record.hpp>
 #include <flight/regexp.hpp>
@@ -25,39 +17,38 @@
 #include <functional>
 #include <limits>
 #include <optional>
-#include <random>
+#include <stdexcept>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/textlayout/text_format_range.hpp>
+namespace flight::types { struct FontVariation; }
+namespace flight::types { struct MarkupTagEffect; }
+namespace flight::types { struct MarkupTagRegistry; }
+namespace flight::types { struct RichTextContent; }
+namespace flight::types { struct TextFormat; }
+namespace flight::types { struct TextFormatRange; }
+namespace flight::types { struct TextMarkupExplanation; }
+namespace flight::types { struct TextMarkupIssue; }
 
 #include <flight/color/pack_color.hpp>
-
-#include <flight/types/text_markup_explanation.hpp>
-
-#include <flight/types/text_format_range.hpp>
-
-#include <flight/types/text_format.hpp>
-
-#include <flight/types/rich_text_content.hpp>
-
-#include <flight/types/markup_tag_registry.hpp>
-
+#include <flight/textlayout/rich_text_content.hpp>
+#include <flight/textlayout/text_format_range.hpp>
+#include <flight/types/font_variation.hpp>
 #include <flight/types/markup_tag_handler.hpp>
-
+#include <flight/types/markup_tag_registry.hpp>
+#include <flight/types/rich_text_content.hpp>
+#include <flight/types/text_format.hpp>
+#include <flight/types/text_format_range.hpp>
+#include <flight/types/text_markup_explanation.hpp>
 #include <flight/text_markup/markup_tag_registry.hpp>
 #include <flight/text_markup/text_markup_guards.hpp>
 
 namespace flight::text_markup {
 
-using flight::textlayout::create_text_format_range;
-
-using flight::color::get_color_rgb;
-
 using flight::types::MarkupTagEffect;
-using flight::types::MarkupTagHandler;
 using flight::types::MarkupTagRegistry;
 using flight::types::RichTextContent;
 using flight::types::TextFormat;
@@ -74,6 +65,7 @@ inline flight::String code_point_to_string(double code, flight::String fallback)
 
 
 // NOT GENERATED: function equalsMarkupFormat -- source line 137
+// refusal: cpp-optional-member-access-unproven [compiler-restriction]
 //
 // The source it stood for:
 //   function equalsMarkupFormat(a: Readonly<TextFormat>, b: Readonly<TextFormat>): boolean {
@@ -95,70 +87,56 @@ inline flight::String code_point_to_string(double code, flight::String fallback)
 //     return true;
 //   }
 //   
-// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/textMarkup.ts: keyof types require C++
-// type computation lowering
+// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/textMarkup.ts: property length on C++
+// absence-carrying storage requires narrowed access: no present-value proof reaches this read. Guard this exact
+// receiver (bind a property or call result to a local first if evaluating it again would produce a different
+// value), then read the member only in the present branch. The compiler will not discard the absence state or
+// call value() without that proof
 
 inline flight::String format_markup_color(double color) {
-  return flight::String("#") + flight::to_string(flight::number_to_string(get_color_rgb(color), 16.0).pad_start(6.0, flight::String("0"))) + flight::String("");
+  return flight::String("#") + flight::to_string(flight::number_to_string(flight::color::get_color_rgb(color), 16.0).pad_start(6.0, flight::String("0"))) + flight::String("");
+}
+
+inline flight::String format_markup_list_tag(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>> format) {
+  if (flight::row_get<flight::RowKey<"listMarker">>(format).has_value()) {
+    return flight::String("<li type=\"") + flight::to_string(flight::row_get<flight::RowKey<"listMarker">>(format).value()) + flight::String("\">");
+  }
+  return flight::String("<li>");
+}
+
+inline std::optional<flight::String> format_markup_textformat_tag(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>> format) {
+  flight::String tag = flight::String("<textformat");
+  bool any = false;
+  if (flight::row_get<flight::RowKey<"blockIndent">>(format).has_value()) {
+    (tag += flight::String(" blockindent=\"") + flight::to_string(flight::row_get<flight::RowKey<"blockIndent">>(format).value()) + flight::String("\""));
+    (any = true);
+  }
+  if (flight::row_get<flight::RowKey<"indent">>(format).has_value()) {
+    (tag += flight::String(" indent=\"") + flight::to_string(flight::row_get<flight::RowKey<"indent">>(format).value()) + flight::String("\""));
+    (any = true);
+  }
+  if (flight::row_get<flight::RowKey<"leading">>(format).has_value()) {
+    (tag += flight::String(" leading=\"") + flight::to_string(flight::row_get<flight::RowKey<"leading">>(format).value()) + flight::String("\""));
+    (any = true);
+  }
+  if (flight::row_get<flight::RowKey<"leftMargin">>(format).has_value()) {
+    (tag += flight::String(" leftmargin=\"") + flight::to_string(flight::row_get<flight::RowKey<"leftMargin">>(format).value()) + flight::String("\""));
+    (any = true);
+  }
+  if (flight::row_get<flight::RowKey<"rightMargin">>(format).has_value()) {
+    (tag += flight::String(" rightmargin=\"") + flight::to_string(flight::row_get<flight::RowKey<"rightMargin">>(format).value()) + flight::String("\""));
+    (any = true);
+  }
+  if (flight::row_get<flight::RowKey<"tabStops">>(format).has_value()) {
+    (tag += flight::String(" tabstops=\"") + flight::to_string(flight::row_get<flight::RowKey<"tabStops">>(format).value().join(flight::String(","))) + flight::String("\""));
+    (any = true);
+  }
+  return (any ? std::optional<flight::String>{flight::String("") + flight::to_string(tag) + flight::String(">")} : std::nullopt);
 }
 
 
-// NOT GENERATED: function formatMarkupListTag -- source line 187
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   function formatMarkupListTag(format: Readonly<TextFormat>): string {
-//     if (format.listMarker !== undefined) return `<li type="${format.listMarker}">`;
-//     return '<li>';
-//   }
-//   
-// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/textMarkup.ts: a presence test against
-// undefined has no absence channel in the emitted C++ storage for property
-
-
-// NOT GENERATED: function formatMarkupTextformatTag -- source line 238
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   function formatMarkupTextformatTag(format: Readonly<TextFormat>): string | null {
-//     let tag = '<textformat';
-//     let any = false;
-//     if (format.blockIndent !== undefined) {
-//       tag += ` blockindent="${format.blockIndent}"`;
-//       any = true;
-//     }
-//     if (format.indent !== undefined) {
-//       tag += ` indent="${format.indent}"`;
-//       any = true;
-//     }
-//     if (format.leading !== undefined) {
-//       tag += ` leading="${format.leading}"`;
-//       any = true;
-//     }
-//     if (format.leftMargin !== undefined) {
-//       tag += ` leftmargin="${format.leftMargin}"`;
-//       any = true;
-//     }
-//     if (format.rightMargin !== undefined) {
-//       tag += ` rightmargin="${format.rightMargin}"`;
-//       any = true;
-//     }
-//     if (format.tabStops !== undefined) {
-//       tag += ` tabstops="${format.tabStops.join(',')}"`;
-//       any = true;
-//     }
-//     return any ? `${tag}>` : null;
-//   }
-//   
-//   // The default standard-dialect registry, built lazily and memoized. Not a module-load side effect:
-//   // nothing runs until the first `parseTextMarkup` call that omits a registry. Kept internal so the
-//   // standard tags stay immutable from outside; a caller wanting custom tags builds their own registry.
-// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/textMarkup.ts: a presence test against
-// undefined has no absence channel in the emitted C++ storage for property
-
-
 // NOT GENERATED: function normalizeMarkupTagResult -- source line 347
-// refusal: cpp-partial-shape-unresolvable [source-portability]
+// refusal: cpp-structural-variant-assertion-without-nominal-storage [source-portability]
 //
 // The source it stood for:
 //   function normalizeMarkupTagResult(result: Readonly<MarkupTagResult>): MarkupTagEffect {
@@ -166,8 +144,11 @@ inline flight::String format_markup_color(double color) {
 //     return { format: result as Partial<TextFormat> };
 //   }
 //   
-// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/textMarkup.ts: Partial<T> requires a
-// statically resolvable C++ object shape; T is named
+// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/textMarkup.ts: type assertion target
+// flight::Ref<flight::types::MarkupTagEffect> is a structural facet of variant alternative
+// flight::Ref<MarkupTagEffect>, but that alternative retains only its anonymous referent and carries no nominal
+// target reference to recover. Narrow the source union by its discriminant before reading the facet, or declare
+// the callback parameter with the concrete target type.
 
 
 // NOT GENERATED: function isSafeMarkupHref -- source line 363
@@ -185,22 +166,22 @@ inline flight::String format_markup_color(double color) {
 // cpp emission failed for @flighthq/text-markup/packages/text-markup/src/textMarkup.ts: string for-of requires a
 // Unicode code-point iteration runtime contract
 
-inline void push_markup_range(flight::Array<flight::Ref<TextFormatRange>> ranges, flight::Ref<TextFormat> format, double start, double end) {
+inline void push_markup_range(flight::Array<flight::Ref<flight::types::TextFormatRange>> ranges, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>> format, double start, double end) {
   if ((start == end)) {
     return;
   }
-  if ((static_cast<double>(([&]() { const auto named_view = flight::named_properties(format); const auto named_keys = named_view.keys(); return flight::Array<flight::String>(named_keys.begin(), named_keys.end()); }()).size()) == 0.0)) {
+  if ((static_cast<double>(([&]() { const auto named_view_3 = flight::named_properties(format); const auto named_keys_3 = named_view_3.keys(); return flight::Array<flight::String>(named_keys_3.begin(), named_keys_3.end()); }()).size()) == 0.0)) {
     return;
   }
-  std::optional<flight::Ref<TextFormatRange>> previous = ranges.get((static_cast<double>(ranges.size()) - 1.0));
-  if (((previous.has_value() && (previous.value()->end == start)) && equals_markup_format(previous.value()->format, format))) {
+  std::optional<flight::Ref<flight::types::TextFormatRange>> previous = ranges.get((static_cast<double>(ranges.size()) - 1.0));
+  if (((([&]() { const auto& presence_operand = previous; return presence_operand.has_value(); }()) && (previous.value()->end == start)) && equals_markup_format(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>(previous.value()->format)), format))) {
     (previous.value()->end = end);
     return;
   }
-  ranges.push(create_text_format_range(flight::make_ref<TextFormat>(*format), start, end));
+  ranges.push(flight::textlayout::create_text_format_range(flight::make_ref<flight::types::TextFormat>(*flight::structural_ref_cast<flight::Ref<flight::types::TextFormat>>(format)), start, end));
 }
 
-inline void append_markup_string(flight::Ref<RichTextContent> content, flight::String value, flight::Ref<TextFormat> format) {
+inline void append_markup_string(flight::Ref<flight::types::RichTextContent> content, flight::String value, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>> format) {
   if ((static_cast<double>(value.length()) == 0.0)) {
     return;
   }
@@ -222,79 +203,33 @@ inline double find_next_unassigned(flight::Int32Array next, double index) {
   return root;
 }
 
-inline std::optional<flight::Ref<MarkupTagRegistry>> default_markup_tag_registry = std::nullopt;
+inline std::optional<flight::Ref<flight::types::MarkupTagRegistry>> default_markup_tag_registry = std::nullopt;
 
-inline flight::Ref<MarkupTagRegistry> get_default_markup_tag_registry() {
-  std::optional<flight::Ref<MarkupTagRegistry>> registry = default_markup_tag_registry;
+inline flight::Ref<flight::types::MarkupTagRegistry> get_default_markup_tag_registry() {
+  std::optional<flight::Ref<flight::types::MarkupTagRegistry>> registry = default_markup_tag_registry;
   if (!registry.has_value()) {
-    (registry = std::optional<flight::Ref<MarkupTagRegistry>>{create_markup_tag_registry()});
-    register_standard_markup_tags(registry.value());
-    (default_markup_tag_registry = std::optional<flight::Ref<MarkupTagRegistry>>{registry.value()});
+    (registry = std::optional<flight::Ref<flight::types::MarkupTagRegistry>>{flight::text_markup::create_markup_tag_registry()});
+    flight::text_markup::register_standard_markup_tags(registry.value());
+    (default_markup_tag_registry = std::optional<flight::Ref<flight::types::MarkupTagRegistry>>{registry.value()});
   }
   return registry.value();
 }
 
-inline flight::Ref<TextFormat> empty_markup_format = flight::make_ref<TextFormat>(TextFormat{});
+inline flight::Ref<flight::types::TextFormat> empty_markup_format = flight::structural_ref_cast<flight::Ref<flight::types::TextFormat>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>());
 
-inline void append_markup_break_before(flight::Ref<RichTextContent> content) {
+inline void append_markup_break_before(flight::Ref<flight::types::RichTextContent> content) {
   const flight::String text = content->text;
   if (((static_cast<double>(text.length()) == 0.0) || text.ends_with(flight::String("\n")))) {
     return;
   }
-  append_markup_string(content, flight::String("\n"), empty_markup_format);
+  append_markup_string(content, flight::String("\n"), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>(empty_markup_format)));
 }
 
-
-// NOT GENERATED: variable (binding) -- source line 458
-//
-// The source it stood for:
-//   const markupFormatKeys: readonly (keyof TextFormat)[] = [
-//     'align',
-//     'blockIndent',
-//     'bold',
-//     'bullet',
-//     'color',
-//     'font',
-//     'indent',
-//     'italic',
-//     'kerning',
-//     'leading',
-//     'leftMargin',
-//     'letterSpacing',
-//     'listMarker',
-//     'rightMargin',
-//     'size',
-//     'strikethrough',
-//     'tabStops',
-//     'target',
-//     'underline',
-//     'url',
-//     'variations',
-//   ];
-//   
-// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/textMarkup.ts: keyof types require C++
-// type computation lowering
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_MARKUP_START_END_FORMAT_CE1CCBAACFB7864E
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_MARKUP_START_END_FORMAT_CE1CCBAACFB7864E
-struct start_end_format_ce1ccbaacfb7864e : public flight::ReferenceEnabled {
-  double start;
-  double end;
-  flight::Ref<TextFormat> format;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_MARKUP_START_END_FORMAT_CE1CCBAACFB7864E
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_MARKUP_START_END_FORMAT_A4C2B780FED27D8C
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_MARKUP_START_END_FORMAT_A4C2B780FED27D8C
-struct start_end_format_a4c2b780fed27d8c : public flight::ReferenceEnabled {
-  double start;
-  double end;
-  flight::Ref<TextFormat> format;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_MARKUP_START_END_FORMAT_A4C2B780FED27D8C
+inline flight::Array<flight::String> markup_format_keys = flight::Array<flight::String>{flight::String("align"), flight::String("blockIndent"), flight::String("bold"), flight::String("bullet"), flight::String("color"), flight::String("font"), flight::String("indent"), flight::String("italic"), flight::String("kerning"), flight::String("leading"), flight::String("leftMargin"), flight::String("letterSpacing"), flight::String("listMarker"), flight::String("rightMargin"), flight::String("size"), flight::String("strikethrough"), flight::String("tabStops"), flight::String("target"), flight::String("underline"), flight::String("url"), flight::String("variations")};
 
 
 // NOT GENERATED: function resolveMarkupFormatRuns -- source line 385
+// refusal: cpp-external-member-call-arity [compiler-restriction]
 //
 // The source it stood for:
 //   function resolveMarkupFormatRuns(
@@ -355,8 +290,9 @@ struct start_end_format_a4c2b780fed27d8c : public flight::ReferenceEnabled {
 //     return runs;
 //   }
 //   
-// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/textMarkup.ts: ambient value Array
-// member from has no C++ binding
+// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/textMarkup.ts: Array.from is
+// represented for exactly 1 argument(s), and this call passes 2; the mapper and thisArg forms have no declared
+// target, so pass only the source sequence
 
 inline flight::Record<flight::String, flight::String> markup_attribute_escapes = {{flight::String("\""), flight::String("&quot;")}, {flight::String("&"), flight::String("&amp;")}, {flight::String("<"), flight::String("&lt;")}, {flight::String(">"), flight::String("&gt;")}};
 
@@ -364,40 +300,36 @@ inline flight::String escape_markup_attribute(flight::String value) {
   return value.replace(flight::RegExp(flight::String("[&<>\"]"), flight::String("g")), [=](flight::String character) { return markup_attribute_escapes.get(character).value(); });
 }
 
+inline flight::String format_markup_anchor_tag(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>> format) {
+  flight::String tag = flight::String("<a");
+  if (flight::row_get<flight::RowKey<"url">>(format).has_value()) {
+    (tag += flight::String(" href=\"") + flight::to_string(escape_markup_attribute(flight::row_get<flight::RowKey<"url">>(format).value())) + flight::String("\""));
+  }
+  if (flight::row_get<flight::RowKey<"target">>(format).has_value()) {
+    (tag += flight::String(" target=\"") + flight::to_string(escape_markup_attribute(flight::row_get<flight::RowKey<"target">>(format).value())) + flight::String("\""));
+  }
+  return flight::String("") + flight::to_string(tag) + flight::String(">");
+}
 
-// NOT GENERATED: function formatMarkupAnchorTag -- source line 164
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   function formatMarkupAnchorTag(format: Readonly<TextFormat>): string {
-//     let tag = '<a';
-//     if (format.url !== undefined) tag += ` href="${escapeMarkupAttribute(format.url)}"`;
-//     if (format.target !== undefined) tag += ` target="${escapeMarkupAttribute(format.target)}"`;
-//     return `${tag}>`;
-//   }
-//   
-// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/textMarkup.ts: a presence test against
-// undefined has no absence channel in the emitted C++ storage for property
-
-
-// NOT GENERATED: function formatMarkupFontTag -- source line 175
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   function formatMarkupFontTag(format: Readonly<TextFormat>): string | null {
-//     const hasColor = format.color !== undefined;
-//     const hasSize = format.size !== undefined;
-//     const hasFace = format.font !== undefined;
-//     if (!hasColor && !hasSize && !hasFace) return null;
-//     let tag = '<font';
-//     if (hasColor) tag += ` color="${formatMarkupColor(format.color as number)}"`;
-//     if (hasSize) tag += ` size="${format.size}"`;
-//     if (hasFace) tag += ` face="${escapeMarkupAttribute(format.font as string)}"`;
-//     return `${tag}>`;
-//   }
-//   
-// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/textMarkup.ts: a presence test against
-// undefined has no absence channel in the emitted C++ storage for property
+inline std::optional<flight::String> format_markup_font_tag(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>> format) {
+  const bool has_color = flight::row_get<flight::RowKey<"color">>(format).has_value();
+  const bool has_size = flight::row_get<flight::RowKey<"size">>(format).has_value();
+  const bool has_face = flight::row_get<flight::RowKey<"font">>(format).has_value();
+  if (((!has_color && !has_size) && !has_face)) {
+    return std::nullopt;
+  }
+  flight::String tag = flight::String("<font");
+  if (has_color) {
+    (tag += flight::String(" color=\"") + flight::to_string(format_markup_color(flight::row_get<flight::RowKey<"color">>(format).value())) + flight::String("\""));
+  }
+  if (has_size) {
+    (tag += flight::String(" size=\"") + flight::to_string(flight::row_get<flight::RowKey<"size">>(format).value()) + flight::String("\""));
+  }
+  if (has_face) {
+    (tag += flight::String(" face=\"") + flight::to_string(escape_markup_attribute(flight::row_get<flight::RowKey<"font">>(format).value())) + flight::String("\""));
+  }
+  return std::optional<flight::String>{flight::String("") + flight::to_string(tag) + flight::String(">")};
+}
 
 inline flight::Record<flight::String, flight::String> markup_named_entities = {{flight::String("amp"), flight::String("&")}, {flight::String("apos"), flight::String("'")}, {flight::String("gt"), flight::String(">")}, {flight::String("lt"), flight::String("<")}, {flight::String("quot"), flight::String("\"")}};
 
@@ -417,7 +349,7 @@ inline flight::String decode_markup_entities(flight::String value) {
 });
 }
 
-inline void append_markup_text(flight::Ref<RichTextContent> content, flight::String raw, flight::Ref<TextFormat> format) {
+inline void append_markup_text(flight::Ref<flight::types::RichTextContent> content, flight::String raw, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>> format) {
   append_markup_string(content, decode_markup_entities(raw), format);
 }
 
@@ -445,79 +377,60 @@ inline void append_markup_text(flight::Ref<RichTextContent> content, flight::Str
 // `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound
 // from the storage and tested the same way
 
-
-// NOT GENERATED: function handleMarkupToken -- source line 285
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   function handleMarkupToken(
-//     content: RichTextContent,
-//     handlers: Readonly<Map<string, MarkupTagHandler>>,
-//     token: string,
-//     offset: number,
-//     stack: TextFormat[],
-//     report: TextMarkupGuard,
-//   ): void {
-//     // The tag body is everything between the angle brackets; drop comments (`<!-- -->`), doctypes
-//     // (`<!…>`), processing instructions (`<?…>`), and the degenerate empty `<>`.
-//     const inner = token.slice(1, -1).trim();
-//     if (inner.length === 0 || inner.startsWith('!') || inner.startsWith('?')) return;
-//   
-//     const closing = inner.startsWith('/');
-//     const selfClosing = inner.endsWith('/');
-//     const body = (closing ? inner.slice(1) : inner).replace(/\/$/, '').trim();
-//     const separator = body.search(/\s/);
-//     const name = (separator === -1 ? body : body.slice(0, separator)).toLowerCase();
-//   
-//     if (closing) {
-//       // Guard the base format: an extra closing tag with nothing open is ignored, not an error.
-//       if (stack.length > 1) stack.pop();
-//       return;
-//     }
-//   
-//     const top = stack[stack.length - 1];
-//     const handler = handlers.get(name);
-//     if (handler === undefined) {
-//       report({ kind: 'unknown-tag', offset, tag: name, value: null });
-//       // Unregistered tag: keep the enclosed text, apply no format. Push a copy of the current format so
-//       // the matching close pops it without disturbing an enclosing tag.
-//       if (!selfClosing) stack.push({ ...top });
-//       return;
-//     }
-//   
-//     let attributes = parseMarkupAttributes(separator === -1 ? '' : body.slice(separator + 1));
-//     if (name === 'a' && attributes.href !== undefined && !isSafeMarkupHref(attributes.href)) {
-//       report({ kind: 'unsafe-href', offset, tag: name, value: attributes.href });
-//       attributes = { ...attributes };
-//       delete attributes.href;
-//     }
-//     const result = normalizeMarkupTagResult(handler(attributes, top));
-//     if (name === 'font' && attributes.color !== undefined && result.format?.color === undefined) {
-//       report({ kind: 'unresolved-font-color', offset, tag: name, value: attributes.color });
-//     }
-//   
-//     // A void insertion tag (text, no format) inserts literal text and never pushes — e.g. `<br>`.
-//     if (result.format === undefined && result.text !== undefined) {
-//       appendMarkupString(content, result.text, top);
-//       return;
-//     }
-//   
-//     if (result.breakBefore === true) appendMarkupBreakBefore(content);
-//     if (result.text !== undefined) appendMarkupString(content, result.text, top);
-//   
-//     const merged: TextFormat = { ...top, ...result.format };
-//     if (!selfClosing) stack.push(merged);
-//   }
-//   
-//   // Normalizes a handler result to the `MarkupTagEffect` shape. The common `Partial<TextFormat>` return
-//   // carries none of the reserved effect keys, so it is wrapped as `{ format }`; a richer return is used
-//   // as-is. `TextFormat` shares no field name with `format`/`breakBefore`/`text`, so the test is exact.
-// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/textMarkup.ts: a presence test against
-// undefined has no absence channel in the emitted C++ storage for property
+inline void handle_markup_token(flight::Ref<flight::types::RichTextContent> content, flight::Map<flight::String, flight::types::MarkupTagHandler> handlers, flight::String token, double offset, flight::Array<flight::Ref<flight::types::TextFormat>> stack, flight::types::TextMarkupGuard report) {
+  const flight::String inner = token.slice(1.0, -1.0).trim();
+  if ((((static_cast<double>(inner.length()) == 0.0) || inner.starts_with(flight::String("!"))) || inner.starts_with(flight::String("?")))) {
+    return;
+  }
+  const bool closing = inner.starts_with(flight::String("/"));
+  const bool self_closing = inner.ends_with(flight::String("/"));
+  const flight::String body = (closing ? inner.slice(1.0) : inner).replace(flight::RegExp(flight::String("\\/$"), flight::String("")), flight::String("")).trim();
+  const double separator = body.search(flight::RegExp(flight::String("\\s"), flight::String("")));
+  const flight::String name = ((separator == -1.0) ? body : body.slice(0.0, separator)).to_lower();
+  if (closing) {
+    if ((static_cast<double>(stack.size()) > 1.0)) {
+      stack.pop();
+    }
+    return;
+  }
+  auto top = stack.element((static_cast<double>(stack.size()) - 1.0));
+  std::optional<std::function<flight::types::MarkupTagResult(flight::Record<flight::String, flight::String>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>)>> handler = handlers.get(name);
+  if (!handler.has_value()) {
+    report(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextMarkupIssue>>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextMarkupIssue>>>>(flight::row_field<flight::RowKey<"kind">>(flight::String("unknown-tag")), flight::row_field<flight::RowKey<"offset">>(offset), flight::row_field<flight::RowKey<"tag">>(name), flight::row_field<flight::RowKey<"value">>(std::nullopt))));
+    if (!self_closing) {
+      stack.push(flight::make_ref<flight::types::TextFormat>(*top));
+    }
+    return;
+  }
+  flight::Record<flight::String, flight::String> attributes = parse_markup_attributes(((separator == -1.0) ? flight::String("") : body.slice((separator + 1.0))));
+  if ((((name == flight::String("a")) && true) && !is_safe_markup_href(attributes.get(flight::String("href")).value()))) {
+    report(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextMarkupIssue>>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextMarkupIssue>>>>(flight::row_field<flight::RowKey<"kind">>(flight::String("unsafe-href")), flight::row_field<flight::RowKey<"offset">>(offset), flight::row_field<flight::RowKey<"tag">>(name), flight::row_field<flight::RowKey<"value">>(std::optional<flight::String>{attributes.get(flight::String("href")).value()}))));
+    (attributes = ([&]() { flight::Record<flight::String, flight::String> record_construction = {}; auto&& record_spread_source = attributes; for (const auto& record_spread_entry : record_spread_source) { record_construction.set(record_spread_entry.first, record_spread_entry.second); } return record_construction; }()));
+    deleteattributes.get(flight::String("href")).value();
+  }
+  auto result = normalize_markup_tag_result(([&]() -> std::variant<flight::Ref<flight::types::TextFormat>, flight::Ref<flight::types::MarkupTagEffect>> { const auto& converted_union = handler.value()(attributes, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>(top))); if (const auto* alternative = std::get_if<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>>(&converted_union)) return std::variant<flight::Ref<flight::types::TextFormat>, flight::Ref<flight::types::MarkupTagEffect>>{std::in_place_type<flight::Ref<flight::types::TextFormat>>, flight::structural_ref_cast<flight::Ref<flight::types::TextFormat>>(*alternative)}; if (const auto* alternative = std::get_if<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MarkupTagEffect>>>>>(&converted_union)) return std::variant<flight::Ref<flight::types::TextFormat>, flight::Ref<flight::types::MarkupTagEffect>>{std::in_place_type<flight::Ref<flight::types::MarkupTagEffect>>, flight::structural_ref_cast<flight::Ref<flight::types::MarkupTagEffect>>(*alternative)}; throw std::logic_error("source union alternative is not a readonly view of one the destination names"); }()));
+  if ((((name == flight::String("font")) && true) && !([&]() -> std::optional<double> { auto optional_chain_receiver = result->format; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->color; }()).has_value())) {
+    report(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextMarkupIssue>>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextMarkupIssue>>>>(flight::row_field<flight::RowKey<"kind">>(flight::String("unresolved-font-color")), flight::row_field<flight::RowKey<"offset">>(offset), flight::row_field<flight::RowKey<"tag">>(name), flight::row_field<flight::RowKey<"value">>(std::optional<flight::String>{attributes.get(flight::String("color")).value()}))));
+  }
+  if ((!result->format.has_value() && result->text.has_value())) {
+    append_markup_string(content, result->text.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>(top)));
+    return;
+  }
+  if ((result->break_before == true)) {
+    append_markup_break_before(content);
+  }
+  if (result->text.has_value()) {
+    append_markup_string(content, result->text.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>(top)));
+  }
+  flight::Ref<flight::types::TextFormat> merged = flight::make_ref<flight::types::TextFormat>(flight::types::TextFormat{});
+  if (!self_closing) {
+    stack.push(merged);
+  }
+}
 
 
 // NOT GENERATED: function parseTextMarkupInternal -- source line 79
-// refusal: cpp-union-runtime-domains-erased [target-runtime]
+// refusal: cpp-member-projection-without-present-storage [compiler-restriction]
 //
 // The source it stood for:
 //   function parseTextMarkupInternal(
@@ -544,20 +457,22 @@ inline void append_markup_text(flight::Ref<RichTextContent> content, flight::Str
 //   // start of the output and against an existing trailing newline so block tags never stack blank lines.
 //   // The break carries no format, which keeps it indistinguishable from a plain newline on re-parse and
 //   // preserves the serialize/parse fixed point.
-// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/textMarkup.ts: C++ runtime contract
-// maps distinct union domains to one carrier without a discriminator or checked projection (MarkupTagRegistry |
-// Readonly -> flight::Ref<MarkupTagRegistry>); give the domains distinguishable key, element, or member types so
-// each reaches a carrier of its own -- a union of two declarations that differ only in name is one carrier
-// whatever the emitter does -- or provide that runtime contract
+// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/textMarkup.ts: member length on
+// optional C++ storage requires proven present payload: nothing proved the payload present, so the read would
+// unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow
+// it into a present local first; the compiler will not call value() without that proof. Where the storage
+// carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and
+// `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound
+// from the storage and tested the same way
 
-inline flight::Ref<TextMarkupExplanation> explain_text_markup(flight::String html, std::optional<flight::Ref<MarkupTagRegistry>> registry = std::nullopt) {
-  flight::Array<flight::Ref<TextMarkupIssue>> issues = flight::Array<flight::Ref<TextMarkupIssue>>{};
-  parse_text_markup_internal(html, registry, [=](flight::Ref<TextMarkupIssue> issue) { return issues.push(issue); });
-  return flight::make_ref<TextMarkupExplanation>(TextMarkupExplanation{.issues = issues});
+inline flight::Ref<flight::types::TextMarkupExplanation> explain_text_markup(flight::String html, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MarkupTagRegistry>>>>> registry = std::nullopt) {
+  flight::Array<flight::Ref<flight::types::TextMarkupIssue>> issues = flight::Array<flight::Ref<flight::types::TextMarkupIssue>>{};
+  parse_text_markup_internal(html, registry, [=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextMarkupIssue>>>> issue) { return issues.push(flight::structural_ref_cast<flight::Ref<flight::types::TextMarkupIssue>>(issue)); });
+  return flight::make_ref<flight::types::TextMarkupExplanation>(flight::types::TextMarkupExplanation{.issues = issues});
 }
 
-inline flight::Ref<RichTextContent> parse_text_markup(flight::String html, std::optional<flight::Ref<MarkupTagRegistry>> registry = std::nullopt) {
-  return parse_text_markup_internal(html, registry, report_text_markup_issue);
+inline flight::Ref<flight::types::RichTextContent> parse_text_markup(flight::String html, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MarkupTagRegistry>>>>> registry = std::nullopt) {
+  return parse_text_markup_internal(html, registry, flight::text_markup::report_text_markup_issue);
 }
 
 inline flight::Record<flight::String, flight::String> markup_text_escapes = {{flight::String("&"), flight::String("&amp;")}, {flight::String("<"), flight::String("&lt;")}, {flight::String(">"), flight::String("&gt;")}};
@@ -566,69 +481,68 @@ inline flight::String escape_markup_text(flight::String value) {
   return value.replace(flight::RegExp(flight::String("[&<>]"), flight::String("g")), [=](flight::String character) { return markup_text_escapes.get(character).value(); });
 }
 
+inline flight::String format_markup_run(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>> format, flight::String text) {
+  flight::Array<flight::String> open = flight::Array<flight::String>{};
+  flight::Array<flight::String> close = flight::Array<flight::String>{};
+  const std::optional<flight::String> textformat = format_markup_textformat_tag(format);
+  if (textformat.has_value()) {
+    open.push(textformat.value());
+    close.unshift(flight::String("</textformat>"));
+  }
+  if (flight::row_get<flight::RowKey<"align">>(format).has_value()) {
+    open.push(flight::String("<p align=\"") + flight::to_string(flight::row_get<flight::RowKey<"align">>(format).value()) + flight::String("\">"));
+    close.unshift(flight::String("</p>"));
+  }
+  if ((flight::row_get<flight::RowKey<"bullet">>(format) == true)) {
+    open.push(format_markup_list_tag(format));
+    close.unshift(flight::String("</li>"));
+  }
+  if ((flight::row_get<flight::RowKey<"url">>(format).has_value() || flight::row_get<flight::RowKey<"target">>(format).has_value())) {
+    open.push(format_markup_anchor_tag(format));
+    close.unshift(flight::String("</a>"));
+  }
+  const std::optional<flight::String> font = format_markup_font_tag(format);
+  if (font.has_value()) {
+    open.push(font.value());
+    close.unshift(flight::String("</font>"));
+  }
+  if ((flight::row_get<flight::RowKey<"bold">>(format) == true)) {
+    open.push(flight::String("<b>"));
+    close.unshift(flight::String("</b>"));
+  }
+  if ((flight::row_get<flight::RowKey<"italic">>(format) == true)) {
+    open.push(flight::String("<i>"));
+    close.unshift(flight::String("</i>"));
+  }
+  if ((flight::row_get<flight::RowKey<"underline">>(format) == true)) {
+    open.push(flight::String("<u>"));
+    close.unshift(flight::String("</u>"));
+  }
+  if ((flight::row_get<flight::RowKey<"strikethrough">>(format) == true)) {
+    open.push(flight::String("<s>"));
+    close.unshift(flight::String("</s>"));
+  }
+  return open.join(flight::String("")) + escape_markup_text(text) + close.join(flight::String(""));
+}
 
-// NOT GENERATED: function formatMarkupRun -- source line 192
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   function formatMarkupRun(format: Readonly<TextFormat>, text: string): string {
-//     const open: string[] = [];
-//     const close: string[] = [];
-//   
-//     const textformat = formatMarkupTextformatTag(format);
-//     if (textformat !== null) {
-//       open.push(textformat);
-//       close.unshift('</textformat>');
-//     }
-//     if (format.align !== undefined) {
-//       open.push(`<p align="${format.align}">`);
-//       close.unshift('</p>');
-//     }
-//     if (format.bullet === true) {
-//       open.push(formatMarkupListTag(format));
-//       close.unshift('</li>');
-//     }
-//     if (format.url !== undefined || format.target !== undefined) {
-//       open.push(formatMarkupAnchorTag(format));
-//       close.unshift('</a>');
-//     }
-//     const font = formatMarkupFontTag(format);
-//     if (font !== null) {
-//       open.push(font);
-//       close.unshift('</font>');
-//     }
-//     if (format.bold === true) {
-//       open.push('<b>');
-//       close.unshift('</b>');
-//     }
-//     if (format.italic === true) {
-//       open.push('<i>');
-//       close.unshift('</i>');
-//     }
-//     if (format.underline === true) {
-//       open.push('<u>');
-//       close.unshift('</u>');
-//     }
-//     if (format.strikethrough === true) {
-//       open.push('<s>');
-//       close.unshift('</s>');
-//     }
-//   
-//     return open.join('') + escapeMarkupText(text) + close.join('');
-//   }
-//   
-// cpp emission failed for @flighthq/text-markup/packages/text-markup/src/textMarkup.ts: a presence test against
-// undefined has no absence channel in the emitted C++ storage for property
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_MARKUP_START_END_FORMAT_CE1CCBAACFB7864E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_MARKUP_START_END_FORMAT_CE1CCBAACFB7864E
+struct start_end_format_ce1ccbaacfb7864e : public flight::ReferenceEnabled {
+  double start;
+  double end;
+  flight::Ref<flight::types::TextFormat> format;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_MARKUP_START_END_FORMAT_CE1CCBAACFB7864E
 
-inline flight::String format_text_markup(flight::Ref<RichTextContent> content) {
-  const flight::String text = content->text;
+inline flight::String format_text_markup(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichTextContent>>>> content) {
+  const flight::String text = flight::row_get<flight::RowKey<"text">>(content);
   if ((static_cast<double>(text.length()) == 0.0)) {
     return flight::String("");
   }
   flight::Array<flight::Ref<start_end_format_ce1ccbaacfb7864e>> runs = resolve_markup_format_runs(content);
   flight::String output = flight::String("");
   for (auto run : runs) {
-    (output += format_markup_run(run->format, text.slice(run->start, run->end)));
+    (output += format_markup_run(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextFormat>>>>(run->format)), text.slice(run->start, run->end)));
   }
   return output;
 }

@@ -1,6 +1,5 @@
 diff --git a/packages/compiler-backend-cpp/src/cppCatchAwaitCarrier.test.ts b/packages/compiler-backend-cpp/src/cppCatchAwaitCarrier.test.ts
 new file mode 100644
-index 0000000..d6f3aac
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppCatchAwaitCarrier.test.ts
 @@ -0,0 +1,132 @@
@@ -137,10 +136,9 @@ index 0000000..d6f3aac
 +  });
 +});
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
-index fd9670d..e96f2e6 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
-@@ -2982,7 +2982,7 @@ describe('createCppCompilerBackend', () => {
+@@ -2983,7 +2983,7 @@
      expect(failure.classification).toBe('compiler-restriction');
    });
  
@@ -149,7 +147,7 @@ index fd9670d..e96f2e6 100644
      const result = lower(
        'catch-value-after-await.ts',
        `export async function run<T>(
-@@ -2994,19 +2994,19 @@ describe('createCppCompilerBackend', () => {
+@@ -2995,19 +2995,19 @@
           catch (error) { await pause; reject(error); }
         }`,
      );
@@ -179,7 +177,7 @@ index fd9670d..e96f2e6 100644
      const result = lower(
        'catch-rethrow-after-await.ts',
        `export async function run(task: Promise<void>, pause: Promise<void>): Promise<void> {
-@@ -3014,14 +3014,12 @@ describe('createCppCompilerBackend', () => {
+@@ -3015,14 +3015,12 @@
           catch (error) { await pause; throw error; }
         }`,
      );
@@ -200,10 +198,9 @@ index fd9670d..e96f2e6 100644
  
    it('accepts the RenderProxy2D source refinement from Node<any> to the Node2D intersection', () => {
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-index bec69ae..6242396 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-@@ -351,6 +351,12 @@ interface EmitContext {
+@@ -363,6 +363,12 @@
    // Dependent callable packs spread more than once, or inside a loop, in their declaring function.
    reusedDependentCallablePackIds: ReadonlySet<string>;
    exceptionPointerBindingIds: ReadonlySet<string>;
@@ -216,7 +213,7 @@ index bec69ae..6242396 100644
    directBindingOwners: ReadonlyMap<string, CppDirectBindingOwner | null>;
    // The bindings whose declaration elected the erased dynamic value as its storage. A presence test
    // asks this rather than the declared type, because the two disagree in both directions and each
-@@ -607,6 +613,7 @@ function emitIrModuleCppWithContext(
+@@ -668,6 +674,7 @@
        ([bindingId]) => !denseArrayLengthBindingIds.has(bindingId),
      ),
    );
@@ -224,7 +221,7 @@ index bec69ae..6242396 100644
    const context: EmitContext = {
      activeDependentCallablePackIds: new Set(),
      anonymousStructs: new Map(),
-@@ -627,7 +634,8 @@ function emitIrModuleCppWithContext(
+@@ -689,7 +696,8 @@
      directBindingOwners: directBindingOwners ?? createCppDirectBindingOwners(sourceModules),
      erasedDynamicStorageBindingIds,
      erasedObjectParameterBindingIds,
@@ -234,7 +231,7 @@ index bec69ae..6242396 100644
      externalCallResultPresenceBindings: new Map(),
      externalBindingStorageTargetTypes,
      forwardDeclaredFunctionBindingIds,
-@@ -2686,6 +2694,27 @@ function isCppDeducibleUnknownStorageCpp(
+@@ -2824,6 +2832,27 @@
    return !mutable && initializer !== undefined && type?.kind === 'unknown';
  }
  
@@ -262,7 +259,7 @@ index bec69ae..6242396 100644
  function emitVariableDeclaration(declaration: Readonly<IrVariableDeclaration>, context: EmitContext): string[] {
    if ('pattern' in declaration) {
      emissionError(context, 'binding patterns require destructuring lowering before C++ emission');
-@@ -2697,6 +2726,8 @@ function emitVariableDeclaration(declaration: Readonly<IrVariableDeclaration>, c
+@@ -2835,6 +2864,8 @@
        'cpp-uninitialized-variable-missing-type-evidence',
      );
    }
@@ -271,7 +268,7 @@ index bec69ae..6242396 100644
    const name = getBindingTargetName(declaration.binding, context);
    const arrayElement = context.arrayElementBindingIds.has(declaration.binding.id);
    const externalCallResultPresence = context.externalCallResultPresenceBindings.get(declaration.binding.id);
-@@ -2746,6 +2777,8 @@ function emitVariable(variable: Readonly<IrVariable>, context: EmitContext): str
+@@ -2884,6 +2915,8 @@
        'cpp-uninitialized-variable-missing-type-evidence',
      );
    }
@@ -279,8 +276,8 @@ index bec69ae..6242396 100644
 +  if (caughtValueRebinding) return caughtValueRebinding;
    const name = getBindingTargetName(variable.binding, context);
    const arrayElement = context.arrayElementBindingIds.has(variable.binding.id);
-   const weakMapViewInitializer =
-@@ -9227,6 +9260,7 @@ function isCppReifyOnlyCatchBindingCpp(
+   const lengthProvenNullableArrayElement =
+@@ -9385,6 +9418,7 @@
          expression.left.kind === 'identifier' &&
          expression.left.reference.kind === 'binding' &&
          context.exceptionPointerBindingIds.has(expression.left.reference.binding.id) &&
@@ -288,7 +285,7 @@ index bec69ae..6242396 100644
          expression.right.kind === 'identifier' &&
          expression.right.reference.kind === 'binding' &&
          expression.right.reference.binding.id === binding.id
-@@ -23467,7 +23501,7 @@ function collectCppExternalBindingStorageTargetTypesCpp(
+@@ -23647,7 +23681,7 @@
  function collectCppExceptionPointerBindingIdsCpp(
    module: Readonly<IrModule>,
    bindingTypes: ReadonlyMap<string, Readonly<IrType>>,
@@ -297,7 +294,7 @@ index bec69ae..6242396 100644
    // Preserve the caught exception object only for the closed capture-and-rethrow pattern. Counting
    // every reference keeps ordinary unknown storage on the dynamic-value path as soon as it is read,
    // initialized, or assigned from anything other than a catch binding.
-@@ -23496,7 +23530,23 @@ function collectCppExceptionPointerBindingIdsCpp(
+@@ -23676,7 +23710,23 @@
    const referenceCounts = new Map<string, number>();
    const throwCounts = new Map<string, number>();
    const nullishTestCounts = new Map<string, number>();
@@ -321,7 +318,7 @@ index bec69ae..6242396 100644
      expression(expression) {
        if (expression.kind === 'identifier' && expression.reference.kind === 'binding') {
          const bindingId = expression.reference.binding.id;
-@@ -23546,19 +23596,27 @@ function collectCppExceptionPointerBindingIdsCpp(
+@@ -23726,19 +23776,27 @@
        }
      },
    });
@@ -353,10 +350,9 @@ index bec69ae..6242396 100644
  
  function collectCppContextualBindingStorageTargetTypesCpp(
 diff --git a/packages/compiler-lowering/src/compilerCatchAwaitHoistingLowering.ts b/packages/compiler-lowering/src/compilerCatchAwaitHoistingLowering.ts
-index c1333bc..d440bff 100644
 --- a/packages/compiler-lowering/src/compilerCatchAwaitHoistingLowering.ts
 +++ b/packages/compiler-lowering/src/compilerCatchAwaitHoistingLowering.ts
-@@ -146,6 +146,65 @@ function createIrCatchFlagBinding(
+@@ -146,6 +146,65 @@
    };
  }
  
@@ -422,7 +418,7 @@ index c1333bc..d440bff 100644
  function lowerIrModuleCatchAwaitHoisting(module: Readonly<IrModule>): IrModule {
    return {
      ...module,
-@@ -248,24 +307,16 @@ function lowerIrStatementCatchAwaitHoisting(
+@@ -248,24 +307,16 @@
          };
        }
  
@@ -457,7 +453,7 @@ index c1333bc..d440bff 100644
        const catchBody = lowerIrStatementCatchAwaitHoisting(statement.catchClause.body, origin, counter);
        const flagBinding = createIrCatchFlagBinding(origin, counter);
        const flagVariable: IrStatement = {
-@@ -278,39 +329,102 @@ function lowerIrStatementCatchAwaitHoisting(
+@@ -278,39 +329,102 @@
          ],
          kind: 'variable',
        };

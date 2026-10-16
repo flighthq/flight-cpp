@@ -3,6 +3,7 @@
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
+#include <type_traits>
 #include <variant>
 #include <flight/runtime.hpp>
 
@@ -86,7 +87,7 @@ inline void apply_rive_solo(flight::Array<std::optional<flight::types::Node2D>> 
                 continue;
               }
               std::optional<std::optional<flight::types::Node2D>> node = nodes.get(child);
-              if ((node.has_value() && node.value().has_value())) {
+              if ((([&](const auto& presence_operand) { if constexpr (flight::detail::optional_traits<std::remove_cvref_t<decltype(presence_operand.value())>>::optional) { return !presence_operand.has_value() || presence_operand.value().has_value(); } else { return presence_operand.has_value(); } }(node)) && ([&](const auto& presence_operand) { if constexpr (flight::detail::optional_traits<std::remove_cvref_t<decltype(presence_operand.value())>>::optional) { return presence_operand.has_value(); } else { return presence_operand.has_value(); } }(node)))) {
                 flight::row_set<flight::RowKey<"visible">>(node.value(), false);
               }
             }

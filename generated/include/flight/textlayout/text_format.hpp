@@ -10,28 +10,35 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct FontVariation; }
+namespace flight::types { struct TextFormat; }
+
+#include <flight/types/font_variation.hpp>
+#include <flight/types/text_format.hpp>
+
 namespace flight::textlayout {
 
 inline const double default_size = 12.0;
 
-inline double get_text_format_ascent(flight::Ref<TextFormat> format) {
-  return format->size.value_or(default_size);
+inline double get_text_format_ascent(flight::Ref<flight::types::TextFormat> format) {
+  return ([&]() -> double { auto nullish_coalesce_left = format->size; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return default_size; }());
 }
 
-inline double get_text_format_descent(flight::Ref<TextFormat> format) {
-  return (format->size.value_or(default_size) * 0.185);
+inline double get_text_format_descent(flight::Ref<flight::types::TextFormat> format) {
+  return (([&]() -> double { auto nullish_coalesce_left = format->size; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return default_size; }()) * 0.185);
 }
 
-inline double get_text_format_leading(flight::Ref<TextFormat> format) {
-  return format->leading.value_or(0.0);
+inline double get_text_format_leading(flight::Ref<flight::types::TextFormat> format) {
+  return ([&]() -> double { auto nullish_coalesce_left = format->leading; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
 }
 
-inline double get_text_format_height(flight::Ref<TextFormat> format) {
+inline double get_text_format_height(flight::Ref<flight::types::TextFormat> format) {
   return ((get_text_format_ascent(format) + get_text_format_descent(format)) + get_text_format_leading(format));
 }
 
 
 // NOT GENERATED: function mergeTextFormat -- source line 21
+// refusal: cpp-named-properties-write-unsupported [target-runtime]
 //
 // The source it stood for:
 //   export function mergeTextFormat(base: TextFormat, override: TextFormat): TextFormat {
@@ -45,7 +52,11 @@ inline double get_text_format_height(flight::Ref<TextFormat> format) {
 //     return result;
 //   }
 //   
-// cpp emission failed for @flighthq/textlayout/packages/textlayout/src/textFormat.ts: keyof types require C++
-// type computation lowering
+// cpp emission failed for @flighthq/textlayout/packages/textlayout/src/textFormat.ts: a dynamic named-property
+// write through the owner-preserving view requires target-runtime mutation support: flight::NamedProperties is
+// deliberately read-only, so the write cannot reach the owner it views. Keep the key as a finite union of
+// declared member names and assign through the typed object, or add an owner-preserving checked
+// NamedProperties::set(String, Any) contract. The compiler will not cast between owners, copy into replacement
+// storage, materialize a replacement owner, or add side storage
 
 } // namespace flight::textlayout

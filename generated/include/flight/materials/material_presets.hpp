@@ -5,7 +5,6 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function createAluminumStandardPbrMaterial -- source line 21
 //   missing: function createCarbonStandardPbrMaterial -- source line 32
-//   missing: function createGlassExtendedPbrMaterial -- source line 43
 //   missing: function createGoldStandardPbrMaterial -- source line 86
 //   missing: function createIronStandardPbrMaterial -- source line 97
 //   missing: function createMarbleStandardPbrMaterial -- source line 108
@@ -14,6 +13,9 @@
 //   missing: function createSilverStandardPbrMaterial -- source line 141
 //   missing: function createSkinStandardPbrMaterial -- source line 152
 //   missing: function createWoodStandardPbrMaterial -- source line 163
+#include <flight/structural_ref.hpp>
+#include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -23,8 +25,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/extended_pbr_material.hpp>
 
+namespace flight::types { struct AnisotropyPbrExtension; }
+namespace flight::types { struct ClearcoatPbrExtension; }
 namespace flight::types { struct ExtendedPbrMaterial; }
 namespace flight::types { struct GlassExtendedPbrMaterialOptions; }
+namespace flight::types { struct IridescencePbrExtension; }
+namespace flight::types { struct PbrExtension; }
+namespace flight::types { struct SheenPbrExtension; }
+namespace flight::types { struct SpecularPbrExtension; }
 namespace flight::types { struct StandardPbrMaterial; }
 namespace flight::types { struct StandardPbrMaterialProperties; }
 namespace flight::types { struct Texture2D; }
@@ -32,6 +40,12 @@ namespace flight::types { struct Texture2DArray; }
 namespace flight::types { struct Texture3D; }
 namespace flight::types { struct TextureCube; }
 namespace flight::types { struct TransmissionVolumePbrExtension; }
+namespace flight::types { struct WrappedDiffusePbrExtension; }
+
+#include <flight/types/contract.hpp>
+#include <flight/materials/extended_pbr_material.hpp>
+#include <flight/materials/pbr_materials.hpp>
+#include <flight/materials/transmission_volume_pbr_extension.hpp>
 
 namespace flight::materials {
 
@@ -74,56 +88,12 @@ using flight::types::GlassExtendedPbrMaterialOptions;
 // cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: structural-row
 // construction requires explicit named properties
 
-
-// NOT GENERATED: function createGlassExtendedPbrMaterial -- source line 43
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
-//
-// The source it stood for:
-//   export function createGlassExtendedPbrMaterial(
-//     opts: Readonly<GlassExtendedPbrMaterialOptions> = {},
-//   ): ExtendedPbrMaterial {
-//     const extensions: PbrExtensionValue[] = [];
-//     extensions.push(
-//       createTransmissionVolumePbrExtension({
-//         attenuationColor: opts.transmissionVolume?.attenuationColor,
-//         attenuationDistance: opts.transmissionVolume?.attenuationDistance,
-//         ior: opts.transmissionVolume?.ior ?? 1.5,
-//         thickness: opts.transmissionVolume?.thickness,
-//         thicknessMap: opts.transmissionVolume?.thicknessMap,
-//         thicknessMapUvSet: opts.transmissionVolume?.thicknessMapUvSet,
-//         transmission: opts.transmissionVolume?.transmission ?? 1,
-//         transmissionMap: opts.transmissionVolume?.transmissionMap,
-//         transmissionMapUvSet: opts.transmissionVolume?.transmissionMapUvSet,
-//       }),
-//     );
-//     return createExtendedPbrMaterial({
-//       alphaCutoff: opts.alphaCutoff,
-//       alphaMode: opts.alphaMode,
-//       blendMode: opts.blendMode,
-//       doubleSided: opts.doubleSided,
-//       extensions,
-//       standard: createStandardPbrMaterialProperties({
-//         alphaMap: opts.standard?.alphaMap,
-//         baseColor: opts.standard?.baseColor ?? 0xffffffff,
-//         baseColorMap: opts.standard?.baseColorMap,
-//         emissive: opts.standard?.emissive,
-//         emissiveMap: opts.standard?.emissiveMap,
-//         emissiveStrength: opts.standard?.emissiveStrength,
-//         metallic: opts.standard?.metallic ?? 0,
-//         metallicRoughnessMap: opts.standard?.metallicRoughnessMap,
-//         normalMap: opts.standard?.normalMap,
-//         normalScale: opts.standard?.normalScale,
-//         occlusionMap: opts.standard?.occlusionMap,
-//         occlusionStrength: opts.standard?.occlusionStrength,
-//         roughness: opts.standard?.roughness ?? 0,
-//       }),
-//     });
-//   }
-//   
-//   // Gold: fully metallic, moderate roughness, warm saturated base color.
-//   // Metallic: 1 · roughness: 0.25 · baseColor: 0xFFD700 (gold yellow in sRGB)
-// cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: contextual union value
-// type flight::Array<flight::Ref<flight::types::PbrExtensionValue>> is not a represented runtime domain
+inline flight::Ref<flight::types::ExtendedPbrMaterial> create_glass_extended_pbr_material(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlassExtendedPbrMaterialOptions>>>>> opts = std::nullopt) {
+  opts = opts.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlassExtendedPbrMaterialOptions>>>>());
+  flight::Array<flight::types::PbrExtensionValue> extensions = flight::Array<flight::types::PbrExtensionValue>{};
+  extensions.push(std::variant<flight::Ref<flight::types::TransmissionVolumePbrExtension>, flight::Ref<flight::types::AnisotropyPbrExtension>, flight::Ref<flight::types::IridescencePbrExtension>, flight::Ref<flight::types::WrappedDiffusePbrExtension>, flight::Ref<flight::types::SpecularPbrExtension>, flight::Ref<flight::types::ClearcoatPbrExtension>, flight::Ref<flight::types::SheenPbrExtension>, flight::Ref<flight::types::PbrExtension>>{std::in_place_type<flight::Ref<flight::types::TransmissionVolumePbrExtension>>, flight::materials::create_transmission_volume_pbr_extension(flight::make_structural_ref<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::TransmissionVolumePbrExtension>>>>>(flight::row_field<flight::RowKey<"attenuationColor">>(([&]() -> std::optional<double> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"transmissionVolume">>(opts.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"attenuationColor">>(optional_chain_receiver.value()); }())), flight::row_field<flight::RowKey<"attenuationDistance">>(([&]() -> std::optional<double> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"transmissionVolume">>(opts.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"attenuationDistance">>(optional_chain_receiver.value()); }())), flight::row_field<flight::RowKey<"ior">>(([&]() -> std::optional<double> { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"transmissionVolume">>(opts.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"ior">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return std::optional<double>{1.5}; }())), flight::row_field<flight::RowKey<"thickness">>(([&]() -> std::optional<double> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"transmissionVolume">>(opts.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"thickness">>(optional_chain_receiver.value()); }())), flight::row_field<flight::RowKey<"thicknessMap">>(([&]() -> std::optional<flight::types::Texture> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"transmissionVolume">>(opts.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"thicknessMap">>(optional_chain_receiver.value()); }())), flight::row_field<flight::RowKey<"thicknessMapUvSet">>(([&]() -> std::optional<flight::types::PbrUvSet> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"transmissionVolume">>(opts.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"thicknessMapUvSet">>(optional_chain_receiver.value()); }())), flight::row_field<flight::RowKey<"transmission">>(([&]() -> std::optional<double> { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"transmissionVolume">>(opts.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"transmission">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return std::optional<double>{1.0}; }())), flight::row_field<flight::RowKey<"transmissionMap">>(([&]() -> std::optional<flight::types::Texture> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"transmissionVolume">>(opts.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"transmissionMap">>(optional_chain_receiver.value()); }())), flight::row_field<flight::RowKey<"transmissionMapUvSet">>(([&]() -> std::optional<flight::types::PbrUvSet> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"transmissionVolume">>(opts.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"transmissionMapUvSet">>(optional_chain_receiver.value()); }()))))});
+  return flight::materials::create_extended_pbr_material(flight::make_structural_ref<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::ExtendedPbrMaterial>>>>>(flight::row_field<flight::RowKey<"alphaCutoff">>(flight::row_get<flight::RowKey<"alphaCutoff">>(opts.value())), flight::row_field<flight::RowKey<"alphaMode">>(flight::row_get<flight::RowKey<"alphaMode">>(opts.value())), flight::row_field<flight::RowKey<"blendMode">>(flight::row_get<flight::RowKey<"blendMode">>(opts.value())), flight::row_field<flight::RowKey<"doubleSided">>(flight::row_get<flight::RowKey<"doubleSided">>(opts.value())), flight::row_field<flight::RowKey<"extensions">>(std::optional<flight::Array<flight::types::PbrExtensionValue>>{extensions}), flight::row_field<flight::RowKey<"standard">>(std::optional<flight::Ref<flight::types::StandardPbrMaterialProperties>>{flight::materials::create_standard_pbr_material_properties(flight::make_structural_ref<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::StandardPbrMaterialProperties>>>>>(flight::row_field<flight::RowKey<"alphaMap">>(([&]() -> std::optional<flight::types::Texture> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"standard">>(opts.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"alphaMap">>(optional_chain_receiver.value()); }())), flight::row_field<flight::RowKey<"baseColor">>(([&]() -> std::optional<double> { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"standard">>(opts.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"baseColor">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return std::optional<double>{4294967295.0}; }())), flight::row_field<flight::RowKey<"baseColorMap">>(([&]() -> std::optional<flight::types::Texture> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"standard">>(opts.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"baseColorMap">>(optional_chain_receiver.value()); }())), flight::row_field<flight::RowKey<"emissive">>(([&]() -> std::optional<double> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"standard">>(opts.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"emissive">>(optional_chain_receiver.value()); }())), flight::row_field<flight::RowKey<"emissiveMap">>(([&]() -> std::optional<flight::types::Texture> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"standard">>(opts.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"emissiveMap">>(optional_chain_receiver.value()); }())), flight::row_field<flight::RowKey<"emissiveStrength">>(([&]() -> std::optional<double> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"standard">>(opts.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"emissiveStrength">>(optional_chain_receiver.value()); }())), flight::row_field<flight::RowKey<"metallic">>(([&]() -> std::optional<double> { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"standard">>(opts.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"metallic">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return std::optional<double>{0.0}; }())), flight::row_field<flight::RowKey<"metallicRoughnessMap">>(([&]() -> std::optional<flight::types::Texture> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"standard">>(opts.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"metallicRoughnessMap">>(optional_chain_receiver.value()); }())), flight::row_field<flight::RowKey<"normalMap">>(([&]() -> std::optional<flight::types::Texture> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"standard">>(opts.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"normalMap">>(optional_chain_receiver.value()); }())), flight::row_field<flight::RowKey<"normalScale">>(([&]() -> std::optional<double> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"standard">>(opts.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"normalScale">>(optional_chain_receiver.value()); }())), flight::row_field<flight::RowKey<"occlusionMap">>(([&]() -> std::optional<flight::types::Texture> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"standard">>(opts.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"occlusionMap">>(optional_chain_receiver.value()); }())), flight::row_field<flight::RowKey<"occlusionStrength">>(([&]() -> std::optional<double> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"standard">>(opts.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"occlusionStrength">>(optional_chain_receiver.value()); }())), flight::row_field<flight::RowKey<"roughness">>(([&]() -> std::optional<double> { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"standard">>(opts.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"roughness">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return std::optional<double>{0.0}; }()))))})));
+}
 
 
 // NOT GENERATED: function createGoldStandardPbrMaterial -- source line 86

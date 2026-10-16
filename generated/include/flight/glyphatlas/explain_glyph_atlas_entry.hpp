@@ -9,11 +9,30 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/bitmap.hpp>
+
 #include <flight/types/glyph_source.hpp>
+
+namespace flight::types { struct Bitmap; }
+namespace flight::types { struct GlyphAtlas; }
+namespace flight::types { struct GlyphAtlasEntryExplanation; }
+namespace flight::types { struct GlyphAtlasRuntime; }
+namespace flight::types { struct GlyphAtlasShelf; }
+namespace flight::types { struct GlyphEntry; }
+namespace flight::types { struct GlyphMetrics; }
+namespace flight::types { struct GlyphRasterizeOptions; }
+namespace flight::types { struct GlyphRasterizedBitmap; }
+namespace flight::types { struct HostGlyphRasterizerCapability; }
 
 namespace flight::glyphatlas {
 
+using flight::types::Bitmap;
 using flight::types::GlyphAtlas;
+using flight::types::GlyphAtlasShelf;
+using flight::types::GlyphEntry;
+using flight::types::GlyphRasterizedBitmap;
+
+using flight::types::GlyphAtlasRuntime;
 
 
 // NOT GENERATED: function explainGlyphAtlasEntry -- source line 13
