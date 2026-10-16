@@ -1,6 +1,7 @@
 // Default native Sprite owner lane from sprite.ts. Custom factory/runtime lanes remain unsupported.
 #pragma once
 #include <flight/node/native_node2d_access.hpp>
+#include <flight/scene2d/display_object.hpp>
 #include <flight/texture/texture.hpp>
 #include <flight/types/sprite_identity_renderer_data.hpp>
 #include <flight/render/gl_scene2d_bindings.hpp>

@@ -11,7 +11,6 @@ inline void invalidate_node_appearance(flight::types::Node2D source);
 inline void invalidate_node_parent_reference(flight::types::Node2D source);
 inline void invalidate_node_world_bounds(flight::types::Node2D source);
 }
-#include <flight/scene2d/display_object.hpp>
 #include <stdexcept>
 
 namespace flight::node {
@@ -34,7 +33,7 @@ flight::types::Node2D native_node_2d(const std::shared_ptr<Object>& source) {
 inline NativeNode2DRuntimeOwner native_node_2d_runtime(flight::types::Node2D source) {
   if (auto shape = source.shared_exact_object<flight::types::Shape>()) return shape->entity_runtime_key.value();
   if (auto sprite = source.shared_exact_object<flight::types::Sprite>()) return sprite->entity_runtime_key.value();
-  return flight::scene2d::get_node_2d_runtime(source);
+  return flight::row_get<NativeNode2DRuntimeOwner>(source, flight::types::entity_runtime_key);
 }
 
 inline void invalidate_node_appearance(flight::types::Node2D source) {
