@@ -19,6 +19,8 @@ namespace flight::node {
 // concrete owner; graph operations consume only its common Node2D trait cells.
 // Backends recover the original Shape/Sprite before reading family-specific data.
 template <typename Object>
+  requires(std::same_as<Object, flight::types::Shape> ||
+           std::same_as<Object, flight::types::Sprite>)
 flight::types::Node2D native_node_2d(const std::shared_ptr<Object>& source) {
   using View = flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<Object>>>>;
   View original(source);

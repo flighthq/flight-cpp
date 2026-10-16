@@ -123,10 +123,10 @@ inline bool prepare_scene_2d_render(NativeGlState state, NativeNode2D root) {
 
 namespace flight::render {
 using AdaptHook = std::function<void(flight::Ref<flight::types::RenderState>, flight::types::NodeAny, flight::Ref<flight::types::RenderProxy2D>)>;
-inline void update_render_proxy_2d(flight::Ref<flight::types::RenderState>, flight::types::NodeAny, flight::Ref<flight::types::RenderProxy2D>, std::optional<flight::Ref<flight::types::RenderProxy2D>>);
-inline bool walk_node(flight::Ref<flight::types::RenderState>, flight::types::Node2D, flight::types::RenderProxyVisitor);
-inline void walk_render_subtree(flight::Ref<flight::types::RenderState>, flight::types::NodeAny, std::function<void(flight::Ref<flight::types::RenderState>, flight::types::NodeAny)>);
-inline flight::Ref<flight::types::RenderProxy2D> get_or_create_render_proxy_2d(flight::Ref<flight::types::RenderState>, flight::types::Node2D);
+void update_render_proxy_2d(flight::Ref<flight::types::RenderState>, flight::types::NodeAny, flight::Ref<flight::types::RenderProxy2D>, std::optional<flight::Ref<flight::types::RenderProxy2D>>);
+bool walk_node(flight::Ref<flight::types::RenderState>, flight::types::Node2D, flight::types::RenderProxyVisitor);
+void walk_render_subtree(flight::Ref<flight::types::RenderState>, flight::types::NodeAny, std::function<void(flight::Ref<flight::types::RenderState>, flight::types::NodeAny)>);
+flight::Ref<flight::types::RenderProxy2D> get_or_create_render_proxy_2d(flight::Ref<flight::types::RenderState>, flight::types::Node2D);
 inline void dispose_render_proxy(flight::Ref<flight::types::RenderState> state, flight::types::NodeAny source) {
   auto runtime = flight::render::get_render_state_runtime(state);
   flight::WeakMap<flight::types::NodeAny, flight::Ref<flight::types::RenderProxy>> render_proxy_map = runtime->render_proxy_map;

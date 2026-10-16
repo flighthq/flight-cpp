@@ -1,6 +1,7 @@
 #include <flight/render/render_proxy.hpp>
 #include <flight/render/renderer.hpp>
 #include <flight/render_gl/gl_render_state.hpp>
+#include <flight/render_gl/gl_quad_material_registry.hpp>
 #include <flight/scene2d/display_object.hpp>
 #include <flight/scene2d_gl/gl_quad_batch_writer.hpp>
 #include <flight/shape/shape.hpp>
@@ -58,6 +59,21 @@ int main() {
     const auto revision = runtime->renderer_map_id;
     flight::render::register_node_renderer(state, flight::types::shape_kind, renderer);
     require(runtime->renderer_map_id == revision, "identical descriptor registration advanced revision");
+
+    auto material = flight::make_ref<flight::types::Material2D>();
+    material->kind = flight::String("test-material");
+    using MaterialView = flight::StructuralRef<flight::RowReadonly<
+        flight::RowOf<flight::Ref<flight::types::Material>>>>;
+    MaterialView material_view(flight::StructuralRef<flight::RowWritable<
+        flight::RowOf<flight::Ref<flight::types::Material2D>>>>(material));
+    auto material_renderer = flight::make_ref<flight::types::GlQuadMaterialRenderer>();
+    flight::render_gl::register_gl_quad_material_renderer(state, material->kind, material_renderer);
+    require(material_view.shared_exact_object<flight::types::Material2D>() == material &&
+                flight::render_gl::resolve_gl_quad_material_renderer(state, std::optional{material_view}) == material_renderer,
+            "material resolution replaced or nominally reinterpreted the original Material2D owner");
+    material->kind = flight::String("unregistered");
+    require(!flight::render_gl::resolve_gl_quad_material_renderer(state, std::optional{material_view}),
+            "material row view stopped reading the original owner's live kind cell");
 
     flight::row_set<RowKey<"x">>(root, 10.0);
     flight::row_set<RowKey<"alpha">>(root, 0.5);

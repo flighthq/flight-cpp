@@ -10,7 +10,13 @@ inline void register_gl_quad_material_renderer(flight::Ref<flight::types::GlRend
 template <typename Material>
 inline std::optional<flight::Ref<flight::types::GlQuadMaterialRenderer>> resolve_gl_quad_material_renderer(flight::Ref<flight::types::GlRenderState> state, std::optional<Material> material) {
   auto runtime = get_gl_render_state_runtime(state);
-  auto kind = material ? (*material)->kind : flight::types::standard_material_kind;
+  auto kind = flight::types::standard_material_kind;
+  if (material) {
+    if constexpr (requires { typename Material::schema_type; })
+      kind = flight::row_get<flight::RowKey<"kind">>(*material);
+    else
+      kind = (*material)->kind;
+  }
   auto entry = runtime->registries->material_renderers.get(kind);
   if (entry) return std::get<flight::Ref<flight::types::GlQuadMaterialRenderer>>(*entry);
   if (runtime->registry_miss && *runtime->registry_miss) runtime->registry_miss.value()->callable(flight::types::RenderRegistryTable::MaterialRenderer, kind);

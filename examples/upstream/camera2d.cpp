@@ -305,13 +305,6 @@ class CameraExample final {
   }
 
  private:
-  [[nodiscard]] Point screen(Point world) const {
-    return {
-        view_matrix_->a * world.x + view_matrix_->c * world.y + view_matrix_->tx,
-        view_matrix_->b * world.x + view_matrix_->d * world.y + view_matrix_->ty,
-    };
-  }
-
   void update_player(const Frame& frame) {
     double horizontal{};
     double vertical{};
