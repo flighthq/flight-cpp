@@ -235,7 +235,7 @@ struct GlRenderState : public flight::ReferenceEnabled {
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostImageCapability>>>>> image_host;
   double render_alpha;
   std::optional<flight::String> render_blend_mode;
-  flight::Ref<flight::types::Scene3DGraphSyncPolicy> scene_graph_sync_policy;
+  flight::types::Scene3DGraphSyncPolicy scene_graph_sync_policy;
   bool round_pixels;
   std::optional<std::function<void(flight::Ref<GlRenderState>, std::optional<flight::String>)>> apply_blend_mode;
   flight::Ref<flight::types::GlContextState> context_state;
@@ -299,12 +299,12 @@ struct GlRenderStateRuntime : public flight::ReferenceEnabled {
   double current_frame_id;
   std::optional<std::function<void(flight::Ref<flight::types::RenderState>, flight::types::NodeAny, flight::Ref<flight::types::RenderProxy2D>)>> render_adapt_hook;
   flight::WeakMap<flight::types::NodeAny, flight::Ref<flight::types::RenderProxyAdapter>> render_proxy_adapter_map;
-  flight::WeakMap<flight::types::NodeAny, flight::Ref<flight::types::RenderProxy>> render_proxy_map;
-  flight::Set<flight::types::NodeAny> render_proxy_sources;
+  flight::WeakMap<flight::types::Node2D, flight::Ref<flight::types::RenderProxy2D>> render_proxy_map;
+  flight::Set<flight::types::Node2D> render_proxy_sources;
   flight::Ref<std::optional<flight::Ref<callable_clear_signals_774cfd518e842cad>>> registry_miss;
   flight::Ref<GlRenderRegistries> registries;
   double renderer_map_id;
-  flight::Array<flight::types::NodeAny> temp_stack;
+  flight::Array<flight::types::Node2D> temp_stack;
   flight::Ref<flight::types::GlContextRuntime> context;
   double modifier_snippet_revision;
   double pbr_extension_revision;
@@ -316,7 +316,7 @@ struct GlRenderStateRuntime : public flight::ReferenceEnabled {
   std::optional<flight::Map<flight::String, flight::Ref<flight::types::GlBitmapShader>>> material_bitmap_shader_map;
   std::optional<std::function<std::optional<flight::Ref<entity_runtime_key_program_bind_locations_045bf20012f68d3c>>(flight::Ref<flight::types::RenderProxy2D>)>> webgl_shader_binding_resolver;
   std::optional<flight::String> quad_batch_writer_blend_mode;
-  std::optional<flight::Ref<flight::types::Material>> quad_batch_writer_material;
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>>> quad_batch_writer_material;
   std::optional<flight::Ref<flight::types::GlQuadMaterialRenderer>> quad_batch_writer_material_renderer;
   double quad_batch_writer_material_floats;
   flight::Float32Array quad_batch_writer_material_data;

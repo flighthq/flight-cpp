@@ -543,6 +543,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("drawColliders") && requires { object.draw_colliders; }) return (object.draw_colliders);
   else if constexpr (Key::name.view() == std::string_view("drawContacts") && requires { object.draw_contacts; }) return (object.draw_contacts);
   else if constexpr (Key::name.view() == std::string_view("drawJoints") && requires { object.draw_joints; }) return (object.draw_joints);
+  else if constexpr (Key::name.view() == std::string_view("drawShapeMeshes") && requires { object.draw_shape_meshes; }) return (object.draw_shape_meshes);
   else if constexpr (Key::name.view() == std::string_view("droppedMaps") && requires { object.dropped_maps; }) return (object.dropped_maps);
   else if constexpr (Key::name.view() == std::string_view("duration") && requires { object.duration; }) return (object.duration);
   else if constexpr (Key::name.view() == std::string_view("durationGuard") && requires { object.duration_guard; }) return (object.duration_guard);
@@ -3056,6 +3057,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("drawColliders") && requires(Object& object) { object.draw_colliders; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().draw_colliders)>>{};
   else if constexpr (Key::name.view() == std::string_view("drawContacts") && requires(Object& object) { object.draw_contacts; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().draw_contacts)>>{};
   else if constexpr (Key::name.view() == std::string_view("drawJoints") && requires(Object& object) { object.draw_joints; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().draw_joints)>>{};
+  else if constexpr (Key::name.view() == std::string_view("drawShapeMeshes") && requires(Object& object) { object.draw_shape_meshes; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().draw_shape_meshes)>>{};
   else if constexpr (Key::name.view() == std::string_view("droppedMaps") && requires(Object& object) { object.dropped_maps; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().dropped_maps)>>{};
   else if constexpr (Key::name.view() == std::string_view("duration") && requires(Object& object) { object.duration; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().duration)>>{};
   else if constexpr (Key::name.view() == std::string_view("durationGuard") && requires(Object& object) { object.duration_guard; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().duration_guard)>>{};
@@ -5572,6 +5574,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->draw_colliders; }) owner.bind_named("drawColliders", [object]() -> decltype(auto) { return (object->draw_colliders); });
   if constexpr (requires { object->draw_contacts; }) owner.bind_named("drawContacts", [object]() -> decltype(auto) { return (object->draw_contacts); });
   if constexpr (requires { object->draw_joints; }) owner.bind_named("drawJoints", [object]() -> decltype(auto) { return (object->draw_joints); });
+  if constexpr (requires { object->draw_shape_meshes; }) owner.bind_named("drawShapeMeshes", [object]() -> decltype(auto) { return (object->draw_shape_meshes); });
   if constexpr (requires { object->dropped_maps; }) owner.bind_named("droppedMaps", [object]() -> decltype(auto) { return (object->dropped_maps); });
   if constexpr (requires { object->duration; }) owner.bind_named("duration", [object]() -> decltype(auto) { return (object->duration); });
   if constexpr (requires { object->duration_guard; }) owner.bind_named("durationGuard", [object]() -> decltype(auto) { return (object->duration_guard); });
@@ -8122,6 +8125,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(draw_colliders)
   FLIGHT_SDK_ROW_WIDENS(draw_contacts)
   FLIGHT_SDK_ROW_WIDENS(draw_joints)
+  FLIGHT_SDK_ROW_WIDENS(draw_shape_meshes)
   FLIGHT_SDK_ROW_WIDENS(dropped_maps)
   FLIGHT_SDK_ROW_WIDENS(duration)
   FLIGHT_SDK_ROW_WIDENS(duration_guard)
