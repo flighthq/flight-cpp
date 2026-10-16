@@ -7,6 +7,7 @@ namespace flight::node {
 using NativeNode2DRuntimeOwner = std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node2DTraits>>>;
 inline NativeNode2DRuntimeOwner native_node_2d_runtime(flight::types::Node2D source);
 inline void invalidate_node_local_transform(flight::types::Node2D source);
+inline void invalidate_node_appearance(flight::types::Node2D source);
 inline void invalidate_node_parent_reference(flight::types::Node2D source);
 inline void invalidate_node_world_bounds(flight::types::Node2D source);
 }
@@ -34,6 +35,10 @@ inline NativeNode2DRuntimeOwner native_node_2d_runtime(flight::types::Node2D sou
   return flight::scene2d::get_node_2d_runtime(source);
 }
 
+inline void invalidate_node_appearance(flight::types::Node2D source) {
+  auto runtime = native_node_2d_runtime(source);
+  runtime->appearance_id = flight::unsigned_right_shift(runtime->appearance_id + 1, 0);
+}
 inline void invalidate_node_local_transform(flight::types::Node2D source) {
   auto runtime = native_node_2d_runtime(source);
   runtime->local_transform_id = flight::unsigned_right_shift(runtime->local_transform_id + 1, 0);

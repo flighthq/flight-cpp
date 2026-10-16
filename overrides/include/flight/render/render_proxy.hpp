@@ -120,3 +120,116 @@ inline bool prepare_scene_2d_render(NativeGlState state, NativeNode2D root) {
   return dirty;
 }
 } // namespace flight::render
+
+namespace flight::render {
+using AdaptHook = std::function<void(flight::Ref<flight::types::RenderState>, flight::types::NodeAny, flight::Ref<flight::types::RenderProxy2D>)>;
+inline void update_render_proxy_2d(flight::Ref<flight::types::RenderState>, flight::types::NodeAny, flight::Ref<flight::types::RenderProxy2D>, std::optional<flight::Ref<flight::types::RenderProxy2D>>);
+inline bool walk_node(flight::Ref<flight::types::RenderState>, flight::types::Node2D, flight::types::RenderProxyVisitor);
+inline void walk_render_subtree(flight::Ref<flight::types::RenderState>, flight::types::NodeAny, std::function<void(flight::Ref<flight::types::RenderState>, flight::types::NodeAny)>);
+inline flight::Ref<flight::types::RenderProxy2D> get_or_create_render_proxy_2d(flight::Ref<flight::types::RenderState>, flight::types::Node2D);
+inline void dispose_render_proxy(flight::Ref<flight::types::RenderState> state, flight::types::NodeAny source) {
+  auto runtime = flight::render::get_render_state_runtime(state);
+  flight::WeakMap<flight::types::NodeAny, flight::Ref<flight::types::RenderProxy>> render_proxy_map = runtime->render_proxy_map;
+  auto node = render_proxy_map.get(source);
+  if (!node.has_value()) {
+    return;
+  }
+  if (node.value()->renderer_data.has_value()) {
+    ([&]() { auto optional_chain_receiver = ([&]() -> std::optional<std::function<void(flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::RendererData>)>> { auto optional_chain_receiver = node.value()->renderer; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->destroy_data; }()); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(state, node.value()->renderer_data.value()); }());
+  }
+  render_proxy_map.erase(source);
+  runtime->render_proxy_sources.erase(source);
+}
+
+inline void install_render_adapt_hook(flight::Ref<flight::types::RenderState> state, AdaptHook fn) {
+  (flight::render::get_render_state_runtime(state)->render_adapt_hook = std::optional<std::function<void(flight::Ref<flight::types::RenderState>, flight::types::NodeAny, flight::Ref<flight::types::RenderProxy2D>)>>{fn});
+}
+
+inline std::optional<flight::Ref<flight::types::NodeRenderer>> resolve_render_proxy_renderer(flight::Ref<flight::types::RenderState> state, flight::String kind) {
+  auto runtime = flight::render::get_render_state_runtime(state);
+  auto entry = runtime->registries->node_renderers.get(kind);
+  if (!entry.has_value()) {
+    ([&]() { auto optional_chain_receiver = runtime->registry_miss; if (!optional_chain_receiver.has_value()) return; (*optional_chain_receiver.value())(flight::types::RenderRegistryTable::NodeRenderer, kind); }());
+    return std::nullopt;
+  }
+  return std::optional<flight::Ref<flight::types::NodeRenderer>>{entry.value()};
+}
+
+inline void initialize_render_proxy(flight::types::EntityConstruction<flight::Ref<flight::types::RenderProxy>> out, flight::Ref<flight::types::RenderState> state, flight::types::NodeAny source) {
+  auto runtime = flight::render::get_render_state_runtime(state);
+  auto renderer = resolve_render_proxy_renderer(state, source->kind);
+  flight::row_set<flight::RowKey<"source">>(out, source);
+  flight::row_set<flight::RowKey<"kind">>(out, source->kind);
+  flight::row_set<flight::RowKey<"next">>(out, std::nullopt);
+  flight::row_set<flight::RowKey<"alpha">>(out, 1.0);
+  flight::row_set<flight::RowKey<"appearanceFrameId">>(out, -1.0);
+  flight::row_set<flight::RowKey<"blendMode">>(out, std::optional<flight::String>{flight::types::blend_mode->normal});
+  flight::row_set<flight::RowKey<"colorScaleBias">>(out, std::nullopt);
+  flight::row_set<flight::RowKey<"colorMatrix">>(out, std::variant<flight::Array<double>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null});
+  flight::row_set<flight::RowKey<"material">>(out, std::nullopt);
+  flight::row_set<flight::RowKey<"materialData">>(out, std::nullopt);
+  flight::row_set<flight::RowKey<"lastAppearanceId">>(out, -1.0);
+  flight::row_set<flight::RowKey<"lastChildrenId">>(out, -1.0);
+  flight::row_set<flight::RowKey<"lastLocalContentId">>(out, -1.0);
+  flight::row_set<flight::RowKey<"lastLocalTransformId">>(out, -1.0);
+  flight::row_set<flight::RowKey<"lastParentReferenceId">>(out, -1.0);
+  flight::row_set<flight::RowKey<"name">>(out, std::nullopt);
+  flight::row_set<flight::RowKey<"renderer">>(out, renderer);
+  flight::row_set<flight::RowKey<"rendererData">>(out, ([&]() -> std::optional<flight::Ref<flight::types::RendererData>> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Ref<flight::types::RendererData>> { auto optional_chain_receiver = renderer; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->create_data(state, source); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return std::nullopt; }()));
+  flight::row_set<flight::RowKey<"rendererDataSource">>(out, std::optional<std::shared_ptr<flight::types::Node<flight::Any>>>{source});
+  flight::row_set<flight::RowKey<"rendererMapId">>(out, runtime->renderer_map_id);
+  flight::row_set<flight::RowKey<"transformFrameId">>(out, -1.0);
+  flight::row_set<flight::RowKey<"visible">>(out, true);
+}
+
+inline flight::Ref<flight::types::RenderProxy> create_render_proxy(flight::Ref<flight::types::RenderState> state, flight::types::NodeAny source) {
+  flight::types::EntityConstruction<flight::Ref<flight::types::RenderProxy>> out = flight::entity::allocate_entity<flight::Ref<flight::types::RenderProxy>>();
+  initialize_render_proxy(out, state, source);
+  return flight::entity::finish_entity<flight::Ref<flight::types::RenderProxy>>(out);
+}
+
+inline void update_render_proxy_renderer(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::RenderProxy> node) {
+  auto runtime = flight::render::get_render_state_runtime(state);
+  auto renderer = resolve_render_proxy_renderer(state, node->kind);
+  if (((node->renderer != renderer) || (node->renderer_data_source != node->source))) {
+    if (node->renderer_data.has_value()) {
+      ([&]() { auto optional_chain_receiver = ([&]() -> std::optional<std::function<void(flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::RendererData>)>> { auto optional_chain_receiver = node->renderer; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->destroy_data; }()); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(state, node->renderer_data.value()); }());
+    }
+    (node->renderer = renderer);
+    (node->renderer_data = ([&]() -> std::optional<flight::Ref<flight::types::RendererData>> { auto nullish_coalesce_left_2 = ([&]() -> std::optional<flight::Ref<flight::types::RendererData>> { auto optional_chain_receiver = renderer; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->create_data(state, node->source); }()); if (nullish_coalesce_left_2.has_value()) return nullish_coalesce_left_2; return std::nullopt; }()));
+    (node->renderer_data_source = std::optional<std::shared_ptr<flight::types::Node<flight::Any>>>{node->source});
+  }
+  (node->renderer_map_id = runtime->renderer_map_id);
+}
+
+inline bool prepare_scene_2d_render(flight::Ref<flight::types::RenderState> state, flight::types::Node2D source) {
+  return walk_node(state, source, update_render_proxy_2d);
+}
+
+inline void dispose_scene_2d_render(flight::Ref<flight::types::RenderState> state, flight::types::NodeAny root) {
+  walk_render_subtree(state, root, dispose_render_proxy);
+}
+} // namespace flight::render
+
+namespace flight::render {
+inline void dispose_render_proxy(NativeGlState state, NativeNode2D source) {
+  auto runtime = flight::render_gl::get_gl_render_state_runtime(state);
+  auto data = runtime->render_proxy_map.get(source);
+  if (!data) return;
+  if ((*data)->renderer_data) if (auto binding = gl_renderer_binding((*data)->renderer); binding && binding->destroy_data) binding->destroy_data(state, *(*data)->renderer_data);
+  static_cast<void>(runtime->render_proxy_map.erase(source));
+  static_cast<void>(runtime->render_proxy_sources.erase(source));
+}
+inline void dispose_scene_2d_render(NativeGlState state, NativeNode2D root) {
+  auto runtime = flight::render_gl::get_gl_render_state_runtime(state);
+  auto stack = runtime->temp_stack;
+  auto put = [&](std::size_t index, NativeNode2D node) { if (index >= stack.size()) stack.resize(index + 1); stack[index] = node; };
+  std::size_t length = 1; put(0, root);
+  while (length) {
+    auto node = stack[--length];
+    dispose_render_proxy(state, node);
+    auto children = flight::node::native_node_2d_runtime(node)->children;
+    if (children) for (std::size_t i=children->size(); i>0; --i) put(length++, (*children)[i-1]);
+  }
+}
+} // namespace flight::render

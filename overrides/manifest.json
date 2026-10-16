@@ -3274,7 +3274,7 @@
       "equivalence": "Source ordering, absence, identity, invalidation, cache membership, transform/color math and native draw arguments are retained in the supported lane. Unsupported owner/capability branches remain explicit debt, never a painter or fake renderer.",
       "whyNotAPatchOrRepair": "A declaration repair cannot supply refused behavior. Portable source annotations cannot make flattened native C++ siblings share concrete owners; the native callable/trait binding and source-derived bodies are the remaining boundary.",
       "unblocks": "The actual native camera2d Scene2D GL example include and execution chain.",
-      "remaining": "Supplies native GL Scene2D preparation and exact proxy/data owners. Generic RenderState/refused visitors, opt-in color-adjustment and adaptation hooks, and native clip/root-guard callback bindings remain unavailable.",
+      "remaining": "Preserves usable emitted generic APIs and supplies native GL Scene2D preparation/disposal with exact proxy/data owners. Refused generic RenderState visitors, opt-in color-adjustment/adaptation hooks, and native clip/root-guard callback bindings remain unavailable.",
       "expires": "when emission preserves the declared family and callback owners and supplies the native Scene2D GL functions without these projections.",
       "authoredOn": "2026-10-16",
       "supplies": "packages/render/src/renderProxy.ts"

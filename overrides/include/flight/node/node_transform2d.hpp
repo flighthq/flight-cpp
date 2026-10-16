@@ -265,7 +265,6 @@ inline void convert_node_vector2_local_to_global(flight::types::Vector2Like out,
 
 namespace flight::node {
 inline flight::Ref<flight::types::Matrix> get_node_local_matrix(flight::types::Node2D target) {
-  using Runtime = std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node2DTraits>>>;
   auto runtime = flight::node::native_node_2d_runtime(target);
   if (runtime->local_transform_using_local_transform_id == runtime->local_transform_id && runtime->local_matrix) return *runtime->local_matrix;
   const auto value = [&]<typename Key>() { return flight::row_get<Key>(target); };

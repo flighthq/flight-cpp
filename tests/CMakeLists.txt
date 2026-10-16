@@ -200,6 +200,12 @@ if(TARGET Flight::HostSdlGl)
   target_link_libraries(flight_cpp_generated_gl_registries_tests PRIVATE Flight::Cpp Flight::SdkPreview Flight::HostSdlGl)
   add_test(NAME flight_cpp.generated_gl_registries COMMAND flight_cpp_generated_gl_registries_tests)
   flight_cpp_package_test_labels(flight_cpp.generated_gl_registries render-gl scene3d-gl types)
+  add_executable(flight_cpp_generated_scene2d_gl_owners_tests generated_scene2d_gl_owners_test.cpp)
+  target_include_directories(flight_cpp_generated_scene2d_gl_owners_tests BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include")
+  target_link_libraries(flight_cpp_generated_scene2d_gl_owners_tests PRIVATE Flight::Cpp Flight::SdkPreview Flight::HostSdlGl)
+  flight_cpp_set_project_warnings(flight_cpp_generated_scene2d_gl_owners_tests)
+  add_test(NAME flight_cpp.generated_scene2d_gl_owners COMMAND flight_cpp_generated_scene2d_gl_owners_tests)
+  flight_cpp_package_test_labels(flight_cpp.generated_scene2d_gl_owners render render-gl scene2d scene2d-gl shape types)
 endif()
 
 add_executable(
