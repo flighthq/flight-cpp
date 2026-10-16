@@ -12,7 +12,7 @@
 #include <flight/scene3d/scene_node.hpp>
 #include <flight/structural_ref.hpp>
 #include <flight/types/material.hpp>
-#include <flight/types/material3_dvalue.hpp>
+#include <flight/types/material_3d_value.hpp>
 #include <flight/types/mesh.hpp>
 #include <flight/types/mesh_deformer.hpp>
 #include <flight/types/node_signals.hpp>
