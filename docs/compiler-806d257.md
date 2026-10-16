@@ -75,8 +75,9 @@ it and removed. `npm run overrides:check` is green: 186 declared, none drifted, 
 | effects_wgpu | 6 | 4 | `optional<Ref<WgpuEffectPipeline>>` conversion |
 | shape | 14 | 13 | `scale9_shape.hpp`; `shape.hpp` also lost an include of `flight/types/shape_command.hpp` |
 | tray | 1 | 0 | `destroy_tray_runtime` |
+| tokens | (gained elsewhere) | | `flight_document_scene_tokens.hpp`, optional-variant conversion |
 | scene2d_resources | 7 | 6 | `load_scene_2d_image_resources.hpp` |
-| scene3d_gl | 23 | 17 | NOT a regression: all six "lost" headers pass when recompiled at `-j1`; they are `-j8` compiler crashes |
+| scene3d_gl | 23 | 16 | NOT a regression. Every "lost" header was a `-j8` compiler crash; retried serially, all pass. The six scene3d_gl headers that still fail serially -- `_internal_index`, `anisotropy_pbr_gl_extension`, `gl_blinn_phong_mesh_material_renderer`, `gl_extended_pbr_mesh_material_renderer`, `gl_shaded_prelude`, `gl_specular_glossiness_pbr_mesh_material_renderer` -- failed at the M2 baseline too. |
 
 `effects_wgpu` and `scene3d_wgpu` were also the two packages still emitted at the older source revision
 `7e2fc7d`; the move regenerated them at `a627849`, so their headers changed for a source reason and not
@@ -94,9 +95,10 @@ for a compiler one.
 | failing with `compiler exited with status 134` | 9 | 20 |
 
 The sweep is noisy at `-j8`: a `134` is the compiler dying under eight concurrent heavy translation units,
-not a rejected header, and every one retried at `-j1` passed. The per-package table below is what
-survives that, after mapping the baseline's pre-rename header names onto the names the rename commit gave
-them and setting the crashes aside.
+not a rejected header. Retrying all twenty serially, fourteen passed and the other six -- every one in
+scene3d_gl -- had already failed at the baseline. The per-package table below is what survives that, after
+mapping the baseline's pre-rename header names onto the names the rename commit gave them and setting the
+crashes aside.
 
 ## The carry table
 
