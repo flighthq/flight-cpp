@@ -4596,17 +4596,17 @@
       "package": "@flighthq/scene2d-canvas"
     },
     {
-      "dependency": "flight",
-      "digest": "9d081e3811ef93e22a210fe4873eca748170d1136e5ff48dc2e983871f816c15",
-      "id": "materials-named-standard-block-clone",
-      "module": "packages/materials/src/material.ts",
+      "dependency": "flight-compiler",
+      "digest": "b39dfc0234da13d16399e66bac612b4be38a26753e29d40007146ffb0024d08f",
+      "id": "compiler-dependent-erased-object-recovery-template",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
       "package": "@flighthq/materials"
     },
     {
       "dependency": "flight",
-      "digest": "ce881c33e262bfcb225d49a6fbfcdbaf7da39197cf26d52e9a8701b501443be6",
-      "id": "materials-glass-preset-option-boundary",
-      "module": "packages/materials/src/materialPresets.ts",
+      "digest": "9d081e3811ef93e22a210fe4873eca748170d1136e5ff48dc2e983871f816c15",
+      "id": "materials-named-standard-block-clone",
+      "module": "packages/materials/src/material.ts",
       "package": "@flighthq/materials"
     },
     {
@@ -4671,6 +4671,13 @@
       "id": "node-bounds-validity-explicit-carrier",
       "module": "packages/node/src/hasBoundsRectangle.ts",
       "package": "@flighthq/node"
+    },
+    {
+      "dependency": "flight",
+      "digest": "ce881c33e262bfcb225d49a6fbfcdbaf7da39197cf26d52e9a8701b501443be6",
+      "id": "materials-glass-preset-option-boundary",
+      "module": "packages/materials/src/materialPresets.ts",
+      "package": "@flighthq/materials"
     },
     {
       "dependency": "flight",

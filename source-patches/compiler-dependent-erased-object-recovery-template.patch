@@ -1,0 +1,40 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -14587,6 +14587,22 @@
+     expect(direct).not.toContain('.value().value()');
+   });
+ 
++  it('disambiguates checked erased-object recovery in a dependent function', () => {
++    const contents = emitIrModuleCpp(
++      lower(
++        'dependentErasedObjectRecovery.ts',
++        `interface Payload { readonly id: string }
++         interface Box { readonly value: unknown }
++         export function recover<Type extends Box>(box: Type): Payload {
++           return box.value as Payload;
++         }`,
++      ).module,
++      { runtimeProfile: 'flight-cpp' },
++    ).contents;
++
++    expect(contents).toContain('erased_value.template object_if<Payload>()');
++  });
++
+   // A member template call on a type-dependent object needs C++'s `template` disambiguator, and the same
+   // keyword on a concrete object is ill-formed -- so the recovery has to know which one it emitted. The
+   // receiver is a local deduced from the asserted expression, so the question is whether the RECEIVER is
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -24831,7 +24831,8 @@
+     // is dependent exactly when the receiver it produced is: C++ defers the local's type to instantiation
+     // and then requires the disambiguator. A receiver of any concrete type keeps the plain spelling the
+     // emitted text has always had.
+     const recovery =
+       isCppTypeDependentReceiverCpp(erasedValue, context.typeParameterNames) ||
+-      isCppUnknownSpecializationMemberCpp(expression, context)
++      isCppUnknownSpecializationMemberCpp(expression, context) ||
++      context.anonymousStructTypeParameters.length > 0
+         ? '.template object_if'
+         : '.object_if';
