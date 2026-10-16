@@ -104,10 +104,17 @@ emission as a `partial` override (see [the request](compiler-requests/806d257-pr
 
 ## Examples
 
-`npm run examples:check` passes: the two generated native examples match repaired 806d257 output. The six
-SDL example candidates could not be rebuilt here: this workspace carries SDL3 headers only
-(`.tools/sdl3/SDL3-3.4.10/include`) and no `libSDL3`, so `Flight::HostSdl` does not link. The committed
-`artifacts/e2e/scene3d.png` and `artifacts/e2e/camera2d.png` remain from the A5 baseline.
+`npm run examples:check` passes (the two generated native examples match repaired 806d257 output) and
+`npm run examples:run` builds and runs the two portable ones. The six SDL candidates were built and smoked
+by builder4 on this candidate in the persistent E2E environment: six of six build, six of six pass their
+smoke runs, and scene2d->scene3d renders three frames with coverage 198467, the same figure A5's baseline
+recorded. This workspace cannot reproduce that itself -- it carries SDL3 headers only
+(`.tools/sdl3/SDL3-3.4.10/include`) and no `libSDL3` anywhere, so `Flight::HostSdl` does not link.
+
+The one change their run needed is in this tree: `tests/CMakeLists.txt` applies the video-texture package
+labels after their `add_test` registration rather than before it, and drops the two duplicate manual label
+assignments in favour of the label function. The intended label sets are unchanged and the label gate
+still passes.
 
 ## Obsolete patches
 
