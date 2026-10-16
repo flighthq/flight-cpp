@@ -12,7 +12,8 @@ historical measurements remain available in git history and the maintained corpu
 
 ## Patch-to-request index
 
-Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
+Every `source-patches/compiler-*.patch` entry is mapped exactly once below, and the entries whose
+patch has retired because the fix landed upstream keep their row, marked, as the request reference.
 
 | Carried patch | Compiler request |
 | --- | --- |
@@ -57,7 +58,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 | [`compiler-imported-alias-parameter-abi.patch`](../../source-patches/compiler-imported-alias-parameter-abi.patch) | [Exact imported alias at a parameter boundary](compiler-imported-alias-parameter-abi.md) |
 | [`compiler-imported-readonly-view-owner-recovery.patch`](../../source-patches/compiler-imported-readonly-view-owner-recovery.patch) | [Imported owner recovery from readonly views](compiler-imported-readonly-view-owner-recovery.md) |
 | [`compiler-imported-variant-owner-qualification.patch`](../../source-patches/compiler-imported-variant-owner-qualification.patch) | [Imported variant owner qualification](compiler-imported-variant-owner-qualification.md) |
-| [`compiler-nested-import-forward-closure.patch`](../../source-patches/compiler-nested-import-forward-closure.patch) | [Forward declarations for nested imported aliases](compiler-nested-import-forward-closure.md) |
+| `compiler-nested-import-forward-closure.patch` — retired at 806d257, the fix landed upstream | [Forward declarations for nested imported aliases](compiler-nested-import-forward-closure.md) |
 | [`compiler-nested-nullable-property-narrowed-null-test.patch`](../../source-patches/compiler-nested-nullable-property-narrowed-null-test.patch) | [A null test on a narrowed optional-nullable member must read its storage](nested-nullable-property-narrowed-null-test.md) |
 | [`compiler-nul-string-literal.patch`](../../source-patches/compiler-nul-string-literal.patch) | [A source string containing U+0000 is emitted truncated](nul-string-literal-truncated.md) |
 | [`compiler-nullable-optional-parameter-narrowing.patch`](../../source-patches/compiler-nullable-optional-parameter-narrowing.patch) | [Nullable and optional storage needs two absence channels (parameter section)](nullable-optional-presence.md) |
@@ -74,8 +75,8 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 | [`compiler-catch-await-owned-carrier.patch`](../../source-patches/compiler-catch-await-owned-carrier.patch) | [A catch body that awaits and reads its binding needs an owned caught value](catch-binding-across-await.md) |
 | [`compiler-promise-resolve-domain.patch`](../../source-patches/compiler-promise-resolve-domain.patch) | [A resolved task carries the literal it was given](task-resolved-value-domain-mismatch.md) |
 | [`compiler-callable-arity-adaptation.patch`](../../source-patches/compiler-callable-arity-adaptation.patch) | [A function with fewer parameters is assigned where a wider callable is expected](callable-fewer-parameters-adaptation.md) |
-| [`compiler-scoped-emission-semantic-context.patch`](../../source-patches/compiler-scoped-emission-semantic-context.patch) | [Scoped emission must retain semantic context](compiler-scoped-emission-semantic-context.md) |
-| [`compiler-sdk-lane-local-reexports.patch`](../../source-patches/compiler-sdk-lane-local-reexports.patch) | [SDK-local re-exports in an SDK export lane](compiler-sdk-lane-local-reexports.md) |
+| `compiler-scoped-emission-semantic-context.patch` — retired at 806d257, the fix landed upstream | [Scoped emission must retain semantic context](compiler-scoped-emission-semantic-context.md) |
+| `compiler-sdk-lane-local-reexports.patch` — retired at 806d257, the fix landed upstream | [SDK-local re-exports in an SDK export lane](compiler-sdk-lane-local-reexports.md) |
 | [`compiler-structural-row-weak-keys.patch`](../../source-patches/compiler-structural-row-weak-keys.patch) | [Structural rows as WeakMap keys](compiler-structural-row-weak-keys.md) |
 | [`compiler-structural-union-exact-native-owner.patch`](../../source-patches/compiler-structural-union-exact-native-owner.patch) | [Exact native owner recovery from a structural union](compiler-structural-union-exact-native-owner.md) |
 | [`compiler-union-import-runtime-identity.patch`](../../source-patches/compiler-union-import-runtime-identity.patch) | [Canonical runtime identity across union imports](compiler-union-import-runtime-identity.md) |

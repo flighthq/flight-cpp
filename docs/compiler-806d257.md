@@ -130,8 +130,8 @@ Five compiler patches retired because the change they carried landed upstream:
 `compiler-scoped-emission-semantic-context`, `compiler-nested-import-forward-closure`,
 `compiler-sdk-lane-local-reexports`, `compiler-array-from-runtime-member`, and
 `compiler-dependent-erased-object-recovery-template` — the last re-instated above, so four remain retired.
-Their files are gone from `source-patches/`, and `docs/compiler-requests/README.md` still indexes four of
-them; that index needs the rows removed or marked when the request documents are re-read.
+Their files are gone from `source-patches/`, and `docs/compiler-requests/README.md` keeps their rows,
+marked retired, as the reference to the request document each one answered.
 
 ## Tooling
 
