@@ -17,7 +17,7 @@ cc_binary(
     name = "camera2d",
     srcs = ["camera2d.cpp"],
     tags = ["manual"],
-    deps = [":sdl_host", "//:sdk_preview"],
+    deps = [":sdl_host", "//:host_sdl_gl", "//:sdk_preview"],
 )
 
 cc_binary(

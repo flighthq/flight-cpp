@@ -4,7 +4,6 @@
 # from configurations that do not enable FLIGHT_CPP_BUILD_HOST_SDL.
 
 set(UPSTREAM_EXAMPLE_SOURCES
-  camera2d.cpp
   clock.cpp
   collision.cpp
   motionpath.cpp
@@ -17,6 +16,7 @@ foreach(source IN LISTS UPSTREAM_EXAMPLE_SOURCES)
 endforeach()
 
 set(UPSTREAM_GL_EXAMPLE_SOURCES
+  camera2d.cpp
   scene3d.cpp
 )
 set(UPSTREAM_GL_EXAMPLES)
@@ -155,6 +155,9 @@ if(TARGET Flight::HostSdl)
         Flight::HostSdlGl
         Flight::SdkPreview
       )
+      if(example STREQUAL "camera2d")
+        target_link_libraries(flight_cpp_upstream_${example} PRIVATE flight_cpp_upstream_sdl_host)
+      endif()
       flight_cpp_set_project_warnings(flight_cpp_upstream_${example})
       if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
         # The Scene3D include closure instantiates the full generated GL runtime. Suppress the
@@ -168,15 +171,18 @@ if(TARGET Flight::HostSdl)
         )
       endif()
       if(BUILD_TESTING)
-        add_test(
-          NAME flight_cpp_upstream_${example}_smoke
-          COMMAND flight_cpp_upstream_${example} --smoke
-        )
-        set_tests_properties(
-          flight_cpp_upstream_${example}_smoke
-          PROPERTIES PASS_REGULAR_EXPRESSION
-            "scene3d-gl package smoke: rendered 3 verified frames, maximum non-background coverage [1-9][0-9]*"
-        )
+        if(example STREQUAL "camera2d")
+          add_test(NAME flight_cpp_upstream_${example}_smoke
+            COMMAND flight_cpp_upstream_${example} --smoke --capture "${CMAKE_CURRENT_BINARY_DIR}/camera2d-smoke.ppm")
+        else()
+          add_test(NAME flight_cpp_upstream_${example}_smoke COMMAND flight_cpp_upstream_${example} --smoke)
+        endif()
+        if(example STREQUAL "scene3d")
+          set(expected_smoke "scene3d-gl package smoke: rendered 3 verified frames, maximum non-background coverage [1-9][0-9]*")
+        else()
+          set(expected_smoke "scene2d-gl package smoke: rendered 3 verified frames, 118 nodes, maximum non-background coverage [1-9][0-9]*")
+        endif()
+        set_tests_properties(flight_cpp_upstream_${example}_smoke PROPERTIES PASS_REGULAR_EXPRESSION "${expected_smoke}")
         if(UNIX AND NOT APPLE)
           set_tests_properties(
             flight_cpp_upstream_${example}_smoke
