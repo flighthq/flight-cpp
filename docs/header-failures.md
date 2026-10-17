@@ -146,7 +146,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 117 | `missing-member-8aa8170f` | 1 | ANIM | runtime | the emitted code reads a member the target does not declare (`swf_video_handler`) |
 | 118 | `missing-member-ad3558ee` | 1 | ANIM | runtime | the emitted code reads a member the target does not declare (`physics_2d_distance_joint_solver`) |
 | 119 | `missing-member-b5408b35` | 1 | 3D | runtime | the emitted code reads a member the target does not declare (`get_node_world_matrix4`) |
-| 120 | `missing-member-d7bf452c` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`begin`) |
+| 120 | `missing-member-d7bf452c` | 1 | 2D | [compiler/runtime contract](compiler-requests/readonly-record-entry-enumeration.md) | readonly Record entry enumeration and value-to-view construction disagree; G2: 0/1 retained |
 | 121 | `missing-member-dae8c839` | 4 | TEXT | [compiler request](compiler-requests/reference-backed-outcome-variant-narrowing.md) | FNT formatter reads dimensions on an image-source variant instead of its active owner |
 | 122 | `missing-member-dcf85c36` | 1 | 3D | runtime | the emitted code reads a member the target does not declare (`collect_md5_anim_features`) |
 | 123 | `missing-member-ee398c94` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`register_canvas_texture_resolver`) |
@@ -2266,12 +2266,28 @@ carried. Both rows stay failed; global/G1 totals and all unowned rows remain unc
 
 ### 120. `missing-member-d7bf452c` — 1 header(s)
 
-- cause: the emitted code reads a member the target does not declare (`begin`)
+- cause: `Object.entries` selects an iterable helper for a readonly structural Record view
 - subject: `begin`
 - lanes: 2D
-- fix route: runtime
+- fix route: compiler/runtime contract — [readonly Record construction and enumeration](compiler-requests/readonly-record-entry-enumeration.md)
 - first failure at: `flight/object.hpp:45`
 - example: `no member named 'begin' in 'StructuralRef<RowReadonly<RowOf<Record<String, FlightDocumentValue>>>>'`
+
+**G2: 0/1 compile, 1 fail, 0 unattempted** (Clang 22.1.8, one worker, compiler `806d257` /
+Flight `a627849`). The owned SDK header is
+`scene_document/scene_document_interactive_state_bindings.hpp`; `object.hpp` is the included runtime
+location. Its source `cloneFields` snapshots `Object.entries` of an existing readonly field Record
+before recursively cloning each value into its intentionally fresh output.
+
+A runtime-only scratch delegation to the checked native Record's existing `enumerable_entries()`
+clears `begin`, but the same header still fails at line152 converting a Record value into
+`StructuralRef<RowWritable<RowOf<Record<...>>>>`. That changed-input check also completes **0/1**.
+The candidate is rejected: an enumeration helper alone cannot provide the missing owner/readonly
+construction contract or assume every structural input has an exact native Record owner. Preserve
+source dictionary identity/lifetime, typed recursive values, own string-key order and the entry
+snapshot. No permissive Any, copied dictionary/view, empty result or narrowed domain is supplied.
+No production C++, generation or native behavior change is carried. The original row/diagnostic stays
+failed, with foreign rows/clusters and historical G1 totals unchanged.
 
 ### 121. `missing-member-dae8c839` — 4 header(s)
 
