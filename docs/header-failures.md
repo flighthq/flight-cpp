@@ -167,7 +167,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 138 | `no-viable-conversion-bf84cbac` | 1 | 3D | compiler | a value is passed where its declared type cannot receive it |
 | 139 | `no-viable-conversion-c997578d` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
 | 140 | `no-viable-conversion-cef6403d` | 3 | 3D | compiler | a value is passed where its declared type cannot receive it |
-| 141 | `no-viable-conversion-dc893fc7` | 1 | GL | compiler | a value is passed where its declared type cannot receive it |
+| 141 | `no-viable-conversion-dc893fc7` | 1 | GL | binding (applied) | absent WebGL `srcOffset` passed where the host declared a plain defaulted size *(G2: 1/1 pass)* |
 | 142 | `no-viable-conversion-eabaf455` | 1 | 3D | compiler | a value is passed where its declared type cannot receive it |
 | 143 | `no-viable-conversion-f7267dc5` | 1 | ANIM | compiler | a value is passed where its declared type cannot receive it |
 | 144 | `other-1e3a0d33` | 1 | ANIM | source fix; compiler follow-ons | G2: 0/1; typed preset owners fix conditional, now optional Record detail; nominal Bone2D store still owed |
@@ -3052,6 +3052,23 @@ generated owners carry identity-preserving interface heritage.
 - fix route: compiler
 - first failure at: `flight/render_gl/gl_compressed_texture.hpp:407`
 - example: `no viable conversion from 'const nullopt_t' to 'size_t'`
+- G2 fix: host binding, the compressed-texture `source_offset` becomes `std::optional<std::size_t>`
+
+`glCompressedTexture.ts` uploads each mip through `compressedTexSubImage3D` (array layers, line 407) or
+`compressedTexImage2D` (line 411), passing only the view. WebGL declares both trailing parameters as
+`optional GLuint srcOffset = 0, optional GLuint srcLengthOverride = 0`, and the emitter passes both as absent
+(`std::nullopt, std::nullopt`). The SDL host already modelled the length as `std::optional<std::size_t>`, but
+declared the offset as a plain `std::size_t source_offset = 0`, so the absent offset did not convert.
+
+Both host methods now take `std::optional<std::size_t> source_offset`, and the byte range uses
+`source_offset.value_or(0)`, which is the WebIDL default. The upload is therefore the same full-view byte
+range the source asks for. An explicit integer offset still converts, so the existing call API is unchanged.
+No other code called these methods. `tests/host_sdl_test.cpp` pins both forms (absent and explicit) at
+compile time for each method. `src/host_sdl/webgl.cpp` and the host test syntax-check. No upload, format or
+provider was invented, and the full compressed-format domain is untouched.
+
+**G2: 1/1 compile** (`-j1`, Clang 22.1.8): `flight/render_gl/gl_compressed_texture.hpp` passes. The upload
+has not been executed; there is no SDL/GL here.
 
 ### 142. `no-viable-conversion-eabaf455` — 1 header(s)
 

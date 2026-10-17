@@ -453,6 +453,14 @@ int main() {
   // Binding queries answered through get_parameter as the bound handle (or null), as WebGL does:
   // GL_RENDERBUFFER_BINDING and GL_TEXTURE_BINDING_CUBE_MAP.
   static_assert(flight::host_sdl::WebGl2Context::renderbuffer_binding == 0x8CA7);
+  // compressedTexImage2D / compressedTexSubImage3D take `optional GLuint srcOffset = 0` and an optional
+  // length: emitted calls pass both as absent, and an explicit integer offset still converts.
+  static_assert(requires(const flight::host_sdl::WebGl2Context& gl, const flight::ArrayBufferView& view) {
+    gl.compressed_tex_image_2d(0U, 0, 0U, 1, 1, 0, view, std::nullopt, std::nullopt);
+    gl.compressed_tex_image_2d(0U, 0, 0U, 1, 1, 0, view, std::size_t{4});
+    gl.compressed_tex_sub_image_3d(0U, 0, 0, 0, 0, 1, 1, 1, 0U, view, std::nullopt, std::nullopt);
+    gl.compressed_tex_sub_image_3d(0U, 0, 0, 0, 0, 1, 1, 1, 0U, view);
+  });
   static_assert(flight::host_sdl::WebGl2Context::texture_binding_cube_map == 0x8514);
   static_assert(requires(const flight::host_sdl::GlParameterValue& value) {
                   static_cast<std::optional<flight::host_sdl::WebGlRenderbuffer>>(value);

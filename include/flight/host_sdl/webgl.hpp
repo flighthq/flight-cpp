@@ -524,6 +524,9 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
   void clear_depth(float depth) const;
   void color_mask(bool red, bool green, bool blue, bool alpha) const;
   void compile_shader(const std::optional<WebGlShader>& shader) const;
+  // WebGL's `optional GLuint srcOffset = 0, optional GLuint srcLengthOverride = 0`: an absent offset is
+  // the default 0, and an absent length is the rest of the view, so emitted calls that pass both as
+  // absent and existing calls that pass an offset both reach the same byte range.
   void compressed_tex_image_2d(
       std::uint32_t target,
       int level,
@@ -532,7 +535,7 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
       int height,
       int border,
       const ArrayBufferView& source,
-      std::size_t source_offset = 0,
+      std::optional<std::size_t> source_offset = std::nullopt,
       std::optional<std::size_t> source_length = std::nullopt) const;
   void compressed_tex_sub_image_3d(
       std::uint32_t target,
@@ -545,7 +548,7 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
       int depth,
       std::uint32_t format,
       const ArrayBufferView& source,
-      std::size_t source_offset = 0,
+      std::optional<std::size_t> source_offset = std::nullopt,
       std::optional<std::size_t> source_length = std::nullopt) const;
   void cull_face(std::uint32_t mode) const;
   void delete_buffer(const std::optional<WebGlBuffer>& buffer) const;

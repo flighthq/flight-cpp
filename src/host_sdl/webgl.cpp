@@ -790,9 +790,9 @@ void WebGl2Context::compressed_tex_image_2d(
     int height,
     int border,
     const ArrayBufferView& source,
-    std::size_t source_offset,
+    std::optional<std::size_t> source_offset,
     std::optional<std::size_t> source_length) const {
-  const auto range = gl_byte_range(source, source_offset, source_length, "compressedTexImage2D");
+  const auto range = gl_byte_range(source, source_offset.value_or(0), source_length, "compressedTexImage2D");
   gl_function<PFNGLCOMPRESSEDTEXIMAGE2DPROC>(*this, "glCompressedTexImage2D")(
       target, level, internal_format, width, height, border, range.size, range.data);
 }
@@ -808,10 +808,10 @@ void WebGl2Context::compressed_tex_sub_image_3d(
     int depth,
     std::uint32_t format,
     const ArrayBufferView& source,
-    std::size_t source_offset,
+    std::optional<std::size_t> source_offset,
     std::optional<std::size_t> source_length) const {
   const auto range =
-      gl_byte_range(source, source_offset, source_length, "compressedTexSubImage3D");
+      gl_byte_range(source, source_offset.value_or(0), source_length, "compressedTexSubImage3D");
   gl_function<CompressedTexSubImage3DFunction>(*this, "glCompressedTexSubImage3D")(
       target,
       level,
