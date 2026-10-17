@@ -8906,6 +8906,19 @@
       "defect": "The emitter refuses the SWF-owned authored-bounds implementation (cpp-type-assertion-unidentified) but retains createSwfDisplayObject calling it. The exact NOT GENERATED applySwfAuthoredBounds marker, retained call and absent declaration/definition agree. This inserts only the emitted Node2D/optional readonly SwfTagRectangle signature. It does not create or copy data owners, install a bounds hook, synthesize bounds behavior or recover erased data. Calling the refused helper or its retained caller remains an unresolved link; the underlying owner-recovery debt stays open in docs/compiler-requests/assertion-to-undeclared-row-member.md.",
       "expectedWhen": "always",
       "expires": "when applySwfAuthoredBounds emits (the NOT GENERATED marker disappears and this repair matches nothing); sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "text-markup-declare-refused-equals-markup-format",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/text_markup/text_markup.hpp",
+      "symbol": "equals_markup_format",
+      "refusedFunction": "equalsMarkupFormat",
+      "declaration": "bool equals_markup_format(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>> b);",
+      "sourceDeclaration": "packages/text-markup/src/textMarkup.ts -- equalsMarkupFormat(a: Readonly<TextFormat>, b: Readonly<TextFormat>): boolean, refused; pushMarkupRange calls it",
+      "diagnostic": "use of undeclared identifier 'equals_markup_format'",
+      "defect": "The emitter refuses equalsMarkupFormat (cpp-optional-member-access-unproven: aValue.length on an optional TextFormat member has no present-value proof after Array.isArray) but retains pushMarkupRange, which calls it, so text_markup.hpp and every header that includes it fail on an undeclared name. The declaration's signature is the emitter's own: the retained call passes a StructuralRef<RowReadonly<RowOf<Ref<TextFormat>>>> for both Readonly<TextFormat> parameters, and the source returns boolean. Declaration only: pushMarkupRange and its callers compile, and calling it fails to link -- format comparison stays unusable, never substituted.",
+      "expectedWhen": "always",
+      "expires": "when equalsMarkupFormat emits (the NOT GENERATED marker disappears and this repair matches nothing); sdk:check fails if this repair matches no header."
     }
   ]
 }

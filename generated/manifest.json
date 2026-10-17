@@ -3309,6 +3309,12 @@
         "flight/swf/swf_node.hpp"
       ],
       "id": "swf-declare-refused-authored-bounds"
+    },
+    {
+      "files": [
+        "flight/text_markup/text_markup.hpp"
+      ],
+      "id": "text-markup-declare-refused-equals-markup-format"
     }
   ],
   "sourcePatches": [

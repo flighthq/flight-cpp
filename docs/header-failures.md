@@ -54,7 +54,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 25 | `missing-member-237022b0` | 6 | 2D, TEXT | compiler | `create_document_refusal` lives in the wholly refused `sceneDocumentRefusal.ts`, refused for a misclassified imported Record alias *(request filed)* |
 | 26 | `missing-member-e27d26f9` | 6 | 3D | runtime | the emitted code reads a member the target does not declare (`attach_gltf_pbr_extension`) |
 | 27 | `no-viable-conversion-f02000a9` | 6 | 2D, GL | compiler | a value is passed where its declared type cannot receive it |
-| 28 | `undeclared-identifier-6e587559` | 6 | ANIM, TEXT | runtime | the emitted code names `equals_markup_format`, which nothing declares |
+| 28 | `undeclared-identifier-6e587559` | 6 | ANIM, TEXT | runtime | `equals_markup_format` declared by repair; G2 recheck: 0 pass, 6 fail at the next refused helper `parse_markup_attributes` |
 | 29 | `undeclared-identifier-a74215ca` | 6 | 2D | runtime | the emitted code names `K`, which nothing declares |
 | 30 | `undeclared-identifier-f5e3440f` | 6 | 3D, CORE | [compiler request](compiler-requests/retained-declaration-calls-omitted-callee.md) | createResourceLoader calls initializeResourceLoader after the compiler refuses the initializer |
 | 31 | `call-has-no-matching-5a045ef4` | 5 | ANIM | compiler | the emitted call to `read_swf_shape_edge_record` matches no declared overload |
@@ -681,12 +681,14 @@ eight header rows, the resolved failure cluster and their replacement cause meta
 
 ### 28. `undeclared-identifier-6e587559` — 6 header(s)
 
-- cause: the emitted code names `equals_markup_format`, which nothing declares
-- subject: `equals_markup_format`
+- cause: `text_markup.hpp` keeps calls to helpers its own module refused. `equalsMarkupFormat` is refused because `aValue.length` on an optional `TextFormat` member has no present-value proof, but the retained `push_markup_range` still calls it.
+- subject: `parse_markup_attributes` (was `equals_markup_format`)
 - lanes: ANIM, TEXT
-- fix route: runtime
-- first failure at: `flight/text_markup/text_markup.hpp:177`
-- example: `use of undeclared identifier 'equals_markup_format'`
+- fix route: runtime (repair)
+- why this route: G2, measured with GCC 15.2 at `-j1`. All three `declare-refused-function` witnesses hold in `text_markup.hpp` (the NOT GENERATED marker, the retained call, no definition). So the repair `text-markup-declare-refused-equals-markup-format` declares it with the emitter's own carrier (`StructuralRef<RowReadonly<RowOf<Ref<TextFormat>>>>` twice, returning `bool`). There is no body: calling it fails to link.
+- G2 recheck: **0/6 compile, 6 fail** at the next retained call into a refused helper in the same header, `parse_markup_attributes` (`text_markup.hpp:407`). The refused helpers still called are `parseMarkupAttributes`, `isSafeMarkupHref`, `normalizeMarkupTagResult`, `resolveMarkupFormatRuns` and `parseTextMarkupInternal`. The last one takes a callback whose emitted carrier the retained calls do not fix, so declarations alone do not finish this header.
+- first failure at: `flight/text_markup/text_markup.hpp:407`
+- example: `'parse_markup_attributes' was not declared in this scope`
 
 ### 29. `undeclared-identifier-a74215ca` — 6 header(s)
 

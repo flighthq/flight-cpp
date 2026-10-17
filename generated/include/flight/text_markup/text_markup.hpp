@@ -166,6 +166,8 @@ inline std::optional<flight::String> format_markup_textformat_tag(flight::Struct
 // cpp emission failed for @flighthq/text-markup/packages/text-markup/src/textMarkup.ts: string for-of requires a
 // Unicode code-point iteration runtime contract
 
+bool equals_markup_format(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>> b);
+
 inline void push_markup_range(flight::Array<flight::Ref<flight::types::TextFormatRange>> ranges, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextFormat>>>> format, double start, double end) {
   if ((start == end)) {
     return;
