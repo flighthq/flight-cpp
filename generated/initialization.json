@@ -3221,6 +3221,11 @@
       "source": "packages/scene3d-formats/src/gltfRequirements.ts"
     },
     {
+      "name": "GltfSkins",
+      "packageName": "@flighthq/scene3d-formats",
+      "source": "packages/scene3d-formats/src/gltfSkins.ts"
+    },
+    {
       "name": "Md2FeatureRequirements",
       "packageName": "@flighthq/scene3d-formats",
       "source": "packages/scene3d-formats/src/md2FeatureRequirements.ts"
@@ -3254,6 +3259,11 @@
       "name": "RegisterGltfCameraHandlers",
       "packageName": "@flighthq/scene3d-formats",
       "source": "packages/scene3d-formats/src/registerGltfCameraHandlers.ts"
+    },
+    {
+      "name": "RegisterGltfSkinHandlers",
+      "packageName": "@flighthq/scene3d-formats",
+      "source": "packages/scene3d-formats/src/registerGltfSkinHandlers.ts"
     },
     {
       "name": "Scene3dFormatRequirements",
@@ -26326,6 +26336,16 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "GltfSkins",
+          "packageName": "@flighthq/scene3d-formats",
+          "source": "packages/scene3d-formats/src/gltfSkins.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "Md2FeatureRequirements",
           "packageName": "@flighthq/scene3d-formats",
           "source": "packages/scene3d-formats/src/md2FeatureRequirements.ts"
@@ -26389,6 +26409,16 @@
           "name": "RegisterGltfCameraHandlers",
           "packageName": "@flighthq/scene3d-formats",
           "source": "packages/scene3d-formats/src/registerGltfCameraHandlers.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "RegisterGltfSkinHandlers",
+          "packageName": "@flighthq/scene3d-formats",
+          "source": "packages/scene3d-formats/src/registerGltfSkinHandlers.ts"
         }
       ]
     },
@@ -152881,6 +152911,166 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
+            "fingerprint": "sha256:4ed29d9b9c788211ee983240067a7fabe2c29c3555a536a2250a5c90c9f8e21b",
+            "line": 2,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfSkins.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/gltfSkins.ts\",139]",
+            "kind": "import",
+            "name": "ImportDiagnosticSeverity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "ImportDiagnosticSeverity",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:bce5bb70f4f234f12a9118b742bd378f4185d523d2a4ca8b4c3ab96c2d55bbb6",
+            "line": 7,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfSkins.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/gltfSkins.ts\",494]",
+            "kind": "variable",
+            "name": "GltfSkinsCoreFeatureHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:c86bfa98981e6ae4f6641d0b78cd7b8702f26d23ae3c312a038c7ed0d769219b",
+            "line": 15,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfSkins.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/gltfSkins.ts\",693]",
+            "kind": "function",
+            "name": "bindGltfSkins",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:a78b1860aed60af7e7e182cc6c5a080d9f190784edbdc7646ba8262dace93ac7",
+            "line": 30,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfSkins.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/gltfSkins.ts\",1465]",
+            "kind": "function",
+            "name": "buildGltfSkins",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:5520b4ef5a89a5e2fdd3c0556a2995c64120bb5a4abbef358cd423b3a25bb84f",
+            "line": 64,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfSkins.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/gltfSkins.ts\",3078]",
+            "kind": "function",
+            "name": "identityMatrix16",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "GltfSkins",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfSkins.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "GltfSkins",
+        "packageName": "@flighthq/scene3d-formats",
+        "source": "packages/scene3d-formats/src/gltfSkins.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:bce5bb70f4f234f12a9118b742bd378f4185d523d2a4ca8b4c3ab96c2d55bbb6",
+              "line": 7,
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/gltfSkins.ts",
+              "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/gltfSkins.ts\",494]",
+              "kind": "variable",
+              "name": "GltfSkinsCoreFeatureHandler",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
             "fingerprint": "sha256:0103c5c901c5c21c88e30ef0f2479c90cd67d91ef2bc68f1d3a4546ed625562f",
             "line": 1,
             "packageName": "@flighthq/glyphatlas",
@@ -259582,6 +259772,133 @@
         "name": "RegisterGltfCameraHandlers",
         "packageName": "@flighthq/scene3d-formats",
         "source": "packages/scene3d-formats/src/registerGltfCameraHandlers.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:dfc4815c0ddcf09a554c3d39d9b22b1bc2f835e9276a43e1f4457ecd67a162ca",
+            "line": 3,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/registerGltfSkinHandlers.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/registerGltfSkinHandlers.ts\",82]",
+            "kind": "import",
+            "name": "registerGltfCoreFeatureHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "registerGltfCoreFeatureHandler",
+            "kind": "dependency",
+            "module": {
+              "name": "GltfCoreFeatureRegistry",
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/gltfCoreFeatureRegistry.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:bce5bb70f4f234f12a9118b742bd378f4185d523d2a4ca8b4c3ab96c2d55bbb6",
+            "line": 4,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/registerGltfSkinHandlers.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/registerGltfSkinHandlers.ts\",161]",
+            "kind": "import",
+            "name": "GltfSkinsCoreFeatureHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "GltfSkinsCoreFeatureHandler",
+            "kind": "dependency",
+            "module": {
+              "name": "GltfSkins",
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/gltfSkins.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:7b7b2fcde76a9c8c10e57bd4030499d3de2635a2aa4995cfc54ae94788ce7fdb",
+            "line": 7,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/registerGltfSkinHandlers.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/registerGltfSkinHandlers.ts\",313]",
+            "kind": "function",
+            "name": "registerGltfSkinHandlers",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "RegisterGltfSkinHandlers",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/registerGltfSkinHandlers.ts"
+          },
+          "specifier": "./gltfCoreFeatureRegistry.ts",
+          "target": {
+            "name": "GltfCoreFeatureRegistry",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfCoreFeatureRegistry.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "RegisterGltfSkinHandlers",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/registerGltfSkinHandlers.ts"
+          },
+          "specifier": "./gltfSkins.ts",
+          "target": {
+            "name": "GltfSkins",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfSkins.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "RegisterGltfSkinHandlers",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/registerGltfSkinHandlers.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "GltfExtension",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/GltfExtension.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "RegisterGltfSkinHandlers",
+        "packageName": "@flighthq/scene3d-formats",
+        "source": "packages/scene3d-formats/src/registerGltfSkinHandlers.ts"
       },
       "steps": []
     },

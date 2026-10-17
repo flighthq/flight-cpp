@@ -2063,6 +2063,19 @@ carried. Both rows stay failed; global/G1 totals and all unowned rows remain unc
 - New native first failure: `flight/scene3d_formats/gltf_skins.hpp:118`, `member reference base type 'double' is not a structure or union`. The emitted `matrices->data[index].value_or(0)` calls optional operations on the double from SequenceView::operator[]. The existing [required-read/nullish-storage request](compiler-requests/host-initialize-optional-fallback-on-a-required-read.md#g2-gltf-skin-component-distinguish-an-index-miss-from-a-present-double) records the checked `get(index).value_or(0)` contract. The [typed-array binding request](compiler-requests/typed-array-static-from-binding.md) stays open for the general operation.
 - Scoped final native result: **2 attempted / 0 pass / 2 fail / 0 unattempted**, jobs **1**, root and registration header only, both at the same new diagnostic. Both rows remain failed with previousCluster and request links. The real handler behavior executable failed to build and was not run; no positive unused-header link, expected negative-link result, callable skin import or native behavior pass is claimed. No declaration repair or fake body was added. Historical G1 sweep/carry totals and foreign worklist rows/clusters remain unchanged; no global sweep.
 
+Follow-up aggregate audit against the saved exact two-module emission corrects an earlier counting error:
+`registerGltfSkinHandlers` was already counted as emitted while marked `dependency-incomplete`; only
+`gltfSkins` changes the package emitted/refused counts. The supported aggregate delta is therefore **+1
+emitted / -1 refused**, not +2/-2. `scene3d-formats` is corrected from 75/36 to **74 emitted / 37 refused**,
+and the global summary/README decrease emitted by one and increase refused by one. Both owned best-effort
+rows already agree with the saved emitted records; their out-of-closure consumer edge remains preserved.
+
+The same saved output supplies the two missing owned initialization entries/module records. Existing
+`evaluationGroups` derivation adds exactly their two noncyclic singleton groups; every foreign entry,
+module and evaluation group remains unchanged and in the same order. No header/body/refusal ledger,
+source patch or native status changes in this audit, and no generation or native check is rerun. The
+previous native **0/2 fail** result remains unchanged.
+
 ### 95. `undeclared-identifier-e39f9d67` — 2 G1 header(s), resolver restored
 
 The initial scoped run measured **2 attempted / 0 pass / 2 fail / 0 unattempted**, Clang22.1.8,
