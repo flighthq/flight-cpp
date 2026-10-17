@@ -31,7 +31,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 2 | `missing-member-b1a6d5cf` | 34 | 2D | compiler | scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined *(request filed)* |
 | 3 | `in-operator-not-lowered-b1eae4af` | 31 | 2D, GL, PLAT, WGPU | compiler | the TypeScript `in` operator is emitted verbatim as C++ `in` at 4 root headers *(existing request extended)* |
 | 4 | `undeclared-identifier-993e82f1` | 29 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(request filed; builder4/G2)* |
-| 5 | `call-has-no-matching-3882b3e9` | 27 | 2D, 3D, TEXT | binding | same braced-descriptor shape against the device binding's constrained variadic create_texture *(builder4/E0a)* |
+| 5 | `call-has-no-matching-3882b3e9` | 27 | 2D, 3D, TEXT | compiler | bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier *(request filed; builder4/G2)* |
 | 6 | `other-52e846a6` | 18 | ANIM | compiler | a value_type is combined with a three-alternative variant where the declared slot expects one alternative |
 | 7 | `call-has-no-matching-47410fe2` | 16 | 2D, 3D | runtime (fixed) | Number is now a callable conversion object; G2 recheck: 2 pass, 14 fail at later compiler diagnostics |
 | 8 | `other-40da43f7` | 16 | 2D, 3D, ANIM | compiler | an optional<Record<...>> is initialised from a shape that is not its declared storage |
@@ -371,16 +371,37 @@ These non-generic callers still convert an argument to a target containing the c
 no runtime alias or replacement owner was added. The five source-site files are unchanged across the
 clean delivered-base update after the check. G1 sweep totals and unowned rows remain unchanged.
 
-### 5. `call-has-no-matching-3882b3e9` — 27 header(s) *(builder4/E0a)*
+### 5. `call-has-no-matching-3882b3e9` — 27 header(s) *(builder4/G2)*
 
-- cause: same braced-descriptor shape against the device binding's constrained variadic create_texture
+- cause: bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier
 - subject: `create_texture`
 - lanes: 2D, 3D, TEXT
-- fix route: binding
-- why this route: same braced-descriptor shape against the device binding's constrained variadic create_texture
+- fix route: compiler
+- why this route: the SDK overload needs the exact options owner selected by TypeScript
 - first failure at: `flight/scene3d_formats/shared.hpp:100`
 - example: `no matching function for call to 'create_texture'`
-- owned by: builder4 (E0a: TextLabel / layout / Scene2D GL text)
+- owned by: builder4 (G2: reserved Traits / text-binding follow-up)
+
+G2 scoped result after E0a, Clang 22.1.8 at `-j1` with `-Wfatal-errors`: **0/27 compile; all 27
+still fail on `create_texture`**. Every original selected header was attempted; no crashes or
+unattempted rows remain.
+
+| actual first error site | rows |
+| --- | --- |
+| `flight/scene3d_formats/shared.hpp:100` | 17 |
+| `flight/scene2d_formats/rive_asset_binding.hpp:106` | 6 |
+| `flight/bitmaptext/update_bitmap_text.hpp:121` | 4 |
+
+The earlier device-binding attribution was wrong: these are calls to SDK `flight::texture::create_texture`.
+TypeScript selects the 2D options overload by its literal discriminant or the optional 2D default.
+The emitted bare literal constructs none of the owned options carriers. This is the existing
+[contextual options-owner construction request](compiler-requests/contextual-object-literal-owner-materialization.md).
+Its required lowering retains the selected overload, original source/resource references, absence and
+null states, and source evaluation order. Native TextLabel changes cleared none of these first causes.
+
+All 27 selected header bodies, the three error-site files, and the options/factory files are unchanged
+from check start `1fe98c66` through completion on delivered `c343d73a`. G1 sweep/carry products and
+unowned rows/clusters remain unchanged; no SDK behavior or new options overload was added.
 
 ### 6. `other-52e846a6` — 18 header(s)
 

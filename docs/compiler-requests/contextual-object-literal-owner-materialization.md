@@ -86,7 +86,7 @@ overload. Every site below therefore has exactly one statically selected arm, an
 two-dimensional overload returns `Texture2D`, which is the variant arm the call sites already
 construct.
 
-## Current reach
+## Earlier reach at 2b687ea
 
 `@flighthq/textureatlas` `textureAtlasFrom.ts` is the measured current-pin site. Its header is the
 only direct textureatlas failure with `no matching function for call to 'create_texture'`; once
@@ -174,3 +174,34 @@ upstream identity, fresh-atlas, and empty-region assertions. Together with the s
 URL/base64 subset, it moves the scoped package compile from the emitted 5/7-module state to 7/7
 independent headers at two workers. The package remains `partial`, not shippable, because this repair
 does not supply the browser-bound blob/byte loaders or the independent guard callback.
+
+## G2: the reserved 27-header cluster at 806d257
+
+After E0a at compiler `806d257` / Flight `a627849`, the original 27 rows in
+`call-has-no-matching-3882b3e9` were each compiled with Clang 22.1.8, one worker and
+`-Wfatal-errors`. **0/27 compile**. Their actual first errors are:
+
+| first site | selected headers | source literal |
+| --- | --- | --- |
+| `scene3d_formats/shared.hpp:100` | 17 | `{ resource }` |
+| `scene2d_formats/rive_asset_binding.hpp:106` | 6 | `{ dimension: '2d', source: null }` |
+| `bitmaptext/update_bitmap_text.hpp:121` | 4 | `{ dimension: '2d', source: image }` |
+
+The old cluster description attributed these to the WebGPU device's variadic `create_texture`.
+The actual function is `flight::texture::create_texture`; the current native override aliases
+`CreateTexture2DVariantOptions` to canonical `types::CreateTexture2DOptions` and accepts its exact
+owned reference (also through the optional compatibility entry). The emitted braces build neither
+that owner nor the readonly view. This is the contextual owner construction defect above, so the
+worklist now links this request and routes the cluster to the compiler.
+
+The 2D choice comes from the existing TypeScript overload set: explicit `'2d'` selects it, and
+`{ resource }` can use only the arm whose discriminant is optional. The Rive `null` source remains the
+authored 2D null sentinel. No blanket descriptor overload, copied source/resource owner, source patch
+or new compiler prototype is carried by this audit. All selected headers and their options/factory
+files are unchanged from check start `1fe98c66` through delivered `c343d73a`; no unattempted row or
+crashed compiler is counted as a source failure.
+
+The older `gltf_parse.hpp` fatal-include observation above is historical. In the separate current-pin
+29-header Traits audit, that header fails first at `scene3d/scene_document.hpp:106` on the free
+`Traits` parameter. Its own texture call remains unreached and is not added to these 27 measured
+texture failures. G1 sweep totals and all unowned rows remain unchanged.
