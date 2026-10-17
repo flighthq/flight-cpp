@@ -3502,6 +3502,12 @@
         "flight/scene2d_gl/gl_clip_rectangle.hpp"
       ],
       "id": "scene2d-gl-clip-rectangle-drawing-buffer-height-property-binding"
+    },
+    {
+      "files": [
+        "flight/scene2d_formats/lottie_shape_layer.hpp"
+      ],
+      "id": "scene2d-formats-declare-refused-lottie-shape-items"
     }
   ],
   "sourcePatches": [

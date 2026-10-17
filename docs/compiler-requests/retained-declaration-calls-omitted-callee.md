@@ -1527,3 +1527,36 @@ Preserve original allocation/finish identity, host attach/context/live surface, 
 resource/null initialization, extent resync/resize order, capture versus swap-chain/antialias views,
 frame view release and source teardown order. No copied generic/texture target or device/host-release
 substitution is justified by a declaration-only boundary.
+
+## G2 Lottie shape layer retains its refused group walker
+
+At Flight `a627849` / compiler `806d257`, original1 jobs1 Clang22.1.8 completes0/1 in94.9s,
+at `scene2d_formats/lottie_shape_layer.hpp:153`: missing `append_lottie_shape_items`.
+Source33 `appendLottieShapeItems` refuses `cpp-type-assertion-unidentified`: the first transform
+item is asserted to Readonly<LottieTransform>, which is not an exact native variant arm
+([retained-owner and full source contract](readonly-interface-assertion-retained-owner.md#g2-lottie-shape-transform-view-and-complete-group-walk)).
+
+The retained call constructs DisplayObject from context.container, Array<LottieShapeItem> from the
+layer.shapes nullish fallback, Ref<LottieImportContext> from the original import context and nullopt
+for the nullable name. Source returns void; the two public aliases and context owner already exist.
+Existing declare-refused-function repair `scene2d-formats-declare-refused-lottie-shape-items`
+guards the exact marker/live direct call/no definition and adds only this prototype:
+
+```cpp
+void append_lottie_shape_items(flight::types::DisplayObject parent, flight::Array<flight::types::LottieShapeItem> items, flight::Ref<flight::types::LottieImportContext> context, std::optional<flight::String> name = std::nullopt);
+```
+
+One owned-header match and fixed point pass. Removing just the prototype recovers the original
+bytes; there are no copied owners, arrays, group/result objects or algorithm bodies. Actual whole
+owned-header include plus empty main compiles, links and runs exit0. A separate program using the
+real lottie_shape_layer_handler compiles to an object then fails to link solely on the exact
+append_lottie_shape_items signature; it is not run. This qualifies declaration/header availability,
+not shape construction, parsing, animation or drawing.
+
+Normal one-module exact-pin generation reproduces the entire native-tested header, including its
+partial marker, refused body and source excerpt. Only that whole owned header and its new applied
+repair record are carried. Final scoped header1/1; the old failed root is removed and row retains
+previousCluster. Module/package/refusal totals stay unchanged. Direct helper or handler use remains
+unlinkable. The missing group walk must still preserve original owners, closures and render behavior;
+the already-emitted render helper is unchanged, with no new native execution claim. No fake Lottie
+shape/parser/draw, empty result or narrowed domain is supplied.

@@ -230,7 +230,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 201 | `undeclared-identifier-a4a22a69` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glLensDistortionEffectRunner` binding (and its callee `applyLensDistortionEffectToGl`) but still emits the registration call that passes the runner |
 | 202 | `undeclared-identifier-a89b9a39` | 1 | GL | runtime | the emitted code names `gl_bitmap_displacement_effect_runner`, which nothing declares |
 | 203 | `undeclared-identifier-aa084556` | 1 | PLAT | runtime + declaration repairs (applied) | refused track-list guard and grid resolver declared; strict erased integer predicate supplied; G2: 1 pass; validator/registration remain unlinkable |
-| 204 | `undeclared-identifier-ae594b8a` | 1 | 2D | runtime | the emitted code names `append_lottie_shape_items`, which nothing declares |
+| 204 | `undeclared-identifier-ae594b8a` | 0 | 2D | declaration repair (applied) | G2: 1/1 header; unused positive passes, handler links fail exactly on refused Lottie group walker |
 | 205 | `undeclared-identifier-af7a1054` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glMedianEffectRunner` binding (and its callee `applyMedianEffectToGl`) but still emits the registration call that passes the runner |
 | 206 | `undeclared-identifier-b15d9d15` | 1 | ANIM | compiler | G2: 0/1; refused bone parser and complete result omitted; no exact declaration candidate |
 | 207 | `undeclared-identifier-befaa2d6` | 2 | 2D | source patch + repairs (applied) | the emitted code names `compute_scissor_rect`, which nothing declares *(G2: 1 pass, 1 to `no-viable-conversion-e25fffde`)* |
@@ -3714,14 +3714,32 @@ module fingerprints/refusal ledger/package counts and foreign/G1 data remain unc
 body was run; no native grid algorithm, successful validation/registration, arbitrary-owner recovery,
 fake resolver or narrowed value domain is claimed.
 
-### 204. `undeclared-identifier-ae594b8a` — 1 header(s)
+### 204. `undeclared-identifier-ae594b8a` — declaration repaired (1 header rechecked)
 
-- cause: the emitted code names `append_lottie_shape_items`, which nothing declares
-- subject: `append_lottie_shape_items`
-- lanes: 2D
-- fix route: runtime
-- first failure at: `flight/scene2d_formats/lottie_shape_layer.hpp:153`
-- example: `use of undeclared identifier 'append_lottie_shape_items'`
+Original1 jobs1 Clang22.1.8: **0/1 pass**,94.9s, missing append_lottie_shape_items153.
+The source33 walker refuses its readonly LottieTransform assertion through the shape-item variant.
+Its actual concrete transform and open Record arms remain required; selecting just one native
+concrete arm would narrow the input. No body/owner/domain substitution is supplied.
+
+Existing `declare-refused-function` repair `scene2d-formats-declare-refused-lottie-shape-items`
+adds only the exact retained DisplayObject/Array<LottieShapeItem>/Ref<LottieImportContext>/nullable
+String-name prototype. Marker/live-call/no-definition, one owned match and fixed point PASS;
+removing the prototype restores original bytes. Actual unused owned-header compile/link/run0;
+actual retained-handler object compile0 then link1 solely on absent append_lottie_shape_items.
+The expected link failure qualifies the declaration; no called-handler execution or draw claim.
+
+Normal one-module generation reproduces the complete tested header and new applied-repair record.
+Final owned1 jobs1: **1 attempted / 1 pass / 0 fail / 0 unattempted**. Old failed root removed,
+row pass with previousCluster; this worklist entry updated. Partial marker/body refusal and module/
+package totals stay unchanged. Foreign raw roots/rows/prose and historical/G1 totals are preserved.
+
+The [retained-callee request](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-lottie-shape-layer-retains-its-refused-group-walker)
+and [retained-owner/source contract](compiler-requests/readonly-interface-assertion-retained-owner.md#g2-lottie-shape-transform-view-and-complete-group-walk)
+record first transform before hidden filtering, recursive group names/order, shared claims and live
+arrays/closures, registered/custom kinds and diagnostics, postwalk pushed modifiers, painter order,
+clear/unpainted/rerender behavior and conditional Shape/always-group attachment. Existing trim claims
+and general render-stack limitations remain. No fake Lottie shape/parser/draw, copied owner, empty
+result, narrowed input or native shape functionality is claimed. Validation is bounded to owned scope.
 
 ### 205. `undeclared-identifier-af7a1054` — G2 recheck of 1 header(s)
 

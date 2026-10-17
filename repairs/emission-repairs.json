@@ -9261,6 +9261,19 @@
       "defect": "The exact NOT GENERATED marker, three live function-argument callback uses and absent definition agree. The existing repair adds only the precise callback carrier. The body remains refused at NodeAny-to-Shape owner recovery; no hit result, fill-region/path geometry, transform operation, copied owner or narrower graph is supplied. Explicit registration must fail to link only on this callback. Body ownership request: docs/compiler-requests/readonly-callback-derived-owner-recovery.md; retained use: docs/compiler-requests/retained-declaration-calls-omitted-callee.md.",
       "expectedWhen": "always",
       "expires": "when hitTestShapeFill emits or its exact retained registration disappears; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-formats-declare-refused-lottie-shape-items",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/scene2d_formats/lottie_shape_layer.hpp",
+      "symbol": "append_lottie_shape_items",
+      "refusedFunction": "appendLottieShapeItems",
+      "declaration": "void append_lottie_shape_items(flight::types::DisplayObject parent, flight::Array<flight::types::LottieShapeItem> items, flight::Ref<flight::types::LottieImportContext> context, std::optional<flight::String> name = std::nullopt);",
+      "sourceDeclaration": "packages/scene2d-formats/src/lottieShapeLayer.ts:33 -- appendLottieShapeItems(parent: DisplayObject, items: readonly Readonly<LottieShapeItem>[], context: LottieImportContext, name: string | null = null): void. Retained call constructs exactly DisplayObject, Array<LottieShapeItem>, Ref<LottieImportContext> and std::nullopt.",
+      "diagnostic": "use of undeclared identifier 'append_lottie_shape_items'",
+      "defect": "The emitter refuses the transform assertion from the open shape-item union to Readonly<LottieTransform>, but retains lottieShapeLayerHandler calling the absent helper with these exact emitted carriers. Declaration only; no group walk, shape, modifier, painter, animation/parser or drawing behavior is supplied. The full unknown/record arm and source owner identity remain required. Underlying readonly retained-owner assertion: docs/compiler-requests/readonly-interface-assertion-retained-owner.md.",
+      "expectedWhen": "always",
+      "expires": "when appendLottieShapeItems emits or its dependent caller is coherently refused; exact NOT GENERATED marker/live direct-call/no-definition witnesses then stop matching, and sdk:check rejects the obsolete repair."
     }
   ]
 }

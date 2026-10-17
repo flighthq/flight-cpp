@@ -149,6 +149,8 @@ inline void render_lottie_shape_state(flight::Array<flight::types::LottieShapePa
 // actually holds and read this target's members from it, or declare the slot as this target where the concrete
 // type is known
 
+void append_lottie_shape_items(flight::types::DisplayObject parent, flight::Array<flight::types::LottieShapeItem> items, flight::Ref<flight::types::LottieImportContext> context, std::optional<flight::String> name = std::nullopt);
+
 inline void lottie_shape_layer_handler(flight::Ref<flight::types::LottieLayerContext> context) {
   append_lottie_shape_items(context->container, ([&]() -> flight::Array<flight::types::LottieShapeItem> { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"shapes">>(context->layer); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<flight::types::LottieShapeItem>{}; }()), context->import, std::nullopt);
 }
