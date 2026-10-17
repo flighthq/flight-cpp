@@ -47,7 +47,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 18 | `undeclared-identifier-3e3cccce` | 8 | GL | runtime | the emitted code names `blit_offset_shaders`, which nothing declares |
 | 19 | `invalid-operands-4b19651b` | 7 | 2D, ANIM | compiler | a guarded `unknown` (typeof record member, or `Array.isArray` length) is still read as `flight::Any` before a numeric comparison *(request filed)* |
 | 20 | `missing-member-fd48c0bb` | 7 | 3D | [compiler request](compiler-requests/narrowed-imported-union-into-declared-parameter.md) | the emitted code reads a member the target does not declare (`collide_physics_3d_collider_shapes`) |
-| 21 | `other-18dcce71` | 7 | ANIM | runtime | uncategorised: the first diagnostic does not name a single cause |
+| 21 | `other-18dcce71` | 7 | ANIM | [compiler request](compiler-requests/erased-array-element-reading.md) | Array.isArray narrowing leaves an erased array length read as Any in a numeric assignment |
 | 22 | `undeclared-identifier-7dc86326` | 7 | WGPU | runtime | the emitted code names `get_wgpu_scene_3d_runtime`, which nothing declares |
 | 23 | `undeclared-identifier-b90ed4db` | 7 | ANIM | runtime | the emitted code names `dragon_bones_animations_section_handler`, which nothing declares |
 | 24 | `invalid-operands-ec4dbe74` | 6 | CORE, GL | runtime | an operator is applied to operand types it does not accept |
@@ -565,11 +565,14 @@ G2's scoped-only-when-changed rule. Only these owned rows gained request links a
 
 ### 21. `other-18dcce71` — 7 header(s)
 
-- cause: uncategorised: the first diagnostic does not name a single cause
+- cause: Array.isArray narrowing leaves an erased array length read as Any in a numeric assignment
 - lanes: ANIM
-- fix route: runtime
+- fix route: compiler — [erased-array reading request](compiler-requests/erased-array-element-reading.md)
 - first failure at: `flight/skeleton2d_formats/spine_parse_helpers.hpp:90`
 - example: `assigning to 'double' from incompatible type 'Any'`
+- G2 classification: **one shared cause**, not seven independent failures. Each owned row has the same first diagnostic in `spine_parse_helpers.hpp:90`: the `Array.isArray(raw)` branch of `skipCrumbSpineTimelineGroup` emits `count = flight::named_properties(raw).get("length")`, assigning `Any` to `double`.
+- The numeric extraction is only half the gap: `named_properties(const Any&)` resolves object row owners, while an erased array is held as `AnyArray`, so this view returns an empty owner and its length read is undefined. An implicit numeric conversion, an added cast, or replacing array length with enumerable key count cannot faithfully fix it. Exact typed-array recovery already exists, but an array guard alone does not prove its element carrier; the request records the current site beside the earlier measured failed source spellings.
+- Numbers: **0/7 pass, 7 fail**, retained from G1. All seven rows stay failed and link the same request; cluster ID is retained for continuity while its cause and route are corrected. No C++ input, source patch, binding, declaration repair, or override changed; no unchanged compile rerun or behavior improvement is claimed.
 
 ### 22. `undeclared-identifier-7dc86326` — 7 header(s)
 

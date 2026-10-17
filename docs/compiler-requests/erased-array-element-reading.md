@@ -85,3 +85,62 @@ Together these refuse 14 of the package's 59 modules directly, and most of its 2
 
 None. No faithful source spelling reads an erased JSON array: each respelling measured above refuses or
 fails to compile.
+
+
+## G2: an erased array length reaches a numeric assignment without recovery
+
+At Flight `a62784923f3be814463286c9fb28edfe6ab15789` / compiler
+`806d257d2f4100de745cc97340e61c2f301b0f24`, all seven rows in G1 cluster
+`other-18dcce71` first fail at `flight/skeleton2d_formats/spine_parse_helpers.hpp:90`:
+`assigning to 'double' from incompatible type 'Any'`. This is one shared erased-array reading cause,
+not seven unrelated diagnostics.
+
+The pinned `packages/skeleton2d-formats/src/spineParseHelpers.ts` source in
+`skipCrumbSpineTimelineGroup` counts an array by its length and an ordinary object by its keys:
+
+```ts
+let count = 0;
+if (Array.isArray(raw)) count = raw.length;
+else if (raw !== null && typeof raw === 'object') count = Object.keys(raw as Record<string, unknown>).length;
+```
+
+The committed emission keeps `raw` as `flight::Any` and emits the array arm as:
+
+```cpp
+double count = 0.0;
+if (flight::is_array(raw)) {
+  (count = flight::named_properties(raw).get(flight::String("length")));
+}
+```
+
+`NamedProperties::get` returns `Any`, not `double`, so the numeric assignment cannot compile.
+There is also no array length behind this read: `named_properties(const Any&)` asks
+`Any::erased_row_owner()`, which handles `AnyObject` only, whereas boxing an array selects `AnyArray`.
+The resulting empty named view returns `Any(undefined)` for `"length"`. Adding `.as_number()` would
+therefore only turn the compile failure into a failed read. Adding implicit conversion on all `Any`
+values would lose the checked erased-read boundary and still supply no length.
+
+The runtime can recover `Array<T>` through `external_if<Array<T>>()` at its exact stored element type,
+sharing the original array storage. `Array.isArray` establishes array-ness, not that exact `T`; an array
+boxed as `Array<double>` is still an array and cannot be recovered as `Array<Any>`. The required
+compiler/runtime path must read the live original array without copying, either through a proved exact
+carrier or an explicit erased-array length/index contract. A length snapshot captured when boxing would
+be wrong after an alias mutates the array. The existing measured typed-local/assertion failures above
+already show why simply respelling the unknown receiver as `readonly unknown[]` is not a working fix.
+No fresh source-patch experiment or native rerun is claimed for this G2 disposition.
+
+The array branch must continue to count `length`, rather than `Object.keys(raw).length`: array holes
+and enumerable properties make those different questions in JavaScript. It must retain the original
+object/array distinction and diagnostic count. No numeric coercion, copied array, fake property, or
+replacement behavior is carried. The later `buildSpineSegmentEasings` body in this same emitted header
+also reads guarded `curve.length` through the erased named view and indexes the erased `curve`; those
+are visible source/emission boundaries, not freshly measured next-diagnostic or pass claims.
+
+The owned headers, all under `flight/skeleton2d_formats/`, are
+`spine_json_bone_timeline_handler.hpp`, `spine_json_draw_order_timeline_handler.hpp`,
+`spine_json_skins_handler.hpp`, `spine_json_stub_handlers.hpp`, `spine_json_timeline_handlers.hpp`,
+`spine_parse.hpp`, and `spine_parse_helpers.hpp`.
+**0/7 pass, 7 fail** is preserved from G1. Every row remains failing and now links this request; the
+old cluster ID is retained, its uncategorised cause is replaced with this actual cause, and its route
+is compiler. No C++ input changed, so this disposition performs no unchanged compile rerun and makes
+no native or behavioral improvement claim.
