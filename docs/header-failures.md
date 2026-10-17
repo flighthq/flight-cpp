@@ -54,7 +54,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 25 | `missing-member-237022b0` | 6 | 2D, TEXT | compiler | `create_document_refusal` lives in the wholly refused `sceneDocumentRefusal.ts`, refused for a misclassified imported Record alias *(request filed)* |
 | 26 | `missing-member-e27d26f9` | 6 | 3D | runtime | the emitted code reads a member the target does not declare (`attach_gltf_pbr_extension`) |
 | 27 | `no-viable-conversion-f02000a9` | 6 | 2D, GL | [compiler request](compiler-requests/interface-heritage-widening.md) | `RenderProxy2D` cannot widen to the `RenderProxy` parameter because the emitted owners lost their declared heritage |
-| 28 | `undeclared-identifier-6e587559` | 6 | ANIM, TEXT | runtime | `equals_markup_format` declared by repair; G2 recheck: 0 pass, 6 fail at the next refused helper `parse_markup_attributes` |
+| 28 | `undeclared-identifier-6e587559` | 6 | ANIM, TEXT | compiler | G2: 0/6; equality declaration retained, five-helper candidate fails unused compile at Record deletion/union projection |
 | 29 | `undeclared-identifier-a74215ca` | 6 | 2D | compiler | a generic call's object-literal argument is built as `ShapeBoundsCommand<K>`, naming the callee's type parameter *(request filed)* |
 | 30 | `undeclared-identifier-f5e3440f` | 6 | 3D, CORE | [compiler request](compiler-requests/retained-declaration-calls-omitted-callee.md) | createResourceLoader calls initializeResourceLoader after the compiler refuses the initializer |
 | 31 | `call-has-no-matching-5a045ef4` | 5 | ANIM | compiler *(existing request)* | `SwfShapeState` passed to the anonymous writable `pen: { x; y }` parameter without an identity-preserving view |
@@ -841,16 +841,34 @@ proxy's identity or narrow the domain. The request's shape is the declared herit
 
 This row now links the existing request; no source or generated change was made, so no rerun is claimed.
 
-### 28. `undeclared-identifier-6e587559` — 6 header(s)
+### 28. `undeclared-identifier-6e587559` — G2 recheck of 6 header(s)
 
-- cause: `text_markup.hpp` keeps calls to helpers its own module refused. `equalsMarkupFormat` is refused because `aValue.length` on an optional `TextFormat` member has no present-value proof, but the retained `push_markup_range` still calls it.
-- subject: `parse_markup_attributes` (was `equals_markup_format`)
+- cause: text_markup retains calls to its refused parser/format helpers after the prior equality declaration
+- subject: parse_markup_attributes
 - lanes: ANIM, TEXT
-- fix route: runtime (repair)
-- why this route: G2, measured with GCC 15.2 at `-j1`. All three `declare-refused-function` witnesses hold in `text_markup.hpp` (the NOT GENERATED marker, the retained call, no definition). So the repair `text-markup-declare-refused-equals-markup-format` declares it with the emitter's own carrier (`StructuralRef<RowReadonly<RowOf<Ref<TextFormat>>>>` twice, returning `bool`). There is no body: calling it fails to link.
-- G2 recheck: **0/6 compile, 6 fail** at the next retained call into a refused helper in the same header, `parse_markup_attributes` (`text_markup.hpp:407`). The refused helpers still called are `parseMarkupAttributes`, `isSafeMarkupHref`, `normalizeMarkupTagResult`, `resolveMarkupFormatRuns` and `parseTextMarkupInternal`. The last one takes a callback whose emitted carrier the retained calls do not fix, so declarations alone do not finish this header.
-- first failure at: `flight/text_markup/text_markup.hpp:407`
-- example: `'parse_markup_attributes' was not declared in this scope`
+- fix route: [existing retained-callee request](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-text-markup-helper-chain-has-concrete-carriers-but-fails-before-link)
+- actual first failure at: `flight/text_markup/text_markup.hpp:407`
+
+Current Clang22.1.8 jobs1 completes **6 attempted / 0 pass / 6 fail / 0 unattempted**,388s.
+All six owned headers still fail at missing parse_markup_attributes. The existing equals_markup_format
+repair and body refusal remain unchanged. Current TextMarkupGuard and existing result/run owners now
+fix the candidate carriers, superseding the older callback uncertainty; no new owner or API is invented.
+
+Five scratch prototypes match existing exact marker/direct-call/no-definition witnesses, one header,
+fixed point and removal restoring original bytes. Actual unused whole-header compile exits1 on
+retained Record deletion/union projection. Positive unused link/run and qualified called-function
+negative links are not reached; candidates rejected. No production repair, changed normal generation,
+C++/runtime/source/binding/override or manifest change is carried. The six rows stay failed with
+compiler request links; no other cluster or historical/G1 totals are reclassified.
+
+The request records mandatory/full regex captures versus optional values, String Unicode iteration,
+nominal effect/format ownership and Array.from mapper binding; retained href/color presence and merged
+format spreads are inspected only. Preserve lenient/malformed markup, entity decoding, full custom
+registries/results, href filtering/diagnostics, stack composition, distinct per-interval formats,
+fieldwise overlap ordering, source equality and serializer fixed points. Source tests are requirements,
+not native parser/text-layout/SWF/drawing proof. No fake parser/plain-text empty success, copied text
+format owner or narrowed tag/attribute/format domain. Only this worklist entry, owned root/six compact
+rows and one existing request appendix change; foreign bytes/prose/repairs/manifests remain unchanged.
 
 ### 29. `undeclared-identifier-a74215ca` — 6 header(s)
 

@@ -1973,3 +1973,151 @@ records both missing owners, open families, actual posed-path deformation, full 
 spacing/rotation modes, sample-before-mutation order, original bone/Float32 and scratch
 identities, numeric domain and refresh/dispatch semantics. No fake constraint/path solver,
 empty result, copied owner, narrowed domain, new runtime/provider or body is supplied.
+
+## G2 text markup helper chain has concrete carriers but fails before link
+
+At Flight `a627849` / compiler `806d257`, the original undeclared-identifier-6e587559 group
+is exactly six headers: text_markup/{text_markup,contract,_internal_index} and
+swf/{swf_edit_text,swf_edit_text_handler,swf_text_tag_family}. Current Clang22.1.8 jobs1 completes
+**6 attempted / 0 pass / 6 fail / 0 unattempted**,388s, all at
+`text_markup/text_markup.hpp:407`: missing parse_markup_attributes. This rechecks the already
+carried equals_markup_format declaration; it is not a second equality fix or a global census.
+
+The six refusal blocks remain: equalsMarkupFormat137 (optional TextFormat value length after
+Array.isArray), parseMarkupAttributes352 (capture1 toLowerCase), parseTextMarkupInternal79
+(successful full-match0 length), isSafeMarkupHref363 (string code-point for-of),
+normalizeMarkupTagResult347 (nominal effect facet in a structural variant) and resolveMarkupFormatRuns385
+(two-argument Array.from). Both regex capture cases extend the
+[indexed present-element request](indexed-array-member-call-present-element.md), while
+[Unicode iteration](compiler-string-for-of-codepoint-iteration.md) and
+[exact union-owner recovery](asserted-exact-owner-from-nominal-union.md) already record the other families.
+Capture presence must follow the actual regex: group1 is mandatory in each matched attribute and
+match0 exists after exec succeeds; missing optional value groups2/3/4 still use their nullish fallback.
+The existing equality declaration/body refusal stays untouched and does not implement comparison.
+
+The older note that parseTextMarkupInternal's callback carrier cannot be fixed from retained calls
+is superseded by this bounded audit of the current emitted source/types. TextMarkupGuard is already
+std::function<void(StructuralRef<RowReadonly<RowOf<Ref<TextMarkupIssue>>>>)>; both the global reporter
+and explanation lambda fit that declared callback. RichTextContent and MarkupTagEffect are complete
+native owners; MarkupTagResult is the existing variant<Ref<TextFormat>,Ref<MarkupTagEffect>>.
+The local start_end_format_ce1ccbaacfb7864e owner is complete before its serializer call. No invented
+callback, returned-run record, copied format owner or extra ABI mechanism is needed to state candidates.
+
+Five exact scratch declare-refused-function entries use these actual retained boundaries:
+
+| helper | retained input and output carriers |
+| --- | --- |
+| parse_markup_attributes | String -> Record<String,String> |
+| is_safe_markup_href | String -> bool |
+| normalize_markup_tag_result | existing MarkupTagResult nominal-reference variant -> Ref<MarkupTagEffect> |
+| parse_text_markup_internal | String, optional readonly MarkupTagRegistry row, existing TextMarkupGuard -> Ref<RichTextContent> |
+| resolve_markup_format_runs | readonly RichTextContent row -> Array<Ref<existing local start/end/format owner>> |
+
+All five exact marker/live-direct-call/absent-definition witnesses match the same header through the
+existing loader. Each is declaration-only, the set reaches a fixed point, and removing just the five
+prototypes restores original bytes. The run-owner prototype follows its already emitted definition.
+The actual complete unused header with empty main is then compiled, without substitutes for any
+parser, format, guard, equality or initialization body:
+
+- Clang exits1 at candidate417/original411: `use of undeclared identifier 'deleteattributes'`.
+  Source `delete attributes.href` became `deleteattributes.get(String("href")).value()`.
+  This needs Record-key deletion lowering, not a symbol declaration, whitespace insertion or C++
+  pointer delete. `Record::erase` already exists. For this discarded-result statement, erase the href
+  key on the source's copied Record after its unsafe-href report, preserving the other keys and
+  leaving no href value; do not read/unwrap a missing entry. General JavaScript delete-result semantics
+  are separate from Record::erase's “entry was present” bool, so do not conflate their return values.
+- It also emits two `type not found in type list` static assertions at candidate419/original413.
+  The handler's current actual result is variant<Ref<TextFormat>,Ref<MarkupTagEffect>>, but the
+  conversion tries get_if<readonly TextFormat row> and get_if<readonly MarkupTagEffect row> against it.
+  Neither row type is a stored alternative. Select/project the actual nominal alternatives, retaining
+  the same owner and every admitted handler result, before any needed view conversion. A permissive
+  get_if, reinterpretation, copied format/effect or restriction to one handler arm supplies no proof.
+
+
+The unused positive prerequisite fails at compile, so neither positive link/run nor qualified explicit
+parser/serializer negative-link is reached. No additional repair, changed normal generation, C++,
+runtime/binding/source patch, override or manifest/inventory count is carried. The existing equals
+repair/provenance is preserved exactly; the six original failed rows remain on missing attributes407,
+with compiler route and precise requests. Prototype matching does not mean these helpers or callers work.
+
+The Array.from refusal is a binding/arity gap: Array.from is represented for one argument but the
+source passes a length-only object and mapper. include/flight/array.hpp already has
+array_from(ArrayLikeLength, mapper, nullopt) and invokes the mapper with undefined/index. Expose that
+existing operation with source/mapper evaluated once and source length semantics preserved. Each
+interval needs a **distinct** fresh empty TextFormat; fill(oneSharedObject) changes later field writes.
+A supplied thisArg is a separate contract and is not claimed by this absent-thisArg site. No array
+implementation or source rewrite is carried merely to advance one body in this still-broken chain.
+
+By inspection the retained code also folds attributes.href/color !== undefined to true, and emits
+merged = fresh empty TextFormat instead of {...top,...result.format}. Preserve actual Record missing
+keys and full spread composition; the [Record absence](record-missing-key-nullish-coalesce.md) and
+[dropped-spread](object-spread-of-a-parameter-dropped.md) requests remain relevant. These are source/
+emission findings, not native parser outputs or separately isolated tests. The unused global
+empty_markup_format owner is likewise not executed or certified by a failed compile.
+
+Preserve the whole htmlText-subset source, not a restricted built-in-tag parser:
+
+-  Parse accepts every String and an optional readonly registry. Missing registry lazily creates
+  and memoizes the standard dialect; an explicitly empty/custom registry is used as supplied.
+  Registration is lowercase/last-write-wins, with live class/color resolver seams. Handlers receive
+  the actual decoded attribute Record and enclosing format; they return either a plain
+  Partial<TextFormat> or a richer effect, including custom compatible owners. No hardcoded
+  registry, named colors/class-style table or handler family restriction is equivalent.
+-  The local global regex <[^>]*> tokenizes leniently with UTF-16 offsets. Append and entity-decode
+  intervening/trailing text under the current stack format. Unclosed tags extend to end; unmatched
+  '<' stays literal. Empty/comment/doctype/processing tokens do nothing. Closing tokens pop at most
+  one non-base frame regardless of tag name. Unknown opens report unknown-tag and push a copy of
+  the current format unless self-closing, keeping enclosed text and stack depth.
+-  Parse attribute names case-insensitively from mandatory group1; quoted/unquoted/valueless values
+  use the first present capture2/3/4 or empty String. Decode named/numeric entities, retain unknown
+  names/invalid code points, and preserve later duplicate attribute assignment. Do not make
+  mandatory group1 optional in source merely to silence an internal optional carrier.
+  ParseTextMarkupInternal's successful full-match0 read similarly needs exact presence before
+  .length.
+-  Before invoking an anchor handler, a present href passes the actual
+  trim/control-character/scheme policy; remove unsafe href only from a copied attribute Record,
+  report its original value/offset/tag, and preserve other keys/anchor text. The allowed schemes
+  are absent/http/https/mailto/tel, compared lowercased after compaction; arbitrary non-scheme
+  strings remain allowed. Do not drop attributes wholesale, skip diagnostics, replace with a
+  blanket URL policy, or impose ASCII-only input. String for-of is the source code-point operation;
+  no predicate-specific alternate loop is measured or carried here.
+-  Normalize by reserved-key presence (format, breakBefore, text), including present
+  undefined/false/empty values. Preserve an effect's original owner; wrap a plain format as a new
+  {format: same original format}. For a font whose present color remains unresolved, report the
+  original attribute. Text with no format is a void insertion and never pushes. Otherwise perform
+  collapsing unformatted block break first, append literal effect text under the previous top
+  format, and compose {...top,...result.format}; push only for non-self-closing opens. Preserve
+  property presence/order, handler effects/exceptions and original format owners. A fresh empty
+  merged format loses both nested and custom contributions.
+-  Append no range for empty/unformatted text. Merge adjacent equal-format ranges only at matching
+  boundaries and actual equalsMarkupFormat equality; otherwise copy the format into a fresh range.
+  Equality compares own-key counts/values, checking arrays elementwise with strict equality and
+  other values strictly; it cannot compare only a chosen scalar subset or equate present undefined
+  with missing keys. Existing equals declaration supplies none of this behavior.
+-  Formatting accepts arbitrary RichTextContent/range arrays, not only parser-produced content.
+  Ignore nonfinite range endpoints; ceil/clamp to text bounds and skip empty intervals. Mark every
+  boundary, allocate a distinct fresh format per interval with the length+mapper Array.from, then
+  process each fixed format key over ranges in reverse so the latest own field wins field-by-field,
+  including explicit undefined. The union-skipping arrays are per field. Merge adjacent equal runs
+  afterward, including unformatted gaps. Do not fill all intervals with one shared object, choose
+  one whole winning range, sort away source order or allocate/copy per character.
+-  Serialize modeled standard tags in the source nesting order/reverse close order, escaping text
+  and attributes differently, formatting colors as six-digit RGB and keeping
+  block/list/anchor/font/metric semantics. Class tokens serialize as their resolved standard
+  format, not the original class name. Empty content formats empty; unknown/custom syntax need not
+  round-trip as syntax. Preserve the documented parse/format/reparse fixed point for modeled tags.
+  Explain collects issues in source order with the same parser; ordinary parse uses the actual
+  configured guard. Diagnostic callback/issue identity remains observable and is not an ignorable
+  empty result.
+
+Source tests cover plain/empty text, entities, nested and malformed markup, custom/empty
+registries, handler overrides/attributes, relative font sizes/colors, href filtering with preserved
+metadata, blocks/breaks/spans, class styles, overlaps and fixed points. They were inspected as
+requirements, not native parsing/formatting results. The SWF include consumers remain part of the
+six-header census; no TextLabel, SWF parser, layout/provider or drawing result is supplied.
+
+
+No fake parser, text format, universal empty/plain-text success, copied owner or restricted input/tag/
+attribute/format domain is supplied. Existing source tests are requirements, not native functionality
+proof. Only this request appendix, the six owned failed rows/cluster and worklist28 change; all foreign
+raw/semantic products, existing repairs/manifests, historical/G1 totals and source/runtime bytes remain.
