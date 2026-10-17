@@ -1,0 +1,7 @@
+--- a/packages/registry/src/registryTable.ts
++++ b/packages/registry/src/registryTable.ts
+@@ -16,3 +16,3 @@
+ 
+-export function getKindMapKeys(out: Kind[], map: ReadonlyMap<Kind, unknown>): void {
++export function getKindMapKeys<T>(out: Kind[], map: ReadonlyMap<Kind, T>): void {
+   out.length = 0;

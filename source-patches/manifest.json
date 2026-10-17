@@ -4318,6 +4318,23 @@
       "unblocks": "scene2d_formats/rive_object_graph.hpp numeric graph-drop details at report_rive_graph_drop; supplies no binary parser or generic Record covariance.",
       "expires": "when contextual Record value projection preserves existing owners or the emitter chooses the destination value domain for these fresh numeric diagnostic literals, or Flight adopts the private annotation.",
       "appliedOn": "2026-10-17"
+    },
+    {
+      "id": "registry-kind-map-keys-value-parameter",
+      "dependency": "flight",
+      "patch": "registry-kind-map-keys-value-parameter.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/registry/src/registryTable.ts",
+      "package": "@flighthq/registry",
+      "answers": "diagnostic",
+      "refusal": "getKindMapKeys ReadonlyMap<Kind,unknown> lowers to Map<String,Any>, which cannot receive the renderer registry Map<String,Ref<NodeRenderer>> at explain_scene_2d_pipeline_coverage.hpp60",
+      "rewrite": "Makes getKindMapKeys generic in its otherwise-unused map value parameter T; its body, out parameter, readonly map and every caller expression stay unchanged.",
+      "equivalence": "Type parameters and value annotations erase: original/patched complete modules must emit byte-identical JavaScript. For every ReadonlyMap<Kind,T>, the original unknown-valued readonly domain already accepted T; no key/value domain is narrowed. The helper still clears the same caller-owned array, reads keys without inspecting values, deduplicates only as Map already does and sorts the same strings. No map/renderer/graph owner is copied, cast or replaced and no renderer/coverage result is invented.",
+      "verification": "Require exact-pin normal one-module generation, the actual emitted helper with typed/erased value maps and caller-array identity/clear/sort preservation, and one changed assigned header compile. Native graph traversal and render coverage behavior remain separate owner obligations.",
+      "whyNotUpstreamFirst": "C++ Map value instantiations do not implicitly widen to Map<Any>; the target-neutral generic annotation retains the value carrier for a key-only operation instead of adding a permissive container conversion.",
+      "unblocks": "The typed node-renderer registry call to get_kind_map_keys; no graph runtime or coverage verdict implementation is supplied.",
+      "expires": "when the emitter preserves typed readonly map values through key-only calls or Flight adopts the equivalent generic parameter.",
+      "appliedOn": "2026-10-17"
     }
   ]
 }
