@@ -118,7 +118,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 89 | `undeclared-identifier-225478b5` | 2 | 2D | compiler | refused bitmap-text submit callback lacks a declaration; exact declaration still exposes incompatible renderer callback carriers *(existing requests)* |
 | 90 | `undeclared-identifier-3e98002c` | 2 | 3D | runtime | the emitted code names `initialize_awd2_parse_state`, which nothing declares |
 | 91 | `undeclared-identifier-644a9b33` | 2 | 2D | runtime (partial override) | the emitted code names `clip_programs`, which nothing declares *(G2: 1 pass, 1 to `undeclared-identifier-befaa2d6`)* |
-| 92 | `undeclared-identifier-7ce7bd18` | 2 | 3D | runtime | the emitted code names `md2_skin_handler`, which nothing declares |
+| 92 | `undeclared-identifier-7ce7bd18` | 2 | 3D | compiler | refused MD2 skin handler retained by global family; exact declaration fails unused-header positive link *(existing requests, G2: 0/2 retained)* |
 | 93 | `undeclared-identifier-86212434` | 2 | GL | compiler *(existing request)* | the emitter refuses the `glSsaoEffectRunner` binding (and its callee `applySsaoEffectToGl`) but still emits the registration call that passes the runner |
 | 94 | `other-8b0f8597` | 2 | 3D | [compiler request](compiler-requests/host-initialize-optional-fallback-on-a-required-read.md) | skin builder emits after a source patch; SequenceView index nullish fallback still fails (G2: 0/2 pass) |
 | 95 | `undeclared-identifier-e39f9d67` | 2 | 3D | runtime | the emitted code names `resolve_gl_modifier_snippet_source`, which nothing declares |
@@ -1997,12 +1997,28 @@ registration conversions at `gl_clip.hpp:38-49`.
 
 ### 92. `undeclared-identifier-7ce7bd18` — 2 header(s)
 
-- cause: the emitted code names `md2_skin_handler`, which nothing declares
+- cause: the retained global skin family references its refused handler binding
 - subject: `md2_skin_handler`
 - lanes: 3D
-- fix route: runtime
+- fix route: compiler — [existing retained-binding request](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-md2-skin-family-retains-its-refused-binding)
+- related: [concrete material heritage and MD2 semantics](compiler-requests/interface-heritage-widening.md#g2-md2-skin-handler-reaches-the-same-material-owner-boundary)
 - first failure at: `flight/scene3d_formats/md2_skin_handler.hpp:123`
 - example: `use of undeclared identifier 'md2_skin_handler'`
+
+**G2: 0/2 compile, 2 fail, 0 unattempted** (Clang 22.1.8, one worker, compiler `806d257` /
+Flight `a627849`). Both the section registry and skin handler retain this diagnostic. The actual
+source21 binding independently refuses `BlinnPhongMaterial` to `Material` without emitted heritage;
+the retained global skin family reads the omitted value. The source's fixed64 byte path bounds,
+truncation/aggregate-empty diagnostics, alternate material order/identity and first-only mesh binding
+remain obligations, distinct from the MD5 handler's per-mesh shader behavior.
+
+A scratch declaration through the existing engine uses the actual emitted readonly
+`Md2SectionHandler` carrier from its animation sibling. The original path reader/global initializer
+stay intact. The actual unused-header program compiles to an object, but its **required positive link
+fails** with exactly `flight::scene3d_formats::md2_skin_handler` undefined from global initialization.
+The declaration is rejected; this is not a successful explicit-use negative-link check. No repair,
+generated C++, manifest, source patch, substitute skin/material/body or native behavior claim is
+carried. Both rows stay failed; global/G1 totals and all unowned rows remain unchanged.
 
 ### 93. `undeclared-identifier-86212434` — G2 recheck of 2 header(s)
 
