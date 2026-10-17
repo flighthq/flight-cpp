@@ -205,7 +205,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 176 | `undeclared-identifier-514a5b7b` | 1 | 2D | compiler | Tilemap submit refuses nullable material owner widening; exact declaration compile fails NodeAny/Sprite callback carrier *(existing requests extended)* |
 | 177 | `undeclared-identifier-51763a3c` | 1 | GL | runtime | the emitted code names `gl_tone_map_effect_runner`, which nothing declares |
 | 178 | `undeclared-identifier-529e49d7` | 1 | GL | runtime | the emitted code names `gl_directional_blur_effect_runner`, which nothing declares |
-| 179 | `undeclared-identifier-58fb713b` | 1 | 2D | runtime | the emitted code names `draw_dom_scale9_shape`, which nothing declares |
+| 179 | `undeclared-identifier-58fb713b` | 1 | 2D | compiler *(existing request)* | refused `drawDomScale9Shape` retained as `.submit` in the renderer aggregate; declaration probe fails at `.create_data` |
 | 180 | `undeclared-identifier-5be7be47` | 1 | GL | runtime | the emitted code names `gl_scanlines_effect_runner`, which nothing declares |
 | 181 | `undeclared-identifier-6647740e` | 1 | 2D | runtime | the emitted code names `create_rive_relative_transforms`, which nothing declares |
 | 182 | `undeclared-identifier-66ea97f8` | 1 | WGPU | runtime | the emitted code names `initialize_wgpu_screen_render_target`, which nothing declares |
@@ -3203,14 +3203,17 @@ native packet/drawing proof or unchanged old/global check is carried or claimed.
 - first failure at: `flight/effects_gl/gl_directional_blur_effect.hpp:91`
 - example: `use of undeclared identifier 'gl_directional_blur_effect_runner'`
 
-### 179. `undeclared-identifier-58fb713b` — 1 header(s)
+### 179. `undeclared-identifier-58fb713b` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `draw_dom_scale9_shape`, which nothing declares
+- cause: the emitter refuses `drawDomScale9Shape` (`cpp-contextual-union-missing-expression-type:optionalSingle`; the refusal does not name the expression), but keeps `.submit = draw_dom_scale9_shape` in the inline `dom_scale9_shape_renderer` aggregate.
 - subject: `draw_dom_scale9_shape`
 - lanes: 2D
-- fix route: runtime
+- fix route: compiler
+- why this route: a scratch copy with only the exact declaration `void draw_dom_scale9_shape(Ref<DomRenderState>, Ref<RenderProxy2D>)` still fails at `.create_data`. There, `create_dom_scale9_shape_data` returns `Ref<DomScale9ShapeData>` from `NodeAny`, and the slot needs `optional<Ref<RendererData>>` from `Node2D`. Neither link check is reachable, so no repair is carried. This is the same shape as the DOM Scale9 sprite. `scene2d-dom` declares environment `web`.
 - first failure at: `flight/scene2d_dom/dom_scale9_shape.hpp:151`
 - example: `use of undeclared identifier 'draw_dom_scale9_shape'`
+- Scoped native recheck (GCC 15.2, jobs 1, all errors shown): **1 attempted / 0 pass / 1 fail**, the header's own diagnostic. No DOM backend, raster, copied owner or narrowed shape is supplied.
+- compiler request: `docs/compiler-requests/retained-declaration-calls-omitted-callee.md`
 
 ### 180. `undeclared-identifier-5be7be47` — 1 header(s)
 

@@ -1284,3 +1284,24 @@ registration function compiles to an object and then fails to link on exactly th
 symbols. No solver body, warm-start, solve, reaction write or joint narrowing is supplied; the
 refusal itself is
 [the heritage request](interface-heritage-widening.md#g2-physics2d-joint-solvers-narrow-the-base-joint-in-their-bodies).
+
+## G2 DOM Scale9 shape retains a refused aggregate callback
+
+`scene2d_dom/dom_scale9_shape.hpp` at Flight `a627849` / compiler `806d257` omits `drawDomScale9Shape`
+(`domScale9Shape.ts:37`, refused with `cpp-contextual-union-missing-expression-type:optionalSingle`). The
+refusal text does not name the expression that lacks type evidence, and this G2 unit did not isolate it.
+The inline `dom_scale9_shape_renderer` still stores `.submit = draw_dom_scale9_shape`, so the header fails at
+its own line 151 (GCC 15.2, one worker, all errors shown: 1 attempted, 0 pass, 1 fail). The emitter's
+signature is `void draw_dom_scale9_shape(Ref<DomRenderState>, Ref<RenderProxy2D>);`.
+
+As with the DOM Scale9 sprite, a scratch copy containing only that exact declaration still fails at
+`.create_data`. The emitted `create_dom_scale9_shape_data(Ref<RenderState>, NodeAny)` returns
+`Ref<DomScale9ShapeData>`, and the slot requires `optional<Ref<RendererData>>` from `Node2D`. Neither link
+check was reached: not the positive unused-header link, and not the negative link. So no declaration repair
+was carried.
+
+The renderer-data owner needs the carriers of
+[readonly-callback-derived-owner-recovery](readonly-callback-derived-owner-recovery.md). The body's
+raster-canvas element, style writes and rasterizer registry miss stay unrealized:
+- No DOM backend, raster, copied owner or narrowed shape is carried.
+- `scene2d-dom` declares environment `web`.
