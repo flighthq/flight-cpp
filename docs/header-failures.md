@@ -192,7 +192,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 163 | `undeclared-identifier-2363216f` | 1 | GL | runtime | the emitted code names `gl_dither_effect_runner`, which nothing declares |
 | 164 | `undeclared-identifier-2437e103` | 1 | 3D | runtime | the emitted code names `parse_triangle_geometry_block`, which nothing declares |
 | 165 | `undeclared-identifier-251d1ba2` | 1 | 3D | runtime | the emitted code names `collect_pending_texture_owners`, which nothing declares |
-| 166 | `undeclared-identifier-2d9cd75f` | 1 | PLAT | runtime | the emitted code names `hit_test_shape_fill`, which nothing declares |
+| 166 | `undeclared-identifier-2d9cd75f` | 1 | PLAT | declaration repair (applied) | exact refused shape-fill callback declared; G2: 1 pass; three-kind registration and fill hits remain unlinkable |
 | 167 | `undeclared-identifier-3017e8aa` | 1 | GL | runtime | the emitted code names `acquire_gl_render_texture`, which nothing declares |
 | 168 | `undeclared-identifier-332a5586` | 1 | 2D | compiler *(existing request)* | refused `drawDomScale9Sprite` retained as `.submit` in the renderer aggregate; declaration probe fails at `.create_data` |
 | 169 | `undeclared-identifier-34adf2ab` | 1 | ANIM | compiler | G2: 0/1; refused parser/result retained; exact declaration candidate fails unused compile in result-owner dependency |
@@ -3119,14 +3119,37 @@ GPU draw proof, narrowed material domain or unchanged old/global check is carrie
 - first failure at: `flight/scene3d_resources/reveal_scene_3d_resources_on_resolve.hpp:167`
 - example: `use of undeclared identifier 'collect_pending_texture_owners'`
 
-### 166. `undeclared-identifier-2d9cd75f` — 1 header(s)
+### 166. `undeclared-identifier-2d9cd75f` — 1 header, resolved by declaration-only repair
 
-- cause: the emitted code names `hit_test_shape_fill`, which nothing declares
-- subject: `hit_test_shape_fill`
+- original subject: `hit_test_shape_fill`
 - lanes: PLAT
-- fix route: runtime
-- first failure at: `flight/interaction/register_shape_hit_test.hpp:66`
-- example: `use of undeclared identifier 'hit_test_shape_fill'`
+- original failure at: `flight/interaction/register_shape_hit_test.hpp:66`
+- fix route: existing `declare-refused-function` repair, `interaction-declare-refused-shape-fill-hit`
+- retained-callback request: [exact declaration and link boundary](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-interaction-shape-hit-test-retains-its-refused-callback)
+- body request: [original shape-family owners and fill semantics](compiler-requests/readonly-callback-derived-owner-recovery.md#g2-interaction-shape-fill-hits-need-the-original-shape-family-owners)
+
+The exact refusal marker, three live function-argument uses and absent definition agree. The existing
+repair inserts only `double hit_test_shape_fill(flight::types::NodeAny source, double x, double y);`,
+the actual precise callback carrier. It matches exactly one header and is idempotent. The retained
+MorphShape/Shape/Scale9Shape registrations keep the same NodeAny domain; no type adapter, engine
+extension, source/runtime/override body, shared graph/shape/bounds or tilemap-hit edit is carried.
+
+Normal exact-pin one-module generation reproduces only the declaration (+2 header lines) and its
+own manifest repair record. The carried header exactly equals the real qualified candidate. The actual
+unused header compiles, links and runs with static slot/signature checks. Calling the real three-kind
+registration compiles to an object, then fails to link on **only** the exact missing callback. Neither
+registration nor the fill hit-test body runs; no native shape hit/miss or winding result is supplied.
+There is no eager global registration being misreported as an explicit-use negative link.
+
+The original owned-header jobs1 check completes **1 attempted / 1 pass / 0 fail / 0 unattempted**.
+The sole row is pass with `previousCluster`, and the active cluster is removed; no other header is
+measured or promoted. The callback's NodeAny-to-Shape refusal, partial marker, source/refusal
+fingerprints, package/global counts, initialization and applicability policy remain unchanged.
+The body must retain original shape/data/command/path owners, all three registered shape kinds,
+null-versus-empty region behavior, winding and transform/scratch/read effects. Unsupported non-solid
+regions return -1 before transforming; a non-null list transforms before testing regions in order,
+returning0 only on a path hit. No false/constant hit, copied graph or narrowed command domain substitutes
+for those operations. Foreign compact rows, request sections and historical/G1 totals are preserved.
 
 ### 167. `undeclared-identifier-3017e8aa` — 1 header(s)
 
