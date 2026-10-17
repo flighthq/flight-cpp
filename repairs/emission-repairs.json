@@ -9314,6 +9314,19 @@
       "defect": "Exact NOT GENERATED marker, retained direct function-argument registration and absent definition agree. Existing retainedReference declares only the exact solver slot carrier, preserving the mutable skeleton Ref and readonly base constraint domain. The body remains refused because the base row cannot recover bendPositive/boneIndices/compress/stretch/targetBoneIndex or equivalent kind cells from the original IK owner. No IK algorithm, pose/bone/world-matrix mutation, replacement constraint, empty solver or narrower closed constraint family is supplied. Explicit registration must fail to link only on this omitted body. Existing body request: docs/compiler-requests/assertion-to-undeclared-row-member.md; retained callback request: docs/compiler-requests/retained-declaration-calls-omitted-callee.md.",
       "expectedWhen": "always",
       "expires": "when solveSkeleton2DIkConstraint emits or its exact retained registration disappears; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-gl-declare-refused-acquire-render-texture",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/render_gl/gl_render_texture_pool.hpp",
+      "symbol": "acquire_gl_render_texture",
+      "refusedFunction": "acquireGlRenderTexture",
+      "declaration": "flight::Ref<flight::types::RenderTexture> acquire_gl_render_texture(flight::Ref<flight::types::GlRenderState> state, flight::Ref<flight::types::GlRenderTexturePool> pool, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderTargetDescriptor>>>> descriptor);",
+      "sourceDeclaration": "packages/render-gl/src/glRenderTexturePool.ts:15 -- acquireGlRenderTexture(state:GlRenderState,pool:GlRenderTexturePool,descriptor:Readonly<RenderTargetDescriptor>):RenderTexture; retained withGlRenderTextures template constructs exactly these state/pool/readonly-descriptor carriers and stores Ref<RenderTexture>.",
+      "diagnostic": "use of undeclared identifier acquire_gl_render_texture",
+      "defect": "Refused RenderTexture owner/union conversion leaves acquire undeclared in retained bracket. Exact prototype only: no pool storage/cache/operations, target/result or GL provider is supplied.",
+      "expectedWhen": "always",
+      "expires": "when acquireGlRenderTexture emits or the retained bracket stops calling it"
     }
   ]
 }
