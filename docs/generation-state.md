@@ -6078,3 +6078,29 @@ The pattern worth naming: of the last eight dispatches that named a package, sev
 The rows were written before the tests landed and never revisited, and in every case only a gate or a `git log -- <path>`
 check kept a second implementation from being written over the first. A row that names a package is a claim about
 remaining work; the test that would carry that work is what settles it.
+
+## Scoped generation can reproduce a different private member order
+
+Measured 2026-10-17 at Flight `a627849` / compiler `806d257`.
+
+`npm run pkg:generate -- @flighthq/types --check` reports exactly one path as not current:
+`include/flight/types/create_texture_options.hpp`. The candidate differs from the committed full-run
+output only in the order of the first three members of each `CreateTexture*Options` struct:
+`color_space, version, source` instead of `source, version, color_space`. The candidate order is the
+pre-806d257 committed order; the pin-move full regeneration changed it. The same pin therefore emits
+two orders depending on the run's module scope. This is direct emission, not repo-side
+canonicalization: no repair, alias or merge step reorders fields (the merge writes the candidate
+slice verbatim), and the structural member table that feeds row schemas is re-derived from the merged
+tree and was not itself in the diff.
+
+The order is not observable by any caller. Every use of these options is a name-keyed structural row
+(`row_field<RowKey<"sampler">>`, `row_get`, `row_set`) or a by-name member read; there is no positional
+aggregate construction of any `CreateTexture*Options` in `generated/`, `overrides/`, `tests/` or
+`include/`. The member set, types and default initializers are identical, so the full option domain is
+unchanged.
+
+Disposition: the committed order is the full-run exact output, and the authoritative inventory check
+(`npm run sdk:check`) is the CURRENT statement for it. The scoped `@flighthq/types` check is NOT
+current on exactly this private-order path and is expected to report it on a clean checkout. Do not
+reconcile by committing the scoped order without a full regeneration, which would trade one
+not-current state for the other; and do not treat it as an API or aggregate-order change.
