@@ -3,6 +3,7 @@
 #include <flight/host_sdl/gl_app.hpp>
 #include <flight/node/native_node2d_access.hpp>
 #include <flight/path/tessellate_stroke_path.hpp>
+#include <flight/shape/shape_stroke_outline.hpp>
 #include <flight/render/render_proxy.hpp>
 #include <flight/render/renderer.hpp>
 #include <flight/render_gl/gl_render_pass.hpp>
@@ -67,7 +68,15 @@ int Scene2DHost::run(
   render_options->scene_graph_sync_policy = flight::String("requiresInvalidation");
   render_options->blend_realizations = flight::render_gl::standard_gl_blend_realizations;
   render_options->texture_resolvers = flight::render_gl::standard_gl_texture_resolvers;
-  render_options->stroke_tessellator = flight::types::StrokeTessellator(flight::path::tessellate_stroke_path);
+  // Use the SDK's default compact outline for open strokes (including touching
+  // arrow shaft/head subpaths), and its ring tessellator for closed borders.
+  // The strict ring strategy intentionally rejects intersecting open subpaths.
+  render_options->stroke_tessellator = flight::types::StrokeTessellator(
+      [](auto path, auto style, std::optional<double> tolerance) -> std::optional<flight::Ref<flight::types::PathMesh>> {
+        if (flight::shape::is_centerline_closed(path))
+          return flight::path::tessellate_stroke_path(path, style, tolerance);
+        return flight::path::tessellate_path(flight::shape::compact_stroke_path(path, style, tolerance));
+      });
   auto state = flight::render_gl::create_gl_render_state(gl, readonly(render_options));
   flight::render::register_node_renderer(state, flight::types::display_object_kind, flight::scene2d_gl::gl_scene_2d_renderer);
   flight::render::register_node_renderer(state, flight::types::shape_kind, flight::scene2d_gl::gl_mesh_shape_renderer);
