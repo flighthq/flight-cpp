@@ -1,5 +1,9 @@
 #include <flight/host_sdl/gl_app.hpp>
 
+#include <SDL3/SDL_opengles2.h>
+
+#include <array>
+#include <bit>
 #include <cmath>
 #include <iostream>
 #include <optional>
@@ -11,6 +15,101 @@
 namespace {
 void require(bool value, const char* message) {
   if (!value) throw std::runtime_error(message);
+}
+
+void check_array_uniform_ranges(const flight::host_sdl::WebGl2Context& gl) {
+  const auto vertex = gl.create_shader(gl.vertex_shader);
+  const auto fragment = gl.create_shader(gl.fragment_shader);
+  require(vertex.has_value() && fragment.has_value(), "could not create uniform-range shaders");
+  gl.shader_source(vertex, flight::String(
+      "#version 300 es\nvoid main() { gl_Position = vec4(0.0, 0.0, 0.0, 1.0); }\n"));
+  gl.shader_source(fragment, flight::String(
+      "#version 300 es\nprecision highp float;\n"
+      "uniform float u_scalar; uniform vec2 u_pair; uniform vec3 u_triple; uniform vec4 u_quad;\n"
+      "out vec4 color;\nvoid main() {\n"
+      "color = vec4(u_scalar) + vec4(u_pair, 0.0, 0.0) + vec4(u_triple, 0.0) + u_quad;\n}\n"));
+  gl.compile_shader(vertex);
+  gl.compile_shader(fragment);
+  require(gl.get_shader_parameter(vertex, gl.compile_status) == 1 &&
+              gl.get_shader_parameter(fragment, gl.compile_status) == 1,
+          "uniform-range shaders did not compile");
+  const auto program = gl.create_program();
+  gl.attach_shader(program, vertex);
+  gl.attach_shader(program, fragment);
+  gl.link_program(program);
+  require(gl.get_program_parameter(program, gl.link_status) == 1, "uniform-range program did not link");
+  gl.use_program(program);
+  // Read the real driver values through the existing host GL entry-point loader.
+  const auto read_uniform = std::bit_cast<PFNGLGETUNIFORMFVPROC>(gl.function_address("glGetUniformfv"));
+  const std::array<double, 4> numbers{0.1, -0.2, 1.0 / 3.0, 1.23456789};
+  const auto verify = [&](const char* name, std::size_t width, auto upload) {
+    const auto location = gl.get_uniform_location(program, flight::String(name));
+    require(location.has_value(), "uniform-range fixture was optimized out");
+    flight::Array<double> exact;
+    flight::Array<double> prefixed{99.0, 98.0};
+    for (std::size_t i = 0; i < width; ++i) {
+      exact.push(numbers[i]);
+      prefixed.push(numbers[i]);
+    }
+    const auto check_values = [&] {
+      std::array<float, 4> actual{};
+      read_uniform(program.native_name(), static_cast<GLint>(location->native_name()), actual.data());
+      for (std::size_t i = 0; i < width; ++i) {
+        require(actual[i] == static_cast<float>(numbers[i]), "numeric-array uniform selected the wrong values");
+      }
+      require(gl.get_error() == gl.no_error, "uniform-range upload/readback raised a GL error");
+    };
+    upload(location, exact, std::nullopt, std::nullopt);
+    check_values();
+    upload(location, exact, 0.0, std::nullopt);
+    check_values();
+    upload(location, prefixed, 2.0, std::nullopt);
+    check_values();
+    upload(location, prefixed, 2.0, 0.0);
+    check_values();
+    auto suffixed = prefixed.slice();
+    suffixed.push(97.0);
+    upload(location, suffixed, 2.0, static_cast<double>(width));
+    check_values();
+    upload(location, exact, 0.0, static_cast<double>(width));
+    check_values();
+
+    flight::Float32Array typed(width + 2);
+    typed[0] = 99.0F;
+    typed[1] = 98.0F;
+    for (std::size_t i = 0; i < width; ++i) typed[i + 2] = static_cast<float>(numbers[i]);
+    upload(location, typed, 2.0, static_cast<double>(width));
+    check_values();
+
+    const auto require_range_error = [&](auto action) {
+      bool rejected = false;
+      try { action(); } catch (const std::range_error&) { rejected = true; }
+      require(rejected, "invalid numeric-array uniform range did not throw");
+    };
+    require_range_error([&] { upload(location, exact, static_cast<double>(width + 1), std::nullopt); });
+    require_range_error([&] { upload(location, exact, 0.0, static_cast<double>(width + 1)); });
+    require_range_error([&] { upload(location, exact, -1.0, std::nullopt); });
+    require_range_error([&] { upload(location, exact, 0.5, std::nullopt); });
+    check_values();
+  };
+  verify("u_scalar", 1, [&](auto location, const auto& values, auto offset, auto length) {
+    gl.uniform1fv(location, values, offset, length);
+  });
+  verify("u_pair", 2, [&](auto location, const auto& values, auto offset, auto length) {
+    gl.uniform2fv(location, values, offset, length);
+  });
+  verify("u_triple", 3, [&](auto location, const auto& values, auto offset, auto length) {
+    gl.uniform3fv(location, values, offset, length);
+  });
+  verify("u_quad", 4, [&](auto location, const auto& values, auto offset, auto length) {
+    gl.uniform4fv(location, values, offset, length);
+  });
+  gl.use_program(std::nullopt);
+  gl.delete_program(program);
+  gl.delete_shader(vertex);
+  gl.delete_shader(fragment);
+  require(gl.get_error() == gl.no_error, "uniform-range teardown raised a GL error");
+  std::cout << "Numeric-array uniform ranges passed all four widths with actual float readback\n";
 }
 
 void check_attribute_locations(const flight::host_sdl::WebGl2Context& gl) {
@@ -58,6 +157,7 @@ int main() {
     using namespace flight::host_sdl;
     GlApplication app({.title = "Flight installed GL app test", .width = 64, .height = 48, .hidden = true});
     const auto& gl = app.context();
+    check_array_uniform_ranges(gl);
     check_attribute_locations(gl);
 
     // `getParameter(VIEWPORT) as ArrayLike<number> | null` through the nullable carrier: an engaged

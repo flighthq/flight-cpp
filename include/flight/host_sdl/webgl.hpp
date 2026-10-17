@@ -737,6 +737,11 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
       std::optional<double> source_offset,
       std::optional<double> source_length) const;
   void uniform1fv(const std::optional<WebGlUniformLocation>& location, const Array<double>& values) const;
+  void uniform1fv(
+      const std::optional<WebGlUniformLocation>& location,
+      const Array<double>& values,
+      std::optional<double> source_offset,
+      std::optional<double> source_length) const;
   void uniform2fv(const std::optional<WebGlUniformLocation>& location, const Float32Array& values) const;
   void uniform2fv(
       const std::optional<WebGlUniformLocation>& location,
@@ -744,6 +749,11 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
       std::optional<double> source_offset,
       std::optional<double> source_length) const;
   void uniform2fv(const std::optional<WebGlUniformLocation>& location, const Array<double>& values) const;
+  void uniform2fv(
+      const std::optional<WebGlUniformLocation>& location,
+      const Array<double>& values,
+      std::optional<double> source_offset,
+      std::optional<double> source_length) const;
   void uniform3fv(const std::optional<WebGlUniformLocation>& location, const Float32Array& values) const;
   void uniform3fv(
       const std::optional<WebGlUniformLocation>& location,
@@ -751,6 +761,11 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
       std::optional<double> source_offset,
       std::optional<double> source_length) const;
   void uniform3fv(const std::optional<WebGlUniformLocation>& location, const Array<double>& values) const;
+  void uniform3fv(
+      const std::optional<WebGlUniformLocation>& location,
+      const Array<double>& values,
+      std::optional<double> source_offset,
+      std::optional<double> source_length) const;
   void uniform4fv(const std::optional<WebGlUniformLocation>& location, const Float32Array& values) const;
   void uniform4fv(
       const std::optional<WebGlUniformLocation>& location,
@@ -758,6 +773,11 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
       std::optional<double> source_offset,
       std::optional<double> source_length) const;
   void uniform4fv(const std::optional<WebGlUniformLocation>& location, const Array<double>& values) const;
+  void uniform4fv(
+      const std::optional<WebGlUniformLocation>& location,
+      const Array<double>& values,
+      std::optional<double> source_offset,
+      std::optional<double> source_length) const;
   void uniform_matrix3fv(
       const std::optional<WebGlUniformLocation>& location,
       bool transpose,
