@@ -115,4 +115,26 @@ instead of creating a duplicate request from the second diagnostic.
 4. Re-run `gltfSkins.ts` and both OBJ geometry builders; do not mark P-3D2 unblocked when only the
    represented-sequence fixture or ambient binding passes.
 
-No Flight source rewrite or downstream duplicate binding is carried.
+No downstream duplicate ambient binding is carried.
+
+## G2 fixed-length skin source rewrite and its remaining native failure
+
+`scene3d-formats-gltf-skin-matrix-loop` spells the glTF site's exact length-16 mapper as a
+fresh Float32Array and ascending component writes. An existing Matrix4Like annotation names
+the fresh inverse-bind array's destination carrier; a typed diagnostic Record local stays
+inside its original argument evaluation, retaining callback lookup before detail reads.
+These are source-equivalent spellings, not a general `from` binding or a copied input owner.
+
+Nine comparisons of the actual pinned original/patched TypeScript handler passed: valid Float32
+values (including NaN, signed zero and absent elements), absent accessor, accessor fault,
+count mismatch, read/report/data exceptions, absent skins, and a diagnostic getter that changes
+the count before argument evaluation. They also check fresh independent matrices, joint mapping,
+same document/mesh owners and report/read order.
+
+Normal exact-pin generation of the two assigned modules emits both with no refusal, with the
+normal structural member table gaining only the two newly used accessor callback keys. Native
+compilation remains **0/2 passing**, at `.value_or(0)` on a required SequenceView index result;
+the [existing nullish-storage request](host-initialize-optional-fallback-on-a-required-read.md#g2-gltf-skin-component-distinguish-an-index-miss-from-a-present-double)
+records the required checked lookup. The native behavior executable did not build and was not run.
+Both worklist rows remain failed. This source recovery does not certify callable skin import or
+close the general typed-array/array-like binding request.

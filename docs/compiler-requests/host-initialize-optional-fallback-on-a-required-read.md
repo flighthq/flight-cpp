@@ -97,3 +97,39 @@ storing its members is now fixed in `structural_ref.hpp`; see
 [merged-row-not-constructible.md](merged-row-not-constructible.md). With that runtime change and the carried
 fallback lowering, scratch-generated `createHost` instantiates and runs. The committed generated Host module remains
 unchanged until its owning package is regenerated.
+
+## G2 glTF skin component: distinguish an index miss from a present double
+
+At Flight `a627849` / compiler `806d257`, the scoped `gltfSkins.ts` source patch removes the
+missing typed-array `from` binding and emits the real builder. Both assigned headers then fail at
+`flight/scene3d_formats/gltf_skins.hpp:118`:
+
+```cpp
+matrices->data[joint * 16.0 + component].value_or(0.0)
+```
+
+`GltfAccessorData.data` is `flight::SequenceView<double>`. Its `operator[]` returns a present
+`double`, so Clang reports `member reference base type 'double' is not a structure or union`.
+This has the same optional-operation-on-required-storage mismatch as the host site, but the
+source index CAN miss: the required source expression is
+`matrices.data[joint * 16 + component] ?? 0`. Removing the fallback, returning NaN, assuming a
+complete matrix buffer, or copying the source sequence would change its behavior.
+
+The runtime already declares the operation this expression needs:
+
+```cpp
+matrices->data.get(joint * 16.0 + component).value_or(0.0)
+```
+
+`SequenceView::get(double)` returns an optional after checking the index against the same retained
+sequence owner; `operator[]` is a present-element projection. The emitter must choose the lookup's
+index-miss carrier before applying nullish selection. It must preserve one source element read,
+ascending component order, present NaN and signed zero, the missing-element zero, and the final
+Float32 conversion. Adding a `value_or` member to double or bypassing source bounds is not a
+runtime fix. No new compiler mechanism or unchecked indexing substitute is supplied here.
+
+Normal exact-pin generation emits both `gltfSkins` and `registerGltfSkinHandlers` without a refusal.
+Their native gate remains **2 attempted / 0 pass / 2 fail / 0 unattempted**, jobs **1**, at the
+same expression. The real-handler behavior executable also failed to build, so no native run,
+unused-header positive link or skin-import functionality is claimed. The independently measured
+TypeScript equivalence checks qualify the source rewrite, not the incorrect C++ index lowering.

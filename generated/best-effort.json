@@ -30765,16 +30765,9 @@
       "status": "dependency-incomplete"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/contract.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerGltfSkinHandlers.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:06388598d85fff0336a22797ac08b888beaa8c2946e5d165cabd7ce8a6986b8c",
-        "sha256:80c29947429b87287be1684044b7ab7b4f4972874e2ecb88eaac4066bcfd6c72",
-        "sha256:e14680e49f3476415e51876e6c86eddb5ce6ee64ba6535dc2f128a016d6bf854",
-        "sha256:ee1de1f2d50782cf990e244a287c19bddaa6996d4e906bc60fa14f098723eb9d"
       ],
       "module": {
         "name": "GltfSkins",
@@ -30782,7 +30775,7 @@
         "source": "packages/scene3d-formats/src/gltfSkins.ts"
       },
       "path": "flight/scene3d_formats/gltf_skins.hpp",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "consumers": [
@@ -31686,10 +31679,7 @@
         "source": "packages/scene3d-formats/src/registerGltfSkinHandlers.ts"
       },
       "path": "flight/scene3d_formats/register_gltf_skin_handlers.hpp",
-      "refusedDependencies": [
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSkins.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
       "classification": "compiler-restriction",

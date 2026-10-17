@@ -120,7 +120,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 91 | `undeclared-identifier-644a9b33` | 2 | 2D | runtime | the emitted code names `clip_programs`, which nothing declares |
 | 92 | `undeclared-identifier-7ce7bd18` | 2 | 3D | runtime | the emitted code names `md2_skin_handler`, which nothing declares |
 | 93 | `undeclared-identifier-86212434` | 2 | GL | runtime | the emitted code names `gl_ssao_effect_runner`, which nothing declares |
-| 94 | `undeclared-identifier-a02f3fb2` | 2 | 3D | runtime | the emitted code names `build_gltf_skins`, which nothing declares |
+| 94 | `other-8b0f8597` | 2 | 3D | [compiler request](compiler-requests/host-initialize-optional-fallback-on-a-required-read.md) | skin builder emits after a source patch; SequenceView index nullish fallback still fails (G2: 0/2 pass) |
 | 95 | `undeclared-identifier-e39f9d67` | 2 | 3D | runtime | the emitted code names `resolve_gl_modifier_snippet_source`, which nothing declares |
 | 96 | `variant-cast-37507e07` | 2 | 3D | compiler | a functional-style cast is applied to a variant the target type cannot take |
 | 97 | `call-has-no-matching-00dc04ad` | 1 | 2D | compiler | the emitted call to `get_texture_uv_matrix` matches no declared overload |
@@ -1986,14 +1986,13 @@ and foreign products are retained. No generation or global/native baseline rerun
 - first failure at: `flight/effects_gl/gl_ssao_effect.hpp:88`
 - example: `use of undeclared identifier 'gl_ssao_effect_runner'`
 
-### 94. `undeclared-identifier-a02f3fb2` — 2 header(s)
+### 94. `other-8b0f8597` — 2 header(s), formerly `undeclared-identifier-a02f3fb2`
 
-- cause: the emitted code names `build_gltf_skins`, which nothing declares
-- subject: `build_gltf_skins`
-- lanes: 3D
-- fix route: runtime
-- first failure at: `flight/scene3d_formats/gltf_skins.hpp:116`
-- example: `use of undeclared identifier 'build_gltf_skins'`
+- Source patch: `scene3d-formats-gltf-skin-matrix-loop` replaces the exact length-16 `Float32Array.from` mapper with one fresh typed array per joint and ascending component writes. It names the fresh inverse-bind array's existing Matrix4Like element type and constructs the fresh diagnostic Record inside its original argument position. No skin/mesh/source owner is copied or replaced, no empty success/domain narrowing or declaration-only substitute is supplied.
+- Normal exact-pin generation of only `gltfSkins.ts` and `registerGltfSkinHandlers.ts`: **2 emitted / 0 refusals**, through 245 patches. The full existing-tree structural table reproduces before the change and gains only eight lines for the newly used readAccessor/reportAccessorFault keys. Only the two owned refusal/module records and their aggregate emitted/refused counts change; all foreign metadata and consumer edges are preserved. This records C++ emission, not native compilation success.
+- Source equivalence: **9 pinned original/patched handler cases passed**, covering Float32 conversion/NaN/signed zero/absent elements, independent matrices, joint mapping, original document/mesh owners, accessor absence/fault/count mismatch, read/report/data exceptions, absent skins, and a diagnostic getter that mutates the count before detail evaluation.
+- New native first failure: `flight/scene3d_formats/gltf_skins.hpp:118`, `member reference base type 'double' is not a structure or union`. The emitted `matrices->data[index].value_or(0)` calls optional operations on the double from SequenceView::operator[]. The existing [required-read/nullish-storage request](compiler-requests/host-initialize-optional-fallback-on-a-required-read.md#g2-gltf-skin-component-distinguish-an-index-miss-from-a-present-double) records the checked `get(index).value_or(0)` contract. The [typed-array binding request](compiler-requests/typed-array-static-from-binding.md) stays open for the general operation.
+- Scoped final native result: **2 attempted / 0 pass / 2 fail / 0 unattempted**, jobs **1**, root and registration header only, both at the same new diagnostic. Both rows remain failed with previousCluster and request links. The real handler behavior executable failed to build and was not run; no positive unused-header link, expected negative-link result, callable skin import or native behavior pass is claimed. No declaration repair or fake body was added. Historical G1 sweep/carry totals and foreign worklist rows/clusters remain unchanged; no global sweep.
 
 ### 95. `undeclared-identifier-e39f9d67` — 2 header(s)
 
