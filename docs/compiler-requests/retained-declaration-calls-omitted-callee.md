@@ -1616,3 +1616,76 @@ No positive link/run or qualified caller negative object/link is reached. No rep
 fake capture/provider, copied owner or restricted format/timeout domain is carried. Buffer-sharing,
 frame-copy ordering, row alignment, stored premultiplied pixels, BGRA conversion, map/timeout/late
 settlement and source normal-path unmap remain required behavior, not a declaration availability claim.
+
+## G2 Rive clipping declaration does not pass the unused header
+
+At Flight `a627849` / compiler `806d257`, original `undeclared-identifier-6647740e` is one
+header, `scene2d_formats/rive_clipping.hpp`. Clang22.1.8 jobs1 completes **1 attempted / 0 pass /
+1 fail / 0 unattempted**,59.5s, at missing create_rive_relative_transforms207. The exact source121
+NOT GENERATED marker, live retained apply_rive_clipping call and absent definition agree. The source
+and retained call give the same existing readonly artboard row and Matrix-reference array carriers:
+
+```cpp
+flight::Array<flight::Ref<flight::types::Matrix>> create_rive_relative_transforms(
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveArtboardGraph>>>> artboard);
+```
+
+A scratch declare-refused-function entry matches exactly this header through the existing loader,
+reaches a fixed point, and removing only its prototype restores original bytes. No new result owner
+or repair mechanism is needed. But the actual unused include plus empty main fails native compilation,
+exit1, at target.value().has_value() on DisplayObject (candidate226; original224), then at the bare
+optional Record diagnostic detail (candidate233; original231). The former is the
+[nullable indexed binding/storage mismatch](nullable-array-element-null-test.md#g2-rive-clipping-conditional-binding-has-one-optional-layer);
+the latter is the [existing Record materialization gap](optional-record-literal-not-materialized.md#g2-rive-clipping-diagnostic-detail).
+Unused positive link/run and the qualified called-function negative link are **not reached**. The
+prototype is rejected; no production repair, normal generation, C++ or manifest change is carried.
+
+The missing body refuses cpp-array-length-sparse-runtime-required at its scratch allocation, covered
+by the [dense initialization proof request](dense-array-length-initialization-proof.md#g2-rive-relative-transforms-resolve-parent-chains-before-reading).
+The independent registerRiveClippingHandlers source110 refusal is
+cpp-contextual-union-value-type-unrepresented: importRiveCoreObjectAsData is a zero-argument function
+returning null, whereas the existing import_component slot accepts (Ref<RiveArtboardImportContext>,
+double) and returns optional<DisplayObject>. This is the represented callable's signature adaptation
+case of [the contextual union request](callable-arm-in-contextual-union.md), related to
+[fewer-parameter adaptation](callable-fewer-parameters-adaptation.md). Registration must retain the
+real applyArtboard closure over the same kernel and create no node for the clipping component. A
+transform declaration would supply neither this registration nor either omitted body.
+
+The full source contract is narrower than a Rive parser but broader than translation-only clipping:
+
+- Compute relative transforms for the entire artboard before scanning any clipping shapes. Root is
+  identity so the common artboard/pivot cancels. Preserve legal forward parents, non-node inherited
+  Matrix identity, parent-before-child multiplication, rotation/scale/translation, and cycle/unresolved
+  parent errors even when no visible clip uses that component. The scratch proof request records the
+  exact ordering and full-graph obligations; a visible-only walk or root fallback loses them.
+- Read the first property with the requested numeric key; accept only typeof number, without new
+  coercion/finiteness checks. Defaults are rotation0, scale1, x/y current keys13/14 with legacy9/10
+  fallback, sourceId-1, fillRule0 and visible true. Visibility is numeric nonzero; only fillRule1 means
+  evenOdd. A duplicate later numeric property cannot override the first wrong-typed property's fallback.
+- Starting at component1, select type42 and visible clips; resolve the original parent node and skip
+  null/undefined targets. Look up the original source id in shapePaths. Missing or empty geometry reports
+  Drop rive.unresolved-clipping-source with original index/source and continues, preserving diagnostic
+  absence/collector behavior. Do not fabricate geometry, silently clear a pre-existing clip, restrict
+  source references to earlier components, or turn other failures into that diagnostic.
+- Transfer points by inverse(clippedRelative) * sourceRelative. When inversion returns false for a
+  singular clipped transform, use identity * sourceRelative, preserving source geometry rather than
+  the inverse routine's degenerate output. Append every record's commands and every complete x/y data
+  pair in order to a fresh Path; preserve the ignored odd tail and do not mutate/copy input node owners.
+  No polygon-only, one-contour, translation-only or fixed rectangle substitute represents this path.
+- Resolve each clipping shape with simplifyPath under its own fill rule before intersectPaths combines
+  clips for the same original DisplayObject key. Mixed evenOdd/nonZero stacks and all contours matter;
+  record winding is not a substitute for the clipping component's fill rule. Keep real path/kernel
+  owners and source geometry; the existing Path/Matrix/ClipRegion types and path-boolean functions are
+  already represented, not licenses for a new clipping algorithm or kernel no-op.
+- Accumulate clips in the local Map, in component order; only after the whole scan assign
+  createClipRegionFromPath(path) to each affected original node. Preserve Map key identity and deferred
+  writes, including existing clips on untouched nodes and the lack of clip assignment if the pass throws
+  before that final loop. An empty graph does not clear clips; diagnostic writes earlier in a failing
+  pass follow their own source timing.
+
+Pinned source tests cover translated/rotated and ancestor chains, a forward parent, a non-node bridge,
+cycle/unresolved-parent errors, invisible/missing sources, duplicate evenOdd contours, full contour-set
+intersection, mixed fill rules and pass registration. These are source requirements inspected here,
+not native Rive/geometry/parser execution results. No fake clip/path/parser, copied owner, universal
+success/no-op or narrowed graph/property/path domain is supplied. Only the failed original root/row
+and worklist route plus existing request appendices change; header and functionality gain remain zero.

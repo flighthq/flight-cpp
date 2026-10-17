@@ -55,3 +55,15 @@ and `swf/{_internal_swf_tag_stream_test_helper,swf_all_tag_handlers,swf_bitmap_t
 Nothing. No repair, no override, no source patch: a source patch would have to rewrite the object literal at
 16 sites across six packages to work around one missing lowering, and the lowering is the defect. The sites
 stay failing and counted until the emitter names the storage.
+
+## G2 Rive clipping diagnostic detail
+
+The same optional Record construction appears in scene2d_formats/rive_clipping.hpp:231 at Flight
+a627849 / compiler806d257: report_import_diagnostic receives bare pairs for index and source when
+shapePaths has no geometry. With only the exact refused-transform prototype in a scratch header,
+Clang22.1.8 reports the constructor error at candidate233, after the nullable target payload error.
+The actual unused-header compile exits1; no positive link/run or qualified negative link is reached.
+The original owned census row stays on missing create_rive_relative_transforms207 because this
+candidate is rejected. Preserve both detail keys/numeric values, Drop severity, optional sink and
+continue behavior; dropping the diagnostic is not a clipping fix. See the
+[retained-callee audit](retained-declaration-calls-omitted-callee.md#g2-rive-clipping-declaration-does-not-pass-the-unused-header).

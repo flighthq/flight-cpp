@@ -98,3 +98,30 @@ Verified three ways:
 
 `@flighthq/signals` is regenerated with the patch, and its three tombstone cases are asserted in
 `tests/generated_signals_test.cpp`. Reverting either regenerated comparison fails them.
+
+## G2 Rive clipping conditional binding has one optional layer
+
+At Flight a627849 / compiler806d257, applyRiveClipping stores
+`const target = owner >= 0 ? nodes[owner] : null`, where nodes is readonly (DisplayObject|null)[].
+It then skips target === null || target === undefined. The current header emits:
+
+```cpp
+std::optional<flight::types::DisplayObject> target =
+    ((owner >= 0.0) ? std::optional{nodes.element(owner)} : std::nullopt);
+if ((!target.has_value() || !target.value().has_value())) { /* skip */ }
+```
+
+The declaration/conditional has **one** optional, and its payload DisplayObject is the existing
+StructuralRef graph/traits view. It has no has_value member. The indexed presence logic has retained
+a second layer that the stored binding no longer has. Actual scratch declaration-only unused-header
+compilation fails at this test (candidate226, original224), before any link or native clipping call.
+See the [retained-callee audit](retained-declaration-calls-omitted-callee.md#g2-rive-clipping-declaration-does-not-pass-the-unused-header).
+
+The existing compile-time carrier dispatch must apply through this conditional/binding shape too;
+adding has_value to StructuralRef would invent an absence channel on a present payload. Preserve null
+versus out-of-range undefined where strict source tests distinguish them; here the disjunction skips
+both and present targets must retain their original node identity. The emitted element read is also
+not proof that out-of-range behavior matches the source; restoring the full indexed-read contract is
+required before claiming runtime success. No shared runtime, compiler patch or text repair is carried,
+and removing only one condition is not presented as a complete clipping fix. The following optional
+Record error and missing transform/registration bodies remain separate obligations.

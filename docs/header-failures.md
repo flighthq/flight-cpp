@@ -207,7 +207,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 178 | `undeclared-identifier-529e49d7` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glDirectionalBlurEffectRunner` binding (and its callee `applyDirectionalBlurEffectToGl`) but still emits the registration call that passes the runner |
 | 179 | `undeclared-identifier-58fb713b` | 1 | 2D | compiler *(existing request)* | refused `drawDomScale9Shape` retained as `.submit` in the renderer aggregate; declaration probe fails at `.create_data` |
 | 180 | `undeclared-identifier-5be7be47` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glScanlinesEffectRunner` binding (and its callee `applyScanlinesEffectToGl`) but still emits the registration call that passes the runner |
-| 181 | `undeclared-identifier-6647740e` | 1 | 2D | runtime | the emitted code names `create_rive_relative_transforms`, which nothing declares |
+| 181 | `undeclared-identifier-6647740e` | 1 | 2D | compiler | G2: 0/1; exact transform prototype fails unused compile at target presence and Record detail; candidate rejected |
 | 182 | `undeclared-identifier-66ea97f8` | 1 | WGPU | compiler | screen initializer refuses format union; valid declaration witness still fails native GPUTexture width access *(existing and new requests)* |
 | 183 | `undeclared-identifier-67f2c521` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glGodRaysEffectRunner` binding (and its callee `applyGodRaysEffectToGl`) but still emits the registration call that passes the runner |
 | 184 | `undeclared-identifier-6ad30a3d` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glCrtEffectRunner` binding (and its callee `applyCrtEffectToGl`) but still emits the registration call that passes the runner |
@@ -3383,14 +3383,33 @@ native packet/drawing proof or unchanged old/global check is carried or claimed.
 - Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
 - compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
-### 181. `undeclared-identifier-6647740e` — 1 header(s)
+### 181. `undeclared-identifier-6647740e` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `create_rive_relative_transforms`, which nothing declares
-- subject: `create_rive_relative_transforms`
+- cause: retained clipping pass calls the omitted create_rive_relative_transforms
 - lanes: 2D
-- fix route: runtime
-- first failure at: `flight/scene2d_formats/rive_clipping.hpp:207`
-- example: `use of undeclared identifier 'create_rive_relative_transforms'`
+- fix route: [existing retained-callee request](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-rive-clipping-declaration-does-not-pass-the-unused-header)
+- actual first failure at: `flight/scene2d_formats/rive_clipping.hpp:207`
+
+Original1 Clang22.1.8 jobs1 completes in59.5s: **1 attempted / 0 pass / 1 fail / 0 unattempted**.
+The exact refused marker, direct call and readonly artboard/Matrix-array carriers qualify an existing
+mechanism scratch prototype, with fixed point and removal restoring original bytes. Actual unused
+whole-header compile exits1 at target.value().has_value() on a DisplayObject payload (original224),
+then bare optional Record detail (original231). Positive unused link/run and qualified negative link
+are not reached; candidate rejected. No production repair/C++ or changed normal generation is carried.
+
+The helper's sparse scratch needs [graph initialization proof](compiler-requests/dense-array-length-initialization-proof.md#g2-rive-relative-transforms-resolve-parent-chains-before-reading).
+The following [nullable indexed binding](compiler-requests/nullable-array-element-null-test.md#g2-rive-clipping-conditional-binding-has-one-optional-layer)
+and [optional Record](compiler-requests/optional-record-literal-not-materialized.md#g2-rive-clipping-diagnostic-detail)
+errors are measured in the candidate only. Registration independently refuses the represented
+[contextual callable signature](compiler-requests/callable-arm-in-contextual-union.md).
+
+Full-graph parent ordering/errors and Matrix identity, inverse-clipped/source transfer with singular
+fallback, numeric property defaults, all path commands/contours, per-clip fill normalization, original
+node Map keys, missing-source diagnostics and deferred clip assignments remain required. Existing
+Matrix/Path/ClipRegion/kernel owners are inspected; source tests are requirements, not native geometry
+results. No fake clip/path/parser, copied owner, no-op, narrowed graph/path or successful clipping claim.
+Only owned failed root/row, worklist entry and existing request appendices change. Foreign products,
+prose, generation metadata, pins and runtime/source/C++ bytes remain unchanged; functionality gain0.
 
 ### 182. `undeclared-identifier-66ea97f8` — 1 header, compiler-owned
 

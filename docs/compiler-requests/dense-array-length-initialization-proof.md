@@ -72,3 +72,35 @@ earlier on other evidence rules, and the COLLADA helper has no direct row. These
 reductions, not an assertion that a loop proof alone makes any full module emit.
 
 No Flight source or runtime workaround is carried.
+
+## G2 Rive relative transforms resolve parent chains before reading
+
+At Flight a627849 / compiler806d257, scene2d-formats/riveClipping.ts:121 is omitted with
+cpp-array-length-sparse-runtime-required at new Array<Matrix>(artboard.objects.length). The retained
+clipping pass still calls it, leaving the original header0/1; the
+[declaration-only candidate](retained-declaration-calls-omitted-callee.md#g2-rive-clipping-declaration-does-not-pass-the-unused-header)
+independently fails unused-header compilation, so no workaround is carried.
+
+This scratch allocation is a graph resolution case, beyond the simple sequential complete loop above.
+For an empty object array the function returns a fresh empty array before allocating scratch state.
+Otherwise index0 receives a fresh identity Matrix and RESOLVED state. Uint8Array states starts at0;
+pending is a local stack. For every index1..N-1, follow unresolved parents, marking RESOLVING and
+pushing indices until a resolved parent or -1. Encountering RESOLVING throws
+`Rive component parent cycle at index ${current}.`; a parent other than -1 must be an integer in
+[0,N), otherwise throw `Rive component ${current} has unresolved parent ${parent}.`.
+
+Unwind pending in reverse so every inherited Matrix read comes from a resolved parent, or identity
+index0 for -1. Node-derived core types compose inherited * fresh local into a fresh world Matrix;
+other core types assign the very same inherited Matrix reference, not a copy. Mark each resolved.
+The ascending outer loop ensures every output index is assigned before return on normal completion,
+including parents later in the stream and components unrelated to any visible clip. Exceptions abort
+without returning/escaping the partial transform array. Do not infer initialization from output type
+alone or impose topological input order, drop non-node components, skip full-graph errors, or use root
+identity for malformed parents.
+
+A faithful compiler optimization must establish those read-before-write, no-escape and complete-return
+facts across both loops and branches before selecting dense storage. A future explicit-fill source
+rewrite would need its own equivalence evidence for initialization/aliasing and thrown paths; none is
+measured or carried here. The bare sparse-array runtime refusal remains correct without such proof.
+This is a precise existing compiler request, not an implemented sparse/dense runtime, transform solver
+or successful clipping result.
