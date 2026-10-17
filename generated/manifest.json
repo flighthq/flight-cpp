@@ -3532,6 +3532,12 @@
         "flight/render_gl/gl_render_texture_pool.hpp"
       ],
       "id": "render-gl-declare-refused-acquire-render-texture"
+    },
+    {
+      "files": [
+        "flight/skeleton2d/transform_constraint_2d.hpp"
+      ],
+      "id": "skeleton2d-declare-refused-transform-constraint-solver"
     }
   ],
   "sourcePatches": [
