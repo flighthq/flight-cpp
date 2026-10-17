@@ -1328,3 +1328,26 @@ Neither link check was reached, so no declaration repair was carried:
 The renderer-data owner needs the carriers of
 [readonly-callback-derived-owner-recovery](readonly-callback-derived-owner-recovery.md). `scene2d-dom`
 declares environment `web`. No DOM backend, raster, copied owner or narrowed shape is carried.
+
+## G2 WGPU Sprite retains its refused draw callback
+
+At Flight `a627849` / compiler `806d257`, `scene2d_wgpu/wgpu_sprite.hpp` omits `drawWgpuSprite`
+under nullable Material2D-to-Material heritage widening but retains `.submit = draw_wgpu_sprite`
+in its Scene2DRenderer aggregate. Stock original1 remains 0/1, Clang22.1.8 jobs1, at missing draw134.
+The exact source declaration is `void draw_wgpu_sprite(Ref<WgpuRenderState>, Ref<RenderProxy2D>);`.
+
+The existing matcher finds no direct call and the loader rejects the exact aggregate
+`retainedReference`: it is not a callback in a function-argument position. No witness extension is
+proposed. A separate scratch actual unused include with only that declaration fails compilation at
+`.create_data` (candidate136): GLstate/Node2D-to-optionalErasedRef native Sprite helper cannot fill
+the generic RenderState/Node2D-to-optionalRefRendererData slot. See the
+[typed callback request](readonly-callback-derived-owner-recovery.md#g2-wgpu-sprite-retains-gl-specific-native-sprite-helpers).
+No positive unused-header link/run or qualified called-function negative-link is reached; later
+dirty/submit carrier differences are type inspection only. No declaration repair, normal generation,
+body, callback cast or usable renderer is carried.
+
+The [material-owner refusal](compiler-interface-heritage-owner-widening.md#g2-wgpu-sprite-material-owner)
+still needs the original WGPU state/runtime and full material/shader domain. Preserve custom-shader
+flush/blend/texture/bind order and the registered-material default quad path, original Sprite texture
+identity/version and per-state dirty stamp, affine/UV/color/materialData and post-prepare output index.
+An empty draw, fake shader, copied owner or narrowed default-only domain would not implement the source.

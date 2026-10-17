@@ -188,7 +188,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 159 | `undeclared-identifier-1892fccb` | 1 | PLAT | runtime | the emitted code names `resolve_text_char_index`, which nothing declares |
 | 160 | `undeclared-identifier-1a056bbc` | 3 | TEXT | compiler | refused number formatter retained by five wrappers; G2: declaration candidate fails optional literal construction, full option spreads dropped; 0/3 remain failed |
 | 161 | `undeclared-identifier-1d8e072a` | 1 | 2D | compiler | Scale9 draw refuses nullable material owner widening; declaration probe fails native/generic callback conversion *(existing requests extended)* |
-| 162 | `undeclared-identifier-2110ec37` | 1 | WGPU | runtime | the emitted code names `draw_wgpu_sprite`, which nothing declares |
+| 162 | `undeclared-identifier-2110ec37` | 1 | WGPU | compiler | WGPU Sprite draw refuses nullable material owner widening; exact declaration compile fails GL-specific Sprite callback carrier *(existing requests extended)* |
 | 163 | `undeclared-identifier-2363216f` | 1 | GL | runtime | the emitted code names `gl_dither_effect_runner`, which nothing declares |
 | 164 | `undeclared-identifier-2437e103` | 1 | 3D | runtime | the emitted code names `parse_triangle_geometry_block`, which nothing declares |
 | 165 | `undeclared-identifier-251d1ba2` | 1 | 3D | runtime | the emitted code names `collect_pending_texture_owners`, which nothing declares |
@@ -3004,14 +3004,42 @@ owned row/cluster, this report slice and three existing request sections change;
 sweep/carry totals and all foreign products remain unchanged. No normal generation is needed for a
 rejected declaration with unchanged production code, and no scale9 behavior or old/global proof was run.
 
-### 162. `undeclared-identifier-2110ec37` — 1 header(s)
+### 162. `undeclared-identifier-2110ec37` — 1 header, compiler-owned
 
-- cause: the emitted code names `draw_wgpu_sprite`, which nothing declares
-- subject: `draw_wgpu_sprite`
-- lanes: WGPU
-- fix route: runtime
-- first failure at: `flight/scene2d_wgpu/wgpu_sprite.hpp:134`
-- example: `use of undeclared identifier 'draw_wgpu_sprite'`
+The scoped stock header remains **1 attempted / 0 pass / 1 fail / 0 unattempted**, Clang22.1.8,
+jobs **1**, 66.3 seconds, at missing `draw_wgpu_sprite:134`. The source body refuses
+`cpp-contextual-union-interface-heritage-carrier-unrepresented` at nullable `Material2D` to `Material`
+owner widening during quad-material resolution. Preserve the same material owner/null, original WGPU
+state/runtime, proxy, Sprite/data and texture. See the existing
+[material owner request](compiler-requests/compiler-interface-heritage-owner-widening.md#g2-wgpu-sprite-material-owner).
+
+The retained `.submit = draw_wgpu_sprite` is an aggregate field, not a direct call or supported
+function-argument `retainedReference`. The existing matcher finds no call; the loader rejects the
+exact aggregate witness. A separate scratch actual unused include, with only the exact declaration
+`void draw_wgpu_sprite(Ref<WgpuRenderState>, Ref<RenderProxy2D>);`, fails compilation at `.create_data`
+(candidate136): native `create_sprite_renderer_data(GlRenderState, Node2D)` returns
+`optional<ErasedRef>`, while the generated `Scene2DRenderer` slot takes generic RenderState and
+returns `optional<Ref<RendererData>>`. See the existing
+[typed callback/backend contract](compiler-requests/readonly-callback-derived-owner-recovery.md#g2-wgpu-sprite-retains-gl-specific-native-sprite-helpers).
+Dirty/submit state/node/data differences are inspected later, not additional measured first errors.
+No positive unused-header link/run or qualified called-function negative-link is reached; the
+declaration candidate is rejected, with no repair, normal generation, callback cast or witness extension.
+See [retained aggregate qualification](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-wgpu-sprite-retains-its-refused-draw-callback).
+
+Keep the render-pass and null/non-2d/source texture guards. The custom-shader branch must flush the
+quad writer, apply the resolved blend hook, realize the same texture in working color/premultiplied
+mode, bind the actual shader to the original state/proxy, then return. The default quad branch alone
+checks positive view size; preserve registered material lookup/miss reporting and registered standard
+fallback, with null meaning no draw. Do not invent a built-in default material or omit custom shaders.
+Keep actual texture entry/sampler, resource acquisition, affine transform, all six UV coefficients,
+alpha, original materialData and matrix-before-scale-bias fallback. Prepare may flush: use its returned
+instanceIndex for packet base, material and color writes, then increment the real writer count once.
+Native Sprite dirty data must retain the original texture identity/version and per-state stamp; a
+copied generic/GL state or fabricated RendererData cannot provide the WGPU runtime/callback contract.
+
+Only this row/cluster, report162 and appended sections in three existing requests change. Historical
+sweep/carry totals and all foreign products remain unchanged. No production code/body, fake shader,
+GPU draw proof, narrowed material domain or unchanged old/global check is carried or claimed.
 
 ### 163. `undeclared-identifier-2363216f` — 1 header(s)
 

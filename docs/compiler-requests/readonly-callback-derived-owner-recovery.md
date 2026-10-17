@@ -147,3 +147,29 @@ The [nullable material widening](compiler-interface-heritage-owner-widening.md#g
 first refuses the body; [retained aggregate evidence](retained-declaration-calls-omitted-callee.md#g2-gl-scale9-sprite-retains-a-refused-aggregate-callback)
 records why no declaration-only supply is carried. No adapter, owner copy, fake nine-slice packets
 or native Scale9 drawing behavior was added or claimed.
+
+## G2 WGPU Sprite retains GL-specific native Sprite helpers
+
+At Flight `a627849` / compiler `806d257`, `wgpu_sprite.hpp` assigns the native Sprite create/dirty
+helpers to a generated `Scene2DRenderer`. Native create accepts `(Ref<GlRenderState>, Node2D)` and
+returns `optional<ErasedRef>`; the slot accepts `(Ref<RenderState>, Node2D)` and returns
+`optional<Ref<RendererData>>`. An actual unused header with only the exact missing WGPU draw
+declaration fails this conversion first at `.create_data` (candidate136). Stock original1 stays
+0/1 at missing draw134, Clang22.1.8 jobs1; no link boundary is reached.
+
+By type inspection, dirty additionally differs at NodeAny versus Node2D and optional nominal
+RendererData versus ErasedRef. The exact draw requires WgpuRenderState, whereas generic submit
+accepts RenderState. The current `NativeGlScene2DRendererBinding` is explicitly GL-typed and cannot
+stand in for the original WGPU state/runtime. Provide an owner-preserving backend callback contract
+and checked dispatch retaining the same proxy/source/data owners; do not cast function pointers,
+copy generic or GL-shaped states, fabricate nominal RendererData or narrow to one material/shader.
+
+The native helper recovers the exact Sprite and keeps its original optional texture family and
+version in SpriteIdentityRendererData. Dirty compares then updates that identity/version, while a
+missing renderer-data entry returns false. The source stamp is per-state/proxy, so pipelines must
+keep independent stamps. Preserve this owner/lifecycle behavior through any callback adaptation.
+These inspected dirty/submit obligations are not further measured compile or behavior results.
+
+The [nullable material-owner refusal](compiler-interface-heritage-owner-widening.md#g2-wgpu-sprite-material-owner)
+and [retained aggregate qualification](retained-declaration-calls-omitted-callee.md#g2-wgpu-sprite-retains-its-refused-draw-callback)
+remain separate. No callback adapter, shared Sprite/GL change, draw body or GPU proof is supplied.

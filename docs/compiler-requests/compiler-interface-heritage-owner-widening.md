@@ -279,3 +279,28 @@ Original1 remains 0/1 at missing submit165, Clang22.1.8 jobs1, 34.9 seconds. An 
 actual unused header fails the [NodeAny-to-Sprite callback conversion](interface-heritage-widening.md#g2-gl-tilemap-create-data-callback)
 before link. The [retained aggregate qualification](retained-declaration-calls-omitted-callee.md#g2-gl-tilemap-retains-its-refused-submit-callback)
 records why no declaration repair, normal generation, fake packet or usable submission is claimed.
+
+## G2 WGPU Sprite material owner
+
+At Flight `a627849` / compiler `806d257`, `scene2d-wgpu/wgpuSprite.ts:25` refuses the entire
+`drawWgpuSprite` body as `cpp-contextual-union-interface-heritage-carrier-unrepresented` at nullable
+Material2D-to-Material widening. The original proxy material selects the registered quad renderer and
+feeds prepare, whose batch-change comparison uses material reference identity. Independent flattened
+owners have no native inheritance cast; preserve that same owner and null rather than copying a
+base prefix, changing its declared carrier or substituting a default material.
+
+Preserve the actual WgpuRenderState and mutable package runtime, render-pass guard, original
+proxy/Sprite/data/texture, null/non-2d/source guards and both draw paths. A custom shader flushes the
+quad writer, applies the resolved blend hook, realizes the original texture with true/working-color
+arguments, binds the real shader to state/proxy and returns. The default path checks positive texture
+view size and resolves the material kind, registry miss and registered StandardMaterial fallback;
+unresolved means no draw, not a built-in shader/material. Both custom and registered material domains
+must survive. Preserve actual texture entry/sampler, batch resource acquisition, affine transform,
+six UV entries, alpha, materialData and matrix-before-scale-bias color fallback. Packet/material/color
+indices come from prepare's returned instanceIndex after any flush; increment the real writer count once.
+
+Stock original1 remains 0/1 at missing draw134, Clang22.1.8 jobs1, 66.3 seconds. The exact-declaration-only
+actual unused include fails the [GL-specific native callback conversion](readonly-callback-derived-owner-recovery.md#g2-wgpu-sprite-retains-gl-specific-native-sprite-helpers)
+before link. The [retained aggregate request](retained-declaration-calls-omitted-callee.md#g2-wgpu-sprite-retains-its-refused-draw-callback)
+records qualification rejection. No declaration repair, generation, fake shader/draw or usable WGPU
+Sprite implementation is carried.
