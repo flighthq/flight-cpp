@@ -62,10 +62,11 @@ inline void clear_shape_commands(const flight::Ref<flight::types::Shape>& shape)
   flight::node::invalidate_content(shape);
 }
 
-inline void copy_shape_commands(const flight::Ref<flight::types::Shape>& out,
-                                const flight::Ref<flight::types::Shape>& source) {
+inline void copy_shape_commands(
+    const flight::Ref<flight::types::Shape>& out,
+    flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Shape>>>> source) {
   auto& commands = out->data->commands;
-  const auto& source_commands = source->data->commands;
+  const auto& source_commands = flight::row_get<flight::RowKey<"data">>(source)->commands;
   if (commands.identity() != source_commands.identity()) {
     commands.resize(source_commands.size());
     for (std::size_t index = 0; index < source_commands.size(); ++index) {
@@ -73,6 +74,14 @@ inline void copy_shape_commands(const flight::Ref<flight::types::Shape>& out,
     }
   }
   flight::node::invalidate_content(out);
+}
+
+
+// Keep the native reference entry point while sharing the emitted readonly source contract.
+inline void copy_shape_commands(const flight::Ref<flight::types::Shape>& out,
+                                const flight::Ref<flight::types::Shape>& source) {
+  copy_shape_commands(out, flight::StructuralRef<flight::RowReadonly<
+                               flight::RowOf<flight::Ref<flight::types::Shape>>>>{source});
 }
 
 inline double get_shape_command_count(const flight::Ref<flight::types::Shape>& source) {

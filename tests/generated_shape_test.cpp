@@ -252,6 +252,66 @@ void copy_preserves_destination_identity() {
         "self-copy follows the source operation's single invalidation");
 }
 
+void readonly_copy_retains_live_source_owner() {
+  using ReadonlyShape = flight::StructuralRef<flight::RowReadonly<
+      flight::RowOf<flight::Ref<types::Shape>>>>;
+  const auto source = shape::create_shape();
+  const ReadonlyShape view{source};
+  const auto original_data = source->data;
+  const auto replacement_data = shape::create_shape_data();
+  replacement_data->commands = flight::Array<Token>{
+      string_token("moveTo"), number_token(2.0), number_token(7.0), number_token(8.0)};
+  source->data = replacement_data;
+  const void* source_commands = replacement_data->commands.identity();
+  const auto target = shape::create_shape();
+  const void* target_commands = target->data->commands.identity();
+
+  shape::copy_shape_commands(target, view);
+  check(view.shared_exact_object<types::Shape>() == source &&
+            source->data == replacement_data && original_data->commands.empty() &&
+            source->data->commands.identity() == source_commands,
+        "readonly copy retains the exact source owner and reads its replaced data cell");
+  check(target->data->commands.identity() == target_commands &&
+            target_commands != source_commands && target->data->commands.size() == 4 &&
+            is_number(target->data->commands[2], 7.0) &&
+            is_number(target->data->commands[3], 8.0),
+        "readonly copy preserves destination storage and reads live source token order");
+  check(target->entity_runtime_key.value()->local_content_id == 1.0 &&
+            target->entity_runtime_key.value()->local_bounds_id == 1.0 &&
+            source->entity_runtime_key.value()->local_content_id == 0.0 &&
+            source->entity_runtime_key.value()->local_bounds_id == 0.0,
+        "readonly copy invalidates only the destination exactly once");
+
+  source->data->commands[2] = number_token(19.0);
+  shape::copy_shape_commands(target, view);
+  check(is_number(target->data->commands[2], 19.0),
+        "a retained readonly view observes later source command mutations");
+
+  const auto aliased = shape::create_shape();
+  aliased->data->commands = source->data->commands;
+  shape::copy_shape_commands(aliased, view);
+  shape::copy_shape_commands(source, view);
+  check(aliased->data->commands.identity() == source_commands &&
+            source->data->commands.identity() == source_commands &&
+            is_number(source->data->commands[2], 19.0) &&
+            aliased->entity_runtime_key.value()->local_content_id == 1.0 &&
+            aliased->entity_runtime_key.value()->local_bounds_id == 1.0 &&
+            source->entity_runtime_key.value()->local_content_id == 1.0 &&
+            source->entity_runtime_key.value()->local_bounds_id == 1.0,
+        "readonly shared-array and self copies preserve storage and invalidate once");
+
+  using LegacyCopy = void (*)(const flight::Ref<types::Shape>&,
+                              const flight::Ref<types::Shape>&);
+  const LegacyCopy legacy_copy = &shape::copy_shape_commands;
+  source->data->commands.clear();
+  legacy_copy(target, source);
+  check(target->data->commands.empty() &&
+            target->data->commands.identity() == target_commands &&
+            target->entity_runtime_key.value()->local_content_id == 3.0 &&
+            target->entity_runtime_key.value()->local_bounds_id == 3.0,
+        "the legacy typed entry point retains empty-copy and invalidation behavior");
+}
+
 void clear_count_and_empty() {
   const auto value = shape::create_shape();
   value->data->commands = flight::Array<Token>{
@@ -644,6 +704,7 @@ void stroke_centerline_closure() {
 int main() {
   construction_defaults_and_identity();
   copy_preserves_destination_identity();
+  readonly_copy_retains_live_source_owner();
   clear_count_and_empty();
   command_defaults_and_invalidation();
   polygon_and_arc_expansion();
