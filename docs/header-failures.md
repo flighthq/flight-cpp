@@ -35,7 +35,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 6 | `other-52e846a6` | 18 | ANIM | compiler | a value_type is combined with a three-alternative variant where the declared slot expects one alternative |
 | 7 | `call-has-no-matching-47410fe2` | 16 | 2D, 3D | compiler | the emitted call to `map` matches no declared overload |
 | 8 | `other-40da43f7` | 16 | 2D, 3D, ANIM | compiler | an optional<Record<...>> is initialised from a shape that is not its declared storage |
-| 9 | `missing-member-057b0bc9` | 15 | 2D | runtime | the emitted code calls `.filter` on SequenceView, which the runtime does not provide |
+| 9 | `static-cast-assertion-9674a66c` | 15 | 2D | compiler | a TypeScript `as` on `JSON.parse` is emitted as a `static_cast` from `JsonValue` to an unrelated `Ref<T>` |
 | 10 | `call-has-no-matching-076d207f` | 14 | WGPU | compiler | the emitted call to `create_pipeline_layout` matches no declared overload |
 | 11 | `other-e9936ce6` | 13 | 3D | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 12 | `call-has-no-matching-d6950545` | 12 | 2D, CORE | compiler | the emitted call to `get_node_child_count` matches no declared overload |
@@ -358,15 +358,14 @@ deleting or stubbing behaviour.
 - first failure at: `flight/scene3d_formats/three_ds_parse.hpp:208`
 - example: `no matching constructor for initialization of 'optional<Record<String, variant<bool, double, String>>>'`
 
-### 9. `missing-member-057b0bc9` — 15 header(s)
+### 9. `static-cast-assertion-9674a66c` — 15 header(s)
 
-- cause: the emitted code calls `.filter` on SequenceView, which the runtime does not provide
-- subject: `filter`
+- cause: a TypeScript `as` on `JSON.parse` is emitted as a `static_cast` from `JsonValue` to an unrelated `Ref<T>`
 - lanes: 2D
-- fix route: runtime
-- why this route: the emitted code calls `.filter` on SequenceView, which the runtime does not provide
-- first failure at: `flight/scene2d_formats/lottie_document.hpp:116`
-- example: `no member named 'filter' in 'SequenceView<StructuralRef<RowReadonly<RowOf<shared_ptr<LottieMask>>>>>'`
+- fix route: compiler
+- why this route: an assertion between unrelated types is not a cast; the emitter must materialize the declared owner or refuse
+- first failure at: `flight/scene2d_formats/lottie_document.hpp:324`
+- example: `no matching conversion for static_cast from 'JsonValue' to 'flight::Ref<flight::types::LottieDocument>'`
 
 ### 10. `call-has-no-matching-076d207f` — 14 header(s)
 
