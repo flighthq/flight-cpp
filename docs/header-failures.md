@@ -232,7 +232,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 203 | `undeclared-identifier-aa084556` | 1 | PLAT | runtime + declaration repairs (applied) | refused track-list guard and grid resolver declared; strict erased integer predicate supplied; G2: 1 pass; validator/registration remain unlinkable |
 | 204 | `undeclared-identifier-ae594b8a` | 1 | 2D | runtime | the emitted code names `append_lottie_shape_items`, which nothing declares |
 | 205 | `undeclared-identifier-af7a1054` | 1 | GL | runtime | the emitted code names `gl_median_effect_runner`, which nothing declares |
-| 206 | `undeclared-identifier-b15d9d15` | 1 | ANIM | runtime | the emitted code names `parse_dragon_bones_bones`, which nothing declares |
+| 206 | `undeclared-identifier-b15d9d15` | 1 | ANIM | compiler | G2: 0/1; refused bone parser and complete result omitted; no exact declaration candidate |
 | 207 | `undeclared-identifier-befaa2d6` | 2 | 2D | runtime | the emitted code names `compute_scissor_rect`, which nothing declares |
 | 208 | `undeclared-identifier-c162d0c0` | 1 | ANIM | runtime | the emitted code names `solve_skeleton_2d_transform_constraint`, which nothing declares |
 | 209 | `undeclared-identifier-c29489a5` | 1 | GL | runtime | the emitted code names `gl_bloom_effect_runner`, which nothing declares |
@@ -3484,14 +3484,30 @@ fake resolver or narrowed value domain is claimed.
 - first failure at: `flight/effects_gl/gl_median_effect.hpp:90`
 - example: `use of undeclared identifier 'gl_median_effect_runner'`
 
-### 206. `undeclared-identifier-b15d9d15` — 1 header(s)
+### 206. `undeclared-identifier-b15d9d15` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `parse_dragon_bones_bones`, which nothing declares
+- cause: retained section handler calls the omitted parseDragonBonesBones and reads its omitted complete result
 - subject: `parse_dragon_bones_bones`
 - lanes: ANIM
-- fix route: runtime
-- first failure at: `flight/skeleton2d_formats/dragon_bones_bones_handler.hpp:141`
+- fix route: [retained callee/result contract](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-dragonbones-bones-omit-both-the-parser-and-its-complete-result-contract), with [full erased input/bone semantics](compiler-requests/erased-array-element-reading.md#g2-dragonbones-bones-preserve-topological-order-and-positional-remaps)
+- actual first failure at: `flight/skeleton2d_formats/dragon_bones_bones_handler.hpp:141`
 - example: `use of undeclared identifier 'parse_dragon_bones_bones'`
+
+Original1 completes at jobs1, Clang22.1.8,29.8s: **1 attempted / 0 pass / 1 fail / 0 unattempted**.
+The helper refuses erased-array recovery; runtime AnyArray already has exact Array<T> recovery,
+but no generic erased element reads. No complete emitted anonymous bones/remap result exists to
+qualify an exact declaration. The larger context cannot substitute for it. No candidate, unused
+positive link/run or exact negative link was reached or is claimed.
+
+Preserve input/raw-index positions, repeated pending-order parent resolution, duplicate-name Map
+policy, unresolved parents/cycles retained as roots with one Drop diagnostic, exact transforms and
+all four independent inheritance flags. Append original bone references and write the remap prefix
+and name entries into the same context arrays/Map. Missing Record keys and indexed writes growing the
+initially empty remap remain inspected obligations under existing requests; no native proof claimed.
+
+No C++, source, repair, override, manifest, inventory or normal generation change is carried. Only
+this failed root/row and worklist entry change, plus two existing request appendices. Foreign
+rows/roots/prose and historical/G1 totals remain unchanged; no parser, bone or header gain is claimed.
 
 ### 207. `undeclared-identifier-befaa2d6` — 2 header(s) (1 at G1; `gl_clip.hpp` joined in G2 from cluster 91)
 

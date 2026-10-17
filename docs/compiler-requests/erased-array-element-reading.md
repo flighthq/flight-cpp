@@ -342,3 +342,64 @@ candidate fails the real unused-header compile at the result dependency's option
 before either link gate. This does not supply erased iteration or the parser algorithm. No C++ body,
 source rewrite, copied owner, fake slots/parser, empty-success substitute or narrowed input is carried;
 source tests are requirements only, with no native parser behavior or link pass claimed.
+
+## G2 DragonBones bones preserve topological order and positional remaps
+
+At compiler `806d257` / Flight `a627849`, `dragonBonesBonesHandler.ts:40` refuses
+`parseDragonBonesBones(raw: unknown, diagnostics?: ImportDiagnostic[])` as
+`cpp-erased-array-predicate-runtime-required`. Its emitted refusal says Any lacks an array carrier
+and exact extraction. Current AnyArray already preserves shared-array identity, its exact Array<T>
+type and checked `external_if<Array<T>>()`; it has no generic erased element-read view. Array.isArray
+does not prove Array<Any>, Array<double> or a native Bone2D/Record element owner. A faithful boundary
+must admit the full guarded unknown-array domain without copying it or silently skipping a boxed
+element type. JSON.parse's JsonValue and dynamic object/member reads remain under the
+[existing JSON request](parsed-json-object-shape-reads.md).
+
+The source contract requires all of the following:
+
+- Nonarrays use a fresh empty raw array. For an array, allocate a raw-length remap filled with -1;
+  skip null/nonobject entries without compacting their raw positions. Arrays themselves pass the
+  JavaScript object guard; no extra plain-object schema restriction is present. Each accepted entry
+  creates one real Bone2D, a pending parent name and its original raw index.
+- Names and parent names are strings, including empty strings, or null. Length uses numberOr(0),
+  which tests typeof number rather than coercing or imposing finiteness. ParentIndex starts at -1,
+  shearX at0. The original transform helper uses rotate/skew when either property exists; otherwise
+  rotation=skY and shearY=skX-rotation. Numeric defaults are0 for x/y/rotation/skew and1 for scX/scY.
+  Preserve property-presence branching, repeated reads, defaults and the source numeric domain.
+- TransformInherit2D has four independent booleans. Only actual booleans override the true defaults,
+  including inheritTranslation. Arbitrary combinations remain supported, including rotation=false
+  with scale/reflection=true; reducing these to five presets or adding a Skip diagnostic is wrong.
+  The emitted transform helper already constructs Ref<types::TransformInherit2D>, matching Bone2D;
+  there is no inspected anonymous-preset owner mismatch to borrow from the Spine task.
+- Repeatedly scan pending entries in their current order. Accept roots and children whose parent
+  name is already mapped, assign the current output parent index, set a string name to the new index,
+  write the positional raw remap, append the same bone object and splice that pending entry. A child
+  skipped before its parent is visited on a later pass. Duplicate names use Map.set's latest resolved
+  index at each step; a different topological sort or name-only remap can change observable results.
+- If a pass makes no progress, emit exactly the source Drop diagnostic
+  dragonbones.unresolved-bone-parent / parseDragonBonesSkeleton with count=pending.length. Append
+  every remaining entry in pending order as parentIndex=-1, including orphans/cycles, and fill its
+  remap. Do not drop those bones, change severity to Skip or resolve later fallback entries anew.
+  Weighted skin indices consume the positional remap; duplicate names must not collapse them.
+
+Parsing finishes before the section handler mutates its original context. It appends the returned
+bone references, writes the remap prefix by index without clearing a preexisting tail, then rebuilds
+the name map from the local output array (last duplicate wins) and sets those entries on the original
+context Map. Do not replace arrays/Map, offset local indices by preexisting context bones, or clear
+unmentioned keys. The exported reader remains the actual handler alias.
+
+Two inspected obligations survive a future parser declaration. A missing armature.bone and missing
+inheritance keys must reach their helpers as undefined/defaults, whereas retained Record.get(...).value()
+throws. Also parseDragonBonesSkeletonWithRegistry initializes context.rawIndexToOutput to []; the
+handler's first remap write must grow that same array. The emitted assignment through
+`context->raw_index_to_output.element(i)` requires an existing index and throws at0 on that empty array. The
+[existing dense indexed-growth request](array-index-write-must-grow.md) covers this source shape.
+These are source/emission inspections, not native execution or additional measured first errors.
+
+The [retained result/callee request](retained-declaration-calls-omitted-callee.md#g2-dragonbones-bones-omit-both-the-parser-and-its-complete-result-contract)
+records the scoped original1 **0/1 pass** at missing parser141 and absence of an exact complete emitted
+result owner. No lawful declaration candidate or either link gate is reached. Source tests for parent
+ordering, transform defaults, independent inheritance, orphan Drop severity, duplicate-name weighted
+remapping and wrong-typed JSON values establish requirements; they are not native behavior results.
+No fake parser/bones, copied owner, empty-success substitute, narrowed JSON domain or unmeasured
+source respelling is carried. No native parser, remapping or header gain is claimed.

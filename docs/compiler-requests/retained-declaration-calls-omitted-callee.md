@@ -1185,3 +1185,38 @@ input or placeholder registration is supplied. The table annotation's original a
 module transpile to byte-identical JavaScript. The original image header remains failed at its next
 missing callback; the partial marker and the generic resolver's refusal remain visible. Header
 availability, real table registration and image resolution are separate results.
+
+## G2 DragonBones bones omit both the parser and its complete result contract
+
+At compiler `806d257` / Flight `a627849`, original `undeclared-identifier-b15d9d15` contains
+`skeleton2d_formats/dragon_bones_bones_handler.hpp`. The Clang22.1.8 one-worker check completes
+**1 attempted / 0 pass / 1 fail / 0 unattempted**,29.8s, at the retained
+`parse_dragon_bones_bones` call on line141. Its source-line40 marker refuses
+`cpp-erased-array-predicate-runtime-required`; the source returns
+`{ bones: Bone2D[]; rawIndexToOutput: number[] }` after the full bone algorithm
+([erased input and bone contract](erased-array-element-reading.md#g2-dragonbones-bones-preserve-topological-order-and-positional-remaps)).
+
+The retained caller passes Any from the armature Record and optional Array<Ref<ImportDiagnostic>>
+from the original DragonBonesSectionContext. It immediately reads `result->bones` as
+Array<Ref<Bone2D>> and `result->raw_index_to_output` as Array<double>. Those parameter and member
+carriers are visible, but no exact complete anonymous result definition or emitted parser signature
+exists to supply the return owner. Searching generated/runtime/override headers finds the function
+only at this retained call, and the only declared `raw_index_to_output` array field belongs to
+`types::DragonBonesSectionContext` in `types/dragon_bones_registry.hpp`. That larger context is
+not the source's two-field result. Bone2D and its TransformInherit2D field already have their real
+nominal owners; neither supplies the missing result.
+
+A forward-declared result cannot support the caller's member reads. Do not invent a structural hash,
+copy a new two-field owner, substitute the context, use Any/tuple storage or define an empty parser.
+The existing declaration-only repair cannot supply a complete absent result or the refused algorithm.
+No lawful exact declaration candidate is available, so no loader qualification, unused-header positive
+link/run or exact explicit-use negative link is claimed. The inline exported reader still stores the
+actual section handler; unused linkage must be tested when a real result/declaration becomes available.
+
+The emitter must preserve the complete source result contract and exact function declaration for a
+retained caller, or coherently refuse that dependent caller. Recovering the erased input and emitting
+the real parser remains a separate obligation. The inspected missing-key Record reads and context
+array-growth issue are recorded with the source contract, not claimed as additional measured first
+diagnostics. No C++, runtime, source patch, repair, override, manifest or inventory change is carried,
+so no changed generation needs reproducing. This header remains failed; no native parser, bone,
+link or functionality pass is claimed.
