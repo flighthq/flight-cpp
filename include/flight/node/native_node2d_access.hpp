@@ -2,6 +2,7 @@
 #include <flight/types/node_2d.hpp>
 #include <flight/types/shape.hpp>
 #include <flight/types/sprite.hpp>
+#include <flight/types/text_label.hpp>
 
 namespace flight::node {
 using NativeNode2DRuntimeOwner = std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node2DTraits>>>;
@@ -16,10 +17,11 @@ inline void invalidate_node_world_bounds(flight::types::Node2D source);
 namespace flight::node {
 // The generated family changes the data member's static type. Retain that exact
 // concrete owner; graph operations consume only its common Node2D trait cells.
-// Backends recover the original Shape/Sprite before reading family-specific data.
+// Backends recover the original Shape/Sprite/TextLabel before reading family-specific data.
 template <typename Object>
   requires(std::same_as<Object, flight::types::Shape> ||
-           std::same_as<Object, flight::types::Sprite>)
+           std::same_as<Object, flight::types::Sprite> ||
+           std::same_as<Object, flight::types::TextLabel>)
 flight::types::Node2D native_node_2d(const std::shared_ptr<Object>& source) {
   using View = flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<Object>>>>;
   View original(source);
@@ -33,6 +35,7 @@ flight::types::Node2D native_node_2d(const std::shared_ptr<Object>& source) {
 inline NativeNode2DRuntimeOwner native_node_2d_runtime(flight::types::Node2D source) {
   if (auto shape = source.shared_exact_object<flight::types::Shape>()) return shape->entity_runtime_key.value();
   if (auto sprite = source.shared_exact_object<flight::types::Sprite>()) return sprite->entity_runtime_key.value();
+  if (auto label = source.shared_exact_object<flight::types::TextLabel>()) return label->entity_runtime_key.value();
   return flight::row_get<NativeNode2DRuntimeOwner>(source, flight::types::entity_runtime_key);
 }
 

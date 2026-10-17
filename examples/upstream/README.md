@@ -2,14 +2,14 @@
 
 The targets in this directory are audited native SDL ports of the pinned Flight TypeScript examples
 under `.dependencies/flight/examples/packages`. They open a resizable window at the authority's
-canvas size (800 by 600 except for spatial's 800 by 500) and render continuously. SDL replaces the
+canvas size (Clock and Spatial use 800 by 500; Camera2D, Collision and Scene3D use 800 by 600) and render continuously. SDL replaces the
 browser host and presentation surface; the example's camera,
 collision, clock, motion-path, or spatial behavior still comes from the same
 generated Flight APIs used by the TypeScript source. The source comment at the top of each port names
 the TypeScript file used as its authority.
 
 These targets require both `FLIGHT_CPP_BUILD_EXAMPLES=ON` and
-`FLIGHT_CPP_BUILD_HOST_SDL=ON`; `camera2d`, `collision`, and `scene3d` also require `Flight::HostSdlGl`. A build
+`FLIGHT_CPP_BUILD_HOST_SDL=ON`; `camera2d`, `clock`, `collision`, and `scene3d` also require `Flight::HostSdlGl`. A build
 without the optional SDL host does not advertise headless substitutes as examples.
 
 The GL ports use the installed `flight::host_sdl::GlApplication` window and frame-loop API from
@@ -21,17 +21,17 @@ see `docs/host-sdl.md` for timing, resize, event, presentation, and shutdown beh
 | Target suffix | Flight subsystem used for behavior | Behavior preserved from the TypeScript example |
 | --- | --- | --- |
 | `camera2d` | `flight::camera`, `flight::camera_controls`, `flight::scene2d_gl` | Follow camera, bounded world, parallax layers, keyboard movement, pointer-centered wheel zoom; genuine GL scene graph, tessellated shapes, and textured Sprite batches |
-| `clock` | `flight::clock` | Parent/child clock hierarchy, effective pause and scale controls, animated shapes and diagnostics |
+| `clock` | `flight::clock`, `flight::scene2d_gl`, `flight::text` | Parent/child clock hierarchy, effective pause and scale controls, four persistent Shapes and eleven glyph-backed TextLabels |
 | `collision` | `flight::collision`, `flight::scene2d_gl` | Generated circle/AABB/polygon colliders, pair testing, overlap color, and MTV arrows rendered as the authored Shape graph |
 | `motionpath` | `flight::path`, `flight::motionpath` | Two-segment cubic path, moving oriented arrow, speed and clamp/loop/ping-pong controls |
 | `scene3d` | `flight::scene3d_gl`, StandardPbr, effects GL | Procedural meshes, PBR materials, orbit camera, ambient/directional/point lights, shadow map, and HDR multisample presentation |
 | `spatial` | `flight::spatial` | Moving indexed boxes, visible grid cells, pair/point/ray/region queries, and hit counts |
 
 Every executable accepts `--smoke`. Smoke mode creates a hidden SDL window, renders three fixed-step
-frames, and exits. The camera2d, collision, and spatial ports also assert generated package output,
+frames, and exits. The camera2d, clock, collision, and spatial ports also assert generated package output,
 so a locally simulated frame cannot satisfy their smoke checks. CTest uses SDL's dummy video driver
-for the three remaining painter examples and its offscreen GL driver with software rendering for
-`camera2d`, `collision`, and `scene3d` on Linux. Camera2D and Collision CTests capture their first
+for the two remaining painter examples and its offscreen GL driver with software rendering for
+`camera2d`, `clock`, `collision`, and `scene3d` on Linux. Camera2D, Clock and Collision CTests capture their first
 actual GL frame as `examples/upstream/<name>-smoke.ppm` inside the build directory.
 
 Camera2D follows the pinned `camera2d/src/app.ts` and `render.webgl.ts` authorities. Its stars,
@@ -54,7 +54,16 @@ overlay Shape. Generated collider records drive both collision tests and the Sha
 Its original manifold assertions remain, with additional checks for current fill/stroke mesh caches,
 original Shape ownership, and colliding-fill/MTV pixels in every actual GL framebuffer.
 
-`camera2d`, `collision`, and `scene3d` exercise their actual Flight GL renderers. `clock`, `motionpath`,
+Clock preserves the root, four Shapes and eleven TextLabels, with actual shape rotation and paused
+label visibility driven by the generated hierarchical clocks. Text layout remains on the original
+TextLabelRuntime. A genuine GlyphOutlineSource-backed HostGlyphRasterizerCapability supplies glyph
+coverage; the native TextLabel renderer submits the standard SDK Bitmap texture, material and quad
+batch packet. It has no CanvasHost dependency or custom shader. The example discovers a system
+TrueType font, or accepts `FLIGHT_CPP_EXAMPLE_FONT`; it fails clearly when none is usable. Smoke
+checks clock times, pause/scale, original graph/runtime owners, current text/mesh caches and actual
+shape and glyph pixels. Focused owner tests cover options, layout identity and source revision rules.
+
+`camera2d`, `clock`, `collision`, and `scene3d` exercise their actual Flight GL renderers. `motionpath`
 and `spatial` continue to use the SDL painter for presentation while testing their listed Flight
 behavior APIs; they do not provide Scene2D GL coverage.
 

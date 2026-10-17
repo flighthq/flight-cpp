@@ -28,11 +28,19 @@ cc_library(
     deps = ["//:host_sdl_gl", "//:sdk_preview"],
 )
 
+cc_library(
+    name = "font_host",
+    srcs = ["font_host.cpp"],
+    hdrs = ["font_host.hpp"],
+    tags = ["manual"],
+    deps = [":scene2d_host", "//:sdk_preview"],
+)
+
 cc_binary(
     name = "clock",
     srcs = ["clock.cpp"],
     tags = ["manual"],
-    deps = [":sdl_host", "//:sdk_preview"],
+    deps = [":font_host", "//:sdk_preview"],
 )
 
 cc_binary(

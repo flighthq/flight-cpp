@@ -1,131 +1,134 @@
-// Derived from @flighthq/text/packages/text/src/textLabel.ts
-// at generated digest fabb6ee4f78b7aa32e8ea6d199386c829b5d09986ac73996fafb6280a1452c42.
-//
-// OVERRIDE: the emitted text_label.hpp is a PARTIAL -- the emitter refused createTextLabel,
-// createTextLabelData, createTextLabelRuntime, getTextLabelRuntime, initializeTextLabelData and
-// computeTextLabelLocalBoundsRectangle. This completes the module with the node construction and the
-// data/format/string accessors that the Scene2D text examples need.
-//
-// KNOWN GAP, measured 2026-10-12 and NOT closed by re-deriving: four of those six declarations are
-// still absent from the compiled surface -- computeTextLabelLocalBoundsRectangle, createTextLabelRuntime,
-// getTextLabelRuntime, initializeTextLabelData. The package compiles because nothing in its compiled
-// closure calls them, which is why this is easy to mistake for a complete supply. Treat the module's
-// surface as incomplete until they exist.
-// Runtime completion of the generated partial textLabel module.
+// Source-derived textLabel.ts. Native runtime heritage retains one original owner.
 #pragma once
-
-#include <optional>
-#include <flight/runtime.hpp>
 #include <flight/scene2d/display_object.hpp>
-#include <flight/types/text_format.hpp>
-#include <flight/types/text_label.hpp>
-
+#include <flight/node/native_node2d_access.hpp>
+#include <flight/text/text_label_layout.hpp>
+#include <flight/textlayout/text_bounds.hpp>
+#include <flight/textlayout/text_format_range.hpp>
 namespace flight::text {
-
-inline flight::Ref<flight::types::TextLabelData> create_text_label_data() {
-  return flight::make_ref<flight::types::TextLabelData>(flight::types::TextLabelData{
-      .entity_runtime_key = std::nullopt,
-      .auto_size = flight::String("none"),
-      .height = 100.0,
-      .text = flight::String(""),
-      .text_format = flight::make_ref<flight::types::TextFormat>(flight::types::TextFormat{}),
-      .vertical_align = flight::String("top"),
-      .width = 100.0,
-  });
+using NativeTextLabel = flight::Ref<flight::types::TextLabel>;
+using NativeTextLabelData = flight::Ref<flight::types::TextLabelData>;
+using NativeTextLabelRuntime = flight::Ref<flight::types::TextLabelRuntime>;
+using TextLabelDataOptions = std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<NativeTextLabelData>>>>>;
+using TextLabelOptions = std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<NativeTextLabel>>>>>;
+inline void initialize_text_label_data(NativeTextLabelData out, TextLabelDataOptions data = std::nullopt) {
+  using flight::RowKey;
+  out->auto_size = flight::scene2d::node_2d_option_value_or<RowKey<"autoSize">>(data, flight::String("none"));
+  out->height = flight::scene2d::node_2d_option_value_or<RowKey<"height">>(data, 100.0);
+  out->text = flight::scene2d::node_2d_option_value_or<RowKey<"text">>(data, flight::String(""));
+  out->text_format = flight::scene2d::node_2d_option_value_or<RowKey<"textFormat">>(data, flight::make_ref<flight::types::TextFormat>());
+  out->vertical_align = flight::scene2d::node_2d_option_value_or<RowKey<"verticalAlign">>(data, flight::String("top"));
+  out->width = flight::scene2d::node_2d_option_value_or<RowKey<"width">>(data, 100.0);
 }
-
-template <typename Options>
-inline flight::Ref<flight::types::TextLabelData> create_text_label_data(Options&&) {
-  return create_text_label_data();
+inline NativeTextLabelData create_text_label_data(TextLabelDataOptions data = std::nullopt) {
+  auto out = flight::make_ref<flight::types::TextLabelData>();
+  initialize_text_label_data(out, data);
+  return out;
 }
-
-inline flight::Ref<flight::types::TextLabel> make_text_label() {
-  return flight::make_ref<flight::types::TextLabel>(flight::types::TextLabel{
-      .data = create_text_label_data(),
-      .enabled = true,
-      .kind = flight::types::text_label_kind,
-      .name = std::nullopt,
-      .entity_runtime_key = flight::scene2d::create_node_2d_runtime(),
-      .alpha = 1.0,
-      .visible = true,
-      .blend_mode = std::nullopt,
-      .clip = std::nullopt,
-      .material = std::nullopt,
-      .material_data = std::nullopt,
-      .pivot_x = 0.0,
-      .pivot_y = 0.0,
-      .rotation = 0.0,
-      .scale_x = 1.0,
-      .scale_y = 1.0,
-      .skew_x = 0.0,
-      .skew_y = 0.0,
-      .x = 0.0,
-      .y = 0.0,
-  });
+inline NativeTextLabelRuntime get_text_label_runtime(NativeTextLabel source) { return source->entity_runtime_key.value(); }
+inline void compute_text_label_local_bounds_rectangle(flight::Ref<flight::types::Rectangle> out, NativeTextLabel label) {
+  auto data = label->data;
+  auto layout = data->auto_size == flight::String("none") ? std::nullopt : get_text_layout(label);
+  if (!layout) { out->x = out->y = 0; out->width = data->width; out->height = data->height; return; }
+  using View = flight::StructuralRef<flight::RowReadonly<flight::RowOf<NativeTextLabelData>>>;
+  flight::textlayout::compute_text_bounds_rectangle(out, flight::types::TextBoundsSpec(View(data)), *layout);
 }
-
-template <typename Options>
-inline flight::Ref<flight::types::TextLabel> create_text_label(Options&&) {
-  return make_text_label();
+inline NativeTextLabelRuntime create_text_label_runtime() {
+  auto out = flight::make_ref<flight::types::TextLabelRuntime>();
+  // Copy only fresh, unpublished base initialization. No observed owner is replaced.
+  static_cast<flight::node::NativeNode2DRuntimeOwner::element_type&>(*out) = *flight::scene2d::create_node_2d_runtime();
+  out->build_text_layout_params = [](auto source, flight::types::TextMeasureFunction measure) {
+    auto label = source.template shared_exact_object<flight::types::TextLabel>();
+    if (!label) throw std::logic_error("NativeTextLabel layout owner mismatch");
+    auto data = label->data;
+    auto params = flight::make_ref<flight::types::TextLayoutParams>();
+    params->format_ranges = flight::Array<flight::Ref<flight::types::TextFormatRange>>{
+        flight::textlayout::create_text_format_range(data->text_format, 0, static_cast<double>(data->text.length()))};
+    params->text = data->text; params->width = data->width; params->height = data->height;
+    params->measure = std::move(measure);
+    params->vertical_align = data->auto_size == flight::String("none") ? data->vertical_align : flight::String("top");
+    return params;
+  };
+  out->compute_local_bounds_rectangle = [](auto rectangle, auto source) {
+    auto label = source.template shared_exact_object<flight::types::TextLabel>();
+    if (!label) throw std::logic_error("NativeTextLabel bounds owner mismatch");
+    compute_text_label_local_bounds_rectangle(rectangle, label);
+  };
+  out->text_layout_using_content_id = -1;
+  return out;
 }
-
-inline flight::Ref<flight::types::TextLabel> create_text_label() {
-  return make_text_label();
+inline NativeTextLabel create_text_label(TextLabelOptions obj = std::nullopt) {
+  using flight::RowKey;
+  auto out = flight::make_ref<flight::types::TextLabel>();
+  auto data = flight::scene2d::node_2d_optional_value<RowKey<"data">, TextLabelOptions::value_type::schema_type, NativeTextLabelData>(obj);
+  out->data = data ? create_text_label_data(TextLabelDataOptions{TextLabelDataOptions::value_type(*data)}) : create_text_label_data();
+  out->entity_runtime_key = create_text_label_runtime();
+  out->kind = flight::types::text_label_kind;
+  out->enabled = flight::scene2d::node_2d_option_value_or<RowKey<"enabled">>(obj, true);
+  out->visible = flight::scene2d::node_2d_option_value_or<RowKey<"visible">>(obj, true);
+  out->alpha = flight::scene2d::node_2d_option_value_or<RowKey<"alpha">>(obj, 1.0);
+  out->name = flight::scene2d::node_2d_optional_value<RowKey<"name">, TextLabelOptions::value_type::schema_type, flight::String>(obj);
+#define FLIGHT_TEXT_OPTION(member, key, fallback) out->member = flight::scene2d::node_2d_option_value_or<RowKey<key>>(obj, fallback)
+  FLIGHT_TEXT_OPTION(pivot_x, "pivotX", 0.0); FLIGHT_TEXT_OPTION(pivot_y, "pivotY", 0.0);
+  FLIGHT_TEXT_OPTION(rotation, "rotation", 0.0); FLIGHT_TEXT_OPTION(scale_x, "scaleX", 1.0); FLIGHT_TEXT_OPTION(scale_y, "scaleY", 1.0);
+  FLIGHT_TEXT_OPTION(skew_x, "skewX", 0.0); FLIGHT_TEXT_OPTION(skew_y, "skewY", 0.0); FLIGHT_TEXT_OPTION(x, "x", 0.0); FLIGHT_TEXT_OPTION(y, "y", 0.0);
+#undef FLIGHT_TEXT_OPTION
+  if (obj) {
+    out->blend_mode = flight::row_get<RowKey<"blendMode">>(*obj);
+    out->clip = flight::row_get<RowKey<"clip">>(*obj);
+    out->material = flight::row_get<RowKey<"material">>(*obj);
+    out->material_data = flight::row_get<RowKey<"materialData">>(*obj);
+  }
+  return out;
 }
-
-inline flight::Ref<flight::types::TextFormat> get_text_label_format(
-    flight::Ref<flight::types::TextLabel> source) {
-  return source->data->text_format;
+inline auto make_text_label() { return create_text_label(); }
+inline auto get_text_label_format(NativeTextLabel source) { return source->data->text_format; }
+inline auto get_text_label_string(NativeTextLabel source) { return source->data->text; }
+inline void invalidate_text_label_bounds(NativeTextLabel source) {
+  auto runtime = get_text_label_runtime(source);
+  runtime->local_bounds_id = flight::unsigned_right_shift(runtime->local_bounds_id + 1, 0);
 }
-
-inline flight::String get_text_label_string(flight::Ref<flight::types::TextLabel> source) {
-  return source->data->text;
+inline void invalidate_text_label_content(NativeTextLabel source) {
+  auto runtime = get_text_label_runtime(source);
+  runtime->local_content_id = flight::unsigned_right_shift(runtime->local_content_id + 1, 0);
+  if (source->data->auto_size != flight::String("none")) invalidate_text_label_bounds(source);
 }
-
-inline void invalidate_text_label_content(flight::Ref<flight::types::TextLabel> source) {
-  flight::node::invalidate_node_local_content(source);
-  flight::node::invalidate_node_local_bounds(source);
+inline void set_text_label_string(NativeTextLabel source, flight::String value) {
+  if (source->data->text == value) return;
+  source->data->text = std::move(value); invalidate_text_label_content(source);
 }
-
-inline void set_text_label_auto_size(flight::Ref<flight::types::TextLabel> source,
-                                     flight::types::TextAutoSize value) {
+inline void append_text_label_string(NativeTextLabel source, flight::String value) {
+  if (value.length() == 0) return;
+  source->data->text += value; invalidate_text_label_content(source);
+}
+inline void set_text_label_format(NativeTextLabel source, flight::Ref<flight::types::TextFormat> value) {
+  source->data->text_format = value; invalidate_text_label_content(source);
+}
+inline void set_text_label_auto_size(NativeTextLabel source, flight::types::TextAutoSize value) {
   if (source->data->auto_size == value) return;
-  source->data->auto_size = std::move(value);
-  invalidate_text_label_content(source);
+  source->data->auto_size = value;
+  auto runtime = get_text_label_runtime(source);
+  runtime->local_content_id = flight::unsigned_right_shift(runtime->local_content_id + 1, 0);
+  invalidate_text_label_bounds(source);
 }
-
-inline void set_text_label_height(flight::Ref<flight::types::TextLabel> source, double value) {
+inline void set_text_label_vertical_align(NativeTextLabel source, flight::types::TextVerticalAlign value) {
+  if (source->data->vertical_align == value) return;
+  source->data->vertical_align = value;
+  auto runtime = get_text_label_runtime(source);
+  runtime->local_content_id = flight::unsigned_right_shift(runtime->local_content_id + 1, 0);
+}
+inline void set_text_label_height(NativeTextLabel source, double value) {
   if (source->data->height == value) return;
   source->data->height = value;
-  invalidate_text_label_content(source);
+  auto runtime = get_text_label_runtime(source);
+  runtime->local_content_id = flight::unsigned_right_shift(runtime->local_content_id + 1, 0);
+  invalidate_text_label_bounds(source);
 }
-
-inline void set_text_label_string(flight::Ref<flight::types::TextLabel> source,
-                                  flight::String value) {
-  if (source->data->text == value) return;
-  source->data->text = std::move(value);
-  invalidate_text_label_content(source);
-}
-
-inline void set_text_label_format(flight::Ref<flight::types::TextLabel> source,
-                                  flight::Ref<flight::types::TextFormat> value) {
-  if (source->data->text_format == value) return;
-  source->data->text_format = std::move(value);
-  invalidate_text_label_content(source);
-}
-
-inline void set_text_label_vertical_align(
-    flight::Ref<flight::types::TextLabel> source,
-    flight::types::TextVerticalAlign value) {
-  if (source->data->vertical_align == value) return;
-  source->data->vertical_align = std::move(value);
-  invalidate_text_label_content(source);
-}
-
-inline void set_text_label_width(flight::Ref<flight::types::TextLabel> source, double value) {
+inline void set_text_label_width(NativeTextLabel source, double value) {
   if (source->data->width == value) return;
   source->data->width = value;
-  invalidate_text_label_content(source);
+  auto runtime = get_text_label_runtime(source);
+  runtime->local_content_id = flight::unsigned_right_shift(runtime->local_content_id + 1, 0);
+  invalidate_text_label_bounds(source);
 }
-
 } // namespace flight::text

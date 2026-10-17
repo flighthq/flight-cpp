@@ -1,3 +1,4 @@
+#include <flight/text/text_label.hpp>
 #include <flight/render/render_proxy.hpp>
 #include <flight/render/renderer.hpp>
 #include <flight/render_gl/gl_render_state.hpp>
@@ -125,6 +126,63 @@ int main() {
     flight::render::dispose_scene_2d_render(state, root);
     require(destroyed == 1 && runtime->render_proxy_sources.empty() &&
                 !runtime->render_proxy_map.get(child), "subtree disposal lost data teardown or left proxy membership");
+    // The label, its graph view, the base trait and text layout share one runtime.
+    auto format = flight::make_ref<flight::types::TextFormat>();
+    format->size = 10;
+    auto options = flight::make_structural_ref<flight::RowWritable<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::TextLabelData>>>>>(
+        flight::row_field<RowKey<"text">>(flight::String("ab")),
+        flight::row_field<RowKey<"width">>(80.0),
+        flight::row_field<RowKey<"textFormat">>(format));
+    auto data_options = flight::text::TextLabelDataOptions{flight::text::TextLabelDataOptions::value_type(options)};
+    auto data = flight::text::create_text_label_data(data_options);
+    require(data->text == flight::String("ab") && data->width == 80 && data->height == 100 && data->text_format == format,
+            "TextLabel data options/defaults or format reference were lost");
+    auto label_options = flight::make_structural_ref<flight::RowWritable<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::TextLabel>>>>>(
+        flight::row_field<RowKey<"data">>(data), flight::row_field<RowKey<"x">>(12.0));
+    auto label = flight::text::create_text_label(flight::text::TextLabelOptions{flight::text::TextLabelOptions::value_type(label_options)});
+    auto label_view = flight::node::native_node_2d(label);
+    auto label_runtime = flight::text::get_text_label_runtime(label);
+    require(label->data != data && label->data->text_format == format && label->x == 12 && label->scale_x == 1 &&
+                flight::node::native_node_2d_runtime(label_view) == label_runtime &&
+                flight::scene2d::get_node_2d_runtime(label_view) == label_runtime,
+            "TextLabel construction replaced its original runtime or ignored its options");
+    flight::row_set<RowKey<"x">>(label_view, 19.0);
+    flight::node::invalidate_node_local_transform(label_view);
+    require(label->x == 19 && label_runtime->local_transform_id == 1, "TextLabel graph view stopped aliasing live trait cells");
+    const auto old_measure = flight::textlayout::get_text_layout_measure_provider();
+    flight::textlayout::set_text_layout_measure_provider(flight::types::TextMeasureFunction(
+        [](auto text, auto) { return static_cast<double>(text.length()) * 5; }));
+    auto layout = flight::text::get_text_layout(label).value();
+    require(layout->text_width == 10 && flight::text::get_text_layout(label) == layout &&
+                label_runtime->text_layout_using_content_id == label_runtime->local_content_id,
+            "TextLabel layout was not cached on its actual runtime");
+    const auto content_id = label_runtime->local_content_id, bounds_id = label_runtime->local_bounds_id;
+    flight::text::set_text_label_string(label, flight::String("ab"));
+    flight::text::append_text_label_string(label, flight::String(""));
+    require(label_runtime->local_content_id == content_id, "TextLabel equal string/empty append invalidated content");
+    flight::text::set_text_label_format(label, format);
+    require(label_runtime->local_content_id == content_id + 1 && label_runtime->local_bounds_id == bounds_id,
+            "TextLabel same-reference format replacement must invalidate fixed-box content only");
+    flight::text::set_text_label_vertical_align(label, flight::String("bottom"));
+    require(label_runtime->local_bounds_id == bounds_id, "TextLabel fixed-box alignment invalidated bounds");
+    auto rectangle = flight::make_ref<flight::types::Rectangle>();
+    flight::text::compute_text_label_local_bounds_rectangle(rectangle, label);
+    require(rectangle->x == 0 && rectangle->y == 0 && rectangle->width == 80 && rectangle->height == 100,
+            "TextLabel fixed field bounds changed with alignment");
+    flight::text::set_text_label_auto_size(label, flight::String("left"));
+    const auto auto_bounds = label_runtime->local_bounds_id;
+    flight::text::append_text_label_string(label, flight::String("c"));
+    require(label_runtime->local_bounds_id == auto_bounds + 1, "auto-sized TextLabel content did not invalidate bounds");
+    flight::text::compute_text_label_local_bounds_rectangle(rectangle, label);
+    require(rectangle->width == 19 && rectangle->x == 0 && flight::text::get_text_layout(label) == layout,
+            "TextLabel auto bounds or retained layout result owner changed");
+    int stale = 0;
+    flight::text::set_text_label_guard(std::function<void(flight::String, flight::String)>([&](auto, auto) { ++stale; }));
+    label->data->text = flight::String("uninvalidated");
+    flight::text::ensure_text_layout(label);
+    require(stale == 1, "TextLabel stale-string guard did not observe direct mutation");
+    flight::text::set_text_label_guard(std::nullopt);
+    flight::textlayout::set_text_layout_measure_provider(old_measure);
     return 0;
   } catch (const std::exception& error) {
     std::cerr << error.what() << '\n';

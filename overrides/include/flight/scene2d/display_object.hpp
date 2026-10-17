@@ -148,7 +148,7 @@ inline flight::types::DisplayObject create_display_object(
 }
 
 inline Node2DRuntimeOwner get_node_2d_runtime(const Node2D& source) {
-  return flight::row_get<Node2DRuntimeOwner>(source, flight::types::entity_runtime_key);
+  return flight::node::native_node_2d_runtime(source);
 }
 
 inline Node2DRuntimeOwner get_display_object_runtime(
