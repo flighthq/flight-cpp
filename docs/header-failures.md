@@ -71,7 +71,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 42 | `call-has-no-matching-9ebeb95c` | 4 | ANIM, GL | compiler | the emitted call to `get_transform_2d_runtime` matches no declared overload |
 | 43 | `call-has-no-matching-c3aea71c` | 4 | 2D, GL | compiler | the emitted call to `structural_ref_cast` matches no declared overload |
 | 44 | `no-viable-conversion-5903ce63` | 4 | 3D, GL | override re-derivation (fixed) | shading modifier callbacks and registrations now match the patched `ReadonlyModifierValue` / `ModifierDefinitionValue` domains; G2: 4/4 pass |
-| 45 | `no-viable-conversion-e1a24bd1` | 4 | 2D | compiler | a value is passed where its declared type cannot receive it |
+| 45 | `no-viable-conversion-e1a24bd1` | 4 | 2D | compiler | G2: recorded 0/4 retained; Rive numeric diagnostic Record needs existing readonly value projection; docs-only, no rerun |
 | 46 | `other-2aef05a3` | 6 | ANIM | [compiler request](compiler-requests/interface-heritage-widening.md) | shadow-effect conditional branches cannot widen their independent concrete owners into the declared Effect array element |
 | 47 | `other-43523429` | 4 | ANIM | [compiler request](compiler-requests/heritage-argument-generic-deduction.md) | heritage-based Node2D type arguments are not substituted at addNodeChild, leaving a free Traits identifier |
 | 48 | `other-4e22e4de` | 4 | 2D | compiler | JSON.parse assertion casts JsonValue to the Aseprite document-owner variant *(existing request extended)* |
@@ -1111,13 +1111,33 @@ no cast). The dead structural-view helper is removed.
 Checks at `-j1` with Clang 22.1.8: **4/4 pass**; `overrides:check` 228/228 still match their generated
 sources. The override remains `complete` and its `derivedFrom` is unchanged.
 
-### 45. `no-viable-conversion-e1a24bd1` — 4 header(s)
+### 45. `no-viable-conversion-e1a24bd1` — 4 header(s), existing request linked
 
-- cause: a value is passed where its declared type cannot receive it
+- cause: existing optional numeric detail Record cannot enter optional diagnostic-value Record storage
 - lanes: 2D
-- fix route: compiler
-- first failure at: `flight/scene2d_formats/rive_document.hpp:133`
-- example: `no viable conversion from 'optional<Record<[...], double>>' to 'optional<Record<[...], variant<bool, double, String>>>'`
+- fix route: [existing Record projection request](compiler-requests/contextual-record-value-carrier-projection.md#g2-rive-rejection-details-widen-numeric-cells-into-diagnostic-values)
+- recorded first failure at: `flight/scene2d_formats/rive_document.hpp:133`
+- example: `optional<Record<String,double>> -> optional<Record<String,variant<bool,double,String>>>`
+
+Recorded **0/4** remains for Rive document/census/requirements/scene headers. This is a docs/source/
+carrier audit; no C++ changed and no native header/parser check is rerun. Source reportRiveReject
+forwards Readonly<Record<string,number>> to the collector's wider readonly value domain; the collector
+retains the same detail in ImportDiagnostic. Preserve Record owner/keys/order/aliasing and optional
+absence through a readonly value projection, or choose the correct carrier at a proven fresh allocation.
+An implicit copy/coercion, empty detail or dropped collector changes that contract.
+
+The later bare detail literals at280/295 have the separate
+[optional Record construction request](compiler-requests/optional-record-literal-not-materialized.md);
+these are inspected, not measured next errors. All parser functions emit; a missing-function declaration
+cannot repair the value conversion. RiveDocument/core/property and scene/context owners are already
+represented and are distinct from the diagnostic detail's Record carrier.
+
+Preserve exact byte view/header/table widths and version rejection, built-in width precedence,
+ordered property stream/LEB128/little-endian values/string-byte behavior, unknown-width versus overflow
+null/diagnostics, valid empty document versus failure and original graph/registry/context consumers.
+No fake parser/document/empty success, copied Record/context/owner or narrowed input is supplied.
+Only this entry, owned root/four compact rows and one existing request appendix change; foreign raw/
+semantic products/prose, repairs/manifests, source/runtime/C++ and historical/G1 totals are preserved.
 
 ### 46. `other-2aef05a3` — 6 current header(s), 4 in G1
 
