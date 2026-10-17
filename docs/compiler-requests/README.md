@@ -583,3 +583,7 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 
 - [Readonly video helper carriers](video-readonly-helper-carriers.md).
 - [Video frame advance asserted source and undefined callback argument](video-advance-asserted-host-source.md).
+- [An object literal passed to an `optional<Record<...>>` parameter is emitted as a bare braced pair list](optional-record-literal-not-materialized.md) —
+  16 headers across scene2d-formats, scene3d-formats, skeleton2d-formats and swf (cause cluster
+  `other-40da43f7`); the Record's contents are materialized but the Record itself is not named inside the
+  optional. No patch is carried.
