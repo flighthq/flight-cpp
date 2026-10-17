@@ -41,7 +41,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 12 | `call-has-no-matching-d6950545` | 12 | 2D, CORE | compiler | the emitted call to `get_node_child_count` matches no declared overload |
 | 13 | `no-viable-conversion-9c3803c5` | 9 | 2D, WGPU | compiler | a value is passed where its declared type cannot receive it |
 | 14 | `no-viable-conversion-dfea2d92` | 9 | 3D | compiler | a value is passed where its declared type cannot receive it |
-| 15 | `variant-cast-ccfedad4` | 9 | 3D | compiler | a functional-style cast is applied to a variant the target type cannot take |
+| 15 | `variant-cast-ccfedad4` | 9 | 3D | compiler | a retained readonly program row is reconstructed through a writable row before a readonly draw helper *(existing request extended)* |
 | 16 | `call-has-no-matching-b569e92e` | 8 | 3D, ANIM | compiler | the emitted call to `init_joint_base` matches no declared overload |
 | 17 | `undeclared-identifier-294e632e` | 8 | ANIM | runtime | the emitted code names `apply_swf_authored_bounds`, which nothing declares |
 | 18 | `undeclared-identifier-3e3cccce` | 8 | GL | runtime | the emitted code names `blit_offset_shaders`, which nothing declares |
@@ -438,13 +438,29 @@ their replacement failure clusters changed here; `previousCluster` preserves the
 - first failure at: `flight/scene3d_gl/gl_pbr_extension_registry.hpp:64`
 - example: `no viable conversion from '(lambda at /home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/fbd4b072-2bb9-4e1f-a50b-5b91857e85fc/repo/overrides/include/flight/scene3d_gl/gl_pbr_extension_registry.hpp:64:24)' to 'function<bool (optional<Texture>)>' >')`
 
-### 15. `variant-cast-ccfedad4` — 9 header(s)
+### 15. `variant-cast-ccfedad4` — 9 header(s), still failing
 
-- cause: a functional-style cast is applied to a variant the target type cannot take
+- cause: the native readonly active-program row is reconstructed through a writable row before a readonly draw-helper call
 - lanes: 3D
-- fix route: compiler
+- fix route: compiler; native storage and consumer emission must agree on the structural carrier
 - first failure at: `flight/scene3d_gl/gl_depth_mesh_material_renderer.hpp:66`
 - example: `no matching conversion for functional-style cast from 'StructuralRef<RowReadonly<RowOf<shared_ptr<GlMeshProgram>>>>' to 'StructuralRef<RowWritable<RowOf<Ref<GlMeshProgram>>>>'`
+- existing request extended: [guarded readonly optional helper call](compiler-requests/guarded-readonly-optional-helper-call.md)
+
+The effective `types/gl_scene_3d_runtime.hpp` override retains `active_mesh_program` as an optional
+readonly structural view of the concrete program allocation. The pinned source and generated type
+header instead name `GlMeshProgram | null` and an optional nominal reference. The nine generated
+renderer callers read that slot once, guard absence, and try to form a writable row from its actual
+readonly payload before passing it to the already-readonly `draw_gl_mesh_subset` parameter.
+This is a carrier disagreement at the native handoff, not a variant cast.
+
+The runtime's readonly-to-writable rejection is correct. The helper should receive the existing readonly
+program owner directly once storage and emission agree. No runtime conversion, source rewrite,
+generated body, override or cache behavior changed. The related request already existed and was
+extended with the actual storage provenance and all nine sites rather than duplicated.
+
+**G1 status retained: 0/9 pass, 9 fail.** No C++ recompile was run because code did not change, per
+G2's scoped-only-when-changed rule. Only these owned rows gained request links and cast locations.
 
 ### 16. `call-has-no-matching-b569e92e` — 8 header(s)
 
