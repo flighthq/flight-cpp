@@ -9069,6 +9069,19 @@
       "expires": "when countAsciiStlFacets emits (its exact NOT GENERATED marker disappears) or its retained call disappears; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "scene3d-formats-declare-refused-awd2-parse-state",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/scene3d_formats/awd2_block_dispatch.hpp",
+      "symbol": "initialize_awd2_parse_state",
+      "refusedFunction": "initializeAwd2ParseState",
+      "declaration": "void initialize_awd2_parse_state(flight::types::EntityConstruction<flight::Ref<flight::types::Awd2ParseState>> out, flight::Ref<flight::types::Scene3DDocument> document, flight::Uint8Array source, flight::DataView view, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics);",
+      "sourceDeclaration": "packages/scene3d-formats/src/awd2BlockDispatch.ts:44 -- initializeAwd2ParseState(out: EntityConstruction<Awd2ParseState>, document: Scene3DDocument, source: Uint8Array, view: DataView, diagnostics: ImportDiagnostic[] | undefined): void; retained createAwd2ParseState calls it with exactly those emitted carriers.",
+      "diagnostic": "use of undeclared identifier 'initialize_awd2_parse_state'",
+      "defect": "The exact NOT GENERATED marker, the same-header retained createAwd2ParseState call and the absent definition agree. The signature is the five carriers that call already constructs. The body is refused because Object.assign has no lowering onto this entity target, so this repair declares only the missing boundary: it supplies no parser, no parse state, no map or array owner and no field assignment, and the refused initializer itself stays refused. An unused header can link; calling the retained factory still fails to link on initialize_awd2_parse_state. Body evidence remains in object-assign-onto-structural-record.md; retained-call emission remains in retained-declaration-calls-omitted-callee.md.",
+      "expectedWhen": "always",
+      "expires": "when initializeAwd2ParseState emits (its exact NOT GENERATED marker disappears) or its retained call disappears; sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "video-declare-refused-url-loader",
       "kind": "declare-refused-function",
       "appliesTo": "flight/video/video_resource_from.hpp",

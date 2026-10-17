@@ -806,3 +806,18 @@ No declaration/body/registry/source change is carried, and the three production 
 their original diagnostics and prior date provenance. Faithful body emission or a coherent partial boundary
 still requires the caller construction and full options semantics; supplying a default formatter or a
 non-optional overload would not close this request.
+
+## G2 AWD2 parse state: declaration repaired, initializer still owed
+
+`@flighthq/scene3d-formats` `awd2BlockDispatch.ts` at flight `a627849`: `initializeAwd2ParseState` is
+refused because `Object.assign` has no lowering onto the parse-state entity (see
+[object assign onto structural record](object-assign-onto-structural-record.md)), while retained
+`createAwd2ParseState` calls it at `awd2_block_dispatch.hpp:86`. The three witnesses hold — exact marker,
+same-header retained call, no definition — and carried repair
+`scene3d-formats-declare-refused-awd2-parse-state` declares the five carriers the call constructs.
+
+Measured at `-j1` with Clang 22.1.8: the unused header compiles, links and runs; a caller compiles and
+fails to link on exactly
+`flight::scene3d_formats::initialize_awd2_parse_state(...)`; `awd2_block_dispatch.hpp` passes and
+`_internal_index.hpp` moves to the `create_texture` carrier family. No parse state, map, owner or field
+assignment is supplied.

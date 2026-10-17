@@ -81,6 +81,8 @@ inline flight::types::Awd2BlockDispatch expand_awd2_block_dispatch(flight::Array
 // cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/awd2BlockDispatch.ts:
 // Object.assign requires one closed callable-object target and an exact compatible object literal source
 
+void initialize_awd2_parse_state(flight::types::EntityConstruction<flight::Ref<flight::types::Awd2ParseState>> out, flight::Ref<flight::types::Scene3DDocument> document, flight::Uint8Array source, flight::DataView view, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics);
+
 inline flight::Ref<flight::types::Awd2ParseState> create_awd2_parse_state(flight::Ref<flight::types::Scene3DDocument> document, flight::Uint8Array source, flight::DataView view, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics) {
   flight::types::EntityConstruction<flight::Ref<flight::types::Awd2ParseState>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Awd2ParseState>>();
   initialize_awd2_parse_state(out, document, source, view, diagnostics);

@@ -31,7 +31,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 2 | `missing-member-b1a6d5cf` | 38 | 2D | compiler | scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined *(request filed)* |
 | 3 | `in-operator-not-lowered-b1eae4af` | 32 | 2D, 3D, GL, PLAT, WGPU | compiler | the TypeScript `in` operator is emitted verbatim; G2 particle3D joins this existing cause *(existing request extended)* |
 | 4 | `undeclared-identifier-993e82f1` | 29 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(request filed; builder4/G2)* |
-| 5 | `call-has-no-matching-3882b3e9` | 27 | 2D, 3D, TEXT | compiler | bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier *(request filed; builder4/G2)* |
+| 5 | `call-has-no-matching-3882b3e9` | 28 | 2D, 3D, TEXT | compiler | bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier *(request filed; builder4/G2)* |
 | 6 | `other-52e846a6` | 18 | ANIM | compiler | a value_type is combined with a three-alternative variant where the declared slot expects one alternative |
 | 7 | `call-has-no-matching-47410fe2` | 16 | 2D, 3D | runtime (fixed) | Number is now a callable conversion object; G2 recheck: 2 pass, 14 fail at later compiler diagnostics |
 | 8 | `other-40da43f7` | 16 | 2D, 3D, ANIM | compiler | an optional<Record<...>> is initialised from a shape that is not its declared storage |
@@ -116,7 +116,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 87 | `undeclared-identifier-1048386b` | 2 | 3D | compiler | refused MD5 material handler retained by global family; exact declaration fails unused-header positive link *(existing requests, G2: 0/2 retained)* |
 | 88 | `undeclared-identifier-20fa691d` | 2 | 2D | compiler | refused raster draw referenced by retained renderer; exact declaration fails native/generic callback carrier conversion *(existing requests)* |
 | 89 | `undeclared-identifier-225478b5` | 2 | 2D | compiler | refused bitmap-text submit callback lacks a declaration; exact declaration still exposes incompatible renderer callback carriers *(existing requests)* |
-| 90 | `undeclared-identifier-3e98002c` | 2 | 3D | runtime | the emitted code names `initialize_awd2_parse_state`, which nothing declares |
+| 90 | `undeclared-identifier-3e98002c` | 2 | 3D | declaration repair (applied) | omitted AWD2 parse-state initializer declared; G2: 1 pass, 1 moves to the create_texture carrier family; initializer remains unlinkable |
 | 91 | `undeclared-identifier-644a9b33` | 2 | 2D | runtime (partial override) | the emitted code names `clip_programs`, which nothing declares *(G2: 1 pass, 1 to `undeclared-identifier-befaa2d6`)* |
 | 92 | `undeclared-identifier-7ce7bd18` | 2 | 3D | compiler | refused MD2 skin handler retained by global family; exact declaration fails unused-header positive link *(existing requests, G2: 0/2 retained)* |
 | 93 | `undeclared-identifier-86212434` | 2 | GL | compiler *(existing request)* | the emitter refuses the `glSsaoEffectRunner` binding (and its callee `applySsaoEffectToGl`) but still emits the registration call that passes the runner |
@@ -376,7 +376,7 @@ These non-generic callers still convert an argument to a target containing the c
 no runtime alias or replacement owner was added. The five source-site files are unchanged across the
 clean delivered-base update after the check. G1 sweep totals and unowned rows remain unchanged.
 
-### 5. `call-has-no-matching-3882b3e9` — 27 header(s) *(builder4/G2)*
+### 5. `call-has-no-matching-3882b3e9` — 28 header(s) *(builder4/G2)*
 
 - cause: bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier
 - subject: `create_texture`
@@ -1950,14 +1950,37 @@ counts. No fake draw, copied owner, narrowed input, callback adapter or source/r
 supplied. Only the two owned rows/cluster, this report slice and existing requests changed; G1 totals
 and foreign products are retained. No generation or global/native baseline rerun was needed.
 
-### 90. `undeclared-identifier-3e98002c` — 2 header(s)
+### 90. `undeclared-identifier-3e98002c` — 2 header(s), declaration repaired
 
-- cause: the emitted code names `initialize_awd2_parse_state`, which nothing declares
-- subject: `initialize_awd2_parse_state`
+- original cause: retained `createAwd2ParseState` calls `initializeAwd2ParseState` after its body was
+  refused at the `Object.assign` boundary
 - lanes: 3D
-- fix route: runtime
-- first failure at: `flight/scene3d_formats/awd2_block_dispatch.hpp:86`
-- example: `use of undeclared identifier 'initialize_awd2_parse_state'`
+- fix route: declaration-only emission repair, with the initializer debt still open
+- compiler request: [object assign onto structural record](compiler-requests/object-assign-onto-structural-record.md)
+
+The exact refusal marker, the same-header retained call and the absence of any definition justify
+`scene3d-formats-declare-refused-awd2-parse-state`. It declares the five carriers that call constructs:
+the `EntityConstruction` of the parse-state reference, the `Scene3DDocument` reference, `Uint8Array`,
+`DataView` and the optional diagnostics array. No parse state, map, array, owner or field assignment is
+supplied, and the refused initializer itself stays refused.
+
+Written by **normal package generation** at the exact pins (`flight` a627849 / `flight-compiler`
+806d257), and the applied text matches the repair engine's output byte for byte.
+
+Checks at `-j1` with Clang 22.1.8:
+
+- **Unused header positive:** including `awd2_block_dispatch.hpp` with an empty `main` compiles, links
+  and runs.
+- **Exact negative link:** a translation unit that calls `initialize_awd2_parse_state` with those
+  carriers compiles to an object and then fails to link on exactly
+  `flight::scene3d_formats::initialize_awd2_parse_state(StructuralRef<RowWritable<RowOf<shared_ptr<Awd2ParseState>>>>, shared_ptr<Scene3DDocument>, TypedArray<unsigned char>, DataView, optional<Array<shared_ptr<ImportDiagnostic>>>>)`.
+- **Scoped headers:** `awd2_block_dispatch.hpp` passes; `scene3d_formats/_internal_index.hpp` now stops
+  on the existing `create_texture` carrier family at `shared.hpp:100`.
+
+Pre-existing inventory drift was preserved rather than swept: the generation check also reports
+`generated/README.md`, `best-effort.json` and `initialization.json` differing for unrelated glTF-skin
+module entries and package counts that this repair does not touch; those files were left at their
+committed content.
 
 ### 91. `undeclared-identifier-644a9b33` — 2 header(s)
 

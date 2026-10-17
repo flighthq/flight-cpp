@@ -3388,6 +3388,12 @@
         "flight/video/video_resource_from.hpp"
       ],
       "id": "video-declare-refused-url-loader"
+    },
+    {
+      "files": [
+        "flight/scene3d_formats/awd2_block_dispatch.hpp"
+      ],
+      "id": "scene3d-formats-declare-refused-awd2-parse-state"
     }
   ],
   "sourcePatches": [
