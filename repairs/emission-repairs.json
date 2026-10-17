@@ -9274,6 +9274,19 @@
       "defect": "The emitter refuses the transform assertion from the open shape-item union to Readonly<LottieTransform>, but retains lottieShapeLayerHandler calling the absent helper with these exact emitted carriers. Declaration only; no group walk, shape, modifier, painter, animation/parser or drawing behavior is supplied. The full unknown/record arm and source owner identity remain required. Underlying readonly retained-owner assertion: docs/compiler-requests/readonly-interface-assertion-retained-owner.md.",
       "expectedWhen": "always",
       "expires": "when appendLottieShapeItems emits or its dependent caller is coherently refused; exact NOT GENERATED marker/live direct-call/no-definition witnesses then stop matching, and sdk:check rejects the obsolete repair."
+    },
+    {
+      "id": "interaction-declare-refused-sprite-alpha-hit",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/interaction/register_sprite_hit_test.hpp",
+      "symbol": "hit_test_sprite_alpha",
+      "refusedFunction": "hitTestSpriteAlpha",
+      "declaration": "double hit_test_sprite_alpha(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostBitmapReadbackCapability>>>> host_bitmap_readback, flight::types::NodeAny source, double x, double y, double alpha_threshold);",
+      "sourceDeclaration": "packages/interaction/src/registerSpriteHitTest.ts -- hitTestSpriteAlpha(hostBitmapReadback: Readonly<HostBitmapReadbackCapability>, source: NodeAny, x: number, y: number, alphaThreshold: number): number; retained registration lambda captures the exact readonly host row/defaulted double threshold and calls with NodeAny,double,double",
+      "diagnostic": "use of undeclared identifier 'hit_test_sprite_alpha'",
+      "defect": "The exact NOT GENERATED marker, live direct same-header lambda call and absent definition agree. This adds only the retained call carriers and double result; no callback witness extension is needed. The body remains refused at NodeAny-to-Sprite ownership, and bitmapForImage independently refuses TextureSource-to-Bitmap recovery. No bounds, alpha sample, bitmap readback/cache/provider, owner copy, fallback hit or narrowed input is supplied. Explicit registration remains an unresolved link on this exact helper. Existing owner request: docs/compiler-requests/readonly-callback-derived-owner-recovery.md; retained caller request: docs/compiler-requests/retained-declaration-calls-omitted-callee.md.",
+      "expectedWhen": "always",
+      "expires": "when hitTestSpriteAlpha emits or its retained direct call disappears; sdk:check fails if this repair matches no header."
     }
   ]
 }
