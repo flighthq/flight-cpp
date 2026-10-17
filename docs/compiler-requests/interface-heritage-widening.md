@@ -119,6 +119,36 @@ Copying the `binding` and `uid` prefix into a second object, or storing `handle`
 break the source's single runtime identity and live-cell semantics. This site therefore needs the same
 declared-interface heritage rule: one owner with the inherited `EntityRuntime` cells and the additional
 `handle` cell. The surface package carries that exact shape locally until generated type heritage does.
+
+## scene3d-formats glTF PBR extension handlers (measured 2026-10-17, not carried)
+
+`attachGltfPbrExtension(document: Scene3DDocument, index: number, extension: PbrExtension): boolean`
+is refused at flight `a627849` (`cpp-structural-assertion-owner-unproven`, its
+`existing as unknown as ExtendedPbrMaterial`; see
+[assertion to undeclared row member](assertion-to-undeclared-row-member.md)), so
+`flight/scene3d_formats/gltf_material_extension.hpp` carries the NOT GENERATED marker while five
+handlers retain calls to it (`gltf_anisotropy.hpp:121`, `gltf_clearcoat.hpp:121`,
+`gltf_iridescence.hpp:127`, `gltf_sheen.hpp:124`, `gltf_specular.hpp:124`), and
+`register_gltf_material_extension_handlers.hpp` fails through their includes. All three witnesses for
+a `declare-refused-function` repair are present -- the marker, the retained calls, and no definition
+anywhere in the tree -- but the declaration cannot be written: the emitter's own parameter is
+`flight::Ref<flight::types::PbrExtension>`, while each call passes its concrete extension
+(`flight::Ref<flight::types::AnisotropyPbrExtension>` and the five siblings). Every source
+`XPbrExtension extends PbrExtension`; every emitted struct repeats the base fields and inherits only
+`flight::ReferenceEnabled`, so the widening has no C++ path:
+
+```
+gltf_anisotropy.hpp:121:117: error: no viable conversion from 'Ref<flight::types::AnisotropyPbrExtension>' to 'Ref<flight::types::PbrExtension>'
+```
+
+Measured with a scratch declaration at the refused function's own signature, not inferred. A template
+spelling `Ref<Extension>` does not rescue it either: `Ref` is a dependent alias, so deduction fails and
+the call reports `no matching function`. Real heritage is what makes the declaration-only repair
+applicable here. It is also not sufficient on its own: every one of the six headers still fails after
+the declaration, on a second family the declaration cannot address -- the source's `Texture | null`
+fields are emitted as six-arm nullish carriers that do not narrow to the declared
+`optional<variant<...>>` row field.
+
 ## physics2d joint factories (measured 2026-10-14, not carried)
 
 `@flighthq/physics2d` `jointFactories.ts` builds each concrete joint with
