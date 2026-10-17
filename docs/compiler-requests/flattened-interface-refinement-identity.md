@@ -313,3 +313,67 @@ Carried: `interaction-declare-refused-quad-batch-instance-index` declares
 narrowed node/domain or runtime provider is supplied. The unused header compiles, links and runs; a
 caller that registers the hit test fails to link on the resolver. The body stays owed to this request:
 it needs identity-preserving refined `QuadBatch` and `Node2D` views, not a copied owner.
+
+## G2 Scene3D animation needs the original node's optional morph capability
+
+At Flight `a627849` / compiler `806d257`, no-viable-conversion-68fff449 contains one
+header, scene3d/scene_animation.hpp:64. It retains **0 pass / 1 fail**, with no unchanged
+C++ rerun. The existing scene3d-exact-owner-boundaries source patch replaced the original
+`(target.node as Mesh).morph` read with a local SceneAnimationMorphProbe annotation. That
+probe has readonly enabled and optional Mesh['morph']; its generated owner is independent:
+
+```cpp
+struct SceneAnimationMorphProbe : flight::ReferenceEnabled {
+  bool enabled;
+  std::variant<flight::Ref<flight::types::MeshMorph>, flight::Null, flight::Undefined> morph;
+};
+// target.node is Ref<Node3D>, which has no morph member:
+flight::Ref<SceneAnimationMorphProbe> mesh = target->node; // no viable conversion
+```
+
+A source annotation supplies no native object or owner relationship. A nullable/readonly
+respelling cannot restore the morph cell after base Node3D storage lost the concrete owner.
+This is the existing identity-preserving refinement family, specifically an optional-capability
+view between unrelated emitted owners. Declared Mesh-to-Node3D heritage alone is insufficient:
+it does not create Node3D-to-probe inheritance or prove which concrete owner supplied the slot.
+Retain the concrete node through target construction/storage and provide a checked view of
+that same owner's optional morph, preserving absent and null. No pointer reinterpretation,
+probe/node copy, detached weight owner or universal no-morph result is faithful. Requiring
+Mesh geometry/kind or enabled/visible would strengthen the source's actual capability check.
+
+The original Scene3DAnimationTarget carries node:Node3D and four declared paths. AnimationChannel
+keeps targetRef:unknown, so TRS must still accept ordinary Node3Ds; the Weights branch may use
+the same object with a morph capability and skips a null/absent morph before sampling. Preserve
+the actual MeshMorph and its mutable Float32 weights array, target order and channel order.
+Sample straight into those live weights with the unchanged channel.track/time and component
+width, then continue: no TRS scratch write, transform invalidation, target/weight copy, fixed
+four-component weights sink, clamping, normalization or deformer invocation is added. Geometry
+morphing remains the later updateMeshMorph operation; applying the clip only updates its sink.
+
+Non-Weights channels sample into the existing shared four-number scratch array, then mutate
+the same Vector3 position for Translation, Vector3 scale for Scale, or Quaternion rotation
+in the source fallback branch, and invalidateNodeLocalTransform once afterward. Preserve
+numeric time/track domains, source sampling/easing/errors, vector/quaternion identities,
+channel overwrite order and revision effects. Do not replace the node, allocate a new sink,
+zero/snapshot the scratch differently, silently drop a transform path or return fake success.
+Existing source tests describe translation/scale/quaternion, variable-width live morph weights,
+no-morph skips and null-target skips; they are requirements, not native animation evidence.
+
+Two later obligations are visible by inspection, not new measured first errors. First, the
+existing source patch removes '|null' from the target assertion; the emitter now calls
+Any::object_if<Scene3DAnimationTarget> and throws on mismatch BEFORE the retained null/typeof/
+missing-node skip guard, which has become constant false. A source structural target object
+or a null/non-object/missing-node value must reach its original shape check without requiring
+exact nominal allocation first. The [readonly erased-recovery request](erased-value-readonly-row-recovery.md)
+starts with a proven exact owner and does not by itself justify this pre-guard throw. Preserve
+exact source checks and their order rather than strengthening them into a nominal Mesh gate.
+Second, the TRS invalidation call spells NodeOf<Traits> with Traits undetermined, the existing
+[heritage-aware generic deduction](heritage-argument-generic-deduction.md) family; Node3DTraits
+must be inferred without a global alias or copied node. Neither inspected issue is promoted
+to a new diagnostic or claimed solved by fixing the first owner conversion.
+
+No source patch, repair, override, runtime, generated header, manifest or owner representation
+changes in this arc. The existing broad Scene3D patch is provenance, not native owner proof.
+The one failed row/cluster and worklist132 now link this request; foreign products and historical
+sweep totals remain unchanged. No fake animation, narrowed target/path domain, copied owner,
+empty result or native TRS/morph behavior claim is carried.

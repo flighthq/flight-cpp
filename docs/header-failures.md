@@ -158,7 +158,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 129 | `no-viable-conversion-331a999f` | 1 | GL | compiler | a value is passed where its declared type cannot receive it |
 | 130 | `no-viable-conversion-4bbb9be5` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it *(builder4/E0a)* |
 | 131 | `no-viable-conversion-562151da` | 1 | WGPU | compiler | a value is passed where its declared type cannot receive it |
-| 132 | `no-viable-conversion-68fff449` | 1 | 3D | compiler | a value is passed where its declared type cannot receive it |
+| 132 | `no-viable-conversion-68fff449` | 1 | 3D | compiler | base Node3D cannot recover the independent morph probe; existing owner-refinement request linked (G2: 0/1 retained) |
 | 133 | `no-viable-conversion-7e6bb150` | 1 | WGPU | compiler | a value is passed where its declared type cannot receive it |
 | 134 | `no-viable-conversion-802e8004` | 1 | GL | compiler | a value is passed where its declared type cannot receive it |
 | 135 | `no-viable-conversion-9695423c` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
@@ -2830,13 +2830,33 @@ failed, with foreign rows/clusters and historical G1 totals unchanged.
 - first failure at: `flight/scene3d_wgpu/wgpu_environment_ibl_bake.hpp:87`
 - example: `no viable conversion from 'WgpuObject<WgpuTextureViewTag>' to 'Any'`
 
-### 132. `no-viable-conversion-68fff449` — 1 header(s)
+### 132. `no-viable-conversion-68fff449` — 1 header, retained compiler owner boundary
 
-- cause: a value is passed where its declared type cannot receive it
+- cause: Ref<Node3D> cannot become the unrelated Ref<SceneAnimationMorphProbe> carrying optional morph
 - lanes: 3D
-- fix route: compiler
-- first failure at: `flight/scene3d/scene_animation.hpp:64`
-- example: `no viable conversion from 'Ref<Node3D>' to 'Ref<SceneAnimationMorphProbe>'`
+- fix route: compiler, [existing identity-preserving refinement request](compiler-requests/flattened-interface-refinement-identity.md#g2-scene3d-animation-needs-the-original-nodes-optional-morph-capability)
+- unchanged first failure: `flight/scene3d/scene_animation.hpp:64`
+- unchanged example: `no viable conversion from 'Ref<Node3D>' to 'Ref<SceneAnimationMorphProbe>'`
+
+The existing scene3d-exact-owner-boundaries source patch names a readonly enabled/optional-morph
+probe in place of the source Mesh assertion. Its emitted owner is separate from Node3D and Mesh;
+Node3D has no morph cell. The annotation establishes no same-owner conversion. A declaration or
+runtime overload cannot recover a concrete morph that the retaining slot does not describe.
+Retain the actual node and provide a checked optional-capability view; a copied probe/node,
+unchecked cast, geometry/kind-only gate or universal missing-morph answer changes the source.
+
+The Weights path samples into the original MeshMorph Float32 weights array at the track's width,
+then continues without TRS scratch mutation/invalidation or deformer execution. Null/absent morphs
+skip; ordinary Node3Ds remain valid TRS targets. Other paths sample into the original shared
+scratch and mutate the same position/scale/quaternion cells before transform invalidation.
+Preserve source target/channel order, numeric/easing/error behavior, absence and owner identities.
+The request also records the inspected pre-guard exact-nominal target recovery/constant skip
+guard and the later NodeOf<Traits> deduction leak; those are not separately measured diagnostics.
+
+**G2: 0 pass / 1 fail retained.** C++, source/patches, owner layouts, overrides, manifests,
+refusal/count/initialization/policy products and pins are unchanged; no native or generation rerun.
+Only this compact root/row and worklist132 plus an append to the existing request change.
+No fake animation, copied owner, empty result, narrowed domain or native TRS/morph gain is claimed.
 
 ### 133. `no-viable-conversion-7e6bb150` — 1 header(s)
 
