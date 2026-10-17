@@ -1444,16 +1444,23 @@ decltype(auto) row_get(const StructuralRef<Schema>& source) {
     }
     if constexpr (detail::schema_readonly<Schema>) return std::as_const(**stored);
     else return **stored;
+  } else if constexpr (detail::schema_readonly<Schema> && detail::optional_traits<Value>::optional) {
+    // A readonly nullable member can be backed by either optional<T> or the proven present T.
+    // Project a value on every read: there is no optional<T> reference inside a bare T cell, and
+    // caching a wrapper would hide later writes through the original owner. Only the exact inner
+    // type is accepted, one optional layer at a time; this grants no write access to either cell.
+    if (auto* exact = source.shared_owner()->template named_value_if<Value>(Key::name.view())) {
+      return Value(*exact);
+    }
+    using Present = detail::optional_value_t<Value>;
+    if (auto* present = source.shared_owner()->template named_value_if<Present>(Key::name.view())) {
+      return Value(*present);
+    }
+    if (source.shared_owner()->has_named_cell(Key::name.view())) throw std::bad_cast();
+    return Value{};
   } else {
     auto* value = source.shared_owner()->template named_value<Value>(Key::name.view());
-    if (!value) {
-      if constexpr (detail::optional_traits<Value>::optional &&
-                    detail::schema_readonly<Schema>) {
-        static const Value absent{};
-        return std::as_const(absent);
-      }
-      throw std::out_of_range("required structural row property is absent");
-    }
+    if (!value) throw std::out_of_range("required structural row property is absent");
     if constexpr (detail::schema_readonly<Schema>) return std::as_const(*value);
     else return *value;
   }

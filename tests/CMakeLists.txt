@@ -201,6 +201,17 @@ if(TARGET Flight::HostSdlGl)
   add_test(NAME flight_cpp.generated_gl_registries COMMAND flight_cpp_generated_gl_registries_tests)
   flight_cpp_package_test_labels(flight_cpp.generated_gl_registries render-gl scene3d-gl types)
 
+  add_executable(flight_cpp_generated_gl_readonly_present_tests generated_gl_readonly_present_test.cpp)
+  target_include_directories(flight_cpp_generated_gl_readonly_present_tests BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include")
+  target_link_libraries(flight_cpp_generated_gl_readonly_present_tests PRIVATE Flight::Cpp Flight::SdkPreview Flight::HostSdlGl)
+  flight_cpp_set_project_warnings(flight_cpp_generated_gl_readonly_present_tests)
+  add_test(NAME flight_cpp.generated_gl_readonly_present COMMAND flight_cpp_generated_gl_readonly_present_tests)
+  flight_cpp_package_test_labels(flight_cpp.generated_gl_readonly_present render-gl scene3d-gl types)
+  if(UNIX AND NOT APPLE)
+    set_tests_properties(flight_cpp.generated_gl_readonly_present PROPERTIES
+      ENVIRONMENT "SDL_VIDEODRIVER=offscreen;LIBGL_ALWAYS_SOFTWARE=1")
+  endif()
+
   add_executable(flight_cpp_generated_effects_gl_blit_cache_tests generated_effects_gl_blit_cache_test.cpp)
   target_include_directories(flight_cpp_generated_effects_gl_blit_cache_tests BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include")
   target_link_libraries(flight_cpp_generated_effects_gl_blit_cache_tests PRIVATE Flight::Cpp Flight::SdkPreview Flight::HostSdlGl)

@@ -87,6 +87,15 @@ struct TestClipBearing final : public flight::ReferenceEnabled {
   std::optional<flight::Ref<TestClipRegion>> clip;
 };
 
+// A present reference cell viewed through a readonly nullable schema, as with a texture target's
+// framebuffer viewed through GlRenderTarget. The original concrete cell remains non-optional.
+struct TestPresentClipBearing final : public flight::ReferenceEnabled {
+  flight::Ref<TestClipRegion> clip;
+};
+struct TestNestedClipBearing final : public flight::ReferenceEnabled {
+  std::optional<std::optional<flight::Ref<TestClipRegion>>> clip;
+};
+
 // A SECOND subject widening onto the same base. The SDK's motivating case is a union -- an audio
 // reference is embedded or external -- where both alternatives declare the key the common row wants,
 // so a row over that shape has to be satisfiable by either one. The proof is computed from declared
@@ -391,7 +400,75 @@ void test_derived_carrier_view() {
 
 } // namespace
 
+void check_readonly_nullable_cells() {
+  using Clip = flight::Ref<TestClipRegion>;
+  using Key = flight::RowKey<"clip">;
+  using NullableSchema = flight::RowReadonly<flight::RowOf<flight::Ref<TestClipBearing>>>;
+  using NullableView = flight::StructuralRef<NullableSchema>;
+  using PresentView = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TestPresentClipBearing>>>>;
+  using NestedView = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TestNestedClipBearing>>>>;
+  using WritableNullable = flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<TestClipBearing>>>>;
+  static_assert(std::convertible_to<PresentView, NullableView>);
+  static_assert(!std::convertible_to<PresentView, WritableNullable>);
+  static_assert(!std::convertible_to<NullableView, WritableNullable>);
+  static_assert(std::same_as<decltype(flight::row_get<Key>(std::declval<NullableView>())), std::optional<Clip>>);
+  static_assert(std::same_as<decltype(flight::row_get<Key>(std::declval<PresentView>())), const Clip&>);
+
+  auto first = flight::make_ref<TestClipRegion>();
+  auto second = flight::make_ref<TestClipRegion>();
+  first->radius = 3.0;
+  second->radius = 7.0;
+  std::weak_ptr<TestPresentClipBearing> weak;
+  {
+    auto owner = flight::make_ref<TestPresentClipBearing>();
+    owner->clip = first;
+    weak = owner;
+    const PresentView present(owner);
+    const NullableView widened(present);
+    check(widened.identity() == present.identity() && widened.shared_owner() == present.shared_owner(),
+          "nullable read widening must retain the identical concrete owner");
+    check(flight::row_get<Key>(widened) == std::optional<Clip>{first},
+          "a present reference cell reads as an engaged optional of the identical reference");
+    auto projection = flight::row_get<Key>(widened);
+    projection.reset();
+    check(owner->clip == first, "resetting a readonly projection must not write null into the present cell");
+    owner->clip = second;
+    check(flight::row_get<Key>(widened) == std::optional<Clip>{second},
+          "nullable reads must observe updates to the original present cell");
+    owner.reset();
+    check(!weak.expired() && flight::row_get<Key>(widened).value()->radius == 7.0,
+          "the widened view must retain the owner and keep its live member readable");
+  }
+  check(weak.expired(), "nullable projection must not introduce an owner retention cycle");
+
+  auto exact_owner = flight::make_ref<TestClipBearing>();
+  const NullableView exact(exact_owner);
+  check(!flight::row_get<Key>(exact), "an empty optional cell must stay empty");
+  exact_owner->clip = Clip{};
+  const auto null_value = flight::row_get<Key>(exact);
+  check(null_value.has_value() && !null_value.value(), "an engaged null reference must stay distinct from absence");
+  exact_owner->clip = first;
+  check(flight::row_get<Key>(exact) == std::optional<Clip>{first}, "an exact optional must retain reference identity");
+  const NestedView nested(exact);
+  check(flight::row_get<Key>(nested).value() == std::optional<Clip>{first}, "nested projection lifts only one optional layer");
+  exact_owner->clip.reset();
+  const auto nested_absent = flight::row_get<Key>(nested);
+  check(nested_absent.has_value() && !nested_absent.value(), "a present empty inner optional must remain present at the outer layer");
+
+  bool exact_lookup_rejected = false;
+  try { (void)exact.shared_owner()->template named_value<Clip>("clip"); }
+  catch (const std::bad_cast&) { exact_lookup_rejected = true; }
+  check(exact_lookup_rejected, "exact erased lookup must still reject a different storage shape");
+  // Deliberately corrupt a disposable row's cell to prove this is not a permissive erased cast.
+  exact.shared_owner()->set_named_cell("clip", std::make_shared<flight::OwnedRowCell<double>>(1.0));
+  bool projection_rejected = false;
+  try { (void)flight::row_get<Key>(exact); }
+  catch (const std::bad_cast&) { projection_rejected = true; }
+  check(projection_rejected, "nullable projection must reject unrelated stored types rather than report absence");
+}
+
 int main() {
+  check_readonly_nullable_cells();
   test_derived_carrier_view();
   // A Partial<T> object literal is an option bag: its supplied field is present, its omitted field
   // is absent, and constructing it must not collide optional row storage with T's bare native

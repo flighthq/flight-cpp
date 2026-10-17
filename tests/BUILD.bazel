@@ -1175,6 +1175,14 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_gl_readonly_present_test",
+    srcs = ["generated_gl_readonly_present_test.cpp"],
+    size = "small",
+    env = {"SDL_VIDEODRIVER": "offscreen", "LIBGL_ALWAYS_SOFTWARE": "1"},
+    deps = ["//:cpp", "//:sdk_preview", "//:host_sdl_gl"],
+)
+
+cc_test(
     name = "generated_effects_gl_blit_cache_test",
     srcs = ["generated_effects_gl_blit_cache_test.cpp"],
     size = "small",

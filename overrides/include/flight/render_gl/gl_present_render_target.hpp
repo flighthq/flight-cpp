@@ -57,14 +57,14 @@ inline flight::Ref<GlFullscreenProgram> get_gl_copy_program(flight::Ref<GlRender
   return program_capture.read_binding().value();
 }
 
-inline void present_gl_render_target(flight::Ref<GlRenderState> state, flight::Ref<GlTextureRenderTarget> target, std::optional<std::optional<flight::Ref<GlRenderTarget>>> dest = std::nullopt) {
+inline void present_gl_render_target(flight::Ref<GlRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<GlTextureRenderTarget>>>> target, std::optional<std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<GlRenderTarget>>>>>> dest = std::nullopt) {
   dest = dest.value_or(std::nullopt);
-  if ((target->color_space == flight::String("linear"))) {
+  if ((flight::row_get<flight::RowKey<"colorSpace">>(target) == flight::String("linear"))) {
     draw_gl_linear_to_srgb_pass(state, target, dest.value());
     return;
   }
   draw_gl_fullscreen_pass(
-      state, get_gl_copy_program(state), flight::Array{target->texture}, dest.value(), copy_noop);
+      state, get_gl_copy_program(state), flight::Array{flight::row_get<flight::RowKey<"texture">>(target)}, dest.value(), copy_noop);
 }
 
 } // namespace flight::render_gl

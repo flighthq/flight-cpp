@@ -57,9 +57,9 @@ inline flight::Ref<GlFullscreenProgram> get_gl_linear_to_srgb_program(flight::Re
   return program_capture.read_binding().value();
 }
 
-inline void draw_gl_linear_to_srgb_pass(flight::Ref<GlRenderState> state, flight::Ref<GlTextureRenderTarget> source, std::optional<flight::Ref<GlRenderTarget>> dest) {
+inline void draw_gl_linear_to_srgb_pass(flight::Ref<GlRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<GlTextureRenderTarget>>>> source, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<GlRenderTarget>>>>> dest) {
   draw_gl_fullscreen_pass(
-      state, get_gl_linear_to_srgb_program(state), flight::Array{source->texture}, dest,
+      state, get_gl_linear_to_srgb_program(state), flight::Array{flight::row_get<flight::RowKey<"texture">>(source)}, dest,
       linear_to_srgb_noop);
 }
 
