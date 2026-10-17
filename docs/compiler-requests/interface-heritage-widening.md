@@ -452,3 +452,26 @@ here, and then the hook still needs the checked derived-owner recovery that
 stored callable takes the base and recovers the GL state it was registered for, and it must refuse
 rather than reinterpret anything else. A copy of the state, or an unchecked cast, would be wrong.
 `flight/scene2d_gl/gl_clip.hpp` (G2) fails first on this.
+
+## G2 RenderProxy2D must widen to RenderProxy at the adapter call
+
+`@flighthq/render` at flight `a627849`: `applyRenderProxyAdapter(state, source, data: RenderProxy2D)`
+calls `updateRenderProxyRenderer(state, data)` (`renderProxyAdapter.ts:14`), whose emitted parameter is
+`Ref<RenderProxy>` (`render_proxy.hpp:317`). `RenderProxy2D extends RenderProxy` in
+`@flighthq/types`, and the 2D proxy narrows `material` to `Material2D | null` and `source` to `Node2D`.
+The emitted structs are independent flattened owners, so the same object cannot enter the base typed
+slot:
+
+```
+no viable conversion from 'Ref<flight::types::RenderProxy2D>' to 'Ref<flight::types::RenderProxy>'
+  at flight/render/render_proxy_adapter.hpp:54
+```
+
+Six headers fail on that one call: `render/render_proxy_adapter.hpp` and `render/render_cache.hpp`
+directly, and `scene2d_canvas/canvas_cache.hpp`, `scene2d_dom/dom_cache.hpp`,
+`scene2d_dom/scene_2d_dom_pipeline.hpp`, `scene2d_gl/gl_cache.hpp` through their render dependencies.
+
+No workaround is carried. A cast, a copied base owner or a wrapper adapter would split the existing
+proxy's identity or narrow the domain; the faithful lowering is the declared heritage on the emitted
+structs (`struct RenderProxy2D : RenderProxy`), which keeps the one object and its control block and
+lets the base-typed slot receive it unchanged.

@@ -53,7 +53,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 24 | `invalid-operands-ec4dbe74` | 6 | CORE, GL | runtime | an operator is applied to operand types it does not accept |
 | 25 | `missing-member-237022b0` | 6 | 2D, TEXT | compiler | `create_document_refusal` lives in the wholly refused `sceneDocumentRefusal.ts`, refused for a misclassified imported Record alias *(request filed)* |
 | 26 | `missing-member-e27d26f9` | 6 | 3D | runtime | the emitted code reads a member the target does not declare (`attach_gltf_pbr_extension`) |
-| 27 | `no-viable-conversion-f02000a9` | 6 | 2D, GL | compiler | a value is passed where its declared type cannot receive it |
+| 27 | `no-viable-conversion-f02000a9` | 6 | 2D, GL | [compiler request](compiler-requests/interface-heritage-widening.md) | `RenderProxy2D` cannot widen to the `RenderProxy` parameter because the emitted owners lost their declared heritage |
 | 28 | `undeclared-identifier-6e587559` | 6 | ANIM, TEXT | runtime | `equals_markup_format` declared by repair; G2 recheck: 0 pass, 6 fail at the next refused helper `parse_markup_attributes` |
 | 29 | `undeclared-identifier-a74215ca` | 6 | 2D | compiler | a generic call's object-literal argument is built as `ShapeBoundsCommand<K>`, naming the callee's type parameter *(request filed)* |
 | 30 | `undeclared-identifier-f5e3440f` | 6 | 3D, CORE | [compiler request](compiler-requests/retained-declaration-calls-omitted-callee.md) | createResourceLoader calls initializeResourceLoader after the compiler refuses the initializer |
@@ -817,11 +817,25 @@ owner design was added.
 
 ### 27. `no-viable-conversion-f02000a9` — 6 header(s)
 
-- cause: a value is passed where its declared type cannot receive it
+- cause: `RenderProxy2D extends RenderProxy` in the source, but the emitted owners are independent, so
+  `Ref<RenderProxy2D>` does not widen to the `Ref<RenderProxy>` parameter
 - lanes: 2D, GL
-- fix route: compiler
+- fix route: compiler — [interface heritage widening](compiler-requests/interface-heritage-widening.md)
 - first failure at: `flight/render/render_proxy_adapter.hpp:54`
 - example: `no viable conversion from 'Ref<RenderProxy2D>' to 'Ref<RenderProxy>'`
+
+`applyRenderProxyAdapter(state, source, data: RenderProxy2D)` calls `updateRenderProxyRenderer(state,
+data)`, whose parameter is `Ref<RenderProxy>`. The source wide-narrows implicitly; the emitted structs
+repeat the base fields and inherit only `ReferenceEnabled`, so the same object cannot enter the base
+typed slot. The other five headers — `render/render_cache.hpp`,
+`scene2d_canvas/canvas_cache.hpp`, `scene2d_dom/dom_cache.hpp`, `scene2d_dom/scene_2d_dom_pipeline.hpp`,
+`scene2d_gl/gl_cache.hpp` — fail through their render dependencies on the same call.
+
+No workaround is carried: a cast, a copied base owner or a wrapper adapter would split the existing
+proxy's identity or narrow the domain. The request's shape is the declared heritage
+(`struct RenderProxy2D : RenderProxy`), which lets the same object enter the base slot unchanged.
+
+This row now links the existing request; no source or generated change was made, so no rerun is claimed.
 
 ### 28. `undeclared-identifier-6e587559` — 6 header(s)
 
