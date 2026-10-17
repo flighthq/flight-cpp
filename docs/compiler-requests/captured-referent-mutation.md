@@ -67,3 +67,21 @@ general case: a captured local of an unshared type still has no shared represent
 
 None. `@flighthq/midi` is `partial` with this and two other defects named against it; no patch or
 override re-homes the state, because re-homing it would change the identity the module is built on.
+
+## G2 WGPU capture timer initial storage
+
+At Flight `a627849` / compiler `806d257`, `wgpuScreenCapture.ts:132` map helper refuses
+`cpp-shared-mutable-capture-missing-initial-storage`: `let timer: ReturnType<typeof setTimeout> | undefined`
+is assigned inside a Promise executor and read in the enclosing finally. Preserve one mutable cell
+whose initial value is undefined, updated to the exact host timer handle, then consumed by clearTimeout.
+Its union must retain the bound timer handle, not an invented numeric id or copied callback local.
+
+The source starts one GPU map, waits indefinitely when timeoutMs<=0, otherwise adopts a late map
+rejection and races it against a named timeout, clearing the same timer in finally. Timeout does not
+cancel or unmap a later resolution; retrying the same capture buffer is not a supplied recovery path.
+The readback unmaps only after normal pixel copying; do not infer a readback-wide finally from this
+timer-only finally. Default10000ms, exact errors/settlement and original buffer ownership stay intact.
+
+This is an inspected refusal, not executed mapping/timer proof. Original1 remains0/1 at missing acquire;
+an exact three-declaration unused-header candidate fails native [mapped-range access](webgpu-buffer-mapped-readback.md)
+before link. No source initialization patch, timer/Task/host implementation, repair or generation is carried.

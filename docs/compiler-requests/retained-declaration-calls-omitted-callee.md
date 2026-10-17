@@ -1595,3 +1595,24 @@ The [original node and pixel-source owner requirements](readonly-callback-derive
 retain bounds fallback, all texture/source/threshold domains, successful-only weak caching and
 original provider/pixel/transform semantics. No fake hit/miss, copied graph or bitmap owner,
 narrowed domain, source/runtime/override supply or shared/QuadBatch edit is carried.
+
+## G2 WGPU capture three exact declarations still fail native readback
+
+At Flight `a627849` / compiler `806d257`, `render_wgpu/wgpu_screen_capture.hpp` refuses acquire/encode
+at [guarded external texture evidence](guarded-external-optional-member-view.md#g2-wgpu-capture-guards-the-exact-retained-texture)
+and map at [captured timer initial storage](captured-referent-mutation.md#g2-wgpu-capture-timer-initial-storage),
+while retaining two hook assignments in enable and the awaited map call in readback. Original1 stays
+0/1, Clang22.1.8 jobs1,12s, at missing acquire122.
+
+Hook values are not direct calls or function-argument witnesses. The existing marker-guarded
+insert-forward-declaration mechanism qualifies each exact callback prototype: WgpuTexture(Ref screen
+target) and void(Ref screen target,WgpuCommandEncoder). The existing direct-call mechanism qualifies
+Task<void>(WgpuBuffer,double) for map. All three are exact source/native carriers, match one header,
+reach a fixed point, and removal restores original bytes; no witness extension or body is involved.
+
+Nevertheless, the actual unused-header candidate with only these declarations fails compilation at
+scratch175/raw169: native WgpuBuffer lacks get_mapped_range. See [mapped readback](webgpu-buffer-mapped-readback.md).
+No positive link/run or qualified caller negative object/link is reached. No repair, generation,
+fake capture/provider, copied owner or restricted format/timeout domain is carried. Buffer-sharing,
+frame-copy ordering, row alignment, stored premultiplied pixels, BGRA conversion, map/timeout/late
+settlement and source normal-path unmap remain required behavior, not a declaration availability claim.

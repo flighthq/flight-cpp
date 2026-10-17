@@ -633,3 +633,9 @@ patch has retired because the fix landed upstream keep their row, marked, as the
   Original1 stays0/1; exact initializer declaration fails unused-header compilation before link.
   Actual dimensions, shared resource identity, live surface and resize/lifecycle order must survive;
   no target/provider/repair or GPU behavior is supplied.
+
+- [A bound WebGPU buffer needs real mapped readback and its lifetime](webgpu-buffer-mapped-readback.md) —
+  screen-capture original1 stays0/1; exact three-declaration unused-header candidate fails absent
+  get_mapped_range before link. Preserve real mapped bytes, shared buffer/map lifetime, frame-copy
+  handshake, padded rows, BGRA/premultiplied pixels and timeout/late-settlement semantics; no provider
+  or capture implementation is supplied.

@@ -225,7 +225,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 196 | `undeclared-identifier-8b3950d6` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glMotionBlurEffectRunner` binding (and its callee `applyMotionBlurEffectToGl`) but still emits the registration call that passes the runner |
 | 197 | `undeclared-identifier-8e604c65` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glSketchEffectRunner` binding (and its callee `applySketchEffectToGl`) but still emits the registration call that passes the runner |
 | 198 | `undeclared-identifier-9562ef07` | 1 | 2D | compiler *(existing request)* | refused `drawCanvasTilemap` retained as `.submit` in the SpriteRenderer aggregate; declaration probe fails at `.create_data` |
-| 199 | `undeclared-identifier-9aaa5b7f` | 1 | WGPU | runtime | the emitted code names `acquire_wgpu_screen_render_target_capture_texture`, which nothing declares |
+| 199 | `undeclared-identifier-9aaa5b7f` | 1 | WGPU | compiler | capture hooks refuse optional guard evidence; exact three-declaration probe fails native mapped-range access *(existing and new requests)* |
 | 200 | `undeclared-identifier-a3f09fb8` | 1 | 2D | compiler *(existing request)* | refused `drawDomShape` retained as `.submit` in the renderer aggregate; declaration probe fails at `.create_data` |
 | 201 | `undeclared-identifier-a4a22a69` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glLensDistortionEffectRunner` binding (and its callee `applyLensDistortionEffectToGl`) but still emits the registration call that passes the runner |
 | 202 | `undeclared-identifier-a89b9a39` | 1 | GL | runtime | the emitted code names `gl_bitmap_displacement_effect_runner`, which nothing declares |
@@ -3658,14 +3658,40 @@ historical/G1 totals are preserved.
 - Scoped native recheck (GCC 15.2, jobs 1, all errors shown): **1 attempted / 0 pass / 1 fail**, the header's own diagnostic. No tilemap draw, no-op, Canvas backend, copied owner or narrowed tiles is supplied.
 - compiler request: `docs/compiler-requests/retained-declaration-calls-omitted-callee.md`
 
-### 199. `undeclared-identifier-9aaa5b7f` — 1 header(s)
+### 199. `undeclared-identifier-9aaa5b7f` — 1 header, compiler-owned
 
-- cause: the emitted code names `acquire_wgpu_screen_render_target_capture_texture`, which nothing declares
-- subject: `acquire_wgpu_screen_render_target_capture_texture`
-- lanes: WGPU
-- fix route: runtime
-- first failure at: `flight/render_wgpu/wgpu_screen_capture.hpp:122`
-- example: `use of undeclared identifier 'acquire_wgpu_screen_render_target_capture_texture'`
+Stock original1 remains **1 attempted / 0 pass / 1 fail / 0 unattempted**, Clang22.1.8, jobs **1**,
+12 seconds, missing `acquire_wgpu_screen_render_target_capture_texture:122`. Acquire and encode refuse
+`cpp-optional-member-access-unproven` at height/width despite the same local texture's source null
+guards. See [external optional evidence](compiler-requests/guarded-external-optional-member-view.md#g2-wgpu-capture-guards-the-exact-retained-texture).
+The map helper separately refuses `cpp-shared-mutable-capture-missing-initial-storage` on its timer;
+see [captured initial storage](compiler-requests/captured-referent-mutation.md#g2-wgpu-capture-timer-initial-storage).
+
+The two hook values in enable are assignments, not direct calls. Existing marker-guarded
+`insert-forward-declaration` qualifies their exact GPUTexture/target and void/target/encoder callback
+types; existing `declare-refused-function` qualifies the directly awaited `Task<void>(WgpuBuffer,double)`
+map helper. All three match one header, reach a fixed point and removal restores original bytes.
+The actual unused-header scratch with only those prototypes still fails compilation at candidate175
+(stock169): native `WgpuObject<WgpuBufferTag>` lacks `get_mapped_range`. See the new
+[mapped readback contract](compiler-requests/webgpu-buffer-mapped-readback.md) and
+[declaration evidence](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-wgpu-capture-three-exact-declarations-still-fail-native-readback).
+No positive unused-header link/run or qualified negative object/link is reached; no repair, generation,
+fake provider/capture/readback, copied owner or narrowed domain is carried.
+
+Preserve original target/device/texture/retained-buffer identity. Capture uses the logical floor/clamped
+extent after undoing antialias2x, texture reuse/resize and original format/usage flags. Copy is encoded
+in the frame's own encoder; pending/mapped buffers skip writes, unknown map state falls through.
+Rows align to256 bytes; buffer dimensions/stride update only on reallocation. Readback snapshots the
+same buffer/dimensions/stride before awaiting, strips padding, swizzles only the two BGRA formats,
+preserves stored premultiplied RGB/alpha, and unmaps rather than destroys on normal completion.
+Keep the absent-buffer error, default10000ms and <=0 indefinite wait, one map operation, adopted late
+rejection, exact timeout error and timer cleanup in finally. Timeout does not cancel/unmap a late map;
+it is a hard end for capture against that buffer. The source has no readback-wide cleanup finally, so
+no stronger failure-cleanup claim is made. Native map/view/copy/provider behavior remains unavailable.
+
+Only this row/cluster, report199, three existing request appendices and new request/index change.
+Historical sweep/carry totals and foreign products/prose remain unchanged. No GPU capture, pixel,
+timeout behavior, source/runtime body or unchanged old/global check is claimed.
 
 ### 200. `undeclared-identifier-a3f09fb8` — G2 recheck of 1 header(s)
 
