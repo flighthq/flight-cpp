@@ -1011,3 +1011,25 @@ The partial marker, all six omissions, refusal ledger, module fingerprints and p
 The original grid header serial check completes **1 attempted / 1 pass / 0 fail / 0 unattempted**.
 The single row is pass with `previousCluster`; no other header is measured or promoted. Header
 availability and strict integer support do not make either refused grid operation callable.
+
+## G2 GL Scale9 sprite retains a refused aggregate callback
+
+`scene2d_gl/gl_scale9_sprite.hpp` at Flight `a627849` / compiler `806d257` omits
+`drawGlScale9Sprite` under the nullable Material2D-to-Material heritage rule, while the retained
+inline renderer stores `.submit = draw_gl_scale9_sprite`. Original1 remains0/1, Clang22.1.8 jobs1,
+missing that name at168. The exact source declaration is
+`void draw_gl_scale9_sprite(Ref<GlRenderState>, Ref<RenderProxy2D>);`.
+
+As with bitmap text above, this is an aggregate-field reference. The existing repair has no direct
+call to match, and its `retainedReference` loader correctly rejects the exact aggregate code line
+because the callback is not in a function-argument position. No witness extension is proposed.
+One scratch include with only that declaration fails compilation at `.create_data` (scratch170):
+`create_sprite_renderer_data` returns `optional<ErasedRef>` from `(Ref<GlRenderState>, Node2D)`,
+not the slot's `optional<Ref<RendererData>>` from `(Ref<RenderState>, Node2D)`.
+No positive unused-header link/run or called-function negative-link qualification is reached.
+
+The [material owner refusal](compiler-interface-heritage-owner-widening.md#g2-gl-scale9-sprite-material-owner)
+and [backend/data/full Scale9 owner requirements](readonly-callback-derived-owner-recovery.md#g2-scale9-sprite-native-sprite-callbacks-are-not-generic-renderer-callbacks)
+remain separate obligations. Dirty/submit and exact Sprite-recovery restrictions are inspected later
+seams, not additional measured diagnostics. No repair, normal generation, source/runtime/override
+change, fake draw or usable Scale9 rendering claim is carried.

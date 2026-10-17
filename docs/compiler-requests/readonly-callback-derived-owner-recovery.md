@@ -119,3 +119,31 @@ and throws for raster resource teardown; full raster acquisition/upload/replay/l
 See the [valid but insufficient declaration witness](retained-declaration-calls-omitted-callee.md#g2-raster-shape-declaration-witness-is-valid-but-callback-carriers-fail)
 and [separate body presence refusal](nullable-optional-presence.md#g2-raster-shape-null-presence-refusal).
 No callback adapter, fake draw or rendering implementation was carried.
+
+## G2 Scale9 sprite native Sprite callbacks are not generic renderer callbacks
+
+At Flight `a627849` / compiler `806d257`, `gl_scale9_sprite.hpp` assigns the current native Sprite
+create/dirty helpers to a generated `Scene2DRenderer`. Native create accepts
+`Ref<GlRenderState>, Node2D` and returns `optional<ErasedRef>`; the slot instead takes generic
+`Ref<RenderState>, Node2D` and returns `optional<Ref<RendererData>>`. One scratch actual unused header
+with only the missing draw declaration fails this conversion at `.create_data` (candidate170).
+The original production header remains0/1 at missing draw168; no link boundary was reached.
+
+By type inspection, the dirty slot additionally takes `NodeAny`/optional nominal RendererData while
+the native helper takes `Node2D`/optional ErasedRef. The refused GL draw signature also differs from
+the generic state's submit signature. Preserve the original backend state, renderer scratch allocation
+and registered node owner through checked dispatch; casting callbacks or fabricating base data does
+not reconcile these carriers.
+
+There is also a concrete-owner boundary: both native Sprite helpers call `native_sprite`, which
+uses checked `shared_exact_object<Sprite>()`. The Scale9 proxy owns `Scale9Sprite`, with independent
+flattened data/grid/runtime, not that exact native Sprite owner. Its generated texture cell is
+`optional<Ref<Texture>>`, while native Sprite data holds `optional<Texture>` over the four-alternative
+texture family. These inspected storage differences are not another tested compile result, and
+converting the source to a Sprite copy or choosing one texture arm would narrow the declared domain.
+Keep the complete Scale9 owner, original texture/material references and revisions at its typed API.
+
+The [nullable material widening](compiler-interface-heritage-owner-widening.md#g2-gl-scale9-sprite-material-owner)
+first refuses the body; [retained aggregate evidence](retained-declaration-calls-omitted-callee.md#g2-gl-scale9-sprite-retains-a-refused-aggregate-callback)
+records why no declaration-only supply is carried. No adapter, owner copy, fake nine-slice packets
+or native Scale9 drawing behavior was added or claimed.

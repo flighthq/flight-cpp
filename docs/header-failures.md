@@ -187,7 +187,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 158 | `undeclared-identifier-17cb8386` | 1 | GL | runtime | the emitted code names `gl_bokeh_depth_of_field_effect_runner`, which nothing declares |
 | 159 | `undeclared-identifier-1892fccb` | 1 | PLAT | runtime | the emitted code names `resolve_text_char_index`, which nothing declares |
 | 160 | `undeclared-identifier-1a056bbc` | 3 | TEXT | compiler | refused number formatter retained by five wrappers; G2: declaration candidate fails optional literal construction, full option spreads dropped; 0/3 remain failed |
-| 161 | `undeclared-identifier-1d8e072a` | 1 | 2D | runtime | the emitted code names `draw_gl_scale9_sprite`, which nothing declares |
+| 161 | `undeclared-identifier-1d8e072a` | 1 | 2D | compiler | Scale9 draw refuses nullable material owner widening; declaration probe fails native/generic callback conversion *(existing requests extended)* |
 | 162 | `undeclared-identifier-2110ec37` | 1 | WGPU | runtime | the emitted code names `draw_wgpu_sprite`, which nothing declares |
 | 163 | `undeclared-identifier-2363216f` | 1 | GL | runtime | the emitted code names `gl_dither_effect_runner`, which nothing declares |
 | 164 | `undeclared-identifier-2437e103` | 1 | 3D | runtime | the emitted code names `parse_triangle_geometry_block`, which nothing declares |
@@ -2848,14 +2848,41 @@ Caller options override the spelled defaults; preserving their full domain, own-
 effects rules out a default-only overload or copying just the four currently bound runtime fields.
 No locale formatting or callable number API progress is claimed.
 
-### 161. `undeclared-identifier-1d8e072a` — 1 header(s)
+### 161. `undeclared-identifier-1d8e072a` — 1 header, compiler-owned
 
-- cause: the emitted code names `draw_gl_scale9_sprite`, which nothing declares
-- subject: `draw_gl_scale9_sprite`
-- lanes: 2D
-- fix route: runtime
-- first failure at: `flight/scene2d_gl/gl_scale9_sprite.hpp:168`
-- example: `use of undeclared identifier 'draw_gl_scale9_sprite'`
+The scoped stock header remains **1 attempted / 0 pass / 1 fail / 0 unattempted**, Clang22.1.8,
+jobs **1**, 67.3 seconds, at missing `draw_gl_scale9_sprite:168`. The draw body refuses
+`cpp-contextual-union-interface-heritage-carrier-unrepresented`: nullable `Material2D` cannot widen
+to `Material` while retaining its original allocation. These are independent flattened owners,
+despite their matching base fields. This is the existing
+[owner-widening request](compiler-requests/compiler-interface-heritage-owner-widening.md#g2-gl-scale9-sprite-material-owner),
+not a missing runtime draw to substitute or a texture-dimension refusal.
+
+The retained `.submit = draw_gl_scale9_sprite` is an aggregate field, not a direct call or function
+argument accepted by the existing declaration repair. The scratch loader/matcher confirms no direct
+match and rejection of that exact aggregate as `retainedReference`; no mechanism is extended.
+A separate scratch header adding only the exact source declaration
+`void draw_gl_scale9_sprite(Ref<GlRenderState>, Ref<RenderProxy2D>);` still fails the actual unused
+include's compilation at `.create_data` (scratch170): native
+`optional<ErasedRef>(GlRenderState, Node2D)` cannot construct the generic callback returning
+`optional<Ref<RendererData>>` from `(RenderState, Node2D)`. The declaration is rejected before link;
+no positive unused-header link/run or qualified negative link was reached. See
+[retained aggregate evidence](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-gl-scale9-sprite-retains-a-refused-aggregate-callback).
+
+The [typed backend/data-owner request](compiler-requests/readonly-callback-derived-owner-recovery.md#g2-scale9-sprite-native-sprite-callbacks-are-not-generic-renderer-callbacks)
+also records inspected later dirty/submit domains. Native Sprite helpers recover exactly `Sprite`,
+whereas the source proxy owns `Scale9Sprite` with its own data/grid/runtime; no adapter may copy it
+into a base sprite or claim that exact-owner recovery succeeds. Its nullable texture remains the
+full texture family, with only the source's actual 2D/source/positive-size guards; native Sprite and
+generated Scale9 texture storage differ and were not silently reconciled.
+
+Faithful drawing must retain the original material/texture/sampler and working-color/alpha realization,
+UV matrix and render-target V reflection, grid/mapper/scale behavior, nine row-major affine slices,
+post-prepare batch indices, 13-float writes, per-slice material/color/alpha and final count increment.
+No fake draw, zero packet, copied material/sprite/runtime or narrowed domain is carried. Only the
+owned row/cluster, this report slice and three existing request sections change; historical G1
+sweep/carry totals and all foreign products remain unchanged. No normal generation is needed for a
+rejected declaration with unchanged production code, and no scale9 behavior or old/global proof was run.
 
 ### 162. `undeclared-identifier-2110ec37` — 1 header(s)
 

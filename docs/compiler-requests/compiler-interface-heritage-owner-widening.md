@@ -209,3 +209,26 @@ object but fails to link only on `flight::glyphatlas::initialize_glyph_source_fr
 This clears the declaration error and keeps the missing body visible. It does not close this
 owner-widening request or make the partial initializer/factory usable. See also
 [retained callers of omitted callees](retained-declaration-calls-omitted-callee.md).
+
+## G2 GL Scale9 sprite material owner
+
+At Flight `a627849` / compiler `806d257`, `scene2d-gl/glScale9Sprite.ts:26` refuses the entire
+`drawGlScale9Sprite` body as `cpp-contextual-union-interface-heritage-carrier-unrepresented`:
+nullable `Material2D` widens to `Material` when resolving the proxy's quad material renderer.
+Both generated interfaces independently inherit `ReferenceEnabled` and repeat entity runtime key,
+kind and three-state name cells. Those matching fields do not create C++ inheritance or permission
+to replace the original material. Keep its owner through nullable absence, kind lookup and renderer
+selection; a copied Material prefix, unchecked pointer cast or always-default material changes the API.
+
+The source retains a full `Scale9Sprite`, its data/grid/runtime and texture family. After the real
+2D/source/positive-size and mapper guards, it resolves the same texture/sampler and working color
+space, applies its UV matrix/render-target V reflection, and writes nine row-major affine slices
+through the actual batch/material/color pipeline. Geometry/UV writes, scale division, post-prepare
+indices and final count must remain those of the original source; no ordinary-Sprite copy or fixed
+texture kind is an owner-widening fix.
+
+The retained global renderer references the refused draw. Original1 still fails0/1 at line168,
+Clang22.1.8 jobs1. An exact declaration-only actual unused-header candidate instead fails compiling
+its create-data callback before link, so no declaration/normal generation or body is supplied.
+See [aggregate callback evidence](retained-declaration-calls-omitted-callee.md#g2-gl-scale9-sprite-retains-a-refused-aggregate-callback)
+and [native/backend owner carriers](readonly-callback-derived-owner-recovery.md#g2-scale9-sprite-native-sprite-callbacks-are-not-generic-renderer-callbacks).
