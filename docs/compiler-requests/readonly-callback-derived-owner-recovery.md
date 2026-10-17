@@ -210,3 +210,29 @@ also applies to the first operation, whose generic body remains refused. These a
 obligations, not additional measured diagnostics after a supplied text resolver. The bounded
 [retained callback declaration](retained-declaration-calls-omitted-callee.md#g2-interaction-text-hit-test-retains-its-refused-callback)
 addresses name visibility only and leaves the resolver body unavailable.
+
+## G2 WGPU Scale9Sprite native Sprite callback and owner boundaries
+
+At Flight `a627849` / compiler `806d257`, `wgpu_scale9_sprite.hpp` stores the native Sprite helpers
+in a generated Scene2DRenderer. Native create takes `(Ref<GlRenderState>, Node2D)` and returns
+`optional<ErasedRef>`; the slot takes `(Ref<RenderState>, Node2D)` and returns
+`optional<Ref<RendererData>>`. An exact-draw-declaration-only actual unused header fails at
+`.create_data` (candidate166). Stock original1 remains 0/1 at missing draw164, Clang22.1.8 jobs1;
+no native link boundary is reached.
+
+By type inspection, dirty additionally differs at NodeAny/Node2D and nominal RendererData/ErasedRef,
+while the exact submit needs WgpuRenderState rather than generic RenderState. The existing native
+binding is GL-specific; preserve the original WGPU state/runtime through an explicit checked callback
+contract instead of casting functions or copying a generic/GL state.
+
+Both native Sprite helpers recover only `shared_exact_object<Sprite>()`. Scale9Sprite has an
+independent flattened data/grid/runtime owner; nominal Sprite heritage is not that exact native
+object. Generated Scale9 data/runtime texture cells use `optional<Ref<Texture>>`, while native Sprite
+uses `optional<Texture>` over the four-arm texture family. Preserve the original Scale9 owner and
+full texture identity/version with independent per-state dirty stamps; do not fabricate a Sprite,
+copy RendererData or narrow texture/material/grid choices. These later owner/storage obligations are
+inspection only, not additional measured compile or behavior results.
+
+The [material-owner refusal](compiler-interface-heritage-owner-widening.md#g2-wgpu-scale9sprite-material-owner)
+and [retained aggregate qualification](retained-declaration-calls-omitted-callee.md#g2-wgpu-scale9sprite-retains-its-refused-draw-callback)
+remain separate. No callback adapter, shared Sprite/GL change, fake slices or native WGPU draw proof is supplied.

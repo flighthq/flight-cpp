@@ -1435,3 +1435,25 @@ only that owned header and its applied-repair manifest record are carried. The p
 refused body remain, with package/refusal/module totals unchanged. Final scoped header availability
 is1/1, while direct helper or handler use remains unlinkable. No image resolution, decoding, Sprite,
 texture, transform, clipping or full SVG import functionality pass is claimed.
+
+## G2 WGPU Scale9Sprite retains its refused draw callback
+
+At Flight `a627849` / compiler `806d257`, `scene2d_wgpu/wgpu_scale9_sprite.hpp` omits
+`drawWgpuScale9Sprite` under nullable Material2D-to-Material heritage widening but retains
+`.submit = draw_wgpu_scale9_sprite` in its Scene2DRenderer aggregate. Stock original1 stays 0/1,
+Clang22.1.8 jobs1, at missing draw164. Its exact signature is
+`void draw_wgpu_scale9_sprite(Ref<WgpuRenderState>, Ref<RenderProxy2D>);`.
+
+The existing matcher finds no direct call; the loader rejects the exact aggregate `retainedReference`
+because it is not a function-argument callback witness. No extension is proposed. A separate scratch
+actual unused include with only that declaration fails compilation at `.create_data` (candidate166):
+the native GLstate/optionalErasedRef Sprite helper cannot fill the generic RenderState/nominal
+RendererData slot. See the [callback/owner request](readonly-callback-derived-owner-recovery.md#g2-wgpu-scale9sprite-native-sprite-callback-and-owner-boundaries).
+No positive unused-header link/run or qualified called-function negative-link is reached; later
+dirty/submit and exact Sprite-versus-Scale9 owners are inspected only. No declaration repair, normal
+generation, copied owner, fake draw or usable renderer is carried.
+
+The [material-owner request](compiler-interface-heritage-owner-widening.md#g2-wgpu-scale9sprite-material-owner)
+keeps full grid/mapper/scale/texture/material domains, nine-slice order, affine/UV/color and post-prepare
+stream indexing. It also distinguishes the inspected source instance-index/float-offset mismatch from
+the compiler refusal and prelink rejection. This declaration audit supplies no packet correctness proof.

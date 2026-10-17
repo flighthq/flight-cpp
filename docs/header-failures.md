@@ -247,7 +247,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 218 | `undeclared-identifier-e3d6c4e4` | 1 | GL | runtime | the emitted code names `apply_gl_gaussian_blur_pass`, which nothing declares |
 | 219 | `undeclared-identifier-e4a7b51e` | 1 | GL | runtime | the emitted code names `gl_lens_dirt_effect_runner`, which nothing declares |
 | 220 | `undeclared-identifier-e4eb111d` | 1 | GL | runtime | the emitted code names `gl_kuwahara_effect_runner`, which nothing declares |
-| 221 | `undeclared-identifier-e7bf11f9` | 1 | WGPU | runtime | the emitted code names `draw_wgpu_scale9_sprite`, which nothing declares |
+| 221 | `undeclared-identifier-e7bf11f9` | 1 | WGPU | compiler | WGPU Scale9 draw refuses nullable material owner widening; declaration compile fails native/generic callback carrier *(existing requests extended)* |
 | 222 | `undeclared-identifier-ebf3999b` | 1 | GL | runtime | the emitted code names `gl_radial_blur_effect_runner`, which nothing declares |
 | 223 | `undeclared-identifier-f020c1f7` | 1 | GL | runtime | the emitted code names `gl_white_balance_effect_runner`, which nothing declares |
 | 224 | `undeclared-identifier-f6affb68` | 1 | 3D | [compiler request](compiler-requests/retained-declaration-calls-omitted-callee.md) | global transmission/volume/IOR callbacks retain a refused owner resolver; declaration fails unused-header link |
@@ -3757,14 +3757,45 @@ rows/roots/prose and historical/G1 totals remain unchanged; no parser, bone or h
 - first failure at: `flight/effects_gl/gl_kuwahara_effect.hpp:86`
 - example: `use of undeclared identifier 'gl_kuwahara_effect_runner'`
 
-### 221. `undeclared-identifier-e7bf11f9` — 1 header(s)
+### 221. `undeclared-identifier-e7bf11f9` — 1 header, compiler-owned
 
-- cause: the emitted code names `draw_wgpu_scale9_sprite`, which nothing declares
-- subject: `draw_wgpu_scale9_sprite`
-- lanes: WGPU
-- fix route: runtime
-- first failure at: `flight/scene2d_wgpu/wgpu_scale9_sprite.hpp:164`
-- example: `use of undeclared identifier 'draw_wgpu_scale9_sprite'`
+The scoped stock header remains **1 attempted / 0 pass / 1 fail / 0 unattempted**, Clang22.1.8,
+jobs **1**, 58.8 seconds, at missing `draw_wgpu_scale9_sprite:164`. The source body refuses
+`cpp-contextual-union-interface-heritage-carrier-unrepresented` at nullable `Material2D` to `Material`
+owner widening during quad-material resolution. Preserve the proxy's material identity/null and actual
+WGPU state/runtime. See the existing [material owner request](compiler-requests/compiler-interface-heritage-owner-widening.md#g2-wgpu-scale9sprite-material-owner).
+
+The retained `.submit = draw_wgpu_scale9_sprite` is an aggregate field, not a direct call or supported
+function-argument `retainedReference`. The existing matcher finds no call; the loader rejects the
+exact aggregate witness. A separate scratch actual unused include, with only the exact declaration
+`void draw_wgpu_scale9_sprite(Ref<WgpuRenderState>, Ref<RenderProxy2D>);`, fails compilation at
+`.create_data` (candidate166): native `create_sprite_renderer_data(GlRenderState, Node2D)` returns
+`optional<ErasedRef>`, whereas `Scene2DRenderer` takes generic RenderState and returns
+`optional<Ref<RendererData>>`. The [typed callback request](compiler-requests/readonly-callback-derived-owner-recovery.md#g2-wgpu-scale9sprite-native-sprite-callback-and-owner-boundaries)
+also records inspected dirty/submit domains and exact Sprite recovery versus independent Scale9Sprite
+data/grid/runtime/texture owners. These later differences are not further measured first errors.
+No positive unused-header link/run or qualified called-function negative-link is reached; no repair,
+normal generation, callback cast, owner copy or witness extension is carried.
+[Retained aggregate evidence](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-wgpu-scale9sprite-retains-its-refused-draw-callback).
+
+Preserve render-pass/null/non-2d/source guards, original texture/view/sampler, material registration
+lookup/miss/registered standard fallback or no draw, blend, working color and alpha. The mapper rejects
+nonpositive scale/bounds and must retain the full grid math, including compressed borders when the
+scaled center is negative. Keep source and mapped four-coordinate axes, all nine row-major slices
+without new skip rules, inverse-scale affine basis, translated slice origins and all UV coefficients.
+Material/color streams use the writer count read after prepare plus instance, with original
+materialData and matrix-before-scale-bias fallback; the real writer count increases by nine.
+
+Separate source inspection finds an offset-unit inconsistency: `wgpuScale9Sprite.ts:54,74` uses the
+prepare result directly as `writeBase`, but `wgpuQuadBatchWriter.ts:356` returns an instance index and
+its affine writer indexes float elements at `base` (13 floats per instance). With a compatible
+nonempty batch this differs from the documented stride-scaled packet offset. This is unexecuted
+source evidence, not another native error or a source fix; no correct nine-slice packet claim follows
+from a future declaration alone.
+
+Only this row/cluster, report221 and appended sections in three existing requests change. Historical
+sweep/carry totals and all foreign products remain unchanged. No production code/body, fake draw,
+narrowed mapper/material/texture domain, GPU proof or unchanged old/global check is carried or claimed.
 
 ### 222. `undeclared-identifier-ebf3999b` — 1 header(s)
 

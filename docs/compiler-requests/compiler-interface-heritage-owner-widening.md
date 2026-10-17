@@ -304,3 +304,30 @@ actual unused include fails the [GL-specific native callback conversion](readonl
 before link. The [retained aggregate request](retained-declaration-calls-omitted-callee.md#g2-wgpu-sprite-retains-its-refused-draw-callback)
 records qualification rejection. No declaration repair, generation, fake shader/draw or usable WGPU
 Sprite implementation is carried.
+
+## G2 WGPU Scale9Sprite material owner
+
+At Flight `a627849` / compiler `806d257`, `scene2d-wgpu/wgpuScale9Sprite.ts:24` refuses the entire
+`drawWgpuScale9Sprite` body as `cpp-contextual-union-interface-heritage-carrier-unrepresented` at nullable
+Material2D-to-Material widening. Quad renderer resolution and prepare need the same original material;
+prepare compares its reference identity when changing batches. Preserve that owner/null, the registered
+kind/miss/standard fallback semantics and no-draw result. Independent flattened structs permit no
+inheritance cast or base copy, and a built-in default material would change the source domain.
+
+Keep the actual WGPU state/mutable runtime, render-pass guard, full Scale9Sprite/data/grid/runtime and
+texture family with source/non-2d/null checks. The mapper rejects nonpositive scale or bounds; preserve
+all grid coordinates and its compressed-border/negative-center math. Map both four-coordinate axes,
+emit all nine row-major slices, divide the original affine basis by source scales, translate each
+slice origin and compose all six UV coefficients from the original texture matrix. Preserve actual
+texture entry/sampler, blend, true/working-color realization, alpha, materialData and matrix-before-
+scale-bias fallback. Material/color indices use the runtime count read after prepare plus instance,
+then the real writer count increases by nine. No fixed-grid or ordinary-Sprite replacement.
+
+Separate unexecuted source finding: the draw sets writeBase directly to prepare's returned value;
+the helper returns instance count and the affine writer consumes a float-element base with stride13.
+That mismatch for a compatible nonempty batch is not repaired or proven by this compiler disposition.
+
+Stock original1 stays 0/1 at missing draw164, Clang22.1.8 jobs1, 58.8 seconds. The exact-declaration-only
+actual unused header fails the [native/generic callback conversion](readonly-callback-derived-owner-recovery.md#g2-wgpu-scale9sprite-native-sprite-callback-and-owner-boundaries)
+before link. See [retained aggregate qualification](retained-declaration-calls-omitted-callee.md#g2-wgpu-scale9sprite-retains-its-refused-draw-callback).
+No declaration repair, generation, shader/draw body, owner copy or usable Scale9 implementation is carried.
