@@ -138,3 +138,12 @@ separate readonly-program-to-writable-row construction already covered by the
 [guarded readonly helper request](guarded-readonly-optional-helper-call.md#g2-shaded-material-follow-on).
 This is an actual exposed next diagnostic, not a remaining missing-resolver error. No renderer
 writable upgrade or shader execution is claimed.
+
+## Carried-state alignment: the shading definition override
+
+The `shading-register-built-in-modifiers-structural-assertions` override was written before this patch
+and is re-derived against it: its five define-signature callbacks take the patched
+`ReadonlyModifierValue` and view the passed arm as the base `Modifier` row over the same retained owner,
+and its eight registrations pass each definition in the `ModifierDefinitionValue` union's exact
+`Ref<ModifierDefinition>` arm. Measured at `-j1` with Clang 22.1.8, the override and its three dependent
+headers compile 4/4. No callback body, presence test or registration order changed.

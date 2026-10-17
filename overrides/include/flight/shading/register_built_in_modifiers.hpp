@@ -8,6 +8,7 @@
 #include <functional>
 #include <optional>
 #include <string_view>
+#include <variant>
 
 #include <flight/runtime.hpp>
 #include <flight/structural_ref.hpp>
@@ -24,9 +25,12 @@ using ModifierView = flight::StructuralRef<flight::RowReadonly<
     flight::RowOf<flight::Ref<flight::types::Modifier>>>>;
 using ModifierRegistryView = flight::StructuralRef<flight::RowReadonly<
     flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>>;
-using ModifierDefinitionView = flight::StructuralRef<flight::RowReadonly<
-    flight::RowOf<flight::Ref<flight::types::ModifierDefinition>>>>;
-using SignatureFunction = std::function<flight::String(ModifierView)>;
+// The definition's declared callback parameter is ReadonlyModifierValue -- the open Modifier arm
+// plus every built-in -- after the modifier-concrete-value-path patch. The callbacks below read
+// through the base Modifier view. Each one recovers that view from whichever union arm was passed,
+// projecting the SAME retained owner (no copy, no pointer cast), so the reads and their presence
+// semantics are unchanged while the callable's parameter matches the declared destination.
+using SignatureFunction = std::function<flight::String(flight::types::ReadonlyModifierValue)>;
 
 template <typename Specific>
 using ModifierPartialView = flight::StructuralRef<flight::RowReadonly<
@@ -35,13 +39,6 @@ using ModifierPartialView = flight::StructuralRef<flight::RowReadonly<
 template <typename Specific>
 ModifierPartialView<Specific> modifier_partial_view(const ModifierView& modifier) {
   return flight::structural_ref_cast<ModifierPartialView<Specific>>(modifier);
-}
-
-inline ModifierDefinitionView modifier_definition_view(
-    const flight::Ref<flight::types::ModifierDefinition>& definition) {
-  using Writable = flight::StructuralRef<flight::RowWritable<
-      flight::RowOf<flight::Ref<flight::types::ModifierDefinition>>>>;
-  return flight::structural_ref_cast<ModifierDefinitionView>(Writable(definition));
 }
 
 inline bool has_defined_property(const ModifierView& modifier, std::string_view name) {
@@ -60,7 +57,10 @@ inline flight::Ref<flight::types::ModifierDefinition> animated_normal_modifier_d
     flight::make_ref<flight::types::ModifierDefinition>(flight::types::ModifierDefinition{
         .kind = flight::types::animated_normal_modifier_kind,
         .slot = flight::types::modifier_slot->normal,
-        .get_define_signature = SignatureFunction{[](ModifierView modifier) {
+        .get_define_signature = SignatureFunction{[](flight::types::ReadonlyModifierValue value) {
+          const ModifierView modifier = std::visit(
+              [](const auto& arm) { return flight::structural_ref_cast<ModifierView>(arm); },
+              value);
           const auto animated = modifier_partial_view<flight::types::AnimatedNormalModifier>(modifier);
           const auto map = flight::row_get<flight::RowKey<"map">>(animated);
           // AnimatedNormal.map is required but nullable. A bound, disengaged cell is source null;
@@ -78,7 +78,10 @@ inline flight::Ref<flight::types::ModifierDefinition> dissolve_modifier_definiti
     flight::make_ref<flight::types::ModifierDefinition>(flight::types::ModifierDefinition{
         .kind = flight::types::dissolve_modifier_kind,
         .slot = flight::types::modifier_slot->effect,
-        .get_define_signature = SignatureFunction{[](ModifierView modifier) {
+        .get_define_signature = SignatureFunction{[](flight::types::ReadonlyModifierValue value) {
+          const ModifierView modifier = std::visit(
+              [](const auto& arm) { return flight::structural_ref_cast<ModifierView>(arm); },
+              value);
           return has_defined_property(modifier, "map") ? flight::String("m")
                                                         : flight::String("");
         }},
@@ -88,7 +91,10 @@ inline flight::Ref<flight::types::ModifierDefinition> emissive_modifier_definiti
     flight::make_ref<flight::types::ModifierDefinition>(flight::types::ModifierDefinition{
         .kind = flight::types::emissive_modifier_kind,
         .slot = flight::types::modifier_slot->emissive,
-        .get_define_signature = SignatureFunction{[](ModifierView modifier) {
+        .get_define_signature = SignatureFunction{[](flight::types::ReadonlyModifierValue value) {
+          const ModifierView modifier = std::visit(
+              [](const auto& arm) { return flight::structural_ref_cast<ModifierView>(arm); },
+              value);
           const auto emissive = modifier_partial_view<flight::types::EmissiveModifier>(modifier);
           flight::String signature;
           if (flight::row_get<flight::RowKey<"mask">>(emissive).has_value()) {
@@ -114,7 +120,10 @@ inline flight::Ref<flight::types::ModifierDefinition> fog_modifier_definition =
     flight::make_ref<flight::types::ModifierDefinition>(flight::types::ModifierDefinition{
         .kind = flight::types::fog_modifier_kind,
         .slot = flight::types::modifier_slot->effect,
-        .get_define_signature = SignatureFunction{[](ModifierView modifier) {
+        .get_define_signature = SignatureFunction{[](flight::types::ReadonlyModifierValue value) {
+          const ModifierView modifier = std::visit(
+              [](const auto& arm) { return flight::structural_ref_cast<ModifierView>(arm); },
+              value);
           const auto fog = modifier_partial_view<flight::types::FogModifier>(modifier);
           const auto mode = flight::row_get<flight::RowKey<"mode">>(fog);
           if (mode == flight::types::fog_modifier_mode->exponential) return flight::String("e");
@@ -141,7 +150,10 @@ inline flight::Ref<flight::types::ModifierDefinition> vertex_displace_modifier_d
     flight::make_ref<flight::types::ModifierDefinition>(flight::types::ModifierDefinition{
         .kind = flight::types::vertex_displace_modifier_kind,
         .slot = flight::types::modifier_slot->vertex,
-        .get_define_signature = SignatureFunction{[](ModifierView modifier) {
+        .get_define_signature = SignatureFunction{[](flight::types::ReadonlyModifierValue value) {
+          const ModifierView modifier = std::visit(
+              [](const auto& arm) { return flight::structural_ref_cast<ModifierView>(arm); },
+              value);
           const auto displace = modifier_partial_view<flight::types::VertexDisplaceModifier>(modifier);
           const auto source = flight::row_get<flight::RowKey<"source">>(displace);
           flight::String signature =
@@ -156,14 +168,14 @@ inline flight::Ref<flight::types::ModifierDefinition> vertex_displace_modifier_d
     });
 
 inline void register_built_in_modifiers(ModifierRegistryView registry) {
-  register_modifier(registry, modifier_definition_view(animated_normal_modifier_definition));
-  register_modifier(registry, modifier_definition_view(dissolve_modifier_definition));
-  register_modifier(registry, modifier_definition_view(emissive_modifier_definition));
-  register_modifier(registry, modifier_definition_view(env_reflect_modifier_definition));
-  register_modifier(registry, modifier_definition_view(fog_modifier_definition));
-  register_modifier(registry, modifier_definition_view(rim_modifier_definition));
-  register_modifier(registry, modifier_definition_view(toon_modifier_definition));
-  register_modifier(registry, modifier_definition_view(vertex_displace_modifier_definition));
+  register_modifier(registry, flight::types::ModifierDefinitionValue{std::in_place_type<flight::Ref<flight::types::ModifierDefinition>>, animated_normal_modifier_definition});
+  register_modifier(registry, flight::types::ModifierDefinitionValue{std::in_place_type<flight::Ref<flight::types::ModifierDefinition>>, dissolve_modifier_definition});
+  register_modifier(registry, flight::types::ModifierDefinitionValue{std::in_place_type<flight::Ref<flight::types::ModifierDefinition>>, emissive_modifier_definition});
+  register_modifier(registry, flight::types::ModifierDefinitionValue{std::in_place_type<flight::Ref<flight::types::ModifierDefinition>>, env_reflect_modifier_definition});
+  register_modifier(registry, flight::types::ModifierDefinitionValue{std::in_place_type<flight::Ref<flight::types::ModifierDefinition>>, fog_modifier_definition});
+  register_modifier(registry, flight::types::ModifierDefinitionValue{std::in_place_type<flight::Ref<flight::types::ModifierDefinition>>, rim_modifier_definition});
+  register_modifier(registry, flight::types::ModifierDefinitionValue{std::in_place_type<flight::Ref<flight::types::ModifierDefinition>>, toon_modifier_definition});
+  register_modifier(registry, flight::types::ModifierDefinitionValue{std::in_place_type<flight::Ref<flight::types::ModifierDefinition>>, vertex_displace_modifier_definition});
 }
 
 }  // namespace flight::shading

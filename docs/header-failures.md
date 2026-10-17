@@ -70,7 +70,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 41 | `call-has-no-matching-9248dccf` | 4 | ANIM | compiler | the emitted call to `get_node_world_matrix4` matches no declared overload |
 | 42 | `call-has-no-matching-9ebeb95c` | 4 | ANIM, GL | compiler | the emitted call to `get_transform_2d_runtime` matches no declared overload |
 | 43 | `call-has-no-matching-c3aea71c` | 4 | 2D, GL | compiler | the emitted call to `structural_ref_cast` matches no declared overload |
-| 44 | `no-viable-conversion-5903ce63` | 4 | 3D, GL | compiler | a value is passed where its declared type cannot receive it |
+| 44 | `no-viable-conversion-5903ce63` | 4 | 3D, GL | override re-derivation (fixed) | shading modifier callbacks and registrations now match the patched `ReadonlyModifierValue` / `ModifierDefinitionValue` domains; G2: 4/4 pass |
 | 45 | `no-viable-conversion-e1a24bd1` | 4 | 2D | compiler | a value is passed where its declared type cannot receive it |
 | 46 | `other-2aef05a3` | 6 | ANIM | [compiler request](compiler-requests/interface-heritage-widening.md) | shadow-effect conditional branches cannot widen their independent concrete owners into the declared Effect array element |
 | 47 | `other-43523429` | 4 | ANIM | [compiler request](compiler-requests/heritage-argument-generic-deduction.md) | heritage-based Node2D type arguments are not substituted at addNodeChild, leaving a free Traits identifier |
@@ -1090,13 +1090,26 @@ rank remain historical, and `previousCluster` retains this original group.
 - first failure at: `flight/scene2d/scale9_sprite.hpp:162`
 - example: `no matching function for call to 'structural_ref_cast'`
 
-### 44. `no-viable-conversion-5903ce63` — 4 header(s)
+### 44. `no-viable-conversion-5903ce63` — 4 header(s), fixed by re-deriving the override
 
-- cause: a value is passed where its declared type cannot receive it
+- cause: the shading override predates the carried `modifier-concrete-value-path` patch. Its
+  `SignatureFunction` still took the base `Modifier` row while `ModifierDefinition.getDefineSignature`
+  now expects `std::function<String(ReadonlyModifierValue)>`, and it registered structural definition
+  rows where `registerModifier` now takes `ModifierDefinitionValue`
 - lanes: 3D, GL
-- fix route: compiler
-- first failure at: `flight/shading/register_built_in_modifiers.hpp:63`
-- example: `no viable conversion from 'SignatureFunction' >') to 'optional<function<String (ReadonlyModifierValue)>>' >>')`
+- fix route: override re-derivation against the patched callback and registration domains
+- first failure was at: `flight/shading/register_built_in_modifiers.hpp:63`
+
+The override `shading-register-built-in-modifiers-structural-assertions` still supplies the module, but
+the patch changed the types it must satisfy. Each of the five define-signature callbacks now takes
+`flight::types::ReadonlyModifierValue` and recovers the base `Modifier` view from the passed arm with one
+`structural_ref_cast` over the *same retained owner*; no body read or presence test changed, and the
+visit selects no behavior beyond the arm's schema. The eight registrations pass each definition in the
+`ModifierDefinitionValue` union's exact `Ref<ModifierDefinition>` arm, which is the same object (no copy,
+no cast). The dead structural-view helper is removed.
+
+Checks at `-j1` with Clang 22.1.8: **4/4 pass**; `overrides:check` 228/228 still match their generated
+sources. The override remains `complete` and its `derivedFrom` is unchanged.
 
 ### 45. `no-viable-conversion-e1a24bd1` — 4 header(s)
 
