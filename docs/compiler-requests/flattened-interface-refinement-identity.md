@@ -283,3 +283,18 @@ No declaration repair, source rewrite or normal generation is carried. Draw is i
 by an unnamed property-presence test; [retained getter/draw references](retained-declaration-calls-omitted-callee.md#g2-gl-scale9-shape-getter-declaration-stops-at-the-cache-carrier)
 remain. Preserve rasterizer dispatch, mapper fallback, replay/revision/resize and host-owned
 surface/Image/GPU cache acquisition and teardown; no fake drawing or narrowed shape domain.
+
+## G2 Tilemap cell resolution: declaration only, tilemap owners still owed
+
+`@flighthq/interaction` `registerTilemapHitTest.ts` at flight `a627849` refuses
+`resolveTilemapCellIndex(source: NodeAny, x, y): number`: it asserts the `NodeAny` source to the
+concrete `Tilemap` and to `Node2D`, and reads the tilemap graph, tile lookup and bounds. Both asserted
+owners are flattened independents, so the refinement has no heritage path. `registerTilemapHitTest`
+still registers the resolver, so `register_tilemap_hit_test.hpp` names a function nothing declares.
+
+Carried: `interaction-declare-refused-tilemap-cell-index` inserts
+`double resolve_tilemap_cell_index(flight::types::NodeAny, double, double)` -- the exact signature the
+`HitTestPreciseFunction` carrier expects. No hit result, false-hit sentinel, copied tilemap graph,
+narrowed node/domain or runtime provider is supplied. The unused header compiles, links and runs; a
+caller that registers the hit test fails to link on the resolver. The body stays owed to this request:
+it needs identity-preserving refined `Tilemap` and `Node2D` views, not a copied owner.

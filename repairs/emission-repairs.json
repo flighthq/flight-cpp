@@ -8993,6 +8993,19 @@
       "expires": "when hitAreaContainsPoint emits (its NOT GENERATED marker disappears); sdk:check fails if this repair matches no header."
     },
     {
+      "id": "interaction-declare-refused-tilemap-cell-index",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/interaction/register_tilemap_hit_test.hpp",
+      "symbol": "resolve_tilemap_cell_index",
+      "requiredText": "// NOT GENERATED: function resolveTilemapCellIndex -- source line 25",
+      "declaration": "namespace flight::interaction { double resolve_tilemap_cell_index(flight::types::NodeAny source, double x, double y); }",
+      "sourceDeclaration": "packages/interaction/src/registerTilemapHitTest.ts:25 -- function resolveTilemapCellIndex(source: NodeAny, x: number, y: number): number; refused at the NodeAny-to-Tilemap reference assertion while retained registerTilemapHitTest passes it to registerHitTestPrecise with exactly the HitTestPreciseFunction carrier",
+      "diagnostic": "use of undeclared identifier 'resolve_tilemap_cell_index'",
+      "defect": "The emitter refuses resolveTilemapCellIndex at cpp-reference-assertion-without-heritage: the function asserts a NodeAny source to the concrete Tilemap and to Node2D, whose emitted owners are independent, and it also reads the tilemap graph and bounds. The exact NOT GENERATED marker, the retained registration call and the absent definition agree, and the declaration is the signature that call's HitTestPreciseFunction carrier expects (NodeAny, double, double -> double). It supplies no hit result, no false-hit sentinel, no copied tilemap graph, no narrowed node or domain and no runtime provider; calling the refused resolver or a caller that registers it still fails to link.",
+      "expectedWhen": "always",
+      "expires": "when resolveTilemapCellIndex emits (its NOT GENERATED marker disappears); sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "swf-declare-refused-authored-bounds",
       "kind": "declare-refused-function",
       "appliesTo": "flight/swf/swf_node.hpp",

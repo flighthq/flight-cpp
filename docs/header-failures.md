@@ -178,7 +178,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 149 | `static-assertion-261f0db6` | 1 | 3D | compiler | a runtime static assertion rejects the emitted shape |
 | 150 | `undeclared-identifier-0168969a` | 1 | 2D | compiler *(existing + new request filed)* | refused `domScene2DClipHooks` (RenderState asserted to DomRenderState without heritage) still stored; next callee `setDomClipHooks` is in the wholly refused domClipRectangle module |
 | 151 | `undeclared-identifier-07640d32` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glOutlineEffectRunner` binding (and its callee `applyOutlineEffectToGl`) but still emits the registration call that passes the runner |
-| 152 | `undeclared-identifier-076c02b1` | 1 | PLAT | runtime | the emitted code names `resolve_tilemap_cell_index`, which nothing declares |
+| 152 | `undeclared-identifier-076c02b1` | 1 | PLAT | declaration repair (applied) | omitted tilemap cell resolver declared; G2: 1/1 pass, registration remains unlinkable |
 | 153 | `undeclared-identifier-09cc9e86` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glFilmGrainEffectRunner` binding (and its callee `applyFilmGrainEffectToGl`) but still emits the registration call that passes the runner |
 | 154 | `undeclared-identifier-0b8d3b44` | 1 | GL | runtime | the emitted code names `box_blur_shaders`, which nothing declares |
 | 155 | `undeclared-identifier-0c07642f` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glGlitchEffectRunner` binding (and its callee `applyGlitchEffectToGl`) but still emits the registration call that passes the runner |
@@ -2846,14 +2846,28 @@ Foreign rows/roots/prose and historical/G1 totals are preserved.
 - Scoped native recheck (GCC 15.2, jobs 1, all errors shown): **1 attempted / 0 pass / 1 fail** at line 96. No other header names either refused symbol. No runner, effect body, shader, cache or narrowed domain is supplied.
 - compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
-### 152. `undeclared-identifier-076c02b1` — 1 header(s)
+### 152. `undeclared-identifier-076c02b1` — 1 header(s), declaration repaired
 
-- cause: the emitted code names `resolve_tilemap_cell_index`, which nothing declares
-- subject: `resolve_tilemap_cell_index`
+- original cause: `registerTilemapHitTest` passes the refused `resolveTilemapCellIndex` to
+  `registerHitTestPrecise`, so the header names a function nothing declares
 - lanes: PLAT
-- fix route: runtime
-- first failure at: `flight/interaction/register_tilemap_hit_test.hpp:59`
-- example: `use of undeclared identifier 'resolve_tilemap_cell_index'`
+- fix route: declaration-only emission repair, with the resolver body still owed
+- compiler request: [flattened interface refinement identity](compiler-requests/flattened-interface-refinement-identity.md)
+
+The resolver is refused at `cpp-reference-assertion-without-heritage`: it asserts the `NodeAny` source
+to the concrete `Tilemap` and to `Node2D`, whose emitted owners are independent, and it reads the
+tilemap graph and bounds. The exact marker, the retained registration and the absence of a definition
+agree. Because the resolver is passed as a value rather than called, the `declare-refused-function`
+kind does not match it (that kind requires `symbol(`), so the carried repair is
+`insert-forward-declaration` keyed on the exact marker, declaring
+`double resolve_tilemap_cell_index(flight::types::NodeAny, double, double)` -- the signature the
+`HitTestPreciseFunction` carrier expects. No hit result, false-hit sentinel, copied graph, narrowed node
+or runtime provider is supplied.
+
+Written by **normal package generation** at the exact pins and matched byte for byte by the repair
+engine. Checks at `-j1`: the header **passes**; an unused include compiles, links and runs; a caller of
+`register_tilemap_hit_test` compiles and fails to link on exactly `resolve_tilemap_cell_index`, so the
+tilemap hit test stays visibly unavailable rather than substituted.
 
 ### 153. `undeclared-identifier-09cc9e86` — G2 recheck of 1 header(s)
 

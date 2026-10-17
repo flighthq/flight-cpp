@@ -24,6 +24,8 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/types/contract.hpp>
 #include <flight/interaction/hit_tests.hpp>
 
+
+namespace flight::interaction { double resolve_tilemap_cell_index(flight::types::NodeAny source, double x, double y); }
 namespace flight::interaction {
 
 using flight::types::Matrix;

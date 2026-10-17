@@ -1457,3 +1457,16 @@ The [material-owner request](compiler-interface-heritage-owner-widening.md#g2-wg
 keeps full grid/mapper/scale/texture/material domains, nine-slice order, affine/UV/color and post-prepare
 stream indexing. It also distinguishes the inspected source instance-index/float-offset mismatch from
 the compiler refusal and prelink rejection. This declaration audit supplies no packet correctness proof.
+
+## G2 Tilemap registration references a refused resolver by value
+
+`@flighthq/interaction` `registerTilemapHitTest.ts` at flight `a627849` retains
+`registerTilemapHitTest`, which passes the refused `resolveTilemapCellIndex` to
+`registerHitTestPrecise` at `register_tilemap_hit_test.hpp:59`. The exact marker, the retained reference
+and the absence of a definition agree.
+
+Mechanism note: the function is referenced as a **value** (`register_hit_test_precise(kind, resolve...)`),
+not called, so the `declare-refused-function` kind does not match it -- that kind requires `symbol(`.
+The carried repair is `insert-forward-declaration` keyed on the exact marker. Measured at `-j1`: the
+header passes; an unused include links and runs; a caller that registers the hit test fails to link on
+exactly `flight::interaction::resolve_tilemap_cell_index(shared_ptr<Node<Any>>, double, double)`.
