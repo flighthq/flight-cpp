@@ -1502,3 +1502,28 @@ exact-pin one-module generation must reproduce only the declaration and its own 
 record; the partial marker, source/refusal fingerprints and package/init counts remain unchanged.
 No fake miss/hit, copied graph/shape/path owner, narrowed command domain or source/runtime/override
 body is supplied. Header compilation and callable precise geometry remain separate results.
+
+## G2 WGPU screen target initializer declaration cannot pass the unused header
+
+At Flight `a627849` / compiler `806d257`, `render_wgpu/wgpu_screen_render_target.hpp` refuses
+`initializeWgpuScreenRenderTarget` at the [GPUTextureFormat/primitive String union](distinct-union-domains-one-carrier.md#g2-wgpu-screen-target-format-fallback)
+while its retained factory calls `initialize_wgpu_screen_render_target`. Original1 remains0/1,
+Clang22.1.8 jobs1,10.9 seconds, missing initializer151.
+
+The existing declare-refused-function mechanism matches the exact marker, emitted direct call and
+absent definition in one header, reaches a fixed point and restores original bytes when the prototype
+is removed. The source and factory agree on EntityConstruction<Ref<WgpuScreenRenderTarget>>, readonly
+structural HostWgpuCapability/Surface, native WgpuDevice and optional readonly screen options with
+the source default. No anonymous owner or body is needed to state that exact declaration.
+
+However, the actual unused-header scratch compile with only this declaration fails at scratch159
+(stock157): native GPUTexture has no width property for the depth-stencil resize comparison. Missing
+height is inspected only. See the [native size-property request](webgpu-texture-size-properties.md).
+No positive unused-header link/run or real-factory negative object/link is reached, so no declaration
+repair, normal generation, narrowed options or fake provider is carried. Initializer, bind and destroy
+bodies and real GPU operations remain unavailable; header name visibility would not supply a target.
+
+Preserve original allocation/finish identity, host attach/context/live surface, options/error/defaults,
+resource/null initialization, extent resync/resize order, capture versus swap-chain/antialias views,
+frame view release and source teardown order. No copied generic/texture target or device/host-release
+substitution is justified by a declaration-only boundary.

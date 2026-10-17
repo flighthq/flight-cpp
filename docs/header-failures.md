@@ -208,7 +208,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 179 | `undeclared-identifier-58fb713b` | 1 | 2D | compiler *(existing request)* | refused `drawDomScale9Shape` retained as `.submit` in the renderer aggregate; declaration probe fails at `.create_data` |
 | 180 | `undeclared-identifier-5be7be47` | 1 | GL | runtime | the emitted code names `gl_scanlines_effect_runner`, which nothing declares |
 | 181 | `undeclared-identifier-6647740e` | 1 | 2D | runtime | the emitted code names `create_rive_relative_transforms`, which nothing declares |
-| 182 | `undeclared-identifier-66ea97f8` | 1 | WGPU | runtime | the emitted code names `initialize_wgpu_screen_render_target`, which nothing declares |
+| 182 | `undeclared-identifier-66ea97f8` | 1 | WGPU | compiler | screen initializer refuses format union; valid declaration witness still fails native GPUTexture width access *(existing and new requests)* |
 | 183 | `undeclared-identifier-67f2c521` | 1 | GL | runtime | the emitted code names `gl_god_rays_effect_runner`, which nothing declares |
 | 184 | `undeclared-identifier-6ad30a3d` | 1 | GL | runtime | the emitted code names `gl_crt_effect_runner`, which nothing declares |
 | 185 | `undeclared-identifier-6dd20ce4` | 1 | 2D | compiler | QuadBatch submit refuses nullable material owner widening; exact declaration compile fails NodeAny/Sprite callback carrier *(existing requests extended)* |
@@ -3350,14 +3350,40 @@ native packet/drawing proof or unchanged old/global check is carried or claimed.
 - first failure at: `flight/scene2d_formats/rive_clipping.hpp:207`
 - example: `use of undeclared identifier 'create_rive_relative_transforms'`
 
-### 182. `undeclared-identifier-66ea97f8` — 1 header(s)
+### 182. `undeclared-identifier-66ea97f8` — 1 header, compiler-owned
 
-- cause: the emitted code names `initialize_wgpu_screen_render_target`, which nothing declares
-- subject: `initialize_wgpu_screen_render_target`
-- lanes: WGPU
-- fix route: runtime
-- first failure at: `flight/render_wgpu/wgpu_screen_render_target.hpp:151`
-- example: `use of undeclared identifier 'initialize_wgpu_screen_render_target'`
+The scoped stock header remains **1 attempted / 0 pass / 1 fail / 0 unattempted**, Clang22.1.8,
+jobs **1**, 10.9 seconds, at missing `initialize_wgpu_screen_render_target:151`. The initializer
+refuses `cpp-union-runtime-domains-erased`: `GPUTextureFormat | primitive` both map to `flight::String`
+at the format fallback. The [existing same-carrier union request](compiler-requests/distinct-union-domains-one-carrier.md#g2-wgpu-screen-target-format-fallback)
+records this bound scalar-alias case; no closed format subset or hardcoded option is substituted.
+
+The existing declaration repair qualifies the exact refusal marker, retained factory call and absent
+definition in one header, reaches a fixed point, and removal restores original bytes. Its signature
+uses `EntityConstruction<Ref<WgpuScreenRenderTarget>>`, readonly structural host/surface rows, native
+WgpuDevice and optional readonly options with the original default. A scratch actual unused header
+with only that declaration still fails compilation at candidate159 (stock157): the depth-stencil
+resize helper reads `texture.width`, absent from native `WgpuObject<WgpuTextureTag>`. `height` is also
+absent by inspection, not a second measured first error. See the new
+[native texture size-property request](compiler-requests/webgpu-texture-size-properties.md) and
+[retained declaration qualification](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-wgpu-screen-target-initializer-declaration-cannot-pass-the-unused-header).
+No positive unused-header link/run or real-factory negative object/link is reached. The candidate is
+rejected; no declaration repair, normal generation, copied target or fake GPU provider is carried.
+
+Preserve the original construction owner, host/device/drawable/options, attach result's exact context
+and live surface owner, default format/alpha/color-space and exact attach-null error. Initial storage
+uses clamped surface dimensions and real depth-stencil texture/view; capture/antialias hooks and
+resources retain their initial null/false/zero values, attachment count1 and sampleCount1. Each pass
+resyncs live extent (2x per axis for antialias), then checks old texture size and destroys/replaces it
+on mismatch. Capture acquisition precedes swap-chain fallback; presentation views last one frame,
+antialias view selection follows, and screen targets remain distinct from sampleable texture targets.
+Destroy must preserve source resource/null-write order and context unconfigure, without inventing
+device/host-acquisition release. Bind and destroy remain independently refused at optional-call
+expression/callable-result evidence; native GPU creation/view methods are explicitly unavailable.
+
+Only this row/cluster, report182, two existing request appendices and the new request/index change.
+Historical sweep/carry totals and all foreign products remain unchanged. No attachment, resize,
+capture, presentation, GPU lifecycle behavior or unchanged old/global check is claimed.
 
 ### 183. `undeclared-identifier-67f2c521` — 1 header(s)
 

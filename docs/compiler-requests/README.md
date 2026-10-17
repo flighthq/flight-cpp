@@ -627,3 +627,9 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 - [A texture-cache local must retain the effective key carrier and shared map](native-texture-source-cache-local-carrier.md) —
   the G2 Scale9Shape getter-declaration candidate reaches a variant-key native cache copied into a
   nominal TextureSource-key local; preserve the same map and source owners, with no cross-key cast or copied cache.
+
+- [A bound WebGPU texture must expose its actual size properties](webgpu-texture-size-properties.md) —
+  WGPU screen-target resize reads GPUTexture.width/height, absent from the native shared handle.
+  Original1 stays0/1; exact initializer declaration fails unused-header compilation before link.
+  Actual dimensions, shared resource identity, live surface and resize/lifecycle order must survive;
+  no target/provider/repair or GPU behavior is supplied.
