@@ -3297,6 +3297,12 @@
         "flight/interaction/hit_tests.hpp"
       ],
       "id": "interaction-declare-refused-hit-area-contains-point"
+    },
+    {
+      "files": [
+        "flight/swf/swf_node.hpp"
+      ],
+      "id": "swf-declare-refused-authored-bounds"
     }
   ],
   "sourcePatches": [

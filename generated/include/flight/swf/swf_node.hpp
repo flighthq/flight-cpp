@@ -107,6 +107,8 @@ struct SwfAuthoredBoundsData : public flight::ReferenceEnabled {
 // narrows here, because those structs really do inherit. Assert to the alternative the value actually holds and
 // read this target's members from it, or declare the slot as this target where the concrete type is known
 
+void apply_swf_authored_bounds(flight::types::Node2D node, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>> bounds);
+
 inline flight::types::DisplayObject create_swf_display_object(std::optional<flight::Ref<flight::types::SwfTagRectangle>> bounds) {
   flight::types::DisplayObject target = flight::scene2d::create_display_object(std::nullopt);
   apply_swf_authored_bounds(target, ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>> { auto contextual_union_source = bounds; if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>(contextual_union_source.value()))}; }()));

@@ -8880,6 +8880,19 @@
       "defect": "The emitter refuses hitAreaContainsPoint at an unproved structural variant to nominal NodeAny assertion, but retains hitTestNodeRegion calling the refused function. The three witnesses are the NOT GENERATED hitAreaContainsPoint marker, the missing declaration diagnostic, and the retained call with native NodeAny/HitArea/double/double parameters. This declares only the source signature; it supplies no body, owner recovery or hit result. Calling the refused helper or its retained caller still fails to link.",
       "expectedWhen": "always",
       "expires": "when hitAreaContainsPoint emits (its NOT GENERATED marker disappears); sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "swf-declare-refused-authored-bounds",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/swf/swf_node.hpp",
+      "symbol": "apply_swf_authored_bounds",
+      "refusedFunction": "applySwfAuthoredBounds",
+      "declaration": "void apply_swf_authored_bounds(flight::types::Node2D node, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>> bounds);",
+      "sourceDeclaration": "packages/swf/src/swfNode.ts -- applySwfAuthoredBounds(node: Node2D, bounds: Readonly<SwfTagRectangle> | null): void; refused at the Node2DData through unknown assertion while retained createSwfDisplayObject calls it with exactly those emitted carriers",
+      "diagnostic": "use of undeclared identifier 'apply_swf_authored_bounds'",
+      "defect": "The emitter refuses the SWF-owned authored-bounds implementation (cpp-type-assertion-unidentified) but retains createSwfDisplayObject calling it. The exact NOT GENERATED applySwfAuthoredBounds marker, retained call and absent declaration/definition agree. This inserts only the emitted Node2D/optional readonly SwfTagRectangle signature. It does not create or copy data owners, install a bounds hook, synthesize bounds behavior or recover erased data. Calling the refused helper or its retained caller remains an unresolved link; the underlying owner-recovery debt stays open in docs/compiler-requests/assertion-to-undeclared-row-member.md.",
+      "expectedWhen": "always",
+      "expires": "when applySwfAuthoredBounds emits (the NOT GENERATED marker disappears and this repair matches nothing); sdk:check fails if this repair matches no header."
     }
   ]
 }
