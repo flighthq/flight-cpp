@@ -151,6 +151,10 @@ class Map {
 
   Map() : storage_(std::make_shared<Storage>()) {}
 
+  // Generic readonly-map calls may use reference-style member access. Keep that access on this
+  // existing value handle; iterators still retain the same shared storage.
+  [[nodiscard]] const Map* operator->() const noexcept { return this; }
+
   Map(std::initializer_list<Entry> entries) : Map() {
     for (const auto& [key, value] : entries) set(key, value);
   }

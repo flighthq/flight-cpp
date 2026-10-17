@@ -40,12 +40,10 @@ inline flight::types::NonEntityCreateResult<std::shared_ptr<flight::types::Ordin
   return flight::make_ref<flight::types::OrdinalTable<T>>(flight::types::OrdinalTable<T>{.entries = vocabulary.map([=]() -> std::optional<T> { return std::nullopt; }), .vocabulary = vocabulary});
 }
 
-template <typename T>
-inline void get_kind_map_keys(flight::Array<flight::String> out, flight::Map<flight::String, T> map) {
+template <typename MapType>
+inline void get_kind_map_keys(flight::Array<flight::String> out, MapType map) {
   ([&]() { auto&& assignment_receiver = out; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
-  for (const auto& [for_of_key, for_of_value] : map) {
-    static_cast<void>(for_of_value);
-    auto key = for_of_key;
+  for (auto key : map->keys()) {
     out.push(key);
   }
   out.sort();

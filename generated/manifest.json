@@ -5389,7 +5389,7 @@
     },
     {
       "dependency": "flight",
-      "digest": "a91e0e959c8fd4bafd86bfdc2df13a91630c0358bca7e655e8939d9ed5465c07",
+      "digest": "3796a8f0b5dc208e6d5da424d5638b37992877d6169d3157bd5f194df682c601",
       "id": "registry-kind-map-keys-value-parameter",
       "module": "packages/registry/src/registryTable.ts",
       "package": "@flighthq/registry"
