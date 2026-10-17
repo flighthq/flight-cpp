@@ -100,7 +100,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 71 | `other-f9c5bc10` | 3 | 2D | compiler | an `as` assertion over a `flight::JsonValue` is lowered with the erased-value `object_if` pattern, which a tagged JSON value ca... *(request filed)* |
 | 72 | `redefinition-c11d96e9` | 3 | TEXT | runtime (fixed) | the bitmap_font_record override's `#pragma once` was commented out; G2 recheck: 0 pass, 3 fail at `bitmap_font_fnt.hpp:187` |
 | 73 | `undeclared-identifier-145c75d7` | 3 | TEXT | runtime | the emitted code names `initialize_glyph_source_from_glyph_atlas`, which nothing declares |
-| 74 | `undeclared-identifier-2cdb69a6` | 3 | PLAT | runtime | the emitted code names `channel_elements`, which nothing declares |
+| 74 | `undeclared-identifier-2cdb69a6` | 3 | PLAT | runtime + override (fixed) | the emitted code names `channel_elements`, which nothing declares; G2: 3 pass |
 | 75 | `undeclared-identifier-564c29cc` | 3 | TEXT | runtime | the emitted code names `format_date_value`, which nothing declares |
 | 76 | `undeclared-identifier-6a187568` | 3 | 3D | runtime | the emitted code names `count_ascii_stl_facets`, which nothing declares |
 | 77 | `undeclared-identifier-dc087108` | 3 | PLAT | runtime | the emitted code names `load_video_resource_from_url`, which nothing declares |
@@ -1471,14 +1471,32 @@ its own. All three now fail at the next diagnostic:
 - first failure at: `flight/glyphatlas/glyph_source.hpp:78`
 - example: `use of undeclared identifier 'initialize_glyph_source_from_glyph_atlas'`
 
-### 74. `undeclared-identifier-2cdb69a6` — 3 header(s)
+### 74. `undeclared-identifier-2cdb69a6` — 3 G1 header(s), 3 now compile
 
 - cause: the emitted code names `channel_elements`, which nothing declares
 - subject: `channel_elements`
 - lanes: PLAT
-- fix route: runtime
+- fix route: runtime + override (fixed)
 - first failure at: `flight/media/video_channel.hpp:91`
 - example: `use of undeclared identifier 'channel_elements'`
+
+`videoChannel.ts` declares `const channelElements = new WeakMap<VideoChannel, HostImageSource>()`
+at line 167; the emitter refuses that declaration as `cpp-weak-map-value-representation-unproven`
+and still lowers the getter, deleter and setter that use it, so the header named an undeclared map.
+The sibling `videoChannelRuntimes` map is emitted in the same header, so the representation is not
+in doubt here. `overrides/include/flight/media/video_channel.hpp` is the generated header plus that
+one declaration, `flight::WeakMap<flight::Ref<flight::types::VideoChannel>,
+flight::types::HostImageSource>`: the channel reference keys by shared-owner identity, the value is
+the exact `HostImageSource` the source stores, and an entry stops resolving when its channel is
+collected as `WeakMap` requires. It is the source's own storage, not a cache added by the override.
+
+That declaration exposed the next diagnostic in all three headers: emitted code calls
+`Task::catch_error` with a zero-argument closure (`catch(() => …)`) while the runtime required a
+handler invocable with `const Rejection&`. JavaScript supplies the reason, but a handler that ignores
+it may declare no parameter, so `Task::catch_error` now resolves the handler arity through
+`detail::invoke_rejection_handler` and calls the zero-argument form with no argument at all, rather
+than passing the reason to something that discards it. The exact reason still reaches a handler that
+declares it, and the runtime test covers both forms for a value task and for a void task.
 
 ### 75. `undeclared-identifier-564c29cc` — 3 header(s)
 

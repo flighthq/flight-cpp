@@ -3103,6 +3103,22 @@
       "authoredOn": "2026-10-16"
     },
     {
+      "id": "media-video-channel-elements-weak-map",
+      "path": "flight/media/video_channel.hpp",
+      "package": "@flighthq/media",
+      "status": "complete",
+      "supplies": "packages/media/src/videoChannel.ts",
+      "derivedFrom": "1591a02b5ac4d14c637061b49fb501390ce27eca0df243530d94c18ce57d6aab",
+      "reason": "The 806d257 emitter refuses `const channelElements = new WeakMap<VideoChannel, HostImageSource>()` (videoChannel.ts line 167) as cpp-weak-map-value-representation-unproven and then emits the getter, deleter, and setter that call it, so the generated header does not compile. The module's sibling map `videoChannelRuntimes` is emitted in the same header, so only this declaration is withheld.",
+      "change": "Declares `flight::WeakMap<flight::Ref<flight::types::VideoChannel>, flight::types::HostImageSource> channel_elements` beside the existing maps in namespace `flight::media`. Every other byte is the generated 806d257 header.",
+      "equivalence": "The map is the source's own storage, not a cache introduced here: the emitted getter, deleter, and setter call it exactly where the TypeScript does. The key is the channel reference, so two views of one channel are one key (Ref is a shared owner and the default weak-key policy weakens shared_ptr keys by identity); the value is the exact HostImageSource the source stores. An entry disappears when its channel is collected, as WeakMap requires, and no other declaration changes.",
+      "whyNotAPatchOrRepair": "The refusal is a value-representation judgement about a declaration the emitter withheld, so no source rewrite answers it without changing the source's storage. A declaration insertion repair is reserved for a refused function that emitted code calls, which this is not.",
+      "unblocks": "flight/media/video_channel.hpp and the media headers that include it compile independently.",
+      "remaining": "None in the emitted declarations or behavior of this module.",
+      "expires": "when the pinned compiler emits the WeakMap declaration for packages/media/src/videoChannel.ts.",
+      "authoredOn": "2026-10-17"
+    },
+    {
       "id": "scene2d-resources-prior-emission-load-scene-2d-image-resources",
       "path": "flight/scene2d_resources/load_scene_2d_image_resources.hpp",
       "package": "@flighthq/scene2d-resources",

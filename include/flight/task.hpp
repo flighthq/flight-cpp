@@ -341,6 +341,19 @@ class TaskPromiseResult<void> {
   std::shared_ptr<TaskState<void>> state_;
 };
 
+// JavaScript calls a `catch` handler with the rejection reason, but a source is free to write a
+// zero-argument closure when it ignores that reason (`catch(() => fallback)`), and emitted code does.
+// The arity is resolved here rather than at the call site so the zero-argument form is a genuine "this
+// handler declares no parameter" and not the rejection being silently discarded at an adapter.
+template <typename Function>
+decltype(auto) invoke_rejection_handler(Function& function, [[maybe_unused]] const Rejection& rejection) {
+  if constexpr (std::invocable<Function&, const Rejection&>) {
+    return std::invoke(function, rejection);
+  } else {
+    return std::invoke(function);
+  }
+}
+
 } // namespace detail
 
 template <typename Value>
@@ -735,7 +748,8 @@ class Task {
   template <typename Function>
     requires std::copy_constructible<std::remove_cvref_t<Function>>
   [[nodiscard]] Task catch_error(Function function) const {
-    using Result = std::invoke_result_t<Function&, const Rejection&>;
+    using Result = decltype(detail::invoke_rejection_handler(std::declval<Function&>(),
+                                                             std::declval<const Rejection&>()));
     static_assert(std::same_as<detail::TaskResultValue<Result>, Value>,
                   "a task rejection handler must preserve the task value type");
     auto output = pending(executor_);
@@ -747,7 +761,7 @@ class Task {
           return;
         }
         const auto rejection = source.state_->rejection();
-        settle_invocation<Value>(output_state, [&] { return std::invoke(function, rejection); });
+        settle_invocation<Value>(output_state, [&] { return detail::invoke_rejection_handler(function, rejection); });
       });
     });
     return output;

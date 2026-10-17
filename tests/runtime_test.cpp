@@ -3862,6 +3862,20 @@ void test_task() {
   });
   check(recovered.get() == 6, "catch_error recovers an exact rejection value");
 
+  // JavaScript's `catch` supplies the reason, but a handler that ignores it may declare no parameter.
+  // That handler is genuinely zero-argument; the reason is not passed to something that drops it.
+  const auto ignored_reason = value_rejection.catch_error([] { return 7; });
+  check(ignored_reason.get() == 7, "catch_error accepts a zero-argument handler");
+
+  bool void_reason_ignored = false;
+  try {
+    FlightTask<void>::reject(std::string("reason")).catch_error([] {}).get();
+    void_reason_ignored = true;
+  } catch (...) {
+    void_reason_ignored = false;
+  }
+  check(void_reason_ignored, "catch_error accepts a zero-argument handler for a void task");
+
   bool continuation_called = false;
   const auto continued = source.then([&](int value) {
     continuation_called = true;
