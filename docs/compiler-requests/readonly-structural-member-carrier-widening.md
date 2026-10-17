@@ -98,3 +98,51 @@ Default/null destination means canvas; an explicit compatible readonly destinati
 framebuffer, viewport, dimensions and GL context. Existing context-keyed copy/OETF program cache
 identity, uniforms, draw ordering and teardown remain required. A fake successful present, copied
 base target, unchecked owner cast, narrower destination domain or extra conversion is not equivalent.
+
+## Native follow-up: live readonly nullable value projection qualified
+
+The bounded 2026-10-17 follow-up resolves the measured runtime gap and aligns the two native
+present/OETF helper signatures with the already-correct readonly source API. It includes the
+required runtime change; the ABI-only candidate above remains rejected historical evidence.
+
+For a non-required readonly named member whose schema reads optional<T>, row_get now returns a
+fresh value on each read. It accepts the owner's exact optional<T> cell or its exact present T
+cell and wraps one optional layer only. Empty, engaged-null-reference and engaged-reference
+states remain distinct. The same owner and payload identity remain; a later concrete cell update
+is read on the next access. No wrapper is cached and resetting the returned optional cannot write
+null into a present cell. A missing sparse cell still reads empty; a present unrelated storage type
+still throws bad_cast. Exact erased-cell lookup remains exact. Writable, required, partial and
+non-optional readonly access keep their previous paths; no conversion proof or write authority
+is added. The readonly optional return deliberately changes from a cell reference to a value;
+there is no optional reference to return from a bare payload cell.
+
+The structural-row target built/linked and passed **1/1, 0.01 s**, including thirteen new semantic
+checks plus five compile-time assertions: same owner/reference, projected-value independence,
+live updates, retained/released owner lifetime, exact optional empty/null/present states, nested
+one-layer lifting, unchanged exact lookup and unrelated-cell rejection. Its existing required,
+partial, sparse, write and identity checks also ran.
+
+The new actual SDL/Mesa present target built/linked and passed **1/1, 0.42 s**. One CTest invocation
+ran these two tests **2/2 pass, 0.43 s total**, once each. The real context executes eleven native
+draws and RGBA8 readbacks using the unchanged copy and OETF shader programs. The fixture checks
+both color-space branches (within two byte values of the expected channels), nominal/readonly
+source compatibility, explicit readonly texture destinations whose framebuffer cell is present,
+omitted/null canvas destinations, and an explicit base target whose optional framebuffer is
+empty. Each output starts cleared, so a no-op cannot inherit a prior pixel. The same source view
+observes a later texture-cell update. Both program caches retain the identical program on repeat
+use; actual target deletion and context teardown callbacks complete without GL errors.
+
+Changed original-one header compilation with Clang22.1.8, jobs1: **1 attempted / 1 pass / 0 fail /
+0 unattempted, 173.6 s**. The row is PASS with previousCluster and request traceability; the
+single-header active bf84cbac root is removed. No generated SDK header, source patch, emission
+repair, binding manifest or pin changed. The two existing override records retain partial status
+and match their generated derivations (**228/228 override consistency pass**).
+
+This proves the generic readonly nullable read and actual native present helpers. It does not
+execute the full generated presentGlScene3D scene composition, its begin/render/finally/end failure
+ordering or MSAA resolve; those untouched source contracts above remain requirements. It does not
+prove all OETF inputs, a complete module/package, or any DOM style provider. Foreman and Manager
+explicitly retained the five DOM rows as unavailable under SDL; they were not recompiled. No
+normal generation, full sweep or old failed-candidate rerun was performed. Historical measurements,
+sweep/carry counters and foreign products remain intact. Current evidence is under
+`/tmp/builder4-dom-style-present/` (build, CTest/LastTest, scoped header report and override check).

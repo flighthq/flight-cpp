@@ -124,3 +124,12 @@ rejected; the unchanged inventory retains original0/1. The distinct runtime read
 measured stack, evidence limits and full pass/present semantics are filed in
 [readonly structural member carrier widening](readonly-structural-member-carrier-widening.md).
 No native implementation, generated/source patch or successful present is carried.
+
+### Native follow-up resolution of the present boundary
+
+The later bounded follow-up carries the two readonly native helper ABIs together with the required
+runtime nullable-cell value projection. Actual SDL/Mesa present now passes eleven draws/readbacks;
+the original-one header passes. The ABI-only candidate above remains historical rejected evidence.
+See the [qualified runtime resolution](readonly-structural-member-carrier-widening.md#native-follow-up-live-readonly-nullable-value-projection-qualified)
+for exact counts, source/owner guarantees and limits. No compiler caller rewrite or nominal owner
+recovery was needed, and the overrides remain partial.

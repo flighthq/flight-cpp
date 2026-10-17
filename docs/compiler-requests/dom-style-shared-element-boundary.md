@@ -140,3 +140,19 @@ line 28), and its registration still names it at lines 136 and 139. That is the 
 class, and it is reached only after this boundary. `scene2d-dom` declares environment `web`, so applicability
 and the denominator are unchanged. The row stays **0/1 pass, 1 fail** at line 69. No C++, binding, source,
 override or generated text changed.
+
+## Bounded native follow-up: provider scope retained
+
+The 2026-10-17 follow-up (Foreman `4916db9f`, clarified by `39abe59a` / `046c5c30` and
+Manager `863c06b4`) re-examined these five rows together. There is no existing DOM/CSS provider
+behind the SDL value facade to connect to the emitted shared element handles. Retained style
+strings alone would repair only aliasing; they would not supply the required attachment, CSS
+setters, compositing or native text realization. A recording provider used only by a test would
+not qualify those operations either.
+
+The approved disposition is to retain all five rows explicitly unavailable and linked here under
+the current SDL profile. A real web DOM/CSS backend is an optional future user scope expansion;
+no backend, dependency, style-bag substitute, binding election, source/generated code, applicability
+or denominator is changed. The original **0/5 pass, 5 fail** remains; no unchanged DOM header was
+recompiled and no DOM behavior or rendering result is claimed. The independent Scene3D present
+runtime cell projection does not establish DOM style support.

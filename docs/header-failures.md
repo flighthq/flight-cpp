@@ -164,7 +164,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 135 | `no-viable-conversion-9695423c` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
 | 136 | `no-viable-conversion-a516fbdb` | 1 | 3D | compiler | readonly generic graph node cannot become an independent geometry probe; existing refinement request linked (G2: 0/1 retained) |
 | 137 | `no-viable-conversion-b47bc6cd` | 1 | 2D | compiler *(existing request)* | object-narrowed `unknown` used as a `Set<object>` key without the `Any::erased_ref()` identity projection |
-| 138 | `no-viable-conversion-bf84cbac` | 1 | 3D | runtime | native readonly ABI drift; rejected correction exposes nullable framebuffer cell reads |
+| 138 | `no-viable-conversion-bf84cbac` | 1 | 3D | runtime (applied) | readonly native ABI plus live nullable member projection; original1 now 1/1 PASS with actual present proof |
 | 139 | `no-viable-conversion-c997578d` | 1 | 2D | compiler *(existing requests)* | G2: the first GCC failure is cluster 2's re-export before declaration in the include chain; own `:65` view-as-WeakMap-key recorded; row moved |
 | 140 | `no-viable-conversion-cef6403d` | 3 | 3D | compiler | nullable indexed material union cannot widen to the declared material owner; [request](compiler-requests/compiler-interface-heritage-owner-widening.md#g2-picking-hit-material-retains-the-selected-owner) |
 | 141 | `no-viable-conversion-dc893fc7` | 1 | GL | binding (applied) | absent WebGL `srcOffset` passed where the host declared a plain defaulted size *(G2: 1/1 pass)* |
@@ -3425,7 +3425,9 @@ domain, empty result or native version/bounds/upload gain is claimed.
 - Scoped native recheck (GCC 15.2, jobs 1): **1 attempted / 0 pass / 1 fail** at `:138`. Nothing is carried.
 - compiler request: `docs/compiler-requests/erased-object-identity-set-membership.md`
 
-### 138. `no-viable-conversion-bf84cbac` — 1 header(s)
+### 138. `no-viable-conversion-bf84cbac` — 1 original header, 1 pass (native follow-up)
+
+The initial rejected attempt is preserved below; the later qualified runtime resolution follows it.
 
 - cause: the native present/OETF overrides take nominal target references while the source API
   and generated caller correctly use readonly structural views
@@ -3458,6 +3460,25 @@ sweep/carry counters and foreign rows remain. No unchanged stock/generation reru
 copy/OETF pixels, cache teardown or passing live present is claimed. Full source contract and
 candidate/debugger evidence limits are in the new request; logs remain under
 `/tmp/builder4-g2-present-scene3d/`.
+
+**Current native follow-up: resolved, 1/1 PASS.** Readonly nullable named members now project a
+fresh optional from the original exact optional or present-payload cell, one layer only. Live reads,
+reference/owner identity, empty versus engaged-null states and owner lifetime are preserved. The
+projection grants no write authority; unrelated types still throw. Writable/required/partial and
+non-optional paths remain. The two native present/OETF helper ABIs now accept the source-declared
+readonly target/destination and read the same live colorSpace/texture cells; no owner recovery,
+shader/cache/GL/body substitution or domain narrowing.
+
+Commit-first changed targets built/linked. One CTest invocation: **2/2 PASS,total0.43s**;
+structural-row **0.01s**, actual SDL/Mesa present **0.42s**, eleven real draws and RGBA8 readbacks
+(copy/OETF, target/canvas destinations, live texture update, cache identity and cleanup/no GL error).
+Changed original1: **1 attempted /1 pass /0 fail /0 unattempted,173.6s,Clang22.1.8 jobs1**.
+Override consistency **228/228 PASS**; both helper records stay partial. The active single-header
+root is removed and the PASS row retains previousCluster/request provenance. The request records
+the deliberate readonly optional value-return ABI and exact proof limits. No full generated Scene3D
+composition/MSAA/failure-cleanup or DOM provider claim. DOM5 stay explicitly unavailable per
+Foreman/Manager; no unchanged DOM compile, generation, sweep or old proof rerun. Historical and
+foreign products remain intact. Evidence: `/tmp/builder4-dom-style-present/`.
 
 ### 139. `no-viable-conversion-c997578d` — G2 recheck of 1 header
 

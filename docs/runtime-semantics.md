@@ -72,6 +72,19 @@ One more case is admitted, and it is a weakening rather than a widening: a **rea
 
 A widened row keeps the source object and the source's single row owner, so `row_get` reads the real derived object's members — a later write to the derived object is visible through the widened base row, because they are one subject and not two that agree. `shared_object()` on a widened base row is null by design: there is no base object to hand back, and inventing one would be a copy. Direction is preserved in both dimensions — a readonly row never becomes writable, and widening runs derived-to-base only.
 
+A **readonly nullable named member** reads as a value projection. Its schema's `optional<T>` may
+be backed by the original owner's exact `optional<T>` cell or, under the existing widening proof,
+by its exact present `T` cell. `row_get` returns a fresh `optional<T>` on each read, wrapping only
+one layer. It preserves an empty optional, an engaged null reference and an engaged reference as
+distinct states, and retains the same referenced object. Later owner writes are visible on the
+next read. The returned optional is not a reference to a cached wrapper or a mutable cell; resetting
+it cannot put null into a concrete present member. Missing sparse cells read empty, while a present
+cell of an unrelated type still throws `std::bad_cast`. Exact erased-cell lookup, writable reads,
+required-member reads and non-optional readonly references keep their existing contracts. This
+adds no conversion proof or write authority. The structural-row test covers projection, live
+updates, owner lifetime, nested optional lifting and rejection; the native present test covers the
+actual framebuffer handle through this boundary.
+
 A **C++-derived carrier** is the other case, and there the base object does exist. The compiler sometimes emits an anonymous carrier that really inherits from the declared subject: `createShapedRun` allocates `struct advance_width_..._69a845f27c0212e6 : public flight::types::ShapedRun`. A row built from a typed pointer to such an object — `StructuralRef<RowReadonly<RowOf<Ref<ShapedRun>>>>` from a `Ref<ShapedRun>` or from the carrier's own pointer — holds a pointer the compiler itself proved is a `ShapedRun`, because `flatten_ref` only returns the same type or a `static_pointer_cast` it accepted through `derived_from`. `shared_object()` returns that pointer even though the shared row owner was first created for the carrier and records the carrier's type; identity stays the owner's, and the row keeps the object alive like the pointer it came from. The same proof lets such a row answer `shared_exact_object<ShapedRun>()` — asking for its own subject type is not a downcast — so `structural_ref_cast<Ref<ShapedRun>>(row)` recovers the very object instead of throwing `bad_cast`. Every other row — widened from another schema, or rebuilt from an owner with `from_owner` — has no such proof and keeps the exact-owner check, and so does a request for any type other than the row's subject, so no cross-owner cast is made. `tests/structural_row_test.cpp` covers both directions.
 
 A **merged row** (`A & B`, `RowMerge`) has no subject of its own, so it has no `object_type`. Most intersections the SDK builds are one object seen twice, though: `Host & Capabilities` with `Capabilities` a Host, or a capability narrowed by `Required<Pick<Capability, 'center'>>`. `detail::merge_subject_t` names that one object when there is one. A constituent's subject S is the merge's subject when every constituent is a row over S itself, or over a subject the generated table proves S answers for (the widening rule above, including computed-cell agreement). It is void when no constituent qualifies (unrelated subjects), when two distinct subjects qualify (ambiguous), or when a constituent has no subject.
