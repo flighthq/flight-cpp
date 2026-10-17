@@ -677,3 +677,6 @@ patch has retired because the fix landed upstream keep their row, marked, as the
   `@flighthq/swf` `swfFrameAction.ts`: `target as MovieClip` stays a view over the same owner but reaches
   `Ref<MovieClip>` parameters without `structural_ref_cast<Ref<T>>`. The recovery compiles in scratch but is
   checked where the assertion is not, so nothing is carried.
+- [A numeric optional-chain result must retain its numeric payload](numeric-optional-chain-result-erased.md) —
+  SVG selector specificity emits guarded match lengths as `optional<Any>` rather than `optional<double>`;
+  the two measured color consumers join the existing style cluster at `svg_style.hpp:53`.

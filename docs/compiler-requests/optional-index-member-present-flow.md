@@ -310,3 +310,33 @@ Only this append-only note, worklist96 and three compact owned product lines cha
 source patches, repairs, generation inventory and pins are unchanged; unchanged C++ is not rerun.
 Foreign compact product lines/worklist entries and historical/G1 totals remain intact. No native
 header-availability, light import/placement, parser, rendering or link success is claimed.
+
+## G2 SVG color parser capture and full color domain
+
+The `parseSvgColor` refusal is another indexed regexp capture member projection at the same
+pinned revisions. `functionMatch !== null` follows the anchored `rgba?`/`hsla?` match; source
+`svgColor.ts:36` then reads `functionMatch[2].split(...)`. This regexp's second capture is
+mandatory on a successful match, including an empty string, but the general indexed capture
+carrier remains optional. Preserve the proven payload for this access before invoking split.
+The request already covers guarded match/capture member use; no separate capture request or
+global assertion that all regexp captures are present is needed.
+
+The existing source ``svgColor.ts:16`` must retain its full admitted color domain when the body eventually emits:
+
+- Trim and lowercase input. Empty, none and transparent return null; unknown/invalid colors also return null. These source outcomes intentionally share the no-paint value (the existing test says the caller has no separate action for invalid color). Do not invent opaque black, a second sentinel or a fake parsed color. Each successful parse returns the source's fresh SvgColor object with mutable alpha and numeric rgb.
+- Hex forms have lengths 3/4/6/8. Short forms duplicate each channel nibble and optional alpha; long forms parse the six RGB characters and optional alpha byte. Keep the source parseInt/NaN decisions, including prefix parsing rather than adding a stricter whole-string hex grammar. Alpha defaults 1 and byte alpha divides by 255. Bitwise packing and source rounding remain unchanged.
+- The anchored rgba?/hsla? regexp has two mandatory captures. After a successful match, capture 2 is a string even for an empty component sequence. It must be projected before split, without pretending every capture of every regexp is required. Full-match 0 is distinct from captures 1/2. Current refusal says split needs present storage; this does not supply parsing and does not justify replacing RegExpExecArray with Array<String> that erases optional captures elsewhere.
+- Split function contents on whitespace/comma/slash and filter empty components. Require at least three; RGB and HSL each accept the optional fourth alpha independent of whether the name has a final a. Preserve actual handling of extra components rather than adding an exact-arity CSS grammar. RGB numeric/percentage components parseFloat, percentage*255/100, clamp0..255 then round. Alpha parseFloat must be finite, percentage divides by100, then clamp0..1; missing fourth alpha means 1. Keep the source non-finite checks and permissive numeric-prefix behavior, not a new validator.
+- HSL accepts turn*360, grad*.9 (checked before rad), rad*180/pi or ordinary degrees. Fraction/percentage saturation and lightness require finite parsed numbers and clamp0..1. Hue wraps with the source two modulo steps, including negative values, then original chroma/secondary/offset and round/bit packing produce rgb. Do not approximate HSL with RGB, drop percent/unit forms or change signed/boundary rounding.
+- Preserve the exact 20-entry named table, including aqua/cyan, fuchsia/magenta and gray/grey aliases. Named misses return null, not throwing missing-key access or an added default. No new color table or all-CSS-names claim is supplied.
+- resolveSvgColor compares normalized input to currentcolor, selects the original inherited currentColor string only for that token, and calls the same parser. No recursive cascade walk or synthetic color is added. Geometry consumes the returned rgb and alpha in real fill/stroke commands, while a gradient stop multiplies the same returned object's alpha by stop opacity before retaining it; do not return an immutable row, clone a replacement owner or fold stop/style opacity into a parser constant.
+
+Existing svgColor tests specify hex/RGB/HSL/named results, shared null behavior and inherited currentColor; gradient/geometry sources specify opacity and owner use. They are requirements, not evidence of native color, cascade, gradient or painting execution. The declaration leaves the parser's NOT GENERATED marker and partial module intact. It qualifies only an unused header and an exact unresolved function boundary.
+
+The exact declaration in the [retained-callee request](retained-declaration-calls-omitted-callee.md#g2-svg-color-parser-declaration-and-remaining-style-consumers)
+qualifies normal generation and actual unused compile/link/run, with an actual resolver-call object
+followed by the sole missing-parser link error. Final owned native scope is **1/3 pass**:
+`svg_color.hpp` passes; `svg_geometry_element.hpp` and `svg_gradient.hpp` reach the distinct
+[numeric optional-chain result request](numeric-optional-chain-result-erased.md) at `svg_style.hpp:53`.
+The whole emitted header preserves the parser omission; neither this coverage note nor the declaration
+claims parsing or painting behavior. Source tests were read as requirements, not run as native evidence.

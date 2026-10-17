@@ -443,7 +443,7 @@ The other rows remain failures and have been reclassified by their newly exposed
 | follow-on cluster | headers | first failure | cause |
 | --- | --- | --- | --- |
 | `call-has-no-matching-4f8413e4` | 9 | `flight/scene3d_formats/collada_xml.hpp:44` | a numeric builtin used as a callback is emitted as the overloaded std::isfinite name |
-| `undeclared-identifier-fb3e0e45` | 3 | `flight/scene2d_formats/svg_color.hpp:134` | parseSvgColor is refused for unproven optional member storage, but retained resolveSvgColor still calls it |
+| `undeclared-identifier-fb3e0e45` | 3 | `flight/scene2d_formats/svg_color.hpp:134` | parseSvgColor is refused for unproven optional member storage, but retained resolveSvgColor still calls it; [subsequent exact declaration qualification](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-svg-color-parser-declaration-and-remaining-style-consumers) clears this missing name, with final 1/3 and two style follow-ons below |
 | `no-viable-conversion-a21c880d` | 1 | `flight/scene2d_formats/svg_style.hpp:53` | a numeric optional-chain length is erased to optional<Any> before assignment to double |
 | `no-viable-conversion-deeedfb9` | 1 | `flight/scene2d_formats/svg_transform.hpp:52` | a readonly Matrix row is converted through a writable row while forming a readonly MatrixLike argument |
 
@@ -456,6 +456,24 @@ filter implementation.
 
 The opening totals and this group's original rank describe G1. Only these 16 header rows and
 their replacement failure clusters changed here; `previousCluster` preserves the G1 group.
+
+#### G2 SVG color declaration and remaining style consumers
+
+Subsequent scoped check of the three `undeclared-identifier-fb3e0e45` headers completes
+**3 attempted / 1 pass / 2 fail / 0 unattempted**, Clang 22.1.8, jobs 1, 131.6 seconds.
+The exact [refused-parser declaration](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-svg-color-parser-declaration-and-remaining-style-consumers)
+reproduces through normal generation. Actual unused header compile/link/run pass; a real resolver
+call compiles to an object and fails to link only on `parse_svg_color(String)`. `svg_color.hpp`
+now passes. The parser body and [full color/capture contract](compiler-requests/optional-index-member-present-flow.md#g2-svg-color-parser-capture-and-full-color-domain)
+remain omitted; header availability supplies no parsing or painting behavior.
+
+`svg_geometry_element.hpp` and `svg_gradient.hpp` both reach `svg_style.hpp:53`,
+`no viable conversion from 'flight::Any' to 'const double'`. They join
+`no-viable-conversion-a21c880d` under the [numeric optional-chain result request](compiler-requests/numeric-optional-chain-result-erased.md).
+That cluster now has three current members; the preexisting `svg_style.hpp` row was not rerun
+or edited. The preceding 2/16 result and table counts remain the historical Number-callback check.
+Only the three owned header rows, removed missing-name cluster and receiving style-cluster
+membership/coverage change. Existing G1 provenance and all foreign rows remain intact.
 
 ### 8. `other-40da43f7` — 16 header(s)
 

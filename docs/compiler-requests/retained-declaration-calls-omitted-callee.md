@@ -2219,3 +2219,43 @@ and [runner owner/capability](custom-shader-effect-runner-owner.md#g2-plain-blur
 refusals remain separate. Neither source box-blur behavior nor a new shader/cache/target/copy may
 substitute for plain Gaussian compositing or its RenderTexture guards/publication/error semantics.
 Only the owned original header and changed scratch candidate are compiled; no GL operation runs.
+
+## G2 SVG color parser declaration and remaining style consumers
+
+At Flight `a627849` / compiler `806d257`, the original three-header
+`undeclared-identifier-fb3e0e45` group names `parse_svg_color` from retained
+`resolve_svg_color`. The source declaration `parseSvgColor(value: string): SvgColor | null`
+at `packages/scene2d-formats/src/svgColor.ts:16` and the emitted resolver's actual String
+arguments and optional reference result agree on the exact declaration:
+
+```cpp
+std::optional<flight::Ref<flight::types::SvgColor>> parse_svg_color(flight::String value);
+```
+
+The complete, existing `flight::types::SvgColor` owner supplies mutable numeric `alpha` and
+`rgb`; no owner, storage or parser is copied. The `declare-refused-function` repair requires
+the exact NOT GENERATED marker, retained direct call and absent definition. The loader
+matches only `svg_color.hpp`, reaches a fixed point, and deleting only the declaration restores
+the original bytes. Missing marker, missing call and existing body reject the candidate.
+
+Actual whole-header unused compile, link and run each exit 0 with Clang 22.1.8. Static
+signature assertions cover parser and resolver. A translation unit calling the real
+`resolve_svg_color("currentColor", "red")` compiles to an object, then exits 1 at link with
+only `flight::scene2d_formats::parse_svg_color(flight::String)` undefined from the resolver.
+The used program never runs. Normal pinned scoped generation exits 0: 1467 modules lowered,
+30 packages, 0 complete modules emitted, 1 refusal, 252 source patches and 1 header repaired.
+Its entire emitted header is byte-identical to the native-tested candidate; only that header
+and its own applied repair record are carried from generation.
+
+Final scoped native check: **3 attempted / 1 pass / 2 fail / 0 unattempted**, Clang 22.1.8,
+jobs 1, 131.6 seconds. `svg_color.hpp` passes. `svg_geometry_element.hpp` and `svg_gradient.hpp`
+both fail at `svg_style.hpp:53`: `no viable conversion from 'flight::Any' to 'const double'`.
+They join the existing style cluster under the precise
+[numeric optional-chain result request](numeric-optional-chain-result-erased.md); its historical
+style row was not rerun. Repair mechanism tests: 29 pass, 1 skip, 0 fail.
+
+The parser's [indexed regexp capture refusal and complete color domain](optional-index-member-present-flow.md#g2-svg-color-parser-capture-and-full-color-domain)
+remain open. Its partial banner, source excerpt and refusal marker remain byte-for-byte intact.
+This is header availability only: no parser, color/cascade/gradient/painting execution, fake color,
+narrower grammar, runtime conversion, source patch or override is supplied. Calls through either
+parser or resolver remain visibly unusable at the exact missing-parser link boundary.
