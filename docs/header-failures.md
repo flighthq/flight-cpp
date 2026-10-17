@@ -27,7 +27,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 
 | # | cluster | headers | lanes | fix route | cause |
 | --- | --- | --- | --- | --- | --- |
-| 1 | `call-has-no-matching-9c08d665` | 116 | WGPU | binding | the emitted braced descriptor cannot deduce the host binding's variadic template, so the WGPU command-encoder binding needs the... |
+| 1 | `call-has-no-matching-9c08d665` | 116 | WGPU | compiler | bound WebGPU descriptor object literals are emitted as untyped source-order braced initializers with anonymous nested owners *(request filed)* |
 | 2 | `missing-member-b1a6d5cf` | 34 | 2D | compiler | scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined *(request filed)* |
 | 3 | `in-operator-not-lowered-b1eae4af` | 31 | 2D, GL, PLAT, WGPU | compiler | the TypeScript `in` operator is emitted verbatim as C++ `in` |
 | 4 | `undeclared-identifier-993e82f1` | 29 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(builder4/E0a)* |
@@ -282,13 +282,14 @@ deleting or stubbing behaviour.
 
 ### 1. `call-has-no-matching-9c08d665` — 116 header(s)
 
-- cause: the emitted braced descriptor cannot deduce the host binding's variadic template, so the WGPU command-encoder binding needs the typed descriptor overload
+- cause: bound WebGPU descriptor object literals are emitted as untyped source-order braced initializers with anonymous nested owners, which no host overload can faithfully accept
 - subject: `begin_render_pass`
 - lanes: WGPU
-- fix route: binding
-- why this route: the emitted braced descriptor cannot deduce the host binding's variadic template, so the WGPU command-encoder binding needs the typed descriptor overload
+- fix route: compiler
+- why this route: G2 reclassified from binding. A typed descriptor overload cannot take `Array<Ref<anon>>` attachments whose `view` and `clear_value` shapes differ per site
 - first failure at: `flight/render_wgpu/wgpu_render_pass.hpp:146`
 - example: `no matching member function for call to 'begin_render_pass'`
+- compiler request: `docs/compiler-requests/external-descriptor-literal-construction.md`
 
 ### 2. `missing-member-b1a6d5cf` — 34 header(s)
 
