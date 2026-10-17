@@ -2179,3 +2179,43 @@ number sequence and full index domain. Both source body omissions stay visible: 
 and [actual open-object key iteration](layout-object-key-iteration-closed-keys.md#g2-anchor-container-is-an-open-object-at-the-current-pin).
 The unused positive does not substitute either body. No fake layout, copied owner, empty
 result, narrowed domain, output write, fallback success or host/provider is carried.
+
+## G2 Gaussian blur declaration candidate fails the unused header
+
+At Flight `a627849` / compiler `806d257`, original1 undeclared-identifier-e3d6c4e4 is
+ effects_gl/gl_blur_effect.hpp. Actual Clang22.1.8 jobs1 completes **1 attempted / 0 pass / 1 fail /
+0 unattempted**,75.1s, at missing apply_gl_gaussian_blur_pass93. Source105 refusal, retained direct
+calls in apply_gaussian_blur_to_gl and absent definition satisfy declare-refused-function exactly.
+The source and actual retained arguments require:
+
+```cpp
+void apply_gl_gaussian_blur_pass(
+  flight::Ref<flight::types::GlRenderState> state,
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<
+    flight::Ref<flight::types::GlTextureRenderTarget>>>> source,
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<
+    flight::Ref<flight::types::GlTextureRenderTarget>>>> dest,
+  double sigma, double radius, double dir_x, double dir_y);
+```
+
+The same scratch uses existing insert-forward-declaration, guarded by the exact source94 refused
+binding marker, to insert namespace flight::effects_gl { extern flight::types::GlEffectRunner
+ gl_blur_effect_runner; }. This is the alias consumed by the actual register_gl_effect slot;
+no runner object/storage, registration or pass operation is supplied. Both entries match only the
+owned header, reach a fixed point, and removing only their declaration text restores original bytes.
+No repair engine extension or body rewrite is needed for these witness checks.
+
+The actual unused whole-header compile/link command exits1 during compilation, at candidate116
+(original112). The RenderTexture wrapper constructs a writable target row from its already-readonly
+source_target.value(), then tries to pass it readonly. The
+[existing readonly-view request](readonly-view-to-writable.md#g2-gaussian-blur-rendertexture-source-target)
+records the exact diagnostic and agreeing source/generated/native getter contract. No executable is
+produced, positive link/run is not reached, and a qualified real-use negative link cannot be claimed.
+Both prototype candidates are rejected; no production repair, normal generation, registry/manifest,
+C++/runtime/source/binding/override change is carried.
+
+The underlying [Gaussian target union/body](interface-heritage-widening.md#g2-plain-gaussian-blur-preserves-two-compositing-passes)
+and [runner owner/capability](custom-shader-effect-runner-owner.md#g2-plain-blur-runner-is-separate-from-the-gaussian-pass)
+refusals remain separate. Neither source box-blur behavior nor a new shader/cache/target/copy may
+substitute for plain Gaussian compositing or its RenderTexture guards/publication/error semantics.
+Only the owned original header and changed scratch candidate are compiled; no GL operation runs.

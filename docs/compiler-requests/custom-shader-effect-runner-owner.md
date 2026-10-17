@@ -265,3 +265,31 @@ cannot declare, so the row would not move. Nothing is carried:
 
 This was validated by inspection. It is a docs-only disposition, so the unchanged header was not
 recompiled, and its recorded **0/1** failure stands.
+
+## G2 plain blur runner is separate from the Gaussian pass
+
+At Flight `a627849` / compiler `806d257`, glBlurEffect.ts94 glBlurEffectRunner is refused
+cpp-structural-assertion-writable-capability-unproven. Its GlEffectRunner slot takes readonly
+GlEffectContext and readonly Effect; effect as BlurEffect claims a writable derived view solely to
+pass Readonly<BlurEffect>. Readonly<Effect> also declares neither blurX nor blurY, so merely removing
+the writable assertion cannot recover the actual derived owner. Preserve BlurEffect in a named typed
+runner/carrier or validate/recover the exact retained owner at the registry boundary. A kind string,
+copied Effect/BlurEffect prefix or unchecked cast is not that proof; keep the open effect domain.
+
+The runner reads the original ctx.source width/height/format into the authored descriptor, acquires
+a temporary from the same ctx.state/ctx.pool, applies blur with the same source/dest/effect, then
+releases that temporary on normal completion. Do not invent other descriptor axes, new pool/cache,
+replacement target or a cleanup guarantee absent from the source: a thrown apply prevents the normal
+release. Explicit registerGlBlurEffect stores this real runner under BlurEffect in that state's
+registry; no eager registration or fake pass-through runner is equivalent.
+
+Unlike the family table's first failure at registration, this original1 header first fails earlier
+at apply_gl_gaussian_blur_pass93: **0/1 pass**,75.1s, Clang22.1.8 jobs1. The readonly Gaussian helper
+itself refuses at the [nullable base-target row](interface-heritage-widening.md#g2-plain-gaussian-blur-preserves-two-compositing-passes).
+A declaration-only scratch provides its exact helper prototype and, with the existing exact marker
+insert-forward-declaration mechanism, only extern GlEffectRunner gl_blur_effect_runner. No new
+variable-declaration engine kind, runner object/storage or body is introduced. Actual unused compile
+still fails at the [readonly source-target promotion](readonly-view-to-writable.md#g2-gaussian-blur-rendertexture-source-target),
+so both candidates are rejected before link. See [measured qualification](retained-declaration-calls-omitted-callee.md#g2-gaussian-blur-declaration-candidate-fails-the-unused-header).
+This precise existing-mechanism probe does not revise the older unqualified dispositions above.
+No production declaration, registration, blur, shader/cache or target behavior is supplied/executed.

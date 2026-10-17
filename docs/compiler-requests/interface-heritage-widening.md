@@ -656,3 +656,55 @@ The getter's owner/spread defects are inspected separately. No body/declaration/
 rewrite, normal generation or GL/tint operation is supplied/executed by this disposition. See the
 [retained-call request](retained-declaration-calls-omitted-callee.md#g2-gl-tint-caches-precede-the-two-omitted-public-passes)
 for why neither native link gate is qualified. Foreign caller headers are not rechecked or promoted.
+
+## G2 plain Gaussian blur preserves two compositing passes
+
+At Flight `a627849` / compiler `806d257`, glBlurEffect.ts105 applyGlGaussianBlurPass refuses
+cpp-contextual-union-value-type-unrepresented on Readonly<GlTextureRenderTarget> entering
+ drawGlFullscreenPass's Readonly<GlRenderTarget>|null destination. Its source is a readonly structural
+target row, distinct from the plain Ref destination in the box-blur helpers. Preserve the original
+owner through proven readonly base-row/absence construction; existing native projection does not
+emit the refused source body. No target copy, invented framebuffer or writable promotion is justified.
+
+Keep this source recipe distinct from box blur:
+
+- applyGaussianBlurToGl nullishly defaults blurX/blurY to4 (Gaussian sigma in pixels), computes radius
+  sigma>0?ceil(3*sigma):0, and ALWAYS runs source->temp horizontally then temp->dest vertically.
+  Even zero/nonpositive sigma uses the shader's radius-zero sample path on both axes; do not skip
+  passes, use an odd-width multi-box approximation, introduce a passes option, clear targets or add
+  numeric validation/clamping beyond source. Preserve the full authored numeric domain.
+- Obtain the actual effect program with key blur.gaussian and GAUSSIAN_BLUR_FRAGMENT_SRC. Draw with
+  source.texture and the same destination/context via drawGlFullscreenPass. Its normal premultiplied
+  compositing remains in force; this callback does not set ONE/ZERO replacement as box blur does.
+  Upload texelSize=(1/source.width,1/source.height), sigma, radius, direction in source order, using
+  getGlEffectUniformLocation on the program passed by the real fullscreen callback.
+- GLSL uses r=max(0,int(radius)), a direct texture sample for r0, otherwise exp(-i*i/(2*sigma*sigma))
+  weights over -r..r and divides the four-component weighted sum by weightSum. Preserve texture/UV,
+  axis order and normalized RGBA, not a copied source, constant result or synthetic shader.
+- Program caching is owned by glEffectProgramCache: original context weak key -> Map<string,original
+  program>, return the identical hit, compile/cache only a miss, and preserve the existing key/source
+  behavior. Uniform locations are source-cached by original readonly program identity and name,
+  independently of render-state key rotation. Cache a returned null as a present result, distinct
+  from an absent entry, preserving query/cache/return order and failures. The effective partial native
+  override supplies the program map but STILL omits getGlEffectUniformLocation at
+  cpp-member-projection-without-present-storage; the [existing presence request](narrowed-union-presence-proof.md)
+  covers keeping the inner null while proving outer presence. That helper is referenced only inside
+  the refused Gaussian body here; no dead-comment declaration or fake location is supplied.
+
+The RenderTexture-facing wrapper has its own required contract. Reject any source/dest/temp identity
+alias first with the exact distinct-handles error. Only then resolve the source's ready hidden target;
+unavailable runs the existing guard and returns false before touching dest/temp. Inside the original
+state bracket, enter write(temp), then write(dest), and run the same two-pass recipe on the retained
+hidden targets. Success publishes the nested dest write before temp, preserving their ready status,
+colorSpace and unsigned version increments through writeGlRenderTextureTarget; failure follows those
+helpers' existing writing/unrendered/finally/error effects. Return true only after writes and bracket
+finish. Do not clear/composite differently, leak hidden targets, invent transactional rollback or
+publish fake success. Direct applyBlurEffectToGl forwards the same effect blurX/blurY; the corresponding
+RenderTexture effect wrapper delegates to this exact path with original owners/options.
+
+Actual original1 compile is0/1 at missing Gaussian helper93,75.1s. The
+[exact two-declaration candidate](retained-declaration-calls-omitted-callee.md#g2-gaussian-blur-declaration-candidate-fails-the-unused-header)
+fails unused compilation at [readonly source target to writable row](readonly-view-to-writable.md#g2-gaussian-blur-rendertexture-source-target),
+so neither link gate qualifies and no production repair/normal generation/body/cache is carried.
+The [runner owner/capability request](custom-shader-effect-runner-owner.md#g2-plain-blur-runner-is-separate-from-the-gaussian-pass)
+is independent. No Gaussian/GL/RenderTexture/pool/cache operation executes in this unit.

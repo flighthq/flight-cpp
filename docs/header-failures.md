@@ -244,7 +244,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 215 | `undeclared-identifier-d14c2215` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glConvolutionEffectRunner` binding (and its callee `applyConvolutionEffectToGl`) but still emits the registration call that passes the runner |
 | 216 | `undeclared-identifier-d687475c` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glHalftoneEffectRunner` binding (and its callee `applyHalftoneEffectToGl`) but still emits the registration call that passes the runner |
 | 217 | `undeclared-identifier-d7a1d1b7` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glTiltShiftEffectRunner` binding (and its callee `applyTiltShiftEffectToGl`) but still emits the registration call that passes the runner |
-| 218 | `undeclared-identifier-e3d6c4e4` | 1 | GL | runtime | the emitted code names `apply_gl_gaussian_blur_pass`, which nothing declares |
+| 218 | `undeclared-identifier-e3d6c4e4` | 1 | GL | compiler | G2: 0/1; exact helper/runner declarations fail unused compile at readonly source-target to writable row; rejected |
 | 219 | `undeclared-identifier-e4a7b51e` | 1 | GL | compiler *(existing request)* | refused `glLensDirtEffectRunner` still registered; callee widens pooled `Ref<GlTextureRenderTarget>` intermediates to `GlRenderTarget` |
 | 220 | `undeclared-identifier-e4eb111d` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glKuwaharaEffectRunner` binding (and its callee `applyKuwaharaEffectToGl`) but still emits the registration call that passes the runner |
 | 221 | `undeclared-identifier-e7bf11f9` | 1 | WGPU | compiler | WGPU Scale9 draw refuses nullable material owner widening; declaration compile fails native/generic callback carrier *(existing requests extended)* |
@@ -4406,14 +4406,34 @@ historical G1 totals remain unchanged.
 - Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
 - compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
-### 218. `undeclared-identifier-e3d6c4e4` — 1 header(s)
+### 218. `undeclared-identifier-e3d6c4e4` — G2 recheck of original 1 header
 
-- cause: the emitted code names `apply_gl_gaussian_blur_pass`, which nothing declares
-- subject: `apply_gl_gaussian_blur_pass`
-- lanes: GL
-- fix route: runtime
-- first failure at: `flight/effects_gl/gl_blur_effect.hpp:93`
-- example: `use of undeclared identifier 'apply_gl_gaussian_blur_pass'`
+At Flight `a627849` / compiler `806d257`, actual Clang22.1.8 jobs1 completes
+**1 attempted / 0 pass / 1 fail / 0 unattempted**,75.1s, missing apply_gl_gaussian_blur_pass93.
+The existing exact refused-function mechanism matches source105 and both retained Gaussian calls.
+A separate existing insert-forward-declaration matches the exact source94 refused-runner marker and
+declares only its GlEffectRunner slot extern, as retained registration requires. Scratch qualification
+passes for one-header match, fixed point and exact original-byte recovery; neither adds storage/body.
+
+The actual unused-header candidate fails compiling at116 (original112): a readonly GlTextureRenderTarget
+row from get_gl_render_texture_target is reconstructed as RowWritable before being cast back to the
+readonly Gaussian argument. Source, generated getter and native override all return the readonly view;
+this is the existing [readonly-view-to-writable defect](compiler-requests/readonly-view-to-writable.md#g2-gaussian-blur-rendertexture-source-target).
+Positive link/run and exact missing-body negative link are not reached. Both declarations are rejected;
+no production repair/normal generation/runtime/source/binding/override change is carried.
+
+The [retained-callee evidence](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-gaussian-blur-declaration-candidate-fails-the-unused-header)
+keeps the exact two declarations and measured failure. The helper's separate
+[readonly target to nullable base-row refusal](compiler-requests/interface-heritage-widening.md#g2-plain-gaussian-blur-preserves-two-compositing-passes)
+and [BlurEffect runner owner/capability refusal](compiler-requests/custom-shader-effect-runner-owner.md#g2-plain-blur-runner-is-separate-from-the-gaussian-pass) remain.
+This plain Gaussian uses two unconditional weighted/compositing passes, radius ceil(3*sigma), normal
+fullscreen blending and its effect-program cache. It is distinct from box-blur odd-width recipes,
+conditional axis passes, replacement blend and dedicated shader-location cache. Preserve original
+context/program/target owners, numeric domain, alias/ready guards, nested writes/publication and errors.
+The partial effect-program cache override still omits uniform-location resolution; no fake location,
+new cache/provider, copied owner or box-blur substitution is supplied. Foreign compact products/prose
+and historical sweep/carry totals remain untouched; no other header is checked/promoted and no GL,
+registration, Gaussian pass or RenderTexture operation executes.
 
 ### 219. `undeclared-identifier-e4a7b51e` — G2 recheck of 1 header(s)
 
