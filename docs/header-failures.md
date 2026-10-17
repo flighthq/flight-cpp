@@ -224,7 +224,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 195 | `undeclared-identifier-8ae633dc` | 1 | GL | runtime | the emitted code names `gl_smaa_effect_runner`, which nothing declares |
 | 196 | `undeclared-identifier-8b3950d6` | 1 | GL | runtime | the emitted code names `gl_motion_blur_effect_runner`, which nothing declares |
 | 197 | `undeclared-identifier-8e604c65` | 1 | GL | runtime | the emitted code names `gl_sketch_effect_runner`, which nothing declares |
-| 198 | `undeclared-identifier-9562ef07` | 1 | 2D | runtime | the emitted code names `draw_canvas_tilemap`, which nothing declares |
+| 198 | `undeclared-identifier-9562ef07` | 1 | 2D | compiler *(existing request)* | refused `drawCanvasTilemap` retained as `.submit` in the SpriteRenderer aggregate; declaration probe fails at `.create_data` |
 | 199 | `undeclared-identifier-9aaa5b7f` | 1 | WGPU | runtime | the emitted code names `acquire_wgpu_screen_render_target_capture_texture`, which nothing declares |
 | 200 | `undeclared-identifier-a3f09fb8` | 1 | 2D | runtime | the emitted code names `draw_dom_shape`, which nothing declares |
 | 201 | `undeclared-identifier-a4a22a69` | 1 | GL | runtime | the emitted code names `gl_lens_distortion_effect_runner`, which nothing declares |
@@ -3379,14 +3379,17 @@ sweep/carry totals remain unchanged. No old native/rendering proof or global swe
 - first failure at: `flight/effects_gl/gl_sketch_effect.hpp:86`
 - example: `use of undeclared identifier 'gl_sketch_effect_runner'`
 
-### 198. `undeclared-identifier-9562ef07` — 1 header(s)
+### 198. `undeclared-identifier-9562ef07` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `draw_canvas_tilemap`, which nothing declares
+- cause: the emitter refuses `drawCanvasTilemap` (`cpp-contextual-union-interface-heritage-carrier-unrepresented`: a nullable `Material2D` widened to `Material`), but keeps `.submit = draw_canvas_tilemap` in the inline `canvas_tilemap_renderer` `SpriteRenderer` aggregate.
 - subject: `draw_canvas_tilemap`
 - lanes: 2D
-- fix route: runtime
+- fix route: compiler
+- why this route: a scratch copy with only the exact declaration `void draw_canvas_tilemap(Ref<CanvasRenderState>, Ref<RenderProxy2D>)` still fails at `canvas_tilemap.hpp:121` `.create_data`, where `noop_renderer_data` takes `NodeAny` and the slot expects `Sprite`. `submit` also takes `CanvasRenderState` where the slot takes `RenderState` (type inspection only). Neither the positive unused-header link nor the negative link is reachable, and `retainedReference` does not accept an aggregate member, so no repair is carried. This is the same shape as GL bitmap text.
 - first failure at: `flight/scene2d_canvas/canvas_tilemap.hpp:120`
 - example: `use of undeclared identifier 'draw_canvas_tilemap'`
+- Scoped native recheck (GCC 15.2, jobs 1, all errors shown): **1 attempted / 0 pass / 1 fail**, the header's own diagnostic. No tilemap draw, no-op, Canvas backend, copied owner or narrowed tiles is supplied.
+- compiler request: `docs/compiler-requests/retained-declaration-calls-omitted-callee.md`
 
 ### 199. `undeclared-identifier-9aaa5b7f` — 1 header(s)
 

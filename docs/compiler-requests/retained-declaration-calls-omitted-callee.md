@@ -667,6 +667,28 @@ and [typed runtime/backend owners](readonly-callback-derived-owner-recovery.md#g
 need faithful carriers first. The body remains refused; declaration availability must not be reported
 as glyph submission, texture/material binding or actual GL rendering behavior.
 
+## G2 Canvas tilemap retains a refused callback in an aggregate
+
+`scene2d_canvas/canvas_tilemap.hpp` at compiler `806d257` / Flight `a627849` omits `drawCanvasTilemap`
+(`cpp-contextual-union-interface-heritage-carrier-unrepresented`: a nullable `Material2D` widened to
+`Material`). It still retains `.submit = draw_canvas_tilemap` inside the inline `canvas_tilemap_renderer`
+`SpriteRenderer` aggregate, and the header fails on that name at line 120 (GCC 15.2, one worker, all errors
+shown: 1 attempted, 0 pass, 1 fail). The emitter's signature is
+`void draw_canvas_tilemap(Ref<CanvasRenderState>, Ref<RenderProxy2D>);`.
+
+This is the GL bitmap text shape above:
+- The `retainedReference` witness accepts only a function-argument position, not an aggregate member.
+- A scratch copy containing only that exact declaration still fails, at `.create_data`
+  (`canvas_tilemap.hpp:121`). There, `render::noop_renderer_data` takes `NodeAny` and cannot construct the
+  `Sprite`-taking callback.
+- The later `submit` domain mismatch (`Ref<CanvasRenderState>` against `SpriteRenderer.submit`'s
+  `Ref<RenderState>`) is visible by type inspection only. GCC reports nothing past the first member.
+
+So neither a positive unused-header link nor an exact missing-body negative link was reached, and no
+declaration repair was carried. The [heritage callback conversion](interface-heritage-widening.md) and
+[Canvas render-state owner](canvas-render-state-owner-asserted-without-heritage.md) need faithful carriers
+first. The body stays refused, and nothing draws tiles, binds the atlas image or narrows the tile grid.
+
 ## G2 raster shape declaration witness is valid but callback carriers fail
 
 At compiler `806d257` / Flight `a627849`, original cluster `undeclared-identifier-20fa691d`
