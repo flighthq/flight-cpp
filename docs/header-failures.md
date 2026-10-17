@@ -253,7 +253,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 224 | `undeclared-identifier-f6affb68` | 1 | 3D | [compiler request](compiler-requests/retained-declaration-calls-omitted-callee.md) | global transmission/volume/IOR callbacks retain a refused owner resolver; declaration fails unused-header link |
 | 225 | `undeclared-identifier-f91f1e72` | 1 | 2D | compiler (existing partial native carry) | G2 current effective header1/1 pass; generated Canvas getter/draw owner gaps remain *(builder4)* |
 | 226 | `undeclared-identifier-fcbdae42` | 1 | 2D | compiler *(existing request)* | refused `drawCanvasTextLabel` retained as `.submit` in the renderer aggregate; declaration probe fails at `.create_data` |
-| 227 | `variant-cast-7dd5385f` | 1 | GL | compiler | a functional-style cast is applied to a variant the target type cannot take |
+| 227 | `variant-cast-7dd5385f` | 1 | GL | emission repair (applied) | the binding cell for the rebound readonly target view initializes through `RowWritable` and casts straight back; [existing request](compiler-requests/readonly-view-to-writable.md#g2-effects-gl-a-rebindable-readonly-target-stored-through-a-writable-lift) (G2: 1 pass) |
 
 ## Carry clusters
 
@@ -5171,12 +5171,28 @@ Historical sweep/carry totals, all foreign rows/clusters and report slices remai
 
 ### 227. `variant-cast-7dd5385f` — 1 header(s)
 
-- cause: a functional-style cast is applied to a variant the target type cannot take
+- cause: the binding cell for the rebound readonly `current` target view is initialized through
+  `RowWritable` and cast straight back to the same readonly row, claiming authority the source never grants
 - lanes: GL
-- fix route: compiler
+- fix route: emission repair (applied) — [readonly view to writable](compiler-requests/readonly-view-to-writable.md#g2-effects-gl-a-rebindable-readonly-target-stored-through-a-writable-lift)
 - first failure at: `flight/effects_gl/gl_render_texture_effect.hpp:130`
 - example: `no matching conversion for functional-style cast from 'const StructuralRef<RowReadonly<RowOf<shared_ptr<GlTextureRenderTarget>>>>' to 'StructuralRef<RowWritable<RowOf<Ref<GlTextureRenderTarget>>>>'`
 
+`applyGlEffectsToRenderTexture`'s `withGlRenderState` closure binds `let current = sourceTarget`, a
+readonly target view returned by `getGlRenderTextureTarget`, and rebinds it after each
+`writeGlRenderTextureTarget` call. `BindingCell::rebind` replaces the stored view and never writes
+through it, so the writable round trip in the cell's initializer establishes nothing. Repair
+`effects-gl-binding-cell-readonly-target` (`respell-reference-member-access`) removes only that
+round trip: the cell is initialized with `source_target.value()` — the same view, the same live
+target owner, and the same rebind order. Normal scoped generation
+(`npm run pkg:generate -- effects-gl -j1`) emitted the change; the operation runner, explanation
+report and write callback are unchanged.
+
+The scoped generation re-judged an unrelated duplicate-struct alias in
+`gl_contact_shadows_effect.hpp` under its closure, writing back a struct with a different member
+order. That product was not carried: the committed alias names the canonical `flight::effects` shape
+that `create_ssao_effect` takes, while the closure's separate struct would disagree with it at that
+call. That header remains on `undeclared-identifier-86212434`; only the target header's change ships.
 
 ## Scoped G2 PBR registry follow-up
 

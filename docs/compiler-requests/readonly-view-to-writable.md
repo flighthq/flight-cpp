@@ -202,3 +202,45 @@ that row retains its historical Number `previousCluster` and records the resolve
 cause. Historical Number 2/16/table counts, all foreign compact rows/records and pinned inputs
 remain intact. Unchanged C++ is not rerun for final docs/base-only updates. No scene importer,
 viewport parser, gradient or rendering execution is claimed by the apply-function probe.
+
+## G2 Effects-GL: a rebindable readonly target stored through a writable lift
+
+At Flight `a627849` / compiler `806d257`, `flight/effects_gl/gl_render_texture_effect.hpp:130`
+(cluster `variant-cast-7dd5385f`) is the same defect inside a reassigned local's binding cell.
+`applyGlEffectsToRenderTexture`'s `withGlRenderState` closure binds `let current = sourceTarget`
+(a `Readonly<GlTextureRenderTarget>` returned by `getGlRenderTextureTarget`) and rebinds it after
+each `writeGlRenderTextureTarget` call to the target of the alternating output texture. The
+emitter stores `current` in a `BindingCell` whose declared value is the readonly target view, but
+manufactures that initial value as a writable row and casts it straight back:
+
+```cpp
+const auto current_capture = flight::make_binding_cell(
+    flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlTextureRenderTarget>>>>{
+      flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<
+          flight::RowOf<flight::Ref<flight::types::GlTextureRenderTarget>>>>(
+        flight::StructuralRef<flight::RowWritable<
+            flight::RowOf<flight::Ref<flight::types::GlTextureRenderTarget>>>>(
+          source_target.value()))});
+```
+
+```text
+no matching conversion for functional-style cast from
+const StructuralRef<RowReadonly<RowOf<shared_ptr<GlTextureRenderTarget>>>>
+to StructuralRef<RowWritable<RowOf<Ref<GlTextureRenderTarget>>>>
+```
+
+`BindingCell::rebind` replaces the stored view; it never writes through it, so no writable
+authority is needed. The source getter returns a readonly target view (both its generated
+signature and the native override), and the runner's `source` parameter is readonly too, so
+`current` never carries mutation authority. The required shape is to initialize the cell with
+`source_target.value()` directly, exactly as the SVG transform site above passes its guarded
+readonly matrix.
+
+The operation list (`effect_runner_1044da39c1a2f71d`), the explanation report and the
+`write_gl_render_texture_target` callback compile unchanged; the writable lift exists only in
+the capture initialization, which is why this is one expression rather than a missing owner.
+
+Carried meanwhile: emission repair `effects-gl-binding-cell-readonly-target`
+(`respell-reference-member-access`) removes only the writable round trip, keeping the same
+view, the same live target owner and the same rebind order. It expires when the emitter
+initializes a rebindable readonly binding cell without the writable lift.

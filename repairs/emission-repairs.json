@@ -9458,6 +9458,18 @@
       "defect": "The emitter unnecessarily reconstructs the guarded readonly Matrix through RowWritable solely to pass it to the identical readonly MatrixLike parameter. Preserve the same live matrix owner and existing decomposition/assignment without copying a matrix, granting writes, altering any parser, transform or numeric default. Request: docs/compiler-requests/readonly-view-to-writable.md.",
       "expectedWhen": "always",
       "expires": "when guarded readonly Matrix payloads pass to readonly MatrixLike helpers without a writable round trip; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-gl-binding-cell-readonly-target",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/effects_gl/gl_render_texture_effect.hpp",
+      "from": "flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlTextureRenderTarget>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlTextureRenderTarget>>>>(source_target.value()))",
+      "to": "source_target.value()",
+      "sourceDeclaration": "packages/effects-gl/src/glRenderTextureEffect.ts:51-71 -- the withGlRenderState body binds `let current = sourceTarget` (a Readonly<GlTextureRenderTarget> from getGlRenderTextureTarget) and rebinds it after each writeGlRenderTextureTarget call to the target of the alternating output texture; the runner closure reads `current` as its readonly `source`.",
+      "diagnostic": "no matching conversion for functional-style cast from 'const flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::GlTextureRenderTarget>>>>' to 'flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlTextureRenderTarget>>>>'",
+      "defect": "The mutable-local lowering confuses rebinding `current` with mutating its readonly referent and inserts an invalid readonly-to-writable structural conversion before storing the value in the binding cell; the cell value is already the readonly target view, so the round trip establishes nothing. This is the same defect already carried for effects-canvas and effects-wgpu. Keep the same live target owner and the same rebind sequence; no writable authority, cast relaxation, copied target, or effect/runner behavior. Request: docs/compiler-requests/readonly-view-to-writable.md.",
+      "expectedWhen": "always",
+      "expires": "when a rebindable readonly structural view initializes its binding cell without a writable round trip; sdk:check fails if this repair matches no header."
     }
   ]
 }

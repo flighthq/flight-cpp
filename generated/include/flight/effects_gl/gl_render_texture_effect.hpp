@@ -127,7 +127,7 @@ inline bool apply_gl_effects_to_render_texture(flight::Ref<flight::types::GlRend
     return false;
   }
   flight::render_gl::with_gl_render_state<void>(state, [=]() {
-  const auto current_capture = flight::make_binding_cell(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlTextureRenderTarget>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlTextureRenderTarget>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlTextureRenderTarget>>>>(source_target.value()))});
+  const auto current_capture = flight::make_binding_cell(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlTextureRenderTarget>>>>{source_target.value()});
   {
     double index = 0.0;
     while ((index < static_cast<double>(operations.size()))) {

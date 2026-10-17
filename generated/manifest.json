@@ -3593,6 +3593,12 @@
         "flight/scene3d_formats/obj_material_model.hpp"
       ],
       "id": "scene3d-formats-alias-obj-material-structural-shape"
+    },
+    {
+      "files": [
+        "flight/effects_gl/gl_render_texture_effect.hpp"
+      ],
+      "id": "effects-gl-binding-cell-readonly-target"
     }
   ],
   "sourcePatches": [
