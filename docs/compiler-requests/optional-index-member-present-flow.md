@@ -197,3 +197,116 @@ return total_c(… StructuralRef<RowWritable<RowOf<Ref<ItemC>>>>(a.value()) …,
 `@flighthq/physics2d` `step.ts` `resolveEarliestPhysics2DImpact` (line 1084) has this guard over two colliders
 read by index. It is carried by `physics2d-earliest-impact-split-presence-guards`, which writes the two guards
 separately, in the same order, with the same early return.
+
+
+## G2 glTF punctual lights lose an indexed payload after a loop guard
+
+At Flight `a62784923f3be814463286c9fb28edfe6ab15789` / compiler
+`806d257d2f4100de745cc97340e61c2f301b0f24`, cluster `variant-cast-37507e07` has two recorded
+failures at `flight/scene3d_formats/gltf_punctual_lights.hpp:216`. Despite the historical cluster
+name, the first rejected value is `optional<Ref<GltfPunctualLight>>`, not a multi-arm variant.
+Source `packages/scene3d-formats/src/gltfPunctualLights.ts:18-26` binds an indexed definition,
+then explicitly continues when it is undefined, before passing the present object to a readonly helper:
+
+```ts
+const source = definitions[lightIndex];
+if (source === undefined) {
+  tallyLightDrop(lightDrops, ImportDiagnosticSeverity.Drop, 'gltf.light-missing', {
+    firstLight: lightIndex, firstNode: node,
+  });
+  continue;
+}
+const descriptor = buildGltfPunctualLight(source, lightIndex, lightDrops);
+```
+
+Native208 retains the optional Array::get result and native209 tests its presence. Native216 nevertheless
+constructs the writable structural row from the entire optional, then casts that row readonly:
+
+```cpp
+std::optional<flight::Ref<flight::types::GltfPunctualLight>> source = definitions.get(light_index.value());
+if (!source.has_value()) { /* record missing definition, then continue */ }
+// The actual conversion's reduced type aliases:
+build_gltf_punctual_light(structural_ref_cast<ReadView>(WriteView(source)),
+                         light_index.value(), light_drops);
+```
+
+ReadView/WriteView above abbreviate the emitted RowReadonly/RowWritable RowOf<Ref<GltfPunctualLight>>
+carriers; they are not new declarations. StructuralRef accepts an exact shared reference or a proved row,
+not optional<Ref<T>>. The loop guard proves this lookup present, so faithful emission projects
+source.value() and creates a readonly view of that same source owner, for example ReadView(source.value()).
+No source mutation, copied light definition or unchecked pointer cast is needed or permitted. Native221
+already projects source.value()->name, showing that the same local's member read and helper conversion
+are inconsistent. This is the existing indexed-present-flow request at a loop continue guard: the
+ordinary explicit-return controls and disjunctive-guard reductions earlier in this page are not claimed
+to reproduce this complete imported-owner/handler context. This G2 audit does not rerun those reductions.
+
+Adding an optional-taking StructuralRef constructor would have to invent the absent case for a required
+helper parameter and still would not repair the omitted builder. A source guard is already present;
+repeating an annotation/guard is not evidence of corrected emission. Declaration-only repair cannot
+replace this retained conversion expression. No source/compiler/runtime prototype or normal generation
+is carried for this documentation-only disposition.
+
+### The independent light-owner refusal remains open
+
+The module explicitly omits buildGltfPunctualLight47 with
+`cpp-contextual-union-interface-heritage-carrier-unrepresented`. Its declared Light|null result
+first returns the exact createDirectionalLight owner; point and spot branches return their own exact
+owners. [The existing nullable-heritage request already records this exact source site](compiler-interface-heritage-owner-widening.md#same-defect-in-p-3d2).
+Light, DirectionalLight, PointLight and SpotLight are independently flattened generated structs with
+ReferenceEnabled, not a declared native inheritance chain. Extracting source.value() cannot supply that
+missing algorithm or relation. Neither copying a Light prefix nor casting an unrelated shared pointer
+can preserve the real factory result's owner, kind and live cells. No declaration candidate or positive
+unused compile/link/run or qualified negative-link gate was attempted or claimed here.
+
+Distinguish the helper result from its eventual sink: unpatched Scene3DDocumentLight.descriptor declares
+open Light, while the existing scene3d-document-light-values source patch changes document storage to
+LightValue. The generated sink retains eight exact reference arms: DirectionalLight, AreaLight, Light,
+Environment, AmbientLight, HemisphereLight, SpotLight and PointLight. The open Light arm preserves vendor
+kinds, and each built-in arm retains its original allocation. That patch does not change this helper's
+Light|null signature or make the directional nullable return emit. It is unchanged here; document storage
+must not be narrowed to only the three punctual kinds, reduced to base copies or replaced with fake nodes.
+
+### Full handler, kind and placement contract
+
+- The handler is opt-in, kind KHR_lights_punctual. Its family registration adds that exact handler to
+  the caller-owned list, replacing a prior same-kind entry in place. It is not a global install.
+  Missing top-level definitions/nodes use their source empty-array fallbacks. Iterate source nodes in
+  order and skip only an undefined light reference. An unresolved definition records Drop
+  gltf.light-missing with firstLight/firstNode; it must not become a default light or abort other nodes.
+- Build a new descriptor for each successful node placement, even when multiple nodes reference the
+  same definition. Preserve source name, context.nodeIndices[node], and the exact transform returned
+  by context.buildNodeTransform(node), then append to the original document.lights array. No node
+  fabrication, index renumbering, descriptor deduplication/cache or replacement document is justified.
+  Descriptor direction is local -Z for directional/spot, and a point starts at its local origin;
+  the stored Transform3D places it. Do not bake world transforms into the descriptor and compose again.
+- Preserve color's white fallback and individual missing RGB component defaults, alpha1, and the real
+  packLinearToColor sRGB packing. Intensity defaults to1 and rejects !(intensity>=0), including NaN;
+  zero/-0 are valid and +Infinity is not rejected by this predicate. Directional returns before range
+  validation. For other kinds, range defaults to -1 and accepts exactly that sentinel or a positive
+  value; do not add a finite-only rule or reinterpret intensity units. Use the actual factory defaults,
+  including their UnitlessLightUnit, rather than replacing photometric or shadow behavior.
+- Point and spot remain separate real factories. Spot defaults inner=0/outer=pi/4 and requires inner>=0,
+  outer>inner and outer<=pi/2, then converts radians to factory degrees. Unsupported dynamic type data
+  reaches Skip gltf.light-unsupported-type (firstType), after the source intensity/range checks; it is
+  not coerced into a point light. The source schema's three literal types and native String carrier
+  do not remove this fallback: existing tests deliberately exercise an unsupported type.
+- When diagnostics is absent, tallying is a no-op. Otherwise keep one local Map keyed by diagnostic
+  kind: preserve the first severity/detail object, increment count for each later occurrence (including
+  repeated node references), and flush one crumb per kind in insertion order after traversal. Spread
+  the first detail into a fresh record with count and report origin buildGltfPunctualLight to the same
+  context diagnostics array. Do not report per definition, drop first-offender detail or swallow factory/
+  transform exceptions. This handler owns its aggregation, separate from core parser tally state.
+
+The existing gltfPunctualLights tests specify three real placed light kinds, transform/name/index values,
+opt-in/required-extension behavior, missing/negative/range/cone/unsupported diagnostics, repeat aggregation
+and absent collectors. The family-registration test specifies same-kind replacement by the exact handler.
+These were read as source requirements only. Inspected extension Record/object recovery and diagnostics
+construction are not newly measured next errors or native behavior/link evidence.
+
+**Recorded 0/2 pass, 2 fail is retained.** The owned headers are
+`flight/scene3d_formats/{gltf_punctual_lights,register_gltf_lighting_extension_handlers}.hpp`.
+Their two rows and cluster link this existing request and the already-filed nullable-heritage request.
+Only this append-only note, worklist96 and three compact owned product lines change. C++, owner types,
+source patches, repairs, generation inventory and pins are unchanged; unchanged C++ is not rerun.
+Foreign compact product lines/worklist entries and historical/G1 totals remain intact. No native
+header-availability, light import/placement, parser, rendering or link success is claimed.

@@ -122,7 +122,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 93 | `undeclared-identifier-86212434` | 2 | GL | compiler *(existing request)* | the emitter refuses the `glSsaoEffectRunner` binding (and its callee `applySsaoEffectToGl`) but still emits the registration call that passes the runner |
 | 94 | `other-8b0f8597` | 2 | 3D | [compiler request](compiler-requests/host-initialize-optional-fallback-on-a-required-read.md) | skin builder emits after a source patch; SequenceView index nullish fallback still fails (G2: 0/2 pass) |
 | 95 | `undeclared-identifier-e39f9d67` | 2 | 3D | compiler | missing resolver cleared; original2 now 1 pass / 1 readonly program-owner failure; Map guard remains declaration-only *(requests extended)* |
-| 96 | `variant-cast-37507e07` | 2 | 3D | compiler | a functional-style cast is applied to a variant the target type cannot take |
+| 96 | `variant-cast-37507e07` | 2 | 3D | compiler | G2: recorded 0/2 retained; glTF guarded indexed light optional is cast without projection; existing flow/heritage requests, no rerun |
 | 97 | `call-has-no-matching-00dc04ad` | 1 | 2D | compiler | the emitted call to `get_texture_uv_matrix` matches no declared overload |
 | 98 | `call-has-no-matching-35224a3f` | 1 | 3D | compiler | the emitted call to `gl_uniform_type_name` matches no declared overload |
 | 99 | `call-has-no-matching-4c12e411` | 15 | WGPU | compiler | `create_bind_group_layout` entries are emitted as anonymous nested owners inside an untyped braced descriptor *(request filed)* |
@@ -2376,13 +2376,27 @@ cluster changed; `previousCluster` retains their G1 group. Opening sweep/carry t
 rows/clusters remain unchanged. Header and link boundaries do not establish shader assembly or
 shaded rendering while the guard has no body; no global/native baseline was rerun.
 
-### 96. `variant-cast-37507e07` — 2 header(s)
+### 96. `variant-cast-37507e07` — 2 header(s), compiler route
 
-- cause: a functional-style cast is applied to a variant the target type cannot take
-- lanes: 3D
-- fix route: compiler
-- first failure at: `flight/scene3d_formats/gltf_punctual_lights.hpp:216`
-- example: `no matching conversion for functional-style cast from 'optional<Ref<GltfPunctualLight>>' to 'StructuralRef<RowWritable<RowOf<Ref<GltfPunctualLight>>>>'`
+**Recorded 0/2 pass, 2 fail retained; docs-only, unchanged C++ not rerun.** Both
+`flight/scene3d_formats/{gltf_punctual_lights,register_gltf_lighting_extension_handlers}.hpp` rows fail
+at `gltf_punctual_lights.hpp:216`. The historical variant-cast label actually describes
+optional<Ref<GltfPunctualLight>> entering a required writable structural row before a readonly helper call.
+
+Source18-26 guards the indexed source with an undefined/continue branch. The emitter still passes the
+optional wrapper; it must project the same present owner, as its own later name read already does.
+[Existing indexed-present-flow coverage](compiler-requests/optional-index-member-present-flow.md#g2-gltf-punctual-lights-lose-an-indexed-payload-after-a-loop-guard)
+records this precise context, distinguished from earlier return/disjunctive controls.
+The separate omitted builder already has [nullable light-owner coverage](compiler-requests/compiler-interface-heritage-owner-widening.md#same-defect-in-p-3d2):
+extracting the source cannot supply its refused Directional/Point/Spot-to-Light result conversion.
+
+The audit preserves all three punctual branches and unsupported-type fallback, exact factory owners,
+eight-arm document LightValue including open Light, local-axis/Transform3D placement, mapped node/name,
+per-node fresh descriptors, source defaults/numeric domain, opt-in registration and first-detail/count
+aggregation on the same diagnostics array. No fake light/node, copied owner, unchecked cast, narrowed
+kind/input domain or new native/link result is carried. Existing source tests were read only. Only the
+request appendix, this worklist slice and three compact owned product lines change; all C++/patches/
+repairs/manifest/pins and foreign/historical products remain unchanged.
 
 ### 97. `call-has-no-matching-00dc04ad` — 1 header(s)
 
