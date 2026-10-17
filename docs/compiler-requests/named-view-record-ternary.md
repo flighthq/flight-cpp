@@ -52,3 +52,25 @@ alone makes the headers compile.
 3 headers in the G1 sweep, all `skeleton2d-formats` (`dragon_bones_parse_helpers`, `_slots_handler`,
 `_stub_handlers`). No runtime or override carry is possible without either the copy this request rules out
 or hand-writing the parse.
+
+## G2 the same split at a call argument: Spine JSON timeline handlers
+
+At Flight `a627849` / compiler `806d257`, `spineJsonAnimationsHandler.ts` iterates
+`Object.entries(raw as Record<string, unknown>)` and asserts each `animEntry as Record<string, unknown>`.
+It then calls the registered `SpineJsonTimelineHandler`, whose third parameter is declared
+`animEntry: Readonly<Record<string, unknown>>`.
+
+The emitter lowers the assertion to the aliasing view, `flight::NamedProperties anim = flight::named_properties(anim_entry)`,
+but lowers the handler type's parameter to the owning
+`std::function<void(Ref<SpineJsonTimelineContext>, String, Record<String, Any>)>`. So
+`handler.value()(timeline_context, name, anim)` at `skeleton2d_formats/spine_json_animations_handler.hpp:66`
+has no matching call (GCC 15.2, one worker: `no match for call to '(std::function<...Record<String, Any>>) (..., flight::NamedProperties&)'`).
+
+This is the ternary's mismatch at a function boundary. The required shape is the same: a readonly
+`Record<string, unknown>` reached through an assertion is a view, and the parameter that receives it must
+take that view. Materializing the record would copy every property and break the alias the handlers read
+through. Nothing is carried: no materializing conversion, no handler adapter, and no narrowed animation domain.
+
+`spine_json_section_handlers`, `spine_json_handlers` and `spine_json_full` reach this header through their
+includes and were not recompiled. The next error in this header (an optional `Record` diagnostic detail at
+`:76`) was noted but not analysed in this unit.
