@@ -107,7 +107,8 @@ The changed original-one header compiled with **Clang 22.1.8, one worker: 1 atte
 retained on the passing row. Source-patch recovery tests passed **2/2**. An exact emitted-diff check
 proves only the helper carrier/seven member reads/unused include and their unused SDK keys changed.
 This is compile evidence, not native program introspection, log-sink, WeakSet lifetime, renderer or
-pixel execution. No link/live test was run and no broader package/shipping claim follows.
+pixel execution. That header check ran no link/live test; the helper-only execution below is
+separate evidence and carries no broader package/shipping claim.
 
 Scoped generation also produced unrelated FakeGl2 member/hash order and pipeline anonymous-hash
 drift; both headers were restored, with that diff preserved in scratch. The run printed an existing
@@ -117,3 +118,32 @@ header or patch is carried or rerun, and no global/scoped CURRENT claim is infer
 under `/tmp/builder4-g2-custom-shader-guards/` (generate.log, headers-report.json,
 source-patches-tests.log, rejected-foreign-generation-drift.diff). The compiler's dependency file
 records 2,199 actual included files for post-rebase content validation without repeating the compile.
+
+## Follow-up: full JavaScript erasure and actual native helper execution
+
+Foreman aa23f750 requested this additional behavior evidence. The entire original pinned
+`enableGlScene3DCustomShaderGuards.ts` module and the entire module with the exact carried
+one-annotation patch were transpiled with the pinned TypeScript **5.9.3**, using Flight's
+ES2022/ESNext options. Comments were retained; source maps and declarations were disabled as
+separate, non-executable artifacts. Both transpiles reported **zero diagnostics** and produced
+**byte-identical 3,825-byte JavaScript modules**, SHA-256
+`ff82d9104b4e173827ce193001ab0a19a087ea0cca7b03b33af8a7b2496c490f`.
+The comparison checked the full file, not an extracted helper or a subset of statements; it did
+not execute the imported module or substitute a mocked guard.
+
+`tests/generated_gl_registries_test.cpp` now directly calls the actual generated
+`flight::scene3d_gl::gl_uniform_type_name`. Its seven native WebGl2Context constants must return
+mat4, mat3, mat2, vec4, vec3, vec2 and float respectively. Three nonmatching inputs exercise the
+raw-number default: TEXTURE_2D (3553) -> gl-type-3553, 0 -> gl-type-0, and -1.5 -> gl-type--1.5.
+The helper reads static enum constants only, so this uses the actual native host value carrier's
+default construction; no SDL surface, fake context, program or GL call is needed. It exercises
+no uniform introspection, cache, log sink, renderer or pixel path.
+
+The existing GL registries target and its CMake/Bazel registrations are reused, with all prior
+registry assertions intact. After committing the test, the targeted **-j1 build/link passed** and
+exactly one CTest run passed **1/1 in 0.01 s** (0.03 s total), printing that all seven named and
+three default cases passed. No additional target, test infrastructure, generation, old/global
+proof run or compiler-input hash inventory was added. This closes the private helper behavior
+evidence without widening the earlier guard/rendering claims. Full JS outputs, the comparison
+script/report, build and CTest logs are in `/tmp/builder4-custom-uniform-behavior/` and attached
+to the follow-up handoff.
