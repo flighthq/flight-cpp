@@ -9223,6 +9223,20 @@
       "defect": "The emitter refuses the existing Sprite owner in contextual Node2D | null but retains the public image handler calling the absent helper. Exact source/retained-carrier declaration only; the image helper and any caller still fail to link. No image, texture, decoding, resolver, transform or clipping behavior is supplied. Underlying existing-owner contextual member-shape boundary: docs/compiler-requests/contextual-union-value-arm-member-shape.md.",
       "expectedWhen": "always",
       "expires": "when createSvgImageNode emits or its dependent caller is coherently refused; the exact NOT GENERATED marker/direct call/no-definition witnesses then stop matching and sdk:check rejects the obsolete repair."
+    },
+    {
+      "id": "interaction-declare-refused-shape-fill-hit",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/interaction/register_shape_hit_test.hpp",
+      "symbol": "hit_test_shape_fill",
+      "refusedFunction": "hitTestShapeFill",
+      "declaration": "double hit_test_shape_fill(flight::types::NodeAny source, double x, double y);",
+      "retainedReference": "flight::interaction::register_hit_test_precise(flight::types::morph_shape_kind, hit_test_shape_fill);",
+      "sourceDeclaration": "packages/interaction/src/registerShapeHitTest.ts -- hitTestShapeFill(source: NodeAny, x: number, y: number): number; retained MorphShape, Shape and Scale9Shape registrations pass exactly HitTestPreciseFunction = double(NodeAny, double, double)",
+      "diagnostic": "use of undeclared identifier 'hit_test_shape_fill'",
+      "defect": "The exact NOT GENERATED marker, three live function-argument callback uses and absent definition agree. The existing repair adds only the precise callback carrier. The body remains refused at NodeAny-to-Shape owner recovery; no hit result, fill-region/path geometry, transform operation, copied owner or narrower graph is supplied. Explicit registration must fail to link only on this callback. Body ownership request: docs/compiler-requests/readonly-callback-derived-owner-recovery.md; retained use: docs/compiler-requests/retained-declaration-calls-omitted-callee.md.",
+      "expectedWhen": "always",
+      "expires": "when hitTestShapeFill emits or its exact retained registration disappears; sdk:check fails if this repair matches no header."
     }
   ]
 }
