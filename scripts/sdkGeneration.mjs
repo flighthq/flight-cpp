@@ -135,6 +135,12 @@ if (check) {
 // An explicit --binding-profile list still wins, so sdk:generate:headless and friends keep generating
 // their own narrower profiles into out/. The default exists so that the three call sites that must agree
 // -- sdk:generate, sdk:check and scripts/check.mjs's argument list -- cannot drift apart.
+// Products committed beside the tree they describe rather than generated with it. `header-status.json` is
+// the G1 inventory -- which headers compile and why the others do not -- produced by the header sweep, so a
+// generation candidate can never contain it and comparing it would report permanent drift. It is excluded
+// by this exact name and nothing else.
+const STATUS_PRODUCTS = new Set(['header-status.json']);
+
 const SDL_PROFILE_SET = [
   'bindings/runtime.json',
   'bindings/headless.json',
@@ -753,12 +759,6 @@ function isMixedInventory(directory) {
   const file = path.join(directory, 'manifest.json');
   return existsSync(file) && isMixedManifest(JSON.parse(readFileSync(file, 'utf8')));
 }
-
-// Products committed beside the tree they describe rather than generated with it. `header-status.json` is
-// the G1 inventory -- which headers compile and why the others do not -- produced by the header sweep, so a
-// generation candidate can never contain it and comparing it would report permanent drift. It is excluded
-// by this exact name and nothing else.
-const STATUS_PRODUCTS = new Set(['header-status.json']);
 
 function compareTrees(expectedRoot, actualRoot) {
   if (!existsSync(actualRoot)) {
