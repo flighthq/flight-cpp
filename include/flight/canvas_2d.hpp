@@ -381,6 +381,21 @@ class CanvasStyle final {
     return *this;
   }
 
+  template <typename... Value>
+    requires ((std::same_as<Value, String> || std::same_as<Value, CanvasGradient> ||
+               std::same_as<Value, CanvasPattern>) && ...)
+  CanvasStyle(const std::variant<Value...>& value) : CanvasStyle() {
+    *this = value;
+  }
+
+  template <typename... Value>
+    requires ((std::same_as<Value, String> || std::same_as<Value, CanvasGradient> ||
+               std::same_as<Value, CanvasPattern>) && ...)
+  CanvasStyle& operator=(const std::variant<Value...>& value) {
+    std::visit([this](const auto& paint) { *this = paint; }, value);
+    return *this;
+  }
+
   template <typename Value>
     requires std::constructible_from<CanvasStyle, Value>
   CanvasStyle& operator=(const std::optional<Value>& value) {

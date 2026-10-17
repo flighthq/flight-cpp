@@ -2374,6 +2374,50 @@ void test_canvas_2d_styles() {
   check(context.fill_style.is_color() && context.fill_style.color() == flight::String("#abcdef"),
         "fillStyle accepts a color string");
 
+  using EmittedPaint =
+      std::variant<flight::CanvasGradient, flight::CanvasPattern, flight::String>;
+  static_assert(std::is_constructible_v<flight::CanvasStyle, const EmittedPaint&>);
+  static_assert(std::is_assignable_v<flight::CanvasStyle&, const EmittedPaint&>);
+  static_assert(!std::is_constructible_v<flight::CanvasStyle, std::variant<double>>);
+  static_assert(!std::is_assignable_v<flight::CanvasStyle&,
+                                    std::variant<flight::String, flight::Any>>);
+  EmittedPaint paint{std::in_place_type<flight::String>, flight::String("rgba(1,2,3,0.250)")};
+  const flight::CanvasStyle constructed_paint{paint};
+  check(constructed_paint.is_color() &&
+            constructed_paint.color() == flight::String("rgba(1,2,3,0.250)"),
+        "the emitted paint union constructs a style with its exact color value");
+  check(&(context.fill_style = paint) == &context.fill_style &&
+            context.fill_style.color() == constructed_paint.color(),
+        "paint-union assignment returns the same destination style");
+  paint = gradient;
+  context.fill_style = paint;
+  const auto stop_count = gradient.color_stops().size();
+  gradient.add_color_stop(0.75, flight::String("#bfbfbf"));
+  check(context.fill_style.is_gradient() &&
+            context.fill_style.gradient().identity() == gradient.identity() &&
+            context.fill_style.gradient().color_stops().size() == stop_count + 1,
+        "a gradient assigned through the paint union retains its live original stop owner");
+  paint = *pattern;
+  context.fill_style = paint;
+  pattern->set_transform(flight::DomMatrix(1.0, 0.0, 0.0, 1.0, 3.0, 4.0));
+  check(context.fill_style.is_pattern() &&
+            context.fill_style.pattern().identity() == pattern->identity() &&
+            context.fill_style.pattern().transform().e == 3.0 &&
+            context.fill_style.pattern().transform().f == 4.0,
+        "a pattern assigned through the paint union retains its live original transform owner");
+  const std::variant<flight::String, flight::CanvasPattern> reordered_paint{*pattern};
+  const flight::CanvasStyle reordered_style{reordered_paint};
+  check(reordered_style.pattern().identity() == pattern->identity(),
+        "paint variants accept alternate ordering and subsets of the same native domain");
+  context.fill_style = std::optional<EmittedPaint>{};
+  check(context.fill_style.is_pattern() &&
+            context.fill_style.pattern().identity() == pattern->identity(),
+        "an absent optional paint union keeps the previous style unchanged");
+  context.fill_style = std::optional<EmittedPaint>{
+      EmittedPaint{std::in_place_type<flight::String>, flight::String("#102030")}};
+  check(context.fill_style.is_color() && context.fill_style.color() == flight::String("#102030"),
+        "a present optional paint union applies its active native style");
+
   const auto matrix = flight::DomMatrix::from_init(
       flight::DomMatrix2DInit{2.0, std::nullopt, std::nullopt, 3.0, std::nullopt, std::nullopt,
                               std::nullopt, std::nullopt, std::nullopt, std::nullopt,
