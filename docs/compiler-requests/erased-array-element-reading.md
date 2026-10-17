@@ -144,3 +144,61 @@ The owned headers, all under `flight/skeleton2d_formats/`, are
 old cluster ID is retained, its uncategorised cause is replaced with this actual cause, and its route
 is compiler. No C++ input changed, so this disposition performs no unchanged compile rerun and makes
 no native or behavioral improvement claim.
+
+
+## G2: a refused DragonBones handler remains referenced as a callback value
+
+At the same Flight `a627849` / compiler `806d257` pins, cluster
+`undeclared-identifier-b90ed4db` has seven ANIM headers whose shared first error is
+`dragon_bones_animations_handler.hpp:128`: undeclared `dragon_bones_animations_section_handler`.
+This is a retained reference to a refused source function, rather than a missing runtime primitive or
+an emitted definition placed after its use.
+
+`packages/skeleton2d-formats/src/dragonBonesAnimationsHandler.ts:9` reads
+`context.armature.animation`, checks `Array.isArray(raw)`, iterates it, and skips entries for which
+`entry === null || typeof entry !== 'object'`. This is the exact module already listed in this
+request's erased-array/null-test refusals. Its header has:
+
+```cpp
+// NOT GENERATED: function dragonBonesAnimationsSectionHandler -- source line 9
+// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
+```
+
+The emitter then retains the source's exported reader alias as a value initialization:
+
+```cpp
+inline std::function<void(flight::Ref<flight::types::DragonBonesSectionContext>)>
+    dragon_bones_animations_section_reader = dragon_bones_animations_section_handler;
+```
+
+That is the emitter's exact callback carrier. `DragonBonesSectionContext::armature` is emitted as
+`Record<String, Any>` from the source's `Readonly<Record<string, unknown>>`; the body must recover the
+original animation array and its entries, rather than copy an asserted array or invent entry owners.
+The sibling `dragon_bones_section_handlers.hpp` also passes the same missing function to the registry
+and stores it in `dragon_bones_all_section_handlers`. No declaration or definition of this handler
+exists elsewhere in generated, override, or runtime headers. Reordering declarations cannot recover it.
+
+The existing `declare-refused-function` repair requires all three witnesses, including a retained
+**direct call** to the symbol. Here the exact refusal and missing definition agree, but the retained
+use is a callback-value reference, with no direct call in the refused function's header. A probe using
+its exact emitted signature through `applyEmissionRepairs` returned no matched files and left the
+header byte-identical. The mechanism was neither broadened nor bypassed. No declaration repair was
+shipped, so no negative-link result is claimed. A future repair for callback-value references would
+also need to verify the retained inline initializer's linkage behavior and preserve the source alias;
+compiling a declaration alone would not supply the animation handler.
+
+The source body dispatches timeline handlers, builds channels/clips and durations, accumulates unresolved
+bone and unsupported/unregistered timeline counts, and emits the corresponding diagnostics. An empty
+`std::function`, a no-op body, or replacing the reader with another function would change behavior or
+identity. The source explicitly aliases reader to handler; its existing tests assert that identity
+and registry membership. Those tests were read as requirements only, not ported or run in this task.
+No runtime method or external binding can substitute for this omitted TypeScript algorithm. The
+source-spelling attempts already recorded above do not solve the erased-array recovery boundary;
+no fresh patch experiment or new implementation is claimed here.
+
+The owned headers, under `flight/skeleton2d_formats/`, are `_internal_index.hpp`, `contract.hpp`,
+`dragon_bones_animations_handler.hpp`, `dragon_bones_full.hpp`, `dragon_bones_handlers.hpp`,
+`dragon_bones_section_handlers.hpp`, and `skeleton_detect.hpp`.
+**0/7 pass, 7 fail** is preserved from G1; all seven rows remain failed and now link this existing
+request. The cluster route is compiler. No C++ input changed, so no unchanged native compile rerun was
+performed. Closing the missing name must not be reported as restoring the refused animation behavior.

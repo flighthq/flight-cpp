@@ -49,7 +49,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 20 | `missing-member-fd48c0bb` | 7 | 3D | [compiler request](compiler-requests/narrowed-imported-union-into-declared-parameter.md) | the emitted code reads a member the target does not declare (`collide_physics_3d_collider_shapes`) |
 | 21 | `other-18dcce71` | 7 | ANIM | [compiler request](compiler-requests/erased-array-element-reading.md) | Array.isArray narrowing leaves an erased array length read as Any in a numeric assignment |
 | 22 | `undeclared-identifier-7dc86326` | 7 | WGPU | runtime | the emitted code names `get_wgpu_scene_3d_runtime`, which nothing declares |
-| 23 | `undeclared-identifier-b90ed4db` | 7 | ANIM | runtime | the emitted code names `dragon_bones_animations_section_handler`, which nothing declares |
+| 23 | `undeclared-identifier-b90ed4db` | 7 | ANIM | [compiler request](compiler-requests/erased-array-element-reading.md) | a retained callback alias references the DragonBones animations handler after its body is refused |
 | 24 | `invalid-operands-ec4dbe74` | 6 | CORE, GL | runtime | an operator is applied to operand types it does not accept |
 | 25 | `missing-member-237022b0` | 6 | 2D, TEXT | compiler | `create_document_refusal` lives in the wholly refused `sceneDocumentRefusal.ts`, refused for a misclassified imported Record alias *(request filed)* |
 | 26 | `missing-member-e27d26f9` | 6 | 3D | runtime | the emitted code reads a member the target does not declare (`attach_gltf_pbr_extension`) |
@@ -585,12 +585,15 @@ G2's scoped-only-when-changed rule. Only these owned rows gained request links a
 
 ### 23. `undeclared-identifier-b90ed4db` — 7 header(s)
 
-- cause: the emitted code names `dragon_bones_animations_section_handler`, which nothing declares
+- cause: a retained callback alias references the DragonBones animations handler after its body is refused
 - subject: `dragon_bones_animations_section_handler`
 - lanes: ANIM
-- fix route: runtime
+- fix route: compiler — [erased-array reading request](compiler-requests/erased-array-element-reading.md)
 - first failure at: `flight/skeleton2d_formats/dragon_bones_animations_handler.hpp:128`
 - example: `use of undeclared identifier 'dragon_bones_animations_section_handler'`
+- G2 disposition: one shared omitted-handler family. `dragon_bones_animations_handler.hpp:41` marks `dragonBonesAnimationsSectionHandler` NOT GENERATED (`cpp-presence-test-without-absence-storage`); line 128 retains a `std::function<void(Ref<DragonBonesSectionContext>)>` alias initialized from that missing function. No declaration or later definition exists, so moving declarations cannot restore the body.
+- This is a function-value reference, not a retained direct call. An in-memory probe through the existing `declare-refused-function` handler confirms zero matches and byte-identical output; its required direct-call witness is absent. No repair or body was added, so no negative-link check is applicable or claimed. The request already names the erased-array/null-test refusal in this source and now records the retained alias, registry references, exact context carrier, and preservation of handler identity and real animation behavior.
+- Numbers: **0/7 pass, 7 fail**, retained from G1. All seven owned rows remain failing and request-linked. No C++ input changed, no native rerun, and no runtime/behavior/link improvement is claimed.
 
 ### 24. `invalid-operands-ec4dbe74` — 6 header(s)
 
