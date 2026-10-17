@@ -3251,11 +3251,29 @@ prose, override metadata and historical totals remain intact.
 
 ### 135. `no-viable-conversion-9695423c` — 1 header(s)
 
-- cause: a value is passed where its declared type cannot receive it
+- cause: a numeric graph-drop Record cannot implicitly widen into the optional diagnostic Record value domain
 - lanes: 2D
 - fix route: compiler
 - first failure at: `flight/scene2d_formats/rive_object_graph.hpp:39`
 - example: `no viable conversion from 'Record<String, double>' to 'optional<Record<String, variant<bool, double, String>>>'`
+
+G2: **1 attempted / 1 pass / 0 fail / 0 unattempted**, Clang 22.1.8, jobs 1.
+The [existing Record value-carrier request](compiler-requests/contextual-record-value-carrier-projection.md#g2-rive-object-graph-chooses-the-diagnostic-carrier-at-fresh-detail-allocation)
+now records a bounded source workaround: the private required graph-drop helper has only three
+fresh numeric-literal callers, so its erased annotation names the collector value domain at each
+first allocation. Normal pinned generation reproduces the exact carrier candidate; actual graph
+compile/link/run pass for local numbering, filtered streams/spans, object identity, bad/missing/self
+parents, cycles/forward parents and opt-in exact Drop diagnostics with retained Record identity.
+No generic numeric Record covariance, copied owner, fake graph/parser or narrowed input is supplied.
+
+Only the owned graph row passes and its resolved cluster is removed, preserving its previous id.
+The separate Rive document optional-detail projection remains open at historical 0/4; it is not
+promoted or rerun. Full source graph/document/diagnostic domains remain required. No byte parser,
+scene import, assets, animation or rendering executes. The request distinguishes tested graph cases
+from original source assertions and untested malformed-value/exception behavior. All executable
+TypeScript expressions and the C++ graph algorithm are unchanged; only the private annotation/carrier,
+normal header/own provenance and compact owned coverage change. Foreign products, historical/global
+counters and all other worklist entries remain intact; no unchanged C++ rerun for final docs edits.
 
 ### 136. `no-viable-conversion-a516fbdb` — 1 header, retained compiler owner boundary
 

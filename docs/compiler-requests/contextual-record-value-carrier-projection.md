@@ -155,3 +155,104 @@ existing request appendix, four failed rows/their root and worklist45 gain preci
 No C++/runtime/binding/source patch/repair/override/manifest, generation, parser/context functionality
 or global/package/G1 count changes are carried. No fake Rive document/parser/empty success, copied
 owner or narrowed accepted document/diagnostic domain is supplied.
+
+## G2 Rive object graph chooses the diagnostic carrier at fresh detail allocation
+
+At Flight `a627849` / compiler `806d257`, `no-viable-conversion-9695423c` is the single
+`scene2d_formats/rive_object_graph.hpp` failure at line 39. `report_rive_graph_drop`
+receives a required `Record<String,double>` and forwards that existing value into
+`report_import_diagnostic`'s optional `Record<String,variant<bool,double,String>>`.
+The collector and ImportDiagnostic.detail agree on that wider readonly source domain;
+it is the numeric detail Record that fails to cross, not a graph or document owner.
+
+The module-private `reportRiveGraphDrop` has exactly three callsites, all fresh literals:
+`{ index }` for a missing parent or cycle, and `{ index, parent }` for an unresolved parent.
+It never receives an already allocated numeric Record from a public caller. The carried
+[type-only source patch](../../source-patches/rive-object-graph-fresh-diagnostic-record.patch)
+changes only its required detail annotation:
+
+```ts
+// Before:
+detail: Readonly<Record<string, number>>,
+// After, identical to the collector's value domain:
+detail: Readonly<Record<string, boolean | number | string>>,
+```
+
+The annotation erases in TypeScript. It gives each literal the destination Record carrier at
+its first allocation, selecting numeric double alternatives without coercion. The same fresh
+object then passes through the helper and optional collector into diagnostic detail. No entries
+are copied, no wider writes are granted to an existing numeric Record, and no Record owner or
+graph object is replaced. The required helper argument matters: these literals are not bare
+objects being passed directly to an optional Record parameter. This takes the fresh-allocation
+route already allowed above, rather than adding generic existing-Record covariance.
+
+The [Rive document rejection case](#g2-rive-rejection-details-widen-numeric-cells-into-diagnostic-values)
+remains separate and open at recorded 0/4. Its optional numeric detail parameter can receive an
+existing Record, and its adjacent bare literals cross an optional boundary. This graph-local
+private annotation does not solve that API or the separate optional-literal construction gap.
+No parser/document/registry/context owner, binary decoder or diagnostic capability is fabricated.
+
+Normal pinned scoped generation exits 0: 1/1467 modules emitted across 30 packages; 0 refusals recorded; 255 source patch(es) applied; 1 header(s) repaired after emission. Only the own graph header and source-patch provenance record are carried. The complete emitted graph header is
+byte-identical to the native-tested exact carrier candidate. Emission also constructs the four numeric values at the three fresh detail sites with explicit
+`std::variant<bool,double,String>{std::in_place_type<double>, value}` alternatives. Removing only
+those four wrappers and reversing the one private parameter carrier restores the original header
+byte-for-byte; no graph operation, branch or caller expression is otherwise changed.
+Final scoped original one: **1 attempted / 1 pass / 0 fail / 0 unattempted**. Actual whole-header graph probe
+compile/link/run each exit 0 with Clang 22.1.8; it invokes the real generated graph functions,
+not a duplicate graph implementation. Source-patch mechanism tests: **2 pass, 0 skip, 0 fail**.
+
+The source and representation contract remains:
+
+- A RiveDocument is the existing header plus ordered core-object/property owners, with numeric
+  type/property keys and RiveValue number/String/Uint8Array alternatives. Graph construction consumes
+  those same objects; it does not decode bytes, construct a substitute document or discard property
+  metadata. Successful empty/no-artboard graphs are real freshly allocated graph results, distinct
+  from a parser's null failure. `createRiveObjectGraph` allocates/initializes/finishes the existing
+  entity owner; initialization replaces out.artboards with its fresh resolved list, keeping out.
+- Each exact artboard type 1 opens a local numbering space with that artboard at index 0. Components
+  before an artboard are ignored. Thereafter only objects derived from Component type 10 enter that
+  board's objects, using the complete existing core-type ancestry table. Animations, keyframes,
+  assets, state machines and unknown non-components still occupy positions in the original stream
+  but never shift component indices. Do not copy a smaller type table, renumber the board from its
+  first child or keep only a preselected Shape/Ellipse subset.
+- Each board's streamStart is its original artboard index; streamEnd is the next artboard index or
+  the complete document length, retaining ignored objects in the span. The newly created component
+  lists retain original object references and order, not cloned core objects. Parent indices are
+  positions within that board list, not original stream indices or another board's namespace.
+- The artboard always gets parent -1. For a component, find the first property with key 5; missing
+  parent reports `rive.component-without-parent` with index and returns -1. The source asserts its
+  value as number and rejects exactly self, less than zero or greater/equal to count, reporting
+  `rive.unresolved-parent` with original index/parent. Forward in-range parents are allowed, so
+  do not require a previously encountered parent. Keep first-property selection, numeric values,
+  property metadata and original comparison/exception behavior; no new integer/finite/type/field-code
+  validation, default-to-artboard parent or narrowed accepted document is introduced by this patch.
+- Populate every parent entry before scanning cycles from index 1 upwards. The existing slow/fast
+  walk stops at -1 or detects equal cursors; on a detected cycle append `rive.parent-cycle`, origin
+  `resolveRiveParentIndices`, detail index, then change only that entry to -1. Later checks see the
+  updated same parent array. Preserve deterministic break order and still-valid descendants, rather
+  than dropping every participant, sorting parents or fabricating a replacement hierarchy.
+- All three graph diagnostics use Drop severity. Missing/unresolved parents originate at
+  `readRiveParentIndex`; cycles originate at `resolveRiveParentIndices`, not the wrapper's name.
+  Diagnostics append to the caller's existing sink in source order and preserve prior entries.
+  Omitted sink remains a no-op in the collector while graph construction/rooting still completes.
+  Supplied detail remains present with its exact numeric keys; missing parent is not filled with
+  a synthetic parent value. No aggregation, disabled collector, success crumb, Reject severity,
+  stringified number or default detail substitutes for the real drop branch.
+
+The native probe covers no-artboard/fresh result, multiple local spaces, pre-artboard/animation/
+unknown filtering and stream spans, original object identity and independent component lists,
+missing/self/out-of-range parents, the 2↔1 ring's deterministic break, an allowed forward parent,
+absent/present sink, exact Drop kinds/origins/numeric details and retained prior diagnostics.
+A direct helper-to-collector detail check verifies Record identity and a later alias-visible update;
+a static assertion confirms numeric Record does not acquire an implicit generic wider conversion.
+The existing source tests' corpus-based numbering comments are requirements, not a new corpus run.
+No byte parser, scene/artboard importer, asset registry, animation, skeleton or rendering executes.
+Source assertions and untested malformed-value/exception paths remain their original semantics;
+the native cases do not certify every possible forged RiveValue or the whole Rive pipeline.
+
+Only this pinned private source annotation/record, whole normal header/own provenance entry and
+owned request/worklist/product slice change. The passing graph row retains its prior failure id;
+its resolved cluster is removed. Historical/global/package counters and all foreign compact rows,
+records and prose remain intact. The generated header is carried whole from normal emission.
+Runtime, bindings, emission repairs, overrides, document owners, public signatures and the graph
+algorithm remain unchanged. Unchanged C++ is not rerun for final docs/base-only edits.
