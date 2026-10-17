@@ -168,7 +168,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 139 | `no-viable-conversion-c997578d` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
 | 140 | `no-viable-conversion-cef6403d` | 3 | 3D | compiler | a value is passed where its declared type cannot receive it |
 | 141 | `no-viable-conversion-dc893fc7` | 1 | GL | binding (applied) | absent WebGL `srcOffset` passed where the host declared a plain defaulted size *(G2: 1/1 pass)* |
-| 142 | `no-viable-conversion-eabaf455` | 1 | 3D | compiler | a value is passed where its declared type cannot receive it |
+| 142 | `no-viable-conversion-eabaf455` | 1 | 3D | compiler | nullable indexed material remains optional at guarded calls; existing two-layer element request linked (G2: 0/1 retained) |
 | 143 | `no-viable-conversion-f7267dc5` | 1 | ANIM | compiler | G2: recorded 0/1 retained; Spine JSON shared transform preset has anonymous owner, Bone2D slot is nominal; existing request/no rerun |
 | 144 | `other-1e3a0d33` | 1 | ANIM | source fix; compiler follow-ons | G2: 0/1; typed preset owners fix conditional, now optional Record detail; nominal Bone2D store still owed |
 | 145 | `other-4703cbbe` | 1 | 3D | compiler | G2: 0/1; parsed JSON is cast to a nominal glTF document; existing assertion request extended |
@@ -3074,13 +3074,34 @@ provider was invented, and the full compressed-format domain is untouched.
 **G2: 1/1 compile** (`-j1`, Clang 22.1.8): `flight/render_gl/gl_compressed_texture.hpp` passes. The upload
 has not been executed; there is no SDL/GL here.
 
-### 142. `no-viable-conversion-eabaf455` — 1 header(s)
+### 142. `no-viable-conversion-eabaf455` — 1 header, retained indexed-element projection boundary
 
-- cause: a value is passed where its declared type cannot receive it
+- cause: optional<Material3DValue> reaches includes/push after the material null guard
 - lanes: 3D
-- fix route: compiler
-- first failure at: `flight/scene3d/scene_material.hpp:94`
-- example: `no viable conversion from 'optional<variant<shared_ptr<SpecularGlossinessPbrMaterial>, shared_ptr<VertexColorMaterial>, shared_ptr<UnlitMaterial>, shared_ptr<StandardPbrMaterial>, shared_ptr<CustomShaderMaterial>, shared_ptr<BlinnPhongMaterial>, shared_ptr<LambertMaterial>, shared_ptr<DepthMaterial>`
+- fix route: compiler, [existing nullable indexed-element request](compiler-requests/nullable-array-element-null-test.md#g2-scene3d-material-calls-must-receive-the-guarded-inner-element)
+- unchanged first failure: `flight/scene3d/scene_material.hpp:94`
+- unchanged native diagnostic retained in the compact header row (long optional/variant carrier)
+
+The material-value enumeration patch already retains all seventeen Material3DValue arms, including
+open vendor Material3D. The current read is optional<optional<Value>>; the correct strict-null
+predicate distinguishes index-miss undefined from an in-range null, but material.value() still
+passes optional<Value> where includes/push require Value. The name visitor has the same inspected
+projection shape. Preserve active-owner projection and actual source undefined/error behavior;
+a permissive optional overload, default material, changed nullish guard or unchecked unwrap is
+not a faithful carrier fix. No new source patch or runtime adapter is carried.
+
+Keep the original optional node materials capability/array, concrete/vendor owners and live
+runtime/graph traversal. Enumeration includes root then DFS descendants, scans slots in order,
+appends without clearing caller output and deduplicates by reference against its existing prefix.
+Lookup returns the first root/slot/DFS exact-name match by identity, or null. The inspected
+NodeTraits/Node3DTraits visitor mismatch and callback-updated found value returned as literal null
+remain separate obligations, not additional measured diagnostics or a native completion claim.
+
+**G2: 0 pass / 1 fail retained.** Only this compact root/row, worklist142 and an append to the
+existing request change. All C++/source/patch/repair/override/runtime/manifests/counts/refusals/init/
+policy inputs and pins stay unchanged, with no native/generation rerun. Source tests are
+requirements, not native collection/name-lookup proof. No fake material, copied owner, empty
+result, sorted/closed family, narrowed domain or material discovery gain is claimed.
 
 ### 143. `no-viable-conversion-f7267dc5` — 1 header(s), compiler route
 

@@ -125,3 +125,69 @@ not proof that out-of-range behavior matches the source; restoring the full inde
 required before claiming runtime success. No shared runtime, compiler patch or text repair is carried,
 and removing only one condition is not presented as a complete clipping fix. The following optional
 Record error and missing transform/registration bodies remain separate obligations.
+
+## G2 Scene3D material calls must receive the guarded inner element
+
+At Flight `a627849` / compiler `806d257`, no-viable-conversion-eabaf455 contains one
+header, scene3d/scene_material.hpp:94, retaining **0 pass / 1 fail**. The existing
+scene3d-material-value-enumeration source patch already propagates Material3DValue through
+collection output, helper results and named lookup. Its seventeen arms include sixteen concrete
+built-ins plus the open Material3D vendor arm; the old base MaterialValue name is not this error.
+The retained array read and call are, with Value standing for that exact union:
+
+```cpp
+// materials is optional<Array<optional<Value>>>:
+std::optional<std::optional<Value>> material = materials.value().get(i);
+if (/* source material !== null */ && !out.includes(material.value())) {
+  out.push(material.value());
+}
+```
+
+material.value() is still optional<Value>, while includes/push require Value. The same carrier
+reaches the name visitor at line118. These are no-viable-conversion/member visitation barriers,
+not missing material declarations or an unrepresented concrete union. The already-carried
+indexed-element-presence patch emits the two-layer strict-null predicate correctly; its fix
+must remain. This follow-up needs the predicate's proven element state to survive into argument
+and member projection, with the original active material owner and union arm preserved.
+
+The outer layer is an indexed undefined/miss and the inner layer is source null. Strict
+material!==null is true for a miss, unlike a loose nullish test; it does not itself prove both
+layers present. Valid present material elements must project the inner Value, while indexed
+undefined/error behavior must remain faithful to the source. Do not rewrite the guard to skip
+all absence, discard null slots before indexing, assume an unchecked double-value() is always
+safe, coerce optional to a default material, or add permissive Array overloads that hide the
+wrong carrier. Source-level non-null spelling alone does not establish that full contract.
+
+collectNodeMaterials reads the original optional materials capability of the same readonly
+node, returning on a null/absent array. It scans the live array in source index order, skips
+source null slots, and appends to the caller's EXISTING out without clearing it. Duplicate
+suppression is strict object/reference identity against that seeded output; equal fields,
+kind or name do not merge distinct objects, and a shared material across meshes appears once.
+Preserve the actual material array, each concrete/vendor material and caller array, not copied
+records, closed built-in-only families, sorted output, a detached set or a new result array.
+A bare group needs absent-material behavior; no geometry/kind/visibility/enabled gate is added.
+
+getScene3DMaterials collects the root first and then every descendant in depth-first pre-order.
+findScene3DMaterialByName checks the root before walking descendants, scans each node's slots
+in order, compares names strictly/case-sensitively and returns the SAME first matching object,
+including a named root material. Null/no-match returns null, without continuing after a match.
+Preserve live graph/runtime/child arrays, traversal callback/error order and later material-name
+mutation visibility. No fake material, copied node/runtime, empty collection or narrowed graph,
+name or material domain is faithful. The [material-value request](material3d-concrete-value-path.md)
+explains why the vendor arm and concrete ownership remain mandatory.
+
+Later issues are inspected, not new measured first errors. Root/visitor helpers mix Node3D /
+NodeOf<Node3DTraits> with explicitly defaulted NodeTraits traversal callbacks; the existing
+[heritage-aware deduction request](heritage-argument-generic-deduction.md) records the needed
+trait substitution, and a global alias or copied node is not a fix. Named lookup's callback
+rebinds found_capture, yet its final emitted return evaluates read_binding only for void and
+returns literal null. The callback-updated value must be returned; otherwise descendant lookup
+would lose a found object even after compilation. Neither these issues nor the original optional
+materials owner view are proved resolved by projecting the first guarded element.
+
+Existing source tests specify root inclusion, nested first-match lookup, null/anonymous slots,
+shared-material deduplication and empty mesh-free collection. They were inspected as requirements,
+not executed as native discovery evidence. This arc changes only the sole failed row/root,
+worklist142 and this existing request appendix. C++, runtime, source/patches, repairs, overrides,
+manifests, counts/refusals/init/policy and pins remain unchanged; no native or generation rerun.
+No material enumeration/name lookup, ownership, traversal or native success claim is supplied.
