@@ -3258,6 +3258,12 @@
     },
     {
       "files": [
+        "flight/types/color_scale_bias_adjustment.hpp"
+      ],
+      "id": "adjustments-color-scale-bias-interface-heritage"
+    },
+    {
+      "files": [
         "flight/render/render_state.hpp"
       ],
       "id": "render-state-nullable-structural-canvas-host-fallback"

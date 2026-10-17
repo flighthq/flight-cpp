@@ -22,10 +22,7 @@ struct ColorScaleBiasAdjustment;
 
 namespace flight::types {
 
-struct ColorScaleBiasAdjustment : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
-  flight::Array<double> color_matrix;
+struct ColorScaleBiasAdjustment : public ColorMatrixAdjustment {
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ColorScaleBiasLike>>> color_scale_bias;
 };
 

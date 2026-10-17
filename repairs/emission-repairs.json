@@ -8806,6 +8806,18 @@
       "expires": "when emitted reference-backed interfaces retain declared interface heritage instead of duplicating inherited fields; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "adjustments-color-scale-bias-interface-heritage",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/types/color_scale_bias_adjustment.hpp",
+      "sourceDeclaration": "packages/types/src/ColorScaleBiasAdjustment.ts -- ColorScaleBiasAdjustment extends ColorMatrixAdjustment; the existing ColorMatrixAdjustment repair already preserves Adjustment as its base",
+      "from": "struct ColorScaleBiasAdjustment : public flight::ReferenceEnabled {\n  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;\n  flight::String kind;\n  flight::Array<double> color_matrix;\n  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ColorScaleBiasLike>>> color_scale_bias;\n};",
+      "to": "struct ColorScaleBiasAdjustment : public ColorMatrixAdjustment {\n  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ColorScaleBiasLike>>> color_scale_bias;\n};",
+      "diagnostic": "no matching constructor for initialization of 'flight::Array<flight::Ref<flight::types::Adjustment>>'",
+      "defect": "ColorScaleBiasAdjustment repeats the inherited entity_runtime_key, kind and color_matrix fields in an unrelated flattened owner. SWF stores the fresh concrete adjustment in the source-declared open Adjustment array. Extend the existing ColorMatrixAdjustment/TintAdjustment heritage repair with this exact declared edge, removing only the duplicated base fields so the same allocation and control block widen through ColorMatrixAdjustment to Adjustment. No body, closed union, copied owner or pointer reinterpretation is introduced.",
+      "expectedWhen": "always",
+      "expires": "when the emitted ColorScaleBiasAdjustment retains its declared ColorMatrixAdjustment heritage without repeating base fields; sdk:check fails if this exact repair no longer matches."
+    },
+    {
       "id": "render-state-nullable-structural-canvas-host-fallback",
       "kind": "respell-reference-member-access",
       "appliesTo": "flight/render/render_state.hpp",

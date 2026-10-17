@@ -8,6 +8,7 @@
 #include <cmath>
 #include <cstdint>
 #include <iostream>
+#include <memory>
 #include <optional>
 #include <string_view>
 
@@ -446,6 +447,34 @@ void matrix_descriptors_and_resolution() {
             bridge->color_matrix.element(0) == 0.5 && bridge->color_matrix.element(9) == 0.25 &&
             flight::row_get<flight::RowKey<"redScale">>(bridge->color_scale_bias) == 0.5,
         "scale/bias bridge preserves a readable payload and diagonal matrix");
+
+  auto concrete = adjustments::create_color_scale_bias_adjustment(readonly(payload));
+  std::weak_ptr<types::ColorScaleBiasAdjustment> lifetime = concrete;
+  flight::Ref<types::ColorMatrixAdjustment> matrix_base = concrete;
+  flight::Ref<types::Adjustment> adjustment_base = concrete;
+  auto vendor = flight::make_ref<types::Adjustment>();
+  vendor->kind = flight::String("VendorAdjustment");
+  flight::Array<flight::Ref<types::Adjustment>> widened{concrete, vendor};
+  check(widened.get(0.0).value() == adjustment_base &&
+            widened.get(1.0).value() == vendor &&
+            !concrete.owner_before(adjustment_base) &&
+            !adjustment_base.owner_before(concrete),
+        "an open Adjustment array keeps the concrete scale/bias allocation and control block in order");
+  check(&matrix_base->color_matrix == &concrete->color_matrix &&
+            &adjustment_base->kind == &concrete->kind &&
+            &adjustment_base->entity_runtime_key == &concrete->entity_runtime_key,
+        "declared adjustment heritage exposes one set of inherited field cells");
+  matrix_base->color_matrix.element(0.0) = 0.125;
+  check(concrete->color_matrix.element(0.0) == 0.125 &&
+            matrix_base->color_matrix.identity() == concrete->color_matrix.identity() &&
+            flight::row_get<flight::RowKey<"redScale">>(concrete->color_scale_bias) == 0.5,
+        "matrix-base writes reach the concrete adjustment while its scale/bias payload is retained");
+  concrete.reset();
+  matrix_base.reset();
+  adjustment_base.reset();
+  check(!lifetime.expired(), "the Adjustment array retains the widened concrete owner");
+  widened.clear();
+  check(lifetime.expired(), "clearing the last adjustment reference releases the concrete owner");
 }
 
 void lut_and_cache() {
