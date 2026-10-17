@@ -2742,10 +2742,14 @@ float conversion/count/GL operations. Explicit ranges share the original typed b
 subarray behavior and all legacy overloads remain. No source material, state, program, context or
 shader owner is copied; no source/repair/override/generated header/manifest/pin changes.
 
-Commit-first changed host target build/link and ONE real SDL GL CTest **1/1 pass,0.74 s**
-(total0.76s):28 uploads across all four widths (24Array,4typed),32 driver readbacks and16 invalid
-range checks. Driver float readback proves selected values and conversion, with no GL error. This is
-host uniform proof, not a custom renderer/cache/guard/shader/draw execution claim.
+Commit-first changed host target build/link and real SDL GL CTest initially passed **1/1, 0.74 s**
+(total 0.76 s). After adding independent sentinel resets before every upload and rebuilding, the
+final test passed **1/1, 0.13 s** (total 0.14 s); each version ran once. The final test has 28 cases
+across all four widths (24 Array, four typed), 28 resets through unchanged typed two-argument
+uploads, 32 driver readbacks and 16 invalid range checks. Driver float readback proves selected
+values and conversion with no GL error, and the resets prevent no-op uploads from inheriting a
+prior success. This is host uniform proof, not custom renderer/cache/guard/shader/draw execution.
+The test-only strengthening changes no production or SDK input; no second header compile ran.
 
 Changed original1 header: **1 attempted / 0 pass / 1 fail / 0 unattempted,124.9 s,Clang22.1.8
 jobs1**. The original uniform root is removed; this failed row joins existing

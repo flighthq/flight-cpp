@@ -51,6 +51,17 @@ void check_array_uniform_ranges(const flight::host_sdl::WebGl2Context& gl) {
       exact.push(numbers[i]);
       prefixed.push(numbers[i]);
     }
+    flight::Float32Array sentinel(width);
+    for (std::size_t i = 0; i < width; ++i) sentinel[i] = -99.0F;
+    const auto reset_values = [&] {
+      // Use the unchanged two-argument typed overloads, independently of the range path under test.
+      switch (width) {
+        case 1: gl.uniform1fv(location, sentinel); break;
+        case 2: gl.uniform2fv(location, sentinel); break;
+        case 3: gl.uniform3fv(location, sentinel); break;
+        case 4: gl.uniform4fv(location, sentinel); break;
+      }
+    };
     const auto check_values = [&] {
       std::array<float, 4> actual{};
       read_uniform(program.native_name(), static_cast<GLint>(location->native_name()), actual.data());
@@ -59,18 +70,24 @@ void check_array_uniform_ranges(const flight::host_sdl::WebGl2Context& gl) {
       }
       require(gl.get_error() == gl.no_error, "uniform-range upload/readback raised a GL error");
     };
+    reset_values();
     upload(location, exact, std::nullopt, std::nullopt);
     check_values();
+    reset_values();
     upload(location, exact, 0.0, std::nullopt);
     check_values();
+    reset_values();
     upload(location, prefixed, 2.0, std::nullopt);
     check_values();
+    reset_values();
     upload(location, prefixed, 2.0, 0.0);
     check_values();
     auto suffixed = prefixed.slice();
     suffixed.push(97.0);
+    reset_values();
     upload(location, suffixed, 2.0, static_cast<double>(width));
     check_values();
+    reset_values();
     upload(location, exact, 0.0, static_cast<double>(width));
     check_values();
 
@@ -78,6 +95,7 @@ void check_array_uniform_ranges(const flight::host_sdl::WebGl2Context& gl) {
     typed[0] = 99.0F;
     typed[1] = 98.0F;
     for (std::size_t i = 0; i < width; ++i) typed[i + 2] = static_cast<float>(numbers[i]);
+    reset_values();
     upload(location, typed, 2.0, static_cast<double>(width));
     check_values();
 

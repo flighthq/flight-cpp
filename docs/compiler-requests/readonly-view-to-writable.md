@@ -265,15 +265,20 @@ and typed overloads remain, and typed selection still uses its original subarray
 numeric upload window is not a substitute material, context, program or shader-source owner.
 No generated header, source patch, emission repair, override, binding manifest or pin was changed.
 
-The changed existing host SDL GL application target built/linked and ran once: **1/1 pass,
-0.74 s** (0.76 s total). In one real context, a linked uniform fixture exercises all four widths:
-24 numeric-array uploads (absent/explicit zero, prefixed offset, zero/rest length, bounded length),
-four typed-array offset uploads, and 16 invalid numeric-array ranges. Actual glGetUniformfv
-readback verifies every selected component after native float conversion, including fractional
-numbers: 32 reads include one after the rejected ranges for each width, proving unchanged values
-and no GL error. The fixture uses the host's
-existing typed GL entry-point loader; no model callback is cast or substituted. This is host upload
-proof, not execution of the custom material renderer, its cache/guard, or its shader/draw path.
+The changed existing host SDL GL application target initially built/linked and passed **1/1,
+0.74 s** (0.76 s total). The test was then strengthened to reset each uniform to a distinct sentinel
+before every upload, so a no-op cannot inherit the preceding expected value. After rebuilding the
+changed target, this final version passed **1/1, 0.13 s** (0.14 s total). Each version ran once.
+In one real context, a linked uniform fixture exercises all four widths: 24 numeric-array uploads
+(absent/explicit zero, prefixed offset, zero/rest length, bounded length), four typed-array offset
+uploads, and 16 invalid numeric-array ranges. The 28 sentinel resets use unchanged two-argument
+typed uploads: 56 successful upload calls in total, including the 28 cases under test. Actual
+glGetUniformfv readback verifies every selected component after native float conversion, including
+fractional numbers: 32 reads include one after the rejected ranges for each width, proving unchanged
+values and no GL error. The fixture uses the host's existing typed GL entry-point loader; no model
+callback is cast or substituted. This is host upload proof, not execution of the custom material
+renderer, its cache/guard, or its shader/draw path. The test-only strengthening changes no production
+or SDK header input, so the scoped header compile below was not repeated.
 
 After that fix, changed original1 compilation with Clang22.1.8 jobs1 completes **1 attempted /
 0 pass / 1 fail / 0 unattempted, 124.9 s**, at the independent readonly conversion at **:175**:
