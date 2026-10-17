@@ -85,7 +85,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 56 | `undeclared-identifier-f2b46b01` | 4 | 3D | declaration repairs (applied) | refused standard/unlit callback declarations supplied; G2: 1 pass, 3 deeper compiler failures; callbacks remain unlinkable |
 | 57 | `call-has-no-matching-3b2f72dd` | 3 | PLAT | compiler | the emitted call to `is_optional_number` matches no declared overload |
 | 58 | `call-has-no-matching-56e47749` | 3 | GL | compiler | the emitted call to `compute_node_root_local_bounds_rectangle` matches no declared overload |
-| 59 | `invalid-operands-98cd7094` | 3 | 2D | runtime | an operator is applied to operand types it does not accept |
+| 59 | `invalid-operands-98cd7094` | 3 | 2D | [compiler request](compiler-requests/local-handler-callable-identity.md) | a nullable registry callback is compared with the module function by identity, but the emitted `std::function` adapter erased it |
 | 60 | `missing-member-95ead583` | 3 | 3D | [compiler request](compiler-requests/cube-texture-width-and-completeness.md#g2-gl-environment-face-revisions-use-the-same-selected-owner-read) | nullable cube-face source retains seven real owners, but version is read on the variant itself |
 | 61 | `missing-member-b22d5c52` | 3 | 2D | declaration repair (applied) | refused callee `resolve_canvas_texture_window_source` declared across modules; G2: 0 pass, 3 to `missing-member-f497840c`; function remains unlinkable |
 | 62 | `missing-member-c36ea2d4` | 3 | 2D | binding | the web renderer needs shared CSS style state; SDL exposes copied shell values with no opacity field *(request filed)* |
@@ -1275,11 +1275,25 @@ test port was performed. Header inclusion does not make the refused registration
 
 ### 59. `invalid-operands-98cd7094` — 3 header(s)
 
-- cause: an operator is applied to operand types it does not accept
+- cause: `enableGlColorAdjustmentGuards` tests idempotence with
+  `runtime.registries.colorAdjustmentFeatureGuard !== warnGlColorAdjustmentNotEnabled`; the slot emits as
+  `std::variant<std::function<void (Ref<GlRenderState>, variant<Array<double>, Ref<ColorScaleBias>,
+  Ref<TintMaterialData>>)>, Null, Undefined>` and the test as `!=` against the `void ()` function
 - lanes: 2D
-- fix route: runtime
+- fix route: compiler — [local handler callable identity](compiler-requests/local-handler-callable-identity.md)
 - first failure at: `flight/scene2d_gl/enable_gl_color_adjustment_guards.hpp:35`
 - example: `invalid operands to binary expression ('variant<function<void (Ref<GlRenderState>, variant<Array<double>, Ref<ColorScaleBias>, Ref<TintMaterialData>>)>, Null, Undefined>' >, Null, Undefined>') and 'void ()')`
+
+This is the render cluster's identity family, not the readonly-owner recovery one: the module function has
+one JavaScript identity, the assignment adapts its zero parameters to the guard's two, and the comparison
+must be `callable_identity_equal` over the present alternative, false for both `Null` and `Undefined`. A
+runtime operator over the stored value cannot recover the identity the adapter discarded, and comparing
+carriers would invent an equality JavaScript does not have. The `assets-acquire-guard-callable-identity`
+respell is only a storage-type change and does not supply the comparison. `contract.hpp` and
+`_internal_index.hpp` fail through the same include.
+
+Rechecked at `-j1` with Clang 22.1.8: **0/3 pass, 3 fail**, all at the same diagnostic. The route and
+request link are recorded; no fix is carried.
 
 ### 60. `missing-member-95ead583` — 3 header(s)
 

@@ -64,6 +64,26 @@ target-pointer comparison would invent an equality JavaScript does not have.
 This one header blocks all four `@flighthq/debug` headers, because `debug.ts` imports
 `enableColorAdjustmentGuards` through render's contract.
 
+### `@flighthq/scene2d-gl`, the same test inverted (measured 2026-10-17)
+
+`scene2d-gl` `enableGlColorAdjustmentGuards.ts` stores `warnGlColorAdjustmentNotEnabled` into
+`GlRenderRegistries.colorAdjustmentFeatureGuard`, declared `GlColorAdjustmentMaterialFeatureGuard | null`
+with the guard taking `(state: GlRenderState, colorScaleBias: Readonly<ColorScaleBias | TintMaterialData |
+readonly number[]>) => void`. The test is inverted -- `runtime.registries.colorAdjustmentFeatureGuard !==
+warnGlColorAdjustmentNotEnabled` -- but the lowering is the same: `!=` between
+`std::variant<std::function<void (Ref<GlRenderState>, variant<Array<double>, Ref<ColorScaleBias>,
+Ref<TintMaterialData>>)>, Null, Undefined>` and `warn_gl_color_adjustment_not_enabled` (`void ()`), at
+`flight/scene2d_gl/enable_gl_color_adjustment_guards.hpp:35`. The three failing headers are that one,
+`scene2d_gl/contract.hpp` and `scene2d_gl/_internal_index.hpp`.
+
+The identity semantics are the render site's: the module function has one JavaScript object identity, the
+assignment adapts its zero parameters to the guard's two, and the comparison must be
+`callable_identity_equal` over the present alternative, false for both `Null` and `Undefined`. It is not the
+readonly-owner recovery family (render's `ColorScaleBias` return), and the
+`assets-acquire-guard-callable-identity` respell that changes an asset guard's storage carrier to
+`flight::Function` does not answer it: that is a type spelling, while this needs the stored adapter and the
+compared function to be one retained identity. No workaround is carried.
+
 ## Second site: `@flighthq/log`'s LogSink -- identity is required for registry idempotence
 
 `packages/log/src/log.ts` declares `LogSink` as a function type and keeps sinks in an array that is mutated by
