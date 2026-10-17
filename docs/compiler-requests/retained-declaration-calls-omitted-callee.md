@@ -1264,3 +1264,23 @@ owners need the carriers of
 [readonly-callback-derived-owner-recovery](readonly-callback-derived-owner-recovery.md). The draw needs the
 image-source discriminator. `scene2d-dom` declares environment `web`. No DOM backend, draw, copied owner or
 narrowed image domain is carried.
+## G2 physics2d registration retains nine refused solver bindings
+
+At Flight `a627849` / compiler `806d257`, `physics2d/register_built_in_physics_2d_joint_solvers.hpp`
+passes nine bindings from `joints.ts` to `register_physics_2d_joint_solver`, while the refused module
+carries one `NOT GENERATED: variable (binding)` marker per solver. The
+`physics2d-declare-refused-joint-solvers` repair adds only the exact carrier the call constructs:
+
+```cpp
+namespace flight::physics2d {
+extern flight::Ref<flight::types::Physics2DJointSolver> physics_2d_distance_joint_solver;
+// ... the other eight solver bindings, same carrier
+}
+```
+
+These references live inside an inline function, not in a global initializer, so the positive
+prerequisite the MD5/MD2 families failed is satisfied: an unused include links, and a call of the
+registration function compiles to an object and then fails to link on exactly the nine solver
+symbols. No solver body, warm-start, solve, reaction write or joint narrowing is supplied; the
+refusal itself is
+[the heritage request](interface-heritage-widening.md#g2-physics2d-joint-solvers-narrow-the-base-joint-in-their-bodies).

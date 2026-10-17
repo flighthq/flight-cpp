@@ -43,6 +43,8 @@ namespace flight::types { struct RigidBody2D; }
 #include <flight/types/physics_2d.hpp>
 #include <flight/physics2d/solver.hpp>
 
+
+namespace flight::physics2d { extern flight::Ref<flight::types::Physics2DJointSolver> physics_2d_distance_joint_solver; extern flight::Ref<flight::types::Physics2DJointSolver> physics_2d_gear_joint_solver; extern flight::Ref<flight::types::Physics2DJointSolver> physics_2d_mouse_joint_solver; extern flight::Ref<flight::types::Physics2DJointSolver> physics_2d_prismatic_joint_solver; extern flight::Ref<flight::types::Physics2DJointSolver> physics_2d_pulley_joint_solver; extern flight::Ref<flight::types::Physics2DJointSolver> physics_2d_revolute_joint_solver; extern flight::Ref<flight::types::Physics2DJointSolver> physics_2d_rope_joint_solver; extern flight::Ref<flight::types::Physics2DJointSolver> physics_2d_weld_joint_solver; extern flight::Ref<flight::types::Physics2DJointSolver> physics_2d_wheel_joint_solver; }
 namespace flight::physics2d {
 
 using flight::types::Physics2DCollider;

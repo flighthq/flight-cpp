@@ -3460,6 +3460,12 @@
         "flight/physics3d/joints.hpp"
       ],
       "id": "physics3d-declare-refused-slider-joint-solver"
+    },
+    {
+      "files": [
+        "flight/physics2d/joints.hpp"
+      ],
+      "id": "physics2d-declare-refused-joint-solvers"
     }
   ],
   "sourcePatches": [

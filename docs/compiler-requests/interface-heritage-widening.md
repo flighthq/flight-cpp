@@ -416,3 +416,17 @@ GLstate-versus-generic-state submit seam is type inspection only and belongs wit
 The submit body independently refuses [nullable material-owner widening](compiler-interface-heritage-owner-widening.md#g2-gl-tilemap-material-owner).
 See [retained aggregate qualification](retained-declaration-calls-omitted-callee.md#g2-gl-tilemap-retains-its-refused-submit-callback)
 for the rejected declaration candidate. No callback adapter, body or packet/drawing support is supplied.
+## G2 physics2d joint solvers narrow the base joint in their bodies
+
+At Flight `a627849` / compiler `806d257`, the nine exported solver object literals in
+`physics2d/joints.ts` are refused at `cpp-reference-assertion-without-heritage`. Each body receives a
+`Ref<Physics2DJoint>` and asserts it to its concrete joint (for example `Ref<Physics2DJoint>` to
+`Ref<Physics2DGearJoint>`) before writing impulses. The refusal names the missing relation exactly:
+the declarations share no emitted C++ heritage path, and the source carrier does not retain a checked
+dynamic owner that can recover the target. The requirement is the same one the factories above state:
+either the concrete joint owners carry the declared heritage, or the runtime provides a checked
+base-to-derived recovery. A pointer cast, a materialized copy or side storage would each break the
+joint identity the solver mutates. Meanwhile the registration header declares the nine
+`Ref<Physics2DJointSolver>` slots without a body
+([retained callers](retained-declaration-calls-omitted-callee.md#g2-physics2d-registration-retains-nine-refused-solver-bindings)),
+so no solver behavior is claimed.

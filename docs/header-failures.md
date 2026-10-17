@@ -144,7 +144,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 115 | `missing-member-5ac43ed0` | 1 | 3D | source fix; compiler bounds debt | optional color write emits checked TypedArray assignment; G2: 0/1 now writable Aabb output-owner failure |
 | 116 | `missing-member-703ef98e` | 1 | 2D | compiler | G2: 0/1; refused additive handler retained in registration/global family; declaration fails unused positive link |
 | 117 | `missing-member-8aa8170f` | 1 | ANIM | compiler *(existing request)* | the refused `swfVideoHandler` binding is still named by `swfVideoTagFamily`; its placement callable needs a signature adapter |
-| 118 | `missing-member-ad3558ee` | 1 | ANIM | runtime | the emitted code reads a member the target does not declare (`physics_2d_distance_joint_solver`) |
+| 118 | `missing-member-ad3558ee` | 1 | ANIM | runtime + repair (fixed) | the emitted code reads a member the target does not declare (`physics_2d_distance_joint_solver`); G2: 1 pass |
 | 119 | `missing-member-b5408b35` | 1 | 3D | override (fixed) | the `gl_shadow_map` override regained the generated `node_transform3d.hpp` include; G2 recheck: 1 pass |
 | 120 | `missing-member-d7bf452c` | 1 | 2D | [compiler/runtime contract](compiler-requests/readonly-record-entry-enumeration.md) | readonly Record entry enumeration and value-to-view construction disagree; G2: 0/1 retained |
 | 121 | `missing-member-dae8c839` | 4 | TEXT | [compiler request](compiler-requests/reference-backed-outcome-variant-narrowing.md) | FNT formatter reads dimensions on an image-source variant instead of its active owner |
@@ -2454,14 +2454,32 @@ The row remains failed, no header gain is claimed, and all foreign rows/prose an
 - Scoped native recheck (GCC 15.2, jobs 1): **1 attempted / 0 pass / 1 fail**, same diagnostic. `swf_video_handler.hpp` itself compiles. No handler, decoder, empty success or narrowed domain is supplied.
 - compiler request: `docs/compiler-requests/callable-arm-in-contextual-union.md`
 
-### 118. `missing-member-ad3558ee` — 1 header(s)
+### 118. `missing-member-ad3558ee` — 1 G1 header(s), 1 now compiles
 
 - cause: the emitted code reads a member the target does not declare (`physics_2d_distance_joint_solver`)
 - subject: `physics_2d_distance_joint_solver`
 - lanes: ANIM
-- fix route: runtime
+- fix route: runtime + repair (fixed)
 - first failure at: `flight/physics2d/register_built_in_physics_2d_joint_solvers.hpp:21`
 - example: `no member named 'physics_2d_distance_joint_solver' in namespace 'physics2d'`
+
+All nine `physics2D*JointSolver` bindings in `joints.ts` are refused at
+`cpp-reference-assertion-without-heritage`: each body narrows `Ref<Physics2DJoint>` to its concrete
+joint, and there is no C++ heritage or checked owner recovery to cast along (the measured boundary in
+`docs/compiler-requests/interface-heritage-widening.md`). The emitter still lowers
+`registerBuiltInPhysics2DJointSolvers`, which passes every binding to
+`register_physics_2d_joint_solver(world, kind, Ref<Physics2DJointSolver>)`, so the header named a
+member nothing declared. `physics2d-declare-refused-joint-solvers` is the existing
+`insert-forward-declaration` mechanism guarded by the exact refused-binding marker: it declares the
+nine `extern Ref<Physics2DJointSolver>` slots in the refused module's own header, which is the carrier
+the registration call constructs. It supplies no warm-start, solve, accumulated-impulse clearing or
+reaction write, no impulse math, and no joint narrowing.
+
+The cluster's advantage over the refused-binding families that failed their positive prerequisite is
+structural: these bindings are referenced only inside the inline registration function, not by a
+global initializer. An unused include of the registration header links (exit 0), and a call of
+`register_built_in_physics_2d_joint_solvers` compiles to an object and fails to link on exactly the
+nine solver symbols (exit 1), so registration stays visibly unusable rather than substituted.
 
 ### 119. `missing-member-b5408b35` — G2 recheck of 1 header(s)
 
