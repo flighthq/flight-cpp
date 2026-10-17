@@ -85,6 +85,9 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 
 ## Active requests without a compiler patch
 
+- [Native reference recovery from a merged row must project the row first](merged-row-native-recovery-must-project.md) —
+  `@flighthq/node` `disposeNode` recovers `Node<Traits>` directly from the merged `Node<Traits> & Traits` row and
+  trips the runtime's merged-row assertion.
 - [A call to a user-defined type predicate must narrow the guarded value](type-predicate-narrowing-not-applied.md) —
   `@flighthq/scene3d` reads `geometry` through an `isMesh(node)` guard from the un-narrowed `Node3D`
   row, so the runtime's row-schema assertion fires; the predicate itself already builds the narrowed projection.

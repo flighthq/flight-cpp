@@ -174,7 +174,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 145 | `other-4703cbbe` | 1 | 3D | compiler | G2: 0/1; parsed JSON is cast to a nominal glTF document; existing assertion request extended |
 | 146 | `other-5dfe27ec` | 1 | ANIM | compiler | G2: 0/1; erased display-array iteration; collector/derived attachment/full skin algorithms remain refused |
 | 147 | `other-acb4b229` | 1 | 2D | compiler | G2: 0/1; JSON assertion casts to nominal array/hash document union; converter independently refused |
-| 148 | `static-assertion-18059635` | 1 | 3D | compiler | a runtime static assertion rejects the emitted shape |
+| 148 | `static-assertion-18059635` | 1 | 3D | [compiler request](compiler-requests/merged-row-native-recovery-must-project.md) | `dispose_node` recovers the native node from an unprojected merged row and trips the runtime assertion |
 | 149 | `static-assertion-261f0db6` | 1 | 3D | compiler | a runtime static assertion rejects the emitted shape |
 | 150 | `undeclared-identifier-0168969a` | 1 | 2D | compiler *(existing + new request filed)* | refused `domScene2DClipHooks` (RenderState asserted to DomRenderState without heritage) still stored; next callee `setDomClipHooks` is in the wholly refused domClipRectangle module |
 | 151 | `undeclared-identifier-07640d32` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glOutlineEffectRunner` binding (and its callee `applyOutlineEffectToGl`) but still emits the registration call that passes the runner |
@@ -3322,11 +3322,23 @@ Foreign rows/roots/prose and historical/G1 totals are preserved.
 
 ### 148. `static-assertion-18059635` — 1 header(s)
 
-- cause: a runtime static assertion rejects the emitted shape
+- cause: the emitted `dispose_node` body recovers the native `Node<Traits>` from the merged
+  `Node<Traits> & Traits` row without projecting it; the caller also substitutes the default
+  `NodeTraits` instead of the inferred `Node3DTraits`
 - lanes: 3D
-- fix route: compiler
-- first failure at: `flight/structural_ref.hpp:1683`
-- example: `static assertion failed due to requirement '!is_void_v<void>': a merged structural row must be projected before native reference recovery`
+- fix route: compiler — [merged-row native recovery must project](compiler-requests/merged-row-native-recovery-must-project.md)
+- first failure at: `flight/node/node.hpp:77`
+- example: `static assertion failed due to requirement '!std::is_void_v<void>': a merged structural row must be projected before native reference recovery`
+
+The instantiation trace names the chain: `structural_ref.hpp:1683` -> `node.hpp:77`
+(`structural_ref_cast<shared_ptr<Node<>>, RowMerge<RowOf<Node<...>>, ...>>`) ->
+`scene_node_dispose.hpp:22` (`dispose_node<shared_ptr<NodeTraits>>`). The assertion is the runtime's
+deliberate contract, so the defect is the emitter's.
+
+Second, independent half recorded in the request: heritage argument generic deduction (the default
+traits instead of `Node3DTraits`). Follow-on family visible in the same instantiation chain: the
+hierarchy override's `emit_signal` call has no match at `overrides/include/flight/node/hierarchy.hpp:227`
+and stays after the recovery is fixed. No C++ was changed; the scoped trace is the evidence.
 
 ### 149. `static-assertion-261f0db6` — 1 header(s)
 
