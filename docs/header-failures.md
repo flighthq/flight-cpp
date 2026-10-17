@@ -127,7 +127,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 98 | `call-has-no-matching-35224a3f` | 1 | 3D | compiler | the emitted call to `gl_uniform_type_name` matches no declared overload |
 | 99 | `call-has-no-matching-4c12e411` | 15 | WGPU | compiler | `create_bind_group_layout` entries are emitted as anonymous nested owners inside an untyped braced descriptor *(request filed)* |
 | 100 | `call-has-no-matching-76a6a61a` | 1 | 2D | compiler | the emitted call to `get_if` matches no declared overload |
-| 101 | `call-has-no-matching-7f4ae181` | 1 | 2D | compiler | the emitted call to `add_scene_2d_used_kind` matches no declared overload |
+| 101 | `call-has-no-matching-7f4ae181` | 1 | 2D | compiler | guarded blendMode read retains optional<String> at the String helper call; [existing request](compiler-requests/narrowed-optional-template-argument.md#g2-scene2d-kind-usage-passes-a-guarded-member-as-optional-storage) |
 | 102 | `call-has-no-matching-8a1f3a33` | 1 | GL | compiler | a narrowed `Texture2D` reference read through structural `row_get` *(existing request extended)* |
 | 103 | `call-has-no-matching-8d9de718` | 1 | PLAT | compiler | default node runtime supplies a merged child row to nominal NodeAny recursion; [existing request](compiler-requests/node-any-generic-traits-leak.md#g2-interaction-spatial-collection-selects-the-default-runtime-owner) |
 | 104 | `call-has-no-matching-b3c6bcee` | 1 | GL | repair key + compiler | `log_once` designated initializer *(G2: key map extended; 0 pass, 1 to `no-matching-constructor-34a8ea9f`)* |
@@ -2513,12 +2513,32 @@ repairs/manifest/pins and foreign/historical products remain unchanged.
 
 ### 101. `call-has-no-matching-7f4ae181` — 1 header(s)
 
-- cause: the emitted call to `add_scene_2d_used_kind` matches no declared overload
+- cause: the guarded `blendMode` row read still passes `optional<String>` to
+  `add_scene_2d_used_kind(Array<String>, String)`
 - subject: `add_scene_2d_used_kind`
 - lanes: 2D
-- fix route: compiler
+- fix route: compiler — [existing present-payload call request](compiler-requests/narrowed-optional-template-argument.md#g2-scene2d-kind-usage-passes-a-guarded-member-as-optional-storage)
+- related: [concrete node-trait deduction](compiler-requests/heritage-argument-generic-deduction.md)
 - first failure at: `flight/scene2d/scene_kind_usage.hpp:95`
 - example: `no matching function for call to 'add_scene_2d_used_kind'`
+
+**G2: 0 pass / 1 fail retained; no native or generation rerun.** The helper is already defined;
+the source's non-null/non-Normal guard is emitted at94, but the repeated member read at95 keeps its
+optional storage. This extends the existing request to a non-generic scalar/structural-member call,
+without claiming its older generic-local reduction reproduced this entire module.
+
+The original readonly Node2D visitor carries Node2DTraits, while the later traversal111 still selects
+default NodeTraits. Correct payload projection alone therefore does not qualify the walk. Preserve
+the existing trait-bearing traversal source patches, original node/runtime/child/data/material owners,
+caller output record and four reused arrays. Visit the root and every descendant, retain open kind/
+blend/command strings, skip only null/Normal blend and absent material, discover commands structurally
+with original read count and `argCount + 2` stride, then deduplicate and sort. No usage fabrication,
+copied graph, backend/built-in whitelist or optional-taking fallback helper is supplied.
+
+The request records all twelve inspected source cases and the separate native coverage fixture that
+manually constructs usage records. Neither inspection establishes current native kind discovery.
+Only the request/owned row/cluster/worklist change; original diagnostic/counts, C++ and foreign compact
+records are preserved.
 
 ### 102. `call-has-no-matching-8a1f3a33` — 1 header(s)
 
