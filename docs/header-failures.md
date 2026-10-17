@@ -640,6 +640,9 @@ cache, which also recurs as `tint_shaders`/`invert_tint_shaders` and `bevel_comp
 the same split intersection carrier. They also call this module's still-refused
 `apply_gl_effect_blit_pass`/`apply_gl_effect_erase_pass`, so further sibling overrides alone would not
 make them compile.
+That cluster therefore names both filed causes: `docs/compiler-requests/contextual-union-value-arm-member-shape.md`
+for the two apply passes, and `docs/compiler-requests/bound-interface-weak-map-key-policy.md` for the
+`GlContext` weak-key cache. No cache-only override was taken while the apply passes are unsupplied.
 
 ### 19. `invalid-operands-4b19651b` — 7 header(s)
 
