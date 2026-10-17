@@ -9354,6 +9354,20 @@
       "defect": "The emitter refuses ensureScene2DRuntime at recovery from the inherited EntityRuntime slot, which does not declare scene2dSignals, while retaining enableScene2DSignals and getScene2DRuntime calling it. Exact same-header marker/direct-call/no-definition witnesses agree. This declares only the existing Ref<Scene2D> to Ref<Scene2DRuntime> boundary; it adds no lazy allocation, runtime storage/recovery, signals, scene root, binding/provider, empty result or copied owner. The helper and both retained callers stay unlinkable. Owner debt: docs/compiler-requests/asserted-erased-runtime-owner.md; retained-caller debt: docs/compiler-requests/retained-declaration-calls-omitted-callee.md.",
       "expectedWhen": "always",
       "expires": "when ensureScene2DRuntime emits or both dependent callers are coherently refused; the exact NOT GENERATED marker/live direct-call/no-definition witnesses stop matching, and sdk:check rejects an obsolete repair."
+    },
+    {
+      "id": "skeleton2d-declare-refused-path-constraint-solver",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/skeleton2d/path_constraint_2d.hpp",
+      "symbol": "solve_skeleton_2d_path_constraint",
+      "refusedFunction": "solveSkeleton2DPathConstraint",
+      "declaration": "void solve_skeleton_2d_path_constraint(flight::Ref<flight::types::Skeleton2D> skeleton, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DConstraint>>>> constraint);",
+      "retainedReference": "flight::skeleton2d::register_skeleton_2d_constraint_solver(flight::types::skeleton_2d_constraint_kind->path, solve_skeleton_2d_path_constraint);",
+      "sourceDeclaration": "packages/skeleton2d/src/pathConstraint2D.ts -- solveSkeleton2DPathConstraint(skeleton: Skeleton2D, constraint: Readonly<Skeleton2DConstraint>): void; the retained registration passes exactly Skeleton2DConstraintSolver, whose emitted carrier is void(Ref<Skeleton2D>,readonly Skeleton2DConstraint row)",
+      "diagnostic": "use of undeclared identifier 'solve_skeleton_2d_path_constraint'",
+      "defect": "Exact NOT GENERATED marker, retained direct function-argument registration and absent definition agree. Existing retainedReference declares only the exact solver slot carrier, preserving the mutable skeleton Ref and readonly base constraint domain. The body remains refused because the base row cannot recover boneIndices/mixRotate/mixX/mixY/position/positionMode/rotateMode/spacing/spacingMode/targetSlotIndex or equivalent kind cells from the original path owner. No path algorithm, pose/bone/world-matrix mutation, replacement constraint, empty solver or narrower closed constraint family is supplied. Explicit registration must fail to link only on this omitted body. Existing body request: docs/compiler-requests/assertion-to-undeclared-row-member.md; retained callback request: docs/compiler-requests/retained-declaration-calls-omitted-callee.md.",
+      "expectedWhen": "always",
+      "expires": "when solveSkeleton2DPathConstraint emits or its exact retained registration disappears; sdk:check fails if this repair matches no header."
     }
   ]
 }
