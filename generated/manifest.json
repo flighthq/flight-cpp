@@ -3556,6 +3556,18 @@
         "flight/layout/anchor_layout.hpp"
       ],
       "id": "layout-declare-refused-anchor-resolver"
+    },
+    {
+      "files": [
+        "flight/types/timeline_cue.hpp"
+      ],
+      "id": "timeline-audio-cue-interface-heritage"
+    },
+    {
+      "files": [
+        "flight/types/timeline_cue.hpp"
+      ],
+      "id": "timeline-stream-audio-cue-interface-heritage"
     }
   ],
   "sourcePatches": [

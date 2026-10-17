@@ -105,7 +105,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 76 | `undeclared-identifier-6a187568` | 3 | 3D | declaration repair (applied) | refused ASCII STL counter declared; G2: 3 pass; counter remains unlinkable |
 | 77 | `undeclared-identifier-dc087108` | 3 | PLAT | declaration repair (applied) | refused URL loader declared; G2: 3 pass; URL loading remains unlinkable |
 | 78 | `call-has-no-matching-84410867` | 2 | 3D | runtime (applied) | a `Uint16Array \| Uint32Array` union passed to `bufferData`'s `ArrayBufferView` *(G2: 1 pass, 1 to `variant-cast-ccfedad4`)* |
-| 79 | `call-has-no-matching-d42144f0` | 2 | ANIM | compiler | the emitted call to `push` matches no declared overload |
+| 79 | `call-has-no-matching-d42144f0` | 2 | ANIM | override heritage repair (fixed) | the emitted call to `push` matches no declared overload; G2: 2 pass, request linked |
 | 80 | `missing-member-da12a523` | 2 | 3D | runtime + repair (fixed) | the emitted code reads a member the target does not declare (`parse_obj_material_library`); G2: 0 pass, 2 follow-ons (`static-assertion-ecc68c2b`, `undeclared-identifier-d663f62e`) |
 | 81 | `missing-member-dd9b4baa` | 2 | 3D, GL | runtime | the emitted code reads a member the target does not declare (`renderbuffer_binding`) *(G2: binding added; follow-on `no-matching-conversion-bc278253` fixed: 1 pass, 1 to `missing-member-95ead583`)* |
 | 82 | `no-viable-conversion-303c42f1` | 2 | ANIM | compiler | G2: recorded 0/2 retained; DragonBones erased array length cannot enter numeric counts Map; existing request, docs-only/no rerun |
@@ -1916,14 +1916,35 @@ passes 1/1. `src/host_sdl/webgl.cpp`, the host test and the GL app test still sy
 failure (line 79) is the readonly `GlMeshProgram` row rebuilt through a writable row, the same cast that
 cluster's nine headers already carry.
 
-### 79. `call-has-no-matching-d42144f0` — 2 header(s)
+### 79. `call-has-no-matching-d42144f0` — 2 G1 header(s), 2 now compile
 
 - cause: the emitted call to `push` matches no declared overload
 - subject: `push`
 - lanes: ANIM
-- fix route: compiler
+- fix route: override heritage repair (fixed)
 - first failure at: `flight/swf/swf_sound_handler.hpp:120`
 - example: `no matching member function for call to 'push'`
+- compiler request: [flattened interface refinement identity](compiler-requests/flattened-interface-refinement-identity.md)
+
+`TimelineAudioCue` and `TimelineStreamAudioCue` extend `TimelineCue` in TypeScript, but the type
+emitter flattened the inherited `entity_runtime_key`, `frame` and `kind` into independent C++ owners,
+so `Ref<TimelineStreamAudioCue>`/`Ref<TimelineAudioCue>` could not widen into the
+`Array<Ref<TimelineCue>>` the three SWF cue sites push into. The measured request above states that
+real C++ heritage is sufficient for this flow with no runtime change, and that reference identity
+forbids a copy or a base-typed allocation.
+
+The bounded heritage repair family already carried for the SWF adjustment interfaces applies:
+`timeline-audio-cue-interface-heritage` and `timeline-stream-audio-cue-interface-heritage` remove
+only the duplicated inherited members and name the declared `TimelineCue` base. No cue field, value,
+allocation or body is added; every inherited cell is the same cell on the original concrete
+allocation and ordinary shared-pointer widening keeps its control block. Construction is unchanged
+because the cue initializers already assign inherited members through `row_set`, and no construction
+site uses a designated initializer on these types.
+
+A native probe built and ran against the repaired headers: both cue types push into
+`Array<Ref<TimelineCue>>`, the element keeps the exact source address, and the inherited `frame` and
+`kind` cells read and write through the base reference. Both headers compile. The emitter-side fix
+remains open in the request; this repair does not close the request's other interface refinements.
 
 ### 80. `missing-member-da12a523` — 2 G1 header(s), 0 pass, 2 follow-ons
 

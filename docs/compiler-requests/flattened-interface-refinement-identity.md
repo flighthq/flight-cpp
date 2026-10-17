@@ -444,3 +444,25 @@ changes in this arc. The sole failed row/root/worklist136 now link this existing
 request. Both carried guard patches remain provenance, not proof of a native owner conversion.
 No fake morph, copied owner, narrowed graph/weight domain, empty result or native deformation,
 geometry-version, bounds or upload success is claimed; no unchanged native/generation rerun.
+
+## G2 SWF cue arrays: the declared heritage carried as a bounded repair
+
+At compiler `806d257` / Flight `a627849`, the two SWF headers in `call-has-no-matching-d42144f0`
+fail at `swf_sound_handler.hpp:120` because `TimelineAudioCue` and `TimelineStreamAudioCue` repeat
+`TimelineCue`'s `entity_runtime_key`, `frame` and `kind` with no C++ heritage, so the three measured
+push sites have no conversion into `flight::Array<flight::Ref<flight::types::TimelineCue>>`.
+
+Because TypeScript declares that heritage explicitly, the bounded repair family already carried for
+the adjustment interfaces applies unchanged: `timeline-audio-cue-interface-heritage` and
+`timeline-stream-audio-cue-interface-heritage` remove only the duplicated inherited members and name
+the declared `TimelineCue` base. No field, value, allocation or function body is added. The cue
+initializers already assign inherited members through `row_set`, and no construction site uses a
+designated initializer on either type, so the inherited cells remain the same cells on the original
+concrete allocation and standard shared-pointer widening keeps its control block and lifetime. A
+native probe built and ran: both cue types push into the base array, the element keeps the exact
+source address, and inherited `frame`/`kind` read and write through the base reference. Both headers
+compile.
+
+This is the same limited answer the request's SWF measurement anticipated; it does not supply a
+general refinement model, reverse-direction owner recovery, or a runtime bridge, and the other
+interface refinements listed above remain open.

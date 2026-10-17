@@ -69,10 +69,7 @@ struct TimelineAudioEnvelopePoint : public flight::ReferenceEnabled {
   double time;
 };
 
-struct TimelineAudioCue : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  double frame;
-  flight::String kind;
+struct TimelineAudioCue : public TimelineCue {
   std::optional<double> duration;
   double gain;
   flight::Array<flight::Ref<TimelineAudioEnvelopePoint>> envelope;
@@ -83,10 +80,7 @@ struct TimelineAudioCue : public flight::ReferenceEnabled {
   bool stop;
 };
 
-struct TimelineStreamAudioCue : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  double frame;
-  flight::String kind;
+struct TimelineStreamAudioCue : public TimelineCue {
   double gain;
   flight::Ref<flight::types::AudioResource> resource;
 };

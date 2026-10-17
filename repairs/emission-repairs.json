@@ -9381,6 +9381,30 @@
       "defect": "Exact refused binding marker and retained explicit registration agree. Declare only the existing LayoutResolver external callback; supply no layout algorithm, style owner, output or success. Required qualification is actual unused header positive link/run and actual registration negative link on only this binding. Nullable erased-style and object key-iteration body refusals remain in assertion-to-nullable-variant-alternative.md and layout-object-key-iteration-closed-keys.md.",
       "expectedWhen": "always",
       "expires": "when anchorLayoutResolver emits and its exact refused-binding marker disappears; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "timeline-audio-cue-interface-heritage",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/types/timeline_cue.hpp",
+      "sourceDeclaration": "packages/types/src/TimelineCue.ts -- export interface TimelineAudioCue extends TimelineCue, re-declaring kind as the literal 'Audio'",
+      "from": "struct TimelineAudioCue : public flight::ReferenceEnabled {\n  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;\n  double frame;\n  flight::String kind;\n  std::optional<double> duration;\n  double gain;\n  flight::Array<flight::Ref<TimelineAudioEnvelopePoint>> envelope;\n  double loops;\n  double offset;\n  flight::Ref<flight::types::AudioResource> resource;\n  bool skip_if_playing;\n  bool stop;\n};",
+      "to": "struct TimelineAudioCue : public TimelineCue {\n  std::optional<double> duration;\n  double gain;\n  flight::Array<flight::Ref<TimelineAudioEnvelopePoint>> envelope;\n  double loops;\n  double offset;\n  flight::Ref<flight::types::AudioResource> resource;\n  bool skip_if_playing;\n  bool stop;\n};",
+      "diagnostic": "no matching member function for call to 'push'",
+      "defect": "The type emitter flattens inherited interface fields into unrelated C++ owners: TimelineAudioCue and TimelineStreamAudioCue repeat TimelineCue's entity_runtime_key, frame and kind with no heritage, so TypeScript's `extends TimelineCue` cannot widen either reference into `Array<Ref<TimelineCue>>` and the SWF cue pushes have no conversion. This removes only the duplicated inherited members and names the declared TimelineCue base, the same bounded heritage repair already carried for the adjustment interfaces. No cue field, value, allocation or body is added: every inherited cell is the same cell on the original concrete allocation, and ordinary shared-pointer widening keeps its control block and lifetime. The initializers already assign inherited members through row_set, so construction is unchanged.",
+      "expectedWhen": "always",
+      "expires": "when the emitter supplies the declared interface heritage for TimelineAudioCue and TimelineStreamAudioCue; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "timeline-stream-audio-cue-interface-heritage",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/types/timeline_cue.hpp",
+      "sourceDeclaration": "packages/types/src/TimelineCue.ts -- export interface TimelineStreamAudioCue extends TimelineCue, re-declaring kind as the literal 'StreamAudio'",
+      "from": "struct TimelineStreamAudioCue : public flight::ReferenceEnabled {\n  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;\n  double frame;\n  flight::String kind;\n  double gain;\n  flight::Ref<flight::types::AudioResource> resource;\n};",
+      "to": "struct TimelineStreamAudioCue : public TimelineCue {\n  double gain;\n  flight::Ref<flight::types::AudioResource> resource;\n};",
+      "diagnostic": "no matching member function for call to 'push'",
+      "defect": "The type emitter flattens inherited interface fields into unrelated C++ owners: TimelineAudioCue and TimelineStreamAudioCue repeat TimelineCue's entity_runtime_key, frame and kind with no heritage, so TypeScript's `extends TimelineCue` cannot widen either reference into `Array<Ref<TimelineCue>>` and the SWF cue pushes have no conversion. This removes only the duplicated inherited members and names the declared TimelineCue base, the same bounded heritage repair already carried for the adjustment interfaces. No cue field, value, allocation or body is added: every inherited cell is the same cell on the original concrete allocation, and ordinary shared-pointer widening keeps its control block and lifetime. The initializers already assign inherited members through row_set, so construction is unchanged.",
+      "expectedWhen": "always",
+      "expires": "when the emitter supplies the declared interface heritage for TimelineAudioCue and TimelineStreamAudioCue; sdk:check fails if this repair matches no header."
     }
   ]
 }
