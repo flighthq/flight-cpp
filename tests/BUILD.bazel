@@ -1183,6 +1183,14 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_scene2d_gl_clip_cache_test",
+    srcs = ["generated_scene2d_gl_clip_cache_test.cpp"],
+    size = "small",
+    env = {"SDL_VIDEODRIVER": "offscreen", "LIBGL_ALWAYS_SOFTWARE": "1"},
+    deps = ["//:cpp", "//:sdk_preview", "//:host_sdl_gl"],
+)
+
+cc_test(
     name = "generated_scene2d_gl_owners_test",
     srcs = ["generated_scene2d_gl_owners_test.cpp"],
     size = "small",
