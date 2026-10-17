@@ -38,3 +38,21 @@ map. No new view, conversion, local override, binding or runtime behavior is sup
 Fixing the local would not implement the [private data recovery](flattened-interface-refinement-identity.md#g2-gl-scale9-shape-private-raster-data)
 or the separately refused draw/provider pipeline. No positive unused-header link/run, qualified
 negative link, generation or actual GL raster/teardown result is claimed.
+
+## Second site, now repaired: rich text teardown (`scene2d_gl/gl_rich_text.hpp`, G2)
+
+`glRichText.ts:254` repeats the shape: `const cache = getGlRenderStateRuntime(state).context
+.textureSourcePremultipliedTextureCache`, then `cache.get(image)` / `cache.delete(image)` with the rich text's
+`ImageResource`. The generated local again re-declares the nominal `Ref<TextureSource>` key, which fails at
+line 221, and `get`/`erase` then fail on the `ImageResource` key at lines 222 and 225.
+
+The emission repair `scene2d-gl-rich-text-texture-cache-effective-carrier` respells only that declaration as
+`auto cache = ...`. The local is therefore derived from the effective field, as this request asks: a
+`flight::WeakMap` copy at the same `TextureSourceValue` carrier shares the same entries, and `get`/`erase`
+receive the original `ImageResource` owner as its own variant arm. No map is rebuilt, no key is projected,
+and the cache is not narrowed. All three diagnostics are gone.
+
+The header still fails later, on separately refused functions (`drawGlRichTextWithOverlay`,
+`destroyGlRichTextData`) and a `CanvasSurface` structural-reference assertion. No draw, teardown or GL
+result is claimed. The `gl_scale9_shape.hpp:119` site above has the same one-token shape and could take the
+same repair once its private data getter is reachable.

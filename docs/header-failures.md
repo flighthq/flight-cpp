@@ -156,7 +156,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 127 | `no-viable-conversion-2909a65f` | 1 | 2D | patch (fixed) | four `merged.X ?? []` Map-spread fallbacks respelled `new Map<Kind, V>()`; G2 recheck: 1 pass |
 | 128 | `no-viable-conversion-31b754c5` | 1 | ANIM | compiler | G2: recorded 0/1 retained; Spine particle object guard leaves Any unprojected at Record return; existing JSON-read request/no rerun |
 | 129 | `no-viable-conversion-331a999f` | 1 | GL | runtime (applied) | a `Float32Array \| Uint8Array` output passed to `readPixels`'s `ArrayBufferView` *(G2: 1/1 pass)* |
-| 130 | `no-viable-conversion-4bbb9be5` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it *(builder4/E0a)* |
+| 130 | `no-viable-conversion-4bbb9be5` | 1 | 2D | repair (applied) | texture-cache local re-declared with the nominal key instead of the effective carrier *(G2: fixed; 0 pass, 1 to `undeclared-identifier-74ca0a55`)* |
 | 131 | `no-viable-conversion-562151da` | 1 | WGPU | compiler | a value is passed where its declared type cannot receive it; attachment member typed `Any` from a call result *(request linked; two source forms rejected)* |
 | 132 | `no-viable-conversion-68fff449` | 1 | 3D | compiler | base Node3D cannot recover the independent morph probe; existing owner-refinement request linked (G2: 0/1 retained) |
 | 133 | `no-viable-conversion-7e6bb150` | 1 | WGPU | compiler *(existing request)* | inferred local from `getWgpuEffectPipeline` re-expanded from the imported `WgpuEffectPipeline` alias into a local anonymous struct |
@@ -3241,7 +3241,27 @@ repair or override change.
 - fix route: compiler
 - first failure at: `flight/scene2d_gl/gl_rich_text.hpp:221`
 - example: `no viable conversion from 'WeakMap<TextureSourceValue, [...]>' to 'WeakMap<Ref<TextureSource>, [...]>'`
-- owned by: builder4 (E0a: TextLabel / layout / Scene2D GL text)
+- owned by: builder4 (E0a: TextLabel / layout / Scene2D GL text); G2 cache-local fix by builder2 as assigned by Foreman (builder4 informed)
+- existing request extended: [native texture-source cache local carrier](compiler-requests/native-texture-source-cache-local-carrier.md)
+
+`glRichText.ts:254` binds `getGlRenderStateRuntime(state).context.textureSourcePremultipliedTextureCache` to a
+local and then gets and deletes the rich text's `ImageResource`. The effective native slot, from the approved
+`gl_context_runtime` override, is keyed by the seven-owner `TextureSourceValue` variant, but the emitter
+re-declared the local with the nominal `Ref<TextureSource>` key. That failed at line 221, and `get`/`erase`
+failed on the `ImageResource` key at lines 222 and 225.
+
+The exact emission repair `scene2d-gl-rich-text-texture-cache-effective-carrier` respells only that
+declaration as `auto cache = ...`, so the local is derived from the field and keeps its carrier, as the
+existing request asks. A `flight::WeakMap` copy at the same carrier shares the same entries, and the original
+`ImageResource` owner is the key as its own variant arm. No map is rebuilt, no key is projected, and the
+cache is not narrowed. A normal scoped `pkg:generate @flighthq/scene2d-gl` reproduces the repaired header
+and its manifest record, and the repair tests pass (30/30). All three cache diagnostics are gone.
+
+**G2: 0/1 compile, 1 fail** (`-j1`, Clang 22.1.8). `flight/scene2d_gl/gl_rich_text.hpp` moves to
+`undeclared-identifier-74ca0a55`. Its next failure (line 327) is the retained `draw_gl_rich_text` calling
+`drawGlRichTextWithOverlay`, which is refused in the same header (`cpp-reference-assertion-without-heritage`).
+That makes it a same-header declaration-only candidate, followed by the refused `destroyGlRichTextData` and a
+`CanvasSurface` structural-reference assertion. No draw or teardown result is claimed.
 
 ### 131. `no-viable-conversion-562151da` — 1 header(s)
 

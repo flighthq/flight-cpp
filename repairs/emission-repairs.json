@@ -90,6 +90,18 @@
       "expires": "when external binding metadata distinguishes native property accessors during emission; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "scene2d-gl-rich-text-texture-cache-effective-carrier",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/scene2d_gl/gl_rich_text.hpp",
+      "from": "flight::WeakMap<flight::Ref<flight::types::TextureSource>, flight::Ref<texture_version_2f2f82ef5fff624b>> cache = flight::render_gl::get_gl_render_state_runtime(state)->context->texture_source_premultiplied_texture_cache;",
+      "to": "auto cache = flight::render_gl::get_gl_render_state_runtime(state)->context->texture_source_premultiplied_texture_cache;",
+      "sourceDeclaration": "packages/scene2d-gl/src/glRichText.ts:254 -- `const cache = getGlRenderStateRuntime(state).context.textureSourcePremultipliedTextureCache;` then `cache.get(image)` / `cache.delete(image)` with the rich text's ImageResource",
+      "diagnostic": "no viable conversion from 'WeakMap<flight::types::TextureSourceValue, ...>' to 'WeakMap<flight::Ref<flight::types::TextureSource>, ...>'",
+      "defect": "The emitter re-declares the local with the pinned TypeScript slot's nominal TextureSource key, while the effective native context slot (the approved gl_context_runtime override) is keyed by the seven-owner TextureSourceValue variant (docs/compiler-requests/native-texture-source-cache-local-carrier.md). Declaring the local with `auto` derives it from the effective field, so it keeps that carrier: a WeakMap copy at the same carrier shares the same entries, and get/erase then take the original ImageResource owner as its own variant arm. No map is rebuilt, no key is projected or copied, and the shared cache is not narrowed.",
+      "expectedWhen": "always",
+      "expires": "when the emitter declares a cache local from its effective slot carrier (native-texture-source-cache-local-carrier.md); sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "scene2d-gl-clip-rectangle-drawing-buffer-width-property-binding",
       "kind": "respell-reference-member-access",
       "appliesTo": "flight/scene2d_gl/gl_clip_rectangle.hpp",

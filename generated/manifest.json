@@ -3599,6 +3599,12 @@
         "flight/effects_gl/gl_render_texture_effect.hpp"
       ],
       "id": "effects-gl-binding-cell-readonly-target"
+    },
+    {
+      "files": [
+        "flight/scene2d_gl/gl_rich_text.hpp"
+      ],
+      "id": "scene2d-gl-rich-text-texture-cache-effective-carrier"
     }
   ],
   "sourcePatches": [

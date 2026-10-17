@@ -218,7 +218,7 @@ inline std::optional<flight::Ref<flight::types::CanvasSurface>> ensure_gl_rich_t
   }
   if (data->surface.has_value()) {
     if (data->image.has_value()) {
-      flight::WeakMap<flight::Ref<flight::types::TextureSource>, flight::Ref<texture_version_2f2f82ef5fff624b>> cache = flight::render_gl::get_gl_render_state_runtime(state)->context->texture_source_premultiplied_texture_cache;
+      auto cache = flight::render_gl::get_gl_render_state_runtime(state)->context->texture_source_premultiplied_texture_cache;
       auto entry = cache.get(data->image.value());
       if (entry.has_value()) {
         state->gl.delete_texture(entry.value()->texture);
