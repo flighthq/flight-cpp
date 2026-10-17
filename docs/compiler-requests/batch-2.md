@@ -1,16 +1,15 @@
 # Compiler request batch 2 — draft (2026-10-17)
 
-**HOLD for the author's qualified resource recheck; not sent to Principal or flight-compiler.**
-The recorded snapshot's **731 failed rows** have primary request coverage across 177 active clusters;
-primary and related links reach **103 existing request files**, with exact membership counts and no
-broken paths. The five resource-row outcomes, including the recorded one PASS/four FAIL split and
-their count contributions below, are **provisional**: the author withdrew the initial evidence after
-included Map/WebGL inputs changed. A qualified five-header serial rerun is already active. Await that
-confirmation and Foreman review before release. This draft adds no implementation or compiler-fix
-commitment.
+**Ready for Foreman review; not sent to Principal or flight-compiler.** Integration accepted the
+author's qualified five-header resource confirmation; its one PASS/four FAIL split and first causes
+are unchanged, so the allocations below are retained. The recorded snapshot's **731 failed rows**
+have primary request coverage across 177 active clusters; primary and related links reach **103
+existing request files**, with exact membership counts and no broken paths. The resource-specific
+hold is resolved. Foreman must review this draft before release. This draft adds no implementation
+or compiler-fix commitment.
 
 Against compiler `806d257` / Flight `a627849`. Counts below use the scoped G2 worklist at
-flight-cpp `2fab8951c4fabfb2c0c521cb3e868c5284dd6b74`: [header inventory](../../generated/header-status.json)
+flight-cpp `ed7d6bf43a70fe82d2b10db77d9e966dbb3e536e`: [header inventory](../../generated/header-status.json)
 and [cause/disposition worklist](../header-failures.md). There are **3,153 rows: 2,422 PASS / 731 FAIL,
 177 active clusters**. This is accumulated scoped evidence, not a fresh full sweep. The original
 G1 sweep remains 2,339 PASS / 813 FAIL of 3,152; its historical totals are unchanged.
@@ -40,12 +39,13 @@ the [DOM shared-style boundary](dom-style-shared-element-boundary.md) (5) and th
 [Scene3D present nullable-cell projection](readonly-structural-member-carrier-widening.md) (1).
 The 20 PASS rows carried through prior-emission overrides are separate from this failed-row partition.
 
-The worklist records an initial five-header serial `-j1` result on `4d9a4ae8`: one PASS, four ordinary
-failures, zero reproduced crashes. Three recorded failures join the readonly-program cause and one
-joins the union-array cause below. **Those measurements were withdrawn as current acceptance
-evidence** because they preceded included Map/WebGL input changes. The recorded allocation remains
-visible, but resource acceptance is pending the author's qualified rerun; it is not settled by these
-counts. No crash request is invented. The original G1 sweep and serial-retry history are preserved.
+The qualified owner recheck ran only the five former resource records serially at `-j1` on
+`3987edfe`: **one PASS, four ordinary failures, zero reproduced crashes**, with the same four first
+diagnostics. Three failures join the readonly-program cause and one joins the union-array cause
+below. The author confirmed measured dependency equivalence through `542b0205`; Integration accepted
+the confirmation as `ed7d6bf4`, superseding the withdrawn initial evidence. No resource acceptance
+remains pending, and no crash request is invented. The original G1 sweep and serial-retry history are
+preserved.
 
 ## Remaining compiler requests
 
@@ -148,7 +148,7 @@ its separate absence-storage mechanism. The heritage refusals belong to destroy/
 The old cache-local request is history/supporting context, not the primary cause of the remaining
 failure. No optional-overlay signature or declaration/body was invented, and the header remains FAIL.
 WGPU bake also remains FAIL under batch one's descriptor request, with both faithful typing
-candidates discarded. Resource reconciliation remains provisional as recorded above.
+candidates discarded. Resource reconciliation is qualified as recorded above.
 
 The coverage-explain header is already PASS. The custom mesh header remains FAIL after its real
 uniform upload fix, now linked to the existing readonly-source request above; neither result proves
@@ -157,8 +157,8 @@ represent complementary causes, rather than missing links. Counts and the 29-hea
 PASS boundary were refreshed from the named recorded snapshot; only the newly landed cause slices
 needed content review after the earlier full request audit.
 
-Foreman must review the author's qualified five-header results with Integration, refresh any changed
-counts/prose, and review the final draft before one upstream handoff. This documentation does not
-independently repeat or attest those executions. Do not send this draft upstream or send
+Foreman must review the final draft before one upstream handoff. Integration has accepted the
+qualified five-header results; their classifications require no count changes. This documentation
+does not independently repeat or attest those executions. Do not send this draft upstream or send
 individual request pings meanwhile. No build, generation, native or full sweep was rerun to prepare
 this documentation.
