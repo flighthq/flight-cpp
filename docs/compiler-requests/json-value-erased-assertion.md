@@ -47,3 +47,20 @@ emitted code calls it and the runtime genuinely lacked it; this one is an emitte
 `String::starts_with(const String&, double)` implements `String.prototype.startsWith`'s own position
 contract: ToIntegerOrInfinity, clamped to [0, length], NaN and negatives to 0, +Infinity to the length, and
 comparison over UTF-16 code units -- which is what `flight::String` stores. It is not an argument discard.
+
+## G2 BMFont JSON detection
+
+`flight/bitmapfont_formats/bitmap_font_format_kind.hpp:41` at Flight `a627849` / compiler `806d257` is the
+same lowering. `isBmFontJsonObject` checks that `JSON.parse` produced a non-null, non-array object and then
+reads `raw as { chars?: unknown; common?: unknown }`. The emitter asks the `JsonValue` for
+`object_if<chars_common_5b29ec8a252e2596>()` (GCC 15.2: `'const class flight::JsonValue' has no member named
+'object_if'`).
+
+A faithful lowering reads `chars` and `common` from the JSON object, and keeps absent members distinct from
+present ones. The detector must still give the same answer as `parseBitmapFontJson`, which returns null
+without either block. Nothing is carried for this:
+- A `JsonValue::object_if` would have to build the anonymous struct from the JSON tree. That is the
+  materialization this request rules out.
+- Rewriting the source to `as Record<string, unknown>` reaches the missing conversion of
+  [parsed-json-object-shape-reads](parsed-json-object-shape-reads.md) step 1.
+- A fixed detector answer would fake format detection.

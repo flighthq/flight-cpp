@@ -150,7 +150,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 121 | `missing-member-dae8c839` | 4 | TEXT | [compiler request](compiler-requests/reference-backed-outcome-variant-narrowing.md) | FNT formatter reads dimensions on an image-source variant instead of its active owner |
 | 122 | `missing-member-dcf85c36` | 1 | 3D | runtime | the emitted code reads a member the target does not declare (`collect_md5_anim_features`) |
 | 123 | `missing-member-ee398c94` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`register_canvas_texture_resolver`) |
-| 124 | `missing-member-fd2be1bc` | 1 | TEXT | runtime | the emitted code reads a member the target does not declare (`object_if`) |
+| 124 | `missing-member-fd2be1bc` | 1 | TEXT | compiler *(existing request)* | an `as { chars?, common? }` assertion over a parsed `JsonValue` is lowered with the erased-`Any` `object_if` recovery |
 | 125 | `no-viable-conversion-03bf8175` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
 | 126 | `no-viable-conversion-0faa55ca` | 1 | GL | compiler | a value is passed where its declared type cannot receive it |
 | 127 | `no-viable-conversion-2909a65f` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
@@ -2315,14 +2315,17 @@ failed, with foreign rows/clusters and historical G1 totals unchanged.
 - first failure at: `flight/scene2d_canvas/canvas_image_texture_resolver.hpp:50`
 - example: `no member named 'register_canvas_texture_resolver' in namespace 'scene2d_canvas'`
 
-### 124. `missing-member-fd2be1bc` — 1 header(s)
+### 124. `missing-member-fd2be1bc` — G2 recheck of 1 header(s)
 
-- cause: the emitted code reads a member the target does not declare (`object_if`)
+- cause: `isBmFontJsonObject` reads `raw as { chars?: unknown; common?: unknown }` from a parsed `JsonValue`. The emitter lowers this with the erased-`Any` `object_if` recovery, which `JsonValue` does not offer.
 - subject: `object_if`
 - lanes: TEXT
-- fix route: runtime
+- fix route: compiler
+- why this route: a `JsonValue::object_if` would build the anonymous struct from the JSON tree, and that is permissive materialization. A `Record<string, unknown>` source rewrite reaches the missing conversion of `parsed-json-object-shape-reads`. The faithful lowering reads `chars` and `common` from the JSON object while keeping absence distinct, and only the emitter can choose it.
 - first failure at: `flight/bitmapfont_formats/bitmap_font_format_kind.hpp:41`
 - example: `no member named 'object_if' in 'JsonValue'`
+- Scoped native recheck (GCC 15.2, jobs 1): **1 attempted / 0 pass / 1 fail**, same diagnostic. No detector, parser, `Any` conversion or narrowed domain is supplied.
+- compiler request: `docs/compiler-requests/json-value-erased-assertion.md`
 
 ### 125. `no-viable-conversion-03bf8175` — 1 header(s)
 
