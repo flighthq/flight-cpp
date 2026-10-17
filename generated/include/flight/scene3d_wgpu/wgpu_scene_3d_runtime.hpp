@@ -190,6 +190,8 @@ inline flight::WeakMap<flight::Ref<flight::types::WgpuRenderState>, flight::Ref<
 // flight::Ref<flight::types::RenderStateRuntime>. The compiler will not reinterpret the owner, cast it, copy or
 // materialize a replacement, or add side storage.
 
+flight::Ref<flight::types::WgpuScene3DRuntime> get_wgpu_scene_3d_runtime(flight::Ref<flight::types::WgpuRenderState> state);
+
 inline std::optional<flight::Ref<flight::types::WgpuSkinningAdapter>> get_wgpu_skinning_adapter(flight::Ref<flight::types::WgpuRenderState> state) {
   return ([&]() -> std::optional<flight::Ref<flight::types::WgpuSkinningAdapter>> { const auto& erased_value_slot = get_wgpu_scene_3d_runtime(state)->skinning_adapter; if (!erased_value_slot.has_value()) throw std::logic_error("an absent erased value is not represented by the asserted union"); const auto& erased_value = erased_value_slot.value(); if (static_cast<bool>(erased_value.object_if<flight::types::WgpuSkinningAdapter>())) return std::optional<flight::Ref<flight::types::WgpuSkinningAdapter>>{erased_value.object_if<flight::types::WgpuSkinningAdapter>()}; if (erased_value.is_nullish()) return std::nullopt; throw std::logic_error("erased value holds no alternative this union represents"); }());
 }

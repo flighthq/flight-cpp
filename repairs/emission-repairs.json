@@ -8944,6 +8944,19 @@
       "defect": "The emitter refuses equalsMarkupFormat (cpp-optional-member-access-unproven: aValue.length on an optional TextFormat member has no present-value proof after Array.isArray) but retains pushMarkupRange, which calls it, so text_markup.hpp and every header that includes it fail on an undeclared name. The declaration's signature is the emitter's own: the retained call passes a StructuralRef<RowReadonly<RowOf<Ref<TextFormat>>>> for both Readonly<TextFormat> parameters, and the source returns boolean. Declaration only: pushMarkupRange and its callers compile, and calling it fails to link -- format comparison stays unusable, never substituted.",
       "expectedWhen": "always",
       "expires": "when equalsMarkupFormat emits (the NOT GENERATED marker disappears and this repair matches nothing); sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-wgpu-declare-refused-scene-runtime",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/scene3d_wgpu/wgpu_scene_3d_runtime.hpp",
+      "symbol": "get_wgpu_scene_3d_runtime",
+      "refusedFunction": "getWgpuScene3DRuntime",
+      "declaration": "flight::Ref<flight::types::WgpuScene3DRuntime> get_wgpu_scene_3d_runtime(flight::Ref<flight::types::WgpuRenderState> state);",
+      "sourceDeclaration": "packages/scene3d-wgpu/src/wgpuScene3DRuntime.ts -- getWgpuScene3DRuntime(state: WgpuRenderState): WgpuScene3DRuntime; refused at the inherited RenderStateRuntime slot assertion while retained getWgpuSkinningAdapter passes exactly Ref<WgpuRenderState>; sceneRuntimes already names Ref<WgpuScene3DRuntime> as its value carrier",
+      "diagnostic": "use of undeclared identifier 'get_wgpu_scene_3d_runtime'",
+      "defect": "The emitter refuses getWgpuScene3DRuntime (cpp-structural-assertion-owner-unproven) at RenderStateRuntime -> WgpuRenderStateRuntime while retaining getWgpuSkinningAdapter calling it. The exact NOT GENERATED marker, same-header direct call and absent definition agree. This declares only the concrete Ref<WgpuRenderState> -> Ref<WgpuScene3DRuntime> signature already witnessed by the retained caller, source return type and emitted sceneRuntimes WeakMap value. It supplies no runtime body, owner recovery, upload cache, GPU operation or skinning result. Calling the refused accessor or retained caller remains an unresolved link. Body ownership stays open in docs/compiler-requests/asserted-erased-runtime-owner.md; caller emission stays open in docs/compiler-requests/retained-declaration-calls-omitted-callee.md.",
+      "expectedWhen": "always",
+      "expires": "when getWgpuScene3DRuntime emits (its exact NOT GENERATED marker disappears); sdk:check fails if this repair matches no header."
     }
   ]
 }

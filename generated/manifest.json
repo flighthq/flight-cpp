@@ -3327,6 +3327,12 @@
         "flight/scene2d_formats/rive_import_registry.hpp"
       ],
       "id": "scene2d-formats-declare-refused-rive-artboard-import-context"
+    },
+    {
+      "files": [
+        "flight/scene3d_wgpu/wgpu_scene_3d_runtime.hpp"
+      ],
+      "id": "scene3d-wgpu-declare-refused-scene-runtime"
     }
   ],
   "sourcePatches": [
