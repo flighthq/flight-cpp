@@ -219,3 +219,23 @@ Nothing is carried:
 - Declaring the callee would not move the row.
 - A definition would fake bloom: the pool acquisition and release, the bright, blur and composite passes,
   and the program cache.
+
+## G2 lens dirt runner: same plain pooled-reference callee as bloom
+
+`flight/effects_gl/gl_lens_dirt_effect.hpp:112` is the second plain-`Ref` exclusion, inspected on its own at
+Flight `a627849` / compiler `806d257`.
+
+- Runner: `glLensDirtEffectRunner` (source line 57) is refused with
+  `cpp-structural-assertion-writable-capability-unproven`, because `Readonly<Effect>` declares none of
+  `intensity`, `seed` and `threshold`. `register_gl_lens_dirt_effect` still passes it at line 112.
+- Callee: `applyLensDirtEffectToGl` (source line 21) has the bloom recipe's shape. It acquires `bright`,
+  `blurred` and `temp` with `acquireGlTextureRenderTarget(state, pool, descriptor)`, draws into them through
+  `drawGlFullscreenPass`, whose destination is `Readonly<GlRenderTarget> | null`, and releases them. The
+  refused value is the plain `flight::Ref<flight::types::GlTextureRenderTarget>`, the `Ref<Derived>` to
+  `Ref<Base>` widening of [interface-heritage-widening](interface-heritage-widening.md).
+- No other header names `gl_lens_dirt_effect_runner` or `apply_lens_dirt_effect_to_gl`, and neither is
+  defined anywhere.
+
+This was validated by inspection. It is a docs-only disposition, so the unchanged header was not
+recompiled, and its recorded **0/1** failure stands. Nothing is carried: no runner, pass, shader, pool or
+narrowed domain.

@@ -245,7 +245,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 216 | `undeclared-identifier-d687475c` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glHalftoneEffectRunner` binding (and its callee `applyHalftoneEffectToGl`) but still emits the registration call that passes the runner |
 | 217 | `undeclared-identifier-d7a1d1b7` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glTiltShiftEffectRunner` binding (and its callee `applyTiltShiftEffectToGl`) but still emits the registration call that passes the runner |
 | 218 | `undeclared-identifier-e3d6c4e4` | 1 | GL | runtime | the emitted code names `apply_gl_gaussian_blur_pass`, which nothing declares |
-| 219 | `undeclared-identifier-e4a7b51e` | 1 | GL | runtime | the emitted code names `gl_lens_dirt_effect_runner`, which nothing declares |
+| 219 | `undeclared-identifier-e4a7b51e` | 1 | GL | compiler *(existing request)* | refused `glLensDirtEffectRunner` still registered; callee widens pooled `Ref<GlTextureRenderTarget>` intermediates to `GlRenderTarget` |
 | 220 | `undeclared-identifier-e4eb111d` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glKuwaharaEffectRunner` binding (and its callee `applyKuwaharaEffectToGl`) but still emits the registration call that passes the runner |
 | 221 | `undeclared-identifier-e7bf11f9` | 1 | WGPU | compiler | WGPU Scale9 draw refuses nullable material owner widening; declaration compile fails native/generic callback carrier *(existing requests extended)* |
 | 222 | `undeclared-identifier-ebf3999b` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glRadialBlurEffectRunner` binding (and its callee `applyRadialBlurEffectToGl`) but still emits the registration call that passes the runner |
@@ -3935,14 +3935,17 @@ site. The clip renderer is not claimed complete.
 - first failure at: `flight/effects_gl/gl_blur_effect.hpp:93`
 - example: `use of undeclared identifier 'apply_gl_gaussian_blur_pass'`
 
-### 219. `undeclared-identifier-e4a7b51e` — 1 header(s)
+### 219. `undeclared-identifier-e4a7b51e` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_lens_dirt_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glLensDirtEffectRunner` binding (`cpp-structural-assertion-writable-capability-unproven`: `Readonly<Effect>` declares none of `intensity`, `seed` and `threshold`), but `register_gl_lens_dirt_effect` still passes it. Its callee `applyLensDirtEffectToGl` is refused because each pooled intermediate (`acquireGlTextureRenderTarget`, a plain `Ref<GlTextureRenderTarget>`) is passed as `drawGlFullscreenPass`'s `Readonly<GlRenderTarget> | null` destination.
 - subject: `gl_lens_dirt_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: the runner is a variable, which the declaration repair cannot declare, and a definition would fake the effect. The callee needs real `Ref<Derived>` to `Ref<Base>` heritage, per [interface-heritage-widening](compiler-requests/interface-heritage-widening.md). This is the same shape as bloom (excluded from the runner-family table for the same reason).
 - first failure at: `flight/effects_gl/gl_lens_dirt_effect.hpp:112`
 - example: `use of undeclared identifier 'gl_lens_dirt_effect_runner'`
+- Verified by inspection: line 112 is the registration call. Neither symbol is defined or named elsewhere. This docs-only disposition changes no compiled input, so the recorded **0/1** failure stands without an unchanged rerun. No pass, shader, pool or narrowed domain is supplied.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
 ### 220. `undeclared-identifier-e4eb111d` — G2 recheck of 1 header(s)
 
