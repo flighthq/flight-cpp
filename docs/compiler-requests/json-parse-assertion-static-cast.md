@@ -176,3 +176,76 @@ No C++, runtime, binding, source patch, repair, override or generated inventory 
 disposition, so no changed generation needs reproducing. Only this original header was checked; its
 row remains failed with no native parsing, round-trip or functionality pass claimed. The earlier
 Aseprite, Pixi and Lottie rows and historical totals retain their own attribution.
+
+## G2 glTF feature collection keeps the JSON and document input domains
+
+At Flight `a627849` / compiler `806d257`, original `other-4703cbbe` contains one header,
+`scene3d_formats/gltf_features.hpp`. Clang22.1.8 jobs1 completes **1 attempted / 0 pass / 1 fail /
+0 unattempted**,7.8s, at line59:
+
+```cpp
+doc = static_cast<flight::Ref<flight::types::GltfDocument>>(
+    flight::Json::parse(std::get<1>(source)));
+```
+
+The source collectGltfFeatures accepts GltfDocument|string and asserts JSON.parse(source) as
+GltfDocument. All three public functions are emitted; there is no omitted helper or refusal marker
+whose forward declaration could repair this cast. Json::parse already supplies a real JsonValue
+tree with checked kinds and shared JsonArray/JsonObject owners. It did not allocate a nominal
+GltfDocument. The actual generated document is a ReferenceEnabled struct containing optional asset,
+arrays of references to schema owners, extensionsUsed/Required and document extensions. Its asset
+uses the canonical version_fe118d6bc798d137 owner with String version. Neither that owner nor a
+GltfDocument reference exists inside the parsed tree to recover with a cast or Any::object_if.
+
+This is feature inspection, not scene/resource import. GltfBuffer carries byteLength and optional uri;
+GltfBufferView carries its buffer index, byteLength and optional offset/stride; GltfImage retains either
+uri or bufferView plus optional MIME type. The collector does not read/fetch those resources, decode
+images, validate meshes or construct a scene. It accepts partial entries such as meshes:[{}] because
+it only inspects collection length. A full importer, fabricated resource owners or a copied feature-only
+document is not an equivalent replacement for either original input arm.
+
+The complete source contract requires:
+
+- Parse a string once, with the try/catch enclosing JSON.parse and its erased TypeScript assertion.
+  That assertion performs no schema validation. Otherwise read the original document object. After the catch, return
+  null for a null/non-object root or a nonstring asset?.version; any string version, including empty,
+  passes. Do not impose glTF version2.0, require resource fields or route later access/iteration errors
+  into the syntax-failure return. The retained emission folds the root null/type guard to false and
+  replaces the version typeof check with optional presence; fixing only the cast does not restore
+  those dynamic checks for JSON null/primitives or wrong-typed asset/version fields.
+- Allocate a fresh Set for each accepted document. Test meshes, animations, cameras and skins through
+  the source optional length/nullish-zero/>0 expressions, adding Mesh, Animation, Camera, Skin in that
+  order. No entry traversal is required. There is no Array.isArray guard: JSON strings and objects
+  with a length member still follow JavaScript property/comparison semantics. A strict arrays-only
+  projection or conversion that requires complete native mesh/camera/skin owners narrows this input.
+- If extensionsUsed is not undefined, iterate it in source order and add each value to the same Set,
+  retaining source Set insertion/deduplication semantics and existing objects. Do not filter against
+  GLTF_FEATURE_NAMES, sort, infer from extensionsRequired/extension payloads, or coerce entries.
+  The public feature-name list is Animation,Camera,Mesh,Skin; it differs from collection insertion
+  order. The unchecked JSON assertion also admits wrong-typed extension values: strings are iterable,
+  and null/noniterables can throw after the parse catch. A Set<String>-only nominal conversion must
+  not silently stringify/drop values or turn such errors into null. The valid minimal document returns
+  an empty Set, while invalid roots return null; universal empty success is not feature collection.
+- collectGlbFeatures first uses extractGlbJsonChunk, returning null when no chunk is found, then uses
+  the same JSON collector. Extraction reads the exact Uint8Array buffer/byteOffset/byteLength view.
+  Require at least12 bytes, little-endian glTF magic and GLB header version2; use
+  min(declaredLength,view.byteLength), not a new strict equality check. Starting at12, require a full
+  8-byte chunk header and a payload within that end. Skip unknown chunks by their declared size and
+  return the first JSON chunk decoded by TextDecoder from that subarray, retaining padding/decoder
+  behavior. Do not require a BIN chunk or resource availability, assume zero view offset, impose new
+  alignment checks, or skip a malformed first JSON chunk in favor of a later one. This extraction
+  returns decoded text; document/feature checks belong to the collector afterward.
+
+The existing [parsed JSON member-shape request](parsed-json-object-shape-reads.md) covers nested
+owner/absence reads that a nominal cast cannot establish. A faithful compiler/runtime boundary must
+read the original JSON through a represented document/view contract with kinds, optionality, identity,
+Set values and exception boundaries preserved, or explicitly refuse the unsupported assertion. Adding
+a permissive JsonValue conversion, changing JSON.parse's binding, copying a document or disabling the
+string/GLB arm cannot make that contract true. No bounded faithful runtime/binding/source fix is carried.
+
+Pinned source tests cover invalid strings/null/primitives, minimal/empty-array documents, each feature,
+extensions and GLB header/truncation/JSON selection. They are requirements, not native parser/feature
+behavior results in this unit. No C++, runtime, binding, source patch, repair, override, manifest or
+inventory change is carried, so no changed normal generation needs reproducing. The owned root/row
+remains failed with compiler route. No native feature, parser, resource, header or functionality gain
+is claimed; earlier JSON cases and all foreign glTF ledger/edge corrections retain their evidence.

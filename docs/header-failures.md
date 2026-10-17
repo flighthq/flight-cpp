@@ -171,7 +171,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 142 | `no-viable-conversion-eabaf455` | 1 | 3D | compiler | a value is passed where its declared type cannot receive it |
 | 143 | `no-viable-conversion-f7267dc5` | 1 | ANIM | compiler | a value is passed where its declared type cannot receive it |
 | 144 | `other-1e3a0d33` | 1 | ANIM | source fix; compiler follow-ons | G2: 0/1; typed preset owners fix conditional, now optional Record detail; nominal Bone2D store still owed |
-| 145 | `other-4703cbbe` | 1 | 3D | runtime | uncategorised: the first diagnostic does not name a single cause |
+| 145 | `other-4703cbbe` | 1 | 3D | compiler | G2: 0/1; parsed JSON is cast to a nominal glTF document; existing assertion request extended |
 | 146 | `other-5dfe27ec` | 1 | ANIM | compiler | G2: 0/1; erased display-array iteration; collector/derived attachment/full skin algorithms remain refused |
 | 147 | `other-acb4b229` | 1 | 2D | compiler | G2: 0/1; JSON assertion casts to nominal array/hash document union; converter independently refused |
 | 148 | `static-assertion-18059635` | 1 | 3D | compiler | a runtime static assertion rejects the emitted shape |
@@ -2744,13 +2744,29 @@ complete functionality or header gain is claimed. Binary consumption, root paren
 invalid-parent Drop/overrun, sticky truncation and original context/diagnostics/preset identities
 remain the source contract, recorded in the linked requests. No global/package baseline is rerun.
 
-### 145. `other-4703cbbe` — 1 header(s)
+### 145. `other-4703cbbe` — G2 recheck of 1 header(s)
 
-- cause: uncategorised: the first diagnostic does not name a single cause
+- cause: JSON.parse yields JsonValue, but the emitted assertion casts it to an unrelated nominal GltfDocument reference
 - lanes: 3D
-- fix route: runtime
-- first failure at: `flight/scene3d_formats/gltf_features.hpp:59`
+- fix route: [existing JSON assertion request](compiler-requests/json-parse-assertion-static-cast.md#g2-gltf-feature-collection-keeps-the-json-and-document-input-domains), with [nested JSON/absence reads](compiler-requests/parsed-json-object-shape-reads.md)
+- actual first failure at: `flight/scene3d_formats/gltf_features.hpp:59`
 - example: `no matching conversion for static_cast from 'JsonValue' to 'Ref<GltfDocument>'`
+
+Original1 jobs1 Clang22.1.8 completes in7.8s: **1 attempted / 0 pass / 1 fail / 0 unattempted**.
+All functions are emitted; a declaration repair cannot fix the cast. Runtime JSON already has a real
+kind-tagged tree, not the nominal GltfDocument/asset/schema owners. The emitted folded root guard and
+version-presence check also fail to represent source JSON type checks; no native execution claimed.
+
+Preserve both document/string arms, parse-only catch, dynamic root/version/optional-length and
+extension iteration semantics, fresh Set with source insertion/deduplication order and GLB's exact
+view/header/min-length/chunk/TextDecoder behavior. This collector neither validates complete resource
+owners nor loads buffers/images/scenes. No fake features/parser, copied owner, empty-success result,
+narrowed arrays/schema/extension domain or resource loading is supplied.
+
+No C++, runtime, binding, source patch, repair, override, manifest, inventory or changed normal
+generation is carried. Only this failed root/row and worklist entry plus one existing request appendix
+change. Foreign raw/semantic rows/roots/prose, package/G1 counts and prior glTF ledger/edge corrections
+remain unchanged. No native feature/parser/header/functionality gain is claimed.
 
 ### 146. `other-5dfe27ec` — G2 recheck of 1 header(s)
 
