@@ -91,6 +91,8 @@ inline void tally_invalid_value(std::optional<flight::Map<flight::String, flight
 }
 
 
+flight::Ref<flight::types::ObjMaterialLibrary> parse_obj_material_library(flight::String source, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt);
+
 // NOT GENERATED: function parseObjMaterialLibrary -- source line 14
 // refusal: cpp-member-projection-without-present-storage [compiler-restriction]
 //

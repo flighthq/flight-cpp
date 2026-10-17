@@ -7167,6 +7167,22 @@
       "expires": "when formatDateValue emits (the NOT GENERATED marker disappears and this repair matches nothing); sdk:check fails if this repair matches no header."
     },
     {
+      "id": "scene3d-formats-declare-refused-parse-obj-material-library",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/scene3d_formats/mtl_parse.hpp",
+      "symbol": "parse_obj_material_library",
+      "refusedFunction": "parseObjMaterialLibrary",
+      "declaration": "flight::Ref<flight::types::ObjMaterialLibrary> parse_obj_material_library(flight::String source, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt);",
+      "sourceDeclaration": "packages/scene3d-formats/src/mtlParse.ts -- parseObjMaterialLibrary(source: string, diagnostics?: ImportDiagnostic[]): ObjMaterialLibrary, refused at cpp-member-projection-without-present-storage on the bounded-loop read lines[i].trim(); the retained collectObjMaterialModels in flight/scene3d_formats/obj_material_model.hpp calls it with a flight::String source and std::nullopt diagnostics",
+      "calledFrom": [
+        "flight/scene3d_formats/obj_material_model.hpp"
+      ],
+      "diagnostic": "no member named 'parse_obj_material_library' in namespace 'flight::scene3d_formats'",
+      "defect": "The emitter refuses parseObjMaterialLibrary because lines[i].trim() projects a member on the internal optional storage of a plain array index inside a counted loop whose bound is lines.length (docs/compiler-requests/indexed-array-member-call-present-element.md), but it still emits the module's other declarations and retains collectObjMaterialModels in obj_material_model.hpp calling the refused function. The witnesses are split and all checked: mtl_parse.hpp carries the exact NOT GENERATED parseObjMaterialLibrary marker and defines nothing, and obj_material_model.hpp calls parse_obj_material_library outside comments and defines nothing. The declaration is the emitter's own signature, taken from the carrier the retained call constructs (flight::String, and std::optional<Array<Ref<ImportDiagnostic>>> for the omitted diagnostics array) and the Ref<ObjMaterialLibrary> its result is read through. It supplies no MTL grammar, no material record, no diagnostics tally and no parser result. Calling the refused helper fails to link on exactly this symbol. The retained collector in obj_material_model.hpp cannot compile yet for its own structural-reference follow-on (static-assertion-ecc68c2b), so it does not reach the link; nothing here supplies that parser. The underlying lowering gap is recorded in docs/compiler-requests/indexed-array-member-call-present-element.md, and the retained-callee consequence in docs/compiler-requests/retained-declaration-calls-omitted-callee.md.",
+      "expectedWhen": "always",
+      "expires": "when parseObjMaterialLibrary emits (the NOT GENERATED marker disappears and this repair matches nothing); sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "notification-create-signal-using-declaration",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/notification/",

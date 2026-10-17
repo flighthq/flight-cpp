@@ -939,3 +939,24 @@ supply traversal, the registered writers or the complete velocity pass. Preserve
 traits, same node/runtime owners, per-particle and per-instance vectors/atlas transforms, source-only
 coarse fallback, RG signed/subpixel encoding and pixelRatio, original clear/covered alpha and GL-state
 restoration. No dummy program, zero-velocity writer, copied owner, narrowed domain or drawing claim.
+## G2 MTL material library retains the refused parser
+
+At Flight `a627849` / compiler `806d257`, `scene3d_formats/mtl_parse.hpp` carries the NOT GENERATED
+`parseObjMaterialLibrary` marker and no declaration, while `obj_material_model.hpp` retains
+`collectObjMaterialModels` calling it with a `flight::String` source and `std::nullopt` diagnostics.
+The caller is in another header, so `scene3d-formats-declare-refused-parse-obj-material-library`
+names it in `calledFrom` and inserts only the emitter's own signature into the refused module's
+header:
+
+```cpp
+flight::Ref<flight::types::ObjMaterialLibrary> parse_obj_material_library(
+    flight::String source,
+    std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt);
+```
+
+The refused module's header still carries the marker and defines nothing. An unused include of
+`mtl_parse.hpp` links, and a direct call fails to link on exactly `parse_obj_material_library`. The
+retained collector cannot compile yet for its own structural-reference follow-on, not for this
+declaration, so it does not reach either boundary. No library, material, diagnostics or grammar
+behavior is supplied; the underlying refusal is
+[indexed array member calls](indexed-array-member-call-present-element.md).

@@ -77,3 +77,25 @@ ahead for `facet`, accepts partial blocks, substitutes zero or changes null into
 The declaration repair described in
 [retained callers](retained-declaration-calls-omitted-callee.md) supplies neither refused body.
 
+
+## G2 MTL directive line reads
+
+At Flight `a627849` / compiler `806d257`, `scene3d-formats/mtlParse.ts` refuses
+`parseObjMaterialLibrary` at this rule on the first statement of its counted loop:
+
+```ts
+const lines = source.split('\n');
+for (let i = 0; i < lines.length; i++) {
+  const raw = lines[i].trim();
+  ...
+}
+```
+
+The refusal text is `member trim on optional C++ storage requires proven present payload`. The split
+produces a fresh local array, the loop bound is that same array's `length` at each test, and no
+source statement mutates `lines`, so the element is present when read. The emitted read must use the
+runtime's checked element projection and then the original string `trim`; an out-of-range index is
+still a JavaScript TypeError, not an absence. `parseObjMaterialLibrary` is withheld while the
+retained `collectObjMaterialModels` in `obj_material_model.hpp` calls it, so the declaration repair
+in [retained callers](retained-declaration-calls-omitted-callee.md) compiles past the undeclared
+name without supplying any MTL grammar, material record or diagnostics tally.

@@ -106,7 +106,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 77 | `undeclared-identifier-dc087108` | 3 | PLAT | declaration repair (applied) | refused URL loader declared; G2: 3 pass; URL loading remains unlinkable |
 | 78 | `call-has-no-matching-84410867` | 2 | 3D | compiler | the emitted call to `buffer_data` matches no declared overload |
 | 79 | `call-has-no-matching-d42144f0` | 2 | ANIM | compiler | the emitted call to `push` matches no declared overload |
-| 80 | `missing-member-da12a523` | 2 | 3D | runtime | the emitted code reads a member the target does not declare (`parse_obj_material_library`) |
+| 80 | `missing-member-da12a523` | 2 | 3D | runtime + repair (fixed) | the emitted code reads a member the target does not declare (`parse_obj_material_library`); G2: 0 pass, 2 follow-ons (`static-assertion-ecc68c2b`, `undeclared-identifier-d663f62e`) |
 | 81 | `missing-member-dd9b4baa` | 2 | 3D, GL | runtime | the emitted code reads a member the target does not declare (`renderbuffer_binding`) *(G2: binding added; follow-on `no-matching-conversion-bc278253` fixed: 1 pass, 1 to `missing-member-95ead583`)* |
 | 82 | `no-viable-conversion-303c42f1` | 2 | ANIM | compiler | a value is passed where its declared type cannot receive it |
 | 83 | `other-67dc02c6` | 2 | 2D | compiler | `getSurfaceHandle(...) as HTMLCanvasElement` lowered to an unchecked `static_cast` from the erased handle *(existing request extended)* |
@@ -1688,14 +1688,48 @@ their first failure moves to `get_number_format` and they join `undeclared-ident
 - first failure at: `flight/swf/swf_sound_handler.hpp:120`
 - example: `no matching member function for call to 'push'`
 
-### 80. `missing-member-da12a523` — 2 header(s)
+### 80. `missing-member-da12a523` — 2 G1 header(s), 0 pass, 2 follow-ons
 
 - cause: the emitted code reads a member the target does not declare (`parse_obj_material_library`)
 - subject: `parse_obj_material_library`
 - lanes: 3D
-- fix route: runtime
+- fix route: runtime + repair (fixed)
 - first failure at: `flight/scene3d_formats/obj_material_model.hpp:58`
 - example: `no member named 'parse_obj_material_library' in namespace 'scene3d_formats'`
+
+`parseObjMaterialLibrary` is refused in `mtl_parse.ts` because `lines[i].trim()` projects a member
+on the internal optional storage of a plain array index inside a loop bounded by `lines.length`
+(the family in `docs/compiler-requests/indexed-array-member-call-present-element.md`). The module's
+other declarations are emitted, and `collectObjMaterialModels` in `obj_material_model.hpp` calls the
+refused function, so both headers named a missing member. The existing declaration mechanism is
+enough and the callers are in another header, so
+`scene3d-formats-declare-refused-parse-obj-material-library` names `obj_material_model.hpp` in
+`calledFrom` and inserts only the emitter's own signature:
+
+```cpp
+flight::Ref<flight::types::ObjMaterialLibrary> parse_obj_material_library(
+    flight::String source,
+    std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt);
+```
+
+It supplies no MTL grammar, material record, diagnostics tally or parser result. An unused include of
+`mtl_parse.hpp` links, and a call of `parse_obj_material_library` fails to link on exactly that
+symbol. The retained collector in `obj_material_model.hpp` cannot compile yet, but for the
+structural-reference follow-on below, not for this declaration — so it has not reached a link either
+way. The declaration itself is recorded in
+`docs/compiler-requests/retained-declaration-calls-omitted-callee.md`.
+
+#### Follow-on `static-assertion-ecc68c2b`, and `undeclared-identifier-d663f62e`
+
+Neither header compiles yet; the repair moved them past the missing member.
+
+- `obj_material_model.hpp` now fails at `flight/structural_ref.hpp:448` with
+  `dependent_false<flight::types::ObjMaterial>`: `has_obj_pbr_directives` casts the anonymous
+  material-shape row to `RowReadonly<RowOf<Ref<ObjMaterial>>>`, and the runtime rejects the source
+  object type. That is a structural-reference conversion gap, not a missing declaration.
+- `obj_standard_pbr_material_handler.hpp` now names `obj_material_to_standard_pbr`, another
+  retained caller whose callee (`objMaterialToStandardPbr`, source line 30) is refused in the same
+  header. It is a separate cause and is listed as its own cluster rather than folded into this one.
 
 ### 81. `missing-member-dd9b4baa` — 2 header(s)
 

@@ -3400,6 +3400,12 @@
         "flight/layout/flex_layout.hpp"
       ],
       "id": "layout-declare-refused-flex-resolver"
+    },
+    {
+      "files": [
+        "flight/scene3d_formats/mtl_parse.hpp"
+      ],
+      "id": "scene3d-formats-declare-refused-parse-obj-material-library"
     }
   ],
   "sourcePatches": [
