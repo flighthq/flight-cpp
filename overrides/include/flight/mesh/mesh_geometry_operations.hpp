@@ -4,6 +4,7 @@
 #include <cmath>
 #include <cstddef>
 #include <optional>
+#include <stdexcept>
 #include <type_traits>
 #include <variant>
 
@@ -160,6 +161,27 @@ inline bool get_mesh_geometry_triangle_vertex_indices(
   out->i1 = detail::index_at(geometry, element1);
   out->i2 = detail::index_at(geometry, element2);
   return true;
+}
+
+// Generated callers pass the readonly structural row the emitter derives for a
+// `Readonly<MeshGeometry>` parameter, while this module's own implementation works over the
+// retained nominal owner. Recover the exact owner from the view -- the same checked bridge the
+// compute override uses -- instead of copying or reinterpretation, and fail loudly if the view
+// has none.
+template <typename Schema>
+inline double get_mesh_geometry_triangle_count(const flight::StructuralRef<Schema>& geometry) {
+  const auto owner = geometry.template shared_exact_object<MeshGeometry>();
+  if (!owner) throw std::logic_error("mesh: geometry row has no exact owner");
+  return get_mesh_geometry_triangle_count(owner);
+}
+
+template <typename Schema>
+inline bool get_mesh_geometry_triangle_vertex_indices(
+    flight::Ref<MeshTriangleVertexIndices> out,
+    const flight::StructuralRef<Schema>& geometry, double triangle_index) {
+  const auto owner = geometry.template shared_exact_object<MeshGeometry>();
+  if (!owner) throw std::logic_error("mesh: geometry row has no exact owner");
+  return get_mesh_geometry_triangle_vertex_indices(std::move(out), owner, triangle_index);
 }
 
 inline bool forms_whole_primitives(double count, PrimitiveTopology topology) {

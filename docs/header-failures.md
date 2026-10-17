@@ -31,7 +31,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 2 | `missing-member-b1a6d5cf` | 39 | 2D | compiler | scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined *(request filed)* |
 | 3 | `in-operator-not-lowered-b1eae4af` | 32 | 2D, 3D, GL, PLAT, WGPU | compiler | the TypeScript `in` operator is emitted verbatim; G2 particle3D joins this existing cause *(existing request extended)* |
 | 4 | `undeclared-identifier-993e82f1` | 29 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(request filed; builder4/G2)* |
-| 5 | `call-has-no-matching-3882b3e9` | 29 | 2D, 3D, TEXT | compiler | bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier *(request filed; builder4/G2; +1 from `obj_standard_pbr_material_handler.hpp` after its module emitted)* |
+| 5 | `call-has-no-matching-3882b3e9` | 30 | 2D, 3D, TEXT | compiler | bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier *(request filed; builder4/G2; +1 from `obj_standard_pbr_material_handler.hpp` after its module emitted; +1 from `md5_skeleton_handler.hpp` after the mesh override bridges)* |
 | 6 | `other-52e846a6` | 18 | ANIM | compiler *(existing request)* | a nullable attachment array element is not lifted into the reference/null/undefined slot carrier |
 | 7 | `call-has-no-matching-47410fe2` | 16 | 2D, 3D | runtime (fixed) | Number is now a callable conversion object; G2 recheck: 2 pass, 14 fail at later compiler diagnostics |
 | 8 | `other-40da43f7` | 16 | 2D, 3D, ANIM | compiler | an optional<Record<...>> is initialised from a shape that is not its declared storage |
@@ -91,7 +91,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 62 | `missing-member-c36ea2d4` | 3 | 2D | binding | the web renderer needs shared CSS style state; SDL exposes copied shell values with no opacity field *(request filed)* |
 | 63 | `no-viable-conversion-4ca7626f` | 3 | ANIM | compiler | a value is passed where its declared type cannot receive it |
 | 64 | `no-viable-conversion-b3064463` | 3 | GL | compiler | `GlRenderState` passed where `RenderState` is declared; the emitter flattens the heritage *(existing request linked)* |
-| 65 | `no-viable-conversion-b3f3c7c6` | 3 | 3D | compiler | a value is passed where its declared type cannot receive it |
+| 65 | `no-viable-conversion-b3f3c7c6` | 3 | 3D | override bridges (fixed) | a value is passed where its declared type cannot receive it; G2: 2 pass, 1 to `call-has-no-matching-3882b3e9` |
 | 66 | `no-viable-conversion-b5b698fe` | 3 | 2D | compiler | G2: recorded 0/3 retained; guarded Shape JSON Any array needs identity-preserving element reads; docs-only, no rerun |
 | 67 | `other-3d2efc1d` | 3 | 2D | [compiler request](compiler-requests/erased-array-element-reading.md) | the emitter indexes a still-erased `flight::Any` after `Array.isArray` instead of using the runtime's exact-array recovery |
 | 72 | `other-41f4a462` | 3 | ANIM | compiler | a named-property view (which aliases the source object) and an empty Record are the two arms of one conditional, so the conditi... *(request filed)* |
@@ -376,7 +376,7 @@ These non-generic callers still convert an argument to a target containing the c
 no runtime alias or replacement owner was added. The five source-site files are unchanged across the
 clean delivered-base update after the check. G1 sweep totals and unowned rows remain unchanged.
 
-### 5. `call-has-no-matching-3882b3e9` — 29 header(s) *(builder4/G2)*
+### 5. `call-has-no-matching-3882b3e9` — 30 header(s) *(builder4/G2)*
 
 - cause: bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier
 - subject: `create_texture`
@@ -1640,13 +1640,31 @@ faithful local fix:
 
 **G1 status retained: 0/3 pass, 3 fail.** No code changed, so no recompile was run.
 
-### 65. `no-viable-conversion-b3f3c7c6` — 3 header(s)
+### 65. `no-viable-conversion-b3f3c7c6` — 3 G1 header(s), 2 now compile
 
 - cause: a value is passed where its declared type cannot receive it
 - lanes: 3D
-- fix route: compiler
+- fix route: override bridges (fixed)
 - first failure at: `flight/scene3d_formats/md5_parse.hpp:151`
 - example: `no viable conversion from 'StructuralRef<RowReadonly<RowOf<shared_ptr<MeshGeometry>>>>' to 'Ref<MeshGeometry>'`
+
+This was not a compiler defect. The generated emitters agree with each other: generated callers
+pass the readonly structural row the emitter derives for a `Readonly<MeshGeometry>` parameter, and
+the generated `mesh_geometry_operations.hpp`/`mesh_geometry.hpp` APIs name that row. Two hand-written
+overrides (`mesh-geometry-operations-complete-module`, `mesh-geometry-runtime-owner`) replace those
+APIs with implementations over the retained nominal `Ref<MeshGeometry>` and did not expose the
+generated carrier, so every caller that emitted against the generated API failed to convert.
+
+The fix is two checked bridges added to the overrides, using the same owner-recovery the sibling
+compute override already carries: `shared_exact_object<MeshGeometry>()` for triangle counting and
+triangle-vertex selection, and `shared_object()` for skin presence. Each recovers the same retained
+`MeshGeometry` owner without copying, retyping or reinterpreting it, and throws loudly when the view
+retains no exact owner; the arithmetic is unchanged. No compiler request is linked because none is
+owed.
+
+Both `md5_parse.hpp` and `scene3d_gl/enable_gl_scene_3d_deform_guards.hpp` now compile. The third
+header, `md5_skeleton_handler.hpp`, moves past this cause and fails at
+`call-has-no-matching-3882b3e9` (`create_texture`, `shared.hpp:100`), the compiler-owned cluster above.
 
 ### 66. `no-viable-conversion-b5b698fe` — 3 header(s), compiler route
 

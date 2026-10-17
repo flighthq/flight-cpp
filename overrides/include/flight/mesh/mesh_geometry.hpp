@@ -167,6 +167,13 @@ inline bool has_mesh_geometry_skin(flight::Ref<MeshGeometry> geometry) {
   return false;
 }
 
+template <typename Schema>
+inline bool has_mesh_geometry_skin(const flight::StructuralRef<Schema>& geometry) {
+  const auto owner = geometry.shared_object();
+  if (!owner) throw flight::Error(flight::String("mesh: geometry row has no exact owner"));
+  return has_mesh_geometry_skin(owner);
+}
+
 inline void initialize_mesh_geometry(flight::Ref<EntityConstruction<flight::Ref<MeshGeometry>>> out, flight::Ref<MeshGeometry> fields) {
   (out->bounds = fields->bounds);
   (out->indices = fields->indices);
