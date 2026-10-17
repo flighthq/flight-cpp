@@ -28,7 +28,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | # | cluster | headers | lanes | fix route | cause |
 | --- | --- | --- | --- | --- | --- |
 | 1 | `call-has-no-matching-9c08d665` | 117 | WGPU | compiler | bound WebGPU descriptor object literals are emitted as untyped source-order braced initializers with anonymous nested owners *(request filed)* |
-| 2 | `missing-member-b1a6d5cf` | 38 | 2D | compiler | scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined *(request filed)* |
+| 2 | `missing-member-b1a6d5cf` | 39 | 2D | compiler | scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined *(request filed)* |
 | 3 | `in-operator-not-lowered-b1eae4af` | 32 | 2D, 3D, GL, PLAT, WGPU | compiler | the TypeScript `in` operator is emitted verbatim; G2 particle3D joins this existing cause *(existing request extended)* |
 | 4 | `undeclared-identifier-993e82f1` | 29 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(request filed; builder4/G2)* |
 | 5 | `call-has-no-matching-3882b3e9` | 28 | 2D, 3D, TEXT | compiler | bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier *(request filed; builder4/G2)* |
@@ -149,7 +149,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 120 | `missing-member-d7bf452c` | 1 | 2D | [compiler/runtime contract](compiler-requests/readonly-record-entry-enumeration.md) | readonly Record entry enumeration and value-to-view construction disagree; G2: 0/1 retained |
 | 121 | `missing-member-dae8c839` | 4 | TEXT | [compiler request](compiler-requests/reference-backed-outcome-variant-narrowing.md) | FNT formatter reads dimensions on an image-source variant instead of its active owner |
 | 122 | `missing-member-dcf85c36` | 1 | 3D | repair (fixed) | refused `collectMd5AnimFeatures` declared (declaration only) for its retained caller; G2 recheck: 1 pass |
-| 123 | `missing-member-ee398c94` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`register_canvas_texture_resolver`) |
+| 123 | `missing-member-ee398c94` | 1 | 2D | compiler *(existing request)* | G2: the line-50 diagnostic was a cascade; the first GCC failure is cluster 2's re-export before declaration; row moved |
 | 124 | `missing-member-fd2be1bc` | 1 | TEXT | compiler *(existing request)* | an `as { chars?, common? }` assertion over a parsed `JsonValue` is lowered with the erased-`Any` `object_if` recovery |
 | 125 | `no-viable-conversion-03bf8175` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
 | 126 | `no-viable-conversion-0faa55ca` | 1 | GL | compiler | a value is passed where its declared type cannot receive it |
@@ -291,7 +291,7 @@ deleting or stubbing behaviour.
 - example: `no matching member function for call to 'begin_render_pass'`
 - compiler request: `docs/compiler-requests/external-descriptor-literal-construction.md`
 
-### 2. `missing-member-b1a6d5cf` — 38 header(s) (34 at G1; 4 joined in G2 from cluster 61)
+### 2. `missing-member-b1a6d5cf` — 39 header(s) (34 at G1; 4 joined in G2 from cluster 61; 1 from cluster 123)
 
 - cause: scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined
 - subject: `get_canvas_render_state_runtime`
@@ -2492,14 +2492,15 @@ failed, with foreign rows/clusters and historical G1 totals unchanged.
 - Scoped native recheck (GCC 15.2, jobs 1): **1 attempted / 1 pass / 0 fail**. A TU that only includes the header links. A TU that calls `parse_md5_anim_requirements` fails to link, and the only undefined reference is `collect_md5_anim_features`. No feature set, requirements or narrowed domain is supplied.
 - compiler request: `docs/compiler-requests/indexed-array-member-call-present-element.md`
 
-### 123. `missing-member-ee398c94` — 1 header(s)
+### 123. `missing-member-ee398c94` — G2 recheck of 1 header(s)
 
-- cause: the emitted code reads a member the target does not declare (`register_canvas_texture_resolver`)
-- subject: `register_canvas_texture_resolver`
-- lanes: 2D
-- fix route: runtime
-- first failure at: `flight/scene2d_canvas/canvas_image_texture_resolver.hpp:50`
-- example: `no member named 'register_canvas_texture_resolver' in namespace 'scene2d_canvas'`
+- `register_canvas_texture_resolver` is not missing. `canvas_texture_resolver.hpp:104` defines it with the parameters line 50 passes (resolvers, source kind and optional `CanvasTextureResolver`), and the header includes it. The swept diagnostic was a cascade from an earlier failure in that include chain.
+- Scoped native recheck (GCC 15.2, jobs 1, all errors shown): **1 attempted / 0 pass / 1 fail**. There is no error at line 50. The first failure is `flight/scene2d_canvas/canvas_render_state.hpp:69`: `'get_canvas_render_state_runtime' has not been declared`. That is cluster 2's re-export before declaration, reached through `canvas_texture_resolver.hpp`, `canvas_render_surface.hpp` and `canvas_render_state.hpp`. The two later errors, the `CanvasRenderState` to `RenderState` conversion at `:253` and `canvas_render_surface.hpp:35`, are in the same included chain.
+- No Canvas backend, image provider, decode or resolver is supplied. The image resolver's own code is unchanged.
+
+| follow-on cluster | owned headers | first failure | route / cause |
+| --- | --- | --- | --- |
+| `missing-member-b1a6d5cf` | 1 | `flight/scene2d_canvas/canvas_render_state.hpp:69` | compiler: re-export `using` before declaration; [existing request](compiler-requests/local-reexport-using-before-declaration.md) |
 
 ### 124. `missing-member-fd2be1bc` — G2 recheck of 1 header(s)
 
