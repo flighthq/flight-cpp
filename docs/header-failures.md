@@ -33,7 +33,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 4 | `undeclared-identifier-993e82f1` | 29 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(builder4/E0a)* |
 | 5 | `call-has-no-matching-3882b3e9` | 27 | 2D, 3D, TEXT | binding | same braced-descriptor shape against the device binding's constrained variadic create_texture *(builder4/E0a)* |
 | 6 | `other-52e846a6` | 18 | ANIM | compiler | a value_type is combined with a three-alternative variant where the declared slot expects one alternative |
-| 7 | `call-has-no-matching-47410fe2` | 16 | 2D, 3D | compiler | the emitted call to `map` matches no declared overload |
+| 7 | `call-has-no-matching-47410fe2` | 16 | 2D, 3D | runtime (fixed) | Number is now a callable conversion object; G2 recheck: 2 pass, 14 fail at later compiler diagnostics |
 | 8 | `other-40da43f7` | 16 | 2D, 3D, ANIM | compiler | an optional<Record<...>> is initialised from a shape that is not its declared storage |
 | 9 | `static-cast-assertion-9674a66c` | 15 | 2D | compiler | a TypeScript `as` on `JSON.parse` is emitted as a `static_cast` from `JsonValue` to an unrelated `Ref<T>` *(request filed)* |
 | 10 | `call-has-no-matching-076d207f` | 14 | WGPU | compiler | the emitted call to `create_pipeline_layout` matches no declared overload |
@@ -341,14 +341,38 @@ deleting or stubbing behaviour.
 - first failure at: `flight/skeleton2d/skeleton2d_animation_target.hpp:217`
 - example: `incompatible operand types ('value_type' and 'variant<Ref<Attachment2D>, Null, Undefined>' )`
 
-### 7. `call-has-no-matching-47410fe2` — 16 header(s)
+### 7. `call-has-no-matching-47410fe2` — G2 recheck of 16 headers
 
-- cause: the emitted call to `map` matches no declared overload
-- subject: `map`
-- lanes: 2D, 3D
-- fix route: compiler
-- first failure at: `flight/scene3d_formats/collada_xml.hpp:44`
-- example: `no matching member function for call to 'map'`
+The actual receiver is `Array<String>`, and both Array and SequenceView already provide `map`.
+The original failure came from passing the overloaded `flight::to_number` name as a callback.
+The runtime now uses a callable Number conversion object, following `to_boolean`, with the
+same String, C-string, string-view, double and bool conversions. Array/SequenceView callback
+arity, numeric indices and retained source owners are unchanged; mapping still returns a fresh Array.
+
+G2: **2/16 compile, 14 fail**, all attempted at `-j1` with Clang 22.1.8, compiler `806d257` /
+Flight `a627849`. The runtime build and `flight_cpp.runtime` test pass (1/1), including Number
+callbacks through Array, retained SequenceView and Function, order, fresh result identity,
+unchanged source values, NaN, infinity and signed zero.
+
+Passing: `flight/scene2d_formats/svg_xml.hpp` and `flight/scene2d_formats/svg_geometry_path.hpp`.
+The other rows remain failures and have been reclassified by their newly exposed diagnostics:
+
+| follow-on cluster | headers | first failure | cause |
+| --- | --- | --- | --- |
+| `call-has-no-matching-4f8413e4` | 9 | `flight/scene3d_formats/collada_xml.hpp:44` | a numeric builtin used as a callback is emitted as the overloaded std::isfinite name |
+| `undeclared-identifier-fb3e0e45` | 3 | `flight/scene2d_formats/svg_color.hpp:134` | parseSvgColor is refused for unproven optional member storage, but retained resolveSvgColor still calls it |
+| `no-viable-conversion-a21c880d` | 1 | `flight/scene2d_formats/svg_style.hpp:53` | a numeric optional-chain length is erased to optional<Any> before assignment to double |
+| `no-viable-conversion-deeedfb9` | 1 | `flight/scene2d_formats/svg_transform.hpp:52` | a readonly Matrix row is converted through a writable row while forming a readonly MatrixLike argument |
+
+The nine COLLADA failures are covered by the one new
+[callable numeric predicate request](compiler-requests/builtin-numeric-predicate-callback.md).
+The five SVG failures above remain open for separate triage; no parser body, erased-value
+conversion or writable projection was invented to make them pass. No generated header,
+source patch or override changed in this work. Builder6 owns the independent SequenceView
+filter implementation.
+
+The opening totals and this group's original rank describe G1. Only these 16 header rows and
+their replacement failure clusters changed here; `previousCluster` preserves the G1 group.
 
 ### 8. `other-40da43f7` — 16 header(s)
 

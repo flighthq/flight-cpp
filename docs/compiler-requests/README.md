@@ -85,6 +85,9 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 
 ## Active requests without a compiler patch
 
+- [A numeric builtin used as a callback needs a callable value](builtin-numeric-predicate-callback.md) —
+  COLLADA passes the overloaded `std::isfinite` name to `filter`; the preceding `map(Number)`
+  seam is resolved by the runtime's first-class Number conversion object.
 - [A fresh object literal asserted to a type parameter has no C++ owner to become](fresh-literal-asserted-to-type-parameter.md) —
   `@flighthq/tray` `invokeUpdate` (`cpp-reference-assertion-without-heritage`): the asserted value is a new literal, so no heritage proof applies. The unrefused `{ outcome } as Result` branch emits `make_ref<Result>(Result{...})`, which cannot instantiate for a variant. Sound lowering needs exact-shape alternative selection at instantiation.
 - [A caught value written into an `unknown` member needs an `Any` that can hold it](caught-value-into-unknown-member.md) —
