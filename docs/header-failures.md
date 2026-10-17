@@ -163,7 +163,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 134 | `no-viable-conversion-802e8004` | 1 | GL | compiler | GL view destroy instantiates state-to-base teardown without heritage; original0/1 retained, existing request linked |
 | 135 | `no-viable-conversion-9695423c` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
 | 136 | `no-viable-conversion-a516fbdb` | 1 | 3D | compiler | readonly generic graph node cannot become an independent geometry probe; existing refinement request linked (G2: 0/1 retained) |
-| 137 | `no-viable-conversion-b47bc6cd` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
+| 137 | `no-viable-conversion-b47bc6cd` | 1 | 2D | compiler *(existing request)* | object-narrowed `unknown` used as a `Set<object>` key without the `Any::erased_ref()` identity projection |
 | 138 | `no-viable-conversion-bf84cbac` | 1 | 3D | compiler | a value is passed where its declared type cannot receive it |
 | 139 | `no-viable-conversion-c997578d` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
 | 140 | `no-viable-conversion-cef6403d` | 3 | 3D | compiler | a value is passed where its declared type cannot receive it |
@@ -3008,13 +3008,17 @@ compact root/row, worklist136 and the existing request appendix change. Source t
 requirements, not native morph proof. No fake deformation, copied owner, narrowed graph/weight
 domain, empty result or native version/bounds/upload gain is claimed.
 
-### 137. `no-viable-conversion-b47bc6cd` — 1 header(s)
+### 137. `no-viable-conversion-b47bc6cd` — G2 recheck of 1 header(s)
 
-- cause: a value is passed where its declared type cannot receive it
+- cause: `isFlightDocumentValue` narrows `unknown` with `typeof value === 'object'` and uses it as a `Set<object>` key for cycle detection. The emitted `Set<ErasedRef>::has`, `add` and `erase` receive the `flight::Any` unchanged.
+- subject: `is_flight_document_value`
 - lanes: 2D
 - fix route: compiler
+- why this route: the identity projection already exists in the runtime (`Any::erased_ref()`, the same reference with no copy). The emitter must apply it on the narrowed path and decide the array alternative, per [erased-object-identity-set-membership](compiler-requests/erased-object-identity-set-membership.md). A value-keyed set or a fresh wrapper would break cycle detection. The next error, the erased `every` call at `:142`, is [erased-array-element-reading](compiler-requests/erased-array-element-reading.md).
 - first failure at: `flight/scene_document/scene_document_layout_bindings.hpp:138`
 - example: `no viable conversion from 'Any' to 'const ErasedRef'`
+- Scoped native recheck (GCC 15.2, jobs 1): **1 attempted / 0 pass / 1 fail** at `:138`. Nothing is carried.
+- compiler request: `docs/compiler-requests/erased-object-identity-set-membership.md`
 
 ### 138. `no-viable-conversion-bf84cbac` — 1 header(s)
 
