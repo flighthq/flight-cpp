@@ -147,7 +147,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 118 | `missing-member-ad3558ee` | 1 | ANIM | runtime | the emitted code reads a member the target does not declare (`physics_2d_distance_joint_solver`) |
 | 119 | `missing-member-b5408b35` | 1 | 3D | runtime | the emitted code reads a member the target does not declare (`get_node_world_matrix4`) |
 | 120 | `missing-member-d7bf452c` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`begin`) |
-| 121 | `missing-member-dae8c839` | 4 | TEXT | runtime | the emitted code reads a member the target does not declare (`width`) |
+| 121 | `missing-member-dae8c839` | 4 | TEXT | [compiler request](compiler-requests/reference-backed-outcome-variant-narrowing.md) | FNT formatter reads dimensions on an image-source variant instead of its active owner |
 | 122 | `missing-member-dcf85c36` | 1 | 3D | runtime | the emitted code reads a member the target does not declare (`collect_md5_anim_features`) |
 | 123 | `missing-member-ee398c94` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`register_canvas_texture_resolver`) |
 | 124 | `missing-member-fd2be1bc` | 1 | TEXT | runtime | the emitted code reads a member the target does not declare (`object_if`) |
@@ -2031,12 +2031,11 @@ and retain all source spread fields; no permissive runtime constructor or incomp
 
 ### 121. `missing-member-dae8c839` — 4 header(s)
 
-- cause: the emitted code reads a member the target does not declare (`width`)
-- subject: `width`
-- lanes: TEXT
-- fix route: runtime
-- first failure at: `flight/bitmapfont_formats/bitmap_font_fnt.hpp:187`
-- example: `no member named 'width' in 'variant<shared_ptr<VoxelGrid>, shared_ptr<TextureSource>, shared_ptr<ExternalTexture>, shared_ptr<Bitmap>, shared_ptr<CompressedImageResource>, shared_ptr<RenderTarget>, shared_ptr<ImageResource>>'`
+- Cause: `format_bitmap_font_fnt` reads `.width` and `.height` directly on `primary_image.value()`, an image-source variant, after proving only its optional presence. This is in the formatter; the parser has no winning missing-width diagnostic.
+- Route: compiler, [existing variant member-projection request](compiler-requests/reference-backed-outcome-variant-narrowing.md). All seven stored source-owner alternatives already declare both dimensions. `texture.hpp`'s emitted `get_texture_width` demonstrates the appropriate active-owner visitor; a runtime field or binding cannot add a direct member to `std::variant`.
+- Preserve the first page/source selection and absence, read width then height from that same owner, and keep the formatter's zero fallback. Do not narrow the open TextureSource kind family to Bitmap or ImageResource, copy a base owner, coerce through Any, fabricate sizes, or replace the captured source with repeated lookups and the texture helper's different minus-one fallback.
+- First recorded failure: `flight/bitmapfont_formats/bitmap_font_fnt.hpp:187`, missing `width` on the seven-owner variant. Four owned rows retain their exact diagnostics and existing `previousCluster` include-guard-repair provenance, and now link the request. The work-item ID remains for continuity.
+- Recorded result retained: **0/4 pass, 4 fail**. No C++/source patch/binding/override/repair registry changed, so no unchanged native rerun or normal generation was performed. Parser/atlas resolution, metrics, glyph and kerning ordering/identity, and shared scratch behavior were not changed or claimed working. Foreign rows/clusters and historical sweep totals remain unchanged; no global sweep.
 
 ### 122. `missing-member-dcf85c36` — 1 header(s)
 

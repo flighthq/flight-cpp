@@ -109,3 +109,46 @@ references already exist; adding a runtime `.kind` member to `std::variant` is n
 Only this owned WGPU header was measured for this follow-on family. It stays failed and linked here;
 no claim is made about the analogous GL headers, no new C++ repair is carried, and the separately
 refused upload/environment bodies remain unavailable.
+
+## G2 FNT formatter reads dimensions from the same source-value family
+
+At compiler `806d257` / Flight `a627849`, `bitmapfont-formats/bitmapFontFnt.ts:24` emits its
+formatter without a refusal marker, but the first failing read is
+`flight/bitmapfont_formats/bitmap_font_fnt.hpp:187`. The source is:
+
+```ts
+const primaryTexture = font.pages[0]?.texture;
+const primaryImage = primaryTexture?.dimension === '2d' ? primaryTexture.source : null;
+const scaleW = primaryImage !== null ? primaryImage.width : 0;
+const scaleH = primaryImage !== null ? primaryImage.height : 0;
+```
+
+The emitted `primary_texture` is `std::optional<Ref<Texture2D>>`. Its source becomes an optional
+variant of `Ref<VoxelGrid>`, `Ref<TextureSource>`, `Ref<ExternalTexture>`, `Ref<Bitmap>`,
+`Ref<CompressedImageResource>`, `Ref<RenderTarget>` and `Ref<ImageResource>`. Each actual emitted
+owner already declares `double width` and `double height`. After checking the optional, the
+formatter incorrectly reads `primary_image.value().width` and `.height` on the variant itself.
+This is a common-member projection failure on an ordinary value variant, like the cube-image
+site above; it needs no outcome discriminant, host capability binding or new image fields.
+
+The same generated inventory already shows the required operation in
+`flight/texture/texture.hpp`'s `get_texture_width`: after its absence check, it returns
+`std::visit([](const auto& value) { return value->width; }, source.value())`. The formatter needs
+that active-owner read for each dimension, retaining its own zero fallback. The texture helper's
+minus-one fallback is a different contract; replacing the formatter's captured source with repeated
+texture-source lookups is not evidence of the same read order or source selection.
+
+Read the first page's texture/source once, preserve absence, then read width followed by height
+from the same retained owner. The base `TextureSource` alternative carries an open resolver kind;
+dispatch must accept that arm as well as the concrete owners, without requiring a Bitmap or known
+kind, copying dimensions into a base object, consulting an erased Any value, or fabricating a size.
+Metrics, page count/order, glyph and kerning iteration, and the shared kerning scratch pair must
+keep their source behavior.
+
+This winning failure is in `formatBitmapFontFnt`, not in the parser. The module also contains the
+FNT field/number readers and parser that builds the neutral record and resolves page atlases;
+none was rewritten or declared repaired here. Four recorded header failures remain failing and
+link this request: `_internal_index.hpp`, `bitmap_font_detect.hpp`, `bitmap_font_fnt.hpp` and
+`contract.hpp` in `flight/bitmapfont_formats/`. Their diagnostics and prior include-guard repair
+provenance are retained. No C++ input changed, so no unchanged native rerun or parser-functionality
+claim was made.
