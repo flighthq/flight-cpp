@@ -169,7 +169,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 140 | `no-viable-conversion-cef6403d` | 3 | 3D | compiler | a value is passed where its declared type cannot receive it |
 | 141 | `no-viable-conversion-dc893fc7` | 1 | GL | binding (applied) | absent WebGL `srcOffset` passed where the host declared a plain defaulted size *(G2: 1/1 pass)* |
 | 142 | `no-viable-conversion-eabaf455` | 1 | 3D | compiler | a value is passed where its declared type cannot receive it |
-| 143 | `no-viable-conversion-f7267dc5` | 1 | ANIM | compiler | a value is passed where its declared type cannot receive it |
+| 143 | `no-viable-conversion-f7267dc5` | 1 | ANIM | compiler | G2: recorded 0/1 retained; Spine JSON shared transform preset has anonymous owner, Bone2D slot is nominal; existing request/no rerun |
 | 144 | `other-1e3a0d33` | 1 | ANIM | source fix; compiler follow-ons | G2: 0/1; typed preset owners fix conditional, now optional Record detail; nominal Bone2D store still owed |
 | 145 | `other-4703cbbe` | 1 | 3D | compiler | G2: 0/1; parsed JSON is cast to a nominal glTF document; existing assertion request extended |
 | 146 | `other-5dfe27ec` | 1 | ANIM | compiler | G2: 0/1; erased display-array iteration; collector/derived attachment/full skin algorithms remain refused |
@@ -3082,13 +3082,27 @@ has not been executed; there is no SDL/GL here.
 - first failure at: `flight/scene3d/scene_material.hpp:94`
 - example: `no viable conversion from 'optional<variant<shared_ptr<SpecularGlossinessPbrMaterial>, shared_ptr<VertexColorMaterial>, shared_ptr<UnlitMaterial>, shared_ptr<StandardPbrMaterial>, shared_ptr<CustomShaderMaterial>, shared_ptr<BlinnPhongMaterial>, shared_ptr<LambertMaterial>, shared_ptr<DepthMaterial>`
 
-### 143. `no-viable-conversion-f7267dc5` — 1 header(s)
+### 143. `no-viable-conversion-f7267dc5` — 1 header(s), compiler route
 
-- cause: a value is passed where its declared type cannot receive it
-- lanes: ANIM
-- fix route: compiler
-- first failure at: `flight/skeleton2d_formats/spine_json_bones_handler.hpp:36`
-- example: `no viable conversion from 'Ref<reflection_rotation_scale_translation_9dff6858eecb0eb4>' to 'Ref<TransformInherit2D>'`
+**Recorded 0/1 pass, 1 fail retained; docs-only, unchanged C++ not rerun.**
+`flight/skeleton2d_formats/spine_json_bones_handler.hpp:36` still rejects the anonymous shared
+reflection_rotation_scale_translation preset Ref entering nominal Ref<TransformInherit2D>.
+
+The exact source createPlaceholderBone2D69-82 sets transformMode to TransformMode2D.Normal.
+[Existing satisfies-table coverage](compiler-requests/satisfies-record-member-carrier.md#g2-spine-json-bones-store-the-original-shared-preset-into-a-nominal-slot)
+already names this module; it now records this initializer, all five retained helper returns and the
+independent four-axis/shared-owner requirement. No local annotation or declaration makes those
+unrelated native owners compatible; copying flags or narrowing Bone2D storage loses the source contract.
+
+The parser remains omitted at the existing [erased-array/null-test boundary](compiler-requests/erased-array-element-reading.md),
+with a [retained missing-callee call](compiler-requests/retained-declaration-calls-omitted-callee.md) and
+[JSON/missing-key reads](compiler-requests/parsed-json-object-shape-reads.md). These are inspected only,
+not freshly measured next diagnostics or link results. Preserve one positional source-authored recovery
+bone per malformed entry, first report then append, latest preceding named parent, complete numeric
+fallback domain, original preset identity, context array and reader alias. No fake parser/bone, empty
+success, copied owner or narrower JSON/schema is supplied. Only the existing request appendix, this
+slice and two compact owned root/row lines change; shared table/C++/runtime/repairs/patches/manifest/pins,
+foreign rows and the earlier Spine binary disposition are unchanged.
 
 ### 144. `other-1e3a0d33` — G2 recheck of 1 header(s)
 
