@@ -555,6 +555,44 @@ Those changed diagnostics remain failures. Only the four owned rows and affected
 the existing two unowned coverage rows and historical G1 totals are retained without recompiling them.
 No global sweep or upstream test port was performed, and no refused lister body became available.
 
+## G2 glTF transmission volume: a declaration also fails the unused-header link
+
+At compiler `806d257` / Flight `a627849`, the one-header group
+`undeclared-identifier-f6affb68` fails at `scene3d_formats/gltf_transmission_volume.hpp:166`.
+The exact `NOT GENERATED: function resolveTransmissionVolume -- source line 72` marker remains;
+three retained direct calls occur in the transmission, volume and IOR handlers' apply lambdas;
+no declaration or definition supplies the resolver.
+
+The existing guarded declaration engine matched this actual header once in a temporary overlay
+and was idempotent. The retained readonly context parameter, numeric index, source return type
+and concrete `target.value()->...` writes fix the exact signature:
+
+```cpp
+std::optional<flight::Ref<flight::types::TransmissionVolumePbrExtension>> resolve_transmission_volume(
+    flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfExtensionContext>>>> context,
+    double index);
+```
+
+A real C++20 translation unit including that repaired header and returning zero from main
+compiled to an object. **Its unused-header positive link failed**, with exactly one undefined
+symbol: `flight::scene3d_formats::resolve_transmission_volume` at that readonly context/double
+signature. The linker references all three original globally initialized handler callbacks.
+Main never invokes them. This is a failed prerequisite, not a successful called-function
+negative-link check or a usable declaration repair.
+
+The candidate is rejected; no registry entry, generated header/manifest change or replacement
+initializer is carried. Omission handling must account for the retained global callbacks, or
+faithful owner-preserving body emission must supply the resolver. The existing
+[narrower-row-owner request](assertion-to-undeclared-row-member.md#g2-gltf-transmission-volume-and-ior-need-the-same-retained-descriptor)
+records its actual PbrExtension-to-concrete descriptor and material attachment/finder boundaries.
+There is no fake volume, null substitute, copied owner or closed built-in material family.
+
+The recorded production result remains **0/1 passing**, at the original undeclared-call
+diagnostic. Only this owned row/cluster and existing requests change. No production C++ input
+changed, so no normal generation or unchanged native/global rerun was performed. The measured
+object/link check used only the scratch declaration candidate and the installed SDK/override
+includes. No transmission, volume, IOR or material-import functionality is claimed.
+
 ## G2 glTF animations: a declaration fails the unused-header link prerequisite
 
 At compiler `806d257` / Flight `a627849`, the four-header G1 group

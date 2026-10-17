@@ -250,7 +250,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 221 | `undeclared-identifier-e7bf11f9` | 1 | WGPU | runtime | the emitted code names `draw_wgpu_scale9_sprite`, which nothing declares |
 | 222 | `undeclared-identifier-ebf3999b` | 1 | GL | runtime | the emitted code names `gl_radial_blur_effect_runner`, which nothing declares |
 | 223 | `undeclared-identifier-f020c1f7` | 1 | GL | runtime | the emitted code names `gl_white_balance_effect_runner`, which nothing declares |
-| 224 | `undeclared-identifier-f6affb68` | 1 | 3D | runtime | the emitted code names `resolve_transmission_volume`, which nothing declares |
+| 224 | `undeclared-identifier-f6affb68` | 1 | 3D | [compiler request](compiler-requests/retained-declaration-calls-omitted-callee.md) | global transmission/volume/IOR callbacks retain a refused owner resolver; declaration fails unused-header link |
 | 225 | `undeclared-identifier-f91f1e72` | 1 | 2D | runtime | the emitted code names `get_gl_text_label_data`, which nothing declares *(builder4/E0a)* |
 | 226 | `undeclared-identifier-fcbdae42` | 1 | 2D | runtime | the emitted code names `draw_canvas_text_label`, which nothing declares |
 | 227 | `variant-cast-7dd5385f` | 1 | GL | compiler | a functional-style cast is applied to a variant the target type cannot take |
@@ -3174,12 +3174,11 @@ became this one. They add no new cause and no new decision.
 
 ### 224. `undeclared-identifier-f6affb68` — 1 header(s)
 
-- cause: the emitted code names `resolve_transmission_volume`, which nothing declares
-- subject: `resolve_transmission_volume`
-- lanes: 3D
-- fix route: runtime
-- first failure at: `flight/scene3d_formats/gltf_transmission_volume.hpp:166`
-- example: `use of undeclared identifier 'resolve_transmission_volume'`
+- Cause: three globally initialized transmission/volume/IOR handler apply callbacks call `resolve_transmission_volume`, refused as `cpp-structural-assertion-owner-unproven` at PbrExtension-to-TransmissionVolumePbrExtension recovery. The actual base lacks the nine concrete attenuation/ior/thickness/transmission/map cells.
+- Route: compiler, [existing retained-callee request](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-gltf-transmission-volume-a-declaration-also-fails-the-unused-header-link), with [existing narrower-row-owner request](compiler-requests/assertion-to-undeclared-row-member.md#g2-gltf-transmission-volume-and-ior-need-the-same-retained-descriptor). The current extension union already retains built-in and open base arms; kind equality alone does not recover the original concrete owner. Material find/attach helpers are separately refused at Standard/Extended material recovery.
+- Exact declaration probe: optional Ref<TransmissionVolumePbrExtension> from the retained readonly GltfExtensionContext row and double index. Existing marker/live-call/no-definition guard matches this actual header once and is idempotent; no new mechanism is needed to match it. The real unused include compiles to an object, but its POSITIVE link fails on exactly the missing resolver, referenced from all three callbacks. This fails the repair prerequisite and is not a called-function negative-link pass; candidate rejected.
+- Preserve one shared real descriptor across arbitrary handler order, original material/texture owners and legitimate standard-material promotion, absent-extension/material branches, factory/white/infinite-distance/zero-thickness/1.5-IOR defaults, and writes before texture-resolution callbacks or exceptions. No fake/empty volume, null substitute, copied base or narrowed open family is carried.
+- Recorded result remains **0/1 pass, 1 fail** at `flight/scene3d_formats/gltf_transmission_volume.hpp:166`, original undeclared-call diagnostic unchanged. One owned row/cluster gains both request links. No production C++/source/repair/manifest change; no normal generation or unchanged native/global rerun. No positive unused-header link, qualified negative link or callable material-import behavior is claimed. Foreign worklist rows/clusters and historical G1 totals are unchanged.
 
 ### 225. `undeclared-identifier-f91f1e72` — 1 header(s) *(builder4/E0a)*
 

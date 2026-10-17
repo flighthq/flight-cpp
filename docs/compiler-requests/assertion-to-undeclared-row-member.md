@@ -120,6 +120,42 @@ The bounded declaration repairs described in
 address only name visibility for the standard and unlit callbacks. They supply no material refinement,
 texture list or extension registration body. All three owner-recovery refusals remain open here.
 
+## G2 glTF transmission, volume and IOR need the same retained descriptor
+
+At compiler `806d257` / Flight `a627849`, `gltfTransmissionVolume.ts:72` refuses
+`resolveTransmissionVolume` as `cpp-structural-assertion-owner-unproven`. The source finder returns
+`PbrExtension | null`; its present result is asserted to `TransmissionVolumePbrExtension`. The
+emitted base has only the runtime slot and `kind`, while the concrete owner declares
+attenuationColor, attenuationDistance, ior, thickness, thicknessMap, thicknessMapUvSet,
+transmission, transmissionMap and transmissionMapUvSet. None of those cells is proved by the base.
+
+The current `PbrExtensionValue` already retains concrete built-in references alongside the open
+base arm, and `ExtendedPbrMaterial.extensions` stores that union. This is not a request to add
+another concrete union alias. The source finder still returns the base type; its kind comparison
+does not recover a wider owner. The separate `findGltfPbrExtension` and `attachGltfPbrExtension`
+bodies are also refused at MaterialLike-to-Standard/Extended owner assertions. Retyping only the
+resolver return, selecting a built-in arm from the string, copying a base into a fresh descriptor,
+or rejecting the open extension arm would not preserve the original objects and domain.
+
+Transmission, volume and IOR are three independent glTF handlers that fill ONE descriptor, in
+whatever order they run. The resolver returns the existing descriptor, or creates and attaches
+one fresh real descriptor when none exists; a material that cannot carry it yields null.
+The attachment helper promotes a standard material once, preserving its standard property/map
+references and metadata; an already extended material retains its existing extensions, and a
+duplicate kind is not appended. An unlit/specular-glossiness material must not be silently coerced.
+
+The transmission handler writes its factor (default zero) before resolving its linear texture.
+The volume handler packs the supplied/default white attenuation color, writes distance (default
+positive infinity) and thickness (default zero), then resolves its linear thickness texture.
+IOR defaults to 1.5. The same descriptor, texture owners, partial writes before a throwing resolver,
+handler order and factory defaults must survive. An empty volume, repeated fresh descriptors or
+unconditional null would discard the composition this source implements.
+
+The [retained-callee qualification](retained-declaration-calls-omitted-callee.md#g2-gltf-transmission-volume-a-declaration-also-fails-the-unused-header-link)
+also rejects a declaration-only candidate: its actual unused header compiles to an object but
+cannot link because all three globally initialized callbacks retain the missing resolver body.
+No repair, substitute body, narrowed material domain or material-owner redesign is carried.
+
 ## G2 Interaction graph bounds need the original node's 2D capability
 
 At compiler `806d257` / Flight `a627849`, `interaction/hit_tests.hpp:88` marks
