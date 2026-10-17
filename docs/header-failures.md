@@ -36,7 +36,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 7 | `call-has-no-matching-47410fe2` | 16 | 2D, 3D | runtime (fixed) | Number is now a callable conversion object; G2 recheck: 2 pass, 14 fail at later compiler diagnostics |
 | 8 | `other-40da43f7` | 16 | 2D, 3D, ANIM | compiler | an optional<Record<...>> is initialised from a shape that is not its declared storage |
 | 9 | `static-cast-assertion-9674a66c` | 15 | 2D | compiler | a TypeScript `as` on `JSON.parse` is emitted as a `static_cast` from `JsonValue` to an unrelated `Ref<T>` *(request filed)* |
-| 10 | `call-has-no-matching-076d207f` | 14 | WGPU | compiler | the emitted call to `create_pipeline_layout` matches no declared overload |
+| 10 | `call-has-no-matching-076d207f` | 14 | WGPU | runtime (fixed) | typed `create_pipeline_layout` descriptor overload; G2 recheck: 0 pass, 14 fail at `create_bind_group_layout` |
 | 11 | `other-e9936ce6` | 13 | 3D | compiler | a pair literal the declared element type spells as `std::tuple<A, B>` is emitted as `flight::Array{...}`, so class-template ded... *(request filed)* |
 | 12 | `call-has-no-matching-d6950545` | 12 | 2D, CORE | compiler | the emitted call to `get_node_child_count` matches no declared overload |
 | 13 | `no-viable-conversion-9c3803c5` | 9 | 2D, WGPU | compiler | a value is passed where its declared type cannot receive it |
@@ -125,7 +125,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 96 | `variant-cast-37507e07` | 2 | 3D | compiler | a functional-style cast is applied to a variant the target type cannot take |
 | 97 | `call-has-no-matching-00dc04ad` | 1 | 2D | compiler | the emitted call to `get_texture_uv_matrix` matches no declared overload |
 | 98 | `call-has-no-matching-35224a3f` | 1 | 3D | compiler | the emitted call to `gl_uniform_type_name` matches no declared overload |
-| 99 | `call-has-no-matching-4c12e411` | 1 | WGPU | compiler | the emitted call to `create_bind_group_layout` matches no declared overload |
+| 99 | `call-has-no-matching-4c12e411` | 15 | WGPU | compiler | `create_bind_group_layout` entries are emitted as anonymous nested owners inside an untyped braced descriptor *(request filed)* |
 | 100 | `call-has-no-matching-76a6a61a` | 1 | 2D | compiler | the emitted call to `get_if` matches no declared overload |
 | 101 | `call-has-no-matching-7f4ae181` | 1 | 2D | compiler | the emitted call to `add_scene_2d_used_kind` matches no declared overload |
 | 102 | `call-has-no-matching-8a1f3a33` | 1 | GL | compiler | the emitted call to `row_get` matches no declared overload |
@@ -431,14 +431,25 @@ their replacement failure clusters changed here; `previousCluster` preserves the
 - example: `no matching conversion for static_cast from 'JsonValue' to 'flight::Ref<flight::types::LottieDocument>'`
 - compiler request: `docs/compiler-requests/json-parse-assertion-static-cast.md`
 
-### 10. `call-has-no-matching-076d207f` — 14 header(s)
+### 10. `call-has-no-matching-076d207f` — G2 recheck of 14 headers
 
-- cause: the emitted call to `create_pipeline_layout` matches no declared overload
-- subject: `create_pipeline_layout`
-- lanes: WGPU
-- fix route: compiler
-- first failure at: `flight/render_wgpu/wgpu_shader.hpp:54`
-- example: `no matching member function for call to 'create_pipeline_layout'`
+Every `create_pipeline_layout` site passes one field, `.bind_group_layouts`, as an
+`Array<WgpuBindGroupLayout>`: no anonymous owner and no field order to get wrong. So the host now
+declares `WgpuPipelineLayoutDescriptor` (`bind_group_layouts`, `label`) and a typed overload beside the
+variadic one, as `create_texture` already has. Its body is still `unavailable`; nothing is implemented.
+
+G2: **0/14 compile, 14 fail**, all attempted at `-j1` with g++ 15.2. The sweep's Clang 22 is not
+installed in this workspace, so the diagnostic text below is g++'s. `flight/host_sdl/wgpu.hpp` still
+compiles on its own, and the passing `flight/effects_wgpu/wgpu_effect_pass.hpp`, which has two
+`create_pipeline_layout` sites, still passes, as do the three carry headers in `carry-effects-wgpu`.
+All 14 now fail at the next call in `wgpu_shader.hpp`:
+
+| follow-on cluster | headers | first failure | cause |
+| --- | --- | --- | --- |
+| `call-has-no-matching-4c12e411` | 14 | `flight/render_wgpu/wgpu_shader.hpp:98` | `create_bind_group_layout` entries are anonymous nested owners for the bound `GPUBindGroupLayoutEntry` |
+
+That shape is the [descriptor literal request](compiler-requests/external-descriptor-literal-construction.md),
+so no second request is filed.
 
 ### 11. `other-e9936ce6` — 13 header(s)
 
@@ -1212,14 +1223,16 @@ G2's scoped-only-when-changed rule. Only these owned rows gained request links a
 - first failure at: `flight/scene3d_gl/enable_gl_scene_3d_custom_shader_guards.hpp:85`
 - example: `no matching function for call to 'gl_uniform_type_name'`
 
-### 99. `call-has-no-matching-4c12e411` — 1 header(s)
+### 99. `call-has-no-matching-4c12e411` — 15 header(s)
 
-- cause: the emitted call to `create_bind_group_layout` matches no declared overload
+- cause: the `create_bind_group_layout` entries literal is emitted as anonymous nested owners for the bound `GPUBindGroupLayoutEntry`, inside an untyped braced descriptor
 - subject: `create_bind_group_layout`
 - lanes: WGPU
 - fix route: compiler
+- why this route: the same emission as the descriptor literal request. It includes the 14 headers from `call-has-no-matching-076d207f` that now first fail at `flight/render_wgpu/wgpu_shader.hpp:98`
 - first failure at: `flight/render_wgpu/wgpu_fullscreen_pass.hpp:148`
 - example: `no matching member function for call to 'create_bind_group_layout'`
+- compiler request: `docs/compiler-requests/external-descriptor-literal-construction.md`
 
 ### 100. `call-has-no-matching-76a6a61a` — 1 header(s)
 

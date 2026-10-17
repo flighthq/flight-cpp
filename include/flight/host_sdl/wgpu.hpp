@@ -85,6 +85,7 @@ struct WgpuSamplerTag;
 struct WgpuShaderModuleTag;
 struct WgpuTextureTag;
 struct WgpuTextureViewTag;
+struct WgpuPipelineLayoutDescriptor;
 struct WgpuTextureDescriptor;
 
 namespace detail {
@@ -161,6 +162,10 @@ class WgpuObject final {
   [[nodiscard]] WgpuObject<WgpuPipelineLayoutTag> create_pipeline_layout(Arguments&&...) const {
     return unavailable<WgpuPipelineLayoutTag>("createPipelineLayout");
   }
+
+  [[nodiscard]] WgpuObject<WgpuPipelineLayoutTag> create_pipeline_layout(
+      WgpuPipelineLayoutDescriptor descriptor) const
+    requires std::same_as<Tag, WgpuDeviceTag>;
 
   template <typename... Arguments>
     requires std::same_as<Tag, WgpuDeviceTag>
@@ -520,6 +525,20 @@ struct WgpuBindGroupLayoutDescriptor final {
   Iterable<WgpuBindGroupLayoutEntry> entries;
   std::optional<String> label;
 };
+
+// GPUPipelineLayoutDescriptor.
+struct WgpuPipelineLayoutDescriptor final {
+  Iterable<WgpuBindGroupLayout> bind_group_layouts;
+  std::optional<String> label;
+};
+
+template <typename Tag>
+inline WgpuObject<WgpuPipelineLayoutTag> WgpuObject<Tag>::create_pipeline_layout(
+    WgpuPipelineLayoutDescriptor) const
+  requires std::same_as<Tag, WgpuDeviceTag>
+{
+  return unavailable<WgpuPipelineLayoutTag>("createPipelineLayout");
+}
 
 // Buffer and texture upload dictionaries are values owned by the selected WebGPU provider. The
 // runtime retains Web IDL dictionary presence and iterable inputs; validation and default
