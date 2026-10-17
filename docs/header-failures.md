@@ -445,7 +445,7 @@ The other rows remain failures and have been reclassified by their newly exposed
 | `call-has-no-matching-4f8413e4` | 9 | `flight/scene3d_formats/collada_xml.hpp:44` | a numeric builtin used as a callback is emitted as the overloaded std::isfinite name |
 | `undeclared-identifier-fb3e0e45` | 3 | `flight/scene2d_formats/svg_color.hpp:134` | parseSvgColor is refused for unproven optional member storage, but retained resolveSvgColor still calls it; [subsequent exact declaration qualification](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-svg-color-parser-declaration-and-remaining-style-consumers) clears this missing name, with final 1/3 and two style follow-ons below |
 | `no-viable-conversion-a21c880d` | 1 | `flight/scene2d_formats/svg_style.hpp:53` | a numeric optional-chain length is erased to optional<Any> before assignment to double |
-| `no-viable-conversion-deeedfb9` | 1 | `flight/scene2d_formats/svg_transform.hpp:52` | a readonly Matrix row is converted through a writable row while forming a readonly MatrixLike argument |
+| `no-viable-conversion-deeedfb9` | 1 | `flight/scene2d_formats/svg_transform.hpp:52` | a readonly Matrix row is converted through a writable row while forming a readonly MatrixLike argument; [subsequent exact readonly Matrix repair](compiler-requests/readonly-view-to-writable.md#g2-svg-transform-preserves-the-guarded-readonly-matrix) passes 1/1 without changing parser bytes |
 
 The nine COLLADA failures are covered by the one new
 [callable numeric predicate request](compiler-requests/builtin-numeric-predicate-callback.md).
@@ -474,6 +474,25 @@ That cluster now has three current members; the preexisting `svg_style.hpp` row 
 or edited. The preceding 2/16 result and table counts remain the historical Number-callback check.
 Only the three owned header rows, removed missing-name cluster and receiving style-cluster
 membership/coverage change. Existing G1 provenance and all foreign rows remain intact.
+
+#### G2 SVG transform readonly Matrix repair
+
+The subsequent owned one-header check completes **1 attempted / 1 pass / 0 fail /
+0 unattempted**, Clang 22.1.8, jobs 1. The bounded
+[readonly Matrix repair](compiler-requests/readonly-view-to-writable.md#g2-svg-transform-preserves-the-guarded-readonly-matrix)
+removes one invalid writable intermediate and passes the same guarded readonly row to
+`decomposeMatrixToTransform2D`. MatrixLike aliases the same native Matrix owner. Normal
+pinned scoped generation reproduces the whole tested header; actual apply-function native
+compile/link/run pass for null, translation, live view/rotation, reflection/skew and unchanged
+source/target owners. Readonly-to-writable remains unavailable; no runtime checks are weakened.
+
+`svg_transform.hpp` passes and its obsolete `no-viable-conversion-deeedfb9` cluster is removed.
+The row retains its G1 Number group and records the resolved intermediate cause. The existing
+[indexed fallback request](compiler-requests/out-of-range-array-index-widened-to-null.md#g2-svg-transform-empty-scale-arguments-retain-the-final-one-default)
+records the separately inspected `scale()` final-one default gap. No parser bytes change or
+native parser/viewport/import/gradient/painting execution is claimed. This Matrix conversion
+is distinct from SVG style's numeric optional-chain result. The preceding Number 2/16 result,
+table counts and all foreign rows/records remain historical and unchanged.
 
 ### 8. `other-40da43f7` — 16 header(s)
 
