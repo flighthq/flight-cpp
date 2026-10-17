@@ -128,7 +128,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 99 | `call-has-no-matching-4c12e411` | 15 | WGPU | compiler | `create_bind_group_layout` entries are emitted as anonymous nested owners inside an untyped braced descriptor *(request filed)* |
 | 100 | `call-has-no-matching-76a6a61a` | 1 | 2D | compiler | the emitted call to `get_if` matches no declared overload |
 | 101 | `call-has-no-matching-7f4ae181` | 1 | 2D | compiler | the emitted call to `add_scene_2d_used_kind` matches no declared overload |
-| 102 | `call-has-no-matching-8a1f3a33` | 1 | GL | compiler | the emitted call to `row_get` matches no declared overload |
+| 102 | `call-has-no-matching-8a1f3a33` | 1 | GL | compiler | a narrowed `Texture2D` reference read through structural `row_get` *(existing request extended)* |
 | 103 | `call-has-no-matching-8d9de718` | 1 | PLAT | compiler | the emitted call to `collect_spatial_candidates` matches no declared overload |
 | 104 | `call-has-no-matching-b3c6bcee` | 1 | GL | compiler | the emitted call to `log_once` matches no declared overload |
 | 105 | `call-has-no-matching-c287f892` | 1 | ANIM | compiler | the emitted call to `named_properties` matches no declared overload |
@@ -2407,6 +2407,20 @@ shaded rendering while the guard has no body; no global/native baseline was reru
 - fix route: compiler
 - first failure at: `flight/render_gl/gl_external_texture.hpp:51`
 - example: `no matching function for call to 'row_get'`
+- existing request extended: [collapsed union record member access](compiler-requests/collapsed-union-record-member-access.md)
+
+`getExternalTextureSource` narrows `TextureLike` on `dimension === '2d'`, and the emitter correctly selects
+`std::get<2>(texture)`. It then reads `source` with a structural `row_get` on that nominal
+`Ref<Texture2D>` (`could not match 'StructuralRef' against 'std::shared_ptr'`), where `->source` is the
+valid read. Behind it, `source?.kind` reads the seven-owner `TextureSourceValue` variant, and
+`as ExternalTexture` is a checked arm narrowing; both are recorded in the request so a fix keeps them
+faithful.
+
+Nothing is patched. A TypeScript restructuring would need a scoped render-gl regeneration that re-hashes
+headers under peer-owned overrides, and a fake source, copied owner or narrowed domain would misstate the
+lookup.
+
+**G1 status retained: 0/1 pass, 1 fail.** No code changed, so no recompile was run.
 
 ### 103. `call-has-no-matching-8d9de718` — 1 header(s)
 
