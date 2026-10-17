@@ -80,7 +80,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 51 | `static-assertion-00a0e75d` | 4 | 3D, WGPU | compiler | a runtime static assertion rejects the emitted shape |
 | 52 | `undeclared-identifier-0fc9e20f` | 4 | 2D | declaration repair (applied) | omitted artboard-import-context declaration supplied; G2: 0 pass, 4 fail at the next omitted callee; function remains unlinkable |
 | 53 | `undeclared-identifier-69b85faa` | 4 | PLAT | declaration repair (applied) | omitted untrack callee declaration supplied; G2: 0 pass, 4 fail at the next omitted callee; function remains unlinkable |
-| 54 | `undeclared-identifier-7d64d9c1` | 4 | GL | runtime | the emitted code names `gl_custom_shader_effect_runner`, which nothing declares |
+| 58 | `undeclared-identifier-7d64d9c1` | 4 | GL | compiler | the emitter refuses the `glCustomShaderEffectRunner` binding and its resolver but still emits the registration call that passes... *(request filed)* |
 | 55 | `undeclared-identifier-862d162a` | 4 | 3D | runtime | the emitted code names `build_gltf_animations`, which nothing declares |
 | 56 | `undeclared-identifier-f2b46b01` | 4 | 3D | runtime | the emitted code names `list_standard_pbr_material_textures`, which nothing declares |
 | 57 | `call-has-no-matching-3b2f72dd` | 3 | PLAT | compiler | the emitted call to `is_optional_number` matches no declared overload |
@@ -1081,14 +1081,16 @@ callers, so the follow-on is the same omission class rather than a new defect.
 | --- | --- | --- | --- |
 | `undeclared-identifier-f2f09e07` | 4 | `flight/midi/midi_subscription.hpp:198` | compiler: `detachMidiSubscription` refused at an unrepresented `Task<MidiSubscriptionDetachOutcome>` domain; its three delegators pass concrete subscription refs where `Entity` is declared and the emitted structs inherit only `ReferenceEnabled`; [existing request](compiler-requests/task-of-union-domain-unrepresented.md) |
 
-### 54. `undeclared-identifier-7d64d9c1` — 4 header(s)
+### 58. `undeclared-identifier-7d64d9c1` — 4 header(s)
 
-- cause: the emitted code names `gl_custom_shader_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glCustomShaderEffectRunner` binding and its resolver but still emits the registration call that passes both
 - subject: `gl_custom_shader_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: a runtime definition would fake the effect runner; the refusal names an owner-preserving carrier as the compiler-side answer
 - first failure at: `flight/effects_gl/gl_custom_shader_effect.hpp:183`
 - example: `use of undeclared identifier 'gl_custom_shader_effect_runner'`
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
 ### 55. `undeclared-identifier-862d162a` — 4 header(s)
 
