@@ -28,14 +28,14 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | # | cluster | headers | lanes | fix route | cause |
 | --- | --- | --- | --- | --- | --- |
 | 1 | `call-has-no-matching-9c08d665` | 116 | WGPU | binding | the emitted braced descriptor cannot deduce the host binding's variadic template, so the WGPU command-encoder binding needs the... |
-| 2 | `missing-member-b1a6d5cf` | 34 | 2D | compiler | scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined |
+| 2 | `missing-member-b1a6d5cf` | 34 | 2D | compiler | scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined *(request filed)* |
 | 3 | `in-operator-not-lowered-b1eae4af` | 31 | 2D, GL, PLAT, WGPU | compiler | the TypeScript `in` operator is emitted verbatim as C++ `in` |
 | 4 | `undeclared-identifier-993e82f1` | 29 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(builder4/E0a)* |
 | 5 | `call-has-no-matching-3882b3e9` | 27 | 2D, 3D, TEXT | binding | same braced-descriptor shape against the device binding's constrained variadic create_texture *(builder4/E0a)* |
 | 6 | `other-52e846a6` | 18 | ANIM | compiler | a value_type is combined with a three-alternative variant where the declared slot expects one alternative |
 | 7 | `call-has-no-matching-47410fe2` | 16 | 2D, 3D | compiler | the emitted call to `map` matches no declared overload |
 | 8 | `other-40da43f7` | 16 | 2D, 3D, ANIM | compiler | an optional<Record<...>> is initialised from a shape that is not its declared storage |
-| 9 | `static-cast-assertion-9674a66c` | 15 | 2D | compiler | a TypeScript `as` on `JSON.parse` is emitted as a `static_cast` from `JsonValue` to an unrelated `Ref<T>` |
+| 9 | `static-cast-assertion-9674a66c` | 15 | 2D | compiler | a TypeScript `as` on `JSON.parse` is emitted as a `static_cast` from `JsonValue` to an unrelated `Ref<T>` *(request filed)* |
 | 10 | `call-has-no-matching-076d207f` | 14 | WGPU | compiler | the emitted call to `create_pipeline_layout` matches no declared overload |
 | 11 | `other-e9936ce6` | 13 | 3D | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 12 | `call-has-no-matching-d6950545` | 12 | 2D, CORE | compiler | the emitted call to `get_node_child_count` matches no declared overload |
@@ -299,6 +299,7 @@ deleting or stubbing behaviour.
 - why this route: scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined
 - first failure at: `flight/scene2d_canvas/canvas_render_state.hpp:69`
 - example: `no member named 'get_canvas_render_state_runtime' in namespace 'scene2d_canvas'`
+- compiler request: `docs/compiler-requests/local-reexport-using-before-declaration.md`
 
 ### 3. `in-operator-not-lowered-b1eae4af` — 31 header(s)
 
@@ -366,6 +367,7 @@ deleting or stubbing behaviour.
 - why this route: an assertion between unrelated types is not a cast; the emitter must materialize the declared owner or refuse
 - first failure at: `flight/scene2d_formats/lottie_document.hpp:324`
 - example: `no matching conversion for static_cast from 'JsonValue' to 'flight::Ref<flight::types::LottieDocument>'`
+- compiler request: `docs/compiler-requests/json-parse-assertion-static-cast.md`
 
 ### 10. `call-has-no-matching-076d207f` — 14 header(s)
 
