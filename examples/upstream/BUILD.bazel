@@ -20,6 +20,14 @@ cc_binary(
     deps = [":sdl_host", "//:host_sdl_gl", "//:sdk_preview"],
 )
 
+cc_library(
+    name = "scene2d_host",
+    srcs = ["scene2d_host.cpp"],
+    hdrs = ["scene2d_host.hpp"],
+    tags = ["manual"],
+    deps = ["//:host_sdl_gl", "//:sdk_preview"],
+)
+
 cc_binary(
     name = "clock",
     srcs = ["clock.cpp"],
@@ -31,7 +39,7 @@ cc_binary(
     name = "collision",
     srcs = ["collision.cpp"],
     tags = ["manual"],
-    deps = [":sdl_host", "//:sdk_preview"],
+    deps = [":scene2d_host", "//:sdk_preview"],
 )
 
 cc_binary(

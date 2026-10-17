@@ -1,7 +1,14 @@
-// Native SDL port of @flighthq/example-collision.
+// Native SDL/Scene2D GL port of @flighthq/example-collision.
 // Source: .dependencies/flight/examples/packages/collision/src/app.ts
 
-#include "sdl_host.hpp"
+#include "scene2d_host.hpp"
+
+#include <flight/node/native_node2d_access.hpp>
+#include <flight/scene2d/display_object.hpp>
+#include <flight/shape/shape.hpp>
+#include <flight/shape/shape_commands.hpp>
+#include <flight/render/render_proxy.hpp>
+#include <flight/scene2d_gl/gl_shape_data.hpp>
 
 #include <flight/collision/manifold_2d.hpp>
 #include <flight/collision/shape_collision_2d.hpp>
@@ -20,23 +27,26 @@
 
 namespace {
 
-using flight::examples::Canvas;
-using flight::examples::Frame;
-using flight::examples::Point;
+using Frame = flight::examples::Scene2DFrame;
+using Point = flight::examples::ScenePoint;
+using Shape = flight::Ref<flight::types::Shape>;
 
 constexpr std::uint32_t color_idle = 0x4488ccffU;
 constexpr std::uint32_t color_colliding = 0xcc4444ffU;
 constexpr std::uint32_t color_mtv = 0x44cc44ffU;
 
 struct CircleCollider final {
+  Shape shape = flight::shape::create_shape();
   flight::Ref<flight::types::CollisionCircle2D> collider;
 };
 
 struct AabbCollider final {
+  Shape shape = flight::shape::create_shape();
   flight::Ref<flight::types::CollisionAabb2D> collider;
 };
 
 struct PolygonCollider final {
+  Shape shape = flight::shape::create_shape();
   flight::Ref<flight::types::CollisionPolygon2D> collider;
   double center_x{};
   double center_y{};
@@ -222,7 +232,14 @@ class CollisionExample final {
             rectangle(500.0, 310.0, 70.0, 55.0),
             regular_polygon(545.0, 325.0, 60.0, 5),
         },
-        manifold_(flight::collision::create_collision_manifold_2d()) {}
+        manifold_(flight::collision::create_collision_manifold_2d()) {
+    for (auto& collider : colliders_) std::visit([&](const auto& value) {
+      flight::node::add_node_child(root_, flight::node::native_node_2d(value.shape));
+    }, collider);
+    flight::node::add_node_child(root_, flight::node::native_node_2d(overlay_));
+  }
+
+  [[nodiscard]] flight::types::Node2D root() const { return root_; }
 
   void frame(const Frame& frame) {
     handle_drag(frame);
@@ -245,11 +262,40 @@ class CollisionExample final {
     }
     if (frame.smoke) verify_smoke(pair_tests, colliding, manifolds);
     for (std::size_t index = 0; index < colliders_.size(); ++index) {
-      draw_collider(frame.canvas, colliders_[index], colliding[index] ? color_colliding : color_idle);
+      draw_collider(colliders_[index], colliding[index] ? color_colliding : color_idle);
     }
+    flight::shape::clear_shape_commands(overlay_);
     for (const auto& record : manifolds) {
-      draw_arrow(frame.canvas, record.origin, record.normal, record.depth * 2.0);
+      draw_arrow(overlay_, record.origin, record.normal, record.depth * 2.0);
     }
+    flight::node::invalidate_node_local_transform(flight::node::native_node_2d(overlay_));
+  }
+
+  void verify_rendered(const flight::examples::Scene2DRenderFrame& frame) {
+    const auto runtime = flight::render_gl::get_gl_render_state_runtime(frame.state);
+    if (runtime->render_proxy_sources.size() != 6 || !runtime->context->shape_mesh_resources)
+      throw std::runtime_error("collision GL did not traverse the authored six-node scene");
+    const auto check_shape = [&](Shape shape, bool collider) {
+      const auto proxy = flight::render::get_render_proxy_2d(frame.state, flight::node::native_node_2d(shape));
+      if (!proxy || (*proxy)->source.shared_exact_object<flight::types::Shape>() != shape || !(*proxy)->renderer_data)
+        throw std::runtime_error("collision GL lost an original collider/MTV Shape owner");
+      const auto data = flight::scene2d_gl::get_gl_shape_data(*(*proxy)->renderer_data);
+      if (!data->meshes || data->meshes->empty() || (collider && data->meshes->size() != 2) ||
+          data->mesh_version != shape->entity_runtime_key.value()->local_content_id)
+        throw std::runtime_error("collision GL did not tessellate the current authored fill/stroke geometry");
+    };
+    for (const auto& collider : colliders_) std::visit([&](const auto& value) { check_shape(value.shape, true); }, collider);
+    check_shape(overlay_, false);
+    const auto pixel = [&](int x, int y) {
+      x = x * frame.width / 800; y = y * frame.height / 600;
+      return static_cast<std::size_t>(((frame.height - 1 - y) * frame.width + x) * 4);
+    };
+    const auto fill = pixel(210, 205), arrow = pixel(190, 190);
+    if (frame.pixels[fill] < 115 || frame.pixels[fill] > 150 || frame.pixels[fill + 1] > 70 ||
+        frame.pixels[fill + 2] > 80 || frame.pixels[arrow + 1] < 170 ||
+        frame.pixels[arrow] > 100 || frame.pixels[arrow + 2] > 100)
+      throw std::runtime_error("collision framebuffer lacks the colliding fill or generated MTV arrow");
+    if (frame.index != verified_frames_++) throw std::runtime_error("collision GL skipped a subject frame");
   }
 
  private:
@@ -296,73 +342,49 @@ class CollisionExample final {
     }
   }
 
-  static void draw_collider(Canvas& canvas, const Collider& collider, std::uint32_t color) {
-    if (const auto* circle_value = std::get_if<CircleCollider>(&collider)) {
-      canvas.fill_circle(
-          circle_value->collider->x,
-          circle_value->collider->y,
-          circle_value->collider->radius,
-          color,
-          0.6);
-      canvas.stroke_circle(
-          circle_value->collider->x,
-          circle_value->collider->y,
-          circle_value->collider->radius,
-          color,
-          2.0);
-      return;
-    }
-    std::vector<Point> points;
-    if (const auto* aabb = std::get_if<AabbCollider>(&collider)) {
-      const double width = aabb->collider->max_x - aabb->collider->min_x;
-      const double height = aabb->collider->max_y - aabb->collider->min_y;
-      canvas.fill_rectangle(
-          aabb->collider->min_x,
-          aabb->collider->min_y,
-          width,
-          height,
-          color,
-          0.6);
-      canvas.stroke_rectangle(
-          aabb->collider->min_x,
-          aabb->collider->min_y,
-          width,
-          height,
-          color,
-          2.0);
-      return;
-    } else {
-      const auto& polygon = std::get<PolygonCollider>(collider).collider->points;
-      points.reserve(polygon.size() / 2);
-      for (std::size_t index = 0; index < polygon.size(); index += 2) {
-        points.push_back({polygon[index], polygon[index + 1]});
+  static void draw_collider(const Collider& collider, std::uint32_t color) {
+    std::visit([&](const auto& value) {
+      const auto shape = value.shape;
+      flight::shape::clear_shape_commands(shape);
+      flight::shape::append_shape_begin_fill(shape, static_cast<double>(color), 0.6);
+      flight::shape::append_shape_line_style(shape, 2, static_cast<double>(color));
+      using Value = std::decay_t<decltype(value)>;
+      if constexpr (std::is_same_v<Value, CircleCollider>) {
+        flight::shape::append_shape_circle(shape, value.collider->x, value.collider->y, value.collider->radius);
+      } else if constexpr (std::is_same_v<Value, AabbCollider>) {
+        flight::shape::append_shape_rectangle(shape, value.collider->min_x, value.collider->min_y,
+            value.collider->max_x - value.collider->min_x, value.collider->max_y - value.collider->min_y);
+      } else {
+        const auto& points = value.collider->points;
+        flight::shape::append_shape_move_to(shape, points[0], points[1]);
+        for (std::size_t i = 2; i < points.size(); i += 2)
+          flight::shape::append_shape_line_to(shape, points[i], points[i + 1]);
+        flight::shape::append_shape_line_to(shape, points[0], points[1]);
       }
-    }
-    canvas.fill_polygon(points, color, 0.6);
-    canvas.polyline(points, color, 2.0, true);
+      flight::shape::append_shape_end_fill(shape);
+      flight::node::invalidate_node_local_transform(flight::node::native_node_2d(shape));
+    }, collider);
   }
 
-  static void draw_arrow(Canvas& canvas, Point origin, Point normal, double depth) {
+  static void draw_arrow(Shape shape, Point origin, Point normal, double depth) {
     const Point end{origin.x + normal.x * depth, origin.y + normal.y * depth};
-    canvas.line(origin.x, origin.y, end.x, end.y, color_mtv, 3.0);
     const Point perpendicular{-normal.y, normal.x};
-    canvas.line(
+    flight::shape::append_shape_line_style(shape, 3, static_cast<double>(color_mtv));
+    flight::shape::append_shape_move_to(shape, origin.x, origin.y);
+    flight::shape::append_shape_line_to(shape, end.x, end.y);
+    flight::shape::append_shape_move_to(shape,
         end.x - normal.x * 8.0 + perpendicular.x * 4.0,
-        end.y - normal.y * 8.0 + perpendicular.y * 4.0,
-        end.x,
-        end.y,
-        color_mtv,
-        3.0);
-    canvas.line(
-        end.x,
-        end.y,
+        end.y - normal.y * 8.0 + perpendicular.y * 4.0);
+    flight::shape::append_shape_line_to(shape, end.x, end.y);
+    flight::shape::append_shape_line_to(shape,
         end.x - normal.x * 8.0 - perpendicular.x * 4.0,
-        end.y - normal.y * 8.0 - perpendicular.y * 4.0,
-        color_mtv,
-        3.0);
+        end.y - normal.y * 8.0 - perpendicular.y * 4.0);
   }
 
+  flight::types::Node2D root_ = flight::scene2d::create_display_object();
   std::vector<Collider> colliders_;
+  Shape overlay_ = flight::shape::create_shape();
+  std::size_t verified_frames_{};
   flight::Ref<flight::types::CollisionManifold2D> manifold_;
   std::size_t dragged_{colliders_.size()};
   Point drag_offset_{};
@@ -373,11 +395,11 @@ class CollisionExample final {
 int main(int argc, char** argv) {
   try {
     CollisionExample example;
-    return flight::examples::SdlExample::run(
-        argc,
-        argv,
-        "Flight collision - SDL",
-        [&](const Frame& frame) { example.frame(frame); });
+    return flight::examples::Scene2DHost::run(
+        argc, argv, example.root(),
+        [&](const Frame& frame) { example.frame(frame); },
+        [&](const flight::examples::Scene2DRenderFrame& frame) { example.verify_rendered(frame); },
+        {.name = "collision", .title = "Flight collision - Scene2D GL"});
   } catch (const std::exception& error) {
     std::cerr << "collision example failed: " << error.what() << '\n';
     return EXIT_FAILURE;

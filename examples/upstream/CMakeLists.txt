@@ -5,7 +5,6 @@
 
 set(UPSTREAM_EXAMPLE_SOURCES
   clock.cpp
-  collision.cpp
   motionpath.cpp
   spatial.cpp
 )
@@ -17,6 +16,7 @@ endforeach()
 
 set(UPSTREAM_GL_EXAMPLE_SOURCES
   camera2d.cpp
+  collision.cpp
   scene3d.cpp
 )
 set(UPSTREAM_GL_EXAMPLES)
@@ -144,6 +144,14 @@ if(TARGET Flight::HostSdl)
   endforeach()
 
   if(TARGET Flight::HostSdlGl)
+    add_library(flight_cpp_upstream_scene2d_host STATIC scene2d_host.cpp)
+    target_link_libraries(flight_cpp_upstream_scene2d_host PUBLIC Flight::HostSdlGl Flight::SdkPreview)
+    target_include_directories(flight_cpp_upstream_scene2d_host PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+    flight_cpp_set_project_warnings(flight_cpp_upstream_scene2d_host)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+      target_compile_options(flight_cpp_upstream_scene2d_host PRIVATE
+        -Wno-conversion -Wno-missing-field-initializers -Wno-unused-parameter -Wno-unused-result)
+    endif()
     foreach(source IN LISTS UPSTREAM_GL_EXAMPLE_SOURCES)
       get_filename_component(example "${source}" NAME_WE)
       if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${source}")
@@ -157,6 +165,8 @@ if(TARGET Flight::HostSdl)
       )
       if(example STREQUAL "camera2d")
         target_link_libraries(flight_cpp_upstream_${example} PRIVATE flight_cpp_upstream_sdl_host)
+      elseif(example STREQUAL "collision")
+        target_link_libraries(flight_cpp_upstream_${example} PRIVATE flight_cpp_upstream_scene2d_host)
       endif()
       flight_cpp_set_project_warnings(flight_cpp_upstream_${example})
       if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
@@ -174,11 +184,16 @@ if(TARGET Flight::HostSdl)
         if(example STREQUAL "camera2d")
           add_test(NAME flight_cpp_upstream_${example}_smoke
             COMMAND flight_cpp_upstream_${example} --smoke --capture "${CMAKE_CURRENT_BINARY_DIR}/camera2d-smoke.ppm")
+        elseif(example STREQUAL "collision")
+          add_test(NAME flight_cpp_upstream_${example}_smoke
+            COMMAND flight_cpp_upstream_${example} --smoke --capture "${CMAKE_CURRENT_BINARY_DIR}/collision-smoke.ppm")
         else()
           add_test(NAME flight_cpp_upstream_${example}_smoke COMMAND flight_cpp_upstream_${example} --smoke)
         endif()
         if(example STREQUAL "scene3d")
           set(expected_smoke "scene3d-gl package smoke: rendered 3 verified frames, maximum non-background coverage [1-9][0-9]*")
+        elseif(example STREQUAL "collision")
+          set(expected_smoke "scene2d-gl collision smoke: rendered 3 verified frames, 6 nodes, maximum non-background coverage [1-9][0-9]*")
         else()
           set(expected_smoke "scene2d-gl package smoke: rendered 3 verified frames, 118 nodes, maximum non-background coverage [1-9][0-9]*")
         endif()
