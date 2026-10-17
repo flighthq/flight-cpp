@@ -438,3 +438,27 @@ The two entries expire when their source functions emit or their exact registrat
 body, empty texture list, material downcast, copied texture owner or closed PBR union is supplied.
 Their underlying Material-to-concrete assertions and the separate extended-material registration
 remain refused; see [the existing owner-recovery request](assertion-to-undeclared-row-member.md#g2-scene3d-material-texture-listers-retain-only-the-base-material-row).
+
+Normal focused generation at the exact locks lowered the required 1519-module dependency closure and
+wrote this partial header. Its difference from the committed inventory is exactly the two function
+declarations; the manifest records each repair on that one header. The three original owner-recovery
+refusal markers remain, and no package or refusal counter is promoted. Exact matching and reapplication
+as a fixed point were checked. The emission-repair suite passes **26 tests, zero failures, one skipped**
+generic C++ fixture because no default compiler is on PATH; that skip is separate from the actual-header
+native checks below.
+
+The actual repaired header compiles, links and runs in an unused-include program. A second program
+constructs the real registry and retains both original registration functions; compile-time checks
+confirm each function pointer fits Scene3DMaterialTextureLister, and object compilation succeeds.
+Linking that object fails on exactly `list_standard_pbr_material_textures` and
+`list_unlit_material_textures`, with no other undefined symbols. The declaration-only boundary is
+therefore preserved: registration and texture discovery through those callbacks remain unavailable.
+
+The completed changed-input four-header check is **1 pass, 3 fail, 0 unattempted**, one worker.
+`scene_material_texture_registry.hpp` passes. `_internal_index.hpp`, `contract.hpp` and
+`explain_scene_3d_resource_coverage.hpp` now fail at the last header's line 57, where a designated
+initializer targets the SceneCoverageEntry variant. They join the existing outcome-construction
+cause and [request](object-literal-into-outcome-variant.md#g2-scene3d-resource-coverage-returns-a-literal-into-the-outer-outcome-variant).
+Those changed diagnostics remain failures. Only the four owned rows and affected causes changed;
+the existing two unowned coverage rows and historical G1 totals are retained without recompiling them.
+No global sweep or upstream test port was performed, and no refused lister body became available.

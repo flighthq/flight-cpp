@@ -61,8 +61,9 @@ inline flight::types::MidiSubscriptionAttachOutcome attach_failure() {
 The four headers named above still fail, but at `midi_subscription.hpp:164` and on a different cause — a
 retained declaration calling a declaration the module omitted
 ([`retained-declaration-calls-omitted-callee.md`](retained-declaration-calls-omitted-callee.md)) — so the
-construct recorded here needs no further work. The initializer half of this request is closed; the
-`Task<MidiSubscriptionDetachOutcome>` refusal in the same module is the live half, filed as
+MIDI initializer recorded here needs no further work. The current SceneCoverageEntry case below
+still requires outcome-arm construction. The `Task<MidiSubscriptionDetachOutcome>` refusal in the
+same MIDI module is filed separately as
 [`task-of-union-domain-unrepresented.md`](task-of-union-domain-unrepresented.md).
 
 ## Expected behavior
@@ -105,3 +106,52 @@ inventory of log's instances; this request is the general one, and it now has tw
 None for midi: the module is refused anyway, so a supply would have to answer this *and* the refusal
 that names the module. No source patch is carried — the construct is an ordinary object literal whose
 correct lowering the emitter already has.
+
+## G2 Scene3D resource coverage returns a literal into the outer outcome variant
+
+At compiler `806d257` / Flight `a627849`, the material-texture callback declarations expose
+`explain_scene_3d_resource_coverage.hpp:57`. `createShortfallEntry` returns a SceneCoverageEntry;
+its source first looks up the catalog registration and creates `{ facet, kind, registry }`, then:
+
+```ts
+if (registration === null) {
+  return { ...base, coverage: fallback ? SceneCoverage.FallbackUnavailable : SceneCoverage.Unavailable };
+}
+return {
+  ...base,
+  coverage: fallback ? SceneCoverage.FallbackRemediable : SceneCoverage.Unregistered,
+  module: registration.module,
+  registrar: registration.registrar,
+};
+```
+
+The actual alias is a five-arm variant of references to the four shortfall structs plus
+SatisfiedSceneCoverageEntry. The emitted first return instead initializes the outer variant directly:
+
+```cpp
+return {.coverage = (fallback ? flight::types::scene_coverage->fallback_unavailable
+                             : flight::types::scene_coverage->unavailable)};
+```
+
+Clang reports `initialization of non-aggregate type 'flight::types::SceneCoverageEntry' with a
+designated initializer list`. Unlike the corrected MIDI literal above, the coverage discriminant is
+a conditional choosing between two declared arms. The lowering must preserve that choice, construct
+the selected concrete outcome and place its reference into the declared variant. Both returns must
+also retain `facet`, `kind` and `registry` from the source spread; those fields are absent from the
+emitted return, and the registered branch additionally requires the original catalog's module and
+registrar values. Removing the diagnostic by constructing an incomplete default outcome would not
+implement the source.
+
+This is compiler construction evidence, not a missing runtime constructor: C++ designated members
+cannot target std::variant itself, and the concrete arm carriers already exist. No source rewrite,
+runtime overload or coverage implementation is carried for this follow-on. The new owned rows retain
+this failure and link to this existing request. The existing two-row `other-86d0b50b` inventory family
+records the same SceneCoverageEntry diagnostic in GL coverage headers; those unowned rows are not
+changed or recompiled here.
+
+The declaration arc's exact four-header check completed at one worker: **1 pass, 3 fail,
+0 unattempted**. The registry header passes, while `scene3d_resources/_internal_index.hpp`,
+`contract.hpp` and `explain_scene_3d_resource_coverage.hpp` all fail on this designated initializer
+at line 57. These three measured rows join `other-86d0b50b`, making five current rows without changing
+or retesting the two original GL rows. All three remain failed and name this request in the product;
+this outcome construction is separate from the still-unimplemented material texture callbacks.

@@ -82,7 +82,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 53 | `undeclared-identifier-69b85faa` | 4 | PLAT | declaration repair (applied) | omitted untrack callee declaration supplied; G2: 0 pass, 4 fail at the next omitted callee; function remains unlinkable |
 | 58 | `undeclared-identifier-7d64d9c1` | 4 | GL | compiler | the emitter refuses the `glCustomShaderEffectRunner` binding and its resolver but still emits the registration call that passes... *(request filed)* |
 | 55 | `undeclared-identifier-862d162a` | 4 | 3D | runtime | the emitted code names `build_gltf_animations`, which nothing declares |
-| 56 | `undeclared-identifier-f2b46b01` | 4 | 3D | runtime | the emitted code names `list_standard_pbr_material_textures`, which nothing declares |
+| 56 | `undeclared-identifier-f2b46b01` | 4 | 3D | declaration repairs (applied) | refused standard/unlit callback declarations supplied; G2: 1 pass, 3 deeper compiler failures; callbacks remain unlinkable |
 | 57 | `call-has-no-matching-3b2f72dd` | 3 | PLAT | compiler | the emitted call to `is_optional_number` matches no declared overload |
 | 58 | `call-has-no-matching-56e47749` | 3 | GL | compiler | the emitted call to `compute_node_root_local_bounds_rectangle` matches no declared overload |
 | 59 | `invalid-operands-98cd7094` | 3 | 2D | runtime | an operator is applied to operand types it does not accept |
@@ -111,7 +111,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 82 | `no-viable-conversion-303c42f1` | 2 | ANIM | compiler | a value is passed where its declared type cannot receive it |
 | 83 | `other-67dc02c6` | 2 | 2D | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 84 | `other-6f513db2` | 2 | 2D, 3D | runtime | uncategorised: the first diagnostic does not name a single cause |
-| 85 | `other-86d0b50b` | 2 | 2D, 3D | runtime | uncategorised: the first diagnostic does not name a single cause |
+| 85 | `other-86d0b50b` | 5 | 2D, 3D | [compiler request](compiler-requests/object-literal-into-outcome-variant.md) | SceneCoverageEntry literals initialize the outer variant instead of a selected concrete reference arm |
 | 86 | `redefinition-caa49360` | 2 | 3D | runtime | a declaration is emitted twice |
 | 87 | `undeclared-identifier-1048386b` | 2 | 3D | runtime | the emitted code names `md5_material_handler`, which nothing declares |
 | 88 | `undeclared-identifier-20fa691d` | 2 | 2D | runtime | the emitted code names `draw_gl_raster_shape`, which nothing declares |
@@ -1138,12 +1138,36 @@ callers, so the follow-on is the same omission class rather than a new defect.
 
 ### 56. `undeclared-identifier-f2b46b01` — 4 header(s)
 
-- cause: the emitted code names `list_standard_pbr_material_textures`, which nothing declares
+- cause: the standard and unlit material texture listers are refused, but retained registrations pass their undeclared callbacks
 - subject: `list_standard_pbr_material_textures`
 - lanes: 3D
-- fix route: runtime
-- first failure at: `flight/scene3d_resources/scene_material_texture_registry.hpp:162`
-- example: `use of undeclared identifier 'list_standard_pbr_material_textures'`
+- fix route: declaration repairs applied; remaining failures use an existing compiler request
+- original first failure at: `flight/scene3d_resources/scene_material_texture_registry.hpp:162`
+- original example: `use of undeclared identifier 'list_standard_pbr_material_textures'`
+
+Two guarded declare-refused-function repairs supply only the exact Scene3DMaterialTextureLister
+signatures for the standard PBR and unlit callbacks. The optional exact registration-line witness
+handles a function passed as a callback without matching bare symbol mentions. Both source markers,
+retained references and absent definitions agree. Normal focused generation at the locks writes
+exactly two declarations; three owner-recovery refusals and the partial module counters remain.
+See the [retained-callback request](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-scene3d-material-texture-listers-are-retained-callback-values).
+
+Repair guards: **26 tests pass, zero fail, one generic C++ fixture skipped** because the default
+compiler is absent from PATH. Actual-header native checks separately pass: unused include compiles,
+links and runs; both retained registrations and exact callback carriers compile to an object; linking
+that object fails on exactly the two refused lister symbols. No list implementation, owner downcast,
+copied texture reference or closed extension family is supplied. The underlying
+[Material owner-recovery request](compiler-requests/assertion-to-undeclared-row-member.md#g2-scene3d-material-texture-listers-retain-only-the-base-material-row)
+stays open for standard, unlit and extended material callbacks.
+
+Changed-input exact four-header check: **1/4 pass, 3 fail, 0 unattempted**, Clang 22.1.8 at one worker.
+`scene_material_texture_registry.hpp` passes. `_internal_index.hpp`, `contract.hpp` and
+`explain_scene_3d_resource_coverage.hpp` now fail at the latter header's line 57: a designated initializer
+targets SceneCoverageEntry's outer variant. These three rows join existing `other-86d0b50b`, with
+actual diagnostics/locations and the [existing outcome-construction request](compiler-requests/object-literal-into-outcome-variant.md#g2-scene3d-resource-coverage-returns-a-literal-into-the-outer-outcome-variant).
+All three changed diagnostics remain failures. Only the four owned rows and affected causes changed;
+unowned rows and historical sweep totals remain unchanged. No global or unchanged rerun or upstream
+test port was performed. Header inclusion does not make the refused registrations executable.
 
 ### 57. `call-has-no-matching-3b2f72dd` — 3 header(s)
 
@@ -1528,11 +1552,16 @@ cluster of its own, since no header fails on it first.
 - first failure at: `flight/scene2d_gl/gl_particle_emitter_2d.hpp:58`
 - example: `non-constant-expression cannot be narrowed from type 'int' to 'double' in initializer list [-Wc++11-narrowing]`
 
-### 85. `other-86d0b50b` — 2 header(s)
+### 85. `other-86d0b50b` — 5 current header(s), 2 in G1
 
-- cause: uncategorised: the first diagnostic does not name a single cause
+- cause: a SceneCoverageEntry object literal initializes the outer outcome variant instead of its selected concrete reference arm
 - lanes: 2D, 3D
-- fix route: runtime
+- fix route: compiler — [existing outcome-construction request](compiler-requests/object-literal-into-outcome-variant.md#g2-scene3d-resource-coverage-returns-a-literal-into-the-outer-outcome-variant)
+
+The three new Scene3D resource rows are measured after the callback declarations in work item 56,
+at `explain_scene_3d_resource_coverage.hpp:57`. The two original GL rows retain their G1 diagnostics
+and were not recompiled or edited. The complete outcome must select the actual fallback/catalog arm
+and retain all source spread fields; no permissive runtime constructor or incomplete outcome is supplied.
 - first failure at: `flight/scene2d_gl/explain_gl_scene_2d_coverage.hpp:58`
 - example: `initialization of non-aggregate type 'SceneCoverageEntry' with a designated initializer list`
 
