@@ -92,3 +92,37 @@ All of these missing behaviors remain source obligations, not new runtime fallba
 for explicit registration. The [two independent retained boundaries](retained-declaration-calls-omitted-callee.md#g2-grid-track-guard-and-resolver-retain-two-distinct-omissions)
 also include the independently refused track-list validator. No nullable owner recovery, resolver body,
 style copy, narrowed tracks or successful layout result is supplied by either declaration.
+
+## G2 anchor resolver retains the original style and layout buffers
+
+At Flight `a627849` / compiler `806d257`, anchorLayout.ts:10 still refuses the
+anchorLayoutResolver binding as cpp-type-assertion-unidentified. The source asserts the
+LayoutNode<> itemStyle (optional ErasedRef in C++) to
+Readonly<AnchorLayoutItemStyle>|null. Its guard's separate anonymous style owner is not the
+named AnchorLayoutItemStyle owner, and a successful check over that represented owner does
+not prove recovery of an arbitrary object or a differently typed source owner. Keep null
+and the original object through storage, validation and nullable projection; no copied style,
+unchecked cast, narrowed tree generic or replacement owner supplies that evidence.
+
+Preserve the full LayoutResolver carrier: caller-owned Float32 out, readonly original
+LayoutTree, intrinsic ArrayLike numbers, and parent/child indices. The source checks the
+parent's actual containerStyle first, then the child's actual itemStyle, returning the exact
+InvalidContainerStyle/InvalidItemStyle sentinel before output writes on rejection. Its open
+string-keyed resolver Map remains opt-in, last-write-wins and removable by null; custom kinds
+and the core's parent-before-child traversal/failure explanation/guard effects are unchanged.
+
+The missing algorithm reads the parent absolute rectangle at stride4 and intrinsic sizes at
+stride2. Opposing left/right or top/bottom pins stretch with max(0,parentSize-first-second);
+otherwise explicit width/height nullishly fall back to intrinsic sizes and finiteSize keeps
+only finite positive sizes, else0. Negative finite pins remain valid. Left/top take precedence,
+then right/bottom, then the eight source alignments with default topleft. Both axes retain
+independent precedence, parent offsets, original property reads and final x,y,width,height
+write order. Null style, asymmetric rectangles and nested propagation must keep source behavior.
+No constant rectangle, empty resolver, fake success or reconstructed layout tree is supplied.
+
+The [numeric argument annotation](compiler-union-and-literal-argument-construction.md#g2-anchor-numeric-guards-need-the-declared-argument-carrier)
+changes no JavaScript expression and recovers only the retained guard's native call boundary.
+The [external resolver declaration](retained-declaration-calls-omitted-callee.md#g2-anchor-registration-retains-its-refused-resolver)
+adds visibility only. The actual unused header links/runs; explicit registration compiles to
+an object then fails to link on exactly anchor_layout_resolver. All three original headers
+pass, while this binding and isEmptyStyle remain refused. No registration or layout solve runs.

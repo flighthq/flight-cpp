@@ -83,7 +83,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 58 | `undeclared-identifier-7d64d9c1` | 4 | GL | compiler | the emitter refuses the `glCustomShaderEffectRunner` binding and its resolver but still emits the registration call that passes... *(request filed)* |
 | 55 | `undeclared-identifier-862d162a` | 4 | 3D | [compiler request](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-gltf-animations-a-declaration-fails-the-unused-header-link-prerequisite) | the refused animation builder is still called by the global handler; a declaration fails the unused-header link prerequisite |
 | 56 | `undeclared-identifier-f2b46b01` | 4 | 3D | declaration repairs (applied) | refused standard/unlit callback declarations supplied; G2: 1 pass, 3 deeper compiler failures; callbacks remain unlinkable |
-| 57 | `call-has-no-matching-3b2f72dd` | 3 | PLAT | compiler | the emitted call to `is_optional_number` matches no declared overload |
+| 57 | `call-has-no-matching-3b2f72dd` | 3 | PLAT | source patch + declaration (applied) | exact anchor numeric union guard carrier; G2: 3 pass; resolver body remains unlinkable |
 | 58 | `call-has-no-matching-56e47749` | 3 | GL | compiler | a `Node2D` passed to a `Spatial2DNode<Traits>` parameter cannot deduce `Traits` *(existing request linked)* |
 | 59 | `invalid-operands-98cd7094` | 3 | 2D | [compiler request](compiler-requests/local-handler-callable-identity.md) | a nullable registry callback is compared with the module function by identity, but the emitted `std::function` adapter erased it |
 | 60 | `missing-member-95ead583` | 3 | 3D | [compiler request](compiler-requests/cube-texture-width-and-completeness.md#g2-gl-environment-face-revisions-use-the-same-selected-owner-read) | nullable cube-face source retains seven real owners, but version is read on the variant itself |
@@ -1363,14 +1363,42 @@ All three changed diagnostics remain failures. Only the four owned rows and affe
 unowned rows and historical sweep totals remain unchanged. No global or unchanged rerun or upstream
 test port was performed. Header inclusion does not make the refused registrations executable.
 
-### 57. `call-has-no-matching-3b2f72dd` — 3 header(s)
+### 57. `call-has-no-matching-3b2f72dd` — 3 headers, resolved at the retained boundary
 
-- cause: the emitted call to `is_optional_number` matches no declared overload
-- subject: `is_optional_number`
+- original subject: `is_optional_number`, first failure `flight/layout/anchor_layout.hpp:76`
 - lanes: PLAT
-- fix route: compiler
-- first failure at: `flight/layout/anchor_layout.hpp:76`
-- example: `no matching function for call to 'is_optional_number'`
+- fix route: type-only source patch `layout-anchor-number-guard-carrier` and existing guarded declaration `layout-declare-refused-anchor-resolver`
+- original cause/request: [argument construction over represented union arms](compiler-requests/compiler-union-and-literal-argument-construction.md#g2-anchor-numeric-guards-need-the-declared-argument-carrier)
+- body requests: [original nullable style owner](compiler-requests/assertion-to-nullable-variant-alternative.md#g2-anchor-resolver-retains-the-original-style-and-layout-buffers), [actual open-object key iteration](compiler-requests/layout-object-key-iteration-closed-keys.md#g2-anchor-container-is-an-open-object-at-the-current-pin)
+- retained boundary: [exact missing resolver binding](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-anchor-registration-retains-its-refused-resolver)
+
+Six number/null/undefined variant fields were forwarded directly to an unknown/Any helper.
+The runtime represents their values but has no implicit outer-variant constructor. The patch
+repeats the existing field union only in the private helper parameter annotation. Complete
+original/patched modules emit byte-identical JavaScript: body, predicate, every member read,
+short circuit, getter exception, malformed-field rejection and numeric/absence domain remain.
+Normal exact-pin one-module generation emits the exact variant helper and guarded finite test.
+The separate extern declares precisely the retained LayoutResolver slot, keyed on its exact
+source10 refused-binding marker; one match/fixed point recreates normal output, without a body.
+
+The actual unused header compiles, links and runs. Native checks of the actual emitted anonymous
+owner cover all six fields over12 sentinel/numeric cases, all eight source alignments and three
+invalid alignment strings, preserving active arms, negative zero and style identity. This is the
+represented guard domain, not arbitrary external-style owner recovery. The actual explicit
+registration compiles to an object, then fails to link on **only** anchor_layout_resolver.
+No registration or layout algorithm runs; no output rectangle or fake success is supplied.
+
+The scoped original three headers (`anchor_layout.hpp`, `contract.hpp`, `_internal_index.hpp`)
+complete jobs1 **3 attempted / 3 pass / 0 fail / 0 unattempted**. Each compact row is pass/history
+and request-linked; the old active cluster is removed. The sole changed generated header and
+its patch/repair records come from normal emission, with one owned declaration fingerprint.
+Both original body omissions remain: nullable itemStyle recovery and isEmptyStyle's for-in
+on object|null. The historical closed-key example does not prove the current open object's
+enumerable-key evidence. Package/global counts, partial/refusal status, refusal record,
+initialization and applicability policy are unchanged. Original layout/style/buffer owners,
+open registry, failure sentinels, pin/alignment/intrinsic sizing and write order remain source
+obligations. No narrowed public domain, copied owner, fake layout, empty result or runtime
+Any widening is carried. Foreign compact products/prose and historical G1 totals are preserved.
 
 ### 58. `call-has-no-matching-56e47749` — 3 header(s)
 

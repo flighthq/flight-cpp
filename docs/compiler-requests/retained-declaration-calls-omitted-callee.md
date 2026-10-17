@@ -2156,3 +2156,26 @@ is inserted to make an unused-positive result appear to pass; exact negative-lin
 The [existing weak-policy/cache request](bound-interface-weak-map-key-policy.md#g2-normal-and-inverted-gl-tint-caches)
 and [separate target/body request](interface-heritage-widening.md#g2-gl-normal-and-inverted-tint-pass-contract)
 retain independent causes and complete tint/inverted coverage semantics. No GL/cache/pass runs here.
+
+## G2 anchor registration retains its refused resolver
+
+At Flight `a627849` / compiler `806d257`, anchor_layout.hpp retains
+register_anchor_layout_resolver while the exact source10 NOT GENERATED binding marker names
+the refused anchorLayoutResolver. The retained call constructs optional<LayoutResolver> from
+the missing value. Existing insert-forward-declaration, guarded on that marker/refusal,
+adds only `extern flight::types::LayoutResolver anchor_layout_resolver` in its namespace.
+It matches exactly one header, reaches a fixed point and recreates normal emission; no
+function body, callback initializer or repair-engine extension is supplied.
+
+After the separate [numeric argument annotation](compiler-union-and-literal-argument-construction.md#g2-anchor-numeric-guards-need-the-declared-argument-carrier),
+the actual unused whole header compiles, links and runs. The actual explicit registration
+compiles to an object, then fails to link on **only** flight::layout::anchor_layout_resolver.
+Neither registration nor a resolver runs. All three original cluster headers pass jobs1;
+this means retained declaration availability, not successful layout or style-owner recovery.
+
+The exact LayoutResolver callback retains Float32 output, readonly original tree, intrinsic
+number sequence and full index domain. Both source body omissions stay visible: the
+[nullable original-style assertion](assertion-to-nullable-variant-alternative.md#g2-anchor-resolver-retains-the-original-style-and-layout-buffers)
+and [actual open-object key iteration](layout-object-key-iteration-closed-keys.md#g2-anchor-container-is-an-open-object-at-the-current-pin).
+The unused positive does not substitute either body. No fake layout, copied owner, empty
+result, narrowed domain, output write, fallback success or host/provider is carried.

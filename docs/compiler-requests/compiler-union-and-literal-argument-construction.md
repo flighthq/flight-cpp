@@ -116,3 +116,39 @@ records that separate behavior gap. A non-optional overload, permissive runtime 
 literal would conceal it. The helper's own
 [typed-options refusal](compiler-intl-optional-and-union-carrier-evidence.md#g2-number-formatter-still-loses-the-typed-optional-options-boundary)
 remains open independently.
+
+## G2 anchor numeric guards need the declared argument carrier
+
+At Flight `a627849` / compiler `806d257`, cluster call-has-no-matching-3b2f72dd
+contains anchor_layout.hpp and its contract/_internal_index wrappers. The first recorded
+failure is anchor_layout.hpp:76: six bottom/height/left/right/top/width cells have the exact
+carrier std::variant<double, Null, Undefined>, but the emitted private
+is_optional_number(Any) receives that outer variant directly. The runtime already represents
+every active value, including distinct null/undefined and signed zero; it has no implicit
+variant constructor for Any. The existing dynamic named-property any_from visitor does not
+implicitly run at an ordinary function call. This is the argument-construction family above,
+with an unknown parameter rather than an overloaded Date/number member.
+
+A general fix must evaluate the argument once, dispatch on its active arm and construct the
+declared unknown value without number coercion or loss of its sentinel. It must not project
+the number arm before the guard or treat a variant container as a new opaque object. This
+request does not justify a permissive global Any constructor for unrepresented owners.
+
+The carried source patch layout-anchor-number-guard-carrier repeats the six fields' existing
+number|null|undefined domain in ONLY the private helper parameter annotation. Its predicate
+return, body, member reads and callers remain unchanged. The complete original/patched modules
+emit byte-identical JavaScript, preserving malformed-field rejection, getter short circuits,
+throws, finite/negative/negative-zero values, NaN/infinities and both absences. No runtime layout
+or public style domain is narrowed. Normal exact-pin one-module generation emits the exact
+variant parameter and guarded isfinite projection; all six callers construct their union
+argument while preserving their source member read position.
+
+Native checks use the actual emitted anonymous style owner: every numeric field accepts
+undefined, null and finite positive/negative/zero/negative-zero/extreme/subnormal numbers,
+rejects NaN and both infinities, and retains its active arm/value and original style identity.
+All eight source alignments and invalid alignment strings are checked too. This proves the
+represented guard domain, not recovery of arbitrary external style owners as this anonymous
+owner or a layout algorithm. The [nullable-style request](assertion-to-nullable-variant-alternative.md#g2-anchor-resolver-retains-the-original-style-and-layout-buffers)
+and [key-iteration request](layout-object-key-iteration-closed-keys.md#g2-anchor-container-is-an-open-object-at-the-current-pin)
+retain those independent body obligations. The scoped original three headers pass after the
+separate exact external-resolver declaration; explicit registration still cannot link.
