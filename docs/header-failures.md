@@ -202,7 +202,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 173 | `undeclared-identifier-44058981` | 1 | GL | runtime | the emitted code names `gl_blend_effect_runner`, which nothing declares |
 | 174 | `undeclared-identifier-49b86813` | 1 | ANIM | runtime | the emitted code names `solve_skeleton_2d_ik_constraint`, which nothing declares |
 | 175 | `undeclared-identifier-4fc6ab69` | 1 | 2D | runtime | the emitted code names `create_svg_image_node`, which nothing declares |
-| 176 | `undeclared-identifier-514a5b7b` | 1 | 2D | runtime | the emitted code names `submit_gl_tilemap`, which nothing declares |
+| 176 | `undeclared-identifier-514a5b7b` | 1 | 2D | compiler | Tilemap submit refuses nullable material owner widening; exact declaration compile fails NodeAny/Sprite callback carrier *(existing requests extended)* |
 | 177 | `undeclared-identifier-51763a3c` | 1 | GL | runtime | the emitted code names `gl_tone_map_effect_runner`, which nothing declares |
 | 178 | `undeclared-identifier-529e49d7` | 1 | GL | runtime | the emitted code names `gl_directional_blur_effect_runner`, which nothing declares |
 | 179 | `undeclared-identifier-58fb713b` | 1 | 2D | runtime | the emitted code names `draw_dom_scale9_shape`, which nothing declares |
@@ -3128,14 +3128,41 @@ remain unchanged.
 - first failure at: `flight/scene2d_formats/svg_image_element.hpp:128`
 - example: `use of undeclared identifier 'create_svg_image_node'`
 
-### 176. `undeclared-identifier-514a5b7b` — 1 header(s)
+### 176. `undeclared-identifier-514a5b7b` — 1 header, compiler-owned
 
-- cause: the emitted code names `submit_gl_tilemap`, which nothing declares
-- subject: `submit_gl_tilemap`
-- lanes: 2D
-- fix route: runtime
-- first failure at: `flight/scene2d_gl/gl_tilemap.hpp:165`
-- example: `use of undeclared identifier 'submit_gl_tilemap'`
+The scoped stock header remains **1 attempted / 0 pass / 1 fail / 0 unattempted**, Clang22.1.8,
+jobs **1**, 34.9 seconds, at missing `submit_gl_tilemap:165`. The source body refuses
+`cpp-contextual-union-interface-heritage-carrier-unrepresented` at nullable `Material2D` to `Material`
+owner widening during quad-material resolution. Preserve the proxy's original material and selected
+renderer; a base-prefix copy or default material loses that identity. See the existing
+[material owner request](compiler-requests/compiler-interface-heritage-owner-widening.md#g2-gl-tilemap-material-owner).
+
+The retained `.submit = submit_gl_tilemap` is an aggregate field, not a direct call or supported
+function-argument `retainedReference`. The existing matcher finds no call and the loader rejects the
+exact aggregate witness. A separate scratch actual unused include, with only the exact declaration
+`void submit_gl_tilemap(Ref<GlRenderState>, Ref<RenderProxy2D>);`, fails compilation at `.create_data`
+(candidate167): `noop_renderer_data(RenderState, NodeAny)` cannot initialize `SpriteRenderer`'s
+callback taking `(RenderState, Sprite)`. See the existing
+[callback owner request](compiler-requests/interface-heritage-widening.md#g2-gl-tilemap-create-data-callback).
+No positive unused-header link/run or qualified called-function negative-link is reached. The candidate
+is rejected; no repair, normal generation, callback cast or new witness is carried.
+[Retained aggregate evidence](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-gl-tilemap-retains-its-refused-submit-callback)
+also records the later inspected generic RenderState versus GLstate submit domain.
+
+The proxy must retain its full Tilemap/data, atlas/texture, signed `Int16Array` tiles, per-cell
+materialData and real GL writer runtime. Preserve atlas/texture/source and zero-row/column guards,
+material selection, working color, sampler, blend, straight alpha and proxy alpha. Visit cells in
+row-major order using `row * columns + col`; skip negative/out-of-range ids and nonpositive regions.
+Compose the parent affine transform with `(col * tileWidth, row * tileHeight)`. Geometry always uses
+`tileWidth`/`tileHeight`; atlas dimensions and both 90-degree rotations affect UVs, not those sizes.
+After prepare reserves `columns * rows` and may flush, write compact valid packets/material/color at
+its returned start plus `drawCount`; per-cell color still reads the original input cell index. Keep
+ColorScaleBias/Tint/readonly-number-array override, then node matrix, then node scale-bias fallback,
+the instance stride and final writer-count increment by valid draws. No fake packets or narrowed tiles.
+
+Only this row/cluster, report176 and appended sections in three existing requests change. Historical
+sweep/carry totals and foreign products remain unchanged. No production source/runtime/override/body,
+native packet/drawing proof or unchanged old/global check is carried or claimed.
 
 ### 177. `undeclared-identifier-51763a3c` — 1 header(s)
 

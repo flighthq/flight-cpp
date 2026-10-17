@@ -1220,3 +1220,25 @@ array-growth issue are recorded with the source contract, not claimed as additio
 diagnostics. No C++, runtime, source patch, repair, override, manifest or inventory change is carried,
 so no changed generation needs reproducing. This header remains failed; no native parser, bone,
 link or functionality pass is claimed.
+
+## G2 GL Tilemap retains its refused submit callback
+
+At Flight `a627849` / compiler `806d257`, `scene2d_gl/gl_tilemap.hpp` omits `submitGlTilemap`
+under the nullable Material2D-to-Material heritage rule but retains `.submit = submit_gl_tilemap`
+in its renderer aggregate. Stock original1 remains 0/1, Clang22.1.8 jobs1, at missing submit165.
+The exact source signature is `void submit_gl_tilemap(Ref<GlRenderState>, Ref<RenderProxy2D>);`.
+
+The existing declaration matcher finds no direct call and the loader rejects the exact aggregate
+`retainedReference`: it is not a callback in a function-argument position. No witness extension is
+proposed. A separate scratch actual unused include with only that declaration fails compilation at
+`.create_data` (candidate167): `noop_renderer_data(RenderState, NodeAny)` cannot fill the Sprite-taking
+slot. See the [callback owner request](interface-heritage-widening.md#g2-gl-tilemap-create-data-callback).
+No positive unused-header link/run or qualified called-function negative-link is reached. The later
+submit callback's GlRenderState versus generic RenderState is type inspection, not another measured
+first error. No declaration repair, normal generation, body or callable renderer is carried.
+
+The independent [material owner refusal](compiler-interface-heritage-owner-widening.md#g2-gl-tilemap-material-owner)
+still needs the complete Tilemap/atlas/data and actual GL runtime. Preserve signed cell ids, row-major
+input color indexing, invalid-cell skips, fixed tile geometry sizes with rotated region UVs, compact
+post-prepare output indices and actual valid drawCount. An empty submit, fake packet, copied owner
+or reduced tile/color domain would not implement the source.

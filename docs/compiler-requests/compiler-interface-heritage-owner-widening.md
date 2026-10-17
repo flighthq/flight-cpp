@@ -253,3 +253,29 @@ Original1 remains0/1 at missing submit191, Clang22.1.8 jobs1. Its exact declarat
 include fails the [NodeAny-to-Sprite callback conversion](interface-heritage-widening.md#g2-gl-quadbatch-create-data-callback)
 before link. The [retained aggregate request](retained-declaration-calls-omitted-callee.md#g2-gl-quadbatch-retains-its-refused-submit-callback)
 records why no declaration repair, normal generation, fake packet or usable submission claim is carried.
+
+## G2 GL Tilemap material owner
+
+At Flight `a627849` / compiler `806d257`, `scene2d-gl/glTilemap.ts:26` refuses the full
+`submitGlTilemap` body as `cpp-contextual-union-interface-heritage-carrier-unrepresented` at nullable
+Material2D-to-Material widening. The proxy's original material selects the quad renderer and feeds
+the same prepare call. Matching flattened fields do not supply C++ heritage; preserve null, original
+owner identity and registered renderer rather than copying a base prefix or substituting a material.
+
+Preserve the original Tilemap/data, atlas/texture, signed Int16Array tiles, per-cell materialData and
+actual GL writer runtime. Traverse row-major `row * columns + col`; skip negative/out-of-range ids
+and nonpositive atlas regions. Parent affine composition translates by column/row times tile sizes.
+Geometry uses tileWidth/tileHeight even for rotated atlas regions; region dimensions and both rotation
+directions determine UVs only. Preserve texture/source and zero-dimension guards, working color,
+sampler, blend, straight alpha, proxy alpha and original node materialData.
+
+Prepare reserves columns*rows and may flush. Compact valid packet/material/color writes use returned
+startInstance plus drawCount, while per-tile color reads the original input cell index. Keep the
+ColorScaleBias/Tint/readonly-number-array override and null/absence fallback to node matrix then node
+scale-bias, stride and final count increment by actual valid draws. A Sprite copy or narrowed cell,
+atlas, color or rotation domain cannot implement this body.
+
+Original1 remains 0/1 at missing submit165, Clang22.1.8 jobs1, 34.9 seconds. An exact-declaration-only
+actual unused header fails the [NodeAny-to-Sprite callback conversion](interface-heritage-widening.md#g2-gl-tilemap-create-data-callback)
+before link. The [retained aggregate qualification](retained-declaration-calls-omitted-callee.md#g2-gl-tilemap-retains-its-refused-submit-callback)
+records why no declaration repair, normal generation, fake packet or usable submission is claimed.

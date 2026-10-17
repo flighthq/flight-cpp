@@ -396,3 +396,23 @@ Its GLstate-versus-generic-state submit seam is only inspected later and needs t
 The submit body independently refuses [nullable material-owner widening](compiler-interface-heritage-owner-widening.md#g2-gl-quadbatch-material-owner).
 See [retained aggregate qualification](retained-declaration-calls-omitted-callee.md#g2-gl-quadbatch-retains-its-refused-submit-callback)
 for the rejected declaration candidate. No callback adapter, new body or packet/drawing support is supplied.
+
+## G2 GL Tilemap create-data callback
+
+At Flight `a627849` / compiler `806d257`, `gl_tilemap.hpp` stores `noop_renderer_data` as
+`SpriteRenderer.create_data`. Both return `optional<Ref<RendererData>>` and take `Ref<RenderState>`,
+but the function's node argument is `NodeAny` (`shared_ptr<Node<Any>>`) and the callback slot takes
+`Ref<Sprite>`. Those independent native owners do not implicitly convert, so the callable cannot
+accept the slot's declared arguments. A separate exact-submit-declaration-only actual unused include
+fails this conversion first at `.create_data` (candidate167). Stock original1 remains 0/1 at the
+earlier missing submit165, Clang22.1.8 jobs1; no native link boundary is reached.
+
+Faithful declared heritage/owner-view or callback adaptation must preserve the same node and the
+legitimate no-renderer-data result. A function-pointer cast or copied Node does not provide that
+conversion. The source submit needs the complete Tilemap/data, not a fabricated Sprite. Its later
+GLstate-versus-generic-state submit seam is type inspection only and belongs with the existing
+[typed callback/backend contract](readonly-callback-derived-owner-recovery.md).
+
+The submit body independently refuses [nullable material-owner widening](compiler-interface-heritage-owner-widening.md#g2-gl-tilemap-material-owner).
+See [retained aggregate qualification](retained-declaration-calls-omitted-callee.md#g2-gl-tilemap-retains-its-refused-submit-callback)
+for the rejected declaration candidate. No callback adapter, body or packet/drawing support is supplied.
