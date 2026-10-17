@@ -244,3 +244,81 @@ Carried meanwhile: emission repair `effects-gl-binding-cell-readonly-target`
 (`respell-reference-member-access`) removes only the writable round trip, keeping the same
 view, the same live target owner and the same rebind order. It expires when the emitter
 initializes a rebindable readonly binding cell without the writable lift.
+
+## G2 custom material source: native uniform ABI cleared, readonly view still rewrapped
+
+At Flight `a627849` / compiler `806d257`, original-one
+`scene3d_gl/gl_custom_shader_mesh_material_renderer.hpp` first failed at uniform2fv127
+(`call-has-no-matching-c8046ec6`). The emitted source branch is correct to upload a number array:
+CustomShaderMaterial.uniforms is Record<string, number | number[]>|null, and the pinned DOM
+Float32List includes both Float32Array and GLfloat[]. The generated call supplies the two optional
+range arguments as std::nullopt. Native uniform1/2/3/4fv already accepted two-argument Array<double>
+and four-argument Float32Array, but lacked the four-argument Array forms. This was a host ABI gap,
+not a reason to replace the material array, shader, renderer, callback or binding value carrier.
+
+The bounded native fix adds those four Array overloads. Two absent selectors forward the identical
+Array to the unchanged legacy upload; explicit selectors share the existing checked bounds and use
+a numeric value slice before the unchanged double-to-GLfloat conversion/count/GL call. Offset
+absence means zero; length absence or zero means the remaining elements. Invalid/nonintegral/
+negative/out-of-range selectors retain the typed path's range_error rules. Existing two-argument
+and typed overloads remain, and typed selection still uses its original subarray. This immediate
+numeric upload window is not a substitute material, context, program or shader-source owner.
+No generated header, source patch, emission repair, override, binding manifest or pin was changed.
+
+The changed existing host SDL GL application target built/linked and ran once: **1/1 pass,
+0.74 s** (0.76 s total). In one real context, a linked uniform fixture exercises all four widths:
+24 numeric-array uploads (absent/explicit zero, prefixed offset, zero/rest length, bounded length),
+four typed-array offset uploads, and 16 invalid numeric-array ranges. Actual glGetUniformfv
+readback verifies every selected component after native float conversion, including fractional
+numbers: 32 reads include one after the rejected ranges for each width, proving unchanged values
+and no GL error. The fixture uses the host's
+existing typed GL entry-point loader; no model callback is cast or substituted. This is host upload
+proof, not execution of the custom material renderer, its cache/guard, or its shader/draw path.
+
+After that fix, changed original1 compilation with Clang22.1.8 jobs1 completes **1 attempted /
+0 pass / 1 fail / 0 unattempted, 124.9 s**, at the independent readonly conversion at **:175**:
+
+```cpp
+// get_gl_custom_material_shader_source returns optional<ReadonlySource>.
+// ensure_gl_custom_shader_program's third parameter is already ReadonlySource.
+ensure_gl_custom_shader_program(state, shader_key,
+    structural_ref_cast<ReadonlySource>(WritableSource(source.value())));
+```
+
+ReadonlySource is StructuralRef<RowReadonly<RowOf<Ref<GlCustomMaterialShaderSource>>>>;
+WritableSource is its RowWritable counterpart. The preceding null check proves presence, not
+writable authority. Pass the already-proven source.value() readonly view directly, retaining the
+same source registry object and its live vertex/fragment strings. The runtime correctly rejects
+readonly-to-writable construction; do not weaken it, recover mutable authority, copy the source
+or allocate a replacement owner. This is this request's existing family, now another measured
+site in active emitter-conversion-b504f8c4 (1 -> 2 headers). The old uniform root is removed;
+this row remains failed with previousCluster and the request, so there is no header/module gain.
+No candidate readonly repair, source rewrite, normal generation or additional compile is carried.
+
+The untouched renderer contract remains:
+
+- Source registration replaces the same state's persistent customMaterialShaders table with
+  withKindMapEntry; last write wins lookup, snapshots retain their prior table and source identity.
+  Lookup returns the same source or null. The compiled program cache remains keyed by
+  `custom:${shaderKey}`; a cache hit keeps the identical compiled program even after source
+  re-registration, and a new key forces a miss. Compile the original vertex/fragment strings
+  verbatim, retain the real program and nullable model/normal/view-projection/camera locations.
+- Bind keeps the same state/material/camera/light owners. Null material, empty key or missing
+  source sets activeMeshProgram null and skips draw setup. Otherwise preserve ensure-program,
+  nullable opt-in customShaderGuard, beginGlMeshDraw, view/camera upload, custom uniforms and
+  textures in that order. No copied base program, callback cast or narrower material domain.
+- Each uniform bind uses original Object.keys order, queries its location before reading its
+  value, and skips a null location. Scalars and length-one arrays use uniform1f; lengths2/3/4
+  use the matching vector upload; all other lengths, including empty, use uniform1fv. Keep
+  the original number domain and existing float conversion, without clamping or retained copies.
+- Texture enumeration queries each location, selects TEXTURE0+unit, resolves the same full Texture
+  value, and uploads/increments only on success. Failed resolution retains that unit for the
+  next entry. Keep source color-space realizations and shader-owned premultiplication/mask
+  discard; do not inject replacement GLSL or narrow dimensions. Draw still skips a null active
+  program and uses the same proxy, geometry and subset with drawGlMeshSubset otherwise.
+
+The 12 pinned source tests covering source identity/registration, cache-facing bind, uniform dispatch,
+skips, indexed subset draw, persistent snapshots and opt-in renderer registration were read only.
+They are not additional native proof. Recorded draw/proxy rewrapping expressions are independent
+inspected follow-ons, not measured later errors. Evidence is under
+`/tmp/builder4-g2-custom-material/` (host build/CTest/LastTest and scoped header report).

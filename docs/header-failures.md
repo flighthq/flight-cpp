@@ -132,7 +132,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 103 | `call-has-no-matching-8d9de718` | 1 | PLAT | compiler | default node runtime supplies a merged child row to nominal NodeAny recursion; [existing request](compiler-requests/node-any-generic-traits-leak.md#g2-interaction-spatial-collection-selects-the-default-runtime-owner) |
 | 104 | `call-has-no-matching-b3c6bcee` | 1 | GL | repair key + compiler | `log_once` designated initializer *(G2: key map extended; 0 pass, 1 to `no-matching-constructor-34a8ea9f`)* |
 | 105 | `call-has-no-matching-c287f892` | 1 | ANIM | compiler | G2: recorded 0/1 retained; Unity JsonValue cannot become named view/dynamic Record; existing JSON-read request, no rerun |
-| 106 | `call-has-no-matching-c8046ec6` | 1 | 3D | compiler | the emitted call to `uniform2fv` matches no declared overload |
+| 106 | `call-has-no-matching-c8046ec6` | 1 | 3D | binding (fixed) | numeric-array optional uniform ranges supplied; G2: 0/1, now existing readonly-view compiler family |
 | 107 | `call-has-no-matching-e7b28969` | 1 | WGPU | runtime (fixed) | the emitted call to `write_texture` matches no declared overload; G2: 0 pass, 1 to `missing-member-47a93368` |
 | 108 | `call-has-no-matching-fbd6de0d` | 1 | 3D | [compiler request](compiler-requests/interface-heritage-widening.md) | `Mesh.materials` carries `Material3DValue` arms that cannot widen to the callback's declared `Material3D` base |
 | 109 | `call-has-no-matching-fee2f93f` | 1 | 3D | compiler *(request filed)* | `number[]` passed to the fake GL audit `setError(…, readonly unknown[])`: `Array<double>` vs `Array<Any>` |
@@ -2726,14 +2726,38 @@ No parser/particle/curve/serialization gain, fake counts, copied owner or narrow
 Only the request appendix, this slice and two compact root/row lines change; C++/owners/runtime/patches/
 repairs/manifest/pins and foreign/historical products remain unchanged. Coordinator attachments were not applied.
 
-### 106. `call-has-no-matching-c8046ec6` — 1 header(s)
+### 106. `call-has-no-matching-c8046ec6` — 1 original header, 0 pass / 1 follow-on
 
-- cause: the emitted call to `uniform2fv` matches no declared overload
-- subject: `uniform2fv`
+- original cause: native uniform1/2/3/4fv accept Array<double> only at two arguments, while
+  emitted Float32List calls also pass two absent optional range arguments
 - lanes: 3D
-- fix route: compiler
-- first failure at: `flight/scene3d_gl/gl_custom_shader_mesh_material_renderer.hpp:127`
-- example: `no matching member function for call to 'uniform2fv'`
+- fix route: binding/runtime (fixed); remaining compiler projection linked
+- original first failure: `flight/scene3d_gl/gl_custom_shader_mesh_material_renderer.hpp:127`
+- current first failure: same header **:175**, readonly GlCustomMaterialShaderSource row
+  reconstructed as RowWritable before entering the same readonly source parameter
+- compiler request: [readonly view to writable](compiler-requests/readonly-view-to-writable.md#g2-custom-material-source-native-uniform-abi-cleared-readonly-view-still-rewrapped)
+
+The four native Array optional-range overloads retain the legacy absent-range upload and existing
+float conversion/count/GL operations. Explicit ranges share the original typed bounds; typed
+subarray behavior and all legacy overloads remain. No source material, state, program, context or
+shader owner is copied; no source/repair/override/generated header/manifest/pin changes.
+
+Commit-first changed host target build/link and ONE real SDL GL CTest **1/1 pass,0.74 s**
+(total0.76s):28 uploads across all four widths (24Array,4typed),32 driver readbacks and16 invalid
+range checks. Driver float readback proves selected values and conversion, with no GL error. This is
+host uniform proof, not a custom renderer/cache/guard/shader/draw execution claim.
+
+Changed original1 header: **1 attempted / 0 pass / 1 fail / 0 unattempted,124.9 s,Clang22.1.8
+jobs1**. The original uniform root is removed; this failed row joins existing
+emitter-conversion-b504f8c4 (1 -> 2), with previousCluster and the exact existing request.
+Pass source.value()'s proven readonly view directly; the null check supplies no writable authority.
+No readonly repair/cast, mutable owner recovery, fake renderer or domain narrowing is carried.
+
+The request records the full persistent source/cache identity, raw GLSL, opt-in guard, built-in
+locations, scalar/vector/default-array dispatch, texture resolution/unit order and active-program /
+subset draw requirements.12 pinned fake-GL source tests were read only. Historical sweep/carry
+counts and all foreign rows/prose are preserved; no normal generation, extra header or old/global
+proof rerun. Evidence remains under `/tmp/builder4-g2-custom-material/`.
 
 ### 107. `call-has-no-matching-e7b28969` — 1 G1 header(s), 0 pass, 1 follow-on
 
