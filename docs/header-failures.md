@@ -94,7 +94,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 65 | `no-viable-conversion-b3f3c7c6` | 3 | 3D | compiler | a value is passed where its declared type cannot receive it |
 | 66 | `no-viable-conversion-b5b698fe` | 3 | 2D | compiler | a value is passed where its declared type cannot receive it |
 | 67 | `other-3d2efc1d` | 3 | 2D | runtime | uncategorised: the first diagnostic does not name a single cause |
-| 68 | `other-41f4a462` | 3 | ANIM | runtime | uncategorised: the first diagnostic does not name a single cause |
+| 72 | `other-41f4a462` | 3 | ANIM | compiler | a named-property view (which aliases the source object) and an empty Record are the two arms of one conditional, so the conditi... *(request filed)* |
 | 69 | `other-6a1604d5` | 3 | PLAT | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 70 | `other-b860ec87` | 3 | 2D, GL | emission repair (applied) | omitted nominal-owner recovery supplied at the `return parent` branch; G2: 0 pass, 3 fail at the readonly-vs-nominal comparison |
 | 71 | `other-f9c5bc10` | 3 | 2D | compiler | an `as` assertion over a `flight::JsonValue` is lowered with the erased-value `object_if` pattern, which a tagged JSON value ca... *(request filed)* |
@@ -1277,13 +1277,16 @@ permissive assignment or always-default style behavior was supplied. Text layout
 - first failure at: `flight/textureatlas_formats/texture_atlas_detect.hpp:67`
 - example: `type 'Any' does not provide a subscript operator`
 
-### 68. `other-41f4a462` — 3 header(s)
+### 72. `other-41f4a462` — 3 header(s)
 
-- cause: uncategorised: the first diagnostic does not name a single cause
+- cause: a named-property view (which aliases the source object) and an empty Record are the two arms of one conditional, so the conditional has no common type
 - lanes: ANIM
-- fix route: runtime
+- fix route: compiler
+- why this route: NamedProperties already aliases the owner and has an empty default state; joining on it preserves identity, while a Record conversion would copy
 - first failure at: `flight/skeleton2d_formats/dragon_bones_parse_helpers.hpp:61`
-- example: `incompatible operand types ('NamedProperties' and 'Record<String, Any>')`
+- example: `incompatible operand types ('NamedProperties' and 'flight::Record<flight::String, flight::Any>')`
+- compiler request: `docs/compiler-requests/named-view-record-ternary.md`
+- related compiler request: `docs/compiler-requests/membership-test-lowered-literally.md`
 
 ### 69. `other-6a1604d5` — 3 header(s)
 
