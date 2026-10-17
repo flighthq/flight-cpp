@@ -69,6 +69,46 @@ is about *why* `loadVideoResourceFromUrl` cannot be lowered; this one is about w
 callers, and it would outlive that refusal: any partial module whose retained functions call its refused
 ones has the same outcome.
 
+### G2 video URL-loader declaration boundary
+
+At Flight `a627849` / compiler `806d257`, the exact `loadVideoResourceFromUrl` refusal marker,
+both live same-header calls and absent definition support `video-declare-refused-url-loader`
+through the existing declaration-only mechanism. The retained callers pass the readonly
+`HostVideoCapability` row, `flight::String`, optional readonly `VideoResourceLoadOptions` row and
+optional `AbortSignal`, and await or return `Task<Ref<VideoResource>>`. The declaration uses those
+exact carriers and preserves the source optional-argument defaults:
+
+```cpp
+flight::Task<flight::Ref<flight::types::VideoResource>> load_video_resource_from_url(
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostVideoCapability>>>> host_video,
+  flight::String url,
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResourceLoadOptions>>>>> options = std::nullopt,
+  std::optional<flight::AbortSignal> signal = std::nullopt);
+```
+
+No cross-header witness or new repair mechanism is needed. The URL-loader body remains refused
+as `cpp-union-runtime-domains-erased`; the existing
+[image-source discriminator request](image-source-union-domain-discriminator.md) still covers it.
+The actual generated `HostVideoCapability.load_url` already returns `Task<HostImageSource>`, and
+the SDL handle already retains its provider kind. A declaration does not supply the missing
+compiler-visible domain mapping, host video provider or URL decoder.
+
+The source rejects an absent load callback with `No video element backend available`, passes
+the original URL/options/signal to a present callback, and constructs a resource holding the
+same returned element with `ownsElement` true. The blob caller creates its object URL once,
+revokes it on rejection and records it on success; the list caller selects a source and uses
+the empty-resource branch only when selection finds none. Those bodies, callback ordering,
+owner identity, cancellation and task/error settlement are not substituted by this repair.
+The boundary to verify is an unused actual-header link and an object from each retained caller
+that fails to link on exactly the omitted URL loader.
+
+Measured against the real repaired header in C++20: the unused-header program compiled, linked
+and ran, including static signature/default-argument checks. Separate programs invoking the
+retained blob and URL-list loaders each compiled to an object; each then failed to link with
+exactly `flight::video::load_video_resource_from_url` undefined. No other missing symbol was
+reported. Normal exact-pin single-module generation reproduced only the owned header's
+declaration addition and the matching repair manifest record; the refusal block stayed intact.
+
 ## Second measured site: `@flighthq/midi`
 
 The same failure, from the same increment, at `generated/include/flight/midi/midi_subscription.hpp`: the

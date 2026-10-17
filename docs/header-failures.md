@@ -103,7 +103,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 74 | `undeclared-identifier-2cdb69a6` | 3 | PLAT | runtime + override (fixed) | the emitted code names `channel_elements`, which nothing declares; G2: 3 pass |
 | 75 | `undeclared-identifier-564c29cc` | 3 | TEXT | runtime + repair (fixed) | the emitted code names `format_date_value`, which nothing declares; G2: 1 pass, 2 to `undeclared-identifier-1a056bbc` |
 | 76 | `undeclared-identifier-6a187568` | 3 | 3D | declaration repair (applied) | refused ASCII STL counter declared; G2: 3 pass; counter remains unlinkable |
-| 77 | `undeclared-identifier-dc087108` | 3 | PLAT | runtime | the emitted code names `load_video_resource_from_url`, which nothing declares |
+| 77 | `undeclared-identifier-dc087108` | 3 | PLAT | declaration repair (applied) | refused URL loader declared; G2: 3 pass; URL loading remains unlinkable |
 | 78 | `call-has-no-matching-84410867` | 2 | 3D | compiler | the emitted call to `buffer_data` matches no declared overload |
 | 79 | `call-has-no-matching-d42144f0` | 2 | ANIM | compiler | the emitted call to `push` matches no declared overload |
 | 80 | `missing-member-da12a523` | 2 | 3D | runtime | the emitted code reads a member the target does not declare (`parse_obj_material_library`) |
@@ -1600,14 +1600,14 @@ their first failure moves to `get_number_format` and they join `undeclared-ident
 - Actual-header proof: unused header compiled, linked and ran; invoking the retained collector compiled to an object, then failed to link on exactly `flight::scene3d_formats::count_ascii_stl_facets(flight::String)`. Five existing repair witness/load/body tests passed.
 - Scoped native result after the C++ change: **3 attempted / 3 pass / 0 fail / 0 unattempted**, jobs **1**, covering only `_internal_stl_test_helper.hpp`, `stl_features.hpp`, and `stl_requirements.hpp` in `flight/scene3d_formats/`. All three product rows now pass with `previousCluster` and the request links. No global sweep was run; foreign rows/clusters and opening G1 totals remain unchanged.
 
-### 77. `undeclared-identifier-dc087108` — 3 header(s)
+### 77. `undeclared-identifier-dc087108` — 3 G1 header(s), declaration repaired
 
-- cause: the emitted code names `load_video_resource_from_url`, which nothing declares
-- subject: `load_video_resource_from_url`
-- lanes: PLAT
-- fix route: runtime
-- first failure at: `flight/video/video_resource_from.hpp:66`
-- example: `use of undeclared identifier 'load_video_resource_from_url'`
+- Applied repair: `video-declare-refused-url-loader` uses the existing declaration-only mechanism. The exact `loadVideoResourceFromUrl` refusal marker, two live same-header calls from the blob and URL-list loaders, and absent definition agree. No `calledFrom` or new mechanism is needed.
+- The signature preserves the retained callers' emitted carriers: readonly `HostVideoCapability` structural row, `flight::String`, optional readonly `VideoResourceLoadOptions` row, optional `AbortSignal`, and `Task<Ref<VideoResource>>` result. Source optional-argument defaults are retained. Normal exact-pin single-module generation reproduced only the owned header's declaration addition and matching repair manifest record; both inputs were restored clean.
+- The URL body remains refused at `cpp-union-runtime-domains-erased`. [Retained-callee emission](compiler-requests/retained-declaration-calls-omitted-callee.md) and the existing [image-source discriminator contract](compiler-requests/image-source-union-domain-discriminator.md) remain open. HostVideo's load callback already returns the real HostImageSource task and the SDL carrier already retains provider kind; no decoder/provider/host-domain implementation is supplied by this declaration.
+- Semantic limit: preserve absent-callback rejection, original URL/options/signal, the returned host element and owning resource, task/error/cancellation behavior, blob object-URL creation/revocation, and URL-list selection. The source's empty-resource branch belongs only to no selected URL; it is not a substitute for an unavailable loader.
+- Actual-header proof: unused-header compile/link/run and exact signature/default-argument checks passed. Separate real blob-loader and URL-list-loader programs compiled to objects; each then failed to link with exactly `flight::video::load_video_resource_from_url` undefined. Existing repair witness/rejection/body checks **3/3 passed**.
+- Scoped native result: **3 attempted / 3 pass / 0 fail / 0 unattempted**, jobs **1**, for `video_resource_from.hpp`, `contract.hpp` and `_internal_index.hpp` in `flight/video/`. Own rows now pass with `previousCluster` and both request links, but URL loading remains unusable when called and the module stays partial. Foreign rows/clusters and historical sweep totals are unchanged; no global sweep.
 
 ### 78. `call-has-no-matching-84410867` — 2 header(s)
 

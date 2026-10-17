@@ -89,8 +89,17 @@ from (AGENTS.md names them as `copyExternalImageToTexture` sources), so the reac
 
 ## Carrying workaround
 
-None, and the reason is not size — the refused module is 51 lines and a hand supply is available. It is
+No body workaround, and the reason is not size — the refused module is 51 lines and a hand supply is available. It is
 that the defect is in the *profile mapping*: a hand-written module would reproduce the mapping the
 profile should express, which is the "fork nobody chose" the repository's own rules are written to
 prevent. If the mapping is wanted in the profile, this belongs upstream; if a supply is wanted
 regardless, that decision should be explicit.
+
+At the G2 `806d257` follow-up, `video-declare-refused-url-loader` declares only the missing
+`load_video_resource_from_url` boundary, using the two retained callers' exact task/argument
+carriers. The refusal marker and unavailable body remain. Its unused-header and expected
+negative-link checks are tracked in
+[retained callers](retained-declaration-calls-omitted-callee.md); header compilation is not
+evidence of a working URL load or of a supplied host provider. The existing generated host method
+already carries `Task<HostImageSource>`, so this does not need another runtime handle, fake decoder,
+global callback change or narrower image/video-only source domain.
