@@ -41,7 +41,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 12 | `call-has-no-matching-d6950545` | 12 | 2D, CORE | compiler *(existing requests)* | generic `get_node_child_count<Traits>` called without the inferred trait on a non-deducible `RowMerge` parameter (command: `NodeAny`; SVG/Lottie: `Node2D` via heritage) |
 | 13 | `no-viable-conversion-9c3803c5` | 9 | 2D, WGPU | compiler *(existing request)* | generic `noop_renderer_data(…, NodeAny)` stored in `Scene2DRenderer.create_data`, whose `Node2D` does not widen to `NodeAny` |
 | 14 | `no-viable-conversion-dfea2d92` | 9 | 3D | compiler | a value is passed where its declared type cannot receive it |
-| 15 | `variant-cast-ccfedad4` | 10 | 3D | compiler | a retained readonly program row is reconstructed through a writable row before a readonly draw helper *(existing request extended)* |
+| 15 | `variant-cast-ccfedad4` | 13 | 3D | compiler | a retained readonly program row is reconstructed through a writable row before a readonly draw helper *(existing request extended)* |
 | 16 | `call-has-no-matching-b569e92e` | 8 | 3D, ANIM | compiler | the emitted call to `init_joint_base` matches no declared overload |
 | 17 | `undeclared-identifier-294e632e` | 8 | ANIM | declaration repair (applied) | omitted callee declaration supplied; G2: 1 pass, 7 fail at later diagnostics; function remains unlinkable |
 | 18 | `undeclared-identifier-3e3cccce` | 8 | GL | runtime | the emitted code names `blit_offset_shaders`, which nothing declares *(G2: 1 pass, 7 to `undeclared-identifier-e7884ac7`)* |
@@ -60,7 +60,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 31 | `call-has-no-matching-5a045ef4` | 5 | ANIM | compiler *(existing request)* | `SwfShapeState` passed to the anonymous writable `pen: { x; y }` parameter without an identity-preserving view |
 | 32 | `call-has-no-matching-b897f03f` | 5 | 3D | [compiler request](compiler-requests/heritage-argument-generic-deduction.md) | the `getNodeSignals` traits argument falls back to the default `Ref<NodeTraits>` instead of the inferred `Node3DTraits` |
 | 33 | `call-has-no-matching-dd66c064` | 10 | ANIM | compiler | an emitted SwfReader class instance cannot be passed as its structural SwfTagReader interface to the parse callback *(existing request)* |
-| 34 | `compiler-crash-aba5e9ec` | 5 | 3D | none (sweep resource limit; passes serially) | the -j8 sweep ran out of room (retried serially) |
+| 34 | `compiler-crash-aba5e9ec` | 5 | 3D | none (no crash serially) | G2 serial `-j1`: status 134 does not reproduce; 1 pass, 3 moved to `variant-cast-ccfedad4`, 1 to `emitter-conversion-2b9a0802` |
 | 35 | `invalid-operands-6d9a155d` | 5 | 2D | [compiler request](compiler-requests/token-discriminant-comparison.md#g2-current-pin-qualification-all-three-paint-guards-use-this-carrier) | three morph-paint guards compare the whole optional token variant with a String |
 | 36 | `missing-member-5e9e8a2c` | 5 | PLAT | compiler | retained cross-module calls name the refused generic graph-bounds helper *(existing requests extended)* |
 | 37 | `no-viable-conversion-eaf1a6e0` | 5 | 2D | compiler *(existing request)* | generic `noop_renderer_data(…, NodeAny)` stored in `SpriteRenderer.create_data`, whose `Sprite` does not widen to `NodeAny` |
@@ -578,7 +578,7 @@ so no second request is filed.
 - first failure at: `flight/scene3d_gl/gl_pbr_extension_registry.hpp:64`
 - example: `no viable conversion from '(lambda at /home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/fbd4b072-2bb9-4e1f-a50b-5b91857e85fc/repo/overrides/include/flight/scene3d_gl/gl_pbr_extension_registry.hpp:64:24)' to 'function<bool (optional<Texture>)>' >')`
 
-### 15. `variant-cast-ccfedad4` — 10 header(s), still failing (9 at G1; `gl_wireframe_mesh_material_renderer.hpp` joined in G2 from cluster 78)
+### 15. `variant-cast-ccfedad4` — 13 header(s), still failing (9 at G1; `gl_wireframe_mesh_material_renderer.hpp` joined in G2 from cluster 78; 3 from cluster 34)
 
 - cause: the native readonly active-program row is reconstructed through a writable row before a readonly draw-helper call
 - lanes: 3D
@@ -978,12 +978,20 @@ Five owned SWF rows joined this existing cluster after the declaration repair in
 The original five G1 rows remain unchanged and were not recompiled. The same mutable reader
 instance must supply interface reads and writes; copying it into an interface owner would change behavior.
 
-### 34. `compiler-crash-aba5e9ec` — 5 header(s)
+### 34. `compiler-crash-aba5e9ec` — G2 serial recheck of 5 headers
 
-- cause: the -j8 sweep ran out of room (retried serially)
-- lanes: 3D
-- fix route: none (sweep resource limit; passes serially)
-- example: `compiler exited with status 134`
+- G1 recorded these 5 as `compiler exited with status 134` under the `-j8` sweep. Unlike the 12 crashes that a serial retry compiled (summary table), no per-header serial result was saved for them, so the route's "passes serially" was not evidence.
+- G2 serial recheck: GCC 15.2, one header at a time (`-j1`), on base `4d9a4ae8`. **5 attempted, 1 pass, 4 fail, 0 crash.** Each run took 211-447 s. The abort does not reproduce, so it was sweep resource pressure and nothing here is a compiler crash. No crash request is filed, and memory was not measured.
+
+| header | serial result | true first failure | follow-on |
+| --- | --- | --- | --- |
+| `anisotropy_pbr_gl_extension.hpp` | pass | — | — |
+| `gl_blinn_phong_mesh_material_renderer.hpp` | fail | `:126` readonly `GlMeshProgram` row rebuilt through `StructuralRef<RowWritable<…>>` | `variant-cast-ccfedad4` ([request](compiler-requests/guarded-readonly-optional-helper-call.md)) |
+| `gl_specular_glossiness_pbr_mesh_material_renderer.hpp` | fail | `:121`, same program round trip | `variant-cast-ccfedad4` |
+| `contract.hpp` | fail | `gl_blinn_phong_mesh_material_renderer.hpp:126` via include (180 errors in all) | `variant-cast-ccfedad4` |
+| `gl_extended_pbr_mesh_material_renderer.hpp` | fail | `:66` `Array<PbrExtensionValue>` passed as `Array<Ref<PbrExtension>>` | `emitter-conversion-2b9a0802` ([request](compiler-requests/array-of-union-into-array-of-owner.md)) |
+
+- The follow-on clusters only changed count (13 and 2). Historical G1 sweep totals are unchanged, and no fake pass is recorded.
 
 ### 35. `invalid-operands-6d9a155d` — 5 header(s)
 
