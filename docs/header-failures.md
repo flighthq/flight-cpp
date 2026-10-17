@@ -21,7 +21,7 @@ H1) is appended from its author's standalone build and public-header test rather
 
 Ranked below by headers affected. The fix route is a first-pass judgement from the emitted code and the
 host headers; a G2 worker confirms it before choosing a mechanism. Clusters marked as owned by builder4
-are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offered as separate G2 work.
+are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL text work.
 
 ## Clusters, ranked by headers affected
 
@@ -30,7 +30,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 1 | `call-has-no-matching-9c08d665` | 117 | WGPU | compiler | bound WebGPU descriptor object literals are emitted as untyped source-order braced initializers with anonymous nested owners *(request filed)* |
 | 2 | `missing-member-b1a6d5cf` | 34 | 2D | compiler | scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined *(request filed)* |
 | 3 | `in-operator-not-lowered-b1eae4af` | 31 | 2D, GL, PLAT, WGPU | compiler | the TypeScript `in` operator is emitted verbatim as C++ `in` at 4 root headers *(existing request extended)* |
-| 4 | `undeclared-identifier-993e82f1` | 29 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(builder4/E0a)* |
+| 4 | `undeclared-identifier-993e82f1` | 29 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(request filed; builder4/G2)* |
 | 5 | `call-has-no-matching-3882b3e9` | 27 | 2D, 3D, TEXT | binding | same braced-descriptor shape against the device binding's constrained variadic create_texture *(builder4/E0a)* |
 | 6 | `other-52e846a6` | 18 | ANIM | compiler | a value_type is combined with a three-alternative variant where the declared slot expects one alternative |
 | 7 | `call-has-no-matching-47410fe2` | 16 | 2D, 3D | runtime (fixed) | Number is now a callable conversion object; G2 recheck: 2 pass, 14 fail at later compiler diagnostics |
@@ -342,7 +342,7 @@ nominal downcast would narrow the semantics, and no erased TypeScript form is si
 
 **G1 status retained: 0/31 pass, 31 fail.** No C++ recompile was run because no code changed.
 
-### 4. `undeclared-identifier-993e82f1` — 29 header(s) *(builder4/E0a)*
+### 4. `undeclared-identifier-993e82f1` — 29 header(s) *(builder4/G2)*
 
 - cause: the template parameter name `Traits` leaks into emitted code as a free identifier
 - subject: `Traits`
@@ -351,7 +351,25 @@ nominal downcast would narrow the semantics, and no erased TypeScript form is si
 - why this route: the template parameter name `Traits` leaks into emitted code as a free identifier
 - first failure at: `flight/scene3d/scene_document.hpp:106`
 - example: `use of undeclared identifier 'Traits'`
-- owned by: builder4 (E0a: TextLabel / layout / Scene2D GL text)
+- owned by: builder4 (G2: reserved Traits / text-binding follow-up)
+
+G2 scoped result after E0a, Clang 22.1.8 at `-j1`: **0/29 compile; all 29 still fail on `Traits`**.
+The original 29 rows were selected explicitly; the first three completed before a checkpoint stop,
+and the remaining 26 resumed with `-Wfatal-errors`. No header was inferred passing or left unattempted.
+
+| actual first error site | rows |
+| --- | --- |
+| `flight/scene3d/scene_document.hpp:106` | 17 |
+| `flight/textinput/text_input_editing.hpp:172` | 9 |
+| `flight/physics3d/node_sync.hpp:31` | 1 |
+| `flight/scene2d_formats/lottie_solid_layer.hpp:50` | 1 |
+| `flight/scene3d/scene_node_transform.hpp:82` | 1 |
+
+These non-generic callers still convert an argument to a target containing the callee's unsubstituted
+`Traits` parameter. The native TextLabel work cleared none of these first causes. They link the existing
+[generic call argument substitution request](compiler-requests/generic-call-argument-uses-unsubstituted-parameter-type.md);
+no runtime alias or replacement owner was added. The five source-site files are unchanged across the
+clean delivered-base update after the check. G1 sweep totals and unowned rows remain unchanged.
 
 ### 5. `call-has-no-matching-3882b3e9` — 27 header(s) *(builder4/E0a)*
 
