@@ -3349,11 +3349,11 @@
       "status": "partial",
       "derivedFrom": "95fe1d97f27c1b235bad816f9c482be7217d1836159ce62bca659311777655d6",
       "reason": "The pinned emitter flattens related C++ owners and refuses or mis-types the retained native Scene2D GL call chain. The native lane must keep concrete owners through callbacks, caches and traversal rather than cast base objects or materialize replacement rows.",
-      "change": "Derives the declared native owner lane from the pinned source; preserves the original graph, descriptor, data and cache owners and performs the actual source GL operations where this module owns them.",
+      "change": "Derives the declared native owner lane from the pinned source; preserves the original graph, descriptor, data and cache owners and performs the actual source GL operations where this module owns them. The default Sprite factory accepts both an omitted argument and the emitter explicit std::nullopt absence sentinel through the same constructor; supplied options are not ignored.",
       "equivalence": "Source ordering, absence, identity, invalidation, cache membership, transform/color math and native draw arguments are retained in the supported lane. Unsupported owner/capability branches remain explicit debt, never a painter or fake renderer.",
       "whyNotAPatchOrRepair": "A declaration repair cannot supply refused behavior. Portable source annotations cannot make flattened native C++ siblings share concrete owners; the native callable/trait binding and source-derived bodies are the remaining boundary.",
       "unblocks": "The actual native camera2d Scene2D GL example include and execution chain.",
-      "remaining": "Default native Sprite construction and its identity/version renderer-data lifecycle are supplied. Custom data/runtime factories and generic non-GL callback projection remain unavailable.",
+      "remaining": "Default native Sprite construction and its identity/version renderer-data lifecycle are supplied. Only omission and std::nullopt options are accepted; present PartialNode<Sprite> options, custom data/runtime factories and generic non-GL callback projection remain unavailable.",
       "expires": "when emission preserves the declared family and callback owners and supplies the native Scene2D GL functions without these projections.",
       "authoredOn": "2026-10-16",
       "supplies": "packages/scene2d/src/sprite.ts"

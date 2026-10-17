@@ -1,5 +1,6 @@
 // Default native Sprite owner lane from sprite.ts. Custom factory/runtime lanes remain unsupported.
 #pragma once
+#include <optional>
 #include <flight/node/native_node2d_access.hpp>
 #include <flight/scene2d/display_object.hpp>
 #include <flight/texture/texture.hpp>
@@ -14,6 +15,9 @@ inline flight::Ref<flight::types::Sprite> create_sprite() {
   result->pivot_x = result->pivot_y = result->rotation = result->skew_x = result->skew_y = result->x = result->y = 0;
   result->scale_x = result->scale_y = 1;
   return result;
+}
+inline flight::Ref<flight::types::Sprite> create_sprite(std::nullopt_t) {
+  return create_sprite();
 }
 inline auto native_sprite(flight::types::Node2D node) {
   auto source = node.shared_exact_object<flight::types::Sprite>();

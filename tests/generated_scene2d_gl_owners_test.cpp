@@ -4,12 +4,14 @@
 #include <flight/render_gl/gl_render_state.hpp>
 #include <flight/render_gl/gl_quad_material_registry.hpp>
 #include <flight/scene2d/display_object.hpp>
+#include <flight/scene2d/sprite.hpp>
 #include <flight/scene2d_gl/gl_quad_batch_writer.hpp>
 #include <flight/shape/shape.hpp>
 #include <flight/types/gl_render_state.hpp>
 
 #include <cmath>
 #include <iostream>
+#include <optional>
 #include <stdexcept>
 
 namespace {
@@ -18,11 +20,35 @@ void require(bool value, const char* message) {
 }
 struct Data : flight::ReferenceEnabled { int token{}; };
 struct OtherData : flight::ReferenceEnabled {};
+template <typename Options>
+concept SpriteAcceptsOptions = requires(Options options) {
+  flight::scene2d::create_sprite(options);
+};
+using SpriteOptions = flight::StructuralRef<flight::RowReadonly<flight::RowPartial<
+    flight::RowOf<flight::Ref<flight::types::Sprite>>>>>;
+static_assert(SpriteAcceptsOptions<std::nullopt_t>);
+static_assert(!SpriteAcceptsOptions<SpriteOptions>);
+static_assert(!SpriteAcceptsOptions<int>);
 }
 
 int main() {
   try {
     using flight::RowKey;
+    auto sprite = flight::scene2d::create_sprite(std::nullopt);
+    auto second_sprite = flight::scene2d::create_sprite();
+    auto sprite_view = flight::node::native_node_2d(sprite);
+    require(sprite->enabled && sprite->visible && sprite->kind == flight::types::sprite_kind &&
+                sprite->alpha == 1 && sprite->scale_x == 1 && sprite->scale_y == 1 &&
+                sprite->x == 0 && sprite->y == 0 && !sprite->data->texture,
+            "absent Sprite options lost the source defaults or texture absence");
+    require(sprite != second_sprite && sprite->data != second_sprite->data &&
+                sprite->entity_runtime_key != second_sprite->entity_runtime_key &&
+                flight::node::native_node_2d_runtime(sprite_view) == sprite->entity_runtime_key.value() &&
+                flight::scene2d::native_sprite(sprite_view) == sprite,
+            "absent Sprite options shared defaults or replaced the concrete owner/runtime");
+    flight::row_set<RowKey<"x">>(sprite_view, 9.0);
+    require(sprite->x == 9 && second_sprite->x == 0,
+            "Sprite graph view failed to retain its own live owner cells");
     auto state = flight::make_ref<flight::types::GlRenderState>();
     auto runtime = flight::make_ref<flight::types::GlRenderStateRuntime>();
     state->entity_runtime_key = runtime;
