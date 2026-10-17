@@ -23,30 +23,40 @@ claim more than this key-only operation needs and must not manufacture another r
 `registry-kind-map-keys-value-parameter` changes only the helper declaration:
 
 ```ts
-export function getKindMapKeys<T>(out: Kind[], map: ReadonlyMap<Kind,T>): void {
+export function getKindMapKeys<MapType extends ReadonlyMap<Kind,unknown>>(out: Kind[], map: MapType): void {
   out.length = 0;
   for (const key of map.keys()) out.push(key);
   out.sort();
 }
 ```
 
-All map value types accepted by the original unknown-valued readonly input remain accepted. T is
-unconstrained and inferred, including unknown itself; no public key/value domain is narrowed. The
-complete original and patched module transpile to byte-identical JavaScript. The same out array is
-cleared and sorted, and the map is only read. Native generic Map<String,T> preserves its storage and
-original values; this introduces no erased-container conversion or new runtime API.
+The whole-map parameter retains the original ReadonlyMap<Kind,unknown> constraint, including unions
+of maps with different value types. Compatibility controls cover those unions, an unknown-valued map,
+nested reference values and assignment to the original function signature. A parameter generic only
+in V can reject heterogeneous map unions during inference, so it is not the carried form. The complete
+original and patched module transpile to byte-identical JavaScript. The same out array is cleared and
+sorted, and only map keys are read. Native MapType retains the caller's existing typed map and values;
+no erased-container conversion is introduced. The emitter uses map->keys() on MapType; the runtime
+Map supplies a const operator-> self-view of the current value handle. It returns this without
+allocating, copying entries or replacing shared storage; keys() keeps the original live iterator.
+No data fields or value/identity policy change.
 
-Normal exact-pin single-module generation lowered 1,035 modules across two packages, emitted the one
-selected module with no refusals, and applied 255 source patches and two existing repairs. The generated header
-changes only the template/value parameter and removes its unused Any include; the manifest carries
-only this patch's applied digest, with existing package/global counts unchanged. Original1 native
-header check is **1/1 pass, 0 failures, 0 unattempted**, Clang 22.1.8, one worker, 76.4 seconds. The changed existing
-native registry test now passes its typed String map directly; it compiles, links and runs with exit 0.
-A direct actual-helper probe also compiles/links/runs with exit 0 for the exact NodeRenderer-reference map,
-numeric and Any values, empty maps, caller-array alias/clear behavior, open UTF16 key sorting, unchanged
-map order and original value owners. It invokes no renderer or pipeline coverage body. Source-patch
-mechanism tests pass 2/2. The old cluster is removed; the pass row keeps previousCluster and this request.
-These checks qualify the map-key boundary, not graph/runtime capability or complete coverage behavior.
+Normal exact-pin single-module generation lowered 1,035 modules across two packages, emitted the
+selected module with no refusals, and applied 255 source patches and two existing repairs. Its final
+header uses MapType and map->keys(), with the runtime self-view above; the source module body and
+caller expressions are unchanged. The manifest carries only this patch's applied digest, with
+existing package/global inventory totals unchanged.
+
+Final original-header check: **1/1 pass, 0 failures, 0 unattempted**, Clang 22.1.8, one worker,
+73 seconds. The changed native registry test passes its typed map directly and compiles/links/runs
+with exit 0. The direct actual-helper probe also compiles/links/runs with exit 0 for the exact
+NodeRenderer-reference map, numeric/Any/empty maps, caller-array aliases and clearing, open UTF16
+key sorting, map order and original value owners. It checks the Map self-view points to its handle;
+no renderer or coverage body is invoked. The scoped runtime CMake target builds and
+flight_cpp.runtime passes 1/1 (0.02 seconds). Source-patch mechanism tests pass 2/2; the final
+whole-map source/type-domain oracle passes. The old cluster is removed; the pass row keeps its
+previousCluster and request. These checks qualify key enumeration, not the graph-owner obligations below.
+
 
 ## Full node-kind coverage contract
 

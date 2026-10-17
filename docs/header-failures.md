@@ -3103,35 +3103,38 @@ failed, with foreign rows/clusters and historical G1 totals unchanged.
 
 ### 126. `no-viable-conversion-0faa55ca` — 1 header, key-map conversion fixed
 
-- original cause: `getKindMapKeys(ReadonlyMap<Kind,unknown>)` emits `Map<String,Any>` while the caller
-  holds the original `Map<String,Ref<NodeRenderer>>`; there is no implicit value-owner conversion
-- fix: source patch `registry-kind-map-keys-value-parameter` makes the key-only helper generic in T;
-  its whole module emits byte-identical JavaScript and every runtime expression/caller is unchanged
+- original cause: the key helper takes native `Map<String,Any>` while its caller retains the original
+  `Map<String,Ref<NodeRenderer>>`; those value/storage carriers do not implicitly widen
+- fix: source patch `registry-kind-map-keys-value-parameter` keeps the whole MapType constrained to
+  the original ReadonlyMap<Kind,unknown>; its body/callers and complete emitted JavaScript are unchanged
+- runtime bridge: Map's const operator-> returns its current value handle, preserving shared storage;
+  the generated generic helper can call the original keys() iterator without any map/value conversion
 - request: [readonly map key enumeration/value carrier](compiler-requests/readonly-map-key-enumeration-value-carrier.md)
 - original first failure: `flight/render/explain_scene_2d_pipeline_coverage.hpp:60`
 - original example: `no viable conversion from 'Map<[...], flight::Ref<flight::types::NodeRenderer>>' to 'Map<[...], flight::Any>'`
 
-**G2 changed original 1: 1 attempted / 1 pass / 0 failures / 0 unattempted**, Clang 22.1.8, one worker, 76.4 seconds.
-The old cluster is removed; its row is pass with previousCluster/request and the related existing
-[node-any/default-runtime request](compiler-requests/node-any-generic-traits-leak.md). The registry
-header is reproduced by exact-pin normal one-module generation: 1,035 lowered modules across two packages, one emitted module, no refusals,
-255 source patches and two existing repairs. Only the generic declaration/value type and unused include change;
-existing package/global inventory totals stay intact, with one own applied-patch digest added.
+**Final changed original 1: 1 attempted / 1 pass / 0 failures / 0 unattempted**, Clang 22.1.8,
+one worker, 73 seconds. The old cluster is removed; the pass row retains previousCluster/request and
+links the existing [NodeAny/default-runtime request](compiler-requests/node-any-generic-traits-leak.md).
+Whole-map type controls retain mixed-map unions, unknown/nested-owner maps and the original function
+signature; a value-only generic can narrow union inference and is not the carried form.
 
-The changed native registry test passes its typed map directly. It and an actual-helper probe both
-compile/link/run with exit 0; the probe covers exact NodeRenderer-reference, numeric, Any and empty maps,
-caller-array aliases/clearing, open UTF16 sorting, unchanged map order and value-owner identity. Source
-mechanism tests pass 2/2. No permissive Map-to-Any conversion, new registry, renderer call or copied
-owner is supplied. The helper retains its full accepted value domain and reads keys only.
+Normal exact-pin one-module generation: 1,035 lowered modules across two packages, one emitted module,
+no refusals, 255 source patches and two existing repairs. The final header uses MapType/map->keys();
+only its applied-patch digest changes in generation metadata, with package/global totals intact.
+The changed registry test and actual-helper probe compile/link/run with exit 0. The probe covers exact
+NodeRenderer-reference, numeric, Any and empty maps, self-view/caller-array aliases, clearing, open
+UTF16 sorting, map order and value-owner identity. Scoped runtime CMake build and CTest pass 1/1
+(0.02 seconds); source mechanism tests pass 2/2. No permissive Map-to-Any conversion or copied registry.
 
-The source query still collects all node kinds (root plus live iterative preorder descendants), then
-sorts actual registered/used keys and returns uncovered=used-minus-registered and unused=registered-
-minus-used. Open vendor strings and all nodes remain included; no always-covered/empty result or
-backend/visibility/kind filter is introduced. Its inspected collector still selects default NodeTraits
-for NodeAny runtime children; this graph/runtime owner debt is separate from the fixed key call.
-Five source pipeline cases and two key-helper cases were inspected only. The native key/header checks
-do not exercise the pipeline graph walk or prove live rendering/coverage behavior. Foreign products,
-C++ owners, repairs, overrides and pins remain unchanged; no global or unchanged native rerun.
+The source query still collects all node kinds (root plus live iterative preorder descendants), sorts
+the actual used/registered keys, and returns uncovered=used-minus-registered and unused=registered-
+minus-used. Vendor strings and all nodes remain accepted; no always-covered/empty result, visibility
+or backend filter is introduced. Its inspected collector still selects default NodeTraits for NodeAny
+runtime children; graph/runtime owner debt stays separate. Five pipeline and two key-helper source
+cases were inspected only. Native header/key/runtime checks do not exercise this graph walk or prove
+live coverage/rendering. Foreign products, owner storage/layout, repairs, overrides and pins remain
+unchanged; no global or unchanged native rerun is claimed.
 
 ### 127. `no-viable-conversion-2909a65f` — G2 recheck of 1 header
 
