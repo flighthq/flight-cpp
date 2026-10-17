@@ -81,7 +81,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 52 | `undeclared-identifier-0fc9e20f` | 4 | 2D | declaration repair (applied) | omitted artboard-import-context declaration supplied; G2: 0 pass, 4 fail at the next omitted callee; function remains unlinkable |
 | 53 | `undeclared-identifier-69b85faa` | 4 | PLAT | declaration repair (applied) | omitted untrack callee declaration supplied; G2: 0 pass, 4 fail at the next omitted callee; function remains unlinkable |
 | 58 | `undeclared-identifier-7d64d9c1` | 4 | GL | compiler | the emitter refuses the `glCustomShaderEffectRunner` binding and its resolver but still emits the registration call that passes... *(request filed)* |
-| 55 | `undeclared-identifier-862d162a` | 4 | 3D | runtime | the emitted code names `build_gltf_animations`, which nothing declares |
+| 55 | `undeclared-identifier-862d162a` | 4 | 3D | [compiler request](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-gltf-animations-a-declaration-fails-the-unused-header-link-prerequisite) | the refused animation builder is still called by the global handler; a declaration fails the unused-header link prerequisite |
 | 56 | `undeclared-identifier-f2b46b01` | 4 | 3D | declaration repairs (applied) | refused standard/unlit callback declarations supplied; G2: 1 pass, 3 deeper compiler failures; callbacks remain unlinkable |
 | 57 | `call-has-no-matching-3b2f72dd` | 3 | PLAT | compiler | the emitted call to `is_optional_number` matches no declared overload |
 | 58 | `call-has-no-matching-56e47749` | 3 | GL | compiler | the emitted call to `compute_node_root_local_bounds_rectangle` matches no declared overload |
@@ -1160,12 +1160,30 @@ callers, so the follow-on is the same omission class rather than a new defect.
 
 ### 55. `undeclared-identifier-862d162a` — 4 header(s)
 
-- cause: the emitted code names `build_gltf_animations`, which nothing declares
+- cause: buildGltfAnimations is refused, but the globally initialized handler retains an undeclared call
 - subject: `build_gltf_animations`
 - lanes: 3D
-- fix route: runtime
+- fix route: compiler — [existing retained-callee request](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-gltf-animations-a-declaration-fails-the-unused-header-link-prerequisite)
 - first failure at: `flight/scene3d_formats/gltf_animations.hpp:209`
 - example: `use of undeclared identifier 'build_gltf_animations'`
+
+All three declaration witnesses hold: exact builder refusal marker, retained direct call and absent
+definition. A temporary one-declaration overlay compiled the actual unused header to an object, but
+its required positive link failed on exactly the builder symbol: the global handler initializer
+retains the apply lambda even when main never uses it. The candidate was rejected; no repair entry,
+generated C++, manifest change or substitute animation body is carried. This failed positive-link
+prerequisite is not a successful negative-link check.
+
+The builder's refusal is `cpp-member-projection-without-present-storage` for an unidentified `length`
+receiver. The separately refused weights helper is covered by the
+[existing contextual-union evidence request](compiler-requests/compiler-contextual-imported-union-owner.md).
+Real animation channels retain track owners and the accessor-backed times/values; a faithful fix must
+preserve their order, diagnostics and morph-node fan-out rather than return an empty list or copy owners.
+
+Delivered qualification remains **0/4 pass, 4 fail**, retained from G1 with the exact diagnostics
+unchanged. Only the four owned rows and this cause were updated; unowned rows and historical totals
+remain unchanged. With no production C++ change, no unchanged four-header recompile or global sweep
+was run and no animation execution or upstream test coverage is claimed.
 
 ### 56. `undeclared-identifier-f2b46b01` — 4 header(s)
 

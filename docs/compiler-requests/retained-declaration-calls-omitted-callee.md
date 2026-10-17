@@ -462,3 +462,55 @@ cause and [request](object-literal-into-outcome-variant.md#g2-scene3d-resource-c
 Those changed diagnostics remain failures. Only the four owned rows and affected causes changed;
 the existing two unowned coverage rows and historical G1 totals are retained without recompiling them.
 No global sweep or upstream test port was performed, and no refused lister body became available.
+
+## G2 glTF animations: a declaration fails the unused-header link prerequisite
+
+At compiler `806d257` / Flight `a627849`, the four-header G1 group
+`undeclared-identifier-862d162a` first fails at `scene3d_formats/gltf_animations.hpp:209`:
+`use of undeclared identifier 'build_gltf_animations'`. The header has the exact
+`NOT GENERATED: function buildGltfAnimations -- source line 34` marker, retains a direct call from
+`gltf_animations_core_feature_handler.apply`, and has no declaration or definition of the builder.
+No definition exists in the runtime or override trees either.
+
+The builder is refused as `cpp-member-projection-without-present-storage`: a `length` read on optional
+C++ storage lacks presence evidence. The refusal does not identify the receiver expression, so this
+qualification does not attribute it to a particular source `length` read. The separate
+`appendGltfWeightsChannels` refusal at source line 118 is the already reduced
+[`ArrayLike.length` contextual-union evidence gap](compiler-contextual-imported-union-owner.md).
+That request covers the weights helper, not the builder's different winning refusal.
+
+The actual retained caller fixes the declaration candidate's carriers:
+
+```cpp
+flight::Array<flight::Ref<flight::types::Scene3DDocumentAnimation>> build_gltf_animations(
+    flight::StructuralRef<flight::RowReadonly<
+        flight::RowOf<flight::Ref<flight::types::GltfCoreFeatureContext>>>> context);
+```
+
+The existing guarded repair engine matched exactly this header in a temporary overlay and inserted
+only that declaration before the retained handler. Reapplication was a fixed point. With this actual
+header, `#include <flight/scene3d_formats/gltf_animations.hpp>` followed by `int main() { return 0; }`
+compiled to an object with Clang 22.1.8. **The required unused-header positive link failed**, with exactly
+one undefined symbol: `flight::scene3d_formats::build_gltf_animations` at the declaration's readonly
+context carrier. The link reference comes from the original handler's apply lambda, even though main
+does not use the handler: the inline handler is globally initialized and retains the callback.
+This is a failed prerequisite, not a successful called-function negative-link check.
+
+The declaration candidate is therefore rejected. No repair entry, generated C++, manifest change,
+replacement handler or builder body is carried. A placeholder signature alone cannot close this
+globally initialized site. Omission propagation must account for the retained initializer, or faithful
+body emission must make its callback available; a signature cannot make an unused include link here.
+
+The source and emitted owners also rule out an empty-list substitute. GltfCoreFeatureContext owns the
+original document and node/primitive index maps. Accessor results carry `SequenceView<double>` data;
+both the pinned `initializeAnimationTrack` and its native override retain those times and values.
+Each document animation holds `Array<Ref<Scene3DDocumentAnimationChannel>>`, and each channel retains
+its `Ref<AnimationTrack>`. A faithful implementation must preserve source animation/channel order,
+duration and name defaults, accessor/cardinality/path diagnostics, quaternion width, and weights
+fan-out to each original morphable mesh node at that mesh's actual target count. Replacing channels,
+tracks or buffers with copied owners would change these relationships.
+
+Qualification remains **0/4 pass, 4 fail**, retained from G1 at the original undeclared-call diagnostic.
+Only the four owned product rows and this cause are request-linked. No production C++ input changed,
+so the unchanged four-header gate and global sweep were not rerun. There is no claim that animation
+import can execute or that a new native header pass was obtained.
