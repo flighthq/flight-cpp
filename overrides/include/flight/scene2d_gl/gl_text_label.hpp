@@ -88,8 +88,6 @@ inline void draw_native_gl_text_label(flight::Ref<flight::types::GlRenderState> 
     auto params = label_runtime->build_text_layout_params(label, measure);
     auto layout = flight::textlayout::get_text_layout_result(label_runtime);
     flight::textlayout::compute_text_layout(layout, params);
-    label_runtime->text_layout_using_content_id = version;
-    label_runtime->text_layout_using_text = label->data->text;
     data->last_content_id = version; data->last_pixel_ratio = ratio;
     data->log_w = data->log_h = 0;
     double max_x = 0, max_y = 0;

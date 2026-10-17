@@ -152,6 +152,8 @@ void verify_text_labels(const Scene2DRenderFrame& frame,
     if (flight::node::native_node_2d_runtime(node) != runtime)
       throw std::runtime_error("TextLabel runtime identity differs from graph runtime");
     if (!(*proxy)->visible || label->data->text.length() == 0) continue;
+    // Query through the public layout contract, which owns its distinct cache revision.
+    flight::text::ensure_text_layout(label);
     if (!data->bitmap || data->last_content_id != runtime->local_content_id ||
         !runtime->text_layout || runtime->text_layout_using_content_id != runtime->local_content_id ||
         runtime->text_layout_using_text != label->data->text || data->log_w <= 0 || data->log_h <= 0)
