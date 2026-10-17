@@ -382,6 +382,7 @@ their replacement failure clusters changed here; `previousCluster` preserves the
 - why this route: an optional<Record<...>> is initialised from a shape that is not its declared storage
 - first failure at: `flight/scene3d_formats/three_ds_parse.hpp:208`
 - example: `no matching constructor for initialization of 'optional<Record<String, variant<bool, double, String>>>'`
+- compiler request: [optional-record-literal-not-materialized.md](compiler-requests/optional-record-literal-not-materialized.md) (filed; sites still failing, status unchanged)
 
 ### 9. `static-cast-assertion-9674a66c` — 15 header(s)
 
