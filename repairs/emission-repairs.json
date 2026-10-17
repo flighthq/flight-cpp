@@ -9183,6 +9183,20 @@
       "defect": "The emitter refuses the nine solver bindings because each body asserts the base joint owner down to a concrete joint owner (cpp-reference-assertion-without-heritage, the boundary recorded in docs/compiler-requests/interface-heritage-widening.md), yet it still emits registerBuiltInPhysics2DJointSolvers calling register_physics_2d_joint_solver with all nine names from another header. This declares only the exact Ref<Physics2DJointSolver> slots the registration call constructs, in the refused module's own header, so every importer sees them through the include it already has. It supplies no solver body, no warm-start, solve, clear-accumulated-impulses or reaction writing, no impulse math and no joint narrowing. The exact NOT GENERATED binding marker remains. An unused include of the registration header links, and a call of register_built_in_physics_2d_joint_solvers compiles to an object then fails to link on exactly the absent solver bindings.",
       "expectedWhen": "always",
       "expires": "when the solver bindings emit and the exact NOT GENERATED binding marker disappears; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "interaction-declare-refused-text-char-index",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/interaction/register_text_hit_test.hpp",
+      "symbol": "resolve_text_char_index",
+      "refusedFunction": "resolveTextCharIndex",
+      "declaration": "double resolve_text_char_index(flight::types::NodeAny source, double x, double y);",
+      "retainedReference": "flight::interaction::register_hit_test_precise(flight::types::text_label_kind, resolve_text_char_index);",
+      "sourceDeclaration": "packages/interaction/src/registerTextHitTest.ts -- resolveTextCharIndex(source: NodeAny, x: number, y: number): number; retained TextLabel and RichText registrations pass exactly HitTestPreciseFunction = double(NodeAny, double, double)",
+      "diagnostic": "use of undeclared identifier 'resolve_text_char_index'",
+      "defect": "The exact NOT GENERATED marker, two live function-argument callback uses and absent definition agree. The existing repair adds only the precise callback carrier. The body remains refused at NodeAny-to-TextLabel owner recovery; no hit result, layout, bounds/transform operation, copied owner or narrower graph is supplied. Explicit registration must fail to link only on this callback. Body ownership request: docs/compiler-requests/readonly-callback-derived-owner-recovery.md; retained use: docs/compiler-requests/retained-declaration-calls-omitted-callee.md.",
+      "expectedWhen": "always",
+      "expires": "when resolveTextCharIndex emits or its exact retained registration disappears; sdk:check fails if this repair matches no header."
     }
   ]
 }
