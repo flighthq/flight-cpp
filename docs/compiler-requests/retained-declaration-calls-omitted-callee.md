@@ -272,3 +272,47 @@ The upstream case for this function is thin and worth stating so nobody mistakes
 `bitmapFontGlyphSource.test.ts` asserts only `expect(typeof initializeGlyphSourceFromBitmapFont).toBe('function')`.
 A declaration-only repair satisfies exactly that, which is why the fail-loud closeout is verified by a
 header compile plus a *negative* link check rather than by a behavioural assertion.
+
+## G2 SWF authored bounds: declaration visibility and data ownership are separate gaps
+
+At compiler `806d257` / Flight `a627849`, `swfNode.ts` refuses `applySwfAuthoredBounds` at source
+line 29 as `cpp-type-assertion-unidentified`, but retains `createSwfDisplayObject` calling it.
+G1 cluster `undeclared-identifier-294e632e` contains eight headers whose first error is that
+undeclared call in `flight/swf/swf_node.hpp`.
+
+The three declaration-repair witnesses agree:
+
+- The header contains the exact `NOT GENERATED: function applySwfAuthoredBounds` marker.
+- The retained caller passes its `Node2D` alias and an explicitly constructed optional readonly
+  `SwfTagRectangle` view. Imported shape and text callers use the same carriers.
+- No runtime, generated header or override defines the function.
+
+The existing `declare-refused-function` mechanism now supplies only this signature, immediately
+before the retained caller:
+
+```cpp
+void apply_swf_authored_bounds(
+    flight::types::Node2D node,
+    std::optional<flight::StructuralRef<flight::RowReadonly<
+        flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>> bounds);
+```
+
+`swf-declare-refused-authored-bounds` in `repairs/emission-repairs.json` expires when that exact
+refusal marker disappears. The generated manifest records its single affected header. The repair
+adds no body and does not change bounds, install a hook, allocate replacement node data, or perform
+unchecked owner recovery.
+
+The underlying function is still unavailable. Its TypeScript body crosses `node.data as unknown as
+SwfAuthoredBoundsData | null`, copies the supplied rectangle, updates the existing node data (or
+installs data when absent), and installs `computeSwfLocalBoundsRectangle` on the same node runtime.
+That reader is separately refused because the declared `Node2DData` owner does not carry
+`authoredBounds`; see [the existing owner-recovery request](assertion-to-undeclared-row-member.md).
+A common-field-only implementation, a copied data owner or a bounds cache beside the node would
+substitute behavior rather than repair declaration visibility.
+
+Verification uses the actual repaired `swf_node.hpp`: an unused include must compile and link,
+while a call to `apply_swf_authored_bounds(Node2D{}, std::nullopt)` must compile to an object and
+then fail to link on that exact symbol. Both checks passed with Clang 22.1.8: the unused program
+also ran successfully, and the called program stopped at the expected undefined symbol during linking.
+Header compilation is not evidence that authored bounds can execute. Only the eight assigned headers
+are rechecked; any later diagnostic stays a failure.
