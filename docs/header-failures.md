@@ -62,7 +62,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 33 | `call-has-no-matching-dd66c064` | 10 | ANIM | compiler | an emitted SwfReader class instance cannot be passed as its structural SwfTagReader interface to the parse callback *(existing request)* |
 | 34 | `compiler-crash-aba5e9ec` | 5 | 3D | none (sweep resource limit; passes serially) | the -j8 sweep ran out of room (retried serially) |
 | 35 | `invalid-operands-6d9a155d` | 5 | 2D | runtime | an operator is applied to operand types it does not accept |
-| 36 | `missing-member-5e9e8a2c` | 5 | PLAT | runtime | the emitted code reads a member the target does not declare (`hit_test_graph_local_bounds`) |
+| 36 | `missing-member-5e9e8a2c` | 5 | PLAT | compiler | retained cross-module calls name the refused generic graph-bounds helper *(existing requests extended)* |
 | 37 | `no-viable-conversion-eaf1a6e0` | 5 | 2D | compiler | a value is passed where its declared type cannot receive it |
 | 38 | `no-viable-overload-658901de` | 5 | 2D, GL | override/runtime (fixed) | concrete glass extension storage and Canvas paint variants repaired; G2: 4 pass, 1 compiler failure |
 | 39 | `call-has-no-matching-4ce2cc01` | 4 | ANIM | compiler | the emitted call to a function matches no declared overload |
@@ -873,12 +873,15 @@ instance must supply interface reads and writes; copying it into an interface ow
 
 ### 36. `missing-member-5e9e8a2c` — 5 header(s)
 
-- cause: the emitted code reads a member the target does not declare (`hit_test_graph_local_bounds`)
+- cause: retained display/sprite handlers call `hit_test_graph_local_bounds` after the compiler refuses its generic Node-to-Node2D assertion
 - subject: `hit_test_graph_local_bounds`
 - lanes: PLAT
-- fix route: runtime
+- fix route: compiler — [retained omitted callee](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-interaction-graph-local-bounds-calls-cross-the-refused-module), with [node capability recovery](compiler-requests/assertion-to-undeclared-row-member.md#g2-interaction-graph-bounds-need-the-original-nodes-2d-capability)
 - first failure at: `flight/interaction/display_hit_tests.hpp:28`
 - example: `no member named 'hit_test_graph_local_bounds' in namespace 'interaction'`
+- G2 disposition: one omitted-callee family. `hit_tests.hpp:88` marks `hitTestGraphLocalBounds` NOT GENERATED at `cpp-structural-assertion-owner-unproven`; its source inverse-transforms the point through the same node's world matrix, then tests its actual local bounds. Real node/runtime/matrix/bounds identities, lazy provider effects and call order must survive. A false hit result, copied graph or closed Node2D-only API cannot replace that operation.
+- Declaration witnesses do not coincide: the defining header has the exact marker but **zero live calls**; `display_hit_tests.hpp:28/32/36` and `sprite_hit_tests.hpp:16` have four retained `NodeAny` calls but no marker. The existing declaration-repair probe matches zero files and changes no bytes. No repair/body was added, so no negative-link result is claimed.
+- Numbers: **0/5 pass, 5 fail**, retained from G1. All five owned rows preserve their diagnostics and failure status and gain the existing request links; the work-item ID remains with corrected cause/compiler route. No C++ input changed and no native gate was rerun. No Scene2D/TextLabel/Node file, new compiler request or promotion was added. Builder4 owns its active shared-node/text work; this disposition stays within Interaction and its evidence.
 
 ### 37. `no-viable-conversion-eaf1a6e0` — 5 header(s)
 

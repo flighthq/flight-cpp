@@ -119,3 +119,24 @@ The bounded declaration repairs described in
 [the retained-callback request](retained-declaration-calls-omitted-callee.md#g2-scene3d-material-texture-listers-are-retained-callback-values)
 address only name visibility for the standard and unlit callbacks. They supply no material refinement,
 texture list or extension registration body. All three owner-recovery refusals remain open here.
+
+## G2 Interaction graph bounds need the original node's 2D capability
+
+At compiler `806d257` / Flight `a627849`, `interaction/hit_tests.hpp:88` marks
+`hitTestGraphLocalBounds` NOT GENERATED (`cpp-structural-assertion-owner-unproven`). The source is
+generic over `Node<Traits>` but asserts that same node to `Node2D` for both world-transform and
+local-bounds access. The refusal names `shared_ptr<Node<Traits>>` and an unresolved asserted row;
+the generic declaration does not prove the specialized trait/runtime cells the 2D accessors need.
+
+The real operation first inverse-transforms world `(x, y)` into the module's shared scratch point,
+then reads the node's actual local bounds and calls `containsRectanglePointXY`. A repair must retain
+that node, its world matrix and lazily computed bounds, including provider effects and call order.
+Existing concrete Scene2D storage does not prove an arbitrary generic node carries those same cells.
+Retyping the public helper or its `NodeAny` callers to a closed Node2D carrier narrows the source
+domain; copying a graph, fabricating a runtime or returning false changes hit behavior.
+
+This is the same unproved narrower-row assertion family, with generic trait/runtime recovery rather
+than only a nominal data downcast. No Interaction-local source spelling can establish the missing
+owner relation merely by changing a type argument. No shared Node, Scene2D or TextLabel code was
+changed. The [retained-callee request](retained-declaration-calls-omitted-callee.md#g2-interaction-graph-local-bounds-calls-cross-the-refused-module)
+records the resulting five-header compile failure and why the current declaration repair cannot match.

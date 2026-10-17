@@ -116,6 +116,26 @@ internal test helper, and a
 All five stay failed and request-linked. The two compile passes do not make the refused scene
 accessor callable or promote this partial module to a complete implementation.
 
+## G2 Interaction graph-local-bounds calls cross the refused module
+
+At compiler `806d257` / Flight `a627849`, five headers in `missing-member-5e9e8a2c` fail because
+`display_hit_tests.hpp:28/32/36` and `sprite_hit_tests.hpp:16` retain qualified direct calls to
+`flight::interaction::hit_test_graph_local_bounds(source, x, y)`, passing the actual `NodeAny`
+carrier. The generic callee is explicitly refused in `hit_tests.hpp:88`, at its
+[`Node<Traits>` to Node2D capability assertion](assertion-to-undeclared-row-member.md#g2-interaction-graph-bounds-need-the-original-nodes-2d-capability).
+
+The exact refusal marker and retained calls are in different headers. `hit_tests.hpp` has **zero**
+live calls to this symbol; the three display calls and one sprite call have no refusal marker in
+their own headers. An in-memory probe through the existing `declare-refused-function` mechanism
+matches **zero files** and leaves all three headers byte-identical. Thus its same-header witness
+does not hold, even though this is a real omitted-callee family; no repair is registered, no body
+is supplied and no negative-link check is applicable or claimed.
+
+All five rows remain **0 pass / 5 fail**, retained from G1 and now request-linked with compiler
+route. No C++ changed or unchanged native gate was rerun. Name recovery must account for the
+cross-module refusal; the implementation still needs the same real node, world transform and local
+bounds, rather than a false hit result or a copied/narrowed graph.
+
 ## Reduction
 
 The reduction is the emission itself: the refusal is in `loadVideoResourceFromUrl`, and the two retained
