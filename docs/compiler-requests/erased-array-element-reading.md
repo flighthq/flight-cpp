@@ -403,3 +403,126 @@ ordering, transform defaults, independent inheritance, orphan Drop severity, dup
 remapping and wrong-typed JSON values establish requirements; they are not native behavior results.
 No fake parser/bones, copied owner, empty-success substitute, narrowed JSON domain or unmeasured
 source respelling is carried. No native parser, remapping or header gain is claimed.
+
+
+## G2 Shape JSON finite-number validation retains an erased array
+
+At Flight `a62784923f3be814463286c9fb28edfe6ab15789` / compiler
+`806d257d2f4100de745cc97340e61c2f301b0f24`, the three recorded failures in cluster
+`no-viable-conversion-b5b698fe` share `flight/shape_formats/shape_json.hpp:54`:
+`no viable conversion from 'flight::Any' to 'flight::Array<flight::Any>'`.
+This is the existing erased-element-reading boundary, not a missing Record conversion or a
+missing parser declaration. Source `packages/shape-formats/src/shapeJson.ts:181-186` is:
+
+```ts
+function isFiniteNumberArray(value: unknown): boolean {
+  if (!Array.isArray(value)) return false;
+  for (const entry of value) {
+    if (typeof entry !== 'number' || !Number.isFinite(entry)) return false;
+  }
+  return true;
+}
+```
+
+The retained C++ performs the guard, then constructs an unproved native array:
+
+```cpp
+inline bool is_finite_number_array(flight::Any value) {
+  if (!flight::is_array(value)) return false;
+  flight::Array<flight::Any> entries = value; // recorded first failure, line54
+  for (auto entry : entries) {
+    if (entry.type_of() != flight::String("number") || !std::isfinite(entry.as_number()))
+      return false;
+  }
+  return true;
+}
+```
+
+The current runtime's `detail::AnyArray` retains the original shared-array identity, exact
+`Array<T>` handle and type. `external_if<Array<T>>()` recovers that handle only at its stored
+exact type; there is no general erased element-read view. `Array.isArray` proves neither
+`Array<Any>` nor `Array<double>`. Both a boxed numeric array and a heterogeneous array of
+numeric Any cells can satisfy this predicate; invalid cells must be read and rejected. An empty
+array is valid, holes read as undefined and fail, nonnumbers/NaN/infinities fail, and finite negative
+values and -0 are accepted. Nonarrays, including typed-array views, remain false. A faithful
+compiler/runtime boundary must read each original cell in order, with the source short circuit,
+without copying or accepting only one native element type. The exact-type recovery above is usable
+when independently proved; returning false or throwing merely because another valid array carrier
+was boxed would narrow the admitted domain. No implicit Any-to-Array conversion, replacement array,
+unchecked cast, permissive iterator or constant guard is carried. The already measured typed-local
+and assertion attempts earlier in this request cover this representation gap; none is remeasured here.
+
+### Record, schema and owner boundaries inspected
+
+- `isPlainObject` at source215 is the source's non-null, non-array object predicate with a
+  `Record<string, unknown>` type predicate; it is not a prototype/schema validator. Dynamic reads
+  of root.shapeFormat/commands, entry.key/args, texture.index and matrix fields require the original
+  object's named members and missing-key semantics. The retained `is_matrix_like` uses named reads,
+  but `is_matrix_value` at native71-72 asks still-erased Any for direct .a/.b/.c/.d/.tx/.ty fields
+  after the user-defined predicate. These are inspected lowering gaps under the
+  [existing parsed-JSON/member-read request](parsed-json-object-shape-reads.md), not newly measured
+  next diagnostics. An exact anonymous Matrix owner is not established by a structural guard.
+- The shared `defaultShapeCommandSchemas` is a ReadonlyMap built from
+  `SHAPE_COMMAND_SCHEMA_ARGUMENTS satisfies Readonly<Record<ShapeCommandKey, ShapeCommandSchemaDefinition>>`.
+  Its emitted home is `shape_command_schemas.hpp`, with the existing ShapeCommandSchema and argument
+  owners. The distinct appender table is a readonly Record of the same 17 built-in keys. It is emitted
+  as `Record<String,ShapeCommandAppender>`, with an erased native callback alias
+  `std::function<void(Ref<Shape>,Array<void>)>`; source callbacks have heterogeneous positional
+  arities and default arguments. The source's `never[]` erasure is not proof that native appenders
+  take Array<void>, nor authority to replace or copy the table or any command/argument owner.
+  No new callable adapter, table or duplicate schema owner is supplied here.
+- `isValidShapeCommandArgs` reads the shared Map on each call, rejects a missing schema, checks
+  required count through maximum argument count, then checks each supplied positional type in order.
+  Preserve number finiteness, numeric arrays, numbersOrNull, string, boolean, matrixOrNull and texture
+  cases. Strings use typeof string, not an added enum validator. Texture validation after reconstruction
+  accepts the resolver's non-null object; no source Texture-subtype test is added. Optional trailing
+  arguments and null matrix/triangle-array positions remain valid. Do not hard-code only drawPath,
+  remove texture commands, tighten empty arrays or manufacture a schema when a lookup is missing.
+
+### Full codec behavior remains required
+
+Formatting walks the original ShapeData.commands flat key/count/argument stream, advancing by
+argCount+2, and validates before serializing each entry. It throws the source TypeError for an
+unrepresentable command, rather than emitting corrupt geometry or returning empty JSON. Preserve null,
+finite scalar/array values, all six finite matrix fields and the supplied JSON.stringify space option.
+Live texture internals are not serialized: each texture position becomes a zero-based ordinal reference
+in command order. Arrays and existing command/matrix/texture owners are not cloned as a workaround for
+the erased-read failure; ordinary JSON serialization still has its specified value-copy behavior.
+
+Parsing catches JSON syntax failure to null, requires a non-array object with shapeFormat exactly3 and
+an array commands field, and rejects malformed entries, unknown keys and malformed arguments. It
+allocates one real Shape through createShape and replays accepted commands through their original
+appendShape builders into that same result's command buffer, preserving order, builder defaults and
+content invalidation. An empty command list yields a valid empty Shape; malformed input yields null.
+These outcomes cannot be collapsed into an empty-success result or a null-only parser.
+
+Reconstruction keeps null, scalar values and arrays, creates a real Matrix from six finite fields, and
+passes a texture reference's numeric index to the caller's resolver. The source checks typeof number
+for that index, without an extra integer/range restriction. An omitted resolver or nullish result yields
+DROP_COMMAND: stop that command's remaining reconstruction and skip its validation/replay, retaining
+other commands. MALFORMED_ARG instead aborts the whole parse. Do not move arity/type validation ahead
+of this drop branch or replace resolver results: the exact returned Texture object must enter the
+command stream. Preserve repeated reads, resolver/builder exceptions and their order; only JSON.parse
+is inside the source catch.
+
+The original module still explicitly omits three functions: reconstructShapeCommandArg122
+(`cpp-optional-chain-multi-alternative-receiver-unrepresented`), formatShapeJson36
+(`cpp-collection-argument-multiple-present-domains`) and parseShapeJson80
+(`cpp-contextual-union-inequivalent`). The format refusal names optional command-token present
+carriers that its Any collection cannot receive; the parse refusal compares the optional resolver
+function's expanded Texture variant with its declared Texture alias. Native ShapeJsonParseOptions
+retains the optional callback over the existing readonly ShapeTextureReference owner, and Texture
+retains all four existing 2D/array/cube/3D alternatives. Removing an alternative or fabricating a callback,
+parser body, schema or Shape is not a repair. These refusal texts and retained declarations were inspected,
+not promoted to newly measured next errors, link results or separate duplicate compiler requests.
+
+The existing shapeJson.test.ts specifies full non-texture round trips, same-object texture resolution,
+omitted/null resolver drops, all six non-finite matrix-field rejections, positional/arity errors,
+non-finite scalars/arrays, optional tails and schema coverage. Those tests were read as source requirements
+only. No native codec, round-trip, parser, rendering, header-availability or link success is claimed.
+
+**Recorded 0/3 pass, 3 fail is retained.** The owned headers are
+`flight/shape_formats/{_internal_index,contract,shape_json}.hpp`. This docs/status-only disposition
+links their rows and cluster to this existing request and the related JSON-read request. C++ inputs,
+repairs, source patches, generation inventory and pins are unchanged; unchanged C++ is not rerun.
+Foreign compact product lines, worklist entries and historical/G1 totals are preserved.

@@ -92,7 +92,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 63 | `no-viable-conversion-4ca7626f` | 3 | ANIM | compiler | a value is passed where its declared type cannot receive it |
 | 64 | `no-viable-conversion-b3064463` | 3 | GL | compiler | `GlRenderState` passed where `RenderState` is declared; the emitter flattens the heritage *(existing request linked)* |
 | 65 | `no-viable-conversion-b3f3c7c6` | 3 | 3D | compiler | a value is passed where its declared type cannot receive it |
-| 66 | `no-viable-conversion-b5b698fe` | 3 | 2D | compiler | a value is passed where its declared type cannot receive it |
+| 66 | `no-viable-conversion-b5b698fe` | 3 | 2D | compiler | G2: recorded 0/3 retained; guarded Shape JSON Any array needs identity-preserving element reads; docs-only, no rerun |
 | 67 | `other-3d2efc1d` | 3 | 2D | [compiler request](compiler-requests/erased-array-element-reading.md) | the emitter indexes a still-erased `flight::Any` after `Array.isArray` instead of using the runtime's exact-array recovery |
 | 72 | `other-41f4a462` | 3 | ANIM | compiler | a named-property view (which aliases the source object) and an empty Record are the two arms of one conditional, so the conditi... *(request filed)* |
 | 69 | `other-6a1604d5` | 3 | PLAT | override completeness (fixed) | the tray placeholder override shadowed `set_tray_animation_guard`, which the generated guard header calls; G2 recheck: 3/3 pass |
@@ -1625,13 +1625,28 @@ faithful local fix:
 - first failure at: `flight/scene3d_formats/md5_parse.hpp:151`
 - example: `no viable conversion from 'StructuralRef<RowReadonly<RowOf<shared_ptr<MeshGeometry>>>>' to 'Ref<MeshGeometry>'`
 
-### 66. `no-viable-conversion-b5b698fe` — 3 header(s)
+### 66. `no-viable-conversion-b5b698fe` — 3 header(s), compiler route
 
-- cause: a value is passed where its declared type cannot receive it
-- lanes: 2D
-- fix route: compiler
-- first failure at: `flight/shape_formats/shape_json.hpp:54`
-- example: `no viable conversion from 'Any' to 'Array<Any>'`
+**Recorded 0/3 pass, 3 fail retained; docs-only, unchanged C++ not rerun.** All three
+`flight/shape_formats/{_internal_index,contract,shape_json}.hpp` rows still fail at
+`shape_json.hpp:54`: `no viable conversion from 'flight::Any' to 'flight::Array<flight::Any>'`.
+
+Source isFiniteNumberArray181-186 guards with Array.isArray, then visits every cell and requires
+finite numbers. The emitter keeps the value erased and writes Array<Any> entries=value.
+[Existing erased-array reading coverage](compiler-requests/erased-array-element-reading.md#g2-shape-json-finite-number-validation-retains-an-erased-array)
+now records this exact site: AnyArray has identity-preserving exact recovery, but the guard does not
+prove one Array<T> element carrier, and no generic erased cell view is provided. No implicit conversion,
+copy or typed-only predicate is a faithful bounded repair.
+
+The same audit covers the source Record predicate and
+[parsed-JSON/member reads](compiler-requests/parsed-json-object-shape-reads.md), the distinct appender
+Record/shared schema Map, all 17 command keys, positional arity/finiteness, existing Shape/Matrix/Texture
+owners and the three explicitly omitted codec functions. Preserve real builder replay, valid empty
+Shape versus null failure, original resolver Texture identity, ordinal references, and unresolved-texture
+drop before validation. Inspected additional lowering/refusal barriers are not freshly measured next
+errors or native/link results. No fake parser/shape/schema, copied owner or narrowed input is carried.
+Only this worklist slice, four compact owned cluster/row lines and an append to the existing request
+change; C++/repairs/source patches/manifest/pins and foreign/historical products are unchanged.
 
 ### 67. `other-3d2efc1d` — 3 header(s)
 
