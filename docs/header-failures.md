@@ -341,6 +341,11 @@ deleting or stubbing behaviour.
 - first failure at: `flight/skeleton2d/skeleton2d_animation_target.hpp:217`
 - example: `incompatible operand types ('value_type' and 'variant<Ref<Attachment2D>, Null, Undefined>' )`
 
+- G2 check: **0/18 compile**, 18 failures and zero unattempted at `-j1`; every row retains the same root diagnostic.
+- Root: a nullable array element is not lifted into the slot's distinct reference/null/undefined carrier.
+- Compiler request: [nullable array element into an optional-nullable slot](compiler-requests/nullable-array-element-into-dual-sentinel-slot.md).
+- The cheap branch-assignment source rewrite still emits an optional directly into the variant. No source patch, runtime change, repair or override is carried; the cluster remains open.
+
 ### 7. `call-has-no-matching-47410fe2` — G2 recheck of 16 headers
 
 The actual receiver is `Array<String>`, and both Array and SequenceView already provide `map`.
