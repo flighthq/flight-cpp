@@ -194,7 +194,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 165 | `undeclared-identifier-251d1ba2` | 1 | 3D | runtime | the emitted code names `collect_pending_texture_owners`, which nothing declares |
 | 166 | `undeclared-identifier-2d9cd75f` | 1 | PLAT | runtime | the emitted code names `hit_test_shape_fill`, which nothing declares |
 | 167 | `undeclared-identifier-3017e8aa` | 1 | GL | runtime | the emitted code names `acquire_gl_render_texture`, which nothing declares |
-| 168 | `undeclared-identifier-332a5586` | 1 | 2D | runtime | the emitted code names `draw_dom_scale9_sprite`, which nothing declares |
+| 168 | `undeclared-identifier-332a5586` | 1 | 2D | compiler *(existing request)* | refused `drawDomScale9Sprite` retained as `.submit` in the renderer aggregate; declaration probe fails at `.create_data` |
 | 169 | `undeclared-identifier-34adf2ab` | 1 | ANIM | compiler | G2: 0/1; refused parser/result retained; exact declaration candidate fails unused compile in result-owner dependency |
 | 170 | `undeclared-identifier-3582eeb5` | 1 | GL | runtime | the emitted code names `gl_screen_space_fog_effect_runner`, which nothing declares |
 | 171 | `undeclared-identifier-3cb2bb54` | 1 | GL | runtime | the emitted code names `invert_tint_shaders`, which nothing declares |
@@ -3040,14 +3040,17 @@ rejected declaration with unchanged production code, and no scale9 behavior or o
 - first failure at: `flight/render_gl/gl_render_texture_pool.hpp:136`
 - example: `use of undeclared identifier 'acquire_gl_render_texture'`
 
-### 168. `undeclared-identifier-332a5586` — 1 header(s)
+### 168. `undeclared-identifier-332a5586` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `draw_dom_scale9_sprite`, which nothing declares
+- cause: the emitter refuses `drawDomScale9Sprite` (`cpp-union-runtime-domains-erased`: six image domains map to one `host_sdl::ImageSource` carrier), but keeps `.submit = draw_dom_scale9_sprite` in the inline `dom_scale9_sprite_renderer` aggregate.
 - subject: `draw_dom_scale9_sprite`
 - lanes: 2D
-- fix route: runtime
+- fix route: compiler
+- why this route: a scratch copy with only the exact declaration `void draw_dom_scale9_sprite(Ref<DomRenderState>, Ref<RenderProxy2D>)` still fails at `.create_data`. There, `create_dom_scale9_sprite_data` returns `Ref<DomScale9SpriteData>` from `NodeAny`, and the slot needs `optional<Ref<RendererData>>` from `Node2D`. Neither link check is reachable, so no repair is carried. This is the same shape as the GL Scale9 sprite. `scene2d-dom` declares environment `web`.
 - first failure at: `flight/scene2d_dom/dom_scale9_sprite.hpp:149`
 - example: `use of undeclared identifier 'draw_dom_scale9_sprite'`
+- Scoped native recheck (GCC 15.2, jobs 1, all errors shown): **1 attempted / 0 pass / 1 fail**, the header's own diagnostic. No DOM backend, draw, copied owner or narrowed image domain is supplied.
+- compiler request: `docs/compiler-requests/retained-declaration-calls-omitted-callee.md`
 
 ### 169. `undeclared-identifier-34adf2ab` — G2 recheck of 1 header(s)
 

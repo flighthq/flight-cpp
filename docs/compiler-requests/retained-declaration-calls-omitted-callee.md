@@ -1242,3 +1242,25 @@ still needs the complete Tilemap/atlas/data and actual GL runtime. Preserve sign
 input color indexing, invalid-cell skips, fixed tile geometry sizes with rotated region UVs, compact
 post-prepare output indices and actual valid drawCount. An empty submit, fake packet, copied owner
 or reduced tile/color domain would not implement the source.
+
+## G2 DOM Scale9 sprite retains a refused aggregate callback
+
+`scene2d_dom/dom_scale9_sprite.hpp` at Flight `a627849` / compiler `806d257` omits `drawDomScale9Sprite`.
+Its refusal is `cpp-union-runtime-domains-erased`: six image element domains reach the one
+`host_sdl::ImageSource` carrier, see
+[image-source-union-domain-discriminator](image-source-union-domain-discriminator.md). The inline
+`dom_scale9_sprite_renderer` still stores `.submit = draw_dom_scale9_sprite`, so the header fails at its own
+line 149 (GCC 15.2, one worker, all errors shown: 1 attempted, 0 pass, 1 fail). The emitter's signature is
+`void draw_dom_scale9_sprite(Ref<DomRenderState>, Ref<RenderProxy2D>);`.
+
+A scratch copy containing only that exact declaration still fails at `.create_data`. The emitted
+`create_dom_scale9_sprite_data(Ref<RenderState>, NodeAny)` returns `Ref<DomScale9SpriteData>`, and
+`Scene2DRenderer.create_data` requires `optional<Ref<RendererData>>` from `(Ref<RenderState>, Node2D)`. The
+later `submit` mismatch (`DomRenderState` against `RenderState`) is visible by type inspection only.
+
+Neither link check was reached: not the positive unused-header link, and not the negative link. So no
+declaration repair was carried, as with the GL Scale9 sprite above. The backend, renderer-data and Scale9
+owners need the carriers of
+[readonly-callback-derived-owner-recovery](readonly-callback-derived-owner-recovery.md). The draw needs the
+image-source discriminator. `scene2d-dom` declares environment `web`. No DOM backend, draw, copied owner or
+narrowed image domain is carried.
