@@ -4301,6 +4301,23 @@
       "unblocks": "enable_gl_scene_3d_custom_shader_guards.hpp gl_uniform_type_name calls and readonly host-row constant reads.",
       "expires": "when the compiler preserves the declared external value carrier and member policy through Readonly, or Flight adopts the direct private GlContext parameter.",
       "appliedOn": "2026-10-17"
+    },
+    {
+      "id": "rive-object-graph-fresh-diagnostic-record",
+      "dependency": "flight",
+      "patch": "rive-object-graph-fresh-diagnostic-record.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/scene2d-formats/src/riveObjectGraph.ts",
+      "package": "@flighthq/scene2d-formats",
+      "answers": "diagnostic",
+      "refusal": "reportRiveGraphDrop forwards Record<String,double> into optional<Record<String,variant<bool,double,String>>> without an identity-preserving value projection; its three fresh literals can instead be allocated in the collector value domain",
+      "rewrite": "Changes only the private required detail annotation from Readonly<Record<string,number>> to the existing collector Readonly<Record<string,boolean | number | string>>. All three callsites remain their original fresh numeric literals and every executable TypeScript expression is unchanged.",
+      "equivalence": "reportRiveGraphDrop is module-private and has exactly three callers, each passing a fresh inline {index} or {index,parent} literal with no preexisting Record alias. The erased type annotation supplies the wider context at that first allocation, selecting the double value arm without coercion, copying entries or introducing a generic cross-value Record conversion. The same object passes through the optional collector into ImportDiagnostic.detail, preserving source identity/live aliases, keys, values, absence, sink opt-in, diagnostic order/severity/origin and all graph/document owners and behavior.",
+      "verification": "Normal pinned scoped generation must change only the private wide Record parameter and explicit double-alternative construction of the four numeric values at the three existing fresh detail sites, preserving every other header byte. Compile/link/run the actual whole emitted header for local indices, filtered streams/spans, owner identity, missing/self/out-of-range drops, cycle/forward parents and absent/present exact diagnostics; verify retained detail Record identity/live alias. Run final original-one header gate and source-patch mechanism tests.",
+      "whyNotUpstreamFirst": "The existing docs/compiler-requests/contextual-record-value-carrier-projection.md request still needs a readonly view for arbitrary already allocated Records. This closed private helper can instead state the destination carrier at its three genuinely fresh allocation sites, a target-neutral erased annotation change without changing the public Rive graph API.",
+      "unblocks": "scene2d_formats/rive_object_graph.hpp numeric graph-drop details at report_rive_graph_drop; supplies no binary parser or generic Record covariance.",
+      "expires": "when contextual Record value projection preserves existing owners or the emitter chooses the destination value domain for these fresh numeric diagnostic literals, or Flight adopts the private annotation.",
+      "appliedOn": "2026-10-17"
     }
   ]
 }
