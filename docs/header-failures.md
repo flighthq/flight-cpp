@@ -3091,7 +3091,17 @@ failed, with foreign rows/clusters and historical G1 totals unchanged.
 - cause: `mergeDomRenderOptions` spreads `merged.X ?? []` into `new Map([...])` for four `ReadonlyMap<Kind, V>` fields (`canvasShapeCommands`, `effectPaddingResolvers`, `nodeRenderers`, `textureResolvers`). The emitter types each coalesce as the Map carrier but builds the empty `[]` arm as `Array<tuple<String, V>>`, at `:65`, `:68`, `:74` and `:92`.
 - fix: source patch `scene2d-dom-merge-options-empty-map-fallback` (`baseCommit a627849`). It respells each fallback as `new Map<Kind, V>()` of the field's declared types, with a type-only import. Each fallback is a fresh empty iterable consumed only by the spread, so the merged Map's keys, values and insertion order, and every other observable result, are unchanged.
 - Normal exact-pin `pkg:generate @flighthq/scene2d-dom` with the patch changes `merge_dom_render_options.hpp`, `initialization.json` line and offset positions in the patched module, and the manifest patch record. The scoped run also emitted a different private member order for `scene_2d_dom_pipeline.hpp`'s anonymous options shape. That is the scope-dependent order recorded in `docs/generation-state.md`, so the committed full-run order is kept and that file is not changed. No other file references either name, and the pipeline header still fails only at its recorded `render_proxy_adapter` diagnostic (cluster `no-viable-conversion-f02000a9`).
-- Scoped native recheck (GCC 15.2, jobs 1, all errors shown): **1 attempted / 1 pass / 0 fail**, and a TU that only includes the header links against `libflight_cpp_c.a`. No merge behavior is claimed as run.
+- Scoped native recheck (GCC 15.2, jobs 1, all errors shown): **1 attempted / 1 pass / 0 fail**, and a TU that only includes the header links against `libflight_cpp_c.a`.
+- Behavior (the patch replaces `[]` with a runtime empty Map, so compiling and linking alone do not prove it):
+  - native: `tests/generated_scene2d_dom_merge_options_test.cpp`, ctest `flight_cpp.generated_scene2d_dom_merge_options`, label `pkg:scene2d-dom`, **1/1 passed** (GCC 15.2, one target, -j1). It pins:
+    - an empty merge leaves every field absent;
+    - one fragment yields a map with the same keys, order and `NodeRenderer` identities, and that map is fresh (mutating it leaves the input untouched);
+    - two fragments make the later one win per key and keep first-insertion order (`n1, n2, n3`);
+    - a present empty `textureResolvers` stays present and empty, and absent maps stay absent;
+    - a later absent `pixelRatio` does not overwrite;
+    - inputs are not mutated, and reversed fragment order reverses precedence.
+  - A scratch mutant that skips the `nodeRenderers` merge fails the test.
+  - TypeScript equivalence: the original and patched `mergeDomRenderOptions`, transpiled with the pinned compiler checkout's TypeScript 5.9.3, give identical results on 8 fragment sequences. That covers entries and order, value identity, fresh result maps, unchanged inputs, result key order, and the exact sequence of fragment property reads.
 - compiler request: `docs/compiler-requests/contextual-empty-array-fallback-element-evidence.md`
 
 ### 128. `no-viable-conversion-31b754c5` — 1 header(s), compiler route

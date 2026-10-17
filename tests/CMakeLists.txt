@@ -2166,3 +2166,15 @@ target_link_libraries(flight_cpp_generated_video_texture_callable_proxies_tests 
 target_include_directories(flight_cpp_generated_video_texture_callable_proxies_tests BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include" "${PROJECT_SOURCE_DIR}/generated/include")
 add_test(NAME flight_cpp.generated_video_texture_callable_proxies COMMAND flight_cpp_generated_video_texture_callable_proxies_tests)
 flight_cpp_package_test_labels(flight_cpp.generated_video_texture_callable_proxies texture)
+
+add_executable(flight_cpp_generated_scene2d_dom_merge_options_tests generated_scene2d_dom_merge_options_test.cpp)
+target_include_directories(
+  flight_cpp_generated_scene2d_dom_merge_options_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(
+  flight_cpp_generated_scene2d_dom_merge_options_tests
+  PRIVATE Flight::Cpp Flight::SdkPreview
+)
+add_test(NAME flight_cpp.generated_scene2d_dom_merge_options COMMAND flight_cpp_generated_scene2d_dom_merge_options_tests)
+flight_cpp_package_test_labels(flight_cpp.generated_scene2d_dom_merge_options scene2d-dom)

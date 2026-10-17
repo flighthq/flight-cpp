@@ -1732,3 +1732,13 @@ cc_test(
 )
 
 flight_cpp_public_header_tests()
+
+cc_test(
+    name = "generated_scene2d_dom_merge_options_test",
+    srcs = ["generated_scene2d_dom_merge_options_test.cpp"],
+    size = "small",
+    deps = [
+        "//:cpp",
+        "//:sdk_preview",
+    ],
+)
