@@ -3568,6 +3568,12 @@
         "flight/types/timeline_cue.hpp"
       ],
       "id": "timeline-stream-audio-cue-interface-heritage"
+    },
+    {
+      "files": [
+        "flight/scene2d/html_view.hpp"
+      ],
+      "id": "scene2d-html-view-partial-row-absence"
     }
   ],
   "sourcePatches": [

@@ -9405,6 +9405,19 @@
       "defect": "The type emitter flattens inherited interface fields into unrelated C++ owners: TimelineAudioCue and TimelineStreamAudioCue repeat TimelineCue's entity_runtime_key, frame and kind with no heritage, so TypeScript's `extends TimelineCue` cannot widen either reference into `Array<Ref<TimelineCue>>` and the SWF cue pushes have no conversion. This removes only the duplicated inherited members and names the declared TimelineCue base, the same bounded heritage repair already carried for the adjustment interfaces. No cue field, value, allocation or body is added: every inherited cell is the same cell on the original concrete allocation, and ordinary shared-pointer widening keeps its control block and lifetime. The initializers already assign inherited members through row_set, so construction is unchanged.",
       "expectedWhen": "always",
       "expires": "when the emitter supplies the declared interface heritage for TimelineAudioCue and TimelineStreamAudioCue; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-html-view-partial-row-absence",
+      "kind": "project-partial-row-absence",
+      "appliesTo": "flight/scene2d/html_view.hpp",
+      "keys": [
+        "element"
+      ],
+      "sourceDeclaration": "packages/scene2d/src/htmlView.ts -- out.element = data?.element ?? null, where element: HTMLElement | null on the possibly-absent Readonly<Partial<HtmlViewData>> receiver row, lowered against a declared std::variant<flight::host_sdl::HtmlElement, flight::Null, flight::Undefined>",
+      "diagnostic": "could not convert 'flight::row_get<RowKey<FixedString<8>{\"element\"}>, RowReadonly<RowPartial<RowOf<Ref<types::HtmlViewData> > > > >(...)' from 'std::optional<flight::host_sdl::DomElement>' to 'std::variant<flight::host_sdl::HtmlElement, flight::Null, flight::Undefined>'",
+      "defect": "Same construct as node-has-clip-partial-row-absence, here for HtmlViewData.element (HTMLElement | null) read through a partial row in initializeHtmlViewData. The emitter has two lowerings for this construct and emits the short one here: it returns the std::optional straight into a position it declared as the three-state variant, which has no conversion. The long one, which it emits correctly in scene2d_formats/svg_document.hpp, binds the read to a local, maps !has_value() to flight::Null, and returns the value alternative otherwise. The repair writes that long form, so the absence mapping is the emitter's own rather than ours -- at every long-form site in the tree nullopt maps to flight::Null and never to Undefined, and the Undefined channel is already supplied by the receiver check that precedes the read. Anchored to this header and these keys because the three cases that produce this identical diagnostic are separated by the SUBJECT's member declaration, which is in another file: matched by text alone the same transform breaks scene2d_resources/scene_2d_document_source.hpp, which already compiles.",
+      "expectedWhen": "always",
+      "expires": "when the emitter uses its long-form lowering at every partial row_get in a three-state position; sdk:check fails if this repair matches no header."
     }
   ]
 }

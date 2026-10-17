@@ -30,7 +30,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 1 | `call-has-no-matching-9c08d665` | 117 | WGPU | compiler | bound WebGPU descriptor object literals are emitted as untyped source-order braced initializers with anonymous nested owners *(request filed)* |
 | 2 | `missing-member-b1a6d5cf` | 39 | 2D | compiler | scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined *(request filed)* |
 | 3 | `in-operator-not-lowered-b1eae4af` | 32 | 2D, 3D, GL, PLAT, WGPU | compiler | the TypeScript `in` operator is emitted verbatim; G2 particle3D joins this existing cause *(existing request extended)* |
-| 4 | `undeclared-identifier-993e82f1` | 29 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(request filed; builder4/G2)* |
+| 4 | `undeclared-identifier-993e82f1` | 30 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(request filed; builder4/G2)* |
 | 5 | `call-has-no-matching-3882b3e9` | 30 | 2D, 3D, TEXT | compiler | bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier *(request filed; builder4/G2; +1 from `obj_standard_pbr_material_handler.hpp` after its module emitted; +1 from `md5_skeleton_handler.hpp` after the mesh override bridges)* |
 | 6 | `other-52e846a6` | 18 | ANIM | compiler *(existing request)* | a nullable attachment array element is not lifted into the reference/null/undefined slot carrier |
 | 7 | `call-has-no-matching-47410fe2` | 16 | 2D, 3D | runtime (fixed) | Number is now a callable conversion object; G2 recheck: 2 pass, 14 fail at later compiler diagnostics |
@@ -151,7 +151,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 122 | `missing-member-dcf85c36` | 1 | 3D | repair (fixed) | refused `collectMd5AnimFeatures` declared (declaration only) for its retained caller; G2 recheck: 1 pass |
 | 123 | `missing-member-ee398c94` | 1 | 2D | compiler *(existing request)* | G2: the line-50 diagnostic was a cascade; the first GCC failure is cluster 2's re-export before declaration; row moved |
 | 124 | `missing-member-fd2be1bc` | 1 | TEXT | compiler *(existing request)* | an `as { chars?, common? }` assertion over a parsed `JsonValue` is lowered with the erased-`Any` `object_if` recovery |
-| 125 | `no-viable-conversion-03bf8175` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
+| 125 | `no-viable-conversion-03bf8175` | 1 | 2D | repair (applied) | `data?.element ?? null` partial-row absence projected by declared repair; G2: 0 pass, 1 moved to `undeclared-identifier-993e82f1` |
 | 126 | `no-viable-conversion-0faa55ca` | 1 | GL | compiler | a value is passed where its declared type cannot receive it |
 | 127 | `no-viable-conversion-2909a65f` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
 | 128 | `no-viable-conversion-31b754c5` | 1 | ANIM | compiler | G2: recorded 0/1 retained; Spine particle object guard leaves Any unprojected at Record return; existing JSON-read request/no rerun |
@@ -347,7 +347,7 @@ G2 particle follow-on: after the attribute-location binding fix, the owned
 at line 113. It joins this cause as the 32nd current failure and adds the 3D lane. No unowned row was
 recompiled or changed. See the [measured particle site](compiler-requests/membership-test-lowered-literally.md#g2-particle-3d-reaches-the-previously-latent-membership-site).
 
-### 4. `undeclared-identifier-993e82f1` — 29 header(s) *(builder4/G2)*
+### 4. `undeclared-identifier-993e82f1` — 30 header(s) *(builder4/G2)*
 
 - cause: the template parameter name `Traits` leaks into emitted code as a free identifier
 - subject: `Traits`
@@ -2890,13 +2890,16 @@ failed, with foreign rows/clusters and historical G1 totals unchanged.
 - Scoped native recheck (GCC 15.2, jobs 1): **1 attempted / 0 pass / 1 fail**, same diagnostic. No detector, parser, `Any` conversion or narrowed domain is supplied.
 - compiler request: `docs/compiler-requests/json-value-erased-assertion.md`
 
-### 125. `no-viable-conversion-03bf8175` — 1 header(s)
+### 125. `no-viable-conversion-03bf8175` — G2 recheck of 1 header
 
-- cause: a value is passed where its declared type cannot receive it
-- lanes: 2D
-- fix route: compiler
-- first failure at: `flight/scene2d/html_view.hpp:104`
-- example: `no viable conversion from returned value of type 'Value' to function return type 'variant<host_sdl::HtmlElement, Null, Undefined>'`
+- cause: `initializeHtmlViewData` writes `out.element = data?.element ?? null` through the possibly-absent `Readonly<Partial<HtmlViewData>>` row (`element: HTMLElement | null`). The emitter used its short lowering, returning the partial `row_get`'s `std::optional<DomElement>` into the three-state `variant<HtmlElement, Null, Undefined>` it declared (`html_view.hpp:104`).
+- fix: the declared emission repair `scene2d-html-view-partial-row-absence` (`project-partial-row-absence`, key `element`), the same construct as `node-has-clip-partial-row-absence`. It writes the emitter's own long form, mapping `nullopt` to `Null`. Because the source then applies `?? null`, null and undefined both become null, so the mapping is exact. No behavior is added.
+- Normal exact-pin `pkg:generate @flighthq/scene2d`: only the repaired line in `html_view.hpp` and the manifest repair record change. No foreign drift.
+- Scoped native recheck (GCC 15.2, jobs 1, all errors shown): **1 attempted / 0 pass / 1 fail**. Line 104 now compiles. The new first failure is `html_view.hpp:121`, `'Traits' was not declared in this scope`: `setHtmlViewSize` calls `invalidateNodeLocalBounds` and the emitter writes `structural_ref_cast<NodeOf<Traits>>` inside the non-template function. No positive unused-header link is claimed, and no `Traits` constant or narrowed domain is supplied.
+
+| follow-on cluster | owned headers | first failure | route / cause |
+| --- | --- | --- | --- |
+| `undeclared-identifier-993e82f1` | 1 | `flight/scene2d/html_view.hpp:121` | compiler: callee template parameter `Traits` leaks into a non-generic caller conversion; [existing request](compiler-requests/generic-call-argument-uses-unsubstituted-parameter-type.md) (cluster owned by builder4; only its count changed) |
 
 ### 126. `no-viable-conversion-0faa55ca` — 1 header(s)
 
