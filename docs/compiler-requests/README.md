@@ -587,3 +587,6 @@ patch has retired because the fix landed upstream keep their row, marked, as the
   16 headers across scene2d-formats, scene3d-formats, skeleton2d-formats and swf (cause cluster
   `other-40da43f7`); the Record's contents are materialized but the Record itself is not named inside the
   optional. No patch is carried.
+- [A joint initializer is called with the construction view instead of the owner it wraps](entity-construction-view-passed-to-owner-parameter.md) —
+  8 headers across physics2d, physics2d-abi and physics3d; a CONCRETE call, not the generic substitution case in
+  `entity-construction-generic-call-inference.md`. No patch is carried.

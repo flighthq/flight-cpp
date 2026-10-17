@@ -454,6 +454,7 @@ their replacement failure clusters changed here; `previousCluster` preserves the
 - fix route: compiler
 - first failure at: `flight/physics2d/joint_factories.hpp:65`
 - example: `no matching function for call to 'init_joint_base'`
+- compiler request: [entity-construction-view-passed-to-owner-parameter.md](compiler-requests/entity-construction-view-passed-to-owner-parameter.md) (filed; sites still failing, status unchanged)
 
 ### 17. `undeclared-identifier-294e632e` — 8 header(s)
 
