@@ -304,3 +304,41 @@ changes for this disposition, so no changed generation needs reproducing. A decl
 the erased loop or eight omitted algorithms; no positive-unused/negative-link result is claimed.
 No native skin, weighting, wardrobe, parser or functionality pass is claimed. The original row remains
 failed with compiler route, and other DragonBones/Spine/particle/grid rows retain their own evidence.
+
+## G2 Spine JSON slots keep aligned outputs and original bone reads
+
+At compiler `806d257` / Flight `a627849`, `spineJsonSlotsHandler.ts:11` refuses
+`parseSpineSlots(raw: unknown, bones: readonly Bone2D[])` as
+`cpp-presence-test-without-absence-storage`. Its source rejects a nonarray with two fresh empty result
+arrays, then iterates unknown entries and skips null/nonobject entries. The exact diagnostic names an
+identifier without its source name; the loop's source shape is recorded without inventing an exact
+emitter-identified variable. A guard does not prove that a boxed array is only Array<Any>, nor that
+object entries are specific native Slot2D or Record owners. Recover original elements without copying
+an asserted array or narrowing the full JSON/unknown input domain.
+
+Each accepted entry creates one Slot2D and one corresponding attachment-name entry, in input order.
+String names (including empty strings) remain strings, other names become null. A string bone name
+searches the original readonly bone array and selects the first strict matching name; unknown or
+nonstring bone names retain -1 and do not cause the slot to be dropped. Preserve repeated slot.bone
+reads, short circuit and first-match order instead of sorting bones, caching those member reads or
+collapsing duplicate names into a different map policy.
+
+Attachment names are strings or null at the same output index. Each new slot initially has null
+attachment, its actual bone index/name and `parseSpineColor(slot.color)`. The source color helper
+uses white for nonstrings or strings whose length is not8; otherwise it uses parseInt base16, white
+for NaN and the unsigned32 result. It is not an added full-hex validator. Neither universal white nor
+filtering unresolved slots/attachment names preserves the source.
+
+The section handler completes parsing before mutating the original context. It appends all slots
+first, then the aligned attachment names, retaining existing context arrays and original bone owners.
+Its exported reader aliases the actual handler. A missing doc.slots property must reach the helper
+as undefined/nonarray, whereas the retained emitted `doc.get("slots").value()` also exposes the
+[existing missing-key/JSON read problem](parsed-json-object-shape-reads.md). No new schema validation
+or exact anonymous-object assertion can turn valid dynamic inputs into a narrower native-only domain.
+
+The [retained-callee/result-owner request](retained-declaration-calls-omitted-callee.md#g2-spine-json-slots-require-a-complete-result-owner-as-well-as-the-refused-callee)
+records original1 **0/1 pass** at the missing helper81. Its exact existing declaration/result-owner
+candidate fails the real unused-header compile at the result dependency's optional Record diagnostic,
+before either link gate. This does not supply erased iteration or the parser algorithm. No C++ body,
+source rewrite, copied owner, fake slots/parser, empty-success substitute or narrowed input is carried;
+source tests are requirements only, with no native parser behavior or link pass claimed.

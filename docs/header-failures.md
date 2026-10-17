@@ -195,7 +195,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 166 | `undeclared-identifier-2d9cd75f` | 1 | PLAT | runtime | the emitted code names `hit_test_shape_fill`, which nothing declares |
 | 167 | `undeclared-identifier-3017e8aa` | 1 | GL | runtime | the emitted code names `acquire_gl_render_texture`, which nothing declares |
 | 168 | `undeclared-identifier-332a5586` | 1 | 2D | runtime | the emitted code names `draw_dom_scale9_sprite`, which nothing declares |
-| 169 | `undeclared-identifier-34adf2ab` | 1 | ANIM | runtime | the emitted code names `parse_spine_slots`, which nothing declares |
+| 169 | `undeclared-identifier-34adf2ab` | 1 | ANIM | compiler | G2: 0/1; refused parser/result retained; exact declaration candidate fails unused compile in result-owner dependency |
 | 170 | `undeclared-identifier-3582eeb5` | 1 | GL | runtime | the emitted code names `gl_screen_space_fog_effect_runner`, which nothing declares |
 | 171 | `undeclared-identifier-3cb2bb54` | 1 | GL | runtime | the emitted code names `invert_tint_shaders`, which nothing declares |
 | 172 | `undeclared-identifier-3e7f03c4` | 1 | GL | runtime | the emitted code names `gl_sharpen_effect_runner`, which nothing declares |
@@ -3025,14 +3025,30 @@ rejected declaration with unchanged production code, and no scale9 behavior or o
 - first failure at: `flight/scene2d_dom/dom_scale9_sprite.hpp:149`
 - example: `use of undeclared identifier 'draw_dom_scale9_sprite'`
 
-### 169. `undeclared-identifier-34adf2ab` — 1 header(s)
+### 169. `undeclared-identifier-34adf2ab` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `parse_spine_slots`, which nothing declares
+- cause: retained section handler calls the omitted parseSpineSlots and reads its omitted complete anonymous result
 - subject: `parse_spine_slots`
 - lanes: ANIM
-- fix route: runtime
-- first failure at: `flight/skeleton2d_formats/spine_json_slots_handler.hpp:81`
+- fix route: [retained callee/result contract](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-spine-json-slots-require-a-complete-result-owner-as-well-as-the-refused-callee), with [erased input/slot semantics](compiler-requests/erased-array-element-reading.md#g2-spine-json-slots-keep-aligned-outputs-and-original-bone-reads)
+- actual first failure at: `flight/skeleton2d_formats/spine_json_slots_handler.hpp:81`
 - example: `use of undeclared identifier 'parse_spine_slots'`
+
+Original1 completes at jobs1: **0/1 pass, 1 fail, 0 unattempted**. The refused helper needs full unknown
+array/entry recovery, original bone reads/first match, aligned name/slot order, null initial attachment,
+source color conversion and appending into the same context arrays. No fake slot/parser, copied owner,
+new validation, universal empty success or narrowed JSON domain is supplied.
+
+The exact two-array Ref result exists in the binary-slot header with matching source members. Existing
+declaration loader/engine with that complete-owner include matches the owned header once/idempotently;
+no result definition or body is copied. Actual unused JSON-header object compile fails at the included
+binary result-owner module's optional Record diagnostic71. Candidate rejected before positive link/run
+or exact-negative link, neither claimed. The body and reader-alias linkage remain unavailable obligations.
+
+No repair, source, C++, override, manifest or inventory change and no normal generation is needed.
+Only this owned failed root/row and worklist entry change, plus existing request appendices. No native
+slot/parser/functionality/header gain is claimed; foreign rows/roots/prose and historical/G1 totals
+remain unchanged.
 
 ### 170. `undeclared-identifier-3582eeb5` — 1 header(s)
 

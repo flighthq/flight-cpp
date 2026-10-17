@@ -1079,3 +1079,56 @@ remains separate. Preserve full QuadBatch/atlas/array/runtime owners, both trans
 directions, invalid-instance skipping and compact valid packets, post-prepare material/color indices,
 source-index per-quad fallback and final actual drawCount. An empty submit, fake packets, Sprite/base
 copy or narrowed atlas/color domain would not implement that source.
+
+## G2 Spine JSON slots require a complete result owner as well as the refused callee
+
+At compiler `806d257` / Flight `a627849`, original `undeclared-identifier-34adf2ab` contains
+`skeleton2d_formats/spine_json_slots_handler.hpp`. The Clang22.1.8 one-worker check completes
+**0/1 pass, 1 fail, 0 unattempted** at the retained `parse_spine_slots` call on line81.
+The exact source-line11 function marker remains; its body refuses
+`cpp-presence-test-without-absence-storage` while reading the guarded erased array
+([source/domain notes](erased-array-element-reading.md#g2-spine-json-slots-keep-aligned-outputs-and-original-bone-reads)).
+No runtime, override or other generated header defines this function.
+
+The caller destructures `attachmentNames` and `slots` through the returned reference. Its complete
+anonymous result definition is omitted here along with the body. The actual sibling
+`spine_binary_slots_handler.hpp` emits exactly the result both source annotations declare:
+
+```cpp
+struct attachment_names_slots_8d720886328896ca : public flight::ReferenceEnabled {
+  flight::Array<std::optional<flight::String>> attachment_names;
+  flight::Array<flight::Ref<flight::types::Slot2D>> slots;
+};
+```
+
+Both pinned source functions explicitly return these same two array types in this field order. The
+binary helper returns a Ref to that emitted owner in the same namespace. The current retained JSON
+call passes Any from its document record and Array<Ref<Bone2D>> from its original bones, matching the
+unknown/readonly-array source and the emitted sibling bone-lookup signature. The exact scratch
+function declaration is therefore:
+
+```cpp
+flight::Ref<attachment_names_slots_8d720886328896ca> parse_spine_slots(
+    flight::Any raw, flight::Array<flight::Ref<flight::types::Bone2D>> bones);
+```
+
+A result forward declaration alone cannot support the caller's member reads. A scratch candidate uses
+the existing `insert-forward-declaration` loader/engine with the exact function/refusal marker,
+this signature, and an include of that existing complete result owner's header. It matches exactly
+the owned JSON header and reaches a fixed point; removing only the declaration/include recovers the
+original header byte-for-byte. No result fields, owner instance, function body or parser are copied.
+
+The real JSON-header program with only its include and an empty main fails its required unused-header
+object compile. The existing result-owner dependency fails at `spine_binary_slots_handler.hpp:71`,
+whose dark-color diagnostic passes a bare key/value list into optional<Record<...>>
+([existing request](optional-record-literal-not-materialized.md)). This is a failed positive
+prerequisite before link; no unused positive link/run or exact explicit-use negative link is reached
+or claimed. Its emitted JSON reader alias still retains the section handler, and its linkage remains
+an obligation rather than an assumed success after merely adding a signature.
+
+The candidate is rejected. Do not invent an Any/empty result, borrow an incomplete pointer shape,
+copy a new owner or silently omit slots to make the header compile. The emitter must keep a complete
+source result contract visible to retained callers and preserve the missing helper's original semantics,
+or coherently refuse the dependent caller. No repair, generated C++, source patch, override, manifest
+or inventory change is carried, so no changed generation needs reproducing. The original row remains
+failed, with no slot/parser/header gain or native behavior claim.
