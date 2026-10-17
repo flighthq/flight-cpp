@@ -226,7 +226,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 197 | `undeclared-identifier-8e604c65` | 1 | GL | runtime | the emitted code names `gl_sketch_effect_runner`, which nothing declares |
 | 198 | `undeclared-identifier-9562ef07` | 1 | 2D | compiler *(existing request)* | refused `drawCanvasTilemap` retained as `.submit` in the SpriteRenderer aggregate; declaration probe fails at `.create_data` |
 | 199 | `undeclared-identifier-9aaa5b7f` | 1 | WGPU | runtime | the emitted code names `acquire_wgpu_screen_render_target_capture_texture`, which nothing declares |
-| 200 | `undeclared-identifier-a3f09fb8` | 1 | 2D | runtime | the emitted code names `draw_dom_shape`, which nothing declares |
+| 200 | `undeclared-identifier-a3f09fb8` | 1 | 2D | compiler *(existing request)* | refused `drawDomShape` retained as `.submit` in the renderer aggregate; declaration probe fails at `.create_data` |
 | 201 | `undeclared-identifier-a4a22a69` | 1 | GL | runtime | the emitted code names `gl_lens_distortion_effect_runner`, which nothing declares |
 | 202 | `undeclared-identifier-a89b9a39` | 1 | GL | runtime | the emitted code names `gl_bitmap_displacement_effect_runner`, which nothing declares |
 | 203 | `undeclared-identifier-aa084556` | 1 | PLAT | runtime + declaration repairs (applied) | refused track-list guard and grid resolver declared; strict erased integer predicate supplied; G2: 1 pass; validator/registration remain unlinkable |
@@ -3451,14 +3451,17 @@ sweep/carry totals remain unchanged. No old native/rendering proof or global swe
 - first failure at: `flight/render_wgpu/wgpu_screen_capture.hpp:122`
 - example: `use of undeclared identifier 'acquire_wgpu_screen_render_target_capture_texture'`
 
-### 200. `undeclared-identifier-a3f09fb8` — 1 header(s)
+### 200. `undeclared-identifier-a3f09fb8` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `draw_dom_shape`, which nothing declares
+- cause: the emitter refuses `drawDomShape` (`cpp-contextual-union-missing-expression-type:optionalSingle`; the refusal does not name the expression), but keeps `.submit = draw_dom_shape` in the inline `dom_shape_renderer` aggregate, which `dom_morph_shape_renderer` aliases.
 - subject: `draw_dom_shape`
 - lanes: 2D
-- fix route: runtime
+- fix route: compiler
+- why this route: a scratch copy with only the exact declaration `void draw_dom_shape(Ref<DomRenderState>, Ref<RenderProxy2D>)` still fails at `.create_data`. There, `create_dom_shape_data` returns `Ref<DomShapeData>` from `NodeAny`, and the slot needs `optional<Ref<RendererData>>` from `Node2D`. Neither link check is reachable, so no repair is carried. This is the same shape as the DOM Scale9 shape. `scene2d-dom` declares environment `web`.
 - first failure at: `flight/scene2d_dom/dom_shape.hpp:132`
 - example: `use of undeclared identifier 'draw_dom_shape'`
+- Scoped native recheck (GCC 15.2, jobs 1, all errors shown): **1 attempted / 0 pass / 1 fail**, the header's own diagnostic. No DOM backend, raster, copied owner or narrowed shape is supplied.
+- compiler request: `docs/compiler-requests/retained-declaration-calls-omitted-callee.md`
 
 ### 201. `undeclared-identifier-a4a22a69` — 1 header(s)
 

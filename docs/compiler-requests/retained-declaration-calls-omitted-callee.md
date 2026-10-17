@@ -1305,3 +1305,26 @@ The renderer-data owner needs the carriers of
 raster-canvas element, style writes and rasterizer registry miss stay unrealized:
 - No DOM backend, raster, copied owner or narrowed shape is carried.
 - `scene2d-dom` declares environment `web`.
+
+## G2 DOM shape retains a refused aggregate callback
+
+`scene2d_dom/dom_shape.hpp` at Flight `a627849` / compiler `806d257` omits `drawDomShape` (`domShape.ts:31`,
+`cpp-contextual-union-missing-expression-type:optionalSingle`). As with the DOM Scale9 shape, the refusal
+text does not name the expression, and this unit did not isolate it.
+
+The inline `dom_shape_renderer` still stores `.submit = draw_dom_shape`, and `dom_morph_shape_renderer`
+aliases that same renderer. So the header fails at its own line 132 (GCC 15.2, one worker, all errors
+shown: 1 attempted, 0 pass, 1 fail). The emitter's signature is
+`void draw_dom_shape(Ref<DomRenderState>, Ref<RenderProxy2D>);`.
+
+A scratch copy containing only that exact declaration still fails at `.create_data`. The emitted
+`create_dom_shape_data(Ref<RenderState>, NodeAny)` returns `Ref<DomShapeData>`, and the slot requires
+`optional<Ref<RendererData>>` from `Node2D`.
+
+Neither link check was reached, so no declaration repair was carried:
+- the positive unused-header link;
+- the negative link.
+
+The renderer-data owner needs the carriers of
+[readonly-callback-derived-owner-recovery](readonly-callback-derived-owner-recovery.md). `scene2d-dom`
+declares environment `web`. No DOM backend, raster, copied owner or narrowed shape is carried.
