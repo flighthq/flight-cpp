@@ -205,7 +205,7 @@ if(TARGET Flight::HostSdlGl)
   target_include_directories(flight_cpp_generated_effects_gl_blit_cache_tests BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include")
   target_link_libraries(flight_cpp_generated_effects_gl_blit_cache_tests PRIVATE Flight::Cpp Flight::SdkPreview Flight::HostSdlGl)
   add_test(NAME flight_cpp.generated_effects_gl_blit_cache COMMAND flight_cpp_generated_effects_gl_blit_cache_tests)
-  flight_cpp_package_test_labels(flight_cpp.generated_effects_gl_blit_cache effects-gl render-gl types)
+  flight_cpp_package_test_labels(flight_cpp.generated_effects_gl_blit_cache effects-gl)
   if(UNIX AND NOT APPLE)
     set_tests_properties(flight_cpp.generated_effects_gl_blit_cache PROPERTIES
       ENVIRONMENT "SDL_VIDEODRIVER=offscreen;LIBGL_ALWAYS_SOFTWARE=1")
@@ -215,7 +215,7 @@ if(TARGET Flight::HostSdlGl)
   target_link_libraries(flight_cpp_generated_scene2d_gl_owners_tests PRIVATE Flight::Cpp Flight::SdkPreview Flight::HostSdlGl)
   flight_cpp_set_project_warnings(flight_cpp_generated_scene2d_gl_owners_tests)
   add_test(NAME flight_cpp.generated_scene2d_gl_owners COMMAND flight_cpp_generated_scene2d_gl_owners_tests)
-  flight_cpp_package_test_labels(flight_cpp.generated_scene2d_gl_owners render render-gl scene2d scene2d-gl shape types)
+  flight_cpp_package_test_labels(flight_cpp.generated_scene2d_gl_owners render render-gl scene2d scene2d-gl shape text types)
 endif()
 
 add_executable(
