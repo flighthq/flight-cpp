@@ -9419,6 +9419,19 @@
       "defect": "Same construct as node-has-clip-partial-row-absence, here for HtmlViewData.element (HTMLElement | null) read through a partial row in initializeHtmlViewData. The emitter has two lowerings for this construct and emits the short one here: it returns the std::optional straight into a position it declared as the three-state variant, which has no conversion. The long one, which it emits correctly in scene2d_formats/svg_document.hpp, binds the read to a local, maps !has_value() to flight::Null, and returns the value alternative otherwise. The repair writes that long form, so the absence mapping is the emitter's own rather than ours -- at every long-form site in the tree nullopt maps to flight::Null and never to Undefined, and the Undefined channel is already supplied by the receiver check that precedes the read. Anchored to this header and these keys because the three cases that produce this identical diagnostic are separated by the SUBJECT's member declaration, which is in another file: matched by text alone the same transform breaks scene2d_resources/scene_2d_document_source.hpp, which already compiles.",
       "expectedWhen": "always",
       "expires": "when the emitter uses its long-form lowering at every partial row_get in a three-state position; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-formats-declare-refused-svg-color",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/scene2d_formats/svg_color.hpp",
+      "symbol": "parse_svg_color",
+      "refusedFunction": "parseSvgColor",
+      "declaration": "std::optional<flight::Ref<flight::types::SvgColor>> parse_svg_color(flight::String value);",
+      "sourceDeclaration": "packages/scene2d-formats/src/svgColor.ts:16 -- parseSvgColor(value: string): SvgColor | null. Retained resolveSvgColor passes its original String or inherited currentColor String and returns optional<Ref<SvgColor>>.",
+      "diagnostic": "use of undeclared identifier 'parse_svg_color'",
+      "defect": "The emitter refuses parseSvgColor at split on an indexed regexp capture while retaining resolveSvgColor calling it. Exact String-to-existing optional SvgColor reference declaration only; no color parser/body, replacement color, schema owner or narrower color syntax is supplied. Calls to parser or resolver must remain exact missing-parser link failures. Requests: docs/compiler-requests/optional-index-member-present-flow.md and docs/compiler-requests/retained-declaration-calls-omitted-callee.md.",
+      "expectedWhen": "always",
+      "expires": "when parseSvgColor emits or its retained direct call disappears; the exact marker/call/no-definition witnesses stop matching and sdk:check rejects an obsolete repair."
     }
   ]
 }
