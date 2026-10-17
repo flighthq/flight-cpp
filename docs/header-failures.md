@@ -164,7 +164,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 135 | `no-viable-conversion-9695423c` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
 | 136 | `no-viable-conversion-a516fbdb` | 1 | 3D | compiler | readonly generic graph node cannot become an independent geometry probe; existing refinement request linked (G2: 0/1 retained) |
 | 137 | `no-viable-conversion-b47bc6cd` | 1 | 2D | compiler *(existing request)* | object-narrowed `unknown` used as a `Set<object>` key without the `Any::erased_ref()` identity projection |
-| 138 | `no-viable-conversion-bf84cbac` | 1 | 3D | compiler | a value is passed where its declared type cannot receive it |
+| 138 | `no-viable-conversion-bf84cbac` | 1 | 3D | runtime | native readonly ABI drift; rejected correction exposes nullable framebuffer cell reads |
 | 139 | `no-viable-conversion-c997578d` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
 | 140 | `no-viable-conversion-cef6403d` | 3 | 3D | compiler | nullable indexed material union cannot widen to the declared material owner; [request](compiler-requests/compiler-interface-heritage-owner-widening.md#g2-picking-hit-material-retains-the-selected-owner) |
 | 141 | `no-viable-conversion-dc893fc7` | 1 | GL | binding (applied) | absent WebGL `srcOffset` passed where the host declared a plain defaulted size *(G2: 1/1 pass)* |
@@ -3071,11 +3071,37 @@ domain, empty result or native version/bounds/upload gain is claimed.
 
 ### 138. `no-viable-conversion-bf84cbac` — 1 header(s)
 
-- cause: a value is passed where its declared type cannot receive it
+- cause: the native present/OETF overrides take nominal target references while the source API
+  and generated caller correctly use readonly structural views
 - lanes: 3D
-- fix route: compiler
-- first failure at: `flight/scene3d_gl/present_gl_scene_3d.hpp:46`
+- fix route: runtime (native override ABI alignment also required; no compiler caller change)
+- first failure at: `flight/scene3d_gl/present_gl_scene_3d.hpp:46` (original diagnostic retained)
 - example: `no viable conversion from 'StructuralRef<RowReadonly<RowOf<shared_ptr<GlTextureRenderTarget>>>>' to 'Ref<GlTextureRenderTarget>'`
+- requests: [readonly member carrier widening](compiler-requests/readonly-structural-member-carrier-widening.md),
+  [structural argument owner boundary](compiler-requests/structural-subtype-reference-argument-owner.md#g2-scene3d-present-native-override-carrier-drift)
+
+Flight a627849 / compiler806d257. The no-effects source begins the caller's target pass with
+RGBA0/depth1/stencil0, renders the same scene/camera/lights, ends in finally (restore/MSAA resolve),
+then presents that same target to the canvas only on success. Preserve exception/cleanup ordering,
+original state/target identity, full destination domain and context-keyed program caches/teardown.
+Linear color gets one sRGB OETF, sRGB gets an exact copy; alpha is unchanged. No fake present,
+copied base target, unchecked owner recovery or narrower target domain is valid.
+
+A two-helper native readonly-parameter candidate compiled the original-one header **1/1 in
+176.6 s, Clang22.1.8 jobs1**; its new targeted SDL/Mesa executable built and overrides check passed
+228/228. The actual CTest **failed 0/1 in 0.36 s** (`std::bad_cast`) on the first explicit destination
+bind, before any draw/pixel assertion. Real context/target allocation and program compilation/cache
+lookup executed. GDB traced `named_value<optional<WebGlFramebuffer>>` at structural_ref.hpp229
+from row_get1448 through bind_gl_render_target50/fullscreen171,254/present66: the readonly
+base view requests nullable storage from its original texture owner's present framebuffer cell.
+This is distinct from existing optional-to-required merged reads and absent sparse-owner reads.
+
+**Candidate rejected; original 0 pass / 1 fail retained.** All native override/test/manifest edits
+were restored. Only this owned compact root/row, worklist and request links change; historical
+sweep/carry counters and foreign rows remain. No unchanged stock/generation rerun, Scene3D output,
+copy/OETF pixels, cache teardown or passing live present is claimed. Full source contract and
+candidate/debugger evidence limits are in the new request; logs remain under
+`/tmp/builder4-g2-present-scene3d/`.
 
 ### 139. `no-viable-conversion-c997578d` — 1 header(s)
 

@@ -590,6 +590,10 @@ patch has retired because the fix landed upstream keep their row, marked, as the
   silent miscompilation: `@flighthq/textshaper` cannot recover the derived run carrier through its structural row view. No workaround is carried.
 - [A named input carrier and a structurally identical anonymous output carrier cannot alias](named-input-and-anonymous-output-carriers-cannot-alias.md) —
   `@flighthq/screen` loses the aliasing half of all four `dipToScreen*`/`screenToDip*` conversions: the input is a row over the named `Vector2Like`/`RectangleLike` while the out is the anonymous `x_y` shape, so a single object cannot be passed as both. Measured as a hard compile error. No workaround is carried.
+- [A readonly structural member must widen the original cell value](readonly-structural-member-carrier-widening.md) —
+  runtime gap measured by a rejected Scene3D native-present candidate: a concrete framebuffer cell
+  cannot be read as the nullable member of its compatible readonly base view. No compiler caller
+  change or native candidate is carried; original 0/1 remains.
 - [A merged row must be constructible and readable as the one object it describes](merged-row-not-constructible.md) —
   `@flighthq/host` construction and `@flighthq/app` narrowed reads exposed a runtime gap. Resolved in
   `structural_ref.hpp`; no compiler change is requested.

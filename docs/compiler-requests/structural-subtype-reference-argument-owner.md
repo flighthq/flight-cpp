@@ -106,3 +106,21 @@ Four more SWF headers reach `swf_shape.hpp` through their includes: `swf_text`, 
 `swf_static_text_handler` and `swf_font_tag_family`. They were not recompiled. The later `swf_shape.hpp`
 errors (segment array carrier at `:540`, record union `index()` at `:588`) were noted but not analysed in
 this unit. Nothing is carried: no copied pen, no write-back shim, and no narrowed shape domain.
+
+## G2 Scene3D present: native override carrier drift
+
+At Flight a627849 / compiler806d257, `present_gl_scene_3d.hpp:46` already passes the correct
+readonly `GlTextureRenderTarget` row retaining the caller's target. Both the pinned source and
+generated `presentGlRenderTarget` take that readonly view, with an optional/null readonly
+`GlRenderTarget` destination. The effective partial native present and linear-to-sRGB overrides
+instead take nominal `Ref` targets. This is override ABI drift, not an emitted argument-owner
+error, missing heritage or omitted function. Do not repair the caller with a cast or copied owner.
+
+Aligning those two native signatures cleared the one-header compile (1/1, 176.6 s, one worker),
+but the new actual SDL/Mesa test failed 0/1 (0.36 s) on its first explicit destination bind:
+`row_get<"framebuffer">` requested `optional<WebGlFramebuffer>` from the same concrete texture
+owner's present `WebGlFramebuffer` cell and threw `std::bad_cast`. The candidate and test were
+rejected; the unchanged inventory retains original0/1. The distinct runtime read-projection gap,
+measured stack, evidence limits and full pass/present semantics are filed in
+[readonly structural member carrier widening](readonly-structural-member-carrier-widening.md).
+No native implementation, generated/source patch or successful present is carried.
