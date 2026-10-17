@@ -261,9 +261,14 @@ patch has retired because the fix landed upstream keep their row, marked, as the
   `Record` and complete callable-object construction lower, but an ordinary closed interface or entity
   target does not; blocks Scene3D materialization and notification subscription construction.
 - [Typed-array static `from` needs a flight-cpp binding](typed-array-static-from-binding.md) —
-  five direct refusals reach the missing ambient member, including `scene3d-formats/gltfSkins.ts`; that
+  six direct refusals reach the missing ambient member, including `scene3d-formats/gltfSkins.ts`; that
   length-only array-like source also needs lowering beyond the represented-range runtime operation,
   while OBJ's two calls expose a following exact readonly-union insertion boundary.
+- [A typed-array alternative must reach the SequenceView alternative of a contextual union](typed-array-into-sequence-view-union.md) —
+  `awd2GeometryHandler.ts`'s bounded index array has no exact carrier for the destination
+  `SequenceView<double>` alternative (`cpp-contextual-union-inequivalent`), so the faithful
+  `new Uint32Array(indices)` rewrite advances the refusal instead of emitting; the runtime already
+  constructs the view from the typed array.
 - [An `undefined` logical-OR fallback loses the present value domain](logical-or-undefined-fallback-evidence.md) —
   seven P-3D2 name/group sites refuse on `string || undefined`, while the same pinned fixtures with
   `null` or a concrete string fallback emit.

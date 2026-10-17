@@ -62,7 +62,7 @@ general lowering may not omit it.
 
 ## Current measured reach
 
-The committed refusal ledger has five direct instances of the missing static member:
+The committed refusal ledger has six direct instances of the missing static member:
 
 - `scene3d-formats/gltfSkins.ts` (`Float32Array.from`), the P-3D2 site above;
 - `skeleton2d/slotDeform2D.ts` (`Float32Array.from`), now carried by the
@@ -75,7 +75,10 @@ The committed refusal ledger has five direct instances of the missing static mem
   [interface heritage widening](compiler-interface-heritage-owner-widening.md); and `spineJsonSkinsHandler.ts`, whose
   argument is an erased JSON array and is blocked first by [erased-array-element-reading](erased-array-element-reading.md);
 - `tilemap-formats/tiledLayerData.ts` (`Uint32Array.from`); and
-- `tilemap-formats/tiledXmlParse.ts` (`Uint32Array.from`).
+- `tilemap-formats/tiledXmlParse.ts` (`Uint32Array.from`); and
+- `scene3d-formats/awd2GeometryHandler.ts` (`Uint32Array.from`), where the faithful
+  `new Uint32Array(indices)` rewrite exposes the separate
+  [typed-array/SequenceView union gap](typed-array-into-sequence-view-union.md) instead of emitting.
 
 Additional modules use typed-array `from` behind earlier blockers, so this list is the directly measured
 frontier rather than a claim that only five call sites exist.

@@ -190,7 +190,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 161 | `undeclared-identifier-1d8e072a` | 1 | 2D | compiler | Scale9 draw refuses nullable material owner widening; declaration probe fails native/generic callback conversion *(existing requests extended)* |
 | 162 | `undeclared-identifier-2110ec37` | 1 | WGPU | compiler | WGPU Sprite draw refuses nullable material owner widening; exact declaration compile fails GL-specific Sprite callback carrier *(existing requests extended)* |
 | 163 | `undeclared-identifier-2363216f` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glDitherEffectRunner` binding (and its callee `applyDitherEffectToGl`) but still emits the registration call that passes the runner |
-| 164 | `undeclared-identifier-2437e103` | 1 | 3D | runtime | the emitted code names `parse_triangle_geometry_block`, which nothing declares |
+| 164 | `undeclared-identifier-2437e103` | 1 | 3D | compiler | the emitted code names `parse_triangle_geometry_block`, which nothing declares; declaration candidate rejected at the unused-header positive prerequisite *(requests filed)* |
 | 165 | `undeclared-identifier-251d1ba2` | 1 | 3D | runtime | the emitted code names `collect_pending_texture_owners`, which nothing declares |
 | 166 | `undeclared-identifier-2d9cd75f` | 1 | PLAT | declaration repair (applied) | exact refused shape-fill callback declared; G2: 1 pass; three-kind registration and fill hits remain unlinkable |
 | 167 | `undeclared-identifier-3017e8aa` | 1 | GL | runtime | the emitted code names `acquire_gl_render_texture`, which nothing declares |
@@ -3132,9 +3132,29 @@ GPU draw proof, narrowed material domain or unchanged old/global check is carrie
 - cause: the emitted code names `parse_triangle_geometry_block`, which nothing declares
 - subject: `parse_triangle_geometry_block`
 - lanes: 3D
-- fix route: runtime
+- fix route: compiler
 - first failure at: `flight/scene3d_formats/awd2_geometry_handler.hpp:325`
 - example: `use of undeclared identifier 'parse_triangle_geometry_block'`
+- compiler requests: [typed-array static `from`](compiler-requests/typed-array-static-from-binding.md),
+  [typed array into a SequenceView union](compiler-requests/typed-array-into-sequence-view-union.md)
+
+`parseTriangleGeometryBlock` is refused, but the module still emits `awd2_triangle_geometry_handler`,
+whose parse lambda calls it. Two compiler causes were measured in order. The first refusal is
+`Uint32Array.from` with no C++ binding; a faithful `new Uint32Array(indices)` rewrite (the equivalence
+already carried for `skeleton2d-formats`) was tried as a source patch and moved the refusal to the
+next cause instead of emitting. The second is `cpp-contextual-union-inequivalent`: the typed-array
+alternative has no exact carrier for the destination's `SequenceView<double>` contextual-union
+alternative, even though the runtime's `SequenceView(TypedArray)` constructor performs exactly that
+conversion outside a union. Both are compiler boundaries; the source patch was not carried because it
+does not unblock the module.
+
+The declaration-only candidate was then measured and rejected. It compiles the header, and a direct
+call fails to link on exactly `parse_triangle_geometry_block`, but the required unused-header positive
+link fails: the retained `inline` `awd2_triangle_geometry_handler` initializer binds the parse lambda,
+so every including translation unit references the absent symbol — the same failed prerequisite
+recorded for the MD5 and MD2 families in
+[retained callers](compiler-requests/retained-declaration-calls-omitted-callee.md). No repair, override
+or substitute parser is carried; the row stays failed.
 
 ### 165. `undeclared-identifier-251d1ba2` — 1 header(s)
 
