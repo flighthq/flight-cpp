@@ -239,7 +239,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 210 | `undeclared-identifier-c3c55c65` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glCompositeEffectRunner` binding (and its callee `applyCompositeEffectToGl`) but still emits the registration call that passes the runner |
 | 211 | `undeclared-identifier-c45cc1bb` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glFxaaEffectRunner` binding (and its callee `applyFxaaEffectToGl`) but still emits the registration call that passes the runner |
 | 212 | `undeclared-identifier-c7551b38` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glPixelateEffectRunner` binding (and its callee `applyPixelateEffectToGl`) but still emits the registration call that passes the runner |
-| 213 | `undeclared-identifier-cc7c5006` | 1 | ANIM | runtime | the emitted code names `solve_skeleton_2d_path_constraint`, which nothing declares |
+| 213 | `undeclared-identifier-cc7c5006` | 1 | ANIM | declaration repair (applied) | exact refused path solver declared; G2: 1 pass; registration and full constraint solving remain unlinkable |
 | 214 | `undeclared-identifier-cf2fed2b` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glPosterizeEffectRunner` binding (and its callee `applyPosterizeEffectToGl`) but still emits the registration call that passes the runner |
 | 215 | `undeclared-identifier-d14c2215` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glConvolutionEffectRunner` binding (and its callee `applyConvolutionEffectToGl`) but still emits the registration call that passes the runner |
 | 216 | `undeclared-identifier-d687475c` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glHalftoneEffectRunner` binding (and its callee `applyHalftoneEffectToGl`) but still emits the registration call that passes the runner |
@@ -4192,14 +4192,42 @@ G1 totals remain unchanged.
 - Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
 - compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
-### 213. `undeclared-identifier-cc7c5006` — 1 header(s)
+### 213. `undeclared-identifier-cc7c5006` — 1 header, resolved by declaration-only repair
 
-- cause: the emitted code names `solve_skeleton_2d_path_constraint`, which nothing declares
-- subject: `solve_skeleton_2d_path_constraint`
+- original subject: `solve_skeleton_2d_path_constraint`
 - lanes: ANIM
-- fix route: runtime
-- first failure at: `flight/skeleton2d/path_constraint_2d.hpp:290`
-- example: `use of undeclared identifier 'solve_skeleton_2d_path_constraint'`
+- original failure at: `flight/skeleton2d/path_constraint_2d.hpp:290`
+- fix route: existing `declare-refused-function` repair, `skeleton2d-declare-refused-path-constraint-solver`
+- retained callback: [exact declaration and link boundary](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-skeleton2d-path-registration-retains-its-refused-solver)
+- body request: [both original constraint and attachment owners](compiler-requests/assertion-to-undeclared-row-member.md#g2-path-constraints-need-both-original-constraint-and-attachment-owners)
+
+The exact refusal marker, live direct function-argument registration and absent definition agree.
+Existing retainedReference declares only void(Ref<Skeleton2D>, readonly Skeleton2DConstraint row),
+exactly the emitted solver slot. Match1/idempotent/removal exact. Mutable skeleton and readonly
+base constraint ABI remain. No path-only callback, closed kind family, adapter, new owner or engine
+extension is added. resolveSkeleton2DPathAttachment is also refused, but only the omitted solver
+comment references it, so no second declaration is carried.
+
+Normal exact-pin one-module generation plus the existing derived structural-alias rule reproduces
+only +2 owned header lines and its own repair record. The narrow closure omits Screen; applying
+that existing rule only to the raw owned header and committed canonical Screen preserves the
+already-carried x_y alias/include, exactly matching the real tested candidate. Canonical owner and
+alias provenance are unchanged. The actual unused whole header compiles, links and runs, including
+its retained scratch initializers. Actual opt-in registration compiles to an object, then fails
+to link on **only** the exact omitted path solver signature. Neither registration nor solver runs.
+
+The scoped owned-header jobs1 check completes **1 attempted / 1 pass / 0 fail / 0 unattempted**.
+Only that row is pass with previousCluster and the old active cluster is removed. Both concrete
+owner refusals, partial marker, source/refusal fingerprints, helper/scratch bodies, counts,
+initialization metadata and applicability policy stay unchanged. Existing requests preserve
+original constraint/attachment/path/bone/Float32 owners and open kinds, actual weighted/rigid
+posed-path deformation, full position/spacing/rotation and numeric/TransformInherit domains,
+per-sample clamping and invalid-index sampling, sample-before-mutation order, combined world
+translation then parent inversion, tangent/next-sample rotation fallback and per-bone refresh.
+The ordered constraint pass and caller's later descendant propagation remain. No fake constraint
+or path solver, empty result, copied owner, narrowed domain, source/runtime/override body or native
+path-following/deformation/pose gain is supplied. Foreign compact products/registry/prose and
+historical G1 totals remain unchanged.
 
 ### 214. `undeclared-identifier-cf2fed2b` — G2 recheck of 1 header(s)
 

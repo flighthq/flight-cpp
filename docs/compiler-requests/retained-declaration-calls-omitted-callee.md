@@ -1934,3 +1934,42 @@ missing-body negative link remain unqualified. The one-header status remains fai
 error and links the [existing bound-interface cache request](bound-interface-weak-map-key-policy.md#g2-dedicated-gl-box-blur-cache-and-shader-owner).
 The two bodies' separate [concrete render-target/nullable-view refusal](interface-heritage-widening.md#g2-gl-box-blur-pass-destination-and-source-recipe)
 keeps the complete original blur/ping-pong/edge-color/shader contract. No GL/cache/pass operation runs.
+
+## G2 Skeleton2D path registration retains its refused solver
+
+At Flight `a627849` / compiler `806d257`, original undeclared-identifier-cc7c5006
+contains one header, `skeleton2d/path_constraint_2d.hpp:290`. Retained explicit
+`register_skeleton_2d_path_constraint_solver()` passes the missing
+`solve_skeleton_2d_path_constraint` as a direct callback argument. The exact source55
+NOT GENERATED marker, live argument and absent definition agree. The existing
+`declare-refused-function` retainedReference matcher adds only this declaration:
+
+```cpp
+void solve_skeleton_2d_path_constraint(
+  flight::Ref<flight::types::Skeleton2D> skeleton,
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DConstraint>>>> constraint);
+```
+
+The signature exactly matches emitted Skeleton2DConstraintSolver, checked by static type
+assertions. Match1, fixed point and removal recover original bytes. The actual unused
+whole header compiles, links and runs, including its retained scratch initializers.
+Calling the actual opt-in registration compiles to an object, then fails to link on
+**only** this exact solver signature. Neither registration nor solver runs. The scoped
+owned header jobs1 check completes **1 attempted / 1 pass / 0 fail / 0 unattempted**.
+This is name availability; it demonstrates no native path following, deformation or pose result.
+
+Normal exact-pin one-module generation plus the existing derived alias rule reproduces the
+real link-tested candidate (+2 header lines) and own repair record. The narrow closure omits
+Screen. Applying that existing rule only to the raw owned header and committed canonical
+Screen preserves its already-recorded x_y alias/include. Canonical owner and alias provenance
+stay unchanged, with no local duplicate owner or new normalization mechanism. The module's
+partial marker, both owner refusals, source/refusal fingerprints, helper/scratch bodies,
+package/global counts, initialization metadata and applicability policy remain unchanged.
+
+resolveSkeleton2DPathAttachment is also refused but no retained code calls it: its only
+solver call is inside the refusal comment. No extra helper declaration is justified or
+carried. The [existing owner request](assertion-to-undeclared-row-member.md#g2-path-constraints-need-both-original-constraint-and-attachment-owners)
+records both missing owners, open families, actual posed-path deformation, full position/
+spacing/rotation modes, sample-before-mutation order, original bone/Float32 and scratch
+identities, numeric domain and refresh/dispatch semantics. No fake constraint/path solver,
+empty result, copied owner, narrowed domain, new runtime/provider or body is supplied.

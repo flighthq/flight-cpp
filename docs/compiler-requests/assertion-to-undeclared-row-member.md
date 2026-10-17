@@ -262,3 +262,59 @@ execution. The unchanged angle/inversion helper bodies do not recover the refuse
 The [retained declaration](retained-declaration-calls-omitted-callee.md#g2-skeleton2d-transform-registration-retains-its-refused-solver)
 adds name visibility only. No fake constraint, empty solver/result, copied bone/pose owner,
 new runtime/provider or narrower transform/family domain is supplied.
+
+## G2 path constraints need both original constraint and attachment owners
+
+At Flight `a627849` / compiler `806d257`, `skeleton2d/pathConstraint2D.ts`
+refuses both `solveSkeleton2DPathConstraint` (source55) and
+`resolveSkeleton2DPathAttachment` (source154) as cpp-structural-assertion-owner-unproven.
+The first receives a readonly Skeleton2DConstraint base row, lacking boneIndices,
+mixRotate/mixX/mixY, position/positionMode, rotateMode, spacing/spacingMode and targetSlotIndex;
+kind-cell evidence also differs. The second reads the slot's base Attachment2D, which lacks
+commands, pointCount, skin, vertices and winding. Concrete path constraint/attachment structs
+are independent flattened owners. Readonly access, kind equality and a registry key do not
+restore either owner's missing cells. Both boundaries must retain or recover the original
+concrete owner through construction, storage and dispatch. No copied record, cast, detached
+field table or common-field-only path can supply that proof.
+
+Preserve the mutable Skeleton2D Ref and readonly base constraint solver slot. Constraint and
+attachment kinds are open strings; vendor families, registry replacement, unknown-kind skips
+and ordered dispatch remain. The slot/attachment lookup preserves absent/null slots, source
+index comparisons, absent/null attachments and non-path null results. Selecting PathAttachment2DKind
+must recover the existing attachment with its actual command array, optional skin/vertices,
+point count and winding, without constructing a substitute path attachment or closing the family.
+
+The solver calls the existing deformer with the original attachment, skeleton and slot.boneIndex,
+omitting the deform argument (its source default is null). It copies the attachment command
+stream/winding into the existing scratch Path and deforms its actual coordinate pairs into world
+space: weighted Skin2D influences use original bone world matrices; rigid vertices use the slot
+bone's world transform. Cubic control points remain ordinary authored coordinate pairs with their
+own influence entries. Keep optional/null skin and vertices, source guard/error behavior and
+command/data lengths. Do not replace the posed curve by authored vertices, a straight line,
+empty path, copied skeleton or invented slot-deform behavior.
+
+Path deformation and getPathLength occur before the source !(total>0) return, and before the
+empty-chain return. Fixed/Percent position and Fixed/Length/Percent spacing retain original
+number arithmetic and per-bone lengths. Each sample's distance is clamped to [0,total], never
+wrapped or used to shift the whole chain. An invalid bone index still consumes a sample and
+spacing step (length 0); only the later mutation pass skips it. Do not filter/reorder the chain,
+validate indices as integers, clamp mixes or otherwise narrow the original numeric domain.
+All positions/tangents are sampled into the reused Float64 buffers BEFORE any constrained bone
+moves. Preserve scratch identities/growth and path-kernel call/read order; alternating sampling
+and mutation changes a chain and any path skinned to those bones.
+
+The second pass mutates the original Bone2D objects and six-value Float32 world buffer.
+Translation mixes both wanted WORLD coordinates, then performs one parent-space inversion;
+roots use world coordinates directly, determinant magnitude below `1e-9` leaves local position
+unchanged. Its nonzero-mix branch refreshes that bone even when inversion returned null.
+Rotation then reads current world orientation, uses Tangent or the next pre-sampled position
+for Chain, falls back to the tangent for coincident samples/last bone, wraps signed +/-180
+degrees, multiplies by the original mixRotate*mix and refreshes again. Preserve mixX/mixY*mix,
+zero-channel branches, repeated indices, parent order and all TransformInherit2D flag combinations.
+Later constraints see refreshed bones; descendants remain for the caller's one final world pass.
+
+Existing source tests describe registration identity, all position/spacing modes, per-sample
+clamps, tangent/chain orientation, partial mixes, target-slot absence and posed-path motion.
+They are source requirements, not native execution here. The unchanged helper and scratch
+initializers do not implement either refused body. The [retained solver declaration](retained-declaration-calls-omitted-callee.md#g2-skeleton2d-path-registration-retains-its-refused-solver)
+adds visibility only. No fake path solver, empty result, copied owner or narrower domain is carried.
