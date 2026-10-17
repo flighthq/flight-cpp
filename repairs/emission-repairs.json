@@ -9327,6 +9327,20 @@
       "defect": "Refused RenderTexture owner/union conversion leaves acquire undeclared in retained bracket. Exact prototype only: no pool storage/cache/operations, target/result or GL provider is supplied.",
       "expectedWhen": "always",
       "expires": "when acquireGlRenderTexture emits or the retained bracket stops calling it"
+    },
+    {
+      "id": "skeleton2d-declare-refused-transform-constraint-solver",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/skeleton2d/transform_constraint_2d.hpp",
+      "symbol": "solve_skeleton_2d_transform_constraint",
+      "refusedFunction": "solveSkeleton2DTransformConstraint",
+      "declaration": "void solve_skeleton_2d_transform_constraint(flight::Ref<flight::types::Skeleton2D> skeleton, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DConstraint>>>> constraint);",
+      "retainedReference": "flight::skeleton2d::register_skeleton_2d_constraint_solver(flight::types::skeleton_2d_constraint_kind->transform, solve_skeleton_2d_transform_constraint);",
+      "sourceDeclaration": "packages/skeleton2d/src/transformConstraint2D.ts -- solveSkeleton2DTransformConstraint(skeleton: Skeleton2D, constraint: Readonly<Skeleton2DConstraint>): void; the retained registration passes exactly Skeleton2DConstraintSolver, whose emitted carrier is void(Ref<Skeleton2D>,readonly Skeleton2DConstraint row)",
+      "diagnostic": "use of undeclared identifier 'solve_skeleton_2d_transform_constraint'",
+      "defect": "Exact NOT GENERATED marker, retained direct function-argument registration and absent definition agree. Existing retainedReference declares only the exact solver slot carrier, preserving the mutable skeleton Ref and readonly base constraint domain. The body remains refused because the base row cannot recover boneIndices/mixRotate/mixScaleX/mixScaleY/mixShearY/mixX/mixY/offsetRotation/offsetScaleX/offsetScaleY/offsetShearY/offsetX/offsetY/targetBoneIndex or equivalent kind cells from the original transform owner. No transform algorithm, pose/bone/world-matrix mutation, replacement constraint, empty solver or narrower closed constraint family is supplied. Explicit registration must fail to link only on this omitted body. Existing body request: docs/compiler-requests/assertion-to-undeclared-row-member.md; retained callback request: docs/compiler-requests/retained-declaration-calls-omitted-callee.md.",
+      "expectedWhen": "always",
+      "expires": "when solveSkeleton2DTransformConstraint emits or its exact retained registration disappears; sdk:check fails if this repair matches no header."
     }
   ]
 }
