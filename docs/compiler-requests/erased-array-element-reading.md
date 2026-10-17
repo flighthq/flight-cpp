@@ -526,3 +526,103 @@ only. No native codec, round-trip, parser, rendering, header-availability or lin
 links their rows and cluster to this existing request and the related JSON-read request. C++ inputs,
 repairs, source patches, generation inventory and pins are unchanged; unchanged C++ is not rerun.
 Foreign compact product lines, worklist entries and historical/G1 totals are preserved.
+
+
+## G2 DragonBones section counts read erased length into a numeric Map
+
+At Flight `a62784923f3be814463286c9fb28edfe6ab15789` / compiler
+`806d257d2f4100de745cc97340e61c2f301b0f24`, recorded cluster
+`no-viable-conversion-303c42f1` contains two failing headers. Their first diagnostic is
+`flight/skeleton2d_formats/dragon_bones_section_counts.hpp:33`,
+`no viable conversion from 'Any' to 'double'`. This is the existing erased-array-length boundary
+above, now at a numeric Map value rather than an assignment. Source
+`packages/skeleton2d-formats/src/dragonBonesSectionCounts.ts:37-39` reads:
+
+```ts
+const value = record[jsonKey];
+if (!Array.isArray(value) || value.length === 0) return;
+counts.set(kind, value.length);
+```
+
+The retained `count_section_...` helper takes `Map<String,double>` and `Record<String,Any>`.
+It emits the lookup as `record.get(json_key).value()`, keeps that result as Any, then emits:
+
+```cpp
+if (!flight::is_array(value) ||
+    flight::named_properties(value).get(flight::String("length")) == 0.0) return;
+counts.set(kind, flight::named_properties(value).get(flight::String("length")));
+```
+
+Map::set requires its declared double value; NamedProperties::get returns Any. More than a numeric
+extraction is missing: named_properties(Any) asks erased_row_owner(), which answers AnyObject only,
+not AnyArray. For a boxed array the named view is empty and get("length") returns undefined.
+Adding .as_number() would turn this compile failure into a bad read; an implicit Any-to-double
+conversion, zero fallback or special Map overload would conceal the absent length rather than count.
+The retained tallyTimeline helper at native36-40 has the same erased length for its zero test and
+`(counts.get(kind) ?? 0) + raw.length` accumulation; these additional sites were inspected, not
+reported as newly measured next diagnostics.
+
+AnyArray already retains the shared array identity, exact Array<T> handle and checked
+external_if<Array<T>>() recovery. Array.isArray does not establish that T. A faithful boundary must
+read the original array's live length through independently proved exact recovery or a general erased
+array length contract. It must admit every source array element type; counting requires no element
+schema. A copied Array<Any>, an Array<double>-only path, a boxing-time length snapshot or
+Object.keys(value).length would change identity, reject valid input or count a different property set.
+No bounded source spelling, existing declaration repair or external binding supplies that emitted
+numeric read. No fresh compiler/runtime prototype or native rerun is claimed for this disposition.
+
+### Full counting and requirements contract
+
+- JSON syntax errors return null. Null/nonobject documents and a nonarray/missing armature field are
+  unreadable. A real empty armature array returns a fresh empty Map; so does a null/nonobject first
+  armature. Only the first armature is inspected, rather than aggregating all armatures. First-armature
+  and animation-entry guards are non-null object checks, not extra plain-object/schema validators.
+  Preserve the actual guard/read order and missing-key-as-undefined semantics. The current retained
+  Record lookups use .value(), which also exposes the
+  [existing parsed-JSON/member-read request](parsed-json-object-shape-reads.md). Requiring a nominal
+  armature struct, parser version, bone name or validated skeleton would narrow this census.
+- The first armature's bone, slot, skin and ik fields contribute their array lengths to bones, slots,
+  skins and ikConstraints, in that source order. Missing, nonarray or empty fields add no key, rather
+  than a stored zero. Every array position counts, without validating element contents or filtering
+  null/unsupported entries. Array length and object-key enumeration are different operations.
+- A nonempty animation array contributes its entire raw length to animations before entry filtering.
+  Then visit every entry in order, skip null/nonobjects, and tally bone, slot, ffd, ik and zOrder arrays
+  under bone, slot, deform, ik and zOrder respectively. Add each nonempty array's full length to that
+  family's existing count with missing-count default0; do not overwrite prior animation totals,
+  count keyframes inside the family entries, merge section/timeline spellings, or count only valid
+  animation objects for the animations total. Empty/nonarray families do not insert keys.
+- All helpers mutate the same counts Map and preserve first-insertion order while updating totals.
+  The native Map already has shared reference storage; copying the counts into a second result or
+  replacing source arrays/Record owners is not a solution. The section/timeline kind constants in
+  DragonBonesRegistry.ts supply these exact strings; this function is a presence/length census,
+  not handler dispatch or a skeleton parser. No bone/slot/skin schema or registry lookup is added.
+- dragonBonesRequirements.ts9 uses non-null counts for isReadableDragonBones, so an empty readable
+  document must remain true. parseDragonBonesRequirements iterates present Map keys and constructs
+  DocumentFormat requirements named dragonbones.<kind>, then uses the real createRequirementSet
+  with DocumentFormat coverage even for unreadable/no-content input. That factory sorts/deduplicates
+  requirement identities and coverage; preserve it and the existing Requirement/RequirementSet owners.
+  Counts must not become a canned empty requirement set, nor must null and empty Map be conflated.
+
+The module still explicitly omits collectDragonBonesSectionCounts3 as
+`cpp-erased-array-assertion-runtime-required`, and countAnimationTimelines42 as
+`cpp-presence-test-without-absence-storage`. The collector's refusal says Any has no array
+alternative/extraction; that wording is stale for exact recovery, while the general erased-read gap
+remains real. The timeline diagnostic names only an identifier, so no uniquely failing variable is
+inferred from that text. Its source has the raw-array iteration and animEntry null/object guard.
+The requirements header retains two direct calls to the missing collector, with the result stored as
+optional<Map<String,double>>. A declaration would supply neither omitted algorithm nor the broken
+retained length reads, and cannot qualify unused-header availability while those reads fail. No
+candidate declaration, positive unused compile/link/run or qualified negative-link result was tested
+or claimed here; these are inspected omissions/calls, not fresh native evidence.
+
+The existing section-count and requirements tests specify invalid JSON/primitive/missing-armature
+rejections, readable empty counts, each section family, timeline counts, omitted keys, readability and
+namespaced DocumentFormat requirements. They were read as source requirements only. No native counts,
+parser, requirements, skeleton or animation functionality pass is claimed.
+
+**Recorded 0/2 pass, 2 fail is retained.** Only
+`flight/skeleton2d_formats/{dragon_bones_requirements,dragon_bones_section_counts}.hpp` rows and their
+cluster gain this existing request and the related JSON-read link. The worklist slice and this
+append-only request note accompany those three compact product lines. C++, runtime, source patches,
+repairs, generation inventory and pins are unchanged; unchanged C++ is not rerun. Foreign compact
+products, worklist entries and historical/G1 totals are preserved.

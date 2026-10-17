@@ -108,7 +108,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 79 | `call-has-no-matching-d42144f0` | 2 | ANIM | compiler | the emitted call to `push` matches no declared overload |
 | 80 | `missing-member-da12a523` | 2 | 3D | runtime + repair (fixed) | the emitted code reads a member the target does not declare (`parse_obj_material_library`); G2: 0 pass, 2 follow-ons (`static-assertion-ecc68c2b`, `undeclared-identifier-d663f62e`) |
 | 81 | `missing-member-dd9b4baa` | 2 | 3D, GL | runtime | the emitted code reads a member the target does not declare (`renderbuffer_binding`) *(G2: binding added; follow-on `no-matching-conversion-bc278253` fixed: 1 pass, 1 to `missing-member-95ead583`)* |
-| 82 | `no-viable-conversion-303c42f1` | 2 | ANIM | compiler | a value is passed where its declared type cannot receive it |
+| 82 | `no-viable-conversion-303c42f1` | 2 | ANIM | compiler | G2: recorded 0/2 retained; DragonBones erased array length cannot enter numeric counts Map; existing request, docs-only/no rerun |
 | 83 | `other-67dc02c6` | 2 | 2D | compiler | `getSurfaceHandle(...) as HTMLCanvasElement` lowered to an unchecked `static_cast` from the erased handle *(existing request extended)* |
 | 84 | `other-6f513db2` | 2 | 2D, 3D | binding (fixed) | attribute locations now use the source number carrier; G2: 0 pass, 2 later compiler failures |
 | 85 | `other-86d0b50b` | 5 | 2D, 3D | [compiler request](compiler-requests/object-literal-into-outcome-variant.md) | SceneCoverageEntry literals initialize the outer variant instead of a selected concrete reference arm |
@@ -2018,13 +2018,28 @@ that already holds its three environment siblings. Behind that, its own body rea
 hand-written overrides use the `*_constant` names. That collision is recorded here and is not filed as a
 cluster of its own, since no header fails on it first.
 
-### 82. `no-viable-conversion-303c42f1` — 2 header(s)
+### 82. `no-viable-conversion-303c42f1` — 2 header(s), compiler route
 
-- cause: a value is passed where its declared type cannot receive it
-- lanes: ANIM
-- fix route: compiler
-- first failure at: `flight/skeleton2d_formats/dragon_bones_section_counts.hpp:33`
-- example: `no viable conversion from 'Any' to 'double'`
+**Recorded 0/2 pass, 2 fail retained; docs-only, unchanged C++ not rerun.** Both
+`flight/skeleton2d_formats/{dragon_bones_requirements,dragon_bones_section_counts}.hpp` rows still fail
+at `dragon_bones_section_counts.hpp:33`: `no viable conversion from 'Any' to 'double'`.
+
+Source countSection37-39 guards an array, then passes value.length to the numeric counts Map.
+The emitter instead passes named_properties(value).get("length"), an Any read from an empty array
+named view. [Existing erased-array length coverage](compiler-requests/erased-array-element-reading.md#g2-dragonbones-section-counts-read-erased-length-into-a-numeric-map)
+now records this exact boundary and tallyTimeline's same retained length reads. Adding as_number()
+would still read undefined; exact array recovery requires known T, while the source counts any array.
+No bounded conversion/declaration fix supplies that missing live length contract.
+
+The audit retains missing-key semantics under the
+[existing JSON-read request](compiler-requests/parsed-json-object-shape-reads.md), first-armature-only
+selection, null versus readable empty Map, unfiltered section/animation lengths, accumulated five-family
+timelines, absent versus zero keys and same counts Map identity. The real requirements consumer/factory
+must preserve dragonbones.<kind> DocumentFormat entries and coverage. Both omitted functions and the
+two retained collector calls are inspected only; no newly measured next error or link gate is claimed.
+No fake counts/parser, copied owner, tighter schema or canned empty result is supplied. Only the existing
+request appendix, this slice and three compact owned product lines change; foreign/historical products
+and C++/runtime/source patches/repairs/manifest/pins remain unchanged.
 
 ### 83. `other-67dc02c6` — 2 header(s), still failing
 
