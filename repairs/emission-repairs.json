@@ -78,6 +78,18 @@
       "expires": "when external binding metadata distinguishes native property accessors during emission; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "render-gl-cube-face-box-drawing-buffer-property-binding",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/render_gl/gl_cube_render_target.hpp",
+      "from": "flight::Array<double>{0.0, 0.0, gl.drawing_buffer_width, gl.drawing_buffer_height}",
+      "to": "flight::Array<double>{0.0, 0.0, static_cast<double>(gl.drawing_buffer_width()), static_cast<double>(gl.drawing_buffer_height())}",
+      "sourceDeclaration": "packages/render-gl/src/glCubeRenderTarget.ts readGlCubeFaceBox -- `return [0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight]` reads the two WebGL2RenderingContext number properties; the SDL host binding exposes the same values through drawing_buffer_width() and drawing_buffer_height(), which answer int",
+      "diagnostic": "reference to non-static member function must be called; non-constant-expression cannot be narrowed from type 'int' to 'double' in initializer list",
+      "defect": "The same external property read the two drawing-buffer repairs above answer, here inside a braced Array<double> list where their statement-final spelling does not match. Calling the accessor reads the property value; the static_cast is the int-to-Number conversion the JavaScript read performs, exact for every pixel dimension, so no state or behavior is added and the existing call API is unchanged.",
+      "expectedWhen": "always",
+      "expires": "when external binding metadata distinguishes native property accessors during emission; sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "render-gl-draw-unqualified-imports",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/render_gl/gl_draw.hpp",

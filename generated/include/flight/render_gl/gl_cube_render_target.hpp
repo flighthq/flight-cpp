@@ -139,7 +139,7 @@ inline void invalidate_gl_cube_face_binding_cache(flight::Ref<flight::types::GlR
 inline flight::Array<double> read_gl_cube_face_box(flight::host_sdl::WebGl2Context gl, double parameter) {
   std::optional<flight::SequenceView<double>> value = static_cast<std::optional<flight::SequenceView<double>>>(gl.get_parameter(parameter));
   if ((!value.has_value() || (value.value().length < 4.0))) {
-    return flight::Array<double>{0.0, 0.0, gl.drawing_buffer_width, gl.drawing_buffer_height};
+    return flight::Array<double>{0.0, 0.0, static_cast<double>(gl.drawing_buffer_width()), static_cast<double>(gl.drawing_buffer_height())};
   }
   return flight::Array<double>{value.value()[0.0], value.value()[1.0], value.value()[2.0], value.value()[3.0]};
 }

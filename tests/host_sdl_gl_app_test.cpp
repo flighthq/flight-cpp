@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <optional>
 #include <stdexcept>
 #include <string_view>
 
@@ -16,6 +17,20 @@ int main() {
     using namespace flight::host_sdl;
     GlApplication app({.title = "Flight installed GL app test", .width = 64, .height = 48, .hidden = true});
     const auto& gl = app.context();
+
+    // `getParameter(VIEWPORT) as ArrayLike<number> | null` through the nullable carrier: an engaged
+    // view of the four integers, and a non-sequence parameter refused rather than read as null.
+    gl.viewport(1, 2, 30, 40);
+    const auto box = static_cast<std::optional<flight::SequenceView<double>>>(gl.get_parameter(gl.viewport_constant));
+    require(box.has_value() && box->length == 4 && (*box)[0] == 1 && (*box)[1] == 2 && (*box)[2] == 30 &&
+                (*box)[3] == 40,
+            "VIEWPORT did not answer its four integers through the nullable sequence carrier");
+    bool refused_non_sequence = false;
+    try { (void)static_cast<std::optional<flight::SequenceView<double>>>(gl.get_parameter(gl.renderbuffer_binding)); }
+    catch (const std::logic_error&) { refused_non_sequence = true; }
+    require(refused_non_sequence, "a non-sequence parameter was read through the nullable sequence carrier");
+    require(gl.get_error() == gl.no_error, "the viewport query raised a GL error");
+
     const auto id = SDL_GetWindowID(app.canvas().native_window());
     SDL_Event foreign_close{};
     foreign_close.type = SDL_EVENT_WINDOW_CLOSE_REQUESTED;

@@ -457,6 +457,9 @@ int main() {
   static_assert(requires(const flight::host_sdl::GlParameterValue& value) {
                   static_cast<std::optional<flight::host_sdl::WebGlRenderbuffer>>(value);
                 }, "a renderbuffer binding query must convert to the nullable handle WebGL returns");
+  static_assert(requires(const flight::host_sdl::GlParameterValue& value) {
+                  static_cast<std::optional<flight::SequenceView<double>>>(value);
+                }, "`getParameter(p) as ArrayLike<number> | null` must have a nullable sequence carrier");
 
   const flight::host_sdl::GlCanvas no_gl_canvas;
   auto same_no_gl_canvas = no_gl_canvas;

@@ -107,7 +107,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 78 | `call-has-no-matching-84410867` | 2 | 3D | compiler | the emitted call to `buffer_data` matches no declared overload |
 | 79 | `call-has-no-matching-d42144f0` | 2 | ANIM | compiler | the emitted call to `push` matches no declared overload |
 | 80 | `missing-member-da12a523` | 2 | 3D | runtime | the emitted code reads a member the target does not declare (`parse_obj_material_library`) |
-| 81 | `missing-member-dd9b4baa` | 2 | 3D, GL | runtime | the emitted code reads a member the target does not declare (`renderbuffer_binding`) *(G2: binding added; 0 pass, 2 to `no-matching-conversion-bc278253`)* |
+| 81 | `missing-member-dd9b4baa` | 2 | 3D, GL | runtime | the emitted code reads a member the target does not declare (`renderbuffer_binding`) *(G2: binding added; follow-on `no-matching-conversion-bc278253` fixed: 1 pass, 1 to `missing-member-95ead583`)* |
 | 82 | `no-viable-conversion-303c42f1` | 2 | ANIM | compiler | a value is passed where its declared type cannot receive it |
 | 83 | `other-67dc02c6` | 2 | 2D | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 84 | `other-6f513db2` | 2 | 2D, 3D | runtime | uncategorised: the first diagnostic does not name a single cause |
@@ -1445,6 +1445,44 @@ two further host binding shapes:
 
 `gl_environment_capture.hpp` has later, unrelated scene3d-gl failures behind those (`TextureCube`,
 `begin_gl_cube_render_face`, `add_gl_scene_3d_resource_cleanup`).
+
+#### Follow-on `no-matching-conversion-bc278253`, the same two headers
+
+Both shapes are host binding gaps and are answered without changing the existing call API.
+
+- **Nullable numeric sequence.** `GlParameterValue` gains `explicit operator
+  std::optional<SequenceView<double>>()`. It is the nullable-carrier twin of the existing
+  `variant<SequenceView<double>, Null, Undefined>` operator. The only callers pass `SCISSOR_BOX` or
+  `VIEWPORT`, which WebGL never answers with `null`, so the result is an engaged view over the same `Array`
+  owner. A parameter that is not a numeric sequence is refused with the same `logic_error`, never read as
+  absent and never through `Any`.
+- **Property read of a host accessor.** The existing `render-gl-drawing-buffer-width/height-property-binding`
+  repairs call `drawing_buffer_width()`/`drawing_buffer_height()` only where the read ends a statement.
+  The new `render-gl-cube-face-box-drawing-buffer-property-binding` repair answers the one braced
+  `Array<double>` site in `readGlCubeFaceBox`. It calls the accessor and applies the `int` to Number
+  conversion the JavaScript read performs, which is exact for any pixel dimension. The host methods are
+  unchanged. Like the others, it expires when external binding metadata distinguishes native property
+  accessors during emission.
+
+The generated header and manifest carry exactly that repair's application. A scoped
+`pkg:generate @flighthq/render-gl` on this floor also re-hashed closure-dependent anonymous structs in
+four render-gl headers, two of them shadowed by peer-owned overrides. Since AGENTS.md notes that these
+names depend on the closure that first met the shape, that drift was not committed. Only the repaired
+line and its manifest record were kept.
+
+`tests/host_sdl_test.cpp` pins the carrier at compile time. `tests/host_sdl_gl_app_test.cpp` asserts it in
+a live offscreen context: `viewport(1, 2, 30, 40)` reads back as an engaged four-element view, and a
+non-sequence parameter is refused. That test is gated on `Flight::HostSdlGl` and has not been run here.
+builder4's live cache test separately covers the renderbuffer and cube-map binding queries.
+
+**G2: 1/2 compile, 1 fail** (`-j1`, Clang 22.1.8). Passing: `flight/render_gl/gl_cube_render_target.hpp`.
+`flight/scene3d_gl/gl_environment_capture.hpp` moves to the existing `missing-member-95ead583`. In
+compiler order, its first failure is now the included `gl_environment_cube.hpp:56` variant `version` read
+that already holds its three environment siblings. Behind that, its own body reads
+`gl.get_parameter(gl.active_texture)`: the WebGL constant `ACTIVE_TEXTURE` snake-cases onto the host's
+`active_texture()` member function. The host spells that constant `active_texture_constant`, but only
+hand-written overrides use the `*_constant` names. That collision is recorded here and is not filed as a
+cluster of its own, since no header fails on it first.
 
 ### 82. `no-viable-conversion-303c42f1` — 2 header(s)
 

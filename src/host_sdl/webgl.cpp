@@ -402,6 +402,16 @@ GlParameterValue::operator std::variant<SequenceView<bool>, Null, Undefined>() c
   return SequenceView<bool>(*value);
 }
 
+// `getParameter(p) as ArrayLike<number> | null` read through a nullable carrier. The numeric array
+// queries this context answers (viewport, scissor box, color clear value) never answer null, so an
+// engaged view over the same Array owner is the only result; any other parameter is not a numeric
+// sequence and is refused exactly as the variant carrier above refuses it, never read as absent.
+GlParameterValue::operator std::optional<SequenceView<double>>() const {
+  const auto* value = std::get_if<Array<double>>(&value_);
+  if (!value) throw std::logic_error("WebGL parameter is not a numeric sequence");
+  return SequenceView<double>(*value);
+}
+
 GlParameterValue::operator std::optional<WebGlFramebuffer>() const {
   const auto* value = std::get_if<std::optional<WebGlFramebuffer>>(&value_);
   if (!value) throw std::logic_error("WebGL parameter is not a framebuffer");

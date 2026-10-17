@@ -153,6 +153,7 @@ class FLIGHT_HOST_SDL_GL_API GlParameterValue final {
   [[nodiscard]] explicit operator Array<bool>() const;
   [[nodiscard]] explicit operator std::variant<SequenceView<double>, Null, Undefined>() const;
   [[nodiscard]] explicit operator std::variant<SequenceView<bool>, Null, Undefined>() const;
+  [[nodiscard]] explicit operator std::optional<SequenceView<double>>() const;
   [[nodiscard]] explicit operator std::optional<WebGlFramebuffer>() const;
   [[nodiscard]] explicit operator std::optional<WebGlProgram>() const;
   [[nodiscard]] explicit operator std::optional<WebGlRenderbuffer>() const;
