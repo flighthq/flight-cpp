@@ -159,7 +159,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 130 | `no-viable-conversion-4bbb9be5` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it *(builder4/E0a)* |
 | 131 | `no-viable-conversion-562151da` | 1 | WGPU | compiler | a value is passed where its declared type cannot receive it |
 | 132 | `no-viable-conversion-68fff449` | 1 | 3D | compiler | base Node3D cannot recover the independent morph probe; existing owner-refinement request linked (G2: 0/1 retained) |
-| 133 | `no-viable-conversion-7e6bb150` | 1 | WGPU | compiler | a value is passed where its declared type cannot receive it |
+| 133 | `no-viable-conversion-7e6bb150` | 1 | WGPU | compiler *(existing request)* | inferred local from `getWgpuEffectPipeline` re-expanded from the imported `WgpuEffectPipeline` alias into a local anonymous struct |
 | 134 | `no-viable-conversion-802e8004` | 1 | GL | compiler | GL view destroy instantiates state-to-base teardown without heritage; original0/1 retained, existing request linked |
 | 135 | `no-viable-conversion-9695423c` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
 | 136 | `no-viable-conversion-a516fbdb` | 1 | 3D | compiler | readonly generic graph node cannot become an independent geometry probe; existing refinement request linked (G2: 0/1 retained) |
@@ -3212,13 +3212,17 @@ refusal/count/initialization/policy products and pins are unchanged; no native o
 Only this compact root/row and worklist132 plus an append to the existing request change.
 No fake animation, copied owner, empty result, narrowed domain or native TRS/morph gain is claimed.
 
-### 133. `no-viable-conversion-7e6bb150` — 1 header(s)
+### 133. `no-viable-conversion-7e6bb150` — G2 recheck of 1 header
 
-- cause: a value is passed where its declared type cannot receive it
+- cause: `const pipeline = getWgpuEffectPipeline(...)` drops the imported alias `WgpuEffectPipeline = Entity & { pipeline; blendMode; compileForFormat?; variants? }`. The local is emitted as a header-local anonymous struct with `flight::Any` members, while the callee returns `Ref<WgpuEffectPipeline>` and `drawWgpuEffectPass` takes it.
+- subject: `get_wgpu_effect_pipeline`
 - lanes: WGPU
 - fix route: compiler
+- why this route: the inferred local must keep the provider alias carrier, per [compiler-imported-alias-local-flow-abi](compiler-requests/compiler-imported-alias-local-flow-abi.md). Converting between the two structs would copy the pipeline record and erase its WebGPU handles.
 - first failure at: `flight/effects_wgpu/wgpu_color_matrix_pass.hpp:41`
 - example: `no viable conversion from 'Ref<WgpuEffectPipeline>' to 'Ref<entity_runtime_key_pipeline_blend_mode_compile_for_format_variants_5a993344e208d790>'`
+- Scoped native recheck (GCC 15.2, jobs 1, all errors shown): **1 attempted / 0 pass / 1 fail** at `:41` (initialization) and `:42` (the argument). No GPU provider, pass, copied pipeline or narrowed domain is supplied.
+- compiler request: `docs/compiler-requests/compiler-imported-alias-local-flow-abi.md`
 
 ### 134. `no-viable-conversion-802e8004` — G2 request-link audit of original 1 header
 
