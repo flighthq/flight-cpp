@@ -109,3 +109,42 @@ Both are hard compile errors. The record assertion needs an identity-preserving 
 the array assertion needs the checked erased-array view described in
 `erased-array-identity-preserving-view.md`. Neither TypeScript assertion requests a new record or
 array value, so a copying conversion would also be wrong.
+
+## Fourth measured site: the Canvas surface handle (`@flighthq/scene2d-canvas`)
+
+At the same pins, every Canvas consumer recovers its element with the same assertion:
+
+```ts
+const canvas = getSurfaceHandle(surface) as HTMLCanvasElement;   // NativeSurfaceHandle = unknown
+```
+
+```cpp
+flight::host_sdl::GlCanvas canvas = static_cast<flight::host_sdl::GlCanvas>(flight::surface::get_surface_handle(...));
+```
+
+```
+flight/scene2d_canvas/canvas_element.hpp:34: no matching conversion for static_cast from
+  'flight::types::NativeSurfaceHandle' (aka 'flight::Any') to 'flight::host_sdl::GlCanvas'
+```
+
+The source has nine such sites: `canvasElement.ts:15`, `canvasScreenRenderTarget.ts:34`,
+`canvasTextureRenderTarget.ts:33`, `canvasFillPattern.ts:121` and `canvasTextureWindowSource.ts:71`,
+plus four in the Canvas test-support modules. The two headers of G2 cluster `other-67dc02c6`
+(`canvas_element.hpp`, `canvas_screen_render_target.hpp`) fail on the first two.
+
+The target type is right. The SDL binding maps `HTMLCanvasElement` to `flight::host_sdl::GlCanvas`, which
+is the native DOM canvas for both contexts: it carries `style`, `width`, `height`, and `get_context("2d")`
+answering a `flight::CanvasRenderingContext2D`. The handle is an erased `Any`, and the checked read the
+runtime already provides is `handle.external_if<flight::host_sdl::GlCanvas>()`. That recovers the stored
+canvas at its exact type, with the same identity, and answers null for anything else. The assertion
+should lower onto that path, with an absent result being the assertion's failure. A `static_cast` is
+not a conversion `Any` offers, and must not become one.
+
+A checked lowering still leaves one thing open, and it is **not** the emitter's: the handle's domain is
+the provider's. `HostCanvasCapability.create` returns `NativeSurfaceHandle` (`unknown`). The web host
+stores an `HTMLCanvasElement` there, but no SDL host provider implements `HostCanvasCapability` today
+(`include/flight/host_sdl` and `src/host_sdl` create no Canvas surfaces). So nothing natively yet states
+what a Canvas surface handle holds. Recovering it as `GlCanvas` is faithful only once a native provider
+stores exactly that. Hard-coding `GlCanvas` before then would narrow an `unknown` domain by fiat, and
+inventing a provider or a fake surface to make the cast succeed would fake the host. Neither is done
+here.

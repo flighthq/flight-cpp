@@ -109,7 +109,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 80 | `missing-member-da12a523` | 2 | 3D | runtime | the emitted code reads a member the target does not declare (`parse_obj_material_library`) |
 | 81 | `missing-member-dd9b4baa` | 2 | 3D, GL | runtime | the emitted code reads a member the target does not declare (`renderbuffer_binding`) *(G2: binding added; follow-on `no-matching-conversion-bc278253` fixed: 1 pass, 1 to `missing-member-95ead583`)* |
 | 82 | `no-viable-conversion-303c42f1` | 2 | ANIM | compiler | a value is passed where its declared type cannot receive it |
-| 83 | `other-67dc02c6` | 2 | 2D | runtime | uncategorised: the first diagnostic does not name a single cause |
+| 83 | `other-67dc02c6` | 2 | 2D | compiler | `getSurfaceHandle(...) as HTMLCanvasElement` lowered to an unchecked `static_cast` from the erased handle *(existing request extended)* |
 | 84 | `other-6f513db2` | 2 | 2D, 3D | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 85 | `other-86d0b50b` | 5 | 2D, 3D | [compiler request](compiler-requests/object-literal-into-outcome-variant.md) | SceneCoverageEntry literals initialize the outer variant instead of a selected concrete reference arm |
 | 86 | `redefinition-caa49360` | 2 | 3D | runtime | a declaration is emitted twice |
@@ -1784,13 +1784,25 @@ cluster of its own, since no header fails on it first.
 - first failure at: `flight/skeleton2d_formats/dragon_bones_section_counts.hpp:33`
 - example: `no viable conversion from 'Any' to 'double'`
 
-### 83. `other-67dc02c6` — 2 header(s)
+### 83. `other-67dc02c6` — 2 header(s), still failing
 
-- cause: uncategorised: the first diagnostic does not name a single cause
+- cause: `getSurfaceHandle(surface) as HTMLCanvasElement` is emitted as `static_cast<GlCanvas>` of the erased
+  `NativeSurfaceHandle` (`flight::Any`)
 - lanes: 2D
-- fix route: runtime
+- fix route: compiler (checked assertion lowering), and an SDL Canvas host provider for the handle's domain
 - first failure at: `flight/scene2d_canvas/canvas_element.hpp:34`
 - example: `no matching conversion for static_cast from 'NativeSurfaceHandle' to 'host_sdl::GlCanvas'`
+- existing request extended: [assertion lowered to unchecked static_cast](compiler-requests/assertion-lowered-to-unchecked-static-cast.md)
+
+`GlCanvas` is the right native `HTMLCanvasElement`: it has `style`, `width`, `height` and
+`get_context("2d")` returning `CanvasRenderingContext2D`. `Any`'s checked read of it is
+`external_if<GlCanvas>()`. But `HostCanvasCapability.create` returns `NativeSurfaceHandle` (`unknown`), and
+no SDL host provider implements that capability yet. So nothing natively defines what a Canvas surface
+handle holds. Neither a cast, nor narrowing the `unknown` domain to `GlCanvas`, nor an invented
+provider or surface would be faithful.
+
+The request is extended with all nine source sites. These two headers fail on the first two. **G1
+status retained: 0/2 pass, 2 fail.** No code changed, so no recompile was run.
 
 ### 84. `other-6f513db2` — 2 header(s)
 
