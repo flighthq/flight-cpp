@@ -2,7 +2,6 @@
 #pragma once
 #include <cmath>
 #include <cstddef>
-#include <flight/any.hpp>
 #include <flight/map.hpp>
 #include <flight/number.hpp>
 #include <flight/structural_ref.hpp>
@@ -41,7 +40,8 @@ inline flight::types::NonEntityCreateResult<std::shared_ptr<flight::types::Ordin
   return flight::make_ref<flight::types::OrdinalTable<T>>(flight::types::OrdinalTable<T>{.entries = vocabulary.map([=]() -> std::optional<T> { return std::nullopt; }), .vocabulary = vocabulary});
 }
 
-inline void get_kind_map_keys(flight::Array<flight::String> out, flight::Map<flight::String, flight::Any> map) {
+template <typename T>
+inline void get_kind_map_keys(flight::Array<flight::String> out, flight::Map<flight::String, T> map) {
   ([&]() { auto&& assignment_receiver = out; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
   for (const auto& [for_of_key, for_of_value] : map) {
     static_cast<void>(for_of_value);

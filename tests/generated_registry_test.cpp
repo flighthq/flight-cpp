@@ -49,7 +49,7 @@ void test_get_kind_map_keys() {
   const Table table = flight::registry::with_kind_map_entry(
       flight::registry::with_kind_map_entry(Table{}, String("b"), String("1")), String("a"), String("2"));
   flight::Array<String> out;
-  flight::registry::get_kind_map_keys(out, flight::Map<String, flight::Any>(table));
+  flight::registry::get_kind_map_keys(out, table);
   check(out.size() == 2 && out[0] == String("a") && out[1] == String("b"), "getKindMapKeys lists all keys sorted");
 
   flight::Array<String> stale{String("stale")};

@@ -5386,6 +5386,13 @@
       "id": "rive-object-graph-fresh-diagnostic-record",
       "module": "packages/scene2d-formats/src/riveObjectGraph.ts",
       "package": "@flighthq/scene2d-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "a91e0e959c8fd4bafd86bfdc2df13a91630c0358bca7e655e8939d9ed5465c07",
+      "id": "registry-kind-map-keys-value-parameter",
+      "module": "packages/registry/src/registryTable.ts",
+      "package": "@flighthq/registry"
     }
   ],
   "duplicateStructuralStructAliases": {
