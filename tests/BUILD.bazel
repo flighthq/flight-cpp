@@ -1175,6 +1175,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_effects_gl_blit_cache_test",
+    srcs = ["generated_effects_gl_blit_cache_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview", "//:host_sdl_gl"],
+)
+
+cc_test(
     name = "generated_scene2d_gl_owners_test",
     srcs = ["generated_scene2d_gl_owners_test.cpp"],
     size = "small",

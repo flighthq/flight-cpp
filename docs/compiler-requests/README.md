@@ -275,6 +275,10 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 - [An optional member must construct its declared Record value carrier](contextual-record-value-carrier-projection.md) —
   P-3D2 glTF loading refuses when an existing `Record<string, Uint8Array>` fills an optional
   `Record<string, ArrayLike<number>>` member; direct widening instead emits invalid invariant C++.
+- [A Flight interface bound to an external key type never reaches its weak-key policy](bound-interface-weak-map-key-policy.md) —
+  `WeakMap<GlContext, V>` is refused because the policy is read only for ambient key names, though the
+  binding, the `using GlContext` alias and `WebGl2ContextWeakPolicy` all exist; effects-gl's three blit
+  caches are supplied meanwhile by a partial override.
 - [A reference-keyed WeakMap is emitted as a strong Map](reference-keyed-weak-map-as-strong-map.md) —
   `@flighthq/clipboard`'s `_watchSubscriptions` and `@flighthq/connectivity`'s `_subscriptions` are the
   same source shape and took different containers; only lifetime differs, so the clipboard audit

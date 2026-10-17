@@ -44,7 +44,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 15 | `variant-cast-ccfedad4` | 9 | 3D | compiler | a retained readonly program row is reconstructed through a writable row before a readonly draw helper *(existing request extended)* |
 | 16 | `call-has-no-matching-b569e92e` | 8 | 3D, ANIM | compiler | the emitted call to `init_joint_base` matches no declared overload |
 | 17 | `undeclared-identifier-294e632e` | 8 | ANIM | declaration repair (applied) | omitted callee declaration supplied; G2: 1 pass, 7 fail at later diagnostics; function remains unlinkable |
-| 18 | `undeclared-identifier-3e3cccce` | 8 | GL | runtime | the emitted code names `blit_offset_shaders`, which nothing declares |
+| 18 | `undeclared-identifier-3e3cccce` | 8 | GL | runtime | the emitted code names `blit_offset_shaders`, which nothing declares *(G2: 1 pass, 7 to `undeclared-identifier-e7884ac7`)* |
 | 19 | `invalid-operands-4b19651b` | 7 | 2D, ANIM | compiler | a guarded `unknown` (typeof record member, or `Array.isArray` length) is still read as `flight::Any` before a numeric comparison *(request filed)* |
 | 20 | `missing-member-fd48c0bb` | 7 | 3D | [compiler request](compiler-requests/narrowed-imported-union-into-declared-parameter.md) | the emitted code reads a member the target does not declare (`collide_physics_3d_collider_shapes`) |
 | 21 | `other-18dcce71` | 7 | ANIM | [compiler request](compiler-requests/erased-array-element-reading.md) | Array.isArray narrowing leaves an erased array length read as Any in a numeric assignment |
@@ -577,14 +577,51 @@ The opening sweep totals and this group's rank remain the historical G1 snapshot
 eight header rows, the resolved failure cluster and their replacement cause metadata changed;
 `previousCluster` retains the G1 group. A passing header does not make the refused function callable.
 
-### 18. `undeclared-identifier-3e3cccce` — 8 header(s)
+### 18. `undeclared-identifier-3e3cccce` — G2 recheck of 8 headers
 
 - cause: the emitted code names `blit_offset_shaders`, which nothing declares
 - subject: `blit_offset_shaders`
 - lanes: GL
-- fix route: runtime
+- fix route: runtime (partial override), with the binding request for the compiler
 - first failure at: `flight/effects_gl/gl_effect_blit_shader.hpp:87`
 - example: `use of undeclared identifier 'blit_offset_shaders'`
+- compiler request filed: [a bound Flight interface never reaches its weak-key policy](compiler-requests/bound-interface-weak-map-key-policy.md)
+
+`glEffectBlitShader.ts` declares three module-scope `WeakMap<GlContext, …>` caches. The emitter refuses
+them (`cpp-weak-map-key-representation-unproven`) but emits the getters that use them. `GlContext` is a
+Flight interface, and the external weak-key policy is read only for ambient key names, although the
+binding, `using GlContext = flight::host_sdl::WebGl2Context` and `WebGl2ContextWeakPolicy` all exist.
+The partial override `effects-gl-blit-shader-context-caches` supplies the three maps as the source's own:
+- one per program lifetime;
+- keyed by context identity, so copies of a context are one key;
+- holding the context weakly, with no value keeping its key alive.
+
+It makes two further corrections:
+- It restores the dropped `{ ...base, locOffset }` spread, which had left the program fields value-initialized.
+- It gives `BlitOffsetShaderLocations` one carrier instead of two unrelated ones.
+
+The three `apply*` passes stay NOT GENERATED for their separate contextual-union refusal.
+
+`flight_cpp.generated_effects_gl_blit_cache` (registered with the `Flight::HostSdlGl` tests) checks:
+- copies of a context hit one entry;
+- distinct contexts and the three maps are independent;
+- a getter hit returns the identical cached object without compiling;
+- the context is not kept alive;
+- a dead context's program is released by the next lookup.
+
+The miss branch needs a live GL context and is compiled but not executed. This machine has no SDL/GL, so
+the check was run with a scratch link shim that aborts on any GL call. It passed. Two mutations were
+detected: sharing the erase and blit maps failed 2 checks, and a never-storing cache reached the GL miss
+path.
+
+**G2: 1/8 compile, 7 fail** (`-j1`, Clang 22.1.8, compiler `806d257` / Flight `a627849`). Passing:
+`flight/effects_gl/gl_effect_blit_shader.hpp`. The seven filters (bevel, drop shadow, gradient bevel,
+gradient glow, inner glow, inner shadow, outer glow) move to `undeclared-identifier-e7884ac7`. They first
+fail in the sibling `gl_effect_box_blur.hpp` on `box_blur_shaders`. That is the same refused `GlContext`
+cache, which also recurs as `tint_shaders`/`invert_tint_shaders` and `bevel_composite_shaders`, along with
+the same split intersection carrier. They also call this module's still-refused
+`apply_gl_effect_blit_pass`/`apply_gl_effect_erase_pass`, so further sibling overrides alone would not
+make them compile.
 
 ### 19. `invalid-operands-4b19651b` — 7 header(s)
 
