@@ -28,7 +28,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | # | cluster | headers | lanes | fix route | cause |
 | --- | --- | --- | --- | --- | --- |
 | 1 | `call-has-no-matching-9c08d665` | 117 | WGPU | compiler | bound WebGPU descriptor object literals are emitted as untyped source-order braced initializers with anonymous nested owners *(request filed)* |
-| 2 | `missing-member-b1a6d5cf` | 39 | 2D | compiler | scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined *(request filed)* |
+| 2 | `missing-member-b1a6d5cf` | 40 | 2D | compiler | scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined *(request filed)* |
 | 3 | `in-operator-not-lowered-b1eae4af` | 32 | 2D, 3D, GL, PLAT, WGPU | compiler | the TypeScript `in` operator is emitted verbatim; G2 particle3D joins this existing cause *(existing request extended)* |
 | 4 | `undeclared-identifier-993e82f1` | 30 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(request filed; builder4/G2)* |
 | 5 | `call-has-no-matching-3882b3e9` | 30 | 2D, 3D, TEXT | compiler | bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier *(request filed; builder4/G2; +1 from `obj_standard_pbr_material_handler.hpp` after its module emitted; +1 from `md5_skeleton_handler.hpp` after the mesh override bridges)* |
@@ -165,7 +165,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 136 | `no-viable-conversion-a516fbdb` | 1 | 3D | compiler | readonly generic graph node cannot become an independent geometry probe; existing refinement request linked (G2: 0/1 retained) |
 | 137 | `no-viable-conversion-b47bc6cd` | 1 | 2D | compiler *(existing request)* | object-narrowed `unknown` used as a `Set<object>` key without the `Any::erased_ref()` identity projection |
 | 138 | `no-viable-conversion-bf84cbac` | 1 | 3D | runtime | native readonly ABI drift; rejected correction exposes nullable framebuffer cell reads |
-| 139 | `no-viable-conversion-c997578d` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
+| 139 | `no-viable-conversion-c997578d` | 1 | 2D | compiler *(existing requests)* | G2: the first GCC failure is cluster 2's re-export before declaration in the include chain; own `:65` view-as-WeakMap-key recorded; row moved |
 | 140 | `no-viable-conversion-cef6403d` | 3 | 3D | compiler | nullable indexed material union cannot widen to the declared material owner; [request](compiler-requests/compiler-interface-heritage-owner-widening.md#g2-picking-hit-material-retains-the-selected-owner) |
 | 141 | `no-viable-conversion-dc893fc7` | 1 | GL | binding (applied) | absent WebGL `srcOffset` passed where the host declared a plain defaulted size *(G2: 1/1 pass)* |
 | 142 | `no-viable-conversion-eabaf455` | 1 | 3D | compiler | nullable indexed material remains optional at guarded calls; existing two-layer element request linked (G2: 0/1 retained) |
@@ -291,7 +291,7 @@ deleting or stubbing behaviour.
 - example: `no matching member function for call to 'begin_render_pass'`
 - compiler request: `docs/compiler-requests/external-descriptor-literal-construction.md`
 
-### 2. `missing-member-b1a6d5cf` — 39 header(s) (34 at G1; 4 joined in G2 from cluster 61; 1 from cluster 123)
+### 2. `missing-member-b1a6d5cf` — 40 header(s) (34 at G1; 4 joined in G2 from cluster 61; 1 from cluster 123; 1 from `no-viable-conversion-c997578d`)
 
 - cause: scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined
 - subject: `get_canvas_render_state_runtime`
@@ -3309,13 +3309,15 @@ copy/OETF pixels, cache teardown or passing live present is claimed. Full source
 candidate/debugger evidence limits are in the new request; logs remain under
 `/tmp/builder4-g2-present-scene3d/`.
 
-### 139. `no-viable-conversion-c997578d` — 1 header(s)
+### 139. `no-viable-conversion-c997578d` — G2 recheck of 1 header
 
-- cause: a value is passed where its declared type cannot receive it
-- lanes: 2D
-- fix route: compiler
-- first failure at: `flight/scene2d_canvas/canvas_bitmap_texture_resolver.hpp:65`
-- example: `no viable conversion from 'StructuralRef<RowReadonly<RowOf<shared_ptr<Bitmap>>>>' to 'const shared_ptr<Bitmap>'`
+- Scoped native recheck (GCC 15.2, jobs 1, all errors shown): **1 attempted / 0 pass / 1 fail**. The first failure is `flight/scene2d_canvas/canvas_render_state.hpp:69` (`'get_canvas_render_state_runtime' has not been declared`), reached through `canvas_texture_resolver.hpp`, `canvas_render_surface.hpp` and `canvas_render_state.hpp`. That is cluster 2's re-export before declaration, so the row moves there, as `canvas_image_texture_resolver` did (cluster 123).
+- The header's own swept diagnostic, at `canvas_bitmap_texture_resolver.hpp:65`, is still a separate gap. `cache.value().get(bitmap.value())` passes the readonly `Bitmap` view (`getTextureSource(texture) as Readonly<Bitmap> | null`) as the key of the resolver's `WeakMap<Ref<Bitmap>, …>`, with no recovery to the nominal reference whose identity the cache keys on. It is recorded under [asserted-row-view-into-nominal-parameter](compiler-requests/asserted-row-view-into-nominal-parameter.md#related-site-a-readonly-view-used-as-a-weakmap-key-canvas-bitmap-textures).
+- No Canvas provider, decode, cache key copy or narrowed domain is supplied.
+
+| follow-on cluster | owned headers | first failure | route / cause |
+| --- | --- | --- | --- |
+| `missing-member-b1a6d5cf` | 1 | `flight/scene2d_canvas/canvas_render_state.hpp:69` | compiler: re-export `using` before declaration; [existing request](compiler-requests/local-reexport-using-before-declaration.md) |
 
 ### 140. `no-viable-conversion-cef6403d` — 3 header(s)
 

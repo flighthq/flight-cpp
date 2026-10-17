@@ -61,3 +61,13 @@ runtime would change overload resolution SDK-wide. The rows stay open on this re
 
 Cluster `no-viable-conversion-4ca7626f`, 3 headers: `swf/swf_frame_action.hpp`, and `swf_script_handler` and
 `swf_script_tag_family`, which include it. The latter two were not recompiled.
+
+## Related site: a readonly view used as a `WeakMap` key (Canvas bitmap textures)
+
+`scene2d-canvas/src/canvasBitmapTextureResolver.ts` reads `getTextureSource(texture) as Readonly<Bitmap> | null`
+and uses that bitmap as the key of the resolver's `WeakMap<Bitmap, CanvasBitmapElementCacheEntry>`. The emitted
+`cache.value().get(bitmap.value())` at `scene2d_canvas/canvas_bitmap_texture_resolver.hpp:65` passes a
+`StructuralRef<RowReadonly<RowOf<Ref<Bitmap>>>>` where the map's key is `const Ref<Bitmap>&` (GCC 15.2). This is
+the same missing recovery, here from a readonly view into a nominal map key, where the key's identity is the
+whole point. The header's current first failure is earlier, in its include chain (cluster `missing-member-b1a6d5cf`),
+so this site is recorded here and not as its cluster.
