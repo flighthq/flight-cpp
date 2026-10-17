@@ -166,7 +166,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 137 | `no-viable-conversion-b47bc6cd` | 1 | 2D | compiler *(existing request)* | object-narrowed `unknown` used as a `Set<object>` key without the `Any::erased_ref()` identity projection |
 | 138 | `no-viable-conversion-bf84cbac` | 1 | 3D | compiler | a value is passed where its declared type cannot receive it |
 | 139 | `no-viable-conversion-c997578d` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
-| 140 | `no-viable-conversion-cef6403d` | 3 | 3D | compiler | a value is passed where its declared type cannot receive it |
+| 140 | `no-viable-conversion-cef6403d` | 3 | 3D | compiler | nullable indexed material union cannot widen to the declared material owner; [request](compiler-requests/compiler-interface-heritage-owner-widening.md#g2-picking-hit-material-retains-the-selected-owner) |
 | 141 | `no-viable-conversion-dc893fc7` | 1 | GL | binding (applied) | absent WebGL `srcOffset` passed where the host declared a plain defaulted size *(G2: 1/1 pass)* |
 | 142 | `no-viable-conversion-eabaf455` | 1 | 3D | compiler | nullable indexed material remains optional at guarded calls; existing two-layer element request linked (G2: 0/1 retained) |
 | 143 | `no-viable-conversion-f7267dc5` | 1 | ANIM | compiler | G2: recorded 0/1 retained; Spine JSON shared transform preset has anonymous owner, Bone2D slot is nominal; existing request/no rerun |
@@ -3088,19 +3088,32 @@ domain, empty result or native version/bounds/upload gain is claimed.
 ### 140. `no-viable-conversion-cef6403d` — 3 header(s)
 
 - cause: the picking override's `get_scene_3d_hit_material` returns the stored
-  `optional<variant<Ref<SpecularGlossinessPbrMaterial>, …>>` where the declared result is
-  `optional<Ref<Material3D>>`; the concrete material owners have no identity-preserving heritage to the
-  declared interface
+  `optional<Material3DValue>` (17 concrete/open owner arms) through its partial
+  `optional<Ref<Material3D>>` result; the source additionally requires `Material | null`, and the
+  flattened native owners have no identity-preserving heritage to either nominal destination
 - lanes: 3D
-- fix route: compiler
+- fix route: compiler — [existing nullable interface-owner request](compiler-requests/compiler-interface-heritage-owner-widening.md#g2-picking-hit-material-retains-the-selected-owner)
 - first failure at: `flight/picking/scene_hit_attributes.hpp:60`
 - example: `no viable conversion from returned value of type 'optional<variant<shared_ptr<SpecularGlossinessPbrMaterial>, shared_ptr<VertexColorMaterial>, shared_ptr<UnlitMaterial>, shared_ptr<StandardPbrMaterial>, shared_ptr<CustomShaderMaterial>, shared_ptr<BlinnPhongMaterial>, shared_ptr<LambertMaterial>, sh...`
 
-`picking/_internal_index.hpp` and `picking/contract.hpp` join this cluster after the duplicate-helper
-redefinition below was removed; `picking/scene_hit_attributes.hpp` was already here and its line moved
-from `:131` to `:60` when the override stopped repeating the node matrix helpers. This is the gap the
-override's `remaining` names: the material result is narrowed to the concrete `Material3D` type until
-generated owners carry identity-preserving interface heritage.
+**G2: 0 pass / 3 fail retained; no native or generation rerun.** The original three diagnostics and
+the two aggregator rows' `previousCluster` remain unchanged. `picking/_internal_index.hpp` and
+`picking/contract.hpp` joined after the duplicate-helper redefinition was removed;
+`picking/scene_hit_attributes.hpp` was already here and its line moved from `:131` to `:60`. That
+earlier helper de-duplication stays intact and is not repeated.
+
+Current Mesh storage is `Array<optional<Material3DValue>>`, including sixteen built-ins and the open
+`Material3D` vendor arm. This is not a missing union declaration or a nested-optional null-test error:
+`element(subset_index)` returns the stored optional union directly. Merely returning that union would
+clear this local mismatch while still owing the source's declared `Material | null` owner boundary.
+The partial override's historical manifest prose is not evidence that this current header compiles.
+
+Preserve the original readonly hit and its Mesh/geometry/material-array owners. Resolve the current
+triangle's first containing subset in declaration order; return null for no node, no owning subset,
+an out-of-range material slot or a null slot, otherwise return the very same authored material. Do
+not synthesize the renderer's default material, copy a base prefix, select only one variant arm or
+narrow the public result. Existing source and native fixtures are inspected coverage, not a fresh
+success claim for this union-to-base return. The request records the exact carriers and coverage limits.
 
 ### 141. `no-viable-conversion-dc893fc7` — 1 header(s)
 

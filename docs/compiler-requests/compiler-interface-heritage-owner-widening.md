@@ -331,3 +331,69 @@ Stock original1 stays 0/1 at missing draw164, Clang22.1.8 jobs1, 58.8 seconds. T
 actual unused header fails the [native/generic callback conversion](readonly-callback-derived-owner-recovery.md#g2-wgpu-scale9sprite-native-sprite-callback-and-owner-boundaries)
 before link. See [retained aggregate qualification](retained-declaration-calls-omitted-callee.md#g2-wgpu-scale9sprite-retains-its-refused-draw-callback).
 No declaration repair, generation, shader/draw body, owner copy or usable Scale9 implementation is carried.
+
+## G2 picking hit material retains the selected owner
+
+At Flight `a627849` / compiler `806d257`, the original three headers in
+`no-viable-conversion-cef6403d` remain failed: `picking/scene_hit_attributes.hpp`,
+`picking/contract.hpp` and `picking/_internal_index.hpp`. Their stored native diagnostic originates
+at line60 of the effective `picking-hit-attribute-identity-boundary` partial override. This is a
+docs-only current-carrier audit: **0/3 retained, no fresh native or generation measurement**. The
+earlier identical node-matrix-helper de-duplication remains intact, with one helper definition.
+
+The portable source is `packages/picking/src/sceneHitAttributes.ts:13–17`:
+
+```ts
+export function getScene3DHitMaterial(hit: Readonly<Scene3DHit>): Material | null {
+  const node = hit.node;
+  if (node === null) return null;
+  const subsetIndex = getMeshGeometryTriangleSubsetIndex(node.geometry, hit.triangleIndex);
+  return subsetIndex < 0 ? null : (node.materials[subsetIndex] ?? null);
+}
+```
+
+Source `Mesh.materials` is `(Material3D | null)[]`, and every built-in material extends
+`Material3D extends Material`. The existing [open concrete-material path](material3d-concrete-value-path.md)
+already represents that storage as `Array<optional<Material3DValue>>`. Its union has sixteen built-in
+owner arms plus the open `Ref<Material3D>` vendor arm; `SpecularGlossinessPbrMaterial` is simply the
+first arm named in the diagnostic. This is not an obsolete MaterialValue name or missing union.
+
+The effective override receives `AttributeHitView`, a readonly structural row of Scene3DHit, then
+`attribute_exact_hit` checks and retrieves that same native hit (throwing `bad_cast` on mismatch).
+Its node cell is `optional<Ref<Mesh>>`; geometry is the original `Ref<MeshGeometry>`, not a copied
+hit or node. After the null-node and subset/material-array bounds guards, line60 returns
+`node->materials.element(subset_index)`, whose exact type is `optional<Material3DValue>`, into
+`optional<Ref<Material3D>>`. Unlike the indexed `get` case in
+[nullable element guards](nullable-array-element-null-test.md), `element` adds no outer optional;
+there is no extra null layer to unwrap here.
+
+Two boundaries must stay explicit. The partial override's narrower nominal Material3D result cannot
+receive the sixteen unrelated built-in owners; the unoverridden generated function is itself refused
+as `cpp-contextual-union-interface-heritage-carrier-unrepresented` when those owners must return
+through `Material | null`. Material, Material3D and the concrete native structs independently inherit
+ReferenceEnabled. Variant visitation alone does not create their missing C++ base relationship;
+checked exact-owner recovery returns a concrete object, not a new Material base view. Replacing only
+the native return type with the union would still owe the declared base result carrier. The existing
+partial manifest's historical independent-compilation wording is not current compile evidence.
+
+Use the owner-preserving carrier or real emitted heritage described above, covering every built-in
+and the open vendor arm through the nullable result. Keep the same hit, Mesh, geometry and material
+array owners, and read their current cells on each query. The geometry helper examines triangle-list
+elements at `triangleIndex * 3` or triangle-strip elements at `triangleIndex`, returning the first
+declared subset containing all three elements; a negative triangle, unsupported topology or no
+containing subset yields -1. A null hit node, no owning subset, missing/out-of-range material entry
+or null entry yields null. A present entry returns that exact authored object, including its runtime
+identity, kind and optional/null name. Rendering's StandardMaterial fallback is not a hit result.
+No material allocation, prefix copy, unchecked cast, one-arm extraction, kind filter, fake hit or
+public-domain narrowing is a fix. General structural-only readonly hits also remain outside the
+override's checked exact-native-hit path; this audit supplies no adapter or success claim for them.
+
+Inspected source `sceneHitAttributes.test.ts` covers a fresh hit's null/-1/false sentinels with output
+preservation, same-object open Material3D lookup and a null material slot. `meshGeometrySubset.test.ts`
+covers list/strip subsets and non-triangle rejection. The native `generated_picking_test.cpp` fixture
+still constructs a single nominal Material3D, compares selected identity and checks interpolation,
+transforms and absent-channel outputs; its materials array setup predates the current union. Neither
+inspection proves current compilation or all seventeen return arms. A faithful implementation needs
+same-owner results across those arms, live replacement and all null/missing-subset cases, without
+altering the existing hit-attribute outputs. This disposition changes only request/row/cluster/worklist
+links; no override, runtime, source patch, repair, manifest, pin or generated C++ is changed.
