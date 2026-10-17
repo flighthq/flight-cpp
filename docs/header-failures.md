@@ -133,7 +133,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 104 | `call-has-no-matching-b3c6bcee` | 1 | GL | repair key + compiler | `log_once` designated initializer *(G2: key map extended; 0 pass, 1 to `no-matching-constructor-34a8ea9f`)* |
 | 105 | `call-has-no-matching-c287f892` | 1 | ANIM | compiler | G2: recorded 0/1 retained; Unity JsonValue cannot become named view/dynamic Record; existing JSON-read request, no rerun |
 | 106 | `call-has-no-matching-c8046ec6` | 1 | 3D | compiler | the emitted call to `uniform2fv` matches no declared overload |
-| 107 | `call-has-no-matching-e7b28969` | 1 | WGPU | compiler | the emitted call to `write_texture` matches no declared overload |
+| 107 | `call-has-no-matching-e7b28969` | 1 | WGPU | runtime (fixed) | the emitted call to `write_texture` matches no declared overload; G2: 0 pass, 1 to `missing-member-47a93368` |
 | 108 | `call-has-no-matching-fbd6de0d` | 1 | 3D | compiler | the emitted call to `invoke` matches no declared overload |
 | 109 | `call-has-no-matching-fee2f93f` | 1 | 3D | compiler | the emitted call to a function matches no declared overload |
 | 110 | `invalid-operands-dc1c09c4` | 1 | PLAT | source guards + declaration repair (applied) | flex basis comparison and unsafe numeric projection cleared; G2: 1 pass; refused resolver registration remains unlinkable |
@@ -2628,14 +2628,32 @@ repairs/manifest/pins and foreign/historical products remain unchanged. Coordina
 - first failure at: `flight/scene3d_gl/gl_custom_shader_mesh_material_renderer.hpp:127`
 - example: `no matching member function for call to 'uniform2fv'`
 
-### 107. `call-has-no-matching-e7b28969` — 1 header(s)
+### 107. `call-has-no-matching-e7b28969` — 1 G1 header(s), 0 pass, 1 follow-on
 
 - cause: the emitted call to `write_texture` matches no declared overload
 - subject: `write_texture`
 - lanes: WGPU
-- fix route: compiler
+- fix route: runtime (fixed)
 - first failure at: `flight/render_wgpu/wgpu_texture_upload.hpp:22`
 - example: `no matching member function for call to 'write_texture'`
+
+The emitted `queue.writeTexture` call passes two Web IDL dictionary literals
+(`{ texture, origin }` and `{ bytesPerRow, rowsPerImage }`). The host binding's forwarding parameter
+pack cannot deduce through a braced-init-list, so overload resolution failed even though the runtime
+already declares every carrier the call needs. `flight/host_sdl/wgpu.hpp` now names those two carriers
+in a concrete `WgpuQueueTag` overload (`WgpuTexelCopyTextureInfo`, `WgpuTexelCopyBufferLayout`) while
+leaving the data and extent arguments deduced; it calls the same `unavailable_void("writeTexture")`
+host operation, so the SDL WGPU profile still reports the upload unavailable rather than pretending to
+upload. No GPU provider, copy, owner or narrowed domain was invented.
+
+#### Follow-on `missing-member-47a93368`
+
+With the call resolved, the header's first failure is the refused
+`tryCopyWgpuExternalImageToTexture`: `wgpu_external_image_source.hpp` omits it because its ambient
+binding plan is incomplete (`HTMLImageElement[value]` / `HTMLVideoElement[value]` and siblings), and
+`upload_wgpu_texture_element` retains the call. That is the same profile family recorded in
+[distinct image-source domains](compiler-requests/image-source-union-domain-discriminator.md); no
+declaration, provider or upload path is supplied here, and the row stays failed on that request.
 
 ### 108. `call-has-no-matching-fbd6de0d` — 1 header(s)
 

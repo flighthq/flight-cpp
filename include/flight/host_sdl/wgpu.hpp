@@ -87,6 +87,8 @@ struct WgpuTextureTag;
 struct WgpuTextureViewTag;
 struct WgpuPipelineLayoutDescriptor;
 struct WgpuTextureDescriptor;
+struct WgpuTexelCopyTextureInfo;
+struct WgpuTexelCopyBufferLayout;
 
 namespace detail {
 
@@ -230,6 +232,15 @@ class WgpuObject final {
   template <typename... Arguments>
     requires std::same_as<Tag, WgpuQueueTag>
   void write_texture(Arguments&&...) const { unavailable_void("writeTexture"); }
+
+  // WebGPU's writeTexture takes two Web IDL dictionaries as literals, and a forwarding parameter pack
+  // cannot deduce through a braced-init-list. Name the carriers the runtime already declares for those
+  // two arguments so the selected overload is the same host operation; the data and extent arguments
+  // stay deduced, and the operation remains the provider's (this host still reports it unavailable).
+  template <typename Data, typename Size>
+    requires std::same_as<Tag, WgpuQueueTag>
+  void write_texture(const WgpuTexelCopyTextureInfo& destination, Data&& data,
+                     const WgpuTexelCopyBufferLayout& data_layout, Size&& size) const;
 
   template <typename... Arguments>
     requires std::same_as<Tag, WgpuRenderPassEncoderTag>
@@ -587,6 +598,14 @@ struct WgpuTexelCopyTextureInfo final {
   std::optional<WgpuOrigin3D> origin;
   std::optional<String> aspect;
 };
+
+template <typename Tag>
+template <typename Data, typename Size>
+  requires std::same_as<Tag, WgpuQueueTag>
+void WgpuObject<Tag>::write_texture(const WgpuTexelCopyTextureInfo&, Data&&,
+                                    const WgpuTexelCopyBufferLayout&, Size&&) const {
+  unavailable_void("writeTexture");
+}
 
 struct WgpuTextureDescriptor final {
   WgpuExtent3D size;

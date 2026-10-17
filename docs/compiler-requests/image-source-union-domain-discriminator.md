@@ -103,3 +103,15 @@ negative-link checks are tracked in
 evidence of a working URL load or of a supplied host provider. The existing generated host method
 already carries `Task<HostImageSource>`, so this does not need another runtime handle, fake decoder,
 global callback change or narrower image/video-only source domain.
+
+## G2 WGPU texture upload reaches the same copy after the writeTexture binding
+
+At `806d257` / Flight `a627849`, `render_wgpu/wgpu_texture_upload.hpp` first failed on
+`queue.writeTexture` because the host's forwarding binding could not deduce through the two
+dictionary literals; naming `WgpuTexelCopyTextureInfo` and `WgpuTexelCopyBufferLayout` in a concrete
+queue overload resolved that call without changing the unavailable host operation. The header's next
+failure is this request: `upload_wgpu_texture_element` retains
+`try_copy_wgpu_external_image_to_texture`, which `wgpuExternalImageSource.ts` refuses because the
+runtime external symbol plan is missing the `HTMLImageElement[value]` / `HTMLVideoElement[value]`
+bindings. No upload path is carried, and the module's `copyExternalImageToTexture` fast path remains
+unavailable until the profile can name each source domain, exactly as the video reach above records.
