@@ -117,3 +117,37 @@ registered descriptor was stored without its groups and every group index stayed
 The `assets-reject-task-template-parameter` override carries a corrected `copy_asset_descriptor`, and
 `tests/generated_assets_test.cpp` asserts it, including a deduplication case whose expected value is upstream's
 own `copyAssetDescriptor` run under node.
+
+## G2 Intl number wrappers drop all caller option spreads
+
+At Flight `a627849` / compiler `806d257`, `packages/intl/src/number.ts` contains four
+`getNumberFormat` calls with defaults followed by `...options`: compact notation, currency style and
+currency, percent style, and unit style and unit. All four emitted calls contain only the spelled
+defaults. The `options` parameter appears in each wrapper's signature but nowhere in its body. The
+plain `formatNumber` wrapper correctly forwards its optional options parameter, isolating the omission
+to the spreads rather than every options argument.
+
+For example, the source and actual retained C++ are:
+
+```ts
+return getNumberFormat(locale, { style: 'currency', currency, ...options }).format(value);
+```
+
+```cpp
+return get_number_format(locale,
+    {.style = flight::String("currency"), .currency = currency}).format(value);
+```
+
+The source first allocates a fresh object and installs the spelled defaults, then copies every enumerable
+own property of the optional caller object, including reads/getters in source property order. Caller
+properties override defaults, including an own property whose value is `undefined`; absence of the
+options object contributes no properties. The caller object must remain unchanged. The full merged
+object then reaches cache-key serialization and the formatter constructor. Copying a selected list of
+four currently bound fields loses other declared number-format options and cannot reproduce arbitrary
+own-property order or getter effects. Dropping the spread, defaulting away an explicit undefined, or
+sharing/mutating the caller object is not an equivalent rewrite.
+
+The separate [optional literal construction request](compiler-union-and-literal-argument-construction.md#g2-number-declaration-candidate-stops-before-link-qualification)
+blocks object compilation even after a scratch declaration is inserted; the
+[helper's options carrier refusal](compiler-intl-optional-and-union-carrier-evidence.md#g2-number-formatter-still-loses-the-typed-optional-options-boundary)
+blocks its own body. No source rewrite, override or formatter body is carried for this G2 inspection.

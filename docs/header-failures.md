@@ -186,7 +186,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 157 | `undeclared-identifier-1462818e` | 1 | 2D | runtime | the emitted code names `ensure_gl_velocity_program`, which nothing declares |
 | 158 | `undeclared-identifier-17cb8386` | 1 | GL | runtime | the emitted code names `gl_bokeh_depth_of_field_effect_runner`, which nothing declares |
 | 159 | `undeclared-identifier-1892fccb` | 1 | PLAT | runtime | the emitted code names `resolve_text_char_index`, which nothing declares |
-| 160 | `undeclared-identifier-1a056bbc` | 3 | TEXT | runtime | the emitted code names `get_number_format`, which nothing declares; G2: inherits 2 rows from `undeclared-identifier-564c29cc` |
+| 160 | `undeclared-identifier-1a056bbc` | 3 | TEXT | compiler | refused number formatter retained by five wrappers; G2: declaration candidate fails optional literal construction, full option spreads dropped; 0/3 remain failed |
 | 161 | `undeclared-identifier-1d8e072a` | 1 | 2D | runtime | the emitted code names `draw_gl_scale9_sprite`, which nothing declares |
 | 162 | `undeclared-identifier-2110ec37` | 1 | WGPU | runtime | the emitted code names `draw_wgpu_sprite`, which nothing declares |
 | 163 | `undeclared-identifier-2363216f` | 1 | GL | runtime | the emitted code names `gl_dither_effect_runner`, which nothing declares |
@@ -2608,18 +2608,32 @@ generated owners carry identity-preserving interface heritage.
 - first failure at: `flight/interaction/register_text_hit_test.hpp:61`
 - example: `use of undeclared identifier 'resolve_text_char_index'`
 
-### 160. `undeclared-identifier-1a056bbc` — 3 G1 header(s)
+### 160. `undeclared-identifier-1a056bbc` — 3 header(s)
 
-- cause: the emitted code names `get_number_format`, which nothing declares
+- cause: `getNumberFormat` is refused at typed optional options → erased-object union conversion, but five wrappers still call its absent symbol
 - subject: `get_number_format`
 - lanes: TEXT
-- fix route: runtime
-- first failure at: `flight/intl/number.hpp:42`
-- example: `use of undeclared identifier 'get_number_format'`
+- fix route: compiler — [retained refused callee](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-intl-number-declaration-fails-the-unused-object-prerequisite)
+- first production failure at: `flight/intl/number.hpp:42`
+- retained production example: `use of undeclared identifier 'get_number_format'`
 
-The two additional headers arrived from `undeclared-identifier-564c29cc`: `_internal_index.hpp` and
-`contract.hpp` include the whole intl package, so once `datetime.hpp` compiled their first failure
-became this one. They add no new cause and no new decision.
+The original number header and the two rows inherited from `undeclared-identifier-564c29cc`
+(`_internal_index.hpp` and `contract.hpp`) remain **0/3 pass, 3 fail**. The previous date provenance
+and all three original diagnostics are retained; the unchanged production headers were not rerun.
+
+The existing declaration mechanism matches the exact marker, all five live calls and absent definition
+in scratch, using `IntlNumberFormat(LocaleInput, optional<IntlNumberFormatOptions>)`. Serial actual-header
+unused-object checks complete **3 attempted, 0 pass, 3 fail, 0 unattempted**: the compact wrapper's bare
+notation literal cannot initialize the optional parameter. This is a failed compile prerequisite, not a
+positive unused-header link or successful exact negative-link test. The declaration candidate is rejected;
+no repair, C++, manifest, runtime/cache body or source patch is carried, so no generation rerun is needed.
+
+Existing requests separately cover the [helper's optional union evidence](compiler-requests/compiler-intl-optional-and-union-carrier-evidence.md#g2-number-formatter-still-loses-the-typed-optional-options-boundary),
+[optional literal construction](compiler-requests/compiler-union-and-literal-argument-construction.md#g2-number-declaration-candidate-stops-before-link-qualification)
+and [all four dropped caller option spreads](compiler-requests/object-spread-of-a-parameter-dropped.md#g2-intl-number-wrappers-drop-all-caller-option-spreads).
+Caller options override the spelled defaults; preserving their full domain, own-property order and getter
+effects rules out a default-only overload or copying just the four currently bound runtime fields.
+No locale formatting or callable number API progress is claimed.
 
 ### 161. `undeclared-identifier-1d8e072a` — 1 header(s)
 

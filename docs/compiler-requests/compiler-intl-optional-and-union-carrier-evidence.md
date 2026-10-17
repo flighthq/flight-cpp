@@ -64,7 +64,8 @@ export function formatCompactNumber(
 
 ```cpp
 // (1) the source's optional-with-payload evidence selects the optional carrier and its payload
-auto merged = IntlNumberFormatOptions{.notation = flight::String("compact")};
+// `merged` must already contain the defaults followed by the complete source options spread.
+// Constructing only {.notation = "compact"} would silently discard caller options.
 return get_number_format(locale, std::optional<IntlNumberFormatOptions>{merged}).format(value);
 
 // (2) an all-optional interface reaches its optional carrier the same way TextFormat does
@@ -84,3 +85,28 @@ its eviction was tried first — iterating `keys()` and deleting the first, the 
 `glyphatlas-entry-presence-proofs` — and it did **not** clear the refusal, which is the evidence that
 shape (3) is about carried absence rather than the source's spelling. The other six have no workaround
 and are carried as retained refusals.
+
+## G2 number formatter still loses the typed optional options boundary
+
+At Flight `a627849` / compiler `806d257`, `number.hpp` carries the exact
+`NOT GENERATED: function getNumberFormat -- source line 67` marker. Its body still refuses as
+`cpp-contextual-union-inequivalent`: `getCacheKey('number', locale, options)` attempts to pass
+`optionalSingle [flight::IntlNumberFormatOptions]` to `optionalSingle [flight::ErasedRef]` for the
+source `Readonly<object> | undefined` parameter. The existing cache override already accepts the
+actual optional typed options through its template; a missing runtime cache overload is not the cause.
+The constructor and cache body must not be replaced with a fresh/default formatter to bypass the refusal.
+
+The emitted plain-number wrapper establishes `std::optional<flight::IntlNumberFormatOptions>` as the
+actual parameter carrier. The other four wrappers have independent
+[literal-construction](compiler-union-and-literal-argument-construction.md#g2-number-declaration-candidate-stops-before-link-qualification)
+and [dropped-spread](object-spread-of-a-parameter-dropped.md#g2-intl-number-wrappers-drop-all-caller-option-spreads)
+problems; a signature accepting only a non-optional options record would change this source boundary.
+
+The runtime binding and `include/flight/intl.hpp` currently transport only `notation`, `style`,
+`currency` and `unit`. The pinned TypeScript `Intl.NumberFormatOptions` also declares, for example,
+`useGrouping`, `maximumFractionDigits`, `signDisplay` and rounding options. Manually copying just those
+four fields is therefore not a faithful source rewrite. Closing this site requires the declared options
+domain, present/absent payload evidence and complete merge to survive into the cache key and original
+constructor call. It does not authorize a new locale formatter, cache implementation or restricted source
+options type. The current runtime formatter is explicitly locale-neutral and does not interpret those
+options; its availability does not implement this refused source helper.

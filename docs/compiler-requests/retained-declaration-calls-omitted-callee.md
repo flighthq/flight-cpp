@@ -784,3 +784,25 @@ or substitute skin/material/body is carried. Faithful handler emission or cohere
 dependent family/preset is required; silently removing the skin element from the full-support preset
 would lose named materials, first binding, alternate skins and diagnostics. Both original rows remain
 failed, with no header gain or native skin/material behavior claim.
+
+## G2 Intl number declaration fails the unused-object prerequisite
+
+At Flight `a627849` / compiler `806d257`, original cluster `undeclared-identifier-1a056bbc`
+contains `intl/number.hpp` and the `contract.hpp` / `_internal_index.hpp` rows inherited from the earlier
+date declaration repair. `number.hpp` retains five calls to `get_number_format`, but its exact
+`NOT GENERATED: function getNumberFormat -- source line 67` marker replaces the helper and no definition
+exists. Its [typed optional to erased-object refusal](compiler-intl-optional-and-union-carrier-evidence.md#g2-number-formatter-still-loses-the-typed-optional-options-boundary)
+is still present; there is no omitted runtime method or formatter body to extend.
+
+The three declaration witnesses match the existing `declare-refused-function` mechanism in scratch,
+with `IntlNumberFormat(LocaleInput, optional<IntlNumberFormatOptions>)` taken from the actual plain-number
+caller's carriers. However, the real unused-header objects fail for all three headers, before any link,
+on the compact wrapper's bare initializer list passed to the optional parameter. The
+[exact candidate and serial 0/3 result](compiler-union-and-literal-argument-construction.md#g2-number-declaration-candidate-stops-before-link-qualification)
+reject the repair. No unused-header positive link or explicit-use negative-link result is claimed.
+The four wrapper [option spreads are also silently dropped](object-spread-of-a-parameter-dropped.md#g2-intl-number-wrappers-drop-all-caller-option-spreads).
+
+No declaration/body/registry/source change is carried, and the three production rows remain failed with
+their original diagnostics and prior date provenance. Faithful body emission or a coherent partial boundary
+still requires the caller construction and full options semantics; supplying a default formatter or a
+non-optional overload would not close this request.
