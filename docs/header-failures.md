@@ -724,6 +724,24 @@ reproduce, while the package as a whole is not generation-current. The check lef
 unchanged and restored both pinned source checkouts cleanly. The separate pipeline drift is reported
 to Foreman; no unrelated regeneration or repeat of the earlier native/link checks is claimed.
 
+The subsequent bounded pipeline reconciliation used one authorized exact-pin emission of
+`scene3DWgpuPipeline.ts`, retained in scratch through normal patch application and cleanup. Its
+actual diff changes only the private anonymous owner/guard suffix `dcdbf6a9260ce6ad` to
+`19350a15f76885a9`; replacing that name makes the files byte-identical. Member types, callback
+signatures, values, order, allocation and function bodies are unchanged. No other inventory file
+references that owner, and the existing manifest repair record is identical, so only the emitted
+pipeline header was refreshed. The incomplete one-module tree and its structural table were not
+merged into the inventory.
+
+Changed-header check, one worker: **1 attempted, 0 pass, 1 fail, 0 unattempted**. The first diagnostic
+remains `expected ')'`, now recorded precisely at `flight/render/render_registry_guards.hpp:48`:
+the existing [literal membership-test request](compiler-requests/membership-test-lowered-literally.md)
+already describes that nominal `Ref<RenderState>` receiver and its unlowered `in` expression. Only
+this owned row gains the measured location and request link; its failure and 31-header family remain
+unchanged. The refreshed header matches the retained single-module output exactly. No full-package
+generation check was repeated, no whole-package pass is claimed, and no GPU implementation or new
+owner design was added.
+
 ### 23. `undeclared-identifier-b90ed4db` — 7 header(s)
 
 - cause: a retained callback alias references the DragonBones animations handler after its body is refused
