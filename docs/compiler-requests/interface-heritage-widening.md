@@ -351,3 +351,27 @@ base-prefix material or empty callback, narrowing the record domain, or dropping
 from the full-support preset cannot satisfy that contract. The separate
 [retained-binding request](retained-declaration-calls-omitted-callee.md#g2-md2-skin-family-retains-its-refused-binding)
 records the actual declaration/link prerequisite for this module.
+
+## G2 DragonBones skins need the original derived attachment
+
+At compiler `806d257` / Flight `a627849`, `dragonBonesSkinsHandler.ts:97` declares
+`parseDragonBonesDisplay(...): Attachment2D | null`. The exact refusal in
+`skeleton2d_formats/dragon_bones_skins_handler.hpp` is
+`cpp-contextual-union-interface-heritage-carrier-unrepresented`: its image branch returns the
+original RegionAttachment2D through nullable Attachment2D. Source RegionAttachment2D and
+MeshAttachment2D both extend Attachment2D, but all three emitted structs independently inherit only
+ReferenceEnabled. Identical repeated entity/kind/name fields do not give these Ref owners a native
+base relation. The reported first widening is RegionAttachment2D; MeshAttachment2D has the same
+inspected flattened declaration, not an additional measured diagnostic in this task.
+
+The actual display owner must survive into the default skin's positional nullable display table and
+into each named wardrobe attachment. An unrelated base allocation, copied view, pointer cast, image-only
+parser or retagged mesh would lose identity, concrete geometry/skin or the full skin domain. Establish
+real declared heritage or an explicit identity-preserving carrier contract; do not substitute an empty
+result or a new object containing only the base fields.
+
+The original one-header check is **0/1 pass** at the earlier erased Any iteration373. The
+[existing array-read request](erased-array-element-reading.md#g2-dragonbones-skins-emitted-display-iteration-and-refused-collection)
+records that measured boundary, the independently refused collector/helpers and the complete
+image/unweighted/weighted/alternate-skin/remap/recovery contract. No C++ declaration, body, heritage
+repair or runtime/parser behavior is supplied or tested here.

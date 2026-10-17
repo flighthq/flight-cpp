@@ -172,7 +172,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 143 | `no-viable-conversion-f7267dc5` | 1 | ANIM | compiler | a value is passed where its declared type cannot receive it |
 | 144 | `other-1e3a0d33` | 1 | ANIM | source fix; compiler follow-ons | G2: 0/1; typed preset owners fix conditional, now optional Record detail; nominal Bone2D store still owed |
 | 145 | `other-4703cbbe` | 1 | 3D | runtime | uncategorised: the first diagnostic does not name a single cause |
-| 146 | `other-5dfe27ec` | 1 | ANIM | runtime | uncategorised: the first diagnostic does not name a single cause |
+| 146 | `other-5dfe27ec` | 1 | ANIM | compiler | G2: 0/1; erased display-array iteration; collector/derived attachment/full skin algorithms remain refused |
 | 147 | `other-acb4b229` | 1 | 2D | compiler | G2: 0/1; JSON assertion casts to nominal array/hash document union; converter independently refused |
 | 148 | `static-assertion-18059635` | 1 | 3D | compiler | a runtime static assertion rejects the emitted shape |
 | 149 | `static-assertion-261f0db6` | 1 | 3D | compiler | a runtime static assertion rejects the emitted shape |
@@ -2709,13 +2709,32 @@ remain the source contract, recorded in the linked requests. No global/package b
 - first failure at: `flight/scene3d_formats/gltf_features.hpp:59`
 - example: `no matching conversion for static_cast from 'JsonValue' to 'Ref<GltfDocument>'`
 
-### 146. `other-5dfe27ec` — 1 header(s)
+### 146. `other-5dfe27ec` — G2 recheck of 1 header(s)
 
-- cause: uncategorised: the first diagnostic does not name a single cause
+- cause: an Array.isArray guard is followed by a range loop on raw Any instead of an original-owner array-element view
 - lanes: ANIM
-- fix route: runtime
-- first failure at: `flight/skeleton2d_formats/dragon_bones_skins_handler.hpp:373`
-- example: `invalid range expression of type 'Any'; no viable 'begin' function available`
+- fix route: [existing erased-array request](compiler-requests/erased-array-element-reading.md#g2-dragonbones-skins-emitted-display-iteration-and-refused-collection), with [derived attachment heritage](compiler-requests/interface-heritage-widening.md#g2-dragonbones-skins-need-the-original-derived-attachment)
+- actual first failure at: `flight/skeleton2d_formats/dragon_bones_skins_handler.hpp:373`
+- example: `invalid range expression of type 'flight::Any'; no viable 'begin' function available`
+
+The original one-header check completes at one worker: **0/1 pass, 1 fail, 0 unattempted**.
+Current AnyArray keeps exact typed array handles and identity, but supplies no generic element reader.
+An Array<Any>-only iterator/recovery, materialized replacement array, filtered display list or narrowed
+input is not the full unknown-array contract. Eight helpers/collectors remain explicitly omitted,
+including erased array assertions, contextual Any construction, typed-array static from, unqualified
+identifier presence and the RegionAttachment2D-to-Attachment2D owner boundary. No particular unnamed
+presence-test variable is guessed.
+
+The existing requests now record full default/alternate skin order, positional null display retention,
+shared actual attachment owners, default table updates before unresolved-slot filtering, original
+context/diagnostic arrays, image/unweighted/weighted mesh fields, raw positional bone remapping,
+slot/bone-pose inverse transforms, truncated/singular/unresolved/overflow recovery and typed conversions.
+No fake skins, empty success, copied owner/view or restricted mesh/array domain is carried.
+
+No C++, source, binding, iterator, declaration/repair, override, inventory or manifest changes; no normal
+generation is needed. No native skin/parser/weighting behavior, positive-unused/negative-link check or
+header gain is claimed. Only this original failed row/root and worklist entry change; all foreign
+rows/roots/prose and historical/G1 totals are preserved.
 
 ### 147. `other-acb4b229` — G2 recheck of 1 header(s)
 

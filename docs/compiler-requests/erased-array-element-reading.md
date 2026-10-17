@@ -233,3 +233,74 @@ accept `auto`, require finite nonnegative `size` for `fixed`, and finite positiv
 reads and exceptions instead of snapshotting, copying elements, coercing values or assuming every array
 already contains valid track owners. A typed-only loop, default true/false guard or copied erased array
 would not implement the source predicate. This G2 declaration leaves the entire body refused.
+
+## G2 DragonBones skins: emitted display iteration and refused collection
+
+At compiler `806d257` / Flight `a627849`, original cluster `other-5dfe27ec` contains
+`skeleton2d_formats/dragon_bones_skins_handler.hpp`. Its completed Clang22.1.8 one-worker check is
+**0/1 pass, 1 fail, 0 unattempted**, with the first error at line373:
+
+```cpp
+if (!flight::is_array(raw)) return displays;
+for (auto raw_display : raw) { /* parse and append every display position */ }
+// invalid range expression of type 'flight::Any'; no viable 'begin' function available
+```
+
+This is `parseDragonBonesDisplayList(raw: unknown, ...)`, not a declaration-order problem. The
+source guard admits any array, and each cell goes to a parser taking unknown. Current `AnyArray`
+retains the original array identity and an exact `Array<T>` handle in std::any;
+`external_if<Array<T>>()` already recovers that exact type. There is no general element-read thunk,
+array iterator or erased element view. Merely adding an Any iterator that handles only
+`Array<Any>`, requiring `Array<double>`, converting the source to a replacement array, or dropping
+cells that cannot be recovered would narrow the source's admitted arrays or replace identity.
+The producer/erased-reader contract must agree without asserting that every boxed array has one
+particular native element type. A guard is not that exact-type evidence.
+
+Eight declarations remain explicitly omitted: `numberArray`, `parseDragonBonesRegionDisplay`,
+`toFloat32Array`, `toUint16Array`, `parseDragonBonesWeightedMesh`,
+`parseDragonBonesMeshDisplay`, `parseDragonBonesDisplay` and `parseDragonBonesSkins`.
+The collector's exact `cpp-presence-test-without-absence-storage` diagnostic names only an
+identifier, not a specific variable; its source has null/object checks in both raw-skin and raw-slot
+loops, so neither is guessed as the uniquely failing test. Region/mesh/weighted construction also
+refuses contextual Any conversion. `numberArray` reports erased exact-array recovery missing, even
+though the current runtime can recover an already-known exact Array type. Array.isArray plus an
+erased number-array assertion does not establish a homogeneous `Array<double>` or validate cells.
+The [static typed-array from request](typed-array-static-from-binding.md) separately covers the
+Float32Array/Uint16Array ambient member omissions; declaring that member would not supply the
+unrepresented erased reads or other bodies.
+
+### Full skin and display contract
+
+- Keep skin and slot traversal in source order. Empty or missing skin names become `default`;
+  nonarrays and null/nonobject entries follow their actual guards. Every valid skin-slot array yields
+  its wardrobe entry, including alternate skins and empty attachment lists.
+- Preserve every display position in the default skin's table, including a null for an unsupported
+  display. The source updates that table before checking whether slotOrder resolves the slot. Unknown
+  slots do not create named skin attachments, but must not erase or shift the default positional list.
+  Named nonnull displays become attachments under the actual slot index and display name, retaining
+  the same attachment object in both results. The handler appends skins and sets table entries on the
+  original context arrays/Map; the reader remains its actual handler alias.
+- A nonstring display type defaults to image. Image regions use the existing parsed transform.
+  Unweighted meshes retain converted UVs, triangles, direct vertices and null skin. Unsupported kinds,
+  shared meshes and legacy weights without bonePose report their source Skip diagnostics and occupy
+  null display positions; they are not replaced with images or removed.
+- Weighted meshes apply slotPose then inverse bonePose, remap raw bone indices positionally through
+  rawIndexToOutput, and retain the authored influence weights. Duplicate bone names cannot collapse
+  indices. Truncated streams, unresolved remaps/poses, singular matrices and influence overflow follow
+  the existing recovery paths; counts cap at65535 while input pairs are still consumed. Each accepted
+  influence is outputBone/x/y/weight, with Float32 conversion, and the recovered path emits its single
+  Recover diagnostic. Do not normalize weights, use an epsilon determinant guard or silently drop the
+  entire mesh to avoid this domain.
+
+The nullable result still requires the original region/mesh owner to widen to Attachment2D; the
+[heritage request](interface-heritage-widening.md#g2-dragonbones-skins-need-the-original-derived-attachment)
+records that independent explicit refusal. Record/object recovery and missing-key reads also remain
+under [the parsed JSON request](parsed-json-object-shape-reads.md): the retained section handler reads
+`armature.get("skin").value()`, which cannot stand for JavaScript undefined on a missing key.
+Those are inspected source/refusal boundaries, not extra winning header diagnostics or native tests.
+
+No C++, runtime iterator, binding, source patch, declaration/repair, override or generated inventory
+changes for this disposition, so no changed generation needs reproducing. A declaration cannot supply
+the erased loop or eight omitted algorithms; no positive-unused/negative-link result is claimed.
+No native skin, weighting, wardrobe, parser or functionality pass is claimed. The original row remains
+failed with compiler route, and other DragonBones/Spine/particle/grid rows retain their own evidence.
