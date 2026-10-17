@@ -121,6 +121,8 @@ inline flight::WeakMap<flight::Ref<flight::types::ImageResource>, flight::Ref<fl
 // contract that validates and recovers the target owner; the compiler will not use a native pointer cast,
 // materialize a replacement row, or invent side storage
 
+double hit_test_sprite_alpha(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostBitmapReadbackCapability>>>> host_bitmap_readback, flight::types::NodeAny source, double x, double y, double alpha_threshold);
+
 inline void register_sprite_hit_test(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostBitmapReadbackCapability>>>> host_bitmap_readback, std::optional<double> alpha_threshold = std::nullopt) {
   alpha_threshold = alpha_threshold.value_or(1.0);
   flight::interaction::register_hit_test_precise(flight::types::sprite_kind, [=](flight::types::NodeAny source, double x, double y) {

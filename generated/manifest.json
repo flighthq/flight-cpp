@@ -3508,6 +3508,12 @@
         "flight/scene2d_formats/lottie_shape_layer.hpp"
       ],
       "id": "scene2d-formats-declare-refused-lottie-shape-items"
+    },
+    {
+      "files": [
+        "flight/interaction/register_sprite_hit_test.hpp"
+      ],
+      "id": "interaction-declare-refused-sprite-alpha-hit"
     }
   ],
   "sourcePatches": [

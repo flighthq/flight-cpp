@@ -1560,3 +1560,38 @@ previousCluster. Module/package/refusal totals stay unchanged. Direct helper or 
 unlinkable. The missing group walk must still preserve original owners, closures and render behavior;
 the already-emitted render helper is unchanged, with no new native execution claim. No fake Lottie
 shape/parser/draw, empty result or narrowed domain is supplied.
+
+## G2 Interaction Sprite alpha hit retains its refused helper
+
+At Flight `a627849` / compiler `806d257`, `interaction/register_sprite_hit_test.hpp:127`
+retains the registration lambda's direct call to `hit_test_sprite_alpha`. The exact
+`NOT GENERATED: function hitTestSpriteAlpha` marker, that live same-header call and absent
+definition support the existing `declare-refused-function` mechanism without `retainedReference`
+or `calledFrom`:
+
+```cpp
+double hit_test_sprite_alpha(
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostBitmapReadbackCapability>>>> host_bitmap_readback,
+  flight::types::NodeAny source, double x, double y, double alpha_threshold);
+```
+
+These are the retained wrapper/lambda's own carriers: readonly host capability row, NodeAny,
+and present double coordinates/threshold, with a double result for the precise callback.
+The public wrapper's optional threshold/default1 and source lambda/capture remain untouched;
+no optional/default parameter is invented for the required helper argument. The repair matches
+only this header, inserts one declaration, is idempotent and expires with the marker or retained call.
+`bitmapForImage` remains refused and has no live retained call, so no second declaration is added.
+
+The actual unused repaired header compiles, links and runs with static signature/slot and wrapper
+default/explicit-zero checks. A program calling the actual registration with its exact host row,
+using both default and explicit thresholds, compiles to an object and fails to link on exactly the
+missing `flight::interaction::hit_test_sprite_alpha` signature and no other symbol. The program
+never runs: no host provider, cache, readback or hit operation is executed or claimed. There is
+no eager global registration being mistaken for this explicit-use negative link.
+
+Normal exact-pin one-module generation must reproduce only the declaration and own repair record.
+The partial marker, both body omissions, source/refusal fingerprints and package/init counts stay.
+The [original node and pixel-source owner requirements](readonly-callback-derived-owner-recovery.md#g2-interaction-sprite-alpha-hits-need-the-original-node-and-pixel-source-owners)
+retain bounds fallback, all texture/source/threshold domains, successful-only weak caching and
+original provider/pixel/transform semantics. No fake hit/miss, copied graph or bitmap owner,
+narrowed domain, source/runtime/override supply or shared/QuadBatch edit is carried.

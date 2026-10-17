@@ -276,3 +276,48 @@ inspected later storage obligation, not a second measured compiler error. Preser
 The bounded [retained callback declaration](retained-declaration-calls-omitted-callee.md#g2-interaction-shape-hit-test-retains-its-refused-callback)
 addresses name visibility only. No Shape/Node/runtime/bounds or tilemap hit code is changed; no
 fill, path, transform, callback registration or native hit behavior is supplied.
+
+## G2 Interaction Sprite alpha hits need the original node and pixel-source owners
+
+At Flight `a627849` / compiler `806d257`, `interaction/registerSpriteHitTest.ts:27`
+refuses `hitTestSpriteAlpha` at `source as Sprite` with
+`cpp-reference-assertion-without-heritage`. The precise callback receives the full nominal
+`NodeAny`, not a retained Sprite/Node2D capability. The existing native Sprite helper can
+recover an exact Sprite from its owner-preserving Node2D view, but cannot reconstruct it
+from that base graph carrier. Keep the original Sprite, data, optional full Texture union,
+2D transform/runtime and graph-local bounds rather than copying a node or narrowing the ABI.
+
+The helper first tests graph-local bounds and returns -1 on a miss. Only a bounds hit reaches
+the Sprite texture: null or any dimension other than2d returns0, as does a null source or
+unreadable bitmap. Those are the source's bounds fallbacks, not permission to return0 for
+every input. With readable pixels it inverse-transforms into the original shared scratch,
+computes `floor(texture.uvOffset.x * image.width + local.x)` and the corresponding y expression,
+checks bitmap width/height, then compares the sampled Alpha channel with the supplied threshold:
+0 on `>=`, -1 otherwise. Preserve this order, source/image versus bitmap dimensions, all reads,
+scratch effects, early exits and thrown values. Keep the complete numeric threshold domain and
+source default1; the declaration does not clamp, substitute a default or change the captured value.
+
+`bitmapForImage` at52 is independently refused at TextureSource-to-Bitmap recovery. A Bitmap
+kind returns that same Bitmap owner. Only an ImageResource kind reaches the image cache and
+host capture; all other open/built-in source kinds return null. A kind string is not an exact
+native owner proof. The [flattened refinement requirement](flattened-interface-refinement-identity.md)
+also applies to that helper: preserve the Bitmap/ImageResource owner through its base slot and
+callback, rather than inventing a new pixel object or limiting TextureSource to those two kinds.
+The helper is absent in native code and has no retained live caller needing a declaration yet.
+
+The WeakMap is keyed by the original ImageResource and holds the captured Bitmap. A hit returns
+the same cached Bitmap; only successful non-null captures are stored, so failures are retried.
+The source does not key this cache by a copied handle or add a version invalidation policy.
+Capture reads that resource's host source and width/height and asks the original required
+`HostBitmapReadbackCapability.readBitmap` for mode `bitmap`; nonpositive dimensions return the
+existing empty-size result without calling the provider. Preserve provider calls/results/errors,
+weak image lifetime and successful bitmap identity. No readback backend, image decode, cache
+replacement, transparent bitmap or forced hit is supplied by a declaration.
+
+The retained registration captures the exact readonly host row and defaulted threshold by value,
+then passes the original NodeAny and coordinates through the existing precise registry. Shared
+Sprite/Node/runtime/bounds and peer QuadBatch hit code stay untouched. The existing
+[graph-local-bounds requirement](assertion-to-undeclared-row-member.md#g2-interaction-graph-bounds-need-the-original-nodes-2d-capability)
+remains at the first source call; these owner/body obligations are not additional measured native
+errors. The [direct-call declaration](retained-declaration-calls-omitted-callee.md#g2-interaction-sprite-alpha-hit-retains-its-refused-helper)
+recovers name visibility only; neither the registration nor the alpha hit path can execute.
