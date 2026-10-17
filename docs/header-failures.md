@@ -137,7 +137,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 108 | `call-has-no-matching-fbd6de0d` | 1 | 3D | compiler | the emitted call to `invoke` matches no declared overload |
 | 109 | `call-has-no-matching-fee2f93f` | 1 | 3D | compiler | the emitted call to a function matches no declared overload |
 | 110 | `invalid-operands-dc1c09c4` | 1 | PLAT | source guards + declaration repair (applied) | flex basis comparison and unsafe numeric projection cleared; G2: 1 pass; refused resolver registration remains unlinkable |
-| 111 | `missing-member-1620083c` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`mix_blend_mode`) |
+| 111 | `missing-member-1620083c` | 1 | 2D | binding | SDL DOM value/style copies cannot carry the web renderer mix-blend write; open blend domain/provider required; G2: 0/1 retained |
 | 112 | `missing-member-1a2e58cb` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`register_dom_texture_resolver`) |
 | 113 | `missing-member-1ce5ed2e` | 1 | 3D | runtime | the emitted code reads a member the target does not declare (`physics_3d_cone_twist_joint_solver`) |
 | 114 | `missing-member-42783657` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`font`) |
@@ -2299,12 +2299,32 @@ no empty callback, fake rectangle or successful layout result is supplied.
 
 ### 111. `missing-member-1620083c` — 1 header(s)
 
-- cause: the emitted code reads a member the target does not declare (`mix_blend_mode`)
+- cause: the SDL DOM shell has no shared element/style compositor boundary for the web renderer's blend write
 - subject: `mix_blend_mode`
 - lanes: 2D
-- fix route: runtime
+- fix route: binding — [existing shared DOM style request](compiler-requests/dom-style-shared-element-boundary.md#g2-dom-material-blend-writes-use-the-same-missing-shared-style-boundary)
 - first failure at: `flight/scene2d_dom/dom_materials.hpp:27`
-- example: `no member named 'mix_blend_mode' in 'host_sdl::DomStyle'`
+- retained example: `no member named 'mix_blend_mode' in 'host_sdl::DomStyle'`
+
+The source writes `HTMLElement.style.mixBlendMode` on the original element and installs that helper in
+the existing reference-backed `DomRenderState.applyBlendMode`. The emitted element and callback arguments
+are value `HtmlElement` carriers, aliases of `DomElement` with inline plain-String `DomStyle`; even a new
+field would mutate a copy. The existing SDL application shell has no retained HTML/CSS rendering provider
+for this operation. No field-only runtime addition, fake material/compositor, copied owner, disconnected
+side table, no-op assignment or new backend is supplied.
+
+The source blend families are open strings. Keep all 17 mapped keys, `Add -> screen` **approximate**,
+other mapped modes' **exact** fidelity, normal's present empty string and null/unregistered-key empty-CSS
+fallback. Do not narrow vendor modes or turn an absent lookup into a throw or invented fidelity result.
+The source lookup/assignment order, existing element/style identity, callback and setter effects remain
+requirements for a real binding; no later compiler diagnostic is inferred from the inspected lookup.
+
+The pinned package and manifest explicitly declare environment `web`, outside the native SDL profile's
+existing empty applicable-environment set. This already derives not-applicable status; no policy, deferral,
+count or header inventory changes. **Original 0/1 pass, 1 fail retained**, with the same diagnostic and
+cluster. No C++/binding/source/override/generation input changed, so no unchanged header/native/rendering
+check or generation is rerun. Only the existing request and owned cluster/row/table/section111 change;
+foreign/G1 data and the sibling opacity cluster remain intact.
 
 ### 112. `missing-member-1a2e58cb` — 1 header(s)
 

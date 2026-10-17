@@ -76,3 +76,46 @@ these scene-style helpers preserve element mutation.
 `flight/scene2d_dom/dom_text_label.hpp`. Their status rows now link this binding request and the
 recorded first-error location. No C++ input changed, so no new native semantic result or next
 compiler diagnostic is claimed. Text layout and the real Scene2D GL renderer are outside this scope.
+
+## G2 DOM material blend writes use the same missing shared style boundary
+
+At Flight `a627849` / compiler `806d257`, cluster `missing-member-1620083c` contains only
+`scene2d_dom/dom_materials.hpp`. Its retained first failure is
+`no member named 'mix_blend_mode' in 'flight::host_sdl::DomStyle'` at line 27. The actual source is:
+
+```ts
+export function applyDomBlendMode(element: HTMLElement, value: BlendMode | null): void {
+  element.style.mixBlendMode = (value !== null ? DOM_BLEND_MODE[value] : null) ?? '';
+}
+```
+
+The generated helper takes `flight::host_sdl::HtmlElement` by value and assigns
+`element.style.mix_blend_mode`. `enableDomBlendModeSupport` installs that same function into the
+original `DomRenderState.applyBlendMode`; the emitted callback also carries the element by value.
+The state itself is the existing reference-backed `DomRenderState`, not a replacement material owner.
+Adding one plain String field would still write the helper's copied style rather than the actual
+rendered element. The host has no existing CSS compositing/style provider to bind this operation to;
+its document facade and GL canvas conversion do not supply that capability.
+
+The pinned source `BlendMode` and `AdvancedBlendMode` types are open string families, including vendor
+keys, not closed enums. The blend table has 17 explicit keys: six fixed-function names and eleven
+additional advanced names. `Add` maps to CSS `screen` and is classified **approximate**; `Normal` maps
+to the present empty string; the other mapped CSS modes keep their source spelling and **exact**
+classification. A null input, a missing vendor-key lookup or a null table entry reaches the source
+empty-string fallback. Preserve absence separately from a present empty string before that fallback;
+do not throw on an absent map entry, invent a vendor-mode realization, restrict the input to built-ins,
+or upgrade the approximate mapping to exact. The fidelity helper indexes its separate map directly;
+no unregistered-key fidelity fallback is supplied by the source.
+
+A real provider must make this CSS string write observable through every alias and the installed
+callback for the identical element/style owner. Preserve the source lookup and assignment evaluation
+order and setter exceptions. A copied value facade, disconnected side table, fake material/compositor,
+no-op style assignment or hardcoded blend result cannot implement that boundary.
+
+`scene2d-dom/package.json` and the generated package record both explicitly declare environment `web`.
+The native SDL profile's existing empty `applicableEnvironments` list therefore already derives this
+package as not applicable to its shippable denominator. This audit changes no applicability, deferral,
+package totals or compile denominator. The header stays in the inventory and its original **0/1 pass,
+1 fail** diagnostic remains. No C++/binding/source/override/generated body changed; no generation,
+unchanged native compile, style behavior executable or rendering test was run. The emitted nullish
+lookup shape was inspected but no later compiler diagnostic or native behavior result is claimed.
