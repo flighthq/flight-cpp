@@ -9093,6 +9093,19 @@
       "defect": "The exact NOT GENERATED loadVideoResourceFromUrl marker, two live same-header calls and absent definition agree. This declares only the retained callers' own parameter and Task result carriers, with the ordinary source optional-argument defaults. The URL body remains refused at cpp-union-runtime-domains-erased because distinct CanvasImageSource domains map to one SDL ImageSource without a compiler-visible discriminator contract. No provider, URL decoding, Task result, host handle or resource ownership behavior is supplied. Unused repaired headers can link; invoking either retained loader or the refused URL function must still fail to link on this exact missing body. Existing body request: image-source-union-domain-discriminator.md; caller request: retained-declaration-calls-omitted-callee.md.",
       "expectedWhen": "always",
       "expires": "when loadVideoResourceFromUrl emits (its exact NOT GENERATED marker disappears) or both retained calls disappear; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "layout-declare-refused-flex-resolver",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/layout/flex_layout.hpp",
+      "symbol": "flex_layout_resolver",
+      "requiredText": "// NOT GENERATED: variable (binding) -- source line 21\n// refusal: cpp-type-assertion-unidentified",
+      "declaration": "namespace flight::layout { extern flight::types::LayoutResolver flex_layout_resolver; }",
+      "sourceDeclaration": "packages/layout/src/flexLayout.ts -- const flexLayoutResolver: LayoutResolver = (out, tree, intrinsicSizes, parentIndex, childIndex) => ...; refused nullable container/item style assertions; the retained explicit registration constructs optional<flight::types::LayoutResolver> from this missing binding.",
+      "diagnostic": "use of undeclared identifier 'flex_layout_resolver'",
+      "defect": "The exact refused resolver binding marker remains while register_flex_layout_resolver passes its value to register_layout_resolver. This declares only the existing LayoutResolver callback carrier, never a resolver or layout algorithm. The nullable style owner refusal remains open in docs/compiler-requests/assertion-to-nullable-variant-alternative.md and the retained binding boundary in docs/compiler-requests/retained-declaration-calls-omitted-callee.md. Actual unused-header positive compile/link/run passes; explicit registration compiles to an object then fails to link on exactly the absent flex_layout_resolver binding. The normal generated repair matches one header and is declaration-only and idempotent.",
+      "expectedWhen": "always",
+      "expires": "when flexLayoutResolver emits and its exact NOT GENERATED/refusal marker disappears; sdk:check fails if this repair matches no header."
     }
   ]
 }

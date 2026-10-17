@@ -3394,6 +3394,12 @@
         "flight/scene3d_formats/awd2_block_dispatch.hpp"
       ],
       "id": "scene3d-formats-declare-refused-awd2-parse-state"
+    },
+    {
+      "files": [
+        "flight/layout/flex_layout.hpp"
+      ],
+      "id": "layout-declare-refused-flex-resolver"
     }
   ],
   "sourcePatches": [
@@ -5118,6 +5124,13 @@
       "id": "scene3d-instanced-color-present-write",
       "module": "packages/scene3d/src/instancedMesh.ts setInstancedMeshInstanceColor",
       "package": "@flighthq/scene3d"
+    },
+    {
+      "dependency": "flight",
+      "digest": "42a00e3d8d431f7092531a1f647ea033dc16121a3816d434e85ffb38bd2011f9",
+      "id": "layout-flex-basis-unknown-comparison",
+      "module": "packages/layout/src/flexLayout.ts",
+      "package": "@flighthq/layout"
     }
   ],
   "duplicateStructuralStructAliases": {

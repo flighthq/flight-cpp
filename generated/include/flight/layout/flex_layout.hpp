@@ -33,6 +33,8 @@ namespace flight::types { template <typename ContainerStyle, typename ItemStyle>
 #include <flight/types/contract.hpp>
 #include <flight/layout/layout_state.hpp>
 
+
+namespace flight::layout { extern flight::types::LayoutResolver flex_layout_resolver; }
 namespace flight::layout {
 
 using flight::types::FlexLayoutItemStyle;
@@ -106,6 +108,14 @@ inline double get_flex_align_offset(flight::types::FlexLayoutAlign align, double
   return 0.0;
 }
 
+inline bool is_auto_flex_basis(std::variant<double, flight::String> value) {
+  return (value.index() == 1 && (std::get<1>(value) == flight::String("auto")));
+}
+
+inline bool is_non_negative_flex_basis(std::variant<double, flight::String> value) {
+  return ((value.index() == 0 && std::isfinite(std::get<0>(value))) && (std::get<0>(value) >= 0.0));
+}
+
 inline bool is_flex_align(flight::Any value) {
   return ((((([&]() { const auto& presence_operand = value; return presence_operand.is_undefined(); }()) || (value == flight::String("center"))) || (value == flight::String("end"))) || (value == flight::String("start"))) || (value == flight::String("stretch")));
 }
@@ -168,7 +178,7 @@ inline bool is_flex_layout_item_style(std::optional<flight::ErasedRef> value) {
     return true;
   }
   auto style = flight::erased_ref_as<align_self_basis_grow_shrink_298c4618b56053a4>(value.value());
-  return (((((!style->align_self.has_value() || (style->align_self.value() == flight::String("auto"))) || is_flex_align(style->align_self.value())) && ((!style->basis.has_value() || (style->basis.value() == flight::String("auto"))) || is_non_negative_number_flight_value_function_is_u00004e_on_u00004e_egative_u00004e_umber_flight_private_4322b349d95835bd(std::get<0>(style->basis.value())))) && is_non_negative_optional_number_flight_value_function_is_u00004e_on_u00004e_egative_u00004f_ptional_u00004e_umber_flight_private_4322b349d95835bd(style->grow)) && is_non_negative_optional_number_flight_value_function_is_u00004e_on_u00004e_egative_u00004f_ptional_u00004e_umber_flight_private_4322b349d95835bd(style->shrink));
+  return (((((!style->align_self.has_value() || (style->align_self.value() == flight::String("auto"))) || is_flex_align(style->align_self.value())) && ((!style->basis.has_value() || is_auto_flex_basis(style->basis.value())) || is_non_negative_flex_basis(style->basis.value()))) && is_non_negative_optional_number_flight_value_function_is_u00004e_on_u00004e_egative_u00004f_ptional_u00004e_umber_flight_private_4322b349d95835bd(style->grow)) && is_non_negative_optional_number_flight_value_function_is_u00004e_on_u00004e_egative_u00004f_ptional_u00004e_umber_flight_private_4322b349d95835bd(style->shrink));
 }
 
 inline double finite_size_flight_value_function_finite_u000053_ize_flight_private_4322b349d95835bd(double value) {

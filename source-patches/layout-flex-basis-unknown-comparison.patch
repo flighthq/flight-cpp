@@ -1,0 +1,24 @@
+--- a/packages/layout/src/flexLayout.ts
++++ b/packages/layout/src/flexLayout.ts
+@@ -268,12 +268,20 @@
+   const style = value as Partial<FlexLayoutItemStyle>;
+   return (
+     (style.alignSelf === undefined || style.alignSelf === 'auto' || isFlexAlign(style.alignSelf)) &&
+-    (style.basis === undefined || style.basis === 'auto' || isNonNegativeNumber(style.basis)) &&
++    (style.basis === undefined || isAutoFlexBasis(style.basis) || isNonNegativeFlexBasis(style.basis)) &&
+     isNonNegativeOptionalNumber(style.grow) &&
+     isNonNegativeOptionalNumber(style.shrink)
+   );
+ }
+ 
++function isAutoFlexBasis(value: number | 'auto'): boolean {
++  return typeof value === 'string' && value === 'auto';
++}
++
++function isNonNegativeFlexBasis(value: number | 'auto'): boolean {
++  return typeof value === 'number' && Number.isFinite(value) && value >= 0;
++}
++
+ function isFlexAlign(value: unknown): value is FlexLayoutAlign | undefined {
+   return value === undefined || value === 'center' || value === 'end' || value === 'start' || value === 'stretch';
+ }
