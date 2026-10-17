@@ -45,7 +45,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 16 | `call-has-no-matching-b569e92e` | 8 | 3D, ANIM | compiler | the emitted call to `init_joint_base` matches no declared overload |
 | 17 | `undeclared-identifier-294e632e` | 8 | ANIM | runtime | the emitted code names `apply_swf_authored_bounds`, which nothing declares |
 | 18 | `undeclared-identifier-3e3cccce` | 8 | GL | runtime | the emitted code names `blit_offset_shaders`, which nothing declares |
-| 19 | `invalid-operands-4b19651b` | 7 | 2D, ANIM | runtime | an operator is applied to operand types it does not accept |
+| 19 | `invalid-operands-4b19651b` | 7 | 2D, ANIM | compiler | a guarded `unknown` (typeof record member, or `Array.isArray` length) is still read as `flight::Any` before a numeric comparison *(request filed)* |
 | 20 | `missing-member-fd48c0bb` | 7 | 3D | [compiler request](compiler-requests/narrowed-imported-union-into-declared-parameter.md) | the emitted code reads a member the target does not declare (`collide_physics_3d_collider_shapes`) |
 | 21 | `other-18dcce71` | 7 | ANIM | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 22 | `undeclared-identifier-7dc86326` | 7 | WGPU | runtime | the emitted code names `get_wgpu_scene_3d_runtime`, which nothing declares |
@@ -540,11 +540,15 @@ G2's scoped-only-when-changed rule. Only these owned rows gained request links a
 
 ### 19. `invalid-operands-4b19651b` — 7 header(s)
 
-- cause: an operator is applied to operand types it does not accept
+- cause: a type guard narrows an `unknown`, but the emitted read after it is still the erased `flight::Any`, and `>` is applied to that `Any`
 - lanes: 2D, ANIM
-- fix route: runtime
+- fix route: compiler
+- why this route: G2, measured with GCC 15.2 at `-j1`. There are two causes and no runtime fix: a relational operator on `flight::Any` would have to invent JavaScript's abstract comparison, which is a permissive fake.
+  - **Lottie, 4 headers** (`lottie_counts`, `lottie_requirements`, `contract`, `_internal_index`). `typeof record.fr === 'number' && record.fr > 0` tests correctly, but reads `record.get("fr").value()` rather than `.as_number()`. Narrowed locals already use `as_number()`.
+  - **Skeleton2d, 3 headers** (`skeleton2d_json_analyzer`, `spine_json_requirements`, `spine_json_section_counts`). `Array.isArray(value)` then `value.length` is emitted as `named_properties(value).get("length") > 0.0`.
 - first failure at: `flight/scene2d_formats/lottie_counts.hpp:26`
 - example: `invalid operands to binary expression ('Any' and 'double')`
+- compiler request: `docs/compiler-requests/typeof-narrowed-record-member-read.md` (Lottie rows); `docs/compiler-requests/erased-array-element-reading.md` (skeleton2d rows, existing)
 
 ### 20. `missing-member-fd48c0bb` — 7 header(s)
 
