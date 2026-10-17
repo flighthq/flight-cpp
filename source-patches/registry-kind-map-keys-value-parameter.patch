@@ -3,5 +3,5 @@
 @@ -16,3 +16,3 @@
  
 -export function getKindMapKeys(out: Kind[], map: ReadonlyMap<Kind, unknown>): void {
-+export function getKindMapKeys<T>(out: Kind[], map: ReadonlyMap<Kind, T>): void {
++export function getKindMapKeys<MapType extends ReadonlyMap<Kind, unknown>>(out: Kind[], map: MapType): void {
    out.length = 0;
