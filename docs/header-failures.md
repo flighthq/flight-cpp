@@ -38,7 +38,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 9 | `static-cast-assertion-9674a66c` | 15 | 2D | compiler | a TypeScript `as` on `JSON.parse` is emitted as a `static_cast` from `JsonValue` to an unrelated `Ref<T>` *(request filed)* |
 | 10 | `call-has-no-matching-076d207f` | 14 | WGPU | runtime (fixed) | typed `create_pipeline_layout` descriptor overload; G2 recheck: 0 pass, 14 fail at `create_bind_group_layout` |
 | 11 | `other-e9936ce6` | 13 | 3D | compiler | a pair literal the declared element type spells as `std::tuple<A, B>` is emitted as `flight::Array{...}`, so class-template ded... *(request filed)* |
-| 12 | `call-has-no-matching-d6950545` | 12 | 2D, CORE | compiler | the emitted call to `get_node_child_count` matches no declared overload |
+| 12 | `call-has-no-matching-d6950545` | 12 | 2D, CORE | compiler *(existing requests)* | generic `get_node_child_count<Traits>` called without the inferred trait on a non-deducible `RowMerge` parameter (command: `NodeAny`; SVG/Lottie: `Node2D` via heritage) |
 | 13 | `no-viable-conversion-9c3803c5` | 9 | 2D, WGPU | compiler | a value is passed where its declared type cannot receive it |
 | 14 | `no-viable-conversion-dfea2d92` | 9 | 3D | compiler | a value is passed where its declared type cannot receive it |
 | 15 | `variant-cast-ccfedad4` | 9 | 3D | compiler | a retained readonly program row is reconstructed through a writable row before a readonly draw helper *(existing request extended)* |
@@ -505,14 +505,19 @@ so no second request is filed.
 - example: `no viable constructor or deduction guide for deduction of template arguments of 'Array'`
 - compiler request: `docs/compiler-requests/array-pair-literal-deduction.md`
 
-### 12. `call-has-no-matching-d6950545` — 12 header(s)
+### 12. `call-has-no-matching-d6950545` — G2 recheck of 12 header(s)
 
-- cause: the emitted call to `get_node_child_count` matches no declared overload
+- cause: `get_node_child_count<Traits>` (generated and overridden `node/hierarchy.hpp`) takes `StructuralRef<RowReadonly<RowMerge<RowOf<Ref<Node<Traits>>>, RowOf<Traits>>>>`, in which `Traits` is not deducible. The emitted calls pass a different row without the type argument TypeScript inferred.
 - subject: `get_node_child_count`
 - lanes: 2D, CORE
 - fix route: compiler
+- why this route: only the checker knows the inferred trait. A permissive overload, a cast or a narrowed row would guess it.
+  - The command rows (6) pass `Readonly<NodeAny>`. That is Face A of [node-call-trait-absent-from-scope](compiler-requests/node-call-trait-absent-from-scope.md).
+  - The scene2d-formats rows (6) pass `Node2D`, whose `Node2DTraits` comes through `extends`. That is [heritage-argument-generic-deduction](compiler-requests/heritage-argument-generic-deduction.md).
 - first failure at: `flight/command/command_binding.hpp:155`
 - example: `no matching function for call to 'get_node_child_count'`
+- Scoped native recheck (GCC 15.2, jobs 1): **3 attempted / 0 pass / 3 fail**, at `command_binding.hpp:155`, `svg_bounds.hpp:67` and `lottie_test_fixtures.hpp:125`. Each row carries its measured location. The other 9 headers reach `command_binding.hpp` or `svg_bounds.hpp` through their includes. They were not recompiled, keep their recorded failure, and are given no location. No overload, cast, copied owner or narrowed domain is supplied.
+- compiler request: `docs/compiler-requests/node-call-trait-absent-from-scope.md` (command), `docs/compiler-requests/heritage-argument-generic-deduction.md` (scene2d-formats)
 
 ### 13. `no-viable-conversion-9c3803c5` — 9 header(s)
 

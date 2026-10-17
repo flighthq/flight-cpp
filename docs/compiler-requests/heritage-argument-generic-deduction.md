@@ -136,3 +136,19 @@ location, and this request link. They retain work-item ID `other-43523429` while
 updated; the separate reserved TextLabel/E0a `Traits` cluster is untouched. No header was promoted,
 no package-wide or whole-SDK check was run, and no Movieclip playback behavior is claimed from the
 native Sprite constructor regression test.
+
+## G2 SVG bounds and Lottie fixtures pass `Node2D` to `Node<Traits>` node queries
+
+At Flight `a627849` / compiler `806d257`, `@flighthq/scene2d-formats` passes `Node2D` owners to
+`getNodeChildCount` and `getNodeChildAt`. The emitted calls give no type argument:
+- `svg_bounds.hpp:67`, `get_node_child_count(target)`, with `get_node_child_at(target, index)` at line 72;
+- `lottie_test_fixtures.hpp:125`, `get_node_child_count(root)`.
+
+The parameter is the `RowMerge` spelling of `Readonly<Node<Traits>>`, so `Traits` is not deduced (GCC 15.2,
+one worker: `no matching function for call to 'get_node_child_count(flight::types::Node2D&)'`).
+
+`Node2D extends Node<Node2DTraits>`, so the substitution TypeScript makes is `Node2DTraits`. That is the
+heritage walk this request asks for. Both sites were measured. Four more SVG headers reach `svg_bounds.hpp`
+through their includes, and their own first errors were not recompiled: `svg_clip`, `svg_clip_handlers`,
+`svg_handlers` and `svg_import`. The later `svg_bounds.hpp` errors (`get_shape_bounds`,
+`get_node_local_bounds_rectangle`) were not analysed in this unit. Nothing is carried.

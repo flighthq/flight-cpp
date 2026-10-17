@@ -220,3 +220,18 @@ from the source's inferred type and writes it (`Transform2DNode<flight::Ref<flig
 `get_node_local_matrix<flight::Ref<flight::types::Node2DTraits>>(...)`), or it refuses the site instead of
 emitting a call it cannot instantiate. Emitting a bare `Traits` in a non-template scope, or an unnarrowed
 row against a `RowMerge` parameter, satisfies neither.
+
+## G2 command: `getNodeChildCount(Readonly<NodeAny>)` (Face A)
+
+At Flight `a627849` / compiler `806d257`, `command/command_binding.hpp:155` (`resolveInsertIndex`) emits
+`flight::node::get_node_child_count(parent)`, where `parent` is
+`StructuralRef<RowReadonly<RowOf<NodeAny>>>`. The template parameter is
+`StructuralRef<RowReadonly<RowMerge<RowOf<Ref<Node<Traits>>>, RowOf<Traits>>>>`, so `Traits` cannot be
+deduced (GCC 15.2: `no matching function for call to 'get_node_child_count(...)'`).
+
+TypeScript infers `Traits` from `Readonly<NodeAny>`. The emitter neither writes that argument nor narrows
+the row the way it does at other `Node<Traits>` call sites. This is the Face A shape above, and the required
+fix is the same: write the inferred trait, or refuse the site. Measured on `command_binding.hpp`. Five more
+command headers reach it through their includes: `command_history`, `command_transaction`,
+`explain_command_dispatch`, `contract` and `_internal_index`. Their own first errors were not recompiled.
+Nothing is carried, and the call is not narrowed or cast.
