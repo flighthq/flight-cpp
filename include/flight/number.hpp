@@ -348,7 +348,17 @@ inline bool is_safe_integer(double value) noexcept {
          std::abs(value) <= maximum_safe_integer;
 }
 
-inline double to_number(const String& input) {
+// Like Boolean, Number is also passed as a first-class array callback. A callable object keeps
+// those uses deducible without selecting one overload or changing the conversion used by a call.
+struct ToNumber final {
+  [[nodiscard]] double operator()(const String& input) const;
+  [[nodiscard]] double operator()(const char* input) const { return (*this)(String(input)); }
+  [[nodiscard]] double operator()(std::string_view input) const { return (*this)(String(input)); }
+  [[nodiscard]] double operator()(double value) const noexcept { return value; }
+  [[nodiscard]] double operator()(bool value) const noexcept { return value ? 1.0 : 0.0; }
+};
+
+inline double ToNumber::operator()(const String& input) const {
   const std::string encoded = input.to_utf8();
   std::string_view text = detail::trim_number_text(encoded);
   if (text.empty()) return 0.0;
@@ -388,9 +398,6 @@ inline double to_number(const String& input) {
              : std::numeric_limits<double>::quiet_NaN();
 }
 
-inline double to_number(const char* input) { return to_number(String(input)); }
-inline double to_number(std::string_view input) { return to_number(String(input)); }
-inline double to_number(double value) noexcept { return value; }
-inline double to_number(bool value) noexcept { return value ? 1.0 : 0.0; }
+inline constexpr ToNumber to_number{};
 
 } // namespace flight

@@ -450,6 +450,33 @@ void test_sequence_view_map() {
         "a view flat-maps returned arrays in order and omits empty results");
 }
 
+void test_number_callback() {
+  const flight::Array<flight::String> source{"0b101", "-0", " ", "invalid", "Infinity"};
+  const auto converted = source.map(flight::to_number);
+  check(converted.size() == 5 && converted[0] == 5.0 && std::signbit(converted[1]) &&
+            converted[2] == 0.0 && std::isnan(converted[3]) && converted[4] == INFINITY,
+        "Number as a map callback converts strings in order without consuming the index");
+  check(converted.identity() != source.identity() && source[0] == flight::String("0b101") &&
+            source[3] == flight::String("invalid"),
+        "Number mapping creates a fresh array and leaves the source untouched");
+
+  const flight::SequenceView<flight::String> view(source);
+  const auto viewed = view.map(flight::to_number);
+  check(view.identity() == source.identity() && viewed.size() == converted.size() &&
+            viewed[0] == 5.0 && std::signbit(viewed[1]) && std::isnan(viewed[3]),
+        "a retained sequence view accepts Number with the same conversion semantics");
+
+  const auto booleans = flight::Array<bool>{true, false}.map(flight::to_number);
+  const auto numbers = flight::Array<double>{-0.0, INFINITY, NAN}.map(flight::to_number);
+  check(booleans[0] == 1.0 && booleans[1] == 0.0 && std::signbit(numbers[0]) &&
+            numbers[1] == INFINITY && std::isnan(numbers[2]),
+        "first-class Number preserves boolean conversion and numeric special values");
+  const flight::Function<double(flight::String)> callback = flight::to_number;
+  check(callback(flight::String("0x10")) == 16.0 && flight::to_number("2") == 2.0 &&
+            flight::to_number(std::string_view("3")) == 3.0,
+        "Number remains usable through an emitted callable and direct string overloads");
+}
+
 void test_string_search() {
   const auto text = flight::String::from_utf8("a b");
   check(text.search(flight::RegExp(flight::String::from_utf8("\\s"), flight::String::from_utf8(""))) == 1.0,
@@ -4059,6 +4086,7 @@ int main() {
   test_any_optional_shape();
   test_optional_variant_get_if();
   test_sequence_view_map();
+  test_number_callback();
   test_string_search();
   test_array_buffer_like();
   test_array_like_views();
