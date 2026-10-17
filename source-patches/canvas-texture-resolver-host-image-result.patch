@@ -1,13 +1,14 @@
 diff --git a/packages/scene2d-canvas/src/canvasTextureResolver.ts b/packages/scene2d-canvas/src/canvasTextureResolver.ts
 --- a/packages/scene2d-canvas/src/canvasTextureResolver.ts
 +++ b/packages/scene2d-canvas/src/canvasTextureResolver.ts
-@@ -1,5 +1,6 @@
- import { allocateEntity, finishEntity } from '@flighthq/entity/contract';
- import { getRenderStateRuntime } from '@flighthq/render/contract';
+@@ -6,6 +6,7 @@ import type {
+   CanvasTextureResolvers,
+   EntityConstruction,
+   HostCanvasCapability,
 +  HostImageSource,
- import type {
-   CanvasSurface,
-   CanvasTextureResolver,
+   RenderState,
+   Texture,
+   TextureSourceKind,
 @@ -89,7 +90,7 @@ export function registerCanvasTextureResolver(
  export function resolveCanvasTexture(
    resolvers: CanvasTextureResolvers,

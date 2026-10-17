@@ -4536,7 +4536,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency ./canvasTextureResolver.ts was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
+      "reason": "dependency @flighthq/image/contract was refused for @flighthq/image/packages/image/src/imageResourceFrom.ts",
       "stage": "dependency"
     },
     {
@@ -4575,7 +4575,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/canvasFillPattern.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency ./canvasTextureResolver.ts was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
+      "reason": "dependency ./canvasTextureWindowSource.ts was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureWindowSource.ts",
       "stage": "dependency"
     },
     {
@@ -4788,11 +4788,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
+      "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/canvasTextureResolver.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts: runtime external symbol binding plan is incomplete (missing: [value], HostImageSource[type], HostImageSource[value])",
-      "stage": "emission"
+      "reason": "dependency ./canvasRenderSurface.ts was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderSurface.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -4800,7 +4800,7 @@
       "line": 12,
       "module": "packages/scene2d-canvas/src/canvasTextureWindowSource.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureWindowSource.ts: contextual union value type HostImageSource is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureWindowSource.ts: C++ runtime contract maps distinct union domains to one carrier without a discriminator or checked projection (HTMLImageElement | HTMLVideoElement | ImageBitmap | OffscreenCanvas | SVGImageElement | VideoFrame -> flight::host_sdl::ImageSource); give the domains distinguishable key, element, or member types so each reaches a carrier of its own -- a union of two declarations that differ only in name is one carrier whatever the emitter does -- or provide that runtime contract",
       "stage": "emission"
     },
     {

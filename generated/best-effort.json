@@ -24225,7 +24225,6 @@
       "status": "dependency-incomplete"
     },
     {
-      "classification": "target-runtime",
       "consumers": [
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasBitmapText.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts",
@@ -24242,25 +24241,16 @@
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/contract.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/index.ts"
       ],
-      "declarationFingerprints": [
-        "sha256:2935d9667fe1a9923b27d50787afa198f62ea0f0b45d6bc682ae0a570df85342",
-        "sha256:4766e455f672ea3a3abdb5efc0c3a7d0a218131541845cae0b4a790de518e45d",
-        "sha256:556a2e271da03f1219dee7f771ec52f3b1a86186f8f4d21ea618ac778f6ef085",
-        "sha256:8bd6b7a1326cdd97d1654565a77c65d33ce816cfb6bb7853547ab0ef838e1203",
-        "sha256:b30aa23bd0e154fc4052a93bdd525387984e8488621f5d51c6cda87b86c67c2a",
-        "sha256:b7c8e1d46b4b10fdf625396c4b49d7f0ed58be55458f595661413a4aeba38567",
-        "sha256:c22807dba690f3f6a0b4887a106dfa4a3f2e4a57799bf64f1a84fa4114293385",
-        "sha256:df73b123c1b9302c0a0e1d77f85ca929627c142f71957500a849ade9e782719c",
-        "sha256:eb1bcdf808f6ab00dce6f83fedd8c260f243add70339eb84eedbf6ca3d15f0fb"
-      ],
       "module": {
         "name": "CanvasTextureResolver",
         "packageName": "@flighthq/scene2d-canvas",
         "source": "packages/scene2d-canvas/src/canvasTextureResolver.ts"
       },
       "path": "flight/scene2d_canvas/canvas_texture_resolver.hpp",
-      "rule": "cpp-runtime-external-symbol-binding-incomplete",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderSurface.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [
@@ -24279,7 +24269,7 @@
       "status": "emitted"
     },
     {
-      "classification": "compiler-restriction",
+      "classification": "target-runtime",
       "consumers": [
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasFillPattern.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasScale9Sprite.ts",
@@ -24296,7 +24286,7 @@
         "source": "packages/scene2d-canvas/src/canvasTextureWindowSource.ts"
       },
       "path": "flight/scene2d_canvas/canvas_texture_window_source.hpp",
-      "rule": "cpp-contextual-union-value-type-unrepresented",
+      "rule": "cpp-union-runtime-domains-erased",
       "status": "refused-placeholder"
     },
     {

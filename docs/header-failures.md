@@ -28,7 +28,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | # | cluster | headers | lanes | fix route | cause |
 | --- | --- | --- | --- | --- | --- |
 | 1 | `call-has-no-matching-9c08d665` | 117 | WGPU | compiler | bound WebGPU descriptor object literals are emitted as untyped source-order braced initializers with anonymous nested owners *(request filed)* |
-| 2 | `missing-member-b1a6d5cf` | 34 | 2D | compiler | scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined *(request filed)* |
+| 2 | `missing-member-b1a6d5cf` | 38 | 2D | compiler | scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined *(request filed)* |
 | 3 | `in-operator-not-lowered-b1eae4af` | 31 | 2D, GL, PLAT, WGPU | compiler | the TypeScript `in` operator is emitted verbatim as C++ `in` at 4 root headers *(existing request extended)* |
 | 4 | `undeclared-identifier-993e82f1` | 29 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(request filed; builder4/G2)* |
 | 5 | `call-has-no-matching-3882b3e9` | 27 | 2D, 3D, TEXT | compiler | bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier *(request filed; builder4/G2)* |
@@ -87,7 +87,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 58 | `call-has-no-matching-56e47749` | 3 | GL | compiler | the emitted call to `compute_node_root_local_bounds_rectangle` matches no declared overload |
 | 59 | `invalid-operands-98cd7094` | 3 | 2D | [compiler request](compiler-requests/local-handler-callable-identity.md) | a nullable registry callback is compared with the module function by identity, but the emitted `std::function` adapter erased it |
 | 60 | `missing-member-95ead583` | 3 | 3D | [compiler request](compiler-requests/cube-texture-width-and-completeness.md#g2-gl-environment-face-revisions-use-the-same-selected-owner-read) | nullable cube-face source retains seven real owners, but version is read on the variant itself |
-| 61 | `missing-member-b22d5c52` | 3 | 2D | declaration repair (applied) | refused callee `resolve_canvas_texture_window_source` declared across modules; G2: 0 pass, 3 to `missing-member-f497840c`; function remains unlinkable |
+| 61 | `missing-member-b22d5c52` | 3 | 2D | declaration repair (applied) | refused callee `resolve_canvas_texture_window_source` declared across modules; G2: 0 pass; follow-on `missing-member-f497840c` fixed by correcting a source patch; all 3 now in `missing-member-b1a6d5cf`; function remains unlinkable |
 | 62 | `missing-member-c36ea2d4` | 3 | 2D | binding | the web renderer needs shared CSS style state; SDL exposes copied shell values with no opacity field *(request filed)* |
 | 63 | `no-viable-conversion-4ca7626f` | 3 | ANIM | compiler | a value is passed where its declared type cannot receive it |
 | 64 | `no-viable-conversion-b3064463` | 3 | GL | compiler | a value is passed where its declared type cannot receive it |
@@ -291,7 +291,7 @@ deleting or stubbing behaviour.
 - example: `no matching member function for call to 'begin_render_pass'`
 - compiler request: `docs/compiler-requests/external-descriptor-literal-construction.md`
 
-### 2. `missing-member-b1a6d5cf` — 34 header(s)
+### 2. `missing-member-b1a6d5cf` — 38 header(s) (34 at G1; 4 joined in G2 from cluster 61)
 
 - cause: scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined
 - subject: `get_canvas_render_state_runtime`
@@ -1372,6 +1372,48 @@ first at `canvas_fill_pattern.hpp:148` on `acquire_canvas_texture_resolver_surfa
 (`cpp-runtime-external-symbol-binding-incomplete`: `HostImageSource` has no type or value binding), and two
 sibling resolver modules are refused as dependencies of it. The missing `HostImageSource` external binding
 is therefore the shared root of this family. It is a binding-route fix, and broader than this cluster.
+
+#### Follow-on `missing-member-f497840c`: not a binding gap, a misplaced patch line
+
+Bounded investigation showed the `HostImageSource` refusal is not a missing binding.
+- `HostImageSource` is Flight's alias of `CanvasImageSource`. The SDL image binding already maps
+  `CanvasImageSource` to `flight::host_sdl::ImageSource`, and the types tree emits
+  `using HostImageSource = flight::host_sdl::ImageSource;`.
+- `canvasTextureResolver.ts` is the only module in the inventory that asks for `HostImageSource` as an
+  external symbol.
+- The cause is `source-patches/canvas-texture-resolver-host-image-result.patch`. Its first hunk was written
+  against the file after `canvas-texture-resolver-exact-2d-source.patch` deletes the texture import, and it
+  placed `  HostImageSource,` one line early, before `import type {`. Applied in manifest order, the
+  pinned checkout therefore compiled a stray `HostImageSource,` expression statement. That statement is
+  exactly the refusal's `missing: [value], HostImageSource[type], HostImageSource[value]`. Applying the
+  patches in a scratch tree reproduced the line, and it was also visible in the live patched checkout.
+
+G2 corrects the hunk so `HostImageSource` sits inside the type import, between `HostCanvasCapability` and
+`RenderState`. A type import is erased, so the JavaScript is unchanged, and the patch's stated intent is
+unchanged too. Every scene2d-canvas and types patch still applies cleanly in manifest order.
+
+Scoped `pkg:generate @flighthq/scene2d-canvas` then emits `canvasTextureResolver.ts` in full: 33/51
+modules instead of 32, 18 refusals instead of 19, and no NOT GENERATED marker in
+`canvas_texture_resolver.hpp`. Its `resolve_canvas_texture` emits as
+`std::optional<flight::types::HostImageSource>(flight::Ref<CanvasTextureResolvers>, flight::types::Texture)`,
+the same carrier the window-source declaration above already uses.
+- `resolveCanvasTextureWindowSource` stays refused, now for an honest reason
+  (`cpp-union-runtime-domains-erased`: six DOM image domains share one `ImageSource` carrier). The
+  `calledFrom` declaration still applies, which proves the repair under a normal package-scoped
+  generation as well as through the applier.
+- `flight/sdk/structural_members.hpp` gains the `registryMiss` cells the newly emitted module reads.
+- `scene_2d_canvas_pipeline.hpp` takes the scoped run's closure-dependent anonymous-struct ordering. That
+  struct is referenced only inside its own header, and no override shadows scene2d-canvas.
+
+**G2: 0/3 compile, 3 fail.** All three get past `acquire_canvas_texture_resolver_surface`, which now exists.
+They fail first in the newly included `canvas_render_state.hpp:69` on `get_canvas_render_state_runtime`,
+the existing `missing-member-b1a6d5cf` (re-export before declaration, which already has a compiler request).
+They move there, and that cluster's count goes from 34 to 38.
+
+The fourth row is `canvas_texture_resolver.hpp` itself. It was recorded as passing only because its
+best-effort placeholder carried no code. It now emits for real, includes `canvas_render_state.hpp` and fails
+there, so it moves from pass to fail (`previousStatus: pass`). An include walk finds no passing header
+that reaches it, so no other row regresses.
 
 ### 62. `missing-member-c36ea2d4` — 3 header(s)
 

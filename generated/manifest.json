@@ -1663,6 +1663,7 @@
         "flight/scene2d_canvas/canvas_text_input.hpp",
         "flight/scene2d_canvas/canvas_text_label.hpp",
         "flight/scene2d_canvas/canvas_texture_render_target.hpp",
+        "flight/scene2d_canvas/canvas_texture_resolver.hpp",
         "flight/scene2d_canvas/canvas_texture_window_source.hpp",
         "flight/scene2d_canvas/canvas_tilemap.hpp",
         "flight/scene2d_canvas/canvas_transform.hpp",
@@ -4681,7 +4682,7 @@
     },
     {
       "dependency": "flight",
-      "digest": "a707c5b909a2f7a1a39d11148eca1e43c111602974eef0ae7d66a90fd9da4516",
+      "digest": "a9aba250ea8c4c6ce86a015eb617932b7649ee788e66e9dee4d677caaf2c601b",
       "id": "canvas-texture-resolver-host-image-result",
       "module": "packages/types/src/CanvasTextureResolver.ts and packages/scene2d-canvas/src/canvasTextureResolver.ts",
       "package": "@flighthq/scene2d-canvas"
@@ -5161,6 +5162,7 @@
       "flight/render_wgpu/wgpu_render_state.hpp",
       "flight/render_wgpu/wgpu_shader.hpp",
       "flight/scene2d_canvas/canvas_rich_text.hpp",
+      "flight/scene2d_canvas/canvas_texture_resolver.hpp",
       "flight/scene2d_formats/lottie_document.hpp",
       "flight/scene2d_formats/lottie_text_layer.hpp",
       "flight/scene2d_gl/gl_rich_text.hpp",
@@ -6072,10 +6074,10 @@
     {
       "cppIncludePrefix": "flight/scene2d_canvas",
       "cppNamespace": "flight::scene2d_canvas",
-      "emittedModules": 32,
+      "emittedModules": 33,
       "environment": "web",
       "package": "@flighthq/scene2d-canvas",
-      "refusedModules": 19,
+      "refusedModules": 18,
       "sourceModules": 51
     },
     {
@@ -6544,8 +6546,8 @@
   },
   "summary": {
     "packages": 153,
-    "emittedModules": 2563,
-    "refusedModules": 588,
+    "emittedModules": 2564,
+    "refusedModules": 587,
     "sourceModules": 3151
   }
 }

@@ -1813,6 +1813,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("registrars") && requires { object.registrars; }) return (object.registrars);
   else if constexpr (Key::name.view() == std::string_view("registries") && requires { object.registries; }) return (object.registries);
   else if constexpr (Key::name.view() == std::string_view("registry") && requires { object.registry; }) return (object.registry);
+  else if constexpr (Key::name.view() == std::string_view("registryMiss") && requires { object.registry_miss; }) return (object.registry_miss);
   else if constexpr (Key::name.view() == std::string_view("relatedId") && requires { object.related_id; }) return (object.related_id);
   else if constexpr (Key::name.view() == std::string_view("relative") && requires { object.relative; }) return (object.relative);
   else if constexpr (Key::name.view() == std::string_view("relaunch") && requires { object.relaunch; }) return (object.relaunch);
@@ -4327,6 +4328,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("registrars") && requires(Object& object) { object.registrars; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().registrars)>>{};
   else if constexpr (Key::name.view() == std::string_view("registries") && requires(Object& object) { object.registries; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().registries)>>{};
   else if constexpr (Key::name.view() == std::string_view("registry") && requires(Object& object) { object.registry; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().registry)>>{};
+  else if constexpr (Key::name.view() == std::string_view("registryMiss") && requires(Object& object) { object.registry_miss; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().registry_miss)>>{};
   else if constexpr (Key::name.view() == std::string_view("relatedId") && requires(Object& object) { object.related_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().related_id)>>{};
   else if constexpr (Key::name.view() == std::string_view("relative") && requires(Object& object) { object.relative; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().relative)>>{};
   else if constexpr (Key::name.view() == std::string_view("relaunch") && requires(Object& object) { object.relaunch; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().relaunch)>>{};
@@ -6844,6 +6846,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->registrars; }) owner.bind_named("registrars", [object]() -> decltype(auto) { return (object->registrars); });
   if constexpr (requires { object->registries; }) owner.bind_named("registries", [object]() -> decltype(auto) { return (object->registries); });
   if constexpr (requires { object->registry; }) owner.bind_named("registry", [object]() -> decltype(auto) { return (object->registry); });
+  if constexpr (requires { object->registry_miss; }) owner.bind_named("registryMiss", [object]() -> decltype(auto) { return (object->registry_miss); });
   if constexpr (requires { object->related_id; }) owner.bind_named("relatedId", [object]() -> decltype(auto) { return (object->related_id); });
   if constexpr (requires { object->relative; }) owner.bind_named("relative", [object]() -> decltype(auto) { return (object->relative); });
   if constexpr (requires { object->relaunch; }) owner.bind_named("relaunch", [object]() -> decltype(auto) { return (object->relaunch); });
@@ -9395,6 +9398,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(registrars)
   FLIGHT_SDK_ROW_WIDENS(registries)
   FLIGHT_SDK_ROW_WIDENS(registry)
+  FLIGHT_SDK_ROW_WIDENS(registry_miss)
   FLIGHT_SDK_ROW_WIDENS(related_id)
   FLIGHT_SDK_ROW_WIDENS(relative)
   FLIGHT_SDK_ROW_WIDENS(relaunch)

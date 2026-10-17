@@ -43,7 +43,7 @@ inline flight::Ref<flight::types::Vector2> texture_window_view_size = flight::ma
 std::optional<flight::types::HostImageSource> resolve_canvas_texture_window_source(flight::Ref<flight::types::CanvasTextureResolvers> resolvers, flight::types::Texture texture);
 
 // NOT GENERATED: function resolveCanvasTextureWindowSource -- source line 12
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+// refusal: cpp-union-runtime-domains-erased [target-runtime]
 //
 // The source it stood for:
 //   export function resolveCanvasTextureWindowSource(
@@ -129,7 +129,11 @@ std::optional<flight::types::HostImageSource> resolve_canvas_texture_window_sour
 //     return element;
 //   }
 //   
-// cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureWindowSource.ts:
-// contextual union value type HostImageSource is not a represented runtime domain
+// cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureWindowSource.ts: C++
+// runtime contract maps distinct union domains to one carrier without a discriminator or checked projection
+// (HTMLImageElement | HTMLVideoElement | ImageBitmap | OffscreenCanvas | SVGImageElement | VideoFrame ->
+// flight::host_sdl::ImageSource); give the domains distinguishable key, element, or member types so each reaches
+// a carrier of its own -- a union of two declarations that differ only in name is one carrier whatever the
+// emitter does -- or provide that runtime contract
 
 } // namespace flight::scene2d_canvas
