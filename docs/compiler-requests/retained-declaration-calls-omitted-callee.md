@@ -316,3 +316,9 @@ then fail to link on that exact symbol. Both checks passed with Clang 22.1.8: th
 also ran successfully, and the called program stopped at the expected undefined symbol during linking.
 Header compilation is not evidence that authored bounds can execute. Only the eight assigned headers
 are rechecked; any later diagnostic stays a failure.
+
+The completed eight-header G2 recheck is **1 pass, 7 fail, 0 unattempted** at `-j1`.
+`swf_node.hpp` passes; five rows advance to the existing
+[class-instance/interface request](class-instance-as-implemented-interface.md), and two to the
+native `copy_shape_commands` readonly source-parameter mismatch. Those seven rows remain failures
+in the [header worklist](../header-failures.md); none is promoted for merely losing its first diagnostic.

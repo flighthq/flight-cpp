@@ -43,7 +43,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 14 | `no-viable-conversion-dfea2d92` | 9 | 3D | compiler | a value is passed where its declared type cannot receive it |
 | 15 | `variant-cast-ccfedad4` | 9 | 3D | compiler | a retained readonly program row is reconstructed through a writable row before a readonly draw helper *(existing request extended)* |
 | 16 | `call-has-no-matching-b569e92e` | 8 | 3D, ANIM | compiler | the emitted call to `init_joint_base` matches no declared overload |
-| 17 | `undeclared-identifier-294e632e` | 8 | ANIM | runtime | the emitted code names `apply_swf_authored_bounds`, which nothing declares |
+| 17 | `undeclared-identifier-294e632e` | 8 | ANIM | declaration repair (applied) | omitted callee declaration supplied; G2: 1 pass, 7 fail at later diagnostics; function remains unlinkable |
 | 18 | `undeclared-identifier-3e3cccce` | 8 | GL | runtime | the emitted code names `blit_offset_shaders`, which nothing declares |
 | 19 | `invalid-operands-4b19651b` | 7 | 2D, ANIM | compiler | a guarded `unknown` (typeof record member, or `Array.isArray` length) is still read as `flight::Any` before a numeric comparison *(request filed)* |
 | 20 | `missing-member-fd48c0bb` | 7 | 3D | [compiler request](compiler-requests/narrowed-imported-union-into-declared-parameter.md) | the emitted code reads a member the target does not declare (`collide_physics_3d_collider_shapes`) |
@@ -59,7 +59,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 30 | `undeclared-identifier-f5e3440f` | 6 | 3D, CORE | [compiler request](compiler-requests/retained-declaration-calls-omitted-callee.md) | createResourceLoader calls initializeResourceLoader after the compiler refuses the initializer |
 | 31 | `call-has-no-matching-5a045ef4` | 5 | ANIM | compiler | the emitted call to `read_swf_shape_edge_record` matches no declared overload |
 | 32 | `call-has-no-matching-b897f03f` | 5 | 3D | compiler | the emitted call to `get_node_signals` matches no declared overload |
-| 33 | `call-has-no-matching-dd66c064` | 5 | ANIM | compiler | the emitted call to a function matches no declared overload |
+| 33 | `call-has-no-matching-dd66c064` | 10 | ANIM | compiler | an emitted SwfReader class instance cannot be passed as its structural SwfTagReader interface to the parse callback *(existing request)* |
 | 34 | `compiler-crash-aba5e9ec` | 5 | 3D | none (sweep resource limit; passes serially) | the -j8 sweep ran out of room (retried serially) |
 | 35 | `invalid-operands-6d9a155d` | 5 | 2D | runtime | an operator is applied to operand types it does not accept |
 | 36 | `missing-member-5e9e8a2c` | 5 | PLAT | runtime | the emitted code reads a member the target does not declare (`hit_test_graph_local_bounds`) |
@@ -520,14 +520,45 @@ G2's scoped-only-when-changed rule. Only these owned rows gained request links a
 - example: `no matching function for call to 'init_joint_base'`
 - compiler request: [entity-construction-view-passed-to-owner-parameter.md](compiler-requests/entity-construction-view-passed-to-owner-parameter.md) (filed; sites still failing, status unchanged)
 
-### 17. `undeclared-identifier-294e632e` — 8 header(s)
+### 17. `undeclared-identifier-294e632e` — 8 G1 header(s), declaration repaired
 
-- cause: the emitted code names `apply_swf_authored_bounds`, which nothing declares
-- subject: `apply_swf_authored_bounds`
+- original cause: retained code calls `apply_swf_authored_bounds` after its function body was refused
 - lanes: ANIM
-- fix route: runtime
-- first failure at: `flight/swf/swf_node.hpp:112`
-- example: `use of undeclared identifier 'apply_swf_authored_bounds'`
+- fix route: declaration-only emission repair, with implementation debt still open
+- compiler request: [retained-declaration-calls-omitted-callee.md](compiler-requests/retained-declaration-calls-omitted-callee.md)
+
+The exact refusal marker, retained call and absence of any definition justify
+`swf-declare-refused-authored-bounds`. It declares the emitted `Node2D` and optional readonly
+`SwfTagRectangle` carriers before the caller. No function body or replacement node-data owner is
+supplied. The underlying authored-bounds reader and writer still need the owner-recovery contract
+in [assertion-to-undeclared-row-member.md](compiler-requests/assertion-to-undeclared-row-member.md).
+
+G2: **1/8 compiles, 7 fail, 0 unattempted**, all attempted at `-j1` with Clang 22.1.8,
+compiler `806d257` / Flight `a627849`. `flight/swf/swf_node.hpp` passes. Including that actual
+repaired header without calling the function also compiles, links and runs. Calling
+`apply_swf_authored_bounds(Node2D{}, std::nullopt)` compiles to an object, then fails linking on
+that exact undefined symbol. Authored bounds remains unavailable at runtime.
+
+| follow-on cluster | owned headers | first failure | route / cause |
+| --- | --- | --- | --- |
+| `call-has-no-matching-dd66c064` | 5 | `flight/swf/swf_timeline_parse.hpp:122` | compiler: SwfReader class instance has no owner-preserving SwfTagReader interface carrier; [existing request](compiler-requests/class-instance-as-implemented-interface.md) |
+| `no-viable-conversion-3cfd059c` | 2 | `flight/swf/swf_define_shape_handler.hpp:106` | binding: the native copy_shape_commands override requires Ref<Shape> for a source Readonly<Shape> parameter |
+
+The five callback failures are `swf_content_capabilities.hpp`, `swf_document.hpp`, `swf_header.hpp`,
+`swf_requirements.hpp` and `swf_tag_census.hpp`, all under `flight/swf/`. The source supplies all
+five parse callback arguments; this is a reader class/interface conversion gap, not an arity error.
+They join the existing five-row callback cluster without recompiling or changing those other rows.
+
+The two binding failures are `flight/swf/swf_define_shape_handler.hpp` and
+`flight/swf/swf_shape_tag_family.hpp`. Their retained caller passes a readonly structural Shape
+view. `overrides/include/flight/shape/shape.hpp:65` instead takes a nominal `Ref<Shape>` as its
+source, although `packages/shape/src/shape.ts:32` declares `Readonly<Shape>`. Aligning that
+signature while preserving the same source owner is separate follow-on work; no copied Shape,
+writable cast or helper-body substitution was introduced here.
+
+The opening sweep totals and this group's rank remain the historical G1 snapshot. Only these
+eight header rows, the resolved failure cluster and their replacement cause metadata changed;
+`previousCluster` retains the G1 group. A passing header does not make the refused function callable.
 
 ### 18. `undeclared-identifier-3e3cccce` — 8 header(s)
 
@@ -680,13 +711,18 @@ G2's scoped-only-when-changed rule. Only these owned rows gained request links a
 - first failure at: `flight/scene3d/billboard.hpp:88`
 - example: `no matching function for call to 'get_node_signals'`
 
-### 33. `call-has-no-matching-dd66c064` — 5 header(s)
+### 33. `call-has-no-matching-dd66c064` — 10 current header(s), 5 in G1
 
-- cause: the emitted call to a function matches no declared overload
+- cause: an emitted SwfReader class instance cannot be passed as its structural SwfTagReader interface to the parse callback
 - lanes: ANIM
 - fix route: compiler
 - first failure at: `flight/swf/swf_timeline_parse.hpp:122`
 - example: `no matching function for call to object of type 'const function<bool (shared_ptr<SwfTagReader>, double, shared_ptr<SwfTagParseState>, shared_ptr<SwfTagTimelineState>, optional<Array<shared_ptr<ImportDiagnostic>>>)>'`
+- compiler request: [class-instance-as-implemented-interface.md](compiler-requests/class-instance-as-implemented-interface.md)
+
+Five owned SWF rows joined this existing cluster after the declaration repair in section 17.
+The original five G1 rows remain unchanged and were not recompiled. The same mutable reader
+instance must supply interface reads and writes; copying it into an interface owner would change behavior.
 
 ### 34. `compiler-crash-aba5e9ec` — 5 header(s)
 
