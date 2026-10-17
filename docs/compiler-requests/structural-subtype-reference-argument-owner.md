@@ -83,3 +83,26 @@ with the same EasingFunction and all other optional TweenOptions fields absent. 
 constructing a default owner for absence, copying the original options or granting writable authority
 is not that handoff. The runtime's rejection is correct; no permissive optional-to-row constructor,
 source patch or override is carried. The independent manager/target union-order failure remains.
+
+## G2 SWF shape edge reader: a writable structural parameter
+
+At Flight `a627849` / compiler `806d257`, `packages/swf/src/swfShape.ts` calls
+`readSwfShapeEdgeRecord(reader, state)` at source line 585. Here `state` is the private
+`SwfShapeState` (`fill0`, `fill0Segment`, `fill1`, ... plus `x` and `y`), and the callee parameter is the
+anonymous `pen: { x: number; y: number }`. The other caller, at line 318, passes a real pen literal.
+
+The emitted call at `flight/swf/swf_shape.hpp:241` passes `Ref<SwfShapeState>` to
+`Ref<x_y_8365950bd60f783f>` (GCC 15.2, one worker: `could not convert 'state' from
+'shared_ptr<flight::swf::SwfShapeState>' to 'shared_ptr<flight::types::x_y_8365950bd60f783f>'`; Clang
+reports it as no matching `read_swf_shape_edge_record`).
+
+This case is stricter than the readonly one above. The callee **writes** the pen: `pen.x +=`, `pen.y +=`,
+`pen.x = controlX + ...`. Those writes must advance the caller's own `SwfShapeState` position, because the
+next edge record and the segment builder read `state.x` and `state.y`. A copied `{ x, y }` record would
+drop every update. So the required view must be a **writable** alias over the original owner's `x` and
+`y` cells. Even the scalar-copy workaround that is valid for a readonly parameter is not valid here.
+
+Four more SWF headers reach `swf_shape.hpp` through their includes: `swf_text`, `swf_font_handler`,
+`swf_static_text_handler` and `swf_font_tag_family`. They were not recompiled. The later `swf_shape.hpp`
+errors (segment array carrier at `:540`, record union `index()` at `:588`) were noted but not analysed in
+this unit. Nothing is carried: no copied pen, no write-back shim, and no narrowed shape domain.

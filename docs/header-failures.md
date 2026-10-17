@@ -57,7 +57,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 28 | `undeclared-identifier-6e587559` | 6 | ANIM, TEXT | runtime | `equals_markup_format` declared by repair; G2 recheck: 0 pass, 6 fail at the next refused helper `parse_markup_attributes` |
 | 29 | `undeclared-identifier-a74215ca` | 6 | 2D | compiler | a generic call's object-literal argument is built as `ShapeBoundsCommand<K>`, naming the callee's type parameter *(request filed)* |
 | 30 | `undeclared-identifier-f5e3440f` | 6 | 3D, CORE | [compiler request](compiler-requests/retained-declaration-calls-omitted-callee.md) | createResourceLoader calls initializeResourceLoader after the compiler refuses the initializer |
-| 31 | `call-has-no-matching-5a045ef4` | 5 | ANIM | compiler | the emitted call to `read_swf_shape_edge_record` matches no declared overload |
+| 31 | `call-has-no-matching-5a045ef4` | 5 | ANIM | compiler *(existing request)* | `SwfShapeState` passed to the anonymous writable `pen: { x; y }` parameter without an identity-preserving view |
 | 32 | `call-has-no-matching-b897f03f` | 5 | 3D | [compiler request](compiler-requests/heritage-argument-generic-deduction.md) | the `getNodeSignals` traits argument falls back to the default `Ref<NodeTraits>` instead of the inferred `Node3DTraits` |
 | 33 | `call-has-no-matching-dd66c064` | 10 | ANIM | compiler | an emitted SwfReader class instance cannot be passed as its structural SwfTagReader interface to the parse callback *(existing request)* |
 | 34 | `compiler-crash-aba5e9ec` | 5 | 3D | none (sweep resource limit; passes serially) | the -j8 sweep ran out of room (retried serially) |
@@ -876,14 +876,17 @@ This row now links the existing request; no source or generated change was made,
 - The required compile prerequisite for a negative-link check therefore failed. The candidate was rejected; no declaration repair, generated header, runtime, source patch, binding, or override is carried. The measured follow-on is recorded in the existing [flattened-interface owner request](compiler-requests/flattened-interface-refinement-identity.md). A native cast, copied public loader, dummy loader, or error fallback would not preserve the original owner and semantics. Merely finishing the construction still leaves unrelated `ResourceLoaderInternal` and `ResourceLoader` owner structs.
 - Numbers for the delivered tree: **0/6 pass, 6 fail**, retained from G1; the stock missing-name diagnostics remain unchanged and all six rows now link the existing retained-callee request. Only the changed temporary root candidate was compiled; no full-cluster, unchanged-stock, or global rerun was performed. The rejected candidate's new diagnostic remains a failure, not a header promotion. Loader initialization and behavior remain unsupplied.
 
-### 31. `call-has-no-matching-5a045ef4` — 5 header(s)
+### 31. `call-has-no-matching-5a045ef4` — G2 recheck of 5 header(s)
 
-- cause: the emitted call to `read_swf_shape_edge_record` matches no declared overload
+- cause: `readSwfShapeEdgeRecord(reader, state)` passes the private `SwfShapeState` where the callee declares the anonymous `pen: { x: number; y: number }`. The emitted `Ref<SwfShapeState>` does not convert to `Ref<x_y_8365950bd60f783f>`.
 - subject: `read_swf_shape_edge_record`
 - lanes: ANIM
 - fix route: compiler
+- why this route: the callee writes `pen.x` and `pen.y`, and the caller's next record reads `state.x` and `state.y`. So the argument needs a **writable** identity-preserving view, per [structural-subtype-reference-argument-owner](compiler-requests/structural-subtype-reference-argument-owner.md). A copied pen or a write-back shim would lose or reorder those updates.
 - first failure at: `flight/swf/swf_shape.hpp:241`
 - example: `no matching function for call to 'read_swf_shape_edge_record'`
+- Scoped native recheck (GCC 15.2, jobs 1): **1 attempted / 0 pass / 1 fail** at `swf_shape.hpp:241`, which carries the measured location. `swf_text`, `swf_font_handler`, `swf_static_text_handler` and `swf_font_tag_family` reach it through their includes. They were not recompiled, keep their recorded failure, and are given no location. Nothing is carried.
+- compiler request: `docs/compiler-requests/structural-subtype-reference-argument-owner.md`
 
 ### 32. `call-has-no-matching-b897f03f` — 5 header(s)
 
