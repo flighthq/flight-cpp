@@ -185,7 +185,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 156 | `undeclared-identifier-11d6fcbe` | 1 | GL | runtime | the emitted code names `gl_chromatic_aberration_effect_runner`, which nothing declares |
 | 157 | `undeclared-identifier-1462818e` | 1 | 2D | compiler | refused velocity program owner; exact declaration fails unused-header compilation at VIEWPORT method/constant collision *(requests filed)* |
 | 158 | `undeclared-identifier-17cb8386` | 1 | GL | runtime | the emitted code names `gl_bokeh_depth_of_field_effect_runner`, which nothing declares |
-| 159 | `undeclared-identifier-1892fccb` | 1 | PLAT | runtime | the emitted code names `resolve_text_char_index`, which nothing declares |
+| 159 | `undeclared-identifier-1892fccb` | 1 | PLAT | declaration repair (applied) | exact refused text callback declared; G2: 1 pass; registration and character resolution remain unlinkable |
 | 160 | `undeclared-identifier-1a056bbc` | 3 | TEXT | compiler | refused number formatter retained by five wrappers; G2: declaration candidate fails optional literal construction, full option spreads dropped; 0/3 remain failed |
 | 161 | `undeclared-identifier-1d8e072a` | 1 | 2D | compiler | Scale9 draw refuses nullable material owner widening; declaration probe fails native/generic callback conversion *(existing requests extended)* |
 | 162 | `undeclared-identifier-2110ec37` | 1 | WGPU | compiler | WGPU Sprite draw refuses nullable material owner widening; exact declaration compile fails GL-specific Sprite callback carrier *(existing requests extended)* |
@@ -2932,14 +2932,36 @@ old native proof or global sweep was rerun; no renderer behavior gain is claimed
 - first failure at: `flight/effects_gl/gl_bokeh_depth_of_field_effect.hpp:100`
 - example: `use of undeclared identifier 'gl_bokeh_depth_of_field_effect_runner'`
 
-### 159. `undeclared-identifier-1892fccb` — 1 header(s)
+### 159. `undeclared-identifier-1892fccb` — 1 header, resolved by declaration-only repair
 
-- cause: the emitted code names `resolve_text_char_index`, which nothing declares
-- subject: `resolve_text_char_index`
+- original subject: `resolve_text_char_index`
 - lanes: PLAT
-- fix route: runtime
-- first failure at: `flight/interaction/register_text_hit_test.hpp:61`
-- example: `use of undeclared identifier 'resolve_text_char_index'`
+- original failure at: `flight/interaction/register_text_hit_test.hpp:61`
+- fix route: existing `declare-refused-function` repair, `interaction-declare-refused-text-char-index`
+- retained-callback request: [exact declaration and link boundary](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-interaction-text-hit-test-retains-its-refused-callback)
+- body request: [original text/2D owner recovery](compiler-requests/readonly-callback-derived-owner-recovery.md#g2-interaction-text-hit-callbacks-need-the-original-text-and-2d-owners)
+
+The exact refusal marker, two live function-argument uses and absent definition agree. The existing
+repair inserts only `double resolve_text_char_index(flight::types::NodeAny source, double x, double y);`,
+the precise callback slot's actual carrier. It matches exactly one header and is idempotent. Both
+TextLabel and RichText registrations keep their full NodeAny domain; no cross-header witness, engine
+extension, callback adapter, shared TextLabel/GL edit or runtime/source/override change is needed.
+
+Normal exact-pin one-module generation reproduces only the declaration (+2 header lines) and its
+own manifest repair record:1394 lowered modules,0 complete/1 retained partial-refusal,249 patches,
+3 repaired headers; both pins restored clean. The carried header exactly equals the qualified candidate.
+The actual unused header compiles, links and runs with static callback/signature checks. Calling the real
+two-kind registration compiles to an object, then fails to link on **only** the exact missing callback.
+Neither the registration nor the hit-test body runs; no -1/0/character result or native text hit behavior
+is supplied. No eager global registration is mistaken for an explicit-use negative link.
+
+The original owned-header jobs1 check completes **1 attempted / 1 pass / 0 fail / 0 unattempted**.
+The sole row is pass with `previousCluster`, and the active cluster is removed; no other header is
+measured or promoted. The original callback refusal, source/refusal fingerprints, partial marker,
+package/global counts and initialization records remain unchanged. Bounds miss -1, no-layout0,
+original layout-cache/measure/guard effects, world-to-local transform order and exact character-index
+semantics stay obligations of the original owners, not a fake hit or copied graph. Historical/G1 totals,
+foreign compact rows/request sections and applicability policy are preserved.
 
 ### 160. `undeclared-identifier-1a056bbc` — 3 header(s)
 
