@@ -32,7 +32,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 3 | `in-operator-not-lowered-b1eae4af` | 32 | 2D, 3D, GL, PLAT, WGPU | compiler | the TypeScript `in` operator is emitted verbatim; G2 particle3D joins this existing cause *(existing request extended)* |
 | 4 | `undeclared-identifier-993e82f1` | 29 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(request filed; builder4/G2)* |
 | 5 | `call-has-no-matching-3882b3e9` | 28 | 2D, 3D, TEXT | compiler | bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier *(request filed; builder4/G2)* |
-| 6 | `other-52e846a6` | 18 | ANIM | compiler | a value_type is combined with a three-alternative variant where the declared slot expects one alternative |
+| 6 | `other-52e846a6` | 18 | ANIM | compiler *(existing request)* | a nullable attachment array element is not lifted into the reference/null/undefined slot carrier |
 | 7 | `call-has-no-matching-47410fe2` | 16 | 2D, 3D | runtime (fixed) | Number is now a callable conversion object; G2 recheck: 2 pass, 14 fail at later compiler diagnostics |
 | 8 | `other-40da43f7` | 16 | 2D, 3D, ANIM | compiler | an optional<Record<...>> is initialised from a shape that is not its declared storage |
 | 9 | `static-cast-assertion-9674a66c` | 15 | 2D | compiler | a TypeScript `as` on `JSON.parse` is emitted as a `static_cast` from `JsonValue` to an unrelated `Ref<T>` *(request filed)* |
@@ -410,10 +410,10 @@ unowned rows/clusters remain unchanged; no SDK behavior or new options overload 
 
 ### 6. `other-52e846a6` — 18 header(s)
 
-- cause: a value_type is combined with a three-alternative variant where the declared slot expects one alternative
+- cause: a nullable attachment array element (reference or null) is not lifted into the slot carrier that also admits undefined, so the conditional pairs `std::optional<Ref<Attachment2D>>` with `variant<Ref<Attachment2D>, Null, Undefined>`
 - lanes: ANIM
 - fix route: compiler
-- why this route: a value_type is combined with a three-alternative variant where the declared slot expects one alternative
+- why this route: the conditional and assignment operate on standard-library carriers. A runtime helper, binding or declaration repair cannot add the conversion, and the cheap branch rewrite still needs it. An override would copy a partially refused module. Null and undefined must stay distinct.
 - first failure at: `flight/skeleton2d/skeleton2d_animation_target.hpp:217`
 - example: `incompatible operand types ('value_type' and 'variant<Ref<Attachment2D>, Null, Undefined>' )`
 
@@ -421,6 +421,8 @@ unowned rows/clusters remain unchanged; no SDK behavior or new options overload 
 - Root: a nullable array element is not lifted into the slot's distinct reference/null/undefined carrier.
 - Compiler request: [nullable array element into an optional-nullable slot](compiler-requests/nullable-array-element-into-dual-sentinel-slot.md).
 - The cheap branch-assignment source rewrite still emits an optional directly into the variant. No source patch, runtime change, repair or override is carried; the cluster remains open.
+- G2 link pass: the cluster entry now carries this request as its primary `compilerRequest` (the 18 rows already did), and each row records the measured site `skeleton2d_animation_target.hpp:217`. The measurement above was Clang 22.1.8 at `-j1`. No C++ changed, so nothing was recompiled.
+- compiler request: `docs/compiler-requests/nullable-array-element-into-dual-sentinel-slot.md`
 
 ### 7. `call-has-no-matching-47410fe2` — G2 recheck of 16 headers
 
