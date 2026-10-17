@@ -84,7 +84,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 55 | `undeclared-identifier-862d162a` | 4 | 3D | [compiler request](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-gltf-animations-a-declaration-fails-the-unused-header-link-prerequisite) | the refused animation builder is still called by the global handler; a declaration fails the unused-header link prerequisite |
 | 56 | `undeclared-identifier-f2b46b01` | 4 | 3D | declaration repairs (applied) | refused standard/unlit callback declarations supplied; G2: 1 pass, 3 deeper compiler failures; callbacks remain unlinkable |
 | 57 | `call-has-no-matching-3b2f72dd` | 3 | PLAT | compiler | the emitted call to `is_optional_number` matches no declared overload |
-| 58 | `call-has-no-matching-56e47749` | 3 | GL | compiler | the emitted call to `compute_node_root_local_bounds_rectangle` matches no declared overload |
+| 58 | `call-has-no-matching-56e47749` | 3 | GL | compiler | a `Node2D` passed to a `Spatial2DNode<Traits>` parameter cannot deduce `Traits` *(existing request linked)* |
 | 59 | `invalid-operands-98cd7094` | 3 | 2D | [compiler request](compiler-requests/local-handler-callable-identity.md) | a nullable registry callback is compared with the module function by identity, but the emitted `std::function` adapter erased it |
 | 60 | `missing-member-95ead583` | 3 | 3D | [compiler request](compiler-requests/cube-texture-width-and-completeness.md#g2-gl-environment-face-revisions-use-the-same-selected-owner-read) | nullable cube-face source retains seven real owners, but version is read on the variant itself |
 | 61 | `missing-member-b22d5c52` | 3 | 2D | declaration repair (applied) | refused callee `resolve_canvas_texture_window_source` declared across modules; G2: 0 pass; follow-on `missing-member-f497840c` fixed by correcting a source patch; all 3 now in `missing-member-b1a6d5cf`; function remains unlinkable |
@@ -1326,6 +1326,17 @@ test port was performed. Header inclusion does not make the refused registration
 - fix route: compiler
 - first failure at: `flight/effects/effect_capture_geometry.hpp:68`
 - example: `no matching function for call to 'compute_node_root_local_bounds_rectangle'`
+- existing request linked: [generic structural parameter given a narrower row](compiler-requests/generic-structural-parameter-given-a-narrower-row.md) (re-measured at `806d257`)
+
+`effectCaptureGeometry.ts` passes its `Node2D` to `computeNodeRootLocalBoundsRectangle<Traits>(out, root:
+Spatial2DNode<Traits>)`. TypeScript infers `Traits = Node2DTraits` and projects the same owner. In the
+emission, `Node2D` is a `RowOf` row and `Spatial2DNode<Traits>` is a `RowMerge` row, so clang reports
+`could not match 'flight::RowMerge' against 'flight::RowOf'` and `Traits` is never deduced. The existing
+request already measured this exact site; it has been re-measured here. There is no faithful local fix: a
+cast, a copied owner or a substitute bounds computation would each break the identity-preserving
+projection. `contract.hpp` and `_internal_index.hpp` fail by including this header.
+
+**G1 status retained: 0/3 pass, 3 fail.** No code changed, so no recompile was run.
 
 ### 59. `invalid-operands-98cd7094` — 3 header(s)
 

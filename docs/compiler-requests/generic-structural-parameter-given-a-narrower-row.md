@@ -133,3 +133,15 @@ tree alone. What the generated tree does settle is the shape of the gap.
 Nothing. The one measured site is left failing and recorded; no repair, no override, and specifically no
 runtime cast fabricated to paper over it -- the runtime is not missing a cast, the emission is missing a
 projection.
+
+## Re-measured at flight-compiler `806d257` (G2)
+
+Unchanged apart from the line: the call is now `effect_capture_geometry.hpp:68`. Clang's candidate note
+names the cause directly, `could not match 'flight::RowMerge' against 'flight::RowOf'`. The
+`Spatial2DNode<Traits>` parameter is a `RowMerge` row and `Node2D` is a `RowOf` row, so `Traits` is not
+deducible and the call has no viable overload.
+
+It is G2 cluster `call-has-no-matching-56e47749`: `effect_capture_geometry.hpp`, plus `contract.hpp` and
+`_internal_index.hpp`, which include it. There is no faithful local fix. A cast, a copied owner, or
+substituting another bounds computation would each break the identity-preserving projection this
+request asks for.
