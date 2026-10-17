@@ -1772,6 +1772,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("ratio") && requires { object.ratio; }) return (object.ratio);
   else if constexpr (Key::name.view() == std::string_view("ratios") && requires { object.ratios; }) return (object.ratios);
   else if constexpr (Key::name.view() == std::string_view("read") && requires { object.read; }) return (object.read);
+  else if constexpr (Key::name.view() == std::string_view("readAccessor") && requires { object.read_accessor; }) return (object.read_accessor);
   else if constexpr (Key::name.view() == std::string_view("readBitmap") && requires { object.read_bitmap; }) return (object.read_bitmap);
   else if constexpr (Key::name.view() == std::string_view("readBodies") && requires { object.read_bodies; }) return (object.read_bodies);
   else if constexpr (Key::name.view() == std::string_view("readBookmark") && requires { object.read_bookmark; }) return (object.read_bookmark);
@@ -1838,6 +1839,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("repeat") && requires { object.repeat; }) return (object.repeat);
   else if constexpr (Key::name.view() == std::string_view("repeatCount") && requires { object.repeat_count; }) return (object.repeat_count);
   else if constexpr (Key::name.view() == std::string_view("repeatInterval") && requires { object.repeat_interval; }) return (object.repeat_interval);
+  else if constexpr (Key::name.view() == std::string_view("reportAccessorFault") && requires { object.report_accessor_fault; }) return (object.report_accessor_fault);
   else if constexpr (Key::name.view() == std::string_view("reportDiagnostic") && requires { object.report_diagnostic; }) return (object.report_diagnostic);
   else if constexpr (Key::name.view() == std::string_view("request") && requires { object.request; }) return (object.request);
   else if constexpr (Key::name.view() == std::string_view("requestAccess") && requires { object.request_access; }) return (object.request_access);
@@ -4287,6 +4289,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("ratio") && requires(Object& object) { object.ratio; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ratio)>>{};
   else if constexpr (Key::name.view() == std::string_view("ratios") && requires(Object& object) { object.ratios; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ratios)>>{};
   else if constexpr (Key::name.view() == std::string_view("read") && requires(Object& object) { object.read; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().read)>>{};
+  else if constexpr (Key::name.view() == std::string_view("readAccessor") && requires(Object& object) { object.read_accessor; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().read_accessor)>>{};
   else if constexpr (Key::name.view() == std::string_view("readBitmap") && requires(Object& object) { object.read_bitmap; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().read_bitmap)>>{};
   else if constexpr (Key::name.view() == std::string_view("readBodies") && requires(Object& object) { object.read_bodies; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().read_bodies)>>{};
   else if constexpr (Key::name.view() == std::string_view("readBookmark") && requires(Object& object) { object.read_bookmark; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().read_bookmark)>>{};
@@ -4353,6 +4356,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("repeat") && requires(Object& object) { object.repeat; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().repeat)>>{};
   else if constexpr (Key::name.view() == std::string_view("repeatCount") && requires(Object& object) { object.repeat_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().repeat_count)>>{};
   else if constexpr (Key::name.view() == std::string_view("repeatInterval") && requires(Object& object) { object.repeat_interval; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().repeat_interval)>>{};
+  else if constexpr (Key::name.view() == std::string_view("reportAccessorFault") && requires(Object& object) { object.report_accessor_fault; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().report_accessor_fault)>>{};
   else if constexpr (Key::name.view() == std::string_view("reportDiagnostic") && requires(Object& object) { object.report_diagnostic; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().report_diagnostic)>>{};
   else if constexpr (Key::name.view() == std::string_view("request") && requires(Object& object) { object.request; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().request)>>{};
   else if constexpr (Key::name.view() == std::string_view("requestAccess") && requires(Object& object) { object.request_access; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().request_access)>>{};
@@ -6805,6 +6809,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->ratio; }) owner.bind_named("ratio", [object]() -> decltype(auto) { return (object->ratio); });
   if constexpr (requires { object->ratios; }) owner.bind_named("ratios", [object]() -> decltype(auto) { return (object->ratios); });
   if constexpr (requires { object->read; }) owner.bind_named("read", [object]() -> decltype(auto) { return (object->read); });
+  if constexpr (requires { object->read_accessor; }) owner.bind_named("readAccessor", [object]() -> decltype(auto) { return (object->read_accessor); });
   if constexpr (requires { object->read_bitmap; }) owner.bind_named("readBitmap", [object]() -> decltype(auto) { return (object->read_bitmap); });
   if constexpr (requires { object->read_bodies; }) owner.bind_named("readBodies", [object]() -> decltype(auto) { return (object->read_bodies); });
   if constexpr (requires { object->read_bookmark; }) owner.bind_named("readBookmark", [object]() -> decltype(auto) { return (object->read_bookmark); });
@@ -6871,6 +6876,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->repeat; }) owner.bind_named("repeat", [object]() -> decltype(auto) { return (object->repeat); });
   if constexpr (requires { object->repeat_count; }) owner.bind_named("repeatCount", [object]() -> decltype(auto) { return (object->repeat_count); });
   if constexpr (requires { object->repeat_interval; }) owner.bind_named("repeatInterval", [object]() -> decltype(auto) { return (object->repeat_interval); });
+  if constexpr (requires { object->report_accessor_fault; }) owner.bind_named("reportAccessorFault", [object]() -> decltype(auto) { return (object->report_accessor_fault); });
   if constexpr (requires { object->report_diagnostic; }) owner.bind_named("reportDiagnostic", [object]() -> decltype(auto) { return (object->report_diagnostic); });
   if constexpr (requires { object->request; }) owner.bind_named("request", [object]() -> decltype(auto) { return (object->request); });
   if constexpr (requires { object->request_access; }) owner.bind_named("requestAccess", [object]() -> decltype(auto) { return (object->request_access); });
@@ -9357,6 +9363,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(ratio)
   FLIGHT_SDK_ROW_WIDENS(ratios)
   FLIGHT_SDK_ROW_WIDENS(read)
+  FLIGHT_SDK_ROW_WIDENS(read_accessor)
   FLIGHT_SDK_ROW_WIDENS(read_bitmap)
   FLIGHT_SDK_ROW_WIDENS(read_bodies)
   FLIGHT_SDK_ROW_WIDENS(read_bookmark)
@@ -9423,6 +9430,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(repeat)
   FLIGHT_SDK_ROW_WIDENS(repeat_count)
   FLIGHT_SDK_ROW_WIDENS(repeat_interval)
+  FLIGHT_SDK_ROW_WIDENS(report_accessor_fault)
   FLIGHT_SDK_ROW_WIDENS(report_diagnostic)
   FLIGHT_SDK_ROW_WIDENS(request)
   FLIGHT_SDK_ROW_WIDENS(request_access)

@@ -4132,6 +4132,23 @@
       "unblocks": "Removes both decoder MIME nullopt-to-String diagnostics while retaining every original partial-module refusal.",
       "expires": "When nullish coalesces with undefined fallbacks preserve the optional result carrier at the decoder argument boundary, or Flight adopts the explicit carrier.",
       "appliedOn": "2026-10-15"
+    },
+    {
+      "id": "scene3d-formats-gltf-skin-matrix-loop",
+      "dependency": "flight",
+      "patch": "scene3d-formats-gltf-skin-matrix-loop.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/scene3d-formats/src/gltfSkins.ts",
+      "package": "@flighthq/scene3d-formats",
+      "answers": "refusal",
+      "refusal": "ambient value Float32Array member from has no C++ binding",
+      "rewrite": "Spells the fixed-length array-like Float32Array.from mapper as one new Float32Array(16) and an ascending component loop before pushing the same fresh matrix row. Names the freshly allocated inverse-bind array with the existing Matrix4Like element type and constructs the fresh diagnostic literal in its declared Record type inside the original argument evaluation.",
+      "equivalence": "The source length is exactly16 and its mapper ignores the source element. Both forms allocate one independent plain Float32Array per joint, read matrices.data[joint*16+component] once for each component0..15, apply the same nullish-zero selection and Float32 element conversion in that order, then append one fresh {m} row. Fault/mismatch/absent-accessor identity matrices, reporting order, joint mapping, skin order and original document/mesh owners are unchanged. No existing matrix or owner is copied into a substitute, no input arm is removed, and source exceptions propagate before later reads or pushes. The Matrix4Like annotation erases in JavaScript. The diagnostic argument uses an immediate closure with one typed Record local, retaining original callee lookup before count/length reads, property order and the same single fresh detail object; no callback or property read moves outside its original argument position.",
+      "verification": "Focused exact-pin gltfSkins module generation and the two owned native headers, plus actual source and native skin-handler behavior checks; results recorded with this cluster in docs/header-failures.md.",
+      "whyNotUpstreamFirst": "The compiler built-in Float32Array value has no static from binding and its length-only array-like mapper needs a separate lowering (docs/compiler-requests/typed-array-static-from-binding.md); a downstream profile cannot extend that built-in. This fixed16 loop is equivalent target-neutral TypeScript using already-supported constructors/indexed writes.",
+      "unblocks": "The fixed16 inverse-bind matrix construction, canonical Matrix4Like array allocation and fresh optional diagnostic Record argument in buildGltfSkins; scoped results recorded separately.",
+      "expires": "when the compiler lowers typed-array static from with a length-only array-like and mapper, or Flight adopts the explicit fixed16 loop.",
+      "appliedOn": "2026-10-17"
     }
   ]
 }

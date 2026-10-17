@@ -5092,6 +5092,13 @@
       "id": "image-resource-mime-optional-carrier",
       "module": "packages/image/src/imageResourceReference.ts decodeEmbeddedImageResourceReference",
       "package": "@flighthq/image"
+    },
+    {
+      "dependency": "flight",
+      "digest": "8d67b87767da9a2df8dedb66a69f7d53d056c1e27d027056dcb33014605eb7b6",
+      "id": "scene3d-formats-gltf-skin-matrix-loop",
+      "module": "packages/scene3d-formats/src/gltfSkins.ts",
+      "package": "@flighthq/scene3d-formats"
     }
   ],
   "duplicateStructuralStructAliases": {
@@ -6132,9 +6139,9 @@
     {
       "cppIncludePrefix": "flight/scene3d_formats",
       "cppNamespace": "flight::scene3d_formats",
-      "emittedModules": 73,
+      "emittedModules": 75,
       "package": "@flighthq/scene3d-formats",
-      "refusedModules": 38,
+      "refusedModules": 36,
       "sourceModules": 111
     },
     {
@@ -6546,8 +6553,8 @@
   },
   "summary": {
     "packages": 153,
-    "emittedModules": 2564,
-    "refusedModules": 587,
+    "emittedModules": 2566,
+    "refusedModules": 585,
     "sourceModules": 3151
   }
 }

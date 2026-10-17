@@ -6481,15 +6481,6 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 30,
-      "module": "packages/scene3d-formats/src/gltfSkins.ts",
-      "package": "@flighthq/scene3d-formats",
-      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSkins.ts: ambient value Float32Array member from has no C++ binding",
-      "stage": "emission"
-    },
-    {
       "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/gltfSpecular.ts",
       "package": "@flighthq/scene3d-formats",
@@ -6762,13 +6753,6 @@
       "module": "packages/scene3d-formats/src/registerGltfMaterialExtensionHandlers.ts",
       "package": "@flighthq/scene3d-formats",
       "reason": "dependency ./gltfAnisotropy.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfAnisotropy.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/scene3d-formats/src/registerGltfSkinHandlers.ts",
-      "package": "@flighthq/scene3d-formats",
-      "reason": "dependency ./gltfSkins.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSkins.ts",
       "stage": "dependency"
     },
     {

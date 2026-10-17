@@ -1,0 +1,45 @@
+--- a/packages/scene3d-formats/src/gltfSkins.ts
++++ b/packages/scene3d-formats/src/gltfSkins.ts
+@@ -1,4 +1,4 @@
+-import type { GltfCoreFeatureContext, GltfCoreFeatureHandler, Scene3DDocumentSkin } from '@flighthq/types/contract';
++import type { GltfCoreFeatureContext, GltfCoreFeatureHandler, Matrix4Like, Scene3DDocumentSkin } from '@flighthq/types/contract';
+ import { ImportDiagnosticSeverity } from '@flighthq/types/contract';
+ 
+ // Imports the optional top-level `skins` section and binds each referencing mesh after the bedrock mesh and
+@@ -30,23 +30,28 @@
+ function buildGltfSkins(context: Readonly<GltfCoreFeatureContext>): Scene3DDocumentSkin[] {
+   return (context.source.skins ?? []).map((gltfSkin) => {
+     const joints = gltfSkin.joints.map((jointNodeIndex) => context.nodeIndices[jointNodeIndex]);
+-    const inverseBind: { m: Float32Array }[] = [];
++    const inverseBind: Matrix4Like[] = [];
+     if (gltfSkin.inverseBindMatrices !== undefined) {
+       const matrices = context.readAccessor(gltfSkin.inverseBindMatrices, 'MAT4');
+       if (matrices.fault !== null) {
+         context.reportAccessorFault(ImportDiagnosticSeverity.Recover, matrices.fault);
+         for (let joint = 0; joint < joints.length; joint++) inverseBind.push({ m: identityMatrix16() });
+       } else if (matrices.count < joints.length) {
+-        context.reportDiagnostic(ImportDiagnosticSeverity.Recover, 'gltf.skin-ibm-count-mismatch', {
+-          firstActual: matrices.count,
+-          firstExpected: joints.length,
+-        });
++        context.reportDiagnostic(ImportDiagnosticSeverity.Recover, 'gltf.skin-ibm-count-mismatch', (() => {
++          const detail: Record<string, boolean | number | string> = {
++            firstActual: matrices.count,
++            firstExpected: joints.length,
++          };
++          return detail;
++        })());
+         for (let joint = 0; joint < joints.length; joint++) inverseBind.push({ m: identityMatrix16() });
+       } else {
+         for (let joint = 0; joint < joints.length; joint++) {
+-          inverseBind.push({
+-            m: Float32Array.from({ length: 16 }, (_, component) => matrices.data[joint * 16 + component] ?? 0),
+-          });
++          const m = new Float32Array(16);
++          for (let component = 0; component < 16; component++) {
++            m[component] = matrices.data[joint * 16 + component] ?? 0;
++          }
++          inverseBind.push({ m });
+         }
+       }
+     } else {
