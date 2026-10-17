@@ -7208,6 +7208,20 @@
       "expires": "when parseObjMaterialLibrary emits (the NOT GENERATED marker disappears and this repair matches nothing); sdk:check fails if this repair matches no header."
     },
     {
+      "id": "scene3d-formats-alias-obj-material-structural-shape",
+      "kind": "alias-anonymous-struct-to-named",
+      "appliesTo": "flight/scene3d_formats/obj_material_model.hpp",
+      "symbol": "ambient_anisotropy_anisotropy_rotation_clearcoat_clearcoat_roughness_diffuse_dissolve_emissive_illumination_map_ambient_map_bump_map_diffuse_map_dissolve_map_emissive_map_metallic_map_normal_map_roughness_map_specular_metallic_name_roughness_sheen_specular_specular_exponent_c26dc3f9c14be1fd",
+      "replacement": "ObjMaterial",
+      "replacementNamespace": "flight::types",
+      "canonicalInclude": "flight/types/obj_schema.hpp",
+      "sourceDeclaration": "packages/scene3d-formats/src/objMaterialModel.ts -- collectObjMaterialModels iterates ObjMaterialLibrary.materials, whose declared value type is ObjMaterial; the value passed to hasObjPbrDirectives is a Ref<ObjMaterial>",
+      "diagnostic": "static assertion failed due to requirement 'dependent_false<flight::types::ObjMaterial>': structural reference source has an incompatible object type",
+      "defect": "The emitter re-derives the loop value's declared ObjMaterial shape as an anonymous struct named by its members, then tries to construct a structural row over that anonymous schema from the shared_ptr<ObjMaterial> the map already returns; flatten_ref refuses because the anonymous struct is an unrelated C++ owner. The anonymous struct's members are identical to flight::types::ObjMaterial (same names, order, types and optionality, measured by inspection), and the named type is the value's declared carrier, so aliasing the duplicate shape to it removes the second owner without adding behavior or storage. The row then names ObjMaterial and the exact-owner construction succeeds.",
+      "expectedWhen": "always",
+      "expires": "when the emitter uses the declared ObjMaterial carrier for the map value instead of re-deriving an anonymous structural row; sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "notification-create-signal-using-declaration",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/notification/",

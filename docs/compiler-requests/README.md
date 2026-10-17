@@ -85,6 +85,9 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 
 ## Active requests without a compiler patch
 
+- [A named interface value must keep its row carrier, not be recast as an anonymous struct](named-interface-value-recast-as-anonymous-row.md) —
+  `@flighthq/scene3d-formats` re-derives `ObjMaterial` as an anonymous shape and cannot construct that row from the
+  `Ref<ObjMaterial>` the map already yields; carried by an alias repair.
 - [A nullish union stored into an optional field must use the optional carrier](nullish-union-into-optional-field.md) —
   `@flighthq/scene3d` passes a `Light | null` local's three-state variant into a `optional<StructuralRef<...>>`
   row field; the sibling array fields already emit the destination's optional carrier.

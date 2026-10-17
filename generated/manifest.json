@@ -3587,6 +3587,12 @@
         "flight/scene2d_formats/svg_transform.hpp"
       ],
       "id": "scene2d-formats-svg-transform-readonly-matrix"
+    },
+    {
+      "files": [
+        "flight/scene3d_formats/obj_material_model.hpp"
+      ],
+      "id": "scene3d-formats-alias-obj-material-structural-shape"
     }
   ],
   "sourcePatches": [

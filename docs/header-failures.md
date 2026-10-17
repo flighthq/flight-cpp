@@ -106,7 +106,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 77 | `undeclared-identifier-dc087108` | 3 | PLAT | declaration repair (applied) | refused URL loader declared; G2: 3 pass; URL loading remains unlinkable |
 | 78 | `call-has-no-matching-84410867` | 2 | 3D | runtime (applied) | a `Uint16Array \| Uint32Array` union passed to `bufferData`'s `ArrayBufferView` *(G2: 1 pass, 1 to `variant-cast-ccfedad4`)* |
 | 79 | `call-has-no-matching-d42144f0` | 2 | ANIM | override heritage repair (fixed) | the emitted call to `push` matches no declared overload; G2: 2 pass, request linked |
-| 80 | `missing-member-da12a523` | 2 | 3D | runtime + repair (fixed) | the emitted code reads a member the target does not declare (`parse_obj_material_library`); G2: 0 pass, 2 follow-ons (`static-assertion-ecc68c2b`, `undeclared-identifier-d663f62e`) |
+| 80 | `missing-member-da12a523` | 2 | 3D | runtime + repair (fixed) | the emitted code reads a member the target does not declare (`parse_obj_material_library`); G2: 0 pass; one follow-on remains (`undeclared-identifier-d663f62e`), the other (`static-assertion-ecc68c2b`) is fixed by an alias repair |
 | 81 | `missing-member-dd9b4baa` | 2 | 3D, GL | runtime | the emitted code reads a member the target does not declare (`renderbuffer_binding`) *(G2: binding added; follow-on `no-matching-conversion-bc278253` fixed: 1 pass, 1 to `missing-member-95ead583`)* |
 | 82 | `no-viable-conversion-303c42f1` | 2 | ANIM | compiler | G2: recorded 0/2 retained; DragonBones erased array length cannot enter numeric counts Map; existing request, docs-only/no rerun |
 | 83 | `other-67dc02c6` | 2 | 2D | compiler | `getSurfaceHandle(...) as HTMLCanvasElement` lowered to an unchecked `static_cast` from the erased handle *(existing request extended)* |
@@ -2028,14 +2028,17 @@ structural-reference follow-on below, not for this declaration — so it has not
 way. The declaration itself is recorded in
 `docs/compiler-requests/retained-declaration-calls-omitted-callee.md`.
 
-#### Follow-on `static-assertion-ecc68c2b`, and `undeclared-identifier-d663f62e`
+#### Follow-on `static-assertion-ecc68c2b` (fixed), and `undeclared-identifier-d663f62e`
 
-Neither header compiles yet; the repair moved them past the missing member.
-
-- `obj_material_model.hpp` now fails at `flight/structural_ref.hpp:448` with
-  `dependent_false<flight::types::ObjMaterial>`: `has_obj_pbr_directives` casts the anonymous
-  material-shape row to `RowReadonly<RowOf<Ref<ObjMaterial>>>`, and the runtime rejects the source
-  object type. That is a structural-reference conversion gap, not a missing declaration.
+- **`obj_material_model.hpp` is fixed.** It failed at `flight/structural_ref.hpp:448` with
+  `dependent_false<flight::types::ObjMaterial>`: the emitter re-derived the loop value's declared
+  `ObjMaterial` shape as an anonymous struct and could not construct that row from the
+  `Ref<ObjMaterial>` the materials map already returns. Emission repair
+  `scene3d-formats-alias-obj-material-structural-shape` aliases the duplicate shape to
+  `flight::types::ObjMaterial` (members verified identical: same names, order, types and optionality),
+  so the second owner never exists and the declared carrier converts exactly. Applied by normal
+  package generation; the header recompiles **1/1 PASS**. The emitter-side fix is filed as
+  [a named interface value must keep its row carrier](compiler-requests/named-interface-value-recast-as-anonymous-row.md).
 - `obj_standard_pbr_material_handler.hpp` named `obj_material_to_standard_pbr`, whose callee
   `objMaterialToStandardPbr` was refused at `structural-row construction requires explicit named
   properties`: its `createStandardPbrMaterial` options literal ended in three conditional spreads.

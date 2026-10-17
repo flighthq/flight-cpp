@@ -25,32 +25,7 @@ inline bool has_obj_pbr_directives(flight::StructuralRef<flight::RowReadonly<fli
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_AMBIENT_ANISOTROPY_ANISOTROPY_ROTATION_CLEARCOAT_CLEARCOAT_ROUGHNESS_DIFFUSE_DISSOLVE_EMISSIVE_ILLUMINATION_MAP_AMBIENT_MAP_BUMP_MAP_DIFFUSE_MAP_DISSOLVE_MAP_EMISSIVE_MAP_METALLIC_MAP_NORMAL_MAP_ROUGHNESS_MAP_SPECULAR_METALLIC_NAME_ROUGHNESS_SHEEN_SPECULAR_SPECULAR_EXPONENT_C26DC3F9C14BE1FD
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_AMBIENT_ANISOTROPY_ANISOTROPY_ROTATION_CLEARCOAT_CLEARCOAT_ROUGHNESS_DIFFUSE_DISSOLVE_EMISSIVE_ILLUMINATION_MAP_AMBIENT_MAP_BUMP_MAP_DIFFUSE_MAP_DISSOLVE_MAP_EMISSIVE_MAP_METALLIC_MAP_NORMAL_MAP_ROUGHNESS_MAP_SPECULAR_METALLIC_NAME_ROUGHNESS_SHEEN_SPECULAR_SPECULAR_EXPONENT_C26DC3F9C14BE1FD
-struct ambient_anisotropy_anisotropy_rotation_clearcoat_clearcoat_roughness_diffuse_dissolve_emissive_illumination_map_ambient_map_bump_map_diffuse_map_dissolve_map_emissive_map_metallic_map_normal_map_roughness_map_specular_metallic_name_roughness_sheen_specular_specular_exponent_c26dc3f9c14be1fd : public flight::ReferenceEnabled {
-  flight::Array<double> ambient;
-  std::optional<double> anisotropy;
-  std::optional<double> anisotropy_rotation;
-  std::optional<double> clearcoat;
-  std::optional<double> clearcoat_roughness;
-  flight::Array<double> diffuse;
-  double dissolve;
-  std::optional<flight::Array<double>> emissive;
-  double illumination;
-  std::optional<flight::String> map_ambient;
-  std::optional<flight::String> map_bump;
-  std::optional<flight::String> map_diffuse;
-  std::optional<flight::String> map_dissolve;
-  std::optional<flight::String> map_emissive;
-  std::optional<flight::String> map_metallic;
-  std::optional<flight::String> map_normal;
-  std::optional<flight::String> map_roughness;
-  std::optional<flight::String> map_specular;
-  std::optional<double> metallic;
-  flight::String name;
-  std::optional<double> roughness;
-  std::optional<double> sheen;
-  flight::Array<double> specular;
-  double specular_exponent;
-};
+using ambient_anisotropy_anisotropy_rotation_clearcoat_clearcoat_roughness_diffuse_dissolve_emissive_illumination_map_ambient_map_bump_map_diffuse_map_dissolve_map_emissive_map_metallic_map_normal_map_roughness_map_specular_metallic_name_roughness_sheen_specular_specular_exponent_c26dc3f9c14be1fd = flight::types::ObjMaterial;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_AMBIENT_ANISOTROPY_ANISOTROPY_ROTATION_CLEARCOAT_CLEARCOAT_ROUGHNESS_DIFFUSE_DISSOLVE_EMISSIVE_ILLUMINATION_MAP_AMBIENT_MAP_BUMP_MAP_DIFFUSE_MAP_DISSOLVE_MAP_EMISSIVE_MAP_METALLIC_MAP_NORMAL_MAP_ROUGHNESS_MAP_SPECULAR_METALLIC_NAME_ROUGHNESS_SHEEN_SPECULAR_SPECULAR_EXPONENT_C26DC3F9C14BE1FD
 
 inline flight::Set<flight::String> collect_obj_material_models(flight::String source) {
