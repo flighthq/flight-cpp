@@ -126,7 +126,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 97 | `call-has-no-matching-00dc04ad` | 1 | 2D | compiler | the emitted call to `get_texture_uv_matrix` matches no declared overload |
 | 98 | `call-has-no-matching-35224a3f` | 1 | 3D | compiler | the emitted call to `gl_uniform_type_name` matches no declared overload |
 | 99 | `call-has-no-matching-4c12e411` | 15 | WGPU | compiler | `create_bind_group_layout` entries are emitted as anonymous nested owners inside an untyped braced descriptor *(request filed)* |
-| 100 | `call-has-no-matching-76a6a61a` | 1 | 2D | compiler | the emitted call to `get_if` matches no declared overload |
+| 100 | `call-has-no-matching-76a6a61a` | 1 | 2D | compiler | optional slot-resolver result is coalesced as a variant; [existing carrier request](compiler-requests/compiler-flattened-optional-chain-union-storage.md#g2-scene2d-slot-resolver-coalesces-an-optional-callback-result) |
 | 101 | `call-has-no-matching-7f4ae181` | 1 | 2D | compiler | guarded blendMode read retains optional<String> at the String helper call; [existing request](compiler-requests/narrowed-optional-template-argument.md#g2-scene2d-kind-usage-passes-a-guarded-member-as-optional-storage) |
 | 102 | `call-has-no-matching-8a1f3a33` | 1 | GL | compiler | a narrowed `Texture2D` reference read through structural `row_get` *(existing request extended)* |
 | 103 | `call-has-no-matching-8d9de718` | 1 | PLAT | compiler | default node runtime supplies a merged child row to nominal NodeAny recursion; [existing request](compiler-requests/node-any-generic-traits-leak.md#g2-interaction-spatial-collection-selects-the-default-runtime-owner) |
@@ -2526,12 +2526,29 @@ repairs/manifest/pins and foreign/historical products remain unchanged.
 
 ### 100. `call-has-no-matching-76a6a61a` — 1 header(s)
 
-- cause: the emitted call to `get_if` matches no declared overload
+- cause: `options?.resolveSlotContent?.(reference) ?? null` applies `std::get_if<Node2D>` to an
+  `optional<Node2D>` callback result, despite the chain/local/setter sharing that optional carrier
 - subject: `get_if`
 - lanes: 2D
-- fix route: compiler
+- fix route: compiler — [existing optional-chain carrier request](compiler-requests/compiler-flattened-optional-chain-union-storage.md#g2-scene2d-slot-resolver-coalesces-an-optional-callback-result)
 - first failure at: `flight/scene2d_resources/resolve_scene_2d_resources.hpp:49`
 - example: `no matching function for call to 'get_if'`
+
+**G2: 0 pass / 1 fail retained; no native or generation rerun.** The optional callback is represented
+and its full function emits. The carried compiler patch handles optional property chains with multiple
+value arms; it does not qualify this optional call returning one merged Node2D view. Correct the
+coalesce plan from actual storage and preserve the same present node or empty optional, without
+reinvoking a callback, constructing a default or adding a permissive get_if overload.
+
+Preserve the original document/options/reference/provider-node/target/runtime owners and live selected
+slot order. Skipped slots remain untouched; selected null resolutions clear stale managed content.
+The real setter preserves unchanged-content child order and replaces only its managed child. Keep
+selected required counts, one final failure notice, callback/getter/exception effects, fresh partition
+arrays and the document's final root. Existing native checked-hierarchy limits remain separate from
+this callback-carrier audit. Three resolver source cases, two setter cases and diagnostics coverage
+were inspected only; native resource fixtures do not call this resolver/setter. No fake provider,
+copied owner, narrowed working set or native resolution/header-availability gain is supplied. The
+original diagnostic/counts, all C++ and foreign compact records remain unchanged.
 
 ### 101. `call-has-no-matching-7f4ae181` — 1 header(s)
 
