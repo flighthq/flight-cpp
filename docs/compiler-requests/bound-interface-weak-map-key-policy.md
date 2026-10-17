@@ -112,3 +112,44 @@ normal generation or native cache/shader behavior is carried by this disposition
 [blur destination and full recipe](interface-heritage-widening.md#g2-gl-box-blur-pass-destination-and-source-recipe)
 and [retained omitted calls](retained-declaration-calls-omitted-callee.md#g2-gl-box-blur-refuses-a-cache-before-its-omitted-pass-calls)
 remain independent. Only the original one-header compile is measured; no GL/program/cache call runs.
+
+## G2 normal and inverted GL tint caches
+
+At Flight `a627849` / compiler `806d257`, effects-gl/glEffectTintShader.ts42/43 declares two
+WeakMap<GlContext,TintShaderLocations> bindings, tintShaders and invertTintShaders. Both exact
+NOT GENERATED markers refuse cpp-weak-map-key-representation-unproven [source-portability].
+Their getters remain live, so original1 undeclared-identifier-3cb2bb54 completes with Clang22.1.8
+jobs1 **1 attempted / 0 pass / 1 fail / 0 unattempted**,55.5s, at invert_tint_shaders75.
+The named Flight GlContext interface maps to the existing WebGl2Context; its native policy and binding
+are present. The compiler's ambient-only weak-policy lookup is the same existing cause above, not a
+missing SDL key facility. This dedicated tint module is not supplied by the blit-shader override.
+
+Keep two separate maps even though both values share the TintShaderLocations type: normal and
+inverted GLSL programs are different. Each map keys by the actual state.gl's shared context identity,
+with weak keys. A copied context hits the same entry, distinct contexts are independent, and lookup
+in one map must never return the other program's uniform locations. Cache hits return the identical
+cached location owner without compiling/querying. Color, alpha and strength remain per-draw uniforms;
+they do not become cache keys or material owners.
+
+On a miss, compile the corresponding exact TINT_FRAGMENT_SRC or INVERT_TINT_FRAGMENT_SRC through
+compileGlFullscreenProgram. Allocate the source's fresh location record by copying program,
+locPosition, locTexCoord, texture and textures from that one base first, then query u_color, u_alpha
+and u_strength in order on base.program. Preserve program/location handles and shared textures-array
+identity. Only after construction/queries succeed, set that map under the same context and return
+the same new owner. Preserve non-null assertions/errors; do not cache a failed/default program,
+swallow lookup/compile errors, alias the two maps or invent cleanup absent from the source.
+
+Both emitted getters additionally use an optional Ref to an anonymous GlFullscreenProgram-derived
+struct for lookup/rebind/construction, while returning the unrelated flattened Ref<TintShaderLocations>.
+The fresh initializer contains only loc_color/loc_alpha/loc_strength and drops ...base completely.
+Thus the named cache owner is not retained, and the inherited program/attribute/sampler fields are
+value-initialized instead of copied. These two defects are inspected directly, not measured later
+native errors after a fabricated cache. They repeat the sibling blit and box-blur patterns already
+filed in this request; a copied/default native shader record does not repair them.
+
+No cache-only override, extern storage supply, binding, source patch, normal generation or native
+shader/cache behavior is carried. Exact function prototypes cannot implement the refused variable
+bindings or repair getter bodies. The [separate tint destination/body request](interface-heritage-widening.md#g2-gl-normal-and-inverted-tint-pass-contract)
+retains full normal/inverted color/alpha/shader semantics, and the
+[retained-call boundary](retained-declaration-calls-omitted-callee.md#g2-gl-tint-caches-precede-the-two-omitted-public-passes)
+records the unqualified declaration gates. Only the original one-header native compile runs here.

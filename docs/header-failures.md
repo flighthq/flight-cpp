@@ -197,7 +197,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 168 | `undeclared-identifier-332a5586` | 1 | 2D | compiler *(existing request)* | refused `drawDomScale9Sprite` retained as `.submit` in the renderer aggregate; declaration probe fails at `.create_data` |
 | 169 | `undeclared-identifier-34adf2ab` | 1 | ANIM | compiler | G2: 0/1; refused parser/result retained; exact declaration candidate fails unused compile in result-owner dependency |
 | 170 | `undeclared-identifier-3582eeb5` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glScreenSpaceFogEffectRunner` binding (and its callee `applyScreenSpaceFogEffectToGl`) but still emits the registration call that passes the runner |
-| 171 | `undeclared-identifier-3cb2bb54` | 1 | GL | runtime | the emitted code names `invert_tint_shaders`, which nothing declares |
+| 171 | `undeclared-identifier-3cb2bb54` | 1 | GL | compiler | G2: 0/1; two context caches refused; shader owner/spread and normal/inverted tint-pass target debt remain |
 | 172 | `undeclared-identifier-3e7f03c4` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glSharpenEffectRunner` binding (and its callee `applySharpenEffectToGl`) but still emits the registration call that passes the runner |
 | 173 | `undeclared-identifier-44058981` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glBlendEffectRunner` binding (and its callee `applyBlendEffectToGl`) but still emits the registration call that passes the runner |
 | 174 | `undeclared-identifier-49b86813` | 1 | ANIM | declaration repair (applied) | exact refused IK solver declared; G2: 1 pass; registration and full constraint solving remain unlinkable |
@@ -3399,14 +3399,34 @@ remain unchanged.
 - Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
 - compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
-### 171. `undeclared-identifier-3cb2bb54` — 1 header(s)
+### 171. `undeclared-identifier-3cb2bb54` — G2 recheck of original 1 header
 
-- cause: the emitted code names `invert_tint_shaders`, which nothing declares
-- subject: `invert_tint_shaders`
-- lanes: GL
-- fix route: runtime
-- first failure at: `flight/effects_gl/gl_effect_tint_shader.hpp:75`
-- example: `use of undeclared identifier 'invert_tint_shaders'`
+At Flight `a627849` / compiler `806d257`, actual Clang22.1.8 jobs1 completes
+**1 attempted / 0 pass / 1 fail / 0 unattempted**,55.5s, missing invert_tint_shaders at
+flight/effects_gl/gl_effect_tint_shader.hpp75. Source42/43 both tintShaders and invertTintShaders
+refuse cpp-weak-map-key-representation-unproven. The existing
+[bound-interface policy request](compiler-requests/bound-interface-weak-map-key-policy.md#g2-normal-and-inverted-gl-tint-caches)
+explains why GlContext never reaches the native WebGl2Context weak policy. Each is a module-scope
+variable, not an omitted function. Keep two independent shader caches per original shared context.
+
+Both getters also construct a derived anonymous shader owner while declaring the unrelated flattened
+TintShaderLocations return/cache owner, and drop all ...base program/attribute/sampler fields from
+the fresh initializer. Those are inspected emitted defects, not later isolated native diagnostics.
+A cache-only extern/prototype cannot correct owner identity or recreate the missing spread.
+Normal applyGlEffectTintPass65 and inverted applyGlEffectInvertTintPass46 separately refuse the
+[concrete target to nullable readonly base-row conversion](compiler-requests/interface-heritage-widening.md#g2-gl-normal-and-inverted-tint-pass-contract)
+inside drawGlFullscreenPass. The source keeps full packed-RGBA, alpha and strength number domains,
+shared scratch identity, program/target/context ownership and distinct normal/inverted alpha math;
+no Material owner or material resolver belongs to this module.
+
+The [retained-callee request](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-gl-tint-caches-precede-the-two-omitted-public-passes)
+separates the inspected cross-header calls from qualified declarations. The apply functions have no
+live same-header calls; adding exact cross-header declarations still cannot clear the earlier cache
+and getter defects. No declaration candidate, unused-positive/exact-negative-link gate or normal
+generation is run/claimed. No fake cache/shader, copied program/target/material, new storage/operation
+repair or narrowed tint domain is supplied. Only this compact cluster/row/report171 changes and three
+existing requests are extended; foreign prose/rows/clusters and historical sweep/carry totals remain
+intact. No other header is checked/promoted and no GL/cache/tint operation executes.
 
 ### 172. `undeclared-identifier-3e7f03c4` — G2 recheck of 1 header(s)
 

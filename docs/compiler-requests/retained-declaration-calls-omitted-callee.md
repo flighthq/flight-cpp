@@ -2121,3 +2121,38 @@ No fake parser, text format, universal empty/plain-text success, copied owner or
 attribute/format domain is supplied. Existing source tests are requirements, not native functionality
 proof. Only this request appendix, the six owned failed rows/cluster and worklist28 change; all foreign
 raw/semantic products, existing repairs/manifests, historical/G1 totals and source/runtime bytes remain.
+
+## G2 GL tint caches precede the two omitted public passes
+
+At Flight `a627849` / compiler `806d257`, effects_gl/gl_effect_tint_shader.hpp has exact refusal
+markers for applyGlEffectInvertTintPass46 and applyGlEffectTintPass65, but no live calls to those
+functions within this header. The retained getters instead use the source42/43 refused module-scope
+WeakMap variables. Actual original1 Clang22.1.8 jobs1 completes **1 attempted / 0 pass / 1 fail /
+0 unattempted**,55.5s, first error invert_tint_shaders75. A variable omission cannot satisfy
+an exact refused-function marker/call witness; declaring the public apply functions cannot supply
+cache storage or correct the inspected shader-owner mismatch and dropped base spread.
+
+Inspection finds real cross-header normal-tint calls in bevel, gradient bevel/glow, drop shadow and
+outer glow, and inverted-tint calls in inner shadow/glow. Their exact source parameters agree:
+
+```cpp
+void apply_gl_effect_invert_tint_pass(
+  flight::Ref<flight::types::GlRenderState> state,
+  flight::Ref<flight::types::GlTextureRenderTarget> source,
+  flight::Ref<flight::types::GlTextureRenderTarget> dest,
+  double color, double alpha, double strength);
+void apply_gl_effect_tint_pass(
+  flight::Ref<flight::types::GlRenderState> state,
+  flight::Ref<flight::types::GlTextureRenderTarget> source,
+  flight::Ref<flight::types::GlTextureRenderTarget> dest,
+  double color, double alpha, double strength);
+```
+
+These are inspected missing-body boundaries, not a qualified declaration repair. Existing calledFrom
+support could witness named sibling calls, but it cannot make the earlier cache/getter defects pass
+an actual unused include. No candidate/native link gate or normal generation is run/claimed, and no
+production repair or new engine behavior is carried. No synthetic/shared map or default/copied shader
+is inserted to make an unused-positive result appear to pass; exact negative-link remains unqualified.
+The [existing weak-policy/cache request](bound-interface-weak-map-key-policy.md#g2-normal-and-inverted-gl-tint-caches)
+and [separate target/body request](interface-heritage-widening.md#g2-gl-normal-and-inverted-tint-pass-contract)
+retain independent causes and complete tint/inverted coverage semantics. No GL/cache/pass runs here.

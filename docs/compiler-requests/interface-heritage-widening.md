@@ -610,3 +610,49 @@ This is the GL render state case above in another backend. The fix is real herit
 RenderState` and `CanvasRenderState : RenderState`, so the same state owner widens. The native GL candidate
 overload is unrelated. Nothing is carried: no cast, no copied state, no DOM or Canvas filter provider, and no
 narrowed domain.
+
+## G2 GL normal and inverted tint pass contract
+
+At Flight `a627849` / compiler `806d257`, effects-gl/glEffectTintShader.ts46 and65 export
+applyGlEffectInvertTintPass and applyGlEffectTintPass. Both refuse
+cpp-contextual-union-value-type-unrepresented [compiler-restriction] at drawGlFullscreenPass:
+dest is the original Ref<GlTextureRenderTarget>, while the declared destination is
+Readonly<GlRenderTarget>|null. The value resembles an alternative but is not its declaration.
+This is the same concrete-target-to-base readonly/absence carrier boundary as the box-blur and
+other GL passes, independent of this module's two refused context WeakMaps.
+
+The source GlTextureRenderTarget extends GlRenderTarget; native structs are flattened independent
+ReferenceEnabled owners. The existing native fullscreen helper accepts the optional readonly base
+row and offers proven projection, but that runtime surface does not emit the refused TypeScript
+body. Preserve the target's original context/framebuffer/dimension/live cells through that carrier;
+no base copy, fabricated target, unchecked cast or single-attachment/format/depth/MSAA restriction.
+The same original GlRenderState and its cache/program/texture tracking must remain in the pass.
+
+The complete tint contract is specific:
+
+- Choose the corresponding normal or inverted cache/getter before drawing; their programs and
+  uniform locations remain independent. Bind source.texture as the sole input and the same dest
+  through drawGlFullscreenPass. This module takes packed color, alpha and strength numbers; it has
+  no Material object, registered material lookup, fallback material or copied renderer owner.
+- In each setUniforms callback, call unpackColorRgba on the same module scratchTint array. That array
+  starts[0,0,0,0], is reused and overwritten on every draw, and does not escape. The source helper
+  extracts packed 0xRRGGBBAA with JavaScript unsigned shifts/masks, divides each byte by255, and does
+  not gamma-decode. Preserve bitwise coercion of the declared number input, including its full source
+  domain, rather than limiting color to a new validated integer type or changing color space.
+- Upload RGB scratch[0..2], alpha*scratch[3], then strength, in that order; color alpha is applied once.
+  Finish with blendFunc(ONE,ZERO) for replacement output. Do not substitute ordinary alpha blending,
+  allocate/capture a different scratch per cache, add alpha/strength defaults or clamp/validate their
+  full number domains. Preserve draw-helper state ordering/error behavior, without a new finally or
+  rollback guarantee.
+- Normal GLSL computes a=min(1,texture(u_texture,v_texCoord).a*u_alpha*u_strength). Inverted computes
+  a=min(1,(1-texture(...).a)*u_alpha*u_strength); it inverts source coverage before multiplication,
+  not final output alpha. Both return vec4(u_color*a,a), a premultiplied mask, ignoring source RGB.
+  Preserve the upper-only min, including source negative/non-finite behavior; do not add a lower
+  clamp, invert RGB, apply packed alpha twice, gamma-decode, drop strength or return a constant mask.
+
+Original1 actual Clang22.1.8 jobs1 remains **0/1 pass**,55.5s, first failing at the
+[missing invert cache75](bound-interface-weak-map-key-policy.md#g2-normal-and-inverted-gl-tint-caches).
+The getter's owner/spread defects are inspected separately. No body/declaration/cache/shader source
+rewrite, normal generation or GL/tint operation is supplied/executed by this disposition. See the
+[retained-call request](retained-declaration-calls-omitted-callee.md#g2-gl-tint-caches-precede-the-two-omitted-public-passes)
+for why neither native link gate is qualified. Foreign caller headers are not rechecked or promoted.
