@@ -14,7 +14,8 @@ Measured at `2b687ea`, flight `a627849`, from the package's refusal ledger.
 const container = containerValue as Readonly<FlexLayoutContainerStyle> | null;
 ```
 
-and `packages/layout/src/gridLayout.ts` at its own `as Readonly<GridLayoutContainerStyle> | null`.
+and `packages/layout/src/gridLayout.ts` at `as Readonly<GridLayoutItemStyle> | null`. Its separate
+container assertion is non-nullable `Readonly<GridLayoutContainerStyle>`.
 
 ## Observed
 
@@ -69,3 +70,25 @@ select row/column and reverse/wrap modes, preserve padding/gaps/justification/al
 siblings, freeze and rescale shrink weights, and write the target child's four output cells in source
 order. Failure sentinels and rejected-input writes must follow the original source; an empty resolver,
 constant rectangle or fallback success would not close this request.
+
+## G2 grid resolver keeps its own item and container contracts
+
+At Flight `a627849` / compiler `806d257`, the grid resolver binding and `getGridColumn`, `getGridRow`
+and `getGridAutoTrackSize` remain refused at `cpp-type-assertion-unidentified`. The actual nullable
+assertions target `Readonly<GridLayoutItemStyle> | null` from the optional erased `LayoutNode<>.itemStyle`;
+the resolver's container assertion separately targets non-null `Readonly<GridLayoutContainerStyle>`.
+`isGridLayoutContainerStyle(null)` rejects, whereas the flex container validator accepts null. A flex
+resolver body or copied style owner cannot stand in for these grid semantics.
+
+The declared item contract allows null, requires explicit row and column to be jointly present or
+absent, validates nonnegative integer positions and positive integer spans, and defaults spans to one.
+Automatic placement counts only preceding siblings and selects row-major positions. The resolver checks
+span bounds before reading layout dimensions, then preserves padding/gap order, fixed/auto/fraction
+track sizing and the final x/y/width/height writes. Auto tracks subtract spanned fixed sizes and gaps
+from the intrinsic contribution; fraction tracks share the nonnegative remaining space by weight.
+All of these missing behaviors remain source obligations, not new runtime fallbacks.
+
+`layout-declare-refused-grid-resolver` adds only the exact external `LayoutResolver` callback binding
+for explicit registration. The [two independent retained boundaries](retained-declaration-calls-omitted-callee.md#g2-grid-track-guard-and-resolver-retain-two-distinct-omissions)
+also include the independently refused track-list validator. No nullable owner recovery, resolver body,
+style copy, narrowed tracks or successful layout result is supplied by either declaration.

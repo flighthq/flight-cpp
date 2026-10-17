@@ -3325,6 +3325,33 @@ void test_presence_and_math() {
             !flight::is_integer(std::numeric_limits<double>::infinity()) &&
             !flight::is_integer(std::numeric_limits<double>::quiet_NaN()),
         "Number.isInteger recognizes finite integral doubles");
+  check(flight::is_integer(flight::Any(-0.0)) && flight::is_integer(flight::Any(-42.0)) &&
+            flight::is_integer(flight::Any(9007199254740992.0)) &&
+            !flight::is_integer(flight::Any(0.5)) &&
+            !flight::is_integer(flight::Any(std::numeric_limits<double>::infinity())) &&
+            !flight::is_integer(flight::Any(-std::numeric_limits<double>::infinity())) &&
+            !flight::is_integer(flight::Any(std::numeric_limits<double>::quiet_NaN())),
+        "Number.isInteger inspects erased numbers without changing its numeric domain");
+  check(!flight::is_integer(flight::Any()) && !flight::is_integer(flight::Any(flight::null)) &&
+            !flight::is_integer(flight::Any(false)) && !flight::is_integer(flight::Any(true)) &&
+            !flight::is_integer(flight::Any(flight::String("42"))) &&
+            !flight::is_integer(flight::Any(flight::String(""))) &&
+            !flight::is_integer(flight::Any(flight::Symbol(flight::String("integer")))) &&
+            !flight::is_integer(flight::Any(flight::Array<double>{42.0})) &&
+            !flight::is_integer(flight::Any::object(std::make_shared<TestReference>())) &&
+            !flight::is_integer(flight::Any::external(42.0)),
+        "Number.isInteger rejects every represented nonnumber without conversion or throwing");
+  int integer_callback_calls = 0;
+  const auto integer_callback = flight::Any::function([&integer_callback_calls]() {
+    ++integer_callback_calls;
+    return 42.0;
+  });
+  const flight::Any integer_negative_zero(-0.0);
+  check(!flight::is_integer(integer_callback) && integer_callback_calls == 0 &&
+            flight::is_integer(integer_negative_zero) &&
+            std::signbit(integer_negative_zero.as_number()),
+        "Number.isInteger never invokes a callable or mutates a stored number");
+  static_assert(!std::is_convertible_v<flight::Any, double>);
   check(flight::fround(1.337) == 1.3370000123977661 &&
             flight::fround(16777217.0) == 16777216.0 &&
             std::signbit(flight::fround(-0.0)) &&

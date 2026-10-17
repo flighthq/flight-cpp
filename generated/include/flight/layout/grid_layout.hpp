@@ -32,6 +32,8 @@ namespace flight::types { template <typename ContainerStyle, typename ItemStyle>
 #include <flight/types/contract.hpp>
 #include <flight/layout/layout_state.hpp>
 
+
+namespace flight::layout { extern flight::types::LayoutResolver grid_layout_resolver; }
 namespace flight::layout {
 
 using flight::types::GridLayoutItemStyle;
@@ -142,6 +144,8 @@ struct column_gap_columns_padding_bottom_padding_left_padding_right_padding_top_
   std::optional<flight::Array<flight::types::GridLayoutTrack>> rows;
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LAYOUT_COLUMN_GAP_COLUMNS_PADDING_BOTTOM_PADDING_LEFT_PADDING_RIGHT_PADDING_TOP_ROW_GAP_ROWS_A2A50AE54D8DDC71
+
+bool is_track_list(flight::Any value);
 
 inline bool is_grid_layout_container_style(std::optional<flight::ErasedRef> value) {
   if (!value.has_value()) {

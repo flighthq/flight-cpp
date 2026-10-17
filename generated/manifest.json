@@ -3406,6 +3406,18 @@
         "flight/scene3d_formats/mtl_parse.hpp"
       ],
       "id": "scene3d-formats-declare-refused-parse-obj-material-library"
+    },
+    {
+      "files": [
+        "flight/layout/grid_layout.hpp"
+      ],
+      "id": "layout-declare-refused-track-list"
+    },
+    {
+      "files": [
+        "flight/layout/grid_layout.hpp"
+      ],
+      "id": "layout-declare-refused-grid-resolver"
     }
   ],
   "sourcePatches": [

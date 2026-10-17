@@ -20,6 +20,7 @@
 #include <flight/equality.hpp>
 #include <flight/erased_ref.hpp>
 #include <flight/error.hpp>
+#include <flight/math.hpp>
 #include <flight/number.hpp>
 #include <flight/presence.hpp>
 #include <flight/reference.hpp>
@@ -502,6 +503,12 @@ class Any final {
                detail::AnyOpaque>
       value_;
 };
+
+// Number.isInteger inspects a Number without coercing the other language types. The scalar math
+// predicate already supplies the finite/integral test; the erased boundary only selects that domain.
+[[nodiscard]] inline bool is_integer(const Any& value) noexcept {
+  return value.kind() == AnyKind::number && is_integer(value.as_number());
+}
 
 // `String(value)`: the explicit conversion, over the domain the runtime can answer without inventing a
 // ToPrimitive -- undefined, null, booleans, numbers (as Number.prototype.toString renders them), strings,

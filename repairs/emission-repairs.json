@@ -9122,6 +9122,32 @@
       "defect": "The exact refused resolver binding marker remains while register_flex_layout_resolver passes its value to register_layout_resolver. This declares only the existing LayoutResolver callback carrier, never a resolver or layout algorithm. The nullable style owner refusal remains open in docs/compiler-requests/assertion-to-nullable-variant-alternative.md and the retained binding boundary in docs/compiler-requests/retained-declaration-calls-omitted-callee.md. Actual unused-header positive compile/link/run passes; explicit registration compiles to an object then fails to link on exactly the absent flex_layout_resolver binding. The normal generated repair matches one header and is declaration-only and idempotent.",
       "expectedWhen": "always",
       "expires": "when flexLayoutResolver emits and its exact NOT GENERATED/refusal marker disappears; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "layout-declare-refused-track-list",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/layout/grid_layout.hpp",
+      "symbol": "is_track_list",
+      "refusedFunction": "isTrackList",
+      "declaration": "bool is_track_list(flight::Any value);",
+      "sourceDeclaration": "packages/layout/src/gridLayout.ts -- isTrackList(value: unknown): value is readonly GridLayoutTrack[]; source unknown is flight::Any like same-header numeric guards; retained container validation calls it with optional<Array<GridLayoutTrack>> columns and rows, represented by the existing Any optional/array constructors.",
+      "diagnostic": "use of undeclared identifier 'is_track_list'",
+      "defect": "The exact isTrackList marker, two live same-header calls and absent definition agree. The validator is refused at cpp-typeof-runtime-domain-unrepresented for an iterated Array.isArray-narrowed element. Declare the existing unknown-to-bool guard boundary only, not an array copy, narrowed validator, default result or body. Existing erased-array-element-reading and retained-declaration-calls-omitted-callee requests record the missing body.",
+      "expectedWhen": "always",
+      "expires": "when isTrackList emits or the retained call witness disappears; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "layout-declare-refused-grid-resolver",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/layout/grid_layout.hpp",
+      "symbol": "grid_layout_resolver",
+      "requiredText": "// NOT GENERATED: variable (binding) -- source line 17\n// refusal: cpp-type-assertion-unidentified",
+      "declaration": "namespace flight::layout { extern flight::types::LayoutResolver grid_layout_resolver; }",
+      "sourceDeclaration": "packages/layout/src/gridLayout.ts -- const gridLayoutResolver: LayoutResolver = (out, tree, intrinsicSizes, parentIndex, childIndex) => ...; retained registerGridLayoutResolver wraps this exact callback carrier as optional<LayoutResolver>. The binding refuses nullable item-style owner recovery.",
+      "diagnostic": "use of undeclared identifier 'grid_layout_resolver'",
+      "defect": "The exact line17 grid resolver binding refusal marker remains and explicit registration names the absent binding. The existing declaration mechanism adds only the actual LayoutResolver external binding. No callback, grid algorithm, item/container owner, output write or successful registration is supplied. Existing assertion-to-nullable-variant-alternative and retained-declaration-calls-omitted-callee requests cover this boundary.",
+      "expectedWhen": "always",
+      "expires": "when gridLayoutResolver emits and the exact refused-binding marker disappears; sdk:check fails if this repair matches no header."
     }
   ]
 }

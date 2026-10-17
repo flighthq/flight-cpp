@@ -152,3 +152,20 @@ link this request: `_internal_index.hpp`, `bitmap_font_detect.hpp`, `bitmap_font
 `contract.hpp` in `flight/bitmapfont_formats/`. Their diagnostics and prior include-guard repair
 provenance are retained. No C++ input changed, so no unchanged native rerun or parser-functionality
 claim was made.
+
+## G2 grid track fraction still requires an active owner
+
+At Flight `a627849` / compiler `806d257`, `getGridTrackSize` is refused as
+`cpp-union-member-access-unguarded`: `property fraction on a C++ variant requires proven union member
+access`. Its actual `GridLayoutTrack` carrier contains three reference alternatives: kind-only auto,
+kind/size fixed, and fraction/kind. The source checks fixed and auto kinds before its final fraction
+read; its accumulation loop also has a fraction read in the remaining branch. The diagnostic names
+`fraction` but does not identify which expression, so neither is claimed as an independently measured
+failure site.
+
+Preserve the active referenced track through the source kind tests and read only the owner's member
+that those tests prove. Do not materialize a merged owner, drop auto/fixed tracks, coerce weights or
+supply a zero size. Fixed and auto contributions and gaps are subtracted before the remaining space is
+clamped and distributed by fractional weight; the zero-total guard and source read order remain intact.
+The grid declaration repairs leave this entire helper refused. Header availability does not implement
+track sizing or prove native grid layout behavior.

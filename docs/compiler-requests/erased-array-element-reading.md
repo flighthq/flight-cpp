@@ -210,3 +210,26 @@ The owned headers, under `flight/skeleton2d_formats/`, are `_internal_index.hpp`
 **0/7 pass, 7 fail** is preserved from G1; all seven rows remain failed and now link this existing
 request. The cluster route is compiler. No C++ input changed, so no unchanged native compile rerun was
 performed. Closing the missing name must not be reported as restoring the refused animation behavior.
+
+## G2 grid track-list validator retains the same erased-element boundary
+
+At Flight `a627849` / compiler `806d257`, `layout/grid_layout.hpp` omits
+`isTrackList(value: unknown): value is readonly GridLayoutTrack[]` as
+`cpp-typeof-runtime-domain-unrepresented`. After `Array.isArray(value)` and the nonempty check,
+its loop tests `typeof track !== 'object' || track === null`. The exact refusal says the iterated
+value has no closed runtime type evidence. The input is still source `unknown`; it is not restricted
+to an already-validated native `Array<GridLayoutTrack>`.
+
+The retained container validator calls this missing helper on `columns` before `rows`, each stored as
+`optional<Array<GridLayoutTrack>>`. Their existing `Any` optional/array construction preserves the array
+identity and absent state. `layout-declare-refused-track-list` declares the exact `bool(Any)` boundary,
+matching the source unknown carrier used by the same-header numeric guards, and supplies no validation.
+The [retained-boundary notes](retained-declaration-calls-omitted-callee.md#g2-grid-track-guard-and-resolver-retain-two-distinct-omissions)
+record the independent link checks.
+
+Faithful emission must reject nonarrays, empty arrays, null/nonobject elements and unknown kinds. It must
+accept `auto`, require finite nonnegative `size` for `fixed`, and finite positive `fraction` for
+`fraction`. The source repeats kind/member reads and short circuits in a defined order; preserve getter
+reads and exceptions instead of snapshotting, copying elements, coercing values or assuming every array
+already contains valid track owners. A typed-only loop, default true/false guard or copied erased array
+would not implement the source predicate. This G2 declaration leaves the entire body refused.
