@@ -7154,6 +7154,19 @@
       "expires": "when untrackMidiSubscription emits (the NOT GENERATED marker disappears and this repair matches nothing); sdk:check fails if this repair matches no header."
     },
     {
+      "id": "intl-datetime-declare-refused-format-date-value",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/intl/datetime.hpp",
+      "symbol": "format_date_value",
+      "refusedFunction": "formatDateValue",
+      "declaration": "flight::String format_date_value(std::variant<flight::Date, double> date, flight::types::LocaleInput locale, flight::IntlDateTimeFormatOptions options);",
+      "sourceDeclaration": "packages/intl/src/datetime.ts -- formatDateValue(date: Date | number, locale: LocaleInput, options: Readonly<Intl.DateTimeFormatOptions>): string, refused at cpp-contextual-union-value-type-unrepresented; the retained formatDate, formatDateTime and formatTime in the same header call it with exactly those emitted carriers",
+      "diagnostic": "use of undeclared identifier 'format_date_value'",
+      "defect": "The emitter refuses formatDateValue because the contextual union at the retained getCacheKey call -- Readonly<Intl.DateTimeFormatOptions> flowing into Readonly<object> | undefined, emitted as std::optional<flight::ErasedRef> -- reports flight::IntlDateTimeFormatOptions as not a represented runtime domain (docs/compiler-requests/compiler-intl-optional-and-union-carrier-evidence.md, shape 2), yet it retains formatDate, formatDateTime and formatTime calling it. The three witnesses agree: the exact NOT GENERATED formatDateValue marker, emitted code outside comments calling format_date_value, and no definition. The declaration is the emitter's own signature, taken from the carrier the retained calls construct: std::variant<flight::Date, double>, flight::types::LocaleInput and flight::IntlDateTimeFormatOptions by value. It supplies no formatter, no locale behavior, no cache lookup and no date string. Calling the refused helper or any retained caller still fails to link, so the intl formatter stays visibly unusable rather than substituted.",
+      "expectedWhen": "always",
+      "expires": "when formatDateValue emits (the NOT GENERATED marker disappears and this repair matches nothing); sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "notification-create-signal-using-declaration",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/notification/",

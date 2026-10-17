@@ -101,7 +101,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 72 | `redefinition-c11d96e9` | 3 | TEXT | runtime (fixed) | the bitmap_font_record override's `#pragma once` was commented out; G2 recheck: 0 pass, 3 fail at `bitmap_font_fnt.hpp:187` |
 | 73 | `undeclared-identifier-145c75d7` | 3 | TEXT | runtime | the emitted code names `initialize_glyph_source_from_glyph_atlas`, which nothing declares |
 | 74 | `undeclared-identifier-2cdb69a6` | 3 | PLAT | runtime + override (fixed) | the emitted code names `channel_elements`, which nothing declares; G2: 3 pass |
-| 75 | `undeclared-identifier-564c29cc` | 3 | TEXT | runtime | the emitted code names `format_date_value`, which nothing declares |
+| 75 | `undeclared-identifier-564c29cc` | 3 | TEXT | runtime + repair (fixed) | the emitted code names `format_date_value`, which nothing declares; G2: 1 pass, 2 to `undeclared-identifier-1a056bbc` |
 | 76 | `undeclared-identifier-6a187568` | 3 | 3D | declaration repair (applied) | refused ASCII STL counter declared; G2: 3 pass; counter remains unlinkable |
 | 77 | `undeclared-identifier-dc087108` | 3 | PLAT | runtime | the emitted code names `load_video_resource_from_url`, which nothing declares |
 | 78 | `call-has-no-matching-84410867` | 2 | 3D | compiler | the emitted call to `buffer_data` matches no declared overload |
@@ -186,7 +186,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 157 | `undeclared-identifier-1462818e` | 1 | 2D | runtime | the emitted code names `ensure_gl_velocity_program`, which nothing declares |
 | 158 | `undeclared-identifier-17cb8386` | 1 | GL | runtime | the emitted code names `gl_bokeh_depth_of_field_effect_runner`, which nothing declares |
 | 159 | `undeclared-identifier-1892fccb` | 1 | PLAT | runtime | the emitted code names `resolve_text_char_index`, which nothing declares |
-| 160 | `undeclared-identifier-1a056bbc` | 1 | TEXT | runtime | the emitted code names `get_number_format`, which nothing declares |
+| 160 | `undeclared-identifier-1a056bbc` | 3 | TEXT | runtime | the emitted code names `get_number_format`, which nothing declares; G2: inherits 2 rows from `undeclared-identifier-564c29cc` |
 | 161 | `undeclared-identifier-1d8e072a` | 1 | 2D | runtime | the emitted code names `draw_gl_scale9_sprite`, which nothing declares |
 | 162 | `undeclared-identifier-2110ec37` | 1 | WGPU | runtime | the emitted code names `draw_wgpu_sprite`, which nothing declares |
 | 163 | `undeclared-identifier-2363216f` | 1 | GL | runtime | the emitted code names `gl_dither_effect_runner`, which nothing declares |
@@ -1550,14 +1550,30 @@ it may declare no parameter, so `Task::catch_error` now resolves the handler ari
 than passing the reason to something that discards it. The exact reason still reaches a handler that
 declares it, and the runtime test covers both forms for a value task and for a void task.
 
-### 75. `undeclared-identifier-564c29cc` — 3 header(s)
+### 75. `undeclared-identifier-564c29cc` — 3 G1 header(s), 1 now compiles
 
 - cause: the emitted code names `format_date_value`, which nothing declares
 - subject: `format_date_value`
 - lanes: TEXT
-- fix route: runtime
+- fix route: runtime + repair (fixed)
 - first failure at: `flight/intl/datetime.hpp:45`
 - example: `use of undeclared identifier 'format_date_value'`
+
+`formatDateValue` is refused at `cpp-contextual-union-value-type-unrepresented` because the
+options record flowing into the retained `getCacheKey` call is not a represented domain for the
+`Readonly<object> | undefined` carrier; that shape is already filed in
+`docs/compiler-requests/compiler-intl-optional-and-union-carrier-evidence.md`. The emitter still
+lowers `formatDate`, `formatTime` and `formatDateTime`, which call it, so the header named an
+undeclared symbol. `intl-datetime-declare-refused-format-date-value` inserts the emitted signature
+and nothing else: `flight::String format_date_value(std::variant<flight::Date, double>,
+flight::types::LocaleInput, flight::IntlDateTimeFormatOptions)`, taken from the carriers those three
+retained calls construct. A translation unit that includes the header but calls none of them links,
+and a call of `format_date`, `format_time` or `format_date_time` fails to link on
+`format_date_value`, so the formatter stays visibly unusable: no body, no locale behavior, no cache
+lookup and no substituted date string.
+
+That fixes `datetime.hpp`. `_internal_index.hpp` and `contract.hpp` include the whole package, so
+their first failure moves to `get_number_format` and they join `undeclared-identifier-1a056bbc`.
 
 ### 76. `undeclared-identifier-6a187568` — 3 G1 header(s), declaration repaired
 
@@ -2365,7 +2381,7 @@ and retain all source spread fields; no permissive runtime constructor or incomp
 - first failure at: `flight/interaction/register_text_hit_test.hpp:61`
 - example: `use of undeclared identifier 'resolve_text_char_index'`
 
-### 160. `undeclared-identifier-1a056bbc` — 1 header(s)
+### 160. `undeclared-identifier-1a056bbc` — 3 G1 header(s)
 
 - cause: the emitted code names `get_number_format`, which nothing declares
 - subject: `get_number_format`
@@ -2373,6 +2389,10 @@ and retain all source spread fields; no permissive runtime constructor or incomp
 - fix route: runtime
 - first failure at: `flight/intl/number.hpp:42`
 - example: `use of undeclared identifier 'get_number_format'`
+
+The two additional headers arrived from `undeclared-identifier-564c29cc`: `_internal_index.hpp` and
+`contract.hpp` include the whole intl package, so once `datetime.hpp` compiled their first failure
+became this one. They add no new cause and no new decision.
 
 ### 161. `undeclared-identifier-1d8e072a` — 1 header(s)
 

@@ -41,6 +41,8 @@ using flight::types::LocaleInput;
 
 inline flight::IntlDateTimeFormatOptions default_date_options = {.year = flight::String("numeric"), .month = flight::String("numeric"), .day = flight::String("numeric")};
 
+flight::String format_date_value(std::variant<flight::Date, double> date, flight::types::LocaleInput locale, flight::IntlDateTimeFormatOptions options);
+
 inline flight::String format_date(std::variant<flight::Date, double> date, flight::types::LocaleInput locale, std::optional<flight::IntlDateTimeFormatOptions> options = std::nullopt) {
   return format_date_value(date, locale, (options.has_value() ? options.value() : default_date_options));
 }

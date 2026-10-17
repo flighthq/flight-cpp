@@ -3363,6 +3363,12 @@
         "flight/scene3d_formats/stl_features.hpp"
       ],
       "id": "scene3d-formats-declare-refused-ascii-stl-count"
+    },
+    {
+      "files": [
+        "flight/intl/datetime.hpp"
+      ],
+      "id": "intl-datetime-declare-refused-format-date-value"
     }
   ],
   "sourcePatches": [
