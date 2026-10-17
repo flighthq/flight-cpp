@@ -8906,6 +8906,19 @@
       "expires": "when the emitter projects an array into the row element type its member declares; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "scene3d-gl-declare-refused-modifier-table-guard",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/scene3d_gl/gl_shaded_prelude.hpp",
+      "symbol": "is_gl_modifier_snippet_table",
+      "refusedFunction": "isGlModifierSnippetTable",
+      "declaration": "bool is_gl_modifier_snippet_table(GlModifierSnippetSource registry);",
+      "sourceDeclaration": "packages/scene3d-gl/src/glShadedPrelude.ts -- isGlModifierSnippetTable(registry: GlModifierSnippetSource): registry is Readonly<ReadonlyMap<Kind, GlModifierSnippet>>, refused; current emitted resolver and define-key helper call it with the exact alias carrier",
+      "diagnostic": "use of undeclared identifier 'is_gl_modifier_snippet_table'",
+      "defect": "Current emission carries the open concrete modifier/definition owner unions and emits resolveGlModifierSnippetSource, but still refuses the Map guard (cpp-instanceof-member-unresolved). Exact same-header refusal marker, direct calls and absent body satisfy declare-refused-function. Only a bool declaration over the emitted GlModifierSnippetSource alias is added; no type test, shader snippet or substitute behavior. A current-emission override rederivation must retain the full value domains and existing native nested-optional color-feature correction. Calling the resolver remains an exact missing-guard link failure.",
+      "expectedWhen": "always",
+      "expires": "when isGlModifierSnippetTable emits or its retained calls disappear; sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "glyphatlas-declare-refused-initialize-glyph-source",
       "kind": "declare-refused-function",
       "appliesTo": "flight/glyphatlas/glyph_source.hpp",

@@ -131,6 +131,8 @@ inline const flight::String shaded_fragment_template = flight::String("\nprecisi
 // against Map needs the operand's union to name it or to carry the erased arm; this union does neither, so
 // nothing tells the target which kind is being asked about
 
+bool is_gl_modifier_snippet_table(GlModifierSnippetSource registry);
+
 inline std::optional<flight::Ref<flight::types::GlModifierSnippet>> resolve_gl_modifier_snippet_source(GlModifierSnippetSource registry, flight::String kind) {
   if (!is_gl_modifier_snippet_table(registry)) {
     return ([&]() -> std::optional<flight::Ref<flight::types::GlModifierSnippet>> { const auto& narrowed_union = flight::shading::resolve_modifier(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>>>(std::get<0>(registry)), kind); if (!narrowed_union.has_value()) return std::nullopt; if (const auto* alternative = std::get_if<flight::Ref<flight::types::GlModifierSnippet>>(&narrowed_union.value())) return std::optional<flight::Ref<flight::types::GlModifierSnippet>>{*alternative}; throw std::logic_error("asserted union alternative is not present in the value"); }());

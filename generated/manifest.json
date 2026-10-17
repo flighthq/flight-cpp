@@ -3295,6 +3295,12 @@
     },
     {
       "files": [
+        "flight/scene3d_gl/gl_shaded_prelude.hpp"
+      ],
+      "id": "scene3d-gl-declare-refused-modifier-table-guard"
+    },
+    {
+      "files": [
         "flight/glyphatlas/glyph_source.hpp"
       ],
       "id": "glyphatlas-declare-refused-initialize-glyph-source"
