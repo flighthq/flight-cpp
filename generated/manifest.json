@@ -5198,6 +5198,13 @@
       "id": "spine-binary-transform-mode-element-union",
       "module": "packages/skeleton2d-formats/src/spineBinaryBonesHandler.ts SPINE_BINARY_TRANSFORM_MODES",
       "package": "@flighthq/skeleton2d-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "2c8fd25b0c5a2b74d8f64ae910a9b9f0dafa9dbb7c25e6e698a49c1b814fe717",
+      "id": "scene2d-dom-texture-table-carrier",
+      "module": "packages/scene2d-dom/src/domTextureResolver.ts",
+      "package": "@flighthq/scene2d-dom"
     }
   ],
   "duplicateStructuralStructAliases": {

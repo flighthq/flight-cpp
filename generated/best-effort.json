@@ -25128,8 +25128,8 @@
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts"
       ],
       "declarationFingerprints": [
-        "sha256:0d3d533e06766ac03391df04b6f59d2e92bd2ca57162bceeb3d71c412ae69d36",
-        "sha256:4821b544e817bff337b82eede1fefd70dcb3eb307e8f5ee7428776991a5d85c5"
+        "sha256:4821b544e817bff337b82eede1fefd70dcb3eb307e8f5ee7428776991a5d85c5",
+        "sha256:c57231add6ec5683739ff6546a9074cf24be346fbd16751a864e955907ab30ce"
       ],
       "module": {
         "name": "DomTextureResolver",

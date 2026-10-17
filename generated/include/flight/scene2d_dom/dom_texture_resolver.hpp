@@ -3,16 +3,14 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function registerDomTextureResolver -- source line 7
 //   missing: function resolveDomTexture -- source line 20
+#include <flight/host_sdl/image.hpp>
+#include <flight/map.hpp>
+#include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
-
-#include <flight/types/texture_source_kind.hpp>
-
-#include <flight/types/dom_texture_resolver.hpp>
 
 #include <flight/types/dom_render_state.hpp>
 
@@ -25,37 +23,26 @@ namespace flight::types { struct Texture2DArray; }
 namespace flight::types { struct Texture3D; }
 namespace flight::types { struct TextureCube; }
 
+#include <flight/types/contract.hpp>
+#include <flight/scene2d_dom/dom_render_state.hpp>
+
 namespace flight::scene2d_dom {
 
 using flight::types::DomRenderState;
 using flight::types::DomRenderStateRuntime;
-using flight::types::DomTextureResolver;
-using flight::types::TextureSourceKind;
 
-
-// NOT GENERATED: function registerDomTextureResolver -- source line 7
-// refusal: cpp-union-runtime-domains-erased [target-runtime]
-//
-// The source it stood for:
-//   export function registerDomTextureResolver(
-//     state: DomRenderState,
-//     sourceKind: TextureSourceKind,
-//     resolver: DomTextureResolver | null,
-//   ): void {
-//     const runtime = getDomRenderStateRuntime(state);
-//     const table = runtime.registries.textureResolvers ?? new Map();
-//     const entries = new Map(table);
-//     if (resolver === null) entries.delete(sourceKind);
-//     else entries.set(sourceKind, resolver);
-//     runtime.registries.textureResolvers = entries;
-//   }
-//   
-// cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domTextureResolver.ts: C++ runtime
-// contract maps distinct union domains to one carrier without a discriminator or checked projection (Map |
-// ReadonlyMap -> flight::Map<flight::String, flight::types::DomTextureResolver>); give the domains
-// distinguishable key, element, or member types so each reaches a carrier of its own -- a union of two
-// declarations that differ only in name is one carrier whatever the emitter does -- or provide that runtime
-// contract
+inline void register_dom_texture_resolver(flight::Ref<flight::types::DomRenderState> state, flight::String source_kind, std::optional<flight::types::DomTextureResolver> resolver) {
+  auto runtime = flight::scene2d_dom::get_dom_render_state_runtime(state);
+  flight::Map<flight::String, flight::types::DomTextureResolver> table = runtime->registries->texture_resolvers;
+  flight::Map<flight::String, flight::types::DomTextureResolver> entries = flight::Map<flight::String, flight::types::DomTextureResolver>(table).clone();
+  if (!resolver.has_value()) {
+    entries.erase(source_kind);
+  }
+  else {
+    entries.set(source_kind, resolver.value());
+  }
+  (runtime->registries->texture_resolvers = entries);
+}
 
 
 // NOT GENERATED: function resolveDomTexture -- source line 20

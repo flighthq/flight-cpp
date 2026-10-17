@@ -5035,10 +5035,10 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 7,
+      "line": 20,
       "module": "packages/scene2d-dom/src/domTextureResolver.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domTextureResolver.ts: C++ runtime contract maps distinct union domains to one carrier without a discriminator or checked projection (Map | ReadonlyMap -> flight::Map<flight::String, flight::types::DomTextureResolver>); give the domains distinguishable key, element, or member types so each reaches a carrier of its own -- a union of two declarations that differ only in name is one carrier whatever the emitter does -- or provide that runtime contract",
+      "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domTextureResolver.ts: C++ runtime contract maps distinct union domains to one carrier without a discriminator or checked projection (HTMLImageElement | HTMLVideoElement | ImageBitmap | OffscreenCanvas | SVGImageElement | VideoFrame -> flight::host_sdl::ImageSource); give the domains distinguishable key, element, or member types so each reaches a carrier of its own -- a union of two declarations that differ only in name is one carrier whatever the emitter does -- or provide that runtime contract",
       "stage": "emission"
     },
     {

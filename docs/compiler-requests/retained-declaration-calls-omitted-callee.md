@@ -1132,3 +1132,34 @@ source result contract visible to retained callers and preserve the missing help
 or coherently refuse the dependent caller. No repair, generated C++, source patch, override, manifest
 or inventory change is carried, so no changed generation needs reproducing. The original row remains
 failed, with no slot/parser/header gain or native behavior claim.
+
+## G2 DOM image registration retains a refused optional callback
+
+At Flight `a627849` / compiler `806d257`, `scene2d_dom/dom_image_texture_resolver.hpp`
+retains `register_dom_image_texture_resolver` calling the separately refused
+`register_dom_texture_resolver` and passing
+`std::optional<flight::types::DomTextureResolver>{resolve_dom_image_texture}`.
+The original one-header failure is the missing cross-module registration member at67.
+
+The exact registration refusal marker, live direct caller and absent definition satisfy the existing
+`calledFrom` witness: a scratch declaration matches once and is idempotent. No declaration repair is
+carried, because an erased `ReadonlyMap<TextureSourceKind, DomTextureResolver>` local annotation now
+lets normal generation emit the real registration body. It retains the existing state/runtime/registry
+owners and clones the Map before changing one open string key. Native execution checks registration,
+replacement, removal of present/absent keys, retained snapshots, another state's isolation, no eager
+callback invocation and original callback/state/texture owners. The callback signature is unchanged.
+
+The image callback itself is still refused at the exact-alias boundary described in
+[the imported-alias request](compiler-imported-alias-outer-union-abi.md#g2-dom-image-callback-exact-alias-recovery-must-preserve-source-member-reads).
+Its live use is nested inside an optional initializer, not a direct function-argument token.
+The current `retainedReference` loader rejects that exact line with `invalid retainedReference
+callback witness`; no witness extension or generic forward-declaration bypass is introduced.
+The independently attempted image-result annotation was rejected after actual native execution
+threw on a represented non-image source where the pinned source returns null. A compile-only green
+candidate is not evidence that this callback is faithful or usable.
+
+No image callback declaration/body, copied source owner, fake decode, DOM backend, narrowed Texture
+input or placeholder registration is supplied. The table annotation's original and patched complete
+module transpile to byte-identical JavaScript. The original image header remains failed at its next
+missing callback; the partial marker and the generic resolver's refusal remain visible. Header
+availability, real table registration and image resolution are separate results.
