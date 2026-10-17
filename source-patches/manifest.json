@@ -4200,6 +4200,23 @@
       "unblocks": "Only erased preset table element selection; canonical TransformInherit2D storage and diagnostic-detail construction remain independent.",
       "expires": "when readonly tuples of compatible exact object owners retain their element carrier upstream.",
       "appliedOn": "2026-10-17"
+    },
+    {
+      "id": "scene2d-dom-texture-table-carrier",
+      "dependency": "flight",
+      "patch": "scene2d-dom-texture-table-carrier.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/scene2d-dom/src/domTextureResolver.ts",
+      "package": "@flighthq/scene2d-dom",
+      "answers": "refusal",
+      "refusal": "Map | ReadonlyMap -> flight::Map<flight::String, flight::types::DomTextureResolver>",
+      "rewrite": "Annotates the existing nullish-coalesced resolver table as ReadonlyMap<TextureSourceKind, DomTextureResolver>.",
+      "equivalence": "The annotation erases in JavaScript; the whole module transpiles byte-identically. It preserves the existing expression, nullish fallback construction, fresh Map snapshot, insertion order, open string keys, nullable callback replacement/removal and original state/runtime/registry owners. No callback result or texture input is narrowed and no owner or provider is supplied.",
+      "whyNotUpstreamFirst": "The existing persistent Map and exact DomRenderState runtime owner already implement the source operation. An erased local annotation avoids treating mutable and readonly views of the same table as distinct runtime domains; no runtime or binding capability is missing for registration.",
+      "unblocks": "Emits registerDomTextureResolver only. resolveDomTexture and resolveDomImageTexture remain refused, and the original image wrapper remains unavailable at its missing callback.",
+      "expires": "when same-carrier Map/ReadonlyMap coalesces retain the declared table domain upstream, or Flight adopts the explicit local annotation.",
+      "appliedOn": "2026-10-17",
+      "verification": "The initial exact-pin two-module candidate emits the real registration body using the existing Map clone and state runtime owner. Native execution passes open vendor registration/removal and retained snapshot isolation. The separately attempted HostImageSource callback annotation was rejected after a full Texture arm threw bad_variant_access; it is not in this patch. Final table-only generation and scoped checks are recorded in the task disposition."
     }
   ]
 }

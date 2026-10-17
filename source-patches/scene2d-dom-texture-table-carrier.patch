@@ -1,0 +1,12 @@
+diff --git a/packages/scene2d-dom/src/domTextureResolver.ts b/packages/scene2d-dom/src/domTextureResolver.ts
+--- a/packages/scene2d-dom/src/domTextureResolver.ts
++++ b/packages/scene2d-dom/src/domTextureResolver.ts
+@@ -10,7 +10,7 @@
+   resolver: DomTextureResolver | null,
+ ): void {
+   const runtime = getDomRenderStateRuntime(state);
+-  const table = runtime.registries.textureResolvers ?? new Map();
++  const table: ReadonlyMap<TextureSourceKind, DomTextureResolver> = runtime.registries.textureResolvers ?? new Map();
+   const entries = new Map(table);
+   if (resolver === null) entries.delete(sourceKind);
+   else entries.set(sourceKind, resolver);
