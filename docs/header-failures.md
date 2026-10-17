@@ -140,7 +140,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 111 | `missing-member-1620083c` | 1 | 2D | binding | SDL DOM value/style copies cannot carry the web renderer mix-blend write; open blend domain/provider required; G2: 0/1 retained |
 | 112 | `missing-member-1a2e58cb` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`register_dom_texture_resolver`) |
 | 113 | `missing-member-1ce5ed2e` | 1 | 3D | declaration repair (applied) | six refused built-in joint-solver bindings declared; G2: 1/1 pass, registration remains unlinkable |
-| 114 | `missing-member-42783657` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`font`) |
+| 114 | `missing-member-42783657` | 1 | 2D | binding | SDL DOM value/style copies cannot carry the native text font/textAlign/lineHeight writes; shared style provider required; G2: 0/1 retained |
 | 115 | `missing-member-5ac43ed0` | 1 | 3D | source fix; compiler bounds debt | optional color write emits checked TypedArray assignment; G2: 0/1 now writable Aabb output-owner failure |
 | 116 | `missing-member-703ef98e` | 1 | 2D | compiler | G2: 0/1; refused additive handler retained in registration/global family; declaration fails unused positive link |
 | 117 | `missing-member-8aa8170f` | 1 | ANIM | compiler *(existing request)* | the refused `swfVideoHandler` binding is still named by `swfVideoTagFamily`; its placement callable needs a signature adapter |
@@ -2355,14 +2355,17 @@ runs; a translation unit that calls `register_built_in_physics_3d_joint_solvers`
 link on all six symbols at once, so registration stays visibly unavailable rather than substituted.
 The generated `joints.hpp` and `manifest.json` were the only paths written; no ledger drift.
 
-### 114. `missing-member-42783657` — 1 header(s)
+### 114. `missing-member-42783657` — G2 recheck of 1 header(s)
 
-- cause: the emitted code reads a member the target does not declare (`font`)
-- subject: `font`
+- cause: the bound SDL DOM shell lacks a shared CSS style owner for the native text `font`, `textAlign` and `lineHeight` writes
+- subjects: `font`, `text_align`, `line_height`
 - lanes: 2D
-- fix route: runtime
+- fix route: binding
+- why this route: `apply_native_text_style` takes `host_sdl::HtmlElement` by value, and `HtmlElement` aliases the value `DomElement`. Adding the three `String` fields to `DomStyle` would compile, but the writes would land on a copy, which is the copied facade that [dom-style-shared-element-boundary](compiler-requests/dom-style-shared-element-boundary.md) rules out. The refused `drawDomNativeText` is still registered at lines 136 and 139, which is reached only after this boundary. `scene2d-dom` declares environment `web`, so applicability is unchanged.
 - first failure at: `flight/scene2d_dom/dom_native_text.hpp:69`
 - example: `no member named 'font' in 'host_sdl::DomStyle'`
+- Scoped native recheck (GCC 15.2, jobs 1): **1 attempted / 0 pass / 1 fail**, same diagnostic. No DOM/text backend, style field, metrics, glyphs or narrowed input is supplied.
+- compiler request: `docs/compiler-requests/dom-style-shared-element-boundary.md`
 
 ### 115. `missing-member-5ac43ed0` — 1 header(s)
 

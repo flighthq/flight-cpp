@@ -119,3 +119,24 @@ package totals or compile denominator. The header stays in the inventory and its
 1 fail** diagnostic remains. No C++/binding/source/override/generated body changed; no generation,
 unchanged native compile, style behavior executable or rendering test was run. The emitted nullish
 lookup shape was inspected but no later compiler diagnostic or native behavior result is claimed.
+
+## G2 DOM native text style writes use the same missing shared style boundary
+
+At Flight `a627849` / compiler `806d257`, `flight/scene2d_dom/dom_native_text.hpp` fails on the same boundary
+(GCC 15.2, one worker):
+- `apply_native_text_style(flight::host_sdl::HtmlElement element, ...)` takes the element by value, and
+  `HtmlElement` aliases the value `DomElement`.
+- It writes `style.font` (line 69), `style.text_align` (72) and `style.line_height` (75), and `DomStyle`
+  declares none of them.
+
+Adding those three `String` fields would compile, but the writes would land on the parameter's copy. The
+caller's element would never get its font, alignment or leading. That is the copied value facade this
+request rules out, so no field is added here. A real provider must apply the composed CSS font shorthand,
+`rgba()` color, `textAlign` and `lineHeight` to the identical element through every alias, without
+inventing text metrics or glyphs.
+
+The header also refuses `drawDomNativeText` (`cpp-contextual-union-value-type-unrepresented`, source
+line 28), and its registration still names it at lines 136 and 139. That is the separate retained-binding
+class, and it is reached only after this boundary. `scene2d-dom` declares environment `web`, so applicability
+and the denominator are unchanged. The row stays **0/1 pass, 1 fail** at line 69. No C++, binding, source,
+override or generated text changed.
