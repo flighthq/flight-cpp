@@ -85,6 +85,9 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 
 ## Active requests without a compiler patch
 
+- [A call to a user-defined type predicate must narrow the guarded value](type-predicate-narrowing-not-applied.md) —
+  `@flighthq/scene3d` reads `geometry` through an `isMesh(node)` guard from the un-narrowed `Node3D`
+  row, so the runtime's row-schema assertion fires; the predicate itself already builds the narrowed projection.
 - [An assertion on an optional value must cast the present value, not the optional](optional-assertion-cast-must-unwrap.md) —
   `@flighthq/scene2d` `createScale9Sprite` emits `structural_ref_cast<T>(obj)` with `obj` still an
   `std::optional`; the asserted value is type-level only and the callee's optional parameter carries the absence.

@@ -77,7 +77,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 48 | `other-4e22e4de` | 4 | 2D | compiler | JSON.parse assertion casts JsonValue to the Aseprite document-owner variant *(existing request extended)* |
 | 49 | `other-5611a858` | 4 | ANIM | declaration repair (applied) | ColorScaleBiasAdjustment heritage restored; G2: 1 pass, 3 compiler failures |
 | 50 | `other-d6be4352` | 4 | ANIM | [compiler request](compiler-requests/json-parse-assertion-static-cast.md#g2-pixi-particle-parser-the-destination-is-a-dynamic-record) | parsed JSON is asserted to PixiRaw with an unrelated C++ record cast; nested shape/absence lowering also remains open |
-| 51 | `static-assertion-00a0e75d` | 4 | 3D, WGPU | compiler | a runtime static assertion rejects the emitted shape |
+| 51 | `static-assertion-00a0e75d` | 4 | 3D, WGPU | [compiler request](compiler-requests/type-predicate-narrowing-not-applied.md) | an `isMesh` type predicate narrows the guarded value in source, but the emitter reads `geometry` from the un-narrowed `Node3D` row |
 | 52 | `undeclared-identifier-0fc9e20f` | 4 | 2D | declaration repair (applied) | omitted artboard-import-context declaration supplied; G2: 0 pass, 4 fail at the next omitted callee; function remains unlinkable |
 | 53 | `undeclared-identifier-69b85faa` | 4 | PLAT | declaration repair (applied) | omitted untrack callee declaration supplied; G2: 0 pass, 4 fail at the next omitted callee; function remains unlinkable |
 | 58 | `undeclared-identifier-7d64d9c1` | 4 | GL | compiler | the emitter refuses the `glCustomShaderEffectRunner` binding and its resolver but still emits the registration call that passes... *(request filed)* |
@@ -1259,11 +1259,25 @@ native recompile or global sweep was run and no Pixi parity or upstream test por
 
 ### 51. `static-assertion-00a0e75d` — 4 header(s)
 
-- cause: a runtime static assertion rejects the emitted shape
+- cause: a call to a user-defined type predicate (`isMesh`) narrows the guarded value in TypeScript,
+  but the emitter keeps the declared `Node3D` row and reads the narrowed-only `geometry` property from
+  it, which the row schema does not declare
 - lanes: 3D, WGPU
-- fix route: compiler
-- first failure at: `flight/structural_ref.hpp:1421`
-- example: `static assertion failed due to requirement '!is_void_v<void>': structural row schema does not contain the requested property`
+- fix route: compiler — [type predicate narrowing not applied](compiler-requests/type-predicate-narrowing-not-applied.md)
+- first failure at: `flight/scene3d/scene_node_bounds.hpp:53`
+- example: `static assertion failed due to requirement '!std::is_void_v<void>': structural row schema does not contain the requested property`
+
+Measured with the instantiation trace: `row_get<RowKey<"geometry">>` is instantiated on
+`RowReadonly<RowMerge<RowOf<Node<Ref<Node3DTraits>>>, RowOf<Ref<Node3DTraits>>>>`. The predicate itself
+is emitted correctly (it projects to a readonly partial `Mesh` row); only the guarded block keeps the
+un-narrowed row. `scene_node_culling.hpp:61` carries the same construct, and the GL/WGPU forward-lights
+headers report it through their includes.
+
+Follow-on families in the same headers, not addressed by the request: `Ref<Aabb>` where
+`Ref<AabbLike>` is declared (`scene_node_bounds.hpp:57`, `prepare_gl_scene_3d_forward_lights.hpp:155`),
+`row_get<RowKey<"m">>` on the emitted world-matrix row (`prepare_gl_scene_3d_forward_lights.hpp:158`),
+and a `Scene3DLights` row where the declared `Scene3DLightsLike` carrier is expected
+(`prepare_gl_scene_3d_forward_lights.hpp:191`). No C++ was changed; the scoped traces are the evidence.
 
 ### 52. `undeclared-identifier-0fc9e20f` — 4 header(s), declaration repaired
 
