@@ -1,0 +1,12 @@
+diff --git a/packages/scene3d-gl/src/enableGlScene3DCustomShaderGuards.ts b/packages/scene3d-gl/src/enableGlScene3DCustomShaderGuards.ts
+--- a/packages/scene3d-gl/src/enableGlScene3DCustomShaderGuards.ts
++++ b/packages/scene3d-gl/src/enableGlScene3DCustomShaderGuards.ts
+@@ -23,7 +23,7 @@
+ // Maps a GL uniform-type enum to its GLSL type keyword, so a warning names the type a shader must declare
+ // rather than a raw enum. Only the types the built-in uniforms use (and their nearest neighbors) are named;
+ // anything else falls back to the raw enum so the message is still actionable.
+-function glUniformTypeName(gl: Readonly<GlContext>, type: number): string {
++function glUniformTypeName(gl: GlContext, type: number): string {
+   switch (type) {
+     case gl.FLOAT_MAT4:
+       return 'mat4';

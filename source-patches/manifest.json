@@ -4284,6 +4284,23 @@
       "unblocks": "Lets merge_dom_render_options.hpp emit both coalesce arms as the same Map carrier.",
       "expires": "when the emitter lowers an empty-array fallback against a Map-typed present arm as that iterable kind, or Flight adopts this spelling.",
       "appliedOn": "2026-10-17"
+    },
+    {
+      "id": "scene3d-gl-custom-uniform-context-carrier",
+      "dependency": "flight",
+      "patch": "scene3d-gl-custom-uniform-context-carrier.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/scene3d-gl/src/enableGlScene3DCustomShaderGuards.ts",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "diagnostic",
+      "refusal": "glUniformTypeName takes a structural row over Readonly<GlContext>, while the bound context value passed by warnGlCustomShaderUniformTypes is WebGl2Context and has no implicit row conversion",
+      "rewrite": "Names GlContext directly at the private enum-name helper parameter instead of wrapping it in Readonly; every expression, caller and public signature remains unchanged.",
+      "equivalence": "The private helper only reads the seven existing GL enum constants and returns their fixed names or gl-type-${type}; it performs no context write, call, escape, identity comparison or allocation. Removing its erased TypeScript Readonly annotation changes no accepted runtime value, read order, state/material/program identity, cache or logging behavior. The native GlContext binding is already the copyable shared-identity WebGl2Context carrier. No mutable view or owner recovery is introduced.",
+      "verification": "Scoped normal @flighthq/scene3d-gl generation must emit the helper with WebGl2Context and native constant reads; compile the exact changed original-one header with one worker. Preserve the full source helper body byte-for-byte and all guard/callback/log/cache operations.",
+      "whyNotUpstreamFirst": "Readonly utility lowering loses the external binding carrier and property policy (docs/compiler-requests/readonly-bound-external-value-carrier.md); the private helper annotation states the existing carrier without changing its read-only implementation.",
+      "unblocks": "enable_gl_scene_3d_custom_shader_guards.hpp gl_uniform_type_name calls and readonly host-row constant reads.",
+      "expires": "when the compiler preserves the declared external value carrier and member policy through Readonly, or Flight adopts the direct private GlContext parameter.",
+      "appliedOn": "2026-10-17"
     }
   ]
 }

@@ -85,6 +85,9 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 
 ## Active requests without a compiler patch
 
+- [Readonly must retain a bound external value carrier and its member policy](readonly-bound-external-value-carrier.md) —
+  Scene3D custom uniform guards emit a structural row for Readonly<GlContext> while callers retain
+  the native shared context value; an annotation-only private helper source patch carries the fix.
 - [A named interface value must keep its row carrier, not be recast as an anonymous struct](named-interface-value-recast-as-anonymous-row.md) —
   `@flighthq/scene3d-formats` re-derives `ObjMaterial` as an anonymous shape and cannot construct that row from the
   `Ref<ObjMaterial>` the map already yields; carried by an alias repair.
