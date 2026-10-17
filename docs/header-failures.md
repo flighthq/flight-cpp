@@ -123,7 +123,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 94 | `other-8b0f8597` | 2 | 3D | [compiler request](compiler-requests/host-initialize-optional-fallback-on-a-required-read.md) | skin builder emits after a source patch; SequenceView index nullish fallback still fails (G2: 0/2 pass) |
 | 95 | `undeclared-identifier-e39f9d67` | 2 | 3D | compiler | missing resolver cleared; original2 now 1 pass / 1 readonly program-owner failure; Map guard remains declaration-only *(requests extended)* |
 | 96 | `variant-cast-37507e07` | 2 | 3D | compiler | G2: recorded 0/2 retained; glTF guarded indexed light optional is cast without projection; existing flow/heritage requests, no rerun |
-| 97 | `call-has-no-matching-00dc04ad` | 1 | 2D | compiler | the emitted call to `get_texture_uv_matrix` matches no declared overload |
+| 97 | `call-has-no-matching-00dc04ad` | 1 | 2D | override (applied) | the texture override dropped the emitted readonly-row `get_texture_uv_matrix` overload *(G2: 1/1 pass)* |
 | 98 | `call-has-no-matching-35224a3f` | 1 | 3D | source patch (fixed) | private readonly GlContext helper retains its native carrier; G2: 1/1 pass, request linked |
 | 99 | `call-has-no-matching-4c12e411` | 15 | WGPU | compiler | `create_bind_group_layout` entries are emitted as anonymous nested owners inside an untyped braced descriptor *(request filed)* |
 | 100 | `call-has-no-matching-76a6a61a` | 1 | 2D | compiler | optional slot-resolver result is coalesced as a variant; [existing carrier request](compiler-requests/compiler-flattened-optional-chain-union-storage.md#g2-scene2d-slot-resolver-coalesces-an-optional-callback-result) |
@@ -2503,6 +2503,25 @@ repairs/manifest/pins and foreign/historical products remain unchanged.
 - fix route: compiler
 - first failure at: `flight/scene2d_canvas/canvas_texture_view.hpp:68`
 - example: `no matching function for call to 'get_texture_uv_matrix'`
+- G2 fix: the `texture-variant-member-access` override keeps the emitted row-form overload
+
+`canvasTextureView.ts` calls `getTextureUvMatrix(out, texture)` with a texture as its
+`Readonly<TextureUvTransform>`. The emitter passes a readonly `TextureUvTransform` row, which is exactly the
+parameter the generated `texture.hpp` declares. The hand-written `overrides/include/flight/texture/texture.hpp`
+shadows that header, and it replaced the row form with `Ref<TextureUvTransform>` and `TextureLike` overloads,
+so the emitted call matched nothing. The fault was in the override's API surface, not in the emitter.
+
+The override now carries the generated row-form function with its body verbatim (`row_get` reads of
+`uvRotation`, `flipX`/`flipY` and `uvScale`), so there is no copied owner and no cast. The first version
+made `scene2d_gl/gl_sprite.hpp`, a passing header, ambiguous, so the overload is a template constrained to
+`std::same_as` the exact row type. Deduction never considers a conversion, so nominal and `TextureLike`
+arguments resolve exactly as before. The override's `derivedFrom` is unchanged, and `overrides:check` is
+clean (228).
+
+All six headers that call the function were compiled at `-j1` (Clang 22.1.8): `texture/texture`,
+`texture/video_texture`, `scene2d_gl/gl_sprite`, `scene3d_gl/gl_mesh_program` and
+`scene3d_gl/gl_pbr_extension_registry` still pass, and **`scene2d_canvas/canvas_texture_view.hpp` now
+passes (G2: 1/1).**
 
 ### 98. `call-has-no-matching-35224a3f` — 1 header(s)
 

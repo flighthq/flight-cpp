@@ -3,6 +3,7 @@
 
 // The generated module refused its source/clone/construction declarations. This override retains
 // the emitted operations and supplies those declarations below.
+#include <concepts>
 #include <cmath>
 #include <cstdint>
 #include <flight/boolean.hpp>
@@ -290,6 +291,63 @@ inline void get_texture_uv_matrix(Matrix3Like out, flight::Ref<TextureUvTransfor
   }
   const double tx = ((texture->uv_offset->x + (cos_r * pre_offset_x)) - (sin_r * pre_offset_y));
   const double ty = ((texture->uv_offset->y + (sin_r * pre_offset_x)) + (cos_r * pre_offset_y));
+  flight::Float32Array m = out->m;
+  ([&]() { auto&& typed_array = m; const auto typed_index = 0.0; const auto typed_value = (sx * cos_r); return typed_array.set_index(typed_index, typed_value); }());
+  ([&]() { auto&& typed_array_2 = m; const auto typed_index_2 = 1.0; const auto typed_value_2 = (sx * sin_r); return typed_array_2.set_index(typed_index_2, typed_value_2); }());
+  ([&]() { auto&& typed_array_3 = m; const auto typed_index_3 = 2.0; const auto typed_value_3 = 0.0; return typed_array_3.set_index(typed_index_3, typed_value_3); }());
+  ([&]() { auto&& typed_array_4 = m; const auto typed_index_4 = 3.0; const auto typed_value_4 = (-sy * sin_r); return typed_array_4.set_index(typed_index_4, typed_value_4); }());
+  ([&]() { auto&& typed_array_5 = m; const auto typed_index_5 = 4.0; const auto typed_value_5 = (sy * cos_r); return typed_array_5.set_index(typed_index_5, typed_value_5); }());
+  ([&]() { auto&& typed_array_6 = m; const auto typed_index_6 = 5.0; const auto typed_value_6 = 0.0; return typed_array_6.set_index(typed_index_6, typed_value_6); }());
+  ([&]() { auto&& typed_array_7 = m; const auto typed_index_7 = 6.0; const auto typed_value_7 = tx; return typed_array_7.set_index(typed_index_7, typed_value_7); }());
+  ([&]() { auto&& typed_array_8 = m; const auto typed_index_8 = 7.0; const auto typed_value_8 = ty; return typed_array_8.set_index(typed_index_8, typed_value_8); }());
+  ([&]() { auto&& typed_array_9 = m; const auto typed_index_9 = 8.0; const auto typed_value_9 = 1.0; return typed_array_9.set_index(typed_index_9, typed_value_9); }());
+}
+
+// The emitted row-form overload, its body kept verbatim from the generated header. Emitted callers that
+// already hold a readonly TextureUvTransform row (scene2d-canvas's texture view, for one) call this
+// signature. It is a constrained template so it binds ONLY an argument that already is that exact row:
+// deduction never considers a conversion, so a nominal texture or a TextureLike keeps resolving to the
+// overloads above and below exactly as before rather than becoming ambiguous.
+template <typename Row>
+  requires std::same_as<Row, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextureUvTransform>>>>>
+inline void get_texture_uv_matrix(flight::types::Matrix3Like out, Row texture) {
+  const double r = flight::row_get<flight::RowKey<"uvRotation">>(texture);
+  const double flip_scale_x = (flight::row_get<flight::RowKey<"flipX">>(texture) ? -1.0 : 1.0);
+  const double flip_scale_y = (flight::row_get<flight::RowKey<"flipY">>(texture) ? -1.0 : 1.0);
+  const double sx = (flight::row_get<flight::RowKey<"uvScale">>(texture)->x * flip_scale_x);
+  const double sy = (flight::row_get<flight::RowKey<"uvScale">>(texture)->y * flip_scale_y);
+  const double pre_offset_x = (flight::row_get<flight::RowKey<"flipX">>(texture) ? flight::row_get<flight::RowKey<"uvScale">>(texture)->x : 0.0);
+  const double pre_offset_y = (flight::row_get<flight::RowKey<"flipY">>(texture) ? flight::row_get<flight::RowKey<"uvScale">>(texture)->y : 0.0);
+  double cos_r;
+  double sin_r;
+  if ((r == 0.0)) {
+    (cos_r = 1.0);
+    (sin_r = 0.0);
+  }
+  else {
+    if ((r == half_pi)) {
+      (cos_r = 0.0);
+      (sin_r = 1.0);
+    }
+    else {
+      if ((r == -half_pi)) {
+        (cos_r = 0.0);
+        (sin_r = -1.0);
+      }
+      else {
+        if (((r == flight::pi) || (r == -flight::pi))) {
+          (cos_r = -1.0);
+          (sin_r = 0.0);
+        }
+        else {
+          (cos_r = std::cos(r));
+          (sin_r = std::sin(r));
+        }
+      }
+    }
+  }
+  const double tx = ((flight::row_get<flight::RowKey<"uvOffset">>(texture)->x + (cos_r * pre_offset_x)) - (sin_r * pre_offset_y));
+  const double ty = ((flight::row_get<flight::RowKey<"uvOffset">>(texture)->y + (sin_r * pre_offset_x)) + (cos_r * pre_offset_y));
   flight::Float32Array m = out->m;
   ([&]() { auto&& typed_array = m; const auto typed_index = 0.0; const auto typed_value = (sx * cos_r); return typed_array.set_index(typed_index, typed_value); }());
   ([&]() { auto&& typed_array_2 = m; const auto typed_index_2 = 1.0; const auto typed_value_2 = (sx * sin_r); return typed_array_2.set_index(typed_index_2, typed_value_2); }());
