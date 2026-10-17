@@ -712,6 +712,15 @@ Only the seven owned rows were rechecked and updated. The existing descriptor ag
 one owned row; other headers, clusters and historical sweep totals are unchanged. No later failure is
 promoted to a pass and no broader native sweep was run.
 
+Generation follow-up at the same exact pins: `node scripts/pkgGenerate.mjs @flighthq/scene3d-wgpu
+--check --progress` completed once: 1,527 of 1,669 modules emitted and 142 refused in the 37-package
+dependency closure. The package
+check **failed on one path**, `include/flight/scene3d_wgpu/scene_3d_wgpu_pipeline.hpp`; it reported no
+drift for the repaired runtime header or the manifest entry. Thus the new declaration artifacts
+reproduce, while the package as a whole is not generation-current. The check left the inventory
+unchanged and restored both pinned source checkouts cleanly. The separate pipeline drift is reported
+to Foreman; no unrelated regeneration or repeat of the earlier native/link checks is claimed.
+
 ### 23. `undeclared-identifier-b90ed4db` — 7 header(s)
 
 - cause: a retained callback alias references the DragonBones animations handler after its body is refused
