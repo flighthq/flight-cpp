@@ -100,3 +100,9 @@ alias mutation, default values and distinct owners across independent glass cons
 The workaround can be removed only when the complete preset module emits with the declared extension
 value carrier and preserves authored field presence and spread-last precedence. The original passing
 three-field fixture remains insufficient to prove that expiry.
+
+G2 validation at `806d257` / `a627849`: all three assigned materials headers compile, and the
+materials semantic build/CTest passes (1/1). The complete five-row assignment check is **4 pass,
+1 fail, 0 unattempted** at `-j1`; Canvas paint variants are repaired in the runtime, while the
+remaining render-queue failure is linked to the inferred-any node request. Header compilation
+does not remove the readonly-options entry gap or the original standard-preset emission debt.

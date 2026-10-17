@@ -64,7 +64,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 35 | `invalid-operands-6d9a155d` | 5 | 2D | runtime | an operator is applied to operand types it does not accept |
 | 36 | `missing-member-5e9e8a2c` | 5 | PLAT | runtime | the emitted code reads a member the target does not declare (`hit_test_graph_local_bounds`) |
 | 37 | `no-viable-conversion-eaf1a6e0` | 5 | 2D | compiler | a value is passed where its declared type cannot receive it |
-| 38 | `no-viable-overload-658901de` | 5 | 2D, GL | runtime | an assignment or operator has no overload for the emitted operand types |
+| 38 | `no-viable-overload-658901de` | 5 | 2D, GL | override/runtime (fixed) | concrete glass extension storage and Canvas paint variants repaired; G2: 4 pass, 1 compiler failure |
 | 39 | `call-has-no-matching-4ce2cc01` | 4 | ANIM | compiler | the emitted call to a function matches no declared overload |
 | 40 | `call-has-no-matching-82244b93` | 4 | 2D | compiler | the emitted call to `get_or_create_render_proxy_2d` matches no declared overload |
 | 41 | `call-has-no-matching-9248dccf` | 4 | ANIM | compiler | the emitted call to `get_node_world_matrix4` matches no declared overload |
@@ -812,13 +812,51 @@ instance must supply interface reads and writes; copying it into an interface ow
 - first failure at: `flight/scene2d_canvas/canvas_bitmap_text.hpp:116`
 - example: `no viable conversion from 'optional<Ref<RendererData>> (Ref<RenderState>, NodeAny)' ') to 'function<optional<Ref<RendererData>> (Ref<RenderState>, Ref<Sprite>)>' >')`
 
-### 38. `no-viable-overload-658901de` — 5 header(s)
+### 38. `no-viable-overload-658901de` — 5 G1 header(s), 4 now compile
 
-- cause: an assignment or operator has no overload for the emitted operand types
-- lanes: 2D, GL
-- fix route: runtime
-- first failure at: `flight/materials/material_presets.hpp:113`
-- example: `no viable overloaded '='`
+This G1 group combined assignment failures at distinct storage boundaries. The material preset
+override assigned `Array<Ref<PbrExtension>>` to the current `Array<PbrExtensionValue>` field.
+The active source patch already supplies the concrete transmission alternative. Glass now places its
+original `Ref<TransmissionVolumePbrExtension>` directly in that alternative, removing the obsolete
+prefix reinterpretation without a copied owner or a permissive runtime Array conversion.
+
+The Canvas source-mode compositor assigns an emitted
+`variant<CanvasGradient, CanvasPattern, String>` to `CanvasStyle`. Each alternative was already a
+valid native style, but the union was not accepted. The runtime now constructs and assigns variants
+containing only those three exact paint types, in any order or subset, through the existing per-arm
+operations. Gradient and pattern handles retain their live owners, assignment returns the same
+style, and an absent optional still leaves the existing style unchanged. Numeric and Any arms
+remain rejected.
+
+**G2: 4/5 compile, 1 fails, 0 unattempted**, all attempted at `-j1` with Clang 22.1.8,
+compiler `806d257` / Flight `a627849`. Passing:
+
+- `flight/effects_canvas/canvas_source_mode_compositing.hpp`
+- `flight/materials/_internal_index.hpp`
+- `flight/materials/contract.hpp`
+- `flight/materials/material_presets.hpp`
+
+The materials semantic build/CTest passes (1/1), including preset defaults, nested overrides,
+ordered extension storage, concrete descriptor fields, shared control-block identity, alias mutation
+and fresh owners for independent glass results. The runtime build/CTest also passes (1/1), including
+all paint alternatives, live gradient/pattern mutations, reordered/subset variants, optional absence
+and rejection of erased/numeric arms. Override integrity passes, and the preset generated-source
+hash remains current. No unchanged materials test or whole-SDK sweep was rerun after the Canvas edit.
+
+`flight/render/render_queue.hpp` remains failed at `:131`: a child from
+`NodeOf<Ref<NodeTraits>>` is assigned to the nominal `NodeAny` scratch stack. The source current
+node comes from `NodeAny[]`, but its emitted runtime accessor selects the default NodeTraits
+owner. This is now active cluster `no-viable-overload-287a3cf5`, covered by the extended
+[node-any-generic-traits-leak.md](compiler-requests/node-any-generic-traits-leak.md) request.
+No replacement node, unrestricted structural-to-nominal assignment, source patch or queue body
+is supplied; lookup identity, traversal order, pruning and scratch reuse must be preserved.
+
+The preset override is explicitly partial: its pre-existing optional nominal glass-options entry
+still needs the canonical readonly structural entry adaptation. A passing header does not restore
+the ten refused standard-preset emissions; see
+[named-interface-partial-shape.md](compiler-requests/named-interface-partial-shape.md).
+Only these five product rows and their replacement cause changed. The opening G1 sweep totals and
+rank remain historical, and `previousCluster` retains this original group.
 
 ### 39. `call-has-no-matching-4ce2cc01` — 4 header(s)
 

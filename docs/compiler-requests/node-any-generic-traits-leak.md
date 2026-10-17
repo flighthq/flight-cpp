@@ -103,3 +103,49 @@ first, and a literal `Node<Node2DTraits>` argument works while an interface exte
 - walking interface heritage would not fix the `any` leak;
 - the residual change (refuse an undetermined parameter at emission) would turn both into refusals but
   make neither compile.
+
+## G2: an omitted inferred `any` selects the default node runtime and breaks queue storage
+
+At compiler `806d257` / Flight `a627849`, `renderQueue.ts:39` calls
+`getNodeRuntime(current).children`, where `current` comes from the module scratch `NodeAny[]`.
+The emitted `build_render_queue` instead explicitly selects the default trait owner:
+
+```cpp
+std::optional<flight::Array<flight::types::NodeOf<flight::Ref<flight::types::NodeTraits>>>> children =
+    flight::row_get<flight::RowKey<"children">>(
+        flight::node::get_node_runtime<flight::Ref<flight::types::NodeTraits>>(
+            /* current projected as Node<Ref<NodeTraits>>, despite NodeAny storage */));
+// The destination is flight::Array<flight::types::NodeAny>.
+stack.element(stack_length++) = children.value().element(i);
+```
+
+Clang 22.1.8 reports `no viable overloaded '='` at
+`flight/render/render_queue.hpp:131`. The child is a merged structural
+`NodeOf<Ref<NodeTraits>>` row, while the stack element is the nominal
+`shared_ptr<Node<Any>>` alias. These are not interchangeable C++ owners. The declaration of
+`NodeRuntime<Traits>::children` is `optional<Array<NodeOf<Traits>>>`; the wrong runtime
+instantiation has reached both the read and the local storage. This is the inferred-`any`
+boundary above surfacing as a default-owner selection rather than an undeclared `Traits` token.
+
+The source passes the existing child object into the scratch stack. Lowering must retain that same
+node owner through the correctly substituted runtime/children carrier and the stack, including its
+WeakMap lookup identity. It must preserve scratch-array reuse, reverse child pushes, preorder output,
+and pruning of missing/invisible proxies. A permissive assignment between all structural rows and
+nominal references, a copied `Node<Any>`, or a trait-owner reinterpretation would hide the mismatch.
+The broader row/object boundary is related to
+[generic-node-row-into-object-parameter.md](generic-node-row-into-object-parameter.md), but that
+request's erased native-object projection is not a conversion to this nominal generic node type.
+
+A focused TypeScript checker control using the pinned `Node.ts` generic declarations, with unrelated
+non-generic imported names stubbed, resolves this call as `Readonly<NodeRuntime<any>>` and the child
+array as `any[] | null`. This confirms source-side any inference; it is a type-only control, not a
+new SDK emission or native fix.
+
+The earlier explicit `<any>` control proves substitution for its reduced helper call, not that the
+complete render-queue body and its child-to-stack boundary are repaired. No new compiler generation
+or successful source-patch experiment is claimed here. No runtime assignment fallback or generated
+body edit is carried for this row. It remains a compiler failure and links this existing request.
+
+In the completed five-row G2 check, four other headers compile after their native storage/paint
+repairs, but this render-queue row still fails at `:131`: **0/1 pass for this cause**. The row
+and its new cause link this request; G1 sweep totals and all unowned rows remain unchanged.
