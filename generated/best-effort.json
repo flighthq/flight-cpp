@@ -31544,15 +31544,10 @@
       "status": "dependency-incomplete"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/contract.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/index.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialRegistry.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:4757f1dd15c0b77dbb8e121c0ea43b4838d837cec474819e6dacfb520465588b",
-        "sha256:5132f69baa3f5f25ecb8d7100a8a1f7026e826e840a272672ac3c5571e902bd6"
       ],
       "module": {
         "name": "ObjStandardPbrMaterialHandler",
@@ -31560,7 +31555,11 @@
         "source": "packages/scene3d-formats/src/objStandardPbrMaterialHandler.ts"
       },
       "path": "flight/scene3d_formats/obj_standard_pbr_material_handler.hpp",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialHelpers.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialModel.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [

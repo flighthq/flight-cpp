@@ -6697,7 +6697,7 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/objMaterialRegistry.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "dependency ./objStandardPbrMaterialHandler.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/objStandardPbrMaterialHandler.ts",
+      "reason": "dependency ./objBlinnPhongMaterialHandler.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/objBlinnPhongMaterialHandler.ts",
       "stage": "dependency"
     },
     {
@@ -6717,13 +6717,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 30,
+      "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/objStandardPbrMaterialHandler.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/objStandardPbrMaterialHandler.ts: structural-row construction requires explicit named properties",
-      "stage": "emission"
+      "reason": "dependency ./objMaterialModel.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialModel.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",

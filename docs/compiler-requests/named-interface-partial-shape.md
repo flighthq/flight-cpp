@@ -106,3 +106,35 @@ materials semantic build/CTest passes (1/1). The complete five-row assignment ch
 1 fail, 0 unattempted** at `-j1`; Canvas paint variants are repaired in the runtime, while the
 remaining render-queue failure is linked to the inferred-any node request. Header compilation
 does not remove the readonly-options entry gap or the original standard-preset emission debt.
+
+## G2 OBJ standard-PBR options: the conditional spread that reproduces it
+
+At Flight `a627849` / compiler `806d257`, `scene3d-formats/objStandardPbrMaterialHandler.ts` refuses
+`objMaterialToStandardPbr` at this same diagnostic. Its options literal is fully named except for the
+last three members, which are conditional spreads:
+
+```ts
+const result = createStandardPbrMaterial({
+  alphaMap: externalObjTexture(material.mapDissolve, document, 'linear'),
+  baseColor: packObjColor(material.diffuse, material.dissolve),
+  baseColorMap: externalObjTexture(material.mapDiffuse, document, 'srgb'),
+  emissiveMap: externalObjTexture(material.mapEmissive, document, 'srgb'),
+  normalMap: externalObjTexture(material.mapNormal, document, 'linear'),
+  ...(material.emissive !== null ? { emissive: packObjColor(material.emissive, 1) } : {}),
+  ...(material.metallic !== null ? { metallic: material.metallic } : {}),
+  ...(material.roughness !== null ? { roughness: material.roughness } : {}),
+});
+```
+
+Rewriting them as explicit named members with an `undefined` fallback is behaviorally identical
+here. `createStandardPbrMaterial` forwards the options to `createMaterial3D` and
+`assignStandardPbrMaterialProperties`, and both read every field with `opts?.field ?? default`, so a
+member present with `undefined` and an absent member both take the constructor default (`emissive`
+0x000000ff, `metallic` 0, `roughness` 1). The rewrite is carried by
+`source-patches/scene3d-formats-obj-standard-pbr-explicit-options.patch`; the module now emits, the
+package is at 75/111 modules emitted and 36 refused, and the header's first failure moved to the
+unchanged `create_texture` owner-materialization cluster
+([contextual object-literal owner materialization](contextual-object-literal-owner-materialization.md)).
+
+This is a measured reproduction of the generic diagnostic recorded above, not evidence that the
+`materialPresets` sites are fixed; those remain refused.

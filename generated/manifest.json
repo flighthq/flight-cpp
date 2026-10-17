@@ -5270,6 +5270,13 @@
     },
     {
       "dependency": "flight",
+      "digest": "d1d818c5647ec793f95122ff1e5fbc73e942e213f06686ada18cf8b3e10ea839",
+      "id": "scene3d-formats-obj-standard-pbr-explicit-options",
+      "module": "packages/scene3d-formats/src/objStandardPbrMaterialHandler.ts",
+      "package": "@flighthq/scene3d-formats"
+    },
+    {
+      "dependency": "flight",
       "digest": "3a84ea96e8bc853ec7cbab7e14897b1b8276bde0357265f29d5ffbf440a68b8f",
       "id": "scene3d-instanced-color-present-write",
       "module": "packages/scene3d/src/instancedMesh.ts setInstancedMeshInstanceColor",
@@ -6343,9 +6350,9 @@
     {
       "cppIncludePrefix": "flight/scene3d_formats",
       "cppNamespace": "flight::scene3d_formats",
-      "emittedModules": 74,
+      "emittedModules": 75,
       "package": "@flighthq/scene3d-formats",
-      "refusedModules": 37,
+      "refusedModules": 36,
       "sourceModules": 111
     },
     {
@@ -6757,8 +6764,8 @@
   },
   "summary": {
     "packages": 153,
-    "emittedModules": 2566,
-    "refusedModules": 585,
+    "emittedModules": 2567,
+    "refusedModules": 584,
     "sourceModules": 3151
   }
 }

@@ -1,0 +1,12 @@
+diff --git a/packages/scene3d-formats/src/objStandardPbrMaterialHandler.ts b/packages/scene3d-formats/src/objStandardPbrMaterialHandler.ts
+--- a/packages/scene3d-formats/src/objStandardPbrMaterialHandler.ts
++++ b/packages/scene3d-formats/src/objStandardPbrMaterialHandler.ts
+@@ -41,5 +41,5 @@
+     normalMap: externalObjTexture(material.mapNormal, document, 'linear'),
+-    ...(material.emissive !== null ? { emissive: packObjColor(material.emissive, 1) } : {}),
+-    ...(material.metallic !== null ? { metallic: material.metallic } : {}),
+-    ...(material.roughness !== null ? { roughness: material.roughness } : {}),
++    emissive: material.emissive !== null ? packObjColor(material.emissive, 1) : undefined,
++    metallic: material.metallic !== null ? material.metallic : undefined,
++    roughness: material.roughness !== null ? material.roughness : undefined,
+   });

@@ -31,7 +31,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 2 | `missing-member-b1a6d5cf` | 39 | 2D | compiler | scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined *(request filed)* |
 | 3 | `in-operator-not-lowered-b1eae4af` | 32 | 2D, 3D, GL, PLAT, WGPU | compiler | the TypeScript `in` operator is emitted verbatim; G2 particle3D joins this existing cause *(existing request extended)* |
 | 4 | `undeclared-identifier-993e82f1` | 29 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(request filed; builder4/G2)* |
-| 5 | `call-has-no-matching-3882b3e9` | 28 | 2D, 3D, TEXT | compiler | bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier *(request filed; builder4/G2)* |
+| 5 | `call-has-no-matching-3882b3e9` | 29 | 2D, 3D, TEXT | compiler | bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier *(request filed; builder4/G2; +1 from `obj_standard_pbr_material_handler.hpp` after its module emitted)* |
 | 6 | `other-52e846a6` | 18 | ANIM | compiler *(existing request)* | a nullable attachment array element is not lifted into the reference/null/undefined slot carrier |
 | 7 | `call-has-no-matching-47410fe2` | 16 | 2D, 3D | runtime (fixed) | Number is now a callable conversion object; G2 recheck: 2 pass, 14 fail at later compiler diagnostics |
 | 8 | `other-40da43f7` | 16 | 2D, 3D, ANIM | compiler | an optional<Record<...>> is initialised from a shape that is not its declared storage |
@@ -376,7 +376,7 @@ These non-generic callers still convert an argument to a target containing the c
 no runtime alias or replacement owner was added. The five source-site files are unchanged across the
 clean delivered-base update after the check. G1 sweep totals and unowned rows remain unchanged.
 
-### 5. `call-has-no-matching-3882b3e9` — 28 header(s) *(builder4/G2)*
+### 5. `call-has-no-matching-3882b3e9` — 29 header(s) *(builder4/G2)*
 
 - cause: bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier
 - subject: `create_texture`
@@ -1821,9 +1821,14 @@ Neither header compiles yet; the repair moved them past the missing member.
   `dependent_false<flight::types::ObjMaterial>`: `has_obj_pbr_directives` casts the anonymous
   material-shape row to `RowReadonly<RowOf<Ref<ObjMaterial>>>`, and the runtime rejects the source
   object type. That is a structural-reference conversion gap, not a missing declaration.
-- `obj_standard_pbr_material_handler.hpp` now names `obj_material_to_standard_pbr`, another
-  retained caller whose callee (`objMaterialToStandardPbr`, source line 30) is refused in the same
-  header. It is a separate cause and is listed as its own cluster rather than folded into this one.
+- `obj_standard_pbr_material_handler.hpp` named `obj_material_to_standard_pbr`, whose callee
+  `objMaterialToStandardPbr` was refused at `structural-row construction requires explicit named
+  properties`: its `createStandardPbrMaterial` options literal ended in three conditional spreads.
+  The source patch `scene3d-formats-obj-standard-pbr-explicit-options` passes those three fields as
+  explicit named members with an `undefined` fallback, which the constructor reads identically
+  (`opts?.field ?? default`), and the module now emits (**75/111 modules, 36 refused** in the
+  package). The header's first failure therefore moved to `call-has-no-matching-3882b3e9`
+  (`create_texture`, `shared.hpp:100`), the compiler-owned cluster above.
 
 ### 81. `missing-member-dd9b4baa` — 2 header(s)
 

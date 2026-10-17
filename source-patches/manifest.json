@@ -4234,6 +4234,23 @@
       "expires": "when same-carrier Map/ReadonlyMap coalesces retain the declared table domain upstream, or Flight adopts the explicit local annotation.",
       "appliedOn": "2026-10-17",
       "verification": "The complete original/patched module transpiles to byte-identical JavaScript. Final normal exact-pin two-module generation lowers1485 modules with2 retained partial/refusals and249 patches, restoring both pins clean; only the registration header, owned fingerprint/refusal record and patch provenance change. The header equals the real native-tested registration input: open vendor keys, replace/remove/absent remove, snapshot/state isolation, no eager callbacks and original callback/state/texture owners pass. Final scoped jobs1: original image header0/1 at the next undeclared resolve_dom_image_texture, changed registration dependency1/1; total1/2 with zero unattempted. The separately tried image alias/body was rejected after bad_variant_access on a represented Bitmap source and is not carried. No image resolution/backend claim."
+    },
+    {
+      "dependency": "flight",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "package": "@flighthq/scene3d-formats",
+      "answers": "refusal",
+      "appliedOn": "2026-10-17",
+      "id": "scene3d-formats-obj-standard-pbr-explicit-options",
+      "patch": "scene3d-formats-obj-standard-pbr-explicit-options.patch",
+      "module": "packages/scene3d-formats/src/objStandardPbrMaterialHandler.ts",
+      "refusal": "structural-row construction requires explicit named properties (objStandardPbrMaterialHandler.ts:30)",
+      "rewrite": "Passes emissive, metallic and roughness as explicit named options members whose value is undefined when the MTL value is null, instead of three conditional spread members.",
+      "equivalence": "createStandardPbrMaterial forwards the options to createMaterial3D and assignStandardPbrMaterialProperties, and both read every field with `opts?.field ?? default`. A member present with undefined and an absent member both read undefined there, so emissive, metallic and roughness keep their constructor defaults (0x000000ff, 0, 1) when the MTL value is null, and their exact values when present. No other code observes the fresh options object; key order and every other member are unchanged.",
+      "verification": "Guarded pkg:generate of @flighthq/scene3d-formats at a627849 emits objStandardPbrMaterialHandler.",
+      "whyNotUpstreamFirst": "The defect is the emitter's refusal of conditional spread members in a named structural-row construction (docs/compiler-requests/named-interface-partial-shape.md), not a missing runtime operation; the same explicit-member form is the documented equivalent shape.",
+      "unblocks": "Emits objStandardPbrMaterialHandler, compiling obj_standard_pbr_material_handler.hpp.",
+      "expires": "when the emitter accepts conditional spread members in a named structural-row construction at this site."
     }
   ]
 }
