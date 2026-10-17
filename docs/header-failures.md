@@ -3259,9 +3259,14 @@ and its manifest record, and the repair tests pass (30/30). All three cache diag
 
 **G2: 0/1 compile, 1 fail** (`-j1`, Clang 22.1.8). `flight/scene2d_gl/gl_rich_text.hpp` moves to
 `undeclared-identifier-74ca0a55`. Its next failure (line 327) is the retained `draw_gl_rich_text` calling
-`drawGlRichTextWithOverlay`, which is refused in the same header (`cpp-reference-assertion-without-heritage`).
-That makes it a same-header declaration-only candidate, followed by the refused `destroyGlRichTextData` and a
-`CanvasSurface` structural-reference assertion. No draw or teardown result is claimed.
+`drawGlRichTextWithOverlay`, which is refused in the same header as `cpp-presence-test-without-absence-storage`
+(its optional `overlay` and presence tests need two absence channels; see
+[nullable optional presence](compiler-requests/nullable-optional-presence.md)). That cluster links
+[retained declaration calls omitted callee](compiler-requests/retained-declaration-calls-omitted-callee.md),
+where this exact site was added. Its declaration witnesses hold, but no declaration is claimed, because the
+optional `overlay` carrier is the refused absence channel itself. The refused `destroyGlRichTextData`
+(`cpp-reference-assertion-without-heritage`) and a `CanvasSurface` structural-reference assertion follow.
+No draw or teardown result is claimed.
 
 ### 131. `no-viable-conversion-562151da` — 1 header(s)
 

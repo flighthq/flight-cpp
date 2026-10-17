@@ -2259,3 +2259,20 @@ remain open. Its partial banner, source excerpt and refusal marker remain byte-f
 This is header availability only: no parser, color/cascade/gradient/painting execution, fake color,
 narrower grammar, runtime conversion, source patch or override is supplied. Calls through either
 parser or resolver remain visibly unusable at the exact missing-parser link boundary.
+
+## G2 site: Scene2D GL rich text draw (`scene2d_gl/gl_rich_text.hpp:327`)
+
+At flight-compiler `806d257`, the emitter retains `drawGlRichText(state, renderProxy)`, which forwards to
+`drawGlRichTextWithOverlay(state, renderProxy, overlay)`. It refuses the callee
+(`glRichText.ts:79`, `cpp-presence-test-without-absence-storage`): its optional `overlay?` parameter and
+presence tests such as `!data.background` need the two absence channels of
+[nullable optional presence](nullable-optional-presence.md). The retained caller then fails with
+`use of undeclared identifier 'draw_gl_rich_text_with_overlay'`. That is G2 cluster
+`undeclared-identifier-74ca0a55`, reached after the texture-cache local fix recorded in
+[native texture-source cache local carrier](native-texture-source-cache-local-carrier.md).
+
+The marker, the retained call and the absent definition sit in the same header, so the three
+`declare-refused-function` witnesses would hold. No declaration has been added, though, and none is claimed:
+the signature's optional `overlay` carrier is the very absence channel the refusal names, so a declaration
+must not choose one. The refused `destroyGlRichTextData` (`cpp-reference-assertion-without-heritage`) and a
+`CanvasSurface` structural-reference assertion follow in the same header.
