@@ -51,6 +51,23 @@ flight::Ref<flight::types::ModifierDefinition> definition_ref(
   return std::get<flight::Ref<flight::types::ModifierDefinition>>(value);
 }
 
+// The same retained owner through a concrete ReadonlyModifierValue arm. The arm for T is exactly the
+// readonly row readonly_view builds, so the arm names the same object and the callback's dispatch must
+// agree with the base-arm call.
+template <typename T>
+flight::types::ReadonlyModifierValue concrete_modifier_value(const std::shared_ptr<T>& value) {
+  using View = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<T>>>>;
+  return flight::types::ReadonlyModifierValue{std::in_place_type<View>, readonly_view(value)};
+}
+
+template <typename T>
+flight::String concrete_signature(
+    const flight::Ref<flight::types::ModifierDefinition>& definition,
+    const std::shared_ptr<T>& modifier) {
+  if (!definition->get_define_signature.has_value()) return flight::String("<missing>");
+  return definition->get_define_signature.value()(concrete_modifier_value(modifier));
+}
+
 template <typename T>
 flight::String signature(
     const flight::Ref<flight::types::ModifierDefinition>& definition,
@@ -512,6 +529,55 @@ int main() {
   displace->axis = flight::make_ref<types::Vector3>();
   check(signature(shading::vertex_displace_modifier_definition, displace) == flight::String("ha"),
         "fixed-axis displacement appends a");
+
+  // The concrete arms of ReadonlyModifierValue name the same retained owner; dispatch through each of
+  // them must produce the same signature the base-arm call produced for that object state.
+  check(concrete_signature(shading::animated_normal_modifier_definition, animated) ==
+                flight::String("2") &&
+            concrete_signature(shading::animated_normal_modifier_definition, animated) ==
+                signature(shading::animated_normal_modifier_definition, animated),
+        "animated normal dispatches identically through its concrete arm");
+
+  check(concrete_signature(shading::dissolve_modifier_definition, dissolve) == flight::String("m") &&
+            concrete_signature(shading::dissolve_modifier_definition, dissolve) ==
+                signature(shading::dissolve_modifier_definition, dissolve),
+        "mapped dissolve dispatches identically through its concrete arm");
+
+  check(concrete_signature(shading::emissive_modifier_definition, emissive).empty() &&
+            concrete_signature(shading::emissive_modifier_definition, emissive) ==
+                signature(shading::emissive_modifier_definition, emissive),
+        "ignored-facing emissive dispatches identically through its concrete arm");
+
+  check(concrete_signature(shading::fog_modifier_definition, fog) == flight::String("x") &&
+            concrete_signature(shading::fog_modifier_definition, fog) ==
+                signature(shading::fog_modifier_definition, fog),
+        "exponential-squared fog dispatches identically through its concrete arm");
+
+  check(concrete_signature(shading::vertex_displace_modifier_definition, displace) ==
+                flight::String("ha") &&
+            concrete_signature(shading::vertex_displace_modifier_definition, displace) ==
+                signature(shading::vertex_displace_modifier_definition, displace),
+        "fixed-axis displacement dispatches identically through its concrete arm");
+
+  // A concrete owner declares the map member, so an unset optional is the source's null member and
+  // selects the single-layer signature. The absent-cell arm ("1") is the erased-owner case above,
+  // which has no cell to answer.
+  const auto fresh_animated = flight::make_ref<types::AnimatedNormalModifier>();
+  fresh_animated->kind = types::animated_normal_modifier_kind;
+  fresh_animated->slot = types::modifier_slot->normal;
+  check(concrete_signature(shading::animated_normal_modifier_definition, fresh_animated) ==
+                flight::String("0") &&
+            concrete_signature(shading::animated_normal_modifier_definition, fresh_animated) ==
+                signature(shading::animated_normal_modifier_definition, fresh_animated),
+        "an unset concrete map member dispatches as null through the concrete animated-normal arm");
+
+  const auto fresh_dissolve = flight::make_ref<types::DissolveModifier>();
+  fresh_dissolve->kind = types::dissolve_modifier_kind;
+  fresh_dissolve->slot = types::modifier_slot->effect;
+  check(concrete_signature(shading::dissolve_modifier_definition, fresh_dissolve).empty() &&
+            concrete_signature(shading::dissolve_modifier_definition, fresh_dissolve) ==
+                signature(shading::dissolve_modifier_definition, fresh_dissolve),
+        "absent map dispatches identically through the concrete dissolve arm");
 
   const auto key_registry = shading::create_modifier_registry();
   const auto normal_definition = flight::make_ref<types::ModifierDefinition>();
