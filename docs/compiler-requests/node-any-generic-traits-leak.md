@@ -149,3 +149,77 @@ body edit is carried for this row. It remains a compiler failure and links this 
 In the completed five-row G2 check, four other headers compile after their native storage/paint
 repairs, but this render-queue row still fails at `:131`: **0/1 pass for this cause**. The row
 and its new cause link this request; G1 sweep totals and all unowned rows remain unchanged.
+
+## G2 Interaction spatial collection selects the default runtime owner
+
+At compiler `806d257` / Flight `a627849`, `interaction/interaction_spatial_index.hpp:74` retains
+`no matching function for call to 'collect_spatial_candidates'` in the original one-header cluster
+`call-has-no-matching-8d9de718`. This docs-only audit retains **0/1**, the exact diagnostic and all
+counts; no native or generation rerun is claimed. No override supplies this module.
+
+Source `packages/interaction/src/interactionSpatialIndex.ts:66–82` takes a `NodeAny` and a shared
+`NodeAny[]` output. Its recursive step reads `getNodeRuntime(node).children` and passes each existing
+child back to the same collector, last child first. The native carriers expose the same default-runtime
+selection already recorded for render-queue storage above:
+
+```cpp
+// types/node.hpp
+using NodeAny = std::shared_ptr<Node<flight::Any>>;
+template <typename Traits>
+using NodeOf = flight::StructuralRef<flight::RowMerge<
+    flight::RowOf<std::shared_ptr<Node<Traits>>>, flight::RowOf<Traits>>>;
+
+// interaction_spatial_index.hpp:59,69,74 (abridged)
+inline void collect_spatial_candidates(NodeAny node, flight::Array<NodeAny> out);
+// get_node_runtime<flight::Ref<NodeTraits>>(...) reads:
+std::optional<flight::Array<NodeOf<flight::Ref<NodeTraits>>>> children;
+collect_spatial_candidates(children.value().element(i), out);
+```
+
+The recursive argument is a merged structural child row, while the parameter and output array use
+nominal `Node<Any>` references. The generic source runtime accessor returns
+`Readonly<NodeRuntime<Traits>>`, and its children are `NodeOf<Traits>[] | null`; selecting NodeTraits
+from NodeAny changes both runtime and child carriers. Correctly substitute the source's inferred any
+and preserve the original child through the recursive parameter, output array and manager cache.
+The earlier explicit `<any>` reduction does not qualify this complete child-row-to-nominal path.
+A permissive row-to-reference overload, a copied Node<Any>, an unchecked runtime cast, or restricting
+the collector to Node2D would hide or narrow the actual owner boundary. No such fix is carried.
+
+Read the original node's enabled cell and the same runtime's interactionState. A disabled node prunes
+its subtree. Only `hitTestEnabled === true` opts the node in; an enabled candidate with a non-null
+hitArea is appended once and its children are not visited. Otherwise visit the current children array
+in reverse order, then append the parent if opted in. An ineligible parent still permits descendant
+collection. The collector reads neither childrenHitTestEnabled nor clip/visible; this compiler
+disposition does not add gates from the separate linear walk or claim full equivalence with it.
+
+`refreshInteractionSpatialIndex<N extends NodeAny>` is separately NOT GENERATED at source line47,
+`cpp-structural-assertion-owner-unproven`, on `nodes[rank] as Node2D` for world bounds. The existing
+[Interaction graph-bounds owner request](assertion-to-undeclared-row-member.md#g2-interaction-graph-bounds-need-the-original-nodes-2d-capability)
+applies: neither a corrected trait argument nor an erased cache proves the original node's transform
+and bounds-runtime cells. Current native bounds access also keeps its explicit unavailable checked
+HasBoundsRectangleRuntime boundary. No narrower manager API, replacement graph/runtime, fake bounds
+or no-op refresh is supplied, and clearing line74 alone would not supply the refresh body.
+
+Preserve the same `InteractionManager<N>` with root N and its optional SpatialIndex2D/runtime/backend.
+A null index returns before collection or mutation. Otherwise allocate the fresh candidate array,
+cache it under that manager's identity in `WeakMap<object, NodeAny[]>`, then clear the existing index.
+For each ascending rank, read that node's current world rectangle, set the shared scratch AABB to
+`(x,y,x+width,y+height)`, and insert the numeric rank. The backend copies bounds, so scratch reuse is
+intentional. Declined insertion does not renumber the remaining candidates; cache replacement, clear,
+bounds-provider effects and partial inserts before an exception retain source order.
+
+Query returns null for no index or missing/empty cached candidates. Otherwise the same backend clears
+and fills the shared query-output array. Of the returned ranks, only an existing node whose current
+`hitTestNodeRegion(node,x,y,precise)` succeeds becomes best; later ranks greater than or equal to best
+are skipped. Return the original N at the smallest successful rank, independent of backend output
+order, or null. Preserve the precise default false, live hitArea/kind-provider dispatch and actual
+2D coordinates; broadphase overlap alone is not a confirmed hit. Manager dispatch still checks its
+enabled state and pointer capture before choosing this spatial path.
+
+Inspected `interactionSpatialIndex.test.ts` has six source cases: hit/miss selection, topmost overlap,
+null before refresh, opt-in changes, atomic hitArea and transform-change refresh. The native
+`generated_interaction_test.cpp` tests the separate rectangle/circle `spatial_query.hpp` disabled-root
+and explicit bounds-owner failure paths; it does not call this collector, refresh or ranked query.
+No current native index/picking success is inferred from those fixtures. This unit updates only this
+request, its original failed row/cluster and worklist103, preserving all C++/runtime/source/patch/repair/
+override/manifest/pin inputs and foreign records.

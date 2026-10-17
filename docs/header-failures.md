@@ -129,7 +129,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 100 | `call-has-no-matching-76a6a61a` | 1 | 2D | compiler | the emitted call to `get_if` matches no declared overload |
 | 101 | `call-has-no-matching-7f4ae181` | 1 | 2D | compiler | the emitted call to `add_scene_2d_used_kind` matches no declared overload |
 | 102 | `call-has-no-matching-8a1f3a33` | 1 | GL | compiler | a narrowed `Texture2D` reference read through structural `row_get` *(existing request extended)* |
-| 103 | `call-has-no-matching-8d9de718` | 1 | PLAT | compiler | the emitted call to `collect_spatial_candidates` matches no declared overload |
+| 103 | `call-has-no-matching-8d9de718` | 1 | PLAT | compiler | default node runtime supplies a merged child row to nominal NodeAny recursion; [existing request](compiler-requests/node-any-generic-traits-leak.md#g2-interaction-spatial-collection-selects-the-default-runtime-owner) |
 | 104 | `call-has-no-matching-b3c6bcee` | 1 | GL | compiler | the emitted call to `log_once` matches no declared overload |
 | 105 | `call-has-no-matching-c287f892` | 1 | ANIM | compiler | G2: recorded 0/1 retained; Unity JsonValue cannot become named view/dynamic Record; existing JSON-read request, no rerun |
 | 106 | `call-has-no-matching-c8046ec6` | 1 | 3D | compiler | the emitted call to `uniform2fv` matches no declared overload |
@@ -2527,12 +2527,30 @@ lookup.
 
 ### 103. `call-has-no-matching-8d9de718` — 1 header(s)
 
-- cause: the emitted call to `collect_spatial_candidates` matches no declared overload
+- cause: NodeAny runtime inference selects NodeTraits, so `collect_spatial_candidates` receives
+  `NodeOf<Ref<NodeTraits>>` (a merged child row) where its parameter is nominal `Node<Any>`
 - subject: `collect_spatial_candidates`
 - lanes: PLAT
-- fix route: compiler
+- fix route: compiler — [existing inferred-any/default-runtime request](compiler-requests/node-any-generic-traits-leak.md#g2-interaction-spatial-collection-selects-the-default-runtime-owner)
+- related: [original 2D bounds capability](compiler-requests/assertion-to-undeclared-row-member.md#g2-interaction-graph-bounds-need-the-original-nodes-2d-capability)
 - first failure at: `flight/interaction/interaction_spatial_index.hpp:74`
 - example: `no matching function for call to 'collect_spatial_candidates'`
+
+**G2: 0 pass / 1 fail retained; no native or generation rerun.** The collector and its output array
+use `NodeAny = shared_ptr<Node<Any>>`; its current `get_node_runtime<Ref<NodeTraits>>` produces
+`optional<Array<NodeOf<Ref<NodeTraits>>>>`. Correct substitution must preserve the same child owner
+through recursion, accumulation and the manager-keyed WeakMap, rather than copy a node or grant an
+unchecked merged-row conversion. The existing explicit-any reduction is not a full collector fix.
+
+The refresh function separately refuses `NodeAny as Node2D` at world-bounds access. It needs the
+original transform/bounds runtime capability as well as the collector fix; no native index or refresh
+body is supplied. Keep reverse-child/postorder ranking, disabled-subtree pruning, opted-in atomic
+hitArea nodes, fresh cached candidate arrays, the original index/backend and clear/insert effects.
+Query must confirm regions and return the same node at the smallest successful rank, preserving
+precise mode and backend-independent priority. The request records the actual collector gates,
+scratch/backend ownership and six inspected source cases. Native interaction tests cover a separate
+rectangle/circle query boundary and prove no success for this module. C++ and foreign records remain
+unchanged; no fake index, empty-result replacement or narrowed node/manager domain is carried.
 
 ### 104. `call-has-no-matching-b3c6bcee` — 1 header(s)
 
