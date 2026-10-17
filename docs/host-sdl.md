@@ -176,8 +176,8 @@ frame. SDL quit, this window's close request, and Escape stop before another fra
 may be run again, and callback exceptions propagate. `GlLoopOptions` supports a maximum delta,
 optional fixed delta and frame count for deterministic capture, and an idle delay. `present()` is
 also available for an immediate frame outside `run`; the loop already presents its callback's frame.
-Destroy the application on the SDL main thread to release its resources. Retained `GlCanvas` or
-`WebGl2Context` handles share the existing surface lifetime. No painter is part of this API.
+Keep the application alive until its renderer resources and any copied `GlCanvas` or `WebGl2Context`
+handles have been released, then destroy it on the SDL main thread. No painter is part of this API.
 
 SDL video operations must run on the main thread. Construct `Host` before `Window`; destroy GL contexts and Vulkan or
 WebGPU surfaces before their window; destroy windows before `Host`. The types are move-only so ownership transfers are
