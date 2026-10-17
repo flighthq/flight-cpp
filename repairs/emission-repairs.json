@@ -1026,6 +1026,7 @@
         "body_indices": "bodyIndices",
         "missing_command_key": "missingCommandKey",
         "registered_count": "registeredCount",
+    "render_texture": "renderTexture",
         "repeat_count": "repeatCount",
         "requested_count": "requestedCount",
         "timeout_ms": "timeoutMs",

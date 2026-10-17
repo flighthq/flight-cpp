@@ -130,7 +130,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 101 | `call-has-no-matching-7f4ae181` | 1 | 2D | compiler | the emitted call to `add_scene_2d_used_kind` matches no declared overload |
 | 102 | `call-has-no-matching-8a1f3a33` | 1 | GL | compiler | a narrowed `Texture2D` reference read through structural `row_get` *(existing request extended)* |
 | 103 | `call-has-no-matching-8d9de718` | 1 | PLAT | compiler | default node runtime supplies a merged child row to nominal NodeAny recursion; [existing request](compiler-requests/node-any-generic-traits-leak.md#g2-interaction-spatial-collection-selects-the-default-runtime-owner) |
-| 104 | `call-has-no-matching-b3c6bcee` | 1 | GL | compiler | the emitted call to `log_once` matches no declared overload |
+| 104 | `call-has-no-matching-b3c6bcee` | 1 | GL | repair key + compiler | `log_once` designated initializer *(G2: key map extended; 0 pass, 1 to `no-matching-constructor-34a8ea9f`)* |
 | 105 | `call-has-no-matching-c287f892` | 1 | ANIM | compiler | G2: recorded 0/1 retained; Unity JsonValue cannot become named view/dynamic Record; existing JSON-read request, no rerun |
 | 106 | `call-has-no-matching-c8046ec6` | 1 | 3D | compiler | the emitted call to `uniform2fv` matches no declared overload |
 | 107 | `call-has-no-matching-e7b28969` | 1 | WGPU | compiler | the emitted call to `write_texture` matches no declared overload |
@@ -2560,6 +2560,23 @@ unchanged; no fake index, empty-result replacement or narrowed node/manager doma
 - fix route: compiler
 - first failure at: `flight/render_gl/enable_gl_render_texture_guards.hpp:27`
 - example: `no matching function for call to 'log_once'`
+- G2: `log-once-record-from-designated-initializer` key map gains `render_texture -> renderTexture`; the remaining gap is linked to [structural row erasure to unknown](compiler-requests/structural-row-erasure-to-unknown.md) (site added)
+
+`warnGlRenderTextureUnavailable` logs `{ height, message, renderTexture, status, width }` as `LogData`. The
+declared `log_once` repair already rewrites such designated initializers into the `LogData` Record, but it
+deliberately leaves alone any site with an underscored key that is missing from its map, so that a guessed
+field name never ships. `render_texture` was missing. Its TypeScript name is the shorthand `renderTexture`
+(`enableGlRenderTextureGuards.ts:40`, parameter `renderTexture: Readonly<RenderTexture>`), so the map entry
+is exact. It was applied through `applyEmissionRepairs` to the committed header, and the repair's manifest
+record now lists that header. The repair tests (30/30) and the fixed-point oracle pass.
+
+That exposes the true remaining failure. `renderTexture` is a `Readonly<RenderTexture>` structural row
+entering `Record<string, unknown>`, and `flight::Any` cannot hold a structural row without losing its owner.
+That is the boundary the existing structural-row-erasure request describes, and this site has been added to
+it. No member copy, field drop or cast is made.
+
+**G2: 0/1 compile, 1 fail** (`-j1`, Clang 22.1.8). `flight/render_gl/enable_gl_render_texture_guards.hpp`
+moves to `no-matching-constructor-34a8ea9f`.
 
 ### 105. `call-has-no-matching-c287f892` — 1 header(s), compiler route
 

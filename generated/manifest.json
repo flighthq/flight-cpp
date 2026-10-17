@@ -1013,6 +1013,7 @@
         "flight/physics2d/enable_physics_2d_guards.hpp",
         "flight/physics3d/enable_physics_3d_guards.hpp",
         "flight/render/render_registry_guards.hpp",
+        "flight/render_gl/enable_gl_render_texture_guards.hpp",
         "flight/scene2d_resources/enable_scene_2d_resource_failure_guards.hpp",
         "flight/scene3d_gl/enable_gl_pbr_extension_guards.hpp",
         "flight/shape/enable_shape_bounds_guards.hpp",

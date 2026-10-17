@@ -152,3 +152,18 @@ stray events and disposal. They were read as source requirements, not run as nat
 resource/scene behavior. The existing scene, resolver/runtime/signal, Texture, node and local owner
 carriers are reused by the candidate; none is copied or replaced. Header/functionality gain remains0,
 and package/init/G1/global products are not recounted by this scoped request disposition.
+
+## Site: a render texture recorded in a log entry (`@flighthq/render-gl` `enableGlRenderTextureGuards.ts`, G2)
+
+`warnGlRenderTextureUnavailable(state, renderTexture: Readonly<RenderTexture>, ...)` logs
+`logOnce(key, LogLevel.Warn, { height, message, renderTexture, status, width })`. `LogData` is
+`Record<string, unknown> | string`, so the `renderTexture` field is a readonly structural row entering
+`unknown`. That is this request's boundary.
+
+At flight-compiler `806d257` the call first failed on its untyped designated initializer. The declared
+`log-once-record-from-designated-initializer` repair now builds the `LogData` Record, with the
+`render_texture -> renderTexture` key verified against the source, which leaves this erasure as the honest
+remaining failure: `flight::Record<flight::String, flight::Any>` has no constructor taking the
+`StructuralRef<RowReadonly<RowOf<Ref<RenderTexture>>>>` entry (`render_gl/enable_gl_render_texture_guards.hpp:27`).
+Copying the visible members, dropping the field, or casting the row to a nominal reference would each
+lose the owner or the log content, so none is done.
