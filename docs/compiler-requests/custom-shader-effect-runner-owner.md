@@ -146,3 +146,50 @@ omission:
 I validated the site by inspecting the emitted header. Neither symbol is defined anywhere in the tree, and
 no other header names either one. This is a docs-only disposition, so the unchanged header was not
 recompiled, and its recorded **0/1** failure stands. Nothing is carried.
+
+## G2 remaining effects_gl runner family
+
+At Flight `a627849` / compiler `806d257`, 28 more single-header `effects_gl` clusters are the same omission as the SSAO, outline, film grain, glitch, chromatic aberration and bokeh runners above. Each header was checked by script and spot-checked by eye against three conditions:
+
+1. Exactly two NOT GENERATED markers:
+   - the `gl*EffectRunner` binding, refused `cpp-structural-assertion-writable-capability-unproven` for an `effect as <X>Effect` assertion from `Readonly<Effect>`;
+   - its callee `apply<X>EffectToGl`, refused `cpp-contextual-union-value-type-unrepresented` on `StructuralRef<RowReadonly<RowOf<Ref<GlTextureRenderTarget>>>>` (see [interface-heritage-widening](interface-heritage-widening.md)).
+2. The recorded first failure is the `register_gl_<x>_effect` call that passes the refused runner.
+3. Neither symbol is defined anywhere in the tree, and no other header names either one.
+
+Every disposition is docs-only, so the unchanged headers were not recompiled. Each recorded **0/1** failure stands, and nothing is carried: no runner, effect body, shader, cache or narrowed parameters.
+
+| cluster | header:line | members `Readonly<Effect>` does not declare |
+| --- | --- | --- |
+| `undeclared-identifier-2363216f` | `gl_dither_effect.hpp:86` | levels |
+| `undeclared-identifier-3582eeb5` | `gl_screen_space_fog_effect.hpp:98` | color, density, far and near |
+| `undeclared-identifier-3e7f03c4` | `gl_sharpen_effect.hpp:86` | amount |
+| `undeclared-identifier-44058981` | `gl_blend_effect.hpp:119` | backdropKey, mode and opacity |
+| `undeclared-identifier-51763a3c` | `gl_tone_map_effect.hpp:96` | exposure, operator and white |
+| `undeclared-identifier-529e49d7` | `gl_directional_blur_effect.hpp:91` | angle, length and samples |
+| `undeclared-identifier-5be7be47` | `gl_scanlines_effect.hpp:87` | count and intensity |
+| `undeclared-identifier-67f2c521` | `gl_god_rays_effect.hpp:106` | centerX, centerY, decay, density, exposure, samples and weight |
+| `undeclared-identifier-6ad30a3d` | `gl_crt_effect.hpp:92` | aberration, curvature, scanlineIntensity and vignette |
+| `undeclared-identifier-7d85a310` | `gl_lens_flare_effect.hpp:91` | ghosts, halo, intensity and threshold |
+| `undeclared-identifier-7fd1550e` | `gl_camera_motion_blur_effect.hpp:88` | intensity and samples |
+| `undeclared-identifier-7ff1c319` | `gl_vignette_effect.hpp:95` | color, intensity, radius and softness |
+| `undeclared-identifier-898d7996` | `gl_displacement_effect.hpp:91` | frequency, intensity and seed |
+| `undeclared-identifier-8ae633dc` | `gl_smaa_effect.hpp:86` | threshold |
+| `undeclared-identifier-8b3950d6` | `gl_motion_blur_effect.hpp:92` | intensity and samples |
+| `undeclared-identifier-8e604c65` | `gl_sketch_effect.hpp:86` | strength |
+| `undeclared-identifier-a4a22a69` | `gl_lens_distortion_effect.hpp:87` | amount and scale |
+| `undeclared-identifier-af7a1054` | `gl_median_effect.hpp:90` | radius |
+| `undeclared-identifier-c3c55c65` | `gl_composite_effect.hpp:92` | backdropKey and operator |
+| `undeclared-identifier-c45cc1bb` | `gl_fxaa_effect.hpp:86` | edgeThreshold and subpixel |
+| `undeclared-identifier-c7551b38` | `gl_pixelate_effect.hpp:86` | size |
+| `undeclared-identifier-cf2fed2b` | `gl_posterize_effect.hpp:85` | levels |
+| `undeclared-identifier-d14c2215` | `gl_convolution_effect.hpp:131` | bias, clamp, color, divisor, matrix, matrixX, matrixY and preserveAlpha |
+| `undeclared-identifier-d687475c` | `gl_halftone_effect.hpp:88` | angle and scale |
+| `undeclared-identifier-d7a1d1b7` | `gl_tilt_shift_effect.hpp:90` | blur, center and width |
+| `undeclared-identifier-e4eb111d` | `gl_kuwahara_effect.hpp:86` | radius |
+| `undeclared-identifier-ebf3999b` | `gl_radial_blur_effect.hpp:96` | centerX, centerY, samples and strength |
+| `undeclared-identifier-f020c1f7` | `gl_white_balance_effect.hpp:87` | temperature and tint |
+
+Three candidates of the same symptom did **not** meet the conditions. They are excluded here and left unchanged:
+- `undeclared-identifier-c29489a5` (`gl_bloom_effect.hpp:106`) and `undeclared-identifier-e4a7b51e` (`gl_lens_dirt_effect.hpp:112`): the callee's refused value is the plain `Ref<GlTextureRenderTarget>` of an intermediate target, not the readonly structural row.
+- `undeclared-identifier-a89b9a39` (`gl_bitmap_displacement_effect.hpp:153`): the registration also passes a separately refused resolver (`isGlBitmapDisplacementEffectResolvable`, `cpp-structural-assertion-owner-unproven`). That is the two-symbol custom-shader shape, which needs its own unit.

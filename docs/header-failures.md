@@ -189,67 +189,67 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 160 | `undeclared-identifier-1a056bbc` | 3 | TEXT | compiler | refused number formatter retained by five wrappers; G2: declaration candidate fails optional literal construction, full option spreads dropped; 0/3 remain failed |
 | 161 | `undeclared-identifier-1d8e072a` | 1 | 2D | compiler | Scale9 draw refuses nullable material owner widening; declaration probe fails native/generic callback conversion *(existing requests extended)* |
 | 162 | `undeclared-identifier-2110ec37` | 1 | WGPU | compiler | WGPU Sprite draw refuses nullable material owner widening; exact declaration compile fails GL-specific Sprite callback carrier *(existing requests extended)* |
-| 163 | `undeclared-identifier-2363216f` | 1 | GL | runtime | the emitted code names `gl_dither_effect_runner`, which nothing declares |
+| 163 | `undeclared-identifier-2363216f` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glDitherEffectRunner` binding (and its callee `applyDitherEffectToGl`) but still emits the registration call that passes the runner |
 | 164 | `undeclared-identifier-2437e103` | 1 | 3D | runtime | the emitted code names `parse_triangle_geometry_block`, which nothing declares |
 | 165 | `undeclared-identifier-251d1ba2` | 1 | 3D | runtime | the emitted code names `collect_pending_texture_owners`, which nothing declares |
 | 166 | `undeclared-identifier-2d9cd75f` | 1 | PLAT | declaration repair (applied) | exact refused shape-fill callback declared; G2: 1 pass; three-kind registration and fill hits remain unlinkable |
 | 167 | `undeclared-identifier-3017e8aa` | 1 | GL | runtime | the emitted code names `acquire_gl_render_texture`, which nothing declares |
 | 168 | `undeclared-identifier-332a5586` | 1 | 2D | compiler *(existing request)* | refused `drawDomScale9Sprite` retained as `.submit` in the renderer aggregate; declaration probe fails at `.create_data` |
 | 169 | `undeclared-identifier-34adf2ab` | 1 | ANIM | compiler | G2: 0/1; refused parser/result retained; exact declaration candidate fails unused compile in result-owner dependency |
-| 170 | `undeclared-identifier-3582eeb5` | 1 | GL | runtime | the emitted code names `gl_screen_space_fog_effect_runner`, which nothing declares |
+| 170 | `undeclared-identifier-3582eeb5` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glScreenSpaceFogEffectRunner` binding (and its callee `applyScreenSpaceFogEffectToGl`) but still emits the registration call that passes the runner |
 | 171 | `undeclared-identifier-3cb2bb54` | 1 | GL | runtime | the emitted code names `invert_tint_shaders`, which nothing declares |
-| 172 | `undeclared-identifier-3e7f03c4` | 1 | GL | runtime | the emitted code names `gl_sharpen_effect_runner`, which nothing declares |
-| 173 | `undeclared-identifier-44058981` | 1 | GL | runtime | the emitted code names `gl_blend_effect_runner`, which nothing declares |
+| 172 | `undeclared-identifier-3e7f03c4` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glSharpenEffectRunner` binding (and its callee `applySharpenEffectToGl`) but still emits the registration call that passes the runner |
+| 173 | `undeclared-identifier-44058981` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glBlendEffectRunner` binding (and its callee `applyBlendEffectToGl`) but still emits the registration call that passes the runner |
 | 174 | `undeclared-identifier-49b86813` | 1 | ANIM | runtime | the emitted code names `solve_skeleton_2d_ik_constraint`, which nothing declares |
 | 175 | `undeclared-identifier-4fc6ab69` | 0 | 2D | declaration repair (applied) | G2: 1/1 header; unused positive passes, handler links fail exactly on refused image helper |
 | 176 | `undeclared-identifier-514a5b7b` | 1 | 2D | compiler | Tilemap submit refuses nullable material owner widening; exact declaration compile fails NodeAny/Sprite callback carrier *(existing requests extended)* |
-| 177 | `undeclared-identifier-51763a3c` | 1 | GL | runtime | the emitted code names `gl_tone_map_effect_runner`, which nothing declares |
-| 178 | `undeclared-identifier-529e49d7` | 1 | GL | runtime | the emitted code names `gl_directional_blur_effect_runner`, which nothing declares |
+| 177 | `undeclared-identifier-51763a3c` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glToneMapEffectRunner` binding (and its callee `applyToneMapEffectToGl`) but still emits the registration call that passes the runner |
+| 178 | `undeclared-identifier-529e49d7` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glDirectionalBlurEffectRunner` binding (and its callee `applyDirectionalBlurEffectToGl`) but still emits the registration call that passes the runner |
 | 179 | `undeclared-identifier-58fb713b` | 1 | 2D | compiler *(existing request)* | refused `drawDomScale9Shape` retained as `.submit` in the renderer aggregate; declaration probe fails at `.create_data` |
-| 180 | `undeclared-identifier-5be7be47` | 1 | GL | runtime | the emitted code names `gl_scanlines_effect_runner`, which nothing declares |
+| 180 | `undeclared-identifier-5be7be47` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glScanlinesEffectRunner` binding (and its callee `applyScanlinesEffectToGl`) but still emits the registration call that passes the runner |
 | 181 | `undeclared-identifier-6647740e` | 1 | 2D | runtime | the emitted code names `create_rive_relative_transforms`, which nothing declares |
 | 182 | `undeclared-identifier-66ea97f8` | 1 | WGPU | compiler | screen initializer refuses format union; valid declaration witness still fails native GPUTexture width access *(existing and new requests)* |
-| 183 | `undeclared-identifier-67f2c521` | 1 | GL | runtime | the emitted code names `gl_god_rays_effect_runner`, which nothing declares |
-| 184 | `undeclared-identifier-6ad30a3d` | 1 | GL | runtime | the emitted code names `gl_crt_effect_runner`, which nothing declares |
+| 183 | `undeclared-identifier-67f2c521` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glGodRaysEffectRunner` binding (and its callee `applyGodRaysEffectToGl`) but still emits the registration call that passes the runner |
+| 184 | `undeclared-identifier-6ad30a3d` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glCrtEffectRunner` binding (and its callee `applyCrtEffectToGl`) but still emits the registration call that passes the runner |
 | 185 | `undeclared-identifier-6dd20ce4` | 1 | 2D | compiler | QuadBatch submit refuses nullable material owner widening; exact declaration compile fails NodeAny/Sprite callback carrier *(existing requests extended)* |
 | 186 | `undeclared-identifier-757c2c8a` | 1 | 2D | compiler | private Scale9 shape owner recovery refused; exact declaration compile fails native texture-cache local carrier *(requests filed)* |
 | 187 | `undeclared-identifier-785ed669` | 1 | PLAT | runtime | the emitted code names `resolve_quad_batch_instance_index`, which nothing declares |
 | 188 | `undeclared-identifier-7905640c` | 1 | 2D | compiler *(existing request)* | refused `canvasClipHooks` (RenderState asserted to CanvasRenderState without heritage) still stored; all clip callees emitted |
-| 189 | `undeclared-identifier-7d85a310` | 1 | GL | runtime | the emitted code names `gl_lens_flare_effect_runner`, which nothing declares |
+| 189 | `undeclared-identifier-7d85a310` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glLensFlareEffectRunner` binding (and its callee `applyLensFlareEffectToGl`) but still emits the registration call that passes the runner |
 | 190 | `undeclared-identifier-7e3a780f` | 1 | PLAT | runtime | the emitted code names `hit_test_sprite_alpha`, which nothing declares |
-| 191 | `undeclared-identifier-7fd1550e` | 1 | GL | runtime | the emitted code names `gl_camera_motion_blur_effect_runner`, which nothing declares |
-| 192 | `undeclared-identifier-7ff1c319` | 1 | GL | runtime | the emitted code names `gl_vignette_effect_runner`, which nothing declares |
+| 191 | `undeclared-identifier-7fd1550e` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glCameraMotionBlurEffectRunner` binding (and its callee `applyCameraMotionBlurEffectToGl`) but still emits the registration call that passes the runner |
+| 192 | `undeclared-identifier-7ff1c319` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glVignetteEffectRunner` binding (and its callee `applyVignetteEffectToGl`) but still emits the registration call that passes the runner |
 | 193 | `undeclared-identifier-8653adf0` | 1 | 2D | runtime | the emitted code names `ensure_scene_2d_runtime`, which nothing declares |
-| 194 | `undeclared-identifier-898d7996` | 1 | GL | runtime | the emitted code names `gl_displacement_effect_runner`, which nothing declares |
-| 195 | `undeclared-identifier-8ae633dc` | 1 | GL | runtime | the emitted code names `gl_smaa_effect_runner`, which nothing declares |
-| 196 | `undeclared-identifier-8b3950d6` | 1 | GL | runtime | the emitted code names `gl_motion_blur_effect_runner`, which nothing declares |
-| 197 | `undeclared-identifier-8e604c65` | 1 | GL | runtime | the emitted code names `gl_sketch_effect_runner`, which nothing declares |
+| 194 | `undeclared-identifier-898d7996` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glDisplacementEffectRunner` binding (and its callee `applyDisplacementEffectToGl`) but still emits the registration call that passes the runner |
+| 195 | `undeclared-identifier-8ae633dc` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glSmaaEffectRunner` binding (and its callee `applySmaaEffectToGl`) but still emits the registration call that passes the runner |
+| 196 | `undeclared-identifier-8b3950d6` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glMotionBlurEffectRunner` binding (and its callee `applyMotionBlurEffectToGl`) but still emits the registration call that passes the runner |
+| 197 | `undeclared-identifier-8e604c65` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glSketchEffectRunner` binding (and its callee `applySketchEffectToGl`) but still emits the registration call that passes the runner |
 | 198 | `undeclared-identifier-9562ef07` | 1 | 2D | compiler *(existing request)* | refused `drawCanvasTilemap` retained as `.submit` in the SpriteRenderer aggregate; declaration probe fails at `.create_data` |
 | 199 | `undeclared-identifier-9aaa5b7f` | 1 | WGPU | runtime | the emitted code names `acquire_wgpu_screen_render_target_capture_texture`, which nothing declares |
 | 200 | `undeclared-identifier-a3f09fb8` | 1 | 2D | compiler *(existing request)* | refused `drawDomShape` retained as `.submit` in the renderer aggregate; declaration probe fails at `.create_data` |
-| 201 | `undeclared-identifier-a4a22a69` | 1 | GL | runtime | the emitted code names `gl_lens_distortion_effect_runner`, which nothing declares |
+| 201 | `undeclared-identifier-a4a22a69` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glLensDistortionEffectRunner` binding (and its callee `applyLensDistortionEffectToGl`) but still emits the registration call that passes the runner |
 | 202 | `undeclared-identifier-a89b9a39` | 1 | GL | runtime | the emitted code names `gl_bitmap_displacement_effect_runner`, which nothing declares |
 | 203 | `undeclared-identifier-aa084556` | 1 | PLAT | runtime + declaration repairs (applied) | refused track-list guard and grid resolver declared; strict erased integer predicate supplied; G2: 1 pass; validator/registration remain unlinkable |
 | 204 | `undeclared-identifier-ae594b8a` | 1 | 2D | runtime | the emitted code names `append_lottie_shape_items`, which nothing declares |
-| 205 | `undeclared-identifier-af7a1054` | 1 | GL | runtime | the emitted code names `gl_median_effect_runner`, which nothing declares |
+| 205 | `undeclared-identifier-af7a1054` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glMedianEffectRunner` binding (and its callee `applyMedianEffectToGl`) but still emits the registration call that passes the runner |
 | 206 | `undeclared-identifier-b15d9d15` | 1 | ANIM | compiler | G2: 0/1; refused bone parser and complete result omitted; no exact declaration candidate |
 | 207 | `undeclared-identifier-befaa2d6` | 2 | 2D | source patch + repairs (applied) | the emitted code names `compute_scissor_rect`, which nothing declares *(G2: 1 pass, 1 to `no-viable-conversion-e25fffde`)* |
 | 208 | `undeclared-identifier-c162d0c0` | 1 | ANIM | runtime | the emitted code names `solve_skeleton_2d_transform_constraint`, which nothing declares |
 | 209 | `undeclared-identifier-c29489a5` | 1 | GL | runtime | the emitted code names `gl_bloom_effect_runner`, which nothing declares |
-| 210 | `undeclared-identifier-c3c55c65` | 1 | GL | runtime | the emitted code names `gl_composite_effect_runner`, which nothing declares |
-| 211 | `undeclared-identifier-c45cc1bb` | 1 | GL | runtime | the emitted code names `gl_fxaa_effect_runner`, which nothing declares |
-| 212 | `undeclared-identifier-c7551b38` | 1 | GL | runtime | the emitted code names `gl_pixelate_effect_runner`, which nothing declares |
+| 210 | `undeclared-identifier-c3c55c65` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glCompositeEffectRunner` binding (and its callee `applyCompositeEffectToGl`) but still emits the registration call that passes the runner |
+| 211 | `undeclared-identifier-c45cc1bb` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glFxaaEffectRunner` binding (and its callee `applyFxaaEffectToGl`) but still emits the registration call that passes the runner |
+| 212 | `undeclared-identifier-c7551b38` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glPixelateEffectRunner` binding (and its callee `applyPixelateEffectToGl`) but still emits the registration call that passes the runner |
 | 213 | `undeclared-identifier-cc7c5006` | 1 | ANIM | runtime | the emitted code names `solve_skeleton_2d_path_constraint`, which nothing declares |
-| 214 | `undeclared-identifier-cf2fed2b` | 1 | GL | runtime | the emitted code names `gl_posterize_effect_runner`, which nothing declares |
-| 215 | `undeclared-identifier-d14c2215` | 1 | GL | runtime | the emitted code names `gl_convolution_effect_runner`, which nothing declares |
-| 216 | `undeclared-identifier-d687475c` | 1 | GL | runtime | the emitted code names `gl_halftone_effect_runner`, which nothing declares |
-| 217 | `undeclared-identifier-d7a1d1b7` | 1 | GL | runtime | the emitted code names `gl_tilt_shift_effect_runner`, which nothing declares |
+| 214 | `undeclared-identifier-cf2fed2b` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glPosterizeEffectRunner` binding (and its callee `applyPosterizeEffectToGl`) but still emits the registration call that passes the runner |
+| 215 | `undeclared-identifier-d14c2215` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glConvolutionEffectRunner` binding (and its callee `applyConvolutionEffectToGl`) but still emits the registration call that passes the runner |
+| 216 | `undeclared-identifier-d687475c` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glHalftoneEffectRunner` binding (and its callee `applyHalftoneEffectToGl`) but still emits the registration call that passes the runner |
+| 217 | `undeclared-identifier-d7a1d1b7` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glTiltShiftEffectRunner` binding (and its callee `applyTiltShiftEffectToGl`) but still emits the registration call that passes the runner |
 | 218 | `undeclared-identifier-e3d6c4e4` | 1 | GL | runtime | the emitted code names `apply_gl_gaussian_blur_pass`, which nothing declares |
 | 219 | `undeclared-identifier-e4a7b51e` | 1 | GL | runtime | the emitted code names `gl_lens_dirt_effect_runner`, which nothing declares |
-| 220 | `undeclared-identifier-e4eb111d` | 1 | GL | runtime | the emitted code names `gl_kuwahara_effect_runner`, which nothing declares |
+| 220 | `undeclared-identifier-e4eb111d` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glKuwaharaEffectRunner` binding (and its callee `applyKuwaharaEffectToGl`) but still emits the registration call that passes the runner |
 | 221 | `undeclared-identifier-e7bf11f9` | 1 | WGPU | compiler | WGPU Scale9 draw refuses nullable material owner widening; declaration compile fails native/generic callback carrier *(existing requests extended)* |
-| 222 | `undeclared-identifier-ebf3999b` | 1 | GL | runtime | the emitted code names `gl_radial_blur_effect_runner`, which nothing declares |
-| 223 | `undeclared-identifier-f020c1f7` | 1 | GL | runtime | the emitted code names `gl_white_balance_effect_runner`, which nothing declares |
+| 222 | `undeclared-identifier-ebf3999b` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glRadialBlurEffectRunner` binding (and its callee `applyRadialBlurEffectToGl`) but still emits the registration call that passes the runner |
+| 223 | `undeclared-identifier-f020c1f7` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glWhiteBalanceEffectRunner` binding (and its callee `applyWhiteBalanceEffectToGl`) but still emits the registration call that passes the runner |
 | 224 | `undeclared-identifier-f6affb68` | 1 | 3D | [compiler request](compiler-requests/retained-declaration-calls-omitted-callee.md) | global transmission/volume/IOR callbacks retain a refused owner resolver; declaration fails unused-header link |
 | 225 | `undeclared-identifier-f91f1e72` | 1 | 2D | compiler (existing partial native carry) | G2 current effective header1/1 pass; generated Canvas getter/draw owner gaps remain *(builder4)* |
 | 226 | `undeclared-identifier-fcbdae42` | 1 | 2D | compiler *(existing request)* | refused `drawCanvasTextLabel` retained as `.submit` in the renderer aggregate; declaration probe fails at `.create_data` |
@@ -3092,14 +3092,17 @@ Only this row/cluster, report162 and appended sections in three existing request
 sweep/carry totals and all foreign products remain unchanged. No production code/body, fake shader,
 GPU draw proof, narrowed material domain or unchanged old/global check is carried or claimed.
 
-### 163. `undeclared-identifier-2363216f` — 1 header(s)
+### 163. `undeclared-identifier-2363216f` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_dither_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glDitherEffectRunner` binding (and its callee `applyDitherEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_dither_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of levels, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_dither_effect.hpp:86`
 - example: `use of undeclared identifier 'gl_dither_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
 ### 164. `undeclared-identifier-2437e103` — 1 header(s)
 
@@ -3197,14 +3200,17 @@ Only this owned failed root/row and worklist entry change, plus existing request
 slot/parser/functionality/header gain is claimed; foreign rows/roots/prose and historical/G1 totals
 remain unchanged.
 
-### 170. `undeclared-identifier-3582eeb5` — 1 header(s)
+### 170. `undeclared-identifier-3582eeb5` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_screen_space_fog_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glScreenSpaceFogEffectRunner` binding (and its callee `applyScreenSpaceFogEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_screen_space_fog_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of color, density, far and near, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_screen_space_fog_effect.hpp:98`
 - example: `use of undeclared identifier 'gl_screen_space_fog_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
 ### 171. `undeclared-identifier-3cb2bb54` — 1 header(s)
 
@@ -3215,23 +3221,29 @@ remain unchanged.
 - first failure at: `flight/effects_gl/gl_effect_tint_shader.hpp:75`
 - example: `use of undeclared identifier 'invert_tint_shaders'`
 
-### 172. `undeclared-identifier-3e7f03c4` — 1 header(s)
+### 172. `undeclared-identifier-3e7f03c4` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_sharpen_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glSharpenEffectRunner` binding (and its callee `applySharpenEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_sharpen_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of amount, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_sharpen_effect.hpp:86`
 - example: `use of undeclared identifier 'gl_sharpen_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
-### 173. `undeclared-identifier-44058981` — 1 header(s)
+### 173. `undeclared-identifier-44058981` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_blend_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glBlendEffectRunner` binding (and its callee `applyBlendEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_blend_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of backdropKey, mode and opacity, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_blend_effect.hpp:119`
 - example: `use of undeclared identifier 'gl_blend_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
 ### 174. `undeclared-identifier-49b86813` — 1 header(s)
 
@@ -3302,23 +3314,29 @@ Only this row/cluster, report176 and appended sections in three existing request
 sweep/carry totals and foreign products remain unchanged. No production source/runtime/override/body,
 native packet/drawing proof or unchanged old/global check is carried or claimed.
 
-### 177. `undeclared-identifier-51763a3c` — 1 header(s)
+### 177. `undeclared-identifier-51763a3c` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_tone_map_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glToneMapEffectRunner` binding (and its callee `applyToneMapEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_tone_map_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of exposure, operator and white, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_tone_map_effect.hpp:96`
 - example: `use of undeclared identifier 'gl_tone_map_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
-### 178. `undeclared-identifier-529e49d7` — 1 header(s)
+### 178. `undeclared-identifier-529e49d7` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_directional_blur_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glDirectionalBlurEffectRunner` binding (and its callee `applyDirectionalBlurEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_directional_blur_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of angle, length and samples, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_directional_blur_effect.hpp:91`
 - example: `use of undeclared identifier 'gl_directional_blur_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
 ### 179. `undeclared-identifier-58fb713b` — G2 recheck of 1 header(s)
 
@@ -3332,14 +3350,17 @@ native packet/drawing proof or unchanged old/global check is carried or claimed.
 - Scoped native recheck (GCC 15.2, jobs 1, all errors shown): **1 attempted / 0 pass / 1 fail**, the header's own diagnostic. No DOM backend, raster, copied owner or narrowed shape is supplied.
 - compiler request: `docs/compiler-requests/retained-declaration-calls-omitted-callee.md`
 
-### 180. `undeclared-identifier-5be7be47` — 1 header(s)
+### 180. `undeclared-identifier-5be7be47` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_scanlines_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glScanlinesEffectRunner` binding (and its callee `applyScanlinesEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_scanlines_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of count and intensity, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_scanlines_effect.hpp:87`
 - example: `use of undeclared identifier 'gl_scanlines_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
 ### 181. `undeclared-identifier-6647740e` — 1 header(s)
 
@@ -3385,23 +3406,29 @@ Only this row/cluster, report182, two existing request appendices and the new re
 Historical sweep/carry totals and all foreign products remain unchanged. No attachment, resize,
 capture, presentation, GPU lifecycle behavior or unchanged old/global check is claimed.
 
-### 183. `undeclared-identifier-67f2c521` — 1 header(s)
+### 183. `undeclared-identifier-67f2c521` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_god_rays_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glGodRaysEffectRunner` binding (and its callee `applyGodRaysEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_god_rays_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of centerX, centerY, decay, density, exposure, samples and weight, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_god_rays_effect.hpp:106`
 - example: `use of undeclared identifier 'gl_god_rays_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
-### 184. `undeclared-identifier-6ad30a3d` — 1 header(s)
+### 184. `undeclared-identifier-6ad30a3d` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_crt_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glCrtEffectRunner` binding (and its callee `applyCrtEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_crt_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of aberration, curvature, scanlineIntensity and vignette, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_crt_effect.hpp:92`
 - example: `use of undeclared identifier 'gl_crt_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
 ### 185. `undeclared-identifier-6dd20ce4` — 1 header, compiler-owned
 
@@ -3492,14 +3519,17 @@ sweep/carry totals remain unchanged. No old native/rendering proof or global swe
 - Scoped native recheck (GCC 15.2, jobs 1, all errors shown): **1 attempted / 0 pass / 1 fail** at the header's own line 89, not a cascade from an included header. Nothing is carried.
 - compiler request: `docs/compiler-requests/canvas-render-state-owner-asserted-without-heritage.md`
 
-### 189. `undeclared-identifier-7d85a310` — 1 header(s)
+### 189. `undeclared-identifier-7d85a310` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_lens_flare_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glLensFlareEffectRunner` binding (and its callee `applyLensFlareEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_lens_flare_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of ghosts, halo, intensity and threshold, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_lens_flare_effect.hpp:91`
 - example: `use of undeclared identifier 'gl_lens_flare_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
 ### 190. `undeclared-identifier-7e3a780f` — 1 header(s)
 
@@ -3510,23 +3540,29 @@ sweep/carry totals remain unchanged. No old native/rendering proof or global swe
 - first failure at: `flight/interaction/register_sprite_hit_test.hpp:127`
 - example: `use of undeclared identifier 'hit_test_sprite_alpha'`
 
-### 191. `undeclared-identifier-7fd1550e` — 1 header(s)
+### 191. `undeclared-identifier-7fd1550e` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_camera_motion_blur_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glCameraMotionBlurEffectRunner` binding (and its callee `applyCameraMotionBlurEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_camera_motion_blur_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of intensity and samples, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_camera_motion_blur_effect.hpp:88`
 - example: `use of undeclared identifier 'gl_camera_motion_blur_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
-### 192. `undeclared-identifier-7ff1c319` — 1 header(s)
+### 192. `undeclared-identifier-7ff1c319` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_vignette_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glVignetteEffectRunner` binding (and its callee `applyVignetteEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_vignette_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of color, intensity, radius and softness, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_vignette_effect.hpp:95`
 - example: `use of undeclared identifier 'gl_vignette_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
 ### 193. `undeclared-identifier-8653adf0` — 1 header(s)
 
@@ -3537,41 +3573,53 @@ sweep/carry totals remain unchanged. No old native/rendering proof or global swe
 - first failure at: `flight/scene2d/scene2d.hpp:247`
 - example: `use of undeclared identifier 'ensure_scene_2d_runtime'`
 
-### 194. `undeclared-identifier-898d7996` — 1 header(s)
+### 194. `undeclared-identifier-898d7996` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_displacement_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glDisplacementEffectRunner` binding (and its callee `applyDisplacementEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_displacement_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of frequency, intensity and seed, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_displacement_effect.hpp:91`
 - example: `use of undeclared identifier 'gl_displacement_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
-### 195. `undeclared-identifier-8ae633dc` — 1 header(s)
+### 195. `undeclared-identifier-8ae633dc` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_smaa_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glSmaaEffectRunner` binding (and its callee `applySmaaEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_smaa_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of threshold, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_smaa_effect.hpp:86`
 - example: `use of undeclared identifier 'gl_smaa_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
-### 196. `undeclared-identifier-8b3950d6` — 1 header(s)
+### 196. `undeclared-identifier-8b3950d6` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_motion_blur_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glMotionBlurEffectRunner` binding (and its callee `applyMotionBlurEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_motion_blur_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of intensity and samples, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_motion_blur_effect.hpp:92`
 - example: `use of undeclared identifier 'gl_motion_blur_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
-### 197. `undeclared-identifier-8e604c65` — 1 header(s)
+### 197. `undeclared-identifier-8e604c65` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_sketch_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glSketchEffectRunner` binding (and its callee `applySketchEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_sketch_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of strength, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_sketch_effect.hpp:86`
 - example: `use of undeclared identifier 'gl_sketch_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
 ### 198. `undeclared-identifier-9562ef07` — G2 recheck of 1 header(s)
 
@@ -3606,14 +3654,17 @@ sweep/carry totals remain unchanged. No old native/rendering proof or global swe
 - Scoped native recheck (GCC 15.2, jobs 1, all errors shown): **1 attempted / 0 pass / 1 fail**, the header's own diagnostic. No DOM backend, raster, copied owner or narrowed shape is supplied.
 - compiler request: `docs/compiler-requests/retained-declaration-calls-omitted-callee.md`
 
-### 201. `undeclared-identifier-a4a22a69` — 1 header(s)
+### 201. `undeclared-identifier-a4a22a69` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_lens_distortion_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glLensDistortionEffectRunner` binding (and its callee `applyLensDistortionEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_lens_distortion_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of amount and scale, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_lens_distortion_effect.hpp:87`
 - example: `use of undeclared identifier 'gl_lens_distortion_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
 ### 202. `undeclared-identifier-a89b9a39` — 1 header(s)
 
@@ -3672,14 +3723,17 @@ fake resolver or narrowed value domain is claimed.
 - first failure at: `flight/scene2d_formats/lottie_shape_layer.hpp:153`
 - example: `use of undeclared identifier 'append_lottie_shape_items'`
 
-### 205. `undeclared-identifier-af7a1054` — 1 header(s)
+### 205. `undeclared-identifier-af7a1054` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_median_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glMedianEffectRunner` binding (and its callee `applyMedianEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_median_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of radius, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_median_effect.hpp:90`
 - example: `use of undeclared identifier 'gl_median_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
 ### 206. `undeclared-identifier-b15d9d15` — G2 recheck of 1 header(s)
 
@@ -3758,32 +3812,41 @@ site. The clip renderer is not claimed complete.
 - first failure at: `flight/effects_gl/gl_bloom_effect.hpp:106`
 - example: `use of undeclared identifier 'gl_bloom_effect_runner'`
 
-### 210. `undeclared-identifier-c3c55c65` — 1 header(s)
+### 210. `undeclared-identifier-c3c55c65` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_composite_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glCompositeEffectRunner` binding (and its callee `applyCompositeEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_composite_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of backdropKey and operator, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_composite_effect.hpp:92`
 - example: `use of undeclared identifier 'gl_composite_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
-### 211. `undeclared-identifier-c45cc1bb` — 1 header(s)
+### 211. `undeclared-identifier-c45cc1bb` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_fxaa_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glFxaaEffectRunner` binding (and its callee `applyFxaaEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_fxaa_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of edgeThreshold and subpixel, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_fxaa_effect.hpp:86`
 - example: `use of undeclared identifier 'gl_fxaa_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
-### 212. `undeclared-identifier-c7551b38` — 1 header(s)
+### 212. `undeclared-identifier-c7551b38` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_pixelate_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glPixelateEffectRunner` binding (and its callee `applyPixelateEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_pixelate_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of size, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_pixelate_effect.hpp:86`
 - example: `use of undeclared identifier 'gl_pixelate_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
 ### 213. `undeclared-identifier-cc7c5006` — 1 header(s)
 
@@ -3794,41 +3857,53 @@ site. The clip renderer is not claimed complete.
 - first failure at: `flight/skeleton2d/path_constraint_2d.hpp:290`
 - example: `use of undeclared identifier 'solve_skeleton_2d_path_constraint'`
 
-### 214. `undeclared-identifier-cf2fed2b` — 1 header(s)
+### 214. `undeclared-identifier-cf2fed2b` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_posterize_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glPosterizeEffectRunner` binding (and its callee `applyPosterizeEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_posterize_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of levels, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_posterize_effect.hpp:85`
 - example: `use of undeclared identifier 'gl_posterize_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
-### 215. `undeclared-identifier-d14c2215` — 1 header(s)
+### 215. `undeclared-identifier-d14c2215` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_convolution_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glConvolutionEffectRunner` binding (and its callee `applyConvolutionEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_convolution_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of bias, clamp, color, divisor, matrix, matrixX, matrixY and preserveAlpha, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_convolution_effect.hpp:131`
 - example: `use of undeclared identifier 'gl_convolution_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
-### 216. `undeclared-identifier-d687475c` — 1 header(s)
+### 216. `undeclared-identifier-d687475c` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_halftone_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glHalftoneEffectRunner` binding (and its callee `applyHalftoneEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_halftone_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of angle and scale, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_halftone_effect.hpp:88`
 - example: `use of undeclared identifier 'gl_halftone_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
-### 217. `undeclared-identifier-d7a1d1b7` — 1 header(s)
+### 217. `undeclared-identifier-d7a1d1b7` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_tilt_shift_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glTiltShiftEffectRunner` binding (and its callee `applyTiltShiftEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_tilt_shift_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of blur, center and width, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_tilt_shift_effect.hpp:90`
 - example: `use of undeclared identifier 'gl_tilt_shift_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
 ### 218. `undeclared-identifier-e3d6c4e4` — 1 header(s)
 
@@ -3848,14 +3923,17 @@ site. The clip renderer is not claimed complete.
 - first failure at: `flight/effects_gl/gl_lens_dirt_effect.hpp:112`
 - example: `use of undeclared identifier 'gl_lens_dirt_effect_runner'`
 
-### 220. `undeclared-identifier-e4eb111d` — 1 header(s)
+### 220. `undeclared-identifier-e4eb111d` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_kuwahara_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glKuwaharaEffectRunner` binding (and its callee `applyKuwaharaEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_kuwahara_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of radius, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_kuwahara_effect.hpp:86`
 - example: `use of undeclared identifier 'gl_kuwahara_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
 ### 221. `undeclared-identifier-e7bf11f9` — 1 header, compiler-owned
 
@@ -3897,23 +3975,29 @@ Only this row/cluster, report221 and appended sections in three existing request
 sweep/carry totals and all foreign products remain unchanged. No production code/body, fake draw,
 narrowed mapper/material/texture domain, GPU proof or unchanged old/global check is carried or claimed.
 
-### 222. `undeclared-identifier-ebf3999b` — 1 header(s)
+### 222. `undeclared-identifier-ebf3999b` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_radial_blur_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glRadialBlurEffectRunner` binding (and its callee `applyRadialBlurEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_radial_blur_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of centerX, centerY, samples and strength, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_radial_blur_effect.hpp:96`
 - example: `use of undeclared identifier 'gl_radial_blur_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
-### 223. `undeclared-identifier-f020c1f7` — 1 header(s)
+### 223. `undeclared-identifier-f020c1f7` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_white_balance_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glWhiteBalanceEffectRunner` binding (and its callee `applyWhiteBalanceEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_white_balance_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: one row of the [effects_gl runner family](compiler-requests/custom-shader-effect-runner-owner.md#g2-remaining-effects_gl-runner-family). `Readonly<Effect>` declares none of temperature and tint, and the callee refusal is the `GlTextureRenderTarget` widening.
 - first failure at: `flight/effects_gl/gl_white_balance_effect.hpp:87`
 - example: `use of undeclared identifier 'gl_white_balance_effect_runner'`
+- Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
 ### 224. `undeclared-identifier-f6affb68` — 1 header(s)
 
