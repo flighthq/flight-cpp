@@ -74,7 +74,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 45 | `no-viable-conversion-e1a24bd1` | 4 | 2D | compiler | a value is passed where its declared type cannot receive it |
 | 46 | `other-2aef05a3` | 6 | ANIM | [compiler request](compiler-requests/interface-heritage-widening.md) | shadow-effect conditional branches cannot widen their independent concrete owners into the declared Effect array element |
 | 47 | `other-43523429` | 4 | ANIM | [compiler request](compiler-requests/heritage-argument-generic-deduction.md) | heritage-based Node2D type arguments are not substituted at addNodeChild, leaving a free Traits identifier |
-| 48 | `other-4e22e4de` | 4 | 2D | runtime | uncategorised: the first diagnostic does not name a single cause |
+| 48 | `other-4e22e4de` | 4 | 2D | compiler | JSON.parse assertion casts JsonValue to the Aseprite document-owner variant *(existing request extended)* |
 | 49 | `other-5611a858` | 4 | ANIM | declaration repair (applied) | ColorScaleBiasAdjustment heritage restored; G2: 1 pass, 3 compiler failures |
 | 50 | `other-d6be4352` | 4 | ANIM | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 51 | `static-assertion-00a0e75d` | 4 | 3D, WGPU | compiler | a runtime static assertion rejects the emitted shape |
@@ -992,11 +992,16 @@ rank remain historical, and `previousCluster` retains this original group.
 
 ### 48. `other-4e22e4de` — 4 header(s)
 
-- cause: uncategorised: the first diagnostic does not name a single cause
+- cause: `JSON.parse(json) as AsepriteDocument` is emitted as a `static_cast` between unrelated carriers
+- subject: `AsepriteDocument`
 - lanes: 2D
-- fix route: runtime
+- fix route: compiler — [existing JSON assertion request](compiler-requests/json-parse-assertion-static-cast.md#g2-aseprite-document-union)
 - first failure at: `flight/spritesheet_formats/aseprite_parse.hpp:144`
 - example: `no matching conversion for static_cast from 'JsonValue' to 'AsepriteDocument'`
+- G2 disposition: **one shared JSON-assertion cause**, matching the existing Lottie request, with a two-reference document variant here. `Json::parse` already returns a real JSON tree; it cannot be cast into `variant<Ref<AsepriteArrayDocument>, Ref<AsepriteHashDocument>>`. Both public Aseprite parse entry points contain that cast.
+- The document-returning API retains the original array/hash document and layer metadata, while spritesheet mapping also consumes durations and tags. The existing native atlas parser returns geometry/page metadata and omits those values, so substituting it would lose the parser's required result. Materializing the full document or refusing the assertion belongs to the compiler; a permissive conversion, empty document, fake parser or added schema-failure fallback cannot preserve the source contract.
+- `documentToData` is independently omitted at an atlas-schema contextual-union conversion, so no claim is made that removing this cast alone makes the parser work. A declaration repair cannot convert the JSON tree into the document owners.
+- Numbers: **0/4 pass, 4 fail**, retained from G1. All four owned rows keep their exact diagnostic and gain the actual location and existing request link; the original work-item ID is retained with the corrected cause/route. No C++ input changed, no unchanged native rerun and no promotion. Other clusters, the Lottie rows and historical sweep totals are unchanged.
 
 ### 49. `other-5611a858` — 4 header(s)
 
