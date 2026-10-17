@@ -51,7 +51,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 22 | `undeclared-identifier-7dc86326` | 7 | WGPU | runtime | the emitted code names `get_wgpu_scene_3d_runtime`, which nothing declares |
 | 23 | `undeclared-identifier-b90ed4db` | 7 | ANIM | runtime | the emitted code names `dragon_bones_animations_section_handler`, which nothing declares |
 | 24 | `invalid-operands-ec4dbe74` | 6 | CORE, GL | runtime | an operator is applied to operand types it does not accept |
-| 25 | `missing-member-237022b0` | 6 | 2D, TEXT | runtime | the emitted code reads a member the target does not declare (`create_document_refusal`) |
+| 25 | `missing-member-237022b0` | 6 | 2D, TEXT | compiler | `create_document_refusal` lives in the wholly refused `sceneDocumentRefusal.ts`, refused for a misclassified imported Record alias *(request filed)* |
 | 26 | `missing-member-e27d26f9` | 6 | 3D | runtime | the emitted code reads a member the target does not declare (`attach_gltf_pbr_extension`) |
 | 27 | `no-viable-conversion-f02000a9` | 6 | 2D, GL | compiler | a value is passed where its declared type cannot receive it |
 | 28 | `undeclared-identifier-6e587559` | 6 | ANIM, TEXT | runtime | the emitted code names `equals_markup_format`, which nothing declares |
@@ -602,12 +602,14 @@ G2's scoped-only-when-changed rule. Only these owned rows gained request links a
 
 ### 25. `missing-member-237022b0` — 6 header(s)
 
-- cause: the emitted code reads a member the target does not declare (`create_document_refusal`)
+- cause: `flight_document_text.hpp` calls `create_document_refusal`, which belongs to `sceneDocumentRefusal.ts`. That module is refused whole (`cpp-imported-type-unsupported:unsupportedAmbientReference`) because it imports `FlightDocumentResourceLookup`, which is `Readonly<Record<string, unknown>>`. `flight/types` already emits that alias as `flight::Record<flight::String, flight::Any>`, so it is not ambient.
 - subject: `create_document_refusal`
 - lanes: 2D, TEXT
-- fix route: runtime
+- fix route: compiler
+- why this route: G2, measured with GCC 15.2 at `-j1`. The callee's NOT GENERATED surface is a whole-module placeholder in another header, so the same-header `declare-refused-function` witnesses do not hold, and no declaration or body is supplied. It is the existing imported-Record-alias family.
 - first failure at: `flight/scene_document/flight_document_text.hpp:226`
 - example: `no member named 'create_document_refusal' in namespace 'scene_document'`
+- compiler request: `docs/compiler-requests/imported-record-alias-loses-runtime-representation.md`
 
 ### 26. `missing-member-e27d26f9` — 6 header(s)
 
