@@ -1464,6 +1464,23 @@
       "appliedOn": "2026-10-08"
     },
     {
+      "id": "scene2d-gl-clip-rectangle-viewport-number-domain",
+      "dependency": "flight",
+      "patch": "scene2d-gl-clip-rectangle-viewport-number-domain.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/scene2d-gl/src/glClipRectangle.ts",
+      "package": "@flighthq/scene2d-gl",
+      "answers": "refusal",
+      "refusal": "C++ runtime contract maps distinct union domains to one carrier without a discriminator or checked projection (GLsizei | primitive -> double)",
+      "rewrite": "Applies JavaScript's unary numeric identity to computeScissorRect's two viewport fallbacks after nullish selection, as scene3d-gl-viewport-number-domain does for the same shape.",
+      "equivalence": "Both operands are already JavaScript numbers. Unary plus therefore preserves every finite value, infinity, NaN and signed zero, and leaves nullish selection and property-read order unchanged. The same corner transforms, floor/ceil clamping, viewport offsets and scissor rectangle are computed.",
+      "verification": "Scoped scene2d-gl generation emits computeScissorRect and removes the refusal; gl_clip_rectangle.hpp is compiled at -j1.",
+      "whyNotUpstreamFirst": "Web IDL's GLsizei and TypeScript number are one JavaScript numeric domain that arrives through distinct static declarations. The source-level identity states the existing normalization without a target-specific cast or runtime branch.",
+      "unblocks": "pushGlClipRectangle's scissor computation, and the scene2d-gl clip headers that include it.",
+      "expires": "when flight-compiler coalesces Web IDL numeric aliases with primitive number domains, or Flight adopts the explicit numeric normalization upstream.",
+      "appliedOn": "2026-10-17"
+    },
+    {
       "id": "texture-source-concrete-value-arms",
       "dependency": "flight",
       "patch": "texture-source-concrete-value-arms.patch",

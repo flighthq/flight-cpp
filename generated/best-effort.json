@@ -27643,17 +27643,9 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "target-runtime",
       "consumers": [
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/contract.ts",
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/glClip.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:23abeca0c6dbf705a723224b5853beabdcda113273abf428d962709665b09ce3",
-        "sha256:41a021ca357fc86124cb9105505d69653e36331f3fdba13780489767f1d07d26",
-        "sha256:4ab94564ee7951cb533bd99e59d47f9ee9299203bedf0bac55db6e170d4f9236",
-        "sha256:8e03632f7f3203988fec4492edb2515c82f674e5e65fdcf7f82fadc5198fd042",
-        "sha256:95ad41750032f0d0aae321ad5942fed454943f5af192c4092d77bbaaa2d83599"
       ],
       "module": {
         "name": "GlClipRectangle",
@@ -27661,8 +27653,11 @@
         "source": "packages/scene2d-gl/src/glClipRectangle.ts"
       },
       "path": "flight/scene2d_gl/gl_clip_rectangle.hpp",
-      "rule": "cpp-union-runtime-domains-erased",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/render-gl/packages/render-gl/src/glRenderState.ts",
+        "@flighthq/scene2d-gl/packages/scene2d-gl/src/glQuadBatchWriter.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "classification": "compiler-restriction",

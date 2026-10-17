@@ -430,3 +430,25 @@ joint identity the solver mutates. Meanwhile the registration header declares th
 `Ref<Physics2DJointSolver>` slots without a body
 ([retained callers](retained-declaration-calls-omitted-callee.md#g2-physics2d-registration-retains-nine-refused-solver-bindings)),
 so no solver behavior is claimed.
+
+## Site: callbacks over a derived render state in a base-typed hook slot (`@flighthq/scene2d-gl`)
+
+`glClip.ts` builds `webglClipHooks: Scene2DClipHooks`, whose hooks are declared over `RenderState`, and
+implements them over `GlRenderState`. That is legal TypeScript, because method parameters are bivariant,
+and every caller hands the hooks a GL state. The emission:
+
+```cpp
+.finalize = [](flight::Ref<flight::types::GlRenderState> state) { ... }   // gl_clip.hpp:38, :43, :49
+```
+
+```
+no viable conversion from '(lambda at gl_clip.hpp:38:166)' to 'std::function<void (flight::Ref<flight::types::RenderState>)>'
+```
+
+`GlRenderState` is emitted without heritage, so `Ref<GlRenderState>` and `Ref<RenderState>` are unrelated
+types. That makes the base-typed slot unable to carry the derived hook at all. Heritage is necessary
+here, and then the hook still needs the checked derived-owner recovery that
+[readonly-callback-derived-owner-recovery](readonly-callback-derived-owner-recovery.md) asks for. The
+stored callable takes the base and recovers the GL state it was registered for, and it must refuse
+rather than reinterpret anything else. A copy of the state, or an unchecked cast, would be wrong.
+`flight/scene2d_gl/gl_clip.hpp` (G2) fails first on this.

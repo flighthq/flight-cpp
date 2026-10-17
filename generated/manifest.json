@@ -3490,6 +3490,18 @@
         "flight/interaction/register_shape_hit_test.hpp"
       ],
       "id": "interaction-declare-refused-shape-fill-hit"
+    },
+    {
+      "files": [
+        "flight/scene2d_gl/gl_clip_rectangle.hpp"
+      ],
+      "id": "scene2d-gl-clip-rectangle-drawing-buffer-width-property-binding"
+    },
+    {
+      "files": [
+        "flight/scene2d_gl/gl_clip_rectangle.hpp"
+      ],
+      "id": "scene2d-gl-clip-rectangle-drawing-buffer-height-property-binding"
     }
   ],
   "sourcePatches": [
@@ -5235,6 +5247,13 @@
       "id": "scene2d-dom-texture-table-carrier",
       "module": "packages/scene2d-dom/src/domTextureResolver.ts",
       "package": "@flighthq/scene2d-dom"
+    },
+    {
+      "dependency": "flight",
+      "digest": "bd70b53c84659b373b0064d853282ea5d7a69f4aaa3ee9425c99d30836e003fa",
+      "id": "scene2d-gl-clip-rectangle-viewport-number-domain",
+      "module": "packages/scene2d-gl/src/glClipRectangle.ts",
+      "package": "@flighthq/scene2d-gl"
     }
   ],
   "duplicateStructuralStructAliases": {
@@ -5308,6 +5327,7 @@
       "flight/scene2d_canvas/canvas_texture_resolver.hpp",
       "flight/scene2d_formats/lottie_document.hpp",
       "flight/scene2d_formats/lottie_text_layer.hpp",
+      "flight/scene2d_gl/gl_cache.hpp",
       "flight/scene2d_gl/gl_rich_text.hpp",
       "flight/scene2d_gl/gl_scale9_shape.hpp",
       "flight/scene2d_gl/gl_shape_data.hpp",
@@ -6243,9 +6263,9 @@
     {
       "cppIncludePrefix": "flight/scene2d_gl",
       "cppNamespace": "flight::scene2d_gl",
-      "emittedModules": 12,
+      "emittedModules": 13,
       "package": "@flighthq/scene2d-gl",
-      "refusedModules": 21,
+      "refusedModules": 20,
       "sourceModules": 33
     },
     {
@@ -6689,8 +6709,8 @@
   },
   "summary": {
     "packages": 153,
-    "emittedModules": 2565,
-    "refusedModules": 586,
+    "emittedModules": 2566,
+    "refusedModules": 585,
     "sourceModules": 3151
   }
 }

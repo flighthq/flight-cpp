@@ -233,7 +233,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 204 | `undeclared-identifier-ae594b8a` | 1 | 2D | runtime | the emitted code names `append_lottie_shape_items`, which nothing declares |
 | 205 | `undeclared-identifier-af7a1054` | 1 | GL | runtime | the emitted code names `gl_median_effect_runner`, which nothing declares |
 | 206 | `undeclared-identifier-b15d9d15` | 1 | ANIM | compiler | G2: 0/1; refused bone parser and complete result omitted; no exact declaration candidate |
-| 207 | `undeclared-identifier-befaa2d6` | 2 | 2D | runtime | the emitted code names `compute_scissor_rect`, which nothing declares |
+| 207 | `undeclared-identifier-befaa2d6` | 2 | 2D | source patch + repairs (applied) | the emitted code names `compute_scissor_rect`, which nothing declares *(G2: 1 pass, 1 to `no-viable-conversion-e25fffde`)* |
 | 208 | `undeclared-identifier-c162d0c0` | 1 | ANIM | runtime | the emitted code names `solve_skeleton_2d_transform_constraint`, which nothing declares |
 | 209 | `undeclared-identifier-c29489a5` | 1 | GL | runtime | the emitted code names `gl_bloom_effect_runner`, which nothing declares |
 | 210 | `undeclared-identifier-c3c55c65` | 1 | GL | runtime | the emitted code names `gl_composite_effect_runner`, which nothing declares |
@@ -3688,6 +3688,31 @@ rows/roots/prose and historical/G1 totals remain unchanged; no parser, bone or h
 - fix route: runtime
 - first failure at: `flight/scene2d_gl/gl_clip_rectangle.hpp:108`
 - example: `use of undeclared identifier 'compute_scissor_rect'`
+- G2 fix: source patch `scene2d-gl-clip-rectangle-viewport-number-domain`, plus two scoped drawing-buffer repairs
+
+`computeScissorRect` is refused with `cpp-union-runtime-domains-erased` (`GLsizei | primitive -> double`)
+on `viewport?.width ?? state.gl.drawingBufferWidth`, and the same for height: Web IDL's `GLsizei` and
+`number` are one JavaScript domain that arrives through two declarations. The patch applies unary plus
+after the nullish selection, exactly as the landed `scene3d-gl-viewport-number-domain` patch does. Both
+operands are already numbers, so every value, NaN and signed zero is preserved, and so is the read order.
+It applies cleanly to the pin.
+
+Scoped generation then emits `compute_scissor_rect`. Its two drawing-buffer property reads needed the
+existing statement-final accessor respell, whose `render_gl/` scope does not reach here, so two exact
+`scene2d-gl-clip-rectangle-drawing-buffer-{width,height}-property-binding` repairs were added. There are
+no scissor stand-ins: the generated function is the source's own computation.
+
+The module is still listed as `dependency-refused`, because `glQuadBatchWriter.ts` (same number-domain
+shape at its lines 340-341) is refused. Its header is shadowed by a peer-owned native override, so a
+second patch would only drift that override without changing what compiles; it was measured and then
+withdrawn.
+
+**G2: 1/2 compile, 1 fail** (`-j1`, Clang 22.1.8). Passing: `flight/scene2d_gl/gl_clip_rectangle.hpp`.
+`flight/scene2d_gl/gl_clip.hpp` moves to `no-viable-conversion-e25fffde`. Its `Scene2DClipHooks` slots are
+declared over `RenderState` but implemented over `GlRenderState`. That needs emitted heritage plus checked
+derived-owner recovery: the
+[interface heritage widening](compiler-requests/interface-heritage-widening.md) request, extended with this
+site. The clip renderer is not claimed complete.
 
 ### 208. `undeclared-identifier-c162d0c0` — 1 header(s)
 

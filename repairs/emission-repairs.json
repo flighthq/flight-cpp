@@ -90,6 +90,30 @@
       "expires": "when external binding metadata distinguishes native property accessors during emission; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "scene2d-gl-clip-rectangle-drawing-buffer-width-property-binding",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/scene2d_gl/gl_clip_rectangle.hpp",
+      "from": ".drawing_buffer_width;",
+      "to": ".drawing_buffer_width();",
+      "sourceDeclaration": "packages/scene2d-gl/src/glClipRectangle.ts computeScissorRect -- `viewport?.width ?? state.gl.drawingBufferWidth` reads the WebGL2RenderingContext number property; the SDL host binding exposes the same value through drawing_buffer_width()",
+      "diagnostic": "reference to non-static member function must be called",
+      "defect": "The same external property read the render-gl drawing-buffer repairs answer, in scene2d-gl's scissor computation, which their render_gl/ scope does not reach. Calling the accessor reads the property value; it is returned from a lambda declared to return double, which is the int-to-Number conversion the JavaScript read performs. No state or behavior is added and the host call API is unchanged.",
+      "expectedWhen": "always",
+      "expires": "when external binding metadata distinguishes native property accessors during emission; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-gl-clip-rectangle-drawing-buffer-height-property-binding",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/scene2d_gl/gl_clip_rectangle.hpp",
+      "from": ".drawing_buffer_height;",
+      "to": ".drawing_buffer_height();",
+      "sourceDeclaration": "packages/scene2d-gl/src/glClipRectangle.ts computeScissorRect -- `viewport?.height ?? state.gl.drawingBufferHeight` reads the WebGL2RenderingContext number property; the SDL host binding exposes the same value through drawing_buffer_height()",
+      "diagnostic": "reference to non-static member function must be called",
+      "defect": "The same external property read the render-gl drawing-buffer repairs answer, in scene2d-gl's scissor computation, which their render_gl/ scope does not reach. Calling the accessor reads the property value; it is returned from a lambda declared to return double, which is the int-to-Number conversion the JavaScript read performs. No state or behavior is added and the host call API is unchanged.",
+      "expectedWhen": "always",
+      "expires": "when external binding metadata distinguishes native property accessors during emission; sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "render-gl-draw-unqualified-imports",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/render_gl/gl_draw.hpp",

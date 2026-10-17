@@ -5623,13 +5623,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 39,
+      "code": "dependency-refused",
       "module": "packages/scene2d-gl/src/glClipRectangle.ts",
       "package": "@flighthq/scene2d-gl",
-      "reason": "cpp emission failed for @flighthq/scene2d-gl/packages/scene2d-gl/src/glClipRectangle.ts: C++ runtime contract maps distinct union domains to one carrier without a discriminator or checked projection (GLsizei | primitive -> double); give the domains distinguishable key, element, or member types so each reaches a carrier of its own -- a union of two declarations that differ only in name is one carrier whatever the emitter does -- or provide that runtime contract",
-      "stage": "emission"
+      "reason": "dependency ./glQuadBatchWriter.ts was refused for @flighthq/scene2d-gl/packages/scene2d-gl/src/glQuadBatchWriter.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
