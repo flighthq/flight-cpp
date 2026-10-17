@@ -113,5 +113,10 @@ queue overload resolved that call without changing the unavailable host operatio
 failure is this request: `upload_wgpu_texture_element` retains
 `try_copy_wgpu_external_image_to_texture`, which `wgpuExternalImageSource.ts` refuses because the
 runtime external symbol plan is missing the `HTMLImageElement[value]` / `HTMLVideoElement[value]`
-bindings. No upload path is carried, and the module's `copyExternalImageToTexture` fast path remains
-unavailable until the profile can name each source domain, exactly as the video reach above records.
+bindings. The host side confirms the second half: `flight/host_sdl/wgpu.hpp` declares no
+`copyExternalImageToTexture` operation at all (only the adoption surface and forwarding queue
+commands), `src/host_sdl/wgpu.cpp` implements no queue command, and every operation — including the
+newly named `writeTexture` — reports the SDL WGPU profile unavailable. A declaration repair or a host
+stub here would either reproduce the refused profile mapping in a hand-written module or invent the
+upload and its pixels, so neither is carried. Closing this site needs both a profile mapping the
+emitter can name and a real provider operation; the row stays failed on this request.

@@ -2669,11 +2669,19 @@ upload. No GPU provider, copy, owner or narrowed domain was invented.
 #### Follow-on `missing-member-47a93368`
 
 With the call resolved, the header's first failure is the refused
-`tryCopyWgpuExternalImageToTexture`: `wgpu_external_image_source.hpp` omits it because its ambient
-binding plan is incomplete (`HTMLImageElement[value]` / `HTMLVideoElement[value]` and siblings), and
-`upload_wgpu_texture_element` retains the call. That is the same profile family recorded in
-[distinct image-source domains](compiler-requests/image-source-union-domain-discriminator.md); no
-declaration, provider or upload path is supplied here, and the row stays failed on that request.
+`tryCopyWgpuExternalImageToTexture`: `wgpu_external_image_source.hpp` is a best-effort placeholder
+whose module refuses at `cpp-runtime-external-symbol-binding-incomplete`
+(`HTMLImageElement[value]`, `HTMLVideoElement[value]`, `ImageBitmap[value]`, `OffscreenCanvas[value]`,
+`VideoFrame[value]`), and `upload_wgpu_texture_element` retains the call. That is the same profile
+family recorded in
+[distinct image-source domains](compiler-requests/image-source-union-domain-discriminator.md).
+
+There is no real provider to bind, so no binding fix or declaration is carried. The host declares no
+`copyExternalImageToTexture` operation at all — `flight/host_sdl/wgpu.hpp` has only the adoption
+surface and forwarding queue commands, `src/host_sdl/wgpu.cpp` contains no queue operation, and every
+command, including the newly named `writeTexture`, reports the SDL WGPU profile unavailable. Supplying
+one here would either reproduce the refused profile mapping or invent the upload and its pixels. The
+row stays failed on the existing request, which now records this site and the provider boundary.
 
 ### 108. `call-has-no-matching-fbd6de0d` — 1 header(s)
 
