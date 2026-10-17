@@ -112,7 +112,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 83 | `other-67dc02c6` | 2 | 2D | compiler | `getSurfaceHandle(...) as HTMLCanvasElement` lowered to an unchecked `static_cast` from the erased handle *(existing request extended)* |
 | 84 | `other-6f513db2` | 2 | 2D, 3D | binding (fixed) | attribute locations now use the source number carrier; G2: 0 pass, 2 later compiler failures |
 | 85 | `other-86d0b50b` | 5 | 2D, 3D | [compiler request](compiler-requests/object-literal-into-outcome-variant.md) | SceneCoverageEntry literals initialize the outer variant instead of a selected concrete reference arm |
-| 86 | `redefinition-caa49360` | 2 | 3D | runtime | a declaration is emitted twice |
+| 86 | `redefinition-caa49360` | 2 | 3D | override de-duplication (fixed) | two picking overrides each defined the same three node matrix helpers; G2: 0/2 pass, both move to the material conversion below |
 | 87 | `undeclared-identifier-1048386b` | 2 | 3D | runtime | the emitted code names `md5_material_handler`, which nothing declares |
 | 88 | `undeclared-identifier-20fa691d` | 2 | 2D | compiler | refused raster draw referenced by retained renderer; exact declaration fails native/generic callback carrier conversion *(existing requests)* |
 | 89 | `undeclared-identifier-225478b5` | 2 | 2D | compiler | refused bitmap-text submit callback lacks a declaration; exact declaration still exposes incompatible renderer callback carriers *(existing requests)* |
@@ -166,7 +166,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 137 | `no-viable-conversion-b47bc6cd` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
 | 138 | `no-viable-conversion-bf84cbac` | 1 | 3D | compiler | a value is passed where its declared type cannot receive it |
 | 139 | `no-viable-conversion-c997578d` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
-| 140 | `no-viable-conversion-cef6403d` | 1 | 3D | compiler | a value is passed where its declared type cannot receive it |
+| 140 | `no-viable-conversion-cef6403d` | 3 | 3D | compiler | a value is passed where its declared type cannot receive it |
 | 141 | `no-viable-conversion-dc893fc7` | 1 | GL | compiler | a value is passed where its declared type cannot receive it |
 | 142 | `no-viable-conversion-eabaf455` | 1 | 3D | compiler | a value is passed where its declared type cannot receive it |
 | 143 | `no-viable-conversion-f7267dc5` | 1 | ANIM | compiler | a value is passed where its declared type cannot receive it |
@@ -1852,14 +1852,25 @@ and retain all source spread fields; no permissive runtime constructor or incomp
 - first failure at: `flight/scene2d_gl/explain_gl_scene_2d_coverage.hpp:58`
 - example: `initialization of non-aggregate type 'SceneCoverageEntry' with a designated initializer list`
 
-### 86. `redefinition-caa49360` — 2 header(s)
+### 86. `redefinition-caa49360` — 2 header(s), fixed by de-duplicating the overrides
 
-- cause: a declaration is emitted twice
-- subject: `ensure_node_local_matrix4`
+- cause: two hand-written picking overrides defined the same `flight::picking::detail` helpers
+  (`ensure_node_local_matrix4`, `ensure_node_world_matrix4`, `node_world_matrix4`), so a translation unit
+  that includes both redefined them
 - lanes: 3D
-- fix route: runtime
-- first failure at: `flight/picking/scene_hit_attributes.hpp:21`
-- example: `redefinition of 'ensure_node_local_matrix4'`
+- fix route: override de-duplication, not a compiler or runtime defect
+- first failure was at: `flight/picking/scene_hit_attributes.hpp:21`
+
+`pick_scene_3d.hpp` and `scene_hit_attributes.hpp` carried byte-identical copies of the three helpers —
+same parameter types, no default arguments, same bodies. Neither module defines these in Flight source;
+both import the helper from `@flighthq/node/contract`, and each override had re-derived its own plain
+`Node3DView` form. `scene_hit_attributes.hpp` now includes `pick_scene_3d.hpp` and keeps no copies, so
+there is one definition with the same body, name, namespace and ABI.
+
+Measured at `-j1`: the redefinition is gone from all four headers, `pick_scene_3d.hpp` still passes, and
+the two failing headers plus `scene_hit_attributes.hpp` now stop first on the material conversion at
+`scene_hit_attributes.hpp:60` (cluster `no-viable-conversion-cef6403d`). No behavior was deleted or
+widened; the only change is that one copy of an identical helper is gone.
 
 ### 87. `undeclared-identifier-1048386b` — 2 header(s)
 
@@ -2356,13 +2367,22 @@ and foreign products are retained. No generation or global/native baseline rerun
 - first failure at: `flight/scene2d_canvas/canvas_bitmap_texture_resolver.hpp:65`
 - example: `no viable conversion from 'StructuralRef<RowReadonly<RowOf<shared_ptr<Bitmap>>>>' to 'const shared_ptr<Bitmap>'`
 
-### 140. `no-viable-conversion-cef6403d` — 1 header(s)
+### 140. `no-viable-conversion-cef6403d` — 3 header(s)
 
-- cause: a value is passed where its declared type cannot receive it
+- cause: the picking override's `get_scene_3d_hit_material` returns the stored
+  `optional<variant<Ref<SpecularGlossinessPbrMaterial>, …>>` where the declared result is
+  `optional<Ref<Material3D>>`; the concrete material owners have no identity-preserving heritage to the
+  declared interface
 - lanes: 3D
 - fix route: compiler
-- first failure at: `flight/picking/scene_hit_attributes.hpp:131`
-- example: `no viable conversion from returned value of type 'optional<variant<shared_ptr<SpecularGlossinessPbrMaterial>, shared_ptr<VertexColorMaterial>, shared_ptr<UnlitMaterial>, shared_ptr<StandardPbrMaterial>, shared_ptr<CustomShaderMaterial>, shared_ptr<BlinnPhongMaterial>, shared_ptr<LambertMaterial>, sh`
+- first failure at: `flight/picking/scene_hit_attributes.hpp:60`
+- example: `no viable conversion from returned value of type 'optional<variant<shared_ptr<SpecularGlossinessPbrMaterial>, shared_ptr<VertexColorMaterial>, shared_ptr<UnlitMaterial>, shared_ptr<StandardPbrMaterial>, shared_ptr<CustomShaderMaterial>, shared_ptr<BlinnPhongMaterial>, shared_ptr<LambertMaterial>, sh...`
+
+`picking/_internal_index.hpp` and `picking/contract.hpp` join this cluster after the duplicate-helper
+redefinition below was removed; `picking/scene_hit_attributes.hpp` was already here and its line moved
+from `:131` to `:60` when the override stopped repeating the node matrix helpers. This is the gap the
+override's `remaining` names: the material result is narrowed to the concrete `Material3D` type until
+generated owners carry identity-preserving interface heritage.
 
 ### 141. `no-viable-conversion-dc893fc7` — 1 header(s)
 
