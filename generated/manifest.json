@@ -3526,6 +3526,12 @@
         "flight/interaction/register_quad_batch_hit_test.hpp"
       ],
       "id": "interaction-declare-refused-quad-batch-instance-index"
+    },
+    {
+      "files": [
+        "flight/render_gl/gl_render_texture_pool.hpp"
+      ],
+      "id": "render-gl-declare-refused-acquire-render-texture"
     }
   ],
   "sourcePatches": [

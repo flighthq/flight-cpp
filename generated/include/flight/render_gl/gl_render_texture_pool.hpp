@@ -126,6 +126,8 @@ inline void release_gl_render_texture(flight::Ref<flight::types::GlRenderState> 
   pool->free.push(render_texture);
 }
 
+flight::Ref<flight::types::RenderTexture> acquire_gl_render_texture(flight::Ref<flight::types::GlRenderState> state, flight::Ref<flight::types::GlRenderTexturePool> pool, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderTargetDescriptor>>>> descriptor);
+
 template <typename T>
 inline T with_gl_render_textures(flight::Ref<flight::types::GlRenderState> state, flight::Ref<flight::types::GlRenderTexturePool> pool, flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderTargetDescriptor>>>>> descriptors, std::function<T(flight::Array<flight::Ref<flight::types::RenderTexture>>)> callback) {
   flight::Array<flight::Ref<flight::types::RenderTexture>> textures = flight::Array<flight::Ref<flight::types::RenderTexture>>{};
