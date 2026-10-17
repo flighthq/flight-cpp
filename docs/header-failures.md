@@ -191,7 +191,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 162 | `undeclared-identifier-2110ec37` | 1 | WGPU | compiler | WGPU Sprite draw refuses nullable material owner widening; exact declaration compile fails GL-specific Sprite callback carrier *(existing requests extended)* |
 | 163 | `undeclared-identifier-2363216f` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glDitherEffectRunner` binding (and its callee `applyDitherEffectToGl`) but still emits the registration call that passes the runner |
 | 164 | `undeclared-identifier-2437e103` | 1 | 3D | compiler | the emitted code names `parse_triangle_geometry_block`, which nothing declares; declaration candidate rejected at the unused-header positive prerequisite *(requests filed)* |
-| 165 | `undeclared-identifier-251d1ba2` | 1 | 3D | runtime | the emitted code names `collect_pending_texture_owners`, which nothing declares |
+| 165 | `undeclared-identifier-251d1ba2` | 1 | 3D | compiler | G2: 0/1; exact collector prototype fails unused compile at optional ease row and tween variant order; rejected |
 | 166 | `undeclared-identifier-2d9cd75f` | 1 | PLAT | declaration repair (applied) | exact refused shape-fill callback declared; G2: 1 pass; three-kind registration and fill hits remain unlinkable |
 | 167 | `undeclared-identifier-3017e8aa` | 1 | GL | runtime | the emitted code names `acquire_gl_render_texture`, which nothing declares |
 | 168 | `undeclared-identifier-332a5586` | 1 | 2D | compiler *(existing request)* | refused `drawDomScale9Sprite` retained as `.submit` in the renderer aggregate; declaration probe fails at `.create_data` |
@@ -3156,14 +3156,33 @@ recorded for the MD5 and MD2 families in
 [retained callers](compiler-requests/retained-declaration-calls-omitted-callee.md). No repair, override
 or substitute parser is carried; the row stays failed.
 
-### 165. `undeclared-identifier-251d1ba2` — 1 header(s)
+### 165. `undeclared-identifier-251d1ba2` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `collect_pending_texture_owners`, which nothing declares
-- subject: `collect_pending_texture_owners`
+- cause: retained reveal recipe calls omitted collect_pending_texture_owners
 - lanes: 3D
-- fix route: runtime
-- first failure at: `flight/scene3d_resources/reveal_scene_3d_resources_on_resolve.hpp:167`
-- example: `use of undeclared identifier 'collect_pending_texture_owners'`
+- fix route: [existing retained-callee request](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-scene3d-resource-reveal-collector-declaration-fails-before-link)
+- actual first failure at: `flight/scene3d_resources/reveal_scene_3d_resources_on_resolve.hpp:167`
+
+Original1 Clang22.1.8 jobs1 completes in44.7s: **1 attempted / 0 pass / 1 fail / 0 unattempted**.
+The exact refusal marker/direct call and existing readonly scene/resolver plus shared owner Map/Array
+carriers qualify the scratch prototype mechanism; fixed point/removal restore original bytes. Actual
+unused whole-header compile exits1 at the retained tween call (candidate183/original181): whole optional
+ease owner passed to a row constructor, then reversed manager/target variant. Positive unused link/run
+and qualified called-reveal negative link are not reached. Candidate rejected; no production repair,
+C++/manifest/runtime/source/binding/override or changed normal generation is carried.
+
+The body needs [readonly-row erasure with retained native owner](compiler-requests/structural-row-erasure-to-unknown.md#g2-resource-reveal-keeps-scene-resource-and-callback-identity).
+The candidate measures [optional ease-owner projection](compiler-requests/structural-subtype-reference-argument-owner.md#g2-scene3d-reveal-optional-ease-owner-projection)
+and [canonical union order](compiler-requests/canonical-union-carrier-order.md#g2-scene3d-reveal-tween-manager-argument).
+Selected-overload/NumericProps literal obligations are inspected only, not isolated diagnostics.
+
+Preserve root/descendant/material/lister order, every Texture/resource/original-node owner, duplicate
+and shared texture tracking, collection-before-alpha-before-signals, all-pending settlement, caller
+manager/ease/duration, same-slot resolved/failed connection and disposal order. The first-texture
+comment is stale; body/tests wait until pending.size is0. Source tests are inspected requirements;
+no native fade/provider/resource/scene behavior is run. No fake visibility/empty collector, copied
+owner or narrowed material/texture/graph domain. Only owned failed root/row/worklist plus four existing
+request appendices change; foreign products/prose/pins/generation metadata and C++ remain unchanged.
 
 ### 166. `undeclared-identifier-2d9cd75f` — 1 header, resolved by declaration-only repair
 

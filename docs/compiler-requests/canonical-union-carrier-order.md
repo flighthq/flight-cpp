@@ -42,3 +42,19 @@ order and fails at `std::invoke`.
 spells the fixed six-element tuple check as ordered constant-index tests. It evaluates the face storage
 once and short-circuits on the first null in the same order as `every`. The request closes when every
 expansion of a named union reuses its canonical native carrier.
+
+## G2 Scene3D reveal tween manager argument
+
+At Flight a627849 / compiler806d257, the retained resource reveal callback emits the manager-first
+createTween call's first argument as variant<Ref<Node3D>,Ref<TweenManager>> with the manager alternative
+selected. The generated callee and effective tween override both accept
+variant<Ref<TweenManager>,Ref<Node3D>>. Those are distinct C++ types despite representing the same
+source implementation union. Actual unused-header compilation with only the exact omitted collector
+prototype fails create_tween overload resolution at candidate183/original181 and names this reversed
+first-parameter type. The [retained-callee audit](retained-declaration-calls-omitted-callee.md#g2-scene3d-resource-reveal-collector-declaration-fails-before-link)
+records the separate optional-ease projection error and rejection before links.
+
+Canonicalize the instantiated implementation union consistently or use the statically selected
+manager-first overload with its exact caller manager/target/duration/property/options arguments.
+Do not reinterpret a variant, choose an alternative by mismatched index, switch to the default manager,
+or copy the node/manager owner. No runtime/override/repair change or successful tween is carried.

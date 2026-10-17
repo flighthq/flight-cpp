@@ -1757,3 +1757,45 @@ Because it is referenced as a value, the carried repair is `insert-forward-decla
 exact marker, not `declare-refused-function`. Measured at `-j1`: the header passes; an unused include
 links and runs; a caller that registers the hit test fails to link on exactly
 `flight::interaction::resolve_quad_batch_instance_index`.
+
+## G2 Scene3D resource reveal collector declaration fails before link
+
+At Flight `a627849` / compiler `806d257`, original `undeclared-identifier-251d1ba2` contains one
+header, `scene3d_resources/reveal_scene_3d_resources_on_resolve.hpp`. Clang22.1.8 jobs1 completes
+**1 attempted / 0 pass / 1 fail / 0 unattempted**,44.7s, at missing collect_pending_texture_owners167.
+The source82 NOT GENERATED marker, retained direct call and absent definition match. The existing
+local Scene3DResourceRevealOwner is already complete: Ref<Node3D> node and Set<Texture> pending.
+The exact source and retained-call carriers require no invented owner or result record:
+
+```cpp
+void collect_pending_texture_owners(
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3D>>>> scene,
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DResourceResolver>>>> resolver,
+  flight::Map<flight::types::Texture, flight::Array<flight::Ref<Scene3DResourceRevealOwner>>> owners_by_texture,
+  flight::Array<flight::Ref<Scene3DResourceRevealOwner>> owners);
+```
+
+A scratch declare-refused-function entry matches this one header with the existing mechanism,
+reaches a fixed point, and removal of only the prototype restores original bytes. The actual unused
+whole-header include with empty main fails native compile, exit1, at the retained create_tween call
+(candidate183, original181). First it constructs a writable ease row from the entire
+optional<Ref<ease-record>> tween_options. Then create_tween cannot accept its first argument:
+variant<Ref<Node3D>,Ref<TweenManager>> is reversed from the actual callee's
+variant<Ref<TweenManager>,Ref<Node3D>>. The native diagnostic names the real tween override's
+signature; that override keeps the generated implementation's same parameter carrier.
+
+The [optional owner projection](structural-subtype-reference-argument-owner.md#g2-scene3d-reveal-optional-ease-owner-projection)
+and [union carrier order](canonical-union-carrier-order.md#g2-scene3d-reveal-tween-manager-argument) are independent measured
+barriers. Unused positive link/run and qualified real-reveal negative link are not reached. The
+prototype is rejected; no production repair, normal generation, C++/runtime/source/binding/override
+or manifest change is carried, and the original failed row stays at missing collector167.
+
+The collector itself refuses cpp-erased-structural-row-construction-unrepresented when Readonly<Node3D>
+reaches isMesh(unknown). Its [existing structural erasure request](structural-row-erasure-to-unknown.md#g2-resource-reveal-keeps-scene-resource-and-callback-identity)
+records full collection, alpha/tween, event and disposal semantics. A declaration would not implement
+this body or create any provider/visibility/resource result. The retained call also contains the bare
+alpha property literal at the generic NumericProps/optional-union boundary; this is inspected only,
+not a separately isolated native diagnostic or evidence that repairing the two measured errors would
+finish the function. The existing [selected-overload](source-overload-call-through-selected-signature.md)
+and [generic mapped-type](generic-mapped-type-erased-to-any.md) requests remain relevant. Neither
+signal callback execution nor tween, resource loading or scene rendering is exercised here.

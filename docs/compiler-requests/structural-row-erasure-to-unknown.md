@@ -91,3 +91,64 @@ The upstream warning includes the original atlas object alongside `message`, `re
 allowed to receive any `Readonly<TextureAtlas>` structural owner. Until `Any` can retain that row
 owner, the built-in enabling path must remain explicitly partial rather than claim a complete guard
 whose observable log payload differs.
+
+## G2 resource reveal keeps scene resource and callback identity
+
+At Flight a627849 / compiler806d257, collectPendingTextureOwners in
+scene3d-resources/revealScene3DResourcesOnResolve.ts:82 still refuses at the Readonly<Node3D> argument
+to isMesh(unknown). The retained public reveal then fails at missing collector167. The
+[exact declaration candidate](retained-declaration-calls-omitted-callee.md#g2-scene3d-resource-reveal-collector-declaration-fails-before-link)
+passes the existing matcher but fails actual unused-header compilation at the later tween call; no
+positive link/run, qualified negative link, repair or changed normal generation is carried.
+
+The source guard recognizes an object with non-null geometry, including custom Mesh kinds. Replacing
+it with MeshKind equality, copying a Node3D row, recovering a narrower native pointer via shared_object,
+boxing only visible fields or manufacturing writable authority loses the source domain or owner.
+Any already preserves exact native object references, and StructuralRef retains shared row/native
+owners, but the compiler/runtime do not share the required erasure of a readonly view over a wider
+owner. A typed pre-erasure guard needs its own faithful source/API and owner proof; none is carried.
+
+The complete recipe must preserve these boundaries:
+
+- Visit scene.root before its descendants in the existing traversal order. For each mesh use the same
+  original node, iterate materials in order, skip null, clear the reusable slots before each material,
+  and invoke the resolver registry's actual kind lister. Custom/overridden listers and their append
+  order remain supported; an unregistered kind contributes nothing. Do not replace this reveal-only
+  ownership walk with global scene-resource discovery or restrict material families.
+- For every listed Texture, find the first scene.resources reference whose textures back-edge includes
+  that exact Texture. Skip absent refs, textures already carrying any source, and refs in Failed state.
+  Do not replace the rule with an Unresolved/Loading-only filter: a source-less ref in another state
+  still follows the actual test. Preserve all Texture alternatives and resource identities; two sampler
+  Texture objects sharing one image reference remain separate pending keys. This collector neither
+  fetches/decodes data nor constructs a provider or source.
+- Use one shared RevealOwner per original node, created on its first pending texture. Deduplicate
+  repeated texture slots across that node's materials with its Set, and retain the same RevealOwner
+  in the owners array and each Texture's owner list. A shared Texture can name multiple nodes. Keep
+  node/material/slot order, original Map/Set key identity and handle aliasing; no copied mesh, fabricated
+  owner list, universal empty collector or narrowed registry gives equivalent writes.
+- Finish collection before setting each tracked node.alpha to options.from ?? 0. Preserve default
+  fadeSeconds0.4, custom values and optional ease. Untracked/already sourced/failed/unlisted nodes retain
+  their existing alpha. Collection errors occur before the alpha loop and before signal enabling;
+  do not hide nodes eagerly while a lister is still running or catch errors as empty success.
+- Enable the resolver's existing signal group after hiding and connect the **same** slot first to
+  onResourceResolved then onResourceFailed. The slot looks up event.texture by identity; ignore
+  untracked textures, erase the tracked Texture entry before visiting its owners, remove it from each
+  pending Set, and createTween with the caller's manager/original node/duration/alpha1/ease only when
+  that Set becomes empty. Repeated/forwarded terminal events cannot schedule duplicate fades. The
+  slot does not use event.ref to substitute an owner key or perform state validation.
+- Wait for **all** pending textures on each owner, including mixed resolved/failed events. The source
+  comment saying an object fades when the first resolves is stale: pending.size === 0 and the pinned
+  two-texture tests require the last tracked texture. Preserve failure as settlement and cancellation
+  as pending until a later actual resolution; inventing a failure/resolve event on cancel changes this
+  recipe. The resolver updates/binds resources before its terminal events; reveal only subscribes.
+- Return a disposer that disconnects this same slot from resolved then failed, retaining the original
+  signals. It does not cancel loads, remove caller-owned in-flight tweens, restore alpha or tick the
+  manager. The application advances tweens and needs a node-opacity-honoring renderer; no immediate
+  visibility flip, default-manager substitution or fake animation is a resource reveal implementation.
+
+Pinned source tests inspect default/custom initial alpha, duration/completed fade, multiple textures,
+failure-plus-success, bound/failed exclusions, unlisted/mixed material behavior, shared Texture owners,
+stray events and disposal. They were read as source requirements, not run as native recipe/provider/
+resource/scene behavior. The existing scene, resolver/runtime/signal, Texture, node and local owner
+carriers are reused by the candidate; none is copied or replaced. Header/functionality gain remains0,
+and package/init/G1/global products are not recounted by this scoped request disposition.
