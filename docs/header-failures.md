@@ -56,7 +56,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 27 | `no-viable-conversion-f02000a9` | 6 | 2D, GL | compiler | a value is passed where its declared type cannot receive it |
 | 28 | `undeclared-identifier-6e587559` | 6 | ANIM, TEXT | runtime | the emitted code names `equals_markup_format`, which nothing declares |
 | 29 | `undeclared-identifier-a74215ca` | 6 | 2D | runtime | the emitted code names `K`, which nothing declares |
-| 30 | `undeclared-identifier-f5e3440f` | 6 | 3D, CORE | runtime | the emitted code names `initialize_resource_loader`, which nothing declares |
+| 30 | `undeclared-identifier-f5e3440f` | 6 | 3D, CORE | [compiler request](compiler-requests/retained-declaration-calls-omitted-callee.md) | createResourceLoader calls initializeResourceLoader after the compiler refuses the initializer |
 | 31 | `call-has-no-matching-5a045ef4` | 5 | ANIM | compiler | the emitted call to `read_swf_shape_edge_record` matches no declared overload |
 | 32 | `call-has-no-matching-b897f03f` | 5 | 3D | compiler | the emitted call to `get_node_signals` matches no declared overload |
 | 33 | `call-has-no-matching-dd66c064` | 5 | ANIM | compiler | the emitted call to a function matches no declared overload |
@@ -651,12 +651,16 @@ G2's scoped-only-when-changed rule. Only these owned rows gained request links a
 
 ### 30. `undeclared-identifier-f5e3440f` — 6 header(s)
 
-- cause: the emitted code names `initialize_resource_loader`, which nothing declares
+- cause: createResourceLoader calls initializeResourceLoader after the compiler refuses the initializer
 - subject: `initialize_resource_loader`
 - lanes: 3D, CORE
-- fix route: runtime
+- fix route: compiler — [retained callee request](compiler-requests/retained-declaration-calls-omitted-callee.md)
 - first failure at: `flight/loader/resource_loader.hpp:465`
 - example: `use of undeclared identifier 'initialize_resource_loader'`
+- G2 inspection: the exact source-line-315 NOT GENERATED marker is present (`cpp-contextual-union-inequivalent` over `const opts = options ?? {}`), the factory calls the missing symbol at line 465, and no definition exists in generated/runtime/override code. The caller supplies `EntityConstruction<Ref<ResourceLoaderInternal>>` and optional readonly `ResourceLoaderOptions` structural storage; these determine the declaration's signature, with no invented body.
+- A temporary candidate applied that declaration through the existing `declare-refused-function` helper. It matched this header and reached a fixed point. The root-only native check at one worker was **0/1 pass, 1 fail, 0 unattempted**: the first missing-name diagnostic cleared, but candidate line 468 then failed returning `EntityConstruction<Ref<ResourceLoaderInternal>>` as `Ref<ResourceLoader>`.
+- The required compile prerequisite for a negative-link check therefore failed. The candidate was rejected; no declaration repair, generated header, runtime, source patch, binding, or override is carried. The measured follow-on is recorded in the existing [flattened-interface owner request](compiler-requests/flattened-interface-refinement-identity.md). A native cast, copied public loader, dummy loader, or error fallback would not preserve the original owner and semantics. Merely finishing the construction still leaves unrelated `ResourceLoaderInternal` and `ResourceLoader` owner structs.
+- Numbers for the delivered tree: **0/6 pass, 6 fail**, retained from G1; the stock missing-name diagnostics remain unchanged and all six rows now link the existing retained-callee request. Only the changed temporary root candidate was compiled; no full-cluster, unchanged-stock, or global rerun was performed. The rejected candidate's new diagnostic remains a failure, not a header promotion. Loader initialization and behavior remain unsupplied.
 
 ### 31. `call-has-no-matching-5a045ef4` — 5 header(s)
 

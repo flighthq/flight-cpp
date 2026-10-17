@@ -177,3 +177,43 @@ The Manager has ruled that this is a user decision, not fleet work. Until it is 
 - signals keeps `connectSignalTracked` refused.
 - The loader residual named in that decision waits on it too. Its measured doc is not on this base, so it is named
   here rather than linked.
+
+
+## G2 loader factory: declaration-only repair exposes the construction return boundary
+
+At Flight `a62784923f3be814463286c9fb28edfe6ab15789` / compiler
+`806d257d2f4100de745cc97340e61c2f301b0f24`, the committed loader header first fails calling the
+refused `initialize_resource_loader`, as covered by
+[retained declarations calling omitted callees](retained-declaration-calls-omitted-callee.md).
+The initializer's NOT GENERATED marker names source line 315 and `cpp-contextual-union-inequivalent`
+for its `options ?? {}` fallback. The factory still emits this body:
+
+```cpp
+flight::types::EntityConstruction<flight::Ref<ResourceLoaderInternal>> out =
+    flight::entity::allocate_entity<flight::Ref<ResourceLoaderInternal>>();
+initialize_resource_loader(out, options);
+return out; // declared factory return: flight::Ref<flight::types::ResourceLoader>
+```
+
+A temporary `declare-refused-function` candidate used the exact construction-view and optional readonly
+options carriers visible at that call. Its exact refusal/call/no-definition witnesses matched, and a
+second application changed nothing. The candidate supplied only a declaration, never initialization.
+Compiling only `flight/loader/resource_loader.hpp` with Clang 22.1.8 at one worker produced **0/1 pass,
+1 fail, 0 unattempted**. The missing name cleared, and the first error became:
+
+```text
+no viable conversion from returned value of type
+'flight::types::EntityConstruction<flight::Ref<ResourceLoaderInternal>>'
+to function return type 'flight::Ref<flight::types::ResourceLoader>'
+```
+
+The failure was at candidate line 468 (the stock return is line 466). No negative-link check could run
+because the actual repaired header did not compile. The candidate was rejected and no repair or header
+change is carried; the six original cluster rows keep their stock failure and **0/6 pass** qualification.
+This result measures one root candidate, not a fresh six-header or global sweep.
+
+`finish_entity(out)` can recover only the exact construction owner. It does not add a heritage relation
+between the independent `ResourceLoaderInternal` and public `ResourceLoader` structs described above.
+A copied public loader would split identity and fields; a native cast would assert absent C++ heritage.
+Both the retained-call declaration gap and this owner-return boundary must remain visible until a
+faithful representation closes them. No dummy initialization, fallback result, or loader behavior is supplied.
