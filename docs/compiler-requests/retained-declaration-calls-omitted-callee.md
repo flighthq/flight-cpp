@@ -12,6 +12,38 @@ this costs the header.
 
 Measured at flight-compiler `2b687ea` / flight `a627849` against emitted `@flighthq/video`.
 
+## G2 ASCII STL census retains the refused counter
+
+At Flight `a627849` / compiler `806d257`, `scene3d_formats/stl_features.hpp` retains
+`collect_stl_features` calling the refused `countAsciiStlFacets`. The caller decodes the complete
+byte window with the existing UTF-8 decoder and passes its `flight::String` result, then stores
+the counter result as `std::optional<double>`. The exact refusal marker, live same-header call
+and absent definition support the existing `scene3d-formats-declare-refused-ascii-stl-count`
+declaration repair:
+
+```cpp
+std::optional<double> count_ascii_stl_facets(flight::String text);
+```
+
+The same-header witness is sufficient; no `calledFrom` list or new repair mechanism is needed.
+The repair must expire when the marker or retained call disappears. Both the counter and its
+`readAsciiStlBodyTokens` helper remain refused at indexed string member presence. The two plain
+indexed reads are recorded in
+[indexed member calls](indexed-array-member-call-present-element.md), and the six optional
+indexed reads in [optional index/member flow](optional-index-member-present-flow.md).
+
+The source collector first checks exact binary payload bounds, then checks a short ASCII prefix
+before decoding the whole file and applying the facet grammar. Declaration availability does
+not supply that grammar, make the ASCII branch usable, or justify marking the partial module
+complete. The required boundary is an unused real-header link that succeeds and a call through
+the retained collector that compiles to an object but fails to link on this exact missing counter.
+
+That boundary was checked against the actual repaired header with C++20: the unused-header program
+compiled, linked and ran; the program invoking `collect_stl_features` compiled to an object, then
+failed to link with exactly `flight::scene3d_formats::count_ascii_stl_facets(flight::String)` undefined.
+Normal exact-pin single-module generation reproduced only the declaration addition and its repair
+manifest record. No parser body or source rewrite was carried.
+
 ## Observed
 
 `generated/include/flight/video/video_resource_from.hpp` omits `load_video_resource_from_url` (source

@@ -102,7 +102,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 73 | `undeclared-identifier-145c75d7` | 3 | TEXT | runtime | the emitted code names `initialize_glyph_source_from_glyph_atlas`, which nothing declares |
 | 74 | `undeclared-identifier-2cdb69a6` | 3 | PLAT | runtime + override (fixed) | the emitted code names `channel_elements`, which nothing declares; G2: 3 pass |
 | 75 | `undeclared-identifier-564c29cc` | 3 | TEXT | runtime | the emitted code names `format_date_value`, which nothing declares |
-| 76 | `undeclared-identifier-6a187568` | 3 | 3D | runtime | the emitted code names `count_ascii_stl_facets`, which nothing declares |
+| 76 | `undeclared-identifier-6a187568` | 3 | 3D | declaration repair (applied) | refused ASCII STL counter declared; G2: 3 pass; counter remains unlinkable |
 | 77 | `undeclared-identifier-dc087108` | 3 | PLAT | runtime | the emitted code names `load_video_resource_from_url`, which nothing declares |
 | 78 | `call-has-no-matching-84410867` | 2 | 3D | compiler | the emitted call to `buffer_data` matches no declared overload |
 | 79 | `call-has-no-matching-d42144f0` | 2 | ANIM | compiler | the emitted call to `push` matches no declared overload |
@@ -1549,14 +1549,14 @@ declares it, and the runtime test covers both forms for a value task and for a v
 - first failure at: `flight/intl/datetime.hpp:45`
 - example: `use of undeclared identifier 'format_date_value'`
 
-### 76. `undeclared-identifier-6a187568` — 3 header(s)
+### 76. `undeclared-identifier-6a187568` — 3 G1 header(s), declaration repaired
 
-- cause: the emitted code names `count_ascii_stl_facets`, which nothing declares
-- subject: `count_ascii_stl_facets`
-- lanes: 3D
-- fix route: runtime
-- first failure at: `flight/scene3d_formats/stl_features.hpp:154`
-- example: `use of undeclared identifier 'count_ascii_stl_facets'`
+- Applied repair: `scene3d-formats-declare-refused-ascii-stl-count`, using the existing guarded declaration-only mechanism. The exact `countAsciiStlFacets` refusal marker, live same-header `collect_stl_features` call and absent definition agree; no cross-header `calledFrom` witness is needed.
+- Exact carrier: `std::optional<double> count_ascii_stl_facets(flight::String text);`. The retained caller constructs the String via `decode_utf8` and stores the result as optional<double>. Normal exact-pin single-module generation added only this declaration and its repair manifest record; both pinned checkouts were restored clean.
+- Remaining body causes: `countAsciiStlFacets` and `readAsciiStlBodyTokens` are refused on indexed string member presence. The plain token reads are covered by [indexed array member calls](compiler-requests/indexed-array-member-call-present-element.md); six optional indexed member calls are covered by [optional index/member flow](compiler-requests/optional-index-member-present-flow.md). The [retained-callee request](compiler-requests/retained-declaration-calls-omitted-callee.md) records the declaration boundary.
+- Semantic limit: the source validates the complete ASCII facet grammar and finite coordinates after exact binary bounds and prefix checks. No parser, fallback count, grammar change or behavior is supplied. Both refusal blocks remain, so this partial module is still not a complete ASCII STL implementation.
+- Actual-header proof: unused header compiled, linked and ran; invoking the retained collector compiled to an object, then failed to link on exactly `flight::scene3d_formats::count_ascii_stl_facets(flight::String)`. Five existing repair witness/load/body tests passed.
+- Scoped native result after the C++ change: **3 attempted / 3 pass / 0 fail / 0 unattempted**, jobs **1**, covering only `_internal_stl_test_helper.hpp`, `stl_features.hpp`, and `stl_requirements.hpp` in `flight/scene3d_formats/`. All three product rows now pass with `previousCluster` and the request links. No global sweep was run; foreign rows/clusters and opening G1 totals remain unchanged.
 
 ### 77. `undeclared-identifier-dc087108` — 3 header(s)
 

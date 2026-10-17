@@ -51,3 +51,29 @@ This is distinct from [optional index/member flow](optional-index-member-present
 uses `values[index]?.member()`, and from [nullable array element tests](nullable-array-element-null-test.md),
 whose element type itself carries `null`. Here neither the source element nor the access is optional.
 
+## G2 ASCII STL token reads
+
+At Flight `a627849` / compiler `806d257`, `scene3d-formats/stlFeatures.ts` has two plain indexed
+string reads in its refused functions:
+
+```ts
+// countAsciiStlFacets, inside while (index < tokens.length)
+const keyword = tokens[index].toLowerCase();
+// readAsciiStlBodyTokens, after rejecting an empty trimmed input
+if (header.split(/\s+/)[0].toLowerCase() !== 'solid') return null;
+```
+
+Both refusal blocks report `cpp-member-projection-without-present-storage` on `toLowerCase`.
+The tokens come from splitting the same local text; the first header token and the bounded loop
+element are present. Their projection must preserve the original token and normal string case
+conversion. The grammar also uses six indexed optional member calls, already covered by
+[optional index/member flow](optional-index-member-present-flow.md); those must retain their
+absent-token rejection branches, rather than use an unconditional checked projection.
+
+`countAsciiStlFacets` accepts only complete facet blocks: a finite normal, `outer loop`, three finite
+vertices, `endloop` and `endfacet`. It stops on `endsolid` and returns null when no facet was counted.
+The header helper treats the remainder of the first line as the solid name. A parser that scans
+ahead for `facet`, accepts partial blocks, substitutes zero or changes null into a count is not a fix.
+The declaration repair described in
+[retained callers](retained-declaration-calls-omitted-callee.md) supplies neither refused body.
+
