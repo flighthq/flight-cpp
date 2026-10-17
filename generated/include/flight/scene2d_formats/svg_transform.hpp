@@ -49,7 +49,7 @@ inline void apply_svg_transform(flight::types::Node2D target, std::optional<flig
     return;
   }
   auto transform = flight::geometry::create_transform_2d(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
-  flight::geometry::decompose_matrix_to_transform_2d(transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(matrix.value())));
+  flight::geometry::decompose_matrix_to_transform_2d(transform, matrix.value());
   assign_svg_transform(target, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Transform2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Transform2D>>>>(transform)));
 }
 

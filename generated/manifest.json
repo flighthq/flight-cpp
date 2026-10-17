@@ -3581,6 +3581,12 @@
         "flight/scene2d_formats/svg_color.hpp"
       ],
       "id": "scene2d-formats-declare-refused-svg-color"
+    },
+    {
+      "files": [
+        "flight/scene2d_formats/svg_transform.hpp"
+      ],
+      "id": "scene2d-formats-svg-transform-readonly-matrix"
     }
   ],
   "sourcePatches": [
