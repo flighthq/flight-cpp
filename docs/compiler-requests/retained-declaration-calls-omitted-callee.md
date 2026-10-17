@@ -1724,3 +1724,25 @@ The original helper bodies, partial marker, body refusal, source fingerprints an
 keeps the full open constraint domain, original bone/Float32 owners, one/two-bone mathematics,
 degenerate cases and ordered local/world mutations. Header availability does not supply checked
 IK owner recovery, an empty solver, a replacement constraint or a callable registration.
+## G2 AWD2 triangle geometry retains a refused parser and fails the unused-header prerequisite
+
+At Flight `a627849` / compiler `806d257`, `scene3d_formats/awd2_geometry_handler.hpp` carries the NOT
+GENERATED `parseTriangleGeometryBlock` marker and emits `awd2_triangle_geometry_handler`, whose parse
+lambda calls it. Two compiler causes are measured and filed: the first `Uint32Array.from` has no
+ambient binding ([typed-array static from](typed-array-static-from-binding.md)), and the faithful
+`new Uint32Array(indices)` rewrite moves to a typed-array alternative with no exact carrier for the
+destination `SequenceView<double>` contextual-union alternative
+([the union gap](typed-array-into-sequence-view-union.md)); neither emits.
+
+A declaration-only candidate adding exactly the emitted carriers
+(`DataView`, `Uint8Array`, `double`, `double`, `bool`, `optional<Array<Ref<ImportDiagnostic>>>`,
+returning `Array<Ref<Awd2ParsedGeometry>>`) was measured in normal generation. The header compiles
+1/1, and a direct call fails to link on exactly `parse_triangle_geometry_block`. But the required
+unused-header positive link fails for that same symbol, because the retained `inline`
+`awd2_triangle_geometry_handler` initializer binds the parse lambda, so every including translation
+unit references the absent parser. That is a failed positive prerequisite, not a successful
+declaration boundary, and the candidate is rejected — the same disposition as the MD5 and MD2
+families above.
+
+No repair, generated C++, source patch, override or substitute parser is carried, and no header gain
+is claimed. The row stays failed on the two filed compiler causes.
