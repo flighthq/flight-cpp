@@ -76,7 +76,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 47 | `other-43523429` | 4 | ANIM | [compiler request](compiler-requests/heritage-argument-generic-deduction.md) | heritage-based Node2D type arguments are not substituted at addNodeChild, leaving a free Traits identifier |
 | 48 | `other-4e22e4de` | 4 | 2D | compiler | JSON.parse assertion casts JsonValue to the Aseprite document-owner variant *(existing request extended)* |
 | 49 | `other-5611a858` | 4 | ANIM | declaration repair (applied) | ColorScaleBiasAdjustment heritage restored; G2: 1 pass, 3 compiler failures |
-| 50 | `other-d6be4352` | 4 | ANIM | runtime | uncategorised: the first diagnostic does not name a single cause |
+| 50 | `other-d6be4352` | 4 | ANIM | [compiler request](compiler-requests/json-parse-assertion-static-cast.md#g2-pixi-particle-parser-the-destination-is-a-dynamic-record) | parsed JSON is asserted to PixiRaw with an unrelated C++ record cast; nested shape/absence lowering also remains open |
 | 51 | `static-assertion-00a0e75d` | 4 | 3D, WGPU | compiler | a runtime static assertion rejects the emitted shape |
 | 52 | `undeclared-identifier-0fc9e20f` | 4 | 2D | declaration repair (applied) | omitted artboard-import-context declaration supplied; G2: 0 pass, 4 fail at the next omitted callee; function remains unlinkable |
 | 53 | `undeclared-identifier-69b85faa` | 4 | PLAT | declaration repair (applied) | omitted untrack callee declaration supplied; G2: 0 pass, 4 fail at the next omitted callee; function remains unlinkable |
@@ -1052,11 +1052,24 @@ upstream test port was performed.
 
 ### 50. `other-d6be4352` — 4 header(s)
 
-- cause: uncategorised: the first diagnostic does not name a single cause
+- cause: a JSON.parse assertion to PixiRaw is emitted as a static_cast from JsonValue to Record<String, Any>
 - lanes: ANIM
-- fix route: runtime
+- fix route: compiler — [existing JSON assertion request](compiler-requests/json-parse-assertion-static-cast.md#g2-pixi-particle-parser-the-destination-is-a-dynamic-record)
 - first failure at: `flight/particles_formats/pixi_parse.hpp:55`
 - example: `no matching conversion for static_cast from 'JsonValue' to 'PixiRaw'`
+
+`parsePixiJson` already validates a non-null, non-array object. PixiRaw has no mandatory config fields;
+`{}` must reach the finite defaults, while supplied nested bounds/pairs/colors/spawn shapes affect
+the actual config and ordered import diagnostics. The same parsed object feeds both consumers.
+The [existing parsed-object shape request](compiler-requests/parsed-json-object-shape-reads.md#g2-current-pin-pixi-inventory-qualification)
+already records the nested anonymous-struct recovery and missing-key `get().value()` barriers. Making
+the outer cast compile alone would leave those behaviors broken; no permissive conversion, defaults-only
+parser or full parser fork is supplied.
+
+Delivered qualification remains **0/4 pass, 4 fail**, retained from G1 with the exact diagnostics
+unchanged and both existing requests linked in the product. Only the four owned rows and this cause
+were updated; all other rows and historical totals remain unchanged. No C++ input changed, so no
+native recompile or global sweep was run and no Pixi parity or upstream test port is claimed.
 
 ### 51. `static-assertion-00a0e75d` — 4 header(s)
 

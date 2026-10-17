@@ -91,3 +91,25 @@ and `scene3d-formats` `static_cast<T>(Json::parse(...))` sites.
 
 None. A conversion or an override would compile code that throws on real documents, or would fork the parser.
 The three parsers stay non-compiling and are reported as the residual.
+
+## G2 current-pin Pixi inventory qualification
+
+At compiler `806d257` / Flight `a627849`, group `other-d6be4352` still first fails at
+`particles_formats/pixi_parse.hpp:55`, converting JsonValue to PixiRaw (`Record<String, Any>`).
+The source root guard is retained. The emitted nested lifetime, color, angle, spawn and acceleration
+reads still ask Any for exact anonymous struct owners; those owners are not in the parsed JSON tree.
+The emitted fixed-key reads also still use `get(key).value()`, although Record::get returns an empty
+optional for a missing key. Those are related emitted barriers, not additional measured first errors.
+
+The source has no mandatory configuration fields and explicitly supports an empty object through
+defaults. Syntax errors retain their JSON-prefixed error, while null, arrays and primitive roots
+receive the separate expected-object error. Config mapping and document diagnostics consume the same
+parsed raw object; an assertion adds no fresh JavaScript object or native anonymous-struct identity.
+The existing native particles-formats test intentionally excludes this parser and its built-in
+registration table, so its passing coverage is not Pixi parser evidence.
+
+Only the four Pixi-dependent inventory rows are linked in this arc, with
+[the JSON assertion request](json-parse-assertion-static-cast.md#g2-pixi-particle-parser-the-destination-is-a-dynamic-record)
+as the primary first-error cause and this file as related required work. They retain **0 pass / 4 fail**
+from G1, with unchanged diagnostics and no C++ recompile. No conversion, parser replacement, new
+request, global sweep or upstream test port is carried; other parser rows are not changed.

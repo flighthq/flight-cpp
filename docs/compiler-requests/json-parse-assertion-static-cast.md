@@ -88,3 +88,39 @@ No C++ runtime, binding, source patch, declaration repair or override changed fo
 The four owned rows remain **0 pass / 4 fail**, retained from G1 and now linked here with compiler
 route; no unchanged native rerun or new behavior improvement is claimed. The Lottie group and other
 headers retain their existing counts and attribution.
+
+## G2 Pixi particle parser: the destination is a dynamic record
+
+At compiler `806d257` / Flight `a627849`, `other-d6be4352` covers four particles-formats headers:
+`pixi_parse.hpp`, `register_built_in_particle_formats.hpp`, `contract.hpp` and `_internal_index.hpp`.
+Their retained first failure is `pixi_parse.hpp:55`:
+
+```cpp
+using PixiRaw = flight::Record<flight::String, flight::Any>;
+// raw is flight::JsonValue, already checked as a non-null object rather than an array.
+return static_cast<PixiRaw>(raw);
+```
+
+This is the same assertion/cast defect with a dynamic Record destination, rather than Lottie's
+nominal document or Aseprite's document union. `parsePixiJson` parses once, wraps syntax failures in
+the format-tagged JSON error, then separately rejects null, arrays and non-object roots. Its final
+`raw as PixiRaw` is an erased assertion, not a constructor or an additional schema check.
+
+No config field is mandatory: the pinned source and tests require `{}` to use finite defaults.
+The mapping reads optional lifetime/angle bounds, numeric or `{value}` entries in start/end pairs,
+color fields and spawn-shape payloads. It also preserves frequency-to-rate conversion, clockwise
+screen-space angle mapping and blend-mode choices. The document entry point feeds the same parsed
+raw object to config mapping and ordered diagnostics for burst, polygon, acceleration and behaviors;
+it returns config plus diagnostics, not the original raw document.
+
+The already-filed [parsed JSON object-shape request](parsed-json-object-shape-reads.md) covers this
+exact Pixi path and its additional barriers: anonymous nested shapes are recovered with
+`Any::object_if<T>()` although parsed JSON never held those C++ structs, and missing record keys
+are unconditionally unwrapped instead of reading as undefined. A permissive conversion for the
+outer record alone would leave those failures, including the valid empty-object case. Replacing the
+parser with defaults would lose both authored values and diagnostic behavior.
+
+No runtime, binding, source patch, declaration repair or override changes for this disposition.
+The four owned rows retain **0 pass / 4 fail** from G1 and now name this request plus the existing
+shape-read request. No C++ input changed, so there was no native recompile, parser parity claim,
+global sweep or upstream test port. Other JSON assertion groups keep their own counts and attribution.
