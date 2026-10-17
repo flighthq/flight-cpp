@@ -3538,6 +3538,12 @@
         "flight/skeleton2d/transform_constraint_2d.hpp"
       ],
       "id": "skeleton2d-declare-refused-transform-constraint-solver"
+    },
+    {
+      "files": [
+        "flight/scene2d/scene2d.hpp"
+      ],
+      "id": "scene2d-declare-refused-ensure-runtime"
     }
   ],
   "sourcePatches": [

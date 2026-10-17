@@ -1868,3 +1868,32 @@ The [existing owner request](assertion-to-undeclared-row-member.md#g2-transform-
 records the missing concrete transform cells, source world-to-local per-channel math,
 original bone/Float32 buffer identity and refresh/dispatch order. This repair supplies no
 solver body, copied owner, fake constraint, empty result, narrowed domain or native pose gain.
+
+## G2 Scene2D lazy runtime accessor remains an absent body
+
+At Flight `a627849` / compiler `806d257`, original1 Clang22.1.8 jobs1 completes0/1 in31.7s,
+at scene2d/scene2d.hpp247: missing ensure_scene_2d_runtime. The exact source94 refusal marker,
+two retained direct calls and absent definition agree. Source ensureScene2DRuntime takes Scene2D
+and returns Scene2DRuntime; the caller and create_scene_2d_runtime already use these complete native
+reference carriers. The existing repair scene2d-declare-refused-ensure-runtime adds only:
+
+```cpp
+flight::Ref<flight::types::Scene2DRuntime> ensure_scene_2d_runtime(flight::Ref<flight::types::Scene2D> source);
+```
+
+The existing loader matches one owned header, reaches a fixed point, and removal restores original
+bytes. No new owner, body, storage, recovery or default result is supplied. Actual unused whole-header
+include with a static signature assertion compiles, links and runs exit0. A program using both real
+retained callers, enable_scene_2d_signals and get_scene_2d_runtime, compiles to an object, then fails
+link exit1 on **only** ensure_scene_2d_runtime(Ref<Scene2D>). The linker identifies both caller
+references. That program is not run; no lazy runtime or signal-enabling behavior is exercised.
+
+Normal exact-pin single-module generation reproduces the entire tested header. Only that whole header,
+the declaration repair and its own applied record are carried; partial marker, source/refusal excerpts,
+module/package/refusal totals and five omitted bodies remain unchanged. Final owned header1/1;
+the old failed root is removed and the row retains previousCluster. Unused availability is qualified;
+either retained call still requires the absent helper at link. No real scene construction, root
+membership, runtime allocation/reuse, resize signal, binding/provider or rendering result is supplied.
+The [existing erased runtime owner request](asserted-erased-runtime-owner.md#g2-scene2d-lazy-runtime-and-root-ownership)
+records the full source contract and separate root-runtime authority boundary. No fake scene, copied
+owner, empty-result/no-op or narrowed accepted scene/root/runtime domain is introduced.

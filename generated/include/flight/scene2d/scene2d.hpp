@@ -243,6 +243,8 @@ inline flight::Ref<flight::types::Scene2DSignals> create_scene_2d_signals() {
 // it -- rather than asserting past flight::Ref<flight::types::EntityRuntime>. The compiler will not reinterpret
 // the owner, cast it, copy or materialize a replacement, or add side storage.
 
+flight::Ref<flight::types::Scene2DRuntime> ensure_scene_2d_runtime(flight::Ref<flight::types::Scene2D> source);
+
 inline flight::Ref<flight::types::Scene2DSignals> enable_scene_2d_signals(flight::Ref<flight::types::Scene2D> source) {
   auto runtime = ensure_scene_2d_runtime(source);
   return ([&]() { auto&& assignment_target = runtime->scene2d_signals; if (!assignment_target.has_value()) assignment_target = std::optional<flight::Ref<flight::types::Scene2DSignals>>{create_scene_2d_signals()}; return assignment_target.value(); }());

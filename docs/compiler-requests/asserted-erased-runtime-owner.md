@@ -159,3 +159,79 @@ or broader owner redesign is carried by this repair.
 
 [`entity-intersection-arm-sibling-carriers.md`](entity-intersection-arm-sibling-carriers.md) — the tray
 lane's version of the same family, carried by the `tray-create-result-and-runtime-owner` source patch.
+
+## G2 Scene2D lazy runtime and root ownership
+
+At Flight a627849 / compiler806d257, scene2d.ts ensureScene2DRuntime94 is refused as
+cpp-structural-assertion-owner-unproven when the inherited EntityRuntimeKey slot is asserted to
+Scene2DRuntime | undefined. getScene2DSignals62 and setScene2DSize86 refuse the same recovery.
+The source's EntityRuntime declares binding and optional uid; Scene2DRuntime extends it with nullable
+scene2dSignals. Generated Scene2D stores optional<Ref<EntityRuntime>>, while Scene2DRuntime is an
+independent ReferenceEnabled struct with binding, uid and scene2d_signals. A base slot read cannot
+establish those additional cells or the original concrete owner's identity. Existing exact-runtime
+factory output is not proof for every arbitrary value later recovered from this inherited slot.
+
+The public inherited slot also admits a plain EntityRuntime. In particular attachEntityBinding can
+install that base runtime before any scene-specific accessor runs, retaining a real provider binding.
+The source ensure returns it unchanged; getScene2DSignals treats its missing scene2dSignals as null,
+and enable uses nullish assignment to add the signal group on that same object. Thus recovering only
+allocations originally constructed as nominal Scene2DRuntime would narrow the admitted scene/provider
+history. Retain existing binding/uid/object identity and source extension behavior through a declared
+owner/capability contract; neither swapping in a fresh derived runtime nor narrowing only the scene
+slot/accessor type establishes equivalence for the existing generic binding API. The declaration does
+not solve this construction/storage/provider seam.
+
+The [retained accessor declaration](retained-declaration-calls-omitted-callee.md#g2-scene2d-lazy-runtime-accessor-remains-an-absent-body)
+clears only the missing name: actual unused include compile/link/run0, both retained callers' object
+compile0, then link1 solely on the absent helper. Normal generation preserves the body refusal and
+all five omitted functions. The header becomes1/1, but there is no runtime/accessor/root/scene/provider
+behavior gain. No parallel owner map, copied or reinitialized runtime, unchecked downcast, side
+storage or nominal schema fabricated from common fields is carried.
+
+Preserve the complete source behavior at any eventual owner boundary:
+
+- Scene2D is a presentation-context Entity owning a display-object root, not a Node or Viewport. The
+  factory creates a fresh root, allocates/initializes the same scene, writes that scene reference into
+  the root's existing Node2DRuntime.scene2d back-pointer, and returns it. Initialization uses the supplied
+  root and source nullish defaults: align topleft, color null, scaleMode noscale, logical height550 and
+  width400. Keep explicit zero/color/dimension values and the original root; do not replace it with a
+  provider node, nest the Scene2D in a tree or derive dimensions from a drawable surface.
+- The scene entity begins without a runtime. ensureScene2DRuntime reuses any existing runtime as the
+  source does; only undefined causes one createScene2DRuntime call and one slot write. The fresh
+  runtime has binding null and scene2dSignals null, with uid omitted. Preserve the original binding,
+  optional uid and existing signal group on reuse. Do not eagerly bind a provider, allocate on each
+  accessor, replace existing runtime state or silently reset a base/wider owner to make recovery fit.
+  A faithful typed storage/accessor or checked recovery contract must describe what it actually holds.
+- getScene2DRuntime may lazily allocate, even though its input and result are readonly views. That is
+  the source's deliberate internal mutation, not permission to grant writable access to arbitrary
+  scene/node views. getScene2DSignals is different: it reads the existing optional slot and returns
+  null without allocating before signals are enabled. enableScene2DSignals ensures the runtime, creates
+  one Scene2DSignals only while its cell is nullish, and returns the same group on later calls.
+- Scene2DSignals construction initializes three distinct real zero-argument signals: fullscreen changed,
+  orientation changed and resize. setScene2DSize first compares width and height with strict equality;
+  equal dimensions return before writes/runtime reads. Otherwise write width then height, read the
+  existing runtime without ensuring one, and emit resize once only if signals already exist. Keep
+  source number/equality behavior, callback timing and the already-updated dimensions; do not clamp,
+  coalesce separate calls, allocate a listener group or emit an unconditional/fake resize.
+- Root membership uses getNodeRoot's current parent walk and the top node's existing scene2d back-pointer.
+  Standalone nodes and trees with unowned roots return null; nested descendants see the same scene.
+  Preserve current parent/root identity and lazy membership after graph changes, without propagating
+  per-node scene state, memoizing stale roots or manufacturing a scene for an unowned tree.
+
+Root membership/construction have a separate source-portability refusal:
+getScene2DRoot51 and createScene2D21 assert Readonly<NodeRuntime<Node2DTraits>> from getNodeRuntime
+to writable Node2DRuntime. The latter must write the back-pointer; the former only reads it. The
+[readonly authority request](readonly-view-to-writable.md) and
+[full node runtime owner boundary](node-transform-runtime-owner-argument.md) apply: a read-only
+respelling alone cannot supply scene2d, transform and bounds cells absent from the declared base.
+Retain full Node2DRuntime construction/storage and separate legitimate mutable initialization from
+readonly traversal; do not use a permissive cast or copy to suppress either obligation. This unit
+changes no shared Node, DisplayObject, TextLabel, provider or runtime ABI code.
+
+The binding field remains the existing nullable object identity/ErasedRef carrier; this module does
+not choose a DOM, GL, Canvas, surface or other provider. Its scene context and the root's node runtime
+are distinct owners and must not be conflated. Pinned source tests cover default/custom dimensions,
+root identity, standalone/unowned/deep membership, lazy runtime, stable signal group and conditional
+resize callbacks. They were inspected as requirements, not executed as native scene functionality.
+The declaration supplies none of those omitted bodies, narrows no scene/root/options domain and
+introduces no fake scene, universal null/empty result or backend success claim.

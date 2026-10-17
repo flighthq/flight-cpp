@@ -219,7 +219,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 190 | `undeclared-identifier-7e3a780f` | 1 | PLAT | declaration repair (applied) | exact Sprite alpha helper declared; G2: 1 pass; registration and pixel hit testing remain unlinkable |
 | 191 | `undeclared-identifier-7fd1550e` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glCameraMotionBlurEffectRunner` binding (and its callee `applyCameraMotionBlurEffectToGl`) but still emits the registration call that passes the runner |
 | 192 | `undeclared-identifier-7ff1c319` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glVignetteEffectRunner` binding (and its callee `applyVignetteEffectToGl`) but still emits the registration call that passes the runner |
-| 193 | `undeclared-identifier-8653adf0` | 1 | 2D | runtime | the emitted code names `ensure_scene_2d_runtime`, which nothing declares |
+| 193 | `undeclared-identifier-8653adf0` | 0 | 2D | declaration repair (applied) | G2: 1/1 header; unused positive passes, both retained runtime/signal callers link only to the absent helper |
 | 194 | `undeclared-identifier-898d7996` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glDisplacementEffectRunner` binding (and its callee `applyDisplacementEffectToGl`) but still emits the registration call that passes the runner |
 | 195 | `undeclared-identifier-8ae633dc` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glSmaaEffectRunner` binding (and its callee `applySmaaEffectToGl`) but still emits the registration call that passes the runner |
 | 196 | `undeclared-identifier-8b3950d6` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glMotionBlurEffectRunner` binding (and its callee `applyMotionBlurEffectToGl`) but still emits the registration call that passes the runner |
@@ -3760,14 +3760,32 @@ historical/G1 totals are preserved.
 - Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
 - compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
-### 193. `undeclared-identifier-8653adf0` — 1 header(s)
+### 193. `undeclared-identifier-8653adf0` — declaration repaired (1 header rechecked)
 
-- cause: the emitted code names `ensure_scene_2d_runtime`, which nothing declares
-- subject: `ensure_scene_2d_runtime`
-- lanes: 2D
-- fix route: runtime
-- first failure at: `flight/scene2d/scene2d.hpp:247`
-- example: `use of undeclared identifier 'ensure_scene_2d_runtime'`
+Original1 Clang22.1.8 jobs1: **0/1 pass**,31.7s, missing ensure_scene_2d_runtime247.
+The helper refuses recovery from inherited EntityRuntime to Scene2DRuntime with its scene2dSignals
+cell; exact Scene2D and Scene2DRuntime references already exist. Existing declare-refused-function
+repair scene2d-declare-refused-ensure-runtime adds only that source/retained-caller prototype.
+Marker/live-call/no-definition, one owned match, fixed point and removal restoring original bytes PASS.
+
+Actual unused whole-header/static signature compile/link/run0; a program invoking both real retained
+enable_scene_2d_signals and get_scene_2d_runtime compiles0, then links1 **only** on the absent helper,
+with both references named by the linker. It is not run. This qualifies declaration/header availability;
+no helper, runtime, signal-enabling or scene/provider body execution is claimed.
+
+Normal single-module exact-pin generation reproduces the whole tested header and own applied-repair
+record. Final owned1 jobs1: **1 attempted / 1 pass / 0 fail / 0 unattempted**. Old root removed;
+row pass with previousCluster. Partial marker and all five refused bodies plus package/refusal totals
+stay unchanged. Foreign raw/semantic roots/rows, worklist prose, history and G1 totals are preserved.
+
+The [retained-callee request](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-scene2d-lazy-runtime-accessor-remains-an-absent-body)
+and [full scene/runtime/root contract](compiler-requests/asserted-erased-runtime-owner.md#g2-scene2d-lazy-runtime-and-root-ownership)
+record Scene2D versus tree-root identity, nullish options/defaults, lazy runtime/binding/signal reuse,
+nonallocating signals read, conditional resize write/callback order and current-root membership.
+The root's readonly/base runtime needs separate legitimate mutation and full Node2DRuntime cells;
+no shared owner/ABI/provider implementation or narrowing is carried. Source tests are requirements,
+not native scene/root/runtime/signal/provider/rendering results. No fake scene, copied owner or empty
+success is supplied. Scope is bounded to the owned header, repair/record and compact products/requests.
 
 ### 194. `undeclared-identifier-898d7996` — G2 recheck of 1 header(s)
 

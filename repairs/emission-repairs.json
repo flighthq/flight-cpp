@@ -9341,6 +9341,19 @@
       "defect": "Exact NOT GENERATED marker, retained direct function-argument registration and absent definition agree. Existing retainedReference declares only the exact solver slot carrier, preserving the mutable skeleton Ref and readonly base constraint domain. The body remains refused because the base row cannot recover boneIndices/mixRotate/mixScaleX/mixScaleY/mixShearY/mixX/mixY/offsetRotation/offsetScaleX/offsetScaleY/offsetShearY/offsetX/offsetY/targetBoneIndex or equivalent kind cells from the original transform owner. No transform algorithm, pose/bone/world-matrix mutation, replacement constraint, empty solver or narrower closed constraint family is supplied. Explicit registration must fail to link only on this omitted body. Existing body request: docs/compiler-requests/assertion-to-undeclared-row-member.md; retained callback request: docs/compiler-requests/retained-declaration-calls-omitted-callee.md.",
       "expectedWhen": "always",
       "expires": "when solveSkeleton2DTransformConstraint emits or its exact retained registration disappears; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-declare-refused-ensure-runtime",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/scene2d/scene2d.hpp",
+      "symbol": "ensure_scene_2d_runtime",
+      "refusedFunction": "ensureScene2DRuntime",
+      "declaration": "flight::Ref<flight::types::Scene2DRuntime> ensure_scene_2d_runtime(flight::Ref<flight::types::Scene2D> source);",
+      "sourceDeclaration": "packages/scene2d/src/scene2d.ts:94 -- ensureScene2DRuntime(source: Scene2D): Scene2DRuntime. Exact retained nominal source and existing complete runtime-reference result.",
+      "diagnostic": "use of undeclared identifier 'ensure_scene_2d_runtime'",
+      "defect": "The emitter refuses ensureScene2DRuntime at recovery from the inherited EntityRuntime slot, which does not declare scene2dSignals, while retaining enableScene2DSignals and getScene2DRuntime calling it. Exact same-header marker/direct-call/no-definition witnesses agree. This declares only the existing Ref<Scene2D> to Ref<Scene2DRuntime> boundary; it adds no lazy allocation, runtime storage/recovery, signals, scene root, binding/provider, empty result or copied owner. The helper and both retained callers stay unlinkable. Owner debt: docs/compiler-requests/asserted-erased-runtime-owner.md; retained-caller debt: docs/compiler-requests/retained-declaration-calls-omitted-callee.md.",
+      "expectedWhen": "always",
+      "expires": "when ensureScene2DRuntime emits or both dependent callers are coherently refused; the exact NOT GENERATED marker/live direct-call/no-definition witnesses stop matching, and sdk:check rejects an obsolete repair."
     }
   ]
 }
