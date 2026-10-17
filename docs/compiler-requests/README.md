@@ -88,7 +88,8 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 - [A readonly row returned as its declared nominal owner keeps the owner recovery](readonly-row-return-owner-recovery.md) —
   `@flighthq/render` `resolveInheritedColorScaleBias` emits the `return parent` branch as a bare
   `optional<Ref<ColorScaleBias>>` construction while the sibling `return local` branch gets
-  `structural_ref_cast`; carried by emission repair `render-inherited-color-scale-bias-parent-owner-recovery`.
+  `structural_ref_cast`. No workaround carried: the recovery is an operation, and the header still
+  fails on later families, so no legal carrier supplies it.
 - [A numeric builtin used as a callback needs a callable value](builtin-numeric-predicate-callback.md) —
   COLLADA passes the overloaded `std::isfinite` name to `filter`; the preceding `map(Number)`
   seam is resolved by the runtime's first-class Number conversion object.

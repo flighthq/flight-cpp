@@ -3336,12 +3336,6 @@
     },
     {
       "files": [
-        "flight/render/enable_color_adjustments.hpp"
-      ],
-      "id": "render-inherited-color-scale-bias-parent-owner-recovery"
-    }
-    ,{
-      "files": [
         "flight/render_gl/gl_cube_render_target.hpp"
       ],
       "id": "render-gl-cube-face-box-drawing-buffer-property-binding"

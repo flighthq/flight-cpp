@@ -57,7 +57,26 @@ a readonly-to-writable projection at the `concat_color_scale_bias` call (`:95`),
 scratch locals (`:147`-`:149`, `:198`) — so this repair moves the first diagnostic and does not make
 the header pass.
 
-The carried workaround is emission repair
-`render-inherited-color-scale-bias-parent-owner-recovery`, which adds exactly the cast the emitter
-already emits one branch up. It expires when a readonly structural row returned as its declared
-nominal owner is emitted with the owner recovery.
+**No workaround is carried.** A bounded fix was attempted and withdrawn (2026-10-17), and the reasons
+are worth keeping:
+
+- An emission repair may only correct text with no operation of its own; `structural_ref_cast` is an
+  operation, so the repair mechanism cannot carry this. The attempted entry
+  `render-inherited-color-scale-bias-parent-owner-recovery` was removed rather than kept under a
+  different name.
+- A header override would reproduce the emitted header plus the cast, but the header still fails on the
+  reference-comparison family at `:94` and on omitted helpers at `:147`-`:149` and `:198`, so the
+  override would not compile. An override that does not compile is `incomplete` and may not name
+  `supplies` — it would shadow the generated file to supply nothing.
+- A source patch has no clearly equivalent expression: the two source branches are structurally
+  identical, and the emitter emits the recovery for one and not the other, so no rewrite of
+  `return parent` chooses the lowering rather than guessing at it.
+- The recovery's boundary was measured on this exact schema. `structural_ref_cast<Ref<ColorScaleBias>>`
+  returns the same object for an owner-backed `RowReadonly<RowOf<Ref<ColorScaleBias>>>` view, and a
+  fresh `make_structural_ref` row of that schema is owner-backed too, so it also round-trips. A bare
+  row owner with no native object throws `bad_cast`; no emitted constructor of this schema produces
+  one, but the declared parameter type does not itself promise an owner, so the compiler fix still has
+  to make the owner decision where the nominal owner is known rather than leaving it to the caller's
+  construction path.
+
+The cluster therefore stays failing at `enable_color_adjustments.hpp:92`.

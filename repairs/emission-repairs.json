@@ -8878,18 +8878,6 @@
       "expires": "when a null written through a mapped type over a type parameter (EntityConstruction<State>) produces the member's absent state; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "render-inherited-color-scale-bias-parent-owner-recovery",
-      "kind": "respell-reference-member-access",
-      "appliesTo": "flight/render/enable_color_adjustments.hpp",
-      "from": "return std::optional<flight::Ref<flight::types::ColorScaleBias>>{parent.value()};",
-      "to": "return std::optional<flight::Ref<flight::types::ColorScaleBias>>{flight::structural_ref_cast<flight::Ref<flight::types::ColorScaleBias>>(parent.value())};",
-      "sourceDeclaration": "packages/render/src/enableColorAdjustments.ts -- resolveInheritedColorScaleBias: `if (local === null) return parent;` returns the readonly ColorScaleBias row as the declared nominal ColorScaleBias owner; the sibling `return local` branch already emits the same structural_ref_cast",
-      "diagnostic": "no matching constructor for initialization of 'std::optional<flight::Ref<flight::types::ColorScaleBias>>'",
-      "defect": "The emitter drops the owner recovery when a readonly structural row is returned directly as the declared nominal owner: the sibling `return local` branch is wrapped in flight::structural_ref_cast<Ref<ColorScaleBias>>, but the `return parent` branch is emitted as a bare optional construction with no conversion. This repair adds the exact cast the emitter already emits one branch up. structural_ref_cast recovers the exact shared owner (and throws bad_cast when the view is not that object), so one object, one control block and one lifetime are kept; no owner is copied, no writable row is formed and no optional is reinterpreted. See docs/compiler-requests/readonly-row-return-owner-recovery.md.",
-      "expectedWhen": "always",
-      "expires": "when a readonly structural row returned as its declared nominal owner is emitted with the owner recovery; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "requirement-codegen-row-write-array-projection",
       "kind": "project-array-at-row-write",
       "appliesTo": "flight/requirement_codegen/requirement_codegen.hpp",
