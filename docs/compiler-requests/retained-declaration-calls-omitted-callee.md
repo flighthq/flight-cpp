@@ -1799,3 +1799,35 @@ not a separately isolated native diagnostic or evidence that repairing the two m
 finish the function. The existing [selected-overload](source-overload-call-through-selected-signature.md)
 and [generic mapped-type](generic-mapped-type-erased-to-any.md) requests remain relevant. Neither
 signal callback execution nor tween, resource loading or scene rendering is exercised here.
+
+## G2 GL render-texture pool acquisition declaration qualified
+
+At Flight `a627849` / compiler `806d257`, original undeclared-identifier-3017e8aa contains only
+render_gl/gl_render_texture_pool.hpp. Stock Clang22.1.8 jobs1 completes1/0/1/0
+(attempted/pass/fail/unattempted),102.9s, missing acquire_gl_render_texture136. The exact refusal
+marker, retained direct call and absent definition qualify the existing declare-refused-function
+mechanism; one-header match, fixed point and removing only the prototype restoring original bytes
+are measured. The source and actual bracket agree on this exact owner/presence signature:
+
+```cpp
+flight::Ref<flight::types::RenderTexture> acquire_gl_render_texture(
+  flight::Ref<flight::types::GlRenderState> state,
+  flight::Ref<flight::types::GlRenderTexturePool> pool,
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<
+    flight::Ref<flight::types::RenderTargetDescriptor>>>> descriptor);
+```
+
+Normal exact-pin one-module generation applies render-gl-declare-refused-acquire-render-texture,
+reproducing the actual tested header byte for byte (+2 lines) and its sole new manifest record.
+The actual whole-header unused executable compiles, links and runs (all exit0). Instantiating the
+retained with_gl_render_textures<double> with real forwarded state/pool/descriptor SequenceView and
+std::function carriers compiles (exit0); linking fails (exit1) on **only** this exact acquisition
+symbol, referenced by the real template at138. There is no fake callee/provider/result or invocation
+of pool operations. Final original1 scoped header check is1/1/0/0, jobs1; no other row is promoted.
+
+The source body remains refused by the
+[contextual union owner boundary](contextual-union-value-arm-member-shape.md#g2-gl-render-texture-pool-keeps-the-original-render-texture-owner).
+The exact declaration supplies no storage, cache, target, lease operation or implementation. Actual
+with_gl_render_textures<void> compilation separately fails at
+[optional<void> in finally lowering](void-return-inside-try-finally.md#g2-generic-gl-render-texture-bracket-with-void-result);
+that generic case is retained as compiler debt, not silently excluded by the successful double probe.

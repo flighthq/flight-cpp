@@ -193,7 +193,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 164 | `undeclared-identifier-2437e103` | 1 | 3D | compiler | the emitted code names `parse_triangle_geometry_block`, which nothing declares; declaration candidate rejected at the unused-header positive prerequisite *(requests filed)* |
 | 165 | `undeclared-identifier-251d1ba2` | 1 | 3D | compiler | G2: 0/1; exact collector prototype fails unused compile at optional ease row and tween variant order; rejected |
 | 166 | `undeclared-identifier-2d9cd75f` | 1 | PLAT | declaration repair (applied) | exact refused shape-fill callback declared; G2: 1 pass; three-kind registration and fill hits remain unlinkable |
-| 167 | `undeclared-identifier-3017e8aa` | 1 | GL | runtime | the emitted code names `acquire_gl_render_texture`, which nothing declares |
+| 167 | `undeclared-identifier-3017e8aa` | 0 | GL | declaration repair (applied) | owned header 1/1; acquire body absent; void bracket instantiation still fails |
 | 168 | `undeclared-identifier-332a5586` | 1 | 2D | compiler *(existing request)* | refused `drawDomScale9Sprite` retained as `.submit` in the renderer aggregate; declaration probe fails at `.create_data` |
 | 169 | `undeclared-identifier-34adf2ab` | 1 | ANIM | compiler | G2: 0/1; refused parser/result retained; exact declaration candidate fails unused compile in result-owner dependency |
 | 170 | `undeclared-identifier-3582eeb5` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glScreenSpaceFogEffectRunner` binding (and its callee `applyScreenSpaceFogEffectToGl`) but still emits the registration call that passes the runner |
@@ -3234,14 +3234,30 @@ regions return -1 before transforming; a non-null list transforms before testing
 returning0 only on a path hit. No false/constant hit, copied graph or narrowed command domain substitutes
 for those operations. Foreign compact rows, request sections and historical/G1 totals are preserved.
 
-### 167. `undeclared-identifier-3017e8aa` — 1 header(s)
+### 167. `undeclared-identifier-3017e8aa` — G2 recheck of original 1 header
 
-- cause: the emitted code names `acquire_gl_render_texture`, which nothing declares
-- subject: `acquire_gl_render_texture`
-- lanes: GL
-- fix route: runtime
-- first failure at: `flight/render_gl/gl_render_texture_pool.hpp:136`
-- example: `use of undeclared identifier 'acquire_gl_render_texture'`
+At Flight `a627849` / compiler `806d257`, stock Clang22.1.8 jobs1 completes
+**1 attempted / 0 pass / 1 fail / 0 unattempted** in102.9s at missing acquire_gl_render_texture136.
+The existing exact NOT GENERATED/direct-call repair now supplies only its source-faithful prototype.
+Normal exact-pin generation produces the same header bytes as the qualified candidate and adds only
+its own applied-repair manifest entry. Actual unused-header compile/link/run passes. Instantiating the
+real retained with_gl_render_textures<double> compiles to an object; linking fails on **only** the
+exact missing acquire body. Acquisition, callbacks, GL caches and pool operations are not executed.
+
+The final original1 scoped header check completes **1 attempted / 1 pass / 0 fail / 0 unattempted**
+in124.4s, jobs1. The owned row passes with previousCluster; only this active cluster is removed.
+This is header/declaration availability. A separate actual with_gl_render_textures<void> instantiation
+fails at the retained std::optional<T> finally-return slot (header134): optional<void> is ill-formed.
+The generic source domain is retained, and the honest overall attestation records this compiler gap.
+
+The existing [contextual union owner request](compiler-requests/contextual-union-value-arm-member-shape.md#g2-gl-render-texture-pool-keeps-the-original-render-texture-owner)
+records the refused acquisition, exact GL-context ownership, original pooled RenderTarget and cache
+identity, descriptor presence/copy/version semantics, LIFO leases and release/destroy error order.
+The [retained-callee evidence](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-gl-render-texture-pool-acquisition-declaration-qualified)
+and [void-finally request](compiler-requests/void-return-inside-try-finally.md#g2-generic-gl-render-texture-bracket-with-void-result)
+separate the measured boundaries. No body, replacement target, provider, fake result, copied owner,
+new storage/cache/operation or narrower descriptor/result domain is supplied. Foreign compact rows,
+clusters/report prose and all historical sweep/carry totals are preserved.
 
 ### 168. `undeclared-identifier-332a5586` — G2 recheck of 1 header(s)
 
