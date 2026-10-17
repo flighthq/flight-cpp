@@ -142,7 +142,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 113 | `missing-member-1ce5ed2e` | 1 | 3D | runtime | the emitted code reads a member the target does not declare (`physics_3d_cone_twist_joint_solver`) |
 | 114 | `missing-member-42783657` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`font`) |
 | 115 | `missing-member-5ac43ed0` | 1 | 3D | source fix; compiler bounds debt | optional color write emits checked TypedArray assignment; G2: 0/1 now writable Aabb output-owner failure |
-| 116 | `missing-member-703ef98e` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`lottie_additive_mask_handler`) |
+| 116 | `missing-member-703ef98e` | 1 | 2D | compiler | G2: 0/1; refused additive handler retained in registration/global family; declaration fails unused positive link |
 | 117 | `missing-member-8aa8170f` | 1 | ANIM | compiler *(existing request)* | the refused `swfVideoHandler` binding is still named by `swfVideoTagFamily`; its placement callable needs a signature adapter |
 | 118 | `missing-member-ad3558ee` | 1 | ANIM | runtime | the emitted code reads a member the target does not declare (`physics_2d_distance_joint_solver`) |
 | 119 | `missing-member-b5408b35` | 1 | 3D | override (fixed) | the `gl_shadow_map` override regained the generated `node_transform3d.hpp` include; G2 recheck: 1 pass |
@@ -2324,14 +2324,31 @@ native test ran. Its scratch source/logs remain available; no unbuildable test/r
 The source-identity and generation checks pass, with no header gain or native color/instance/material
 behavior pass claimed. The bounds owner contract remains open; no body, cast or copy adapter hides it.
 
-### 116. `missing-member-703ef98e` — 1 header(s)
+### 116. `missing-member-703ef98e` — G2 recheck of 1 header(s)
 
-- cause: the emitted code reads a member the target does not declare (`lottie_additive_mask_handler`)
+- cause: the additive mask function refuses at a generic animatable-property conversion; its registration and global family retain the absent callback
 - subject: `lottie_additive_mask_handler`
 - lanes: 2D
-- fix route: runtime
-- first failure at: `flight/scene2d_formats/lottie_mask_handlers.hpp:18`
-- example: `no member named 'lottie_additive_mask_handler' in namespace 'scene2d_formats'`
+- fix route: [retained callback/family request](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-lottie-mask-family-requires-the-refused-function-during-initialization), with [generic call specialization](compiler-requests/generic-call-argument-uses-unsubstituted-parameter-type.md#g2-lottie-mask-handler-refuses-before-emitting-the-call)
+- actual first failure at: `flight/scene2d_formats/lottie_mask_handlers.hpp:18`
+- example: `no member named 'lottie_additive_mask_handler' in namespace 'flight::scene2d_formats'`
+
+The original one-header check completes with Clang22.1.8 at one worker: **0/1 pass, 1 fail,
+0 unattempted**. Exact pinned source and aliases retain the same Ref<LottieMaskContext>, readonly mask
+views, original Node2D target and import context. The source guard/initial-outline/animated update
+semantics remain owed; no fake mask, empty family, copied owner or narrowed domain is supplied.
+
+A scratch candidate through the existing declaration loader/engine inserts only the actual function
+signature at its exact refused marker, matches one header and reaches a fixed point. The real family
+header and its inline global initializer stay intact. An include-only program with an empty main
+compiles to an object, but its required unused-header positive link fails on exactly this missing
+handler, referenced by the family's line21 global initializer. This is not an explicit-use negative-link
+pass. No executable or native mask behavior runs.
+
+The candidate is rejected. No C++, repair, source patch, generated inventory or manifest is changed;
+no normal generation or global/package/native baseline rerun is needed. Only the owned product root/row
+and this worklist entry are reconciled, and the existing requests gain this exact source/link evidence.
+The row remains failed, no header gain is claimed, and all foreign rows/prose and G1 totals are preserved.
 
 ### 117. `missing-member-8aa8170f` — G2 recheck of 1 header(s)
 

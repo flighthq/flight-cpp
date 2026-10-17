@@ -875,3 +875,42 @@ registration is used; there is no missing global initializer in the unused progr
 [basis guard source rewrite](mixed-value-union-literal-comparison.md), the original one-header serial
 check is **1/1 pass**. This is header availability with a visible missing-body link boundary; the module
 and callable layout resolver remain incomplete.
+
+## G2 Lottie mask family requires the refused function during initialization
+
+At compiler `806d257` / Flight `a627849`, original cluster `missing-member-703ef98e`
+contains `scene2d_formats/lottie_mask_handlers.hpp`. Its completed Clang22.1.8 one-worker check is
+**0/1 pass, 1 fail, 0 unattempted**: the registration at line18 names the absent
+`flight::scene2d_formats::lottie_additive_mask_handler`. The same header's retained inline
+`lottie_all_mask_handlers` initializes its single element from that function at line21.
+The function itself is explicitly refused in `lottie_mask.hpp`, source line21, as
+`cpp-contextual-union-inequivalent`; the [generic argument request](generic-call-argument-uses-unsubstituted-parameter-type.md#g2-lottie-mask-handler-refuses-before-emitting-the-call)
+records the uninstantiated target `T` versus concrete shape-path alternatives. No generated header,
+override, binding or runtime definition supplies this handler.
+
+The exact signature comes from the actual source function and emitted `LottieMaskHandler` alias,
+`std::function<void(Ref<LottieMaskContext>)>`. A scratch use of the existing
+`insert-forward-declaration` mechanism, guarded by the exact function/refusal marker, adds only:
+
+```cpp
+namespace flight::scene2d_formats {
+void lottie_additive_mask_handler(flight::Ref<flight::types::LottieMaskContext> context);
+}
+```
+
+The repair loader accepts this candidate; exactly one header changes and the engine reaches a fixed
+point. The original refused source excerpt, actual registration and entire global family initializer
+remain byte-for-byte intact. A program including the actual family header with only
+`int main() { return 0; }` compiles to an object, but its required unused-header positive link fails.
+The only undefined symbol is `flight::scene2d_formats::lottie_additive_mask_handler` with the exact
+shared `LottieMaskContext` parameter, referenced by line21's `__cxx_global_var_init`. Main neither
+reads the family nor calls the handler. This is a failed positive prerequisite; it is not a successful
+explicit-use negative-link check. No executable runs and no mask behavior passes.
+
+The declaration candidate is rejected. No repair entry, source patch, generated C++, manifest,
+override or substitute mask/body is carried, so no changed generation needs reproducing. Preserve the
+family's original callback identity, additive kind and registry insertion/replacement behavior when
+faithful emission becomes available. Supplying an empty family, dropping the additive member,
+returning without masking, or moving initialization behind an accessor would change the source.
+Either emit the actual handler or report the dependent family unavailable coherently. The original
+row remains failed with no header gain.

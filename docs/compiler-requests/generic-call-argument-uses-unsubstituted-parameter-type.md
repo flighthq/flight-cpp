@@ -64,3 +64,46 @@ inference, and a fixed constant would be a guess.
   the five `scene2d_formats` SVG headers that include it.
 - `undeclared-identifier-993e82f1`, `Traits`, 29 headers. That cluster belongs to builder4 (E0a), and its
   rows are not changed here.
+
+## G2 Lottie mask handler refuses before emitting the call
+
+At compiler `806d257` / Flight `a627849`, `scene2d-formats/src/lottieMask.ts:21`
+is refused as `cpp-contextual-union-inequivalent [target-runtime]`. This site stops during conversion
+planning rather than emitting an undeclared type parameter into C++. Its diagnostic compares:
+
+```text
+target optionalVariant carriers
+[Ref<LottieAnimatedProperty<T>>, Ref<LottieStaticProperty<T>>]
+from property source multiVariant carriers
+[Ref<LottieAnimatedProperty<Ref<LottieShapePath>>>,
+ Ref<LottieStaticProperty<Ref<LottieShapePath>>>]
+```
+
+The actual source `LottieMask.pt` is `LottieAnimatable<LottieShapePath>`. The non-generic handler
+calls `initialLottieValue(first.pt)` and `isAnimatedLottieProperty(first.pt)`; their declarations
+are generic in `T`. The diagnostic leaves that callee parameter in the destination arm instead of
+using the concrete shape-path instantiation. Substitute the checked call's type arguments before
+contextual union conversion, retaining the same animated/static property owners and their nested
+keyframes/path values. Optional lifting must retain the same active owner; a new sibling property,
+path or keyframe collection, an erased Any conversion or a cast asserting unrelated native owners
+is not an implementation of this call.
+
+The complete source context holds masks as readonly views in document order, the original Node2D
+target and the original import context. The body declines an absent first mask, non-additive mode,
+inversion or multiple active masks, then declines an unreadable initial path. It installs a clip from
+the actual initial outline. For animation, it retains that target and one current numeric array in
+the update callback, rebuilds the clip from each sample and passes the same import context to channel
+construction. The predicate identifies keyframes structurally, including exports with no animated
+flag; neither a flag-only substitute nor a signature narrowed to static paths preserves the domain.
+
+Fixing call specialization alone does not supply the independently refused helpers:
+`initialLottieValue` still refuses at its optional generic return, `isAnimatedLottieProperty` at
+unguarded variant `length`, and `toLottieShapePath` at parsed/erased readonly path recovery. The
+[existing readonly recovery request](erased-value-readonly-row-recovery.md#affected-flight-modules)
+already distinguishes that parsed JSON case from exact nominal-owner recovery; no exact-owner cast
+is assumed here. These are inspected refusal markers, not additional measured header failures.
+
+The retained [mask family](retained-declaration-calls-omitted-callee.md#g2-lottie-mask-family-requires-the-refused-function-during-initialization)
+still requires the omitted callback during global initialization. Its original one-header check is
+**0/1 pass**, and a scratch exact declaration fails the unused positive link on this same handler.
+No declaration, owner copy, fake mask/handler/body, source rewrite or narrowed mask domain is carried.
