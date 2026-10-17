@@ -46,7 +46,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 17 | `undeclared-identifier-294e632e` | 8 | ANIM | runtime | the emitted code names `apply_swf_authored_bounds`, which nothing declares |
 | 18 | `undeclared-identifier-3e3cccce` | 8 | GL | runtime | the emitted code names `blit_offset_shaders`, which nothing declares |
 | 19 | `invalid-operands-4b19651b` | 7 | 2D, ANIM | runtime | an operator is applied to operand types it does not accept |
-| 20 | `missing-member-fd48c0bb` | 7 | 3D | runtime | the emitted code reads a member the target does not declare (`collide_physics_3d_collider_shapes`) |
+| 20 | `missing-member-fd48c0bb` | 7 | 3D | [compiler request](compiler-requests/narrowed-imported-union-into-declared-parameter.md) | the emitted code reads a member the target does not declare (`collide_physics_3d_collider_shapes`) |
 | 21 | `other-18dcce71` | 7 | ANIM | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 22 | `undeclared-identifier-7dc86326` | 7 | WGPU | runtime | the emitted code names `get_wgpu_scene_3d_runtime`, which nothing declares |
 | 23 | `undeclared-identifier-b90ed4db` | 7 | ANIM | runtime | the emitted code names `dragon_bones_animations_section_handler`, which nothing declares |
@@ -551,9 +551,13 @@ G2's scoped-only-when-changed rule. Only these owned rows gained request links a
 - cause: the emitted code reads a member the target does not declare (`collide_physics_3d_collider_shapes`)
 - subject: `collide_physics_3d_collider_shapes`
 - lanes: 3D
-- fix route: runtime
+- fix route: compiler — [narrowed imported union request](compiler-requests/narrowed-imported-union-into-declared-parameter.md)
 - first failure at: `flight/physics3d/contact_intake.hpp:284`
 - example: `no member named 'collide_physics_3d_collider_shapes' in namespace 'physics3d'`
+
+- G2 disposition: the missing name is a refused TypeScript callee, not a missing runtime primitive. `collider_collision.hpp` marks `collidePhysics3DColliderShapes` NOT GENERATED at source line 19 (`cpp-contextual-union-inequivalent`); `contact_intake.hpp:284`, `continuous.hpp:375`, and `solver.hpp:510` retain calls. The narrowed seven built-in shape arms must enter `CollisionShape3D` without replacing their owners.
+- The existing declaration repair requires refusal and call in the same header; these witnesses span sibling headers. No repair, source patch, runtime binding, override, or body is carried. The request records both the missing declaration and the refused conversion, including why the earlier whole-union-local workaround cannot be applied before this source's concave-shape guards.
+- Numbers: **0/7 pass, 7 fail**, preserved from G1; no C++ input changed and no unchanged compile rerun was performed. All seven owned rows remain failing and link the request. No package behavior or link success is claimed.
 
 ### 21. `other-18dcce71` — 7 header(s)
 
