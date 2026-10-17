@@ -181,6 +181,9 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 - [An initialized optional typed-array member needs a present indexed write](initialized-optional-typed-array-write.md) —
   instanced-mesh color writes lose presence and typed-array semantics; an erased assertion emits the
   checked write while existing writable bounds-owner calls keep the header failed.
+- [A readonly preset tuple must retain its shared-owner element carrier](readonly-preset-tuple-element-owner.md) —
+  Spine binary mode selection uses a type-only element-union annotation and the canonical preset alias;
+  the header still fails on diagnostic Record construction and owes the separate Bone2D owner contract.
 - [Quadbatch needs one retained owner across specialized construction boundaries](quadbatch-owner-and-contextual-construction.md) —
   flattened Node2D/runtime/signal owners and contextual factories omit ten declarations; the native
   adapter preserves batch, runtime, buffer-view, atlas, material and signal identities explicitly.

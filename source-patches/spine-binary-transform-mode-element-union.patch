@@ -1,0 +1,16 @@
+diff --git a/packages/skeleton2d-formats/src/spineBinaryBonesHandler.ts b/packages/skeleton2d-formats/src/spineBinaryBonesHandler.ts
+--- a/packages/skeleton2d-formats/src/spineBinaryBonesHandler.ts
++++ b/packages/skeleton2d-formats/src/spineBinaryBonesHandler.ts
+@@ -81,10 +81,10 @@
+ 
+ export { skipSpineBinaryBonesSection };
+ 
+-const SPINE_BINARY_TRANSFORM_MODES = [
++const SPINE_BINARY_TRANSFORM_MODES: readonly (typeof TransformMode2D)[keyof typeof TransformMode2D][] = [
+   TransformMode2D.Normal,
+   TransformMode2D.OnlyTranslation,
+   TransformMode2D.NoRotationOrReflection,
+   TransformMode2D.NoScale,
+   TransformMode2D.NoScaleOrReflection,
+-] as const;
++];

@@ -68,3 +68,24 @@ builds the inherit flags directly for that reason.
 
 None. The faithful source fix is in `@flighthq/types` (declare the table's member type, as `ModeTyped`
 does), which is outside the packages that consume it.
+
+## G2 Spine binary table selection and bone storage are distinct boundaries
+
+At compiler `806d257` / Flight `a627849`, `spine_binary_bones_handler.hpp` first failed because
+its readonly preset tuple became `Array<Any>`, mixing an erased element with an exact preset Ref in
+the ordinal selection. The [local element-union source annotation](readonly-preset-tuple-element-owner.md)
+retains those original owners. Normal generation includes the unchanged canonical TransformMode2D
+header so the existing duplicate-struct alias engine preserves its exact shared flags carrier. Whole
+source JavaScript and every emitted function body remain unchanged; no preset is reconstructed.
+
+The independent store still expects `Bone2D.transform_mode: Ref<TransformInherit2D>`, while each
+preset is `Ref<reflection_rotation_scale_translation_9dff6858eecb0eb4>`. The two declarations still
+inherit ReferenceEnabled independently and share no native base relation. A source assertion,
+unchecked pointer cast, copied four-flag object or changed Bone2D slot cannot supply the original
+preset owner. The shared `satisfies` table itself is not rewritten by this one-header task.
+
+The final scoped result is **0/1 pass** at the earlier optional Record diagnostic construction63;
+this nominal-store mismatch is inspected, not claimed as a new winning compiler diagnostic or a
+native parsing pass. Preserve the reader's exact cursor/field order, root parent-byte omission,
+invalid-parent Drop/overrun behavior, original diagnostics/context arrays and all five preset identities
+when the owner contract is fixed. Those source requirements are recorded in the linked request.

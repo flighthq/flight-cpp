@@ -4183,6 +4183,23 @@
       "unblocks": "Answers the retained flex basis validation comparison without adding a layout resolver or recovering the separately refused nullable style owners.",
       "expires": "when strict literal comparison over a number/string optional member preserves both active alternatives and its subsequent unknown guard, or Flight adopts the equivalent helper.",
       "appliedOn": "2026-10-17"
+    },
+    {
+      "id": "spine-binary-transform-mode-element-union",
+      "dependency": "flight",
+      "patch": "spine-binary-transform-mode-element-union.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/skeleton2d-formats/src/spineBinaryBonesHandler.ts SPINE_BINARY_TRANSFORM_MODES",
+      "package": "@flighthq/skeleton2d-formats",
+      "answers": "diagnostic",
+      "refusal": "Readonly tuple of shared preset objects emits Array<Any>, so ordinal selection mixes erased element and exact preset Ref.",
+      "rewrite": "Spells the exact existing five-preset element union as a readonly array annotation; removes erased as const.",
+      "equivalence": "Whole original/patched module emits byte-identical JavaScript. Same five original preset owners, allocation order, table reads, guard and fallback, full binary reader/input order and diagnostics; no owner or parser body substituted.",
+      "verification": "Whole original/patched module JavaScript byte-identical. Normal exact-pin generation of owned handler plus unchanged canonical dependency reproduces original shared preset alias and typed table; only owned header/provenance carried, all function bodies unchanged. Original1 jobs1 is0/1 atAny48; incomplete-closure trial0/1 atlocalArray47 rejected. Final changed1 jobs1 complete0/1 at existing optional Record construction63. No native bone/parser executable/link/behavior pass. Exact output/foreign provenance/pins validated.",
+      "whyNotUpstreamFirst": "Local type-only expression supplies explicit element evidence without changing any JavaScript operation or canonical shared preset owner.",
+      "unblocks": "Only erased preset table element selection; canonical TransformInherit2D storage and diagnostic-detail construction remain independent.",
+      "expires": "when readonly tuples of compatible exact object owners retain their element carrier upstream.",
+      "appliedOn": "2026-10-17"
     }
   ]
 }

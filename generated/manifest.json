@@ -5155,6 +5155,13 @@
       "id": "layout-flex-basis-unknown-comparison",
       "module": "packages/layout/src/flexLayout.ts",
       "package": "@flighthq/layout"
+    },
+    {
+      "dependency": "flight",
+      "digest": "30659e68bd4ad4992f6842069422fb21ada0beec8b71c8550e34c4530ce6801a",
+      "id": "spine-binary-transform-mode-element-union",
+      "module": "packages/skeleton2d-formats/src/spineBinaryBonesHandler.ts SPINE_BINARY_TRANSFORM_MODES",
+      "package": "@flighthq/skeleton2d-formats"
     }
   ],
   "duplicateStructuralStructAliases": {

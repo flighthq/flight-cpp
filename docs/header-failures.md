@@ -170,7 +170,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 141 | `no-viable-conversion-dc893fc7` | 1 | GL | compiler | a value is passed where its declared type cannot receive it |
 | 142 | `no-viable-conversion-eabaf455` | 1 | 3D | compiler | a value is passed where its declared type cannot receive it |
 | 143 | `no-viable-conversion-f7267dc5` | 1 | ANIM | compiler | a value is passed where its declared type cannot receive it |
-| 144 | `other-1e3a0d33` | 1 | ANIM | runtime | uncategorised: the first diagnostic does not name a single cause |
+| 144 | `other-1e3a0d33` | 1 | ANIM | source fix; compiler follow-ons | G2: 0/1; typed preset owners fix conditional, now optional Record detail; nominal Bone2D store still owed |
 | 145 | `other-4703cbbe` | 1 | 3D | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 146 | `other-5dfe27ec` | 1 | ANIM | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 147 | `other-acb4b229` | 1 | 2D | compiler | G2: 0/1; JSON assertion casts to nominal array/hash document union; converter independently refused |
@@ -2661,13 +2661,31 @@ generated owners carry identity-preserving interface heritage.
 - first failure at: `flight/skeleton2d_formats/spine_json_bones_handler.hpp:36`
 - example: `no viable conversion from 'Ref<reflection_rotation_scale_translation_9dff6858eecb0eb4>' to 'Ref<TransformInherit2D>'`
 
-### 144. `other-1e3a0d33` — 1 header(s)
+### 144. `other-1e3a0d33` — G2 recheck of 1 header(s)
 
-- cause: uncategorised: the first diagnostic does not name a single cause
+- original cause: readonly preset tuple emits erased Any cells, then mixes an element with a shared preset Ref
 - lanes: ANIM
-- fix route: runtime
-- first failure at: `flight/skeleton2d_formats/spine_binary_bones_handler.hpp:48`
-- example: `incompatible operand types ('value_type' and 'Ref<reflection_rotation_scale_translation_9dff6858eecb0eb4>' )`
+- fix route: [erased source element-union annotation](compiler-requests/readonly-preset-tuple-element-owner.md), then [optional Record detail](compiler-requests/optional-record-literal-not-materialized.md) and [preset/Bone2D owner contract](compiler-requests/satisfies-record-member-carrier.md#g2-spine-binary-table-selection-and-bone-storage-are-distinct-boundaries)
+- original first failure at: `flight/skeleton2d_formats/spine_binary_bones_handler.hpp:48`
+- original example: `incompatible operand types ('value_type' (aka 'flight::Any') and preset Ref)`
+
+The explicit readonly element-union annotation emits byte-identical JavaScript. Normal exact-pin
+emission includes the unchanged canonical preset dependency so the existing alias engine retains its
+shared owner. Only the exact owned header/provenance is carried; every emitted function/parser body
+is unchanged. The initial incomplete-closure trial fails at a local anonymous-owner Array constructor
+and is not carried. No shared preset table, runtime API, bone/parser/body, view copy or input domain
+is replaced.
+
+Original1 and final changed1 each complete at jobs1: **0/1 pass, 1 fail, 0 unattempted**.
+The Any conditional clears; final first failure is optional Record diagnostic construction at line63.
+The row stays failed, moves to existing `other-40da43f7` with previousCluster retained, and that
+cluster's owned membership rises by one. The separate nominal preset-to-Bone2D store remains inspected
+debt. Historical/G1 totals and all unowned rows/roots/prose are preserved apart from that exact count.
+
+Source proof and normal output/alias checks pass. No native bone/parser execution, link check,
+complete functionality or header gain is claimed. Binary consumption, root parent omission,
+invalid-parent Drop/overrun, sticky truncation and original context/diagnostics/preset identities
+remain the source contract, recorded in the linked requests. No global/package baseline is rerun.
 
 ### 145. `other-4703cbbe` — 1 header(s)
 
