@@ -97,7 +97,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 68 | `other-41f4a462` | 3 | ANIM | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 69 | `other-6a1604d5` | 3 | PLAT | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 70 | `other-b860ec87` | 3 | 2D, GL | runtime | uncategorised: the first diagnostic does not name a single cause |
-| 71 | `other-f9c5bc10` | 3 | 2D | runtime | uncategorised: the first diagnostic does not name a single cause |
+| 71 | `other-f9c5bc10` | 3 | 2D | compiler | an `as` assertion over a `flight::JsonValue` is lowered with the erased-value `object_if` pattern, which a tagged JSON value ca... *(request filed)* |
 | 72 | `redefinition-c11d96e9` | 3 | TEXT | runtime (fixed) | the bitmap_font_record override's `#pragma once` was commented out; G2 recheck: 0 pass, 3 fail at `bitmap_font_fnt.hpp:187` |
 | 73 | `undeclared-identifier-145c75d7` | 3 | TEXT | runtime | the emitted code names `initialize_glyph_source_from_glyph_atlas`, which nothing declares |
 | 74 | `undeclared-identifier-2cdb69a6` | 3 | PLAT | runtime | the emitted code names `channel_elements`, which nothing declares |
@@ -1266,11 +1266,13 @@ permissive assignment or always-default style behavior was supplied. Text layout
 
 ### 71. `other-f9c5bc10` — 3 header(s)
 
-- cause: uncategorised: the first diagnostic does not name a single cause
+- cause: an `as` assertion over a `flight::JsonValue` is lowered with the erased-value `object_if` pattern, which a tagged JSON value cannot answer
 - lanes: 2D
-- fix route: runtime
-- first failure at: `flight/tilemap_formats/tilemap_detect.hpp:49`
-- example: `too many arguments to function call, expected single argument 'prefix', have 2 arguments`
+- fix route: compiler
+- why this route: a JsonValue holds a tagged JSON tree, not an exact C++ type; the assertion must read the tree through the declared owner or be refused
+- first failure at: `flight/tilemap_formats/tilemap_detect.hpp:112`
+- example: `no member named 'object_if' in 'flight::JsonValue'`
+- compiler request: `docs/compiler-requests/json-value-erased-assertion.md`
 
 ### 72. `redefinition-c11d96e9` — G2 recheck of 3 headers
 
