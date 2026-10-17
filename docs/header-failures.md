@@ -981,14 +981,14 @@ instance must supply interface reads and writes; copying it into an interface ow
 ### 34. `compiler-crash-aba5e9ec` — G2 serial recheck of 5 headers
 
 - G1 recorded these 5 as `compiler exited with status 134` under the `-j8` sweep. Unlike the 12 crashes that a serial retry compiled (summary table), no per-header serial result was saved for them, so the route's "passes serially" was not evidence.
-- G2 serial recheck: GCC 15.2, one header at a time (`-j1`), on base `4d9a4ae8`. **5 attempted, 1 pass, 4 fail, 0 crash.** Each run took 211-447 s. The abort does not reproduce, so it was sweep resource pressure and nothing here is a compiler crash. No crash request is filed, and memory was not measured.
+- G2 serial recheck: GCC 15.2, one header at a time (`-j1`). It was first measured on `4d9a4ae8` and then re-measured on `3987edfe`, the base this classification was committed on, after that range changed `include/flight/map.hpp` and `host_sdl/webgl.hpp`. The final qualified result, on `3987edfe`: **5 attempted, 1 pass, 4 fail, 0 crash**. The pass is the same and all four first errors are identical; only `contract.hpp`'s total error count moved, from 180 to 176. Each run took 179-373 s. The abort does not reproduce, so it was sweep resource pressure and nothing here is a compiler crash. No crash request is filed, and memory was not measured.
 
 | header | serial result | true first failure | follow-on |
 | --- | --- | --- | --- |
 | `anisotropy_pbr_gl_extension.hpp` | pass | — | — |
 | `gl_blinn_phong_mesh_material_renderer.hpp` | fail | `:126` readonly `GlMeshProgram` row rebuilt through `StructuralRef<RowWritable<…>>` | `variant-cast-ccfedad4` ([request](compiler-requests/guarded-readonly-optional-helper-call.md)) |
 | `gl_specular_glossiness_pbr_mesh_material_renderer.hpp` | fail | `:121`, same program round trip | `variant-cast-ccfedad4` |
-| `contract.hpp` | fail | `gl_blinn_phong_mesh_material_renderer.hpp:126` via include (180 errors in all) | `variant-cast-ccfedad4` |
+| `contract.hpp` | fail | `gl_blinn_phong_mesh_material_renderer.hpp:126` via include (176 errors in all on `3987edfe`) | `variant-cast-ccfedad4` |
 | `gl_extended_pbr_mesh_material_renderer.hpp` | fail | `:66` `Array<PbrExtensionValue>` passed as `Array<Ref<PbrExtension>>` | `emitter-conversion-2b9a0802` ([request](compiler-requests/array-of-union-into-array-of-owner.md)) |
 
 - The follow-on clusters only changed count (13 and 2). Historical G1 sweep totals are unchanged, and no fake pass is recorded.
