@@ -1,6 +1,6 @@
 # Work queue
 
-Status: **APPROVED** by the user, 2026-10-11; **NOW** section added 2026-10-15 and takes precedence (see `index.md` D7–D9).
+Status: **APPROVED** by the user, 2026-10-11; **NEXT** section (2026-10-17) takes precedence (see `index.md` D7–D9).
 
 Foreman divides and dispatches; builders own implementation. Rules, CPU budget and the package
 definition of done are in `index.md`. Items are ordered by priority within each phase. `Needs:`
@@ -30,7 +30,68 @@ Q0 reports the assignment.
 
 ---
 
-## NOW — current priority (user, 2026-10-15). Supersedes Phase 0–1 ordering below.
+## NEXT — current priority (user, 2026-10-17). Supersedes NOW, which is complete.
+
+NOW is done: Track A (6/6 examples build and smoke, camera2d and scene3d on GL) and Track M
+(compiler 806d257, `docs/compiler-806d257.md`) both landed. Evidence rule D9 still applies.
+
+**Upstream-test porting is ON HOLD** (user, 2026-10-17): no work on lowering `*.test.ts`, extending
+`upstreamTestParityPrototype`, or new parity-test infrastructure until the user settles test strategy.
+Existing tests keep running.
+
+### G · Every public header compiles — the main fleet work
+
+A header that does not compile is a defect to fix here, not a status to publish (D10).
+
+G1 · GEN (builder6). One full header sweep at the current base (`sdk:compile:sdl`, `-j8`, one-off;
+    other agents stay out of heavy builds while it runs). Commit:
+    - `generated/header-status.json`: every public header, pass/fail, and for failures the first
+      diagnostic and a **root-cause cluster** id. Compact, sorted, deterministic.
+    - `docs/header-failures.md`: clusters ranked by headers affected, each with its cause, an example
+      diagnostic, owning lane(s), and the fix route (runtime / binding / compiler / override).
+    Clustering is the point: group by cause (e.g. "`variant<ArrayBuffer, Uint8Array>` cast",
+    "refused function still called", "missing runtime helper X"), not by package. Retry `-j8` crashes
+    serially before classifying. The `-j8` crash, not the header, is the issue there.
+    Refresh only the touched rows when a cluster is fixed; no second full sweep until all of G2 is done.
+
+G2 · all builders, foreman assigns one cluster per builder, largest first. A cluster is done when
+    every header in it compiles, shown by recompiling **only that cluster's headers**. Fix order
+    is `AGENTS.md`'s: runtime extension → external binding → source patch / repair → override. Never
+    make a header compile by deleting or stubbing behavior: a refused function stays declared-and-
+    unlinkable (declare-refused-function), not faked.
+    Compiler-shaped clusters: write one `docs/compiler-requests/<slug>.md` per cluster and tell
+    foreman. Principal batches them for the user to land in flight-compiler. Carry a source patch
+    only if it's cheap and clearly equivalent; otherwise leave the cluster open and move to the next one.
+    The 12 `partial` carry overrides from the 806d257 move (`docs/compiler-806d257.md`, carry table) are
+    in scope as their own clusters.
+    Accept: `header-status.json` shows zero failures, or each remaining failure names a filed
+    compiler request.
+
+### H · Public SDL GL app surface (builder4) — before E
+
+H1. Move the window / GL context / frame loop / present code that `camera2d` and `scene3d` use out of
+    `examples/upstream/sdl_host.cpp` into the installed `Flight::HostSdlGl` library as a small public
+    C++ API: create a window with a GL surface, run a per-frame callback with dt, resize, present,
+    shut down. It must be enough for a downstream binding (flight-hx) to open a window and render a
+    Flight scene without example code. The painter `Canvas` is **not** promoted. Port `camera2d` and
+    `scene3d` onto it; their smoke tests and PNGs must not change.
+
+### E · Remaining 2D examples onto Scene2D GL (builder4, after H1)
+
+E0a. Move clock, collision, motionpath and spatial onto Scene2D GL and the H1 surface, the way
+     `b95afc2a` did camera2d: the upstream Node2D/Shape/TextLabel scene and render pass, not a painter.
+     Then delete the painter's drawing code from `sdl_host.cpp`. E0b–E0d (faithfulness fixes and
+     smoke tests that check the subject was driven) ride along per example. Save a PNG frame per example
+     in `artifacts/e2e/`. Accept: all six examples run through GL, smoke tests pass, and the painter is gone.
+
+### Staffing
+
+builder6 → G1, then a G2 cluster. builder4 → H1 then E0a. Other builders → G2 clusters as G1
+publishes them; idle until then. Integration merges per D9.
+
+---
+
+## NOW — COMPLETE (2026-10-16). Kept for record.
 
 Two tracks, in this order of priority. Everything else waits or idles. Idle is fine: it frees CPU.
 Evidence follows `index.md` "Evidence" (D9): commit, one numbers line, one attest. Nothing more.

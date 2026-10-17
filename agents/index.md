@@ -57,6 +57,11 @@ Last full baseline (builder audit, base 846fa56, old flight pin 7e2fc7d). Not to
 - **Toolchains.** Any agent may install toolchains and dependencies it needs (cmake, a C++20
   compiler, SDL3, Mesa/EGL, …). Install only what your item needs.
 
+- **D10 — Non-compiling headers are defects (user, 2026-10-17).** A public header that fails to
+  compile is fixed here, by cause, not just reported. `generated/header-status.json` is the
+  worklist, and the target is zero failures. Upstream-test porting is on hold pending the user's
+  test strategy.
+
 ## Definition of done for a package
 
 A package is **done** when all hold, verified by its lane:
