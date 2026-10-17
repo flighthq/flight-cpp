@@ -242,7 +242,7 @@ Upstream tests: 7 files, 63 `it` cases, 102 `expect` assertions.
 | `src/fontStatus.test.ts` | 5 | isFontLoaded · whenFontsReady |  |
 | `src/glyphOutlineSource.test.ts` | 5 | allocateGlyphRasterizerBackendFromGlyphOutlineSource · initializeGlyphRasterizerBackendFromGlyphOutlineSource |  |
 
-Local CTest coverage: `examples/upstream/sdl_host.cpp` — linked into every `flight_cpp_upstream_*` example, which load a system TrueType font and rasterize its glyph outlines at runtime (exercised, not asserted)
+Local CTest coverage: `examples/upstream/font_host.cpp` — linked into Camera2D, Clock, MotionPath and Spatial; loads system TrueType fonts and supplies genuine glyph-outline rasterizer capabilities. Their smokes assert current text caches and actual visible glyph pixels.
 
 Web-only exclusions:
   - None identified for this package.
@@ -271,7 +271,7 @@ Upstream tests: 15 files, 219 `it` cases, 391 `expect` assertions.
 | `src/woff2GlyfTransform.test.ts` | 35 | createWoff2TransformReverser · decodeWoff2Triplet · getWoff2BboxBitmapByteLength · hasWoff2GlyphBbox · isWoff2PointOnCurve · measureWoff2CompositeGlyph · readWoff2GlyfStreams · readWoff2Short · reverseWoff2GlyfTransform |  |
 | `src/woffFont.test.ts` | 15 | readWoffChecksumMismatches · readWoffFont |  |
 
-Local CTest coverage: `examples/upstream/sdl_host.cpp` — reads the sfnt table directory, loca, metrics, advances, cmap and glyf outlines of that font (exercised, not asserted)
+Local CTest coverage: `examples/upstream/font_host.cpp` — reads the sfnt table directory, loca, metrics, advances, cmap and glyf outlines of the system fonts used by the text-bearing GL examples.
 
 Web-only exclusions:
   - None identified for this package.

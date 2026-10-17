@@ -1,7 +1,9 @@
 // Native SDL/OpenGL ES port of @flighthq/example-camera2d.
 // Source: .dependencies/flight/examples/packages/camera2d/src/app.ts
 
-#include "sdl_host.hpp"
+#include "font_host.hpp"
+#include <flight/text/text_label.hpp>
+#include <array>
 
 #include <flight/host_sdl/gl_app.hpp>
 #include <flight/host_sdl/web_platform.hpp>
@@ -22,7 +24,7 @@
 #include <flight/scene2d_gl/gl_mesh_shape_renderer.hpp>
 #include <flight/scene2d_gl/gl_sprite.hpp>
 #include <flight/scene2d_gl/gl_standard_material.hpp>
-#include <SDL3/SDL_surface.h>
+#include <SDL3/SDL_events.h>
 #include <fstream>
 #include <unordered_set>
 
@@ -54,14 +56,13 @@
 
 namespace {
 
-using flight::examples::Canvas;
 struct CameraInput final {
   std::unordered_set<SDL_Keycode> keys;
   double pointer_x{}, pointer_y{}, wheel_y{};
   bool key_down(SDL_Keycode key) const { return keys.contains(key); }
 };
 struct Frame final { const CameraInput& input; double delta_time; std::size_t index; bool smoke; };
-using flight::examples::Point;
+using Point=flight::examples::ScenePoint;
 
 constexpr double world_width = 2400.0;
 constexpr double world_height = 1800.0;
@@ -245,20 +246,16 @@ class CameraExample final {
     flight::render::register_node_renderer(state, flight::types::shape_kind, flight::scene2d_gl::gl_mesh_shape_renderer);
     flight::render::register_node_renderer(state, flight::types::sprite_kind, flight::scene2d_gl::gl_sprite_renderer);
     flight::scene2d_gl::register_gl_standard_material(state);
+    flight::examples::install_text_renderer(state);
     auto screen = flight::render_gl::create_gl_screen_render_target(gl);
     auto clear = flight::make_ref<flight::types::RenderTargetClear>();
     clear->color = flight::Array<double>{0x1a/255.0, 0x1a/255.0, 0x2e/255.0, 1};
-    // SDL paints only this separate HUD asset; every world/parallax pixel comes from Flight GL.
-    Canvas hud("Camera2D HUD raster asset", true, 800, 96);
-    using Texture = std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>;
-    Texture hud_target(SDL_CreateTexture(hud.native_renderer(), SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, 800, 96), SDL_DestroyTexture);
-    if (!hud_target) throw std::runtime_error(SDL_GetError());
     CameraInput input; std::size_t frames=0, maximum_coverage=0;
     flight::host_sdl::GlLoopOptions loop;
     if (smoke) { loop.fixed_delta_time = 1.0/60.0; loop.maximum_frames = 3; }
     app.run([&](const flight::host_sdl::GlFrame& timing) {
       frame(Frame{input,timing.delta_time,timing.index,smoke});
-      update_hud(hud, hud_target.get()); gl.make_current();
+      update_hud();
       if (!flight::render::prepare_scene_2d_render(state, root_)) throw std::runtime_error("Camera2D authored scene was not prepared");
       auto pass = flight::render_gl::begin_gl_render_pass(state, screen, readonly_row(clear));
       flight::scene2d_gl::render_gl_scene_2d(pass, root_);
@@ -272,6 +269,8 @@ class CameraExample final {
         std::size_t coverage=0;
         for (std::size_t i=0;i<pixels.size();i+=4) if (pixels[i]!=0x1a || pixels[i+1]!=0x1a || pixels[i+2]!=0x2e) ++coverage;
         const auto center = static_cast<std::size_t>((600-1-300)*800+400)*4;
+        if (smoke) flight::examples::verify_text_labels(
+            {state,pixels,800,600,timing.index},hud_labels_);
         if (smoke && (coverage<5000 || pixels[center]<240 || pixels[center+1]<180 || pixels[center+1]>220 || pixels[center+2]<35 || pixels[center+2]>70)) throw std::runtime_error("Camera2D GL framebuffer lacks the authored yellow player or scene coverage");
         maximum_coverage=std::max(maximum_coverage,coverage);
         if (capture && frames == 0) {
@@ -289,7 +288,7 @@ class CameraExample final {
       if (event.type == SDL_EVENT_MOUSE_WHEEL) { input.wheel_y += event.wheel.y; input.pointer_x=event.wheel.mouse_x; input.pointer_y=event.wheel.mouse_y; }
     });
     if (smoke) {
-      if (subject_verified_frames_ != 3 || follow_updates_ != 3 || shape_count_ != 66 || sprite_count_ != 45) throw std::runtime_error("Camera2D GL did not verify all authored frames and nodes");
+      if (subject_verified_frames_ != 3 || follow_updates_ != 3 || shape_count_ != 67 || sprite_count_ != 44) throw std::runtime_error("Camera2D GL did not verify all authored frames and nodes");
       std::cout << "scene2d-gl package smoke: rendered " << subject_verified_frames_ << " verified frames, " << node_count_ << " nodes, maximum non-background coverage " << maximum_coverage << '\n';
     }
     flight::render::dispose_scene_2d_render(state, root_);
@@ -428,9 +427,16 @@ class CameraExample final {
       end(out);
     }
     player_shape_ = shape(world_container_); bounds_shape_ = shape(world_container_);
-    hud_bitmap_ = flight::bitmap::create_bitmap(800, 96);
-    hud_bitmap_->alpha_type = flight::String("premultiplied");
-    hud_sprite_ = sprite(hud_container_, bitmap_texture(hud_bitmap_), 0, 0, 800, 96);
+    auto background=shape(hud_container_); fill(background,0x000000ffU,.5);
+    flight::shape::append_shape_rectangle(background,8,8,260,80); end(background);
+    constexpr std::array<const char*,4> texts{"","","WASD/Arrows: move  Scroll: zoom","Green = visible bounds  Red = world border"};
+    for(std::size_t i=0;i<hud_labels_.size();++i) {
+      auto label=flight::text::create_text_label(); label->data->text=flight::String(texts[i]);
+      label->data->text_format->size=13; label->data->text_format->color=0xffffffff;
+      label->data->text_format->font=flight::String("monospace"); label->x=16; label->y=16+static_cast<double>(i)*18;
+      flight::node::invalidate_node_local_transform(flight::node::native_node_2d(label));
+      attach(hud_container_,flight::node::native_node_2d(label)); hud_labels_[i]=label;
+    }
   }
   void update_scene() {
     move(stars_container_, stars_offset_->x, stars_offset_->y);
@@ -450,23 +456,9 @@ class CameraExample final {
     flight::shape::append_shape_line_style(bounds_shape_, 2, static_cast<double>(0x00c864ffU), 0.6);
     flight::shape::append_shape_rectangle(bounds_shape_, visible_bounds_->x, visible_bounds_->y, visible_bounds_->width, visible_bounds_->height); end(bounds_shape_);
   }
-  void update_hud(Canvas& canvas, SDL_Texture* target) {
-    auto renderer = canvas.native_renderer();
-    if (!SDL_SetRenderTarget(renderer, target)) throw std::runtime_error(SDL_GetError());
-    canvas.begin(0); draw_hud(canvas);
-    using Surface = std::unique_ptr<SDL_Surface, decltype(&SDL_DestroySurface)>;
-    Surface pixels(SDL_RenderReadPixels(renderer, nullptr), SDL_DestroySurface);
-    if (!pixels) throw std::runtime_error(SDL_GetError());
-    Surface rgba(SDL_ConvertSurface(pixels.get(), SDL_PIXELFORMAT_RGBA32), SDL_DestroySurface);
-    if (!rgba) throw std::runtime_error(SDL_GetError());
-    if (SDL_MUSTLOCK(rgba.get()) && !SDL_LockSurface(rgba.get())) throw std::runtime_error(SDL_GetError());
-    for (int y = 0; y < 96; ++y) {
-      auto* row = static_cast<std::uint8_t*>(rgba->pixels) + y * rgba->pitch;
-      for (int x = 0; x < 800*4; ++x) hud_bitmap_->data[static_cast<std::size_t>(y*800*4+x)] = row[x];
-    }
-    if (SDL_MUSTLOCK(rgba.get())) SDL_UnlockSurface(rgba.get());
-    if (!SDL_SetRenderTarget(renderer, nullptr)) throw std::runtime_error(SDL_GetError());
-    flight::bitmap::invalidate_bitmap(hud_bitmap_);
+  void update_hud() {
+    flight::text::set_text_label_string(hud_labels_[0],flight::String("Camera2D: ("+fixed(camera_->x,0)+", "+fixed(camera_->y,0)+")  Zoom: "+fixed(camera_->zoom,2)));
+    flight::text::set_text_label_string(hud_labels_[1],flight::String("Player: ("+fixed(player_.x,0)+", "+fixed(player_.y,0)+")"));
   }
   void verify_scene(flight::Ref<flight::types::GlRenderState> state) {
     auto runtime = flight::render_gl::get_gl_render_state_runtime(state);
@@ -502,26 +494,20 @@ class CameraExample final {
     if (mesh_count(stars_shape_) != 80 || mesh_count(mountains_shape_) != 8 ||
         mesh_count(clouds_shape_) != 12 || mesh_count(player_shape_) != 2)
       throw std::runtime_error("Camera2D GL changed authored parallax or player geometry");
+    auto hud_children=flight::node::native_node_2d_runtime(hud_container_)->children;
+    if(node_count_!=122 || !hud_children || hud_children->size()!=5)
+      throw std::runtime_error("Camera2D GL lost the authored HUD background/four TextLabel graph");
+    for(std::size_t i=0;i<hud_labels_.size();++i)
+      if((*hud_children)[i+1]!=flight::node::native_node_2d(hud_labels_[i]))
+        throw std::runtime_error("Camera2D GL changed authored HUD label order/owners");
     ++subject_verified_frames_;
-  }
-  void draw_hud(Canvas& canvas) const {
-    canvas.fill_rectangle(8.0, 8.0, 260.0, 80.0, 0x000000ffU, 0.5);
-    canvas.text(
-        "Camera2D: (" + fixed(camera_->x, 0) + ", " + fixed(camera_->y, 0) + ")  Zoom: " + fixed(camera_->zoom, 2),
-        16.0,
-        16.0,
-        0xffffffffU,
-        13.0);
-    canvas.text("Player: (" + fixed(player_.x, 0) + ", " + fixed(player_.y, 0) + ")", 16.0, 34.0, 0xffffffffU, 13.0);
-    canvas.text("WASD/Arrows: move  Scroll: zoom", 16.0, 52.0, 0xffffffffU, 13.0);
-    canvas.text("Green = visible bounds  Red = world border", 16.0, 70.0, 0xffffffffU, 13.0);
   }
 
   Node root_, stars_container_, mountains_container_, clouds_container_, world_container_, hud_container_;
   Shape player_shape_, bounds_shape_, stars_shape_, mountains_shape_, clouds_shape_;
   std::vector<Shape> shapes_;
-  Sprite hud_sprite_;
-  flight::Ref<flight::types::Bitmap> grid_bitmap_, hud_bitmap_;
+  std::array<flight::Ref<flight::types::TextLabel>,4> hud_labels_;
+  flight::Ref<flight::types::Bitmap> grid_bitmap_;
   std::size_t node_count_{}, shape_count_{}, sprite_count_{}, subject_verified_frames_{};
   std::vector<Landmark> landmarks_;
   std::vector<Star> stars_;

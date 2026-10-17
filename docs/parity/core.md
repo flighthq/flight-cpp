@@ -268,7 +268,7 @@ Upstream carries per-package records at `flight/agents/packages/types/`: `status
 - `flight_cpp.host_sdl` — `tests/host_sdl_test.cpp` (incidental: includes the package as part of a larger closure)
 - `flight_cpp.structural_row` — `tests/structural_row_test.cpp` (incidental: includes the package as part of a larger closure)
 - `flight_cpp.example.sound_sdl` — `examples/sound/sound_sdl_example.cpp` (incidental: includes the package as part of a larger closure)
-- `flight_cpp_upstream_sdl_host` — `examples/upstream/sdl_host.cpp` (incidental: includes the package as part of a larger closure)
+- `flight_cpp_upstream_font_host` — `examples/upstream/font_host.cpp` (incidental: includes the package as part of a larger closure)
 - `flight_cpp_upstream_spatial_smoke` — `examples/upstream/spatial.cpp` (incidental: includes the package as part of a larger closure)
 
 ### Local generation status

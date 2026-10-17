@@ -1,7 +1,14 @@
-// Native SDL port of @flighthq/example-spatial.
+// Native Scene2D GL port of @flighthq/example-spatial.
 // Source: .dependencies/flight/examples/packages/spatial/src/app.ts
 
-#include "sdl_host.hpp"
+#include "scene2d_host.hpp"
+#include "font_host.hpp"
+#include <flight/shape/shape.hpp>
+#include <flight/shape/shape_commands.hpp>
+#include <flight/text/text_label.hpp>
+#include <flight/render/render_proxy.hpp>
+#include <flight/scene2d_gl/gl_shape_data.hpp>
+#include <array>
 
 #include <flight/spatial/spatial_index.hpp>
 #include <flight/spatial/uniform_grid.hpp>
@@ -23,8 +30,9 @@
 
 namespace {
 
-using flight::examples::Canvas;
-using flight::examples::Frame;
+using Frame = flight::examples::Scene2DFrame;
+using Shape = flight::Ref<flight::types::Shape>;
+using Label = flight::Ref<flight::types::TextLabel>;
 
 constexpr double width = 800.0;
 constexpr double height = 500.0;
@@ -35,6 +43,7 @@ constexpr std::uint32_t color_ray = 0xcccc44ffU;
 constexpr std::uint32_t color_region = 0x44ccccffU;
 
 struct Object final {
+  Shape shape = flight::shape::create_shape();
   double id{};
   flight::Ref<flight::types::SpatialAabb2D> bounds;
   double velocity_x{};
@@ -83,6 +92,11 @@ class SpatialExample final {
         active_mode_(capture_mode ? Mode::region : Mode::pairs),
         index_(flight::spatial::create_spatial_index_2d(
             flight::spatial::create_uniform_grid_spatial_backend_2d(100.0))) {
+    using namespace flight::shape;
+    append_shape_line_style(grid_,1,0x263954ff,0.65);
+    for(double x=100;x<width;x+=100) { append_shape_move_to(grid_,x,0); append_shape_line_to(grid_,x,height); }
+    for(double y=100;y<height;y+=100) { append_shape_move_to(grid_,0,y); append_shape_line_to(grid_,width,y); }
+    attach(grid_);
     Random random(capture_mode);
     for (int index = 0; index < 20; ++index) {
       const double object_width = random.range(30.0, 80.0);
@@ -103,12 +117,17 @@ class SpatialExample final {
           .velocity_x = moving ? random.range(-30.0, 30.0) : 0.0,
           .velocity_y = moving ? random.range(-30.0, 30.0) : 0.0,
       });
+      attach(objects_.back().shape);
       if (flight::spatial::insert_spatial_object_2d(index_, static_cast<double>(index), bounds)) {
         ++inserted_count_;
       }
     }
+    attach(overlay_);
+    label(0,"Click: point query | R: ray query | Q: region query",10,6,13,0x888888ff);
+    label(1,"Mode: Pairs",10,height-30,14,0xccccccff);
   }
 
+  auto root() const { return root_; }
   void frame(const Frame& frame) {
     handle_input(frame);
     const std::size_t updated_count = update(std::min(frame.delta_time, 0.05));
@@ -143,25 +162,22 @@ class SpatialExample final {
       }
     }
     if (frame.smoke) verify_smoke(updated_count);
-    draw(frame.canvas, active_mode_, highlighted, results, mouse_x_, mouse_y_);
+    draw(active_mode_, highlighted, results, mouse_x_, mouse_y_);
   }
 
  private:
   void handle_input(const Frame& frame) {
     if (capture_mode_) return;
-    if (frame.input.pointer_inside) {
-      mouse_x_ = frame.input.pointer_x;
-      mouse_y_ = frame.input.pointer_y;
+    mouse_x_ = frame.input.pointer_x;
+    mouse_y_ = frame.input.pointer_y;
+    using Kind=flight::examples::SceneInputEvent::Kind;
+    for(const auto& event:frame.input.events) {
+      if(event.kind==Kind::pointer_down) active_mode_=Mode::point;
+      if(event.kind==Kind::pointer_up || event.kind==Kind::pointer_cancel) active_mode_=Mode::pairs;
+      if(event.kind==Kind::key_down && event.key==SDLK_R) active_mode_=Mode::ray;
+      if(event.kind==Kind::key_down && event.key==SDLK_Q) active_mode_=Mode::region;
+      if(event.kind==Kind::key_up && (event.key==SDLK_R || event.key==SDLK_Q)) active_mode_=Mode::pairs;
     }
-    if (frame.input.pointer_pressed) active_mode_ = Mode::point;
-    for (const SDL_Keycode key : frame.input.keys_pressed) {
-      if (key == SDLK_R) active_mode_ = Mode::ray;
-      if (key == SDLK_Q) active_mode_ = Mode::region;
-    }
-    for (const SDL_Keycode key : frame.input.keys_released) {
-      if (key == SDLK_R || key == SDLK_Q) active_mode_ = Mode::pairs;
-    }
-    if (frame.input.pointer_released) active_mode_ = Mode::pairs;
   }
 
   [[nodiscard]] std::size_t update(double delta_time) {
@@ -305,63 +321,60 @@ class SpatialExample final {
     if (index < highlighted.size()) highlighted[index] = true;
   }
 
-  void draw(
-      Canvas& canvas,
-      Mode mode,
-      const std::vector<bool>& highlighted,
-      int results,
-      double mouse_x,
-      double mouse_y) const {
-    for (double x = 100.0; x < width; x += 100.0) canvas.line(x, 0.0, x, height, 0x263954ffU, 1.0, 0.65);
-    for (double y = 100.0; y < height; y += 100.0) canvas.line(0.0, y, width, y, 0x263954ffU, 1.0, 0.65);
-    const std::uint32_t hit_color = mode == Mode::point ? color_point
-                                    : mode == Mode::ray ? color_ray
-                                    : mode == Mode::region ? color_region
-                                                           : color_overlap;
-    for (std::size_t index = 0; index < objects_.size(); ++index) {
-      const auto& object = objects_[index];
-      const auto& bounds = *object.bounds;
-      const std::uint32_t color = highlighted[index] ? hit_color : color_idle;
-      canvas.fill_rectangle(
-          bounds.min_x,
-          bounds.min_y,
-          bounds.max_x - bounds.min_x,
-          bounds.max_y - bounds.min_y,
-          color,
-          0.5);
-      canvas.stroke_rectangle(
-          bounds.min_x,
-          bounds.min_y,
-          bounds.max_x - bounds.min_x,
-          bounds.max_y - bounds.min_y,
-          0x335577ffU);
-    }
-    if (mode == Mode::point) {
-      canvas.line(mouse_x - 8.0, mouse_y, mouse_x + 8.0, mouse_y, color_point, 2.0);
-      canvas.line(mouse_x, mouse_y - 8.0, mouse_x, mouse_y + 8.0, color_point, 2.0);
-    } else if (mode == Mode::ray) {
-      const double length = std::hypot(mouse_x, mouse_y - height / 2.0);
-      if (length > 0.0) {
-        canvas.line(
-            0.0,
-            height / 2.0,
-            mouse_x / length * width * 1.5,
-            height / 2.0 + (mouse_y - height / 2.0) / length * width * 1.5,
-            color_ray);
-      }
-    } else if (mode == Mode::region) {
-      canvas.fill_rectangle(mouse_x - 50.0, mouse_y - 50.0, 100.0, 100.0, color_region, 0.15);
-      canvas.stroke_rectangle(mouse_x - 50.0, mouse_y - 50.0, 100.0, 100.0, color_region);
-    }
-    canvas.text("Click: point query | R: ray query | Q: region query", 10.0, 6.0, 0x888888ffU, 13.0);
-    canvas.text(
-        "Mode: " + std::string(mode_name(mode)) + "  Hits: " + std::to_string(results),
-        10.0,
-        height - 30.0,
-        0xccccccffU,
-        14.0);
+  template<class T> void attach(T object) { flight::node::add_node_child(root_,flight::node::native_node_2d(object)); }
+  void label(std::size_t i,const char* text,double x,double y,double size,std::uint32_t color) {
+    auto value=flight::text::create_text_label(); value->data->text=flight::String(text);
+    value->data->text_format->size=size; value->data->text_format->color=color; value->x=x; value->y=y;
+    flight::node::invalidate_node_local_transform(flight::node::native_node_2d(value)); labels_[i]=value; attach(value);
   }
-
+  void draw(Mode mode,const std::vector<bool>& highlighted,int results,double mouse_x,double mouse_y) {
+    using namespace flight::shape;
+    const auto hit_color=mode==Mode::point?color_point:mode==Mode::ray?color_ray:mode==Mode::region?color_region:color_overlap;
+    for(std::size_t i=0;i<objects_.size();++i) {
+      auto shape=objects_[i].shape; const auto& b=*objects_[i].bounds;
+      clear_shape_commands(shape); append_shape_begin_fill(shape,highlighted[i]?hit_color:color_idle,.5);
+      append_shape_line_style(shape,1,0x335577ff); append_shape_rectangle(shape,b.min_x,b.min_y,b.max_x-b.min_x,b.max_y-b.min_y); append_shape_end_fill(shape);
+      flight::node::invalidate_node_appearance(flight::node::native_node_2d(shape));
+    }
+    clear_shape_commands(overlay_);
+    if(mode==Mode::point) {
+      append_shape_line_style(overlay_,2,color_point);
+      append_shape_move_to(overlay_,mouse_x-8,mouse_y); append_shape_line_to(overlay_,mouse_x+8,mouse_y);
+      append_shape_move_to(overlay_,mouse_x,mouse_y-8); append_shape_line_to(overlay_,mouse_x,mouse_y+8);
+    } else if(mode==Mode::ray) {
+      const double dx=mouse_x,dy=mouse_y-height/2,length=std::hypot(dx,dy);
+      if(length>0) { append_shape_line_style(overlay_,1,color_ray); append_shape_move_to(overlay_,0,height/2);
+        append_shape_line_to(overlay_,dx/length*width*1.5,height/2+dy/length*width*1.5); }
+    } else if(mode==Mode::region) {
+      append_shape_begin_fill(overlay_,color_region,.15); append_shape_line_style(overlay_,1,color_region);
+      append_shape_rectangle(overlay_,mouse_x-50,mouse_y-50,100,100); append_shape_end_fill(overlay_);
+    }
+    flight::node::invalidate_node_appearance(flight::node::native_node_2d(overlay_));
+    flight::text::set_text_label_string(labels_[1],flight::String("Mode: "+std::string(mode_name(mode))+"  Hits: "+std::to_string(results)));
+  }
+ public:
+  void verify(const flight::examples::Scene2DRenderFrame& frame) const {
+    if(flight::render_gl::get_gl_render_state_runtime(frame.state)->render_proxy_sources.size()!=25)
+      throw std::runtime_error("spatial GL lost the authored 25-node graph");
+    auto check=[&](Shape shape,std::size_t count) {
+      auto proxy=flight::render::get_render_proxy_2d(frame.state,flight::node::native_node_2d(shape));
+      if(!proxy || (*proxy)->source.shared_exact_object<flight::types::Shape>()!=shape || !(*proxy)->renderer_data)
+        throw std::runtime_error("spatial GL lost the original Shape owner");
+      auto data=flight::scene2d_gl::get_gl_shape_data(*(*proxy)->renderer_data);
+      if(!data->meshes || data->meshes->size()!=count || data->mesh_version!=shape->entity_runtime_key.value()->local_content_id)
+        throw std::runtime_error("spatial GL did not tessellate current grid/object/query geometry");
+    };
+    check(grid_,1); for(const auto& object:objects_) check(object.shape,2); check(overlay_,2);
+    flight::examples::verify_text_labels(frame,labels_);
+    std::size_t query_pixels=0;
+    for(std::size_t i=0;i<frame.pixels.size();i+=4)
+      if(frame.pixels[i]<90 && frame.pixels[i+1]>180 && frame.pixels[i+2]>180) ++query_pixels;
+    if(query_pixels<100) throw std::runtime_error("spatial GL framebuffer lacks the actual highlighted query border");
+  }
+ private:
+  flight::types::Node2D root_ = flight::scene2d::create_display_object();
+  Shape grid_=flight::shape::create_shape(),overlay_=flight::shape::create_shape();
+  std::array<Label,2> labels_;
   std::vector<Object> objects_;
   bool capture_mode_{};
   Mode active_mode_{Mode::pairs};
@@ -377,15 +390,12 @@ class SpatialExample final {
 
 int main(int argc, char** argv) {
   try {
-    const bool capture_mode = argc == 2 && std::string_view(argv[1]) == "--smoke";
+    bool capture_mode=false;
+    for(int i=1;i<argc;++i) if(std::string_view(argv[i])=="--smoke") capture_mode=true;
     SpatialExample example(capture_mode);
-    return flight::examples::SdlExample::run(
-        argc,
-        argv,
-        "Flight spatial index - SDL",
-        [&](const Frame& frame) { example.frame(frame); },
-        static_cast<int>(width),
-        static_cast<int>(height));
+    return flight::examples::Scene2DHost::run(argc,argv,example.root(),
+        [&](const Frame& f){example.frame(f);},[&](const auto& f){example.verify(f);},
+        {.name="spatial",.title="Flight spatial index - Scene2D GL",.width=800,.height=500,.maximum_delta_time=.05},flight::examples::install_text_renderer);
   } catch (const std::exception& error) {
     std::cerr << "spatial example failed: " << error.what() << '\n';
     return EXIT_FAILURE;

@@ -3,10 +3,7 @@
 # and controls. The SDL host is optional, so these examples are simply omitted
 # from configurations that do not enable FLIGHT_CPP_BUILD_HOST_SDL.
 
-set(UPSTREAM_EXAMPLE_SOURCES
-  motionpath.cpp
-  spatial.cpp
-)
+set(UPSTREAM_EXAMPLE_SOURCES)
 set(UPSTREAM_EXAMPLES)
 foreach(source IN LISTS UPSTREAM_EXAMPLE_SOURCES)
   get_filename_component(example "${source}" NAME_WE)
@@ -17,6 +14,8 @@ set(UPSTREAM_GL_EXAMPLE_SOURCES
   clock.cpp
   camera2d.cpp
   collision.cpp
+  motionpath.cpp
+  spatial.cpp
   scene3d.cpp
 )
 set(UPSTREAM_GL_EXAMPLES)
@@ -95,54 +94,7 @@ if(NOT _flight_cpp_upstream_inventory_count EQUAL 34 OR
 endif()
 
 if(TARGET Flight::HostSdl)
-  add_library(flight_cpp_upstream_sdl_host STATIC
-    sdl_host.cpp
-  )
-  target_link_libraries(flight_cpp_upstream_sdl_host PUBLIC Flight::HostSdl Flight::SdkPreview)
-  target_include_directories(flight_cpp_upstream_sdl_host PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
-  flight_cpp_set_project_warnings(flight_cpp_upstream_sdl_host)
-  if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    target_compile_options(flight_cpp_upstream_sdl_host PRIVATE
-      -Wno-error=missing-field-initializers
-    )
-  endif()
-
   set(flight_cpp_upstream_targets)
-  foreach(source IN LISTS UPSTREAM_EXAMPLE_SOURCES)
-    get_filename_component(example "${source}" NAME_WE)
-    if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${source}")
-      message(FATAL_ERROR "Audited upstream example ${example} has no source file")
-    endif()
-    add_executable(flight_cpp_upstream_${example} "${source}")
-    list(APPEND flight_cpp_upstream_targets flight_cpp_upstream_${example})
-    target_link_libraries(flight_cpp_upstream_${example} PRIVATE
-      flight_cpp_upstream_sdl_host
-      Flight::SdkPreview
-    )
-    flight_cpp_set_project_warnings(flight_cpp_upstream_${example})
-    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-      # Generated SDK dependencies still contain intentional no-op parameters, ignored
-      # WeakMap erase results, and JavaScript-number indices converted to C++ index types.
-      # Keep all other project warnings fatal for the ports.
-      target_compile_options(flight_cpp_upstream_${example} PRIVATE
-        -Wno-error=conversion
-        -Wno-error=float-conversion
-        -Wno-error=unused-parameter
-        -Wno-error=unused-result
-      )
-    endif()
-    if(BUILD_TESTING)
-      add_test(
-        NAME flight_cpp_upstream_${example}_smoke
-        COMMAND flight_cpp_upstream_${example} --smoke
-      )
-      set_tests_properties(
-        flight_cpp_upstream_${example}_smoke
-        PROPERTIES ENVIRONMENT "SDL_VIDEODRIVER=dummy"
-      )
-    endif()
-  endforeach()
-
   if(TARGET Flight::HostSdlGl)
     add_library(flight_cpp_upstream_scene2d_host STATIC scene2d_host.cpp)
     target_link_libraries(flight_cpp_upstream_scene2d_host PUBLIC Flight::HostSdlGl Flight::SdkPreview)
@@ -171,9 +123,7 @@ if(TARGET Flight::HostSdl)
         Flight::HostSdlGl
         Flight::SdkPreview
       )
-      if(example STREQUAL "camera2d")
-        target_link_libraries(flight_cpp_upstream_${example} PRIVATE flight_cpp_upstream_sdl_host)
-      elseif(example STREQUAL "clock")
+      if(example MATCHES "^(camera2d|clock|motionpath|spatial)$")
         target_link_libraries(flight_cpp_upstream_${example} PRIVATE flight_cpp_upstream_font_host)
       elseif(example STREQUAL "collision")
         target_link_libraries(flight_cpp_upstream_${example} PRIVATE flight_cpp_upstream_scene2d_host)
@@ -191,17 +141,11 @@ if(TARGET Flight::HostSdl)
         )
       endif()
       if(BUILD_TESTING)
-        if(example STREQUAL "camera2d")
-          add_test(NAME flight_cpp_upstream_${example}_smoke
-            COMMAND flight_cpp_upstream_${example} --smoke --capture "${CMAKE_CURRENT_BINARY_DIR}/camera2d-smoke.ppm")
-        elseif(example STREQUAL "clock")
-          add_test(NAME flight_cpp_upstream_${example}_smoke
-            COMMAND flight_cpp_upstream_${example} --smoke --capture "${CMAKE_CURRENT_BINARY_DIR}/clock-smoke.ppm")
-        elseif(example STREQUAL "collision")
-          add_test(NAME flight_cpp_upstream_${example}_smoke
-            COMMAND flight_cpp_upstream_${example} --smoke --capture "${CMAKE_CURRENT_BINARY_DIR}/collision-smoke.ppm")
-        else()
+        if(example STREQUAL "scene3d")
           add_test(NAME flight_cpp_upstream_${example}_smoke COMMAND flight_cpp_upstream_${example} --smoke)
+        else()
+          add_test(NAME flight_cpp_upstream_${example}_smoke
+            COMMAND flight_cpp_upstream_${example} --smoke --capture "${CMAKE_CURRENT_BINARY_DIR}/${example}-smoke.ppm")
         endif()
         if(example STREQUAL "scene3d")
           set(expected_smoke "scene3d-gl package smoke: rendered 3 verified frames, maximum non-background coverage [1-9][0-9]*")
@@ -209,8 +153,12 @@ if(TARGET Flight::HostSdl)
           set(expected_smoke "scene2d-gl clock smoke: rendered 3 verified frames, 16 nodes, maximum non-background coverage [1-9][0-9]*")
         elseif(example STREQUAL "collision")
           set(expected_smoke "scene2d-gl collision smoke: rendered 3 verified frames, 6 nodes, maximum non-background coverage [1-9][0-9]*")
+        elseif(example STREQUAL "motionpath")
+          set(expected_smoke "scene2d-gl motionpath smoke: rendered 3 verified frames, 15 nodes, maximum non-background coverage [1-9][0-9]*")
+        elseif(example STREQUAL "spatial")
+          set(expected_smoke "scene2d-gl spatial smoke: rendered 3 verified frames, 25 nodes, maximum non-background coverage [1-9][0-9]*")
         else()
-          set(expected_smoke "scene2d-gl package smoke: rendered 3 verified frames, 118 nodes, maximum non-background coverage [1-9][0-9]*")
+          set(expected_smoke "scene2d-gl package smoke: rendered 3 verified frames, 122 nodes, maximum non-background coverage [1-9][0-9]*")
         endif()
         set_tests_properties(flight_cpp_upstream_${example}_smoke PROPERTIES PASS_REGULAR_EXPRESSION "${expected_smoke}")
         if(UNIX AND NOT APPLE)
