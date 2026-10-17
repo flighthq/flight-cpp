@@ -93,7 +93,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 64 | `no-viable-conversion-b3064463` | 3 | GL | compiler | a value is passed where its declared type cannot receive it |
 | 65 | `no-viable-conversion-b3f3c7c6` | 3 | 3D | compiler | a value is passed where its declared type cannot receive it |
 | 66 | `no-viable-conversion-b5b698fe` | 3 | 2D | compiler | a value is passed where its declared type cannot receive it |
-| 67 | `other-3d2efc1d` | 3 | 2D | runtime | uncategorised: the first diagnostic does not name a single cause |
+| 67 | `other-3d2efc1d` | 3 | 2D | [compiler request](compiler-requests/erased-array-element-reading.md) | the emitter indexes a still-erased `flight::Any` after `Array.isArray` instead of using the runtime's exact-array recovery |
 | 72 | `other-41f4a462` | 3 | ANIM | compiler | a named-property view (which aliases the source object) and an empty Record are the two arms of one conditional, so the conditi... *(request filed)* |
 | 69 | `other-6a1604d5` | 3 | PLAT | override completeness (fixed) | the tray placeholder override shadowed `set_tray_animation_guard`, which the generated guard header calls; G2 recheck: 3/3 pass |
 | 70 | `other-b860ec87` | 3 | 2D, GL | compiler | the emitted code returns a readonly structural row as its declared nominal owner and drops the recovery; fix attempted and withdrawn |
@@ -1419,11 +1419,21 @@ permissive assignment or always-default style behavior was supplied. Text layout
 
 ### 67. `other-3d2efc1d` — 3 header(s)
 
-- cause: uncategorised: the first diagnostic does not name a single cause
+- cause: after `Array.isArray(frames)` the emitter narrows only the guard and writes
+  `frames[static_cast<size_t>(0.0)]` on the still-erased `flight::Any`
 - lanes: 2D
-- fix route: runtime
+- fix route: compiler — [erased array element reading](compiler-requests/erased-array-element-reading.md)
 - first failure at: `flight/textureatlas_formats/texture_atlas_detect.hpp:67`
 - example: `type 'Any' does not provide a subscript operator`
+
+The runtime already carries both halves of the faithful lowering: `flight::is_array` (which the
+emitter does call) and `Any::external_if<flight::Array<flight::Any>>()` for the checked exact-array
+recovery, which no emitted code uses. A subscript operator on `Any` would be permissive, and copying
+the array would replace the source's own array view, so no runtime or emission-repair fix is carried;
+`contract.hpp` and `_internal_index.hpp` fail through the same include.
+
+Rechecked at `-j1` with Clang 22.1.8: **0/3 pass, 3 fail**, all at the same diagnostic. The route and
+request link are recorded; nothing else changed and no native rerun is claimed.
 
 ### 72. `other-41f4a462` — 3 header(s)
 

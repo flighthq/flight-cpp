@@ -68,6 +68,14 @@ modules' own `JSON.parse` sites are not emitted either), so both halves need to 
 
 `@flighthq/skeleton2d-formats` at flight `a627849`; every site has the measured shape.
 
+`@flighthq/textureatlas-formats` at flight `a627849`, `firstFrame` in `textureAtlasDetect.ts`: after
+`Array.isArray(frames)` the emitter narrows only the guard and writes
+`frames[static_cast<size_t>(0.0)]` on a `flight::Any`, so `texture_atlas_detect.hpp:67` reports
+`type 'flight::Any' does not provide a subscript operator` and the three format headers fail. This is
+the index-zero form of the same recovery: the element must come from
+`frames.external_if<flight::Array<flight::Any>>()`, not from a subscript on the erased value; as
+above, the recovery is exact only for an array stored as `Array<Any>`.
+
 Refused as "a presence test against null has no absence channel":
 - DragonBones: `dragonBonesAnimationsHandler.ts`, `dragonBonesBoneTimelineHandler.ts`, `dragonBonesParse.ts`,
   `dragonBonesParseHelpers.ts`, `dragonBonesSectionCounts.ts`, `dragonBonesSlotTimelineHandler.ts`,
