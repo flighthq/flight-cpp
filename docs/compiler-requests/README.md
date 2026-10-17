@@ -432,6 +432,8 @@ patch has retired because the fix landed upstream keep their row, marked, as the
   source spelling exists, so `glyphSource.ts`, `bitmapFontGlyphSource.ts`, and Scene3D's punctual-light
   factory stay refused; image resource resolution now records the same Bitmap/ImageResource-to-
   TextureSource identity boundary.
+- [DOM style writes require a shared element and style boundary](dom-style-shared-element-boundary.md) —
+  three scene2d-dom headers target a value-owned SDL shell with missing style fields; the package explicitly declares a web environment. No copied/default-only style workaround is carried.
 - [Browser URL and location values need runtime bindings](browser-url-location-runtime-bindings.md) —
   `@flighthq/image` cannot emit `imageResourceFrom.ts` because the runtime profile has `Blob` but no
   `location` value or URL construction/object-URL lifetime contract.

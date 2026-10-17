@@ -88,7 +88,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 59 | `invalid-operands-98cd7094` | 3 | 2D | runtime | an operator is applied to operand types it does not accept |
 | 60 | `missing-member-95ead583` | 3 | 3D | runtime | the emitted code reads a member the target does not declare (`version`) |
 | 61 | `missing-member-b22d5c52` | 3 | 2D | runtime | the emitted code reads a member the target does not declare (`resolve_canvas_texture_window_source`) |
-| 62 | `missing-member-c36ea2d4` | 3 | 2D | runtime | the emitted code reads a member the target does not declare (`opacity`) |
+| 62 | `missing-member-c36ea2d4` | 3 | 2D | binding | the web renderer needs shared CSS style state; SDL exposes copied shell values with no opacity field *(request filed)* |
 | 63 | `no-viable-conversion-4ca7626f` | 3 | ANIM | compiler | a value is passed where its declared type cannot receive it |
 | 64 | `no-viable-conversion-b3064463` | 3 | GL | compiler | a value is passed where its declared type cannot receive it |
 | 65 | `no-viable-conversion-b3f3c7c6` | 3 | 3D | compiler | a value is passed where its declared type cannot receive it |
@@ -1078,12 +1078,29 @@ callers, so the follow-on is the same omission class rather than a new defect.
 
 ### 62. `missing-member-c36ea2d4` — 3 header(s)
 
-- cause: the emitted code reads a member the target does not declare (`opacity`)
+- cause: the bound SDL DOM shell lacks a shared CSS style owner for the web renderer's opacity and related writes
 - subject: `opacity`
 - lanes: 2D
-- fix route: runtime
+- fix route: binding
 - first failure at: `flight/scene2d_dom/dom_style.hpp:33`
 - example: `no member named 'opacity' in 'host_sdl::DomStyle'`
+- request: [dom-style-shared-element-boundary.md](compiler-requests/dom-style-shared-element-boundary.md)
+
+The pinned source writes a String opacity or the empty string, then smoothing/filter/blend styles
+on the existing HTMLElement. The bound `HtmlElement` is actually a value `DomElement` with an
+inline `DomStyle` of ordinary String fields. Even the existing transform helper receives that
+carrier by value, so its style writes affect a copied shell value. Adding one numeric/default
+property, or all missing fields without a shared owner, would hide the boundary.
+
+`scene2d-dom/package.json` and the generated manifest explicitly declare environment `web`;
+the native SDL profile has no applicable web environment. This existing applicability rule is
+unchanged and does not remove these headers from the compile inventory. The SDL application
+shell is documented as a DOM value facade, not a retained HTML tree/style renderer.
+
+**G1 status retained: 0/3 pass, 3 fail.** No C++ input changed and no unchanged header or native
+test was recompiled. Only the three owned rows gained location/request links, and the cluster
+route/cause now records the actual host binding boundary. No DOM renderer, copied element,
+permissive assignment or always-default style behavior was supplied. Text layout/GL work is untouched.
 
 ### 63. `no-viable-conversion-4ca7626f` — 3 header(s)
 
