@@ -160,7 +160,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 131 | `no-viable-conversion-562151da` | 1 | WGPU | compiler | a value is passed where its declared type cannot receive it |
 | 132 | `no-viable-conversion-68fff449` | 1 | 3D | compiler | base Node3D cannot recover the independent morph probe; existing owner-refinement request linked (G2: 0/1 retained) |
 | 133 | `no-viable-conversion-7e6bb150` | 1 | WGPU | compiler | a value is passed where its declared type cannot receive it |
-| 134 | `no-viable-conversion-802e8004` | 1 | GL | compiler | a value is passed where its declared type cannot receive it |
+| 134 | `no-viable-conversion-802e8004` | 1 | GL | compiler | GL view destroy instantiates state-to-base teardown without heritage; original0/1 retained, existing request linked |
 | 135 | `no-viable-conversion-9695423c` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
 | 136 | `no-viable-conversion-a516fbdb` | 1 | 3D | compiler | a value is passed where its declared type cannot receive it |
 | 137 | `no-viable-conversion-b47bc6cd` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
@@ -2907,13 +2907,30 @@ No fake animation, copied owner, empty result, narrowed domain or native TRS/mor
 - first failure at: `flight/effects_wgpu/wgpu_color_matrix_pass.hpp:41`
 - example: `no viable conversion from 'Ref<WgpuEffectPipeline>' to 'Ref<entity_runtime_key_pipeline_blend_mode_compile_for_format_variants_5a993344e208d790>'`
 
-### 134. `no-viable-conversion-802e8004` — 1 header(s)
+### 134. `no-viable-conversion-802e8004` — G2 request-link audit of original 1 header
 
-- cause: a value is passed where its declared type cannot receive it
-- lanes: GL
-- fix route: compiler
-- first failure at: `flight/render_gl/gl_render_state.hpp:329`
-- example: `no viable conversion from 'const Ref<GlRenderState>' to 'Ref<RenderState>'`
+- Owned row: `flight/render_gl/gl_render_view.hpp`, retained fail (**original0/1**, no unchanged rerun).
+- Recorded first error: `flight/render_gl/gl_render_state.hpp:329`, `no viable conversion from const Ref<GlRenderState> to Ref<RenderState>`.
+- Existing request: [declared interface heritage](compiler-requests/interface-heritage-widening.md#g2-gl-view-destruction-instantiates-the-deferred-state-teardown).
+
+The diagnostic location is the effective partial native gl_render_state override, not an additional
+owned header or the current generated file's line329. Its destroy_gl_render_state<DeferredState=
+GlRenderState> defers the unsupported inherited call until use; the view's ordinary inline destroy
+function calls it with resources.renderState and instantiates that default. The callee already
+exists as destroy_render_state(Ref<RenderState>); no forward declaration fixes this owner mismatch.
+Both effective state structs and their runtime structs are independent flattened owners despite
+source GlRenderState extends RenderState and GlRenderStateRuntime extends RenderStateRuntime.
+
+The linked existing request now records the exact one-row/view-to-state relationship, single runtime
+owner and source teardown/lifetime contract. Preserve view target-before-state destruction, original
+state/proxy teardown callbacks, weak destroyed-state identity, common cleanup before context reference
+decrement, last-owner GL cleanup and caller-owned context. A copied base state/runtime, unchecked cast,
+empty destructor or changed resource/host domain is not that widening. The override's partial manifest
+already declares this remaining instantiation failure; unrelated initialization/creation support does
+not make shutdown available. No C++/runtime/override/binding/source/repair/generation is changed, no new
+native result or GL/destruction behavior is claimed, and no other header is promoted/rechecked.
+Only this compact cluster/row/report134 and one existing request appendix change; foreign records,
+prose, override metadata and historical totals remain intact.
 
 ### 135. `no-viable-conversion-9695423c` — 1 header(s)
 

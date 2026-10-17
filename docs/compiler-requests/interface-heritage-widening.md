@@ -708,3 +708,58 @@ fails unused compilation at [readonly source target to writable row](readonly-vi
 so neither link gate qualifies and no production repair/normal generation/body/cache is carried.
 The [runner owner/capability request](custom-shader-effect-runner-owner.md#g2-plain-blur-runner-is-separate-from-the-gaussian-pass)
 is independent. No Gaussian/GL/RenderTexture/pool/cache operation executes in this unit.
+
+## G2 GL view destruction instantiates the deferred state teardown
+
+At Flight `a627849` / compiler `806d257`, no-viable-conversion-802e8004 contains exactly ONE row:
+render_gl/gl_render_view.hpp. Its retained destroy_gl_render_view_resources destroys the actual view
+target, then calls destroy_gl_render_state(resources.renderState). The recorded error is in the
+EFFECTIVE overrides/include/flight/render_gl/gl_render_state.hpp329, where that call instantiates
+ destroy_gl_render_state<DeferredState=types::GlRenderState>. Its const Ref<DeferredState> local is
+the same original GlRenderState; it cannot enter the already-defined destroy_render_state(Ref<RenderState>).
+The const applies to the shared-pointer variable and does not create a derived/base pointee relation.
+The current generated gl_render_state.hpp329 is unrelated buffer-cleanup text, so do not mistake the
+inventory's diagnostic path for an additional owned row or a current raw-generated line match.
+
+This is the exact GL teardown heritage case already filed above, not a new request. Source declares
+GlRenderState extends RenderState and GlRenderStateRuntime extends RenderStateRuntime. Generated and
+effective native GlRenderState/RenderState and their runtimes independently inherit ReferenceEnabled.
+Their repeated public fields do not create an owner conversion; their EntityRuntimeKey slots also
+name different runtime Ref carriers. The common getRenderStateRuntime must reach the original
+state-attached runtime, proxy source set/maps, registries/miss connection and traversal stack, not a
+second runtime or copied base prefix. Restoring only a state pointer relation while shadowing the
+runtime slot would still split the source's live cells. Carry the complete declared heritage/owner
+relation through that shared runtime access. No cast, copied state/runtime, empty disposal overload,
+side registry or domain restriction can substitute for it.
+
+Keep the source lifetime and failure ordering:
+
+- View destruction first destroys resources.renderTarget, then its original renderState; the context
+  remains caller-owned and is released through the caller's host hook. A target destruction exception
+  prevents the later state call. This builder neither closes the host surface nor replaces the context.
+- destroyGlRenderState returns for the same state already in its weak destroyed set; otherwise it
+  marks it destroyed BEFORE callbacks. Iterate a snapshot of state-runtime teardowns with that same
+  state, then clear their live array. An exception preserves the source's earlier effects/mark; do
+  not add retries, attempt-all cleanup or rollback that the source does not promise.
+- Run common destroyRenderState next on this same state/runtime. It snapshots original proxy sources,
+  disposes each proxy through its actual renderer hooks, clears the registry-miss connection and
+  sets it null, makes effectPaddingResolvers undefined, then clears tempStack. Preserve identities,
+  absence and callback/error order; do not silently skip common teardown or rebuild the proxy domain.
+- Only afterwards decrement the shared context runtime's references. A nonzero count leaves its GL
+  resources alive. On the last reference, run context teardowns in their source iteration order and
+  clear that array, deduplicate authored program handles in a Set, then delete those programs and
+  the authored quad/particle/quad-batch buffers with the same presence guards and order. Preserve
+  resource aliasing, context ownership and exceptions. Do not delete registrant-owned material
+  programs or enumerate/destroy the source's weak texture cache; those are explicitly caller/per-node
+  responsibilities. No stronger cleanup completion guarantee is invented.
+
+The native partial override native-e2e-render_gl-gl_render_state already records that inherited
+teardown is unavailable and fails at instantiation. Its deferred template permits unrelated partial
+uses to compile; the emitted view destroy makes the unsupported boundary concrete. No declaration
+repair applies because the callee exists, and no local call rename/cast or copied owner is carried.
+The view's separate refused createGlRenderViewResources spread/creation is not repaired by this link.
+
+This docs-only missing-link audit retains the recorded **0/1** and original diagnostic; no compiled
+input changed, so no native/header/GL/destruction rerun or fresh failure measurement is claimed. Only
+this cluster, its real view row, worklist134 and this existing-request appendix are updated. The older
+144-header migration count above remains historical, not a new sweep or count for this one-row unit.
