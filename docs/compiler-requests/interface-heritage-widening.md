@@ -523,3 +523,24 @@ through their includes and were not recompiled.
 The same `Sprite` to `NodeAny` same-owner widening is required, keeping the legitimate no-data result. Nothing
 is carried: no adapter that rebuilds the node, no function-pointer cast, no Canvas text or QuadBatch provider,
 and no narrowed domain.
+
+## Site: the GL render-state guards (`@flighthq/render-gl` `enableGlRenderStateGuards.ts`)
+
+Both directions of the missing `GlRenderState : RenderState` heritage meet in one module:
+
+- **Widening.** `areGlRenderStateGuardsEnabled` and `enableGlRenderStateGuards` call
+  `getRenderStateRuntime(state)` with their `GlRenderState`. The emitted call
+  `flight::render::get_render_state_runtime(state)` fails with `no viable conversion from
+  'Ref<GlRenderState>' to 'Ref<RenderState>'` (`enable_gl_render_state_guards.hpp:79`), which is G2
+  cluster `no-viable-conversion-b3064463`. The other two of its three headers (`render_gl/_internal_index.hpp`
+  and `render_gl/contract.hpp`) fail by including it.
+- **Checked recovery.** The guard installed into the base-typed `registries.renderRootGuard` slot,
+  `warnOnSecondRenderRoot(state: RenderState, root: NodeAny)`, asserts `state as GlRenderState` to key its
+  first-root map. It is refused as `cpp-reference-assertion-without-heritage`.
+
+Substituting `get_gl_render_state_runtime` at the call would pick an owner the source does not name. A
+pointer cast, a copied base owner or an always-false guard would each misstate the guard, so nothing is
+patched or overridden. With real heritage the call widens implicitly, and the guard's assertion becomes
+the checked derived-owner recovery described above. The comparison `guard === warnOnSecondRenderRoot` then
+also needs the callable identity of
+[local-handler-callable-identity](local-handler-callable-identity.md).

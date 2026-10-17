@@ -90,7 +90,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 61 | `missing-member-b22d5c52` | 3 | 2D | declaration repair (applied) | refused callee `resolve_canvas_texture_window_source` declared across modules; G2: 0 pass; follow-on `missing-member-f497840c` fixed by correcting a source patch; all 3 now in `missing-member-b1a6d5cf`; function remains unlinkable |
 | 62 | `missing-member-c36ea2d4` | 3 | 2D | binding | the web renderer needs shared CSS style state; SDL exposes copied shell values with no opacity field *(request filed)* |
 | 63 | `no-viable-conversion-4ca7626f` | 3 | ANIM | compiler | a value is passed where its declared type cannot receive it |
-| 64 | `no-viable-conversion-b3064463` | 3 | GL | compiler | a value is passed where its declared type cannot receive it |
+| 64 | `no-viable-conversion-b3064463` | 3 | GL | compiler | `GlRenderState` passed where `RenderState` is declared; the emitter flattens the heritage *(existing request linked)* |
 | 65 | `no-viable-conversion-b3f3c7c6` | 3 | 3D | compiler | a value is passed where its declared type cannot receive it |
 | 66 | `no-viable-conversion-b5b698fe` | 3 | 2D | compiler | a value is passed where its declared type cannot receive it |
 | 67 | `other-3d2efc1d` | 3 | 2D | [compiler request](compiler-requests/erased-array-element-reading.md) | the emitter indexes a still-erased `flight::Any` after `Array.isArray` instead of using the runtime's exact-array recovery |
@@ -1506,6 +1506,19 @@ permissive assignment or always-default style behavior was supplied. Text layout
 - fix route: compiler
 - first failure at: `flight/render_gl/enable_gl_render_state_guards.hpp:79`
 - example: `no viable conversion from 'Ref<GlRenderState>' to 'Ref<RenderState>'`
+- existing request linked: [interface heritage widening](compiler-requests/interface-heritage-widening.md) (site added)
+
+`enableGlRenderStateGuards.ts` calls `getRenderStateRuntime(state)` with its `GlRenderState`. That is a
+derived-to-base widening, and the emitter cannot make it because it flattens
+`GlRenderState : RenderState`. The guard it installs into the base-typed `renderRootGuard` slot asserts
+`state as GlRenderState`, which is refused as `cpp-reference-assertion-without-heritage`. There is no
+faithful local fix:
+- substituting `get_gl_render_state_runtime` would pick an owner the source does not name;
+- a cast, a copied base owner or an always-false guard would misstate the guard.
+
+`_internal_index.hpp` and `contract.hpp` fail by including this header.
+
+**G1 status retained: 0/3 pass, 3 fail.** No code changed, so no recompile was run.
 
 ### 65. `no-viable-conversion-b3f3c7c6` — 3 header(s)
 
