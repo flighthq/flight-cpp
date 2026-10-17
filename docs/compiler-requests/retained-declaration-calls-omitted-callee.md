@@ -746,3 +746,41 @@ or substitute handler is carried, and no generation change needs reproducing. Th
 supply the faithful original handler or report its dependent family/preset unavailable coherently;
 removing the material element from the full-support preset must not be reported as completed support.
 Both original rows remain failed, with no header gain or native material behavior claim.
+
+## G2 MD2 skin family retains its refused binding
+
+At compiler `806d257` / Flight `a627849`, original cluster `undeclared-identifier-7ce7bd18`
+contains `scene3d_formats/md2_section_registry.hpp` and `md2_skin_handler.hpp`. The completed
+Clang 22.1.8 check at one worker is **0/2 pass, 2 fail, 0 unattempted**; both report
+`use of undeclared identifier 'md2_skin_handler'` at the skin header's line 123.
+`NOT GENERATED: variable (binding) -- source line 21` replaces the handler, refused as
+`cpp-reference-assertion-without-heritage` at the actual `BlinnPhongMaterial` to `Material` assertion.
+The [existing heritage request](interface-heritage-widening.md#g2-md2-skin-handler-reaches-the-same-material-owner-boundary)
+records the independently inspected owner defect and the distinct MD2 record/material/diagnostic contract.
+The byte-path reader itself emits; its availability does not supply the omitted collecting callback.
+
+The retained inline `md2_skin_family` globally initializes its one element from the omitted handler.
+The full-support section registry includes this header and spreads the skin family before the animation
+family; that source ordering matters for mesh material binding. The actual sibling
+`md2_animation_handler` has the same declared `Readonly<Md2SectionHandler>` source type and emits the
+exact carrier used for this external declaration candidate:
+
+```cpp
+extern flight::StructuralRef<flight::RowReadonly<
+    flight::RowOf<flight::Ref<flight::types::Md2SectionHandler>>>> md2_skin_handler;
+```
+
+The existing `insert-forward-declaration` engine in scratch, guarded by the exact skin-handler refusal
+marker, inserts only this declaration in the package namespace and reaches a fixed point. The original
+path reader and global family initializer remain byte-for-byte intact. The actual-header program with
+only its include and `int main() { return 0; }` compiled to an object, but its required unused-header positive link failed.
+The linker reports exactly one undefined symbol, `flight::scene3d_formats::md2_skin_handler`, from
+`__cxx_global_var_init` in the retained family initializer. Main neither accesses the family nor
+invokes the collecting callback. This is a failed positive prerequisite, not a successful explicit-use
+negative-link test; the independently measured MD2 boundary reaches the same disposition as MD5.
+
+The declaration candidate is rejected. No repair entry, generated C++, manifest, source patch, override
+or substitute skin/material/body is carried. Faithful handler emission or coherent refusal of its
+dependent family/preset is required; silently removing the skin element from the full-support preset
+would lose named materials, first binding, alternate skins and diagnostics. Both original rows remain
+failed, with no header gain or native skin/material behavior claim.

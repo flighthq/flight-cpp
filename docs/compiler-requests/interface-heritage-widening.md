@@ -324,3 +324,30 @@ an unrelated native pointer cast, side storage, omitted material handler or an e
 does not implement this source. The separate
 [retained-binding request](retained-declaration-calls-omitted-callee.md#g2-md5-material-family-retains-a-refused-binding)
 records why declaring the omitted handler does not by itself make its header safe to link.
+
+## G2 MD2 skin handler reaches the same material owner boundary
+
+At compiler `806d257` / Flight `a627849`, `scene3d-formats/md2SkinHandler.ts:21`
+independently refuses its whole `md2SkinHandler` binding as
+`cpp-reference-assertion-without-heritage`. The actual diagnostic again identifies the factory's
+`Ref<BlinnPhongMaterial>` asserted to `Ref<Material>`; `MaterialLike` storage also names
+`Ref<Material>`. The source's `BlinnPhongMaterial extends Material3D extends Material` relation is
+absent from those three independent emitted native owners. The common owner defect is measured at
+this module, rather than inferred from the MD5 disposition above.
+
+MD2's callback has a different contract. It reads up to `numSkins` fixed 64-byte records starting at
+`offSkins`, checks each complete record against the original byte length before decoding its
+NUL-terminated path with `String.fromCharCode`, reports a truncated record and stops at that point.
+Empty names create no material; their count and first record index produce one post-loop diagnostic,
+including after a truncation break. Each non-empty name creates one Blinn-Phong material with an
+external texture reference using the original document resource array and null base path. The name
+is retained as authored identity, the material's pre-append index is captured, and that same material
+is appended to the document in record order. Only an empty `meshMaterials` array receives that index,
+so alternate skins remain in the document and existing mesh bindings are preserved.
+
+Faithful emission must keep all concrete material fields, object/resource/array identities, byte
+bounds, diagnostic aggregation and append/binding order. Omitting alternate skins, substituting a
+base-prefix material or empty callback, narrowing the record domain, or dropping the skin handler
+from the full-support preset cannot satisfy that contract. The separate
+[retained-binding request](retained-declaration-calls-omitted-callee.md#g2-md2-skin-family-retains-its-refused-binding)
+records the actual declaration/link prerequisite for this module.
