@@ -1057,3 +1057,25 @@ renderer stores it; generic-versus-GL callbacks and full ShapeRuntime remain unp
 No extra declaration or positive/negative link result for the draw was tested. Preserve complete
 commands/grid, provider replay/dispatch/fallback, dirty size/scale/pixelRatio/revision checks and actual
 surface/Image/GPU lifecycle, rather than substituting empty raster data or mesh-only support.
+
+## G2 GL QuadBatch retains its refused submit callback
+
+At Flight `a627849` / compiler `806d257`, `scene2d_gl/gl_quad_batch.hpp` omits `submitGlQuadBatch`
+under the nullable Material2D-to-Material heritage rule but stores `.submit = submit_gl_quad_batch`
+in its inline renderer aggregate. Original1 remains0/1, Clang22.1.8 jobs1, at missing submit191.
+The exact source signature is `void submit_gl_quad_batch(Ref<GlRenderState>, Ref<RenderProxy2D>);`.
+
+The existing declaration repair finds no direct call and correctly rejects the exact aggregate
+`retainedReference`, which is not a callback in a function-argument position. No witness extension
+is proposed. One scratch actual unused include with only that declaration fails compilation at
+`.create_data` (candidate193): `noop_renderer_data(RenderState, NodeAny)` cannot initialize the
+Sprite-taking slot. See the [existing callback owner request](interface-heritage-widening.md#g2-gl-quadbatch-create-data-callback).
+No positive unused-header link/run or qualified called-function negative-link is reached. The later
+submit callback's GlRenderState versus generic RenderState is inspected by type, not another actual
+first-error result. No declaration/normal generation/body or callable renderer is carried.
+
+The [material owner refusal](compiler-interface-heritage-owner-widening.md#g2-gl-quadbatch-material-owner)
+remains separate. Preserve full QuadBatch/atlas/array/runtime owners, both transform modes and rotation
+directions, invalid-instance skipping and compact valid packets, post-prepare material/color indices,
+source-index per-quad fallback and final actual drawCount. An empty submit, fake packets, Sprite/base
+copy or narrowed atlas/color domain would not implement that source.

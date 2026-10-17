@@ -211,7 +211,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 182 | `undeclared-identifier-66ea97f8` | 1 | WGPU | runtime | the emitted code names `initialize_wgpu_screen_render_target`, which nothing declares |
 | 183 | `undeclared-identifier-67f2c521` | 1 | GL | runtime | the emitted code names `gl_god_rays_effect_runner`, which nothing declares |
 | 184 | `undeclared-identifier-6ad30a3d` | 1 | GL | runtime | the emitted code names `gl_crt_effect_runner`, which nothing declares |
-| 185 | `undeclared-identifier-6dd20ce4` | 1 | 2D | runtime | the emitted code names `submit_gl_quad_batch`, which nothing declares |
+| 185 | `undeclared-identifier-6dd20ce4` | 1 | 2D | compiler | QuadBatch submit refuses nullable material owner widening; exact declaration compile fails NodeAny/Sprite callback carrier *(existing requests extended)* |
 | 186 | `undeclared-identifier-757c2c8a` | 1 | 2D | compiler | private Scale9 shape owner recovery refused; exact declaration compile fails native texture-cache local carrier *(requests filed)* |
 | 187 | `undeclared-identifier-785ed669` | 1 | PLAT | runtime | the emitted code names `resolve_quad_batch_instance_index`, which nothing declares |
 | 188 | `undeclared-identifier-7905640c` | 1 | 2D | compiler *(existing request)* | refused `canvasClipHooks` (RenderState asserted to CanvasRenderState without heritage) still stored; all clip callees emitted |
@@ -3169,14 +3169,39 @@ rejected declaration with unchanged production code, and no scale9 behavior or o
 - first failure at: `flight/effects_gl/gl_crt_effect.hpp:92`
 - example: `use of undeclared identifier 'gl_crt_effect_runner'`
 
-### 185. `undeclared-identifier-6dd20ce4` — 1 header(s)
+### 185. `undeclared-identifier-6dd20ce4` — 1 header, compiler-owned
 
-- cause: the emitted code names `submit_gl_quad_batch`, which nothing declares
-- subject: `submit_gl_quad_batch`
-- lanes: 2D
-- fix route: runtime
-- first failure at: `flight/scene2d_gl/gl_quad_batch.hpp:191`
-- example: `use of undeclared identifier 'submit_gl_quad_batch'`
+The scoped stock header remains **1 attempted / 0 pass / 1 fail / 0 unattempted**, Clang22.1.8,
+jobs **1**, 67 seconds, at missing `submit_gl_quad_batch:191`. Submit refuses
+`cpp-contextual-union-interface-heritage-carrier-unrepresented` at nullable `Material2D` to `Material`
+owner widening during quad-material resolution. The original material cannot be retagged, copied to
+a base prefix or replaced by a default. See the existing [material owner request](compiler-requests/compiler-interface-heritage-owner-widening.md#g2-gl-quadbatch-material-owner).
+
+The retained `.submit = submit_gl_quad_batch` is an aggregate field, not a direct call or supported
+function-argument `retainedReference`. The existing matcher finds no call and the loader rejects that
+exact aggregate witness. A separate scratch include with only the exact source declaration
+`void submit_gl_quad_batch(Ref<GlRenderState>, Ref<RenderProxy2D>);` fails compilation at `.create_data`
+(candidate193): `noop_renderer_data(RenderState, NodeAny)` cannot initialize the
+`SpriteRenderer` callback taking `(RenderState, Sprite)`. This is the existing
+[callback owner conversion](compiler-requests/interface-heritage-widening.md#g2-gl-quadbatch-create-data-callback),
+not a positive link or called-function negative-link result. The declaration is rejected; no repair,
+normal generation, callback cast or new witness is carried. [Retained aggregate evidence](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-gl-quadbatch-retains-its-refused-submit-callback)
+also records the later inspected generic RenderState versus GLstate submit domain.
+
+The source proxy must retain its complete QuadBatch and original atlas, ids/transforms/materialData
+arrays and GL writer runtime. A Sprite copy or narrowed transform/color/atlas subset cannot replace
+that owner. Preserve actual atlas/texture/source/count guards, texture/sampler/working-color/alpha,
+vector2 and affine parent composition, both 90-degree region rotations, UV and width/height handling,
+id-range/nonpositive-region skips, and compact valid-instance packet order. `prepareGlQuadBatchWrite`
+may flush; material/color writes must use its returned start plus `drawCount`, while source per-quad
+color lookup still uses input index `i`. Keep per-quad color/Tint/number-array override, then node
+color-matrix, then node scale-bias fallback, original materialData references/alpha, stride and final
+count increment by actual valid draws, not reserved instanceCount. No fake packets or draw behavior.
+
+Only this row/cluster, report185 and appended sections in three existing requests change. Historical
+sweep/carry totals and all foreign products remain unchanged. No positive unused-header link/run,
+qualified negative link, new source/runtime/override/body or native packet/drawing proof is claimed;
+no unchanged old/global checks were rerun.
 
 ### 186. `undeclared-identifier-757c2c8a` — 1 header, compiler-owned
 

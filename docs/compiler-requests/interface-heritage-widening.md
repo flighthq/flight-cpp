@@ -375,3 +375,24 @@ The original one-header check is **0/1 pass** at the earlier erased Any iteratio
 records that measured boundary, the independently refused collector/helpers and the complete
 image/unweighted/weighted/alternate-skin/remap/recovery contract. No C++ declaration, body, heritage
 repair or runtime/parser behavior is supplied or tested here.
+
+## G2 GL QuadBatch create-data callback
+
+At Flight `a627849` / compiler `806d257`, `gl_quad_batch.hpp` stores the existing
+`noop_renderer_data` as `SpriteRenderer.create_data`. Both return
+`optional<Ref<RendererData>>` and take `Ref<RenderState>`, but the actual function's source argument
+is `NodeAny` (`shared_ptr<Node<Any>>`) while the callback slot takes `Ref<Sprite>`. The independent
+native Sprite owner does not implicitly convert to that widest Node owner, so the callable is not
+invocable with the slot's declared arguments. An exact-declaration-only scratch actual unused header
+fails this conversion first at `.create_data` (candidate193); production original1 stays0/1 at the
+earlier missing submit191, Clang22.1.8 jobs1. No native link boundary is reached.
+
+Faithful declared heritage/owner-view or callback adaptation must preserve the same node and the
+legitimate no-renderer-data result; casting a function pointer or fabricating a copied Node is not
+that conversion. The source submit itself owns a complete QuadBatch, not a Sprite replacement.
+Its GLstate-versus-generic-state submit seam is only inspected later and needs the existing
+[typed callback/backend contract](readonly-callback-derived-owner-recovery.md).
+
+The submit body independently refuses [nullable material-owner widening](compiler-interface-heritage-owner-widening.md#g2-gl-quadbatch-material-owner).
+See [retained aggregate qualification](retained-declaration-calls-omitted-callee.md#g2-gl-quadbatch-retains-its-refused-submit-callback)
+for the rejected declaration candidate. No callback adapter, new body or packet/drawing support is supplied.

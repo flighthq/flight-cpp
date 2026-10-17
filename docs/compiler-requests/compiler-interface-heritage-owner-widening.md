@@ -232,3 +232,24 @@ Clang22.1.8 jobs1. An exact declaration-only actual unused-header candidate inst
 its create-data callback before link, so no declaration/normal generation or body is supplied.
 See [aggregate callback evidence](retained-declaration-calls-omitted-callee.md#g2-gl-scale9-sprite-retains-a-refused-aggregate-callback)
 and [native/backend owner carriers](readonly-callback-derived-owner-recovery.md#g2-scale9-sprite-native-sprite-callbacks-are-not-generic-renderer-callbacks).
+
+## G2 GL QuadBatch material owner
+
+At Flight `a627849` / compiler `806d257`, `scene2d-gl/glQuadBatch.ts:26` refuses all of
+`submitGlQuadBatch` as `cpp-contextual-union-interface-heritage-carrier-unrepresented` at nullable
+Material2D-to-Material widening. The proxy's original material feeds quad-renderer selection and the
+same batch's prepare call; matching flattened entity/kind/name fields do not create C++ heritage or
+permit a base copy/default material. Preserve owner identity, null and the selected registered renderer.
+
+The complete QuadBatch/data and original atlas/texture, ids/transforms and per-quad materialData must
+survive. Source vector2 and affine instance transforms compose with the original parent, atlas regions
+retain both clockwise/counterclockwise UV mappings, invalid ids and nonpositive regions do not write
+packets, and valid packets stay compact. After prepare can flush, material/color writes use returned
+startInstance plus valid drawCount, while per-quad color lookup uses original input index. Preserve
+per-quad ColorScaleBias/Tint/readonly-number-array versus node matrix/scale-bias fallback, working color,
+sampler/straight alpha, proxy alpha and final valid-draw count. No copied Sprite, material or arrays.
+
+Original1 remains0/1 at missing submit191, Clang22.1.8 jobs1. Its exact declaration-only actual unused
+include fails the [NodeAny-to-Sprite callback conversion](interface-heritage-widening.md#g2-gl-quadbatch-create-data-callback)
+before link. The [retained aggregate request](retained-declaration-calls-omitted-callee.md#g2-gl-quadbatch-retains-its-refused-submit-callback)
+records why no declaration repair, normal generation, fake packet or usable submission claim is carried.
