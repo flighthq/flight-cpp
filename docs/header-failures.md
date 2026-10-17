@@ -114,7 +114,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 85 | `other-86d0b50b` | 5 | 2D, 3D | [compiler request](compiler-requests/object-literal-into-outcome-variant.md) | SceneCoverageEntry literals initialize the outer variant instead of a selected concrete reference arm |
 | 86 | `redefinition-caa49360` | 2 | 3D | runtime | a declaration is emitted twice |
 | 87 | `undeclared-identifier-1048386b` | 2 | 3D | runtime | the emitted code names `md5_material_handler`, which nothing declares |
-| 88 | `undeclared-identifier-20fa691d` | 2 | 2D | runtime | the emitted code names `draw_gl_raster_shape`, which nothing declares |
+| 88 | `undeclared-identifier-20fa691d` | 2 | 2D | compiler | refused raster draw referenced by retained renderer; exact declaration fails native/generic callback carrier conversion *(existing requests)* |
 | 89 | `undeclared-identifier-225478b5` | 2 | 2D | compiler | refused bitmap-text submit callback lacks a declaration; exact declaration still exposes incompatible renderer callback carriers *(existing requests)* |
 | 90 | `undeclared-identifier-3e98002c` | 2 | 3D | runtime | the emitted code names `initialize_awd2_parse_state`, which nothing declares |
 | 91 | `undeclared-identifier-644a9b33` | 2 | 2D | runtime | the emitted code names `clip_programs`, which nothing declares |
@@ -1843,14 +1843,29 @@ and retain all source spread fields; no permissive runtime constructor or incomp
 - first failure at: `flight/scene3d_formats/md5_material_handler.hpp:69`
 - example: `use of undeclared identifier 'md5_material_handler'`
 
-### 88. `undeclared-identifier-20fa691d` — 2 header(s)
+### 88. `undeclared-identifier-20fa691d` — 2 header(s), compiler route
 
-- cause: the emitted code names `draw_gl_raster_shape`, which nothing declares
-- subject: `draw_gl_raster_shape`
-- lanes: 2D
-- fix route: runtime
-- first failure at: `flight/scene2d_gl/gl_raster_shape_renderer.hpp:173`
-- example: `use of undeclared identifier 'draw_gl_raster_shape'`
+Scoped Clang22.1.8, one worker: **2 attempted / 0 pass / 2 fail / 0 unattempted**. Both
+`scene2d_gl/gl_raster_shape_renderer.hpp` and `scene2d_gl/gl_shape.hpp` fail at the former's
+line173, `use of undeclared identifier 'draw_gl_raster_shape'`.
+
+The [retained-callee request](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-raster-shape-declaration-witness-is-valid-but-callback-carriers-fail)
+now records the exact cross-header `calledFrom` witness in `gl_shape.hpp`. The existing repair
+mechanism matches, but a scratch unused header with only the exact draw declaration fails at
+`.create_data`: native `optional<ErasedRef>(Ref<GlRenderState>, Node2D)` cannot initialize generic
+`optional<Ref<RendererData>>(Ref<RenderState>, Node2D)` callback storage. No unused-header positive
+link or missing-body negative-link boundary was reached; no declaration repair is carried.
+
+The draw body remains refused at a [null-presence property test](compiler-requests/nullable-optional-presence.md#g2-raster-shape-null-presence-refusal).
+The ledger identifies only `property`, not the exact null test, so no source cell is guessed.
+[Typed backend/data owner recovery](compiler-requests/readonly-callback-derived-owner-recovery.md#g2-raster-shape-native-and-generic-renderer-callbacks)
+records the callback boundary. The existing native shape-data override remains partial: raster
+surfaces, image upload and raster-resource teardown are unavailable. Full command replay, pixelRatio
+invalidation, cache resource deletion, image versioning, bounds/alpha/material/color batching and
+real texture/quad submission are still required; no fake draw, copied owner or narrowed scene is supplied.
+
+Only owned2 rows/cluster/report slice and existing requests changed. Historical/foreign products and
+all measured C++ inputs remain unchanged; no generation, broad sweep or old live baseline rerun.
 
 ### 89. `undeclared-identifier-225478b5` — 2 header(s), compiler route
 

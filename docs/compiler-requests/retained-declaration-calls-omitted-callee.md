@@ -628,3 +628,27 @@ The [heritage callback conversion](interface-heritage-widening.md#g2-gl-bitmap-t
 and [typed runtime/backend owners](readonly-callback-derived-owner-recovery.md#g2-gl-bitmap-text-needs-its-own-runtime-owner)
 need faithful carriers first. The body remains refused; declaration availability must not be reported
 as glyph submission, texture/material binding or actual GL rendering behavior.
+
+## G2 raster shape declaration witness is valid but callback carriers fail
+
+At compiler `806d257` / Flight `a627849`, original cluster `undeclared-identifier-20fa691d`
+contains `scene2d_gl/gl_raster_shape_renderer.hpp` and `scene2d_gl/gl_shape.hpp`. Both still fail on
+`draw_gl_raster_shape` at the former's line173 (Clang22.1.8 jobs1:2 attempted,0 pass,2 fail,0 unattempted).
+The source signature is `void draw_gl_raster_shape(Ref<GlRenderState>, Ref<RenderProxy2D>);`.
+
+The exact `drawGlRasterShape` refusal marker is in the raster module; `gl_shape.hpp` includes it
+and retains a qualified direct call. An in-memory use of existing `declare-refused-function` with
+`calledFrom: ["flight/scene2d_gl/gl_shape.hpp"]` matches only the raster header and adds only that
+declaration. This witness is valid even though the local renderer binding stores a function value.
+
+A scratch unused include with only the exact declaration still fails compilation at `.create_data`:
+`create_gl_shape_data` returns `optional<ErasedRef>` and accepts `Ref<GlRenderState>, Node2D`, while
+`Scene2DRenderer.create_data` expects `optional<Ref<RendererData>>` from `Ref<RenderState>, Node2D`.
+Thus the witness is not enough to satisfy the required positive unused-header link; no negative-link
+boundary is reached and no declaration repair or repair-engine change is carried. The later destroy
+and submit callback differences are type inspection, not additional native diagnostics.
+
+The [body's null-presence refusal](nullable-optional-presence.md#g2-raster-shape-null-presence-refusal)
+and [backend/data owner carriers](readonly-callback-derived-owner-recovery.md#g2-raster-shape-native-and-generic-renderer-callbacks)
+remain open. Native raster lifecycle debt is explicit in the existing partial shape-data override;
+a declaration must not be presented as full rasterization or actual texture/material/quad submission.

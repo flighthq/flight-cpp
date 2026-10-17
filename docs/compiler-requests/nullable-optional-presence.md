@@ -148,3 +148,25 @@ The emitter should lower `x === 'lit'` over a nullable carrier as "present and e
 `x !== null && x === 'lit'` already emits. Affected: `@flighthq/particles-formats` `spineSerialize.ts`
 (`configToSpineBlendMode`) and `starlingPexSerialize.ts` (`configToDocument`). They are carried by the
 `particles-formats-spine-blend-mode-present` and `particles-formats-pex-blend-mode-present` source patches.
+
+## G2 raster shape null-presence refusal
+
+At compiler `806d257` / Flight `a627849`, `drawGlRasterShape` in
+`packages/scene2d-gl/src/glRasterShapeRenderer.ts:27` remains refused as
+`cpp-presence-test-without-absence-storage`: a presence test against null has no absence channel in
+storage for `property`. Both the header comment and refusal ledger omit the exact tested property;
+the module-start location is not evidence for selecting one particular expression.
+
+The source checks nullable renderer data, canvas/image capabilities and raster image/surface values.
+The declared host capabilities and renderer-data slots here are `T | null`, so the shared rule does
+not establish an optional-and-nullable three-state case. Preserve the actual declared absence domain
+and emit its null test; do not silently fold it to a constant, replace a strict test with truthiness,
+or guess a source patch from the unlocalized message.
+
+The raster strategy replays every registered canvas command into real offscreen pixels. Its revision,
+size and pixelRatio checks control surface recreation, GL cache deletion and image invalidation before
+texture/quad submission. Those semantics and owner identities survive any presence repair. The existing
+native shape-data override explicitly leaves raster surfaces, image upload and teardown unavailable;
+no drawing implementation is supplied by this audit. The two headers remain 0/2 and the
+[declaration-only candidate](retained-declaration-calls-omitted-callee.md#g2-raster-shape-declaration-witness-is-valid-but-callback-carriers-fail)
+also fails before linking.

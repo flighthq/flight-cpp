@@ -100,3 +100,22 @@ one worker). A declaration-only probe fails earlier at the separate
 [create-data owner conversion](interface-heritage-widening.md#g2-gl-bitmap-text-renderer-create-data-callback).
 No renderer implementation or declaration repair is carried; see the
 [retained aggregate callback boundary](retained-declaration-calls-omitted-callee.md#g2-gl-bitmap-text-retains-a-refused-callback-in-an-aggregate).
+
+## G2 raster shape native and generic renderer callbacks
+
+The current `gl_shape_data.hpp` override preserves its actual `GlShapeRendererData` owner through
+`ErasedRef`; its create callback returns `optional<ErasedRef>` from `(Ref<GlRenderState>, Node2D)`.
+The emitted `Scene2DRenderer.create_data` instead requires `optional<Ref<RendererData>>` from
+`(Ref<RenderState>, Node2D)`. One scratch raster header with only its missing draw declaration
+fails compiling this exact callback conversion before reaching a link step (Clang22.1.8).
+
+The same typed-owner/checked-dispatch requirement above applies to backend state and renderer data.
+A callback must keep the GL state, its exact renderer-data allocation and the complete Node2D domain;
+casting function pointers, copying base data or reinterpreting every generic state as GL proves none
+of these. Destroy/submit carrier differences are visible by type inspection but were not reached by
+the first-error probe. The existing native shape-data partial carry supplies mesh lifecycle only,
+and throws for raster resource teardown; full raster acquisition/upload/replay/lifecycle remains debt.
+
+See the [valid but insufficient declaration witness](retained-declaration-calls-omitted-callee.md#g2-raster-shape-declaration-witness-is-valid-but-callback-carriers-fail)
+and [separate body presence refusal](nullable-optional-presence.md#g2-raster-shape-null-presence-refusal).
+No callback adapter, fake draw or rendering implementation was carried.
