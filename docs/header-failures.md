@@ -89,7 +89,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 60 | `missing-member-95ead583` | 3 | 3D | [compiler request](compiler-requests/cube-texture-width-and-completeness.md#g2-gl-environment-face-revisions-use-the-same-selected-owner-read) | nullable cube-face source retains seven real owners, but version is read on the variant itself |
 | 61 | `missing-member-b22d5c52` | 3 | 2D | declaration repair (applied) | refused callee `resolve_canvas_texture_window_source` declared across modules; G2: 0 pass; follow-on `missing-member-f497840c` fixed by correcting a source patch; all 3 now in `missing-member-b1a6d5cf`; function remains unlinkable |
 | 62 | `missing-member-c36ea2d4` | 3 | 2D | binding | the web renderer needs shared CSS style state; SDL exposes copied shell values with no opacity field *(request filed)* |
-| 63 | `no-viable-conversion-4ca7626f` | 3 | ANIM | compiler | a value is passed where its declared type cannot receive it |
+| 63 | `no-viable-conversion-4ca7626f` | 3 | ANIM | compiler *(request filed)* | `target as MovieClip` view passed to `Ref<MovieClip>` parameters without the checked recovery cast |
 | 64 | `no-viable-conversion-b3064463` | 3 | GL | compiler | `GlRenderState` passed where `RenderState` is declared; the emitter flattens the heritage *(existing request linked)* |
 | 65 | `no-viable-conversion-b3f3c7c6` | 3 | 3D | override bridges (fixed) | a value is passed where its declared type cannot receive it; G2: 2 pass, 1 to `call-has-no-matching-3882b3e9` |
 | 66 | `no-viable-conversion-b5b698fe` | 3 | 2D | compiler | G2: recorded 0/3 retained; guarded Shape JSON Any array needs identity-preserving element reads; docs-only, no rerun |
@@ -1611,13 +1611,17 @@ test was recompiled. Only the three owned rows gained location/request links, an
 route/cause now records the actual host binding boundary. No DOM renderer, copied element,
 permissive assignment or always-default style behavior was supplied. Text layout/GL work is untouched.
 
-### 63. `no-viable-conversion-4ca7626f` — 3 header(s)
+### 63. `no-viable-conversion-4ca7626f` — G2 recheck of 3 header(s)
 
-- cause: a value is passed where its declared type cannot receive it
+- cause: in `swfFrameAction.ts`, `target as MovieClip` (a `Node2D` downcast) is kept as a writable structural view over the same owner, then passed to the `stop`, `play`, `next` and `prev` movie-clip functions, whose parameter is `Ref<MovieClip>`, without recovery.
+- subject: `stop_movie_clip`
 - lanes: ANIM
 - fix route: compiler
+- why this route: the runtime's checked `structural_ref_cast<Ref<T>>` recovery exists. A scratch copy with only those six recoveries compiles. But it throws `bad_cast` where the TypeScript assertion is unchecked, so choosing that exception shape is the emitter's call. A repair or override would choose it silently, and an implicit runtime conversion would change overload resolution SDK-wide.
 - first failure at: `flight/swf/swf_frame_action.hpp:88`
 - example: `no viable conversion from 'StructuralRef<RowWritable<RowOf<Ref<MovieClip>>>>' to 'Ref<MovieClip>'`
+- Scoped native recheck (GCC 15.2, jobs 1): **1 attempted / 0 pass / 1 fail** at `swf_frame_action.hpp:88`, which carries the measured location. `swf_script_handler` and `swf_script_tag_family` include it. They were not recompiled, keep their recorded failure, and are given no location. Nothing is carried.
+- compiler request: `docs/compiler-requests/asserted-row-view-into-nominal-parameter.md`
 
 ### 64. `no-viable-conversion-b3064463` — 3 header(s)
 
