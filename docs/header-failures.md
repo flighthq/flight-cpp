@@ -67,7 +67,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 38 | `no-viable-overload-658901de` | 5 | 2D, GL | override/runtime (fixed) | concrete glass extension storage and Canvas paint variants repaired; G2: 4 pass, 1 compiler failure |
 | 39 | `call-has-no-matching-4ce2cc01` | 4 | ANIM | compiler *(existing request)* | asserted record lowered to a `NamedProperties` view but the Spine timeline handler parameter to an owning `Record<String, Any>` |
 | 40 | `call-has-no-matching-82244b93` | 4 | 2D | compiler *(existing request)* | DOM/Canvas render states passed to `get_or_create_render_proxy_2d(Ref<RenderState>, …)` without emitted heritage |
-| 41 | `call-has-no-matching-9248dccf` | 4 | ANIM | compiler | the emitted call to `get_node_world_matrix4` matches no declared overload |
+| 41 | `call-has-no-matching-9248dccf` | 4 | ANIM | compiler *(existing request)* | generic `get_node_world_matrix4<Node3DTraits>` call vs the native transform override API; runtime-owner boundary |
 | 42 | `call-has-no-matching-9ebeb95c` | 4 | ANIM, GL | compiler | the emitted call to `get_transform_2d_runtime` matches no declared overload |
 | 43 | `call-has-no-matching-c3aea71c` | 4 | 2D, GL | compiler | the emitted call to `structural_ref_cast` matches no declared overload |
 | 44 | `no-viable-conversion-5903ce63` | 4 | 3D, GL | override re-derivation (fixed) | shading modifier callbacks and registrations now match the patched `ReadonlyModifierValue` / `ModifierDefinitionValue` domains; G2: 4/4 pass |
@@ -1063,14 +1063,20 @@ rank remain historical, and `previousCluster` retains this original group.
 - Scoped native recheck (GCC 15.2, jobs 1): **2 attempted / 0 pass / 2 fail** at `dom_cssfilter_binding.hpp:39` and `canvas_cssfilter_binding.hpp:45`, which carry measured locations. The DOM `contract` and `_internal_index` reach the DOM root through their includes. They were not recompiled, keep their recorded failure, and are given no location. Nothing is carried.
 - compiler request: `docs/compiler-requests/interface-heritage-widening.md`
 
-### 41. `call-has-no-matching-9248dccf` — 4 header(s)
+### 41. `call-has-no-matching-9248dccf` — G2 recheck of 4 header(s)
 
-- cause: the emitted call to `get_node_world_matrix4` matches no declared overload
+- cause: `updateParticleEmitter3D` calls `get_node_world_matrix4<Node3DTraits>` on the emitter, cast to a merged row whose runtime-key member is a particleemitter-local struct. The native `node_transform3d.hpp` override that shadows the generated header offers `template <typename Target>` returning `Ref<Matrix4>`, so the explicit trait binds as `Target`.
 - subject: `get_node_world_matrix4`
 - lanes: ANIM
 - fix route: compiler
+- why this route: two scratch probes were tried and neither was carried.
+  - A forwarding overload for an explicit `Traits` only exposes the override's result and runtime-target mismatches.
+  - The generated `node_transform3d.hpp` fails at its own runtime-owner rows.
+  - This is the particleemitter site already analysed in [node-transform-runtime-owner-argument](compiler-requests/node-transform-runtime-owner-argument.md), behind [generic-structural-parameter-given-a-narrower-row](compiler-requests/generic-structural-parameter-given-a-narrower-row.md). It needs the runtime-owner decision, not an adapter.
 - first failure at: `flight/particleemitter/update_particle_emitter_3d.hpp:112`
 - example: `no matching function for call to 'get_node_world_matrix4'`
+- Scoped native recheck (GCC 15.2, jobs 1): **1 attempted / 0 pass / 1 fail** at `update_particle_emitter_3d.hpp:112`, which carries the measured location. `prewarm_particle_emitter_3d`, `contract` and `_internal_index` were not recompiled, keep their recorded failure, and are given no location. No override, generated or runtime change is carried.
+- compiler request: `docs/compiler-requests/node-transform-runtime-owner-argument.md`
 
 ### 42. `call-has-no-matching-9ebeb95c` — 4 header(s)
 

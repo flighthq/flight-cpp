@@ -70,6 +70,29 @@ readonly merged row whose runtime-key member is a particleemitter-local concrete
 is [a generic structural parameter given a narrower row](generic-structural-parameter-given-a-narrower-row.md); this
 request applies again only once it is past.
 
+### G2: the 3D site under the native transform override (GCC 15.2)
+
+Cluster `call-has-no-matching-9248dccf` (4 particleemitter headers) is this site. With the shadowing
+`overrides/include/flight/node/node_transform3d.hpp` in the include path,
+`update_particle_emitter_3d.hpp:112` calls `get_node_world_matrix4<flight::Ref<flight::types::Node3DTraits>>(...)`.
+That call fails against the override's native `template <typename Target> get_node_world_matrix4(const Target&)`:
+the explicit trait is bound as `Target`, so the cast node row would have to initialize
+`const Ref<Node3DTraits>&` (GCC 15.2, one worker: 1 attempted, 0 pass, 1 fail).
+
+Two scratch probes show this is not a bounded fix, and neither was carried:
+- A forwarding overload that takes an explicit `Traits` resolves the call but exposes the next mismatches:
+  - the override returns `Ref<Matrix4>` where the emitted caller reads `row_get<"m">` from the generated
+    readonly `Matrix4` row;
+  - the override's `runtime(target)` does not accept this merged structural target;
+  - line 117 repeats the same pattern for the local matrix.
+- Compiling against the generated `node_transform3d.hpp` instead fails inside that header, at its runtime-owner
+  rows (`:151`, `:296`, `:301`) and the merged-row projection assertion. That is the representation boundary
+  described here and in the narrower-row request linked above.
+
+So the override's native API, its declared `partial` scope, and the emitted generic call disagree, and closing
+that needs the runtime-owner decision below, not an adapter. `prewarm_particle_emitter_3d`, `contract` and
+`_internal_index` were not recompiled and keep their recorded failure.
+
 ## Why there is no small source repair (measured 2026-10-13)
 
 The helper that fails, `getTransform2DRuntime(target: Transform2DRuntimeOwner<Traits>)`, comes from this repository's
