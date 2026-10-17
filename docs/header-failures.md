@@ -55,7 +55,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 26 | `missing-member-e27d26f9` | 6 | 3D | runtime | the emitted code reads a member the target does not declare (`attach_gltf_pbr_extension`) |
 | 27 | `no-viable-conversion-f02000a9` | 6 | 2D, GL | compiler | a value is passed where its declared type cannot receive it |
 | 28 | `undeclared-identifier-6e587559` | 6 | ANIM, TEXT | runtime | `equals_markup_format` declared by repair; G2 recheck: 0 pass, 6 fail at the next refused helper `parse_markup_attributes` |
-| 29 | `undeclared-identifier-a74215ca` | 6 | 2D | runtime | the emitted code names `K`, which nothing declares |
+| 29 | `undeclared-identifier-a74215ca` | 6 | 2D | compiler | a generic call's object-literal argument is built as `ShapeBoundsCommand<K>`, naming the callee's type parameter *(request filed)* |
 | 30 | `undeclared-identifier-f5e3440f` | 6 | 3D, CORE | [compiler request](compiler-requests/retained-declaration-calls-omitted-callee.md) | createResourceLoader calls initializeResourceLoader after the compiler refuses the initializer |
 | 31 | `call-has-no-matching-5a045ef4` | 5 | ANIM | compiler | the emitted call to `read_swf_shape_edge_record` matches no declared overload |
 | 32 | `call-has-no-matching-b897f03f` | 5 | 3D | compiler | the emitted call to `get_node_signals` matches no declared overload |
@@ -729,12 +729,14 @@ make them compile.
 
 ### 29. `undeclared-identifier-a74215ca` — 6 header(s)
 
-- cause: the emitted code names `K`, which nothing declares
+- cause: `registerShapeBoundsCommand<K extends ShapeCommandKey>` is emitted correctly as a template, but its non-generic caller `register_default_shape_bounds_commands` builds each object literal as `ShapeBoundsCommand<K>`, with the callee's type parameter instead of the inferred argument
 - subject: `K`
 - lanes: 2D
-- fix route: runtime
+- fix route: compiler
+- why this route: G2, measured with GCC 15.2 at `-j1`. The type argument is the checker's inference; no runtime constant or repair can supply it. It is the same defect as the `Traits` cluster `undeclared-identifier-993e82f1` (builder4), which is not changed here
 - first failure at: `flight/shape/register_default_shape_bounds_commands.hpp:17`
 - example: `use of undeclared identifier 'K'`
+- compiler request: `docs/compiler-requests/generic-call-argument-uses-unsubstituted-parameter-type.md`
 
 ### 30. `undeclared-identifier-f5e3440f` — 6 header(s)
 
