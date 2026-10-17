@@ -155,7 +155,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 126 | `no-viable-conversion-0faa55ca` | 1 | GL | compiler | a value is passed where its declared type cannot receive it |
 | 127 | `no-viable-conversion-2909a65f` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
 | 128 | `no-viable-conversion-31b754c5` | 1 | ANIM | compiler | a value is passed where its declared type cannot receive it |
-| 129 | `no-viable-conversion-331a999f` | 1 | GL | compiler | a value is passed where its declared type cannot receive it |
+| 129 | `no-viable-conversion-331a999f` | 1 | GL | runtime (applied) | a `Float32Array \| Uint8Array` output passed to `readPixels`'s `ArrayBufferView` *(G2: 1/1 pass)* |
 | 130 | `no-viable-conversion-4bbb9be5` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it *(builder4/E0a)* |
 | 131 | `no-viable-conversion-562151da` | 1 | WGPU | compiler | a value is passed where its declared type cannot receive it |
 | 132 | `no-viable-conversion-68fff449` | 1 | 3D | compiler | base Node3D cannot recover the independent morph probe; existing owner-refinement request linked (G2: 0/1 retained) |
@@ -2812,6 +2812,18 @@ failed, with foreign rows/clusters and historical G1 totals unchanged.
 - fix route: compiler
 - first failure at: `flight/render_gl/gl_readback.hpp:37`
 - example: `no viable conversion from 'variant<Float32Array, Uint8Array>' to 'ArrayBufferView'`
+- G2: resolved by the runtime `ArrayBufferView` variant conversion (`e6a47cbd`, cluster 78)
+
+`glReadback.ts` reads pixels into its caller's `Float32Array | Uint8Array` with
+`gl.readPixels(x, y, width, height, format, type, out)`. This is the same view union that cluster 78's
+`bufferData` site needed, here in the write direction. The landed conversion views the active member
+with its own buffer, offset, length, kind and identity. `read_pixels` takes that view and
+`glReadPixels` writes through `destination.data()`, the writable pointer into the shared backing, so the
+pixels land in the caller's own array. No copy is involved; the runtime test's `same_backing` check covers
+it. No fake pixels or provider, and nothing in this module changed.
+
+**G2: 1/1 compile** (`-j1`, Clang 22.1.8): `flight/render_gl/gl_readback.hpp` passes with no source,
+repair or override change.
 
 ### 130. `no-viable-conversion-4bbb9be5` — 1 header(s) *(builder4/E0a)*
 
