@@ -214,7 +214,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 185 | `undeclared-identifier-6dd20ce4` | 1 | 2D | runtime | the emitted code names `submit_gl_quad_batch`, which nothing declares |
 | 186 | `undeclared-identifier-757c2c8a` | 1 | 2D | compiler | private Scale9 shape owner recovery refused; exact declaration compile fails native texture-cache local carrier *(requests filed)* |
 | 187 | `undeclared-identifier-785ed669` | 1 | PLAT | runtime | the emitted code names `resolve_quad_batch_instance_index`, which nothing declares |
-| 188 | `undeclared-identifier-7905640c` | 1 | 2D | runtime | the emitted code names `canvas_clip_hooks`, which nothing declares |
+| 188 | `undeclared-identifier-7905640c` | 1 | 2D | compiler *(existing request)* | refused `canvasClipHooks` (RenderState asserted to CanvasRenderState without heritage) still stored; all clip callees emitted |
 | 189 | `undeclared-identifier-7d85a310` | 1 | GL | runtime | the emitted code names `gl_lens_flare_effect_runner`, which nothing declares |
 | 190 | `undeclared-identifier-7e3a780f` | 1 | PLAT | runtime | the emitted code names `hit_test_sprite_alpha`, which nothing declares |
 | 191 | `undeclared-identifier-7fd1550e` | 1 | GL | runtime | the emitted code names `gl_camera_motion_blur_effect_runner`, which nothing declares |
@@ -3221,14 +3221,17 @@ sweep/carry totals remain unchanged. No old native/rendering proof or global swe
 - first failure at: `flight/interaction/register_quad_batch_hit_test.hpp:94`
 - example: `use of undeclared identifier 'resolve_quad_batch_instance_index'`
 
-### 188. `undeclared-identifier-7905640c` — 1 header(s)
+### 188. `undeclared-identifier-7905640c` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `canvas_clip_hooks`, which nothing declares
+- cause: the emitter refuses the `canvasClipHooks` binding (`cpp-reference-assertion-without-heritage`, because each hook starts with `state as CanvasRenderState`), but `enable_canvas_clip` still stores it at line 89.
 - subject: `canvas_clip_hooks`
 - lanes: 2D
-- fix route: runtime
+- fix route: compiler
+- why this route: `pop_canvas_clip_rectangle`, `push_canvas_clip_rectangle` and `push_canvas_clip_contours` are all emitted in `canvas_clip_rectangle.hpp` with `Ref<CanvasRenderState>`. The only gap is recovering the Canvas owner from the shared `RenderState`, which needs heritage or a checked dispatch contract. A hook table would fake clipping, and the declaration repair declares only functions. This is the same shape as the DOM clip hooks (cluster 150).
 - first failure at: `flight/scene2d_canvas/canvas_clip.hpp:89`
 - example: `use of undeclared identifier 'canvas_clip_hooks'`
+- Scoped native recheck (GCC 15.2, jobs 1, all errors shown): **1 attempted / 0 pass / 1 fail** at the header's own line 89, not a cascade from an included header. Nothing is carried.
+- compiler request: `docs/compiler-requests/canvas-render-state-owner-asserted-without-heritage.md`
 
 ### 189. `undeclared-identifier-7d85a310` — 1 header(s)
 

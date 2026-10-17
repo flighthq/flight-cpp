@@ -212,3 +212,17 @@ state. Nothing is carried:
 - A hook table would fake clipping.
 - The next call, `set_dom_clip_hooks` at line 82, belongs to the wholly refused `domClipRectangle.ts`. See
   [local-interface-extending-lib-dom-interface](local-interface-extending-lib-dom-interface.md).
+
+### G2 Canvas clip hooks
+
+`canvasClip.ts:12` refuses `canvasClipHooks` with the same `cpp-reference-assertion-without-heritage`: every
+hook starts with `const s = state as CanvasRenderState`. `enable_canvas_clip` still stores the binding, so
+`flight/scene2d_canvas/canvas_clip.hpp:89` fails on `'canvas_clip_hooks' was not declared` (GCC 15.2, one
+worker, all errors shown). That is the header's own first diagnostic, not a cascade from an included header.
+
+Every callee the hooks need is already emitted in `canvas_clip_rectangle.hpp`, taking
+`Ref<CanvasRenderState>`: `pop_canvas_clip_rectangle`, `push_canvas_clip_rectangle` and
+`push_canvas_clip_contours`. So the only missing piece is recovering the exact Canvas owner from the shared
+`RenderState` argument, through heritage or a checked dispatch contract, as above. Nothing is carried:
+- The hooks are a variable, which the declaration repair cannot declare.
+- A hook table would fake clipping.
