@@ -85,3 +85,58 @@ the supplied constructor, face-size and completeness behavior.
 Drop the override when the emitter lowers the common property through the retained variant and tests
 the nullable tuple element's correct absence layer, or when the source callback emits with one
 canonical variant carrier. Its `derivedFrom` hash detects any generated-header change before that.
+
+## G2 GL environment face revisions use the same selected-owner read
+
+At compiler `806d257` / Flight `a627849`, `missing-member-95ead583` covers
+`scene3d_gl/gl_environment_cube.hpp`, `gl_environment_ibl_bake.hpp` and
+`gl_environment_skybox.hpp`. The retained first diagnostic is at
+`flight/scene3d_gl/gl_environment_cube.hpp:56`: no member named `version` on the seven-arm
+`TextureSourceValue` variant.
+
+Every stored arm already declares `double version`: `VoxelGrid`, `TextureSource`, `ExternalTexture`,
+`Bitmap`, `CompressedImageResource`, `RenderTarget` and `ImageResource`. This is a read of the active
+source owner's existing revision, not a missing host binding or a request for a synthetic version on
+an unsupported source. The original open `TextureSource` arm must remain available for vendor kinds.
+
+The pinned source maps `source?.version ?? -1` over the cube faces. The existing
+`scene3d-gl-explicit-environment-carriers` patch expands that into an ordered loop with an explicit
+null test and one append of either `-1` or `source.version`. The generated code retains presence:
+
+```cpp
+for (auto source : cube->sources) {
+  versions.push((!source.has_value() ? -1.0 : source.value().version));
+}
+```
+
+`source.value()` is still the complete value variant. The same module's current-face comparison
+emits `source.value().version` after rejecting a null face, and its pixel-kind guard similarly emits
+`image.value().kind`. The required operation is a visit through the active reference, for example
+`std::visit([](const auto& owner) { return owner->version; }, source.value())`, retaining each existing
+presence check, fallback, comparison order and source owner. Reading a common member does not prove
+that the active arm is Bitmap or ImageResource.
+
+A runtime helper cannot change a direct member access emitted on `std::variant`; an additional field
+on the concrete structs would duplicate storage they already have. A copied TextureSource base, an
+unconditional alternative selection, or a closed replacement union would change the source contract.
+No runtime or binding conversion is added for this classification.
+
+A bounded experiment changed only the existing revision-loop ternary into explicit null/else branches.
+Each face still appends exactly once, in the same order, using `-1` for null and the original owner's
+version otherwise. Normal focused SDK generation at the exact locks applied the full declared patch
+stack, lowered the required 1643-module dependency closure and emitted only `glEnvironmentCube.ts`:
+**1/1 emitted, zero refusals**. Both sibling checkouts were restored cleanly by normal generation.
+The emitted header changes only that control flow and still reads `source.value().version` directly
+in the else branch, at candidate line 60. Generation acceptance therefore does not fix the native
+member projection.
+
+The actual generated candidate was used as a one-header include overlay against the canonical SDK.
+Only the three owned headers were compiled, with Clang 22.1.8 at one worker: **0/3 pass, 3 fail,
+0 unattempted**. Every first error is the same missing `version` member at candidate line 60. The
+source edit was rejected and withdrawn; its original patch is restored byte-for-byte. No generated
+header, source patch, runtime, binding, emission repair or override change is carried.
+
+The shipped rows therefore retain their **0/3 pass, 3 fail** G1 qualification and original diagnostics
+at line 56, with all three now linked here and the cause routed to the compiler. Candidate diagnostics
+are not substituted for the shipped tree's diagnostics. The historical sweep totals and unowned rows
+are unchanged. No unchanged-stock or global recheck, upstream test port, or duplicate request was made.

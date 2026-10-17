@@ -86,7 +86,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 57 | `call-has-no-matching-3b2f72dd` | 3 | PLAT | compiler | the emitted call to `is_optional_number` matches no declared overload |
 | 58 | `call-has-no-matching-56e47749` | 3 | GL | compiler | the emitted call to `compute_node_root_local_bounds_rectangle` matches no declared overload |
 | 59 | `invalid-operands-98cd7094` | 3 | 2D | runtime | an operator is applied to operand types it does not accept |
-| 60 | `missing-member-95ead583` | 3 | 3D | runtime | the emitted code reads a member the target does not declare (`version`) |
+| 60 | `missing-member-95ead583` | 3 | 3D | [compiler request](compiler-requests/cube-texture-width-and-completeness.md#g2-gl-environment-face-revisions-use-the-same-selected-owner-read) | nullable cube-face source retains seven real owners, but version is read on the variant itself |
 | 61 | `missing-member-b22d5c52` | 3 | 2D | runtime | the emitted code reads a member the target does not declare (`resolve_canvas_texture_window_source`) |
 | 62 | `missing-member-c36ea2d4` | 3 | 2D | binding | the web renderer needs shared CSS style state; SDL exposes copied shell values with no opacity field *(request filed)* |
 | 63 | `no-viable-conversion-4ca7626f` | 3 | ANIM | compiler | a value is passed where its declared type cannot receive it |
@@ -1136,12 +1136,34 @@ callers, so the follow-on is the same omission class rather than a new defect.
 
 ### 60. `missing-member-95ead583` — 3 header(s)
 
-- cause: the emitted code reads a member the target does not declare (`version`)
+- cause: the GL cube-face revision loop unwraps the nullable face but reads version on its seven-owner TextureSourceValue variant instead of visiting the active owner
 - subject: `version`
 - lanes: 3D
-- fix route: runtime
+- fix route: compiler — [existing cube-texture member-projection request](compiler-requests/cube-texture-width-and-completeness.md#g2-gl-environment-face-revisions-use-the-same-selected-owner-read)
 - first failure at: `flight/scene3d_gl/gl_environment_cube.hpp:56`
 - example: `no member named 'version' in 'variant<shared_ptr<VoxelGrid>, shared_ptr<TextureSource>, shared_ptr<ExternalTexture>, shared_ptr<Bitmap>, shared_ptr<CompressedImageResource>, shared_ptr<RenderTarget>, shared_ptr<ImageResource>>'`
+
+All seven actual source arms already declare `double version`; the open TextureSource arm remains
+part of the contract. The pinned source uses `source?.version ?? -1`. Its existing source patch expands
+that into an ordered loop with a null check, which the C++ retains, but `source.value()` remains the
+complete variant. The same source owner's field must be read through a visit. Adding a runtime field
+or a host overload cannot make this emitted variant member access valid. Narrowing every face to
+Bitmap/ImageResource or copying a common base would change the source domain or identity.
+
+A bounded experiment changed only the existing loop's ternary into explicit null/else branches,
+preserving one append per face, the null fallback, order and owners. Normal focused generation at the
+exact locks emits **1/1 module with zero refusals**, but the else branch still reads
+`source.value().version` directly at candidate line 60. The candidate is measured through exactly
+these three owned headers, with one C++ worker: **0/3 pass, 3 fail, 0 unattempted**. All three first
+errors are the same missing `version` member at candidate line 60; generation acceptance is not a
+header pass.
+
+The source edit was rejected and the original patch restored byte-for-byte. No generated header,
+runtime, binding, repair, override or source change is carried. The three shipped rows retain their
+**0/3 pass, 3 fail** G1 qualification and original line-56 diagnostics, with the exact source/owner
+analysis and existing request link added. Only those rows and this cause changed; unowned rows and
+historical sweep totals remain unchanged. No unchanged-stock or global rerun, duplicate request or
+upstream test port was performed.
 
 ### 61. `missing-member-b22d5c52` — 3 header(s)
 
