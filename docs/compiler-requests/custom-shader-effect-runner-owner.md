@@ -85,3 +85,20 @@ SSAO runner above:
 
 Nothing is carried: the runner is a variable, a definition would fake the effect, and the callee
 declaration would not move the row. No shader, cache or narrowed domain is supplied.
+
+## G2 film grain runner
+
+`flight/effects_gl/gl_film_grain_effect.hpp` at Flight `a627849` / compiler `806d257` is the same omission
+again:
+- `glFilmGrainEffectRunner` (source line 26) is refused with
+  `cpp-structural-assertion-writable-capability-unproven`, because `Readonly<Effect>` declares none of
+  `intensity`, `seed` and `size`.
+- `register_gl_film_grain_effect` still passes `gl_film_grain_effect_runner` at line 89, which is the
+  cluster's recorded first failure.
+- The callee `applyFilmGrainEffectToGl` (source line 9) is refused with the same `GlTextureRenderTarget`
+  widening, see [interface-heritage-widening](interface-heritage-widening.md).
+
+I validated the site by inspecting the emitted header and confirmed that no definition of either symbol
+exists anywhere in the tree, and that no other header names either one. This is a docs-only disposition
+within this family, so the unchanged header was not recompiled, and its recorded **0/1** failure stands.
+Nothing is carried.

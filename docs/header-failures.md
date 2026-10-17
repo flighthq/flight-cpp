@@ -179,7 +179,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 150 | `undeclared-identifier-0168969a` | 1 | 2D | compiler *(existing + new request filed)* | refused `domScene2DClipHooks` (RenderState asserted to DomRenderState without heritage) still stored; next callee `setDomClipHooks` is in the wholly refused domClipRectangle module |
 | 151 | `undeclared-identifier-07640d32` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glOutlineEffectRunner` binding (and its callee `applyOutlineEffectToGl`) but still emits the registration call that passes the runner |
 | 152 | `undeclared-identifier-076c02b1` | 1 | PLAT | runtime | the emitted code names `resolve_tilemap_cell_index`, which nothing declares |
-| 153 | `undeclared-identifier-09cc9e86` | 1 | GL | runtime | the emitted code names `gl_film_grain_effect_runner`, which nothing declares |
+| 153 | `undeclared-identifier-09cc9e86` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glFilmGrainEffectRunner` binding (and its callee `applyFilmGrainEffectToGl`) but still emits the registration call that passes the runner |
 | 154 | `undeclared-identifier-0b8d3b44` | 1 | GL | runtime | the emitted code names `box_blur_shaders`, which nothing declares |
 | 155 | `undeclared-identifier-0c07642f` | 1 | GL | runtime | the emitted code names `gl_glitch_effect_runner`, which nothing declares |
 | 156 | `undeclared-identifier-11d6fcbe` | 1 | GL | runtime | the emitted code names `gl_chromatic_aberration_effect_runner`, which nothing declares |
@@ -2855,14 +2855,17 @@ Foreign rows/roots/prose and historical/G1 totals are preserved.
 - first failure at: `flight/interaction/register_tilemap_hit_test.hpp:59`
 - example: `use of undeclared identifier 'resolve_tilemap_cell_index'`
 
-### 153. `undeclared-identifier-09cc9e86` — 1 header(s)
+### 153. `undeclared-identifier-09cc9e86` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_film_grain_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glFilmGrainEffectRunner` binding (and its callee `applyFilmGrainEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_film_grain_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: a runtime definition would fake the effect runner. The runner refusal (`cpp-structural-assertion-writable-capability-unproven`: `Readonly<Effect>` declares none of `intensity`, `seed` and `size`) names an owner-preserving carrier as the compiler-side answer. The callee refusal is the `GlTextureRenderTarget` widening of [interface-heritage-widening](compiler-requests/interface-heritage-widening.md). This is the same family as the SSAO and outline runners.
 - first failure at: `flight/effects_gl/gl_film_grain_effect.hpp:89`
 - example: `use of undeclared identifier 'gl_film_grain_effect_runner'`
+- Verified by inspection: line 89 is the `register_gl_film_grain_effect` call that passes the refused binding. Nothing in the tree defines either symbol, and no other header names either one. This docs-only disposition changes no compiled input, so the recorded **0/1** failure stands without an unchanged rerun. No runner, effect body, shader or narrowed parameters are supplied.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
 ### 154. `undeclared-identifier-0b8d3b44` — 1 header(s)
 
