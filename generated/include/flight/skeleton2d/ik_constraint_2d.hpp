@@ -201,6 +201,8 @@ inline void solve_skeleton_2d_ik_chain2(flight::Ref<flight::types::Skeleton2D> s
 // past flight::Ref<flight::types::Skeleton2DConstraint>. The compiler will not reinterpret the owner, cast it,
 // copy or materialize a replacement, or add side storage.
 
+void solve_skeleton_2d_ik_constraint(flight::Ref<flight::types::Skeleton2D> skeleton, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DConstraint>>>> constraint);
+
 inline void register_skeleton_2d_ik_constraint_solver() {
   flight::skeleton2d::register_skeleton_2d_constraint_solver(flight::types::skeleton_2d_constraint_kind->ik, solve_skeleton_2d_ik_constraint);
 }

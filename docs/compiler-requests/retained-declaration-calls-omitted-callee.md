@@ -1689,3 +1689,38 @@ intersection, mixed fill rules and pass registration. These are source requireme
 not native Rive/geometry/parser execution results. No fake clip/path/parser, copied owner, universal
 success/no-op or narrowed graph/property/path domain is supplied. Only the failed original root/row
 and worklist route plus existing request appendices change; header and functionality gain remain zero.
+
+## G2 Skeleton2D IK registration retains its refused solver
+
+At Flight `a627849` / compiler `806d257`, `skeleton2d/ik_constraint_2d.hpp:205`
+retains `register_skeleton_2d_constraint_solver(...->ik, solve_skeleton_2d_ik_constraint)`
+after refusing `solveSkeleton2DIkConstraint`. The exact NOT GENERATED marker, live direct
+function-argument callback reference and absent definition support the existing
+`declare-refused-function` mechanism with that exact line as `retainedReference`:
+
+```cpp
+void solve_skeleton_2d_ik_constraint(
+  flight::Ref<flight::types::Skeleton2D> skeleton,
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DConstraint>>>> constraint);
+```
+
+This is the actual `Skeleton2DConstraintSolver` slot, with a mutable shared skeleton owner and
+readonly base constraint row. It does not claim the callback already has an IK row. The repair
+matches exactly this header, inserts only one declaration, is idempotent and expires with the
+refused function or exact registration. No new witness, cross-header list or ABI adapter is needed.
+
+The actual unused repaired header compiles, links and runs with static slot/signature checks.
+Calling the real opt-in registration compiles to an object, then fails to link on exactly
+`flight::skeleton2d::solve_skeleton_2d_ik_constraint` with those carriers and no other missing symbol.
+No eager global registration is being misreported as this explicit-use negative link. Neither
+registration nor the refused constraint solver runs, and no native IK/pose behavior is supplied.
+
+Normal exact-pin one-module generation plus the existing derived alias rule reproduces only the
+declaration and own repair record. Its narrow closure omits the existing Screen canonical point
+owner, so the raw header emits a local x/y duplicate. Applying aliasDuplicateStructuralStructs to only
+that raw header and its committed Screen owner restores exactly the existing x_y alias/include; the
+owner and existing alias provenance stay unchanged. This result equals the real link-tested candidate.
+The original helper bodies, partial marker, body refusal, source fingerprints and counts/init remain. The [existing row-owner request](assertion-to-undeclared-row-member.md#g2-ik-constraint-dispatch-must-retain-the-original-constraint-and-pose-owners)
+keeps the full open constraint domain, original bone/Float32 owners, one/two-bone mathematics,
+degenerate cases and ordered local/world mutations. Header availability does not supply checked
+IK owner recovery, an empty solver, a replacement constraint or a callable registration.

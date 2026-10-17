@@ -3514,6 +3514,12 @@
         "flight/interaction/register_sprite_hit_test.hpp"
       ],
       "id": "interaction-declare-refused-sprite-alpha-hit"
+    },
+    {
+      "files": [
+        "flight/skeleton2d/ik_constraint_2d.hpp"
+      ],
+      "id": "skeleton2d-declare-refused-ik-constraint-solver"
     }
   ],
   "sourcePatches": [

@@ -176,3 +176,43 @@ than only a nominal data downcast. No Interaction-local source spelling can esta
 owner relation merely by changing a type argument. No shared Node, Scene2D or TextLabel code was
 changed. The [retained-callee request](retained-declaration-calls-omitted-callee.md#g2-interaction-graph-local-bounds-calls-cross-the-refused-module)
 records the resulting five-header compile failure and why the current declaration repair cannot match.
+
+## G2 IK constraint dispatch must retain the original constraint and pose owners
+
+At Flight `a627849` / compiler `806d257`, `skeleton2d/ikConstraint2D.ts:21`
+refuses `solveSkeleton2DIkConstraint` as `cpp-structural-assertion-owner-unproven`.
+The readonly base Skeleton2DConstraint row has kind/mix, not bendPositive, boneIndices,
+compress, stretch or targetBoneIndex; the refusal also reports incompatible kind-cell evidence.
+The concrete IK constraint is a separate flattened owner. Removing write authority does not
+recover its extra cells, and selecting its registered string kind does not prove that owner.
+
+The actual solver slot is `void(Ref<Skeleton2D>, readonly Skeleton2DConstraint row)`.
+The caller passes base readonly constraints in source order through an open string-keyed Map;
+unregistered kinds are skipped, replacement is last-write-wins and custom families use the same
+pass. A source-type change that makes the public slot IK-only or closes this family to built-ins
+would narrow the contract. Preserve the concrete constraint owner through construction, retaining
+slots and dispatch, or provide checked recovery at that boundary. No copied constraint, new IK
+record from common fields, pointer cast or disconnected owner table supplies the missing evidence.
+
+The skeleton owns the original Bone2D reference array and flat Float32 world/inverse-bind/skin
+buffers. IK reads target world translation from six-value affine blocks and writes bone LOCAL
+rotation/scales, refreshing only the moved bone's world transform. Later constraints see those
+updates; descendants are intentionally refreshed by the caller's single world pass after all
+constraints. Do not replace these owners/buffers or introduce a different propagation order.
+
+The existing one-bone path aims in the bone parent's local space, subtracts shearX, wraps the
+angle difference into the source signed +/-180 range and blends by the original mix. Stretch
+and compress use the source reach/length tests and blend both local scales. The two-bone solve
+retains both cosine clamps (including unreachable inner/dead-zone targets), bend direction,
+length/reach checks and parent-only stretching; scaling both bones would compound inheritance.
+It refreshes the parent before applying/refreshing the child's local rotation. Parent inversion
+returns null below determinant magnitude1e-9; roots use the original world target coordinates.
+Keep the source index-range checks, chains of exactly1/2, skips for other lengths/degenerate
+cases, original numeric domains/mix, reads, exceptions and writes. Bone inheritance remains the
+full TransformInherit2D domain, including independently chosen axes, not only named presets.
+
+These helper bodies remain in the partial header, unchanged. They do not recover the refused
+base-to-IK dispatch owner, and no native full-constraint/pose solve is demonstrated by a header
+compile or by declaration availability. The bounded [retained callback declaration](retained-declaration-calls-omitted-callee.md#g2-skeleton2d-ik-registration-retains-its-refused-solver)
+supplies name visibility only; neither registration nor the refused solver can link. No fake
+constraint, empty solver/result, copied pose owner or narrower constraint domain is carried.
