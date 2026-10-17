@@ -504,3 +504,22 @@ result stays legitimate. Nothing is carried:
 - no function-pointer cast;
 - no Canvas, DOM or WGPU provider;
 - no narrowed node domain.
+
+## G2 Canvas BitmapText and QuadBatch create-data callbacks
+
+This is the Canvas form of the GL bitmap text and QuadBatch sections above. Cluster
+`no-viable-conversion-eaf1a6e0` covers 5 headers at Flight `a627849` / compiler `806d257`.
+
+Two Canvas renderers store `flight::render::noop_renderer_data` (`(Ref<RenderState>, NodeAny)`) in
+`SpriteRenderer.create_data`, whose slot passes `Ref<Sprite>`:
+- `canvas_bitmap_text_renderer`, at `scene2d_canvas/canvas_bitmap_text.hpp:116`;
+- the QuadBatch renderer, at `scene2d_canvas/canvas_quad_batch.hpp:159`.
+
+The flattened `Sprite` owner does not convert to `NodeAny`, so the result is
+`could not convert 'flight::render::noop_renderer_data' ...` (GCC 15.2, one worker; both roots measured,
+2 attempted, 0 pass, 2 fail). `scene_2d_canvas_pipeline`, `contract` and `_internal_index` reach both roots
+through their includes and were not recompiled.
+
+The same `Sprite` to `NodeAny` same-owner widening is required, keeping the legitimate no-data result. Nothing
+is carried: no adapter that rebuilds the node, no function-pointer cast, no Canvas text or QuadBatch provider,
+and no narrowed domain.

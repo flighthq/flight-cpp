@@ -63,7 +63,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 34 | `compiler-crash-aba5e9ec` | 5 | 3D | none (sweep resource limit; passes serially) | the -j8 sweep ran out of room (retried serially) |
 | 35 | `invalid-operands-6d9a155d` | 5 | 2D | [compiler request](compiler-requests/token-discriminant-comparison.md#g2-current-pin-qualification-all-three-paint-guards-use-this-carrier) | three morph-paint guards compare the whole optional token variant with a String |
 | 36 | `missing-member-5e9e8a2c` | 5 | PLAT | compiler | retained cross-module calls name the refused generic graph-bounds helper *(existing requests extended)* |
-| 37 | `no-viable-conversion-eaf1a6e0` | 5 | 2D | compiler | a value is passed where its declared type cannot receive it |
+| 37 | `no-viable-conversion-eaf1a6e0` | 5 | 2D | compiler *(existing request)* | generic `noop_renderer_data(…, NodeAny)` stored in `SpriteRenderer.create_data`, whose `Sprite` does not widen to `NodeAny` |
 | 38 | `no-viable-overload-658901de` | 5 | 2D, GL | override/runtime (fixed) | concrete glass extension storage and Canvas paint variants repaired; G2: 4 pass, 1 compiler failure |
 | 39 | `call-has-no-matching-4ce2cc01` | 4 | ANIM | compiler | the emitted call to a function matches no declared overload |
 | 40 | `call-has-no-matching-82244b93` | 4 | 2D | compiler | the emitted call to `get_or_create_render_proxy_2d` matches no declared overload |
@@ -960,13 +960,17 @@ compile, global sweep or upstream test port was run and no paint execution or ne
 - Declaration witnesses do not coincide: the defining header has the exact marker but **zero live calls**; `display_hit_tests.hpp:28/32/36` and `sprite_hit_tests.hpp:16` have four retained `NodeAny` calls but no marker. The existing declaration-repair probe matches zero files and changes no bytes. No repair/body was added, so no negative-link result is claimed.
 - Numbers: **0/5 pass, 5 fail**, retained from G1. All five owned rows preserve their diagnostics and failure status and gain the existing request links; the work-item ID remains with corrected cause/compiler route. No C++ input changed and no native gate was rerun. No Scene2D/TextLabel/Node file, new compiler request or promotion was added. Builder4 owns its active shared-node/text work; this disposition stays within Interaction and its evidence.
 
-### 37. `no-viable-conversion-eaf1a6e0` — 5 header(s)
+### 37. `no-viable-conversion-eaf1a6e0` — G2 recheck of 5 header(s)
 
-- cause: a value is passed where its declared type cannot receive it
+- cause: the generic `flight::render::noop_renderer_data(Ref<RenderState>, NodeAny)` is stored in `SpriteRenderer.create_data`, whose `std::function` passes a flattened `Ref<Sprite>` that does not widen to `NodeAny`. TypeScript accepts it because a `Sprite` is a `Node`.
+- subject: `noop_renderer_data`
 - lanes: 2D
 - fix route: compiler
+- why this route: the carriers need the same-owner `Sprite` to `NodeAny` widening of [interface-heritage-widening](compiler-requests/interface-heritage-widening.md). This is the Canvas form of its GL bitmap text and QuadBatch create-data sections. An adapter that rebuilds the node, a function-pointer cast or a narrowed domain would not preserve the owner.
 - first failure at: `flight/scene2d_canvas/canvas_bitmap_text.hpp:116`
 - example: `no viable conversion from 'optional<Ref<RendererData>> (Ref<RenderState>, NodeAny)' ') to 'function<optional<Ref<RendererData>> (Ref<RenderState>, Ref<Sprite>)>' >')`
+- Scoped native recheck (GCC 15.2, jobs 1): **2 attempted / 0 pass / 2 fail** at the roots, `canvas_bitmap_text.hpp:116` and `canvas_quad_batch.hpp:159`, which carry measured locations. `scene_2d_canvas_pipeline`, `contract` and `_internal_index` reach them through their includes. They were not recompiled, keep their recorded failure, and are given no location. Nothing is carried.
+- compiler request: `docs/compiler-requests/interface-heritage-widening.md`
 
 ### 38. `no-viable-overload-658901de` — 5 G1 header(s), 4 now compile
 
