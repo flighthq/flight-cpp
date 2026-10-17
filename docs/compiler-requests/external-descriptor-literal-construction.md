@@ -78,3 +78,28 @@ profile gap is reported as a missing binding instead of a C++ overload failure.
 Runtime follow-up once this lands: typed descriptor overloads beside each variadic method, matching
 `create_texture`, and bindings for the six unbound descriptors above. They remain `unavailable`
 bodies; this request is about construction, not a backend.
+
+## G2 IBL BRDF attachment: a typed local does not restore the bound member domain
+
+At `806d257` / Flight `a627849`, `scene3d_wgpu/wgpu_environment_ibl_bake.hpp` fails before the render
+pass call: the shared anonymous color-attachment struct types its `view` member as `flight::Any`, so
+`texture.createView()` cannot enter it.
+
+```text
+no viable conversion from 'WgpuObject<WgpuTextureViewTag>' to 'flight::Any'
+```
+
+`GPUTextureView` is bound in `bindings/sdl-wgpu.json` (type space, shared, target
+`flight::host_sdl::WgpuTextureView`), and the positive control is `render_wgpu/wgpu_render_pass.hpp`:
+the identical `view_clear_value_load_op_store_op` shape there emits `WgpuTextureView view;` because the
+value is a `GPUTextureView` **parameter**. Two faithful source rewrites were measured and did not
+change the emission: calling `texture.createView()` inline in the member, and hoisting it into
+`const view: GPUTextureView = texture.createView()` before the literal. Both still produced
+`flight::Any view;`, so the member domain follows the call result rather than the local's declared
+external type. The regenerated headers were compared and both rewrites were discarded.
+
+Required: when typing a contextual attachment member, resolve the source expression's declared or
+inferred external type — the annotated local, and the bound return domain of a method call — exactly
+as the emitter already does for a parameter. The sibling header is the parameter-form control. This
+does not need a new profile entry; the binding exists. No bake, provider, copied owner or narrowed
+domain is supplied by this repository pending the fix.

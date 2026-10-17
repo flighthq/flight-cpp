@@ -157,7 +157,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 128 | `no-viable-conversion-31b754c5` | 1 | ANIM | compiler | G2: recorded 0/1 retained; Spine particle object guard leaves Any unprojected at Record return; existing JSON-read request/no rerun |
 | 129 | `no-viable-conversion-331a999f` | 1 | GL | runtime (applied) | a `Float32Array \| Uint8Array` output passed to `readPixels`'s `ArrayBufferView` *(G2: 1/1 pass)* |
 | 130 | `no-viable-conversion-4bbb9be5` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it *(builder4/E0a)* |
-| 131 | `no-viable-conversion-562151da` | 1 | WGPU | compiler | a value is passed where its declared type cannot receive it |
+| 131 | `no-viable-conversion-562151da` | 1 | WGPU | compiler | a value is passed where its declared type cannot receive it; attachment member typed `Any` from a call result *(request linked; two source forms rejected)* |
 | 132 | `no-viable-conversion-68fff449` | 1 | 3D | compiler | base Node3D cannot recover the independent morph probe; existing owner-refinement request linked (G2: 0/1 retained) |
 | 133 | `no-viable-conversion-7e6bb150` | 1 | WGPU | compiler *(existing request)* | inferred local from `getWgpuEffectPipeline` re-expanded from the imported `WgpuEffectPipeline` alias into a local anonymous struct |
 | 134 | `no-viable-conversion-802e8004` | 1 | GL | compiler | GL view destroy instantiates state-to-base teardown without heritage; original0/1 retained, existing request linked |
@@ -3242,6 +3242,23 @@ repair or override change.
 - fix route: compiler
 - first failure at: `flight/scene3d_wgpu/wgpu_environment_ibl_bake.hpp:87`
 - example: `no viable conversion from 'WgpuObject<WgpuTextureViewTag>' to 'Any'`
+- compiler request: [external descriptor literal construction](compiler-requests/external-descriptor-literal-construction.md)
+
+The shared color-attachment struct in `wgpu_environment_ibl_bake.hpp` types its `view` member as
+`flight::Any`, so `texture.createView()` cannot enter it. `GPUTextureView` is bound in
+`bindings/sdl-wgpu.json` to `flight::host_sdl::WgpuTextureView`, and the identical member in
+`render_wgpu/wgpu_render_pass.hpp` — fed by a `GPUTextureView` parameter — emits that bound type. The
+loss is specific to the expression form: the member domain follows the call result instead of the
+source's declared type.
+
+Two faithful source forms were measured and rejected. Calling `texture.createView()` inline in the
+member and hoisting it into an explicitly annotated `const view: GPUTextureView` local both still
+emitted `flight::Any`; their regenerated headers were byte-compared and discarded. Restructuring the
+call behind a helper that receives the view as a parameter was not carried speculatively. The residual
+is recorded as a measured variant in
+[external descriptor literal construction](compiler-requests/external-descriptor-literal-construction.md),
+which already owns the contextual-literal member typing; no declaration, bake, provider or copied
+owner is supplied, and the row stays failed.
 
 ### 132. `no-viable-conversion-68fff449` — 1 header, retained compiler owner boundary
 
