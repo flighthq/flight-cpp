@@ -58,7 +58,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 29 | `undeclared-identifier-a74215ca` | 6 | 2D | compiler | a generic call's object-literal argument is built as `ShapeBoundsCommand<K>`, naming the callee's type parameter *(request filed)* |
 | 30 | `undeclared-identifier-f5e3440f` | 6 | 3D, CORE | [compiler request](compiler-requests/retained-declaration-calls-omitted-callee.md) | createResourceLoader calls initializeResourceLoader after the compiler refuses the initializer |
 | 31 | `call-has-no-matching-5a045ef4` | 5 | ANIM | compiler | the emitted call to `read_swf_shape_edge_record` matches no declared overload |
-| 32 | `call-has-no-matching-b897f03f` | 5 | 3D | compiler | the emitted call to `get_node_signals` matches no declared overload |
+| 32 | `call-has-no-matching-b897f03f` | 5 | 3D | [compiler request](compiler-requests/heritage-argument-generic-deduction.md) | the `getNodeSignals` traits argument falls back to the default `Ref<NodeTraits>` instead of the inferred `Node3DTraits` |
 | 33 | `call-has-no-matching-dd66c064` | 10 | ANIM | compiler | an emitted SwfReader class instance cannot be passed as its structural SwfTagReader interface to the parse callback *(existing request)* |
 | 34 | `compiler-crash-aba5e9ec` | 5 | 3D | none (sweep resource limit; passes serially) | the -j8 sweep ran out of room (retried serially) |
 | 35 | `invalid-operands-6d9a155d` | 5 | 2D | [compiler request](compiler-requests/token-discriminant-comparison.md#g2-current-pin-qualification-all-three-paint-guards-use-this-carrier) | three morph-paint guards compare the whole optional token variant with a String |
@@ -887,12 +887,25 @@ This row now links the existing request; no source or generated change was made,
 
 ### 32. `call-has-no-matching-b897f03f` — 5 header(s)
 
-- cause: the emitted call to `get_node_signals` matches no declared overload
-- subject: `get_node_signals`
+- cause: the generic `getNodeSignals<Node<Traits>>` call is emitted with the default
+  `Ref<NodeTraits>` argument because the heritage walk that would infer `Node3DTraits` from
+  `Billboard`'s `Node3D` alias does not happen
 - lanes: 3D
-- fix route: compiler
+- fix route: compiler — [heritage argument generic deduction](compiler-requests/heritage-argument-generic-deduction.md)
 - first failure at: `flight/scene3d/billboard.hpp:88`
 - example: `no matching function for call to 'get_node_signals'`
+
+`Billboard extends Node3D`, and `Node3D = Node<Node3DTraits> & Node3DTraits`, so TypeScript infers
+`Traits = Node3DTraits`. The emitter emits
+`get_node_signals<flight::Ref<flight::types::NodeTraits>>(source)`, whose parameter is
+`Ref<Node<Ref<NodeTraits>>>`, and `source` is a nominal `Ref<Billboard>`, so no overload matches. The
+other four headers (`_internal_index`, `billboard_camera`, `contract`, `enable_scene_3d_guards`) fail
+through the same call.
+
+No workaround is carried: a cast to `Node<Ref<NodeTraits>>` would not recover the concrete traits owner,
+and a copied owner would change identity. The request's heritage walk substitutes `Node3DTraits`.
+
+This row now links the existing request; no source or generated change was made, so no rerun is claimed.
 
 ### 33. `call-has-no-matching-dd66c064` — 10 current header(s), 5 in G1
 

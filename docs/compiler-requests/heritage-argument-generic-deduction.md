@@ -152,3 +152,34 @@ heritage walk this request asks for. Both sites were measured. Four more SVG hea
 through their includes, and their own first errors were not recompiled: `svg_clip`, `svg_clip_handlers`,
 `svg_handlers` and `svg_import`. The later `svg_bounds.hpp` errors (`get_shape_bounds`,
 `get_node_local_bounds_rectangle`) were not analysed in this unit. Nothing is carried.
+
+## G2 Scene3D Billboard signals: the default constraint replaces the inferred traits
+
+`@flighthq/scene3d` `billboard.ts:54` calls `getNodeSignals(source)` with `source: Billboard`. The callee
+is `getNodeSignals<Traits extends object = NodeTraits>(source: Node<Traits>)`. `Billboard extends
+Node3D`, and `Node3D = Node<Node3DTraits> & Node3DTraits`, so TypeScript infers `Traits = Node3DTraits`.
+
+The emitter does not walk that alias and intersection. It emits the **default** constraint instead:
+
+```cpp
+inline std::optional<flight::Ref<flight::types::NodeSignals>> get_billboard_signals(
+    flight::Ref<flight::types::Billboard> source) {
+  return flight::node::get_node_signals<flight::Ref<flight::types::NodeTraits>>(source);
+}
+```
+
+`get_node_signals` takes `shared_ptr<Node<Traits>>`, so this instantiation wants
+`Ref<Node<Ref<NodeTraits>>>`; `source` is a nominal `Ref<Billboard>`, and no overload matches:
+
+```
+no matching function for call to 'get_node_signals'  at flight/scene3d/billboard.hpp:88
+```
+
+Four more headers fail through the same call: `scene3d/_internal_index.hpp`,
+`scene3d/billboard_camera.hpp`, `scene3d/contract.hpp`, `scene3d/enable_scene_3d_guards.hpp`.
+
+This is the SVG/Lottie case one step worse: with no deduction the emitter wrote no type argument there,
+while here a default exists and it writes the erased interface reference (`Ref<NodeTraits>`) rather than
+the concrete traits object the source infers. No workaround is carried: a cast to
+`Node<Ref<NodeTraits>>` would not recover the concrete traits owner and a copied owner would change
+identity. The heritage walk this request asks for substitutes `Node3DTraits`.
