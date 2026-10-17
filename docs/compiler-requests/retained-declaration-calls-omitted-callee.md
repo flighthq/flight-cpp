@@ -1033,3 +1033,27 @@ and [backend/data/full Scale9 owner requirements](readonly-callback-derived-owne
 remain separate obligations. Dirty/submit and exact Sprite-recovery restrictions are inspected later
 seams, not additional measured diagnostics. No repair, normal generation, source/runtime/override
 change, fake draw or usable Scale9 rendering claim is carried.
+
+## G2 GL Scale9 shape getter declaration stops at the cache carrier
+
+At Flight `a627849` / compiler `806d257`, `gl_scale9_shape.hpp:114` retains the destroy callback's
+call to `get_gl_scale9_shape_data` after the private nominal-owner assertion is refused. Existing
+`declare-refused-function` loader, exact marker/direct-call/absent-body match, one declaration
+insertion and idempotence pass in scratch for
+`Ref<GlScale9ShapeData> get_gl_scale9_shape_data(Ref<RendererData>);`.
+
+The actual unused include with only that declaration fails compilation at candidate121 (stock119):
+`WeakMap<TextureSourceValue, Entry>` cannot initialize the local
+`WeakMap<Ref<TextureSource>, Entry>`. This is the effective native context slot versus its emitted
+consumer, as recorded in the [cache-local carrier request](native-texture-source-cache-local-carrier.md).
+The candidate is rejected before link, not an expected called-function negative-link pass. No repair,
+normal generation, positive unused-header link/run or callable getter is supplied. Production original1
+remains0/1, Clang22.1.8 jobs1, at the unchanged missing-name diagnostic.
+
+The [private raster-data owner request](flattened-interface-refinement-identity.md#g2-gl-scale9-shape-private-raster-data)
+remains distinct from `drawGlScale9Shape`'s `cpp-presence-test-without-absence-storage` refusal, whose
+message names no exact property. The retained mask wrapper calls that missing draw and the global
+renderer stores it; generic-versus-GL callbacks and full ShapeRuntime remain unproven later seams.
+No extra declaration or positive/negative link result for the draw was tested. Preserve complete
+commands/grid, provider replay/dispatch/fallback, dirty size/scale/pixelRatio/revision checks and actual
+surface/Image/GPU lifecycle, rather than substituting empty raster data or mesh-only support.

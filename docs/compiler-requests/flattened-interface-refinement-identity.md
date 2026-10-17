@@ -260,3 +260,26 @@ concrete joint type, whose emitted owner is independent of `Physics3DJoint`. Bal
 no solver object, method, joint assertion or registration result. The unused header compiles, links and
 runs; a caller fails to link on all six symbols at once. The bodies stay owed to this request: what they
 need is the identity-preserving refined joint view, not a copied owner or a narrowed constraint.
+
+## G2 GL Scale9 shape private raster data
+
+At Flight `a627849` / compiler `806d257`, `scene2d-gl/glScale9Shape.ts:191` asserts RendererData to
+private `GlScale9ShapeData`. These are independent flattened owners: the private object adds image,
+surface and lastH/lastW/lastScaleX/lastScaleY/lastContentId/lastPixelRatio cells to the entity runtime
+key. The getter refuses `cpp-reference-assertion-without-heritage`. Its factory allocates that private
+object, initializes it and returns through the generic slot; destroy/draw must later recover that
+same allocation and its provider/cache ownership, not copy a common prefix or invent side storage.
+
+This is distinct from the Scale9 node's inherited ShapeRuntime. The full Scale9Shape must retain its
+own data commands/grid, bounds and content revision; the existing `shape/scale9_shape.hpp` carry still
+marks factory/runtime construction/recovery as refused. The native `gl_shape_data.hpp` checked
+ErasedRef lane holds a different mesh-data owner and explicitly throws for raster resource teardown.
+Neither is a supplied private Scale9 raster surface lifecycle.
+
+Original GL header1 remains0/1 at missing getter114, Clang22.1.8 jobs1. An exact existing declaration
+qualifies its refusal/direct-call/absent-body witnesses, but the actual unused include fails a
+[texture-cache carrier conversion](native-texture-source-cache-local-carrier.md) before link.
+No declaration repair, source rewrite or normal generation is carried. Draw is independently refused
+by an unnamed property-presence test; [retained getter/draw references](retained-declaration-calls-omitted-callee.md#g2-gl-scale9-shape-getter-declaration-stops-at-the-cache-carrier)
+remain. Preserve rasterizer dispatch, mapper fallback, replay/revision/resize and host-owned
+surface/Image/GPU cache acquisition and teardown; no fake drawing or narrowed shape domain.

@@ -623,3 +623,7 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 - [A bound external constant must keep its member target name](external-property-method-name-collision.md) —
   the G2 GL velocity declaration-only candidate fails on `gl.VIEWPORT` emitted as the native
   `viewport` method instead of `viewport_constant`; typed query-result assertions remain a separate inspected seam.
+
+- [A texture-cache local must retain the effective key carrier and shared map](native-texture-source-cache-local-carrier.md) —
+  the G2 Scale9Shape getter-declaration candidate reaches a variant-key native cache copied into a
+  nominal TextureSource-key local; preserve the same map and source owners, with no cross-key cast or copied cache.

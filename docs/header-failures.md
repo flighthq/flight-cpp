@@ -212,7 +212,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 183 | `undeclared-identifier-67f2c521` | 1 | GL | runtime | the emitted code names `gl_god_rays_effect_runner`, which nothing declares |
 | 184 | `undeclared-identifier-6ad30a3d` | 1 | GL | runtime | the emitted code names `gl_crt_effect_runner`, which nothing declares |
 | 185 | `undeclared-identifier-6dd20ce4` | 1 | 2D | runtime | the emitted code names `submit_gl_quad_batch`, which nothing declares |
-| 186 | `undeclared-identifier-757c2c8a` | 1 | 2D | runtime | the emitted code names `get_gl_scale9_shape_data`, which nothing declares |
+| 186 | `undeclared-identifier-757c2c8a` | 1 | 2D | compiler | private Scale9 shape owner recovery refused; exact declaration compile fails native texture-cache local carrier *(requests filed)* |
 | 187 | `undeclared-identifier-785ed669` | 1 | PLAT | runtime | the emitted code names `resolve_quad_batch_instance_index`, which nothing declares |
 | 188 | `undeclared-identifier-7905640c` | 1 | 2D | runtime | the emitted code names `canvas_clip_hooks`, which nothing declares |
 | 189 | `undeclared-identifier-7d85a310` | 1 | GL | runtime | the emitted code names `gl_lens_flare_effect_runner`, which nothing declares |
@@ -3154,14 +3154,39 @@ rejected declaration with unchanged production code, and no scale9 behavior or o
 - first failure at: `flight/scene2d_gl/gl_quad_batch.hpp:191`
 - example: `use of undeclared identifier 'submit_gl_quad_batch'`
 
-### 186. `undeclared-identifier-757c2c8a` — 1 header(s)
+### 186. `undeclared-identifier-757c2c8a` — 1 header, compiler-owned
 
-- cause: the emitted code names `get_gl_scale9_shape_data`, which nothing declares
-- subject: `get_gl_scale9_shape_data`
-- lanes: 2D
-- fix route: runtime
-- first failure at: `flight/scene2d_gl/gl_scale9_shape.hpp:114`
-- example: `use of undeclared identifier 'get_gl_scale9_shape_data'`
+The scoped stock header remains **1 attempted / 0 pass / 1 fail / 0 unattempted**, Clang22.1.8,
+jobs **1**, 53.5 seconds, at missing `get_gl_scale9_shape_data:114`. The private getter refuses
+`cpp-reference-assertion-without-heritage`: generic `RendererData` does not retain a checked
+`GlScale9ShapeData` owner. The [existing refinement request](compiler-requests/flattened-interface-refinement-identity.md#g2-gl-scale9-shape-private-raster-data)
+records the original allocation, eight extra raster/cache cells and same-owner lifecycle requirement.
+The already-carried Scale9Shape factory/runtime module is separately partial; no replacement runtime
+or reuse of mesh-only shape data closes the private raster owner boundary.
+
+The existing exact declaration mechanism qualifies
+`Ref<GlScale9ShapeData> get_gl_scale9_shape_data(Ref<RendererData>);` once and idempotently under the
+marker/direct-call/absent-body witnesses. The actual unused-header candidate then **fails compilation**
+at scratch121 (stock119): native `WeakMap<TextureSourceValue, Entry>` cannot initialize emitted
+`WeakMap<Ref<TextureSource>, Entry>`. The [new cache-local carrier request](compiler-requests/native-texture-source-cache-local-carrier.md)
+records this native-slot versus generated-consumer representation seam, not a missing permissive
+Map constructor. The declaration is rejected before link; no positive unused-header link/run,
+qualified negative-link or normal generation is claimed. See [retained getter/draw evidence](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-gl-scale9-shape-getter-declaration-stops-at-the-cache-carrier).
+
+The draw body independently refuses a null-presence test on an unnamed property; its ledger does not
+prove which field, so none is guessed. The retained mask wrapper and global renderer still reference
+the refused draw. Backend callback and full shape/runtime owners need the existing
+[typed owner contract](compiler-requests/readonly-callback-derived-owner-recovery.md), not a copied
+Shape, RendererData, texture source or surface. The current native shape-data lane supplies mesh
+lifecycle and explicitly refuses raster teardown; it is not a Scale9 raster implementation.
+
+Preserve registered rasterizer dispatch/miss reporting, mapper-null delegation, original commands/grid
+and bounds/content revision, pixelRatio/size/scale invalidation, remapped-command replay, pixel-space
+transform/reset, same-host surface acquisition/reuse/release, Image-keyed GPU eviction before release,
+resize failure/absence, actual image invalidation, stripped-scale matrix and real textured quad/mask.
+No fake raster/draw, empty success, copied owner or narrowed shape/key domain is carried. Only this
+row/cluster, report186 and named request evidence change; all foreign products and historical
+sweep/carry totals remain unchanged. No old native/rendering proof or global sweep was rerun.
 
 ### 187. `undeclared-identifier-785ed669` — 1 header(s)
 
