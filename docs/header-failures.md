@@ -95,7 +95,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 66 | `no-viable-conversion-b5b698fe` | 3 | 2D | compiler | a value is passed where its declared type cannot receive it |
 | 67 | `other-3d2efc1d` | 3 | 2D | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 72 | `other-41f4a462` | 3 | ANIM | compiler | a named-property view (which aliases the source object) and an empty Record are the two arms of one conditional, so the conditi... *(request filed)* |
-| 69 | `other-6a1604d5` | 3 | PLAT | runtime | uncategorised: the first diagnostic does not name a single cause |
+| 69 | `other-6a1604d5` | 3 | PLAT | override completeness (fixed) | the tray placeholder override shadowed `set_tray_animation_guard`, which the generated guard header calls; G2 recheck: 3/3 pass |
 | 70 | `other-b860ec87` | 3 | 2D, GL | compiler | the emitted code returns a readonly structural row as its declared nominal owner and drops the recovery; fix attempted and withdrawn |
 | 71 | `other-f9c5bc10` | 3 | 2D | compiler | an `as` assertion over a `flight::JsonValue` is lowered with the erased-value `object_if` pattern, which a tagged JSON value ca... *(request filed)* |
 | 72 | `redefinition-c11d96e9` | 3 | TEXT | runtime (fixed) | the bitmap_font_record override's `#pragma once` was commented out; G2 recheck: 0 pass, 3 fail at `bitmap_font_fnt.hpp:187` |
@@ -1436,13 +1436,26 @@ permissive assignment or always-default style behavior was supplied. Text layout
 - compiler request: `docs/compiler-requests/named-view-record-ternary.md`
 - related compiler request: `docs/compiler-requests/membership-test-lowered-literally.md`
 
-### 69. `other-6a1604d5` — 3 header(s)
+### 69. `other-6a1604d5` — 3 header(s), fixed by completing the override
 
-- cause: uncategorised: the first diagnostic does not name a single cause
+- cause: the `tray-prior-emission-tray` override is a placeholder that declares nothing but two
+  forward declarations, so it hid `set_tray_animation_guard` from the generated
+  `enable_tray_guards.hpp`, which calls it twice
 - lanes: PLAT
-- fix route: runtime
-- first failure at: `flight/tray/enable_tray_guards.hpp:25`
-- example: `no type named 'set_tray_animation_guard' in namespace 'tray'`
+- fix route: override completeness, not a compiler or binding defect
+- first failure was at: `flight/tray/enable_tray_guards.hpp:25`
+
+The 806d257 `tray.hpp` emission *does* declare `animation_guard` and
+`set_tray_animation_guard`, but that header does not compile on its own (retained callers name
+`attach_tray_event`, `destroy_tray_runtime` and `invoke_update`), so the package ships the previous
+pinned compiler's placeholder. The placeholder omitted the slot and setter that a sibling generated
+header needs. Both are now supplied in the override exactly as the current emission writes them: one
+optional module-level slot and a plain assignment. No native tray provider is invented and the callback
+domain is unchanged.
+
+G2: **3/3 pass, plus `flight/tray/tray.hpp` passes**, measured at `-j1` with Clang 22.1.8. The rest of
+the module's surface is still only declared in the placeholder's comments and remains owed until the
+pinned compiler emits `tray.ts` so that its header compiles independently.
 
 ### 70. `other-b860ec87` — 3 header(s)
 

@@ -36,3 +36,9 @@ pinned compiler still owes.
 
 The carry is deliberate debt, not a fork: it is the emission this repository already measured, and each entry
 expires when the pinned compiler emits the module so that its header compiles on its own.
+
+The `@flighthq/tray` carry is a placeholder rather than a full prior emission: `tray.ts` was refused at
+`2b687ea` too, so that override declares the module's surface in comments and supplies nothing. The
+806d257 `enable_tray_guards.hpp` calls `set_tray_animation_guard`, so the placeholder now also carries
+that setter and its `animation_guard` slot, copied unchanged from the current emission, and the
+package's three guard headers compile. Everything else the module declares remains owed.
