@@ -144,7 +144,11 @@ patch has retired because the fix landed upstream keep their row, marked, as the
   `Modifier` stacks erase eight built-in descriptor owners, while `ModifierDefinition` registries erase the GL
   and WGPU snippet callbacks stored in them. The exact replacement is `ModifierValue` plus
   `ModifierDefinitionValue` across types, shading and the renamed `glShadedMeshMaterialRenderer.ts`, with a
-  branch for the independent vertex-direction fallback. The carrying source patch is still pending on GL.
+  branch for the independent vertex-direction fallback. The current-pin source patch is applied; the shaded
+  prelude now retains all owners, with its remaining Map guard declared only.
+- [A readonly Map arm must retain its Map constructor evidence](readonly-map-instanceof-member-evidence.md) —
+  the shaded prelude's union already emits a concrete Map arm, but its `instanceof Map` guard refuses through
+  the `Readonly<ReadonlyMap<...>>` spelling. The exact guard declaration supplies no shader or type-test body.
 - [PBR define-key construction needs only the alpha-mode scalar](scene3d-gl-pbr-alpha-mode-boundary.md) —
   the three renamed PBR renderers cannot widen their concrete flattened owners to `Readonly<Material3D>` merely
   so `glPbrStandardBlock.ts` can read `alphaMode`. A scalar entry point keeps the existing object-taking helper,

@@ -54,3 +54,10 @@ witnesses. An unused current-emission header with that declaration and the previ
 color-feature optional projection compiled, linked and ran. Such a declaration supplies no guard,
 shader snippet or rendering behavior; a real resolver call must still fail to link on the exact missing
 guard until this request is implemented.
+
+The committed guard declaration and its manifest record were reproduced by normal exact-pin
+single-module generation. The active override equals the positive-tested full-domain candidate,
+including only the existing native optional-feature projection beyond generated output. A call of
+`resolve_gl_modifier_snippet_source` using the actual Map alternative compiled to an object, then
+failed to link only on `flight::scene3d_gl::is_gl_modifier_snippet_table(GlModifierSnippetSource)`.
+No positive type-test, shader compilation or rendering execution is claimed by that link boundary.

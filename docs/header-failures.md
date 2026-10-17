@@ -121,7 +121,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 92 | `undeclared-identifier-7ce7bd18` | 2 | 3D | compiler | refused MD2 skin handler retained by global family; exact declaration fails unused-header positive link *(existing requests, G2: 0/2 retained)* |
 | 93 | `undeclared-identifier-86212434` | 2 | GL | compiler *(existing request)* | the emitter refuses the `glSsaoEffectRunner` binding (and its callee `applySsaoEffectToGl`) but still emits the registration call that passes the runner |
 | 94 | `other-8b0f8597` | 2 | 3D | [compiler request](compiler-requests/host-initialize-optional-fallback-on-a-required-read.md) | skin builder emits after a source patch; SequenceView index nullish fallback still fails (G2: 0/2 pass) |
-| 95 | `undeclared-identifier-e39f9d67` | 2 | 3D | runtime | the emitted code names `resolve_gl_modifier_snippet_source`, which nothing declares |
+| 95 | `undeclared-identifier-e39f9d67` | 2 | 3D | compiler | missing resolver cleared; original2 now 1 pass / 1 readonly program-owner failure; Map guard remains declaration-only *(requests extended)* |
 | 96 | `variant-cast-37507e07` | 2 | 3D | compiler | a functional-style cast is applied to a variant the target type cannot take |
 | 97 | `call-has-no-matching-00dc04ad` | 1 | 2D | compiler | the emitted call to `get_texture_uv_matrix` matches no declared overload |
 | 98 | `call-has-no-matching-35224a3f` | 1 | 3D | compiler | the emitted call to `gl_uniform_type_name` matches no declared overload |
@@ -2040,14 +2040,36 @@ carried. Both rows stay failed; global/G1 totals and all unowned rows remain unc
 - New native first failure: `flight/scene3d_formats/gltf_skins.hpp:118`, `member reference base type 'double' is not a structure or union`. The emitted `matrices->data[index].value_or(0)` calls optional operations on the double from SequenceView::operator[]. The existing [required-read/nullish-storage request](compiler-requests/host-initialize-optional-fallback-on-a-required-read.md#g2-gltf-skin-component-distinguish-an-index-miss-from-a-present-double) records the checked `get(index).value_or(0)` contract. The [typed-array binding request](compiler-requests/typed-array-static-from-binding.md) stays open for the general operation.
 - Scoped final native result: **2 attempted / 0 pass / 2 fail / 0 unattempted**, jobs **1**, root and registration header only, both at the same new diagnostic. Both rows remain failed with previousCluster and request links. The real handler behavior executable failed to build and was not run; no positive unused-header link, expected negative-link result, callable skin import or native behavior pass is claimed. No declaration repair or fake body was added. Historical G1 sweep/carry totals and foreign worklist rows/clusters remain unchanged; no global sweep.
 
-### 95. `undeclared-identifier-e39f9d67` — 2 header(s)
+### 95. `undeclared-identifier-e39f9d67` — 2 G1 header(s), resolver restored
 
-- cause: the emitted code names `resolve_gl_modifier_snippet_source`, which nothing declares
-- subject: `resolve_gl_modifier_snippet_source`
-- lanes: 3D
-- fix route: runtime
-- first failure at: `flight/scene3d_gl/gl_shaded_prelude.hpp:168`
-- example: `use of undeclared identifier 'resolve_gl_modifier_snippet_source'`
+The initial scoped run measured **2 attempted / 0 pass / 2 fail / 0 unattempted**, Clang22.1.8,
+one worker, both at the older active override's missing resolver on `gl_shaded_prelude.hpp:168`.
+The current concrete-value source patch is already rebased/applied. Normal exact-pin single-module
+generation retains all nine modifier arms, three definition arms and the real checked resolver.
+The prelude override is rederived from that emission, keeping byte-identical GLSL and only the
+previously accepted native nested-optional color-feature projection.
+
+The existing `declare-refused-function` mechanism adds the exact private Map-guard declaration under
+its refusal/direct-call/absent-body witnesses. An unused actual prelude compiled, linked and ran;
+a real Map-alternative resolver call compiled to an object, then failed to link only on
+`is_gl_modifier_snippet_table(GlModifierSnippetSource)`. The override remains partial; no guard,
+shader snippet or rendering body is supplied. The [Map constructor-evidence request](compiler-requests/readonly-map-instanceof-member-evidence.md)
+records the remaining refusal; the [concrete-owner request](compiler-requests/modifier-concrete-value-path.md)
+records the restored full domain.
+
+The final scoped run measured **2 attempted / 1 pass / 1 fail / 0 unattempted**, jobs **1**,
+Clang22.1.8, 306.5 seconds. `gl_shaded_prelude.hpp` passes. The material renderer now reaches:
+
+| follow-on cluster | headers | first failure | cause |
+| --- | --- | --- | --- |
+| `readonly-view-round-trip-4476a9e9` | 1 | `flight/scene3d_gl/gl_shaded_mesh_material_renderer.hpp:169` | a retained readonly program row is reconstructed through a writable row before the readonly draw helper |
+
+This is the existing [guarded readonly helper request](compiler-requests/guarded-readonly-optional-helper-call.md#g2-shaded-material-follow-on),
+with the same native storage provenance as the nine earlier renderers. No mutable upgrade, nominal
+owner recovery or program/cache copy is valid. Only these original two rows and their replacement
+cluster changed; `previousCluster` retains their G1 group. Opening sweep/carry totals and all foreign
+rows/clusters remain unchanged. Header and link boundaries do not establish shader assembly or
+shaded rendering while the guard has no body; no global/native baseline was rerun.
 
 ### 96. `variant-cast-37507e07` — 2 header(s)
 

@@ -119,3 +119,19 @@ reads `registry.definitions.get(kind) ?? null` after the same guard. That is exa
 `resolveModifier`, so it preserves one lookup, the returned definition's identity, and the null miss
 sentinel while avoiding the broken helper boundary. Remove the direct lookup when the guarded payload
 can pass to an identically readonly parameter without a writable round trip.
+
+## G2 shaded material follow-on
+
+The scoped original two-header modifier check now clears the old missing resolver and measures
+**1 pass / 1 fail**, Clang22.1.8, one worker. `gl_shaded_prelude.hpp` passes;
+`gl_shaded_mesh_material_renderer.hpp:169` reaches the same readonly active-program handoff above:
+its retained draw callback reads the effective optional readonly program, guards absence, and then
+constructs a writable `GlMeshProgram` row before calling readonly `draw_gl_mesh_subset`.
+The first fatal diagnostic rejects exactly that writable construction. The existing native program
+storage and its shared uniform/cache cells must pass through with readonly authority.
+
+This adds one actually measured consumer to this request without rerunning or changing the nine
+historical renderer rows/clusters. The modifier prelude is restored with full owner domains, real
+shader strings and only a declaration for its refused Map guard; that separate
+[constructor-evidence gap](readonly-map-instanceof-member-evidence.md) still prevents a positive
+resolver/shader execution claim. No renderer override, mutable conversion or copied owner is carried.

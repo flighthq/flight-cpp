@@ -104,8 +104,37 @@ is duplicated and no evaluation is moved across a GL call.
 
 ## Carrying workaround and status
 
-`source-patches/modifier-concrete-value-path.patch` carries the older form against Flight `7e2fc7d`. It has a
-`pendingRebase` marker because `shadedGlMeshMaterialRenderer.ts` became
-`glShadedMeshMaterialRenderer.ts`; it is not applied at the current pin. The source-patch lane owns the rebase.
-This request changes no patch, repair or generated file. It expires when heterogeneous open-interface storage
-retains checked concrete owners, or when Flight adopts these explicit value unions.
+`source-patches/modifier-concrete-value-path.patch` is rebased to Flight `a627849` and applied at the
+current pin, as the source-patch manifest and emitted nine-arm `ModifierValue` / three-arm
+`ModifierDefinitionValue` show. It covers the renamed `glShadedMeshMaterialRenderer.ts` as well as
+the shared registry and callback paths. The earlier pending-rebase description is historical.
+The patch expires when heterogeneous open-interface storage retains checked concrete owners, or when
+Flight adopts these explicit value unions.
+
+### G2 shaded-prelude carry reconciled with current emission
+
+Original cluster `undeclared-identifier-e39f9d67` measured 0/2 at the active older native override's
+missing `resolve_gl_modifier_snippet_source` (line168). That override still accepted
+`Array<Ref<Modifier>>` and carried an old base-definition owner refusal. Current generated output
+already emits the resolver using checked GL-snippet recovery from `ModifierDefinitionValue`, with
+all modifier owners passed through the shared readonly callback family.
+
+The prelude override is now rederived from normal exact-pin single-module output, preserving both
+registry sources, eight built-ins, open vendor modifiers/definitions and GL/WGPU definition arms.
+Its real GLSL strings are byte-identical. Only the previously accepted nested-optional color-feature
+projection remains a native correction. The exact existing declaration repair adds
+`bool is_gl_modifier_snippet_table(GlModifierSnippetSource registry);`; no guard, snippet or shader
+body is supplied. The override stays partial.
+
+An unused actual header compiled, linked and ran; a real resolver call compiled to an object and
+failed to link only on that exact missing guard. The remaining
+[readonly Map constructor-evidence request](readonly-map-instanceof-member-evidence.md) records the
+current guard refusal. Header integration and concrete-owner preservation do not make shader
+assembly or a full shaded rendering path available while this guard has no body.
+
+The changed original two headers measured **1 pass / 1 fail**, Clang22.1.8, one worker:
+`gl_shaded_prelude.hpp` passes, while `gl_shaded_mesh_material_renderer.hpp:169` now fails on the
+separate readonly-program-to-writable-row construction already covered by the
+[guarded readonly helper request](guarded-readonly-optional-helper-call.md#g2-shaded-material-follow-on).
+This is an actual exposed next diagnostic, not a remaining missing-resolver error. No renderer
+writable upgrade or shader execution is claimed.
