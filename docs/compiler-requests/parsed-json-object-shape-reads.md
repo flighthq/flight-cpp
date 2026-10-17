@@ -113,3 +113,128 @@ Only the four Pixi-dependent inventory rows are linked in this arc, with
 as the primary first-error cause and this file as related required work. They retain **0 pass / 4 fail**
 from G1, with unchanged diagnostics and no C++ recompile. No conversion, parser replacement, new
 request, global sweep or upstream test port is carried; other parser rows are not changed.
+
+
+## G2 Unity particle JSON returns a named view of the wrong carrier
+
+At Flight `a62784923f3be814463286c9fb28edfe6ab15789` / compiler
+`806d257d2f4100de745cc97340e61c2f301b0f24`, cluster `call-has-no-matching-c287f892` contains
+`flight/particles_formats/unity_parse.hpp`. Its recorded first failure is native77:
+`no matching function for call to 'named_properties'`. Source
+`packages/particles-formats/src/unityParse.ts:35-47` parses to unknown, rejects null/nonobject/array
+roots, then returns that original object as Record<string,unknown>. The retained C++ is:
+
+```cpp
+inline flight::Record<flight::String, flight::Any> parse_unity_json(flight::String json) {
+  flight::JsonValue raw;
+  // JSON.parse, format-tagged catch and the root guard are retained here.
+  return flight::named_properties(raw); // native77
+}
+```
+
+This is this existing parsed-JSON/dynamic-Record request, already listing unityParse.ts, rather than
+a new binding name or a missing declaration. Current named_properties overloads accept an existing
+shared native object, StructuralRef or Any row owner. JsonValue instead owns a tagged JSON tree with
+JsonObject/JsonArray storage and has no such native row. Moreover, even a named-view overload would
+not match the function's declared Record<String,Any> return: NamedProperties and Record are different
+carriers. Returning an empty view/Record or adding an unchecked conversion would conceal the real
+JSON values. An asserted UnityParticleDocument/native anonymous struct is not an owner that the
+parsed object was allocated with.
+
+Faithful lowering must let one parsed object and its nested values answer the source dynamic Record
+reads and arrays, with missing keys yielding undefined, through a coherent parse carrier or checked
+JSON-backed member view. Do not invent schema owners, clone a second tree to satisfy an unrelated row,
+restrict the parser to prevalidated native Unity structs, require mandatory properties or coerce
+unknown values. The existing C++ helpers visibly use get(key).value() on Records and even on Any reads
+from NamedProperties; missing fields must reach the source default paths instead. Erased-array loops
+also retain named length reads/indexing without recovering array storage. These are inspected adjacent
+lowering barriers, not freshly measured next diagnostics.
+
+The catch remains an independent inspected error boundary: source catches JSON.parse's error and
+throws Error with the Invalid Unity particle JSON prefix plus its message. Native Json::parse throws
+JsonSyntaxError (a std::runtime_error), while the emitted catch binds const std::exception& and
+casts it to flight::Error before reading message. Preserve the source exception kind/message and
+separate expected-object error; no new native exception test or error-order claim is made here.
+
+### Real particle configuration, document and schema owners
+
+Both public entry points accept JSON strings and optional pixelsPerUnit, default100. The direct
+parseUnityParticle path returns rawToConfig(parseUnityJson(...), ppu), with no intermediate document.
+parseUnityParticleDocument parses once, then evaluates config, diagnostics and document in that order
+from the same raw object. Its existing UnityParseResult carries the real ParticleEmitterConfig owner,
+UnityParticleDocument owner and ImportDiagnostic array, not a substitute plain row or empty success.
+An empty JSON object is valid and takes defaults; syntax errors and null/array/primitive roots throw.
+
+Preserve the source conversion rules, including these distinctions:
+
+- rn/rb/rs use typeof number/boolean/string and their actual fallbacks, without numeric coercion or
+  an added finite-only schema. mmLow/mmHigh accept a number directly; twoConstants/twoCurves select
+  constantMin/constantMax with constant fallback; other modes use constant. Preserve the source
+  min/max and NaN/infinite/-0 domain, rather than adding range normalization or swapping endpoints.
+- PPU scales speed, emitter radius/box dimensions and gravityModifier*physicsGravity (default9.81).
+  It does not scale lifetimes or start size. Spawn rate averages the low/high rateOverTime values
+  (default10). Only the first burst feeds config count/repeat interval; cycleCount1 selects interval0.
+  maxParticles uses the source bitwise-or0 conversion. Looping defaults true and maps duration to0;
+  nonlooping uses max(0,duration default5). Rotation-over-lifetime converts degrees/sec to radians/sec.
+- Config shape handling defaults disabled, point, direction(0,-1), spread pi and dimensions0.
+  Enabled Sphere/Hemisphere/Circle map to circle; Box/Rectangle to rect; Cone uses the authored
+  angle in radians and becomes circle only for positive radius. The typed document readShape defaults
+  enabled=true, Cone and radius1, and preserves authored shape fields/scale. Routing config through
+  that typed document would change defaults and is not an equivalent fix. Unsupported shape strings
+  retain the actual point fallback and Recover diagnostic, not a new mandatory enum validator.
+- Keep start/end RGB and alpha selection from colorOverLifetime versus startColor, white/fade
+  defaults, size endpoint division by max(0.001,average start size), and enabled rotation controls.
+  Color, alpha and size curves bake only when their corresponding arrays have more than two keys.
+  Color keys may hold nested color or inline RGB; missing time uses i/(length-1). Delegate to the
+  existing particleColorCurveFromKeyframes/particleCurveFromKeyframes with real ColorKeyframe/
+  CurveKeyframe owners and their default33 samples; do not reduce multi-stop data to endpoints,
+  replace curves with null or invent a new interpolation algorithm. Disabled/short-curve paths retain
+  their actual null curves and endpoint/default behavior.
+- rawToDocument preserves its explicit name/loop/prewarm, authored units, min/max records, all burst
+  records, shape and lifetime-reader fields using their existing defaults. Its color/size lifetime
+  readers currently populate endpoint/size fields, not the optional gradient/curve members advertised
+  by the schema. Preserve that actual mapping; this disposition does not claim arbitrary raw JSON
+  field preservation or upgrade the document's round-trip fidelity. Source allocations of config,
+  document subobjects and curve arrays remain where the source creates them, with no repair copies.
+- unityBlendMode reads only the top-level blendMode despite a comment mentioning renderMode. Its
+  lowercase additive/add, multiply, screen, normal/alpha mapping and null fallback remain unchanged.
+  Do not add a renderMode fallback or force every unrecognized mode to normal.
+
+### Diagnostics and the three omitted helpers
+
+collectUnityDiagnostics scans the existing eleven unsupported-module key/label pairs in source order:
+velocityOverLifetime, forceOverLifetime, limitVelocityOverLifetime, inheritVelocity, noise, collision,
+subEmitters, trails, textureSheetAnimation, externalForces and lights. Only an object with boolean
+enabled=true contributes. Collect first, then emit one Skip unity.module-unsupported per distinct
+module label, origin collectUnityDiagnostics. Preserve labels and insertion order rather than merging
+all losses into a count or reporting every field as unsupported.
+
+Then report Skip unity.extra-bursts-unsupported with the entire burstCount when there is more than one
+burst, Recover unity.shape-unsupported for an enabled unmapped shape, Skip unity.prewarm-unsupported,
+and Skip unity.start-rotation-unsupported for nonzero constant/min/max or curve/twoCurves modes.
+The comment above the collector still calls the extra-burst case Drop; the actual code and test say
+Skip and govern this contract. Multi-stop gradients now bake and must not gain an obsolete unsupported
+diagnostic. Both the real diagnostics array and the selected source fallback behavior must survive.
+
+The header still explicitly omits rawToConfig85 and readEmission364 with
+cpp-erased-array-assertion-runtime-required, and collectUnityDiagnostics216 with
+cpp-optional-member-access-unproven (property bursts lacks present-value proof). The existing
+[erased-array request](erased-array-element-reading.md) covers array<unknown>/Record reads and notes
+that AnyArray has exact recovery but no generic element view; the optional em?.bursts test and later
+em.bursts need coherent [present-flow evidence](optional-index-member-present-flow.md), not the
+already-carried optional-aware is_array binding alone. The [retained-callee request](retained-declaration-calls-omitted-callee.md)
+covers calls to those missing algorithms from public parsers/rawToDocument. Adding their declarations
+would neither repair native77 nor supply config mapping, diagnostics or burst parsing. No candidate,
+positive unused compile/link/run or qualified negative-link gate was attempted or claimed.
+
+Existing unityParse.test.ts covers valid config defaults/conversions, invalid roots and tagged syntax
+errors, multi-stop color/alpha/size sampling, config/document agreement, preserved name/loop/prewarm,
+diagnostic severities/details and serialization/re-import expectations. These were read as source
+requirements only. No native Unity config/parser/document/curve/serialization/particle execution,
+header-availability or link success is claimed.
+
+**Recorded 0/1 pass, 1 fail is retained.** Only this existing request appendix, worklist105 and two
+compact product lines (one cluster/one failed row) change. C++, particle/schema owners, runtime,
+repairs, source patches, generation inventory and pins are unchanged; unchanged C++ is not rerun.
+Foreign compact products/worklist entries and historical/G1 totals remain intact. No foreign coordinator
+attachment was applied, and no fake parser/counts, copied owner or narrowed input is supplied.

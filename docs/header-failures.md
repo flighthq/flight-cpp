@@ -131,7 +131,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 102 | `call-has-no-matching-8a1f3a33` | 1 | GL | compiler | a narrowed `Texture2D` reference read through structural `row_get` *(existing request extended)* |
 | 103 | `call-has-no-matching-8d9de718` | 1 | PLAT | compiler | the emitted call to `collect_spatial_candidates` matches no declared overload |
 | 104 | `call-has-no-matching-b3c6bcee` | 1 | GL | compiler | the emitted call to `log_once` matches no declared overload |
-| 105 | `call-has-no-matching-c287f892` | 1 | ANIM | compiler | the emitted call to `named_properties` matches no declared overload |
+| 105 | `call-has-no-matching-c287f892` | 1 | ANIM | compiler | G2: recorded 0/1 retained; Unity JsonValue cannot become named view/dynamic Record; existing JSON-read request, no rerun |
 | 106 | `call-has-no-matching-c8046ec6` | 1 | 3D | compiler | the emitted call to `uniform2fv` matches no declared overload |
 | 107 | `call-has-no-matching-e7b28969` | 1 | WGPU | compiler | the emitted call to `write_texture` matches no declared overload |
 | 108 | `call-has-no-matching-fbd6de0d` | 1 | 3D | compiler | the emitted call to `invoke` matches no declared overload |
@@ -2529,14 +2529,28 @@ lookup.
 - first failure at: `flight/render_gl/enable_gl_render_texture_guards.hpp:27`
 - example: `no matching function for call to 'log_once'`
 
-### 105. `call-has-no-matching-c287f892` — 1 header(s)
+### 105. `call-has-no-matching-c287f892` — 1 header(s), compiler route
 
-- cause: the emitted call to `named_properties` matches no declared overload
-- subject: `named_properties`
-- lanes: ANIM
-- fix route: compiler
-- first failure at: `flight/particles_formats/unity_parse.hpp:77`
-- example: `no matching function for call to 'named_properties'`
+**Recorded 0/1 pass, 1 fail retained; docs-only, unchanged C++ not rerun.**
+`flight/particles_formats/unity_parse.hpp:77` still has no matching named_properties(raw) overload
+for JsonValue. Source parseUnityJson35-47 asserts the original parsed object as Record<string,unknown>,
+while native storage is JsonValue and the function returns Record<String,Any>.
+
+[Existing parsed-JSON/member-read coverage](compiler-requests/parsed-json-object-shape-reads.md#g2-unity-particle-json-returns-a-named-view-of-the-wrong-carrier)
+already lists Unity; it now records this exact named-view mismatch, separate Record return requirement,
+missing-key/nested-array reads and inspected exception carrier. A new overload alone cannot bridge those
+owners, and a copied/schema-asserted/default-empty result would change the source input/identity contract.
+
+The full audit preserves direct versus document parse/evaluation order and differing shape defaults,
+PPU/min-max/shape/burst/loop/gravity mappings, actual multi-stop curve baking, typed result/particle owners,
+all eleven unsupported modules and ordered Skip/Recover diagnostics. rawToConfig/readEmission remain
+omitted at [erased-array recovery](compiler-requests/erased-array-element-reading.md); collectUnityDiagnostics
+remains omitted at [optional present-flow proof](compiler-requests/optional-index-member-present-flow.md).
+[Retained missing-callee calls](compiler-requests/retained-declaration-calls-omitted-callee.md) supply no
+algorithms or unused-header availability. These are inspected only, not fresh next diagnostics/link tests.
+No parser/particle/curve/serialization gain, fake counts, copied owner or narrowed JSON/schema is claimed.
+Only the request appendix, this slice and two compact root/row lines change; C++/owners/runtime/patches/
+repairs/manifest/pins and foreign/historical products remain unchanged. Coordinator attachments were not applied.
 
 ### 106. `call-has-no-matching-c8046ec6` — 1 header(s)
 
