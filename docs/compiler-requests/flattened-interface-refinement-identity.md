@@ -298,3 +298,18 @@ Carried: `interaction-declare-refused-tilemap-cell-index` inserts
 narrowed node/domain or runtime provider is supplied. The unused header compiles, links and runs; a
 caller that registers the hit test fails to link on the resolver. The body stays owed to this request:
 it needs identity-preserving refined `Tilemap` and `Node2D` views, not a copied owner.
+
+## G2 QuadBatch instance resolution: declaration only, quad-batch owners still owed
+
+`@flighthq/interaction` `registerQuadBatchHitTest.ts` at flight `a627849` refuses
+`resolveQuadBatchInstanceIndex(source: NodeAny, x, y): number`: it asserts the `NodeAny` source to the
+concrete `QuadBatch` and to `Node2D`, then reads the atlas, instance ids, transforms and per-instance
+bounds. Both asserted owners are flattened independents, so the refinement has no heritage path, and
+`registerQuadBatchHitTest` still registers the resolver.
+
+Carried: `interaction-declare-refused-quad-batch-instance-index` declares
+`double resolve_quad_batch_instance_index(flight::types::NodeAny, double, double)` -- the exact
+`HitTestPreciseFunction` carrier shape. No hit index, false-hit sentinel, copied quad-batch graph,
+narrowed node/domain or runtime provider is supplied. The unused header compiles, links and runs; a
+caller that registers the hit test fails to link on the resolver. The body stays owed to this request:
+it needs identity-preserving refined `QuadBatch` and `Node2D` views, not a copied owner.

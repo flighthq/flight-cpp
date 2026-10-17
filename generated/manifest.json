@@ -3520,6 +3520,12 @@
         "flight/skeleton2d/ik_constraint_2d.hpp"
       ],
       "id": "skeleton2d-declare-refused-ik-constraint-solver"
+    },
+    {
+      "files": [
+        "flight/interaction/register_quad_batch_hit_test.hpp"
+      ],
+      "id": "interaction-declare-refused-quad-batch-instance-index"
     }
   ],
   "sourcePatches": [

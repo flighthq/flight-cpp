@@ -213,7 +213,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 184 | `undeclared-identifier-6ad30a3d` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glCrtEffectRunner` binding (and its callee `applyCrtEffectToGl`) but still emits the registration call that passes the runner |
 | 185 | `undeclared-identifier-6dd20ce4` | 1 | 2D | compiler | QuadBatch submit refuses nullable material owner widening; exact declaration compile fails NodeAny/Sprite callback carrier *(existing requests extended)* |
 | 186 | `undeclared-identifier-757c2c8a` | 1 | 2D | compiler | private Scale9 shape owner recovery refused; exact declaration compile fails native texture-cache local carrier *(requests filed)* |
-| 187 | `undeclared-identifier-785ed669` | 1 | PLAT | runtime | the emitted code names `resolve_quad_batch_instance_index`, which nothing declares |
+| 187 | `undeclared-identifier-785ed669` | 1 | PLAT | declaration repair (applied) | omitted quad-batch instance resolver declared; G2: 1/1 pass, registration remains unlinkable |
 | 188 | `undeclared-identifier-7905640c` | 1 | 2D | compiler *(existing request)* | refused `canvasClipHooks` (RenderState asserted to CanvasRenderState without heritage) still stored; all clip callees emitted |
 | 189 | `undeclared-identifier-7d85a310` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glLensFlareEffectRunner` binding (and its callee `applyLensFlareEffectToGl`) but still emits the registration call that passes the runner |
 | 190 | `undeclared-identifier-7e3a780f` | 1 | PLAT | declaration repair (applied) | exact Sprite alpha helper declared; G2: 1 pass; registration and pixel hit testing remain unlinkable |
@@ -3587,14 +3587,26 @@ No fake raster/draw, empty success, copied owner or narrowed shape/key domain is
 row/cluster, report186 and named request evidence change; all foreign products and historical
 sweep/carry totals remain unchanged. No old native/rendering proof or global sweep was rerun.
 
-### 187. `undeclared-identifier-785ed669` — 1 header(s)
+### 187. `undeclared-identifier-785ed669` — 1 header(s), declaration repaired
 
-- cause: the emitted code names `resolve_quad_batch_instance_index`, which nothing declares
-- subject: `resolve_quad_batch_instance_index`
+- original cause: `registerQuadBatchHitTest` passes the refused `resolveQuadBatchInstanceIndex` to
+  `registerHitTestPrecise`, so the header names a function nothing declares
 - lanes: PLAT
-- fix route: runtime
-- first failure at: `flight/interaction/register_quad_batch_hit_test.hpp:94`
-- example: `use of undeclared identifier 'resolve_quad_batch_instance_index'`
+- fix route: declaration-only emission repair, with the resolver body still owed
+- compiler request: [flattened interface refinement identity](compiler-requests/flattened-interface-refinement-identity.md)
+
+The resolver is refused at `cpp-reference-assertion-without-heritage`: it asserts the `NodeAny` source
+to the concrete `QuadBatch` and to `Node2D`, whose emitted owners are independent, and it reads the
+atlas, ids, transforms and per-instance bounds. The resolver is passed as a value, so the carried repair
+is `insert-forward-declaration` keyed on the exact marker, declaring
+`double resolve_quad_batch_instance_index(flight::types::NodeAny, double, double)` -- the
+`HitTestPreciseFunction` carrier's shape. No hit index, false-hit sentinel, copied quad-batch graph,
+narrowed node/domain or runtime provider is supplied.
+
+Written by **normal package generation** at the exact pins and matched byte for byte by the repair
+engine. Checks at `-j1`: the header **passes**; an unused include compiles, links and runs; a caller of
+`register_quad_batch_hit_test` compiles and fails to link on exactly `resolve_quad_batch_instance_index`,
+so the quad-batch hit test stays visibly unavailable rather than substituted.
 
 ### 188. `undeclared-identifier-7905640c` — G2 recheck of 1 header(s)
 

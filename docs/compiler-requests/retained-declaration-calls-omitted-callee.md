@@ -1746,3 +1746,14 @@ families above.
 
 No repair, generated C++, source patch, override or substitute parser is carried, and no header gain
 is claimed. The row stays failed on the two filed compiler causes.
+
+
+## G2 QuadBatch registration references a refused resolver by value
+
+The same shape as the tilemap registration, one module over: `@flighthq/interaction`
+`registerQuadBatchHitTest.ts` retains `registerQuadBatchHitTest`, which passes the refused
+`resolveQuadBatchInstanceIndex` to `registerHitTestPrecise` at `register_quad_batch_hit_test.hpp:94`.
+Because it is referenced as a value, the carried repair is `insert-forward-declaration` keyed on the
+exact marker, not `declare-refused-function`. Measured at `-j1`: the header passes; an unused include
+links and runs; a caller that registers the hit test fails to link on exactly
+`flight::interaction::resolve_quad_batch_instance_index`.

@@ -9030,6 +9030,19 @@
       "expires": "when resolveTilemapCellIndex emits (its NOT GENERATED marker disappears); sdk:check fails if this repair matches no header."
     },
     {
+      "id": "interaction-declare-refused-quad-batch-instance-index",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/interaction/register_quad_batch_hit_test.hpp",
+      "symbol": "resolve_quad_batch_instance_index",
+      "requiredText": "// NOT GENERATED: function resolveQuadBatchInstanceIndex -- source line 26",
+      "declaration": "namespace flight::interaction { double resolve_quad_batch_instance_index(flight::types::NodeAny source, double x, double y); }",
+      "sourceDeclaration": "packages/interaction/src/registerQuadBatchHitTest.ts:26 -- function resolveQuadBatchInstanceIndex(source: NodeAny, x: number, y: number): number; refused at the NodeAny-to-QuadBatch reference assertion while retained registerQuadBatchHitTest passes it to registerHitTestPrecise with exactly the HitTestPreciseFunction carrier",
+      "diagnostic": "use of undeclared identifier 'resolve_quad_batch_instance_index'",
+      "defect": "The emitter refuses resolveQuadBatchInstanceIndex at cpp-reference-assertion-without-heritage: the function asserts a NodeAny source to the concrete QuadBatch and to Node2D, whose emitted owners are independent, and it reads the atlas, ids, transforms and instance bounds. The exact NOT GENERATED marker, the retained registration reference and the absent definition agree. The resolver is passed as a value, so the repair is a forward declaration keyed on that marker; it supplies no hit index, no false-hit sentinel, no copied quad-batch graph, no narrowed node or domain and no runtime provider. Calling the refused resolver or a caller that registers it still fails to link.",
+      "expectedWhen": "always",
+      "expires": "when resolveQuadBatchInstanceIndex emits (its NOT GENERATED marker disappears); sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "swf-declare-refused-authored-bounds",
       "kind": "declare-refused-function",
       "appliesTo": "flight/swf/swf_node.hpp",
