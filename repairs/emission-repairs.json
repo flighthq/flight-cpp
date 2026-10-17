@@ -9148,6 +9148,22 @@
       "defect": "The exact line17 grid resolver binding refusal marker remains and explicit registration names the absent binding. The existing declaration mechanism adds only the actual LayoutResolver external binding. No callback, grid algorithm, item/container owner, output write or successful registration is supplied. Existing assertion-to-nullable-variant-alternative and retained-declaration-calls-omitted-callee requests cover this boundary.",
       "expectedWhen": "always",
       "expires": "when gridLayoutResolver emits and the exact refused-binding marker disappears; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-formats-declare-refused-collect-md5-anim-features",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/scene3d_formats/md5_anim_features.hpp",
+      "calledFrom": [
+        "flight/scene3d_formats/md5_anim_requirements.hpp"
+      ],
+      "symbol": "collect_md5_anim_features",
+      "refusedFunction": "collectMd5AnimFeatures",
+      "declaration": "flight::Set<flight::String> collect_md5_anim_features(flight::String source);",
+      "sourceDeclaration": "packages/scene3d-formats/src/md5AnimFeatures.ts -- collectMd5AnimFeatures(source: string): ReadonlySet<string>, refused; parseMd5AnimRequirements in md5AnimRequirements.ts calls it",
+      "diagnostic": "no member named 'collect_md5_anim_features' in namespace 'flight::scene3d_formats'",
+      "defect": "The emitter refuses collectMd5AnimFeatures (cpp-member-projection-without-present-storage: lines[i].trim() keeps the indexed read as optional storage, docs/compiler-requests/indexed-array-member-call-present-element.md) but retains parseMd5AnimRequirements in md5_anim_requirements.hpp, which includes its header, so that header fails on a missing member. The declaration's signature is the emitter's own: the retained call passes the flight::String source and stores the result into flight::Set<flight::String>, the carrier the emitted sibling collect_collada_features(flight::String) also returns for ReadonlySet<string>. It is inserted at the refused function's own marker. Declaration only: the caller compiles, and any call fails to link, so MD5 animation feature detection stays unusable and is never substituted by an empty or fixed feature set.",
+      "expectedWhen": "always",
+      "expires": "when collectMd5AnimFeatures emits (the NOT GENERATED marker disappears and this repair matches nothing); sdk:check fails if this repair matches no header."
     }
   ]
 }

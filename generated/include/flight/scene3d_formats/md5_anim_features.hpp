@@ -18,6 +18,8 @@ inline const flight::String md5_anim_feature_animation = flight::String("Animati
 inline flight::Array<flight::String> md5_anim_feature_names = flight::Array<flight::String>{md5_anim_feature_hierarchy, md5_anim_feature_animation};
 
 
+flight::Set<flight::String> collect_md5_anim_features(flight::String source);
+
 // NOT GENERATED: function collectMd5AnimFeatures -- source line 33
 // refusal: cpp-member-projection-without-present-storage [compiler-restriction]
 //

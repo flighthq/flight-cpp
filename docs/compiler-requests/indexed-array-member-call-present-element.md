@@ -99,3 +99,11 @@ still a JavaScript TypeError, not an absence. `parseObjMaterialLibrary` is withh
 retained `collectObjMaterialModels` in `obj_material_model.hpp` calls it, so the declaration repair
 in [retained callers](retained-declaration-calls-omitted-callee.md) compiles past the undeclared
 name without supplying any MTL grammar, material record or diagnostics tally.
+
+## G2 MD5 animation feature collection
+
+At Flight `a627849` / compiler `806d257`, `collectMd5AnimFeatures` (`md5AnimFeatures.ts:33`) refuses on
+`lines[i].trim()`, which is the same indexed member call. The retained caller `parseMd5AnimRequirements`
+compiles because of the declaration-only repair `scene3d-formats-declare-refused-collect-md5-anim-features`.
+Any call of it fails to link on `collect_md5_anim_features` (GCC 15.2), so MD5 animation feature detection
+stays unavailable until the element read lowers as present.

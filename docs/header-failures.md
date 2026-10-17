@@ -148,7 +148,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 119 | `missing-member-b5408b35` | 1 | 3D | override (fixed) | the `gl_shadow_map` override regained the generated `node_transform3d.hpp` include; G2 recheck: 1 pass |
 | 120 | `missing-member-d7bf452c` | 1 | 2D | [compiler/runtime contract](compiler-requests/readonly-record-entry-enumeration.md) | readonly Record entry enumeration and value-to-view construction disagree; G2: 0/1 retained |
 | 121 | `missing-member-dae8c839` | 4 | TEXT | [compiler request](compiler-requests/reference-backed-outcome-variant-narrowing.md) | FNT formatter reads dimensions on an image-source variant instead of its active owner |
-| 122 | `missing-member-dcf85c36` | 1 | 3D | runtime | the emitted code reads a member the target does not declare (`collect_md5_anim_features`) |
+| 122 | `missing-member-dcf85c36` | 1 | 3D | repair (fixed) | refused `collectMd5AnimFeatures` declared (declaration only) for its retained caller; G2 recheck: 1 pass |
 | 123 | `missing-member-ee398c94` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`register_canvas_texture_resolver`) |
 | 124 | `missing-member-fd2be1bc` | 1 | TEXT | compiler *(existing request)* | an `as { chars?, common? }` assertion over a parsed `JsonValue` is lowered with the erased-`Any` `object_if` recovery |
 | 125 | `no-viable-conversion-03bf8175` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
@@ -2467,14 +2467,16 @@ failed, with foreign rows/clusters and historical G1 totals unchanged.
 - First recorded failure: `flight/bitmapfont_formats/bitmap_font_fnt.hpp:187`, missing `width` on the seven-owner variant. Four owned rows retain their exact diagnostics and existing `previousCluster` include-guard-repair provenance, and now link the request. The work-item ID remains for continuity.
 - Recorded result retained: **0/4 pass, 4 fail**. No C++/source patch/binding/override/repair registry changed, so no unchanged native rerun or normal generation was performed. Parser/atlas resolution, metrics, glyph and kerning ordering/identity, and shared scratch behavior were not changed or claimed working. Foreign rows/clusters and historical sweep totals remain unchanged; no global sweep.
 
-### 122. `missing-member-dcf85c36` — 1 header(s)
+### 122. `missing-member-dcf85c36` — G2 recheck of 1 header(s)
 
-- cause: the emitted code reads a member the target does not declare (`collect_md5_anim_features`)
+- cause: `collectMd5AnimFeatures` is refused (`cpp-member-projection-without-present-storage` on `lines[i].trim()`), but its caller `parseMd5AnimRequirements` is kept in `md5_anim_requirements.hpp`.
 - subject: `collect_md5_anim_features`
 - lanes: 3D
-- fix route: runtime
-- first failure at: `flight/scene3d_formats/md5_anim_requirements.hpp:20`
-- example: `no member named 'collect_md5_anim_features' in namespace 'scene3d_formats'`
+- fix route: repair (fixed)
+- change: declaration-only emission repair `scene3d-formats-declare-refused-collect-md5-anim-features` (`calledFrom` the requirements header). All three witnesses hold: the exact NOT GENERATED marker, the retained call, and no definition. The declaration uses the emitter's own carriers, `flight::Set<flight::String>(flight::String)`, the same ones the emitted sibling `collect_collada_features` uses.
+- Normal exact-pin `pkg:generate @flighthq/scene3d-formats` (245 patches): the repaired header and the manifest repair record reproduce. `--check` differs only in four foreign paths (`README.md`, `best-effort.json`, `initialization.json` and the `manifest.json` module counts). These are the glTF-skin records from section 94, and the committed tree's versions are kept unchanged.
+- Scoped native recheck (GCC 15.2, jobs 1): **1 attempted / 1 pass / 0 fail**. A TU that only includes the header links. A TU that calls `parse_md5_anim_requirements` fails to link, and the only undefined reference is `collect_md5_anim_features`. No feature set, requirements or narrowed domain is supplied.
+- compiler request: `docs/compiler-requests/indexed-array-member-call-present-element.md`
 
 ### 123. `missing-member-ee398c94` — 1 header(s)
 

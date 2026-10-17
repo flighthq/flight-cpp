@@ -3418,6 +3418,12 @@
         "flight/layout/grid_layout.hpp"
       ],
       "id": "layout-declare-refused-grid-resolver"
+    },
+    {
+      "files": [
+        "flight/scene3d_formats/md5_anim_features.hpp"
+      ],
+      "id": "scene3d-formats-declare-refused-collect-md5-anim-features"
     }
   ],
   "sourcePatches": [
