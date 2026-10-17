@@ -252,7 +252,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 223 | `undeclared-identifier-f020c1f7` | 1 | GL | runtime | the emitted code names `gl_white_balance_effect_runner`, which nothing declares |
 | 224 | `undeclared-identifier-f6affb68` | 1 | 3D | [compiler request](compiler-requests/retained-declaration-calls-omitted-callee.md) | global transmission/volume/IOR callbacks retain a refused owner resolver; declaration fails unused-header link |
 | 225 | `undeclared-identifier-f91f1e72` | 1 | 2D | compiler (existing partial native carry) | G2 current effective header1/1 pass; generated Canvas getter/draw owner gaps remain *(builder4)* |
-| 226 | `undeclared-identifier-fcbdae42` | 1 | 2D | runtime | the emitted code names `draw_canvas_text_label`, which nothing declares |
+| 226 | `undeclared-identifier-fcbdae42` | 1 | 2D | compiler *(existing request)* | refused `drawCanvasTextLabel` retained as `.submit` in the renderer aggregate; declaration probe fails at `.create_data` |
 | 227 | `variant-cast-7dd5385f` | 1 | GL | compiler | a functional-style cast is applied to a variant the target type cannot take |
 
 ## Carry clusters
@@ -3807,14 +3807,17 @@ is proposed, and the effective header does not call the refused getter. No gener
 semantics test, shader/draw execution, old E0a/clip-cache proof or global/native baseline was rerun.
 Historical sweep/carry totals, all foreign rows/clusters and report slices remain unchanged.
 
-### 226. `undeclared-identifier-fcbdae42` — 1 header(s)
+### 226. `undeclared-identifier-fcbdae42` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `draw_canvas_text_label`, which nothing declares
+- cause: the emitter refuses `drawCanvasTextLabel` (`cpp-contextual-union-missing-expression-type:optionalSingle`; the refusal does not name the expression), but keeps `.submit = draw_canvas_text_label` in the inline `canvas_text_label_renderer` aggregate.
 - subject: `draw_canvas_text_label`
 - lanes: 2D
-- fix route: runtime
+- fix route: compiler
+- why this route: a scratch copy with only the exact declaration `void draw_canvas_text_label(Ref<CanvasRenderState>, Ref<RenderProxy2D>)` still fails at `.create_data`. There, `create_canvas_text_label_data` returns `Ref<RendererData>` but takes `CanvasRenderState` and `NodeAny` where the slot takes `RenderState` and `Node2D`. Neither link check is reachable, so no repair is carried. Only the Canvas TextLabel is covered here; the native GL TextLabel is untouched.
 - first failure at: `flight/scene2d_canvas/canvas_text_label.hpp:140`
 - example: `use of undeclared identifier 'draw_canvas_text_label'`
+- Scoped native recheck (GCC 15.2, jobs 1, all errors shown): **1 attempted / 0 pass / 1 fail**, the header's own diagnostic. No Canvas backend, text, metrics, copied owner or narrowed input is supplied.
+- compiler request: `docs/compiler-requests/retained-declaration-calls-omitted-callee.md`
 
 ### 227. `variant-cast-7dd5385f` — 1 header(s)
 

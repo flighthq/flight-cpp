@@ -1383,3 +1383,23 @@ copied graph/owner/layout, narrowed NodeAny domain, runtime/source patch, text o
 GL/text edit is carried. Normal exact-pin one-module generation must reproduce only the declaration
 and its own repair manifest record. The owned header's compile result is recorded separately from
 the absent resolver's behavior.
+
+## G2 Canvas TextLabel retains a refused aggregate callback
+
+`scene2d_canvas/canvas_text_label.hpp` at Flight `a627849` / compiler `806d257` omits `drawCanvasTextLabel`
+(the marker says source line 33; `cpp-contextual-union-missing-expression-type:optionalSingle`). The refusal
+text does not name the expression, and this unit did not isolate it. The inline `canvas_text_label_renderer`
+still stores `.submit = draw_canvas_text_label`, so the header fails at its own line 140 (GCC 15.2, one
+worker, all errors shown: 1 attempted, 0 pass, 1 fail). The emitter's signature is
+`void draw_canvas_text_label(Ref<CanvasRenderState>, Ref<RenderProxy2D>);`.
+
+A scratch copy containing only that exact declaration still fails at `.create_data`. Here the emitted
+`create_canvas_text_label_data` already returns `Ref<RendererData>`, but it takes
+`(Ref<CanvasRenderState>, NodeAny)`, while `Scene2DRenderer.create_data` takes `(Ref<RenderState>, Node2D)`.
+That is the Canvas render-state owner of
+[canvas-render-state-owner-asserted-without-heritage](canvas-render-state-owner-asserted-without-heritage.md)
+plus the node-domain carrier.
+
+Neither link check was reached: not the positive unused-header link, and not the negative link. So no
+declaration repair was carried. This covers Canvas only; the native GL TextLabel is a separate owner's unit,
+and nothing there was touched. No Canvas backend, text, metrics, copied owner or narrowed input is carried.
