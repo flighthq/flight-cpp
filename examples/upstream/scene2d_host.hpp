@@ -18,10 +18,17 @@ namespace flight::examples {
 
 struct ScenePoint { double x{}, y{}; };
 
+struct SceneInputEvent {
+  enum class Kind { key_down, key_up, pointer_down, pointer_up, pointer_cancel };
+  Kind kind;
+  SDL_Keycode key{};
+};
+
 struct SceneInput {
   double pointer_x{}, pointer_y{}, wheel_y{};
   bool pointer_down{}, pointer_pressed{}, pointer_released{};
   std::vector<SDL_Keycode> keys_pressed;
+  std::vector<SceneInputEvent> events;
   [[nodiscard]] bool key_down(SDL_Keycode key) const;
   [[nodiscard]] bool key_pressed(SDL_Keycode key) const;
  private:

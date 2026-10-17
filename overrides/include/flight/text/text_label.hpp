@@ -30,8 +30,14 @@ inline void compute_text_label_local_bounds_rectangle(flight::Ref<flight::types:
   auto data = label->data;
   auto layout = data->auto_size == flight::String("none") ? std::nullopt : get_text_layout(label);
   if (!layout) { out->x = out->y = 0; out->width = data->width; out->height = data->height; return; }
-  using View = flight::StructuralRef<flight::RowReadonly<flight::RowOf<NativeTextLabelData>>>;
-  flight::textlayout::compute_text_bounds_rectangle(out, flight::types::TextBoundsSpec(View(data)), *layout);
+  // TextLabelData has no wordWrap member. This read-only value specification
+  // supplies its actual absence to the generic bounds helper; no data owner is cast.
+  auto spec = flight::make_structural_ref<flight::types::TextBoundsSpec::schema_type>(
+      flight::row_field<flight::RowKey<"autoSize">>(data->auto_size),
+      flight::row_field<flight::RowKey<"height">>(data->height),
+      flight::row_field<flight::RowKey<"width">>(data->width),
+      flight::row_field<flight::RowKey<"wordWrap">>(std::optional<bool>{}));
+  flight::textlayout::compute_text_bounds_rectangle(out, spec, *layout);
 }
 inline NativeTextLabelRuntime create_text_label_runtime() {
   auto out = flight::make_ref<flight::types::TextLabelRuntime>();

@@ -98,6 +98,7 @@ int Scene2DHost::run(
   if (smoke) { loop.fixed_delta_time = 1.0 / 60.0; loop.maximum_frames = 3; }
   app.run([&](const flight::host_sdl::GlFrame& timing) {
     if (timing.resized) {
+      state->pixel_ratio = static_cast<double>(timing.pixel_size.width) / timing.logical_size.width;
       flight::row_set<flight::RowKey<"scaleX">>(root, static_cast<double>(timing.pixel_size.width) / options.width);
       flight::row_set<flight::RowKey<"scaleY">>(root, static_cast<double>(timing.pixel_size.height) / options.height);
       flight::node::invalidate_node_local_transform(root);
@@ -129,6 +130,7 @@ int Scene2DHost::run(
       if (capture_path && timing.index == 0) capture(pixels, size.width, size.height, *capture_path);
     }
     input.keys_pressed.clear();
+    input.events.clear();
     input.wheel_y = 0;
     input.pointer_pressed = input.pointer_released = false;
   }, loop, [&](const SDL_Event& event) {
@@ -140,7 +142,11 @@ int Scene2DHost::run(
     if (event.type == SDL_EVENT_KEY_DOWN) {
       input.held_keys.insert(event.key.key);
       input.keys_pressed.push_back(event.key.key);
-    } else if (event.type == SDL_EVENT_KEY_UP) input.held_keys.erase(event.key.key);
+      input.events.push_back({SceneInputEvent::Kind::key_down,event.key.key});
+    } else if (event.type == SDL_EVENT_KEY_UP) {
+      input.held_keys.erase(event.key.key);
+      input.events.push_back({SceneInputEvent::Kind::key_up,event.key.key});
+    }
     else if (event.type == SDL_EVENT_MOUSE_MOTION) pointer(event.motion.x, event.motion.y);
     else if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN || event.type == SDL_EVENT_MOUSE_BUTTON_UP) {
       pointer(event.button.x, event.button.y);
@@ -148,8 +154,15 @@ int Scene2DHost::run(
         input.pointer_down = event.type == SDL_EVENT_MOUSE_BUTTON_DOWN;
         input.pointer_pressed = input.pointer_down;
         input.pointer_released = !input.pointer_down;
+        input.events.push_back({input.pointer_down ? SceneInputEvent::Kind::pointer_down : SceneInputEvent::Kind::pointer_up});
       }
     } else if (event.type == SDL_EVENT_MOUSE_WHEEL) input.wheel_y += event.wheel.y;
+    else if (event.type == SDL_EVENT_WINDOW_FOCUS_LOST) {
+      input.held_keys.clear();
+      input.pointer_released = input.pointer_down;
+      input.pointer_down = false;
+      input.events.push_back({SceneInputEvent::Kind::pointer_cancel});
+    }
   });
   if (smoke) {
     if (verified != 3) throw std::runtime_error("Scene2D smoke did not verify every authored frame");

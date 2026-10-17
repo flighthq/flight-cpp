@@ -13,6 +13,7 @@
 #include <cstdlib>
 #include <iomanip>
 #include <iostream>
+#include <limits>
 #include <sstream>
 #include <stdexcept>
 namespace {
@@ -55,13 +56,16 @@ class ClockExample {
   auto root() const { return root_; }
   void frame(const Frame& frame) {
     if (frame.smoke && frame.index==0) flight::clock::pause_clock(b_);
-    if (frame.input.key_pressed(SDLK_P)) toggle(root_clock_);
-    if (frame.input.key_pressed(SDLK_1)) toggle(a_);
-    if (frame.input.key_pressed(SDLK_2)) toggle(b_);
-    if (frame.input.key_pressed(SDLK_LEFT)) flight::clock::set_clock_scale(a_,std::max(a_->scale-.25,0.0));
-    if (frame.input.key_pressed(SDLK_RIGHT)) flight::clock::set_clock_scale(a_,std::min(a_->scale+.25,4.0));
-    if (frame.input.key_pressed(SDLK_DOWN)) flight::clock::set_clock_scale(b_,std::max(b_->scale-.25,0.0));
-    if (frame.input.key_pressed(SDLK_UP)) flight::clock::set_clock_scale(b_,std::min(b_->scale+.25,4.0));
+    for(const auto& event:frame.input.events) {
+      if(event.kind!=flight::examples::SceneInputEvent::Kind::key_down) continue;
+    if (event.key==SDLK_P) toggle(root_clock_);
+    if (event.key==SDLK_1) toggle(a_);
+    if (event.key==SDLK_2) toggle(b_);
+    if (event.key==SDLK_LEFT) flight::clock::set_clock_scale(a_,std::max(a_->scale-.25,0.0));
+    if (event.key==SDLK_RIGHT) flight::clock::set_clock_scale(a_,std::min(a_->scale+.25,4.0));
+    if (event.key==SDLK_DOWN) flight::clock::set_clock_scale(b_,std::max(b_->scale-.25,0.0));
+    if (event.key==SDLK_UP) flight::clock::set_clock_scale(b_,std::min(b_->scale+.25,4.0));
+    }
     flight::clock::advance_clock(root_clock_,frame.delta_time*1000);
     const std::array clocks{root_clock_,a_,b_};
     for (std::size_t i=0;i<3;++i) {
@@ -112,6 +116,6 @@ int main(int argc,char** argv) {
   try {
     ClockExample example;
     return flight::examples::Scene2DHost::run(argc,argv,example.root(),[&](auto& f){example.frame(f);},[&](auto& f){example.verify(f);},
-      {.name="clock",.title="Flight hierarchical clocks - Scene2D GL",.width=800,.height=500},flight::examples::install_text_renderer);
+      {.name="clock",.title="Flight hierarchical clocks - Scene2D GL",.width=800,.height=500,.maximum_delta_time=std::numeric_limits<double>::max()},flight::examples::install_text_renderer);
   } catch(const std::exception& error) { std::cerr<<"clock example failed: "<<error.what()<<'\n'; return EXIT_FAILURE; }
 }
