@@ -130,6 +130,8 @@ inline flight::Record<flight::String, double> svg_named_colors = {{flight::Strin
 // `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound
 // from the storage and tested the same way
 
+std::optional<flight::Ref<flight::types::SvgColor>> parse_svg_color(flight::String value);
+
 inline std::optional<flight::Ref<flight::types::SvgColor>> resolve_svg_color(flight::String value, flight::String current_color) {
   return parse_svg_color(((value.trim().to_lower() == flight::String("currentcolor")) ? current_color : value));
 }

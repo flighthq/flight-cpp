@@ -3575,6 +3575,12 @@
         "flight/scene2d/html_view.hpp"
       ],
       "id": "scene2d-html-view-partial-row-absence"
+    },
+    {
+      "files": [
+        "flight/scene2d_formats/svg_color.hpp"
+      ],
+      "id": "scene2d-formats-declare-refused-svg-color"
     }
   ],
   "sourcePatches": [
