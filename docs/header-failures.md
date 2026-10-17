@@ -173,7 +173,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 144 | `other-1e3a0d33` | 1 | ANIM | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 145 | `other-4703cbbe` | 1 | 3D | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 146 | `other-5dfe27ec` | 1 | ANIM | runtime | uncategorised: the first diagnostic does not name a single cause |
-| 147 | `other-acb4b229` | 1 | 2D | runtime | uncategorised: the first diagnostic does not name a single cause |
+| 147 | `other-acb4b229` | 1 | 2D | compiler | G2: 0/1; JSON assertion casts to nominal array/hash document union; converter independently refused |
 | 148 | `static-assertion-18059635` | 1 | 3D | compiler | a runtime static assertion rejects the emitted shape |
 | 149 | `static-assertion-261f0db6` | 1 | 3D | compiler | a runtime static assertion rejects the emitted shape |
 | 150 | `undeclared-identifier-0168969a` | 1 | 2D | runtime | the emitted code names `dom_scene_2d_clip_hooks`, which nothing declares |
@@ -2629,13 +2629,31 @@ generated owners carry identity-preserving interface heritage.
 - first failure at: `flight/skeleton2d_formats/dragon_bones_skins_handler.hpp:373`
 - example: `invalid range expression of type 'Any'; no viable 'begin' function available`
 
-### 147. `other-acb4b229` — 1 header(s)
+### 147. `other-acb4b229` — G2 recheck of 1 header(s)
 
-- cause: uncategorised: the first diagnostic does not name a single cause
+- cause: `JSON.parse(json) as TexturePackerDocument` emits a C++ cast from JsonValue to a variant of unrelated array/hash document owners
 - lanes: 2D
-- fix route: runtime
-- first failure at: `flight/spritesheet_formats/texture_packer_parse.hpp:128`
+- fix route: [JSON assertion request](compiler-requests/json-parse-assertion-static-cast.md#g2-texturepacker-retains-its-original-document-as-well-as-spritesheet-metadata), with [parallel schema union conversion](compiler-requests/parallel-schema-union-structural-conversion.md#g2-texturepacker-document-converter-is-still-omitted)
+- actual first failure at: `flight/spritesheet_formats/texture_packer_parse.hpp:128`
 - example: `no matching conversion for static_cast from 'JsonValue' to 'TexturePackerDocument'`
+
+The original one-header check completes at one worker: **0/1 pass, 1 fail, 0 unattempted**.
+Both public parse bodies repeat the invalid cast; the same header's `documentToData` is independently
+refused at the distinct spritesheet-to-atlas schema union. The real JsonValue tree and checked kind
+accessors cannot reinterpret it into generated nominal Ref owners. No runtime conversion or declaration
+can invent that owner contract, and a copied view or narrowed domain is rejected.
+
+Source semantics retain array/hash document shape, frame order/names, rotated upright dimensions,
+trim/source size/pivot, animations from inclusive frame tags, original image/size/scale and diagnostic
+sink/catch boundaries. The document-returning parser exposes the original metadata. Existing native
+atlas geometry does not retain that document/tags and uses different scale normalization, so it is not
+a substitute parser. Syntax failure still owes its Reject diagnostic and real empty-array sentinel;
+valid JSON must not be universally routed there.
+
+Only existing requests and this owned root/row/worklist entry change. No C++, source, binding, repair,
+override, manifest or generated inventory changes; no normal generation or global/package/native
+baseline rerun is needed. No parser behavior, round-trip, link check or header gain is claimed.
+Foreign rows/roots/prose and historical/G1 totals are preserved.
 
 ### 148. `static-assertion-18059635` — 1 header(s)
 

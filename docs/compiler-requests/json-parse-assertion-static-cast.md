@@ -124,3 +124,55 @@ No runtime, binding, source patch, declaration repair or override changes for th
 The four owned rows retain **0 pass / 4 fail** from G1 and now name this request plus the existing
 shape-read request. No C++ input changed, so there was no native recompile, parser parity claim,
 global sweep or upstream test port. Other JSON assertion groups keep their own counts and attribution.
+
+## G2 TexturePacker retains its original document as well as spritesheet metadata
+
+At compiler `806d257` / Flight `a627849`, original cluster `other-acb4b229` contains
+`spritesheet_formats/texture_packer_parse.hpp`. Its completed Clang22.1.8 one-worker check is
+**0/1 pass, 1 fail, 0 unattempted**. Both public parser bodies assert
+`JSON.parse(json) as TexturePackerDocument`; the first emitted cast fails at line128, and the
+document-returning entry point repeats it at line145:
+
+```cpp
+document = static_cast<flight::types::TexturePackerDocument>(flight::Json::parse(json));
+// TexturePackerDocument = variant<Ref<TexturePackerHashDocument>, Ref<TexturePackerArrayDocument>>
+```
+
+`JsonValue` holds the real JSON tree, with separately shared JsonArray/JsonObject owners and checked
+kind accessors. It never held either generated nominal document struct. No runtime constructor,
+external binding or erased assertion can reinterpret that object into either Ref owner, select the
+correct array/hash arm and populate all of its nested fields. A permissive Any conversion or an
+unconditional choice of one arm would hide this representation gap.
+
+This API cannot be supplied by returning the existing native atlas parser's geometry. The source
+`documentToData` delegates geometry to `parseTexturePackerAtlasDocument`, then maps regions into
+frames: upright dimensions swap for rotated rectangles, trim offsets and original sizes are retained,
+missing pivots remain null, and names retain region order. It separately derives animations
+from `meta.frameTags`, using each inclusive from/to range, direction, name, 100ms frame duration and
+repeatCount -1. Image name/size and the original numeric-or-string scale come from this same document.
+The document-returning sibling returns that original document together with the mapped data. Source
+tests require both array/hash variants and retained app/version/format fields, not an empty sentinel
+on a valid input or a newly reconstructed atlas-shaped document.
+
+The existing `textureatlas_formats::detail::parse_texture_packer_atlas_json_checked` populates an
+atlas and returns it. It neither returns the parsed document nor retains frameTags or the additional
+spritesheet metadata. Its finite-positive atlas scale normalization also differs from this source's
+`metaScale`: numeric scales pass through, while string scales use `parseFloat(scale) || 1`.
+Using the atlas's normalized scale would change zero/negative/non-finite or fallback behavior.
+
+The source try/catch encloses parsing and the erased assertion only. Syntax failure appends one
+Reject `spritesheet.texture-packer.malformed-json` diagnostic with the appropriate public function
+name and returns empty data; the document-returning sibling also returns the real frame-less array
+sentinel with blank metadata, zero size and numeric scale1. Valid JSON is not schema-validated by the
+assertion. A new conversion must not turn later shape/mapping errors into this syntax fallback or
+report every input as malformed. Preserve document identity/shape, nested data, ordering and the
+source catch boundary through an explicit represented JSON/document contract, or refuse the assertion
+coherently. A copied view, fake parser or narrowed accepted domain is not carried.
+
+The independently refused `documentToData` still crosses the
+[parallel schema union boundary](parallel-schema-union-structural-conversion.md#g2-texturepacker-document-converter-is-still-omitted).
+A declaration for that helper cannot repair either invalid cast and is not a parser implementation.
+No C++, runtime, binding, source patch, repair, override or generated inventory changes for this
+disposition, so no changed generation needs reproducing. Only this original header was checked; its
+row remains failed with no native parsing, round-trip or functionality pass claimed. The earlier
+Aseprite, Pixi and Lottie rows and historical totals retain their own attribution.

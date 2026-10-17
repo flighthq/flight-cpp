@@ -56,3 +56,34 @@ another, structurally compatible schema union.
 None. Copying the whole JSON document into the atlas schema would change identity and evaluation costs,
 while a source assertion merely asks the emitter for the same unsupported cross-owner conversion. Both
 parsers remain refused.
+
+## G2 TexturePacker document converter is still omitted
+
+Inspected at compiler `806d257` / Flight `a627849` for original
+`other-acb4b229`, `spritesheet_formats/texture_packer_parse.hpp`.
+The exact `NOT GENERATED: function documentToData -- source line 58` marker and refusal ledger
+retain `cpp-contextual-union-inequivalent [source-portability]` at:
+
+```ts
+const regions = parseTexturePackerAtlasDocument(doc, createTextureAtlas()).regions;
+```
+
+The target alternatives are `Ref<TexturePackerAtlasArrayDocument>` and
+`Ref<TexturePackerAtlasHashDocument>`; the source carries `Ref<TexturePackerHashDocument>` and
+`Ref<TexturePackerArrayDocument>`. These are separate public schema names, with compatible nested
+rectangles/sizes/pivots/frames/metadata. Spritesheet frame-tag direction is required while the atlas
+schema allows it absent. Neither arm order nor the extra spritesheet guarantee is native inheritance.
+Preserve the same document, nested frames, tag arrays and metadata through the actual structural
+read contract rather than copying into atlas owners, retyping only the top-level pointer or narrowing
+the public parser to one variant.
+
+After geometry, the omitted function creates the actual spritesheet frames and animations and reads
+image/size/scale from the original metadata. `parseTexturePackerSpritesheetDocument` returns that
+same parsed document, so a geometry-only atlas parser cannot supply its retained-data contract.
+The sibling native JSON helper drops the document/tags and normalizes atlas scale differently from
+the source spritesheet scale; neither that helper nor a declaration supplies this missing converter.
+The [JSON assertion request](json-parse-assertion-static-cast.md#g2-texturepacker-retains-its-original-document-as-well-as-spritesheet-metadata)
+records the independent first compile failure, both public parse/catch boundaries and exact source
+semantics. The actual one-header check is **0/1 pass** at its line128 cast, before a call to this
+helper. This refusal is source/ledger inspection, not an additional measured diagnostic or native
+behavior claim. No parser/body/view copy or other C++ carry is supplied.
