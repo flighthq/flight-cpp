@@ -754,9 +754,17 @@ function isMixedInventory(directory) {
   return existsSync(file) && isMixedManifest(JSON.parse(readFileSync(file, 'utf8')));
 }
 
+// Products committed beside the tree they describe rather than generated with it. `header-status.json` is
+// the G1 inventory -- which headers compile and why the others do not -- produced by the header sweep, so a
+// generation candidate can never contain it and comparing it would report permanent drift. It is excluded
+// by this exact name and nothing else.
+const STATUS_PRODUCTS = new Set(['header-status.json']);
+
 function compareTrees(expectedRoot, actualRoot) {
   if (!existsSync(actualRoot)) {
-    return filesUnder(expectedRoot).map((filename) => portable(path.relative(expectedRoot, filename)));
+    return filesUnder(expectedRoot)
+      .map((filename) => portable(path.relative(expectedRoot, filename)))
+      .filter((filename) => !STATUS_PRODUCTS.has(filename));
   }
   const expected = new Map(
     filesUnder(expectedRoot).map((filename) => [portable(path.relative(expectedRoot, filename)), readFileSync(filename)]),
@@ -764,7 +772,9 @@ function compareTrees(expectedRoot, actualRoot) {
   const actual = new Map(
     filesUnder(actualRoot).map((filename) => [portable(path.relative(actualRoot, filename)), readFileSync(filename)]),
   );
-  const paths = [...new Set([...expected.keys(), ...actual.keys()])].sort();
+  const paths = [...new Set([...expected.keys(), ...actual.keys()])]
+    .filter((filename) => !STATUS_PRODUCTS.has(filename))
+    .sort();
   return paths.filter(
     (filename) =>
       !expected.has(filename) || !actual.has(filename) || !expected.get(filename).equals(actual.get(filename)),
