@@ -686,3 +686,6 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 - [A numeric optional-chain result must retain its numeric payload](numeric-optional-chain-result-erased.md) —
   SVG selector specificity emits guarded match lengths as `optional<Any>` rather than `optional<double>`;
   the two measured color consumers join the existing style cluster at `svg_style.hpp:53`.
+- [A typed array passed to a `readonly unknown[]` parameter needs a readonly element view](typed-array-into-readonly-unknown-array-parameter.md) —
+  `@flighthq/scene3d-gl` fake GL error audit: `number[]` into `setError(..., readonly unknown[])` lowers as
+  `Array<double>` against `Array<Any>`. Nothing is carried.

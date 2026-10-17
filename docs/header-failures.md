@@ -135,7 +135,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 106 | `call-has-no-matching-c8046ec6` | 1 | 3D | compiler | the emitted call to `uniform2fv` matches no declared overload |
 | 107 | `call-has-no-matching-e7b28969` | 1 | WGPU | runtime (fixed) | the emitted call to `write_texture` matches no declared overload; G2: 0 pass, 1 to `missing-member-47a93368` |
 | 108 | `call-has-no-matching-fbd6de0d` | 1 | 3D | [compiler request](compiler-requests/interface-heritage-widening.md) | `Mesh.materials` carries `Material3DValue` arms that cannot widen to the callback's declared `Material3D` base |
-| 109 | `call-has-no-matching-fee2f93f` | 1 | 3D | compiler | the emitted call to a function matches no declared overload |
+| 109 | `call-has-no-matching-fee2f93f` | 1 | 3D | compiler *(request filed)* | `number[]` passed to the fake GL audit `setError(…, readonly unknown[])`: `Array<double>` vs `Array<Any>` |
 | 110 | `invalid-operands-dc1c09c4` | 1 | PLAT | source guards + declaration repair (applied) | flex basis comparison and unsafe numeric projection cleared; G2: 1 pass; refused resolver registration remains unlinkable |
 | 111 | `missing-member-1620083c` | 1 | 2D | binding | SDL DOM value/style copies cannot carry the web renderer mix-blend write; open blend domain/provider required; G2: 0/1 retained |
 | 112 | `undeclared-identifier-af6f50aa` | 1 | 2D | compiler | the DOM image registration retains its refused optional image callback after the persistent table registration now emits |
@@ -2789,13 +2789,17 @@ declared (`clone_node_3d_subtree.hpp:81`, the same missing `Mesh : Node3D` herit
 leak at `:84`/`:86` (existing node generic traits leak family). No C++ was changed; the scoped trace is
 the evidence.
 
-### 109. `call-has-no-matching-fee2f93f` — 1 header(s)
+### 109. `call-has-no-matching-fee2f93f` — G2 recheck of 1 header
 
-- cause: the emitted call to a function matches no declared overload
+- cause: the fake WebGL validation helpers in `glScene3DTestHelper.ts` build `const args = [mode, first, count, …]` (`number[]`) and pass it to the error audit's `setError(code, call, args: readonly unknown[])`. The emitter lowers the argument as `Array<double>` and the parameter as `Array<Any>`.
+- subject: `set_error`
 - lanes: 3D
 - fix route: compiler
+- why this route: a `readonly unknown[]` parameter needs a readonly element view, or an element-generic carrier, over the caller's array. A materialized copy is only incidentally safe here, because `setError` just joins the elements. The fixture and the runtime are not changed to fit the emitter, and no assertion is loosened.
 - first failure at: `flight/scene3d_gl/_internal_gl_scene_3d_test_helper.hpp:373`
 - example: `no matching function for call to object of type 'function<void (double, String, Array<Any>)>'`
+- Scoped native recheck (GCC 15.2, jobs 1): **1 attempted / 0 pass / 1 fail** at `:373` (and the same error at each later `setError` call). Nothing is carried.
+- compiler request: `docs/compiler-requests/typed-array-into-readonly-unknown-array-parameter.md` *(new)*
 
 ### 110. `invalid-operands-dc1c09c4` — 1 header(s), header boundary fixed
 
