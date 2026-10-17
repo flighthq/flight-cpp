@@ -593,3 +593,20 @@ records that separate first blocker and the dropped base spread; the
 [retained-callee request](retained-declaration-calls-omitted-callee.md#g2-gl-box-blur-refuses-a-cache-before-its-omitted-pass-calls)
 records why no declaration-only candidate qualifies. No body, target, shader, cache, normal generation,
 source patch or native behavior pass is supplied by this docs/products-only disposition.
+
+## G2 CSS filter bindings: DOM and Canvas render states into `getOrCreateRenderProxy2D`
+
+At Flight `a627849` / compiler `806d257`, `scene2d-dom/src/domCSSFilterBinding.ts` and
+`scene2d-canvas/src/canvasCSSFilterBinding.ts` each call `getOrCreateRenderProxy2D(state, node)` with their
+backend state, `DomRenderState` or `CanvasRenderState`. The generic overload takes `Ref<RenderState>`, so
+neither call matches (GCC 15.2, one worker):
+- `scene2d_dom/dom_cssfilter_binding.hpp:39`, `get_or_create_render_proxy_2d(Ref<DomRenderState>&, Node2D&)`;
+- `scene2d_canvas/canvas_cssfilter_binding.hpp:45`, `get_or_create_render_proxy_2d(Ref<CanvasRenderState>&, Node2D&)`.
+
+Both roots were measured: 2 attempted, 0 pass, 2 fail. The DOM `contract` and `_internal_index` headers reach
+the DOM root through their includes and were not recompiled.
+
+This is the GL render state case above in another backend. The fix is real heritage, `DomRenderState :
+RenderState` and `CanvasRenderState : RenderState`, so the same state owner widens. The native GL candidate
+overload is unrelated. Nothing is carried: no cast, no copied state, no DOM or Canvas filter provider, and no
+narrowed domain.

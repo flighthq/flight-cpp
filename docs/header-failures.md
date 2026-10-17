@@ -66,7 +66,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 37 | `no-viable-conversion-eaf1a6e0` | 5 | 2D | compiler *(existing request)* | generic `noop_renderer_data(…, NodeAny)` stored in `SpriteRenderer.create_data`, whose `Sprite` does not widen to `NodeAny` |
 | 38 | `no-viable-overload-658901de` | 5 | 2D, GL | override/runtime (fixed) | concrete glass extension storage and Canvas paint variants repaired; G2: 4 pass, 1 compiler failure |
 | 39 | `call-has-no-matching-4ce2cc01` | 4 | ANIM | compiler *(existing request)* | asserted record lowered to a `NamedProperties` view but the Spine timeline handler parameter to an owning `Record<String, Any>` |
-| 40 | `call-has-no-matching-82244b93` | 4 | 2D | compiler | the emitted call to `get_or_create_render_proxy_2d` matches no declared overload |
+| 40 | `call-has-no-matching-82244b93` | 4 | 2D | compiler *(existing request)* | DOM/Canvas render states passed to `get_or_create_render_proxy_2d(Ref<RenderState>, …)` without emitted heritage |
 | 41 | `call-has-no-matching-9248dccf` | 4 | ANIM | compiler | the emitted call to `get_node_world_matrix4` matches no declared overload |
 | 42 | `call-has-no-matching-9ebeb95c` | 4 | ANIM, GL | compiler | the emitted call to `get_transform_2d_runtime` matches no declared overload |
 | 43 | `call-has-no-matching-c3aea71c` | 4 | 2D, GL | compiler | the emitted call to `structural_ref_cast` matches no declared overload |
@@ -1051,14 +1051,17 @@ rank remain historical, and `previousCluster` retains this original group.
 - Scoped native recheck (GCC 15.2, jobs 1): **1 attempted / 0 pass / 1 fail** at `spine_json_animations_handler.hpp:66`, which carries the measured location. `spine_json_section_handlers`, `spine_json_handlers` and `spine_json_full` reach it through their includes. They were not recompiled, keep their recorded failure, and are given no location. Nothing is carried.
 - compiler request: `docs/compiler-requests/named-view-record-ternary.md`
 
-### 40. `call-has-no-matching-82244b93` — 4 header(s)
+### 40. `call-has-no-matching-82244b93` — G2 recheck of 4 header(s)
 
-- cause: the emitted call to `get_or_create_render_proxy_2d` matches no declared overload
+- cause: the DOM and Canvas CSS filter bindings pass `Ref<DomRenderState>` and `Ref<CanvasRenderState>` to `get_or_create_render_proxy_2d(Ref<RenderState>, Node2D)`. The generated backend states do not inherit `RenderState`.
 - subject: `get_or_create_render_proxy_2d`
 - lanes: 2D
 - fix route: compiler
+- why this route: TypeScript widens the backend state. The faithful fix is emitted heritage so the same owner converts, as in the GL render state case of [interface-heritage-widening](compiler-requests/interface-heritage-widening.md). A cast, a copied state or a filter provider would not preserve it.
 - first failure at: `flight/scene2d_dom/dom_cssfilter_binding.hpp:39`
 - example: `no matching function for call to 'get_or_create_render_proxy_2d'`
+- Scoped native recheck (GCC 15.2, jobs 1): **2 attempted / 0 pass / 2 fail** at `dom_cssfilter_binding.hpp:39` and `canvas_cssfilter_binding.hpp:45`, which carry measured locations. The DOM `contract` and `_internal_index` reach the DOM root through their includes. They were not recompiled, keep their recorded failure, and are given no location. Nothing is carried.
+- compiler request: `docs/compiler-requests/interface-heritage-widening.md`
 
 ### 41. `call-has-no-matching-9248dccf` — 4 header(s)
 
