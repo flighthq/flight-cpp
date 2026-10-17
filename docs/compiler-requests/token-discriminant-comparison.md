@@ -45,3 +45,50 @@ testing. No operator is carried here.
 ## What this repository carries meanwhile
 
 Nothing: the cluster is open.
+
+## G2 current-pin qualification: all three paint guards use this carrier
+
+At compiler `806d257` / Flight `a627849`, source `sampleMorphShapePaintBinding` has three strict
+inequality guards over the same flat command buffer:
+
+- `commands[i] !== 'beginFill'`, emitted at `morph_shape_paint.hpp:77` in the color branch;
+- `commands[i] !== 'lineStyle'`, emitted at line 85 in the line branch;
+- `commands[i] !== binding.commandKey`, emitted at line 93 for the remaining texture/gradient branches.
+
+The last right operand is a String-valued visit of the two remaining binding alternatives. It has the
+same failure as the literals; repairing only the first literal would leave two equivalent comparisons.
+`ShapeCommand.ts` defines the full source token domain: Matrix, all four Texture alternatives,
+boolean, number, readonly number array, string and null. The emitted alias above retains those nine
+present alternatives plus optional absence. A comparison must inspect the String alternative without
+converting the other alternatives to strings, dropping them from the token carrier or selecting an
+unchecked variant arm. A stored null token and every non-string token mismatch a string key; an equal
+String matches and a different String mismatches. The original operands must be evaluated once in
+their source order before deciding the comparison.
+
+There is no missing external binding or runtime member to add. The existing equality operation in
+`flight/presence.hpp` applies only to `variant<Value, Null, Undefined>` compared with its present Value.
+This site's `optional<variant<...>>` is a different carrier and does not match it. Widening that
+operator to arbitrary heterogeneous variants would introduce comparison policy outside its tested
+three-state contract. Erasing the token to Any or coercing it would also discard the emitter's known
+String test. No equality overload, token wrapper, source patch, emission repair or override is carried.
+
+The source's owners matter after a matching guard. `commands` aliases the existing data command
+array; sampling changes its color/alpha/thickness/focal-ratio cells. Texture sampling mutates the
+existing command Matrix, and gradient sampling mutates the existing colors, alphas, ratios and
+optional Matrix. Those handles must continue to address the same live objects. Gradient endpoint
+arrays and matrices are snapshotted at construction where the source explicitly clones them, while
+the texture itself remains shared. A repair must retain both those intentional snapshots and the
+in-place sampling behavior, along with endpoint interpolation and binding order.
+
+The five assigned headers remain failed in the product and explicitly link this existing request:
+
+- `flight/shape/_internal_index.hpp`
+- `flight/shape/contract.hpp`
+- `flight/shape/morph_shape.hpp`
+- `flight/shape/morph_shape_animation.hpp`
+- `flight/shape/morph_shape_paint.hpp`
+
+Qualification is **0/5 pass, 5 fail**, retained from G1 with the original diagnostics unchanged.
+Only these five rows and their cause are reclassified to compiler lowering. No production C++ input
+changed, so no generation, unchanged five-header compile or global sweep was run. No paint execution,
+new native pass or upstream test coverage is claimed.

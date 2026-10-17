@@ -61,7 +61,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 32 | `call-has-no-matching-b897f03f` | 5 | 3D | compiler | the emitted call to `get_node_signals` matches no declared overload |
 | 33 | `call-has-no-matching-dd66c064` | 10 | ANIM | compiler | an emitted SwfReader class instance cannot be passed as its structural SwfTagReader interface to the parse callback *(existing request)* |
 | 34 | `compiler-crash-aba5e9ec` | 5 | 3D | none (sweep resource limit; passes serially) | the -j8 sweep ran out of room (retried serially) |
-| 35 | `invalid-operands-6d9a155d` | 5 | 2D | runtime | an operator is applied to operand types it does not accept |
+| 35 | `invalid-operands-6d9a155d` | 5 | 2D | [compiler request](compiler-requests/token-discriminant-comparison.md#g2-current-pin-qualification-all-three-paint-guards-use-this-carrier) | three morph-paint guards compare the whole optional token variant with a String |
 | 36 | `missing-member-5e9e8a2c` | 5 | PLAT | compiler | retained cross-module calls name the refused generic graph-bounds helper *(existing requests extended)* |
 | 37 | `no-viable-conversion-eaf1a6e0` | 5 | 2D | compiler | a value is passed where its declared type cannot receive it |
 | 38 | `no-viable-overload-658901de` | 5 | 2D, GL | override/runtime (fixed) | concrete glass extension storage and Canvas paint variants repaired; G2: 4 pass, 1 compiler failure |
@@ -865,11 +865,24 @@ instance must supply interface reads and writes; copying it into an interface ow
 
 ### 35. `invalid-operands-6d9a155d` — 5 header(s)
 
-- cause: an operator is applied to operand types it does not accept
+- cause: three morph-paint guards compare the whole optional token variant with a String
 - lanes: 2D
-- fix route: runtime
+- fix route: compiler — [existing token comparison request](compiler-requests/token-discriminant-comparison.md#g2-current-pin-qualification-all-three-paint-guards-use-this-carrier)
 - first failure at: `flight/shape/morph_shape_paint.hpp:77`
 - example: `invalid operands to binary expression ('value_type' and 'String')`
+
+The actual source tests beginFill, lineStyle and the remaining binding.commandKey with strict
+inequality. All three emitted guards need a presence check and selection of the represented String
+alternative. The complete token domain still includes bool, number, numeric arrays, Matrix and all
+four Texture owners. The runtime's existing three-state presence equality does not match this
+heterogeneous optional variant; no broader coercion/operator, narrowed token union or body substitute
+is carried. Sampling must retain the original command array and mutate its existing Matrix/gradient
+buffers, while preserving the endpoint snapshots explicitly made during construction.
+
+Delivered qualification remains **0/5 pass, 5 fail**, retained from G1 with the exact original
+diagnostics. The five owned rows now link the existing request; unowned rows/causes and historical
+totals remain unchanged. No production C++ input changed, so no generation, unchanged five-header
+compile, global sweep or upstream test port was run and no paint execution or new native pass is claimed.
 
 ### 36. `missing-member-5e9e8a2c` — 5 header(s)
 
