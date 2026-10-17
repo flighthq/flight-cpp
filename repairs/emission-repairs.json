@@ -8906,6 +8906,19 @@
       "expires": "when the emitter projects an array into the row element type its member declares; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "glyphatlas-declare-refused-initialize-glyph-source",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/glyphatlas/glyph_source.hpp",
+      "symbol": "initialize_glyph_source_from_glyph_atlas",
+      "refusedFunction": "initializeGlyphSourceFromGlyphAtlas",
+      "declaration": "void initialize_glyph_source_from_glyph_atlas(flight::types::EntityConstruction<flight::Ref<flight::types::GlyphSource>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlyphAtlas>>>> atlas);",
+      "sourceDeclaration": "packages/glyphatlas/src/glyphSource.ts -- initializeGlyphSourceFromGlyphAtlas(out: EntityConstruction<GlyphSource>, atlas: Readonly<GlyphAtlas>): void, refused; createGlyphSourceFromGlyphAtlas calls it with exactly these emitted carriers",
+      "diagnostic": "use of undeclared identifier 'initialize_glyph_source_from_glyph_atlas'",
+      "defect": "The emitter refuses initializeGlyphSourceFromGlyphAtlas (cpp-contextual-union-interface-heritage-carrier-unrepresented) but retains its same-header caller createGlyphSourceFromGlyphAtlas. Its exact NOT GENERATED marker, emitted call and absent definition satisfy the existing declaration repair witnesses; retainedReference and calledFrom are unnecessary. Only the declaration is supplied. The Bitmap-to-TextureSource owner widening remains refused, so using the initializer or factory must fail to link rather than copy the bitmap, narrow GlyphSource, replace atlas identity or invent glyph/layout behavior. The underlying carrier gap is recorded in docs/compiler-requests/compiler-interface-heritage-owner-widening.md.",
+      "expectedWhen": "always",
+      "expires": "when initializeGlyphSourceFromGlyphAtlas emits (the NOT GENERATED marker disappears and this repair matches nothing); sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "bitmapfont-declare-refused-initialize-glyph-source",
       "kind": "declare-refused-function",
       "appliesTo": "flight/bitmapfont/bitmap_font_glyph_source.hpp",

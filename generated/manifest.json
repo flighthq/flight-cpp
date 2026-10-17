@@ -3294,6 +3294,12 @@
     },
     {
       "files": [
+        "flight/glyphatlas/glyph_source.hpp"
+      ],
+      "id": "glyphatlas-declare-refused-initialize-glyph-source"
+    },
+    {
+      "files": [
         "flight/bitmapfont/bitmap_font_glyph_source.hpp"
       ],
       "id": "bitmapfont-declare-refused-initialize-glyph-source"

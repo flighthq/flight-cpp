@@ -73,6 +73,8 @@ using flight::types::GlyphSource;
 // at the carrier needs either that runtime carrier or interface structs emitted with the heritage as a C++ base
 // relation.
 
+void initialize_glyph_source_from_glyph_atlas(flight::types::EntityConstruction<flight::Ref<flight::types::GlyphSource>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlyphAtlas>>>> atlas);
+
 inline flight::Ref<flight::types::GlyphSource> create_glyph_source_from_glyph_atlas(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlyphAtlas>>>> atlas) {
   flight::types::EntityConstruction<flight::Ref<flight::types::GlyphSource>> out = flight::entity::allocate_entity<flight::Ref<flight::types::GlyphSource>>();
   initialize_glyph_source_from_glyph_atlas(out, atlas);
