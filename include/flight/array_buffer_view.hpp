@@ -92,6 +92,15 @@ class ArrayBufferView {
         kind(detail::array_buffer_view_kind<Value>::value),
         identity_(source.identity()) {}
 
+  // A union of views, such as `Uint16Array | Uint32Array`, is an ArrayBufferView whichever member it
+  // holds, so it passes wherever a view is accepted. The active member is viewed exactly as it would be
+  // on its own: same buffer, offset, length, element kind and identity, never copied. A variant with any
+  // member that is not a view (a string, null, a plain number) does not take this path.
+  template <typename... Views>
+    requires(sizeof...(Views) > 0 && (std::is_constructible_v<ArrayBufferView, const Views&> && ...))
+  ArrayBufferView(const std::variant<Views...>& source)
+      : ArrayBufferView(std::visit([](const auto& view) { return ArrayBufferView(view); }, source)) {}
+
   [[nodiscard]] const std::byte* data() const noexcept { return buffer.data() + byte_offset; }
   [[nodiscard]] std::byte* data() { return buffer.writable_data() + byte_offset; }
   [[nodiscard]] constexpr std::size_t bytes_per_element() const noexcept {

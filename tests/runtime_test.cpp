@@ -1046,6 +1046,21 @@ void test_blob() {
           flight::Blob(flight::Array<flight::String>{" SDK"}),
       },
       flight::BlobPropertyBag{.type = "TEXT/PLAIN"});
+  const flight::Uint16Array short_indices{1, 2, 3};
+  const flight::Uint32Array wide_indices{4, 5};
+  const std::variant<flight::Uint16Array, flight::Uint32Array> narrow_union = short_indices;
+  const std::variant<flight::Uint16Array, flight::Uint32Array> wide_union = wide_indices;
+  const flight::ArrayBufferView narrow_view = narrow_union;
+  const flight::ArrayBufferView wide_view = wide_union;
+  check(narrow_view.identity() == short_indices.identity() && narrow_view.byte_length == 6 &&
+            narrow_view.kind == flight::ArrayBufferViewKind::uint16_array &&
+            narrow_view.same_backing(flight::ArrayBufferView(short_indices)) &&
+            wide_view.identity() == wide_indices.identity() && wide_view.byte_length == 8 &&
+            wide_view.kind == flight::ArrayBufferViewKind::uint32_array,
+        "a union of typed arrays views its active member without copying it");
+  static_assert(!std::is_constructible_v<flight::ArrayBufferView, std::variant<flight::Uint8Array, flight::String>>,
+                "a union with a non-view member is not an ArrayBufferView");
+
   check(typed_parts.text().get() == flight::String("Flight! SDK") &&
             typed_parts.type == flight::String("text/plain"),
         "BlobPart and BlobPropertyBag preserve the standard constructor domains");

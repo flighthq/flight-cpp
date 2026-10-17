@@ -41,7 +41,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 12 | `call-has-no-matching-d6950545` | 12 | 2D, CORE | compiler *(existing requests)* | generic `get_node_child_count<Traits>` called without the inferred trait on a non-deducible `RowMerge` parameter (command: `NodeAny`; SVG/Lottie: `Node2D` via heritage) |
 | 13 | `no-viable-conversion-9c3803c5` | 9 | 2D, WGPU | compiler *(existing request)* | generic `noop_renderer_data(…, NodeAny)` stored in `Scene2DRenderer.create_data`, whose `Node2D` does not widen to `NodeAny` |
 | 14 | `no-viable-conversion-dfea2d92` | 9 | 3D | compiler | a value is passed where its declared type cannot receive it |
-| 15 | `variant-cast-ccfedad4` | 9 | 3D | compiler | a retained readonly program row is reconstructed through a writable row before a readonly draw helper *(existing request extended)* |
+| 15 | `variant-cast-ccfedad4` | 10 | 3D | compiler | a retained readonly program row is reconstructed through a writable row before a readonly draw helper *(existing request extended)* |
 | 16 | `call-has-no-matching-b569e92e` | 8 | 3D, ANIM | compiler | the emitted call to `init_joint_base` matches no declared overload |
 | 17 | `undeclared-identifier-294e632e` | 8 | ANIM | declaration repair (applied) | omitted callee declaration supplied; G2: 1 pass, 7 fail at later diagnostics; function remains unlinkable |
 | 18 | `undeclared-identifier-3e3cccce` | 8 | GL | runtime | the emitted code names `blit_offset_shaders`, which nothing declares *(G2: 1 pass, 7 to `undeclared-identifier-e7884ac7`)* |
@@ -104,7 +104,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 75 | `undeclared-identifier-564c29cc` | 3 | TEXT | runtime + repair (fixed) | the emitted code names `format_date_value`, which nothing declares; G2: 1 pass, 2 to `undeclared-identifier-1a056bbc` |
 | 76 | `undeclared-identifier-6a187568` | 3 | 3D | declaration repair (applied) | refused ASCII STL counter declared; G2: 3 pass; counter remains unlinkable |
 | 77 | `undeclared-identifier-dc087108` | 3 | PLAT | declaration repair (applied) | refused URL loader declared; G2: 3 pass; URL loading remains unlinkable |
-| 78 | `call-has-no-matching-84410867` | 2 | 3D | compiler | the emitted call to `buffer_data` matches no declared overload |
+| 78 | `call-has-no-matching-84410867` | 2 | 3D | runtime (applied) | a `Uint16Array \| Uint32Array` union passed to `bufferData`'s `ArrayBufferView` *(G2: 1 pass, 1 to `variant-cast-ccfedad4`)* |
 | 79 | `call-has-no-matching-d42144f0` | 2 | ANIM | compiler | the emitted call to `push` matches no declared overload |
 | 80 | `missing-member-da12a523` | 2 | 3D | runtime + repair (fixed) | the emitted code reads a member the target does not declare (`parse_obj_material_library`); G2: 0 pass, 2 follow-ons (`static-assertion-ecc68c2b`, `undeclared-identifier-d663f62e`) |
 | 81 | `missing-member-dd9b4baa` | 2 | 3D, GL | runtime | the emitted code reads a member the target does not declare (`renderbuffer_binding`) *(G2: binding added; follow-on `no-matching-conversion-bc278253` fixed: 1 pass, 1 to `missing-member-95ead583`)* |
@@ -541,7 +541,7 @@ so no second request is filed.
 - first failure at: `flight/scene3d_gl/gl_pbr_extension_registry.hpp:64`
 - example: `no viable conversion from '(lambda at /home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/fbd4b072-2bb9-4e1f-a50b-5b91857e85fc/repo/overrides/include/flight/scene3d_gl/gl_pbr_extension_registry.hpp:64:24)' to 'function<bool (optional<Texture>)>' >')`
 
-### 15. `variant-cast-ccfedad4` — 9 header(s), still failing
+### 15. `variant-cast-ccfedad4` — 10 header(s), still failing (9 at G1; `gl_wireframe_mesh_material_renderer.hpp` joined in G2 from cluster 78)
 
 - cause: the native readonly active-program row is reconstructed through a writable row before a readonly draw-helper call
 - lanes: 3D
@@ -1833,6 +1833,28 @@ their first failure moves to `get_number_format` and they join `undeclared-ident
 - fix route: compiler
 - first failure at: `flight/scene3d_gl/gl_wireframe_upload.hpp:136`
 - example: `no matching member function for call to 'buffer_data'`
+- G2 fix: runtime, `flight::ArrayBufferView` gains a converting constructor from a variant of views
+
+`glWireframeUpload.ts` builds its line indices as `Uint16Array | Uint32Array`, choosing 32-bit when the triangle
+indices are 32-bit or there are more than 65535 lines, and passes them to `gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, lineIndices, gl.STATIC_DRAW)`. WebGL accepts any
+`ArrayBufferView` there, and both union members are one. Natively the union is a
+`std::variant<Uint16Array, Uint32Array>`. `ArrayBufferView` converted from each typed array, but not from a
+variant of them, so no `buffer_data` overload matched.
+
+The runtime now views the active member through `std::visit`: the same buffer, byte offset, byte length,
+element kind and identity it would have on its own, with no copy. The constructor applies only when every
+alternative is itself a view, so a variant holding a string, null or a number does not take it. The upload
+call needs no source, repair or override change.
+
+`tests/runtime_test.cpp` checks both members of such a union (identity, byte length, element kind and
+shared backing) and statically checks that a union with a non-view member is not a view. `flight_cpp.runtime`
+passes 1/1. `src/host_sdl/webgl.cpp`, the host test and the GL app test still syntax-check, so no
+`ArrayBufferView` overload became ambiguous.
+
+**G2: 1/2 compile, 1 fail** (`-j1`, Clang 22.1.8). Passing: `flight/scene3d_gl/gl_wireframe_upload.hpp`.
+`flight/scene3d_gl/gl_wireframe_mesh_material_renderer.hpp` moves to `variant-cast-ccfedad4`. Its next
+failure (line 79) is the readonly `GlMeshProgram` row rebuilt through a writable row, the same cast that
+cluster's nine headers already carry.
 
 ### 79. `call-has-no-matching-d42144f0` — 2 header(s)
 
