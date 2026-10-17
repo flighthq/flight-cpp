@@ -152,7 +152,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 123 | `missing-member-ee398c94` | 1 | 2D | compiler *(existing request)* | G2: the line-50 diagnostic was a cascade; the first GCC failure is cluster 2's re-export before declaration; row moved |
 | 124 | `missing-member-fd2be1bc` | 1 | TEXT | compiler *(existing request)* | an `as { chars?, common? }` assertion over a parsed `JsonValue` is lowered with the erased-`Any` `object_if` recovery |
 | 125 | `no-viable-conversion-03bf8175` | 1 | 2D | repair (applied) | `data?.element ?? null` partial-row absence projected by declared repair; G2: 0 pass, 1 moved to `undeclared-identifier-993e82f1` |
-| 126 | `no-viable-conversion-0faa55ca` | 1 | GL | compiler | a value is passed where its declared type cannot receive it |
+| 126 | `no-viable-conversion-0faa55ca` | 1 | GL | source annotation (applied) | generic key enumeration retains typed renderer map; G2: 1/1 pass; [request](compiler-requests/readonly-map-key-enumeration-value-carrier.md) |
 | 127 | `no-viable-conversion-2909a65f` | 1 | 2D | patch (fixed) | four `merged.X ?? []` Map-spread fallbacks respelled `new Map<Kind, V>()`; G2 recheck: 1 pass |
 | 128 | `no-viable-conversion-31b754c5` | 1 | ANIM | compiler | G2: recorded 0/1 retained; Spine particle object guard leaves Any unprojected at Record return; existing JSON-read request/no rerun |
 | 129 | `no-viable-conversion-331a999f` | 1 | GL | runtime (applied) | a `Float32Array \| Uint8Array` output passed to `readPixels`'s `ArrayBufferView` *(G2: 1/1 pass)* |
@@ -3101,13 +3101,37 @@ failed, with foreign rows/clusters and historical G1 totals unchanged.
 | --- | --- | --- | --- |
 | `undeclared-identifier-993e82f1` | 1 | `flight/scene2d/html_view.hpp:121` | compiler: callee template parameter `Traits` leaks into a non-generic caller conversion; [existing request](compiler-requests/generic-call-argument-uses-unsubstituted-parameter-type.md) (cluster owned by builder4; only its count changed) |
 
-### 126. `no-viable-conversion-0faa55ca` — 1 header(s)
+### 126. `no-viable-conversion-0faa55ca` — 1 header, key-map conversion fixed
 
-- cause: a value is passed where its declared type cannot receive it
-- lanes: GL
-- fix route: compiler
-- first failure at: `flight/render/explain_scene_2d_pipeline_coverage.hpp:60`
-- example: `no viable conversion from 'Map<[...], Ref<NodeRenderer>>' to 'Map<[...], Any>'`
+- original cause: `getKindMapKeys(ReadonlyMap<Kind,unknown>)` emits `Map<String,Any>` while the caller
+  holds the original `Map<String,Ref<NodeRenderer>>`; there is no implicit value-owner conversion
+- fix: source patch `registry-kind-map-keys-value-parameter` makes the key-only helper generic in T;
+  its whole module emits byte-identical JavaScript and every runtime expression/caller is unchanged
+- request: [readonly map key enumeration/value carrier](compiler-requests/readonly-map-key-enumeration-value-carrier.md)
+- original first failure: `flight/render/explain_scene_2d_pipeline_coverage.hpp:60`
+- original example: `no viable conversion from 'Map<[...], flight::Ref<flight::types::NodeRenderer>>' to 'Map<[...], flight::Any>'`
+
+**G2 changed original 1: 1 attempted / 1 pass / 0 failures / 0 unattempted**, Clang 22.1.8, one worker, 76.4 seconds.
+The old cluster is removed; its row is pass with previousCluster/request and the related existing
+[node-any/default-runtime request](compiler-requests/node-any-generic-traits-leak.md). The registry
+header is reproduced by exact-pin normal one-module generation: 1,035 lowered modules across two packages, one emitted module, no refusals,
+255 source patches and two existing repairs. Only the generic declaration/value type and unused include change;
+existing package/global inventory totals stay intact, with one own applied-patch digest added.
+
+The changed native registry test passes its typed map directly. It and an actual-helper probe both
+compile/link/run with exit 0; the probe covers exact NodeRenderer-reference, numeric, Any and empty maps,
+caller-array aliases/clearing, open UTF16 sorting, unchanged map order and value-owner identity. Source
+mechanism tests pass 2/2. No permissive Map-to-Any conversion, new registry, renderer call or copied
+owner is supplied. The helper retains its full accepted value domain and reads keys only.
+
+The source query still collects all node kinds (root plus live iterative preorder descendants), then
+sorts actual registered/used keys and returns uncovered=used-minus-registered and unused=registered-
+minus-used. Open vendor strings and all nodes remain included; no always-covered/empty result or
+backend/visibility/kind filter is introduced. Its inspected collector still selects default NodeTraits
+for NodeAny runtime children; this graph/runtime owner debt is separate from the fixed key call.
+Five source pipeline cases and two key-helper cases were inspected only. The native key/header checks
+do not exercise the pipeline graph walk or prove live rendering/coverage behavior. Foreign products,
+C++ owners, repairs, overrides and pins remain unchanged; no global or unchanged native rerun.
 
 ### 127. `no-viable-conversion-2909a65f` — G2 recheck of 1 header
 

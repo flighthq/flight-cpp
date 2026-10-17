@@ -85,6 +85,9 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 
 ## Active requests without a compiler patch
 
+- [Readonly map key enumeration must retain the map value carrier](readonly-map-key-enumeration-value-carrier.md) —
+  an annotation-only generic registry helper preserves typed values for key-only calls; native key/header checks pass,
+  while pipeline graph-owner behavior remains separate.
 - [Readonly must retain a bound external value carrier and its member policy](readonly-bound-external-value-carrier.md) —
   Scene3D custom uniform guards emit a structural row for Readonly<GlContext> while callers retain
   the native shared context value; an annotation-only private helper source patch carries the fix.
