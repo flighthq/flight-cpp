@@ -62,6 +62,8 @@ inline flight::Ref<flight::types::Vector2> shape_hit_test_local_point = flight::
 // contract that validates and recovers the target owner; the compiler will not use a native pointer cast,
 // materialize a replacement row, or invent side storage
 
+double hit_test_shape_fill(flight::types::NodeAny source, double x, double y);
+
 inline void register_shape_hit_test() {
   flight::interaction::register_hit_test_precise(flight::types::morph_shape_kind, hit_test_shape_fill);
   flight::interaction::register_hit_test_precise(flight::types::shape_kind, hit_test_shape_fill);

@@ -236,3 +236,43 @@ inspection only, not additional measured compile or behavior results.
 The [material-owner refusal](compiler-interface-heritage-owner-widening.md#g2-wgpu-scale9sprite-material-owner)
 and [retained aggregate qualification](retained-declaration-calls-omitted-callee.md#g2-wgpu-scale9sprite-retains-its-refused-draw-callback)
 remain separate. No callback adapter, shared Sprite/GL change, fake slices or native WGPU draw proof is supplied.
+
+## G2 Interaction shape fill hits need the original shape-family owners
+
+At Flight `a627849` / compiler `806d257`, `interaction/registerShapeHitTest.ts:25`
+refuses `hitTestShapeFill` at `(source as Shape).data.commands` with
+`cpp-reference-assertion-without-heritage`. Its full `NodeAny` callback carrier is
+`shared_ptr<Node<Any>>`; Shape, MorphShape and Scale9Shape are independent flattened
+C++ owners. Source MorphShapeData and Scale9ShapeData extend ShapeData and retain their
+own command arrays, morph/path/paint bindings or scale9 grid. The three kind registrations
+select a callback; they do not recover those owners from the existing base graph carrier.
+
+The source reads the original `data.commands` and resolves fill regions first. Unsupported
+non-solid fills (gradient/texture fills or textured triangles) return null and yield -1 before
+any world-matrix read or scratch-point write. An empty but non-null region list still reaches
+the transform, then returns -1. A non-empty list is tested in order with `containsPathPoint`,
+returning0 on the first hit and -1 only after all misses. There is no added coarse-bounds shortcut
+or stroke-outline test. Preserve data/command reads, fresh region/path construction, null versus
+empty behavior, world-to-local transform, shared scratch writes, early exits and exceptions.
+
+The full command-token domain includes Matrix, all Texture alternatives, booleans, numbers,
+readonly number arrays, strings and null; command keys can be extended in the source registry.
+The fill helper retains the command stream's argument counts/order, expands supported geometry,
+keeps raw-path winding and ignores unsupported geometry names as the source does. Path containment
+uses the original path winding (evenOdd or nonZero), adaptive curve flattening with the source
+0.25 path-unit tolerance and its boundary convention. Do not substitute bounding rectangles,
+a constant miss or hit, a copied ShapeData/graph, a closed command subset or one concrete
+shape owner for this three-kind callback.
+
+Current native Node2D capability helpers retain an exact Shape owner and runtime when entered
+from that concrete owner. They do not recover it from the existing nominal NodeAny, and their
+closed Shape/Sprite/TextLabel domain does not establish MorphShape or Scale9Shape ownership.
+By inspection, the emitted Shape command array stores ShapeCommandToken values, whereas the
+other two flattened data owners currently spell token references; those representations must be
+reconciled while retaining the same source array and token values, not copied past. This is an
+inspected later storage obligation, not a second measured compiler error. Preserve the original
+2D transform/runtime and graph/bounds ownership without redirecting exact geometry to coarse hits.
+
+The bounded [retained callback declaration](retained-declaration-calls-omitted-callee.md#g2-interaction-shape-hit-test-retains-its-refused-callback)
+addresses name visibility only. No Shape/Node/runtime/bounds or tilemap hit code is changed; no
+fill, path, transform, callback registration or native hit behavior is supplied.

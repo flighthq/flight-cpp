@@ -3484,6 +3484,12 @@
         "flight/interaction/register_tilemap_hit_test.hpp"
       ],
       "id": "interaction-declare-refused-tilemap-cell-index"
+    },
+    {
+      "files": [
+        "flight/interaction/register_shape_hit_test.hpp"
+      ],
+      "id": "interaction-declare-refused-shape-fill-hit"
     }
   ],
   "sourcePatches": [

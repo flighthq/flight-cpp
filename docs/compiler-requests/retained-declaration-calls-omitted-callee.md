@@ -1470,3 +1470,35 @@ not called, so the `declare-refused-function` kind does not match it -- that kin
 The carried repair is `insert-forward-declaration` keyed on the exact marker. Measured at `-j1`: the
 header passes; an unused include links and runs; a caller that registers the hit test fails to link on
 exactly `flight::interaction::resolve_tilemap_cell_index(shared_ptr<Node<Any>>, double, double)`.
+
+## G2 Interaction shape hit-test retains its refused callback
+
+At Flight `a627849` / compiler `806d257`, `interaction/register_shape_hit_test.hpp:66/67/68`
+retains `register_hit_test_precise` calls for MorphShape, Shape and Scale9Shape, each passing
+`hit_test_shape_fill`. The exact `NOT GENERATED: function hitTestShapeFill` marker, all three
+live function-argument references and absent definition support the existing
+`declare-refused-function` mechanism with the exact MorphShape line as `retainedReference`:
+
+```cpp
+double hit_test_shape_fill(flight::types::NodeAny source, double x, double y);
+```
+
+The signature is the actual `HitTestPreciseFunction = double(NodeAny,double,double)` carrier.
+No adapter, inferred data owner, narrowing of the public graph parameter or repair-engine
+extension is needed. The repair matches exactly this header, adds only one declaration,
+is idempotent and expires when the refused function emits or its exact retained registration
+disappears. Shared tilemap-hit and graph/shape code is not edited.
+
+The actual unused repaired header compiles, links and runs with static callback/signature checks.
+Calling the real three-kind registration compiles to an object, then fails to link on exactly
+`flight::interaction::hit_test_shape_fill(NodeAny,double,double)` and no other missing symbol.
+There is no eager global registration being passed off as an explicit-use negative link.
+Neither registration nor the missing fill hit-test body runs, and no hit result is produced.
+
+The original refusal remains a [shape-family owner requirement](readonly-callback-derived-owner-recovery.md#g2-interaction-shape-fill-hits-need-the-original-shape-family-owners).
+Null versus empty fill regions, winding/path queries, the original command arrays, transform order
+and the complete Shape/MorphShape/Scale9Shape domain remain obligations of that body. Normal
+exact-pin one-module generation must reproduce only the declaration and its own repair manifest
+record; the partial marker, source/refusal fingerprints and package/init counts remain unchanged.
+No fake miss/hit, copied graph/shape/path owner, narrowed command domain or source/runtime/override
+body is supplied. Header compilation and callable precise geometry remain separate results.
