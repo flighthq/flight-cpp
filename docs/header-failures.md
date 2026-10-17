@@ -139,7 +139,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 110 | `invalid-operands-dc1c09c4` | 1 | PLAT | source guards + declaration repair (applied) | flex basis comparison and unsafe numeric projection cleared; G2: 1 pass; refused resolver registration remains unlinkable |
 | 111 | `missing-member-1620083c` | 1 | 2D | binding | SDL DOM value/style copies cannot carry the web renderer mix-blend write; open blend domain/provider required; G2: 0/1 retained |
 | 112 | `missing-member-1a2e58cb` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`register_dom_texture_resolver`) |
-| 113 | `missing-member-1ce5ed2e` | 1 | 3D | runtime | the emitted code reads a member the target does not declare (`physics_3d_cone_twist_joint_solver`) |
+| 113 | `missing-member-1ce5ed2e` | 1 | 3D | declaration repair (applied) | six refused built-in joint-solver bindings declared; G2: 1/1 pass, registration remains unlinkable |
 | 114 | `missing-member-42783657` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`font`) |
 | 115 | `missing-member-5ac43ed0` | 1 | 3D | source fix; compiler bounds debt | optional color write emits checked TypedArray assignment; G2: 0/1 now writable Aabb output-owner failure |
 | 116 | `missing-member-703ef98e` | 1 | 2D | compiler | G2: 0/1; refused additive handler retained in registration/global family; declaration fails unused positive link |
@@ -2335,14 +2335,25 @@ foreign/G1 data and the sibling opacity cluster remain intact.
 - first failure at: `flight/scene2d_dom/dom_image_texture_resolver.hpp:67`
 - example: `no member named 'register_dom_texture_resolver' in namespace 'scene2d_dom'`
 
-### 113. `missing-member-1ce5ed2e` — 1 header(s)
+### 113. `missing-member-1ce5ed2e` — 1 header(s), declaration repaired
 
-- cause: the emitted code reads a member the target does not declare (`physics_3d_cone_twist_joint_solver`)
-- subject: `physics_3d_cone_twist_joint_solver`
+- original cause: `registerBuiltInPhysics3DJointSolvers` re-emits all seven registrations, but six of
+  the built-in solver bindings are refused, so the header names members that do not exist
 - lanes: 3D
-- fix route: runtime
-- first failure at: `flight/physics3d/register_built_in_physics_3d_joint_solvers.hpp:22`
-- example: `no member named 'physics_3d_cone_twist_joint_solver' in namespace 'physics3d'`
+- fix route: declaration-only emission repair, with the solver bodies still owed
+- compiler request: [flattened interface refinement identity](compiler-requests/flattened-interface-refinement-identity.md)
+
+`joints.ts` refuses the fixed, distance, cone-twist, hinge, generic-6dof and slider solvers at
+`cpp-reference-assertion-without-heritage`: each method asserts a `Physics3DJoint` to its concrete
+joint type. The exact `NOT GENERATED: variable (binding)` marker for each, the register call in the
+sibling header and the absent definition agree, so six repairs insert an `extern` declaration each.
+No solver object, method, joint assertion or registration result is supplied.
+
+Written by **normal package generation** at the exact pins and matched byte for byte by the repair
+engine. Checks at `-j1` with Clang 22.1.8: the header **passes**; an unused include compiles, links and
+runs; a translation unit that calls `register_built_in_physics_3d_joint_solvers` compiles and fails to
+link on all six symbols at once, so registration stays visibly unavailable rather than substituted.
+The generated `joints.hpp` and `manifest.json` were the only paths written; no ledger drift.
 
 ### 114. `missing-member-42783657` — 1 header(s)
 

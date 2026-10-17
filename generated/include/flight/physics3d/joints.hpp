@@ -41,6 +41,18 @@ namespace flight::types { struct SpatialIndexBackend3D; }
 #include <flight/physics3d/joint_rows.hpp>
 #include <flight/physics3d/world.hpp>
 
+
+namespace flight::physics3d { extern flight::Ref<flight::types::Physics3DJointSolver> physics_3d_fixed_joint_solver; }
+
+namespace flight::physics3d { extern flight::Ref<flight::types::Physics3DJointSolver> physics_3d_distance_joint_solver; }
+
+namespace flight::physics3d { extern flight::Ref<flight::types::Physics3DJointSolver> physics_3d_cone_twist_joint_solver; }
+
+namespace flight::physics3d { extern flight::Ref<flight::types::Physics3DJointSolver> physics_3d_hinge_joint_solver; }
+
+namespace flight::physics3d { extern flight::Ref<flight::types::Physics3DJointSolver> physics_3d_generic6_dof_joint_solver; }
+
+namespace flight::physics3d { extern flight::Ref<flight::types::Physics3DJointSolver> physics_3d_slider_joint_solver; }
 namespace flight::physics3d {
 
 using flight::types::Physics3DConeTwistJoint;

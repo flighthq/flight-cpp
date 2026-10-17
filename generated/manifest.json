@@ -3424,6 +3424,42 @@
         "flight/scene3d_formats/md5_anim_features.hpp"
       ],
       "id": "scene3d-formats-declare-refused-collect-md5-anim-features"
+    },
+    {
+      "files": [
+        "flight/physics3d/joints.hpp"
+      ],
+      "id": "physics3d-declare-refused-fixed-joint-solver"
+    },
+    {
+      "files": [
+        "flight/physics3d/joints.hpp"
+      ],
+      "id": "physics3d-declare-refused-distance-joint-solver"
+    },
+    {
+      "files": [
+        "flight/physics3d/joints.hpp"
+      ],
+      "id": "physics3d-declare-refused-cone-twist-joint-solver"
+    },
+    {
+      "files": [
+        "flight/physics3d/joints.hpp"
+      ],
+      "id": "physics3d-declare-refused-hinge-joint-solver"
+    },
+    {
+      "files": [
+        "flight/physics3d/joints.hpp"
+      ],
+      "id": "physics3d-declare-refused-generic6-dof-joint-solver"
+    },
+    {
+      "files": [
+        "flight/physics3d/joints.hpp"
+      ],
+      "id": "physics3d-declare-refused-slider-joint-solver"
     }
   ],
   "sourcePatches": [

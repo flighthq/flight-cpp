@@ -246,3 +246,17 @@ stays partial: CanvasHost/ImageHost overloads and the browser singleton renderer
 The separately refused draw and retained callback references are recorded in the
 [existing retained-declaration request](retained-declaration-calls-omitted-callee.md#g2-gl-textlabel-generated-canvas-path-remains-unavailable).
 No declaration repair, normal generation, unused-header link or negative-link probe was run here.
+
+## G2 Physics3D built-in joint solvers: declarations only
+
+`@flighthq/physics3d` `joints.ts` at flight `a627849` refuses six of the seven built-in solver bindings
+(fixed, distance, cone-twist, hinge, generic-6dof, slider) as
+`cpp-reference-assertion-without-heritage`: each solver method asserts a `Physics3DJoint` to its
+concrete joint type, whose emitted owner is independent of `Physics3DJoint`. Ball-and-socket emits.
+
+`registerBuiltInPhysics3DJointSolvers.ts` re-emits the registration for all seven, so
+`register_built_in_physics_3d_joint_solvers.hpp` names six members that do not exist. Carried:
+`physics3d-declare-refused-*-joint-solver` inserts an `extern` declaration for each refused binding --
+no solver object, method, joint assertion or registration result. The unused header compiles, links and
+runs; a caller fails to link on all six symbols at once. The bodies stay owed to this request: what they
+need is the identity-preserving refined joint view, not a copied owner or a narrowed constraint.
