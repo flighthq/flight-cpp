@@ -9432,6 +9432,18 @@
       "defect": "The emitter refuses parseSvgColor at split on an indexed regexp capture while retaining resolveSvgColor calling it. Exact String-to-existing optional SvgColor reference declaration only; no color parser/body, replacement color, schema owner or narrower color syntax is supplied. Calls to parser or resolver must remain exact missing-parser link failures. Requests: docs/compiler-requests/optional-index-member-present-flow.md and docs/compiler-requests/retained-declaration-calls-omitted-callee.md.",
       "expectedWhen": "always",
       "expires": "when parseSvgColor emits or its retained direct call disappears; the exact marker/call/no-definition witnesses stop matching and sdk:check rejects an obsolete repair."
+    },
+    {
+      "id": "scene2d-formats-svg-transform-readonly-matrix",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/scene2d_formats/svg_transform.hpp",
+      "from": "flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(matrix.value()))",
+      "to": "matrix.value()",
+      "sourceDeclaration": "packages/scene2d-formats/src/svgTransform.ts:19-23 -- applySvgTransform guards a Readonly<Matrix> | null parameter and passes the same present Matrix to decomposeMatrixToTransform2D, whose source is Readonly<MatrixLike>. MatrixLike lowers to Ref<Matrix>, so these are the identical readonly schema.",
+      "diagnostic": "cannot construct a writable Matrix StructuralRef from the readonly matrix.value() view",
+      "defect": "The emitter unnecessarily reconstructs the guarded readonly Matrix through RowWritable solely to pass it to the identical readonly MatrixLike parameter. Preserve the same live matrix owner and existing decomposition/assignment without copying a matrix, granting writes, altering any parser, transform or numeric default. Request: docs/compiler-requests/readonly-view-to-writable.md.",
+      "expectedWhen": "always",
+      "expires": "when guarded readonly Matrix payloads pass to readonly MatrixLike helpers without a writable round trip; sdk:check fails if this repair matches no header."
     }
   ]
 }
