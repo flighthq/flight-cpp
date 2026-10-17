@@ -200,7 +200,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 171 | `undeclared-identifier-3cb2bb54` | 1 | GL | runtime | the emitted code names `invert_tint_shaders`, which nothing declares |
 | 172 | `undeclared-identifier-3e7f03c4` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glSharpenEffectRunner` binding (and its callee `applySharpenEffectToGl`) but still emits the registration call that passes the runner |
 | 173 | `undeclared-identifier-44058981` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glBlendEffectRunner` binding (and its callee `applyBlendEffectToGl`) but still emits the registration call that passes the runner |
-| 174 | `undeclared-identifier-49b86813` | 1 | ANIM | runtime | the emitted code names `solve_skeleton_2d_ik_constraint`, which nothing declares |
+| 174 | `undeclared-identifier-49b86813` | 1 | ANIM | declaration repair (applied) | exact refused IK solver declared; G2: 1 pass; registration and full constraint solving remain unlinkable |
 | 175 | `undeclared-identifier-4fc6ab69` | 0 | 2D | declaration repair (applied) | G2: 1/1 header; unused positive passes, handler links fail exactly on refused image helper |
 | 176 | `undeclared-identifier-514a5b7b` | 1 | 2D | compiler | Tilemap submit refuses nullable material owner widening; exact declaration compile fails NodeAny/Sprite callback carrier *(existing requests extended)* |
 | 177 | `undeclared-identifier-51763a3c` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glToneMapEffectRunner` binding (and its callee `applyToneMapEffectToGl`) but still emits the registration call that passes the runner |
@@ -3268,14 +3268,41 @@ remain unchanged.
 - Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
 - compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
-### 174. `undeclared-identifier-49b86813` — 1 header(s)
+### 174. `undeclared-identifier-49b86813` — 1 header, resolved by declaration-only repair
 
-- cause: the emitted code names `solve_skeleton_2d_ik_constraint`, which nothing declares
-- subject: `solve_skeleton_2d_ik_constraint`
+- original subject: `solve_skeleton_2d_ik_constraint`
 - lanes: ANIM
-- fix route: runtime
-- first failure at: `flight/skeleton2d/ik_constraint_2d.hpp:205`
-- example: `use of undeclared identifier 'solve_skeleton_2d_ik_constraint'`
+- original failure at: `flight/skeleton2d/ik_constraint_2d.hpp:205`
+- fix route: existing `declare-refused-function` repair, `skeleton2d-declare-refused-ik-constraint-solver`
+- retained callback: [exact declaration and link boundary](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-skeleton2d-ik-registration-retains-its-refused-solver)
+- body request: [original constraint and pose owner recovery](compiler-requests/assertion-to-undeclared-row-member.md#g2-ik-constraint-dispatch-must-retain-the-original-constraint-and-pose-owners)
+
+The exact refusal marker, live direct function-argument registration and absent definition agree.
+The existing retainedReference repair declares only void(Ref<Skeleton2D>, readonly Skeleton2DConstraint
+row), exactly the emitted Skeleton2DConstraintSolver slot. It matches one header and is idempotent.
+The original mutable skeleton Ref and full readonly base constraint ABI remain; no IK-only callback,
+closed kind union, adapter, cross-header list, repair-engine extension or replacement owner is added.
+
+Normal exact-pin one-module generation plus the existing derived structural-alias rule reproduces
+only the declaration (+2 header lines) and own repair record. The raw narrow closure omits Screen,
+so the existing rule, applied only to this header and its committed canonical Screen owner, restores
+the already-carried x_y alias/include. The owner and alias provenance stay unchanged; the result
+exactly equals the tested real candidate. The actual unused
+header compiles, links and runs with static solver-slot/signature checks. Calling the actual opt-in
+registration compiles to an object, then fails to link on **only** the exact omitted IK solver signature.
+There is no eager global registration being mistaken for this explicit-use negative link. Neither
+registration nor the full constraint body runs, and no native IK/pose result is supplied.
+
+The original owned-header jobs1 check completes **1 attempted / 1 pass / 0 fail / 0 unattempted**.
+The sole row is pass with `previousCluster`; the active cluster is removed, with no other header
+measured or promoted. The helper bodies, partial marker, original row-owner refusal, source/refusal
+fingerprints, package/global counts, initialization and applicability policy remain unchanged.
+Existing requests retain the open solver registry and original constraint, bone and Float32 owners;
+parent-space inversion/range/degeneracy checks, one/two-bone math, both cosine clamps, signed angle
+wrap, original mix/bend/stretch/compress and parent-before-child matrix refresh; the caller's ordered
+pass and later descendant propagation remain. No fake constraint, empty solver/result, copied pose
+owner, narrowed numeric/family domain or source/runtime/override body is carried. Foreign raw
+registry/worklist/request data and historical/G1 totals are preserved.
 
 ### 175. `undeclared-identifier-4fc6ab69` — declaration repaired (1 header rechecked)
 
