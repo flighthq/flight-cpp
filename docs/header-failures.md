@@ -68,7 +68,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 39 | `call-has-no-matching-4ce2cc01` | 4 | ANIM | compiler *(existing request)* | asserted record lowered to a `NamedProperties` view but the Spine timeline handler parameter to an owning `Record<String, Any>` |
 | 40 | `call-has-no-matching-82244b93` | 4 | 2D | compiler *(existing request)* | DOM/Canvas render states passed to `get_or_create_render_proxy_2d(Ref<RenderState>, …)` without emitted heritage |
 | 41 | `call-has-no-matching-9248dccf` | 4 | ANIM | compiler *(existing request)* | generic `get_node_world_matrix4<Node3DTraits>` call vs the native transform override API; runtime-owner boundary |
-| 42 | `call-has-no-matching-9ebeb95c` | 4 | ANIM, GL | compiler | the emitted call to `get_transform_2d_runtime` matches no declared overload |
+| 42 | `call-has-no-matching-9ebeb95c` | 4 | ANIM, GL | compiler *(existing request)* | nominal `Transform2DRuntimeOwner<Traits>` helper kept by the partial native transform override; no node row converts |
 | 43 | `call-has-no-matching-c3aea71c` | 4 | 2D, GL | [compiler request](compiler-requests/optional-assertion-cast-must-unwrap.md) | an assertion on an optional is emitted as `structural_ref_cast` of the optional, which no overload accepts |
 | 44 | `no-viable-conversion-5903ce63` | 4 | 3D, GL | override re-derivation (fixed) | shading modifier callbacks and registrations now match the patched `ReadonlyModifierValue` / `ModifierDefinitionValue` domains; G2: 4/4 pass |
 | 45 | `no-viable-conversion-e1a24bd1` | 4 | 2D | compiler | G2: recorded 0/4 retained; Rive numeric diagnostic Record needs existing readonly value projection; docs-only, no rerun |
@@ -1078,14 +1078,17 @@ rank remain historical, and `previousCluster` retains this original group.
 - Scoped native recheck (GCC 15.2, jobs 1): **1 attempted / 0 pass / 1 fail** at `update_particle_emitter_3d.hpp:112`, which carries the measured location. `prewarm_particle_emitter_3d`, `contract` and `_internal_index` were not recompiled, keep their recorded failure, and are given no location. No override, generated or runtime change is carried.
 - compiler request: `docs/compiler-requests/node-transform-runtime-owner-argument.md`
 
-### 42. `call-has-no-matching-9ebeb95c` — 4 header(s)
+### 42. `call-has-no-matching-9ebeb95c` — G2 recheck of 4 header(s)
 
-- cause: the emitted call to `get_transform_2d_runtime` matches no declared overload
+- cause: `get_transform_2d_runtime` takes the nominal `Ref<Transform2DRuntimeOwner<Traits>>`, which no node row converts to. The partial native `node_transform2d.hpp` override keeps that emitted helper, so each `Node2DTraits` instantiation of the world and local matrix getters fails inside it.
 - subject: `get_transform_2d_runtime`
 - lanes: ANIM, GL
 - fix route: compiler
+- why this route: this is the original defect of [node-transform-runtime-owner-argument](compiler-requests/node-transform-runtime-owner-argument.md). The transform cells live only on the runtime intersection, while the node slot holds the base `NodeRuntime`. Recovering them needs the runtime-owner decision, not a cast to the nominal owner or a copied runtime.
 - first failure at: `flight/node/node_transform2d.hpp:251`
 - example: `no matching function for call to 'get_transform_2d_runtime'`
+- Scoped native recheck (GCC 15.2, jobs 1): **2 attempted / 0 pass / 2 fail**. `update_particle_emitter_2d` fails at override `node_transform2d.hpp:251` (`get_node_world_matrix`), and `render_transform2d` at override `:177` (`get_node_local_matrix`). Both rows carry those measured locations. `prewarm_particle_emitter_2d` and `step_particle_emitter_2d` were not recompiled, keep their recorded failure, and are given no location. No override, generated or runtime change is carried.
+- compiler request: `docs/compiler-requests/node-transform-runtime-owner-argument.md`
 
 ### 43. `call-has-no-matching-c3aea71c` — 4 header(s)
 

@@ -93,6 +93,23 @@ So the override's native API, its declared `partial` scope, and the emitted gene
 that needs the runtime-owner decision below, not an adapter. `prewarm_particle_emitter_3d`, `contract` and
 `_internal_index` were not recompiled and keep their recorded failure.
 
+### G2: the 2D site through the partial native `node_transform2d.hpp` override (GCC 15.2)
+
+Cluster `call-has-no-matching-9ebeb95c` (4 headers) is the original 2D defect, reached through the
+shadowing `overrides/include/flight/node/node_transform2d.hpp`. That `partial` override carries the emitted
+`get_transform_2d_runtime(flight::Ref<Transform2DRuntimeOwner<Traits>> target)` unchanged, and its manifest
+`remaining` says the emitted world-transform projection lanes are unchanged. Instantiating with
+`Traits = Ref<Node2DTraits>` fails inside the override (GCC 15.2, one worker; 2 roots measured, 2 attempted,
+0 pass, 2 fail):
+- from `particleemitter/update_particle_emitter_2d.hpp:106`, `get_node_world_matrix` at override `:250-251`,
+  and `ensure_node_world_matrix` at `:232`: `could not convert 'target' from Transform2DNode<Ref<Node2DTraits>>`;
+- from `render/render_transform2d.hpp:55`, `get_node_local_matrix` at override `:176-177` and `:168`, with
+  the same conversion.
+
+`prewarm_particle_emitter_2d` and `step_particle_emitter_2d` reach the same instantiation through the update
+module and were not recompiled. The disposition is unchanged: no cast to the nominal owner, no copied
+runtime, and no narrowed transform domain. The runtime-owner decision below is what unblocks it.
+
 ## Why there is no small source repair (measured 2026-10-13)
 
 The helper that fails, `getTransform2DRuntime(target: Transform2DRuntimeOwner<Traits>)`, comes from this repository's
