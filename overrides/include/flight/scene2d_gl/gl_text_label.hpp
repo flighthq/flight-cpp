@@ -8,7 +8,6 @@
 #include <flight/bitmap/bitmap.hpp>
 #include <flight/scene2d_gl/gl_quad_batch_writer.hpp>
 #include <flight/render_gl/gl_quad_material_registry.hpp>
-#include <flight/render/scene2d_working_color_space.hpp>
 #include <flight/types/glyph_source.hpp>
 #include <map>
 #include <tuple>
@@ -141,7 +140,7 @@ inline void draw_native_gl_text_label(flight::Ref<flight::types::GlRenderState> 
   if (data->log_w <= 0 || data->log_h <= 0) return;
   auto runtime = flight::render_gl::get_gl_render_state_runtime(state);
   ensure_gl_quad_batch_shader(state);
-  auto texture = flight::render_gl::bind_gl_bitmap_texture(state, *data->bitmap, std::nullopt, std::nullopt, true, flight::render::scene_2d_working_color_space);
+  auto texture = flight::render_gl::bind_gl_bitmap_texture(state, *data->bitmap, std::nullopt, std::nullopt, true);
   const bool straight = runtime->context->current_texture_realization.value()->straight_alpha;
   const double index = prepare_gl_quad_batch_write(state, texture, straight, std::nullopt, proxy->blend_mode, material, *renderer, 1);
   write_gl_quad_batch_instance(runtime->quad_batch_writer_instance_data, index * quad_batch_instance_floats, proxy->transform_2d,

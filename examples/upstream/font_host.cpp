@@ -107,17 +107,25 @@ struct LoadedFont final {
   return LoadedFont{.source = std::move(source), .metrics = metrics.value()};
 }
 
-[[nodiscard]] std::optional<LoadedFont> load_example_font() {
+[[nodiscard]] std::optional<LoadedFont> load_example_font(bool monospace = false) {
   std::vector<std::string> candidates;
   if (const char* configured = std::getenv("FLIGHT_CPP_EXAMPLE_FONT")) {
     candidates.emplace_back(configured);
   }
-  candidates.emplace_back("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf");
-  candidates.emplace_back("/usr/share/fonts/truetype/liberation2/LiberationSans-Regular.ttf");
-  candidates.emplace_back("/usr/share/fonts/truetype/freefont/FreeSans.ttf");
-  candidates.emplace_back("/System/Library/Fonts/Supplemental/Arial.ttf");
-  if (const char* windows = std::getenv("WINDIR")) {
-    candidates.emplace_back(std::string(windows) + "/Fonts/arial.ttf");
+  if(monospace) {
+    candidates.emplace_back("/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf");
+    candidates.emplace_back("/usr/share/fonts/truetype/liberation2/LiberationMono-Regular.ttf");
+    candidates.emplace_back("/usr/share/fonts/truetype/freefont/FreeMono.ttf");
+    candidates.emplace_back("/System/Library/Fonts/Monaco.ttf");
+    candidates.emplace_back("/System/Library/Fonts/Supplemental/Courier New.ttf");
+    candidates.emplace_back("/System/Library/Fonts/Menlo.ttc");
+    if(const char* windows=std::getenv("WINDIR")) candidates.emplace_back(std::string(windows)+"/Fonts/consola.ttf");
+  } else {
+    candidates.emplace_back("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf");
+    candidates.emplace_back("/usr/share/fonts/truetype/liberation2/LiberationSans-Regular.ttf");
+    candidates.emplace_back("/usr/share/fonts/truetype/freefont/FreeSans.ttf");
+    candidates.emplace_back("/System/Library/Fonts/Supplemental/Arial.ttf");
+    if(const char* windows=std::getenv("WINDIR")) candidates.emplace_back(std::string(windows)+"/Fonts/arial.ttf");
   }
   for (const auto& candidate : candidates) {
     try {
@@ -133,7 +141,20 @@ struct LoadedFont final {
 void install_text_renderer(flight::Ref<flight::types::GlRenderState> state) {
   auto font = load_example_font();
   if (!font) throw std::runtime_error("TextLabel requires a TrueType font; set FLIGHT_CPP_EXAMPLE_FONT");
-  auto capability = flight::font::allocate_glyph_rasterizer_backend_from_glyph_outline_source(font->source);
+  auto sans=flight::font::allocate_glyph_rasterizer_backend_from_glyph_outline_source(font->source);
+  auto mono_font=load_example_font(true);
+  auto mono=mono_font ? flight::font::allocate_glyph_rasterizer_backend_from_glyph_outline_source(mono_font->source) : nullptr;
+  auto capability=flight::make_ref<flight::types::HostGlyphRasterizerCapability>();
+  capability->rasterize=[sans,mono](double cp,auto options) {
+    const bool monospace=flight::row_get<flight::RowKey<"fontFamily">>(options)==flight::String("monospace");
+    if(monospace && !mono) throw std::runtime_error("monospace TextLabel requires a TrueType font; set FLIGHT_CPP_EXAMPLE_FONT");
+    return (monospace?mono:sans)->rasterize(cp,options);
+  };
+  capability->measure_metrics=[sans,mono](auto options) {
+    const bool monospace=flight::row_get<flight::RowKey<"fontFamily">>(options)==flight::String("monospace");
+    if(monospace && !mono) throw std::runtime_error("monospace TextLabel requires a TrueType font; set FLIGHT_CPP_EXAMPLE_FONT");
+    return (monospace?mono:sans)->measure_metrics.value()(options);
+  };
   auto provider = std::make_shared<flight::scene2d_gl::NativeGlyphTextProvider>(capability);
   flight::textlayout::set_text_layout_measure_provider(flight::types::TextMeasureFunction(
       [provider](auto text, auto format) { return provider->measure(text, format); }));
