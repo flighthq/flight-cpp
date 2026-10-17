@@ -125,6 +125,8 @@ inline flight::Null import_rive_core_object_as_data() {
 // flight-cpp provides identity-preserving projected-sequence storage, declare the source as readonly
 // RiveCoreObject[] rather than readonly Readonly<RiveCoreObject>[].
 
+void initialize_rive_artboard_import_context(flight::types::EntityConstruction<flight::Ref<flight::types::RiveArtboardImportContext>> out, flight::Ref<flight::types::RiveImportRegistry> registry, flight::Ref<flight::types::RiveArtboardGraph> artboard, flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>> objects, flight::types::DisplayObject root, flight::Array<flight::String> font_names, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt);
+
 inline flight::Ref<flight::types::RiveArtboardImportContext> create_rive_artboard_import_context(flight::Ref<flight::types::RiveImportRegistry> registry, flight::Ref<flight::types::RiveArtboardGraph> artboard, flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>> objects, flight::types::DisplayObject root, flight::Array<flight::String> font_names, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<flight::types::RiveArtboardImportContext>> out = flight::entity::allocate_entity<flight::Ref<flight::types::RiveArtboardImportContext>>();
   initialize_rive_artboard_import_context(out, registry, artboard, objects, root, font_names, diagnostics);

@@ -78,7 +78,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 49 | `other-5611a858` | 4 | ANIM | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 50 | `other-d6be4352` | 4 | ANIM | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 51 | `static-assertion-00a0e75d` | 4 | 3D, WGPU | compiler | a runtime static assertion rejects the emitted shape |
-| 52 | `undeclared-identifier-0fc9e20f` | 4 | 2D | runtime | the emitted code names `initialize_rive_artboard_import_context`, which nothing declares |
+| 52 | `undeclared-identifier-0fc9e20f` | 4 | 2D | declaration repair (applied) | omitted artboard-import-context declaration supplied; G2: 0 pass, 4 fail at the next omitted callee; function remains unlinkable |
 | 53 | `undeclared-identifier-69b85faa` | 4 | PLAT | declaration repair (applied) | omitted untrack callee declaration supplied; G2: 0 pass, 4 fail at the next omitted callee; function remains unlinkable |
 | 54 | `undeclared-identifier-7d64d9c1` | 4 | GL | runtime | the emitted code names `gl_custom_shader_effect_runner`, which nothing declares |
 | 55 | `undeclared-identifier-862d162a` | 4 | 3D | runtime | the emitted code names `build_gltf_animations`, which nothing declares |
@@ -977,14 +977,32 @@ rank remain historical, and `previousCluster` retains this original group.
 - first failure at: `flight/structural_ref.hpp:1421`
 - example: `static assertion failed due to requirement '!is_void_v<void>': structural row schema does not contain the requested property`
 
-### 52. `undeclared-identifier-0fc9e20f` — 4 header(s)
+### 52. `undeclared-identifier-0fc9e20f` — 4 header(s), declaration repaired
 
-- cause: the emitted code names `initialize_rive_artboard_import_context`, which nothing declares
-- subject: `initialize_rive_artboard_import_context`
+- original cause: retained code calls `initialize_rive_artboard_import_context` after its body was
+  refused at the projected-sequence storage boundary
 - lanes: 2D
-- fix route: runtime
-- first failure at: `flight/scene2d_formats/rive_import_registry.hpp:130`
-- example: `use of undeclared identifier 'initialize_rive_artboard_import_context'`
+- fix route: declaration-only emission repair, with projected-sequence debt still open
+- compiler request: [readonly-sequence-owning-array.md](compiler-requests/readonly-sequence-owning-array.md)
+
+The exact refusal marker, the single retained call and the absence of any definition justify
+`scene2d-formats-declare-refused-rive-artboard-import-context`. It declares the seven carriers the
+retained call constructs, including the `SequenceView` the caller already holds. No construction body,
+field initialisation, owning array or recovered sequence storage is supplied; calls remain unresolved
+links.
+
+Written by **normal package generation** at the exact pins (`flight` a627849 / `flight-compiler`
+806d257, rehydrated without `--update`): the pre-write check reported exactly
+`rive_import_registry.hpp` and `manifest.json` as the differing paths, and the write produced only
+those two.
+
+G2: **0/4 compile, 4 fail, 0 unattempted** at `-j1` with Clang 22.1.8. The artboard callee resolves in
+`rive_import_registry.hpp` and the three headers that include it; all four now fail one callee further
+on `initialize_rive_document_import_context`.
+
+| follow-on cluster | owned headers | first failure | route / cause |
+| --- | --- | --- | --- |
+| `undeclared-identifier-6bcf3171` | 4 | `flight/scene2d_formats/rive_import_registry.hpp:169` | compiler: the document import context is refused at the same projected-sequence storage boundary; its retained delegating caller is beside it in the same file; [existing request](compiler-requests/readonly-sequence-owning-array.md) |
 
 ### 53. `undeclared-identifier-69b85faa` — 4 header(s), declaration repaired
 

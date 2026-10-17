@@ -4044,6 +4044,19 @@
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "scene2d-formats-declare-refused-rive-artboard-import-context",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/scene2d_formats/rive_import_registry.hpp",
+      "symbol": "initialize_rive_artboard_import_context",
+      "refusedFunction": "initializeRiveArtboardImportContext",
+      "declaration": "void initialize_rive_artboard_import_context(flight::types::EntityConstruction<flight::Ref<flight::types::RiveArtboardImportContext>> out, flight::Ref<flight::types::RiveImportRegistry> registry, flight::Ref<flight::types::RiveArtboardGraph> artboard, flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>> objects, flight::types::DisplayObject root, flight::Array<flight::String> font_names, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt);",
+      "sourceDeclaration": "packages/scene2d-formats/src/riveImportRegistry.ts -- initializeRiveArtboardImportContext(out: EntityConstruction<RiveArtboardImportContext>, registry: RiveImportRegistry, artboard: RiveArtboardGraph, objects: readonly Readonly<RiveCoreObject>[], root: DisplayObject, fontNames: readonly string[], diagnostics?: ImportDiagnostic[]): void; refused at the projected-sequence storage boundary while retained createRiveArtboardImportContext calls it with exactly those emitted carriers",
+      "diagnostic": "use of undeclared identifier 'initialize_rive_artboard_import_context'",
+      "defect": "The emitter refuses initializeRiveArtboardImportContext (cpp-contextual-structural-array-nominal-recovery-unproven) but retains createRiveArtboardImportContext calling it. The exact NOT GENERATED initializeRiveArtboardImportContext marker, the retained call and the absent declaration/definition agree. This inserts only the seven carriers the retained call constructs; it supplies no construction body, no field initialisation, no owning array and no recovered sequence storage. Calling the refused helper or its retained caller remains an unresolved link, so the import context stays visibly unusable rather than substituted. The underlying projected-sequence capability stays open in docs/compiler-requests/quadbatch-owner-and-contextual-construction.md.",
+      "expectedWhen": "always",
+      "expires": "when initializeRiveArtboardImportContext emits (the NOT GENERATED marker disappears and this repair matches nothing); sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "selection-unqualified-types-names",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/selection/",

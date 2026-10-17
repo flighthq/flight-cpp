@@ -3315,6 +3315,12 @@
         "flight/text_markup/text_markup.hpp"
       ],
       "id": "text-markup-declare-refused-equals-markup-format"
+    },
+    {
+      "files": [
+        "flight/scene2d_formats/rive_import_registry.hpp"
+      ],
+      "id": "scene2d-formats-declare-refused-rive-artboard-import-context"
     }
   ],
   "sourcePatches": [

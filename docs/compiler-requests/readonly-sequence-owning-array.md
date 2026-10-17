@@ -34,3 +34,10 @@ exposes element views over it, rather than a copied owning array.
   it. The equivalence rests on the helper being private and its result being consumed once, by a caller that reads
   only `facet` and `key` and mints its own objects -- asserted in `tests/generated_requirement_codegen_test.cpp`,
   whose additive-expansion cases fail when the originals stop being carried through.
+- `initializeRiveArtboardImportContext` in `@flighthq/scene2d-formats` (`riveImportRegistry.ts`): refused
+  at the `readonly Readonly<RiveCoreObject>[]` store into the context's owning `objects` member; its
+  retained `createRiveArtboardImportContext` caller keeps `rive_import_registry.hpp` and the three
+  headers that include it failing on the omitted callee. Declared only by
+  `scene2d-formats-declare-refused-rive-artboard-import-context`, so the callers compile and any call
+  fails to link: the import context stays unbuilt rather than substituted, and the projected-sequence
+  carrier is still owed here.
