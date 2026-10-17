@@ -143,6 +143,8 @@ inline bool starts_with_ascii_solid(flight::Uint8Array bytes) {
   return (head.slice(0.0, 5.0).to_lower() == flight::String("solid"));
 }
 
+std::optional<double> count_ascii_stl_facets(flight::String text);
+
 inline std::optional<flight::Ref<flight::types::StlFeatures>> collect_stl_features(flight::Uint8Array bytes) {
   const std::optional<double> binary_count = read_binary_stl_triangle_count(bytes);
   if (binary_count.has_value()) {

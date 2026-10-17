@@ -9015,6 +9015,19 @@
       "defect": "The exact NOT GENERATED marker, retained registration callback reference and absent definition agree. The declared parameters are the registry callback's emitted readonly Material row and existing Texture-reference array. This adds no body, empty texture list, material downcast, texture copy or extension-domain restriction. An unused header may compile and link; retaining either registration must still fail to link on the refused callback. Concrete Material owner recovery remains open in docs/compiler-requests/assertion-to-undeclared-row-member.md.",
       "expectedWhen": "always",
       "expires": "when listUnlitMaterialTextures emits or its exact retained registration disappears; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-formats-declare-refused-ascii-stl-count",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/scene3d_formats/stl_features.hpp",
+      "symbol": "count_ascii_stl_facets",
+      "refusedFunction": "countAsciiStlFacets",
+      "declaration": "std::optional<double> count_ascii_stl_facets(flight::String text);",
+      "sourceDeclaration": "packages/scene3d-formats/src/stlFeatures.ts:62 -- countAsciiStlFacets(text: string): number | null; retained collect_stl_features passes the flight::String returned by decode_utf8 and stores the result in std::optional<double>.",
+      "diagnostic": "use of undeclared identifier 'count_ascii_stl_facets'",
+      "defect": "The exact NOT GENERATED marker, same-header retained collect_stl_features call and absent definition agree. The signature is the emitter-owned String argument and optional<double> result already constructed by that call. The body and its readAsciiStlBodyTokens helper are refused at indexed-string member presence. This repair declares only the missing boundary and leaves both bodies refused: no substitute count, parser, acceptance grammar, token array or changed absence behavior. An unused header can link; calling the retained collector still fails to link on count_ascii_stl_facets. Body evidence remains in optional-index-member-present-flow.md and indexed-array-member-call-present-element.md; retained-call emission remains in retained-declaration-calls-omitted-callee.md.",
+      "expectedWhen": "always",
+      "expires": "when countAsciiStlFacets emits (its exact NOT GENERATED marker disappears) or its retained call disappears; sdk:check fails if this repair matches no header."
     }
   ]
 }

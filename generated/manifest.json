@@ -3357,6 +3357,12 @@
         "flight/scene2d_canvas/canvas_texture_window_source.hpp"
       ],
       "id": "scene2d-canvas-declare-refused-texture-window-source"
+    },
+    {
+      "files": [
+        "flight/scene3d_formats/stl_features.hpp"
+      ],
+      "id": "scene3d-formats-declare-refused-ascii-stl-count"
     }
   ],
   "sourcePatches": [
