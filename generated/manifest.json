@@ -3375,6 +3375,12 @@
         "flight/intl/datetime.hpp"
       ],
       "id": "intl-datetime-declare-refused-format-date-value"
+    },
+    {
+      "files": [
+        "flight/video/video_resource_from.hpp"
+      ],
+      "id": "video-declare-refused-url-loader"
     }
   ],
   "sourcePatches": [

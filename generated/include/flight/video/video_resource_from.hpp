@@ -56,6 +56,8 @@ using flight::types::VideoResourceUrl;
 // a carrier of its own -- a union of two declarations that differ only in name is one carrier whatever the
 // emitter does -- or provide that runtime contract
 
+flight::Task<flight::Ref<flight::types::VideoResource>> load_video_resource_from_url(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostVideoCapability>>>> host_video, flight::String url, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResourceLoadOptions>>>>> options = std::nullopt, std::optional<flight::AbortSignal> signal = std::nullopt);
+
 inline flight::Task<flight::Ref<flight::types::VideoResource>> load_video_resource_from_blob(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostVideoCapability>>>> host_video, flight::Blob blob, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResourceLoadOptions>>>>> options = std::nullopt, std::optional<flight::AbortSignal> signal = std::nullopt) {
   if ((!flight::row_get<flight::RowKey<"createObjectUrl">>(host_video).has_value() || !flight::row_get<flight::RowKey<"revokeObjectUrl">>(host_video).has_value())) {
     throw flight::Error(flight::String("No video object URL backend available"));

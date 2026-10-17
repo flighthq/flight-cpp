@@ -9054,6 +9054,19 @@
       "defect": "The exact NOT GENERATED marker, same-header retained collect_stl_features call and absent definition agree. The signature is the emitter-owned String argument and optional<double> result already constructed by that call. The body and its readAsciiStlBodyTokens helper are refused at indexed-string member presence. This repair declares only the missing boundary and leaves both bodies refused: no substitute count, parser, acceptance grammar, token array or changed absence behavior. An unused header can link; calling the retained collector still fails to link on count_ascii_stl_facets. Body evidence remains in optional-index-member-present-flow.md and indexed-array-member-call-present-element.md; retained-call emission remains in retained-declaration-calls-omitted-callee.md.",
       "expectedWhen": "always",
       "expires": "when countAsciiStlFacets emits (its exact NOT GENERATED marker disappears) or its retained call disappears; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "video-declare-refused-url-loader",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/video/video_resource_from.hpp",
+      "symbol": "load_video_resource_from_url",
+      "refusedFunction": "loadVideoResourceFromUrl",
+      "declaration": "flight::Task<flight::Ref<flight::types::VideoResource>> load_video_resource_from_url(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostVideoCapability>>>> host_video, flight::String url, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResourceLoadOptions>>>>> options = std::nullopt, std::optional<flight::AbortSignal> signal = std::nullopt);",
+      "sourceDeclaration": "packages/video/src/videoResourceFrom.ts:32 -- loadVideoResourceFromUrl(hostVideo: Readonly<HostVideoCapability>, url: string, options?: Readonly<VideoResourceLoadOptions>, signal?: AbortSignal): Promise<VideoResource>. Both retained blob and URL-list loaders pass the same emitted readonly host row, String, optional readonly options row and optional AbortSignal; their return/await carrier is Task<Ref<VideoResource>>.",
+      "diagnostic": "use of undeclared identifier 'load_video_resource_from_url'",
+      "defect": "The exact NOT GENERATED loadVideoResourceFromUrl marker, two live same-header calls and absent definition agree. This declares only the retained callers' own parameter and Task result carriers, with the ordinary source optional-argument defaults. The URL body remains refused at cpp-union-runtime-domains-erased because distinct CanvasImageSource domains map to one SDL ImageSource without a compiler-visible discriminator contract. No provider, URL decoding, Task result, host handle or resource ownership behavior is supplied. Unused repaired headers can link; invoking either retained loader or the refused URL function must still fail to link on this exact missing body. Existing body request: image-source-union-domain-discriminator.md; caller request: retained-declaration-calls-omitted-callee.md.",
+      "expectedWhen": "always",
+      "expires": "when loadVideoResourceFromUrl emits (its exact NOT GENERATED marker disappears) or both retained calls disappear; sdk:check fails if this repair matches no header."
     }
   ]
 }
