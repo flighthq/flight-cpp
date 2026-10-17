@@ -91,3 +91,29 @@ and makes no full-renderer capability claim.
 The pinned source guard tests cover false-before-enable/true-after-enable, one corrective mat4-to-mat3
 normal-matrix warning across repeated binds, silence for matching built-ins, and ignoring custom
 uniforms. They use a fake GL source fixture and were read only; they are not new SDL/GL execution.
+
+## G2 scoped result and limits
+
+The annotation-only source patch is carried. Normal exact-pin scoped generation of scene3d-gl
+completed: **64/69 modules emitted, 5 refused**, unchanged emission counts; its dependency closure
+emitted 1536/1643 modules across 36 packages with 107 refusals. The generated helper takes
+WebGl2Context and reads the same seven mapped native constants. The now-unused seven FLOAT keys
+are removed from the generated SDK member lookup/type/binding/widening tables; no other key changes.
+The generated manifest adds only this patch's digest/provenance. The guard callback, cache, logging,
+material renderer and every public API/body expression remain unchanged.
+
+The changed original-one header compiled with **Clang 22.1.8, one worker: 1 attempted / 1 pass /
+0 fail / 0 unattempted, 116.3 s**. The old cluster is removed, with previousCluster and this request
+retained on the passing row. Source-patch recovery tests passed **2/2**. An exact emitted-diff check
+proves only the helper carrier/seven member reads/unused include and their unused SDK keys changed.
+This is compile evidence, not native program introspection, log-sink, WeakSet lifetime, renderer or
+pixel execution. No link/live test was run and no broader package/shipping claim follows.
+
+Scoped generation also produced unrelated FakeGl2 member/hash order and pipeline anonymous-hash
+drift; both headers were restored, with that diff preserved in scratch. The run printed an existing
+scene2d-gl-clip-rectangle-viewport-number-domain warning. That detector matches the refusal text
+anywhere in the package, so this alone does not identify a clip-rectangle regression. No scene2d
+header or patch is carried or rerun, and no global/scoped CURRENT claim is inferred. Evidence lives
+under `/tmp/builder4-g2-custom-shader-guards/` (generate.log, headers-report.json,
+source-patches-tests.log, rejected-foreign-generation-drift.diff). The compiler's dependency file
+records 2,199 actual included files for post-rebase content validation without repeating the compile.

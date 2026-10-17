@@ -124,7 +124,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 95 | `undeclared-identifier-e39f9d67` | 2 | 3D | compiler | missing resolver cleared; original2 now 1 pass / 1 readonly program-owner failure; Map guard remains declaration-only *(requests extended)* |
 | 96 | `variant-cast-37507e07` | 2 | 3D | compiler | G2: recorded 0/2 retained; glTF guarded indexed light optional is cast without projection; existing flow/heritage requests, no rerun |
 | 97 | `call-has-no-matching-00dc04ad` | 1 | 2D | compiler | the emitted call to `get_texture_uv_matrix` matches no declared overload |
-| 98 | `call-has-no-matching-35224a3f` | 1 | 3D | compiler | the emitted call to `gl_uniform_type_name` matches no declared overload |
+| 98 | `call-has-no-matching-35224a3f` | 1 | 3D | source patch (fixed) | private readonly GlContext helper retains its native carrier; G2: 1/1 pass, request linked |
 | 99 | `call-has-no-matching-4c12e411` | 15 | WGPU | compiler | `create_bind_group_layout` entries are emitted as anonymous nested owners inside an untyped braced descriptor *(request filed)* |
 | 100 | `call-has-no-matching-76a6a61a` | 1 | 2D | compiler | optional slot-resolver result is coalesced as a variant; [existing carrier request](compiler-requests/compiler-flattened-optional-chain-union-storage.md#g2-scene2d-slot-resolver-coalesces-an-optional-callback-result) |
 | 101 | `call-has-no-matching-7f4ae181` | 1 | 2D | compiler | guarded blendMode read retains optional<String> at the String helper call; [existing request](compiler-requests/narrowed-optional-template-argument.md#g2-scene2d-kind-usage-passes-a-guarded-member-as-optional-storage) |
@@ -2506,12 +2506,41 @@ repairs/manifest/pins and foreign/historical products remain unchanged.
 
 ### 98. `call-has-no-matching-35224a3f` — 1 header(s)
 
-- cause: the emitted call to `gl_uniform_type_name` matches no declared overload
+- cause: the helper's Readonly<GlContext> becomes a structural row while callers retain the bound
+  WebGl2Context value; the helper and runtime callback are already declared
 - subject: `gl_uniform_type_name`
 - lanes: 3D
-- fix route: compiler
-- first failure at: `flight/scene3d_gl/enable_gl_scene_3d_custom_shader_guards.hpp:85`
-- example: `no matching function for call to 'gl_uniform_type_name'`
+- fix route: annotation-only source patch (applied)
+- original first failure: `flight/scene3d_gl/enable_gl_scene_3d_custom_shader_guards.hpp:85`
+- compiler request: [readonly bound external value carrier](compiler-requests/readonly-bound-external-value-carrier.md)
+
+`scene3d-gl-custom-uniform-context-carrier.patch` only names GlContext directly on the private
+seven-enum name helper. Its TypeScript body, callers and public API are identical. Native generation
+now uses WebGl2Context and its seven constants, retaining the same shared surface identity; no
+context/state/material/program owner is copied or recovered and no callback cast is introduced.
+The bound type already exists, so a missing declaration/extra binding or permissive row constructor
+is not the fix. The generated SDK table drops only the seven now-unused FLOAT enum row keys.
+
+Preserve the same state runtime's nullable opt-in guard slot and matching(state,program,key)
+callback; module WeakSet program identity and add-before-introspection/error ordering; original
+active-uniform enumeration/null/custom/matching skips; u_model/u_viewProjection mat4,
+u_normalMatrix mat3/u_cameraPosition vec3 expectations; seven labels/raw-enum fallback;
+logOnce shaderKey/uniform key, Warn data and scene-gl category. The material renderer's source/key,
+missing-material/source skips, hook-before-draw-setup and uniform/texture uploads are unchanged.
+Full requirements and read-only source test coverage are in the request.
+
+**Changed original1: 1 attempted / 1 pass / 0 fail / 0 unattempted,116.3 s,Clang22.1.8 jobs1.**
+Normal exact-pin generation: scene3d-gl64/69 emitted5refused (no emission-count change), closure
+1536/1643 across36packages107refusals; source-patch tests2/2 pass. Active cluster removed, pass row
+retains previousCluster/request. Historical sweep/carry counts and all foreign rows remain unchanged.
+This is header-compile evidence; no native uniform introspection/log/cache/shader/pixel execution,
+link proof, full renderer/package gain or global CURRENT result is claimed.
+
+Two unrelated scoped FakeGl2 order/hash and pipeline anonymous-hash changes were restored. The
+existing scene2d viewport source-patch warning uses a package-wide refusal match and is recorded
+without inferring a clip-module regression or changing that lane. No old GL/global proof rerun;
+2,199 actual compile dependencies are captured for final content/hash validation. Logs and rejected
+drift remain under `/tmp/builder4-g2-custom-shader-guards/`.
 
 ### 99. `call-has-no-matching-4c12e411` — 15 header(s)
 
