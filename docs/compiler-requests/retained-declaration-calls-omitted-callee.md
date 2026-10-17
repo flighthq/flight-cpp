@@ -69,6 +69,53 @@ relationships are flattened in C++ (each emitted struct inherits only `Reference
 declaration repair would not compile the delegators. This is therefore the next callee in the same
 class, not a separate defect.
 
+## G2 site: `scene3d-wgpu` scene runtime
+
+At compiler `806d257` / Flight `a627849`, the seven-header G1 group
+`undeclared-identifier-7dc86326` first fails at `wgpu_scene_3d_runtime.hpp:194`.
+`getWgpuScene3DRuntime` has the exact `NOT GENERATED` marker and
+`cpp-structural-assertion-owner-unproven` refusal, but the same header retains
+`get_wgpu_skinning_adapter(Ref<WgpuRenderState> state)` and its direct call
+`get_wgpu_scene_3d_runtime(state)->skinning_adapter`. No definition or declaration of that callee
+exists in the original header.
+
+`scene3d-wgpu-declare-refused-scene-runtime` uses the existing guarded
+`declare-refused-function` mechanism to insert only:
+
+```cpp
+flight::Ref<flight::types::WgpuScene3DRuntime> get_wgpu_scene_3d_runtime(
+    flight::Ref<flight::types::WgpuRenderState> state);
+```
+
+The argument is the retained caller's actual carrier. The source return type and the emitted
+`scene_runtimes` WeakMap value both name the same `Ref<WgpuScene3DRuntime>` result; no anonymous owner
+or substitute result was invented. The exact refusal marker, same-header direct call and absence of a
+definition are the three witnesses. Removing the marker when emission succeeds expires this repair.
+
+The real repaired header compiles and links when unused. A separate object calling the real retained
+`get_wgpu_skinning_adapter` compiles, then fails to link exactly on `get_wgpu_scene_3d_runtime`.
+The header remains explicitly PARTIAL and its original refusal and source excerpt remain intact.
+The [runtime-owner request](asserted-erased-runtime-owner.md#g2-site-flighthqscene3d-wgpu-scene-runtime)
+records the body refusal and identity requirements; this declaration supplies no cache allocation,
+skinning behavior, owner recovery or GPU backend implementation.
+
+The scoped seven-header recheck is complete: **2 pass, 5 fail, 0 unattempted**, with one C++ worker.
+The repaired runtime header and `enable_wgpu_scene_3d_forward_light_selection_guards.hpp` compile.
+The custom-shader guards header and its two barrels now fail at line 116 on
+`run_wgpu_custom_shader_guards`, whose body is also explicitly refused
+(`cpp-contextual-union-inequivalent` at the `material.uniforms ?? {}` record fallback). The retained
+enable function stores that missing function as a callback value; it does not call it directly.
+Consequently this second site does not satisfy the existing direct-call repair witness, and no
+declaration, replacement guard or repair-engine broadening is carried for it. This is the same
+retained-reference consequence with a function-value use instead of a direct call.
+
+The other two failures are the existing
+[render-pass descriptor construction](external-descriptor-literal-construction.md) family in the
+internal test helper, and a
+[member read on the cube-image variant](reference-backed-outcome-variant-narrowing.md#g2-cube-image-value-variant).
+All five stay failed and request-linked. The two compile passes do not make the refused scene
+accessor callable or promote this partial module to a complete implementation.
+
 ## Reduction
 
 The reduction is the emission itself: the refusal is in `loadVideoResourceFromUrl`, and the two retained

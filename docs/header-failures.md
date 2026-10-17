@@ -27,7 +27,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 
 | # | cluster | headers | lanes | fix route | cause |
 | --- | --- | --- | --- | --- | --- |
-| 1 | `call-has-no-matching-9c08d665` | 116 | WGPU | compiler | bound WebGPU descriptor object literals are emitted as untyped source-order braced initializers with anonymous nested owners *(request filed)* |
+| 1 | `call-has-no-matching-9c08d665` | 117 | WGPU | compiler | bound WebGPU descriptor object literals are emitted as untyped source-order braced initializers with anonymous nested owners *(request filed)* |
 | 2 | `missing-member-b1a6d5cf` | 34 | 2D | compiler | scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined *(request filed)* |
 | 3 | `in-operator-not-lowered-b1eae4af` | 31 | 2D, GL, PLAT, WGPU | compiler | the TypeScript `in` operator is emitted verbatim as C++ `in` at 4 root headers *(existing request extended)* |
 | 4 | `undeclared-identifier-993e82f1` | 29 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(builder4/E0a)* |
@@ -48,7 +48,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 19 | `invalid-operands-4b19651b` | 7 | 2D, ANIM | compiler | a guarded `unknown` (typeof record member, or `Array.isArray` length) is still read as `flight::Any` before a numeric comparison *(request filed)* |
 | 20 | `missing-member-fd48c0bb` | 7 | 3D | [compiler request](compiler-requests/narrowed-imported-union-into-declared-parameter.md) | the emitted code reads a member the target does not declare (`collide_physics_3d_collider_shapes`) |
 | 21 | `other-18dcce71` | 7 | ANIM | [compiler request](compiler-requests/erased-array-element-reading.md) | Array.isArray narrowing leaves an erased array length read as Any in a numeric assignment |
-| 22 | `undeclared-identifier-7dc86326` | 7 | WGPU | runtime | the emitted code names `get_wgpu_scene_3d_runtime`, which nothing declares |
+| 22 | `undeclared-identifier-7dc86326` | 7 | WGPU | declaration repair (applied) | refused scene accessor declared; G2: 2 pass, 5 later compiler failures; accessor remains unlinkable |
 | 23 | `undeclared-identifier-b90ed4db` | 7 | ANIM | [compiler request](compiler-requests/erased-array-element-reading.md) | a retained callback alias references the DragonBones animations handler after its body is refused |
 | 24 | `invalid-operands-ec4dbe74` | 6 | CORE, GL | runtime | an operator is applied to operand types it does not accept |
 | 25 | `missing-member-237022b0` | 6 | 2D, TEXT | compiler | `create_document_refusal` lives in the wholly refused `sceneDocumentRefusal.ts`, refused for a misclassified imported Record alias *(request filed)* |
@@ -280,7 +280,7 @@ or emission repair, and only then an override. A cluster whose route is `compile
 `docs/compiler-requests/<slug>.md` rather than a workaround, and no header is made to compile by
 deleting or stubbing behaviour.
 
-### 1. `call-has-no-matching-9c08d665` — 116 header(s)
+### 1. `call-has-no-matching-9c08d665` — 117 header(s)
 
 - cause: bound WebGPU descriptor object literals are emitted as untyped source-order braced initializers with anonymous nested owners, which no host overload can faithfully accept
 - subject: `begin_render_pass`
@@ -659,14 +659,40 @@ make them compile.
 - The numeric extraction is only half the gap: `named_properties(const Any&)` resolves object row owners, while an erased array is held as `AnyArray`, so this view returns an empty owner and its length read is undefined. An implicit numeric conversion, an added cast, or replacing array length with enumerable key count cannot faithfully fix it. Exact typed-array recovery already exists, but an array guard alone does not prove its element carrier; the request records the current site beside the earlier measured failed source spellings.
 - Numbers: **0/7 pass, 7 fail**, retained from G1. All seven rows stay failed and link the same request; cluster ID is retained for continuity while its cause and route are corrected. No C++ input, source patch, binding, declaration repair, or override changed; no unchanged compile rerun or behavior improvement is claimed.
 
-### 22. `undeclared-identifier-7dc86326` — 7 header(s)
+### 22. `undeclared-identifier-7dc86326` — 7 G1 header(s), declaration repaired
 
-- cause: the emitted code names `get_wgpu_scene_3d_runtime`, which nothing declares
-- subject: `get_wgpu_scene_3d_runtime`
+- original cause: `getWgpuSkinningAdapter` calls `getWgpuScene3DRuntime` after its body was refused
 - lanes: WGPU
-- fix route: runtime
-- first failure at: `flight/scene3d_wgpu/wgpu_scene_3d_runtime.hpp:194`
-- example: `use of undeclared identifier 'get_wgpu_scene_3d_runtime'`
+- fix route: declaration-only emission repair; remaining causes are compiler defects
+- compiler requests: [retained omitted callee](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-site-scene3d-wgpu-scene-runtime), [runtime owner recovery](compiler-requests/asserted-erased-runtime-owner.md#g2-site-flighthqscene3d-wgpu-scene-runtime)
+
+The actual refusal is `cpp-structural-assertion-owner-unproven` at the source assertion from
+`RenderStateRuntime` to `WgpuRenderStateRuntime`. The module already emits a concrete
+`WeakMap<Ref<WgpuRenderState>, Ref<WgpuScene3DRuntime>>`; this is not an unrepresented WeakMap
+value or evidence of a missing GPU provider. Construction and retention still erase the wider runtime
+owner, so a faithful body needs more than changing this accessor's return type.
+
+`scene3d-wgpu-declare-refused-scene-runtime` uses the existing exact refusal marker, same-header direct
+call and absent definition witnesses. It declares only the actual `Ref<WgpuRenderState>` parameter and
+`Ref<WgpuScene3DRuntime>` result. The real header compiles, links and runs without a call; an object
+calling the retained `get_wgpu_skinning_adapter` compiles, then fails to link exactly on
+`get_wgpu_scene_3d_runtime`. The original PARTIAL marker and refusal remain. No GPU implementation,
+cache replacement, owner cast/copy or new design is supplied.
+
+G2 at compiler `806d257` / Flight `a627849`, Clang 22.1.8, **one worker: 7 attempted, 2 pass,
+5 fail, 0 unattempted**. The runtime header and
+`enable_wgpu_scene_3d_forward_light_selection_guards.hpp` compile; this does not make the refused
+accessor callable or complete the package. Existing repair witness/body-rejection tests: **3/3 pass**.
+
+| follow-on cluster | owned headers | first failure | compiler request |
+| --- | --- | --- | --- |
+| `undeclared-identifier-cebba2ff` | 3 | `run_wgpu_custom_shader_guards` undeclared at custom-shader guards header:116 | [retained omitted declaration](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-site-scene3d-wgpu-scene-runtime); a stored function value supplies no direct-call witness for another repair |
+| `call-has-no-matching-9c08d665` | 1 | `begin_render_pass` descriptor mismatch at `render_wgpu/wgpu_render_pass.hpp:146` | [existing descriptor construction request](compiler-requests/external-descriptor-literal-construction.md); only this newly exposed owned row joins the aggregate |
+| `missing-member-ff8549f6` | 1 | `image.value().kind` reads directly on a variant at `wgpu_environment_cube.hpp:50` | [active-arm member projection](compiler-requests/reference-backed-outcome-variant-narrowing.md#g2-cube-image-value-variant) |
+
+Only the seven owned rows were rechecked and updated. The existing descriptor aggregate grows by that
+one owned row; other headers, clusters and historical sweep totals are unchanged. No later failure is
+promoted to a pass and no broader native sweep was run.
 
 ### 23. `undeclared-identifier-b90ed4db` — 7 header(s)
 

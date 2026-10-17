@@ -124,6 +124,37 @@ The native completion must keep one derived runtime allocation, store it through
 slot, and recover that same identity along real C++ heritage. It must not copy the runtime or maintain
 parallel state beside the entity.
 
+## G2 site: `@flighthq/scene3d-wgpu` scene runtime
+
+At compiler `806d257` / Flight `a627849`, `wgpuScene3DRuntime.ts:13` refuses
+`getWgpuScene3DRuntime` with `cpp-structural-assertion-owner-unproven`. Its first read is:
+
+```ts
+const stateRuntime = state[EntityRuntimeKey] as WgpuRenderStateRuntime;
+```
+
+`WgpuRenderState` inherits the `RenderStateRuntime` slot from `RenderState`. The generated slot is
+`std::optional<Ref<RenderStateRuntime>>`; the assertion asks for `Ref<WgpuRenderStateRuntime>`, whose
+`context`, backend state cells and differently represented `registries` are not supplied by that base
+owner. The generated structs each inherit `ReferenceEnabled`, with no declared heritage between them.
+The source factory also asserts `createRenderStateRuntime()` to the derived runtime before retaining
+it in the base slot. Changing only this accessor's result cannot recover the original concrete owner
+through that construction and storage path.
+
+This is not a refused WeakMap value or evidence of a missing GPU provider. The module already emits
+`scene_runtimes` as `WeakMap<Ref<WgpuRenderState>, Ref<WgpuScene3DRuntime>>`. Source lookup reuses the
+scene for the same state; first use reads the skinning registry and reuses or installs the device-tier
+mesh-upload map before storing the scene. Any eventual body must preserve both identities, the mutable
+scene caches and the nullable skinning result. A copied runtime, reinterpreted base owner, second owner
+table or fresh upload map per derived state would not implement that behavior.
+
+The existing declaration-only repair now lets the retained `getWgpuSkinningAdapter` caller name this
+accessor, using the already emitted state and scene carriers. It supplies no body or GPU operations:
+calling the retained accessor compiles but fails to link on `get_wgpu_scene_3d_runtime`. The
+[retained-callee request](retained-declaration-calls-omitted-callee.md#g2-site-scene3d-wgpu-scene-runtime)
+records that separate emission consequence. The ownership refusal stays open; no backend completion
+or broader owner redesign is carried by this repair.
+
 ## Related
 
 [`entity-intersection-arm-sibling-carriers.md`](entity-intersection-arm-sibling-carriers.md) — the tray

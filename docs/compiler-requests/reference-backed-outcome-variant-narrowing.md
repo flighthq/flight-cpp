@@ -81,3 +81,31 @@ records the one behavioral boundary it cannot close — a generic JSON read whos
 not represent reports `parse-failed`, where the source's unchecked `as Value` would have returned the
 parsed value. The module is therefore **not** declared as `supplies`, and `@flighthq/preferences`
 stays `partial` rather than shippable while the emitter refuses it.
+
+## G2 cube-image value variant
+
+At compiler `806d257` / Flight `a627849`, the WGPU scene-runtime declaration repair exposes the
+same direct-member-on-variant failure at `flight/scene3d_wgpu/wgpu_environment_cube.hpp:50`.
+This site uses an ordinary value variant from an array, rather than the externally returned
+reference-backed outcome above; no bound capability result or generic outcome alias is involved.
+
+`hasWgpuCubeFacePixels` loops over exactly six cube faces, rejecting a missing face or one whose
+`kind` is neither `ImageTextureSourceKind` nor `BitmapTextureSourceKind`. The source reads
+`cube.sources[face]`; emitted storage is an optional variant of references to `VoxelGrid`,
+`TextureSource`, `ExternalTexture`, `Bitmap`, `CompressedImageResource`, `RenderTarget` and
+`ImageResource`. After its presence test, the emitted condition reads `image.value().kind` twice
+directly on that variant:
+
+```text
+no member named 'kind' in 'std::variant<...>'
+```
+
+The read must dispatch through the active stored arm and read that object's actual kind, retaining
+the six-face order and short circuit rejection. A common-member read does not prove that every face
+is a bitmap or image resource, so selecting either alternative unconditionally or copying into a
+base `TextureSource` would not implement the source. The existing concrete variant and its owner
+references already exist; adding a runtime `.kind` member to `std::variant` is not a runtime fix.
+
+Only this owned WGPU header was measured for this follow-on family. It stays failed and linked here;
+no claim is made about the analogous GL headers, no new C++ repair is carried, and the separately
+refused upload/environment bodies remain unavailable.
