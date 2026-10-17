@@ -37,7 +37,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 8 | `other-40da43f7` | 16 | 2D, 3D, ANIM | compiler | an optional<Record<...>> is initialised from a shape that is not its declared storage |
 | 9 | `static-cast-assertion-9674a66c` | 15 | 2D | compiler | a TypeScript `as` on `JSON.parse` is emitted as a `static_cast` from `JsonValue` to an unrelated `Ref<T>` *(request filed)* |
 | 10 | `call-has-no-matching-076d207f` | 14 | WGPU | compiler | the emitted call to `create_pipeline_layout` matches no declared overload |
-| 11 | `other-e9936ce6` | 13 | 3D | runtime | uncategorised: the first diagnostic does not name a single cause |
+| 11 | `other-e9936ce6` | 13 | 3D | compiler | a pair literal the declared element type spells as `std::tuple<A, B>` is emitted as `flight::Array{...}`, so class-template ded... *(request filed)* |
 | 12 | `call-has-no-matching-d6950545` | 12 | 2D, CORE | compiler | the emitted call to `get_node_child_count` matches no declared overload |
 | 13 | `no-viable-conversion-9c3803c5` | 9 | 2D, WGPU | compiler | a value is passed where its declared type cannot receive it |
 | 14 | `no-viable-conversion-dfea2d92` | 9 | 3D | compiler | a value is passed where its declared type cannot receive it |
@@ -380,11 +380,13 @@ deleting or stubbing behaviour.
 
 ### 11. `other-e9936ce6` — 13 header(s)
 
-- cause: uncategorised: the first diagnostic does not name a single cause
+- cause: a pair literal the declared element type spells as `std::tuple<A, B>` is emitted as `flight::Array{...}`, so class-template deduction fails
 - lanes: 3D
-- fix route: runtime
+- fix route: compiler
+- why this route: the inner literal must be the declared tuple; a deduction guide would compile it with the wrong element type
 - first failure at: `flight/scene3d_formats/collada_feature_requirements.hpp:24`
 - example: `no viable constructor or deduction guide for deduction of template arguments of 'Array'`
+- compiler request: `docs/compiler-requests/array-pair-literal-deduction.md`
 
 ### 12. `call-has-no-matching-d6950545` — 12 header(s)
 
