@@ -119,7 +119,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 90 | `undeclared-identifier-3e98002c` | 2 | 3D | runtime | the emitted code names `initialize_awd2_parse_state`, which nothing declares |
 | 91 | `undeclared-identifier-644a9b33` | 2 | 2D | runtime (partial override) | the emitted code names `clip_programs`, which nothing declares *(G2: 1 pass, 1 to `undeclared-identifier-befaa2d6`)* |
 | 92 | `undeclared-identifier-7ce7bd18` | 2 | 3D | runtime | the emitted code names `md2_skin_handler`, which nothing declares |
-| 93 | `undeclared-identifier-86212434` | 2 | GL | runtime | the emitted code names `gl_ssao_effect_runner`, which nothing declares |
+| 93 | `undeclared-identifier-86212434` | 2 | GL | compiler *(existing request)* | the emitter refuses the `glSsaoEffectRunner` binding (and its callee `applySsaoEffectToGl`) but still emits the registration call that passes the runner |
 | 94 | `other-8b0f8597` | 2 | 3D | [compiler request](compiler-requests/host-initialize-optional-fallback-on-a-required-read.md) | skin builder emits after a source patch; SequenceView index nullish fallback still fails (G2: 0/2 pass) |
 | 95 | `undeclared-identifier-e39f9d67` | 2 | 3D | runtime | the emitted code names `resolve_gl_modifier_snippet_source`, which nothing declares |
 | 96 | `variant-cast-37507e07` | 2 | 3D | compiler | a functional-style cast is applied to a variant the target type cannot take |
@@ -2004,14 +2004,17 @@ registration conversions at `gl_clip.hpp:38-49`.
 - first failure at: `flight/scene3d_formats/md2_skin_handler.hpp:123`
 - example: `use of undeclared identifier 'md2_skin_handler'`
 
-### 93. `undeclared-identifier-86212434` — 2 header(s)
+### 93. `undeclared-identifier-86212434` — G2 recheck of 2 header(s)
 
-- cause: the emitted code names `gl_ssao_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glSsaoEffectRunner` binding (and its callee `applySsaoEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_ssao_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: a runtime definition would fake the effect runner. The runner refusal (`cpp-structural-assertion-writable-capability-unproven`) names an owner-preserving carrier as the compiler-side answer. The callee refusal (`cpp-contextual-union-value-type-unrepresented`) is the `Readonly<GlTextureRenderTarget>` to `Readonly<GlRenderTarget> | null` widening of [interface-heritage-widening](compiler-requests/interface-heritage-widening.md).
 - first failure at: `flight/effects_gl/gl_ssao_effect.hpp:88`
 - example: `use of undeclared identifier 'gl_ssao_effect_runner'`
+- Scoped native recheck (GCC 15.2, jobs 1): **2 attempted / 0 pass / 2 fail**. Both headers fail first at line 88. `gl_contact_shadows_effect.hpp:41` also calls the refused `apply_ssao_effect_to_gl`. That declaration would satisfy all three witnesses, but it would move neither row, so it is not carried. No runner, effect body, cache or narrowed shader domain is supplied.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
 ### 94. `other-8b0f8597` — 2 header(s), formerly `undeclared-identifier-a02f3fb2`
 

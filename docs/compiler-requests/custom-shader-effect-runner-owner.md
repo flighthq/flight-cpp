@@ -52,3 +52,19 @@ a variable-declaration kind is new apparatus rather than a cheap fix. The cluste
 ## Affected
 
 4 headers in the G1 sweep, all `effects_gl` (`gl_custom_shader_effect` and its importers).
+
+## G2 SSAO runner
+
+`flight/effects_gl/gl_ssao_effect.hpp` at Flight `a627849` / compiler `806d257` is the same omission.
+`glSsaoEffectRunner` is refused with `cpp-structural-assertion-writable-capability-unproven` (it asserts
+`effect as SsaoEffect` from `Readonly<Effect>`), yet `register_gl_ssao_effect` still passes
+`gl_ssao_effect_runner` at line 88. Both owned headers, `gl_ssao_effect.hpp` and its importer
+`gl_contact_shadows_effect.hpp`, fail first there (GCC 15.2, one worker).
+
+The runner's callee is refused too: `applySsaoEffectToGl` hits `cpp-contextual-union-value-type-unrepresented`
+because it passes `Readonly<GlTextureRenderTarget>` where `drawGlFullscreenPass` declares
+`Readonly<GlRenderTarget> | null`. That is a derived-to-base widening, see
+[interface-heritage-widening](interface-heritage-widening.md). `gl_contact_shadows_effect.hpp:41` also calls
+it. A declaration of `apply_ssao_effect_to_gl` would meet all three witnesses, but neither row would move,
+because the runner fails first. So nothing is carried: no runner definition, no declaration, and no
+narrowed shader domain.
