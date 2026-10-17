@@ -102,3 +102,17 @@ I validated the site by inspecting the emitted header and confirmed that no defi
 exists anywhere in the tree, and that no other header names either one. This is a docs-only disposition
 within this family, so the unchanged header was not recompiled, and its recorded **0/1** failure stands.
 Nothing is carried.
+
+## G2 glitch runner
+
+`flight/effects_gl/gl_glitch_effect.hpp` at Flight `a627849` / compiler `806d257` is the same omission:
+- `glGlitchEffectRunner` (source line 29) is refused with
+  `cpp-structural-assertion-writable-capability-unproven`, because `Readonly<Effect>` declares none of
+  `blockSize`, `colorShift`, `intensity` and `seed`.
+- `register_gl_glitch_effect` still passes `gl_glitch_effect_runner` at line 92.
+- The callee `applyGlitchEffectToGl` (source line 9) is refused with the same `GlTextureRenderTarget`
+  widening, see [interface-heritage-widening](interface-heritage-widening.md).
+
+I validated the site by inspecting the emitted header. No definition of either symbol exists in the tree,
+and no other header names either one. This is a docs-only disposition, so the unchanged header was not
+recompiled, and its recorded **0/1** failure stands. Nothing is carried.
