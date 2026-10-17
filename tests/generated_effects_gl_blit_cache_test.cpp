@@ -6,12 +6,13 @@
 // are independent; the getter answers a hit with the identical cached object, without compiling; and a
 // cache never keeps its context alive, nor its program once the context is gone.
 //
-// A live GL context cannot be made here, so the miss branch (compile, uniform lookup) is not run. The
-// keys are real contexts nonetheless: `WebGl2Context::lock_weak` over an owner whose lifetime the test
-// controls, which is exactly what the weak-key policy holds and compares. No context member that
-// reaches the GL state is called.
+// The ownership checks control the weak-key lifetime without calling GL. One additional, actual
+// offscreen GlApplication context exercises the offset cache miss (shader compile, program link and
+// attribute/uniform lookup), followed by a hit through a copy of that context. No apply-pass is used.
 #include <flight/effects_gl/gl_effect_blit_shader.hpp>
+#include <flight/host_sdl/gl_app.hpp>
 
+#include <exception>
 #include <iostream>
 #include <memory>
 #include <type_traits>
@@ -105,16 +106,63 @@ void check_weakness() {
         "a dead context's program outlived the next lookup");
 }
 
+void check_live_miss_and_hit() {
+  flight::host_sdl::GlApplication app({
+      .title = "Flight effects-gl cache miss", .width = 32, .height = 32, .hidden = true});
+  const auto gl = app.context();
+  check(!effects_gl::blit_offset_shaders.has(gl), "live offset cache was not initially empty");
+
+  const auto offset = effects_gl::get_gl_blit_offset_shader(state_over(gl));
+  check(effects_gl::blit_offset_shaders.get(gl) == std::optional{offset},
+        "the live miss did not cache its compiled owner");
+  check(static_cast<bool>(offset->program) && gl.get_program_parameter(offset->program, gl.link_status) == 1,
+        "the live miss did not produce a linked program");
+  check(offset->loc_position >= 0 && offset->loc_tex_coord >= 0 &&
+            offset->loc_position == gl.get_attrib_location(offset->program, flight::String("a_position")) &&
+            offset->loc_tex_coord == gl.get_attrib_location(offset->program, flight::String("a_texCoord")),
+        "the offset spread lost the compiled attribute locations");
+  const auto sampler = gl.get_uniform_location(offset->program, flight::String("u_texture"));
+  const auto displacement = gl.get_uniform_location(offset->program, flight::String("u_offset"));
+  check(sampler && displacement && offset->texture && offset->loc_offset &&
+            offset->texture.native_name() == sampler->native_name() &&
+            offset->loc_offset.native_name() == displacement->native_name() &&
+            offset->textures.size() == 1 && offset->textures[0] == offset->texture,
+        "the live miss lost its sampler/offset locations or copied texture array");
+  gl.use_program(offset->program);
+  gl.uniform1i(offset->texture, 0);
+  gl.uniform2f(offset->loc_offset, 0.25F, -0.5F);
+  check(gl.get_error() == gl.no_error, "the live program rejected its actual uniform locations");
+
+  const WebGl2Context copy = gl;
+  const auto hit = effects_gl::get_gl_blit_offset_shader(state_over(copy));
+  check(hit == offset && hit->program == offset->program && hit->loc_offset == offset->loc_offset &&
+            hit->textures.identity() == offset->textures.identity(),
+        "a live context copy did not hit the identical program and locations");
+  check(!effects_gl::blit_shaders.has(gl) && !effects_gl::erase_shaders.has(gl),
+        "the live offset miss populated a different cache");
+
+  gl.use_program(std::nullopt);
+  check(effects_gl::blit_offset_shaders.erase(gl), "could not release the live cache entry");
+  gl.delete_program(offset->program);
+  check(gl.get_error() == gl.no_error, "live program teardown failed");
+}
+
 }  // namespace
 
 int main() {
-  check_carrier();
-  check_hits_and_identity();
-  check_weakness();
-  if (failures != 0) {
-    std::cerr << failures << " effects-gl blit cache check(s) failed\n";
+  try {
+    check_carrier();
+    check_hits_and_identity();
+    check_weakness();
+    check_live_miss_and_hit();
+    if (failures != 0) {
+      std::cerr << failures << " effects-gl blit cache check(s) failed\n";
+      return 1;
+    }
+    std::cout << "effects-gl blit cache checks passed; live offset miss/link/locations/hit verified\n";
+    return 0;
+  } catch (const std::exception& error) {
+    std::cerr << "effects-gl live cache check failed: " << error.what() << '\n';
     return 1;
   }
-  std::cout << "effects-gl blit cache checks passed\n";
-  return 0;
 }
