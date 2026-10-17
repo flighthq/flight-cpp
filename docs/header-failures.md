@@ -177,7 +177,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 148 | `static-assertion-18059635` | 1 | 3D | compiler | a runtime static assertion rejects the emitted shape |
 | 149 | `static-assertion-261f0db6` | 1 | 3D | compiler | a runtime static assertion rejects the emitted shape |
 | 150 | `undeclared-identifier-0168969a` | 1 | 2D | compiler *(existing + new request filed)* | refused `domScene2DClipHooks` (RenderState asserted to DomRenderState without heritage) still stored; next callee `setDomClipHooks` is in the wholly refused domClipRectangle module |
-| 151 | `undeclared-identifier-07640d32` | 1 | GL | runtime | the emitted code names `gl_outline_effect_runner`, which nothing declares |
+| 151 | `undeclared-identifier-07640d32` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glOutlineEffectRunner` binding (and its callee `applyOutlineEffectToGl`) but still emits the registration call that passes the runner |
 | 152 | `undeclared-identifier-076c02b1` | 1 | PLAT | runtime | the emitted code names `resolve_tilemap_cell_index`, which nothing declares |
 | 153 | `undeclared-identifier-09cc9e86` | 1 | GL | runtime | the emitted code names `gl_film_grain_effect_runner`, which nothing declares |
 | 154 | `undeclared-identifier-0b8d3b44` | 1 | GL | runtime | the emitted code names `box_blur_shaders`, which nothing declares |
@@ -2834,14 +2834,17 @@ Foreign rows/roots/prose and historical/G1 totals are preserved.
 - compiler request: `docs/compiler-requests/canvas-render-state-owner-asserted-without-heritage.md`
 - compiler request: `docs/compiler-requests/local-interface-extending-lib-dom-interface.md` *(new)*
 
-### 151. `undeclared-identifier-07640d32` — 1 header(s)
+### 151. `undeclared-identifier-07640d32` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_outline_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glOutlineEffectRunner` binding (and its callee `applyOutlineEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_outline_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: a runtime definition would fake the effect runner. The runner refusal (`cpp-structural-assertion-writable-capability-unproven`) names an owner-preserving carrier as the compiler-side answer. The callee refusal (`cpp-contextual-union-value-type-unrepresented`) is the `Readonly<GlTextureRenderTarget>` to `Readonly<GlRenderTarget> | null` widening of [interface-heritage-widening](compiler-requests/interface-heritage-widening.md). This is the same family as the SSAO runner (cluster 93).
 - first failure at: `flight/effects_gl/gl_outline_effect.hpp:96`
 - example: `use of undeclared identifier 'gl_outline_effect_runner'`
+- Scoped native recheck (GCC 15.2, jobs 1, all errors shown): **1 attempted / 0 pass / 1 fail** at line 96. No other header names either refused symbol. No runner, effect body, shader, cache or narrowed domain is supplied.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
 ### 152. `undeclared-identifier-076c02b1` — 1 header(s)
 

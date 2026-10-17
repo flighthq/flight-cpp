@@ -68,3 +68,20 @@ because it passes `Readonly<GlTextureRenderTarget>` where `drawGlFullscreenPass`
 it. A declaration of `apply_ssao_effect_to_gl` would meet all three witnesses, but neither row would move,
 because the runner fails first. So nothing is carried: no runner definition, no declaration, and no
 narrowed shader domain.
+
+## G2 outline runner
+
+`flight/effects_gl/gl_outline_effect.hpp` at Flight `a627849` / compiler `806d257` is the same omission as the
+SSAO runner above:
+- `glOutlineEffectRunner` is refused with `cpp-structural-assertion-writable-capability-unproven`. It asserts
+  `effect as OutlineEffect` from `Readonly<Effect>`, which declares none of `color`, `thickness` and
+  `threshold`.
+- `register_gl_outline_effect` still passes `gl_outline_effect_runner` at line 96. The header fails first
+  there (GCC 15.2, one worker, all errors shown: 1 attempted, 0 pass, 1 fail).
+- Its callee `applyOutlineEffectToGl` is refused with `cpp-contextual-union-value-type-unrepresented`, the
+  same `Readonly<GlTextureRenderTarget>` to `Readonly<GlRenderTarget> | null` widening as SSAO. See
+  [interface-heritage-widening](interface-heritage-widening.md).
+- No other header names either symbol. `contract.hpp` and `_internal_index.hpp` only include this one.
+
+Nothing is carried: the runner is a variable, a definition would fake the effect, and the callee
+declaration would not move the row. No shader, cache or narrowed domain is supplied.
