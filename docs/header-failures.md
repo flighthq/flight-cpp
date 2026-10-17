@@ -138,7 +138,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 109 | `call-has-no-matching-fee2f93f` | 1 | 3D | compiler | the emitted call to a function matches no declared overload |
 | 110 | `invalid-operands-dc1c09c4` | 1 | PLAT | source guards + declaration repair (applied) | flex basis comparison and unsafe numeric projection cleared; G2: 1 pass; refused resolver registration remains unlinkable |
 | 111 | `missing-member-1620083c` | 1 | 2D | binding | SDL DOM value/style copies cannot carry the web renderer mix-blend write; open blend domain/provider required; G2: 0/1 retained |
-| 112 | `missing-member-1a2e58cb` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`register_dom_texture_resolver`) |
+| 112 | `undeclared-identifier-af6f50aa` | 1 | 2D | compiler | the DOM image registration retains its refused optional image callback after the persistent table registration now emits |
 | 113 | `missing-member-1ce5ed2e` | 1 | 3D | declaration repair (applied) | six refused built-in joint-solver bindings declared; G2: 1/1 pass, registration remains unlinkable |
 | 114 | `missing-member-42783657` | 1 | 2D | binding | SDL DOM value/style copies cannot carry the native text font/textAlign/lineHeight writes; shared style provider required; G2: 0/1 retained |
 | 115 | `missing-member-5ac43ed0` | 1 | 3D | source fix; compiler bounds debt | optional color write emits checked TypedArray assignment; G2: 0/1 now writable Aabb output-owner failure |
@@ -2326,14 +2326,38 @@ cluster. No C++/binding/source/override/generation input changed, so no unchange
 check or generation is rerun. Only the existing request and owned cluster/row/table/section111 change;
 foreign/G1 data and the sibling opacity cluster remain intact.
 
-### 112. `missing-member-1a2e58cb` — 1 header(s)
+### 112. `undeclared-identifier-af6f50aa` — 1 header(s)
 
-- cause: the emitted code reads a member the target does not declare (`register_dom_texture_resolver`)
-- subject: `register_dom_texture_resolver`
+- previous cluster: `missing-member-1a2e58cb`
+- cause: the DOM image registration retains its refused optional image callback after the persistent table registration now emits
+- subject: `resolve_dom_image_texture`
 - lanes: 2D
-- fix route: runtime
-- first failure at: `flight/scene2d_dom/dom_image_texture_resolver.hpp:67`
-- example: `no member named 'register_dom_texture_resolver' in namespace 'scene2d_dom'`
+- fix route: compiler — [retained optional callback](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-dom-image-registration-retains-a-refused-optional-callback)
+- related request: [exact host alias and full source-member domain](compiler-requests/compiler-imported-alias-outer-union-abi.md#g2-dom-image-callback-exact-alias-recovery-must-preserve-source-member-reads)
+- current failure at: `flight/scene2d_dom/dom_image_texture_resolver.hpp:67`
+- current example: `use of undeclared identifier 'resolve_dom_image_texture'`
+
+The carried `scene2d-dom-texture-table-carrier` source patch adds only the existing local table's
+`ReadonlyMap<TextureSourceKind, DomTextureResolver>` annotation; the complete module emits byte-identical
+JavaScript. Normal exact-pin two-module generation emits the real persistent registration body using
+its existing runtime owner and Map clone. Native execution passes open vendor registration, replacement,
+present/absent removal, snapshot isolation, state isolation, no eager callbacks and original callback,
+state and texture owners. The generated registration header exactly matches those tested bytes.
+
+The separately tried image-result alias annotation is **rejected and uncarried**. Its normal body and
+both headers compiled; native image/null results and all seven provider-kind identities passed, but a
+represented Bitmap texture source threw `bad_variant_access` where the actual pinned source returns
+null for absent `.source`. No narrowing of the declared Texture/source owners is accepted. The original
+image header remains byte-identical, still marks the callback refused, and its nested optional initializer
+is outside the existing callback declaration witness. No witness extension or declaration bypass is added.
+
+Final committed-input scoped jobs1 check: **original 0/1 pass, 1 fail** at the next missing callback;
+**changed dependency 1/1 pass** (`dom_texture_resolver.hpp`), total1/2 with zero unattempted. The old
+registration-member error is cleared; image resolution and generic `resolveDomTexture` remain unavailable.
+The two best-effort statuses, package/global counts and initialization records remain unchanged; only the
+owned table fingerprint and refusal record move. The explicit `web` environment and existing native SDL
+applicability/deferral policy remain unchanged. No decoder, DOM image backend, copied owner, narrowed
+input, fake callback or override is supplied. Foreign worklist/G1 rows and totals are preserved.
 
 ### 113. `missing-member-1ce5ed2e` — 1 header(s), declaration repaired
 
