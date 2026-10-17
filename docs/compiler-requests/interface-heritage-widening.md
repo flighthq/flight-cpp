@@ -763,3 +763,29 @@ This docs-only missing-link audit retains the recorded **0/1** and original diag
 input changed, so no native/header/GL/destruction rerun or fresh failure measurement is claimed. Only
 this cluster, its real view row, worklist134 and this existing-request appendix are updated. The older
 144-header migration count above remains historical, not a new sweep or count for this one-row unit.
+
+## G2 CloneNode3DSubtree: Material3DValue and Mesh must widen to their declared bases
+
+`@flighthq/scene3d` `cloneNode3DSubtree.ts` at flight `a627849` passes a `Material3D` callback over
+`Mesh.materials`. After the `material-concrete-value-path` patch, `Mesh.materials` is
+`Array<optional<Material3DValue>>`, while `materialOverride` is
+`((material: Material3D | null) => Material3D | null) | null`. TypeScript accepts the map call because
+every `Material3DValue` arm is structurally a `Material3D`; the emitted structs are independent
+flattened owners that inherit only `ReferenceEnabled`, so the callback is not invocable with the
+element:
+
+```
+flight/array.hpp:43: no matching function for call to 'invoke'
+  invoke_array_callback<std::function<optional<Ref<Material3D>>(optional<Ref<Material3D>>)>,
+                        optional<Material3DValue>>
+flight/scene3d/clone_node_3d_subtree.hpp:79: no matching member function for call to 'map'
+```
+
+Declared heritage (`struct StandardPbrMaterial : Material3D`, … for every arm) makes the union arm
+widen to the callback parameter exactly as the source does. No cast, copied owner or narrowed domain is
+an equivalent.
+
+The same header carries two more families, measured in the same compile: `Ref<Mesh>` returned where
+`Ref<Node3D>` is declared (`clone_node_3d_subtree.hpp:81`) — the same missing `Mesh : Node3D` heritage —
+and the `Traits` leak at `:84`/`:86`, which belongs to the existing
+[node generic traits leak](node-any-generic-traits-leak.md) family.

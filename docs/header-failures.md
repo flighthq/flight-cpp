@@ -134,7 +134,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 105 | `call-has-no-matching-c287f892` | 1 | ANIM | compiler | G2: recorded 0/1 retained; Unity JsonValue cannot become named view/dynamic Record; existing JSON-read request, no rerun |
 | 106 | `call-has-no-matching-c8046ec6` | 1 | 3D | compiler | the emitted call to `uniform2fv` matches no declared overload |
 | 107 | `call-has-no-matching-e7b28969` | 1 | WGPU | runtime (fixed) | the emitted call to `write_texture` matches no declared overload; G2: 0 pass, 1 to `missing-member-47a93368` |
-| 108 | `call-has-no-matching-fbd6de0d` | 1 | 3D | compiler | the emitted call to `invoke` matches no declared overload |
+| 108 | `call-has-no-matching-fbd6de0d` | 1 | 3D | [compiler request](compiler-requests/interface-heritage-widening.md) | `Mesh.materials` carries `Material3DValue` arms that cannot widen to the callback's declared `Material3D` base |
 | 109 | `call-has-no-matching-fee2f93f` | 1 | 3D | compiler | the emitted call to a function matches no declared overload |
 | 110 | `invalid-operands-dc1c09c4` | 1 | PLAT | source guards + declaration repair (applied) | flex basis comparison and unsafe numeric projection cleared; G2: 1 pass; refused resolver registration remains unlinkable |
 | 111 | `missing-member-1620083c` | 1 | 2D | binding | SDL DOM value/style copies cannot carry the web renderer mix-blend write; open blend domain/provider required; G2: 0/1 retained |
@@ -2753,12 +2753,22 @@ row stays failed on the existing request, which now records this site and the pr
 
 ### 108. `call-has-no-matching-fbd6de0d` — 1 header(s)
 
-- cause: the emitted call to `invoke` matches no declared overload
-- subject: `invoke`
+- cause: after the material value-union patch, `Mesh.materials` is `Array<optional<Material3DValue>>` while
+  `materialOverride` takes `optional<Ref<Material3D>>`; the concrete material structs inherit only
+  `ReferenceEnabled`, so no arm widens to the declared base
 - lanes: 3D
-- fix route: compiler
+- fix route: compiler — [interface heritage widening](compiler-requests/interface-heritage-widening.md)
 - first failure at: `flight/array.hpp:43`
 - example: `no matching function for call to 'invoke'`
+
+The trace names both sides: `invoke_array_callback<std::function<optional<Ref<Material3D>>(optional<Ref<Material3D>>)>, optional<Material3DValue>>` from `array.hpp:403` (`Array::map`), instantiated at
+`clone_node_3d_subtree.hpp:79`. TypeScript accepts the call structurally; C++ needs the declared
+heritage on each concrete material.
+
+Two follow-on families measured in the same compile: `Ref<Mesh>` returned where `Ref<Node3D>` is
+declared (`clone_node_3d_subtree.hpp:81`, the same missing `Mesh : Node3D` heritage), and the `Traits`
+leak at `:84`/`:86` (existing node generic traits leak family). No C++ was changed; the scoped trace is
+the evidence.
 
 ### 109. `call-has-no-matching-fee2f93f` — 1 header(s)
 
