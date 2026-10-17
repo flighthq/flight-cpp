@@ -647,3 +647,20 @@ patch has retired because the fix landed upstream keep their row, marked, as the
   get_mapped_range before link. Preserve real mapped bytes, shared buffer/map lifetime, frame-copy
   handshake, padded rows, BGRA/premultiplied pixels and timeout/late-settlement semantics; no provider
   or capture implementation is supplied.
+- [Object literals passed to bound WebGPU methods need the binding's field contract](external-descriptor-literal-construction.md) —
+  An object literal passed to a bound WebGPU method (the `call-has-no-matching` cluster led by
+  `begin_render_pass`) is emitted as a bare braced initializer. The constrained variadic host template
+  cannot deduce from it, even where `bindings/sdl-wgpu.json` declares the descriptor's `objectConstruction`.
+- [A `typeof` guard on a record member does not narrow the member's next read](typeof-narrowed-record-member-read.md) —
+  `@flighthq/scene2d-formats` Lottie detection: `typeof record.fr === 'number' && record.fr > 0` compares an
+  erased `flight::Any`. The narrowed read must be `as_number()`, as it already is for locals.
+- [A call to a generic function converts its argument to the callee's unsubstituted parameter type](generic-call-argument-uses-unsubstituted-parameter-type.md) —
+  `@flighthq/shape` `registerShapeBoundsCommand` and the `Traits`-generic node helpers: a non-generic caller
+  names the callee's own type parameter (`K`, `Traits`), which is not in scope at the call site.
+- [A module-local interface that extends a lib.dom interface refuses its whole module](local-interface-extending-lib-dom-interface.md) —
+  `@flighthq/scene2d-dom` `domClipRectangle.ts`: `interface DomClipStyle extends CSSStyleDeclaration` stops
+  the interface-inheritance pass, so none of the module's eleven declarations is emitted.
+- [A downcast assertion kept as a structural view must be recovered before a nominal parameter](asserted-row-view-into-nominal-parameter.md) —
+  `@flighthq/swf` `swfFrameAction.ts`: `target as MovieClip` stays a view over the same owner but reaches
+  `Ref<MovieClip>` parameters without `structural_ref_cast<Ref<T>>`. The recovery compiles in scratch but is
+  checked where the assertion is not, so nothing is carried.
