@@ -143,7 +143,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 114 | `missing-member-42783657` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`font`) |
 | 115 | `missing-member-5ac43ed0` | 1 | 3D | runtime | the emitted code reads a member the target does not declare (`element`) |
 | 116 | `missing-member-703ef98e` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`lottie_additive_mask_handler`) |
-| 117 | `missing-member-8aa8170f` | 1 | ANIM | runtime | the emitted code reads a member the target does not declare (`swf_video_handler`) |
+| 117 | `missing-member-8aa8170f` | 1 | ANIM | compiler *(existing request)* | the refused `swfVideoHandler` binding is still named by `swfVideoTagFamily`; its placement callable needs a signature adapter |
 | 118 | `missing-member-ad3558ee` | 1 | ANIM | runtime | the emitted code reads a member the target does not declare (`physics_2d_distance_joint_solver`) |
 | 119 | `missing-member-b5408b35` | 1 | 3D | override (fixed) | the `gl_shadow_map` override regained the generated `node_transform3d.hpp` include; G2 recheck: 1 pass |
 | 120 | `missing-member-d7bf452c` | 1 | 2D | [compiler/runtime contract](compiler-requests/readonly-record-entry-enumeration.md) | readonly Record entry enumeration and value-to-view construction disagree; G2: 0/1 retained |
@@ -2259,14 +2259,17 @@ shaded rendering while the guard has no body; no global/native baseline was reru
 - first failure at: `flight/scene2d_formats/lottie_mask_handlers.hpp:18`
 - example: `no member named 'lottie_additive_mask_handler' in namespace 'scene2d_formats'`
 
-### 117. `missing-member-8aa8170f` — 1 header(s)
+### 117. `missing-member-8aa8170f` — G2 recheck of 1 header(s)
 
-- cause: the emitted code reads a member the target does not declare (`swf_video_handler`)
+- cause: the emitter refuses the `swfVideoHandler` binding (`cpp-contextual-union-value-type-unrepresented`), and `swfVideoTagFamily` still names it. The binding's `createPlacementNode` omits the slot's trailing `diagnostics` parameter and returns `Sprite | null` where the slot returns `Node2D | null`. TypeScript accepts both differences.
 - subject: `swf_video_handler`
 - lanes: ANIM
-- fix route: runtime
+- fix route: compiler
+- why this route: a runtime handler would fake video placement, and the declaration repair declares only functions, not a `Ref<SwfTagHandler>` variable. The callable needs a signature adapter that keeps the `Sprite` identity, and only the emitter can produce one.
 - first failure at: `flight/swf/swf_video_tag_family.hpp:15`
 - example: `no member named 'swf_video_handler' in namespace 'swf'`
+- Scoped native recheck (GCC 15.2, jobs 1): **1 attempted / 0 pass / 1 fail**, same diagnostic. `swf_video_handler.hpp` itself compiles. No handler, decoder, empty success or narrowed domain is supplied.
+- compiler request: `docs/compiler-requests/callable-arm-in-contextual-union.md`
 
 ### 118. `missing-member-ad3558ee` — 1 header(s)
 
