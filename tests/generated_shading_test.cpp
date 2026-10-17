@@ -30,6 +30,27 @@ flight::shading::ModifierView modifier_view(const std::shared_ptr<T>& value) {
   return flight::structural_ref_cast<flight::shading::ModifierView>(readonly_view(value));
 }
 
+// The modifier system's carriers are the patched value unions: stacks and options hold
+// ModifierValue, definitions enter and leave the registry as ModifierDefinitionValue. These helpers
+// build the arms that name the exact owner the assertions below already use, so every identity check
+// still compares the same stored object.
+flight::types::ModifierValue modifier_value(
+    const flight::Ref<flight::types::Modifier>& modifier) {
+  return flight::types::ModifierValue{
+      std::in_place_type<flight::Ref<flight::types::Modifier>>, modifier};
+}
+
+flight::types::ModifierDefinitionValue definition_value(
+    const flight::Ref<flight::types::ModifierDefinition>& definition) {
+  return flight::types::ModifierDefinitionValue{
+      std::in_place_type<flight::Ref<flight::types::ModifierDefinition>>, definition};
+}
+
+flight::Ref<flight::types::ModifierDefinition> definition_ref(
+    const flight::types::ModifierDefinitionValue& value) {
+  return std::get<flight::Ref<flight::types::ModifierDefinition>>(value);
+}
+
 template <typename T>
 flight::String signature(
     const flight::Ref<flight::types::ModifierDefinition>& definition,
@@ -260,7 +281,7 @@ void check_constructor_data() {
   material_options->shininess = 8.0;
   material_options->specular = static_cast<double>(0x506070ffu);
   material_options->specular_map = texture;
-  material_options->modifiers = flight::Array<flight::Ref<types::Modifier>>{authored_modifier};
+  material_options->modifiers = flight::Array<types::ModifierValue>{modifier_value(authored_modifier)};
   const auto custom_material = shading::create_shaded_material(readonly_view(material_options));
   check(custom_material->alpha_mode == flight::String("mask") &&
             custom_material->alpha_cutoff == 0.25 && custom_material->double_sided,
@@ -274,7 +295,8 @@ void check_constructor_data() {
             texture_is(custom_material->specular_map, texture),
         "shaded material retains every texture parameter owner");
   check(custom_material->modifiers.size() == 1 &&
-            custom_material->modifiers[0] == authored_modifier,
+            std::get<flight::Ref<types::Modifier>>(custom_material->modifiers[0]) ==
+                authored_modifier,
         "shaded material retains modifier-array element identity");
 }
 
@@ -291,11 +313,15 @@ void check_ordering_and_failures() {
   const auto effect_b = make_modifier("EffectB", types::modifier_slot->effect);
   const auto unknown_a = make_modifier("UnknownA", flight::String("Ambient"));
   const auto unknown_b = make_modifier("UnknownB", flight::String("acme.Weird"));
-  const flight::Array<flight::Ref<types::Modifier>> authored{
-      unknown_b, effect_b, specular, vertex, effect_a, emissive, normal, unknown_a, diffuse};
+  const flight::Array<types::ModifierValue> authored{
+      modifier_value(unknown_b), modifier_value(effect_b), modifier_value(specular),
+      modifier_value(vertex), modifier_value(effect_a), modifier_value(emissive),
+      modifier_value(normal), modifier_value(unknown_a), modifier_value(diffuse)};
   const auto ordered = shading::order_modifier_stack(authored);
-  const flight::Array<flight::Ref<types::Modifier>> expected{
-      vertex, normal, diffuse, specular, emissive, effect_b, effect_a, unknown_b, unknown_a};
+  const flight::Array<types::ModifierValue> expected{
+      modifier_value(vertex), modifier_value(normal), modifier_value(diffuse),
+      modifier_value(specular), modifier_value(emissive), modifier_value(effect_b),
+      modifier_value(effect_a), modifier_value(unknown_b), modifier_value(unknown_a)};
   check(ordered.size() == expected.size(), "ordering retains every authored modifier");
   bool exact_order = ordered.size() == expected.size();
   for (std::size_t index = 0; exact_order && index < expected.size(); ++index) {
@@ -303,7 +329,9 @@ void check_ordering_and_failures() {
   }
   check(exact_order,
         "ordering is Vertex-Normal-Diffuse-Specular-Emissive-Effect then stable unknowns");
-  check(authored[0] == unknown_b && authored[1] == effect_b && authored[2] == specular,
+  check(std::get<flight::Ref<types::Modifier>>(authored[0]) == unknown_b &&
+            std::get<flight::Ref<types::Modifier>>(authored[1]) == effect_b &&
+            std::get<flight::Ref<types::Modifier>>(authored[2]) == specular,
         "ordering does not mutate the authored stack");
   check(shading::order_modifier_stack({}).empty(), "ordering preserves an empty stack");
 
@@ -329,15 +357,21 @@ void check_ordering_and_failures() {
   const auto registered =
       make_modifier(types::emissive_modifier_kind, types::modifier_slot->emissive);
   const auto missing = shading::get_unregistered_modifier_kinds(
-      readonly_view(registry), {missing_a, registered, missing_b, missing_a});
+      readonly_view(registry),
+      flight::Array<types::ModifierValue>{modifier_value(missing_a), modifier_value(registered),
+                                          modifier_value(missing_b), modifier_value(missing_a)});
   check(missing.size() == 2 && missing[0] == flight::String("acme.Missing") &&
             missing[1] == flight::String("acme.Other"),
         "unregistered failures deduplicate in first-seen order");
-  check(!shading::is_modifier_stack_valid(readonly_view(registry),
-                                          {registered, missing_a}),
+  check(!shading::is_modifier_stack_valid(
+            readonly_view(registry),
+            flight::Array<types::ModifierValue>{modifier_value(registered), modifier_value(missing_a)}),
         "a stack fails validation when any kind is unregistered");
-  check(shading::is_modifier_stack_valid(readonly_view(registry), {registered}) &&
-            shading::is_modifier_stack_valid(readonly_view(registry), {}),
+  check(shading::is_modifier_stack_valid(
+            readonly_view(registry),
+            flight::Array<types::ModifierValue>{modifier_value(registered)}) &&
+            shading::is_modifier_stack_valid(readonly_view(registry),
+                                             flight::Array<types::ModifierValue>{}),
         "registered and empty stacks pass validation");
   check(!shading::resolve_modifier(readonly_view(registry), flight::String("acme.Missing"))
              .has_value(),
@@ -347,7 +381,7 @@ void check_ordering_and_failures() {
   const auto custom_definition = flight::make_ref<types::ModifierDefinition>();
   custom_definition->kind = flight::String("acme.Fresh");
   custom_definition->slot = types::modifier_slot->effect;
-  shading::register_modifier(readonly_view(registry), readonly_view(custom_definition));
+  shading::register_modifier(readonly_view(registry), definition_value(custom_definition));
   check(!shading::resolve_modifier(readonly_view(fresh), custom_definition->kind).has_value(),
         "modifier registries do not share definition storage");
 }
@@ -369,7 +403,7 @@ int main() {
                                  const flight::String& slot,
                                  bool has_signature) {
     const auto registered = shading::resolve_modifier(readonly_view(registry), kind);
-    check(registered.has_value() && registered.value() == definition,
+    check(registered.has_value() && definition_ref(registered.value()) == definition,
           "registration retains each built-in definition owner");
     check(definition->kind == kind && definition->slot == slot,
           "each built-in definition retains its kind and slot");
@@ -396,11 +430,11 @@ int main() {
   const auto replacement = flight::make_ref<types::ModifierDefinition>();
   replacement->kind = types::animated_normal_modifier_kind;
   replacement->slot = types::modifier_slot->effect;
-  shading::register_modifier(readonly_view(registry), readonly_view(replacement));
-  check(shading::resolve_modifier(readonly_view(registry), replacement->kind).value() == replacement,
+  shading::register_modifier(readonly_view(registry), definition_value(replacement));
+  check(definition_ref(shading::resolve_modifier(readonly_view(registry), replacement->kind).value()) == replacement,
         "registry replacement is last-write-wins");
   shading::register_built_in_modifiers(readonly_view(registry));
-  check(shading::resolve_modifier(readonly_view(registry), replacement->kind).value() ==
+  check(definition_ref(shading::resolve_modifier(readonly_view(registry), replacement->kind).value()) ==
             shading::animated_normal_modifier_definition,
         "re-registering built-ins restores their owners");
 
@@ -484,12 +518,12 @@ int main() {
   normal_definition->kind = flight::String("acme.Normal");
   normal_definition->slot = types::modifier_slot->normal;
   normal_definition->get_define_signature = shading::SignatureFunction{
-      [](shading::ModifierView) { return flight::String("n"); }};
+      [](flight::types::ReadonlyModifierValue) { return flight::String("n"); }};
   const auto effect_definition = flight::make_ref<types::ModifierDefinition>();
   effect_definition->kind = flight::String("acme.Effect");
   effect_definition->slot = types::modifier_slot->effect;
-  shading::register_modifier(readonly_view(key_registry), readonly_view(normal_definition));
-  shading::register_modifier(readonly_view(key_registry), readonly_view(effect_definition));
+  shading::register_modifier(readonly_view(key_registry), definition_value(normal_definition));
+  shading::register_modifier(readonly_view(key_registry), definition_value(effect_definition));
 
   const auto normal = flight::make_ref<types::Modifier>();
   normal->kind = normal_definition->kind;
@@ -497,7 +531,7 @@ int main() {
   const auto effect = flight::make_ref<types::Modifier>();
   effect->kind = effect_definition->kind;
   effect->slot = effect_definition->slot;
-  const flight::Array<flight::Ref<types::Modifier>> authored{effect, normal};
+  const flight::Array<types::ModifierValue> authored{modifier_value(effect), modifier_value(normal)};
   check(shading::get_modifier_define_key(authored, readonly_view(key_registry)) ==
             flight::String("acme.Normal:n+acme.Effect"),
         "define keys use readonly registry lookup and canonical slot order");
