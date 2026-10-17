@@ -3544,6 +3544,12 @@
         "flight/scene2d/scene2d.hpp"
       ],
       "id": "scene2d-declare-refused-ensure-runtime"
+    },
+    {
+      "files": [
+        "flight/skeleton2d/path_constraint_2d.hpp"
+      ],
+      "id": "skeleton2d-declare-refused-path-constraint-solver"
     }
   ],
   "sourcePatches": [
