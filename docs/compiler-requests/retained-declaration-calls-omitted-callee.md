@@ -821,3 +821,28 @@ fails to link on exactly
 `flight::scene3d_formats::initialize_awd2_parse_state(...)`; `awd2_block_dispatch.hpp` passes and
 `_internal_index.hpp` moves to the `create_texture` carrier family. No parse state, map, owner or field
 assignment is supplied.
+
+## G2 GL TextLabel generated Canvas path remains unavailable
+
+The generated `scene2d_gl/gl_text_label.hpp` at Flight `a627849` / compiler `806d257` retains
+`destroy_gl_text_label_data` calling `get_gl_text_label_data`, while that getter is refused as
+`cpp-reference-assertion-without-heritage`. Its original retained call is at line100. The private
+renderer-data allocation and later recovery must preserve the same owner; see
+[flattened refinement](flattened-interface-refinement-identity.md#g2-gl-textlabel-private-renderer-data).
+The source also needs its full TextLabel and typed runtime, not a base-shaped replacement.
+
+The draw body is independently refused as `cpp-presence-test-without-absence-storage`. Its diagnostic
+names no exact tested property; the source has several null checks, so no particular member is blamed
+without further evidence. The final emitted global `gl_text_label_renderer` still references the
+missing `draw_gl_text_label` as its submit value. Its callbacks declare generic RenderState,
+Node2D/RendererData carriers while the local source callbacks take GL state and private renderer data;
+the [typed callback/backend owner requirement](readonly-callback-derived-owner-recovery.md) still applies.
+A getter declaration alone cannot supply those bodies or settle a globally retained function value.
+This conclusion is type/source inspection, not a new declaration or native link probe.
+
+The current effective header instead uses the preexisting partial native glyph factory and checked
+ErasedRef binding. It has no call to the refused getter and no browser singleton. Original1 compiles
+at jobs1, but CanvasHost/ImageHost overloads and browser renderer remain unavailable. No declaration
+repair or shader/drawing substitute is proposed, so no positive-unused/negative-called link result or
+new generation is claimed. The scoped result reconciles the stale G1 name error with the landed
+native carry; it does not make the omitted generated path callable.

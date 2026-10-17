@@ -251,7 +251,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 222 | `undeclared-identifier-ebf3999b` | 1 | GL | runtime | the emitted code names `gl_radial_blur_effect_runner`, which nothing declares |
 | 223 | `undeclared-identifier-f020c1f7` | 1 | GL | runtime | the emitted code names `gl_white_balance_effect_runner`, which nothing declares |
 | 224 | `undeclared-identifier-f6affb68` | 1 | 3D | [compiler request](compiler-requests/retained-declaration-calls-omitted-callee.md) | global transmission/volume/IOR callbacks retain a refused owner resolver; declaration fails unused-header link |
-| 225 | `undeclared-identifier-f91f1e72` | 1 | 2D | runtime | the emitted code names `get_gl_text_label_data`, which nothing declares *(builder4/E0a)* |
+| 225 | `undeclared-identifier-f91f1e72` | 1 | 2D | compiler (existing partial native carry) | G2 current effective header1/1 pass; generated Canvas getter/draw owner gaps remain *(builder4)* |
 | 226 | `undeclared-identifier-fcbdae42` | 1 | 2D | runtime | the emitted code names `draw_canvas_text_label`, which nothing declares |
 | 227 | `variant-cast-7dd5385f` | 1 | GL | compiler | a functional-style cast is applied to a variant the target type cannot take |
 
@@ -3277,15 +3277,38 @@ No locale formatting or callable number API progress is claimed.
 - Preserve one shared real descriptor across arbitrary handler order, original material/texture owners and legitimate standard-material promotion, absent-extension/material branches, factory/white/infinite-distance/zero-thickness/1.5-IOR defaults, and writes before texture-resolution callbacks or exceptions. No fake/empty volume, null substitute, copied base or narrowed open family is carried.
 - Recorded result remains **0/1 pass, 1 fail** at `flight/scene3d_formats/gltf_transmission_volume.hpp:166`, original undeclared-call diagnostic unchanged. One owned row/cluster gains both request links. No production C++/source/repair/manifest change; no normal generation or unchanged native/global rerun. No positive unused-header link, qualified negative link or callable material-import behavior is claimed. Foreign worklist rows/clusters and historical G1 totals are unchanged.
 
-### 225. `undeclared-identifier-f91f1e72` — 1 header(s) *(builder4/E0a)*
+### 225. `undeclared-identifier-f91f1e72` — 1 G1 header, passing through existing partial native carry
 
-- cause: the emitted code names `get_gl_text_label_data`, which nothing declares
-- subject: `get_gl_text_label_data`
-- lanes: 2D
-- fix route: runtime
-- first failure at: `flight/scene2d_gl/gl_text_label.hpp:100`
-- example: `use of undeclared identifier 'get_gl_text_label_data'`
-- owned by: builder4 (E0a: TextLabel / layout / Scene2D GL text)
+The historical missing `get_gl_text_label_data` at generated `gl_text_label.hpp:100` is already
+shadowed by the landed `scene2d-gl-native-glyph-text-label` override. This G2 arc changes no C++,
+source patch, repair or manifest. The current effective header measured **1 attempted / 1 pass /
+0 fail / 0 unattempted**, Clang22.1.8, jobs **1**, 183.4 seconds. The one row now records pass,
+its original cluster and the unresolved requests; the obsolete active failure cluster is removed.
+
+The existing native path keeps the exact `TextLabel` from the render proxy, its typed
+`TextLabelRuntime` and original data/layout/revision cells. Renderer scratch allocation is boxed as
+`ErasedRef` by `NativeGlScene2DRendererBinding`, then recovered with checked
+`as<NativeGlTextLabelData>()`; the original owner is retained. Its glyph-provider boundary, Bitmap,
+material/texture realization and standard quad writer stay unchanged. No fixed glyph subset, copied
+runtime/renderer data, unchecked base cast or fake drawing is introduced. These are inspected
+properties of the prior approved carry, not fresh behavioral results.
+
+The generated Canvas path remains partial for separate reasons. `getGlTextLabelData` refuses as
+`cpp-reference-assertion-without-heritage`: flattened `RendererData` cannot recover the private
+`GlTextLabelData` allocation. This is the existing
+[identity-preserving refinement request](compiler-requests/flattened-interface-refinement-identity.md#g2-gl-textlabel-private-renderer-data).
+`drawGlTextLabel` also refuses as `cpp-presence-test-without-absence-storage`; its message does not
+identify the tested property, so no particular field or null-removal patch is inferred. See
+[nullable presence](compiler-requests/nullable-optional-presence.md) and the
+[retained getter/draw references](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-gl-textlabel-generated-canvas-path-remains-unavailable).
+The generated singleton's callback carriers also differ from the explicit native GL binding.
+
+The native override remains **partial**: CanvasHost/ImageHost overloads and the browser singleton
+renderer are unavailable, and font selection/shaping depend on the supplied glyph capability.
+An unused-header link or called-function negative link was not needed or run: no declaration repair
+is proposed, and the effective header does not call the refused getter. No generation, new glyph
+semantics test, shader/draw execution, old E0a/clip-cache proof or global/native baseline was rerun.
+Historical sweep/carry totals, all foreign rows/clusters and report slices remain unchanged.
 
 ### 226. `undeclared-identifier-fcbdae42` — 1 header(s)
 

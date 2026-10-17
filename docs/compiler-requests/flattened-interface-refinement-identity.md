@@ -221,3 +221,28 @@ between the independent `ResourceLoaderInternal` and public `ResourceLoader` str
 A copied public loader would split identity and fields; a native cast would assert absent C++ heritage.
 Both the retained-call declaration gap and this owner-return boundary must remain visible until a
 faithful representation closes them. No dummy initialization, fallback result, or loader behavior is supplied.
+
+## G2 GL TextLabel private renderer data
+
+At Flight `a627849` / compiler `806d257`, `scene2d-gl/glTextLabel.ts:48` asserts
+`RendererData` to its private `GlTextLabelData`. The latter source interface extends `RendererData`,
+but the generated owners independently inherit `ReferenceEnabled`. The base has only the entity
+runtime key; the private owner also has allocH/allocW, image/surface, lastContentId/lastPixelRatio
+and logH/logW. The getter refuses as `cpp-reference-assertion-without-heritage`; a field-prefix copy
+or native pointer cast cannot recover that original object and its live raster/cache cells.
+The factory's construction/finish path must retain the private allocation before a later destroy or
+draw callback recovers it. A checked recovery without that carried allocation is insufficient.
+
+The already-landed partial native glyph override demonstrates the existing exact-owner contract,
+without repairing the generated Canvas API: its create-data binding boxes `NativeGlTextLabelData`
+in `ErasedRef`; destroy/submit recover that exact type with `as<T>()`, rejecting a mismatched owner.
+The render proxy retains its full `TextLabel`, whose typed runtime retains layout and revision cells.
+No fixed glyph subset, base-owner replacement or implicit CanvasHost implementation is supplied.
+Font selection/shaping remain the explicit glyph capability's responsibility.
+
+G2 original1 now compiles through that preexisting native override (Clang22.1.8, one worker). This is
+an effective-header inventory correction, not newly generated getter/draw behavior. The override
+stays partial: CanvasHost/ImageHost overloads and the browser singleton renderer are unavailable.
+The separately refused draw and retained callback references are recorded in the
+[existing retained-declaration request](retained-declaration-calls-omitted-callee.md#g2-gl-textlabel-generated-canvas-path-remains-unavailable).
+No declaration repair, normal generation, unused-header link or negative-link probe was run here.
