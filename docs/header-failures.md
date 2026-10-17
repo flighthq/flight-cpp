@@ -73,7 +73,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 44 | `no-viable-conversion-5903ce63` | 4 | 3D, GL | compiler | a value is passed where its declared type cannot receive it |
 | 45 | `no-viable-conversion-e1a24bd1` | 4 | 2D | compiler | a value is passed where its declared type cannot receive it |
 | 46 | `other-2aef05a3` | 4 | ANIM | [compiler request](compiler-requests/interface-heritage-widening.md) | shadow-effect conditional branches cannot widen their independent concrete owners into the declared Effect array element |
-| 47 | `other-43523429` | 4 | ANIM | runtime | uncategorised: the first diagnostic does not name a single cause |
+| 47 | `other-43523429` | 4 | ANIM | [compiler request](compiler-requests/heritage-argument-generic-deduction.md) | heritage-based Node2D type arguments are not substituted at addNodeChild, leaving a free Traits identifier |
 | 48 | `other-4e22e4de` | 4 | 2D | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 49 | `other-5611a858` | 4 | ANIM | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 50 | `other-d6be4352` | 4 | ANIM | runtime | uncategorised: the first diagnostic does not name a single cause |
@@ -935,11 +935,15 @@ rank remain historical, and `previousCluster` retains this original group.
 
 ### 47. `other-43523429` — 4 header(s)
 
-- cause: uncategorised: the first diagnostic does not name a single cause
+- cause: heritage-based Node2D type arguments are not substituted at `addNodeChild`, leaving a free `Traits` identifier
 - lanes: ANIM
-- fix route: runtime
-- first failure at: `flight/movieclip/spritesheet_timeline_source.hpp:122`
-- example: `too many arguments to function call, expected 0, have 1`
+- fix route: compiler — [heritage type-argument deduction request](compiler-requests/heritage-argument-generic-deduction.md)
+- first failure at: `flight/movieclip/spritesheet_timeline_source.hpp:123`
+- example: `use of undeclared identifier 'Traits'`
+- G2 native fix: the original expected-zero/have-one diagnostic at line 122 was `create_sprite(std::nullopt)` emitted for the source's `createSprite()`, not a callback dropping legitimate arguments. The existing native Sprite completion now accepts exactly `std::nullopt_t` and forwards to its no-options constructor. Present options and arbitrary argument types are rejected; the override remains partial and its manifest records the supported absence-only boundary.
+- Verification: the project native owner target built and `flight_cpp.generated_scene2d_gl_owners` passed **1/1**, checking defaults/texture absence, fresh data/runtime identities, retained graph cells, and compile-time rejection of supplied option rows and integers. Override integrity passed **226/226**.
+- Changed-input scoped native result: **0/4 pass, 4 fail, 0 unattempted**, one worker. All four first errors now reach the same `Traits` leak at line 123; the prior arity error is removed, and the new compiler diagnostic remains a failure. Every owned row has the actual new diagnostic/location and existing request link.
+- These four Movieclip rows retain their work-item ID for continuity. The separately reserved 29-header `Traits`/TextLabel/E0a cluster and all unowned rows remain unchanged. No compiler source patch, package-wide check, global header sweep, or upstream test port was performed; Movieclip playback is not claimed working.
 
 ### 48. `other-4e22e4de` — 4 header(s)
 
