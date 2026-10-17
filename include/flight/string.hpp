@@ -299,6 +299,20 @@ class String {
     return value_.starts_with(prefix.value_);
   }
 
+  // `String.prototype.startsWith(searchString, position)`: the position is ToIntegerOrInfinity'd and clamped
+  // to [0, length]. `value_` is already UTF-16 code units -- the domain JavaScript compares in -- so no
+  // code-point mapping is involved, and the clamp is the same one `normalize_substring_boundary` applies to
+  // `substring`. NaN and any negative value become 0, and +Infinity becomes the length, where only the empty
+  // prefix matches; both are the specification's own answers rather than a discarded argument.
+  [[nodiscard]] bool starts_with(const String& prefix, double position) const noexcept {
+    const auto length = size();
+    const size_type start = (std::isnan(position) || position <= 0.0)
+                                ? 0
+                                : (position >= static_cast<double>(length) ? length
+                                                                           : static_cast<size_type>(std::trunc(position)));
+    return prefix.size() <= length - start && value_.compare(start, prefix.size(), prefix.value_) == 0;
+  }
+
   [[nodiscard]] String substring(
       std::ptrdiff_t begin_index,
       std::ptrdiff_t end_index = std::numeric_limits<std::ptrdiff_t>::max()) const {

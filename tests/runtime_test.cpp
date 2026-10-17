@@ -3495,6 +3495,18 @@ void test_string() {
         "regexp split includes captures and applies the result limit");
   check(flight::String("prefix").starts_with("pre") && flight::String("prefix").ends_with("fix"),
         "string prefix and suffix checks accept UTF-8 boundaries");
+  check(flight::String("prefix").starts_with("pre", 0) && !flight::String("prefix").starts_with("pre", 1) &&
+            flight::String("prefix").starts_with("fix", 3) && !flight::String("prefix").starts_with("p", 3.9),
+        "starts_with compares at its UTF-16 position, ToIntegerOrInfinity'd");
+  check(flight::String("abc").starts_with("abc", -2) &&
+            flight::String("abc").starts_with("abc", std::numeric_limits<double>::quiet_NaN()) &&
+            flight::String("abc").starts_with("", std::numeric_limits<double>::infinity()) &&
+            !flight::String("abc").starts_with("a", std::numeric_limits<double>::infinity()) &&
+            !flight::String("abc").starts_with("c", 3) &&
+            flight::String("abc").starts_with("", 99),
+        "starts_with clamps negative, NaN and infinite positions the way TypeScript does");
+  check(flight::String(u"aéb").starts_with(u"éb", 1),
+        "starts_with positions count UTF-16 code units, not bytes");
   check(flight::String("ABC").to_lower() == flight::String("abc"),
         "ASCII case conversion is deterministic without a provider");
   check(flight::String("ab").pad_start(5, "01") == flight::String("010ab"),
