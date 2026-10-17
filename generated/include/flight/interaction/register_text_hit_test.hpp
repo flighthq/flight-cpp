@@ -57,6 +57,8 @@ inline flight::Ref<flight::types::Vector2> text_hit_local_point = flight::make_r
 // contract that validates and recovers the target owner; the compiler will not use a native pointer cast,
 // materialize a replacement row, or invent side storage
 
+double resolve_text_char_index(flight::types::NodeAny source, double x, double y);
+
 inline void register_text_hit_test() {
   flight::interaction::register_hit_test_precise(flight::types::text_label_kind, resolve_text_char_index);
   flight::interaction::register_hit_test_precise(flight::types::rich_text_kind, resolve_text_char_index);

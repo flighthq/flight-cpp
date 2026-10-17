@@ -1351,3 +1351,35 @@ still needs the original WGPU state/runtime and full material/shader domain. Pre
 flush/blend/texture/bind order and the registered-material default quad path, original Sprite texture
 identity/version and per-state dirty stamp, affine/UV/color/materialData and post-prepare output index.
 An empty draw, fake shader, copied owner or narrowed default-only domain would not implement the source.
+
+## G2 Interaction text hit-test retains its refused callback
+
+At Flight `a627849` / compiler `806d257`, `interaction/register_text_hit_test.hpp:61/62`
+retains two calls to `register_hit_test_precise`, passing `resolve_text_char_index` for
+TextLabel and RichText. The callback itself has the exact `NOT GENERATED: function
+resolveTextCharIndex` marker and no definition. Both uses are direct function arguments,
+so the existing `declare-refused-function` mechanism's `retainedReference` witness applies:
+
+```cpp
+double resolve_text_char_index(flight::types::NodeAny source, double x, double y);
+```
+
+The signature is the existing `HitTestPreciseFunction` carrier, `double(NodeAny,double,double)`;
+no type adapter, anonymous owner or fallback return is inferred. The repair matches exactly
+this one header, adds only that declaration and is idempotent. It expires when the refused
+function emits or its exact retained registration disappears. No cross-header caller list
+or repair-engine extension is needed.
+
+The actual unused repaired header compiles, links and runs with static callback/signature checks.
+Calling the real two-kind registration compiles to an object and fails to link on exactly the
+missing `flight::interaction::resolve_text_char_index(NodeAny,double,double)` body. Thus the
+unused header is available, while neither this registration nor precise text hit resolution can
+execute. There is no global eager registration being misreported as an explicit-use negative link.
+
+The [text/2D owner request](readonly-callback-derived-owner-recovery.md#g2-interaction-text-hit-callbacks-need-the-original-text-and-2d-owners)
+keeps the actual refusal and the complete TextLabel/RichText, runtime-cache, bounds and transform
+requirements. The original callback body, partial marker and module refusal remain; no false hit,
+copied graph/owner/layout, narrowed NodeAny domain, runtime/source patch, text override or shared
+GL/text edit is carried. Normal exact-pin one-module generation must reproduce only the declaration
+and its own repair manifest record. The owned header's compile result is recorded separately from
+the absent resolver's behavior.

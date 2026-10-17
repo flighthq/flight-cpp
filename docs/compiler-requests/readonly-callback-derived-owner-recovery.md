@@ -173,3 +173,40 @@ These inspected dirty/submit obligations are not further measured compile or beh
 The [nullable material-owner refusal](compiler-interface-heritage-owner-widening.md#g2-wgpu-sprite-material-owner)
 and [retained aggregate qualification](retained-declaration-calls-omitted-callee.md#g2-wgpu-sprite-retains-its-refused-draw-callback)
 remain separate. No callback adapter, shared Sprite/GL change, draw body or GPU proof is supplied.
+
+## G2 Interaction text hit callbacks need the original text and 2D owners
+
+At Flight `a627849` / compiler `806d257`, `interaction/registerTextHitTest.ts:26`
+refuses `resolveTextCharIndex` at `source as TextLabel` with
+`cpp-reference-assertion-without-heritage`. Its callback input is the full `NodeAny`,
+emitted as `shared_ptr<Node<Any>>`, while `TextLabel` is an independent flattened
+reference owner with its original `TextLabelData` and typed `TextLabelRuntime` slot.
+The two retained registrations install this same callback for `TextLabelKind` and
+`RichTextKind`; source `RichText` extends `TextLabel` with its own data/runtime refinement.
+Neither a kind string nor selection of the precise-provider registry supplies that
+owner relation. Do not restrict the public callback to a concrete TextLabel or exclude RichText.
+
+The actual source first tests the original graph-local bounds and returns -1 outside.
+Only a bounds hit reaches `getTextLayout` on that same node; null layout returns0.
+A present layout then triggers the world-matrix read, inverse transform into the original
+shared scratch point and `computeRichTextCharIndexAtPoint` over that same layout.
+Preserve this order, both early returns, graph/transform/bounds cells, scratch writes,
+exceptions and precise character-index result. The layout getter can validate or rebuild
+the original runtime cache, invoke the optional text guard and registered measure provider,
+and update its content revision/text stamps. A fixed0/-1 result or copied text/runtime/layout
+would bypass those effects. The character query retains nearest-line and glyph-advance
+selection, including empty-layout0 and the line-end result below the chosen line.
+
+Current native helpers already retain an exact TextLabel when it enters a `Node2D`
+structural view, and native text layout reads that TextLabel's own typed runtime. That is
+not recovery from the precise callback's existing nominal `NodeAny` carrier, nor does
+its closed Shape/Sprite/TextLabel helper establish a RichText owner contract. Shared text,
+GL text, Node and bounds code are left untouched. A real implementation needs an
+owner-preserving checked dispatch/capability boundary through the graph and callback;
+no base pointer cast, replacement graph node, side table or domain narrowing is supplied.
+
+The earlier [graph-local-bounds request](assertion-to-undeclared-row-member.md#g2-interaction-graph-bounds-need-the-original-nodes-2d-capability)
+also applies to the first operation, whose generic body remains refused. These are source/type
+obligations, not additional measured diagnostics after a supplied text resolver. The bounded
+[retained callback declaration](retained-declaration-calls-omitted-callee.md#g2-interaction-text-hit-test-retains-its-refused-callback)
+addresses name visibility only and leaves the resolver body unavailable.
