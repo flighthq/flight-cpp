@@ -32,9 +32,11 @@ The native `types/gl_context.hpp` already aliases GlContext to WebGl2Context; `b
 already binds WebGL2RenderingContext to that same shared value type. WebGl2Context's constants
 are present (`float_mat4`, `float_mat3`, `float_mat2`, `float_vec4`, `float_vec3`, `float_vec2`,
 `float_`). Its copyable view retains the existing shared SDL surface/context identity. It is not
-a generated ReferenceEnabled record with a structural row table for uppercase source keys.
-Adding an implicit structural constructor would neither apply the external member policy nor
-prove such a row schema, and copying or allocating a different context is not valid.
+a generated ReferenceEnabled owner that implicitly enters a StructuralRef. The generated generic
+member table does already map the seven uppercase keys to their native constant members; that
+lookup support does not supply the missing value-to-row carrier boundary. Inventing an owning
+wrapper or allocating a different context is not a declaration repair. Preserve the existing
+shared surface identity through the external carrier instead.
 
 ## Required lowering
 

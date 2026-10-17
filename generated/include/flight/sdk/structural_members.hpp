@@ -14,14 +14,7 @@ namespace flight::detail {
 
 template <typename Key, typename Object>
 decltype(auto) generated_row_member(Object& object) {
-  if constexpr (Key::name.view() == std::string_view("FLOAT") && requires { object.float_; }) return (object.float_);
-  else if constexpr (Key::name.view() == std::string_view("FLOAT_MAT2") && requires { object.float_mat2; }) return (object.float_mat2);
-  else if constexpr (Key::name.view() == std::string_view("FLOAT_MAT3") && requires { object.float_mat3; }) return (object.float_mat3);
-  else if constexpr (Key::name.view() == std::string_view("FLOAT_MAT4") && requires { object.float_mat4; }) return (object.float_mat4);
-  else if constexpr (Key::name.view() == std::string_view("FLOAT_VEC2") && requires { object.float_vec2; }) return (object.float_vec2);
-  else if constexpr (Key::name.view() == std::string_view("FLOAT_VEC3") && requires { object.float_vec3; }) return (object.float_vec3);
-  else if constexpr (Key::name.view() == std::string_view("FLOAT_VEC4") && requires { object.float_vec4; }) return (object.float_vec4);
-  else if constexpr (Key::name.view() == std::string_view("__brand") && requires { object.brand; }) return (object.brand);
+  if constexpr (Key::name.view() == std::string_view("__brand") && requires { object.brand; }) return (object.brand);
   else if constexpr (Key::name.view() == std::string_view("a") && requires { object.a; }) return (object.a);
   else if constexpr (Key::name.view() == std::string_view("aac") && requires { object.aac; }) return (object.aac);
   else if constexpr (Key::name.view() == std::string_view("aberration") && requires { object.aberration; }) return (object.aberration);
@@ -2531,14 +2524,7 @@ decltype(auto) generated_row_member(Object& object) {
 
 template <typename Key, typename Object>
 consteval auto generated_row_member_type_identity() {
-  if constexpr (Key::name.view() == std::string_view("FLOAT") && requires(Object& object) { object.float_; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().float_)>>{};
-  else if constexpr (Key::name.view() == std::string_view("FLOAT_MAT2") && requires(Object& object) { object.float_mat2; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().float_mat2)>>{};
-  else if constexpr (Key::name.view() == std::string_view("FLOAT_MAT3") && requires(Object& object) { object.float_mat3; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().float_mat3)>>{};
-  else if constexpr (Key::name.view() == std::string_view("FLOAT_MAT4") && requires(Object& object) { object.float_mat4; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().float_mat4)>>{};
-  else if constexpr (Key::name.view() == std::string_view("FLOAT_VEC2") && requires(Object& object) { object.float_vec2; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().float_vec2)>>{};
-  else if constexpr (Key::name.view() == std::string_view("FLOAT_VEC3") && requires(Object& object) { object.float_vec3; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().float_vec3)>>{};
-  else if constexpr (Key::name.view() == std::string_view("FLOAT_VEC4") && requires(Object& object) { object.float_vec4; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().float_vec4)>>{};
-  else if constexpr (Key::name.view() == std::string_view("__brand") && requires(Object& object) { object.brand; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().brand)>>{};
+  if constexpr (Key::name.view() == std::string_view("__brand") && requires(Object& object) { object.brand; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().brand)>>{};
   else if constexpr (Key::name.view() == std::string_view("a") && requires(Object& object) { object.a; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().a)>>{};
   else if constexpr (Key::name.view() == std::string_view("aac") && requires(Object& object) { object.aac; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().aac)>>{};
   else if constexpr (Key::name.view() == std::string_view("aberration") && requires(Object& object) { object.aberration; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().aberration)>>{};
@@ -5051,13 +5037,6 @@ using generated_row_member_t = typename decltype(generated_row_member_type_ident
 
 template <typename Object>
 void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& object) {
-  if constexpr (requires { object->float_; }) owner.bind_named("FLOAT", [object]() -> decltype(auto) { return (object->float_); });
-  if constexpr (requires { object->float_mat2; }) owner.bind_named("FLOAT_MAT2", [object]() -> decltype(auto) { return (object->float_mat2); });
-  if constexpr (requires { object->float_mat3; }) owner.bind_named("FLOAT_MAT3", [object]() -> decltype(auto) { return (object->float_mat3); });
-  if constexpr (requires { object->float_mat4; }) owner.bind_named("FLOAT_MAT4", [object]() -> decltype(auto) { return (object->float_mat4); });
-  if constexpr (requires { object->float_vec2; }) owner.bind_named("FLOAT_VEC2", [object]() -> decltype(auto) { return (object->float_vec2); });
-  if constexpr (requires { object->float_vec3; }) owner.bind_named("FLOAT_VEC3", [object]() -> decltype(auto) { return (object->float_vec3); });
-  if constexpr (requires { object->float_vec4; }) owner.bind_named("FLOAT_VEC4", [object]() -> decltype(auto) { return (object->float_vec4); });
   if constexpr (requires { object->brand; }) owner.bind_named("__brand", [object]() -> decltype(auto) { return (object->brand); });
   if constexpr (requires { object->a; }) owner.bind_named("a", [object]() -> decltype(auto) { return (object->a); });
   if constexpr (requires { object->aac; }) owner.bind_named("aac", [object]() -> decltype(auto) { return (object->aac); });
@@ -7605,13 +7584,6 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_COMPUTED(scene_3d_resource_resolver_runtime_key)
   FLIGHT_SDK_ROW_COMPUTED(tilemap_signals_slot)
   std::size_t matched = 0;
-  FLIGHT_SDK_ROW_WIDENS(float_)
-  FLIGHT_SDK_ROW_WIDENS(float_mat2)
-  FLIGHT_SDK_ROW_WIDENS(float_mat3)
-  FLIGHT_SDK_ROW_WIDENS(float_mat4)
-  FLIGHT_SDK_ROW_WIDENS(float_vec2)
-  FLIGHT_SDK_ROW_WIDENS(float_vec3)
-  FLIGHT_SDK_ROW_WIDENS(float_vec4)
   FLIGHT_SDK_ROW_WIDENS(brand)
   FLIGHT_SDK_ROW_WIDENS(a)
   FLIGHT_SDK_ROW_WIDENS(aac)

@@ -3,7 +3,6 @@
 #include <flight/any.hpp>
 #include <flight/host_sdl/webgl.hpp>
 #include <flight/record.hpp>
-#include <flight/structural_ref.hpp>
 #include <flight/weak_set.hpp>
 #include <functional>
 #include <optional>
@@ -27,28 +26,28 @@ inline bool are_gl_scene_3d_custom_shader_guards_enabled(flight::Ref<flight::typ
   return !((std::holds_alternative<flight::Null>(flight::scene3d_gl::get_gl_scene_3d_runtime(state)->custom_shader_guard) || std::holds_alternative<flight::Undefined>(flight::scene3d_gl::get_gl_scene_3d_runtime(state)->custom_shader_guard)));
 }
 
-inline flight::String gl_uniform_type_name(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::host_sdl::WebGl2Context>>> gl, double type) {
+inline flight::String gl_uniform_type_name(flight::host_sdl::WebGl2Context gl, double type) {
   {
     auto switch_value = type;
-    if (switch_value == flight::row_get<flight::RowKey<"FLOAT_MAT4">>(gl)) {
+    if (switch_value == gl.float_mat4) {
       return flight::String("mat4");
     }
-    else if (switch_value == flight::row_get<flight::RowKey<"FLOAT_MAT3">>(gl)) {
+    else if (switch_value == gl.float_mat3) {
       return flight::String("mat3");
     }
-    else if (switch_value == flight::row_get<flight::RowKey<"FLOAT_MAT2">>(gl)) {
+    else if (switch_value == gl.float_mat2) {
       return flight::String("mat2");
     }
-    else if (switch_value == flight::row_get<flight::RowKey<"FLOAT_VEC4">>(gl)) {
+    else if (switch_value == gl.float_vec4) {
       return flight::String("vec4");
     }
-    else if (switch_value == flight::row_get<flight::RowKey<"FLOAT_VEC3">>(gl)) {
+    else if (switch_value == gl.float_vec3) {
       return flight::String("vec3");
     }
-    else if (switch_value == flight::row_get<flight::RowKey<"FLOAT_VEC2">>(gl)) {
+    else if (switch_value == gl.float_vec2) {
       return flight::String("vec2");
     }
-    else if (switch_value == flight::row_get<flight::RowKey<"FLOAT">>(gl)) {
+    else if (switch_value == gl.float_) {
       return flight::String("float");
     }
     else {

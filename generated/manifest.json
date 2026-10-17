@@ -5278,6 +5278,13 @@
     },
     {
       "dependency": "flight",
+      "digest": "b6df07fc083066e3ed9aa2b9139aa3b5fdc9d3c626a1abb1ad784853a39f06f8",
+      "id": "scene3d-gl-custom-uniform-context-carrier",
+      "module": "packages/scene3d-gl/src/enableGlScene3DCustomShaderGuards.ts",
+      "package": "@flighthq/scene3d-gl"
+    },
+    {
+      "dependency": "flight",
       "digest": "95de41226fa6db8fea89e1655054837ae16500af50d8c24a3ffd570331345da3",
       "id": "render-node-call-explicit-traits",
       "module": "packages/render/src/renderTarget.ts and packages/render/src/renderTransform2d.ts",
