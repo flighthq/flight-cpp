@@ -652,3 +652,24 @@ The [body's null-presence refusal](nullable-optional-presence.md#g2-raster-shape
 and [backend/data owner carriers](readonly-callback-derived-owner-recovery.md#g2-raster-shape-native-and-generic-renderer-callbacks)
 remain open. Native raster lifecycle debt is explicit in the existing partial shape-data override;
 a declaration must not be presented as full rasterization or actual texture/material/quad submission.
+
+## G2 GL particle renderer after the attribute-location number carrier fix
+
+At compiler `806d257` / Flight `a627849`, the changed two-header particle check clears the original
+nonconstant int-to-double aggregate-initialization error. `WebGl2Context::get_attrib_location` now
+returns the source number carrier, preserving every GLint result including -1. The 2D header then
+fails at `scene2d_gl/gl_particle_emitter_2d.hpp:268` on undeclared
+`draw_gl_particle_emitter_2d`.
+
+The exact `NOT GENERATED: function drawGlParticleEmitter2D -- source line 144` marker remains.
+Its renderer submit lambda retains the original flush followed by the missing draw call. The body
+refusal is `cpp-union-runtime-domains-erased`, naming `GLsizei | primitive -> double`; the
+[existing same-carrier union request](distinct-union-domains-one-carrier.md) covers that class.
+This diagnostic does not identify the particular receiver expression, so no source expression is
+attributed here. No declaration, draw body, empty draw or callback adapter is carried in this
+numeric-binding change. Attribute lookup availability does not supply particle drawing.
+
+The completed serial check is **0/2 pass, 2 fail, 0 unattempted**. Only this 2D row joins the
+retained-callee cause. The 3D row reaches its existing literal-membership gap at line 113 and stays
+failed under [that request](membership-test-lowered-literally.md#g2-particle-3d-reaches-the-previously-latent-membership-site).
+Both later diagnostics remain failures; no rendering pass is claimed.

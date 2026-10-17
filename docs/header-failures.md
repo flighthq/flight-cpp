@@ -29,7 +29,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | --- | --- | --- | --- | --- | --- |
 | 1 | `call-has-no-matching-9c08d665` | 117 | WGPU | compiler | bound WebGPU descriptor object literals are emitted as untyped source-order braced initializers with anonymous nested owners *(request filed)* |
 | 2 | `missing-member-b1a6d5cf` | 38 | 2D | compiler | scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined *(request filed)* |
-| 3 | `in-operator-not-lowered-b1eae4af` | 31 | 2D, GL, PLAT, WGPU | compiler | the TypeScript `in` operator is emitted verbatim as C++ `in` at 4 root headers *(existing request extended)* |
+| 3 | `in-operator-not-lowered-b1eae4af` | 32 | 2D, 3D, GL, PLAT, WGPU | compiler | the TypeScript `in` operator is emitted verbatim; G2 particle3D joins this existing cause *(existing request extended)* |
 | 4 | `undeclared-identifier-993e82f1` | 29 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(request filed; builder4/G2)* |
 | 5 | `call-has-no-matching-3882b3e9` | 27 | 2D, 3D, TEXT | compiler | bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier *(request filed; builder4/G2)* |
 | 6 | `other-52e846a6` | 18 | ANIM | compiler | a value_type is combined with a three-alternative variant where the declared slot expects one alternative |
@@ -110,7 +110,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 81 | `missing-member-dd9b4baa` | 2 | 3D, GL | runtime | the emitted code reads a member the target does not declare (`renderbuffer_binding`) *(G2: binding added; follow-on `no-matching-conversion-bc278253` fixed: 1 pass, 1 to `missing-member-95ead583`)* |
 | 82 | `no-viable-conversion-303c42f1` | 2 | ANIM | compiler | a value is passed where its declared type cannot receive it |
 | 83 | `other-67dc02c6` | 2 | 2D | compiler | `getSurfaceHandle(...) as HTMLCanvasElement` lowered to an unchecked `static_cast` from the erased handle *(existing request extended)* |
-| 84 | `other-6f513db2` | 2 | 2D, 3D | runtime | uncategorised: the first diagnostic does not name a single cause |
+| 84 | `other-6f513db2` | 2 | 2D, 3D | binding (fixed) | attribute locations now use the source number carrier; G2: 0 pass, 2 later compiler failures |
 | 85 | `other-86d0b50b` | 5 | 2D, 3D | [compiler request](compiler-requests/object-literal-into-outcome-variant.md) | SceneCoverageEntry literals initialize the outer variant instead of a selected concrete reference arm |
 | 86 | `redefinition-caa49360` | 2 | 3D | runtime | a declaration is emitted twice |
 | 87 | `undeclared-identifier-1048386b` | 2 | 3D | runtime | the emitted code names `md5_material_handler`, which nothing declares |
@@ -302,17 +302,17 @@ deleting or stubbing behaviour.
 - example: `no member named 'get_canvas_render_state_runtime' in namespace 'scene2d_canvas'`
 - compiler request: `docs/compiler-requests/local-reexport-using-before-declaration.md`
 
-### 3. `in-operator-not-lowered-b1eae4af` — 31 header(s)
+### 3. `in-operator-not-lowered-b1eae4af` — 32 current header(s), 31 in G1
 
 - cause: the TypeScript `in` operator is emitted verbatim as C++ `in`
-- lanes: 2D, GL, PLAT, WGPU
+- lanes: 2D, 3D, GL, PLAT, WGPU
 - fix route: compiler; the `render_registry_guards` receiver also needs a structural carrier
 - first failure at: `flight/interaction/interaction_manager.hpp:510`
 - example: `expected ')'`
 - existing request extended: [membership test lowered literally](compiler-requests/membership-test-lowered-literally.md);
   related: [Interaction runtime membership](compiler-requests/interaction-runtime-property-membership.md)
 
-Only four headers contain the failing expression. By include walk, the other 27 reach
+In G1, four headers contain the failing expression. By include walk, the other 27 reach
 `interaction_manager` (21), `render_registry_guards` (8), `explain_scene_3d_pipeline_coverage` (1), or
 `wgpu_render_state` (`render_wgpu/wgpu_shader.hpp`). The last header's own first diagnostic belongs to another cluster.
 
@@ -335,12 +335,17 @@ The nominal site cannot be fixed by lowering `in` alone. The native backend stat
 `ReferenceEnabled`, not from `RenderState`, so a `Ref<RenderState>` never holds the state being probed.
 Any compiling spelling would answer false at all seven sites and always return the fallback message.
 
-Eight more headers contain the expression but fail first on another cluster's diagnostic. They are listed
+In G1, eight more headers contain the expression but fail first on another cluster's diagnostic. They are listed
 in the request as latent sites and are not reclassified here. No source patch, repair, override or runtime
 change was made. An own-keys predicate, value read or
 nominal downcast would narrow the semantics, and no erased TypeScript form is simpler than `in`.
 
 **G1 status retained: 0/31 pass, 31 fail.** No C++ recompile was run because no code changed.
+
+G2 particle follow-on: after the attribute-location binding fix, the owned
+`scene3d_gl/gl_particle_emitter_3d.hpp` first fails at its previously latent literal `in` expression
+at line 113. It joins this cause as the 32nd current failure and adds the 3D lane. No unowned row was
+recompiled or changed. See the [measured particle site](compiler-requests/membership-test-lowered-literally.md#g2-particle-3d-reaches-the-previously-latent-membership-site).
 
 ### 4. `undeclared-identifier-993e82f1` — 29 header(s) *(builder4/G2)*
 
@@ -1806,11 +1811,33 @@ status retained: 0/2 pass, 2 fail.** No code changed, so no recompile was run.
 
 ### 84. `other-6f513db2` — 2 header(s)
 
-- cause: uncategorised: the first diagnostic does not name a single cause
+- cause: an SDL attribute lookup returning int is list-initialized into the generated double location field
 - lanes: 2D, 3D
-- fix route: runtime
-- first failure at: `flight/scene2d_gl/gl_particle_emitter_2d.hpp:58`
-- example: `non-constant-expression cannot be narrowed from type 'int' to 'double' in initializer list [-Wc++11-narrowing]`
+- fix route: runtime binding corrected; both remaining failures are compiler debt
+- original first failure at: `flight/scene2d_gl/gl_particle_emitter_2d.hpp:58`
+- original example: `non-constant-expression cannot be narrowed from type 'int' to 'double' in initializer list [-Wc++11-narrowing]`
+
+The pinned DOM declaration returns GLint, a TypeScript number. The SDL binding now returns double
+and explicitly converts the unchanged real GL query result. Every signed 32-bit GLint, including
+the missing-location -1 sentinel, is exactly representable; the program owner, encoded name, lookup
+and error behavior remain unchanged. No generated header, source patch, emission repair or warning
+suppression is carried.
+
+The changed two-header check at one worker is **0 pass, 2 fail, 0 unattempted**. Both original narrowing
+errors clear. The 2D header now fails on the refused draw callee at line 268, recorded as
+`undeclared-identifier-789527d7` under the [existing retained-callee request](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-gl-particle-renderer-after-the-attribute-location-number-carrier-fix).
+The 3D header reaches literal membership at line 113 and joins the
+[existing membership cause](compiler-requests/membership-test-lowered-literally.md#g2-particle-3d-reaches-the-previously-latent-membership-site).
+Both stay failed; the old narrowing cause has no remaining owned rows. Historical totals and
+unowned rows remain unchanged.
+
+The native binding implementation and extended host_sdl_gl_app test compile to objects locally.
+Builder4 built the changed target at one job and ran `flight_cpp.host_sdl_gl_app` once on real SDL
+offscreen software GL: **1/1 pass**. All three C++ source blobs exactly match this change. The test
+links an actual shader with attribute location 5, checks that location and missing-name -1 through
+a double aggregate, pins the return type and checks teardown without a GL error. Existing application
+checks ran in that same invocation. Local live configuration lacked the SDL3 library package;
+Builder4 used its existing SDL3 3.4.2 setup. This verifies the binding, not either particle draw body.
 
 ### 85. `other-86d0b50b` — 5 current header(s), 2 in G1
 

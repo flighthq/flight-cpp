@@ -194,3 +194,20 @@ are not classified here.
 No source patch is carried. A TypeScript rewrite that erases to the same JavaScript cannot express
 presence on these receivers more simply than `in` already does, and the nominal site needs a carrier
 change in the emitter, not a source change.
+
+## G2 particle 3D reaches the previously latent membership site
+
+The runtime correction to the attribute-location number carrier clears the original list-narrowing
+error from `scene3d_gl/gl_particle_emitter_3d.hpp`. Its scoped one-worker check now first reports
+`expected ')'` at line 113, in `is_scene_particle_emitter_3d`. This is the particle site already listed
+above, now measured as the winning diagnostic rather than inferred from a later expression.
+
+The existing `scene3d-gl-particle-capability-guard.patch` supplies the TypeScript predicate over the
+original readonly NodeAny owner: matching kind plus `'blendMode' in node` and `'data' in node`.
+Emission preserves the readonly row but writes both `in` operators verbatim. The required particle
+fields are not repaired by a value read, nominal cast, copied node or always-false guard. This numeric
+binding change supplies no membership lowering and carries no change to that existing source patch.
+
+Only the owned particle 3D row joins this cause; its first diagnostic and line 113 are recorded in
+the product. Historical G1 totals and all unowned rows remain unchanged. The two-header particle
+check is 0 pass, 2 fail; its other row reaches the separately refused 2D draw callee.
