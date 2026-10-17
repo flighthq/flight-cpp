@@ -116,3 +116,18 @@ Nothing is carried.
 I validated the site by inspecting the emitted header. No definition of either symbol exists in the tree,
 and no other header names either one. This is a docs-only disposition, so the unchanged header was not
 recompiled, and its recorded **0/1** failure stands. Nothing is carried.
+
+## G2 chromatic aberration runner
+
+`flight/effects_gl/gl_chromatic_aberration_effect.hpp` at Flight `a627849` / compiler `806d257` is the same
+omission:
+- `glChromaticAberrationEffectRunner` (source line 30) is refused with
+  `cpp-structural-assertion-writable-capability-unproven`, because `Readonly<Effect>` declares neither
+  `intensity` nor `radial`.
+- `register_gl_chromatic_aberration_effect` still passes the runner at line 88.
+- The callee `applyChromaticAberrationEffectToGl` (source line 15) is refused with the same
+  `GlTextureRenderTarget` widening, see [interface-heritage-widening](interface-heritage-widening.md).
+
+I validated the site by inspecting the emitted header. Neither symbol is defined anywhere in the tree, and
+no other header names either one. This is a docs-only disposition, so the unchanged header was not
+recompiled, and its recorded **0/1** failure stands. Nothing is carried.

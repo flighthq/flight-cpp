@@ -182,7 +182,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 153 | `undeclared-identifier-09cc9e86` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glFilmGrainEffectRunner` binding (and its callee `applyFilmGrainEffectToGl`) but still emits the registration call that passes the runner |
 | 154 | `undeclared-identifier-0b8d3b44` | 1 | GL | runtime | the emitted code names `box_blur_shaders`, which nothing declares |
 | 155 | `undeclared-identifier-0c07642f` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glGlitchEffectRunner` binding (and its callee `applyGlitchEffectToGl`) but still emits the registration call that passes the runner |
-| 156 | `undeclared-identifier-11d6fcbe` | 1 | GL | runtime | the emitted code names `gl_chromatic_aberration_effect_runner`, which nothing declares |
+| 156 | `undeclared-identifier-11d6fcbe` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glChromaticAberrationEffectRunner` binding (and its callee `applyChromaticAberrationEffectToGl`) but still emits the registration call that passes the runner |
 | 157 | `undeclared-identifier-1462818e` | 1 | 2D | compiler | refused velocity program owner; exact declaration fails unused-header compilation at VIEWPORT method/constant collision *(requests filed)* |
 | 158 | `undeclared-identifier-17cb8386` | 1 | GL | runtime | the emitted code names `gl_bokeh_depth_of_field_effect_runner`, which nothing declares |
 | 159 | `undeclared-identifier-1892fccb` | 1 | PLAT | declaration repair (applied) | exact refused text callback declared; G2: 1 pass; registration and character resolution remain unlinkable |
@@ -2902,14 +2902,17 @@ tilemap hit test stays visibly unavailable rather than substituted.
 - Verified by inspection: line 92 is the `register_gl_glitch_effect` call that passes the refused binding. Nothing in the tree defines either symbol, and no other header names either one. This docs-only disposition changes no compiled input, so the recorded **0/1** failure stands without an unchanged rerun. No runner, effect body, shader, cache or narrowed domain is supplied.
 - compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
-### 156. `undeclared-identifier-11d6fcbe` — 1 header(s)
+### 156. `undeclared-identifier-11d6fcbe` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_chromatic_aberration_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glChromaticAberrationEffectRunner` binding (and its callee `applyChromaticAberrationEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_chromatic_aberration_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: a runtime definition would fake the effect runner. The runner refusal (`cpp-structural-assertion-writable-capability-unproven`: `Readonly<Effect>` declares neither `intensity` nor `radial`) names an owner-preserving carrier as the compiler-side answer. The callee refusal is the `GlTextureRenderTarget` widening of [interface-heritage-widening](compiler-requests/interface-heritage-widening.md). This is the same family as the SSAO, outline, film grain and glitch runners.
 - first failure at: `flight/effects_gl/gl_chromatic_aberration_effect.hpp:88`
 - example: `use of undeclared identifier 'gl_chromatic_aberration_effect_runner'`
+- Verified by inspection: line 88 is the registration call that passes the refused binding. Nothing in the tree defines either symbol, and no other header names either one. This docs-only disposition changes no compiled input, so the recorded **0/1** failure stands without an unchanged rerun. No runner, effect body, shader, cache or narrowed domain is supplied.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
 ### 157. `undeclared-identifier-1462818e` — 1 header, compiler-owned
 
