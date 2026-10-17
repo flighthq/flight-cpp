@@ -475,3 +475,32 @@ No workaround is carried. A cast, a copied base owner or a wrapper adapter would
 proxy's identity or narrow the domain; the faithful lowering is the declared heritage on the emitted
 structs (`struct RenderProxy2D : RenderProxy`), which keeps the one object and its control block and
 lets the base-typed slot receive it unchanged.
+
+## G2 Scene2D node renderers: `noop_renderer_data` into `Scene2DRenderer.create_data`
+
+This is the `Node2D` slot form of the create-data callbacks above. Cluster `no-viable-conversion-9c3803c5`
+covers 9 headers at Flight `a627849` / compiler `806d257`.
+
+Three renderers store the generic `flight::render::noop_renderer_data` in `Scene2DRenderer.create_data`:
+- `canvas_scene_2d_renderer`, at `scene2d_canvas/canvas_node_2d.hpp:62`;
+- the DOM renderer, at `scene2d_dom/dom_node_2d.hpp:53`;
+- the WGPU renderer, at `scene2d_wgpu/wgpu_node_2d.hpp:120`.
+
+The source is `noopRendererData(_state: RenderState, _source: NodeAny): RendererData | null`, and the slot
+is `createData(state: RenderState, source: Node2D): RendererData | null`. TypeScript accepts the assignment
+because a `Node2D` is a `Node`. In C++ the function takes `NodeAny` (`Ref<Node<Any>>`) and the slot's
+`std::function` passes a flattened `Node2D`, which does not convert to it. So
+`could not convert 'flight::render::noop_renderer_data' ...` (GCC 15.2, one worker; all three roots measured,
+3 attempted, 0 pass, 3 fail).
+
+The other six Canvas rows reach `canvas_node_2d.hpp:62` through their includes: `canvas_rich_text`,
+`canvas_scale9_shape`, `canvas_scale9_sprite`, `canvas_shape`, `canvas_shape_rasterizer` and
+`canvas_sprite`. Several of them also store `noop_renderer_data` later, at their own `create_data`. They
+were not recompiled.
+
+The same widening is needed: `Node2D` must reach `NodeAny` while keeping the same node, so the no-data
+result stays legitimate. Nothing is carried:
+- no adapter lambda that rebuilds a node;
+- no function-pointer cast;
+- no Canvas, DOM or WGPU provider;
+- no narrowed node domain.

@@ -39,7 +39,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 10 | `call-has-no-matching-076d207f` | 14 | WGPU | runtime (fixed) | typed `create_pipeline_layout` descriptor overload; G2 recheck: 0 pass, 14 fail at `create_bind_group_layout` |
 | 11 | `other-e9936ce6` | 13 | 3D | compiler | a pair literal the declared element type spells as `std::tuple<A, B>` is emitted as `flight::Array{...}`, so class-template ded... *(request filed)* |
 | 12 | `call-has-no-matching-d6950545` | 12 | 2D, CORE | compiler *(existing requests)* | generic `get_node_child_count<Traits>` called without the inferred trait on a non-deducible `RowMerge` parameter (command: `NodeAny`; SVG/Lottie: `Node2D` via heritage) |
-| 13 | `no-viable-conversion-9c3803c5` | 9 | 2D, WGPU | compiler | a value is passed where its declared type cannot receive it |
+| 13 | `no-viable-conversion-9c3803c5` | 9 | 2D, WGPU | compiler *(existing request)* | generic `noop_renderer_data(…, NodeAny)` stored in `Scene2DRenderer.create_data`, whose `Node2D` does not widen to `NodeAny` |
 | 14 | `no-viable-conversion-dfea2d92` | 9 | 3D | compiler | a value is passed where its declared type cannot receive it |
 | 15 | `variant-cast-ccfedad4` | 9 | 3D | compiler | a retained readonly program row is reconstructed through a writable row before a readonly draw helper *(existing request extended)* |
 | 16 | `call-has-no-matching-b569e92e` | 8 | 3D, ANIM | compiler | the emitted call to `init_joint_base` matches no declared overload |
@@ -521,13 +521,17 @@ so no second request is filed.
 - Scoped native recheck (GCC 15.2, jobs 1): **3 attempted / 0 pass / 3 fail**, at `command_binding.hpp:155`, `svg_bounds.hpp:67` and `lottie_test_fixtures.hpp:125`. Each row carries its measured location. The other 9 headers reach `command_binding.hpp` or `svg_bounds.hpp` through their includes. They were not recompiled, keep their recorded failure, and are given no location. No overload, cast, copied owner or narrowed domain is supplied.
 - compiler request: `docs/compiler-requests/node-call-trait-absent-from-scope.md` (command), `docs/compiler-requests/heritage-argument-generic-deduction.md` (scene2d-formats)
 
-### 13. `no-viable-conversion-9c3803c5` — 9 header(s)
+### 13. `no-viable-conversion-9c3803c5` — G2 recheck of 9 header(s)
 
-- cause: a value is passed where its declared type cannot receive it
+- cause: the generic `flight::render::noop_renderer_data(Ref<RenderState>, NodeAny)` is stored in `Scene2DRenderer.create_data`, whose `std::function` passes a flattened `Node2D` that does not widen to `NodeAny`. TypeScript accepts it because a `Node2D` is a `Node`.
+- subject: `noop_renderer_data`
 - lanes: 2D, WGPU
 - fix route: compiler
+- why this route: the carriers need the same-owner `Node2D` to `NodeAny` widening of [interface-heritage-widening](compiler-requests/interface-heritage-widening.md). This is the `Node2D` form of its existing `Sprite` create-data sections. An adapter that rebuilds the node, a function-pointer cast or a narrowed domain would not preserve the owner.
 - first failure at: `flight/scene2d_canvas/canvas_node_2d.hpp:62`
 - example: `no viable conversion from 'optional<Ref<RendererData>> (Ref<RenderState>, NodeAny)' ') to 'function<optional<Ref<RendererData>> (Ref<RenderState>, Node2D)>' >')`
+- Scoped native recheck (GCC 15.2, jobs 1): **3 attempted / 0 pass / 3 fail** at the three roots, `canvas_node_2d.hpp:62`, `dom_node_2d.hpp:53` and `wgpu_node_2d.hpp:120`, which carry measured locations. The six other Canvas rows reach `canvas_node_2d.hpp` through their includes. They were not recompiled, keep their recorded failure, and are given no location. Nothing is carried.
+- compiler request: `docs/compiler-requests/interface-heritage-widening.md`
 
 ### 14. `no-viable-conversion-dfea2d92` — 9 header(s)
 
