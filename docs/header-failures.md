@@ -99,7 +99,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 70 | `other-b860ec87` | 3 | 2D, GL | compiler | the emitted code returns a readonly structural row as its declared nominal owner and drops the recovery; fix attempted and withdrawn |
 | 71 | `other-f9c5bc10` | 3 | 2D | compiler | an `as` assertion over a `flight::JsonValue` is lowered with the erased-value `object_if` pattern, which a tagged JSON value ca... *(request filed)* |
 | 72 | `redefinition-c11d96e9` | 3 | TEXT | runtime (fixed) | the bitmap_font_record override's `#pragma once` was commented out; G2 recheck: 0 pass, 3 fail at `bitmap_font_fnt.hpp:187` |
-| 73 | `undeclared-identifier-145c75d7` | 3 | TEXT | runtime | the emitted code names `initialize_glyph_source_from_glyph_atlas`, which nothing declares |
+| 73 | `undeclared-identifier-145c75d7` | 3 | TEXT | declaration repair (applied) | refused glyph-atlas initializer declared; G2: 3 pass; factory remains unlinkable |
 | 74 | `undeclared-identifier-2cdb69a6` | 3 | PLAT | runtime + override (fixed) | the emitted code names `channel_elements`, which nothing declares; G2: 3 pass |
 | 75 | `undeclared-identifier-564c29cc` | 3 | TEXT | runtime + repair (fixed) | the emitted code names `format_date_value`, which nothing declares; G2: 1 pass, 2 to `undeclared-identifier-1a056bbc` |
 | 76 | `undeclared-identifier-6a187568` | 3 | 3D | declaration repair (applied) | refused ASCII STL counter declared; G2: 3 pass; counter remains unlinkable |
@@ -1514,14 +1514,30 @@ its own. All three now fail at the next diagnostic:
 | --- | --- | --- | --- |
 | `missing-member-dae8c839` | 3 | `flight/bitmapfont_formats/bitmap_font_fnt.hpp:187` | `.width` read on an image-source `std::variant` |
 
-### 73. `undeclared-identifier-145c75d7` — 3 header(s)
+### 73. `undeclared-identifier-145c75d7` — 3 G1 header(s), declaration repaired
 
-- cause: the emitted code names `initialize_glyph_source_from_glyph_atlas`, which nothing declares
-- subject: `initialize_glyph_source_from_glyph_atlas`
-- lanes: TEXT
-- fix route: runtime
-- first failure at: `flight/glyphatlas/glyph_source.hpp:78`
-- example: `use of undeclared identifier 'initialize_glyph_source_from_glyph_atlas'`
+The existing guarded `declare-refused-function` repair now declares
+`initialize_glyph_source_from_glyph_atlas` with exactly the retained factory's emitted carriers:
+`EntityConstruction<Ref<GlyphSource>>` and `StructuralRef<RowReadonly<RowOf<Ref<GlyphAtlas>>>>`.
+The exact refusal marker, same-header direct call and absent definition agree; `retainedReference`
+and `calledFrom` are unnecessary. Exact-pin single-module generation reproduced only this declaration
+and its repair manifest record, with both pinned checkouts restored clean.
+
+The initializer body remains refused at `Bitmap -> TextureSource | null` owner widening, covered by
+[the existing heritage-owner request](compiler-requests/compiler-interface-heritage-owner-widening.md#g2-glyph-atlas-declaration-boundary).
+The [retained-callee request](compiler-requests/retained-declaration-calls-omitted-callee.md) covers the
+missing declaration. The atlas's real bitmap, rasterize-on-miss entries, kerning, shared metrics and
+layout revision remain source requirements. No copied texture owner, fake glyph, narrowed source,
+initializer body or replacement implementation was supplied; this partial module is still unusable
+through the factory or initializer.
+
+Actual checks with Clang 22.1.8: **3 attempted / 3 pass / 0 fail / 0 unattempted**, one worker,
+covering only `glyphatlas/_internal_index.hpp`, `glyphatlas/contract.hpp` and `glyphatlas/glyph_source.hpp`.
+An unused program including all three headers compiled, linked and ran. Calling the actual retained
+factory compiled to an object, then failed to link only on the declared refused initializer.
+Six existing repair witness/load/body checks passed. The three product rows now pass with
+`previousCluster` and the existing request links; the old name-error cluster is removed. Historical
+G1 totals, foreign rows/clusters and unrelated report sections remain unchanged. No global sweep.
 
 ### 74. `undeclared-identifier-2cdb69a6` — 3 G1 header(s), 3 now compile
 

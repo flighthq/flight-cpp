@@ -178,3 +178,34 @@ Flight `a627849` and flight-compiler `2b687ea`, the module refuses with concrete
 Annotating the local or splitting the branch does not create an owner-preserving C++ relationship.
 Copying the common fields into a new `TextureSource` would discard the exact resource identity returned
 by the decoder or fetch callback. The resolver therefore remains an explicit refusal under this request.
+
+## G2 glyph atlas declaration boundary
+
+The original three headers in `undeclared-identifier-145c75d7` at compiler `806d257` / Flight
+`a627849` failed because `create_glyph_source_from_glyph_atlas` calls the refused initializer without
+a declaration. The existing `declare-refused-function` mechanism now adds only:
+
+```cpp
+void initialize_glyph_source_from_glyph_atlas(
+    flight::types::EntityConstruction<flight::Ref<flight::types::GlyphSource>> out,
+    flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlyphAtlas>>>> atlas);
+```
+
+The retained call supplies these exact construction-row and readonly-owner carriers. Its live
+same-header call, exact `initializeGlyphSourceFromGlyphAtlas` refusal marker and absent body satisfy
+the repair guards, so neither a callback `retainedReference` nor cross-module `calledFrom` is needed.
+Normal single-module generation with the pinned inputs reproduced only that declaration and its
+repair manifest record; no generated body was edited by hand.
+
+The underlying refusal above remains: page zero must return the atlas's exact bitmap owner through
+`TextureSource | null`; other pages return null. The bound methods must retain the same atlas for
+rasterize-on-miss glyph entries, kerning, shared metrics and placement revision. Copying common
+texture fields, replacing the owner, narrowing the public GlyphSource slot or inventing glyph data
+would not implement that contract. No such behavior was supplied.
+
+Scoped Clang 22.1.8 verification at one worker: three selected headers compile, an unused program
+including all three links and runs, and a call through the actual retained factory compiles to an
+object but fails to link only on `flight::glyphatlas::initialize_glyph_source_from_glyph_atlas`.
+This clears the declaration error and keeps the missing body visible. It does not close this
+owner-widening request or make the partial initializer/factory usable. See also
+[retained callers of omitted callees](retained-declaration-calls-omitted-callee.md).
