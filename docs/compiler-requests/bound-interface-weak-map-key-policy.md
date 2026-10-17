@@ -52,6 +52,8 @@ This adds no new runtime surface: the map, the policy and the key type are alrea
 - `@flighthq/effects-gl` `glEffectBlitShader.ts:46-48`: `blitOffsetShaders`, `blitShaders`, `eraseShaders`.
   Supplied meanwhile by the partial override `effects-gl-blit-shader-context-caches`; G2 cluster
   `undeclared-identifier-3e3cccce` (8 headers).
+- `@flighthq/scene2d-gl` `glClipContours.ts:122`: `clipPrograms`. Supplied meanwhile by the partial override
+  `scene2d-gl-clip-contours-context-cache`; G2 cluster `undeclared-identifier-644a9b33` (2 headers).
 - The other `GlContext`-keyed refusals counted in `docs/generation-state.md` (16 at the time of that count).
 
 ## Emission defects in the same module

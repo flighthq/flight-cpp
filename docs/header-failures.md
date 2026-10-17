@@ -117,7 +117,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 88 | `undeclared-identifier-20fa691d` | 2 | 2D | compiler | refused raster draw referenced by retained renderer; exact declaration fails native/generic callback carrier conversion *(existing requests)* |
 | 89 | `undeclared-identifier-225478b5` | 2 | 2D | compiler | refused bitmap-text submit callback lacks a declaration; exact declaration still exposes incompatible renderer callback carriers *(existing requests)* |
 | 90 | `undeclared-identifier-3e98002c` | 2 | 3D | runtime | the emitted code names `initialize_awd2_parse_state`, which nothing declares |
-| 91 | `undeclared-identifier-644a9b33` | 2 | 2D | runtime | the emitted code names `clip_programs`, which nothing declares |
+| 91 | `undeclared-identifier-644a9b33` | 2 | 2D | runtime (partial override) | the emitted code names `clip_programs`, which nothing declares *(G2: 1 pass, 1 to `undeclared-identifier-befaa2d6`)* |
 | 92 | `undeclared-identifier-7ce7bd18` | 2 | 3D | runtime | the emitted code names `md2_skin_handler`, which nothing declares |
 | 93 | `undeclared-identifier-86212434` | 2 | GL | runtime | the emitted code names `gl_ssao_effect_runner`, which nothing declares |
 | 94 | `other-8b0f8597` | 2 | 3D | [compiler request](compiler-requests/host-initialize-optional-fallback-on-a-required-read.md) | skin builder emits after a source patch; SequenceView index nullish fallback still fails (G2: 0/2 pass) |
@@ -233,7 +233,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 204 | `undeclared-identifier-ae594b8a` | 1 | 2D | runtime | the emitted code names `append_lottie_shape_items`, which nothing declares |
 | 205 | `undeclared-identifier-af7a1054` | 1 | GL | runtime | the emitted code names `gl_median_effect_runner`, which nothing declares |
 | 206 | `undeclared-identifier-b15d9d15` | 1 | ANIM | runtime | the emitted code names `parse_dragon_bones_bones`, which nothing declares |
-| 207 | `undeclared-identifier-befaa2d6` | 1 | 2D | runtime | the emitted code names `compute_scissor_rect`, which nothing declares |
+| 207 | `undeclared-identifier-befaa2d6` | 2 | 2D | runtime | the emitted code names `compute_scissor_rect`, which nothing declares |
 | 208 | `undeclared-identifier-c162d0c0` | 1 | ANIM | runtime | the emitted code names `solve_skeleton_2d_transform_constraint`, which nothing declares |
 | 209 | `undeclared-identifier-c29489a5` | 1 | GL | runtime | the emitted code names `gl_bloom_effect_runner`, which nothing declares |
 | 210 | `undeclared-identifier-c3c55c65` | 1 | GL | runtime | the emitted code names `gl_composite_effect_runner`, which nothing declares |
@@ -1967,6 +1967,33 @@ and foreign products are retained. No generation or global/native baseline rerun
 - fix route: runtime
 - first failure at: `flight/scene2d_gl/gl_clip_contours.hpp:72`
 - example: `use of undeclared identifier 'clip_programs'`
+- G2 fix: partial override `scene2d-gl-clip-contours-context-cache`; the binding gap is filed as
+  [a bound Flight interface never reaches its weak-key policy](compiler-requests/bound-interface-weak-map-key-policy.md)
+
+`glClipContours.ts:122` declares `const clipPrograms = new WeakMap<GlContext, ClipProgram>()`. The emitter
+refuses it (`cpp-weak-map-key-representation-unproven`) for the same reason as effects-gl's blit caches:
+`GlContext` is a Flight interface, so the `WebGl2ContextWeakPolicy` the binding declares is never read.
+The emitted `ensure_clip_program` and `clip_program_for` still use it. This module refuses nothing else.
+
+The override copies the emission and declares the source's own map as a module-scope
+`flight::WeakMap<GlContext, Ref<ClipProgram>, WebGl2ContextWeakPolicy>`: one map for the program's
+lifetime, keyed by context identity, holding the context weakly. The cached program and buffer handles
+hold their surface only weakly, so no value keeps its key alive. No cache, program or shader is invented.
+
+With the map in place, three host-binding spellings in the same bodies surfaced. The override corrects
+each one in place, without changing behaviour:
+- `drawingBufferWidth`/`Height` are read through the host accessors, as the render-gl drawing-buffer
+  repairs already do;
+- the source's three-argument `uniformMatrix3fv` with a plain array is called without the two absent
+  optional offsets the emitter appended;
+- `gl.CULL_FACE` becomes the host's `cull_face_constant`, because `cull_face` is the method.
+
+The live GL behaviour is compiled but not executed here, since this machine has no SDL/GL.
+
+**G2: 1/2 compile, 1 fail** (`-j1`, Clang 22.1.8). Passing: `flight/scene2d_gl/gl_clip_contours.hpp`.
+`flight/scene2d_gl/gl_clip.hpp` moves to `undeclared-identifier-befaa2d6`: its first failure is the
+included `gl_clip_rectangle.hpp:108` (`compute_scissor_rect`). Behind that are its own `std::function`
+registration conversions at `gl_clip.hpp:38-49`.
 
 ### 92. `undeclared-identifier-7ce7bd18` — 2 header(s)
 
@@ -2989,7 +3016,7 @@ became this one. They add no new cause and no new decision.
 - first failure at: `flight/skeleton2d_formats/dragon_bones_bones_handler.hpp:141`
 - example: `use of undeclared identifier 'parse_dragon_bones_bones'`
 
-### 207. `undeclared-identifier-befaa2d6` — 1 header(s)
+### 207. `undeclared-identifier-befaa2d6` — 2 header(s) (1 at G1; `gl_clip.hpp` joined in G2 from cluster 91)
 
 - cause: the emitted code names `compute_scissor_rect`, which nothing declares
 - subject: `compute_scissor_rect`

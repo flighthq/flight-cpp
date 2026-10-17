@@ -2804,6 +2804,21 @@
       "authoredOn": "2026-10-17"
     },
     {
+      "id": "scene2d-gl-clip-contours-context-cache",
+      "path": "flight/scene2d_gl/gl_clip_contours.hpp",
+      "package": "@flighthq/scene2d-gl",
+      "status": "partial",
+      "derivedFrom": "49ddfa2397121d593d61e5f83081c7442d5339b64926735501de5f6a2772c800",
+      "reason": "The emitter refuses glClipContours.ts's module-scope `clipPrograms = new WeakMap<GlContext, ClipProgram>()` (cpp-weak-map-key-representation-unproven): GlContext is a Flight interface, and the external weak-key policy is read only for ambient key names. Yet the emitted ensure_clip_program and clip_program_for use it, so gl_clip_contours and gl_clip fail on an undeclared clip_programs.",
+      "change": "Copies the a627849 emission and adds the map, a module-scope flight::WeakMap<GlContext, Ref<ClipProgram>, WebGl2ContextWeakPolicy>, at the refused declaration's marker, with the weak_map include. It also corrects three host-binding spellings in the emitted bodies: drawingBufferWidth/Height are read through the host accessors; the plain-array uniformMatrix3fv is called without the two absent optional offsets the emitter appended; and gl.CULL_FACE becomes cull_face_constant. Nothing else changes.",
+      "equivalence": "It is the source's own map: one per program lifetime, keyed by the context's identity (two copies of one context are one key), holding the context weakly. The cached program and buffer handles hold their surface only weakly, so no value keeps its key alive, and an expired entry is purged before the next lookup. ensure_clip_program compiles once per context and later calls return early; clip_program_for returns the identical cached object, in the source's order. No program, shader or buffer is created beyond what the source creates. Each spelling correction reads or passes the same value the source does (int-to-Number is exact for pixel dimensions; the matrix call passes the same nine numbers with no offset).",
+      "whyNotAPatchOrRepair": "An emission repair may not add storage. A source patch re-spelling the key as WebGL2RenderingContext would work around the same compiler gap the bound-interface request names; the override keeps the source untouched and expires with that request.",
+      "unblocks": "flight/scene2d_gl/gl_clip_contours.hpp (now compiles) and flight/scene2d_gl/gl_clip.hpp past `clip_programs`.",
+      "remaining": "Nothing in this module is NOT GENERATED beyond the map. The map's live GL behaviour (miss compiles, hit returns the cached program) is not executed here: there is no SDL/GL on this machine.",
+      "expires": "when the compiler reads the weak-key policy through a bound Flight interface (docs/compiler-requests/bound-interface-weak-map-key-policy.md).",
+      "authoredOn": "2026-10-17"
+    },
+    {
       "id": "native-e2e-render_gl-gl_texture_resolver",
       "path": "flight/render_gl/gl_texture_resolver.hpp",
       "package": "@flighthq/render-gl",
