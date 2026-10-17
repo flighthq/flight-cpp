@@ -122,3 +122,21 @@ scene3d migration does not rediscover it.
 None. A copy-in/copy-out shim or an override converting through a temporary `AabbLike` would change
 identity: the caller's `min`/`max` vectors would not be the ones written. A source patch retyping
 `createAabb` or the writers would change the public API.
+
+## G2 instanced-mesh bounds after the color-write fix
+
+At compiler `806d257` / Flight `a627849`, `scene3d/instanced_mesh.hpp` reaches this previously
+masked boundary after its [optional color-write fix](initialized-optional-typed-array-write.md).
+The serial changed-header check is **0/1 pass, 1 fail, 0 unattempted**. Its first diagnostic is
+`no viable conversion from 'Ref<flight::types::Aabb>' to 'Ref<flight::types::AabbLike>'` at line353:
+`transform_aabb_by_matrix4` receives the original `scratch_instance_bounds` as its writable out.
+Line363 also passes the original `out` Aabb owner to `union_aabb`; the readonly input projections
+already retain their source owners. Both failures occur while compiling the real header, before any
+instance-color test can link or execute.
+
+The source `Aabb` is an Entity with `min/max: Vector3`; `AabbLike` is the compatible structural
+`min/max: Vector3Like` type alias, not a declared C++ base class. Preserve the same output object and
+nested vector owners as each transformed instance is unioned. No copy-in/out adapter, native pointer
+cast, source retyping, fake bounds or material/instance result is supplied. The failed actual native
+color-test build is not a behavior pass; its temporary registration was withdrawn. The source-only
+color correction is carried independently, and the production row remains failed under this request.

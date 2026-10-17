@@ -1,0 +1,8 @@
+diff --git a/packages/scene3d/src/instancedMesh.ts b/packages/scene3d/src/instancedMesh.ts
+--- a/packages/scene3d/src/instancedMesh.ts
++++ b/packages/scene3d/src/instancedMesh.ts
+@@ -256,3 +256,3 @@
+   }
+-  target.instanceColors[index] = color;
++  target.instanceColors![index] = color;
+   invalidateInstancedMesh(target);

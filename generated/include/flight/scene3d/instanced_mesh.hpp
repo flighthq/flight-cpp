@@ -230,7 +230,7 @@ inline void set_instanced_mesh_instance_color(flight::Ref<flight::types::Instanc
     colors.fill(4294967295.0);
     (target->instance_colors = std::optional<flight::Uint32Array>{colors});
   }
-  (target->instance_colors.element(index) = color);
+  ([&]() { auto&& typed_array_2 = target->instance_colors.value(); const auto typed_index_2 = index; const auto typed_value_2 = color; return typed_array_2.set_index(typed_index_2, typed_value_2); }());
   invalidate_instanced_mesh(target);
 }
 
@@ -276,7 +276,7 @@ inline void set_instanced_mesh_instance_matrix_range(flight::Ref<flight::types::
         {
           double k = 0.0;
           while ((k < 16.0)) {
-            ([&]() { auto&& typed_array_2 = matrix; const auto typed_index_2 = k; const auto typed_value_2 = source.get_index((offset + k)); return typed_array_2.set_index(typed_index_2, typed_value_2); }());
+            ([&]() { auto&& typed_array_3 = matrix; const auto typed_index_3 = k; const auto typed_value_3 = source.get_index((offset + k)); return typed_array_3.set_index(typed_index_3, typed_value_3); }());
             (k += 1.0);
           }
         }

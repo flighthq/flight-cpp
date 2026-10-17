@@ -141,7 +141,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 112 | `missing-member-1a2e58cb` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`register_dom_texture_resolver`) |
 | 113 | `missing-member-1ce5ed2e` | 1 | 3D | runtime | the emitted code reads a member the target does not declare (`physics_3d_cone_twist_joint_solver`) |
 | 114 | `missing-member-42783657` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`font`) |
-| 115 | `missing-member-5ac43ed0` | 1 | 3D | runtime | the emitted code reads a member the target does not declare (`element`) |
+| 115 | `missing-member-5ac43ed0` | 1 | 3D | source fix; compiler bounds debt | optional color write emits checked TypedArray assignment; G2: 0/1 now writable Aabb output-owner failure |
 | 116 | `missing-member-703ef98e` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`lottie_additive_mask_handler`) |
 | 117 | `missing-member-8aa8170f` | 1 | ANIM | compiler *(existing request)* | the refused `swfVideoHandler` binding is still named by `swfVideoTagFamily`; its placement callable needs a signature adapter |
 | 118 | `missing-member-ad3558ee` | 1 | ANIM | runtime | the emitted code reads a member the target does not declare (`physics_2d_distance_joint_solver`) |
@@ -2266,12 +2266,28 @@ shaded rendering while the guard has no body; no global/native baseline was reru
 
 ### 115. `missing-member-5ac43ed0` — 1 header(s)
 
-- cause: the emitted code reads a member the target does not declare (`element`)
-- subject: `element`
+- original cause: indexed write calls `element` on optional Uint32Array storage
 - lanes: 3D
-- fix route: runtime
-- first failure at: `flight/scene3d/instanced_mesh.hpp:233`
-- example: `no member named 'element' in 'optional<TypedArray<unsigned int>>'; did you mean to use '->' instead of '.'?`
+- fix route: [erased source assertion](compiler-requests/initialized-optional-typed-array-write.md), then [existing writable output-owner request](compiler-requests/writable-structural-out-of-a-wider-owner.md#g2-instanced-mesh-bounds-after-the-color-write-fix)
+- original first failure at: `flight/scene3d/instanced_mesh.hpp:233`
+- original example: `no member named 'element' in 'optional<TypedArray<unsigned int>>'`
+
+`scene3d-instanced-color-present-write` adds only `!` to the final indexed color write. Whole original
+and patched module JavaScript is byte-identical. Normal exact-pin single-module generation reproduces
+payload unwrapping and `set_index`, preserving typed-array conversion and invalid-property behavior;
+the only other emitted diff renumbers a later temporary. No runtime API, owner/material copy,
+permissive Any or restricted numeric domain is added.
+
+The original one-header check completes at one worker: **0/1 pass, 1 fail, 0 unattempted**. The color
+error clears, but `compute_instanced_mesh_local_bounds_aabb` now fails at line353 passing its scratch
+Aabb to `transform_aabb_by_matrix4`'s nominal writable AabbLike slot. Line363 has the same issue at
+`union_aabb`. The row moves to `no-viable-conversion-84892a1c` with its previous cluster retained;
+the original cause has no remaining owned rows. Historical/G1 totals and unowned rows stay unchanged.
+
+The actual real-factory/color-setter native test failed to build at these two bounds calls, so no
+native test ran. Its scratch source/logs remain available; no unbuildable test/registration is carried.
+The source-identity and generation checks pass, with no header gain or native color/instance/material
+behavior pass claimed. The bounds owner contract remains open; no body, cast or copy adapter hides it.
 
 ### 116. `missing-member-703ef98e` — 1 header(s)
 

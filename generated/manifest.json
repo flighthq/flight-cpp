@@ -5111,6 +5111,13 @@
       "id": "scene3d-formats-gltf-skin-matrix-loop",
       "module": "packages/scene3d-formats/src/gltfSkins.ts",
       "package": "@flighthq/scene3d-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "3a84ea96e8bc853ec7cbab7e14897b1b8276bde0357265f29d5ffbf440a68b8f",
+      "id": "scene3d-instanced-color-present-write",
+      "module": "packages/scene3d/src/instancedMesh.ts setInstancedMeshInstanceColor",
+      "package": "@flighthq/scene3d"
     }
   ],
   "duplicateStructuralStructAliases": {

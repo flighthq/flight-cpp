@@ -4149,6 +4149,23 @@
       "unblocks": "Removes the static-from refusal and emits the real buildGltfSkins body through canonical fresh matrix/diagnostic allocations. Native compilation remains blocked on SequenceView index-miss storage; both worklist rows stay failed.",
       "expires": "when the compiler lowers typed-array static from with a length-only array-like and mapper, or Flight adopts the explicit fixed16 loop.",
       "appliedOn": "2026-10-17"
+    },
+    {
+      "id": "scene3d-instanced-color-present-write",
+      "dependency": "flight",
+      "patch": "scene3d-instanced-color-present-write.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/scene3d/src/instancedMesh.ts setInstancedMeshInstanceColor",
+      "package": "@flighthq/scene3d",
+      "answers": "diagnostic",
+      "refusal": "The emitter writes element(index) directly on optional<Uint32Array> after the null branch initializes the same member.",
+      "rewrite": "Adds an erased non-null assertion at the final indexed write, preserving the original property accesses and evaluation order.",
+      "equivalence": "The non-null assertion emits no JavaScript. Entire original and patched module transpilation must be byte-identical, so guards, allocation/fill, getter/setter order, owner identities, Uint32 assignment, index/color domain and version invalidation remain unchanged.",
+      "verification": "Whole original/patched module emits byte-identical JavaScript. Exact-pin normal one-module generation reproduces optional.value plus checked set_index and later temporary renumber only. Changed1 header jobs1 is0/1 at existing Aabb-to-AabbLike writable-out353. Real color executable failed to build at353/363 and was NOT RUN; no native behavior pass. Exact generated/provenance and foreign metadata validated.",
+      "whyNotUpstreamFirst": "The pinned source is correct and already proves presence by initialization; this type-only expression supplies missing emitter lvalue presence evidence without substituting runtime behavior.",
+      "unblocks": "Only the optional Uint32Array element write in the instanced mesh color setter; no material or other instance operation is replaced.",
+      "expires": "when optional member indexed lvalues retain the post-initialization or explicit non-null presence proof upstream.",
+      "appliedOn": "2026-10-17"
     }
   ]
 }

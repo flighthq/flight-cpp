@@ -178,6 +178,9 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 - [The result of `??=` is present](nullish-assignment-result-presence.md) — a local bound from
   `slot ??= value` keeps the slot's optional carrier, so the first member read refuses for lack of a presence
   proof. Carried per site in scene2d-canvas; uncarried in `glScene3DRuntime.ts` `addGlScene3DResourceCleanup`.
+- [An initialized optional typed-array member needs a present indexed write](initialized-optional-typed-array-write.md) —
+  instanced-mesh color writes lose presence and typed-array semantics; an erased assertion emits the
+  checked write while existing writable bounds-owner calls keep the header failed.
 - [Quadbatch needs one retained owner across specialized construction boundaries](quadbatch-owner-and-contextual-construction.md) —
   flattened Node2D/runtime/signal owners and contextual factories omit ten declarations; the native
   adapter preserves batch, runtime, buffer-view, atlas, material and signal identities explicitly.
