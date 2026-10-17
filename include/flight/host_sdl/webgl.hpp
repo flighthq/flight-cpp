@@ -155,6 +155,7 @@ class FLIGHT_HOST_SDL_GL_API GlParameterValue final {
   [[nodiscard]] explicit operator std::variant<SequenceView<bool>, Null, Undefined>() const;
   [[nodiscard]] explicit operator std::optional<WebGlFramebuffer>() const;
   [[nodiscard]] explicit operator std::optional<WebGlProgram>() const;
+  [[nodiscard]] explicit operator std::optional<WebGlRenderbuffer>() const;
   [[nodiscard]] explicit operator std::optional<WebGlTexture>() const;
   [[nodiscard]] explicit operator std::optional<WebGlVertexArrayObject>() const;
 
@@ -175,6 +176,7 @@ class FLIGHT_HOST_SDL_GL_API GlParameterValue final {
       Array<bool>,
       std::optional<WebGlFramebuffer>,
       std::optional<WebGlProgram>,
+      std::optional<WebGlRenderbuffer>,
       std::optional<WebGlTexture>,
       std::optional<WebGlVertexArrayObject>>;
 
@@ -357,6 +359,7 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
   static constexpr std::uint32_t points = 0;
   static constexpr std::uint32_t read_framebuffer = 36008;
   static constexpr std::uint32_t renderbuffer = 36161;
+  static constexpr std::uint32_t renderbuffer_binding = 36007;
   static constexpr std::uint32_t repeat = 10497;
   static constexpr std::uint32_t rgba = 6408;
   static constexpr std::uint32_t rgba16_f = 34842;
@@ -395,6 +398,7 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
   static constexpr std::uint32_t texture_2_d_array = 35866;
   static constexpr std::uint32_t texture_3_d = 32879;
   static constexpr std::uint32_t texture_binding_2_d = 32873;
+  static constexpr std::uint32_t texture_binding_cube_map = 34068;
   static constexpr std::uint32_t texture_cube_map = 34067;
   static constexpr std::uint32_t texture_cube_map_positive_x = 34069;
   static constexpr std::uint32_t texture_mag_filter = 10240;

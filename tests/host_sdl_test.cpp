@@ -450,6 +450,13 @@ int main() {
   expect(anisotropy.max_texture_max_anisotropy_ext == 0x84FF,
          "GL anisotropy maximum query changed");
   static_assert(flight::host_sdl::WebGl2Context::max_texture_size == 3379);
+  // Binding queries answered through get_parameter as the bound handle (or null), as WebGL does:
+  // GL_RENDERBUFFER_BINDING and GL_TEXTURE_BINDING_CUBE_MAP.
+  static_assert(flight::host_sdl::WebGl2Context::renderbuffer_binding == 0x8CA7);
+  static_assert(flight::host_sdl::WebGl2Context::texture_binding_cube_map == 0x8514);
+  static_assert(requires(const flight::host_sdl::GlParameterValue& value) {
+                  static_cast<std::optional<flight::host_sdl::WebGlRenderbuffer>>(value);
+                }, "a renderbuffer binding query must convert to the nullable handle WebGL returns");
 
   const flight::host_sdl::GlCanvas no_gl_canvas;
   auto same_no_gl_canvas = no_gl_canvas;

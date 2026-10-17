@@ -107,7 +107,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 78 | `call-has-no-matching-84410867` | 2 | 3D | compiler | the emitted call to `buffer_data` matches no declared overload |
 | 79 | `call-has-no-matching-d42144f0` | 2 | ANIM | compiler | the emitted call to `push` matches no declared overload |
 | 80 | `missing-member-da12a523` | 2 | 3D | runtime | the emitted code reads a member the target does not declare (`parse_obj_material_library`) |
-| 81 | `missing-member-dd9b4baa` | 2 | 3D, GL | runtime | the emitted code reads a member the target does not declare (`renderbuffer_binding`) |
+| 81 | `missing-member-dd9b4baa` | 2 | 3D, GL | runtime | the emitted code reads a member the target does not declare (`renderbuffer_binding`) *(G2: binding added; 0 pass, 2 to `no-matching-conversion-bc278253`)* |
 | 82 | `no-viable-conversion-303c42f1` | 2 | ANIM | compiler | a value is passed where its declared type cannot receive it |
 | 83 | `other-67dc02c6` | 2 | 2D | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 84 | `other-6f513db2` | 2 | 2D, 3D | runtime | uncategorised: the first diagnostic does not name a single cause |
@@ -1243,6 +1243,43 @@ callers, so the follow-on is the same omission class rather than a new defect.
 - fix route: runtime
 - first failure at: `flight/render_gl/gl_cube_render_target.hpp:96`
 - example: `no member named 'renderbuffer_binding' in 'host_sdl::WebGl2Context'`
+
+`createGlCubeRenderTarget` saves the bindings it will restore:
+
+```ts
+gl.getParameter(gl.RENDERBUFFER_BINDING) as WebGLRenderbuffer | null
+gl.getParameter(gl.TEXTURE_BINDING_CUBE_MAP) as WebGLTexture | null
+```
+
+The host `WebGl2Context` declared neither query. The emitted cast already names the right nullable
+handles, so the gap is the host binding, not the emitter. G2 adds both queries to
+`include/flight/host_sdl/webgl.hpp` and `src/host_sdl/webgl.cpp`:
+- `renderbuffer_binding` (`GL_RENDERBUFFER_BINDING`, 0x8CA7) and `texture_binding_cube_map`
+  (`GL_TEXTURE_BINDING_CUBE_MAP`, 0x8514);
+- a `std::optional<WebGlRenderbuffer>` alternative and conversion on `GlParameterValue`;
+- `get_parameter` branches that resolve the bound name to the handle state this context issued for it,
+  exactly as `FRAMEBUFFER_BINDING` and `TEXTURE_BINDING_2D` already do.
+
+So the query returns the same object the source bound (`0` is `null`), and a name the context never
+issued raises the existing `native GL returned an object outside this WebGL context` error rather than a
+manufactured handle. `tests/host_sdl_test.cpp` pins both enum values and the nullable-handle conversion
+at compile time.
+
+No live GL context exists on this machine and the SDL host library is not built here, so the query has
+not been executed. `src/host_sdl/webgl.cpp` (with SDL's built-in GL definitions) and the host test
+were syntax-checked only.
+
+**G2: 0/2 compile, 2 fail** (`-j1`, Clang 22.1.8, compiler `806d257` / Flight `a627849`). Both headers
+pass `renderbuffer_binding` and now fail first in the same function, `read_gl_cube_face_box`
+(`gl_cube_render_target.hpp:140-142`). Both rows move to `no-matching-conversion-bc278253`, which covers
+two further host binding shapes:
+- `gl.getParameter(parameter) as ArrayLike<number> | null` is cast to
+  `std::optional<SequenceView<double>>`, while `GlParameterValue` converts only to
+  `std::variant<SequenceView<double>, Null, Undefined>`;
+- `gl.drawingBufferWidth`/`Height` are read as properties of what the host declares as member functions.
+
+`gl_environment_capture.hpp` has later, unrelated scene3d-gl failures behind those (`TextureCube`,
+`begin_gl_cube_render_face`, `add_gl_scene_3d_resource_cleanup`).
 
 ### 82. `no-viable-conversion-303c42f1` — 2 header(s)
 

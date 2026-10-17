@@ -414,6 +414,12 @@ GlParameterValue::operator std::optional<WebGlProgram>() const {
   return *value;
 }
 
+GlParameterValue::operator std::optional<WebGlRenderbuffer>() const {
+  const auto* value = std::get_if<std::optional<WebGlRenderbuffer>>(&value_);
+  if (!value) throw std::logic_error("WebGL parameter is not a renderbuffer");
+  return *value;
+}
+
 GlParameterValue::operator std::optional<WebGlTexture>() const {
   const auto* value = std::get_if<std::optional<WebGlTexture>>(&value_);
   if (!value) throw std::logic_error("WebGL parameter is not a texture");
@@ -1110,7 +1116,16 @@ GlParameterValue WebGl2Context::get_parameter(std::uint32_t parameter) const {
             : std::optional<WebGlProgram>(WebGlProgram(
                   find_object_state(detail::WebGlObjectKind::program, name))));
   }
-  if (parameter == texture_binding_2_d) {
+  // The bound name resolves to the handle state this context already issued for it, so the query
+  // returns the same WebGLRenderbuffer object `bindRenderbuffer` was given, and 0 is null.
+  if (parameter == renderbuffer_binding) {
+    return GlParameterValue(
+        name == 0
+            ? std::optional<WebGlRenderbuffer>{}
+            : std::optional<WebGlRenderbuffer>(WebGlRenderbuffer(
+                  find_object_state(detail::WebGlObjectKind::renderbuffer, name))));
+  }
+  if (parameter == texture_binding_2_d || parameter == texture_binding_cube_map) {
     return GlParameterValue(
         name == 0
             ? std::optional<WebGlTexture>{}
