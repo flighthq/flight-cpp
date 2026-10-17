@@ -153,7 +153,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 124 | `missing-member-fd2be1bc` | 1 | TEXT | compiler *(existing request)* | an `as { chars?, common? }` assertion over a parsed `JsonValue` is lowered with the erased-`Any` `object_if` recovery |
 | 125 | `no-viable-conversion-03bf8175` | 1 | 2D | repair (applied) | `data?.element ?? null` partial-row absence projected by declared repair; G2: 0 pass, 1 moved to `undeclared-identifier-993e82f1` |
 | 126 | `no-viable-conversion-0faa55ca` | 1 | GL | compiler | a value is passed where its declared type cannot receive it |
-| 127 | `no-viable-conversion-2909a65f` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
+| 127 | `no-viable-conversion-2909a65f` | 1 | 2D | patch (fixed) | four `merged.X ?? []` Map-spread fallbacks respelled `new Map<Kind, V>()`; G2 recheck: 1 pass |
 | 128 | `no-viable-conversion-31b754c5` | 1 | ANIM | compiler | G2: recorded 0/1 retained; Spine particle object guard leaves Any unprojected at Record return; existing JSON-read request/no rerun |
 | 129 | `no-viable-conversion-331a999f` | 1 | GL | runtime (applied) | a `Float32Array \| Uint8Array` output passed to `readPixels`'s `ArrayBufferView` *(G2: 1/1 pass)* |
 | 130 | `no-viable-conversion-4bbb9be5` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it *(builder4/E0a)* |
@@ -3000,13 +3000,13 @@ failed, with foreign rows/clusters and historical G1 totals unchanged.
 - first failure at: `flight/render/explain_scene_2d_pipeline_coverage.hpp:60`
 - example: `no viable conversion from 'Map<[...], Ref<NodeRenderer>>' to 'Map<[...], Any>'`
 
-### 127. `no-viable-conversion-2909a65f` — 1 header(s)
+### 127. `no-viable-conversion-2909a65f` — G2 recheck of 1 header
 
-- cause: a value is passed where its declared type cannot receive it
-- lanes: 2D
-- fix route: compiler
-- first failure at: `flight/scene2d_dom/merge_dom_render_options.hpp:65`
-- example: `no viable conversion from returned value of type 'Array<tuple<String, Ref<CanvasShapeCommand<ShapeCommandKey>>>>' to function return type 'Map<String, Ref<CanvasShapeCommand<ShapeCommandKey>>>'`
+- cause: `mergeDomRenderOptions` spreads `merged.X ?? []` into `new Map([...])` for four `ReadonlyMap<Kind, V>` fields (`canvasShapeCommands`, `effectPaddingResolvers`, `nodeRenderers`, `textureResolvers`). The emitter types each coalesce as the Map carrier but builds the empty `[]` arm as `Array<tuple<String, V>>`, at `:65`, `:68`, `:74` and `:92`.
+- fix: source patch `scene2d-dom-merge-options-empty-map-fallback` (`baseCommit a627849`). It respells each fallback as `new Map<Kind, V>()` of the field's declared types, with a type-only import. Each fallback is a fresh empty iterable consumed only by the spread, so the merged Map's keys, values and insertion order, and every other observable result, are unchanged.
+- Normal exact-pin `pkg:generate @flighthq/scene2d-dom` with the patch changes `merge_dom_render_options.hpp`, `initialization.json` line and offset positions in the patched module, and the manifest patch record. The scoped run also emitted a different private member order for `scene_2d_dom_pipeline.hpp`'s anonymous options shape. That is the scope-dependent order recorded in `docs/generation-state.md`, so the committed full-run order is kept and that file is not changed. No other file references either name, and the pipeline header still fails only at its recorded `render_proxy_adapter` diagnostic (cluster `no-viable-conversion-f02000a9`).
+- Scoped native recheck (GCC 15.2, jobs 1, all errors shown): **1 attempted / 1 pass / 0 fail**, and a TU that only includes the header links against `libflight_cpp_c.a`. No merge behavior is claimed as run.
+- compiler request: `docs/compiler-requests/contextual-empty-array-fallback-element-evidence.md`
 
 ### 128. `no-viable-conversion-31b754c5` — 1 header(s), compiler route
 

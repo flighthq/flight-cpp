@@ -62,3 +62,22 @@ The required carrier is therefore the identity-preserving erased array view desc
 `erased-array-identity-preserving-view.md`, not an element type borrowed from the object arm. Choosing
 `Array<Any>` by fiat is only correct if that is the array's actual storage; copying another typed
 array into it would change identity and break the restore/interpolation writes.
+
+## G2 a `Map` present arm: DOM render-option merging (patch carried)
+
+At Flight `a627849` / compiler `806d257`, `@flighthq/scene2d-dom` `mergeDomRenderOptions` spreads
+`merged.X ?? []` into `new Map([...])` for four `ReadonlyMap<Kind, V>` fields. Here the present arm is a
+`Map`, not an array. The emitter types the coalesce as the Map carrier but builds the `[]` arm as
+`Array<tuple<String, V>>`, so `merge_dom_render_options.hpp` failed at lines 65, 68, 74 and 92 (GCC 15.2).
+
+The source patch `scene2d-dom-merge-options-empty-map-fallback` respells each fallback as
+`new Map<Kind, V>()` of the field's declared types. Each fallback is a fresh empty iterable consumed only by
+the spread, so the resulting Map's keys, values and insertion order are unchanged.
+
+Normal exact-pin `pkg:generate @flighthq/scene2d-dom` with the patch:
+- the header now compiles (1 attempted, 1 pass, 0 fail), and an unused-header TU links against the runtime
+  library;
+- the scoped run's different private member order for `scene_2d_dom_pipeline.hpp` (the scope-dependent order in
+  `docs/generation-state.md`) is not committed; that header still fails at its recorded, unrelated diagnostic.
+
+The patch expires when the emitter lowers an empty fallback as its present arm's iterable kind.

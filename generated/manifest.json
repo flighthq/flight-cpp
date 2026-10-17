@@ -5336,6 +5336,13 @@
     },
     {
       "dependency": "flight",
+      "digest": "15af192d7ec6f974e25e21f0f8d3e51ccb49bfe68bcb79bdba30e74cea3901d6",
+      "id": "scene2d-dom-merge-options-empty-map-fallback",
+      "module": "packages/scene2d-dom/src/mergeDomRenderOptions.ts",
+      "package": "@flighthq/scene2d-dom"
+    },
+    {
+      "dependency": "flight",
       "digest": "bd70b53c84659b373b0064d853282ea5d7a69f4aaa3ee9425c99d30836e003fa",
       "id": "scene2d-gl-clip-rectangle-viewport-number-domain",
       "module": "packages/scene2d-gl/src/glClipRectangle.ts",

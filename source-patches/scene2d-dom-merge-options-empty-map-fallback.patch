@@ -1,0 +1,46 @@
+diff --git a/packages/scene2d-dom/src/mergeDomRenderOptions.ts b/packages/scene2d-dom/src/mergeDomRenderOptions.ts
+--- a/packages/scene2d-dom/src/mergeDomRenderOptions.ts
++++ b/packages/scene2d-dom/src/mergeDomRenderOptions.ts
+@@ -1,4 +1,11 @@
+-import type { DomRenderOptions } from '@flighthq/types/contract';
++import type {
++  CanvasShapeCommand,
++  DomRenderOptions,
++  DomTextureResolver,
++  EffectPaddingResolver,
++  Kind,
++  NodeRenderer,
++} from '@flighthq/types/contract';
+ 
+ /**
+  * Composes DOM render-option fragments into one, field by field.
+@@ -23,17 +30,17 @@ export function mergeDomRenderOptions(
+   const merged: { -readonly [K in keyof DomRenderOptions]: DomRenderOptions[K] } = {};
+   for (const fragment of options) {
+     if (fragment.canvasShapeCommands !== undefined) {
+-      merged.canvasShapeCommands = new Map([...(merged.canvasShapeCommands ?? []), ...fragment.canvasShapeCommands]);
++      merged.canvasShapeCommands = new Map([...(merged.canvasShapeCommands ?? new Map<Kind, CanvasShapeCommand>()), ...fragment.canvasShapeCommands]);
+     }
+     if (fragment.effectPaddingResolvers !== undefined) {
+       merged.effectPaddingResolvers = new Map([
+-        ...(merged.effectPaddingResolvers ?? []),
++        ...(merged.effectPaddingResolvers ?? new Map<Kind, EffectPaddingResolver>()),
+         ...fragment.effectPaddingResolvers,
+       ]);
+     }
+     if (fragment.imageSmoothingEnabled !== undefined) merged.imageSmoothingEnabled = fragment.imageSmoothingEnabled;
+     if (fragment.nodeRenderers !== undefined) {
+-      merged.nodeRenderers = new Map([...(merged.nodeRenderers ?? []), ...fragment.nodeRenderers]);
++      merged.nodeRenderers = new Map([...(merged.nodeRenderers ?? new Map<Kind, NodeRenderer>()), ...fragment.nodeRenderers]);
+     }
+     if (fragment.pixelRatio !== undefined) merged.pixelRatio = fragment.pixelRatio;
+     if (fragment.roundPixels !== undefined) merged.roundPixels = fragment.roundPixels;
+@@ -41,7 +48,7 @@ export function mergeDomRenderOptions(
+     if (fragment.shapeRasterizer !== undefined) merged.shapeRasterizer = fragment.shapeRasterizer;
+     if (fragment.strokeTessellator !== undefined) merged.strokeTessellator = fragment.strokeTessellator;
+     if (fragment.textureResolvers !== undefined) {
+-      merged.textureResolvers = new Map([...(merged.textureResolvers ?? []), ...fragment.textureResolvers]);
++      merged.textureResolvers = new Map([...(merged.textureResolvers ?? new Map<Kind, DomTextureResolver>()), ...fragment.textureResolvers]);
+     }
+   }
+   return merged;

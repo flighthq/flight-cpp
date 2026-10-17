@@ -215977,10 +215977,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:c8c140086d891a9afea0cd9f57802b1bffdfc98d064bbc24f1ed1b768c6c5b20",
-            "line": 20,
+            "line": 27,
             "packageName": "@flighthq/scene2d-dom",
             "source": "packages/scene2d-dom/src/mergeDomRenderOptions.ts",
-            "id": "binding:[\"@flighthq/scene2d-dom\",\"packages/scene2d-dom/src/mergeDomRenderOptions.ts\",980]",
+            "id": "binding:[\"@flighthq/scene2d-dom\",\"packages/scene2d-dom/src/mergeDomRenderOptions.ts\",1076]",
             "kind": "function",
             "name": "mergeDomRenderOptions",
             "scope": "module",

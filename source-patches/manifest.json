@@ -4268,6 +4268,22 @@
       "unblocks": "The retained anchor numeric guard call only; both key iteration and nullable erased-style resolver refusals remain.",
       "expires": "when the emitter boxes the active represented union arm into the unknown parameter or Flight adopts the equivalent private annotation.",
       "appliedOn": "2026-10-17"
+    },
+    {
+      "id": "scene2d-dom-merge-options-empty-map-fallback",
+      "dependency": "flight",
+      "patch": "scene2d-dom-merge-options-empty-map-fallback.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/scene2d-dom/src/mergeDomRenderOptions.ts",
+      "package": "@flighthq/scene2d-dom",
+      "answers": "diagnostic",
+      "refusal": "the `merged.X ?? []` fallback spread into `new Map([...])` is lowered with the coalesce typed as the present ReadonlyMap arm but the empty arm built as Array<tuple<K, V>>, so the conditional arms have no common carrier",
+      "rewrite": "Replaces each of the four `?? []` fallbacks (canvasShapeCommands, effectPaddingResolvers, nodeRenderers, textureResolvers) with `?? new Map<Kind, V>()` of the field's own declared key and value types, and imports those types type-only.",
+      "equivalence": "Each fallback is a fresh empty iterable consumed only by the enclosing spread: an empty Map and an empty array both contribute zero entries, so the spread yields the same sequence, the new Map has the same keys, values and insertion order, and the fallback object is never retained, compared or exposed. The type-only import erases. No absence, identity, equality, ordering, exception or settlement behaviour changes.",
+      "whyNotUpstreamFirst": "The empty-array fallback lowering is a compiler gap (contextual-empty-array-fallback-element-evidence); this states the fallback in the carrier its present arm already has, which is target-neutral TypeScript.",
+      "unblocks": "Lets merge_dom_render_options.hpp emit both coalesce arms as the same Map carrier.",
+      "expires": "when the emitter lowers an empty-array fallback against a Map-typed present arm as that iterable kind, or Flight adopts this spelling.",
+      "appliedOn": "2026-10-17"
     }
   ]
 }
