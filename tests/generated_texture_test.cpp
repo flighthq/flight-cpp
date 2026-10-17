@@ -2090,6 +2090,74 @@ int main(int argc, char** argv) {
   check(video_destroy_state,
         "video destruction is idempotent, preserves the borrowed resource, and leaves stable sentinels");
 
+  // The emitted row-form get_texture_uv_matrix(Matrix3Like, readonly TextureUvTransform row) that the
+  // texture override keeps verbatim from the generated header. Each case calls THAT overload with an
+  // explicit readonly row; the expected column-major matrices were produced by running the pinned
+  // TypeScript getTextureUvMatrix itself into a Float32Array (types erased, nothing else). The source has
+  // no separate anchor: the flip pre-offset is the only origin shift. Cases whose arithmetic is exact
+  // (axis-aligned and the exact 0/±pi/2/pi branches) are compared bit for bit, sign of zero included; the
+  // two general angles go through cos/sin and are compared to 1e-6.
+  {
+    using UvRow = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<types::TextureUvTransform>>>>;
+    static_assert(requires(types::Matrix3Like out, UvRow row) { texture::get_texture_uv_matrix(out, row); });
+    static_assert(requires(types::Matrix3Like out, flight::Ref<types::TextureUvTransform> nominal) {
+      texture::get_texture_uv_matrix(out, nominal);
+    }, "a nominal transform still resolves unambiguously");
+    static_assert(requires(types::Matrix3Like out, types::TextureLike like) { texture::get_texture_uv_matrix(out, like); },
+                  "a TextureLike still resolves unambiguously");
+    struct UvCase {
+      const char* name;
+      bool flip_x;
+      bool flip_y;
+      double ox, oy, rotation, sx, sy;
+      bool exact;
+      std::array<double, 9> m;
+    };
+    const double nz = -0.0;
+    const double half_pi = 1.5707963267948966;
+    const double pi = 3.141592653589793;
+    const UvCase uv_cases[] = {
+        {"identity", false, false, 0, 0, 0, 1, 1, true, {1, 0, 0, nz, 1, 0, 0, 0, 1}},
+        {"offset", false, false, 0.25, -0.5, 0, 1, 1, true, {1, 0, 0, nz, 1, 0, 0.25, -0.5, 1}},
+        {"scale", false, false, 0, 0, 0, 0.5, 2, true, {0.5, 0, 0, nz, 2, 0, 0, 0, 1}},
+        {"quarter turn exact", false, false, 0.1, 0.2, half_pi, 0.5, 0.25, true,
+         {0, 0.5, 0, -0.25, 0, 0, 0.10000000149011612, 0.20000000298023224, 1}},
+        {"negative quarter turn exact", false, false, 0, 0, -half_pi, 1, 1, true, {0, -1, 0, 1, 0, 0, 0, 0, 1}},
+        {"half turn exact", false, false, 0, 0, pi, 1, 1, true, {-1, 0, 0, nz, -1, 0, 0, 0, 1}},
+        {"general rotation", false, false, 0.125, 0.375, 0.3, 0.75, 0.5, false,
+         {0.7165023684501648, 0.22164015471935272, 0, -0.14776010811328888, 0.47766825556755066, 0, 0.125, 0.375, 1}},
+        {"flip x", true, false, 0, 0, 0, 0.5, 1, true, {-0.5, nz, 0, nz, 1, 0, 0.5, 0, 1}},
+        {"flip y", false, true, 0.1, 0, 0, 1, 0.25, true, {1, 0, 0, 0, -0.25, 0, 0.10000000149011612, 0.25, 1}},
+        {"flip both with rotation", true, true, 0.2, -0.1, 0.7, 0.6, 0.4, false,
+         {-0.45890530943870544, -0.3865306079387665, 0, 0.2576870620250702, -0.30593687295913696, 0,
+          0.4012182354927063, 0.5924674868583679, 1}},
+    };
+    bool row_uv_matches_source = true;
+    for (const UvCase& entry : uv_cases) {
+      auto transform = flight::make_ref<types::TextureUvTransform>();
+      transform->flip_x = entry.flip_x;
+      transform->flip_y = entry.flip_y;
+      transform->uv_offset = flight::geometry::create_vector2(entry.ox, entry.oy);
+      transform->uv_rotation = entry.rotation;
+      transform->uv_scale = flight::geometry::create_vector2(entry.sx, entry.sy);
+      const auto out = flight::geometry::create_matrix3();
+      const auto storage = out->m;
+      texture::get_texture_uv_matrix(out, UvRow(transform));
+      bool ok = out->m.identity() == storage.identity();
+      for (int i = 0; i < 9; ++i) {
+        const double actual = out->m.get_index(static_cast<double>(i));
+        const double expected = entry.m[static_cast<std::size_t>(i)];
+        ok = ok && (entry.exact ? actual == expected && std::signbit(actual) == std::signbit(expected)
+                                : std::abs(actual - expected) <= 1e-6);
+      }
+      if (!ok) std::cerr << "row-form uv case differs from the pinned source: " << entry.name << '\n';
+      row_uv_matches_source = row_uv_matches_source && ok;
+    }
+    if (mutation == "--mutate-uv-row") row_uv_matches_source = false;
+    check(row_uv_matches_source,
+          "the row-form getTextureUvMatrix writes the pinned source's matrix into the supplied output");
+  }
+
   if (failures == 0) {
     std::cout << "texture construction, source, UV, copy, and equality match Flight\n";
   }
