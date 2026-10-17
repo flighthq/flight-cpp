@@ -9287,6 +9287,20 @@
       "defect": "The exact NOT GENERATED marker, live direct same-header lambda call and absent definition agree. This adds only the retained call carriers and double result; no callback witness extension is needed. The body remains refused at NodeAny-to-Sprite ownership, and bitmapForImage independently refuses TextureSource-to-Bitmap recovery. No bounds, alpha sample, bitmap readback/cache/provider, owner copy, fallback hit or narrowed input is supplied. Explicit registration remains an unresolved link on this exact helper. Existing owner request: docs/compiler-requests/readonly-callback-derived-owner-recovery.md; retained caller request: docs/compiler-requests/retained-declaration-calls-omitted-callee.md.",
       "expectedWhen": "always",
       "expires": "when hitTestSpriteAlpha emits or its retained direct call disappears; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "skeleton2d-declare-refused-ik-constraint-solver",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/skeleton2d/ik_constraint_2d.hpp",
+      "symbol": "solve_skeleton_2d_ik_constraint",
+      "refusedFunction": "solveSkeleton2DIkConstraint",
+      "declaration": "void solve_skeleton_2d_ik_constraint(flight::Ref<flight::types::Skeleton2D> skeleton, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DConstraint>>>> constraint);",
+      "retainedReference": "flight::skeleton2d::register_skeleton_2d_constraint_solver(flight::types::skeleton_2d_constraint_kind->ik, solve_skeleton_2d_ik_constraint);",
+      "sourceDeclaration": "packages/skeleton2d/src/ikConstraint2D.ts -- solveSkeleton2DIkConstraint(skeleton: Skeleton2D, constraint: Readonly<Skeleton2DConstraint>): void; the retained registration passes exactly Skeleton2DConstraintSolver, whose emitted carrier is void(Ref<Skeleton2D>,readonly Skeleton2DConstraint row)",
+      "diagnostic": "use of undeclared identifier 'solve_skeleton_2d_ik_constraint'",
+      "defect": "Exact NOT GENERATED marker, retained direct function-argument registration and absent definition agree. Existing retainedReference declares only the exact solver slot carrier, preserving the mutable skeleton Ref and readonly base constraint domain. The body remains refused because the base row cannot recover bendPositive/boneIndices/compress/stretch/targetBoneIndex or equivalent kind cells from the original IK owner. No IK algorithm, pose/bone/world-matrix mutation, replacement constraint, empty solver or narrower closed constraint family is supplied. Explicit registration must fail to link only on this omitted body. Existing body request: docs/compiler-requests/assertion-to-undeclared-row-member.md; retained callback request: docs/compiler-requests/retained-declaration-calls-omitted-callee.md.",
+      "expectedWhen": "always",
+      "expires": "when solveSkeleton2DIkConstraint emits or its exact retained registration disappears; sdk:check fails if this repair matches no header."
     }
   ]
 }
