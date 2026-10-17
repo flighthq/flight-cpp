@@ -606,3 +606,25 @@ Qualification remains **0/4 pass, 4 fail**, retained from G1 at the original und
 Only the four owned product rows and this cause are request-linked. No production C++ input changed,
 so the unchanged four-header gate and global sweep were not rerun. There is no claim that animation
 import can execute or that a new native header pass was obtained.
+
+## G2 GL bitmap text retains a refused callback in an aggregate
+
+`scene2d_gl/gl_bitmap_text.hpp` at compiler `806d257` / Flight `a627849` omits
+`submitGlBitmapText` but retains `.submit = submit_gl_bitmap_text` inside the inline
+`gl_bitmap_text_renderer` aggregate. Both original headers fail on that name at line163
+(Clang22.1.8 jobs1:2 attempted,0 pass,2 fail,0 unattempted). The exact source signature is
+`void submit_gl_bitmap_text(Ref<GlRenderState>, Ref<RenderProxy2D>);`.
+
+This is not a direct call or a callback in a function argument: the existing guarded
+`retainedReference` witness accepts the latter, and `calledFrom` requires named direct callers.
+Extending that witness would not clear this header. One scratch copy containing only the exact
+declaration still fails to compile the unused include at `.create_data`, whose NodeAny-taking
+`noop_renderer_data` cannot construct the Sprite-taking callback. The later generic RenderState
+versus GlRenderState submit-domain mismatch is visible by type inspection, not a native follow-on
+result. Neither a positive unused-header link nor an exact missing-body negative link was reached,
+and no declaration repair was carried.
+
+The [heritage callback conversion](interface-heritage-widening.md#g2-gl-bitmap-text-renderer-create-data-callback)
+and [typed runtime/backend owners](readonly-callback-derived-owner-recovery.md#g2-gl-bitmap-text-needs-its-own-runtime-owner)
+need faithful carriers first. The body remains refused; declaration availability must not be reported
+as glyph submission, texture/material binding or actual GL rendering behavior.

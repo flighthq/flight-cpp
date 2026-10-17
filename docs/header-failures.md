@@ -115,7 +115,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 86 | `redefinition-caa49360` | 2 | 3D | runtime | a declaration is emitted twice |
 | 87 | `undeclared-identifier-1048386b` | 2 | 3D | runtime | the emitted code names `md5_material_handler`, which nothing declares |
 | 88 | `undeclared-identifier-20fa691d` | 2 | 2D | runtime | the emitted code names `draw_gl_raster_shape`, which nothing declares |
-| 89 | `undeclared-identifier-225478b5` | 2 | 2D | runtime | the emitted code names `submit_gl_bitmap_text`, which nothing declares |
+| 89 | `undeclared-identifier-225478b5` | 2 | 2D | compiler | refused bitmap-text submit callback lacks a declaration; exact declaration still exposes incompatible renderer callback carriers *(existing requests)* |
 | 90 | `undeclared-identifier-3e98002c` | 2 | 3D | runtime | the emitted code names `initialize_awd2_parse_state`, which nothing declares |
 | 91 | `undeclared-identifier-644a9b33` | 2 | 2D | runtime | the emitted code names `clip_programs`, which nothing declares |
 | 92 | `undeclared-identifier-7ce7bd18` | 2 | 3D | runtime | the emitted code names `md2_skin_handler`, which nothing declares |
@@ -1798,14 +1798,33 @@ and retain all source spread fields; no permissive runtime constructor or incomp
 - first failure at: `flight/scene2d_gl/gl_raster_shape_renderer.hpp:173`
 - example: `use of undeclared identifier 'draw_gl_raster_shape'`
 
-### 89. `undeclared-identifier-225478b5` — 2 header(s)
+### 89. `undeclared-identifier-225478b5` — 2 header(s), compiler route
 
-- cause: the emitted code names `submit_gl_bitmap_text`, which nothing declares
-- subject: `submit_gl_bitmap_text`
-- lanes: 2D
-- fix route: runtime
-- first failure at: `flight/scene2d_gl/gl_bitmap_text.hpp:163`
-- example: `use of undeclared identifier 'submit_gl_bitmap_text'`
+Scoped Clang 22.1.8, one worker: **2 attempted / 0 pass / 2 fail / 0 unattempted**. Both
+`scene2d_gl/gl_bitmap_text.hpp` and `scene2d_gl/scene_2d_gl_pipeline.hpp` still fail at
+`gl_bitmap_text.hpp:163`, `use of undeclared identifier 'submit_gl_bitmap_text'`.
+
+The retained `gl_bitmap_text_renderer` aggregate refers to the refused `submitGlBitmapText`.
+Its body asserts readonly `Node2DRuntime` to writable `BitmapTextRuntime`, without the declared
+owner/cells for `pages`, `glyphLayoutVersion`, `lineCount` and `truncated`. The current native
+`NodeRuntime<Ref<Node2DTraits>>` accessor is not the flattened `BitmapTextRuntime` owner either.
+[Typed callback/runtime owner recovery](compiler-requests/readonly-callback-derived-owner-recovery.md#g2-gl-bitmap-text-needs-its-own-runtime-owner)
+covers that boundary; removing only the writable assertion does not establish the missing cells.
+
+One scratch copy added only the exact source callback declaration, `void submit_gl_bitmap_text(
+Ref<GlRenderState>, Ref<RenderProxy2D>);`. The unused-header program still failed to compile at
+`.create_data`: actual `noop_renderer_data(RenderState, NodeAny)` cannot initialize
+`SpriteRenderer.create_data(RenderState, Sprite)`. This is the existing
+[heritage/carrier request](compiler-requests/interface-heritage-widening.md#g2-gl-bitmap-text-renderer-create-data-callback).
+The later submit `GlRenderState` versus generic `RenderState` domain was inspected, not reached by
+that first-error probe. The [retained-callee request](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-gl-bitmap-text-retains-a-refused-callback-in-an-aggregate)
+records why no declaration-only repair or positive/negative link claim was carried.
+
+The required renderer uses real page ids/transforms, atlas textures, UV rotation, alpha, material
+and color adjustments through the GL batch writer, retaining batch-flush ordering and actual draw
+counts. No fake draw, copied owner, narrowed input, callback adapter or source/runtime change was
+supplied. Only the two owned rows/cluster, this report slice and existing requests changed; G1 totals
+and foreign products are retained. No generation or global/native baseline rerun was needed.
 
 ### 90. `undeclared-identifier-3e98002c` — 2 header(s)
 

@@ -282,3 +282,21 @@ line 106; that separate follow-on is recorded in the
 [existing omitted-callee request](retained-declaration-calls-omitted-callee.md#g2-swf-legacy-placement-follow-on-after-adjustment-heritage).
 Only the four owned header rows and affected cause counts changed. All three changed diagnostics stay
 failures; there was no global sweep or claim that the refused SWF bodies became available.
+
+## G2 GL bitmap text renderer create-data callback
+
+At compiler `806d257` / Flight `a627849`, the retained aggregate in
+`scene2d_gl/gl_bitmap_text.hpp` stores `flight::render::noop_renderer_data` in
+`SpriteRenderer.create_data`. The actual native function accepts `(Ref<RenderState>, NodeAny)`;
+the destination accepts `(Ref<RenderState>, Ref<Sprite>)`. The flattened Sprite owner does not
+convert to the NodeAny owner, so those callable carriers are incompatible despite the source's
+Sprite/Node relationship. Widening must preserve the same node owner, not copy fields or cast the
+function pointer to another callable signature.
+
+One scratch copy adding only the exact refused submit declaration exposed this conversion as the
+first fatal error at `.create_data` (scratch line165), before `.submit` was checked. The program only
+included the actual header and `main`; it did not reach a link step. The committed two headers still
+fail at the missing submit name on line163. No callback adapter or runtime change was carried.
+The separate [BitmapText runtime owner](readonly-callback-derived-owner-recovery.md#g2-gl-bitmap-text-needs-its-own-runtime-owner)
+and [retained callback declaration](retained-declaration-calls-omitted-callee.md#g2-gl-bitmap-text-retains-a-refused-callback-in-an-aggregate)
+remain open.

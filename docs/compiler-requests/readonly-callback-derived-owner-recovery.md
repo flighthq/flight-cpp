@@ -73,3 +73,30 @@ runtime, callback objects, cache writes, and identities remain unchanged.
 
 The workaround expires when Flight carries the exact slot and runner upstream, or when the compiler
 can preserve and validate the same readonly derived owner through the generic callback boundary.
+
+## G2 GL bitmap text needs its own runtime owner
+
+At compiler `806d257` / Flight `a627849`, `scene2d-gl/glBitmapText.ts:36` reads
+`(getNode2DRuntime(source) as BitmapTextRuntime).pages` inside refused `submitGlBitmapText`.
+The refusal is `cpp-structural-assertion-writable-capability-unproven`: the readonly base runtime
+has no declared `pages`, `glyphLayoutVersion`, `lineCount` or `truncated` cells. Changing only the
+assertion to readonly removes the false write claim but does not recover the full owner. The current
+native getter's `NodeRuntime<Ref<Node2DTraits>>` is also distinct from flattened `BitmapTextRuntime`.
+
+The same owner requirement above applies: initialization must establish the complete typed runtime
+in the BitmapText's slot, and the typed renderer must read that same owner and its page arrays. The
+source factory currently asserts `createNode2DRuntime(defaultMethods)` to `BitmapTextRuntime` before
+writing its extra fields, so the storage/construction boundary must be declared as well. Keep the
+exact Node2D traits and readonly read authority; no replacement runtime, page copy or side storage.
+
+Its GL callback also takes `GlRenderState`, whereas `SpriteRenderer.submit` declares `RenderState`.
+That later domain difference is visible from the types, not a measured follow-on diagnostic. The
+callback needs the exact backend owner or checked dispatch described above, preserving the public
+carrier instead of asserting every base state to GL. Real page textures, glyph transforms/UV rotation,
+alpha, material/color records, post-flush batch offsets and valid-glyph draw counts must survive.
+
+The original two headers still fail on the retained callback's missing name (0/2, Clang22.1.8,
+one worker). A declaration-only probe fails earlier at the separate
+[create-data owner conversion](interface-heritage-widening.md#g2-gl-bitmap-text-renderer-create-data-callback).
+No renderer implementation or declaration repair is carried; see the
+[retained aggregate callback boundary](retained-declaration-calls-omitted-callee.md#g2-gl-bitmap-text-retains-a-refused-callback-in-an-aggregate).
