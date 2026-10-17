@@ -69,7 +69,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 40 | `call-has-no-matching-82244b93` | 4 | 2D | compiler *(existing request)* | DOM/Canvas render states passed to `get_or_create_render_proxy_2d(Ref<RenderState>, …)` without emitted heritage |
 | 41 | `call-has-no-matching-9248dccf` | 4 | ANIM | compiler *(existing request)* | generic `get_node_world_matrix4<Node3DTraits>` call vs the native transform override API; runtime-owner boundary |
 | 42 | `call-has-no-matching-9ebeb95c` | 4 | ANIM, GL | compiler | the emitted call to `get_transform_2d_runtime` matches no declared overload |
-| 43 | `call-has-no-matching-c3aea71c` | 4 | 2D, GL | compiler | the emitted call to `structural_ref_cast` matches no declared overload |
+| 43 | `call-has-no-matching-c3aea71c` | 4 | 2D, GL | [compiler request](compiler-requests/optional-assertion-cast-must-unwrap.md) | an assertion on an optional is emitted as `structural_ref_cast` of the optional, which no overload accepts |
 | 44 | `no-viable-conversion-5903ce63` | 4 | 3D, GL | override re-derivation (fixed) | shading modifier callbacks and registrations now match the patched `ReadonlyModifierValue` / `ModifierDefinitionValue` domains; G2: 4/4 pass |
 | 45 | `no-viable-conversion-e1a24bd1` | 4 | 2D | compiler | G2: recorded 0/4 retained; Rive numeric diagnostic Record needs existing readonly value projection; docs-only, no rerun |
 | 46 | `other-2aef05a3` | 6 | ANIM | [compiler request](compiler-requests/interface-heritage-widening.md) | shadow-effect conditional branches cannot widen their independent concrete owners into the declared Effect array element |
@@ -1089,12 +1089,26 @@ rank remain historical, and `previousCluster` retains this original group.
 
 ### 43. `call-has-no-matching-c3aea71c` — 4 header(s)
 
-- cause: the emitted call to `structural_ref_cast` matches no declared overload
-- subject: `structural_ref_cast`
+- cause: an `as` assertion on an optional `Readonly<PartialNode<T>>` is emitted as
+  `structural_ref_cast` of the optional itself, which no runtime overload accepts, instead of
+  unwrapping the present value and preserving absence
 - lanes: 2D, GL
-- fix route: compiler
+- fix route: compiler — [optional assertion cast must unwrap](compiler-requests/optional-assertion-cast-must-unwrap.md)
 - first failure at: `flight/scene2d/scale9_sprite.hpp:162`
 - example: `no matching function for call to 'structural_ref_cast'`
+
+`createScale9Sprite` asserts its `obj?: Readonly<PartialNode<Scale9Sprite>>` parameter and the emitter
+casts the optional; the compiler notes name the operand types exactly (`could not match
+'StructuralRef' against 'std::optional'`, same for `std::shared_ptr`). The cast target equals the
+parameter's element type, so only the absence needs carrying. `scene2d/_internal_index.hpp`,
+`scene2d/contract.hpp` and `render/render_viewport.hpp` fail through the same include.
+
+The same header carries a second, independent family behind this one:
+`use of undeclared identifier 'create_scale9_sprite_runtime'` at the same statement, so this request
+does not by itself make the header pass.
+
+No C++ was changed; the scoped recheck (`-j1`) reproduced the first diagnostic and the second-family
+note above.
 
 ### 44. `no-viable-conversion-5903ce63` — 4 header(s), fixed by re-deriving the override
 

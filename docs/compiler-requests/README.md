@@ -85,6 +85,9 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 
 ## Active requests without a compiler patch
 
+- [An assertion on an optional value must cast the present value, not the optional](optional-assertion-cast-must-unwrap.md) —
+  `@flighthq/scene2d` `createScale9Sprite` emits `structural_ref_cast<T>(obj)` with `obj` still an
+  `std::optional`; the asserted value is type-level only and the callee's optional parameter carries the absence.
 - [A readonly row returned as its declared nominal owner keeps the owner recovery](readonly-row-return-owner-recovery.md) —
   `@flighthq/render` `resolveInheritedColorScaleBias` emits the `return parent` branch as a bare
   `optional<Ref<ColorScaleBias>>` construction while the sibling `return local` branch gets
