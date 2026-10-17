@@ -2598,3 +2598,13 @@ two further host binding shapes:
 - first failure at: `flight/effects_gl/gl_render_texture_effect.hpp:130`
 - example: `no matching conversion for functional-style cast from 'const StructuralRef<RowReadonly<RowOf<shared_ptr<GlTextureRenderTarget>>>>' to 'StructuralRef<RowWritable<RowOf<Ref<GlTextureRenderTarget>>>>'`
 
+
+## Scoped G2 PBR registry follow-up
+
+The carried PBR extension registry override was repaired against 806d257. Of its nine
+`no-viable-conversion-dfea2d92` headers, seven now compile. The two residuals are
+`scene3d_gl/_internal_index.hpp` (readonly view to writable carrier) and
+`scene3d_gl/enable_gl_pbr_extension_guards.hpp` (array of union to array of owner).
+See [readonly view request](compiler-requests/readonly-view-to-writable.md) and
+[array owner request](compiler-requests/array-of-union-into-array-of-owner.md).
+This is a scoped update; the original G1 sweep totals above remain historical.
