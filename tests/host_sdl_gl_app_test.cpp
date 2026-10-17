@@ -5,10 +5,51 @@
 #include <optional>
 #include <stdexcept>
 #include <string_view>
+#include <type_traits>
+#include <utility>
 
 namespace {
 void require(bool value, const char* message) {
   if (!value) throw std::runtime_error(message);
+}
+
+void check_attribute_locations(const flight::host_sdl::WebGl2Context& gl) {
+  using namespace flight::host_sdl;
+  static_assert(std::is_same_v<decltype(gl.get_attrib_location(
+      std::declval<const WebGlProgram&>(), std::declval<const flight::String&>())), double>);
+
+  const auto vertex = gl.create_shader(gl.vertex_shader);
+  const auto fragment = gl.create_shader(gl.fragment_shader);
+  require(vertex.has_value() && fragment.has_value(), "could not create attribute-location shaders");
+  gl.shader_source(vertex, flight::String(
+      "#version 300 es\nlayout(location = 5) in vec2 a_position;\n"
+      "void main() { gl_Position = vec4(a_position, 0.0, 1.0); }\n"));
+  gl.shader_source(fragment, flight::String(
+      "#version 300 es\nprecision mediump float;\nout vec4 color;\n"
+      "void main() { color = vec4(1.0); }\n"));
+  gl.compile_shader(vertex);
+  gl.compile_shader(fragment);
+  require(gl.get_shader_parameter(vertex, gl.compile_status) == 1 &&
+              gl.get_shader_parameter(fragment, gl.compile_status) == 1,
+          "attribute-location shaders did not compile");
+  const auto program = gl.create_program();
+  gl.attach_shader(program, vertex);
+  gl.attach_shader(program, fragment);
+  gl.link_program(program);
+  require(gl.get_program_parameter(program, gl.link_status) == 1,
+          "attribute-location program did not link");
+
+  // Generated shader records use number (double) fields and aggregate initialization.
+  struct Locations { double active; double missing; };
+  const Locations locations{
+      gl.get_attrib_location(program, flight::String("a_position")),
+      gl.get_attrib_location(program, flight::String("a_missing"))};
+  require(locations.active == 5.0, "attribute location lost its numeric value");
+  require(locations.missing == -1.0, "missing attribute location lost its negative sentinel");
+  gl.delete_program(program);
+  gl.delete_shader(vertex);
+  gl.delete_shader(fragment);
+  require(gl.get_error() == gl.no_error, "attribute-location query or teardown raised a GL error");
 }
 }
 
@@ -17,6 +58,7 @@ int main() {
     using namespace flight::host_sdl;
     GlApplication app({.title = "Flight installed GL app test", .width = 64, .height = 48, .hidden = true});
     const auto& gl = app.context();
+    check_attribute_locations(gl);
 
     // `getParameter(VIEWPORT) as ArrayLike<number> | null` through the nullable carrier: an engaged
     // view of the four integers, and a non-sequence parameter refused rather than read as null.

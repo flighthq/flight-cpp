@@ -592,7 +592,7 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
   [[nodiscard]] std::optional<WebGlActiveInfo> get_active_uniform(
       const WebGlProgram& program,
       int index) const;
-  [[nodiscard]] int get_attrib_location(const WebGlProgram& program, const String& name) const;
+  [[nodiscard]] double get_attrib_location(const WebGlProgram& program, const String& name) const;
   [[nodiscard]] std::optional<GlExtension> get_extension(const String& name) const;
   [[nodiscard]] GlParameterValue get_parameter(std::uint32_t parameter) const;
   [[nodiscard]] std::optional<String> get_program_info_log(const WebGlProgram& program) const;

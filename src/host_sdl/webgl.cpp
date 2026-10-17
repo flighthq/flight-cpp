@@ -1029,10 +1029,10 @@ std::optional<WebGlActiveInfo> WebGl2Context::get_active_uniform(
   };
 }
 
-int WebGl2Context::get_attrib_location(const WebGlProgram& program, const String& name) const {
+double WebGl2Context::get_attrib_location(const WebGlProgram& program, const String& name) const {
   const auto encoded = name.to_utf8();
-  return gl_function<PFNGLGETATTRIBLOCATIONPROC>(*this, "glGetAttribLocation")(
-      require_object(program.state_, detail::WebGlObjectKind::program), encoded.c_str());
+  return static_cast<double>(gl_function<PFNGLGETATTRIBLOCATIONPROC>(*this, "glGetAttribLocation")(
+      require_object(program.state_, detail::WebGlObjectKind::program), encoded.c_str()));
 }
 
 std::optional<GlExtension> WebGl2Context::get_extension(const String& name) const {
