@@ -88,8 +88,9 @@ or materializing a base owner would lose the exact runtime identity, so Selectio
 
 ## Carrying workaround
 
-Emission repairs `adjustments-color-matrix-interface-heritage` and `adjustments-tint-interface-heritage`
-respell the two structs with their declared heritage, removing only the duplicated member declarations.
+Emission repairs `adjustments-color-matrix-interface-heritage`, `adjustments-tint-interface-heritage`
+and `adjustments-color-scale-bias-interface-heritage` respell those structs with their declared heritage,
+removing only duplicated base member declarations.
 Selection carries the same declaration-only correction in its runtime-type overrides because scoped
 selection generation cannot rewrite its already-current `@flighthq/types` dependency row. Every field
 keeps its name, type and declaration order. They expire when the emitter retains
@@ -240,3 +241,44 @@ qualification and original conditional diagnostics remain unchanged from G1; all
 this request. The changed candidate's new diagnostic remains a failure, not a promotion. There was no
 unchanged-stock rerun or global native sweep. Builder5's separate SWF Shape/read-only work was not
 changed by this experiment.
+
+
+## G2 SWF color-transform arrays: complete the existing declared heritage chain
+
+At compiler `806d257` / Flight `a627849`, cluster `other-5611a858` first fails at
+`flight/swf/swf_appearance.hpp:123`. `readSwfColorTransform` returns a single fresh
+`ColorScaleBiasAdjustment` in `readonly Adjustment[] | null`. The emitter constructs
+`Array<Ref<Adjustment>>{create_color_scale_bias_adjustment(...)}`, while the factory returns
+`Ref<ColorScaleBiasAdjustment>`.
+
+The existing ColorMatrixAdjustment repair already makes that type inherit Adjustment, and the
+TintAdjustment repair uses that same matrix base. Only ColorScaleBiasAdjustment remained a flattened
+sibling. Its pinned TypeScript declaration explicitly extends ColorMatrixAdjustment. The new repair
+removes its duplicated `entity_runtime_key`, `kind` and `color_matrix` members and uses the already
+repaired ColorMatrixAdjustment base, leaving only its own `color_scale_bias` member. The exact text
+match is guarded by the repair registry, recorded in the generated manifest, and expires when the
+emitter supplies that declared relationship. Reapplying the repair is a fixed point.
+
+No function body, pointer cast, owner allocation or Adjustment union is added. The source Adjustment
+contract stays open to vendor kinds. All inherited fields are the same cells on the original concrete
+allocation, and standard shared-pointer widening retains its control block and lifetime. This extends
+the existing bounded adjustment declaration repair; it does not choose a runtime-wide refinement or
+owner-recovery design. The broader reverse-direction requests remain open.
+
+The existing native adjustments suite now checks construction of an open base-reference array from
+the real concrete factory, element order with a vendor Adjustment, shared control-block identity,
+inherited field-cell addresses, writes through the matrix base, retained scale/bias data and release
+when the last array reference is cleared. No source tint/alpha formulas or SWF array joining logic changed.
+The native target built successfully and `flight_cpp.generated_adjustments` passed **1/1** with
+these checks. The repair loader accepted the exact single-header replacement, reapplication changed
+nothing, and the generated manifest records that one repair.
+
+The exact four-header changed-input check completed at one worker: **1/4 pass, 3 fail,
+0 unattempted**. `swf_appearance.hpp` passes. `swf_place_object3_handler.hpp` and
+`swf_placement_tag_family.hpp` now reach the existing stock shadow-effect conditional mismatch at
+`swf_filter.hpp:257`, joining the four already classified rows without recompiling them. The remaining
+`swf_place_object_handler.hpp` reaches a retained call to the refused `readLegacyPlaceObject` at
+line 106; that separate follow-on is recorded in the
+[existing omitted-callee request](retained-declaration-calls-omitted-callee.md#g2-swf-legacy-placement-follow-on-after-adjustment-heritage).
+Only the four owned header rows and affected cause counts changed. All three changed diagnostics stay
+failures; there was no global sweep or claim that the refused SWF bodies became available.

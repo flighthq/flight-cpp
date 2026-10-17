@@ -336,3 +336,27 @@ The completed eight-header G2 recheck is **1 pass, 7 fail, 0 unattempted** at `-
 [class-instance/interface request](class-instance-as-implemented-interface.md), and two to the
 native `copy_shape_commands` readonly source-parameter mismatch. Those seven rows remain failures
 in the [header worklist](../header-failures.md); none is promoted for merely losing its first diagnostic.
+
+## G2 SWF legacy placement follow-on after adjustment heritage
+
+At compiler `806d257` / Flight `a627849`, the bounded ColorScaleBiasAdjustment heritage repair
+removes the Adjustment-array constructor failure from the four owned SWF headers. The completed
+changed-input check is **1/4 pass, 3 fail, 0 unattempted**, one worker. One of the three failures is
+`swf_place_object_handler.hpp:106`: `use of undeclared identifier 'read_legacy_place_object'`.
+The other two reach the already filed effect-owner widening gap; they are not counted in this cause.
+
+The same header has the exact `NOT GENERATED: function readLegacyPlaceObject -- source line 60`
+marker and retains a call from the `swf_place_object_handler` parse callback. No definition exists in
+the generated, runtime or override trees. The call passes the original
+`Ref<SwfTagReader>` and the timeline's `Map<double, Ref<SwfTagPlacement>>`. The source helper reads
+the character, depth, matrix and optional color transform, then updates that same placement map.
+Its body is refused as `dual-sentinel optional property result requires one represented member value
+domain` at the optional color-adjustment projection. A replacement must preserve the reader position,
+validity, optional/null result and original array owners.
+
+These witnesses classify the next diagnostic under this existing request. No helper declaration,
+body or source patch was attempted in the bounded adjustment-heritage arc. A declaration-only candidate
+would still require actual-header positive and missing-symbol link validation, including the retained
+callback in the globally initialized handler; a syntax-only gate cannot certify that boundary.
+`swf_place_object_handler.hpp` remains failed with its actual diagnostic, location and request link.
+No SWF placement implementation is supplied, and no unchanged or global rerun is claimed.

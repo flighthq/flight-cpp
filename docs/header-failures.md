@@ -72,10 +72,10 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 43 | `call-has-no-matching-c3aea71c` | 4 | 2D, GL | compiler | the emitted call to `structural_ref_cast` matches no declared overload |
 | 44 | `no-viable-conversion-5903ce63` | 4 | 3D, GL | compiler | a value is passed where its declared type cannot receive it |
 | 45 | `no-viable-conversion-e1a24bd1` | 4 | 2D | compiler | a value is passed where its declared type cannot receive it |
-| 46 | `other-2aef05a3` | 4 | ANIM | [compiler request](compiler-requests/interface-heritage-widening.md) | shadow-effect conditional branches cannot widen their independent concrete owners into the declared Effect array element |
+| 46 | `other-2aef05a3` | 6 | ANIM | [compiler request](compiler-requests/interface-heritage-widening.md) | shadow-effect conditional branches cannot widen their independent concrete owners into the declared Effect array element |
 | 47 | `other-43523429` | 4 | ANIM | [compiler request](compiler-requests/heritage-argument-generic-deduction.md) | heritage-based Node2D type arguments are not substituted at addNodeChild, leaving a free Traits identifier |
 | 48 | `other-4e22e4de` | 4 | 2D | runtime | uncategorised: the first diagnostic does not name a single cause |
-| 49 | `other-5611a858` | 4 | ANIM | runtime | uncategorised: the first diagnostic does not name a single cause |
+| 49 | `other-5611a858` | 4 | ANIM | declaration repair (applied) | ColorScaleBiasAdjustment heritage restored; G2: 1 pass, 3 compiler failures |
 | 50 | `other-d6be4352` | 4 | ANIM | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 51 | `static-assertion-00a0e75d` | 4 | 3D, WGPU | compiler | a runtime static assertion rejects the emitted shape |
 | 52 | `undeclared-identifier-0fc9e20f` | 4 | 2D | declaration repair (applied) | omitted artboard-import-context declaration supplied; G2: 0 pass, 4 fail at the next omitted callee; function remains unlinkable |
@@ -920,7 +920,7 @@ rank remain historical, and `previousCluster` retains this original group.
 - first failure at: `flight/scene2d_formats/rive_document.hpp:133`
 - example: `no viable conversion from 'optional<Record<[...], double>>' to 'optional<Record<[...], variant<bool, double, String>>>'`
 
-### 46. `other-2aef05a3` — 4 header(s)
+### 46. `other-2aef05a3` — 6 current header(s), 4 in G1
 
 - cause: shadow-effect conditional branches cannot widen their independent concrete owners into the declared Effect array element
 - lanes: ANIM
@@ -932,6 +932,7 @@ rank remain historical, and `previousCluster` retains this original group.
 - The temporary patch and manifest entry were withdrawn, the manifest restored byte-for-byte, and both pinned checkouts cleaned by normal generation. No source patch, generated header, runtime, repair, binding, or override is carried. Builder5's Shape/read-only work is in separate files and was not touched.
 - Delivered numbers: **0/4 pass, 4 fail**, retained from G1, with the stock conditional diagnostics unchanged and every owned row linked to the existing request. No unchanged-stock or global rerun is claimed.
 - Changed candidate result: **0/4 pass, 4 fail, 0 unattempted**, Clang 22.1.8 at one worker. All four first errors are `no matching member function for call to 'push'` at the direct inner-shadow push, candidate `swf_filter.hpp:288`. The source branch patch was rejected; this changed diagnostic remains a failure and is not written over the shipped tree's stock diagnostics.
+- The separate adjustment-heritage repair in work item 49 exposes this same stock conditional diagnostic in `swf_place_object3_handler.hpp` and `swf_placement_tag_family.hpp`. These two newly measured failures join this cause, making six current rows. The original four rows and their G1 qualification remain unchanged; they were not recompiled in the four-header adjustment check.
 
 ### 47. `other-43523429` — 4 header(s)
 
@@ -955,11 +956,38 @@ rank remain historical, and `previousCluster` retains this original group.
 
 ### 49. `other-5611a858` — 4 header(s)
 
-- cause: uncategorised: the first diagnostic does not name a single cause
+- cause: ColorScaleBiasAdjustment was emitted independently of its declared ColorMatrixAdjustment base, preventing the real concrete factory owner from entering the open Adjustment array
 - lanes: ANIM
-- fix route: runtime
-- first failure at: `flight/swf/swf_appearance.hpp:123`
-- example: `no matching constructor for initialization of 'Array<Ref<Adjustment>>'`
+- fix route: declaration repair applied; remaining failures use existing compiler requests
+- original first failure at: `flight/swf/swf_appearance.hpp:123`
+- original example: `no matching constructor for initialization of 'Array<Ref<Adjustment>>'`
+
+The existing ColorMatrixAdjustment and TintAdjustment repairs already retain declared heritage. The
+new `adjustments-color-scale-bias-interface-heritage` repair completes that same chain, replacing only
+the duplicated base declarations with `ColorScaleBiasAdjustment : ColorMatrixAdjustment`. No body,
+copied owner, pointer cast or closed Adjustment union is supplied. The real factory's single allocation
+now widens through the existing matrix base to Adjustment, retaining its inherited cells and lifetime.
+See the [existing heritage request](compiler-requests/interface-heritage-widening.md#g2-swf-color-transform-arrays-complete-the-existing-declared-heritage-chain).
+
+The existing native adjustments target built and `flight_cpp.generated_adjustments` passed **1/1**,
+covering the actual factory, array order with a vendor kind, shared control block, same inherited field
+cells, matrix writes and final owner release. The exact repair match, fixed point and manifest entry
+were also checked.
+
+Changed-input scoped native result: **1/4 pass, 3 fail, 0 unattempted**, Clang 22.1.8 at one worker.
+`swf_appearance.hpp` passes. The remaining rows retain the actual first diagnostics:
+
+| follow-on cluster | owned headers | first failure | route / cause |
+| --- | --- | --- | --- |
+| `other-2aef05a3` | 2 | `flight/swf/swf_filter.hpp:257` | compiler: incompatible InnerShadowEffect/DropShadowEffect owners; [existing heritage request](compiler-requests/interface-heritage-widening.md) |
+| `undeclared-identifier-1e1a12b0` | 1 | `flight/swf/swf_place_object_handler.hpp:106` | compiler: retained `read_legacy_place_object` call after its body was refused; [existing omitted-callee request](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-swf-legacy-placement-follow-on-after-adjustment-heritage) |
+
+The two filter failures are `swf_place_object3_handler.hpp` and `swf_placement_tag_family.hpp`;
+`swf_place_object_handler.hpp` reports the undeclared legacy helper. These changed diagnostics remain
+failures. Only these four header rows and their affected causes were updated; the G1 sweep totals and
+all unowned rows remain unchanged. This does not make legacy placement or filter parsing available,
+and it does not resolve general reverse-direction interface owner recovery. No global sweep or
+upstream test port was performed.
 
 ### 50. `other-d6be4352` — 4 header(s)
 

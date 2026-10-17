@@ -100,15 +100,19 @@ There is no downstream workaround: materializing the refined struct would replac
 break reference equality. The generated placeholders deliberately retain the refusal until the compiler
 and runtime agree on an owner-preserving interface-refinement carrier.
 
-Also blocks `@flighthq/swf` at a627849: `swf_appearance.hpp` builds `colorAdjustments: Adjustment[]` from
-`createColorScaleBiasAdjustment(...)`. `ColorScaleBiasAdjustment` extends `ColorMatrixAdjustment` extends
-`Adjustment` in TypeScript, but the emitted structs are independent, so a `Ref<ColorScaleBiasAdjustment>`
-cannot enter `flight::Array<flight::Ref<flight::types::Adjustment>>` without a copy that would split identity.
-No workaround is carried. Measured at `swf_appearance.hpp:123` (and through it `swf_place_object_handler.hpp`):
-`flight::Array<flight::Ref<flight::types::Adjustment>>{create_color_scale_bias_adjustment(...)}` has no matching
-constructor. The element is a fresh entity whose only reference is the array, and its `colorMatrix`/scale-bias
-fields are what the consumer reads, so allocating it as an `Adjustment` would narrow the source domain. No emitted
-package stores a concrete adjustment in an `Adjustment[]` today, so there is no existing carrier to reuse.
+The original SWF measurement at a627849 also failed in `swf_appearance.hpp:123`, where
+`colorAdjustments: Adjustment[]` receives `createColorScaleBiasAdjustment(...)`. Its TypeScript
+heritage is `ColorScaleBiasAdjustment extends ColorMatrixAdjustment extends Adjustment`, but the
+flattened concrete reference could not enter `Array<Ref<Adjustment>>`.
+
+At compiler `806d257`, the existing declaration repairs already preserve ColorMatrixAdjustment's
+Adjustment base and TintAdjustment's ColorMatrixAdjustment base. G2 extends that same bounded repair
+family to ColorScaleBiasAdjustment, removing only duplicated inherited fields and retaining the
+original concrete allocation through ordinary C++ shared-pointer widening. See
+[the current widening repair](interface-heritage-widening.md#g2-swf-color-transform-arrays-complete-the-existing-declared-heritage-chain).
+No copied base object, closed Adjustment union, pointer reinterpretation or general refinement model
+is supplied. This closes that particular missing declared edge; it does not close this request's
+reverse-direction owner recovery or the other unrepaired concrete interfaces.
 
 Also blocks `swf_sound_handler.hpp` at a627849: `cues: TimelineCue[]` receives
 `TimelineStreamAudioCue`, which extends `TimelineCue` in TypeScript but not in the emitted C++ (3 sites).
