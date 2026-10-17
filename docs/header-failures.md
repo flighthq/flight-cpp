@@ -216,7 +216,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 187 | `undeclared-identifier-785ed669` | 1 | PLAT | runtime | the emitted code names `resolve_quad_batch_instance_index`, which nothing declares |
 | 188 | `undeclared-identifier-7905640c` | 1 | 2D | compiler *(existing request)* | refused `canvasClipHooks` (RenderState asserted to CanvasRenderState without heritage) still stored; all clip callees emitted |
 | 189 | `undeclared-identifier-7d85a310` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glLensFlareEffectRunner` binding (and its callee `applyLensFlareEffectToGl`) but still emits the registration call that passes the runner |
-| 190 | `undeclared-identifier-7e3a780f` | 1 | PLAT | runtime | the emitted code names `hit_test_sprite_alpha`, which nothing declares |
+| 190 | `undeclared-identifier-7e3a780f` | 1 | PLAT | declaration repair (applied) | exact Sprite alpha helper declared; G2: 1 pass; registration and pixel hit testing remain unlinkable |
 | 191 | `undeclared-identifier-7fd1550e` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glCameraMotionBlurEffectRunner` binding (and its callee `applyCameraMotionBlurEffectToGl`) but still emits the registration call that passes the runner |
 | 192 | `undeclared-identifier-7ff1c319` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glVignetteEffectRunner` binding (and its callee `applyVignetteEffectToGl`) but still emits the registration call that passes the runner |
 | 193 | `undeclared-identifier-8653adf0` | 1 | 2D | runtime | the emitted code names `ensure_scene_2d_runtime`, which nothing declares |
@@ -3531,14 +3531,39 @@ sweep/carry totals remain unchanged. No old native/rendering proof or global swe
 - Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
 - compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
-### 190. `undeclared-identifier-7e3a780f` — 1 header(s)
+### 190. `undeclared-identifier-7e3a780f` — 1 header, resolved by declaration-only repair
 
-- cause: the emitted code names `hit_test_sprite_alpha`, which nothing declares
-- subject: `hit_test_sprite_alpha`
+- original subject: `hit_test_sprite_alpha`
 - lanes: PLAT
-- fix route: runtime
-- first failure at: `flight/interaction/register_sprite_hit_test.hpp:127`
-- example: `use of undeclared identifier 'hit_test_sprite_alpha'`
+- original failure at: `flight/interaction/register_sprite_hit_test.hpp:127`
+- fix route: existing `declare-refused-function` repair, `interaction-declare-refused-sprite-alpha-hit`
+- retained caller: [exact direct-call declaration and link boundary](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-interaction-sprite-alpha-hit-retains-its-refused-helper)
+- body request: [original node and pixel-source owners](compiler-requests/readonly-callback-derived-owner-recovery.md#g2-interaction-sprite-alpha-hits-need-the-original-node-and-pixel-source-owners)
+
+The exact refusal marker, live direct same-header lambda call and absent definition agree. The existing
+repair declares the actual readonly HostBitmapReadbackCapability row, NodeAny and present double x/y/
+threshold parameters with a double result. It matches one header and is idempotent; neither a callback
+reference witness nor cross-header caller list/engine extension is needed. The wrapper's default1,
+optional threshold, readonly-host capture and complete NodeAny/Texture/source/numeric domains stay.
+
+Normal exact-pin one-module generation reproduces only the declaration (+2 header lines) and its own
+manifest repair record. The carried header exactly equals the tested real candidate. The actual unused
+header compiles, links and runs with static signature/slot/default/explicit-zero checks. Actual default-
+and explicit-threshold registration calls compile to an object, then fail to link on **only** the exact
+missing helper. No eager registration is misreported as an explicit-use negative link, and no host
+provider, registration, readback, bitmap-cache or hit operation is executed or supplied.
+
+The original owned-header jobs1 check completes **1 attempted / 1 pass / 0 fail / 0 unattempted**.
+The sole row is pass with `previousCluster`, and the active cluster is removed; no other header is
+measured or promoted. Both body omissions (`hitTestSpriteAlpha` and `bitmapForImage`), partial marker,
+source/refusal fingerprints, package/global counts, initialization and applicability policy remain.
+The bitmap helper has no retained live caller and receives no declaration. Existing owner/refinement
+requests retain graph-local bounds, original Sprite/data/texture/source/Bitmap owners and weak image
+lifetime, successful-only capture caching/retries, original required provider results/errors and exact
+UV-offset/image-size/local-point floors, bitmap bounds and Alpha-threshold comparison. No fake hit,
+copied graph/bitmap, new invalidation policy, narrowed domain, source/runtime/override supply or shared
+Sprite/Node/bounds/peer QuadBatch edit is carried. Foreign raw registry/worklist/request data and
+historical/G1 totals are preserved.
 
 ### 191. `undeclared-identifier-7fd1550e` — G2 recheck of 1 header(s)
 
