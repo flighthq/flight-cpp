@@ -2072,6 +2072,21 @@ if(TARGET Flight::HostSdlWgpu)
 endif()
 
 if(TARGET Flight::HostSdlGl)
+  add_executable(flight_cpp_host_sdl_gl_app_tests host_sdl_gl_app_test.cpp)
+  target_link_libraries(flight_cpp_host_sdl_gl_app_tests PRIVATE Flight::HostSdlGl)
+  flight_cpp_set_project_warnings(flight_cpp_host_sdl_gl_app_tests)
+  add_test(NAME flight_cpp.host_sdl_gl_app COMMAND flight_cpp_host_sdl_gl_app_tests)
+  if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set_tests_properties(flight_cpp.host_sdl_gl_app PROPERTIES
+      ENVIRONMENT "SDL_VIDEODRIVER=offscreen;LIBGL_ALWAYS_SOFTWARE=1")
+  endif()
+
+  set(source "${CMAKE_CURRENT_BINARY_DIR}/header_host_sdl_gl_app_test.cpp")
+  file(GENERATE OUTPUT "${source}" CONTENT "#include <flight/host_sdl/gl_app.hpp>\n")
+  add_library(flight_cpp_header_host_sdl_gl_app_test OBJECT "${source}")
+  target_link_libraries(flight_cpp_header_host_sdl_gl_app_test PRIVATE Flight::HostSdlGl)
+  flight_cpp_set_project_warnings(flight_cpp_header_host_sdl_gl_app_test)
+
   set(source "${CMAKE_CURRENT_BINARY_DIR}/header_host_sdl_image_test.cpp")
   file(GENERATE OUTPUT "${source}" CONTENT "#include <flight/host_sdl/image.hpp>\n")
   add_library(flight_cpp_header_host_sdl_image_test OBJECT "${source}")

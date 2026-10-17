@@ -280,6 +280,7 @@ if(FLIGHT_CPP_BUILD_HOST_SDL)
   add_library(
     flight_host_sdl_gl
     src/host_sdl/gl.cpp
+    src/host_sdl/gl_app.cpp
     src/host_sdl/web_platform.cpp
     src/host_sdl/webgl.cpp
   )

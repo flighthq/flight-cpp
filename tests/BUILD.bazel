@@ -1674,6 +1674,15 @@ cc_test(
 )
 
 cc_test(
+    name = "host_sdl_gl_app_test",
+    srcs = ["host_sdl_gl_app_test.cpp"],
+    size = "small",
+    tags = ["manual"],
+    env = {"SDL_VIDEODRIVER": "offscreen", "LIBGL_ALWAYS_SOFTWARE": "1"},
+    deps = ["//:host_sdl_gl"],
+)
+
+cc_test(
     name = "host_sdl_test",
     srcs = ["host_sdl_test.cpp"],
     env = {

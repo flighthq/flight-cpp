@@ -3,7 +3,7 @@
 
 #include "sdl_host.hpp"
 
-#include <flight/host_sdl/webgl.hpp>
+#include <flight/host_sdl/gl_app.hpp>
 #include <flight/host_sdl/web_platform.hpp>
 #include <flight/node/native_node2d_access.hpp>
 #include <flight/scene2d/display_object.hpp>
@@ -23,9 +23,7 @@
 #include <flight/scene2d_gl/gl_sprite.hpp>
 #include <flight/scene2d_gl/gl_standard_material.hpp>
 #include <SDL3/SDL_surface.h>
-#include <chrono>
 #include <fstream>
-#include <thread>
 #include <unordered_set>
 
 
@@ -234,9 +232,9 @@ class CameraExample final {
       else if (arg == "--capture" && i+1<argc) capture = argv[++i];
       else throw std::runtime_error("usage: camera2d [--smoke] [--capture frame.ppm]");
     }
-    flight::host_sdl::Host host;
-    auto canvas = flight::host_sdl::GlCanvas::create(800, 600, 1, flight::String("Flight Camera2D - Scene2D GL"), smoke);
-    auto gl = canvas.get_context(); gl.make_current();
+    flight::host_sdl::GlApplication app({
+        .title = "Flight Camera2D - Scene2D GL", .width = 800, .height = 600, .hidden = smoke});
+    auto gl = app.context();
     auto options = flight::make_ref<flight::types::GlRenderStateOptions>();
     options->pixel_ratio = 1; options->scene_graph_sync_policy = flight::String("requiresInvalidation");
     options->blend_realizations = flight::render_gl::standard_gl_blend_realizations;
@@ -255,21 +253,11 @@ class CameraExample final {
     using Texture = std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>;
     Texture hud_target(SDL_CreateTexture(hud.native_renderer(), SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, 800, 96), SDL_DestroyTexture);
     if (!hud_target) throw std::runtime_error(SDL_GetError());
-    CameraInput input; std::size_t frames=0, maximum_coverage=0; bool running=true;
-    std::uint64_t previous = flight::host_sdl::Host::ticks_nanoseconds();
-    while (running) {
-      input.wheel_y = 0;
-      SDL_Event event{};
-      while (host.poll_event(event)) {
-        if (event.type == SDL_EVENT_QUIT || event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED || (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_ESCAPE)) running=false;
-        if (event.type == SDL_EVENT_KEY_DOWN) input.keys.insert(event.key.key);
-        if (event.type == SDL_EVENT_KEY_UP) input.keys.erase(event.key.key);
-        if (event.type == SDL_EVENT_MOUSE_MOTION) { input.pointer_x=event.motion.x; input.pointer_y=event.motion.y; }
-        if (event.type == SDL_EVENT_MOUSE_WHEEL) { input.wheel_y += event.wheel.y; input.pointer_x=event.wheel.mouse_x; input.pointer_y=event.wheel.mouse_y; }
-      }
-      const auto now = flight::host_sdl::Host::ticks_nanoseconds();
-      const double dt = smoke ? 1.0/60.0 : std::min(static_cast<double>(now-previous)/1e9,0.1); previous=now;
-      frame(Frame{input,dt,frames,smoke});
+    CameraInput input; std::size_t frames=0, maximum_coverage=0;
+    flight::host_sdl::GlLoopOptions loop;
+    if (smoke) { loop.fixed_delta_time = 1.0/60.0; loop.maximum_frames = 3; }
+    app.run([&](const flight::host_sdl::GlFrame& timing) {
+      frame(Frame{input,timing.delta_time,timing.index,smoke});
       update_hud(hud, hud_target.get()); gl.make_current();
       if (!flight::render::prepare_scene_2d_render(state, root_)) throw std::runtime_error("Camera2D authored scene was not prepared");
       auto pass = flight::render_gl::begin_gl_render_pass(state, screen, readonly_row(clear));
@@ -292,10 +280,14 @@ class CameraExample final {
           if (!out) throw std::runtime_error("Camera2D capture write failed");
         }
       }
-      gl.present(); ++frames;
-      if (smoke && frames>=3) running=false;
-      if (!smoke) std::this_thread::sleep_for(std::chrono::milliseconds(8));
-    }
+      ++frames;
+      input.wheel_y = 0;
+    }, loop, [&](const SDL_Event& event) {
+      if (event.type == SDL_EVENT_KEY_DOWN) input.keys.insert(event.key.key);
+      if (event.type == SDL_EVENT_KEY_UP) input.keys.erase(event.key.key);
+      if (event.type == SDL_EVENT_MOUSE_MOTION) { input.pointer_x=event.motion.x; input.pointer_y=event.motion.y; }
+      if (event.type == SDL_EVENT_MOUSE_WHEEL) { input.wheel_y += event.wheel.y; input.pointer_x=event.wheel.mouse_x; input.pointer_y=event.wheel.mouse_y; }
+    });
     if (smoke) {
       if (subject_verified_frames_ != 3 || follow_updates_ != 3 || shape_count_ != 66 || sprite_count_ != 45) throw std::runtime_error("Camera2D GL did not verify all authored frames and nodes");
       std::cout << "scene2d-gl package smoke: rendered " << subject_verified_frames_ << " verified frames, " << node_count_ << " nodes, maximum non-background coverage " << maximum_coverage << '\n';

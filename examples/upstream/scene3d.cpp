@@ -1,7 +1,7 @@
 // Native SDL/OpenGL ES port of @flighthq/example-scene3d.
 // Sources: .dependencies/flight/examples/packages/scene3d/src/{app,render.webgl}.ts
 
-#include <flight/host_sdl/host.hpp>
+#include <flight/host_sdl/gl_app.hpp>
 #include <flight/host_sdl/web_platform.hpp>
 #include <flight/host_sdl/webgl.hpp>
 
@@ -30,7 +30,6 @@
 #include <SDL3/SDL_keycode.h>
 
 #include <algorithm>
-#include <chrono>
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
@@ -43,7 +42,6 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
-#include <thread>
 #include <utility>
 #include <variant>
 
@@ -263,11 +261,10 @@ struct Scene final {
 class Scene3DExample final {
  public:
   explicit Scene3DExample(bool smoke)
-      : host_(),
-        canvas_(flight::host_sdl::GlCanvas::create(
-            800, 600, 1.0, flight::String("Flight scene3d - SDL + OpenGL ES"),
-            smoke)),
-        gl_(canvas_.get_context()),
+      : app_({.title = "Flight scene3d - SDL + OpenGL ES",
+              .width = 800, .height = 600, .hidden = smoke}),
+        canvas_(app_.canvas()),
+        gl_(app_.context()),
         platform_input_(canvas_),
         scene_(create_scene()) {
     gl_.make_current();
@@ -327,11 +324,9 @@ class Scene3DExample final {
   }
 
   int run(bool smoke, const std::optional<std::string>& capture_path) {
-    using namespace std::chrono_literals;
     std::size_t frames = 0;
     std::size_t verified_frames = 0;
     std::size_t maximum_coverage = 0;
-    bool running = true;
     const auto draw_frame = [&]() {
       auto capture = render(
           smoke || (capture_path.has_value() && !captured_), smoke);
@@ -363,40 +358,24 @@ class Scene3DExample final {
               std::max(maximum_coverage, frame.pixels_different_from_corner);
         }
       }
-      gl_.present();
       ++frames;
-      if (smoke && frames >= 3) running = false;
     };
 
     // The TypeScript authority renders once immediately after its initial controller update, then
     // schedules the time-stepped animation callback. Preserve that first-frame ordering here.
     draw_frame();
-    std::uint64_t previous = flight::host_sdl::Host::ticks_nanoseconds();
-    while (running) {
-      SDL_Event event{};
-      while (host_.poll_event(event)) {
-        if (event.type == SDL_EVENT_QUIT ||
-            event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED ||
-            (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_ESCAPE)) {
-          running = false;
-        }
-        static_cast<void>(platform_input_.dispatch(event));
-      }
-
-      const std::uint64_t now = flight::host_sdl::Host::ticks_nanoseconds();
-      const double delta_time = smoke
-                                    ? 1.0 / 60.0
-                                    : std::min(
-                                          static_cast<double>(now - previous) /
-                                              1'000'000'000.0,
-                                          0.05);
-      previous = now;
+    app_.present();
+    flight::host_sdl::GlLoopOptions loop;
+    loop.maximum_delta_time = 0.05;
+    if (smoke) { loop.fixed_delta_time = 1.0 / 60.0; loop.maximum_frames = 2; }
+    app_.run([&](const flight::host_sdl::GlFrame& frame) {
       flight::camera_controls::update_orbit_camera_controller(
-          scene_.controller, scene_.camera, delta_time);
+          scene_.controller, scene_.camera, frame.delta_time);
       ++controller_updates_;
       draw_frame();
-      std::this_thread::sleep_for(8ms);
-    }
+    }, loop, [this](const SDL_Event& event) {
+      static_cast<void>(platform_input_.dispatch(event));
+    });
     if (smoke) {
       if (verified_frames != frames) {
         throw std::runtime_error(
@@ -536,7 +515,7 @@ class Scene3DExample final {
     };
   }
 
-  flight::host_sdl::Host host_;
+  flight::host_sdl::GlApplication app_;
   flight::host_sdl::GlCanvas canvas_;
   flight::host_sdl::WebGl2Context gl_;
   flight::host_sdl::WebPlatformInput platform_input_;

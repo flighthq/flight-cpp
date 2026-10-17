@@ -12,6 +12,10 @@ These targets require both `FLIGHT_CPP_BUILD_EXAMPLES=ON` and
 `FLIGHT_CPP_BUILD_HOST_SDL=ON`; `camera2d` and `scene3d` also require the `Flight::HostSdlGl` target. A build
 without the optional SDL host does not advertise headless substitutes as examples.
 
+The GL ports use the installed `flight::host_sdl::GlApplication` window and frame-loop API from
+`Flight::HostSdlGl`. Downstream applications can use the same API without linking this directory;
+see `docs/host-sdl.md` for timing, resize, event, presentation, and shutdown behavior.
+
 ## Runnable ports
 
 | Target suffix | Flight subsystem used for behavior | Behavior preserved from the TypeScript example |

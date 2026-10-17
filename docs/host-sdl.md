@@ -148,6 +148,37 @@ target_link_libraries(my_gl_app PRIVATE Flight::HostSdlGl)
 
 ## Ownership and event loop
 
+`Flight::HostSdlGl` installs `<flight/host_sdl/gl_app.hpp>` for applications and bindings that need
+a window and a frame callback without any example code or generated SDK. `GlApplication` owns the
+SDL video lifetime and GLES surface. Its loop polls events, reports delta time and both logical and
+pixel sizes, makes the context current, calls the frame callback, then presents once. The first
+frame and any size change set `GlFrame::resized`. The application chooses its Flight renderer and
+updates its render target/projection when those sizes change.
+
+```cpp
+#include <flight/host_sdl/gl_app.hpp>
+
+int main() {
+  flight::host_sdl::GlApplication app({.title = "Flight app", .width = 800, .height = 600});
+  app.run([&](const flight::host_sdl::GlFrame& frame) {
+    const auto& gl = app.context();
+    gl.viewport(0, 0, frame.pixel_size.width, frame.pixel_size.height);
+    gl.clear_color(0.1, 0.1, 0.18, 1.0);
+    gl.clear(gl.color_buffer_bit);
+    // Prepare and draw a Flight scene here, using frame.delta_time for its update.
+  });
+}
+```
+
+Pass an event callback as the third `run` argument for SDL input or `WebPlatformInput::dispatch`.
+`resize(width, height)` requests a window resize; `request_shutdown()` stops after the current
+frame. SDL quit, this window's close request, and Escape stop before another frame. A stopped loop
+may be run again, and callback exceptions propagate. `GlLoopOptions` supports a maximum delta,
+optional fixed delta and frame count for deterministic capture, and an idle delay. `present()` is
+also available for an immediate frame outside `run`; the loop already presents its callback's frame.
+Destroy the application on the SDL main thread to release its resources. Retained `GlCanvas` or
+`WebGl2Context` handles share the existing surface lifetime. No painter is part of this API.
+
 SDL video operations must run on the main thread. Construct `Host` before `Window`; destroy GL contexts and Vulkan or
 WebGPU surfaces before their window; destroy windows before `Host`. The types are move-only so ownership transfers are
 explicit.
