@@ -3333,6 +3333,12 @@
         "flight/scene3d_wgpu/wgpu_scene_3d_runtime.hpp"
       ],
       "id": "scene3d-wgpu-declare-refused-scene-runtime"
+    },
+    {
+      "files": [
+        "flight/render/enable_color_adjustments.hpp"
+      ],
+      "id": "render-inherited-color-scale-bias-parent-owner-recovery"
     }
   ],
   "sourcePatches": [

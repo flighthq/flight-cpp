@@ -47,6 +47,14 @@ Clang rejects the comparison as invalid operands between the two optional carrie
 of `flight/spritesheet/spritesheet_player.hpp`; three other failing headers stop first in the separately
 partial `@flighthq/textureatlas` dependency.
 
+A second measured site at the same pins: `@flighthq/render` `enableColorAdjustments.ts`, in
+`resolveInheritedColorScaleBias` (`flight/render/enable_color_adjustments.hpp:94`). `previous` is the
+nominal `optional<Ref<ColorScaleBias>>` parameter, while `parent` and `local` are readonly structural
+optionals, so the emitted `previous != parent.value()` and `previous != local.value()` compare the two
+carriers directly. The same header carries three further families (a nominal-owner return recovery, a
+readonly-to-writable projection at `concat_color_scale_bias`, and omitted matrix helpers), so this
+comparison is not its only blocker.
+
 ## Required lowering
 
 Strict equality must compare the retained owners, without copying or recovering mutable authority:

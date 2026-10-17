@@ -96,7 +96,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 67 | `other-3d2efc1d` | 3 | 2D | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 68 | `other-41f4a462` | 3 | ANIM | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 69 | `other-6a1604d5` | 3 | PLAT | runtime | uncategorised: the first diagnostic does not name a single cause |
-| 70 | `other-b860ec87` | 3 | 2D, GL | runtime | uncategorised: the first diagnostic does not name a single cause |
+| 70 | `other-b860ec87` | 3 | 2D, GL | emission repair (applied) | omitted nominal-owner recovery supplied at the `return parent` branch; G2: 0 pass, 3 fail at the readonly-vs-nominal comparison |
 | 71 | `other-f9c5bc10` | 3 | 2D | compiler | an `as` assertion over a `flight::JsonValue` is lowered with the erased-value `object_if` pattern, which a tagged JSON value ca... *(request filed)* |
 | 72 | `redefinition-c11d96e9` | 3 | TEXT | runtime (fixed) | the bitmap_font_record override's `#pragma once` was commented out; G2 recheck: 0 pass, 3 fail at `bitmap_font_fnt.hpp:187` |
 | 73 | `undeclared-identifier-145c75d7` | 3 | TEXT | runtime | the emitted code names `initialize_glyph_source_from_glyph_atlas`, which nothing declares |
@@ -1276,13 +1276,30 @@ permissive assignment or always-default style behavior was supplied. Text layout
 - first failure at: `flight/tray/enable_tray_guards.hpp:25`
 - example: `no type named 'set_tray_animation_guard' in namespace 'tray'`
 
-### 70. `other-b860ec87` — 3 header(s)
+### 70. `other-b860ec87` — 3 header(s), expression repaired
 
-- cause: uncategorised: the first diagnostic does not name a single cause
+- original cause: `resolveInheritedColorScaleBias` returned a readonly structural row directly as its
+  declared nominal `ColorScaleBias` owner, and the emitter dropped the recovery cast on that branch
 - lanes: 2D, GL
-- fix route: runtime
-- first failure at: `flight/render/enable_color_adjustments.hpp:92`
-- example: `no matching constructor for initialization of 'optional<Ref<ColorScaleBias>>'`
+- fix route: emission repair (text only), with the compiler request still open
+- compiler request: [readonly-row-return-owner-recovery.md](compiler-requests/readonly-row-return-owner-recovery.md)
+
+`render-inherited-color-scale-bias-parent-owner-recovery` adds exactly the
+`flight::structural_ref_cast<Ref<ColorScaleBias>>(...)` the emitter already emits on the sibling
+`return local` branch. The cast recovers the exact shared owner (and throws `bad_cast` when the view is
+not that object), so one object, one control block and one lifetime are kept; no owner is copied, no
+writable row is formed and no optional is reinterpreted.
+
+Written by **normal package generation** at the exact pins (`flight` a627849 / `flight-compiler`
+806d257): the pre-write check named exactly `enable_color_adjustments.hpp` and `manifest.json`, and the
+write produced only those two.
+
+G2: **0/3 compile, 3 fail, 0 unattempted** at `-j1` with Clang 22.1.8. All three now fail one family
+further, at the strict comparison between the nominal optional and the readonly row.
+
+| follow-on cluster | owned headers | first failure | route / cause |
+| --- | --- | --- | --- |
+| `invalid-operands-6c12cdba` | 3 | `flight/render/enable_color_adjustments.hpp:94` | compiler: `previous != parent.value()` compares `optional<Ref<ColorScaleBias>>` with a readonly `StructuralRef`; [existing request](compiler-requests/readonly-structural-nominal-identity-comparison.md). The same header keeps a readonly-to-writable projection at `:95` and omitted matrix helpers at `:147`-`:149` and `:198`. |
 
 ### 71. `other-f9c5bc10` — 3 header(s)
 

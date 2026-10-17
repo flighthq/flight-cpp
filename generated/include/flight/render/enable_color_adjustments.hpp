@@ -89,7 +89,7 @@ inline std::optional<flight::Ref<flight::types::ColorScaleBias>> resolve_inherit
     return ([&]() -> std::optional<flight::Ref<flight::types::ColorScaleBias>> { auto contextual_union_source = local; if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<flight::Ref<flight::types::ColorScaleBias>>{flight::structural_ref_cast<flight::Ref<flight::types::ColorScaleBias>>(contextual_union_source.value())}; }());
   }
   if (!local.has_value()) {
-    return std::optional<flight::Ref<flight::types::ColorScaleBias>>{parent.value()};
+    return std::optional<flight::Ref<flight::types::ColorScaleBias>>{flight::structural_ref_cast<flight::Ref<flight::types::ColorScaleBias>>(parent.value())};
   }
   auto out = (((((previous != parent.value()) && (previous != local.value())) && previous.has_value()) && inherited_color_scale_biases.has(previous.value())) ? previous.value() : create_inherited_color_scale_bias());
   flight::materials::concat_color_scale_bias(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ColorScaleBiasLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ColorScaleBias>>>>(parent.value())), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::ColorScaleBiasLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ColorScaleBias>>>>(local.value())));
