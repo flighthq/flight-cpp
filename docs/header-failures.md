@@ -98,7 +98,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 69 | `other-6a1604d5` | 3 | PLAT | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 70 | `other-b860ec87` | 3 | 2D, GL | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 71 | `other-f9c5bc10` | 3 | 2D | runtime | uncategorised: the first diagnostic does not name a single cause |
-| 72 | `redefinition-c11d96e9` | 3 | TEXT | runtime | a declaration is emitted twice |
+| 72 | `redefinition-c11d96e9` | 3 | TEXT | runtime (fixed) | the bitmap_font_record override's `#pragma once` was commented out; G2 recheck: 0 pass, 3 fail at `bitmap_font_fnt.hpp:187` |
 | 73 | `undeclared-identifier-145c75d7` | 3 | TEXT | runtime | the emitted code names `initialize_glyph_source_from_glyph_atlas`, which nothing declares |
 | 74 | `undeclared-identifier-2cdb69a6` | 3 | PLAT | runtime | the emitted code names `channel_elements`, which nothing declares |
 | 75 | `undeclared-identifier-564c29cc` | 3 | TEXT | runtime | the emitted code names `format_date_value`, which nothing declares |
@@ -147,7 +147,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 118 | `missing-member-ad3558ee` | 1 | ANIM | runtime | the emitted code reads a member the target does not declare (`physics_2d_distance_joint_solver`) |
 | 119 | `missing-member-b5408b35` | 1 | 3D | runtime | the emitted code reads a member the target does not declare (`get_node_world_matrix4`) |
 | 120 | `missing-member-d7bf452c` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`begin`) |
-| 121 | `missing-member-dae8c839` | 1 | TEXT | runtime | the emitted code reads a member the target does not declare (`width`) |
+| 121 | `missing-member-dae8c839` | 4 | TEXT | runtime | the emitted code reads a member the target does not declare (`width`) |
 | 122 | `missing-member-dcf85c36` | 1 | 3D | runtime | the emitted code reads a member the target does not declare (`collect_md5_anim_features`) |
 | 123 | `missing-member-ee398c94` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`register_canvas_texture_resolver`) |
 | 124 | `missing-member-fd2be1bc` | 1 | TEXT | runtime | the emitted code reads a member the target does not declare (`object_if`) |
@@ -1178,13 +1178,22 @@ permissive assignment or always-default style behavior was supplied. Text layout
 - first failure at: `flight/tilemap_formats/tilemap_detect.hpp:49`
 - example: `too many arguments to function call, expected single argument 'prefix', have 2 arguments`
 
-### 72. `redefinition-c11d96e9` — 3 header(s)
+### 72. `redefinition-c11d96e9` — G2 recheck of 3 headers
 
-- cause: a declaration is emitted twice
-- lanes: TEXT
-- fix route: runtime
-- first failure at: `flight/bitmapfont_formats/bitmap_font_record.hpp:23`
-- example: `redefinition of default argument`
+Nothing was emitted twice. The override `overrides/include/flight/bitmapfont_formats/bitmap_font_record.hpp`
+had its `#pragma once` joined onto the end of a comment line (`// express.#pragma once`), so it had no
+include guard. `bitmap_font_detect.hpp` reaches it twice, through `bitmap_font_fnt.hpp` and
+`bitmap_font_binary.hpp`, and the second copy redefined `build_bitmap_font_from_record` and its default
+argument. The guard now has its own line. No declaration, body, default argument or signature changed,
+and `npm run overrides:check` still matches all 226 overrides to their generated sources: the override
+is unchanged against `eb4d4fdf...` and is still `complete`. This was the only override with a commented-out guard.
+
+G2: **0/3 compile, 3 fail**, all attempted at `-j1` with GCC 15.2. `bitmap_font_record.hpp` compiles on
+its own. All three now fail at the next diagnostic:
+
+| follow-on cluster | headers | first failure | cause |
+| --- | --- | --- | --- |
+| `missing-member-dae8c839` | 3 | `flight/bitmapfont_formats/bitmap_font_fnt.hpp:187` | `.width` read on an image-source `std::variant` |
 
 ### 73. `undeclared-identifier-145c75d7` — 3 header(s)
 
@@ -1650,7 +1659,7 @@ two further host binding shapes:
 - first failure at: `flight/object.hpp:45`
 - example: `no member named 'begin' in 'StructuralRef<RowReadonly<RowOf<Record<String, FlightDocumentValue>>>>'`
 
-### 121. `missing-member-dae8c839` — 1 header(s)
+### 121. `missing-member-dae8c839` — 4 header(s)
 
 - cause: the emitted code reads a member the target does not declare (`width`)
 - subject: `width`

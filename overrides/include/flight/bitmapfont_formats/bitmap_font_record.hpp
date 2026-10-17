@@ -4,7 +4,8 @@
 // Re-derived 2026-10-12: the emitted bitmap_font_record.hpp is complete (no omitted declarations),
 // and this override carries both of the module's exports -- build_bitmap_font_from_record and
 // report_dropped_bitmap_font_records -- with the record-init-list rewrite the emitter still cannot
-// express.#pragma once
+// express.
+#pragma once
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
