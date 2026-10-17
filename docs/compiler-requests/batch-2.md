@@ -1,37 +1,48 @@
 # Compiler request batch 2 — draft (2026-10-17)
 
-**Hold for Foreman review; not sent to Principal or flight-compiler.** The RichText and WGPU IBL
-bake dispositions and five historical resource-crash records are still pending. Reconcile those
-owners' final results before releasing one upstream bundle. This draft adds no implementation or
+**Ready for Foreman review; not sent to Principal or flight-compiler.** All **731 failed rows**
+have substantive primary request coverage. Primary and related links reach **103 existing request
+files**; every row maps to one of 177 active clusters, with exact membership counts and no broken
+request paths. No owner
+disposition or resource-record partition remains pending. Upstream release still requires Foreman
+review, including the resource-check receipt clarification. This draft adds no implementation or
 compiler-fix commitment.
 
 Against compiler `806d257` / Flight `a627849`. Counts below use the scoped G2 worklist at
-flight-cpp `71f4b0a99dc53ca7ffaff9bc379f3525fd4e0f49`: [header inventory](../../generated/header-status.json)
-and [cause/disposition worklist](../header-failures.md). There are **3,153 rows: 2,421 PASS / 732 FAIL,
-178 active clusters**. This is accumulated scoped evidence, not a fresh full sweep. The original
+flight-cpp `2fab8951c4fabfb2c0c521cb3e868c5284dd6b74`: [header inventory](../../generated/header-status.json)
+and [cause/disposition worklist](../header-failures.md). There are **3,153 rows: 2,422 PASS / 731 FAIL,
+177 active clusters**. This is accumulated scoped evidence, not a fresh full sweep. The original
 G1 sweep remains 2,339 PASS / 813 FAIL of 3,152; its historical totals are unchanged.
 
 ## Scope and counting
 
 [Batch 1](batch-1.md) already carries seven ranked items, linking eight request files, with about
-234 affected headers at its historical snapshot. Its current first-cause footprint is **268 failed
-headers**: descriptors 132, local re-export order 40, membership 32, JSON-parse casts 25, optional
+234 affected headers at its historical snapshot. Its current first-cause footprint is **269 failed
+headers**: descriptors 133, local re-export order 40, membership 32, JSON-parse casts 25, optional
 Record literals 17, tuple pairs 13 and numeric predicate callbacks 9. These requests are excluded
 from the batch-two table; do not add the old 234 estimate to today's counts.
 
 Each remaining failed header is assigned once, using its own primary request, falling back to its
-cluster's primary request, and its current cluster's route. This preserves intentional row-specific
-primaries in mixed clusters. The table groups **451 compiler-routed failed headers across 63 primary
-request files**. Multiple linked requests in a row retain their distinct triggers; their combined
+cluster's primary request. This preserves intentional row-specific primaries in mixed clusters.
+The table groups **456 failed headers across 63 primary compiler-request files**: 455 are routed to
+the compiler in the inventory; the RichText retained-callee row still has a `runtime` route but joins
+its actual filed compiler-request family here. That explicit one-row inclusion changes no inventory
+route. The six separate binding/runtime rows below remain outside this bundle. Multiple linked
+requests in a row retain their distinct triggers; their combined
 count is a union of assigned headers, not an estimate of headers one fix will unblock. Related
 requests and later diagnostics in the dossiers add no second header count. Includers are included
 in these counts; they are not additional independent reproductions.
 
-The complete failed-row partition is **268 batch one + 451 batch two + 2 pending compiler rows +
-5 historical resource records + 6 binding/runtime rows = 732**. The six separately routed rows are
+The complete failed-row partition is **269 batch one + 456 batch two +
+6 binding/runtime rows = 731**. The six separately routed rows are
 the [DOM shared-style boundary](dom-style-shared-element-boundary.md) (5) and the
 [Scene3D present nullable-cell projection](readonly-structural-member-carrier-widening.md) (1).
 The 20 PASS rows carried through prior-emission overrides are separate from this failed-row partition.
+
+The owner rechecked only the five former resource records serially at `-j1` on `4d9a4ae8`: one PASS,
+four ordinary failures, zero reproduced crashes. Three failures now join the readonly-program cause
+and one joins the union-array cause below. No resource-pending category or new crash request remains;
+the original G1 sweep and serial-retry history are preserved.
 
 ## Remaining compiler requests
 
@@ -42,14 +53,14 @@ provider. No replacement bodies, permissive owner casts or narrowed source domai
 
 | Failed headers | Existing requests | Recorded cause / required boundary |
 | ---: | --- | --- |
-| 95 | [Retained omitted callee](retained-declaration-calls-omitted-callee.md) (53); [refused runner/registration](custom-shader-effect-runner-owner.md) (42) | Retained code names refused functions or bindings. Keep declaration dependencies coherent; declarations alone do not supply bodies. Runner variables and eager initializers have separate qualification limits. |
+| 96 | [Retained omitted callee](retained-declaration-calls-omitted-callee.md) (54); [refused runner/registration](custom-shader-effect-runner-owner.md) (42) | Retained code names refused functions or bindings. Keep declaration dependencies coherent; declarations alone do not supply bodies. Runner variables and eager initializers have separate qualification limits. |
 | 50 | [Declared heritage](interface-heritage-widening.md) (42); [nullable heritage owner](compiler-interface-heritage-owner-widening.md) (8) | Flattened independent owners cannot perform source-declared base widening, including callback and nullable storage boundaries. Preserve the original owner. |
 | 36 | [Generic argument substitution](generic-call-argument-uses-unsubstituted-parameter-type.md) | Caller conversions/literals name the callee's unsubstituted `Traits` or `K`; use the inferred type argument. |
 | 30 | [Contextual owned literal](contextual-object-literal-owner-materialization.md) | A source-selected SDK factory overload needs its owned options carrier, rather than bare designators. This differs from batch one's bound WebGPU descriptors. |
 | 26 | [Erased array reads](erased-array-element-reading.md) | `Array.isArray` guards leave iteration, indexed reads or length on `Any`; recover the original array and its element/length evidence. |
 | 19 | [Attachment slot lift](nullable-array-element-into-dual-sentinel-slot.md) (18); [nullish field storage](nullish-union-into-optional-field.md) (1) | Adapt the actual nullable/sentinel value to the destination slot while preserving distinct null/undefined states where declared. |
+| 16 | [Guarded readonly helper](guarded-readonly-optional-helper-call.md) (14); [readonly/writable round trip](readonly-view-to-writable.md) (2) | Pass the retained readonly program/source view directly to the readonly helper; do not manufacture write authority. |
 | 15 | [Heritage argument deduction](heritage-argument-generic-deduction.md) | Infer concrete node traits through declared interface heritage, rather than leaking `Traits` or selecting the default constraint. |
-| 13 | [Guarded readonly helper](guarded-readonly-optional-helper-call.md) (11); [readonly/writable round trip](readonly-view-to-writable.md) (2) | Pass the retained readonly program/source view directly to the readonly helper; do not manufacture write authority. |
 | 10 | [Class implementing interface](class-instance-as-implemented-interface.md) | SwfReader and its structural interface need one live reader, cursor and method owner. |
 | 10 | [Reference-backed variant reads](reference-backed-outcome-variant-narrowing.md) (5); [cube-face reads](cube-texture-width-and-completeness.md) (4); [nominal/row member access](collapsed-union-record-member-access.md) (1) | Select the active referenced alternative and use its actual member carrier; do not read properties on an optional/variant or invent a separate row. |
 | 9 | [Callable identity](local-handler-callable-identity.md) | Registry comparisons and signal cleanup must retain the same function object's identity through callable storage. |
@@ -79,12 +90,12 @@ provider. No replacement bodies, permissive owner casts or narrowed source domai
 | 2 | [Readonly callback derived owner](readonly-callback-derived-owner-recovery.md) | The bounds callback must retain the exact node and runtime capability rather than recover it from an erased base row. |
 | 2 | [Required-read nullish fallback](host-initialize-optional-fallback-on-a-required-read.md) | glTF skin indexing emits `value_or` on a present double; use the actual lookup/missing-value boundary. |
 | 2 | [Map-values local carrier](map-values-spread-local-element-carrier.md) | SWF placement spread storage must retain its typed elements instead of inferring `Array<Any>`. |
+| 2 | [Array of union into owner array](array-of-union-into-array-of-owner.md) | PBR extension guards and the extended renderer pass union-valued elements to an array of the base owner; an element-copying conversion is not equivalent. |
 | 1 | [Guarded external optional](guarded-external-optional-member-view.md) | WGPU capture loses the guarded texture payload; provider/readback and timer refusals remain separately recorded. |
 | 1 | [Same-carrier union domains](distinct-union-domains-one-carrier.md) | WGPU target initialization loses source-domain evidence at its format fallback; declaring it alone exposes absent texture size APIs. |
 | 1 | [External image discriminator/profile](image-source-union-domain-discriminator.md) | WGPU upload still lacks represented external-image value bindings **and a real provider copy operation**. Compiler/profile work alone is insufficient. |
 | 1 | [Structural row into unknown](structural-row-erasure-to-unknown.md) | Logging a readonly render-texture row needs owner-preserving erasure to Any, not a copied visible prefix. |
 | 1 | [Optional callback coalesce storage](compiler-flattened-optional-chain-union-storage.md) | Slot resolution applies `get_if` to an optional Node2D callback result; plan from its actual emitted storage. The carried property/texture patch does not cover this call trigger. |
-| 1 | [Array of union into owner array](array-of-union-into-array-of-owner.md) | PBR extension guards pass union-valued elements to an array of the base owner; an element-copying conversion is not equivalent. |
 | 1 | [Merged-row nominal recovery](merged-row-native-recovery-must-project.md) | DisposeNode must project a merged row before checked nominal recovery; runtime's deliberate assertion must stay intact. |
 | 1 | [Typed-array static from](typed-array-static-from-binding.md) | AWD2 geometry retains an omitted parser; the ambient `Uint32Array.from` binding and related typed-array/SequenceView union conversion are both owed. |
 | 1 | [Readonly unknown-array argument](typed-array-into-readonly-unknown-array-parameter.md) | The fake GL audit passes Array<double> to a readonly unknown-array parameter; preserve its original readonly sequence without a permissive Any-array conversion. |
@@ -98,7 +109,7 @@ provider. No replacement bodies, permissive owner casts or narrowed source domai
 These are separate acceptance dimensions. The current `declare-refused-function` manifest entries
 occur in **29 PASS defining headers, declaring 30 functions** (two material listers share one header).
 Those entries supply declarations, not implementations. This count excludes includers and other
-extern/binding repair kinds; it is not an exhaustive count of unavailable APIs, nor an addition to 451.
+extern/binding repair kinds; it is not an exhaustive count of unavailable APIs, nor an addition to 456.
 
 - [Retained-callee dispositions](retained-declaration-calls-omitted-callee.md) preserve each qualified
   unused-header positive link and explicit-use negative link, or the exact prerequisite that rejected
@@ -114,8 +125,9 @@ extern/binding repair kinds; it is not an exhaustive count of unavailable APIs, 
 - Carried G2 fixes with no assigned failed row still owe upstream lowering:
   [whole readonly-map key carrier](readonly-map-key-enumeration-value-carrier.md),
   [typed empty-map fallback](contextual-empty-array-fallback-element-evidence.md),
-  [named ObjMaterial row alias](named-interface-value-recast-as-anonymous-row.md), and
-  [bound readonly context carrier](readonly-bound-external-value-carrier.md).
+  [named ObjMaterial row alias](named-interface-value-recast-as-anonymous-row.md),
+  [bound readonly context carrier](readonly-bound-external-value-carrier.md), and
+  [native texture-cache local carrier](native-texture-source-cache-local-carrier.md).
   Their request-specific source/native checks have their stated scope; coverage graph/rendering
   behavior is separate. Rive graph fresh diagnostic allocation and SVG transform application likewise
   have bounded execution evidence, while Rive document rejection projection and SVG parsing remain open.
@@ -126,15 +138,24 @@ workarounds. Removing any carry requires its own expiry and semantic checks.
 
 ## Release hold
 
-Two ordinary rows remain unlinked at this snapshot: `flight/scene2d_gl/gl_rich_text.hpp`
-(`no-viable-conversion-4bbb9be5`, builder2) and
-`flight/scene3d_wgpu/wgpu_environment_ibl_bake.hpp` (`no-viable-conversion-562151da`, builder6).
-Builder owns the five `compiler-crash-aba5e9ec` Scene3D GL records. Their historical `-j8` status134
-is a resource-limit record with serial-pass provenance, not five new compiler requests.
+RichText's final `undeclared-identifier-74ca0a55` row now links the
+[retained-callee request at line327](retained-declaration-calls-omitted-callee.md#g2-site-scene2d-gl-rich-text-draw-scene2d_glgl_rich_texthpp327).
+The request records the actual `cpp-presence-test-without-absence-storage` overlay marker and links
+its separate absence-storage mechanism. The heritage refusals belong to destroy/layout siblings.
+The old cache-local request is history/supporting context, not the primary cause of the remaining
+failure. No optional-overlay signature or declaration/body was invented, and the header remains FAIL.
+WGPU bake also remains FAIL under batch one's descriptor request, with both faithful typing
+candidates discarded. Resource reconciliation is complete as recorded above.
 
 The coverage-explain header is already PASS. The custom mesh header remains FAIL after its real
 uniform upload fix, now linked to the existing readonly-source request above; neither result proves
-custom drawing or complete graph coverage. Refresh this snapshot's counts and include the remaining
-owners' final dispositions, then let Foreman review one final upstream handoff. Do not send this
-draft upstream or send individual request pings meanwhile. No build, generation or native checks were rerun
-to prepare this documentation.
+custom drawing or complete graph coverage. The 16 row/cluster primary-request differences still
+represent complementary causes, rather than missing links. Counts and the 29-header/30-declaration
+PASS boundary were refreshed from the named final snapshot; only the newly landed cause slices
+needed content review after the earlier full request audit.
+
+Foreman must review the final draft and resolve the resource-check receipt question with Integration
+before one upstream handoff. The worklist records the five serial results; this documentation does
+not independently repeat or attest those executions. Do not send this draft upstream or send
+individual request pings meanwhile. No build, generation, native or full sweep was rerun to prepare
+this documentation.
