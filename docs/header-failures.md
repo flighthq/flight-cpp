@@ -228,7 +228,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 199 | `undeclared-identifier-9aaa5b7f` | 1 | WGPU | compiler | capture hooks refuse optional guard evidence; exact three-declaration probe fails native mapped-range access *(existing and new requests)* |
 | 200 | `undeclared-identifier-a3f09fb8` | 1 | 2D | compiler *(existing request)* | refused `drawDomShape` retained as `.submit` in the renderer aggregate; declaration probe fails at `.create_data` |
 | 201 | `undeclared-identifier-a4a22a69` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glLensDistortionEffectRunner` binding (and its callee `applyLensDistortionEffectToGl`) but still emits the registration call that passes the runner |
-| 202 | `undeclared-identifier-a89b9a39` | 1 | GL | runtime | the emitted code names `gl_bitmap_displacement_effect_runner`, which nothing declares |
+| 202 | `undeclared-identifier-a89b9a39` | 1 | GL | compiler *(existing request)* | refused `glBitmapDisplacementEffectRunner` and resolver `isGlBitmapDisplacementEffectResolvable` both still registered (custom-shader shape) |
 | 203 | `undeclared-identifier-aa084556` | 1 | PLAT | runtime + declaration repairs (applied) | refused track-list guard and grid resolver declared; strict erased integer predicate supplied; G2: 1 pass; validator/registration remain unlinkable |
 | 204 | `undeclared-identifier-ae594b8a` | 0 | 2D | declaration repair (applied) | G2: 1/1 header; unused positive passes, handler links fail exactly on refused Lottie group walker |
 | 205 | `undeclared-identifier-af7a1054` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glMedianEffectRunner` binding (and its callee `applyMedianEffectToGl`) but still emits the registration call that passes the runner |
@@ -3717,14 +3717,17 @@ timeout behavior, source/runtime body or unchanged old/global check is claimed.
 - Verified by inspection: docs-only, the recorded **0/1** stands, and nothing is carried.
 - compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
-### 202. `undeclared-identifier-a89b9a39` — 1 header(s)
+### 202. `undeclared-identifier-a89b9a39` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_bitmap_displacement_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glBitmapDisplacementEffectRunner` binding (`cpp-structural-assertion-writable-capability-unproven`) and the `isGlBitmapDisplacementEffectResolvable` resolver (`cpp-structural-assertion-owner-unproven`, asserting `Readonly<Effect>` to read `map`), but `register_gl_bitmap_displacement_effect` still passes both. The callee `applyBitmapDisplacementEffectToGl` is refused on the readonly structural `GlTextureRenderTarget` widening.
 - subject: `gl_bitmap_displacement_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: this is the two-symbol custom-shader shape the request was filed for. The resolver alone would meet the `retainedReference` witness, but the runner on the same line is a variable the repair cannot declare, so the row would not move. A runner or resolver body would fake the effect or its map resolution.
 - first failure at: `flight/effects_gl/gl_bitmap_displacement_effect.hpp:153`
 - example: `use of undeclared identifier 'gl_bitmap_displacement_effect_runner'`
+- Verified by inspection: line 153 is the registration call. No symbol is defined or named elsewhere. This docs-only disposition changes no compiled input, so the recorded **0/1** failure stands without an unchanged rerun. No texture provider, shader or narrowed domain is supplied.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
 ### 203. `undeclared-identifier-aa084556` — 1 header(s), header boundary fixed
 

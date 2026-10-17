@@ -239,3 +239,29 @@ Flight `a627849` / compiler `806d257`.
 This was validated by inspection. It is a docs-only disposition, so the unchanged header was not
 recompiled, and its recorded **0/1** failure stands. Nothing is carried: no runner, pass, shader, pool or
 narrowed domain.
+
+## G2 bitmap displacement: runner and resolver, as in the custom shader
+
+`flight/effects_gl/gl_bitmap_displacement_effect.hpp:153` is the third exclusion from the family table,
+inspected on its own at Flight `a627849` / compiler `806d257`. It has the two-symbol shape this request was
+filed for: `register_gl_bitmap_displacement_effect` passes both a refused runner and a refused resolver.
+
+- Runner: `glBitmapDisplacementEffectRunner` (source line 60) is refused with
+  `cpp-structural-assertion-writable-capability-unproven`, because `Readonly<Effect>` declares none of
+  `componentX`, `componentY`, `edgeMode`, `map`, `scaleX` and `scaleY`.
+- Resolver: `isGlBitmapDisplacementEffectResolvable` (source line 67) asserts
+  `(effect as Readonly<BitmapDisplacementEffect>).map` to test whether the map texture resolves through
+  `resolveGlTexture`. It is refused with `cpp-structural-assertion-owner-unproven`, the same code as
+  `isGlCustomShaderEffectResolvable`.
+- Callee: `applyBitmapDisplacementEffectToGl` (source line 17) is refused on the family's readonly structural
+  `GlTextureRenderTarget` widening, see [interface-heritage-widening](interface-heritage-widening.md).
+- No other header names any of the three symbols, and none is defined anywhere.
+
+A declaration of the resolver alone would satisfy the guarded `retainedReference` witness, because it is
+passed in a function-argument position. But the runner on the same line is a variable, which the repair
+cannot declare, so the row would not move. Nothing is carried:
+- no runner, resolver, texture provider, shader or narrowed domain;
+- the resolver must not be answered with a fixed `false` or `true`.
+
+This was validated by inspection. It is a docs-only disposition, so the unchanged header was not
+recompiled, and its recorded **0/1** failure stands.
