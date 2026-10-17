@@ -184,7 +184,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 155 | `undeclared-identifier-0c07642f` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glGlitchEffectRunner` binding (and its callee `applyGlitchEffectToGl`) but still emits the registration call that passes the runner |
 | 156 | `undeclared-identifier-11d6fcbe` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glChromaticAberrationEffectRunner` binding (and its callee `applyChromaticAberrationEffectToGl`) but still emits the registration call that passes the runner |
 | 157 | `undeclared-identifier-1462818e` | 1 | 2D | compiler | refused velocity program owner; exact declaration fails unused-header compilation at VIEWPORT method/constant collision *(requests filed)* |
-| 158 | `undeclared-identifier-17cb8386` | 1 | GL | runtime | the emitted code names `gl_bokeh_depth_of_field_effect_runner`, which nothing declares |
+| 158 | `undeclared-identifier-17cb8386` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glBokehDepthOfFieldEffectRunner` binding (and its callee `applyBokehDepthOfFieldEffectToGl`) but still emits the registration call that passes the runner |
 | 159 | `undeclared-identifier-1892fccb` | 1 | PLAT | declaration repair (applied) | exact refused text callback declared; G2: 1 pass; registration and character resolution remain unlinkable |
 | 160 | `undeclared-identifier-1a056bbc` | 3 | TEXT | compiler | refused number formatter retained by five wrappers; G2: declaration candidate fails optional literal construction, full option spreads dropped; 0/3 remain failed |
 | 161 | `undeclared-identifier-1d8e072a` | 1 | 2D | compiler | Scale9 draw refuses nullable material owner widening; declaration probe fails native/generic callback conversion *(existing requests extended)* |
@@ -2949,14 +2949,17 @@ Only this row/cluster, report157 and the named request evidence change. Historic
 and all foreign worklist rows/clusters stay unchanged. No velocity-data suite, actual GL velocity pass,
 old native proof or global sweep was rerun; no renderer behavior gain is claimed.
 
-### 158. `undeclared-identifier-17cb8386` — 1 header(s)
+### 158. `undeclared-identifier-17cb8386` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_bokeh_depth_of_field_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glBokehDepthOfFieldEffectRunner` binding (and its callee `applyBokehDepthOfFieldEffectToGl`) but still emits the registration call that passes the runner
 - subject: `gl_bokeh_depth_of_field_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: a runtime definition would fake the effect runner. The runner refusal (`cpp-structural-assertion-writable-capability-unproven`: `Readonly<Effect>` declares none of `focusDistance`, `focusRange` and `maxBlur`) names an owner-preserving carrier as the compiler-side answer. The callee refusal is the `GlTextureRenderTarget` widening of [interface-heritage-widening](compiler-requests/interface-heritage-widening.md). This is the same family as the SSAO, outline, film grain, glitch and chromatic aberration runners.
 - first failure at: `flight/effects_gl/gl_bokeh_depth_of_field_effect.hpp:100`
 - example: `use of undeclared identifier 'gl_bokeh_depth_of_field_effect_runner'`
+- Verified by inspection: line 100 is the registration call that passes the refused binding. Nothing in the tree defines either symbol, and no other header names either one. This docs-only disposition changes no compiled input, so the recorded **0/1** failure stands without an unchanged rerun. No runner, effect body, shader or narrowed parameters are supplied.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
 ### 159. `undeclared-identifier-1892fccb` — 1 header, resolved by declaration-only repair
 

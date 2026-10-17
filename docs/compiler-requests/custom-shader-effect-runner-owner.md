@@ -131,3 +131,18 @@ omission:
 I validated the site by inspecting the emitted header. Neither symbol is defined anywhere in the tree, and
 no other header names either one. This is a docs-only disposition, so the unchanged header was not
 recompiled, and its recorded **0/1** failure stands. Nothing is carried.
+
+## G2 bokeh depth-of-field runner
+
+`flight/effects_gl/gl_bokeh_depth_of_field_effect.hpp` at Flight `a627849` / compiler `806d257` is the same
+omission:
+- `glBokehDepthOfFieldEffectRunner` (source line 37) is refused with
+  `cpp-structural-assertion-writable-capability-unproven`, because `Readonly<Effect>` declares none of
+  `focusDistance`, `focusRange` and `maxBlur`.
+- `register_gl_bokeh_depth_of_field_effect` still passes the runner at line 100.
+- The callee `applyBokehDepthOfFieldEffectToGl` (source line 16) is refused with the same
+  `GlTextureRenderTarget` widening, see [interface-heritage-widening](interface-heritage-widening.md).
+
+I validated the site by inspecting the emitted header. Neither symbol is defined anywhere in the tree, and
+no other header names either one. This is a docs-only disposition, so the unchanged header was not
+recompiled, and its recorded **0/1** failure stands. Nothing is carried.
