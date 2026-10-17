@@ -175,7 +175,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 146 | `other-5dfe27ec` | 1 | ANIM | compiler | G2: 0/1; erased display-array iteration; collector/derived attachment/full skin algorithms remain refused |
 | 147 | `other-acb4b229` | 1 | 2D | compiler | G2: 0/1; JSON assertion casts to nominal array/hash document union; converter independently refused |
 | 148 | `static-assertion-18059635` | 1 | 3D | [compiler request](compiler-requests/merged-row-native-recovery-must-project.md) | `dispose_node` recovers the native node from an unprojected merged row and trips the runtime assertion |
-| 149 | `static-assertion-261f0db6` | 1 | 3D | compiler | a runtime static assertion rejects the emitted shape |
+| 149 | `static-assertion-261f0db6` | 1 | 3D | [compiler request](compiler-requests/nullish-union-into-optional-field.md) | a `Light \| null` three-state variant is stored into an `optional<StructuralRef<...>>` row field |
 | 150 | `undeclared-identifier-0168969a` | 1 | 2D | compiler *(existing + new request filed)* | refused `domScene2DClipHooks` (RenderState asserted to DomRenderState without heritage) still stored; next callee `setDomClipHooks` is in the wholly refused domClipRectangle module |
 | 151 | `undeclared-identifier-07640d32` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glOutlineEffectRunner` binding (and its callee `applyOutlineEffectToGl`) but still emits the registration call that passes the runner |
 | 152 | `undeclared-identifier-076c02b1` | 1 | PLAT | declaration repair (applied) | omitted tilemap cell resolver declared; G2: 1/1 pass, registration remains unlinkable |
@@ -3358,11 +3358,22 @@ and stays after the recovery is fixed. No C++ was changed; the scoped trace is t
 
 ### 149. `static-assertion-261f0db6` — 1 header(s)
 
-- cause: a runtime static assertion rejects the emitted shape
+- cause: a local typed `Light | null` is emitted as its three-state
+  `variant<StructuralRef, Null, Undefined>` carrier and handed to a row field declared
+  `optional<StructuralRef>`, which is not constructible from it
 - lanes: 3D
-- fix route: compiler
-- first failure at: `flight/structural_ref.hpp:1584`
+- fix route: compiler — [nullish union into optional field](compiler-requests/nullish-union-into-optional-field.md)
+- first failure at: `flight/scene3d/scene_document_lights.hpp:146`
 - example: `static assertion failed: structural row construction has an incompatible value type`
+
+The trace names both sides: `initialize_row_field` for
+`RowReadonly<RowPartial<RowOf<shared_ptr<Scene3DLights>>>>` receives
+`std::variant<StructuralRef<RowReadonly<RowOf<shared_ptr<AmbientLight>>>>, flight::Null, flight::Undefined>`
+where the field is `std::optional<StructuralRef<...>>`; the same failure repeats for `directional`. The
+sibling array fields already emit the destination's carrier
+(`std::optional<flight::Array<...>>` holding the hemisphere array), which is the shape the request asks
+for. This is the mirror of `partial-row-three-state-return.md`. No C++ was changed; the scoped trace is
+the evidence.
 
 ### 150. `undeclared-identifier-0168969a` — G2 recheck of 1 header(s)
 

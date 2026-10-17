@@ -85,6 +85,9 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 
 ## Active requests without a compiler patch
 
+- [A nullish union stored into an optional field must use the optional carrier](nullish-union-into-optional-field.md) —
+  `@flighthq/scene3d` passes a `Light | null` local's three-state variant into a `optional<StructuralRef<...>>`
+  row field; the sibling array fields already emit the destination's optional carrier.
 - [Native reference recovery from a merged row must project the row first](merged-row-native-recovery-must-project.md) —
   `@flighthq/node` `disposeNode` recovers `Node<Traits>` directly from the merged `Node<Traits> & Traits` row and
   trips the runtime's merged-row assertion.
