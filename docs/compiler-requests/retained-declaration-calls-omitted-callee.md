@@ -846,3 +846,32 @@ at jobs1, but CanvasHost/ImageHost overloads and browser renderer remain unavail
 repair or shader/drawing substitute is proposed, so no positive-unused/negative-called link result or
 new generation is claimed. The scoped result reconciles the stale G1 name error with the landed
 native carry; it does not make the omitted generated path callable.
+
+## G2 flex resolver binding is declared for explicit registration
+
+At Flight `a627849` / compiler `806d257`, `flex_layout.hpp` retains
+`register_flex_layout_resolver` constructing `std::optional<flight::types::LayoutResolver>` from
+`flex_layout_resolver`. The actual source is `const flexLayoutResolver: LayoutResolver = ...`; its exact
+line-21 variable-binding refusal marker remains and no definition exists. The binding refuses at the
+[nullable style owner assertions](assertion-to-nullable-variant-alternative.md#g2-flex-header-boundary-nullable-style-owners-remain-refused).
+
+The existing `insert-forward-declaration` repair `layout-declare-refused-flex-resolver` is scoped to
+this exact header and refusal marker and adds only:
+
+```cpp
+namespace flight::layout { extern flight::types::LayoutResolver flex_layout_resolver; }
+```
+
+The alias is the actual callback carrier the retained call wraps, with Float32Array output,
+readonly LayoutTree row, SequenceView<double> intrinsic sizes, two double indices and optional String
+failure result. No callback, layout algorithm, registration side effect or successful result is supplied.
+Normal exact-pin one-module generation applies the repair to exactly this header; the existing engine
+reproduces the addition and reaches a fixed point.
+
+The real unused-header program compiles, links and runs. A program calling the actual registration
+function compiles to an object, then fails to link with exactly one undefined symbol,
+`flight::layout::flex_layout_resolver`. The registered callback value is referenced only when explicit
+registration is used; there is no missing global initializer in the unused program. After the separate
+[basis guard source rewrite](mixed-value-union-literal-comparison.md), the original one-header serial
+check is **1/1 pass**. This is header availability with a visible missing-body link boundary; the module
+and callable layout resolver remain incomplete.

@@ -136,7 +136,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 107 | `call-has-no-matching-e7b28969` | 1 | WGPU | compiler | the emitted call to `write_texture` matches no declared overload |
 | 108 | `call-has-no-matching-fbd6de0d` | 1 | 3D | compiler | the emitted call to `invoke` matches no declared overload |
 | 109 | `call-has-no-matching-fee2f93f` | 1 | 3D | compiler | the emitted call to a function matches no declared overload |
-| 110 | `invalid-operands-dc1c09c4` | 1 | PLAT | runtime | an operator is applied to operand types it does not accept |
+| 110 | `invalid-operands-dc1c09c4` | 1 | PLAT | source guards + declaration repair (applied) | flex basis comparison and unsafe numeric projection cleared; G2: 1 pass; refused resolver registration remains unlinkable |
 | 111 | `missing-member-1620083c` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`mix_blend_mode`) |
 | 112 | `missing-member-1a2e58cb` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`register_dom_texture_resolver`) |
 | 113 | `missing-member-1ce5ed2e` | 1 | 3D | runtime | the emitted code reads a member the target does not declare (`physics_3d_cone_twist_joint_solver`) |
@@ -2220,13 +2220,35 @@ shaded rendering while the guard has no body; no global/native baseline was reru
 - first failure at: `flight/scene3d_gl/_internal_gl_scene_3d_test_helper.hpp:373`
 - example: `no matching function for call to object of type 'function<void (double, String, Array<Any>)>'`
 
-### 110. `invalid-operands-dc1c09c4` — 1 header(s)
+### 110. `invalid-operands-dc1c09c4` — 1 header(s), header boundary fixed
 
-- cause: an operator is applied to operand types it does not accept
+- original cause: the optional number/string `basis` member is compared directly with `String("auto")`, then projected as a number even for an invalid runtime string
 - lanes: PLAT
-- fix route: runtime
-- first failure at: `flight/layout/flex_layout.hpp:171`
-- example: `invalid operands to binary expression ('variant<double, String>' and 'String')`
+- fix route: [equivalent source guards](compiler-requests/mixed-value-union-literal-comparison.md) plus declaration-only repair
+- original first failure at: `flight/layout/flex_layout.hpp:171`
+- original example: `invalid operands to binary expression ('variant<double, String>' and 'String')`
+
+`layout-flex-basis-unknown-comparison` moves the strict literal and finite nonnegative numeric tests into
+two boolean helpers over the field's existing union. Each checks its local active type; all three original
+property reads remain in their short-circuit positions. Original/patched full-source validation agrees in
+**30 cases**, including changing/throwing getters and invalid values. Normal exact-pin single-module
+emission reproduces the explicit variant-index guards. No global variant equality, Any conversion,
+coercion, snapshot, copied owner, narrowed values or layout implementation is added.
+
+The separate [nullable style owner refusals](compiler-requests/assertion-to-nullable-variant-alternative.md#g2-flex-header-boundary-nullable-style-owners-remain-refused)
+leave `getFlexBase`, `getFlexShrinkScale` and the resolver binding omitted. The existing exact-header
+`insert-forward-declaration` repair `layout-declare-refused-flex-resolver` declares only the actual
+`LayoutResolver` binding for retained explicit registration. Normal generation reproduces the declaration
+and repair record; the module/refusal ledger and package emission counts remain partial and unchanged.
+
+- **Original header gate:** complete serial C++20 check, **1 attempted / 1 pass / 0 fail / 0 unattempted**.
+- **Unused header positive:** actual header compiles, links and runs.
+- **Explicit registration negative:** actual retained registration compiles to an object, then fails to link on exactly `flight::layout::flex_layout_resolver`.
+- **Native guard domain:** the actual emitted anonymous style owner passes absence/auto/nonnegative, invalid string/number, NaN/infinity, negative zero, alignment and grow/shrink checks with owner/value preservation. Arbitrary style-owner recovery and full layout behavior are not proved.
+
+The one row is pass with `previousCluster`; the original active cluster is removed. No other header is
+measured or promoted, and foreign/G1 totals remain unchanged. The refused resolver stays unavailable;
+no empty callback, fake rectangle or successful layout result is supplied.
 
 ### 111. `missing-member-1620083c` — 1 header(s)
 

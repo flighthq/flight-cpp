@@ -513,6 +513,9 @@ patch has retired because the fix landed upstream keep their row, marked, as the
   skeleton2d's `cloneSkeleton2D` slot copy; carried by the `skeleton2d-clone-slot-copy-declared-type` source patch.
 - [A default value on an optional, nullable parameter must lower without a presence proof](default-on-optional-nullable-parameter.md) —
   skeleton2d's `createSkeleton2D`; carried by the `skeleton2d-create-two-state-slots-default` source patch.
+- [A strict literal test on a number/string member must inspect the active alternative](mixed-value-union-literal-comparison.md) —
+  flex basis validation compares an optional numeric/string member with `auto` and then projects an untrusted
+  string as numeric; carried by source guards that retain every original property read.
 - [Strict equality between a nullable, optional value and a present value must not lower to a raw `==`](nullish-variant-strict-equality.md) —
   skeleton2d's `getSkeleton2DBoneIndexByName`; carried by the `skeleton2d-bone-name-present-comparison` source patch.
 - [Members of a `satisfies Record<string, T>` table must carry `T`, or the emitter must convert them](satisfies-record-member-carrier.md) —
