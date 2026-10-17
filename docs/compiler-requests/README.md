@@ -486,6 +486,8 @@ patch has retired because the fix landed upstream keep their row, marked, as the
   `@flighthq/movieclip`'s spritesheet source adds and invalidates a `Sprite` under a `Node2D`; the third leaked-`Traits` cause, cross-linked with the `any` and readonly-view requests. No workaround is carried.
 - [Recovering an erased value as a readonly row must take the checked recovery a writable assertion takes](erased-value-readonly-row-recovery.md) —
   skeleton2d's three animation binders read `unknown` targets as readonly rows; `as T` already emits `object_if<T>`.
+- [An inferred Map-values spread local must retain its typed elements](map-values-spread-local-element-carrier.md) —
+  SWF Scale9 placement collection emits a typed spread result into `Array<Any>`; observed after the readonly Shape copy binding repair.
 - [An inferred spread copy must keep its named type when it enters an optional, nullable array](spread-copy-into-optional-nullable-array.md) —
   skeleton2d's `cloneSkeleton2D` slot copy; carried by the `skeleton2d-clone-slot-copy-declared-type` source patch.
 - [A default value on an optional, nullable parameter must lower without a presence proof](default-on-optional-nullable-parameter.md) —

@@ -533,7 +533,7 @@ The exact refusal marker, retained call and absence of any definition justify
 supplied. The underlying authored-bounds reader and writer still need the owner-recovery contract
 in [assertion-to-undeclared-row-member.md](compiler-requests/assertion-to-undeclared-row-member.md).
 
-G2: **1/8 compiles, 7 fail, 0 unattempted**, all attempted at `-j1` with Clang 22.1.8,
+Initial declaration G2: **1/8 compiles, 7 fail, 0 unattempted**, all attempted at `-j1` with Clang 22.1.8,
 compiler `806d257` / Flight `a627849`. `flight/swf/swf_node.hpp` passes. Including that actual
 repaired header without calling the function also compiles, links and runs. Calling
 `apply_swf_authored_bounds(Node2D{}, std::nullopt)` compiles to an object, then fails linking on
@@ -542,19 +542,36 @@ that exact undefined symbol. Authored bounds remains unavailable at runtime.
 | follow-on cluster | owned headers | first failure | route / cause |
 | --- | --- | --- | --- |
 | `call-has-no-matching-dd66c064` | 5 | `flight/swf/swf_timeline_parse.hpp:122` | compiler: SwfReader class instance has no owner-preserving SwfTagReader interface carrier; [existing request](compiler-requests/class-instance-as-implemented-interface.md) |
-| `no-viable-conversion-3cfd059c` | 2 | `flight/swf/swf_define_shape_handler.hpp:106` | binding: the native copy_shape_commands override requires Ref<Shape> for a source Readonly<Shape> parameter |
+| `no-viable-conversion-3cfd059c` | 2 | `flight/swf/swf_define_shape_handler.hpp:106` | binding: native copy_shape_commands rejected the readonly source; resolved by the follow-up below |
 
 The five callback failures are `swf_content_capabilities.hpp`, `swf_document.hpp`, `swf_header.hpp`,
 `swf_requirements.hpp` and `swf_tag_census.hpp`, all under `flight/swf/`. The source supplies all
 five parse callback arguments; this is a reader class/interface conversion gap, not an arity error.
 They join the existing five-row callback cluster without recompiling or changing those other rows.
 
-The two binding failures are `flight/swf/swf_define_shape_handler.hpp` and
+The two initial binding failures were `flight/swf/swf_define_shape_handler.hpp` and
 `flight/swf/swf_shape_tag_family.hpp`. Their retained caller passes a readonly structural Shape
-view. `overrides/include/flight/shape/shape.hpp:65` instead takes a nominal `Ref<Shape>` as its
-source, although `packages/shape/src/shape.ts:32` declares `Readonly<Shape>`. Aligning that
-signature while preserving the same source owner is separate follow-on work; no copied Shape,
-writable cast or helper-body substitution was introduced here.
+view. The native override instead required a nominal `Ref<Shape>` source, although
+`packages/shape/src/shape.ts:32` declares `Readonly<Shape>`.
+
+The assigned two-row binding follow-up now accepts the canonical readonly structural Shape view
+and reads its original data row cell. The legacy nominal-reference overload forwards to that same
+implementation. The shape override remains partial with all other declared debt intact, and its
+manifest still matches the unchanged current generated-source hash.
+
+**Binding follow-up: shape semantic/owner CTest 1/1 pass; override integrity pass;
+scoped headers 0/2 pass, 2 fail, 0 unattempted at `-j1`** with Clang 22.1.8. The semantic test
+checks replaced source data cells and later token mutations through the retained readonly owner,
+destination array identity/order, shared-array/self-copy behavior, empty legacy calls and exact
+content/bounds invalidation. No copied Shape or writable capability upgrade was introduced.
+
+Both headers advance past `copy_shape_commands` to the compiler's mismatched inferred placement
+array at `flight/swf/swf_define_shape_handler.hpp:115`. The spread lambda constructs
+`Array<Ref<SwfTagPlacement>>`, but its destination local is declared `Array<Any>`.
+The two rows remain failures in `no-viable-conversion-2411db39`, linked to
+[map-values-spread-local-element-carrier.md](compiler-requests/map-values-spread-local-element-carrier.md).
+The old two-row binding cause is resolved and removed from active JSON clusters. This follow-up
+recompiled only those two headers; the other five callback failures remain unchanged.
 
 The opening sweep totals and this group's rank remain the historical G1 snapshot. Only these
 eight header rows, the resolved failure cluster and their replacement cause metadata changed;
