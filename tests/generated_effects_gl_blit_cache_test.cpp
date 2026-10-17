@@ -106,10 +106,44 @@ void check_weakness() {
         "a dead context's program outlived the next lookup");
 }
 
+void check_live_binding_queries(const WebGl2Context& gl) {
+  using flight::host_sdl::WebGlRenderbuffer;
+  using flight::host_sdl::WebGlTexture;
+  const auto renderbuffer_binding = [&] {
+    return static_cast<std::optional<WebGlRenderbuffer>>(gl.get_parameter(gl.renderbuffer_binding));
+  };
+  const auto cube_binding = [&] {
+    return static_cast<std::optional<WebGlTexture>>(gl.get_parameter(gl.texture_binding_cube_map));
+  };
+  const auto saved_renderbuffer = renderbuffer_binding();
+  const auto saved_cube = cube_binding();
+  const auto saved_2d = static_cast<std::optional<WebGlTexture>>(gl.get_parameter(gl.texture_binding_2_d));
+  check(!saved_renderbuffer && !saved_cube, "fresh live binding queries did not return null");
+
+  const auto renderbuffer = gl.create_renderbuffer();
+  gl.bind_renderbuffer(gl.renderbuffer, renderbuffer);
+  check(renderbuffer_binding() == renderbuffer, "renderbuffer query lost the issued handle owner");
+  gl.bind_renderbuffer(gl.renderbuffer, saved_renderbuffer);
+  check(renderbuffer_binding() == saved_renderbuffer, "renderbuffer query did not observe restored binding");
+
+  const auto cube = gl.create_texture();
+  gl.bind_texture(gl.texture_cube_map, cube);
+  check(cube_binding() == cube, "cube texture query lost the issued handle owner");
+  check(static_cast<std::optional<WebGlTexture>>(gl.get_parameter(gl.texture_binding_2_d)) == saved_2d,
+        "cube binding changed the independent 2D texture binding");
+  gl.bind_texture(gl.texture_cube_map, saved_cube);
+  check(cube_binding() == saved_cube, "cube texture query did not observe restored binding");
+
+  gl.delete_renderbuffer(renderbuffer);
+  gl.delete_texture(cube);
+  check(gl.get_error() == gl.no_error, "live binding query/bind/restore/teardown failed");
+}
+
 void check_live_miss_and_hit() {
   flight::host_sdl::GlApplication app({
       .title = "Flight effects-gl cache miss", .width = 32, .height = 32, .hidden = true});
   const auto gl = app.context();
+  check_live_binding_queries(gl);
   check(!effects_gl::blit_offset_shaders.has(gl), "live offset cache was not initially empty");
 
   const auto offset = effects_gl::get_gl_blit_offset_shader(state_over(gl));
@@ -159,7 +193,7 @@ int main() {
       std::cerr << failures << " effects-gl blit cache check(s) failed\n";
       return 1;
     }
-    std::cout << "effects-gl blit cache checks passed; live offset miss/link/locations/hit verified\n";
+    std::cout << "effects-gl blit cache checks passed; live offset miss/link/locations/hit and two binding queries verified\n";
     return 0;
   } catch (const std::exception& error) {
     std::cerr << "effects-gl live cache check failed: " << error.what() << '\n';
