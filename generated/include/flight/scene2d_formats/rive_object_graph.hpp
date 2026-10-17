@@ -35,7 +35,7 @@ using flight::types::RiveArtboardGraph;
 using flight::types::RiveCoreObject;
 using flight::types::RiveProperty;
 
-inline void report_rive_graph_drop(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics, flight::String kind, flight::String origin, flight::Record<flight::String, double> detail) {
+inline void report_rive_graph_drop(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics, flight::String kind, flight::String origin, flight::Record<flight::String, std::variant<bool, double, flight::String>> detail) {
   flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, kind, origin, detail);
 }
 
@@ -50,12 +50,12 @@ inline const double rive_no_parent_flight_value_variable__u000052__u000049__u000
 inline double read_rive_parent_index(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>> object, double count, double index, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics) {
   auto property = flight::row_get<flight::RowKey<"properties">>(object).find([=](flight::Ref<flight::types::RiveProperty> candidate) { return (candidate->key == rive_parent_id_property_key); });
   if (!property.has_value()) {
-    report_rive_graph_drop(diagnostics, flight::String("rive.component-without-parent"), flight::String("readRiveParentIndex"), {{flight::String("index"), index}});
+    report_rive_graph_drop(diagnostics, flight::String("rive.component-without-parent"), flight::String("readRiveParentIndex"), {{flight::String("index"), std::variant<bool, double, flight::String>{std::in_place_type<double>, index}}});
     return rive_no_parent_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u00004e__u00004f__u00005f__u000050__u000041__u000052__u000045__u00004e__u000054__flight_private_2f56cc2a15d4312e;
   }
   const double parent = std::get<double>(property.value()->value);
   if ((((parent == index) || (parent < 0.0)) || (parent >= count))) {
-    report_rive_graph_drop(diagnostics, flight::String("rive.unresolved-parent"), flight::String("readRiveParentIndex"), {{flight::String("index"), index}, {flight::String("parent"), parent}});
+    report_rive_graph_drop(diagnostics, flight::String("rive.unresolved-parent"), flight::String("readRiveParentIndex"), {{flight::String("index"), std::variant<bool, double, flight::String>{std::in_place_type<double>, index}}, {flight::String("parent"), std::variant<bool, double, flight::String>{std::in_place_type<double>, parent}}});
     return rive_no_parent_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u00004e__u00004f__u00005f__u000050__u000041__u000052__u000045__u00004e__u000054__flight_private_2f56cc2a15d4312e;
   }
   return parent;
@@ -105,7 +105,7 @@ inline void resolve_rive_parent_indices(flight::Ref<flight::types::RiveArtboardG
           (index_2 += 1.0);
           continue;
         }
-        report_rive_graph_drop(diagnostics, flight::String("rive.parent-cycle"), flight::String("resolveRiveParentIndices"), {{flight::String("index"), index_2}});
+        report_rive_graph_drop(diagnostics, flight::String("rive.parent-cycle"), flight::String("resolveRiveParentIndices"), {{flight::String("index"), std::variant<bool, double, flight::String>{std::in_place_type<double>, index_2}}});
         (parents.element(index_2) = rive_no_parent_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u00004e__u00004f__u00005f__u000050__u000041__u000052__u000045__u00004e__u000054__flight_private_2f56cc2a15d4312e);
       }
       (index_2 += 1.0);

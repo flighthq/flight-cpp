@@ -5373,6 +5373,13 @@
       "id": "layout-anchor-number-guard-carrier",
       "module": "packages/layout/src/anchorLayout.ts",
       "package": "@flighthq/layout"
+    },
+    {
+      "dependency": "flight",
+      "digest": "123a1e9ecded618e022c2d436d7d65fedff5b2d1ddae2360683c7f93389bbfc1",
+      "id": "rive-object-graph-fresh-diagnostic-record",
+      "module": "packages/scene2d-formats/src/riveObjectGraph.ts",
+      "package": "@flighthq/scene2d-formats"
     }
   ],
   "duplicateStructuralStructAliases": {
