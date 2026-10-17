@@ -193,3 +193,29 @@ Every disposition is docs-only, so the unchanged headers were not recompiled. Ea
 Three candidates of the same symptom did **not** meet the conditions. They are excluded here and left unchanged:
 - `undeclared-identifier-c29489a5` (`gl_bloom_effect.hpp:106`) and `undeclared-identifier-e4a7b51e` (`gl_lens_dirt_effect.hpp:112`): the callee's refused value is the plain `Ref<GlTextureRenderTarget>` of an intermediate target, not the readonly structural row.
 - `undeclared-identifier-a89b9a39` (`gl_bitmap_displacement_effect.hpp:153`): the registration also passes a separately refused resolver (`isGlBitmapDisplacementEffectResolvable`, `cpp-structural-assertion-owner-unproven`). That is the two-symbol custom-shader shape, which needs its own unit.
+
+## G2 bloom runner: the callee widens a plain pooled reference
+
+`flight/effects_gl/gl_bloom_effect.hpp:106` is one of the three cases the family table excludes. Each refusal
+was inspected on its own terms, at Flight `a627849` / compiler `806d257`.
+
+- Runner: `glBloomEffectRunner` (source line 55) is refused with
+  `cpp-structural-assertion-writable-capability-unproven`, the same as the family: `Readonly<Effect>` declares
+  none of `intensity`, `passes`, `radius` and `threshold`. `register_gl_bloom_effect` still passes it at
+  line 106, which is the header's only error (GCC 15.2, one worker, all errors shown: 1 attempted, 0 pass,
+  1 fail).
+- Callee: `applyBloomEffectToGl` (source line 22) is refused with `cpp-contextual-union-value-type-unrepresented`,
+  but on a different value from the family's. The multi-pass recipe acquires intermediate targets with
+  `acquireGlTextureRenderTarget(state, pool, descriptor)` and passes each one (`bright`, `blurred`, `temp`)
+  as `drawGlFullscreenPass`'s `dest: Readonly<GlRenderTarget> | null`. The refused value is therefore a
+  plain `flight::Ref<flight::types::GlTextureRenderTarget>`, not a readonly structural row. That is the core
+  `Ref<Derived>` to `Ref<Base>` widening of [interface-heritage-widening](interface-heritage-widening.md),
+  and it still needs real heritage, not a cast.
+- No other header names `gl_bloom_effect_runner` or `apply_bloom_effect_to_gl`, and neither is defined
+  anywhere.
+
+Nothing is carried:
+- The runner is a variable, which the declaration repair cannot declare.
+- Declaring the callee would not move the row.
+- A definition would fake bloom: the pool acquisition and release, the bright, blur and composite passes,
+  and the program cache.

@@ -235,7 +235,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 206 | `undeclared-identifier-b15d9d15` | 1 | ANIM | compiler | G2: 0/1; refused bone parser and complete result omitted; no exact declaration candidate |
 | 207 | `undeclared-identifier-befaa2d6` | 2 | 2D | source patch + repairs (applied) | the emitted code names `compute_scissor_rect`, which nothing declares *(G2: 1 pass, 1 to `no-viable-conversion-e25fffde`)* |
 | 208 | `undeclared-identifier-c162d0c0` | 1 | ANIM | runtime | the emitted code names `solve_skeleton_2d_transform_constraint`, which nothing declares |
-| 209 | `undeclared-identifier-c29489a5` | 1 | GL | runtime | the emitted code names `gl_bloom_effect_runner`, which nothing declares |
+| 209 | `undeclared-identifier-c29489a5` | 1 | GL | compiler *(existing request)* | refused `glBloomEffectRunner` still registered; callee widens pooled `Ref<GlTextureRenderTarget>` intermediates to `GlRenderTarget` |
 | 210 | `undeclared-identifier-c3c55c65` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glCompositeEffectRunner` binding (and its callee `applyCompositeEffectToGl`) but still emits the registration call that passes the runner |
 | 211 | `undeclared-identifier-c45cc1bb` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glFxaaEffectRunner` binding (and its callee `applyFxaaEffectToGl`) but still emits the registration call that passes the runner |
 | 212 | `undeclared-identifier-c7551b38` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glPixelateEffectRunner` binding (and its callee `applyPixelateEffectToGl`) but still emits the registration call that passes the runner |
@@ -3821,14 +3821,17 @@ site. The clip renderer is not claimed complete.
 - first failure at: `flight/skeleton2d/transform_constraint_2d.hpp:175`
 - example: `use of undeclared identifier 'solve_skeleton_2d_transform_constraint'`
 
-### 209. `undeclared-identifier-c29489a5` — 1 header(s)
+### 209. `undeclared-identifier-c29489a5` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `gl_bloom_effect_runner`, which nothing declares
+- cause: the emitter refuses the `glBloomEffectRunner` binding (`cpp-structural-assertion-writable-capability-unproven`: `Readonly<Effect>` declares none of `intensity`, `passes`, `radius` and `threshold`), but `register_gl_bloom_effect` still passes it. Its callee `applyBloomEffectToGl` is refused because each pooled intermediate (`acquireGlTextureRenderTarget`, a plain `Ref<GlTextureRenderTarget>`) is passed as `drawGlFullscreenPass`'s `Readonly<GlRenderTarget> | null` destination.
 - subject: `gl_bloom_effect_runner`
 - lanes: GL
-- fix route: runtime
+- fix route: compiler
+- why this route: the runner is a variable, which the declaration repair cannot declare, and a definition would fake bloom. The callee needs real `Ref<Derived>` to `Ref<Base>` heritage, per [interface-heritage-widening](compiler-requests/interface-heritage-widening.md). This header is excluded from the runner-family table because of the plain-`Ref` callee, and is handled on its own here.
 - first failure at: `flight/effects_gl/gl_bloom_effect.hpp:106`
 - example: `use of undeclared identifier 'gl_bloom_effect_runner'`
+- Scoped native recheck (GCC 15.2, jobs 1, all errors shown): **1 attempted / 0 pass / 1 fail** at line 106, the only error. Neither symbol is defined or named elsewhere. No bloom pass, shader, pool or narrowed domain is supplied.
+- compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
 ### 210. `undeclared-identifier-c3c55c65` — G2 recheck of 1 header(s)
 
