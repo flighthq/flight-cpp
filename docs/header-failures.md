@@ -29,7 +29,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | --- | --- | --- | --- | --- | --- |
 | 1 | `call-has-no-matching-9c08d665` | 116 | WGPU | compiler | bound WebGPU descriptor object literals are emitted as untyped source-order braced initializers with anonymous nested owners *(request filed)* |
 | 2 | `missing-member-b1a6d5cf` | 34 | 2D | compiler | scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined *(request filed)* |
-| 3 | `in-operator-not-lowered-b1eae4af` | 31 | 2D, GL, PLAT, WGPU | compiler | the TypeScript `in` operator is emitted verbatim as C++ `in` |
+| 3 | `in-operator-not-lowered-b1eae4af` | 31 | 2D, GL, PLAT, WGPU | compiler | the TypeScript `in` operator is emitted verbatim as C++ `in` at 4 root headers *(existing request extended)* |
 | 4 | `undeclared-identifier-993e82f1` | 29 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(builder4/E0a)* |
 | 5 | `call-has-no-matching-3882b3e9` | 27 | 2D, 3D, TEXT | binding | same braced-descriptor shape against the device binding's constrained variadic create_texture *(builder4/E0a)* |
 | 6 | `other-52e846a6` | 18 | ANIM | compiler | a value_type is combined with a three-alternative variant where the declared slot expects one alternative |
@@ -306,10 +306,41 @@ deleting or stubbing behaviour.
 
 - cause: the TypeScript `in` operator is emitted verbatim as C++ `in`
 - lanes: 2D, GL, PLAT, WGPU
-- fix route: compiler
-- why this route: the TypeScript `in` operator is emitted verbatim as C++ `in`
+- fix route: compiler; the `render_registry_guards` receiver also needs a structural carrier
 - first failure at: `flight/interaction/interaction_manager.hpp:510`
 - example: `expected ')'`
+- existing request extended: [membership test lowered literally](compiler-requests/membership-test-lowered-literally.md);
+  related: [Interaction runtime membership](compiler-requests/interaction-runtime-property-membership.md)
+
+Only four headers contain the failing expression. By include walk, the other 27 reach
+`interaction_manager` (21), `render_registry_guards` (8), `explain_scene_3d_pipeline_coverage` (1), or
+`wgpu_render_state` (`render_wgpu/wgpu_shader.hpp`). The last header's own first diagnostic belongs to another cluster.
+
+| root header | receiver as emitted | keys | faithful lowering |
+|---|---|---|---|
+| `interaction/interaction_manager.hpp:510` | readonly structural row | `worldMatrix` | `row_has<RowKey<"worldMatrix">>` |
+| `render/explain_scene_3d_pipeline_coverage.hpp:44` | readonly structural row over `NodeAny` | `materials` | `row_has<RowKey<"materials">>` |
+| `render/render_registry_guards.hpp:48-81` | nominal `Ref<RenderState>` | `device`, `element`, `gl` | none until the carrier changes |
+| `render_wgpu/wgpu_render_state.hpp:259` | variant of runtime and device-state row | `EntityRuntimeKey` | test the one arm declaring it as required |
+
+Every probed string key is required on every type that declares it, so present-but-undefined cannot occur
+for them. For a key outside the static schema, `row_has` asks the shared owner whether the cell exists,
+without reading its value or invoking a getter. That makes it exact at the two structural sites.
+
+The Symbol key is different. `Entity` declares `[EntityRuntimeKey]: EntityRuntime | undefined`, and entities
+are routinely built with it undefined. `row_has(Symbol)` reports whether the slot holds a value, so it would
+answer false where JavaScript answers true. Only the variant-arm test is faithful there.
+
+The nominal site cannot be fixed by lowering `in` alone. The native backend states derive only from
+`ReferenceEnabled`, not from `RenderState`, so a `Ref<RenderState>` never holds the state being probed.
+Any compiling spelling would answer false at all seven sites and always return the fallback message.
+
+Eight more headers contain the expression but fail first on another cluster's diagnostic. They are listed
+in the request as latent sites and are not reclassified here. No source patch, repair, override or runtime
+change was made. An own-keys predicate, value read or
+nominal downcast would narrow the semantics, and no erased TypeScript form is simpler than `in`.
+
+**G1 status retained: 0/31 pass, 31 fail.** No C++ recompile was run because no code changed.
 
 ### 4. `undeclared-identifier-993e82f1` — 29 header(s) *(builder4/E0a)*
 

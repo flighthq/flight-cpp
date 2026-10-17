@@ -112,3 +112,85 @@ int main() {
 absent            : has=0 get-engaged=0 any-defined=0
 present-undefined : has=1 get-engaged=1 any-defined=0
 ```
+
+## At flight-compiler `806d257`: four receivers, three lowerings (G2)
+
+The G1 sweep at compiler `806d257` / Flight `a627849` groups 31 failing headers as
+`in-operator-not-lowered-b1eae4af`, all `expected ')'`. Only four headers contain the expression that fails there. The other 27 fail
+because they include one of them; an include walk over the 31 reaches `interaction_manager` from 21,
+`render_registry_guards` from 8, `explain_scene_3d_pipeline_coverage` from 1, and
+`wgpu_render_state` from `render_wgpu/wgpu_shader.hpp`.
+
+| header | source | receiver as emitted | probed key |
+|---|---|---|---|
+| `interaction/interaction_manager.hpp:510` | `interactionManager.ts` `hasTransform2DRuntime` | `StructuralRef<RowReadonly<RowOf<shared_ptr<NodeRuntime<…>>>>>` | `worldMatrix` |
+| `render/explain_scene_3d_pipeline_coverage.hpp:44` | `explainScene3DPipelineCoverage.ts:78` | `StructuralRef<RowReadonly<RowOf<NodeAny>>>` | `materials` |
+| `render/render_registry_guards.hpp:48-81` (7 sites) | `renderRegistryGuards.ts:54-80` | `flight::Ref<flight::types::RenderState>` (nominal) | `device`, `element`, `gl` |
+| `render_wgpu/wgpu_render_state.hpp:259` | `wgpuRenderState.ts:245` | `std::variant<Ref<WgpuRenderStateRuntime>, StructuralRef<…WgpuDeviceState>>` | `EntityRuntimeKey` (Symbol) |
+
+None of these receivers is a Record. The Record lowering above (`record.has(key)`) does not apply, and
+neither does the bounded `respell-membership-test` repair, whose spelling is `.has()` on the receiver.
+`StructuralRef` has no `.has`. `NamedProperties::has` answers own keys only, which would narrow inherited
+presence; see [Interaction runtime membership](interaction-runtime-property-membership.md).
+
+**Every probed string key is a required member on every type that declares it.** `HasTransform2D.worldMatrix`
+(`Matrix | null`), `Mesh`/`InstancedMesh`/`Billboard.materials`, `WgpuRenderState.device`,
+`DomRenderState.element` and `GlRenderState.gl` are all non-optional. None is an `Object.prototype` name.
+So present-but-undefined cannot arise at the string-keyed sites, and a getter is never on the path.
+
+**The Symbol key is the opposite case.** `Entity` declares `[EntityRuntimeKey]: EntityRuntime | undefined`
+as a required member, and entities are routinely written as `{ [EntityRuntimeKey]: undefined, … }`. So
+present-but-undefined is the normal state there. `row_has(row, Symbol)` reports the computed cell's
+engagement (`symbol_present`, `structural_ref.hpp:1556`), so it would answer false for a fresh device state
+that JavaScript reports as present. It must not be used for this site.
+
+The receiver is a two-arm variant. `WgpuDeviceState extends Entity` declares the key as required, while
+`WgpuRenderStateRuntime extends RenderStateRuntime extends EntityRuntime` does not declare it. The faithful
+lowering is therefore the arm test `std::holds_alternative<StructuralRef<…WgpuDeviceState>>(x)`. It is
+chosen because exactly one arm declares the key and declares it as required, not because of the arm's name.
+If two arms declared it, or one declared it as optional, the emitter must refuse.
+
+**Structural receivers (2 sites).** `row_has<RowKey<"k">>(row)` (`structural_ref.hpp:1564`) can be faithful
+here. For a key outside the row's static schema it asks the shared owner `has_named_cell(k)`. That reports
+whether the owner bound the cell, regardless of its value, and it invokes no getter. Widened rows share the
+owner, so a base-typed row sees the derived object's cells. The lowering is exact under one condition: the
+key is required on every declaring type, which is true at both sites.
+
+The lowering is NOT exact for a key declared optional (`k?: T`). Absent and present-undefined are then one
+disengaged `std::optional`, and `row_has` reports engagement. Where the key is inside the static schema,
+`row_has` reports engagement for an optional member and true for a required one. The emitter must refuse
+the optional case rather than pick either answer.
+
+**Nominal receiver (7 sites, one header).** No membership test can be faithful here. The emitted native
+`WgpuRenderState`, `GlRenderState`, `DomRenderState` and `CanvasRenderState` each derive only from
+`flight::ReferenceEnabled`, not from `RenderState`, and `ReferenceEnabled` carries no member table. So a
+`Ref<RenderState>` can never hold the backend state the source probes for. Any lowering of `in` that
+compiles there answers false at every site, and `getRenderRegistriesMissMessage` would always return the
+Canvas/GL fallback text. The source parameter is the structural interface `RenderState`. It must be
+carried as a structural row over the caller's actual state owner, as the other two sites already are,
+before `row_has` can answer.
+
+**Requested lowering.** For `'k' in x`:
+- A Record receiver: `x.has(k)` plus the `Object.prototype` names, as above.
+- A variant receiver where exactly one arm declares `k` as required and no arm declares it optionally: test that arm.
+- A structural-row receiver where `k` is required on every type declaring it: `flight::row_has<flight::RowKey<"k">>(x)`.
+- An optional `k`, or a receiver carried nominally: refuse with a named reason.
+
+Never use an own-keys predicate, a value read, a constant, or a nominal downcast chosen by name.
+
+**Latent sites.** Eight more headers contain the same expression but fail first on an earlier diagnostic,
+so G1 grouped them in other clusters. They will surface here when those clusters clear:
+- `particles_formats/register_built_in_particle_formats.hpp:217` (`start`)
+- `render/render_cache.hpp:131` (`cache`)
+- `scene2d_formats/lottie_document.hpp:906` (`x`)
+- `scene3d/scene_document.hpp:144` (`EntityRuntimeKey`)
+- `scene3d_gl/gl_particle_emitter_3d.hpp:113` (`blendMode`)
+- `scene3d_wgpu/wgpu_shadow_map.hpp:127` (`instanceMatrices`)
+- `skeleton2d_formats/dragon_bones_parse_helpers.hpp:64-146` (`rotate`, `skew`, `curve`, `tweenEasing`)
+
+The DragonBones keys are optional JSON members, where absent and present-undefined differ. These sites
+are not classified here.
+
+No source patch is carried. A TypeScript rewrite that erases to the same JavaScript cannot express
+presence on these receivers more simply than `in` already does, and the nominal site needs a carrier
+change in the emitter, not a source change.
