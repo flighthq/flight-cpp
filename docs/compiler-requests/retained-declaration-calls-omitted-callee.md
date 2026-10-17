@@ -1403,3 +1403,35 @@ plus the node-domain carrier.
 Neither link check was reached: not the positive unused-header link, and not the negative link. So no
 declaration repair was carried. This covers Canvas only; the native GL TextLabel is a separate owner's unit,
 and nothing there was touched. No Canvas backend, text, metrics, copied owner or narrowed input is carried.
+
+## G2 SVG image handler retains its refused image helper
+
+At Flight `a627849` / compiler `806d257`, original1 Clang22.1.8 jobs1 completes0/1 at
+`scene2d_formats/svg_image_element.hpp:128`: missing `create_svg_image_node`. Source24
+`createSvgImageNode` refuses `cpp-contextual-union-value-type-unrepresented` for its existing
+Ref<Sprite> owner flowing into Node2D|null; the [existing contextual member-shape request](contextual-union-value-arm-member-shape.md#g2-svg-image-preserves-the-original-sprite-resource-and-geometry)
+records the body and complete image contract. This diagnostic does not identify one offending member.
+
+The exact declaration is derived from source and the retained caller: optional<types::Node2D>,
+readonly structural XML/style rows, and Ref<types::SvgImportContext>. The emitted text helper has the
+same three parameter carriers. Node2D is its actual complete StructuralRef alias, not Ref<Node2D> or
+a new nominal node. Existing declare-refused-function repair
+`scene2d-formats-declare-refused-svg-image-node` matches the exact function marker, retained direct
+call and absent definition. It inserts only this prototype before the caller:
+
+```cpp
+std::optional<flight::types::Node2D> create_svg_image_node(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>> element, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>> parent_style, flight::Ref<flight::types::SvgImportContext> context);
+```
+
+The engine qualifies exactly the owned header, reaches a fixed point, and removal of only that
+declaration restores the original bytes. Actual unused include plus empty main compiles, links and
+runs with exit0. A separate program using the real svg_image_element_handler compiles to an object,
+then fails to link with exactly the undefined create_svg_image_node and its readonly XML/style/context
+signature; it is not run. The expected link failure is an explicit qualification test, not usable SVG
+image behavior. There are no copied result/owner definitions or stand-in image/parser implementations.
+
+Normal one-module exact-pin generation with the real repair reproduces the entire tested header;
+only that owned header and its applied-repair manifest record are carried. The partial marker and
+refused body remain, with package/refusal/module totals unchanged. Final scoped header availability
+is1/1, while direct helper or handler use remains unlinkable. No image resolution, decoding, Sprite,
+texture, transform, clipping or full SVG import functionality pass is claimed.

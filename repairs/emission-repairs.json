@@ -9197,6 +9197,19 @@
       "defect": "The exact NOT GENERATED marker, two live function-argument callback uses and absent definition agree. The existing repair adds only the precise callback carrier. The body remains refused at NodeAny-to-TextLabel owner recovery; no hit result, layout, bounds/transform operation, copied owner or narrower graph is supplied. Explicit registration must fail to link only on this callback. Body ownership request: docs/compiler-requests/readonly-callback-derived-owner-recovery.md; retained use: docs/compiler-requests/retained-declaration-calls-omitted-callee.md.",
       "expectedWhen": "always",
       "expires": "when resolveTextCharIndex emits or its exact retained registration disappears; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-formats-declare-refused-svg-image-node",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/scene2d_formats/svg_image_element.hpp",
+      "symbol": "create_svg_image_node",
+      "refusedFunction": "createSvgImageNode",
+      "declaration": "std::optional<flight::types::Node2D> create_svg_image_node(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>> element, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>> parent_style, flight::Ref<flight::types::SvgImportContext> context);",
+      "sourceDeclaration": "packages/scene2d-formats/src/svgImageElement.ts:24 -- createSvgImageNode(element: Readonly<XmlElement>, parentStyle: Readonly<SvgStyle>, context: SvgImportContext): Node2D | null; retained svgImageElementHandler passes the exact readonly structural XML/style rows and original context, and returns optional<Node2D>.",
+      "diagnostic": "use of undeclared identifier 'create_svg_image_node'",
+      "defect": "The emitter refuses the existing Sprite owner in contextual Node2D | null but retains the public image handler calling the absent helper. Exact source/retained-carrier declaration only; the image helper and any caller still fail to link. No image, texture, decoding, resolver, transform or clipping behavior is supplied. Underlying existing-owner contextual member-shape boundary: docs/compiler-requests/contextual-union-value-arm-member-shape.md.",
+      "expectedWhen": "always",
+      "expires": "when createSvgImageNode emits or its dependent caller is coherently refused; the exact NOT GENERATED marker/direct call/no-definition witnesses then stop matching and sdk:check rejects the obsolete repair."
     }
   ]
 }

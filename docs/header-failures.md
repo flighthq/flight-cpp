@@ -201,7 +201,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 172 | `undeclared-identifier-3e7f03c4` | 1 | GL | runtime | the emitted code names `gl_sharpen_effect_runner`, which nothing declares |
 | 173 | `undeclared-identifier-44058981` | 1 | GL | runtime | the emitted code names `gl_blend_effect_runner`, which nothing declares |
 | 174 | `undeclared-identifier-49b86813` | 1 | ANIM | runtime | the emitted code names `solve_skeleton_2d_ik_constraint`, which nothing declares |
-| 175 | `undeclared-identifier-4fc6ab69` | 1 | 2D | runtime | the emitted code names `create_svg_image_node`, which nothing declares |
+| 175 | `undeclared-identifier-4fc6ab69` | 0 | 2D | declaration repair (applied) | G2: 1/1 header; unused positive passes, handler links fail exactly on refused image helper |
 | 176 | `undeclared-identifier-514a5b7b` | 1 | 2D | compiler | Tilemap submit refuses nullable material owner widening; exact declaration compile fails NodeAny/Sprite callback carrier *(existing requests extended)* |
 | 177 | `undeclared-identifier-51763a3c` | 1 | GL | runtime | the emitted code names `gl_tone_map_effect_runner`, which nothing declares |
 | 178 | `undeclared-identifier-529e49d7` | 1 | GL | runtime | the emitted code names `gl_directional_blur_effect_runner`, which nothing declares |
@@ -3190,14 +3190,29 @@ remain unchanged.
 - first failure at: `flight/skeleton2d/ik_constraint_2d.hpp:205`
 - example: `use of undeclared identifier 'solve_skeleton_2d_ik_constraint'`
 
-### 175. `undeclared-identifier-4fc6ab69` — 1 header(s)
+### 175. `undeclared-identifier-4fc6ab69` — declaration repaired (1 header rechecked)
 
-- cause: the emitted code names `create_svg_image_node`, which nothing declares
-- subject: `create_svg_image_node`
-- lanes: 2D
-- fix route: runtime
-- first failure at: `flight/scene2d_formats/svg_image_element.hpp:128`
-- example: `use of undeclared identifier 'create_svg_image_node'`
+Original1 jobs1, Clang22.1.8: **0/1 pass**, missing create_svg_image_node128. Source24 refuses
+the existing Sprite owner at the nullable Node2D contextual member-shape boundary. The exact
+source/retained readonly XML/style/context carriers and optional<Node2D> result match the emitted
+Node2D alias and sibling SVG helper parameters; no nominal/base/result owner is invented.
+
+Existing `declare-refused-function` repair `scene2d-formats-declare-refused-svg-image-node`
+inserts one exact prototype after checking marker/live call/no definition. One owned-header match
+and fixed point pass; removing the prototype recovers original bytes. Actual unused owned-header
+compile/link/run passes. Using the real retained handler compiles, then links fail exactly on the
+absent helper/signature; no native image behavior or called-handler execution is claimed.
+
+Normal one-module generation reproduces the complete tested header and applied-repair record;
+final owned1 jobs1 is **1 attempted / 1 pass / 0 fail / 0 unattempted**. The failed root is removed,
+the row passes with previousCluster, and this worklist entry is updated. Partial/refused image body,
+module/package totals, foreign rows/roots/prose and historical/G1 counts remain unchanged.
+
+The [retained-callee request](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-svg-image-handler-retains-its-refused-image-helper)
+and [existing body-owner request](compiler-requests/contextual-union-value-arm-member-shape.md#g2-svg-image-preserves-the-original-sprite-resource-and-geometry)
+record full resolver/Drop diagnostics, original ImageResource/texture/Sprite identity, numeric input,
+aspect ratio and author*geometry transforms, appearance and intrinsic objectBoundingBox before clip
+dispatch. No fake image/decode/SVG parser, copied owner or narrowed source domain is supplied.
 
 ### 176. `undeclared-identifier-514a5b7b` — 1 header, compiler-owned
 

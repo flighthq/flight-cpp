@@ -124,6 +124,8 @@ using flight::types::XmlElement;
 // changing identity is intended. The compiler will not retype, copy, or materialize the existing object into a
 // sibling owner.
 
+std::optional<flight::types::Node2D> create_svg_image_node(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>> element, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>> parent_style, flight::Ref<flight::types::SvgImportContext> context);
+
 inline std::optional<flight::types::Node2D> svg_image_element_handler(flight::Ref<flight::types::SvgElementContext> context) {
   return create_svg_image_node(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(context->element), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>>(context->parent_style), context->import);
 }
