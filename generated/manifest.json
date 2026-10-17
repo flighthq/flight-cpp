@@ -3550,6 +3550,12 @@
         "flight/skeleton2d/path_constraint_2d.hpp"
       ],
       "id": "skeleton2d-declare-refused-path-constraint-solver"
+    },
+    {
+      "files": [
+        "flight/layout/anchor_layout.hpp"
+      ],
+      "id": "layout-declare-refused-anchor-resolver"
     }
   ],
   "sourcePatches": [
@@ -5309,6 +5315,13 @@
       "id": "scene2d-gl-clip-rectangle-viewport-number-domain",
       "module": "packages/scene2d-gl/src/glClipRectangle.ts",
       "package": "@flighthq/scene2d-gl"
+    },
+    {
+      "dependency": "flight",
+      "digest": "5371a4984d94034440c05a59eb2b920485a8b65c60248d42e6dba91d529e8fb6",
+      "id": "layout-anchor-number-guard-carrier",
+      "module": "packages/layout/src/anchorLayout.ts",
+      "package": "@flighthq/layout"
     }
   ],
   "duplicateStructuralStructAliases": {

@@ -1,0 +1,11 @@
+--- a/packages/layout/src/anchorLayout.ts
++++ b/packages/layout/src/anchorLayout.ts
+@@ -84,7 +84,7 @@
+   );
+ }
+ 
+-function isOptionalNumber(value: unknown): value is number | null | undefined {
++function isOptionalNumber(value: number | null | undefined): value is number | null | undefined {
+   return value === undefined || value === null || (typeof value === 'number' && Number.isFinite(value));
+ }
+ 

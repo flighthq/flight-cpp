@@ -9368,6 +9368,19 @@
       "defect": "Exact NOT GENERATED marker, retained direct function-argument registration and absent definition agree. Existing retainedReference declares only the exact solver slot carrier, preserving the mutable skeleton Ref and readonly base constraint domain. The body remains refused because the base row cannot recover boneIndices/mixRotate/mixX/mixY/position/positionMode/rotateMode/spacing/spacingMode/targetSlotIndex or equivalent kind cells from the original path owner. No path algorithm, pose/bone/world-matrix mutation, replacement constraint, empty solver or narrower closed constraint family is supplied. Explicit registration must fail to link only on this omitted body. Existing body request: docs/compiler-requests/assertion-to-undeclared-row-member.md; retained callback request: docs/compiler-requests/retained-declaration-calls-omitted-callee.md.",
       "expectedWhen": "always",
       "expires": "when solveSkeleton2DPathConstraint emits or its exact retained registration disappears; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "layout-declare-refused-anchor-resolver",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/layout/anchor_layout.hpp",
+      "symbol": "anchor_layout_resolver",
+      "requiredText": "// NOT GENERATED: variable (binding) -- source line 10\n// refusal: cpp-type-assertion-unidentified",
+      "declaration": "namespace flight::layout { extern flight::types::LayoutResolver anchor_layout_resolver; }",
+      "sourceDeclaration": "packages/layout/src/anchorLayout.ts -- const anchorLayoutResolver: LayoutResolver = (out, tree, intrinsicSizes, parentIndex, childIndex) => ...; retained registerAnchorLayoutResolver constructs optional<LayoutResolver> from exactly this binding.",
+      "diagnostic": "use of undeclared identifier 'anchor_layout_resolver'",
+      "defect": "Exact refused binding marker and retained explicit registration agree. Declare only the existing LayoutResolver external callback; supply no layout algorithm, style owner, output or success. Required qualification is actual unused header positive link/run and actual registration negative link on only this binding. Nullable erased-style and object key-iteration body refusals remain in assertion-to-nullable-variant-alternative.md and layout-object-key-iteration-closed-keys.md.",
+      "expectedWhen": "always",
+      "expires": "when anchorLayoutResolver emits and its exact refused-binding marker disappears; sdk:check fails if this repair matches no header."
     }
   ]
 }

@@ -4251,6 +4251,23 @@
       "whyNotUpstreamFirst": "The defect is the emitter's refusal of conditional spread members in a named structural-row construction (docs/compiler-requests/named-interface-partial-shape.md), not a missing runtime operation; the same explicit-member form is the documented equivalent shape.",
       "unblocks": "Emits objStandardPbrMaterialHandler, compiling obj_standard_pbr_material_handler.hpp.",
       "expires": "when the emitter accepts conditional spread members in a named structural-row construction at this site."
+    },
+    {
+      "id": "layout-anchor-number-guard-carrier",
+      "dependency": "flight",
+      "patch": "layout-anchor-number-guard-carrier.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/layout/src/anchorLayout.ts",
+      "package": "@flighthq/layout",
+      "answers": "diagnostic",
+      "refusal": "not a refusal: six numeric/null/undefined style-member variants are forwarded directly to the private unknown/Any isOptionalNumber parameter without active-arm conversion",
+      "rewrite": "Repeats the existing six field domains in the private helper parameter annotation; all runtime expressions, type-predicate return and callers are untouched.",
+      "equivalence": "The annotation erases: complete original/patched modules must emit byte-identical JavaScript. Unknown malformed runtime fields still take the original typeof/finite rejection path; source member reads, short circuits, getter exceptions, absence/null, negative zero and full numeric domain remain. No public layout or style domain, owner, output or runtime Any conversion changes.",
+      "verification": "Complete original/patched modules emit byte-identical JavaScript. Exact-pin normal one-module generation retains both body omissions and emits the variant-aware numeric helper/call construction. Actual emitted anonymous-owner guard build/run passes all six numeric fields over12 sentinel/numeric cases and eight valid/three invalid alignments, preserving active arms/negative zero/original identity. Actual unused whole header links/runs; actual explicit registration object compiles then fails to link ONLY the externally declared anchor_layout_resolver. Scoped original3 result is recorded with the owned header-status/worklist; no arbitrary external-style recovery or layout algorithm is supplied.",
+      "whyNotUpstreamFirst": "All six retained arguments already have this exact declared union; a local erased annotation supplies the carrier without a global permissive Any constructor.",
+      "unblocks": "The retained anchor numeric guard call only; both key iteration and nullable erased-style resolver refusals remain.",
+      "expires": "when the emitter boxes the active represented union arm into the unknown parameter or Flight adopts the equivalent private annotation.",
+      "appliedOn": "2026-10-17"
     }
   ]
 }
