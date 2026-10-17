@@ -30367,7 +30367,6 @@
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfParse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfPunctualLights.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSheen.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSkins.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSpecular.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSpecularGlossiness.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfTransmissionVolume.ts",
@@ -30402,7 +30401,6 @@
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerGltfAnimationHandlers.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerGltfLightingExtensionHandlers.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerGltfMaterialExtensionHandlers.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerGltfSkinHandlers.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/scene3DFormatsTestHelper.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/sceneSkeleton.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/shared.ts",
@@ -30591,7 +30589,6 @@
       "refusedDependencies": [
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfParse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerGltfAnimationHandlers.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerGltfSkinHandlers.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneDocument.ts"
       ],
       "status": "dependency-incomplete"
@@ -30915,7 +30912,6 @@
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerGltfAnimationHandlers.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerGltfLightingExtensionHandlers.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerGltfMaterialExtensionHandlers.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerGltfSkinHandlers.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/scene3DFormatsTestHelper.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/sceneSkeleton.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/shared.ts",
@@ -31585,8 +31581,7 @@
       "refusedDependencies": [
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerGltfAnimationHandlers.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerGltfLightingExtensionHandlers.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerGltfMaterialExtensionHandlers.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerGltfSkinHandlers.ts"
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerGltfMaterialExtensionHandlers.ts"
       ],
       "status": "dependency-incomplete"
     },
