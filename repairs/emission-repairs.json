@@ -8981,6 +8981,34 @@
       "defect": "The emitter refuses getWgpuScene3DRuntime (cpp-structural-assertion-owner-unproven) at RenderStateRuntime -> WgpuRenderStateRuntime while retaining getWgpuSkinningAdapter calling it. The exact NOT GENERATED marker, same-header direct call and absent definition agree. This declares only the concrete Ref<WgpuRenderState> -> Ref<WgpuScene3DRuntime> signature already witnessed by the retained caller, source return type and emitted sceneRuntimes WeakMap value. It supplies no runtime body, owner recovery, upload cache, GPU operation or skinning result. Calling the refused accessor or retained caller remains an unresolved link. Body ownership stays open in docs/compiler-requests/asserted-erased-runtime-owner.md; caller emission stays open in docs/compiler-requests/retained-declaration-calls-omitted-callee.md.",
       "expectedWhen": "always",
       "expires": "when getWgpuScene3DRuntime emits (its exact NOT GENERATED marker disappears); sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-resources-declare-refused-standard-pbr-textures",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/scene3d_resources/scene_material_texture_registry.hpp",
+      "symbol": "list_standard_pbr_material_textures",
+      "refusedFunction": "listStandardPbrMaterialTextures",
+      "declaration": "void list_standard_pbr_material_textures(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>> material, flight::Array<flight::types::Texture> out);",
+      "retainedReference": "register_scene_3d_material_textures(registry, flight::types::standard_pbr_material_kind, list_standard_pbr_material_textures);",
+      "sourceDeclaration": "packages/scene3d-resources/src/sceneMaterialTextureRegistry.ts -- listStandardPbrMaterialTextures(material: Readonly<Material>, out: Texture[]): void; the retained register_standard_pbr_scene_3d_material_textures passes this exact callback to the emitted Scene3DMaterialTextureLister carrier",
+      "diagnostic": "use of undeclared identifier 'list_standard_pbr_material_textures'",
+      "defect": "The exact NOT GENERATED marker, retained registration callback reference and absent definition agree. The declared parameters are the registry callback's emitted readonly Material row and existing Texture-reference array. This adds no body, empty texture list, material downcast, texture copy or extension-domain restriction. An unused header may compile and link; retaining either registration must still fail to link on the refused callback. Concrete Material owner recovery remains open in docs/compiler-requests/assertion-to-undeclared-row-member.md.",
+      "expectedWhen": "always",
+      "expires": "when listStandardPbrMaterialTextures emits or its exact retained registration disappears; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene3d-resources-declare-refused-unlit-textures",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/scene3d_resources/scene_material_texture_registry.hpp",
+      "symbol": "list_unlit_material_textures",
+      "refusedFunction": "listUnlitMaterialTextures",
+      "declaration": "void list_unlit_material_textures(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>> material, flight::Array<flight::types::Texture> out);",
+      "retainedReference": "register_scene_3d_material_textures(registry, flight::types::unlit_material_kind, list_unlit_material_textures);",
+      "sourceDeclaration": "packages/scene3d-resources/src/sceneMaterialTextureRegistry.ts -- listUnlitMaterialTextures(material: Readonly<Material>, out: Texture[]): void; the retained register_unlit_scene_3d_material_textures passes this exact callback to the emitted Scene3DMaterialTextureLister carrier",
+      "diagnostic": "use of undeclared identifier 'list_unlit_material_textures'",
+      "defect": "The exact NOT GENERATED marker, retained registration callback reference and absent definition agree. The declared parameters are the registry callback's emitted readonly Material row and existing Texture-reference array. This adds no body, empty texture list, material downcast, texture copy or extension-domain restriction. An unused header may compile and link; retaining either registration must still fail to link on the refused callback. Concrete Material owner recovery remains open in docs/compiler-requests/assertion-to-undeclared-row-member.md.",
+      "expectedWhen": "always",
+      "expires": "when listUnlitMaterialTextures emits or its exact retained registration disappears; sdk:check fails if this repair matches no header."
     }
   ]
 }

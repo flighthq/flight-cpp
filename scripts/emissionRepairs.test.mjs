@@ -171,6 +171,47 @@ test('unrelated refusals, a header with no caller, and a defined symbol are left
   }
 });
 
+test('a refused callback needs its exact retained registration witness', () => {
+  const reference = 'register_thing(2, make_thing);';
+  const repair = { ...refusedRepair, retainedReference: reference };
+  const contents = refusedHeader().replace('return make_thing(2) + 1;', reference);
+  const files = [{ contents, path: 'flight/pkg/thing.hpp' }];
+  assert.deepEqual(applyEmissionRepairs([refusedRepair], files)[0].files, []);
+  assert.deepEqual(applyEmissionRepairs([repair], files)[0].files, ['flight/pkg/thing.hpp']);
+  assert.ok(files[0].contents.indexOf(repair.declaration) < files[0].contents.indexOf('inline int use_thing()'));
+  assert.ok(files[0].contents.includes(reference));
+  assert.deepEqual(applyEmissionRepairs([repair], files)[0].files, []);
+  for (const other of [
+    contents.replace(reference, '// ' + reference),
+    contents.replace(reference, 'register_thing(3, make_thing);'),
+    contents.replace('function makeThing ', 'function makeOther '),
+    contents.replace('inline int other()', 'inline int make_thing()'),
+  ]) {
+    const unchanged = [{ contents: other, path: 'flight/pkg/thing.hpp' }];
+    assert.deepEqual(applyEmissionRepairs([repair], unchanged)[0].files, []);
+    assert.equal(unchanged[0].contents, other);
+  }
+});
+
+test('a refused callback witness must name a single code-line function argument', () => {
+  const root = mkdtempSync(path.join(tmpdir(), 'flight-repairs-'));
+  try {
+    spawnSync('mkdir', ['-p', path.join(root, 'repairs')]);
+    const write = (retainedReference) => writeFileSync(
+      path.join(root, 'repairs', 'emission-repairs.json'),
+      JSON.stringify({ repairs: [{ ...refusedRepair, retainedReference }], schema: 'flight-cpp-emission-repairs/1' }),
+    );
+    write('register_thing(2, make_thing);');
+    assert.equal(loadEmissionRepairs(root).length, 1);
+    for (const value of ['', [], '// register_thing(make_thing);', 'register_thing(make_thing);\n', 'auto callback = make_thing;', 'register_thing(make_other);']) {
+      write(value);
+      assert.throws(() => loadEmissionRepairs(root), /retainedReference/u);
+    }
+  } finally {
+    rmSync(root, { force: true, recursive: true });
+  }
+});
+
 test('a declare-refused-function repair with a body is refused at load', () => {
   const root = mkdtempSync(path.join(tmpdir(), 'flight-repairs-'));
   try {

@@ -158,6 +158,8 @@ inline void list_standard_pbr_properties_textures(flight::StructuralRef<flight::
 // base-typed slot erased it -- rather than asserting past flight::Ref<flight::types::Material>. The compiler
 // will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.
 
+void list_standard_pbr_material_textures(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>> material, flight::Array<flight::types::Texture> out);
+
 inline void register_standard_pbr_scene_3d_material_textures(flight::Ref<flight::types::Scene3DMaterialTextureRegistry> registry) {
   register_scene_3d_material_textures(registry, flight::types::standard_pbr_material_kind, list_standard_pbr_material_textures);
 }
@@ -190,6 +192,8 @@ inline void register_standard_pbr_scene_3d_material_textures(flight::Ref<flight:
 // that concrete owner is known; changing only the accessor result cannot recover a wider owner after a
 // base-typed slot erased it -- rather than asserting past flight::Ref<flight::types::Material>. The compiler
 // will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.
+
+void list_unlit_material_textures(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>> material, flight::Array<flight::types::Texture> out);
 
 inline void register_unlit_scene_3d_material_textures(flight::Ref<flight::types::Scene3DMaterialTextureRegistry> registry) {
   register_scene_3d_material_textures(registry, flight::types::unlit_material_kind, list_unlit_material_textures);

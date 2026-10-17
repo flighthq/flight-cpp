@@ -89,3 +89,33 @@ Also refused at `a627849`: the seven built-in GL PBR extension registrations in 
 (`anisotropy`, `clearcoat`, `iridescence`, `sheen`, `specular`, `transmissionVolume`, `wrappedDiffuse`). Each
 asserts `Readonly<PbrExtension>` to its concrete interface. The pending `pbr-extension-concrete-value-arms`
 patch retains the owners instead; see [its request](pbr-extension-concrete-value-arms.md).
+
+## G2 Scene3D material texture listers retain only the base material row
+
+At compiler `806d257` / Flight `a627849`, `sceneMaterialTextureRegistry.ts` refuses
+`listStandardPbrMaterialTextures`, `listUnlitMaterialTextures` and
+`registerExtendedPbrScene3DMaterialTextures` as `cpp-structural-assertion-owner-unproven`.
+Each registry callback receives `Readonly<Material>`. The actual emitted Material contains only
+`entity_runtime_key`, `kind` and `name`; its readonly structural view does not declare the concrete
+standard, unlit or extended map fields. The concrete structs are separate flattened owners.
+
+The standard lister asserts that row to StandardPbrMaterial, then visits the existing non-null
+`baseColorMap`, `emissiveMap`, `metallicRoughnessMap`, `normalMap` and `occlusionMap` in that order,
+appending the same Texture references to the caller's existing array. The unlit lister appends its
+non-null `baseColorMap`. The extended lister first visits its original `standard` property block,
+then traverses its extensions in order and looks each kind up in the registry's extension-lister map.
+Unknown material and extension kinds append nothing through the normal lookup behavior; that does
+not authorize an empty-list replacement for a registered concrete material.
+
+Pinned `ExtendedPbrMaterial.extensions` is an open `readonly PbrExtension[]`. The current carried
+type patch retains the open arm alongside redundant concrete built-in references in PbrExtensionValue;
+neither representation permits replacing it with a closed built-in PBR family. Likewise, a registry
+kind or callback selection does not reconstruct a concrete material owner or add the missing map cells
+to a base-typed row. The required recovery must retain the exact material, its live cells, the same
+texture owners and the existing accumulation/dispatch order. Copying a base or concrete owner, assuming
+a cast from the kind string, or narrowing opaque vendor extensions would change that contract.
+
+The bounded declaration repairs described in
+[the retained-callback request](retained-declaration-calls-omitted-callee.md#g2-scene3d-material-texture-listers-are-retained-callback-values)
+address only name visibility for the standard and unlit callbacks. They supply no material refinement,
+texture list or extension registration body. All three owner-recovery refusals remain open here.

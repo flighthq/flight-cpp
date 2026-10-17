@@ -125,6 +125,16 @@ export function loadEmissionRepairs(root) {
           `Emission repair ${repair.id} must declare ${repair.symbol} as a single function declaration with no body.`,
         );
       }
+      // A retained registration can pass the refused function as a callback rather than call it
+      // directly. Require its exact code line and a function-argument position; a bare token or
+      // comment is not evidence that emitted code needs the symbol.
+      if (repair.retainedReference !== undefined &&
+          (typeof repair.retainedReference !== 'string' ||
+           /[\r\n]|\/[/*]/u.test(repair.retainedReference) ||
+           !repair.retainedReference.trim().endsWith(';') ||
+           !new RegExp(`(?:\\(|,)\\s*${repair.symbol}\\s*[,)]`, 'u').test(repair.retainedReference))) {
+        throw new Error(`Emission repair ${repair.id} has an invalid retainedReference callback witness`);
+      }
     }
     // One name or a list, never both and never neither. This defect -- a name owned by another package's
     // namespace, written unqualified -- produces names by the DOZEN per package: 26 in @flighthq/texture
@@ -254,7 +264,8 @@ const HANDLERS = {
 // repair inserts the refused function's DECLARATION only: the caller then compiles, and any call of it fails to
 // link, loudly, instead of the whole header failing. It never supplies behavior. It applies only where all
 // three witnesses agree: the header carries the exact NOT GENERATED marker for the refused source function,
-// emitted code outside comments calls the C++ symbol, and nothing in the header defines it. The declaration
+// emitted code outside comments calls the C++ symbol (or an exact declared registration passes it as a
+// callback), and nothing in the header defines it. The declaration
 // goes immediately before the first emitted function that calls it, so every type its signature names --
 // including an anonymous parameter struct the emitter declared for the call -- is already in scope.
 function declareRefusedFunction(contents, repair) {
@@ -270,7 +281,8 @@ function declareRefusedFunction(contents, repair) {
   if (lines.some(defines)) return undefined;
   let first = -1;
   for (let i = 0; i < lines.length; i++) {
-    if (code(lines[i]) && call.test(lines[i])) {
+    if (code(lines[i]) && (call.test(lines[i]) ||
+        (repair.retainedReference !== undefined && lines[i].trim() === repair.retainedReference.trim()))) {
       first = i;
       break;
     }

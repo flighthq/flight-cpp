@@ -407,3 +407,34 @@ would still require actual-header positive and missing-symbol link validation, i
 callback in the globally initialized handler; a syntax-only gate cannot certify that boundary.
 `swf_place_object_handler.hpp` remains failed with its actual diagnostic, location and request link.
 No SWF placement implementation is supplied, and no unchanged or global rerun is claimed.
+
+## G2 Scene3D material texture listers are retained callback values
+
+At compiler `806d257` / Flight `a627849`, four owned headers first fail at
+`scene3d_resources/scene_material_texture_registry.hpp:162`, where the retained standard PBR
+registration passes the undeclared `list_standard_pbr_material_textures` callback. The same module
+retains the unlit registration passing `list_unlit_material_textures`. Both have exact NOT GENERATED
+function markers and neither has a definition in the generated, runtime or override trees.
+
+The emitted Scene3DMaterialTextureLister callback fixes both signatures without guessing:
+
+```cpp
+void list_standard_pbr_material_textures(
+    flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>> material,
+    flight::Array<flight::types::Texture> out);
+void list_unlit_material_textures(
+    flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>> material,
+    flight::Array<flight::types::Texture> out);
+```
+
+The existing declare-refused-function mechanism now optionally accepts `retainedReference`, the exact
+single code line that passes the refused symbol as a function argument. It is validated as a callback
+argument and rejects comments, multiple lines and arbitrary symbol mentions. Matching still requires
+the exact source-function refusal marker, absence of an existing definition/declaration, and that exact
+registration line outside comments. It inserts only the declaration before the retained caller, and
+reapplication changes nothing. Existing direct-call repairs retain their previous behavior.
+
+The two entries expire when their source functions emit or their exact registrations disappear. No
+body, empty texture list, material downcast, copied texture owner or closed PBR union is supplied.
+Their underlying Material-to-concrete assertions and the separate extended-material registration
+remain refused; see [the existing owner-recovery request](assertion-to-undeclared-row-member.md#g2-scene3d-material-texture-listers-retain-only-the-base-material-row).
