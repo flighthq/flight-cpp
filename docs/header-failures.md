@@ -234,7 +234,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 205 | `undeclared-identifier-af7a1054` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glMedianEffectRunner` binding (and its callee `applyMedianEffectToGl`) but still emits the registration call that passes the runner |
 | 206 | `undeclared-identifier-b15d9d15` | 1 | ANIM | compiler | G2: 0/1; refused bone parser and complete result omitted; no exact declaration candidate |
 | 207 | `undeclared-identifier-befaa2d6` | 2 | 2D | source patch + repairs (applied) | the emitted code names `compute_scissor_rect`, which nothing declares *(G2: 1 pass, 1 to `no-viable-conversion-e25fffde`)* |
-| 208 | `undeclared-identifier-c162d0c0` | 1 | ANIM | runtime | the emitted code names `solve_skeleton_2d_transform_constraint`, which nothing declares |
+| 208 | `undeclared-identifier-c162d0c0` | 1 | ANIM | declaration repair (applied) | exact refused transform solver declared; G2: 1 pass; registration and full constraint solving remain unlinkable |
 | 209 | `undeclared-identifier-c29489a5` | 1 | GL | compiler *(existing request)* | refused `glBloomEffectRunner` still registered; callee widens pooled `Ref<GlTextureRenderTarget>` intermediates to `GlRenderTarget` |
 | 210 | `undeclared-identifier-c3c55c65` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glCompositeEffectRunner` binding (and its callee `applyCompositeEffectToGl`) but still emits the registration call that passes the runner |
 | 211 | `undeclared-identifier-c45cc1bb` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glFxaaEffectRunner` binding (and its callee `applyFxaaEffectToGl`) but still emits the registration call that passes the runner |
@@ -4037,14 +4037,41 @@ derived-owner recovery: the
 [interface heritage widening](compiler-requests/interface-heritage-widening.md) request, extended with this
 site. The clip renderer is not claimed complete.
 
-### 208. `undeclared-identifier-c162d0c0` — 1 header(s)
+### 208. `undeclared-identifier-c162d0c0` — 1 header, resolved by declaration-only repair
 
-- cause: the emitted code names `solve_skeleton_2d_transform_constraint`, which nothing declares
-- subject: `solve_skeleton_2d_transform_constraint`
+- original subject: `solve_skeleton_2d_transform_constraint`
 - lanes: ANIM
-- fix route: runtime
-- first failure at: `flight/skeleton2d/transform_constraint_2d.hpp:175`
-- example: `use of undeclared identifier 'solve_skeleton_2d_transform_constraint'`
+- original failure at: `flight/skeleton2d/transform_constraint_2d.hpp:175`
+- fix route: existing `declare-refused-function` repair, `skeleton2d-declare-refused-transform-constraint-solver`
+- retained callback: [exact declaration and link boundary](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-skeleton2d-transform-registration-retains-its-refused-solver)
+- body request: [original constraint and pose owner recovery](compiler-requests/assertion-to-undeclared-row-member.md#g2-transform-constraint-dispatch-must-retain-the-original-constraint-and-pose-owners)
+
+The exact refusal marker, live direct function-argument registration and absent definition agree.
+The existing retainedReference repair declares only void(Ref<Skeleton2D>, readonly Skeleton2DConstraint
+row), exactly the emitted Skeleton2DConstraintSolver slot. It matches one header and is idempotent.
+The mutable skeleton Ref and full readonly base constraint ABI remain. No transform-only callback,
+closed kind union, adapter, repair-engine extension or replacement owner is added.
+
+Normal exact-pin one-module generation plus the existing derived structural-alias rule reproduces
+only the declaration (+2 header lines) and own repair record. The narrow closure omits Screen;
+applying that existing rule only to this raw header and its committed canonical Screen owner
+preserves the already-carried x_y alias/include. The canonical owner and alias provenance stay
+unchanged; the result equals the tested candidate. The actual unused whole header compiles,
+links and runs with static solver-slot/signature checks. Calling the actual opt-in registration
+compiles to an object, then fails to link on **only** the exact omitted transform solver signature.
+Neither registration nor the solver runs; there is no native transform/pose result.
+
+The owned-header jobs1 check completes **1 attempted / 1 pass / 0 fail / 0 unattempted**.
+The sole row is pass with previousCluster; the active cluster is removed without promoting or
+measuring foreign headers. Helper bodies, partial marker, original row-owner refusal, source/refusal
+fingerprints, package/global counts, initialization and applicability policy are unchanged.
+Existing requests preserve the original constraint, Bone2D and Float32 owners; target snapshot,
+all six channel mixes/offsets, signed angle wrap, world-scale ratios, combined world translation
+before one parent inversion, source singular/range checks, original numeric/transform-mode domains
+and per-bone refresh order. The open registry's ordered pass and caller's later descendant refresh
+remain. No fake constraint, empty solver/result, copied pose owner, narrowed domain or
+source/runtime/override body is carried. Foreign raw registry/worklist/request data and historical
+G1 totals remain unchanged.
 
 ### 209. `undeclared-identifier-c29489a5` — G2 recheck of 1 header(s)
 

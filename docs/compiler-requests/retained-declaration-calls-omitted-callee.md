@@ -1831,3 +1831,40 @@ The exact declaration supplies no storage, cache, target, lease operation or imp
 with_gl_render_textures<void> compilation separately fails at
 [optional<void> in finally lowering](void-return-inside-try-finally.md#g2-generic-gl-render-texture-bracket-with-void-result);
 that generic case is retained as compiler debt, not silently excluded by the successful double probe.
+
+## G2 Skeleton2D transform registration retains its refused solver
+
+At Flight `a627849` / compiler `806d257`, original `undeclared-identifier-c162d0c0`
+contains one header, `skeleton2d/transform_constraint_2d.hpp:175`. Its retained explicit
+`register_skeleton_2d_transform_constraint_solver()` passes the absent
+`solve_skeleton_2d_transform_constraint` as a direct function argument. The exact source24
+NOT GENERATED marker, live callback argument and absent definition agree. The existing
+`declare-refused-function` retainedReference matcher adds only this declaration:
+
+```cpp
+void solve_skeleton_2d_transform_constraint(
+  flight::Ref<flight::types::Skeleton2D> skeleton,
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2DConstraint>>>> constraint);
+```
+
+This is exactly the emitted Skeleton2DConstraintSolver carrier, checked with static type
+assertions. Match1, fixed point and removal recover original bytes. The actual unused
+whole header compiles, links and runs. Calling the actual opt-in registration compiles to
+an object, then fails to link on **only** this exact solver signature. There is no eager
+global registration or stand-in solver in the positive test, and neither registration nor
+constraint solving runs. The original owned header jobs1 check completes **1 attempted /
+1 pass / 0 fail / 0 unattempted**; this measures declaration availability, not pose behavior.
+
+Normal exact-pin one-module generation plus the existing derived alias rule reproduces the
+link-tested candidate (+2 header lines) and own repair record. The narrow closure omits
+Screen, so applying that existing rule only to the raw owned header and committed canonical
+Screen preserves the already-recorded x_y alias/include. The canonical owner and existing
+alias provenance remain unchanged; no local duplicate owner or new alias rule is carried.
+The partial marker, owner refusal, source/refusal fingerprints, package/global counts,
+initialization and applicability policy are unchanged. The mutable skeleton Ref, readonly
+base constraint and open string registry are retained without a transform-only adapter.
+
+The [existing owner request](assertion-to-undeclared-row-member.md#g2-transform-constraint-dispatch-must-retain-the-original-constraint-and-pose-owners)
+records the missing concrete transform cells, source world-to-local per-channel math,
+original bone/Float32 buffer identity and refresh/dispatch order. This repair supplies no
+solver body, copied owner, fake constraint, empty result, narrowed domain or native pose gain.

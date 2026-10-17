@@ -216,3 +216,49 @@ base-to-IK dispatch owner, and no native full-constraint/pose solve is demonstra
 compile or by declaration availability. The bounded [retained callback declaration](retained-declaration-calls-omitted-callee.md#g2-skeleton2d-ik-registration-retains-its-refused-solver)
 supplies name visibility only; neither registration nor the refused solver can link. No fake
 constraint, empty solver/result, copied pose owner or narrower constraint domain is carried.
+
+## G2 transform constraint dispatch must retain the original constraint and pose owners
+
+At Flight `a627849` / compiler `806d257`, `skeleton2d/transformConstraint2D.ts:24`
+refuses `solveSkeleton2DTransformConstraint` as `cpp-structural-assertion-owner-unproven`.
+The readonly base Skeleton2DConstraint row has kind/mix, not boneIndices, targetBoneIndex,
+all six channel mixes (mixRotate, mixScaleX, mixScaleY, mixShearY, mixX, mixY) or their six
+offsets. The refusal also reports incompatible kind-cell evidence. The emitted concrete
+Skeleton2DTransformConstraint is a separate flattened owner. Readonly access and selection
+by its registered string kind do not recover the original concrete cells.
+
+Keep the public solver slot `void(Ref<Skeleton2D>, readonly Skeleton2DConstraint row)`:
+the registry accepts open string kinds, replacement is last-write-wins, unknown kinds are
+skipped, and custom families run in the same ordered pass as built-ins. Preserve concrete
+owners through construction, storage and dispatch or provide checked owner recovery there.
+A transform-only callback, closed kind union, pointer cast, copied constraint or detached
+field table cannot establish this relation without changing the source contract.
+
+The solver reads the original Skeleton2D bone-reference array and Float32 world buffer of
+six-value affine blocks. It snapshots target world rotation, both column lengths, y-axis
+shear and translation before visiting constrained boneIndices in source order. Target and
+bone range checks remain exact. Rotation and shear use the source signed +/-180 degree
+wrap; each of the six channel mixes is multiplied by the original constraint mix, without
+clamping. Scale offsets are added before the source world-scale ratio; the source current>0
+comparison gates each scale update. Preserve zero-channel branches, offsets,
+all numeric domains, reads and observable writes rather than copying local fields directly.
+
+Translation mixes both wanted WORLD coordinates first, then converts the point once through
+the constrained bone's parent basis. Independent axis inversions would skew partial mixes
+under rotated parents. Roots use those world coordinates directly. Parent determinant
+magnitude below `1e-9` returns null and leaves local translation unchanged; prior rotation,
+scale and shear writes still stand, and the per-bone world refresh still occurs. Preserve
+the order rotation, scaleX, scaleY, shearY, translation, refresh, including repeated indices
+and a target also appearing in the constrained list. Refresh mutates the same Float32 world
+buffer, so later bones/constraints observe current data while the target snapshot stays fixed.
+Descendants are deliberately left to the caller's one full world pass after all constraints.
+Bone transformMode remains the full independent TransformInherit2D flag domain, not only presets.
+
+This is the source world-space form. Its interface explicitly defers Spine local/relative
+variants; neither a declaration nor later owner recovery should claim to implement them.
+Existing source tests specify per-channel offsets, mix multiplication, parent-space position,
+world-scale ratio, all named bones and range skips; reading those tests is not native pose
+execution. The unchanged angle/inversion helper bodies do not recover the refused solver.
+The [retained declaration](retained-declaration-calls-omitted-callee.md#g2-skeleton2d-transform-registration-retains-its-refused-solver)
+adds name visibility only. No fake constraint, empty solver/result, copied bone/pose owner,
+new runtime/provider or narrower transform/family domain is supplied.
