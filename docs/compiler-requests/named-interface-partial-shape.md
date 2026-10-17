@@ -76,11 +76,27 @@ override.
 
 ## Carrying workaround
 
-`materials-upstream-preset-assemblies` supplies the refused module with explicit partial-row aliases
-and preserves spread-last precedence. Its glass path also records the separate generated-interface
-heritage limitation: until the Scene3D-GL-owned concrete extension value-arm patch is rebased, the
-same transmission allocation is retained through the generated `PbrExtension` prefix view.
+`materials-upstream-preset-assemblies` supplies the preset bodies with explicit partial-row aliases
+and preserves spread-last precedence. At compiler `806d257` / Flight `a627849`, ten standard
+presets remain refused at structural-row construction, while the glass body is retained. The native
+override still supplies these assemblies through its existing native entry points.
 
-The workaround can be removed only when the complete preset module emits and source interface heritage
-preserves concrete owners through the `PbrExtension` view. The first condition must be tested against
-the full imported owner graph; the now-passing three-field fixture is not an expiry proof.
+The G2 native assignment failure was a stale override boundary after the concrete-value-arm patch
+landed: `ExtendedPbrMaterial.extensions` already stores `Array<PbrExtensionValue>`, but glass
+constructed `Array<Ref<PbrExtension>>` using a `reinterpret_pointer_cast` prefix alias. Those array
+carriers cannot be assigned. The override now places its existing `Ref<TransmissionVolumePbrExtension>`
+directly in the declared variant alternative. The same allocation and shared control block are retained;
+no base owner, copied descriptor, runtime covariance or unchecked recovery is needed. The source
+patch and open extension arm are unchanged.
+
+The current generated-source hash still matches the override manifest. Its obsolete prefix-alias debt
+is removed; the named-Partial/spread compiler debt remains. The native glass function still takes
+its existing optional nominal options reference, rather than the emitted readonly structural options
+carrier. That separate entry adaptation is not supplied by this storage repair, so the manifest
+records the override as partial instead of claiming that all source surface is provided. The materials semantic suite uses the
+actual variant carrier and checks concrete descriptor fields, nested overrides, list order and identity,
+alias mutation, default values and distinct owners across independent glass constructions.
+
+The workaround can be removed only when the complete preset module emits with the declared extension
+value carrier and preserves authored field presence and spread-last precedence. The original passing
+three-field fixture remains insufficient to prove that expiry.
