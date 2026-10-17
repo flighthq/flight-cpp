@@ -154,7 +154,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 125 | `no-viable-conversion-03bf8175` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
 | 126 | `no-viable-conversion-0faa55ca` | 1 | GL | compiler | a value is passed where its declared type cannot receive it |
 | 127 | `no-viable-conversion-2909a65f` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
-| 128 | `no-viable-conversion-31b754c5` | 1 | ANIM | compiler | a value is passed where its declared type cannot receive it |
+| 128 | `no-viable-conversion-31b754c5` | 1 | ANIM | compiler | G2: recorded 0/1 retained; Spine particle object guard leaves Any unprojected at Record return; existing JSON-read request/no rerun |
 | 129 | `no-viable-conversion-331a999f` | 1 | GL | runtime (applied) | a `Float32Array \| Uint8Array` output passed to `readPixels`'s `ArrayBufferView` *(G2: 1/1 pass)* |
 | 130 | `no-viable-conversion-4bbb9be5` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it *(builder4/E0a)* |
 | 131 | `no-viable-conversion-562151da` | 1 | WGPU | compiler | a value is passed where its declared type cannot receive it |
@@ -2914,13 +2914,29 @@ failed, with foreign rows/clusters and historical G1 totals unchanged.
 - first failure at: `flight/scene2d_dom/merge_dom_render_options.hpp:65`
 - example: `no viable conversion from returned value of type 'Array<tuple<String, Ref<CanvasShapeCommand<ShapeCommandKey>>>>' to function return type 'Map<String, Ref<CanvasShapeCommand<ShapeCommandKey>>>'`
 
-### 128. `no-viable-conversion-31b754c5` — 1 header(s)
+### 128. `no-viable-conversion-31b754c5` — 1 header(s), compiler route
 
-- cause: a value is passed where its declared type cannot receive it
-- lanes: ANIM
-- fix route: compiler
-- first failure at: `flight/particles_formats/spine_parse.hpp:102`
-- example: `no viable conversion from returned value of type 'Any' to function return type 'Record<String, Any>'`
+**Recorded 0/1 pass, 1 fail retained; docs-only, unchanged C++ not rerun.**
+`flight/particles_formats/spine_parse.hpp:102` still returns Any from require_spine_record where
+Record<String,Any> is required. Source93-99's type predicate proves a non-null, non-array object,
+not an exact boxed native Record or declared keyframe/document owner.
+
+[Existing JSON/dynamic-member coverage](compiler-requests/parsed-json-object-shape-reads.md#g2-spine-particle-object-guard-cannot-return-an-unprojected-any-as-record)
+already lists this module and now records this predicate-return form. Exact external_if<Record>()
+only handles one storage type; an implicit conversion, copied schema or default-empty result would
+narrow the accepted object/input domain or lose identity. No bounded local annotation/declaration fix
+supplies the same-object dynamic view and missing-key semantics.
+
+The full audit preserves tint/alpha/images validation order and path errors, permissive valid defaults,
+actual range/units/shape/blend mappings, real multi-stop curve baking, endpoint hex behavior, typed result
+owners and config/diagnostics/document evaluation order. The two omitted functions remain under existing
+[JSON exception](compiler-requests/parsed-json-object-shape-reads.md#parsespinejson-emitted-before-refused-at-a627849),
+[erased-array](compiler-requests/erased-array-element-reading.md) and
+[retained-callee](compiler-requests/retained-declaration-calls-omitted-callee.md) coverage. Additional barriers
+are inspected only, not fresh next diagnostics/link gates. No fake parser, empty-result substitute,
+copied owner, stricter schema or native particle/curve/serialization success is claimed. Only the existing
+request appendix, this slice and two compact root/row lines change; C++/owners/runtime/patches/repairs/
+manifest/pins and foreign/historical products remain unchanged.
 
 ### 129. `no-viable-conversion-331a999f` — 1 header(s)
 

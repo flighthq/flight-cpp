@@ -238,3 +238,104 @@ compact product lines (one cluster/one failed row) change. C++, particle/schema 
 repairs, source patches, generation inventory and pins are unchanged; unchanged C++ is not rerun.
 Foreign compact products/worklist entries and historical/G1 totals remain intact. No foreign coordinator
 attachment was applied, and no fake parser/counts, copied owner or narrowed input is supplied.
+
+
+## G2 Spine particle object guard cannot return an unprojected Any as Record
+
+At Flight `a62784923f3be814463286c9fb28edfe6ab15789` / compiler
+`806d257d2f4100de745cc97340e61c2f301b0f24`, cluster `no-viable-conversion-31b754c5` contains
+`flight/particles_formats/spine_parse.hpp`. Its recorded first failure is native102:
+`no viable conversion from returned value of type 'flight::Any' to function return type 'flight::Record<flight::String, flight::Any>'`.
+Source `packages/particles-formats/src/spineParse.ts:93-99` declares a dynamic Record type predicate
+and a required-object helper. The helper's emitted signature carries Any into Record:
+
+```cpp
+inline flight::Record<flight::String, flight::Any>
+require_spine_record(flight::Any value, flight::String path) {
+  if (!is_unknown_record(value)) invalid_spine_entry(path, flight::String("a JSON object"));
+  return value; // native102: no dynamic object/Record projection
+}
+```
+
+isUnknownRecord excludes null, nonobjects and arrays. It establishes the source object's dynamic
+member view, not the exact native storage type Record<String,Any> or an anonymous keyframe schema.
+The current Record has its own shared storage; Any may instead hold a native object owner, an exact
+externally boxed Record, or values reached through a JSON tree. external_if<Record<String,Any>>() is
+honest only for that exact boxed type. Using it as the only accepted path, copying entries into a new
+Record, adding an implicit Any conversion, or asserting SpineTintKeyframe/SpineParticleDocument would
+reject valid dynamic objects or manufacture identity/schema evidence. The existing parsed-JSON request
+already lists this module and its missing-key/nested-object carrier contract; this is its current
+predicate-return form, rather than a new request or binding name.
+
+Faithful emission must return the same object's checked dynamic member view and let absent members
+read undefined. It must agree with the JSON.parse carrier at the root and the original object owners
+at nested reads. A local helper annotation already declares Record, and a forward declaration cannot
+replace this retained return expression. No bounded local runtime conversion or declaration supplies
+that coherent carrier. No source/compiler/runtime prototype or normal generation is carried here.
+
+### Validation, config and curve behavior required
+
+- Empty object input is valid and uses defaults. Syntax errors keep the Invalid Spine particle JSON
+  prefix and source Error/message handling; null/array/primitive roots use the separate expected-object
+  error. After a valid root, validate tint, then alpha, then images before config mapping, even for
+  the direct config-only entry point. Nonarray tint/alpha fields are ignored by these validators;
+  every entry of an array must be a non-null, non-array object or throw the exact path-bearing
+  Invalid Spine particle document error. Do not filter bad entries, validate only endpoints, relax
+  nested arrays into objects or replace failures with empty results.
+- readSpineImages returns a fresh empty list for a nonarray; an array must contain strings at every
+  position, preserving order and duplicates. Any nonstring throws images[index] must be a string.
+  The full document retains those image strings; this task adds no texture loading or native image
+  binding. Missing properties must reach the source default path rather than Record.get(key).value()
+  throwing. Existing emitted erased length/index reads and fixed-key .value() accesses remain inspected
+  JSON/array barriers, not freshly measured next compiler diagnostics.
+- Preserve the real createParticleEmitterConfig owner and its defaults. Lifetime/duration milliseconds
+  convert to seconds; angles and spin degrees convert to radians. Direction is cos(midAngle),
+  -sin(midAngle), and spread is half the authored angle range. Velocity remains pixels/sec, wind/gravity
+  remain the corresponding average accelerations. Ranges accept only non-array objects and numeric
+  low/high fields with the actual independent defaults; do not coerce, sort endpoints, impose finiteness
+  or normalize negative ranges. maxParticles retains bitwise-or0. Continuous defaults true; duration is
+  positive authored ms/1000 only when noncontinuous, otherwise0.
+- For an ellipse, equal averaged spawn width/height produces circle with radius=width/2; unequal
+  dimensions produce rect. Other source shapes produce the actual point fallback, while the document
+  retains line/ellipse/point according to spineSpawnShape. ScaleEnd is averaged end scale divided by
+  positive averaged start scale, otherwise0. Do not replace this with a different epsilon/clamp policy.
+  Config blend accepts additive/multiply/screen/normal and returns null otherwise; the typed document
+  falls back to normal. Keep those source distinctions rather than routing config through document.
+- Endpoint tint uses first/last original entries, white fallback, and the exact hex conversion:
+  remove the first #, pad right with f to six characters, parse each pair base16, use1 only for a
+  non-finite channel parse. It is not a strict six-digit validator. Alpha endpoints default1/0 on
+  missing/nonarray/empty input. Every endpoint still requires its real validated object.
+- More than two tint/alpha entries bake complete curves through particleColorCurveFromKeyframes and
+  particleCurveFromKeyframes using the existing ColorKeyframe/CurveKeyframe owners and default33 samples.
+  Missing time uses i/(length-1); missing tint/alpha uses white/1. Shorter timelines retain null curves
+  and first/last interpolation. Do not keep only endpoints, substitute null curves, or replace the real
+  sorting/interpolation helpers. The document's keyframe readers preserve source order/strings/values
+  and use their actual time default0, with distinct nonarray defaults and valid empty arrays retained.
+- parseSpineParticle maps one parsed raw object with no intermediate document. The document entry point
+  parses once, then evaluates config, diagnostics and document in that source order. SpineParseResult
+  retains the real ParticleEmitterConfig, SpineParticleDocument and ImportDiagnostic-array owners.
+  The document keeps its explicit name/ranges/authored units/tint/alpha/images/blend fields; no copied
+  native schema is substituted for the dynamic raw object and no parser-only empty success is supplied.
+- collectSpineDiagnostics emits Skip crumbs in source order for nonzero lifeOffset range, nonzero
+  x/y ranges (one position crumb), and strictly true premultiplied. Origin is collectSpineDiagnostics.
+  Numeric-only range checks and exact equality matter; preserve original diagnostic array and details.
+  Multi-stop curves are supported by baking and do not gain obsolete unsupported-tint/alpha warnings.
+
+The module explicitly omits parseSpineJson26 as cpp-instanceof-operand-unresolved and
+readSpineImages102 as cpp-erased-array-predicate-runtime-required. The earlier section of this existing
+request already records the JSON exception-carrier mismatch: Json::parse produces JsonValue and
+JsonSyntaxError, not a source Error instance. [Erased-array reading](erased-array-element-reading.md)
+records that AnyArray has exact identity-preserving extraction but no generic erased element view;
+its old no-array-alternative refusal wording is stale, not permission to narrow this parser's domain.
+[Retained-callee coverage](retained-declaration-calls-omitted-callee.md) applies to the direct public
+parse calls and validate/document image calls. A declaration would not repair native102 or implement
+syntax handling/image validation. No candidate, positive unused compile/link/run, qualified negative
+link or newly measured next-error claim is made. Both source tests and serialization/re-import/curve
+sampling expectations were read as requirements only; no native Spine particle execution is claimed.
+
+**Recorded 0/1 pass, 1 fail is retained.** Only this existing request appendix, worklist128 and two
+compact owned product lines (one root/one failed row) change. C++, particle/curve/schema owners,
+runtime, source patches, repairs, generation inventory and pins are unchanged; unchanged C++ is not rerun.
+Foreign compact products/worklist entries and historical/G1 totals remain intact. No fake parser,
+empty-result substitute, copied owner, narrowed input or native parser/curve/serialization/link gain
+is supplied or claimed.
