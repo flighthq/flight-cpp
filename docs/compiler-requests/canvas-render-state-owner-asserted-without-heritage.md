@@ -195,3 +195,20 @@ A native test belongs on the runtime side rather than the compiler side: assert 
 and its runtime each keep **one** allocation, that `readCanvasRenderStateRuntimeOwner` returns the very
 runtime written by `writeCanvasRenderStateRuntimeOwner`, and that the two accessors do not copy. That is
 the invariant the equivalence argument claims, and it is the one an assertion-based rewrite would break.
+
+## G2 DOM clip hooks assert the DOM render state from its base
+
+`@flighthq/scene2d-dom`'s `domClip.ts` refuses its `domScene2DClipHooks: Scene2DClipHooks` binding with
+`cpp-reference-assertion-without-heritage`, at Flight `a627849` / compiler `806d257`. Each hook receives the
+shared `RenderState` and calls `getDomRenderStateRuntime(state as DomRenderState)`, which is the same
+base-to-derived assertion as the Canvas constructors. `enable_dom_clip_support` still stores the binding,
+so `flight/scene2d_dom/dom_clip.hpp:81` fails on `'dom_scene_2d_clip_hooks' was not declared` (GCC 15.2, one
+worker). `canvas_clip.hpp:89` (`canvas_clip_hooks`) has the same shape.
+
+The hooks need the exact DOM owner recovered through real heritage or a checked dispatch contract that
+validates the state before entering the typed hook. They must never use a pointer cast or a replacement
+state. Nothing is carried:
+- The declaration repair declares only functions, not a `Ref<Scene2DClipHooks>` variable.
+- A hook table would fake clipping.
+- The next call, `set_dom_clip_hooks` at line 82, belongs to the wholly refused `domClipRectangle.ts`. See
+  [local-interface-extending-lib-dom-interface](local-interface-extending-lib-dom-interface.md).

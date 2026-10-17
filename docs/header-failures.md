@@ -176,7 +176,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 147 | `other-acb4b229` | 1 | 2D | compiler | G2: 0/1; JSON assertion casts to nominal array/hash document union; converter independently refused |
 | 148 | `static-assertion-18059635` | 1 | 3D | compiler | a runtime static assertion rejects the emitted shape |
 | 149 | `static-assertion-261f0db6` | 1 | 3D | compiler | a runtime static assertion rejects the emitted shape |
-| 150 | `undeclared-identifier-0168969a` | 1 | 2D | runtime | the emitted code names `dom_scene_2d_clip_hooks`, which nothing declares |
+| 150 | `undeclared-identifier-0168969a` | 1 | 2D | compiler *(existing + new request filed)* | refused `domScene2DClipHooks` (RenderState asserted to DomRenderState without heritage) still stored; next callee `setDomClipHooks` is in the wholly refused domClipRectangle module |
 | 151 | `undeclared-identifier-07640d32` | 1 | GL | runtime | the emitted code names `gl_outline_effect_runner`, which nothing declares |
 | 152 | `undeclared-identifier-076c02b1` | 1 | PLAT | runtime | the emitted code names `resolve_tilemap_cell_index`, which nothing declares |
 | 153 | `undeclared-identifier-09cc9e86` | 1 | GL | runtime | the emitted code names `gl_film_grain_effect_runner`, which nothing declares |
@@ -2759,14 +2759,18 @@ Foreign rows/roots/prose and historical/G1 totals are preserved.
 - first failure at: `flight/structural_ref.hpp:1584`
 - example: `static assertion failed: structural row construction has an incompatible value type`
 
-### 150. `undeclared-identifier-0168969a` — 1 header(s)
+### 150. `undeclared-identifier-0168969a` — G2 recheck of 1 header(s)
 
-- cause: the emitted code names `dom_scene_2d_clip_hooks`, which nothing declares
+- cause: the emitter refuses the `domScene2DClipHooks` binding (`cpp-reference-assertion-without-heritage`, because each hook asserts the shared `RenderState` to `DomRenderState`), but `enable_dom_clip_support` still stores it at line 81. The next callee, `set_dom_clip_hooks` at line 82, belongs to `domClipRectangle.ts`, which is refused as a whole because its private `DomClipStyle extends CSSStyleDeclaration` stops the interface-inheritance pass. Its header is a best-effort placeholder.
 - subject: `dom_scene_2d_clip_hooks`
 - lanes: 2D
-- fix route: runtime
+- fix route: compiler
+- why this route: a hook table or clip provider would fake clipping. The declaration repair declares only functions (the hooks are a variable), and the placeholder has no NOT GENERATED marker to declare against. The DOM owner needs real heritage or a checked dispatch contract. The clip-path write is also blocked behind the [shared DOM style boundary](compiler-requests/dom-style-shared-element-boundary.md). `scene2d-dom` declares environment `web`. The sibling `canvas_clip.hpp:89` (`undeclared-identifier-7905640c`) has the same shape, and its row is not changed here.
 - first failure at: `flight/scene2d_dom/dom_clip.hpp:81`
 - example: `use of undeclared identifier 'dom_scene_2d_clip_hooks'`
+- Scoped native recheck (GCC 15.2, jobs 1): **1 attempted / 0 pass / 1 fail**, same diagnostic. Nothing is carried.
+- compiler request: `docs/compiler-requests/canvas-render-state-owner-asserted-without-heritage.md`
+- compiler request: `docs/compiler-requests/local-interface-extending-lib-dom-interface.md` *(new)*
 
 ### 151. `undeclared-identifier-07640d32` — 1 header(s)
 
