@@ -223,12 +223,12 @@ int main(int argc, char** argv) {
   const auto vendor_base = flight::make_ref<types::PbrExtension>();
   vendor_base->entity_runtime_key = std::nullopt;
   vendor_base->kind = flight::String("VendorPbrExtension");
-  flight::Array<flight::Ref<types::PbrExtension>> ordered_extensions{
+  flight::Array<types::PbrExtensionValue> ordered_extensions{
       clearcoat_base, vendor_base};
   auto extended_owner = std::make_shared<flight::RowOwner>();
   extended_owner->set_named_value(
       "extensions",
-      std::optional<flight::Array<flight::Ref<types::PbrExtension>>>{
+      std::optional<flight::Array<types::PbrExtensionValue>>{
           ordered_extensions});
   extended_owner->set_named_value(
       "standard",
@@ -238,14 +238,14 @@ int main(int argc, char** argv) {
       options<types::ExtendedPbrMaterial>(extended_owner));
   if (mutation == "--mutate-order") {
     ordered->extensions =
-        flight::Array<flight::Ref<types::PbrExtension>>{vendor_base, clearcoat_base};
+        flight::Array<types::PbrExtensionValue>{vendor_base, clearcoat_base};
   }
   check(ordered->standard == standard_block &&
             ordered->extensions.identity() == ordered_extensions.identity(),
         "extended PBR preserves the exact standard block and extension-list identities");
-  check(ordered->extensions.get(0.0).value()->kind ==
+  check(std::get<flight::Ref<types::PbrExtension>>(ordered->extensions.get(0.0).value())->kind ==
                 types::clearcoat_pbr_extension_kind &&
-            ordered->extensions.get(1.0).value()->kind ==
+            std::get<flight::Ref<types::PbrExtension>>(ordered->extensions.get(1.0).value())->kind ==
                 flight::String("VendorPbrExtension"),
         "extended PBR retains extension program-selection order");
 
@@ -292,14 +292,39 @@ int main(int argc, char** argv) {
             glass->standard->metallic == 0.0 && glass->standard->roughness == 0.2,
         "glass merges its standard defaults with nested caller options");
   const auto extension = glass->extensions.get(0.0);
-  check(extension.has_value() &&
-            extension.value()->kind ==
-                types::transmission_volume_pbr_extension_kind,
-        "glass retains one ordered transmission extension through its base view");
-  const auto transmission = std::reinterpret_pointer_cast<
-      types::TransmissionVolumePbrExtension>(extension.value());
-  check(transmission->transmission == 0.4 && transmission->ior == 1.5,
-        "glass retains the same concrete extension owner and nested overrides");
+  check(glass->extensions.size() == 1 && extension.has_value() &&
+            std::holds_alternative<flight::Ref<types::TransmissionVolumePbrExtension>>(
+                extension.value()),
+        "glass retains exactly one concrete transmission owner in the ordered value list");
+  const auto transmission = std::get<flight::Ref<types::TransmissionVolumePbrExtension>>(
+      extension.value());
+  check(transmission->kind == types::transmission_volume_pbr_extension_kind &&
+            transmission->transmission == 0.4 && transmission->ior == 1.5,
+        "glass retains the concrete extension fields and nested caller overrides");
+  const auto extension_list_alias = glass->extensions;
+  const auto transmission_alias =
+      std::get<flight::Ref<types::TransmissionVolumePbrExtension>>(
+          extension_list_alias.get(0.0).value());
+  transmission_alias->thickness = 2.75;
+  check(extension_list_alias.identity() == glass->extensions.identity() &&
+            transmission_alias == transmission && transmission->thickness == 2.75 &&
+            !transmission_alias.owner_before(transmission) &&
+            !transmission.owner_before(transmission_alias),
+        "glass value-list aliases retain the same concrete allocation and control block");
+  const auto default_glass = materials::create_glass_extended_pbr_material();
+  const auto default_transmission =
+      std::get<flight::Ref<types::TransmissionVolumePbrExtension>>(
+          default_glass->extensions.get(0.0).value());
+  check(default_glass->extensions.size() == 1 &&
+            default_glass->extensions.identity() != glass->extensions.identity() &&
+            default_glass->standard != glass->standard &&
+            default_transmission != transmission && default_transmission->ior == 1.5 &&
+            default_transmission->transmission == 1.0 &&
+            default_transmission->thickness == 0.0 &&
+            default_glass->standard->base_color == 4294967295.0 &&
+            default_glass->standard->metallic == 0.0 &&
+            default_glass->standard->roughness == 0.0,
+        "default glass creates fresh ordered storage and concrete owners with source defaults");
 
   using UniformValue = std::variant<flight::Array<double>, double>;
   flight::Record<flight::String, UniformValue> uniforms;
