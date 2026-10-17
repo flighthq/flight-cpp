@@ -176,3 +176,67 @@ piece:
   `EntityConstruction`) to `Ref<Base>`.
 - No checked base-to-derived refinement.
 - It presupposes real C++ inheritance, which the nine joint structs do not have.
+
+
+## G2 SWF filters: a non-nullable conditional exposes the same missing base owner relation
+
+At Flight `a62784923f3be814463286c9fb28edfe6ab15789` / compiler
+`806d257d2f4100de745cc97340e61c2f301b0f24`, G1 cluster `other-2aef05a3` has four SWF headers
+first failing at `flight/swf/swf_filter.hpp:257`. The operands of the emitted conditional are
+`Ref<InnerShadowEffect>` and `Ref<DropShadowEffect>`.
+
+`packages/swf/src/swfFilter.ts` declares `outEffects: Effect[]` and pushes one selected factory result:
+
+```ts
+outEffects.push((flags & FILTER_INNER) !== 0
+  ? createInnerShadowEffect({ /* original shadow options */ })
+  : createDropShadowEffect({ /* original shadow options */ }));
+```
+
+Both concrete TypeScript interfaces extend `Effect`. `packages/types/src/Effect.ts` explicitly defines
+Effect as an **open base contract**, with new effects registered by their `kind`; it is not a central
+closed union. The emitted destination is consequently `Array<Ref<Effect>>`, not a variant over the two
+shadow owners. The effective `Effect`, `InnerShadowEffect`, and `DropShadowEffect` headers each derive
+independently from `ReferenceEnabled`. The concrete structs repeat `entity_runtime_key` and `kind`
+instead of inheriting the emitted `Effect`; no override supplies a different type relation.
+
+The conditional cannot choose a common C++ pointer type, and selecting the correct branch alone still
+requires widening the chosen concrete effect into the array's declared base owner. A variant containing
+both concrete refs would express selection but would not provide that `Ref<Effect>` conversion. An
+operator or unused runtime helper cannot change the emitted standard-library pointer relationship.
+
+The required widening must retain the exact object returned by the selected factory, its lifetime and
+all original field cells. Copying only the common fields into a fresh `Effect` loses that object and its
+concrete options; a native pointer cast would invent absent inheritance. Replacing the open effect API
+with a closed list changes the contract. This non-nullable site therefore reaches the same representation
+requirement as the [nullable resource sites](compiler-interface-heritage-owner-widening.md), rather than a new effect-specific union capability.
+The inner/outer glow and gradient effect choices later in this parser use the same pattern; they were
+read as related source sites, not counted as independently measured first failures.
+
+
+A bounded source experiment split only the first shadow conditional into an `if`/`else`, with the
+original `outEffects.push(createInnerShadowEffect(...))` and
+`outEffects.push(createDropShadowEffect(...))` in their respective branches. Each selected factory
+still receives its original fields in order, and its returned object is appended once to the same
+array. No object is copied, cast, or substituted.
+
+Normal focused SDK generation applied that provisional source patch at the locked pins, lowered the
+1768-module dependency closure, and emitted only `packages/swf/src/swfFilter.ts`. The exact emitted
+header, without any handwritten C++ rewrite, was then used as a one-header include overlay against the
+canonical generated SDK. Only the four owned headers were compiled, with Clang 22.1.8 at one worker:
+**0/4 pass, 4 fail, 0 unattempted**. Every first error is `no matching member function for call to
+'push'` at candidate `swf_filter.hpp:288`, the direct inner-shadow push. The conditional mismatch is
+removed, but its factory still returns `Ref<InnerShadowEffect>` where the single-item `Array::push`
+requires the array's declared `Ref<Effect>`.
+
+The branch patch was rejected and its registry entry withdrawn; the source-patch manifest was restored
+byte-for-byte and both dependency checkouts were restored by normal generation. No C++ header, source
+patch, binding, emission repair, runtime conversion, or override is carried. No second cast/closed-union
+experiment is needed to repeat the same missing owner relationship.
+
+The owned headers are `flight/swf/_internal_index.hpp`, `flight/swf/contract.hpp`,
+`flight/swf/enable_swf_guards.hpp`, and `flight/swf/swf_filter.hpp`. Their delivered **0/4 pass, 4 fail**
+qualification and original conditional diagnostics remain unchanged from G1; all four rows now link
+this request. The changed candidate's new diagnostic remains a failure, not a promotion. There was no
+unchanged-stock rerun or global native sweep. Builder5's separate SWF Shape/read-only work was not
+changed by this experiment.

@@ -72,7 +72,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 43 | `call-has-no-matching-c3aea71c` | 4 | 2D, GL | compiler | the emitted call to `structural_ref_cast` matches no declared overload |
 | 44 | `no-viable-conversion-5903ce63` | 4 | 3D, GL | compiler | a value is passed where its declared type cannot receive it |
 | 45 | `no-viable-conversion-e1a24bd1` | 4 | 2D | compiler | a value is passed where its declared type cannot receive it |
-| 46 | `other-2aef05a3` | 4 | ANIM | runtime | uncategorised: the first diagnostic does not name a single cause |
+| 46 | `other-2aef05a3` | 4 | ANIM | [compiler request](compiler-requests/interface-heritage-widening.md) | shadow-effect conditional branches cannot widen their independent concrete owners into the declared Effect array element |
 | 47 | `other-43523429` | 4 | ANIM | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 48 | `other-4e22e4de` | 4 | 2D | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 49 | `other-5611a858` | 4 | ANIM | runtime | uncategorised: the first diagnostic does not name a single cause |
@@ -843,11 +843,16 @@ instance must supply interface reads and writes; copying it into an interface ow
 
 ### 46. `other-2aef05a3` — 4 header(s)
 
-- cause: uncategorised: the first diagnostic does not name a single cause
+- cause: shadow-effect conditional branches cannot widen their independent concrete owners into the declared Effect array element
 - lanes: ANIM
-- fix route: runtime
+- fix route: compiler — [interface-heritage owner request](compiler-requests/interface-heritage-widening.md)
 - first failure at: `flight/swf/swf_filter.hpp:257`
 - example: `incompatible operand types ('Ref<InnerShadowEffect>' and 'Ref<DropShadowEffect>')`
+- G2 classification: one owner-widening family. `outEffects` is declared `Effect[]` and emits `Array<Ref<Effect>>`; `Effect` is an open base contract, not a closed union of known effects. The canonical concrete and base effect structs independently derive from `ReferenceEnabled`, with no effective type override providing the declared TypeScript heritage.
+- A clearly equivalent first-shadow branch source patch was tested through normal focused generation of `swfFilter.ts`, preserving the selected original factory, options, single append, and exact returned owner. The emitted direct `push(create_inner_shadow_effect(...))` at candidate line 288 still requires a concrete-to-base owner conversion. An unused runtime helper cannot change that C++ pointer relationship; a cast, copied base descriptor, or closed effect union would change identity or the public contract.
+- The temporary patch and manifest entry were withdrawn, the manifest restored byte-for-byte, and both pinned checkouts cleaned by normal generation. No source patch, generated header, runtime, repair, binding, or override is carried. Builder5's Shape/read-only work is in separate files and was not touched.
+- Delivered numbers: **0/4 pass, 4 fail**, retained from G1, with the stock conditional diagnostics unchanged and every owned row linked to the existing request. No unchanged-stock or global rerun is claimed.
+- Changed candidate result: **0/4 pass, 4 fail, 0 unattempted**, Clang 22.1.8 at one worker. All four first errors are `no matching member function for call to 'push'` at the direct inner-shadow push, candidate `swf_filter.hpp:288`. The source branch patch was rejected; this changed diagnostic remains a failure and is not written over the shipped tree's stock diagnostics.
 
 ### 47. `other-43523429` — 4 header(s)
 
