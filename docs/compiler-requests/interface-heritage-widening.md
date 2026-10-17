@@ -544,3 +544,52 @@ patched or overridden. With real heritage the call widens implicitly, and the gu
 the checked derived-owner recovery described above. The comparison `guard === warnOnSecondRenderRoot` then
 also needs the callable identity of
 [local-handler-callable-identity](local-handler-callable-identity.md).
+
+## G2 GL box-blur pass destination and source recipe
+
+At Flight `a627849` / compiler `806d257`, effects-gl/glEffectBoxBlur.ts110 applyBoxBlurPass and
+source98 applyBlurBlit both refuse cpp-contextual-union-value-type-unrepresented [compiler-restriction].
+Each calls drawGlFullscreenPass with its original dest:GlTextureRenderTarget, whose emitted value is
+Ref<types::GlTextureRenderTarget>, where the declared destination is Readonly<GlRenderTarget>|null.
+The refusal says this source resembles an alternative but is not the declaration that alternative
+names. This is the same concrete-target widening already filed for the GL effect-pass family, now
+with its two exact box-blur sites. The cache's WeakMap refusal is separate, not the apply-pass cause.
+
+GlTextureRenderTarget extends GlRenderTarget in source; both emitted native structs independently
+inherit ReferenceEnabled. The actual native fullscreen-pass surface takes an optional readonly
+GlRenderTarget row and already offers proven original-owner projection. The compiler must construct
+that declared view/absence carrier from the original target rather than attempt an unrelated nominal
+Ref conversion. Existing runtime row proof does not make this refused TypeScript body emit. A copied
+GlRenderTarget, fabricated framebuffer, unchecked pointer cast or reduced attachment/format/depth/MSAA
+family would lose owner/cells or change the declared domain. Preserve the same target/context,
+framebuffer and dimensions through pass binding/tracking. No actual blur draw is tested here.
+
+The source's full recipe must survive any compiler fix:
+
+- passes is Math.max(1,Math.round(options.passes??1)), blurX/blurY nullishly default to4 and remain
+  target Gaussian standard deviations. Preserve explicit zero, source numeric behavior (including
+  non-finite inputs), optional edgeColor and computeBoxBlurPassRadius's per-pass odd-width recipe;
+  do not substitute a fixed radius, add validation/clamping, or narrow the number domain.
+- Fetch the shader before the loop even if no radius later causes a pass. Keep read=source/write=temp
+  and, for each pass, X then Y. Draw only for radius>0, then assign read=write and toggle write by
+  original temp/dest identity. Distinct caller scratch is the source's documented contract; do not
+  allocate replacement targets, invent alias checks or silently change the two targets' roles.
+  If read!=dest after the loop, perform the real radius-zero blit, including when every axis was
+  skipped. If read==dest, skip only that tail draw, retaining earlier shader lookup/errors.
+- A blur draw samples source.texture and writes the same dest via drawGlFullscreenPass. Upload
+  texelSize=(1/source.width,1/source.height), radius, direction, then edge uniforms. Undefined edgeColor
+  sets RGBA0/use0; an explicit four-number tuple, including transparent zero, uploads those exact
+  cells/use1. Then set blendFunc(ONE,ZERO) for replacement rather than compositing. The tail blit
+  obtains the shader and sets texelSize0,radius0,direction0,RGBA0/use0, then the same blend factors.
+- Preserve the exact GLSL: r=max(0,int(u_radius)); r0 samples once, otherwise sum offsets -r through+r
+  and divide by2*r+1. Edge color applies only when useEdgeColor>0.5 and UV lies strictly outside[0,1];
+  all other samples use the bound texture. No new premultiplication, altered sampling or constant
+  blur result is equivalent. Fullscreen program/target/texture/state operations and their source
+  ordering/exception effects remain required; do not invent a stronger finally/restore guarantee.
+
+The immediate actual owned-header result is **0/1 pass**,57.1s, at missing cache115, not a runtime
+blur failure or a native diagnostic at either draw. Its [bound-interface cache and shader-owner request](bound-interface-weak-map-key-policy.md#g2-dedicated-gl-box-blur-cache-and-shader-owner)
+records that separate first blocker and the dropped base spread; the
+[retained-callee request](retained-declaration-calls-omitted-callee.md#g2-gl-box-blur-refuses-a-cache-before-its-omitted-pass-calls)
+records why no declaration-only candidate qualifies. No body, target, shader, cache, normal generation,
+source patch or native behavior pass is supplied by this docs/products-only disposition.

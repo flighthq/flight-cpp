@@ -69,3 +69,46 @@ The override also corrects these; they are listed so that a fix for the key does
 - `type BlitOffsetShaderLocations = GlFullscreenProgram & { locOffset }` gets two unrelated carriers: a
   flattened named struct and the derived structural one. The getter returns the first but builds and
   caches the second.
+
+## G2 dedicated GL box-blur cache and shader owner
+
+At Flight `a627849` / compiler `806d257`, effects-gl/glEffectBoxBlur.ts46 declares
+const boxBlurShaders = new WeakMap<GlContext, BoxBlurShaderLocations>(). Its exact NOT GENERATED
+marker refuses cpp-weak-map-key-representation-unproven [source-portability]; get_box_blur_shader
+still reads and writes the missing binding. Original1 undeclared-identifier-0b8d3b44 is measured with
+Clang22.1.8 jobs1: **1 attempted / 0 pass / 1 fail / 0 unattempted**,57.1s, at this header115.
+The existing native alias, binding and WebGl2ContextWeakPolicy are present; the compiler's ambient-only
+policy branch in getWeakMapKeyRepresentationCpp still excludes the Flight GlContext interface.
+This is another site of this request, not a new missing native key capability.
+
+Keep one module cache keyed by the original state.gl context's shared identity. Copies of one context
+must hit one entry, distinct contexts must remain independent, and key storage must stay weak. A hit
+returns the identical cached shader-location object without compilation or new uniform queries. On a
+miss, compile the actual BOX_BLUR_FRAGMENT_SRC via compileGlFullscreenProgram, then create the source's
+fresh BoxBlurShaderLocations object by copying all base fields (program, locPosition, locTexCoord,
+texture, textures) before querying u_texelSize, u_radius, u_direction, u_edgeColor and u_useEdgeColor,
+in that order on the same base.program. Preserve the handles and the shared textures array identity;
+the source spread creates a fresh record, not a new GL program or deep-copied array. Only after all
+queries/construction succeed, cache and return that same fresh owner. Keep existing non-null uniform
+assertions and failures; no default location, swallowed error, cache-on-error or extra teardown policy.
+The source has no explicit cache clearing or program-destruction operation to invent here.
+
+Two further defects are visible in the committed getter, independently of the first native error.
+BoxBlurShaderLocations is a flattened ReferenceEnabled record, while the lookup local and fresh
+construction name a separate anonymous struct deriving GlFullscreenProgram. The latter cannot become
+the former through a native owner conversion. Preserve the declared cache-value owner through lookup,
+construction, rebind, set and return, as required by the existing
+[cache-value carrier request](contextual-union-map-value-carrier.md#g2-gl-velocity-program-lookup-and-rebind).
+Also, the emitted fresh initializer spells only the five added locations and never copies base:
+its inherited program/attribute/sampler fields are left value-initialized. Restore the actual spread,
+including its evaluation order and aliases; a zero/default program or base-prefix replacement is not
+source behavior. These are inspected emitted defects, not later errors isolated by a synthetic cache.
+The same two patterns are already recorded for the sibling blit module above. That partial override
+does not define box_blur_shaders or repair this dedicated getter.
+
+An extern cache declaration supplies no actual cache, and two exact function prototypes cannot repair
+these owner/spread defects. No new binding, cache-only override, source rewrite, repair engine change,
+normal generation or native cache/shader behavior is carried by this disposition. The separate
+[blur destination and full recipe](interface-heritage-widening.md#g2-gl-box-blur-pass-destination-and-source-recipe)
+and [retained omitted calls](retained-declaration-calls-omitted-callee.md#g2-gl-box-blur-refuses-a-cache-before-its-omitted-pass-calls)
+remain independent. Only the original one-header compile is measured; no GL/program/cache call runs.

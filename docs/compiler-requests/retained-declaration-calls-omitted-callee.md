@@ -1897,3 +1897,40 @@ membership, runtime allocation/reuse, resize signal, binding/provider or renderi
 The [existing erased runtime owner request](asserted-erased-runtime-owner.md#g2-scene2d-lazy-runtime-and-root-ownership)
 records the full source contract and separate root-runtime authority boundary. No fake scene, copied
 owner, empty-result/no-op or narrowed accepted scene/root/runtime domain is introduced.
+
+## G2 GL box-blur refuses a cache before its omitted pass calls
+
+At Flight `a627849` / compiler `806d257`, effects_gl/gl_effect_box_blur.hpp retains
+apply_gl_effect_box_blur with direct calls to apply_box_blur_pass171/177 and apply_blur_blit186.
+Both exact source NOT GENERATED markers and absent bodies are present. The source and retained
+arguments agree on these inspected prototypes (BoxBlurEdgeColor is Array<double> in this header):
+
+```cpp
+void apply_box_blur_pass(
+  flight::Ref<flight::types::GlRenderState> state,
+  flight::Ref<flight::types::GlTextureRenderTarget> source,
+  flight::Ref<flight::types::GlTextureRenderTarget> dest,
+  flight::Ref<BoxBlurShaderLocations> loc,
+  double radius, double dir_x, double dir_y,
+  std::optional<flight::Array<double>> edge_color);
+void apply_blur_blit(
+  flight::Ref<flight::types::GlRenderState> state,
+  flight::Ref<flight::types::GlTextureRenderTarget> source,
+  flight::Ref<flight::types::GlTextureRenderTarget> dest);
+```
+
+They describe absent functions, not a complete declaration-only solution. The actual original1
+Clang22.1.8 jobs1 compile completes **1 attempted / 0 pass / 1 fail / 0 unattempted**,57.1s,
+at missing box_blur_shaders115. Its source46 omission is a module-scope WeakMap variable; it cannot
+satisfy declare-refused-function's function-marker/call witnesses. An extern cache alone supplies no
+storage or shader-cache implementation and leaves the independently inspected named/anonymous owner
+mismatch and dropped base spread in the retained getter. Adding the two prototypes does not address
+that prior failure. No synthetic map, default shader or borrowed sibling cache is introduced to make
+an unused-positive gate appear to pass.
+
+No prototype candidate/native link gate is run or claimed for this disposition, and no production
+repair or normal generation is carried. Positive unused-header compile/link/run and the exact
+missing-body negative link remain unqualified. The one-header status remains fail at its actual first
+error and links the [existing bound-interface cache request](bound-interface-weak-map-key-policy.md#g2-dedicated-gl-box-blur-cache-and-shader-owner).
+The two bodies' separate [concrete render-target/nullable-view refusal](interface-heritage-widening.md#g2-gl-box-blur-pass-destination-and-source-recipe)
+keeps the complete original blur/ping-pong/edge-color/shader contract. No GL/cache/pass operation runs.

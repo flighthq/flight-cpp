@@ -180,7 +180,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 151 | `undeclared-identifier-07640d32` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glOutlineEffectRunner` binding (and its callee `applyOutlineEffectToGl`) but still emits the registration call that passes the runner |
 | 152 | `undeclared-identifier-076c02b1` | 1 | PLAT | declaration repair (applied) | omitted tilemap cell resolver declared; G2: 1/1 pass, registration remains unlinkable |
 | 153 | `undeclared-identifier-09cc9e86` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glFilmGrainEffectRunner` binding (and its callee `applyFilmGrainEffectToGl`) but still emits the registration call that passes the runner |
-| 154 | `undeclared-identifier-0b8d3b44` | 1 | GL | runtime | the emitted code names `box_blur_shaders`, which nothing declares |
+| 154 | `undeclared-identifier-0b8d3b44` | 1 | GL | compiler | G2: 0/1; bound-context WeakMap refused; shader spread/owner and omitted blur-pass union debt remain |
 | 155 | `undeclared-identifier-0c07642f` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glGlitchEffectRunner` binding (and its callee `applyGlitchEffectToGl`) but still emits the registration call that passes the runner |
 | 156 | `undeclared-identifier-11d6fcbe` | 1 | GL | compiler *(existing request)* | the emitter refuses the `glChromaticAberrationEffectRunner` binding (and its callee `applyChromaticAberrationEffectToGl`) but still emits the registration call that passes the runner |
 | 157 | `undeclared-identifier-1462818e` | 1 | 2D | compiler | refused velocity program owner; exact declaration fails unused-header compilation at VIEWPORT method/constant collision *(requests filed)* |
@@ -2959,14 +2959,36 @@ tilemap hit test stays visibly unavailable rather than substituted.
 - Verified by inspection: line 89 is the `register_gl_film_grain_effect` call that passes the refused binding. Nothing in the tree defines either symbol, and no other header names either one. This docs-only disposition changes no compiled input, so the recorded **0/1** failure stands without an unchanged rerun. No runner, effect body, shader or narrowed parameters are supplied.
 - compiler request: `docs/compiler-requests/custom-shader-effect-runner-owner.md`
 
-### 154. `undeclared-identifier-0b8d3b44` — 1 header(s)
+### 154. `undeclared-identifier-0b8d3b44` — G2 recheck of original 1 header
 
-- cause: the emitted code names `box_blur_shaders`, which nothing declares
-- subject: `box_blur_shaders`
-- lanes: GL
-- fix route: runtime
-- first failure at: `flight/effects_gl/gl_effect_box_blur.hpp:115`
-- example: `use of undeclared identifier 'box_blur_shaders'`
+At Flight `a627849` / compiler `806d257`, actual Clang22.1.8 jobs1 completes
+**1 attempted / 0 pass / 1 fail / 0 unattempted**,57.1s. The first error remains missing
+box_blur_shaders at effects_gl/gl_effect_box_blur.hpp115. Source46 declares one module-scope
+WeakMap<GlContext,BoxBlurShaderLocations>; its cpp-weak-map-key-representation-unproven refusal is
+already the [bound-interface policy request](compiler-requests/bound-interface-weak-map-key-policy.md#g2-dedicated-gl-box-blur-cache-and-shader-owner).
+GlContext maps to the existing WebGl2Context and weak policy, but the compiler consults the external
+policy only for ambient key references. This is a refused variable, not an omitted function body.
+
+The retained getter has two further inspected defects: it constructs a derived anonymous shader
+record while returning the unrelated flattened named BoxBlurShaderLocations, and drops the source
+...base spread (program, attributes and texture uniforms). Those are not measured later native
+errors or working-cache evidence. The sibling blit override does not supply this module's cache or
+shader owner. No cache-only declaration/override or copied/default program is carried.
+
+Source applyBoxBlurPass110 and applyBlurBlit98 separately refuse the existing
+[render-target owner/nullable-row boundary](compiler-requests/interface-heritage-widening.md#g2-gl-box-blur-pass-destination-and-source-recipe):
+a plain Ref<GlTextureRenderTarget> must reach drawGlFullscreenPass's Readonly<GlRenderTarget>|null
+without replacing the target. The two exact retained-callee declarations cannot supply the missing
+cache or correct the getter; [declaration qualification](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-gl-box-blur-refuses-a-cache-before-its-omitted-pass-calls)
+is not reached. No unused-positive or exact-negative-link result is claimed.
+
+Existing requests now retain context/cache identity, complete shader fields and source compilation/
+uniform/cache order, sigma-derived X/Y passes and original temp/dest ping-pong, radius-zero skip and
+tail blit, optional edge-color distinction, exact shader sampling and replacement blend behavior.
+No fake blur/shader/cache, storage/operation repair, narrowed numeric/target domain or native GL
+execution is supplied. No production source/repair/generation/runtime/binding/override change is
+carried. Only this cluster/row/report154 changes; foreign compact products/prose and all historical
+sweep/carry totals remain intact. Other headers mentioning this module are not rechecked or promoted.
 
 ### 155. `undeclared-identifier-0c07642f` — G2 recheck of 1 header(s)
 
