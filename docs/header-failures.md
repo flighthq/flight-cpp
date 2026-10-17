@@ -79,7 +79,7 @@ are inside E0a's TextLabel / text-layout / Scene2D GL text work and are not offe
 | 50 | `other-d6be4352` | 4 | ANIM | runtime | uncategorised: the first diagnostic does not name a single cause |
 | 51 | `static-assertion-00a0e75d` | 4 | 3D, WGPU | compiler | a runtime static assertion rejects the emitted shape |
 | 52 | `undeclared-identifier-0fc9e20f` | 4 | 2D | runtime | the emitted code names `initialize_rive_artboard_import_context`, which nothing declares |
-| 53 | `undeclared-identifier-69b85faa` | 4 | PLAT | runtime | the emitted code names `untrack_midi_subscription`, which nothing declares |
+| 53 | `undeclared-identifier-69b85faa` | 4 | PLAT | declaration repair (applied) | omitted untrack callee declaration supplied; G2: 0 pass, 4 fail at the next omitted callee; function remains unlinkable |
 | 54 | `undeclared-identifier-7d64d9c1` | 4 | GL | runtime | the emitted code names `gl_custom_shader_effect_runner`, which nothing declares |
 | 55 | `undeclared-identifier-862d162a` | 4 | 3D | runtime | the emitted code names `build_gltf_animations`, which nothing declares |
 | 56 | `undeclared-identifier-f2b46b01` | 4 | 3D | runtime | the emitted code names `list_standard_pbr_material_textures`, which nothing declares |
@@ -903,14 +903,28 @@ instance must supply interface reads and writes; copying it into an interface ow
 - first failure at: `flight/scene2d_formats/rive_import_registry.hpp:130`
 - example: `use of undeclared identifier 'initialize_rive_artboard_import_context'`
 
-### 53. `undeclared-identifier-69b85faa` — 4 header(s)
+### 53. `undeclared-identifier-69b85faa` — 4 header(s), declaration repaired
 
-- cause: the emitted code names `untrack_midi_subscription`, which nothing declares
-- subject: `untrack_midi_subscription`
+- original cause: retained code calls `untrack_midi_subscription` after its function body was refused
+  at the optional `ownerSubscriptions?.delete` call
 - lanes: PLAT
-- fix route: runtime
-- first failure at: `flight/midi/midi_subscription.hpp:164`
-- example: `use of undeclared identifier 'untrack_midi_subscription'`
+- fix route: declaration-only emission repair, with implementation debt still open
+- compiler request: [optional-property-call-result-evidence.md](compiler-requests/optional-property-call-result-evidence.md)
+
+The exact refusal marker, the three retained calls and the absence of any definition justify
+`midi-declare-refused-untrack-subscription`. It declares the emitted
+`flight::Ref<flight::types::Entity>` and `flight::Ref<MidiSubscriptionRuntime>` carriers before the
+first caller. No body, no `Set` mutation and no null write are supplied.
+
+G2: **0/4 compile, 4 fail, 0 unattempted**, all attempted at `-j1` with Clang 22.1.8, compiler
+`806d257` / Flight `a627849`. With the declaration, `midi_subscription.hpp:164` resolves in
+`_internal_index.hpp`, `contract.hpp`, `midi_access.hpp` and `midi_subscription.hpp`; all four now fail
+one callee further, on `detach_midi_subscription`. Each of those headers also carries the retained
+callers, so the follow-on is the same omission class rather than a new defect.
+
+| follow-on cluster | owned headers | first failure | route / cause |
+| --- | --- | --- | --- |
+| `undeclared-identifier-f2f09e07` | 4 | `flight/midi/midi_subscription.hpp:198` | compiler: `detachMidiSubscription` refused at an unrepresented `Task<MidiSubscriptionDetachOutcome>` domain; its three delegators pass concrete subscription refs where `Entity` is declared and the emitted structs inherit only `ReferenceEnabled`; [existing request](compiler-requests/task-of-union-domain-unrepresented.md) |
 
 ### 54. `undeclared-identifier-7d64d9c1` — 4 header(s)
 

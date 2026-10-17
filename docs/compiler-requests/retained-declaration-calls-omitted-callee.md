@@ -55,6 +55,20 @@ function is filed separately as
 three other omissions are filed too and none of them is what breaks the header today. `@flighthq/midi` is
 `partial` with those four failures reported.
 
+### Measured after the untrack declaration repair (2026-10-17)
+
+`midi-declare-refused-untrack-subscription` declares the refused `untrack_midi_subscription` from the
+retained calls, so `midi_subscription.hpp:164` resolves and the caller compiles; the call itself stays
+an unresolved link. Recompiled at `-j1`, all four headers now fail one callee further:
+`use of undeclared identifier 'detach_midi_subscription'` at `midi_subscription.hpp:198`.
+`detachMidiSubscription` is refused at an unrepresented `Task<MidiSubscriptionDetachOutcome>` domain
+(see [`task-of-union-domain-unrepresented.md`](task-of-union-domain-unrepresented.md)), and its three
+retained delegators pass `MidiAccessStateSubscription`, `MidiInputMessageSubscription` and
+`MidiPortStateSubscription` where the declared parameter is `Entity`. Those source `extends Entity`
+relationships are flattened in C++ (each emitted struct inherits only `ReferenceEnabled`), so a second
+declaration repair would not compile the delegators. This is therefore the next callee in the same
+class, not a separate defect.
+
 ## Reduction
 
 The reduction is the emission itself: the refusal is in `loadVideoResourceFromUrl`, and the two retained

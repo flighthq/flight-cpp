@@ -56,4 +56,11 @@ declarations are `untrackMidiSubscription` (this site), `detachMidiSubscription`
 
 ## Carrying workaround
 
-None. `@flighthq/midi` stays `partial` with its refusals named.
+`midi-declare-refused-untrack-subscription` in `repairs/emission-repairs.json` declares the refused
+`untrack_midi_subscription` from the two carriers the retained calls construct
+(`flight::Ref<flight::types::Entity>`, `flight::Ref<MidiSubscriptionRuntime>`). It supplies no body, no
+`Set` mutation and no null write, so any call still fails to link and the unsubscribe remains
+unimplemented; the repair exists so the retained callers compile. Recompiled at `-j1`, the four midi
+headers now fail on the next omitted callee, `detach_midi_subscription` — recorded in
+[retained declaration calls omitted callee](retained-declaration-calls-omitted-callee.md). The refusal
+itself stays open, and `@flighthq/midi` stays `partial` with its remaining refusals named.

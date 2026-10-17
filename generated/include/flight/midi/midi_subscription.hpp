@@ -149,6 +149,8 @@ inline flight::Task<bool> release_midi_attachment(flight::Ref<flight::types::Mid
 // cpp emission failed for @flighthq/midi/packages/midi/src/midiSubscription.ts: optional property call delete
 // requires callable result evidence
 
+void untrack_midi_subscription(flight::Ref<flight::types::Entity> subscription, flight::Ref<MidiSubscriptionRuntime> runtime);
+
 inline flight::Task<bool> release_tracked_midi_attachment(flight::Ref<flight::types::Entity> subscription, flight::Ref<MidiSubscriptionRuntime> runtime) {
   {
     auto await_logical_condition = !runtime->attachment.has_value();

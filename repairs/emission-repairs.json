@@ -7116,6 +7116,19 @@
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "midi-declare-refused-untrack-subscription",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/midi/midi_subscription.hpp",
+      "symbol": "untrack_midi_subscription",
+      "refusedFunction": "untrackMidiSubscription",
+      "declaration": "void untrack_midi_subscription(flight::Ref<flight::types::Entity> subscription, flight::Ref<MidiSubscriptionRuntime> runtime);",
+      "sourceDeclaration": "packages/midi/src/midiSubscription.ts -- untrackMidiSubscription(subscription: Entity, runtime: MidiSubscriptionRuntime): void; refused at the optional ownerSubscriptions?.delete call while retained releaseTrackedMidiAttachment and performMidiAttach call it with exactly those emitted carriers",
+      "diagnostic": "use of undeclared identifier 'untrack_midi_subscription'",
+      "defect": "The emitter refuses untrackMidiSubscription (cpp-optional-property-call-missing-callable-result) but retains releaseTrackedMidiAttachment and performMidiAttach calling it. The exact NOT GENERATED untrackMidiSubscription marker, the retained calls and the absent declaration/definition agree. This inserts only the emitted Ref<Entity>/Ref<MidiSubscriptionRuntime> signature; it supplies no unsubscribe behavior, no Set mutation, no null write and no ownership change. Calling the refused helper or its retained callers remains an unresolved link, so the unsubscribe stays visibly unusable rather than substituted. The refusal itself stays open in docs/compiler-requests/optional-property-call-result-evidence.md, and the caller-side consequence in docs/compiler-requests/retained-declaration-calls-omitted-callee.md.",
+      "expectedWhen": "always",
+      "expires": "when untrackMidiSubscription emits (the NOT GENERATED marker disappears and this repair matches nothing); sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "notification-create-signal-using-declaration",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/notification/",
