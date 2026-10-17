@@ -113,7 +113,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 84 | `other-6f513db2` | 2 | 2D, 3D | binding (fixed) | attribute locations now use the source number carrier; G2: 0 pass, 2 later compiler failures |
 | 85 | `other-86d0b50b` | 5 | 2D, 3D | [compiler request](compiler-requests/object-literal-into-outcome-variant.md) | SceneCoverageEntry literals initialize the outer variant instead of a selected concrete reference arm |
 | 86 | `redefinition-caa49360` | 2 | 3D | override de-duplication (fixed) | two picking overrides each defined the same three node matrix helpers; G2: 0/2 pass, both move to the material conversion below |
-| 87 | `undeclared-identifier-1048386b` | 2 | 3D | runtime | the emitted code names `md5_material_handler`, which nothing declares |
+| 87 | `undeclared-identifier-1048386b` | 2 | 3D | compiler | refused MD5 material handler retained by global family; exact declaration fails unused-header positive link *(existing requests, G2: 0/2 retained)* |
 | 88 | `undeclared-identifier-20fa691d` | 2 | 2D | compiler | refused raster draw referenced by retained renderer; exact declaration fails native/generic callback carrier conversion *(existing requests)* |
 | 89 | `undeclared-identifier-225478b5` | 2 | 2D | compiler | refused bitmap-text submit callback lacks a declaration; exact declaration still exposes incompatible renderer callback carriers *(existing requests)* |
 | 90 | `undeclared-identifier-3e98002c` | 2 | 3D | runtime | the emitted code names `initialize_awd2_parse_state`, which nothing declares |
@@ -1874,12 +1874,29 @@ widened; the only change is that one copy of an identical helper is gone.
 
 ### 87. `undeclared-identifier-1048386b` — 2 header(s)
 
-- cause: the emitted code names `md5_material_handler`, which nothing declares
+- cause: the retained global material family references its refused handler binding
 - subject: `md5_material_handler`
 - lanes: 3D
-- fix route: runtime
+- fix route: compiler — [existing retained-binding request](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-md5-material-family-retains-a-refused-binding)
+- related: [declared material heritage and owner identity](compiler-requests/interface-heritage-widening.md#g2-md5-material-handler-needs-the-original-concrete-material-owner)
 - first failure at: `flight/scene3d_formats/md5_material_handler.hpp:69`
 - example: `use of undeclared identifier 'md5_material_handler'`
+
+**G2: 0/2 compile, 2 fail, 0 unattempted** (Clang 22.1.8, one worker, compiler `806d257` /
+Flight `a627849`). The material header and its section-registry consumer both retain this diagnostic.
+The whole source handler binding is refused at a `BlinnPhongMaterial` to `Material` assertion:
+the declared source heritage is absent between the flattened native owners. The retained material
+family globally initializes its one element from that omitted binding; the full-support registry
+includes this header and spreads the skeleton family followed by the material family.
+
+An exact extern-only readonly `Md5SectionHandler` declaration, derived from the sibling handler's
+emitted carrier and applied with the existing declaration engine in scratch, compiles the actual
+unused-header program to an object. Its **required positive link fails**, with exactly
+`flight::scene3d_formats::md5_material_handler` undefined from the global family initializer.
+Main does not read the family or invoke a handler. This is a failed prerequisite, not a successful
+explicit-call negative-link check; the declaration is rejected. No repair, generated C++, manifest,
+source patch, substitute material/body or native behavior claim is carried. Both rows stay failed,
+with unchanged global/G1 totals and no header gain.
 
 ### 88. `undeclared-identifier-20fa691d` — 2 header(s), compiler route
 

@@ -673,3 +673,38 @@ The completed serial check is **0/2 pass, 2 fail, 0 unattempted**. Only this 2D 
 retained-callee cause. The 3D row reaches its existing literal-membership gap at line 113 and stays
 failed under [that request](membership-test-lowered-literally.md#g2-particle-3d-reaches-the-previously-latent-membership-site).
 Both later diagnostics remain failures; no rendering pass is claimed.
+
+## G2 MD5 material family retains a refused binding
+
+At compiler `806d257` / Flight `a627849`, the two original headers in
+`undeclared-identifier-1048386b` are `scene3d_formats/md5_material_handler.hpp` and
+`md5_section_registry.hpp`. The completed Clang 22.1.8 check at one worker is **0/2 pass,
+2 fail, 0 unattempted**. Both report `use of undeclared identifier 'md5_material_handler'`
+at the material header's line 69. This is a refused variable, not a missing function declaration:
+`NOT GENERATED: variable (binding) -- source line 18` replaces `md5MaterialHandler`, but the emitted
+`md5_material_family` still initializes its one element from that absent value. The registry includes
+this header and spreads skeleton handlers followed by the material family into its full-support preset.
+
+The binding refuses as `cpp-reference-assertion-without-heritage` at the concrete Blinn-Phong material
+assertion; the [existing heritage request](interface-heritage-widening.md#g2-md5-material-handler-needs-the-original-concrete-material-owner)
+records the source owner/field/resource semantics. The exact handler carrier is already emitted for the
+sibling `md5_skeleton_handler`, whose source has the same `Readonly<Md5SectionHandler>` declaration:
+
+```cpp
+extern flight::StructuralRef<flight::RowReadonly<
+    flight::RowOf<flight::Ref<flight::types::Md5SectionHandler>>>> md5_material_handler;
+```
+
+A scratch use of the existing `insert-forward-declaration` engine, guarded by the exact refusal marker,
+adds only this external declaration in the package namespace and reaches a fixed point. It leaves the
+entire original global family initializer intact. The actual-header program containing only its include
+and `int main() { return 0; }` compiled to an object, but its required unused-header positive link failed.
+The linker reports exactly one undefined symbol, `flight::scene3d_formats::md5_material_handler`, referenced by the retained
+family's `__cxx_global_var_init`. Main neither reads the family nor calls the handler. This is a failed
+positive prerequisite, not a successful explicit-use negative-link test.
+
+The declaration candidate is rejected. No repair entry, generated C++, manifest, source patch, override
+or substitute handler is carried, and no generation change needs reproducing. The emitter must either
+supply the faithful original handler or report its dependent family/preset unavailable coherently;
+removing the material element from the full-support preset must not be reported as completed support.
+Both original rows remain failed, with no header gain or native material behavior claim.

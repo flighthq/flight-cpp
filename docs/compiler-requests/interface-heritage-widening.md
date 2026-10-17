@@ -300,3 +300,27 @@ fail at the missing submit name on line163. No callback adapter or runtime chang
 The separate [BitmapText runtime owner](readonly-callback-derived-owner-recovery.md#g2-gl-bitmap-text-needs-its-own-runtime-owner)
 and [retained callback declaration](retained-declaration-calls-omitted-callee.md#g2-gl-bitmap-text-retains-a-refused-callback-in-an-aggregate)
 remain open.
+
+## G2 MD5 material handler needs the original concrete material owner
+
+At compiler `806d257` / Flight `a627849`, `scene3d-formats/md5MaterialHandler.ts:18`
+refuses the entire `md5MaterialHandler` binding as `cpp-reference-assertion-without-heritage`.
+The diagnostic identifies `Ref<BlinnPhongMaterial>` to `Ref<Material>` at the source's
+`createBlinnPhongMaterial(...) as unknown as Material`. The source declares
+`BlinnPhongMaterial extends Material3D extends Material`, while all three emitted structs independently
+inherit `ReferenceEnabled`. `MaterialLike` is emitted as `Ref<Material>` too, so merely dropping the
+first assertion would leave the same owner crossing at `document.materials.push`.
+
+The callback adds no resources or materials for a null mesh section or empty shader. Otherwise it
+passes the original shader path, null base path and document resource array to `createExternalTextureRef`,
+then creates one Blinn-Phong material, sets its authored name, appends the document's current material
+index to that mesh section and appends that same material object to the document. The texture helper
+reuses a matching external resource reference or appends a new reference to that same resource array;
+it does not load the image. Each shader-bearing mesh invocation creates its own material.
+
+Faithful emission must retain that material's concrete owner, full map/scalar fields, shared resource
+references, name and append order through the declared base/material-like boundary. A base-prefix copy,
+an unrelated native pointer cast, side storage, omitted material handler or an empty successful callback
+does not implement this source. The separate
+[retained-binding request](retained-declaration-calls-omitted-callee.md#g2-md5-material-family-retains-a-refused-binding)
+records why declaring the omitted handler does not by itself make its header safe to link.
