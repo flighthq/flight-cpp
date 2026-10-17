@@ -3357,6 +3357,12 @@
         "flight/scene3d_resources/scene_material_texture_registry.hpp"
       ],
       "id": "scene3d-resources-declare-refused-unlit-textures"
+    },
+    {
+      "files": [
+        "flight/scene2d_canvas/canvas_texture_window_source.hpp"
+      ],
+      "id": "scene2d-canvas-declare-refused-texture-window-source"
     }
   ],
   "sourcePatches": [

@@ -87,7 +87,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 58 | `call-has-no-matching-56e47749` | 3 | GL | compiler | the emitted call to `compute_node_root_local_bounds_rectangle` matches no declared overload |
 | 59 | `invalid-operands-98cd7094` | 3 | 2D | runtime | an operator is applied to operand types it does not accept |
 | 60 | `missing-member-95ead583` | 3 | 3D | [compiler request](compiler-requests/cube-texture-width-and-completeness.md#g2-gl-environment-face-revisions-use-the-same-selected-owner-read) | nullable cube-face source retains seven real owners, but version is read on the variant itself |
-| 61 | `missing-member-b22d5c52` | 3 | 2D | runtime | the emitted code reads a member the target does not declare (`resolve_canvas_texture_window_source`) |
+| 61 | `missing-member-b22d5c52` | 3 | 2D | declaration repair (applied) | refused callee `resolve_canvas_texture_window_source` declared across modules; G2: 0 pass, 3 to `missing-member-f497840c`; function remains unlinkable |
 | 62 | `missing-member-c36ea2d4` | 3 | 2D | binding | the web renderer needs shared CSS style state; SDL exposes copied shell values with no opacity field *(request filed)* |
 | 63 | `no-viable-conversion-4ca7626f` | 3 | ANIM | compiler | a value is passed where its declared type cannot receive it |
 | 64 | `no-viable-conversion-b3064463` | 3 | GL | compiler | a value is passed where its declared type cannot receive it |
@@ -1247,6 +1247,44 @@ upstream test port was performed.
 - fix route: runtime
 - first failure at: `flight/scene2d_canvas/canvas_fill_pattern.hpp:77`
 - example: `no member named 'resolve_canvas_texture_window_source' in namespace 'scene2d_canvas'`
+- fix route (G2): declaration-only emission repair, with the function's behavior still owed
+
+`resolveCanvasTextureWindowSource` is refused with `cpp-contextual-union-value-type-unrepresented`:
+`HostImageSource` is not a represented runtime domain. Its three callers survive in other scene2d-canvas
+modules, each of which includes its header: `createBitmapPattern`, the Scale9Sprite draw, and the bitmap
+fill command. The function cannot be supplied cheaply. It materializes uv windows onto per-render-state
+Canvas surfaces with a version-keyed cache, so anything less than the real thing would be a fake Canvas,
+provider or empty image.
+
+`declare-refused-function` gains an optional `calledFrom` list for this split case, with the same three
+witnesses held across the tree:
+- `appliesTo` names the refused module's exact header, which must carry the exact NOT GENERATED marker and
+  define nothing;
+- every `calledFrom` header must be in the emitted set, call the symbol outside comments, and define
+  nothing.
+
+The single declaration goes immediately before the refused function's marker. `scripts/emissionRepairs.test.mjs`
+covers the insertion, idempotence, a missing, non-calling or defining caller, and the exact-header load
+rule (28 tests pass).
+
+`scene2d-canvas-declare-refused-texture-window-source` declares
+`std::optional<flight::types::HostImageSource> resolve_canvas_texture_window_source(flight::Ref<flight::types::CanvasTextureResolvers> resolvers, flight::types::Texture texture);`.
+The parameters are the carriers the retained calls pass, matching `createBitmapPattern`'s own emitted
+`CanvasTextureResolvers`/`Readonly<Texture>` parameters. The result is the carrier the bitmap fill command
+stores it into (`CanvasShapeDrawState.bitmap_src`). It was applied with `applyEmissionRepairs` to the
+committed emission, adding the declaration to `canvas_texture_window_source.hpp` and its manifest record, so
+no scoped-generation anonymous-struct drift came with it.
+
+That header still compiles. A translation unit that calls the function compiles and then fails to link
+on exactly `flight::scene2d_canvas::resolve_canvas_texture_window_source`, so texture-window resolution
+stays visibly unusable rather than substituted.
+
+**G2: 0/3 compile, 3 fail** (`-j1`, Clang 22.1.8). All three now get past the window source and fail
+first at `canvas_fill_pattern.hpp:148` on `acquire_canvas_texture_resolver_surface`. They move to
+`missing-member-f497840c`. That callee is in `canvasTextureResolver.ts`, which is **wholly** refused
+(`cpp-runtime-external-symbol-binding-incomplete`: `HostImageSource` has no type or value binding), and two
+sibling resolver modules are refused as dependencies of it. The missing `HostImageSource` external binding
+is therefore the shared root of this family. It is a binding-route fix, and broader than this cluster.
 
 ### 62. `missing-member-c36ea2d4` — 3 header(s)
 

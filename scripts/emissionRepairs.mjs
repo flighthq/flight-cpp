@@ -135,6 +135,21 @@ export function loadEmissionRepairs(root) {
            !new RegExp(`(?:\\(|,)\\s*${repair.symbol}\\s*[,)]`, 'u').test(repair.retainedReference))) {
         throw new Error(`Emission repair ${repair.id} has an invalid retainedReference callback witness`);
       }
+      // `calledFrom` names the headers whose emitted code calls the refused function when that code is
+      // not in the refused module itself. The declaration still goes into the refused module's own header,
+      // so it must be named exactly, and every caller must be named, never matched.
+      if (repair.calledFrom !== undefined) {
+        if (
+          !Array.isArray(repair.calledFrom) ||
+          repair.calledFrom.length === 0 ||
+          repair.calledFrom.some((caller) => typeof caller !== 'string' || !caller.endsWith('.hpp')) ||
+          !repair.appliesTo.endsWith('.hpp')
+        ) {
+          throw new Error(
+            `Emission repair ${repair.id} must name the refused module's exact header in appliesTo and each calling header in calledFrom.`,
+          );
+        }
+      }
     }
     // One name or a list, never both and never neither. This defect -- a name owned by another package's
     // namespace, written unqualified -- produces names by the DOZEN per package: 26 in @flighthq/texture
@@ -268,9 +283,10 @@ const HANDLERS = {
 // callback), and nothing in the header defines it. The declaration
 // goes immediately before the first emitted function that calls it, so every type its signature names --
 // including an anonymous parameter struct the emitter declared for the call -- is already in scope.
-function declareRefusedFunction(contents, repair) {
+function declareRefusedFunction(contents, repair, files = []) {
   const { symbol, refusedFunction, declaration } = repair;
-  if (!contents.includes(`// NOT GENERATED: function ${refusedFunction} `)) return undefined;
+  const marker = `// NOT GENERATED: function ${refusedFunction} `;
+  if (!contents.includes(marker)) return undefined;
   if (contents.includes(declaration)) return undefined;
   const call = new RegExp(`\\b${symbol}\\s*\\(`, 'u');
   const lines = contents.split('\n');
@@ -279,6 +295,23 @@ function declareRefusedFunction(contents, repair) {
   // first parenthesis, ends with the symbol.
   const defines = (line) => /^(?:inline|template)\b/u.test(line) && new RegExp(`\\b${symbol}$`, 'u').test(line.split('(')[0].trimEnd());
   if (lines.some(defines)) return undefined;
+  if (repair.calledFrom !== undefined) {
+    // The callers live in other modules that include this one. The same three witnesses, split across the
+    // tree: this header carries the marker and defines nothing, and EVERY named caller is in the emitted
+    // set, calls the symbol outside comments and defines nothing either. The one declaration then goes
+    // where the refused function would have been, immediately before its marker, inside the package
+    // namespace, so each caller sees it through the include it already has.
+    for (const caller of repair.calledFrom) {
+      const file = files.find((candidate) => candidate.path === caller);
+      if (file === undefined) return undefined;
+      const callerLines = String(file.contents).split('\n');
+      if (callerLines.some(defines)) return undefined;
+      if (!callerLines.some((line) => code(line) && call.test(line))) return undefined;
+    }
+    const at = lines.findIndex((line) => line.startsWith(marker));
+    lines.splice(at, 0, declaration.trim(), '');
+    return lines.join('\n');
+  }
   let first = -1;
   for (let i = 0; i < lines.length; i++) {
     if (code(lines[i]) && (call.test(lines[i]) ||
@@ -515,7 +548,7 @@ function applyOneRound(repairs, files, applied) {
       const contents = typeof file.contents === 'string' ? file.contents : String(file.contents);
       if (repair.requiredText !== undefined && !contents.includes(repair.requiredText)) continue;
       const handler = HANDLERS[repair.kind] ?? insertForwardDeclaration;
-      const repaired = handler(contents, repair);
+      const repaired = handler(contents, repair, files);
       if (repaired === undefined) continue;
       file.contents = repaired;
       touched.push(`${repair.id} (${file.path})`);

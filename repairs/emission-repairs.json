@@ -8970,6 +8970,24 @@
       "expires": "when equalsMarkupFormat emits (the NOT GENERATED marker disappears and this repair matches nothing); sdk:check fails if this repair matches no header."
     },
     {
+      "id": "scene2d-canvas-declare-refused-texture-window-source",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/scene2d_canvas/canvas_texture_window_source.hpp",
+      "calledFrom": [
+        "flight/scene2d_canvas/canvas_fill_pattern.hpp",
+        "flight/scene2d_canvas/canvas_scale9_sprite.hpp",
+        "flight/scene2d_canvas/canvas_shape_commands.hpp"
+      ],
+      "symbol": "resolve_canvas_texture_window_source",
+      "refusedFunction": "resolveCanvasTextureWindowSource",
+      "declaration": "std::optional<flight::types::HostImageSource> resolve_canvas_texture_window_source(flight::Ref<flight::types::CanvasTextureResolvers> resolvers, flight::types::Texture texture);",
+      "sourceDeclaration": "packages/scene2d-canvas/src/canvasTextureWindowSource.ts -- resolveCanvasTextureWindowSource(resolvers: CanvasTextureResolvers, texture: Readonly<Texture>): CanvasImageSource | null, refused; createBitmapPattern, the Scale9Sprite draw and the bitmap fill command call it",
+      "diagnostic": "no member named 'resolve_canvas_texture_window_source' in namespace 'flight::scene2d_canvas'",
+      "defect": "The emitter refuses resolveCanvasTextureWindowSource (cpp-contextual-union-value-type-unrepresented: HostImageSource is not a represented runtime domain) but retains its three callers in other scene2d-canvas modules, which include its header, so they fail on a missing member. The declaration's signature is the emitter's own. Its parameters are the carriers the retained calls pass, which createBitmapPattern also declares for the same CanvasTextureResolvers and Readonly<Texture> parameters: flight::Ref<CanvasTextureResolvers> and the flight::types::Texture variant. Its result is the carrier the bitmap fill command stores it into, std::optional<HostImageSource> (CanvasShapeDrawState.bitmap_src). The declaration is inserted at the refused function's own marker. It is declaration only: the callers compile, and any call fails to link, so texture-window resolution stays unusable and is never substituted by a fake Canvas, provider or empty image.",
+      "expectedWhen": "always",
+      "expires": "when resolveCanvasTextureWindowSource emits (the NOT GENERATED marker disappears and this repair matches nothing); sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "scene3d-wgpu-declare-refused-scene-runtime",
       "kind": "declare-refused-function",
       "appliesTo": "flight/scene3d_wgpu/wgpu_scene_3d_runtime.hpp",

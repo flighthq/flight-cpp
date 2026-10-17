@@ -212,6 +212,65 @@ test('a refused callback witness must name a single code-line function argument'
   }
 });
 
+// The refused function's callers live in another module that includes the refused one.
+const refusedModule = `#pragma once\nnamespace flight::pkg {\n\ninline int other() {\n  return 1;\n}\n\n// NOT GENERATED: function makeThing -- source line 3\n// refusal: example\n\n} // namespace flight::pkg\n`;
+const callerModule = (calls = true, defines = false) =>
+  `#pragma once\n#include <flight/pkg/thing.hpp>\nnamespace flight::pkg {\n\n` +
+  (defines ? 'inline int make_thing(int value) {\n  return value;\n}\n\n' : '') +
+  `inline int use_thing() {\n  return ${calls ? 'make_thing(2)' : '2'} + 1;\n}\n\n} // namespace flight::pkg\n`;
+const crossRepair = {
+  ...refusedRepair,
+  appliesTo: 'flight/pkg/thing.hpp',
+  calledFrom: ['flight/pkg/use.hpp', 'flight/pkg/more.hpp'],
+};
+
+test('a refused function called only from other modules is declared once, at its own marker', () => {
+  const files = [
+    { contents: refusedModule, path: 'flight/pkg/thing.hpp' },
+    { contents: callerModule(), path: 'flight/pkg/use.hpp' },
+    { contents: callerModule(), path: 'flight/pkg/more.hpp' },
+  ];
+  const applied = applyEmissionRepairs([crossRepair], files);
+  assert.deepEqual(applied[0].files, ['flight/pkg/thing.hpp']);
+  const text = files[0].contents;
+  assert.ok(text.indexOf('inline int other()') < text.indexOf('int make_thing(int value);'));
+  assert.ok(text.indexOf('int make_thing(int value);') < text.indexOf('// NOT GENERATED: function makeThing'));
+  assert.equal(files[1].contents, callerModule());
+  assert.deepEqual(applyEmissionRepairs([crossRepair], files)[0].files, []);
+});
+
+test('a cross-module declaration needs every named caller present, calling, and not defining the symbol', () => {
+  for (const callers of [
+    [{ contents: callerModule(), path: 'flight/pkg/use.hpp' }],
+    [{ contents: callerModule(), path: 'flight/pkg/use.hpp' }, { contents: callerModule(false), path: 'flight/pkg/more.hpp' }],
+    [{ contents: callerModule(), path: 'flight/pkg/use.hpp' }, { contents: callerModule(true, true), path: 'flight/pkg/more.hpp' }],
+  ]) {
+    const files = [{ contents: refusedModule, path: 'flight/pkg/thing.hpp' }, ...callers];
+    assert.deepEqual(applyEmissionRepairs([crossRepair], files)[0].files, []);
+    assert.equal(files[0].contents, refusedModule);
+  }
+});
+
+test('a cross-module declaration must name exact headers', () => {
+  const root = mkdtempSync(path.join(tmpdir(), 'flight-repairs-'));
+  try {
+    spawnSync('mkdir', ['-p', path.join(root, 'repairs')]);
+    const write = (repair) =>
+      writeFileSync(
+        path.join(root, 'repairs', 'emission-repairs.json'),
+        JSON.stringify({ repairs: [repair], schema: 'flight-cpp-emission-repairs/1' }),
+      );
+    write(crossRepair);
+    assert.equal(loadEmissionRepairs(root).length, 1);
+    write({ ...crossRepair, appliesTo: 'flight/pkg/' });
+    assert.throws(() => loadEmissionRepairs(root), /exact header/u);
+    write({ ...crossRepair, calledFrom: [] });
+    assert.throws(() => loadEmissionRepairs(root), /exact header/u);
+  } finally {
+    rmSync(root, { force: true, recursive: true });
+  }
+});
+
 test('a declare-refused-function repair with a body is refused at load', () => {
   const root = mkdtempSync(path.join(tmpdir(), 'flight-repairs-'));
   try {

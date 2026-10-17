@@ -40,6 +40,8 @@ using flight::types::Texture;
 inline flight::Ref<flight::types::Vector2> texture_window_view_size = flight::make_ref<flight::types::Vector2>(flight::types::Vector2{.x = 0.0, .y = 0.0});
 
 
+std::optional<flight::types::HostImageSource> resolve_canvas_texture_window_source(flight::Ref<flight::types::CanvasTextureResolvers> resolvers, flight::types::Texture texture);
+
 // NOT GENERATED: function resolveCanvasTextureWindowSource -- source line 12
 // refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
