@@ -960,3 +960,54 @@ retained collector cannot compile yet for its own structural-reference follow-on
 declaration, so it does not reach either boundary. No library, material, diagnostics or grammar
 behavior is supplied; the underlying refusal is
 [indexed array member calls](indexed-array-member-call-present-element.md).
+
+## G2 grid track guard and resolver retain two distinct omissions
+
+At Flight `a627849` / compiler `806d257`, `grid_layout.hpp` first calls the missing `is_track_list`
+from its retained container validator. `NOT GENERATED: function isTrackList -- source line 183`,
+two live same-header calls and no definition support `layout-declare-refused-track-list` through the
+existing `declare-refused-function` engine:
+
+```cpp
+bool is_track_list(flight::Any value);
+```
+
+The source unknown parameter uses the same `Any` carrier as the header's emitted numeric guards.
+The actual callers pass optional columns/rows arrays; the existing optional/array constructors retain
+the array identity and absent-to-undefined channel. No typed-array-only overload or validator result
+is substituted. The body remains refused at
+[erased element runtime-type evidence](erased-array-element-reading.md#g2-grid-track-list-validator-retains-the-same-erased-element-boundary).
+
+The same header also retains explicit registration of the separately omitted source binding
+`const gridLayoutResolver: LayoutResolver = ...`. Its exact line-17 binding marker is
+`cpp-type-assertion-unidentified`. `layout-declare-refused-grid-resolver` uses the existing exact-header,
+marker-guarded `insert-forward-declaration` engine to add only:
+
+```cpp
+namespace flight::layout { extern flight::types::LayoutResolver grid_layout_resolver; }
+```
+
+The retained registration wraps this actual alias in `optional<LayoutResolver>`; its callback takes the
+Float32Array output, readonly LayoutTree row, SequenceView<double> intrinsic sizes and two double indices,
+and returns optional String failure. The [grid owner obligations](assertion-to-nullable-variant-alternative.md#g2-grid-resolver-keeps-its-own-item-and-container-contracts)
+and [track fraction projection](reference-backed-outcome-variant-narrowing.md#g2-grid-track-fraction-still-requires-an-active-owner)
+remain refused. Grid does not share flex's null-container acceptance or basis-validation problem.
+
+An initial scratch declaration candidate stopped before any link because the numeric item guards called
+`is_integer(Any)` while the runtime accepted only double. The runtime now supplies the noncoercive
+`is_integer(const Any&)` overload: only a stored number reaches the existing scalar finite/integral test;
+all other represented types return false without conversion or invocation. The existing runtime target
+passes, covering numeric edge values, nonnumber categories and owner/value effects. No implicit
+`Any -> double` conversion, source rewrite or generated guard body was added.
+
+Normal exact-pin one-module generation reproduces only these two declarations and their repair records;
+each existing engine matches exactly the one header and is idempotent. The actual unused header compiles,
+links and runs. Two independent programs then qualify the retained uses: calling the real container
+validator with a represented auto-track style compiles to an object but fails to link on exactly
+`flight::layout::is_track_list(flight::Any)`; calling the actual registration function compiles to an
+object but fails to link on exactly `flight::layout::grid_layout_resolver`. Neither refused body was run.
+The partial marker, all six omissions, refusal ledger, module fingerprints and package counts remain.
+
+The original grid header serial check completes **1 attempted / 1 pass / 0 fail / 0 unattempted**.
+The single row is pass with `previousCluster`; no other header is measured or promoted. Header
+availability and strict integer support do not make either refused grid operation callable.

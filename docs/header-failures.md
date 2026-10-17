@@ -229,7 +229,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 200 | `undeclared-identifier-a3f09fb8` | 1 | 2D | runtime | the emitted code names `draw_dom_shape`, which nothing declares |
 | 201 | `undeclared-identifier-a4a22a69` | 1 | GL | runtime | the emitted code names `gl_lens_distortion_effect_runner`, which nothing declares |
 | 202 | `undeclared-identifier-a89b9a39` | 1 | GL | runtime | the emitted code names `gl_bitmap_displacement_effect_runner`, which nothing declares |
-| 203 | `undeclared-identifier-aa084556` | 1 | PLAT | runtime | the emitted code names `is_track_list`, which nothing declares |
+| 203 | `undeclared-identifier-aa084556` | 1 | PLAT | runtime + declaration repairs (applied) | refused track-list guard and grid resolver declared; strict erased integer predicate supplied; G2: 1 pass; validator/registration remain unlinkable |
 | 204 | `undeclared-identifier-ae594b8a` | 1 | 2D | runtime | the emitted code names `append_lottie_shape_items`, which nothing declares |
 | 205 | `undeclared-identifier-af7a1054` | 1 | GL | runtime | the emitted code names `gl_median_effect_runner`, which nothing declares |
 | 206 | `undeclared-identifier-b15d9d15` | 1 | ANIM | runtime | the emitted code names `parse_dragon_bones_bones`, which nothing declares |
@@ -3226,14 +3226,44 @@ No locale formatting or callable number API progress is claimed.
 - first failure at: `flight/effects_gl/gl_bitmap_displacement_effect.hpp:153`
 - example: `use of undeclared identifier 'gl_bitmap_displacement_effect_runner'`
 
-### 203. `undeclared-identifier-aa084556` — 1 header(s)
+### 203. `undeclared-identifier-aa084556` — 1 header(s), header boundary fixed
 
-- cause: the emitted code names `is_track_list`, which nothing declares
-- subject: `is_track_list`
+- original cause: the retained grid container validator calls `is_track_list` after its unknown-array predicate is refused
+- subject: `is_track_list`; the separately refused `grid_layout_resolver` binding also remains referenced
 - lanes: PLAT
-- fix route: runtime
-- first failure at: `flight/layout/grid_layout.hpp:151`
-- example: `use of undeclared identifier 'is_track_list'`
+- fix route: noncoercive runtime integer predicate plus [two existing declaration repairs](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-grid-track-guard-and-resolver-retain-two-distinct-omissions)
+- original first failure at: `flight/layout/grid_layout.hpp:151`
+- original example: `use of undeclared identifier 'is_track_list'`
+
+`layout-declare-refused-track-list` declares `bool is_track_list(flight::Any)` from the exact function
+marker, two retained calls and absent definition. `layout-declare-refused-grid-resolver` separately
+declares the actual external `LayoutResolver` binding, guarded by its own line-17 refusal marker.
+Normal exact-pin single-module generation reproduces only these declarations and their repair records;
+no source, validator, resolver, owner, field or layout algorithm is rewritten or supplied.
+
+An initial scratch unused-header candidate fails before any link because `Number.isInteger` is called
+with `Any`, while the runtime accepts only double. `is_integer(const Any&)` now selects only the number
+kind before delegating the existing finite/integral test; every represented nonnumber is rejected without
+coercion, callable invocation or implicit numeric conversion. The existing runtime tests cover numeric
+edges, all represented nonnumber categories and stored-value effects.
+
+- **Original header gate:** complete serial check, **1 attempted / 1 pass / 0 fail / 0 unattempted**.
+- **Runtime:** existing CMake runtime target builds at jobs1 and CTest passes **1/1**.
+- **Unused header positive:** actual repaired header compiles, links and runs.
+- **Track predicate negative:** actual retained container-validator call compiles to an object, then fails to link on exactly `flight::layout::is_track_list(flight::Any)`.
+- **Registration negative:** actual retained registration compiles to an object, then fails to link on exactly `flight::layout::grid_layout_resolver`.
+
+The [unknown track-list evidence](compiler-requests/erased-array-element-reading.md#g2-grid-track-list-validator-retains-the-same-erased-element-boundary),
+[grid item/container recovery](compiler-requests/assertion-to-nullable-variant-alternative.md#g2-grid-resolver-keeps-its-own-item-and-container-contracts)
+and [active track fraction owner](compiler-requests/reference-backed-outcome-variant-narrowing.md#g2-grid-track-fraction-still-requires-an-active-owner)
+remain refused. Grid requires non-null containers with nonempty track arrays, paired explicit row/column,
+positive spans and fixed/auto/fraction sizing; flex's validator/resolver is no substitute. Getter/read order,
+source validation, intrinsic/gap/padding arithmetic and output writes remain intact in the refused source.
+
+The one product row is pass with `previousCluster`; the old active cluster is removed. All six omissions,
+module fingerprints/refusal ledger/package counts and foreign/G1 data remain unchanged. Neither refused
+body was run; no native grid algorithm, successful validation/registration, arbitrary-owner recovery,
+fake resolver or narrowed value domain is claimed.
 
 ### 204. `undeclared-identifier-ae594b8a` — 1 header(s)
 
