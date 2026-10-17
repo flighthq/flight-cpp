@@ -145,7 +145,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 116 | `missing-member-703ef98e` | 1 | 2D | runtime | the emitted code reads a member the target does not declare (`lottie_additive_mask_handler`) |
 | 117 | `missing-member-8aa8170f` | 1 | ANIM | runtime | the emitted code reads a member the target does not declare (`swf_video_handler`) |
 | 118 | `missing-member-ad3558ee` | 1 | ANIM | runtime | the emitted code reads a member the target does not declare (`physics_2d_distance_joint_solver`) |
-| 119 | `missing-member-b5408b35` | 1 | 3D | runtime | the emitted code reads a member the target does not declare (`get_node_world_matrix4`) |
+| 119 | `missing-member-b5408b35` | 1 | 3D | override (fixed) | the `gl_shadow_map` override regained the generated `node_transform3d.hpp` include; G2 recheck: 1 pass |
 | 120 | `missing-member-d7bf452c` | 1 | 2D | [compiler/runtime contract](compiler-requests/readonly-record-entry-enumeration.md) | readonly Record entry enumeration and value-to-view construction disagree; G2: 0/1 retained |
 | 121 | `missing-member-dae8c839` | 4 | TEXT | [compiler request](compiler-requests/reference-backed-outcome-variant-narrowing.md) | FNT formatter reads dimensions on an image-source variant instead of its active owner |
 | 122 | `missing-member-dcf85c36` | 1 | 3D | runtime | the emitted code reads a member the target does not declare (`collect_md5_anim_features`) |
@@ -2255,14 +2255,14 @@ carried. Both rows stay failed; global/G1 totals and all unowned rows remain unc
 - first failure at: `flight/physics2d/register_built_in_physics_2d_joint_solvers.hpp:21`
 - example: `no member named 'physics_2d_distance_joint_solver' in namespace 'physics2d'`
 
-### 119. `missing-member-b5408b35` — 1 header(s)
+### 119. `missing-member-b5408b35` — G2 recheck of 1 header(s)
 
-- cause: the emitted code reads a member the target does not declare (`get_node_world_matrix4`)
+- cause: the override `overrides/include/flight/scene3d_gl/gl_shadow_map.hpp` calls `flight::node::get_node_world_matrix4` at line 228. That function is declared in `flight/node/node_transform3d.hpp`, which the generated header includes and the override did not. The function exists and nothing about it is missing.
 - subject: `get_node_world_matrix4`
 - lanes: 3D
-- fix route: runtime
-- first failure at: `flight/scene3d_gl/gl_shadow_map.hpp:228`
-- example: `no member named 'get_node_world_matrix4' in namespace 'node'`
+- fix route: override (fixed)
+- change: the override now has the generated header's own `#include <flight/node/node_transform3d.hpp>`, and nothing else. The shadow behavior, material domain and the refused `renderGlScene3DShadowMap` are unchanged. `derivedFrom` still matches the generated file, and `overrides:check` reports all 228 overrides fresh.
+- Scoped native recheck (GCC 15.2, jobs 1): **1 attempted / 1 pass / 0 fail**. A TU that only includes the header links against `libflight_cpp_c.a`. No rendering behavior is claimed as run.
 
 ### 120. `missing-member-d7bf452c` — 1 header(s)
 
