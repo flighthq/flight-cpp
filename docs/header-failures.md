@@ -162,7 +162,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 133 | `no-viable-conversion-7e6bb150` | 1 | WGPU | compiler | a value is passed where its declared type cannot receive it |
 | 134 | `no-viable-conversion-802e8004` | 1 | GL | compiler | GL view destroy instantiates state-to-base teardown without heritage; original0/1 retained, existing request linked |
 | 135 | `no-viable-conversion-9695423c` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
-| 136 | `no-viable-conversion-a516fbdb` | 1 | 3D | compiler | a value is passed where its declared type cannot receive it |
+| 136 | `no-viable-conversion-a516fbdb` | 1 | 3D | compiler | readonly generic graph node cannot become an independent geometry probe; existing refinement request linked (G2: 0/1 retained) |
 | 137 | `no-viable-conversion-b47bc6cd` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
 | 138 | `no-viable-conversion-bf84cbac` | 1 | 3D | compiler | a value is passed where its declared type cannot receive it |
 | 139 | `no-viable-conversion-c997578d` | 1 | 2D | compiler | a value is passed where its declared type cannot receive it |
@@ -2943,13 +2943,34 @@ prose, override metadata and historical totals remain intact.
 - first failure at: `flight/scene2d_formats/rive_object_graph.hpp:39`
 - example: `no viable conversion from 'Record<String, double>' to 'optional<Record<String, variant<bool, double, String>>>'`
 
-### 136. `no-viable-conversion-a516fbdb` — 1 header(s)
+### 136. `no-viable-conversion-a516fbdb` — 1 header, retained compiler owner boundary
 
-- cause: a value is passed where its declared type cannot receive it
+- cause: readonly NodeAny row cannot become unrelated Ref<geometry_enabled_869b32e775d5849b>
 - lanes: 3D
-- fix route: compiler
-- first failure at: `flight/scene3d/prepare_scene_3d_morph.hpp:32`
-- example: `no viable conversion from 'StructuralRef<RowReadonly<RowOf<NodeAny>>>' to 'Ref<geometry_enabled_869b32e775d5849b>'`
+- fix route: compiler, [existing identity-preserving refinement request](compiler-requests/flattened-interface-refinement-identity.md#g2-morph-preparation-must-refine-the-original-readonly-graph-owner)
+- unchanged first failure: `flight/scene3d/prepare_scene_3d_morph.hpp:32`
+- unchanged example: `no viable conversion from 'StructuralRef<RowReadonly<RowOf<NodeAny>>>' to 'Ref<geometry_enabled_869b32e775d5849b>'`
+
+The carried morph-capability guard and mesh-capability presence patches name a readonly optional
+geometry probe, but the emitter gives it an independent mutable Ref owner. An annotation provides
+no native relation. Query geometry on the original readonly graph owner, then carry successful
+predicate evidence into the SAME owner's readonly Mesh view; no copied probe/node/geometry,
+unchecked cast, fake no-morph answer or closed Node3D/Mesh-kind traversal is faithful.
+
+Keep enabled-first whole-subtree skips, current-node-before-children processing, original runtime
+and live child order/null state. updateMeshMorph must use the actual MeshMorph weights, geometry,
+geometry-shared bind pose/scratch/weight snapshot and vertices buffer. Null/absent morph returns;
+settled weights do not reblend or bump version. Changed weights blend from captured base with full
+source numeric/sparse-target/channel semantics, preserve other vertex data, bump geometry.version,
+snapshot consumed weights and leave bounds lazy. Shared-geometry/traversal and morph-before-skin /
+before-render order remain. The inspected default NodeTraits runtime selection is separately
+covered by existing inferred-any coverage, not promoted into another measured first error.
+
+**G2: 0 pass / 1 fail retained.** No native/generation rerun on unchanged C++, and no source,
+patch, repair, runtime, override, manifest, count/refusal/init/policy or owner change. Only this
+compact root/row, worklist136 and the existing request appendix change. Source tests are
+requirements, not native morph proof. No fake deformation, copied owner, narrowed graph/weight
+domain, empty result or native version/bounds/upload gain is claimed.
 
 ### 137. `no-viable-conversion-b47bc6cd` — 1 header(s)
 

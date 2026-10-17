@@ -377,3 +377,70 @@ changes in this arc. The existing broad Scene3D patch is provenance, not native 
 The one failed row/cluster and worklist132 now link this request; foreign products and historical
 sweep totals remain unchanged. No fake animation, narrowed target/path domain, copied owner,
 empty result or native TRS/morph behavior claim is carried.
+
+## G2 morph preparation must refine the original readonly graph owner
+
+At Flight `a627849` / compiler `806d257`, no-viable-conversion-a516fbdb contains one
+header, scene3d/prepare_scene_3d_morph.hpp:32, retaining **0 pass / 1 fail**. The existing
+scene3d-morph-capability-guard patch replaces the original readonly NodeAny-to-Mesh assertion
+with a readonly Mesh type predicate. The later scene3d-mesh-capability-presence patch names
+Readonly<Partial<Pick<Mesh,'geometry'>> & {enabled?:boolean}> before its non-null geometry
+read. This still emits an independent nominal owner, not a view of the original node:
+
+```cpp
+struct geometry_enabled_869b32e775d5849b : flight::ReferenceEnabled {
+  std::optional<flight::Ref<flight::types::MeshGeometry>> geometry;
+  std::optional<bool> enabled;
+};
+// inside is_scene_morph_mesh(readonly NodeAny row):
+flight::Ref<geometry_enabled_869b32e775d5849b> candidate = node; // no viable conversion
+```
+
+The source annotation adds no storage or ownership relation. Keep its geometry-presence query
+a readonly view of the SAME retained graph object, preserving absent/null geometry, and carry
+the successful predicate's original-owner evidence into updateMeshMorph's readonly Mesh row
+(geometry and morph). A geometry probe allocation/copy would split live cells; a mutable probe
+reference would invent authority. A boolean alone does not establish a concrete Mesh owner.
+Generic NodeAny/heterogeneous traits and custom-kind geometry-bearing meshes remain valid;
+closing the walk to Node3D, requiring the literal Mesh kind, or returning false for every
+unrecoverable owner would narrow the source graph and silently omit real morphs.
+
+Traversal first checks enabled and returns before geometry/update/runtime/children work for a
+disabled node, skipping the WHOLE subtree. Otherwise it processes the current node before
+reading that same node's runtime.children and recursing in live source array order. Preserve
+null children, shared node/runtime/child identities, getter/error order and the source's dynamic
+length reads. Visibility is not this pass's gate. Do not manufacture an empty child list, copy
+the graph, traverse only direct children or move disabled descendants into a separate pass.
+The emitted runtime access also selects NodeTraits for an any-trait graph; that inspected later
+obligation belongs to the existing [inferred-any/default-trait request](node-any-generic-traits-leak.md#g2-an-omitted-inferred-any-selects-the-default-node-runtime-and-breaks-queue-storage).
+It is not a new measured first diagnostic, and fixing the probe does not prove that runtime
+carrier or the subsequent original-owner Mesh handoff.
+
+The actual deformer reads the original optional MeshMorph and returns before geometry/runtime
+work when it is null/absent. Otherwise it uses the original MeshGeometry and its OWN shared
+MeshGeometryRuntime. The first call lazily captures the interleaved geometry's bind pose and
+reusable scratch there. Later calls compare the full live Float32 weight vector to the stored
+snapshot, including length changes and source strict-number equality; an unchanged vector
+returns without reblend/version/bounds/upload work. Preserve NaN's dirty behavior, signed-zero
+equality and all weight values without clamping or normalization. Bind pose and snapshots
+belong to geometry, so meshes sharing geometry keep the source traversal/shared-cache behavior;
+per-mesh caches, cloned geometry or a detached weight owner would change it.
+
+A blend restarts from the captured base, adds each nonzero weight's actual target deltas in
+source order through min(targets.length,weights.length), and respects shorter sparse delta
+streams. Position and present normal/tangent xyz channels are written through the real layout
+into the SAME vertices buffer; UVs/colors/tangent handedness and absent channels remain intact.
+Then geometry.version increments and the consumed weights are snapshotted, reusing the Float32
+snapshot except when its length changes. Bounds are invalidated by version and recomputed lazily
+on ensureMeshGeometryBounds, not eagerly here. Run this CPU blend after animation/manual weight
+writes and before render preparation; where skinning is composed, preserve morph-before-skin
+ordering without adding a skeleton or GPU-deformer dependency to this pass.
+
+Existing source tests specify nested mesh traversal, disabled-subtree skips, rigid/no-morph
+no-op, lazy bind capture, base-relative reblending, settled version stability and lazy bounds.
+They were inspected as requirements, not run as native morph evidence. No C++, runtime, source
+patch, repair, override, manifest, count/refusal/initialization/policy or owner representation
+changes in this arc. The sole failed row/root/worklist136 now link this existing refinement
+request. Both carried guard patches remain provenance, not proof of a native owner conversion.
+No fake morph, copied owner, narrowed graph/weight domain, empty result or native deformation,
+geometry-version, bounds or upload success is claimed; no unchanged native/generation rerun.
