@@ -914,3 +914,28 @@ faithful emission becomes available. Supplying an empty family, dropping the add
 returning without masking, or moving initialization behind an accessor would change the source.
 Either emit the actual handler or report the dependent family unavailable coherently. The original
 row remains failed with no header gain.
+
+## G2 GL velocity program declaration fails the unused-header compile
+
+At Flight `a627849` / compiler `806d257`, `scene2d_gl/gl_velocity.hpp:155` retains a call to
+`ensure_gl_velocity_program` after `ensureGlVelocityProgram` refuses its named-versus-anonymous cache
+rebind owner. The exact emitted signature is `Ref<GlVelocityProgram>(Ref<GlRenderState>)`:
+`GlVelocityProgram` is the declared program/buffer/location owner and the retained helper passes the
+readonly context's existing state reference. The existing `declare-refused-function` loader and
+exact marker/direct-call/absent-body matcher qualify that declaration once and idempotently in scratch.
+
+The actual unused include with ONLY that declaration fails compilation before any link boundary:
+`reference to non-static member function must be called`, candidate line410 (stock408), at
+`gl.get_parameter(gl.viewport)`. The [external property-name request](external-property-method-name-collision.md)
+records the method/constant distinction. This is a rejected declaration candidate, not an expected
+called-function negative-link result. No repair or normal generation is carried. The production
+original1 remains **0/1 pass**, Clang22.1.8, one worker, unchanged missing-name diagnostic at155.
+
+The helper's [cache value-owner mismatch](contextual-union-map-value-carrier.md#g2-gl-velocity-program-lookup-and-rebind)
+and [GlContext weak-key policy](bound-interface-weak-map-key-policy.md) are independent refusals.
+`visitGlVelocity` also refuses a null test on an unnamed identifier, while all three kind-specific writer
+bindings refuse erased-to-structural owner recovery. Declaring or supplying only the cache cannot
+supply traversal, the registered writers or the complete velocity pass. Preserve generic transform
+traits, same node/runtime owners, per-particle and per-instance vectors/atlas transforms, source-only
+coarse fallback, RG signed/subpixel encoding and pixelRatio, original clear/covered alpha and GL-state
+restoration. No dummy program, zero-velocity writer, copied owner, narrowed domain or drawing claim.

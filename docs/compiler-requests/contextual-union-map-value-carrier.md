@@ -77,3 +77,23 @@ A second attempt is not made here for an unrelated reason: at this base the pack
 `flight/types/renderer.hpp`, which the current `@flighthq/types` row does not emit. Until that row migrates, no
 emission change to this package can be verified by a build, and none should be claimed as one. The measured state is
 recorded in `docs/parity/core.md`.
+
+## G2 GL velocity program lookup and rebind
+
+At Flight `a627849` / compiler `806d257`, `scene2d-gl/glVelocity.ts:324` declares
+`ensureGlVelocityProgram(state: GlRenderState): GlVelocityProgram`. It reads the context WeakMap into
+`let program`, returns the present hit, then constructs the program/buffer/three-location literal,
+sets the same cache entry and returns that same miss owner. The local's source domain is
+`GlVelocityProgram | undefined`; the source creates only one new owner on a miss.
+
+The refusal is `cpp-contextual-union-inequivalent [target-runtime]`: target optionalSingle carrier
+`Ref<program_quad_buffer_loc_corner_loc_clip_rect_loc_velocity_858a12a86c0566f4>` versus call-source
+optionalSingle `Ref<GlVelocityProgram>`. This is a named cache owner versus anonymous rebound owner,
+not the enum/number case above. Keep the collection's declared program owner through lookup, fresh
+construction, rebind, cache write and return, preserving hit identity and the actual program, quad
+buffer and locations. A copied sibling record or default program is not a conversion.
+
+The cache key independently hits the [bound GlContext policy request](bound-interface-weak-map-key-policy.md).
+The retained draw helper then names the refused program function; its exact declaration candidate
+fails the actual unused-header compile at the [VIEWPORT property binding](external-property-method-name-collision.md),
+so no repair, source rewrite, normal generation or actual program/cache behavior pass is claimed here.

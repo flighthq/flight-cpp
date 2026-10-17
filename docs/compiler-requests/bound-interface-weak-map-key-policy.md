@@ -54,6 +54,9 @@ This adds no new runtime surface: the map, the policy and the key type are alrea
   `undeclared-identifier-3e3cccce` (8 headers).
 - `@flighthq/scene2d-gl` `glClipContours.ts:122`: `clipPrograms`. Supplied meanwhile by the partial override
   `scene2d-gl-clip-contours-context-cache`; G2 cluster `undeclared-identifier-644a9b33` (2 headers).
+- `@flighthq/scene2d-gl` `glVelocity.ts:390`: `_velocityPrograms`. Not supplied: the program
+  factory separately refuses its [cache value-owner rebind](contextual-union-map-value-carrier.md#g2-gl-velocity-program-lookup-and-rebind),
+  and traversal/writers remain refused. G2 original1 stays0/1; no cache-only override or drawing claim.
 - The other `GlContext`-keyed refusals counted in `docs/generation-state.md` (16 at the time of that count).
 
 ## Emission defects in the same module

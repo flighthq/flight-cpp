@@ -183,7 +183,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 154 | `undeclared-identifier-0b8d3b44` | 1 | GL | runtime | the emitted code names `box_blur_shaders`, which nothing declares |
 | 155 | `undeclared-identifier-0c07642f` | 1 | GL | runtime | the emitted code names `gl_glitch_effect_runner`, which nothing declares |
 | 156 | `undeclared-identifier-11d6fcbe` | 1 | GL | runtime | the emitted code names `gl_chromatic_aberration_effect_runner`, which nothing declares |
-| 157 | `undeclared-identifier-1462818e` | 1 | 2D | runtime | the emitted code names `ensure_gl_velocity_program`, which nothing declares |
+| 157 | `undeclared-identifier-1462818e` | 1 | 2D | compiler | refused velocity program owner; exact declaration fails unused-header compilation at VIEWPORT method/constant collision *(requests filed)* |
 | 158 | `undeclared-identifier-17cb8386` | 1 | GL | runtime | the emitted code names `gl_bokeh_depth_of_field_effect_runner`, which nothing declares |
 | 159 | `undeclared-identifier-1892fccb` | 1 | PLAT | runtime | the emitted code names `resolve_text_char_index`, which nothing declares |
 | 160 | `undeclared-identifier-1a056bbc` | 3 | TEXT | compiler | refused number formatter retained by five wrappers; G2: declaration candidate fails optional literal construction, full option spreads dropped; 0/3 remain failed |
@@ -2716,14 +2716,40 @@ generated owners carry identity-preserving interface heritage.
 - first failure at: `flight/effects_gl/gl_chromatic_aberration_effect.hpp:88`
 - example: `use of undeclared identifier 'gl_chromatic_aberration_effect_runner'`
 
-### 157. `undeclared-identifier-1462818e` — 1 header(s)
+### 157. `undeclared-identifier-1462818e` — 1 header, compiler-owned
 
-- cause: the emitted code names `ensure_gl_velocity_program`, which nothing declares
-- subject: `ensure_gl_velocity_program`
-- lanes: 2D
-- fix route: runtime
-- first failure at: `flight/scene2d_gl/gl_velocity.hpp:155`
-- example: `use of undeclared identifier 'ensure_gl_velocity_program'`
+The original header measured **1 attempted / 0 pass / 1 fail / 0 unattempted**, Clang22.1.8,
+jobs **1**, 87.8 seconds, still at `ensure_gl_velocity_program` on line155. The body is refused as
+`cpp-contextual-union-inequivalent`: the cache lookup names `Ref<GlVelocityProgram>`, while local
+rebind inference names an anonymous owner with its five program/buffer/location fields. The
+[existing Map-value carrier request](compiler-requests/contextual-union-map-value-carrier.md#g2-gl-velocity-program-lookup-and-rebind)
+records the exact pair. The context WeakMap is independently refused under the
+[existing bound-key policy request](compiler-requests/bound-interface-weak-map-key-policy.md).
+
+The existing declaration mechanism matches the exact refusal/live calls/absent body with
+`Ref<GlVelocityProgram> ensure_gl_velocity_program(Ref<GlRenderState>)`; loader, one-insertion and
+idempotence checks pass in scratch. The actual unused-header candidate **fails compilation**, before
+link: `reference to non-static member function must be called` at scratch line410 (stock408),
+`gl.get_parameter(gl.viewport)`. The host constant is `viewport_constant`; `viewport` is the method.
+The [precise external-property binding request](compiler-requests/external-property-method-name-collision.md)
+records that measured boundary and the separately inspected typed-query carrier seam.
+The declaration is rejected; no repair, source patch, generated/override/binding/runtime change or
+normal generation is carried. There is no positive unused-header link/run or qualified negative-link
+result. See the [retained-callee evidence](compiler-requests/retained-declaration-calls-omitted-callee.md#g2-gl-velocity-program-declaration-fails-the-unused-header-compile).
+
+Full velocity behavior remains owed. Traversal is independently refused by a null-presence test on
+an unnamed identifier; no exact writer/child variable is inferred from that message. Three writer
+bindings refuse erased-to-structural recovery, requiring the same full node/runtime owners under the
+[typed callback contract](compiler-requests/readonly-callback-derived-owner-recovery.md): ordinary node
+world bounds, particle-specific vectors/transforms/worldSpace and atlas regions, and QuadBatch
+per-instance vectors/vector2-or-affine transforms plus only its source-defined coarse fallback.
+Preserve invalid/zero skips, rotated regions, signed/subpixel RG velocity in rgba16f, pixelRatio/y-down
+mapping, covered A=1 versus clear A=0, kind/child order, and framebuffer/blend/viewport/clear-color
+restoration. No fake draw, fixed velocity, copied owner or narrowed kind/traits domain is supplied.
+
+Only this row/cluster, report157 and the named request evidence change. Historical sweep/carry totals
+and all foreign worklist rows/clusters stay unchanged. No velocity-data suite, actual GL velocity pass,
+old native proof or global sweep was rerun; no renderer behavior gain is claimed.
 
 ### 158. `undeclared-identifier-17cb8386` — 1 header(s)
 

@@ -616,3 +616,7 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 - [A joint initializer is called with the construction view instead of the owner it wraps](entity-construction-view-passed-to-owner-parameter.md) —
   8 headers across physics2d, physics2d-abi and physics3d; a CONCRETE call, not the generic substitution case in
   `entity-construction-generic-call-inference.md`. No patch is carried.
+
+- [A bound external constant must keep its member target name](external-property-method-name-collision.md) —
+  the G2 GL velocity declaration-only candidate fails on `gl.VIEWPORT` emitted as the native
+  `viewport` method instead of `viewport_constant`; typed query-result assertions remain a separate inspected seam.
