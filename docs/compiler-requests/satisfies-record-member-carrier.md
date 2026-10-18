@@ -256,8 +256,12 @@ records 441 PASS / 26 FAIL. The only two differing occurrences were explicit
 sources, leaving the same 26 failures and **zero new functional failures**. Those
 timing differences do not establish new compiler capabilities. All 106 declared
 compiler patches apply sequentially from a clean raw pin and reproduce the
-strictly built, 34-test qualified candidate and fixture byte for byte. Latest-base
-composition is verified separately before the shared generation handoff. The
+strictly built, 34-test qualified candidate and fixture byte for byte. After a clean rebase onto `6d2a42e8`, all 107 compiler patches apply from the
+clean raw pin, the strict build passes, and all 34 focused/native controls pass
+again. The three added backend blocks and fixture survive by content, seven
+unrelated emission controls remain byte-identical, and the complete raw three-type
+probe still emits five named original preset allocations with the public bone ABI
+unchanged. The
 registered original complete-header public binary-bone consumer is prepared from
 **60 cases executed against six whole original TypeScript modules**, including
 the actual reader, preset and diagnostic callees. It checks shared input/array
@@ -268,10 +272,11 @@ there is no installed consumer pass yet.
 
 Normal reconciliation must move the defining `types` preset owner together with
 the `skeleton2d-formats` consumers. Regenerating only callers would leave the old
-canonical preset allocation in place. Builder2 remains the sole coordinated Types writer; the qualified patch must
-join its canonical-owner and GL-profile floor. Prefer one grouped output including
-skeleton2d-formats; otherwise builder5 reconciles that caller package once after
-consuming shared Types. No separate builder5 Types run is authorized. The exact six
+canonical preset allocation in place. Builder2 remains the sole coordinated Types writer. The agreed B run groups
+`types`, `render`, `render-wgpu` and `skeleton2d-formats` on the qualified preset,
+canonical-owner and GL-profile floor. Builder2 owns all four generated slices;
+builder5 qualifies this original consumer and its six headers from that shared
+output. There is no separate builder5 Types or skeleton generation. The exact six
 headers must then be measured; all six rows remain unchanged during preparation.
 No generated header edit, runtime descriptor change, pointer cast, replacement
 preset, full parser/package success or global sweep is claimed.

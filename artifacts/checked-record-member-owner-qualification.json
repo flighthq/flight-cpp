@@ -115,9 +115,14 @@
   "normalGroupedReconciliation": {
     "packages": [
       "@flighthq/types",
+      "@flighthq/render",
+      "@flighthq/render-wgpu",
       "@flighthq/skeleton2d-formats"
     ],
-    "state": "Pending shared Types output from sole writer builder2. Requested grouped skeleton output; otherwise builder5 owns one skeleton-only reconciliation after shared Types. No builder5 Types SDK."
+    "soleGeneratedOutputWriter": "builder2",
+    "builder5Role": "Qualify actual complete original public bone consumer and exact six headers from shared grouped B output.",
+    "agreementParcel": "builder2-259943e3",
+    "state": "Awaiting builder2 grouped B normal output after qualified preparation delivery; no separate builder5 Types or skeleton SDK."
   },
   "scopedHeaderSelection": [
     "flight/skeleton2d_formats/spine_binary_bones_handler.hpp",
@@ -168,5 +173,37 @@
       }
     ],
     "interpretation": "Zero new failures. Two baseline-only 15s timeouts pass on both sources with the same120s limit; no capability improvement is attributed to those timing differences."
+  },
+  "currentFloorQualification": {
+    "baseCommit": "6d2a42e8",
+    "compilerPreparationCommit": "9994da01",
+    "compilerPatches": 107,
+    "orderedApplyFromRawClean": true,
+    "strictBuild": "pass",
+    "focused": {
+      "files": 6,
+      "pass": 34,
+      "fail": 0,
+      "skipped": 0
+    },
+    "contentProof": {
+      "compilerPatches": 107,
+      "ownBackendBlocksUnchanged": 3,
+      "ownedFixtureByteIdentical": true,
+      "coldControlsByteIdentical": 7,
+      "rawOriginalPresetNamedAllocations": 5,
+      "publicBoneModeAbiUnchanged": true
+    },
+    "evidenceSha256": {
+      "current107-focused.log": "2fe76756b5ee1d70625c5cfa77d09456c554bbadc01d1cc2f3c32846a6254147",
+      "current107-strict-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "current107-cold-controls.json": "52f2d7aca96869ea710ae996e294d12b0c692d902e483db9834dcb8fb7645d2d",
+      "current107-actual-types.log": "6dcb734cfe2642d1c0f1a03d1bc43d008222c84233d7c52d4f74e6212569de81",
+      "backend-baseline105.json": "8b45a7adcd996228829d132dc83f1e10bb5d1ae03963b07400090d5f92d660c6",
+      "backend-candidate105.json": "5af616f58920d25988c9c2194f481bb5ae60a24c64ffbf4a31a96a05849eca3a",
+      "timing-baseline105.json": "32abd33abed80bb7f5c5ca0366ecf966443010fed773a802674637ca1aa5e05a",
+      "timing-candidate105.json": "e6fa25e2dca79b4d1f0231b72a0126506dccbc4a33d0a99609b15f646e30e763"
+    },
+    "sourcePatchSha256": "34e82ebcffb91dbd995054ef6548f4e88d3f44b1f04f37bbabbc8467e3303b1d"
   }
 }
