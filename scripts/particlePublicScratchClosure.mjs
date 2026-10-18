@@ -114,8 +114,9 @@ for (const name of Object.keys(context.options.packageTargets)) {
     dependencies: new Set(Object.keys(manifest.dependencies ?? {}).filter(name => name.startsWith('@flighthq/')).map(name => name.slice('@flighthq/'.length).replaceAll('-', '_'))),
   });
 }
-const aliases = aliasDuplicateStructuralStructs([...providers, ...emitted], packageGraph);
-const includes = canonicalizeGeneratedIncludes([...providers, ...emitted]);
+const canonicalProviders = providers.filter(file => file.path.startsWith('flight/types/') || file.path.startsWith('flight/particles/'));
+const aliases = aliasDuplicateStructuralStructs([...canonicalProviders, ...emitted], packageGraph);
+const includes = canonicalizeGeneratedIncludes([...providers.map(file => ({ path: file.path, contents: '' })), ...emitted]);
 providers.forEach((file, index) => assert.equal(hash(file.contents), providerHashes[index], 'scratch repair changed an installed provider: ' + file.path));
 for (const file of emitted) {
   const destination = path.join(scratch, 'include', file.path);
