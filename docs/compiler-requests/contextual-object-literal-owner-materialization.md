@@ -205,3 +205,40 @@ The older `gltf_parse.hpp` fatal-include observation above is historical. In the
 29-header Traits audit, that header fails first at `scene3d/scene_document.hpp:106` on the free
 `Traits` parameter. Its own texture call remains unreached and is not added to these 27 measured
 texture failures. G1 sweep totals and all unowned rows remain unchanged.
+
+## G3 bounded OBJ consumer repair (2026-10-17)
+
+The original `scene3d_formats/obj_material_helpers.hpp` is now consumable through a bounded
+source patch, `scene3d-formats-obj-texture-2d-owner`. This fixes its two shared resource-only
+texture calls; the other contextual overload sites in this request remain open.
+The older `obj-standard-pbr-explicit-options` patch addressed conditional option spreads in a
+separate material handler and did not repair these calls. A newly measured local `as Texture2D`
+annotation was refused because the variant retained an anonymous referent without a nominal owner;
+that candidate is not carried. The final source uses the existing `createTexture2D` constructor
+and a discriminant guard for the OBJ color-space write.
+
+Each shared call passes a fresh plain `{ resource }` literal with no dimension. The original
+`createTexture` default branch delegates to `createTexture2D` with that same literal. Its earlier
+common-fields evaluation only creates unobservable fresh sampler/vector objects; it does not read a
+provider, allocate an entity ID, attach a resource, or invoke a caller callback. The dedicated call
+retains all constructor defaults, the selected resource owner, and attachment order. Both shared
+factories construct 2D textures, so the guard always performs the original color-space write on the
+same fresh owner. The public `Texture` union return types and every parameter remain unchanged.
+No factory option, dimension arm, source/resource domain, provider, or null/undefined state is removed.
+
+Normal generation at the exact Flight/compiler pins emits **2/1448 modules across 26 packages,
+0 refusals**, with 257 source patches and 2 headers repaired by existing emission rules. Only the two original generated
+headers and this patch's provenance are carried from that output; clamp/pack bodies are byte-identical.
+Original and final patched TypeScript cases pass for clamp/pack, color-space writes, resource identity,
+absence and attachment order. The real original-header CMake consumer compiles, links and runs:
+**1/1 CTest passes** with Clang 22.1.8 and the existing SDL 3.4.10 include tree. It covers the pinned
+numeric/texture cases plus NaN/infinities, negative zero, a rounding boundary, unsigned RGBA order,
+null/empty URI, reused resources, first-match selection, null/empty base path, embedded byte identity,
+null/empty MIME, defaults and fresh texture owners. Before the discriminant fix, the same native
+consumer failed exactly its two `linear` color-space checks, exposing the old assignment to a copy.
+
+The final standalone check attempts exactly `obj_material_helpers.hpp` and `shared.hpp` at jobs 2:
+**2 pass, 0 fail, 0 unattempted**. Only those two inventory rows move to PASS; the remaining 28 rows
+keep their historical classifications and were not rerun. No global sweep, image decoding/resolution,
+model import, rendering, or general overloaded-object-literal compiler fix is claimed. The native
+consumer is registered in CMake and Bazel; Bazel is unavailable in this workspace and was not run.

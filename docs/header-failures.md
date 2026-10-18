@@ -31,7 +31,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 2 | `missing-member-b1a6d5cf` | 40 | 2D | compiler | scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined *(request filed)* |
 | 3 | `in-operator-not-lowered-b1eae4af` | 32 | 2D, 3D, GL, PLAT, WGPU | compiler | the TypeScript `in` operator is emitted verbatim; G2 particle3D joins this existing cause *(existing request extended)* |
 | 4 | `undeclared-identifier-993e82f1` | 30 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(request filed; builder4/G2)* |
-| 5 | `call-has-no-matching-3882b3e9` | 30 | 2D, 3D, TEXT | compiler | bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier *(request filed; builder4/G2; +1 from `obj_standard_pbr_material_handler.hpp` after its module emitted; +1 from `md5_skeleton_handler.hpp` after the mesh override bridges)* |
+| 5 | `call-has-no-matching-3882b3e9` | 28 | 2D, 3D, TEXT | compiler | bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier *(request filed; builder4/G2; +1 from `obj_standard_pbr_material_handler.hpp` after its module emitted; +1 from `md5_skeleton_handler.hpp` after the mesh override bridges)* |
 | 6 | `other-52e846a6` | 18 | ANIM | compiler *(existing request)* | a nullable attachment array element is not lifted into the reference/null/undefined slot carrier |
 | 7 | `call-has-no-matching-47410fe2` | 16 | 2D, 3D | runtime (fixed) | Number is now a callable conversion object; G2 recheck: 2 pass, 14 fail at later compiler diagnostics |
 | 8 | `other-40da43f7` | 16 | 2D, 3D, ANIM | compiler | an optional<Record<...>> is initialised from a shape that is not its declared storage |
@@ -376,7 +376,7 @@ These non-generic callers still convert an argument to a target containing the c
 no runtime alias or replacement owner was added. The five source-site files are unchanged across the
 clean delivered-base update after the check. G1 sweep totals and unowned rows remain unchanged.
 
-### 5. `call-has-no-matching-3882b3e9` — 30 header(s) *(builder4/G2)*
+### 5. `call-has-no-matching-3882b3e9` — 28 header(s) *(builder4/G2)*
 
 - cause: bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier
 - subject: `create_texture`
@@ -407,6 +407,17 @@ null states, and source evaluation order. Native TextLabel changes cleared none 
 All 27 selected header bodies, the three error-site files, and the options/factory files are unchanged
 from check start `1fe98c66` through completion on delivered `c343d73a`. G1 sweep/carry products and
 unowned rows/clusters remain unchanged; no SDK behavior or new options overload was added.
+
+G3 bounded OBJ check: **2/2 original headers pass**, jobs 2, plus the original-header
+clamp/pack/external-texture consumer **compiles, links and runs (1/1 CTest)**. The
+[bounded repair and measured rejected assertion](compiler-requests/contextual-object-literal-owner-materialization.md#g3-bounded-obj-consumer-repair-2026-10-17)
+use the existing 2D constructor for fresh resource-only options and a guaranteed 2D discriminant
+guard so the OBJ color-space assignment reaches its owner. Public signatures, option domains,
+resource identity/absence/order and provider surface stay intact. Normal exact-pin generation
+emits both original headers with zero refusals; scalar helper bodies are unchanged. The native
+consumer tests numeric edge cases and resource/default/color semantics, and detects the old
+copied color assignment. Only `obj_material_helpers.hpp` and `shared.hpp` move to PASS. The other
+28 rows retain historical classifications and were not rerun; broader compiler debt remains open.
 
 ### 6. `other-52e846a6` — 18 header(s)
 
