@@ -81,12 +81,12 @@ int main() {
      options->components=static_cast<double>(flat.size());
      const auto track=flight::animation::create_animation_track(options);
      const flight::Array<double> sampled;
-     // Retain the observed independent empty-output consumer gap, without calling it source parity.
      try { flight::animation::sample_animation_track(sampled,track,0.0); }
-     catch(const std::range_error&) { ++sampler_gaps; }
-     sampled.resize(flat.size());
-     flight::animation::sample_animation_track(sampled,track,0.0);
+     catch(const std::range_error&) { ++sampler_gaps; std::cerr<<"numeric-sampler-empty-output-grows failed\n"; }
      numbers(sampled,source.flat);
+     const flight::Array<double> preallocated;preallocated.resize(flat.size());
+     flight::animation::sample_animation_track(preallocated,track,0.0);
+     numbers(preallocated,source.flat);
      check(track->values.size()==flat.size());
    }
  }
@@ -104,6 +104,42 @@ int main() {
    check(selected.has_value());check(flight::json_row_raw(*selected)==*wrapper.array_get(0));
    numbers(api::create_lottie_bezier_path(*selected)->data,{1,2});
  }
+
+ for(const auto& source:sampler_cases) {
+   const auto array=[](const std::vector<double>& input){flight::Array<double> out;for(const double value:input)out.push(value);return out;};
+   using Options=flight::animation::times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042;
+   const auto options=flight::make_ref<Options>();const auto values=array(source.values);
+   options->times=flight::SequenceView<double>(array(source.times));options->values=flight::SequenceView<double>(values);
+   options->components=source.components;options->interpolation=flight::String(source.interpolation);options->quaternion=source.quaternion;
+   const auto track=flight::animation::create_animation_track(options);
+   try {
+     if(source.typed) {
+       const flight::Float32Array out(static_cast<double>(source.output.size()));
+       for(std::size_t i=0;i<source.output.size();++i)out.set_index(static_cast<double>(i),source.output[i]);
+       flight::animation::sample_animation_track(out,track,source.time);
+       check(out.size()==source.expected.size());
+       for(std::size_t i=0;i<source.expected.size();++i)check(out.get_index(static_cast<double>(i))==source.expected[i]);
+     } else {
+       const auto out=source.alias_values?values:array(source.output);const auto identity=out.identity();
+       flight::animation::sample_animation_track(out,track,source.time);
+       numbers(out,source.expected);check(out.identity()==identity);
+       if(source.alias_values)check(out.identity()==values.identity());
+     }
+   } catch(const std::exception& error) {std::cerr<<"sampler source case "<<source.name<<": "<<error.what()<<'\n';check(false);}
+ }
+ {
+   using Options=flight::animation::times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042;
+   const auto options=flight::make_ref<Options>();options->times=flight::SequenceView<double>(flight::Array<double>{0.0});options->components=2.0;
+   const auto sentinel=std::make_exception_ptr(flight::RangeError("later sample value"));std::vector<int> reads;
+   options->values=flight::SequenceView<double>::from_erased_array(Any(flight::Array<Any>{Any(1.0),Any(2.0)}),[&](const Any& value){
+     const double number=value.as_number();reads.push_back(number==1?0:1);if(number==2)std::rethrow_exception(sentinel);return number;
+   });
+   const auto track=flight::animation::create_animation_track(options);const flight::Array<double> out;
+   bool same=false;try{flight::animation::sample_animation_track(out,track,0.0);}catch(const flight::RangeError&){same=std::current_exception()==sentinel;}
+   catch(const std::exception& error){std::cerr<<"sampler-later-value-error-retains-prefix: "<<error.what()<<'\n';}
+   check(same && reads==std::vector<int>{0,1});numbers(out,{1});
+ }
+ check(sampler_gaps==0);
  for(const char* input:{"null","7","\"text\"","[]","{}"}) {
    check(!api::to_lottie_shape_path(Any(flight::Json::parse(input))).has_value());
  }

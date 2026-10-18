@@ -83,6 +83,33 @@ for (const operation of ['flattenLottieShapePath','createLottieBezierPath']) {
  const result=api.createLottieBezierPath(selected);assert.deepEqual(result.data,[9,4]);assert.equal(reads,3);
  cases.push({name:'changing-v-getter-keeps-read-order',reads,data:Array.from(result.data)});
 }
+
+const samplerCases = [
+ {name:'zero-keyframes',times:[],values:[],components:3,time:0,interpolation:'Linear',output:[]},
+ {name:'step',times:[0,1],values:[1,2,3,4],components:2,time:0.5,interpolation:'Step',output:[]},
+ {name:'linear',times:[0,1],values:[1,2,3,4],components:2,time:0.5,interpolation:'Linear',output:[]},
+ {name:'cubic',times:[0,1],values:[0,0,1,2,0,0,0,0,3,4,0,0],components:2,time:0.5,interpolation:'Cubic',output:[]},
+ {name:'quaternion',times:[0,1],values:[0,0,0,1,0,0,0,1],components:4,time:0.5,interpolation:'Linear',quaternion:true,output:[]},
+ {name:'existing-tail',times:[0],values:[1,2],components:2,time:0,interpolation:'Linear',output:[10,20,30,40]},
+ {name:'short-array',times:[0],values:[1,2],components:2,time:0,interpolation:'Linear',output:[8]},
+ {name:'short-typed-array',times:[0],values:[1,2],components:2,time:0,interpolation:'Linear',typed:true,output:[8]},
+ {name:'aliased-values',times:[0,1],values:[1,2,3,4],components:2,time:0.5,interpolation:'Linear',aliasValues:true,output:[]},
+].map(input=>{
+ const values=[...input.values];
+ const track=animation.createAnimationTrack({times:input.times,values,components:input.components,interpolation:input.interpolation,quaternion:input.quaternion??false});
+ const out=input.aliasValues?values:input.typed?new Float32Array(input.output):[...input.output];
+ animation.sampleAnimationTrack(out,track,input.time);
+ return {...input,expected:Array.from(out)};
+});
+{
+ const sentinel=new RangeError('later sample value'), reads=[];
+ const values=[1,2];Object.defineProperty(values,'0',{get(){reads.push(0);return 1;}});
+ Object.defineProperty(values,'1',{get(){reads.push(1);throw sentinel;}});
+ const track=animation.createAnimationTrack({times:[0],values,components:2});const out=[];
+ assert.throws(()=>animation.sampleAnimationTrack(out,track,0),error=>error===sentinel);
+ assert.deepEqual(out,[1]);assert.deepEqual(reads,[0,1]);
+ cases.push({name:'sampler-later-value-error-retains-prefix',sameError:true,reads,output:out});
+}
 const sourcePaths=execFileSync('git',['-C',upstream,'ls-tree','-r','a62784923f3be814463286c9fb28edfe6ab15789'],{encoding:'utf8'});
 const blobs=new Map(sourcePaths.trim().split('\n').map(line=>{const at=line.indexOf('\t');return [line.slice(at+1),line.slice(0,at).split(' ')[2]];}));
 for(const relative of Object.keys(hashes)) {
@@ -90,6 +117,6 @@ for(const relative of Object.keys(hashes)) {
  const object=createHash('sha1').update(`blob ${bytes.length}\0`).update(bytes).digest('hex');
  assert.equal(object,blobs.get(relative),relative+' differs from the pinned original module');
 }
-const result={schema:'flight-lottie-bezier-numeric-oracle/1',pin:'a62784923f3be814463286c9fb28edfe6ab15789',sourceSha256:hashes['packages/scene2d-formats/src/lottieBezierPath.ts'],wholeOriginalModules:true,replacementBodies:false,loadedModules:cache.size,verifiedOriginalBlobs:Object.keys(hashes).length,cases,sourceHashes:hashes};
+const result={schema:'flight-lottie-bezier-numeric-oracle/1',pin:'a62784923f3be814463286c9fb28edfe6ab15789',sourceSha256:hashes['packages/scene2d-formats/src/lottieBezierPath.ts'],wholeOriginalModules:true,replacementBodies:false,loadedModules:cache.size,verifiedOriginalBlobs:Object.keys(hashes).length,cases,samplerCases,sourceHashes:hashes};
 const output=path.resolve(args['--output']);fs.mkdirSync(path.dirname(output),{recursive:true});fs.writeFileSync(output,JSON.stringify(result,null,2)+'\n');
-console.log(JSON.stringify({cases:cases.length,verifiedOriginalBlobs:result.verifiedOriginalBlobs,failures:0}));
+console.log(JSON.stringify({cases:cases.length+samplerCases.length,bezierAndOrderCases:cases.length,samplerCases:samplerCases.length,verifiedOriginalBlobs:result.verifiedOriginalBlobs,failures:0}));

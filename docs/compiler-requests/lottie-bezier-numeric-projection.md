@@ -18,8 +18,10 @@ Numeric Bezier observations and represented source getter/owner/error/iteration 
 
 Foreign iterator protocols, unregistered/ambiguous native property metadata, unrepresented getter-value carriers, arbitrary class-heritage layouts, async/labelled raw iteration and unrepresented callable escapes remain explicit partial boundaries. This is a bounded profile, not a whole Lottie/factory/SVG/SDK promotion.
 
-## Independent numeric sampler counterexample
+## Numeric sampler counterexample and repair
 
 The expanded probe found an existing consumer gap with an ordinary numeric track. The original source `sampleAnimationTrack([], track, 0)` grows the output to contain the first numeric keyframe. The current native override's `copy_keyframe_value` writes the `Array<double>` alternative through `element(index)`, which throws `std::range_error` when the output starts empty. The original initial probe aborted at this operation; that failed run is retained.
 
-The final fixture records each empty-output failure separately, then tests a **separate preallocated-output** call against the original source's same preallocated call. Preallocation does not turn the empty-output failure into a pass. Neither numeric storage nor the sampler implementation is changed in this Bezier patch. The empty-output rows remain PARTIAL and require a separately scoped consumer repair; no full numeric sampler parity is claimed.
+The consumer repair appends to the **same** numeric Array only when each successive write reaches its current length. It reads the right-hand value first, preserves an existing output tail, and leaves an already-written prefix intact if a later value read throws. Float32Array writes retain fixed length. No upfront output resize, source-body replacement or storage-family change is used. Writes that would require an unrepresented numeric Array hole/property explicitly refuse.
+
+The final fixture requires empty outputs to grow normally and separately compares preallocated, short, long, aliased and typed outputs with the complete original source. Zero-keyframe, Step, Linear, Cubic and quaternion routes plus a later getter error are covered. The initial abort and six earlier failures remain in the evidence; they are not converted into partial successes through preallocation. This repairs the measured numeric consumer gap without promoting the whole native `createLottieTrack` module or broader factory/SDK behavior.

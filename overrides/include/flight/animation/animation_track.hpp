@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstdint>
 #include <flight/sequence_view.hpp>
+#include <flight/out_of_profile.hpp>
 #include <optional>
 #include <random>
 #include <variant>
@@ -215,12 +216,25 @@ inline double keyframe_value_offset(flight::Ref<AnimationTrack> track, double k)
   return ((track->interpolation == flight::String("Cubic")) ? ((k * stride) + track->components) : (k * stride));
 }
 
+namespace detail {
+// Sample loops write successive indices. Append only at the actual next write, after its value
+// was read; an existing output tail stays intact and a later read failure retains the written prefix.
+inline void write_sample_array_component(const flight::Array<double>& out, double index, double value) {
+  const double length = static_cast<double>(out.size());
+  if (!std::isfinite(index) || index < 0.0 || std::floor(index) != index || index > length) {
+    throw flight::OutOfProfileError("sample write would require an unrepresented numeric Array property or hole");
+  }
+  if (index == length) out.push(value);
+  else out.element(index) = value;
+}
+} // namespace detail
+
 inline void copy_keyframe_value(std::variant<flight::Array<double>, flight::Float32Array> out, flight::Ref<AnimationTrack> track, double k) {
   const double off = keyframe_value_offset(track, k);
   {
     double c = 0.0;
     while ((c < track->components)) {
-      ([&]() { auto&& indexed_source = out; const auto indexed_index = c; const auto indexed_value = track->values[(off + c)]; std::visit([&](auto& indexed_receiver) { if constexpr (requires { indexed_receiver.set_index(indexed_index, indexed_value); }) indexed_receiver.set_index(indexed_index, indexed_value); else indexed_receiver.element(indexed_index) = indexed_value; }, indexed_source); return indexed_value; }());
+      ([&]() { auto&& indexed_source = out; const auto indexed_index = c; const auto indexed_value = track->values[(off + c)]; std::visit([&](auto& indexed_receiver) { if constexpr (requires { indexed_receiver.set_index(indexed_index, indexed_value); }) indexed_receiver.set_index(indexed_index, indexed_value); else detail::write_sample_array_component(indexed_receiver, indexed_index, indexed_value); }, indexed_source); return indexed_value; }());
       (c += 1.0);
     }
   }
@@ -234,10 +248,10 @@ inline void normalize_flat_quaternion(std::variant<flight::Array<double>, flight
   const double len = std::hypot(std::hypot(x, y, z), w);
   if ((len > 0.0)) {
     const double inv = (1.0 / len);
-    ([&]() { auto&& indexed_source_6 = out; const auto indexed_index_6 = 0.0; const auto indexed_value_2 = (x * inv); std::visit([&](auto& indexed_receiver_6) { if constexpr (requires { indexed_receiver_6.set_index(indexed_index_6, indexed_value_2); }) indexed_receiver_6.set_index(indexed_index_6, indexed_value_2); else indexed_receiver_6.element(indexed_index_6) = indexed_value_2; }, indexed_source_6); return indexed_value_2; }());
-    ([&]() { auto&& indexed_source_7 = out; const auto indexed_index_7 = 1.0; const auto indexed_value_3 = (y * inv); std::visit([&](auto& indexed_receiver_7) { if constexpr (requires { indexed_receiver_7.set_index(indexed_index_7, indexed_value_3); }) indexed_receiver_7.set_index(indexed_index_7, indexed_value_3); else indexed_receiver_7.element(indexed_index_7) = indexed_value_3; }, indexed_source_7); return indexed_value_3; }());
-    ([&]() { auto&& indexed_source_8 = out; const auto indexed_index_8 = 2.0; const auto indexed_value_4 = (z * inv); std::visit([&](auto& indexed_receiver_8) { if constexpr (requires { indexed_receiver_8.set_index(indexed_index_8, indexed_value_4); }) indexed_receiver_8.set_index(indexed_index_8, indexed_value_4); else indexed_receiver_8.element(indexed_index_8) = indexed_value_4; }, indexed_source_8); return indexed_value_4; }());
-    ([&]() { auto&& indexed_source_9 = out; const auto indexed_index_9 = 3.0; const auto indexed_value_5 = (w * inv); std::visit([&](auto& indexed_receiver_9) { if constexpr (requires { indexed_receiver_9.set_index(indexed_index_9, indexed_value_5); }) indexed_receiver_9.set_index(indexed_index_9, indexed_value_5); else indexed_receiver_9.element(indexed_index_9) = indexed_value_5; }, indexed_source_9); return indexed_value_5; }());
+    ([&]() { auto&& indexed_source_6 = out; const auto indexed_index_6 = 0.0; const auto indexed_value_2 = (x * inv); std::visit([&](auto& indexed_receiver_6) { if constexpr (requires { indexed_receiver_6.set_index(indexed_index_6, indexed_value_2); }) indexed_receiver_6.set_index(indexed_index_6, indexed_value_2); else detail::write_sample_array_component(indexed_receiver_6, indexed_index_6, indexed_value_2); }, indexed_source_6); return indexed_value_2; }());
+    ([&]() { auto&& indexed_source_7 = out; const auto indexed_index_7 = 1.0; const auto indexed_value_3 = (y * inv); std::visit([&](auto& indexed_receiver_7) { if constexpr (requires { indexed_receiver_7.set_index(indexed_index_7, indexed_value_3); }) indexed_receiver_7.set_index(indexed_index_7, indexed_value_3); else detail::write_sample_array_component(indexed_receiver_7, indexed_index_7, indexed_value_3); }, indexed_source_7); return indexed_value_3; }());
+    ([&]() { auto&& indexed_source_8 = out; const auto indexed_index_8 = 2.0; const auto indexed_value_4 = (z * inv); std::visit([&](auto& indexed_receiver_8) { if constexpr (requires { indexed_receiver_8.set_index(indexed_index_8, indexed_value_4); }) indexed_receiver_8.set_index(indexed_index_8, indexed_value_4); else detail::write_sample_array_component(indexed_receiver_8, indexed_index_8, indexed_value_4); }, indexed_source_8); return indexed_value_4; }());
+    ([&]() { auto&& indexed_source_9 = out; const auto indexed_index_9 = 3.0; const auto indexed_value_5 = (w * inv); std::visit([&](auto& indexed_receiver_9) { if constexpr (requires { indexed_receiver_9.set_index(indexed_index_9, indexed_value_5); }) indexed_receiver_9.set_index(indexed_index_9, indexed_value_5); else detail::write_sample_array_component(indexed_receiver_9, indexed_index_9, indexed_value_5); }, indexed_source_9); return indexed_value_5; }());
   }
 }
 
@@ -262,7 +276,7 @@ inline void sample_cubic_segment(std::variant<flight::Array<double>, flight::Flo
         const double m0 = values[((base0 + (components * 2.0)) + c)];
         const double p1 = values[((base1 + components) + c)];
         const double m1 = values[(base1 + c)];
-        ([&]() { auto&& indexed_source_10 = out; const auto indexed_index_10 = c; const auto indexed_value_6 = ((((h00 * p0) + ((h10 * dt) * m0)) + (h01 * p1)) + ((h11 * dt) * m1)); std::visit([&](auto& indexed_receiver_10) { if constexpr (requires { indexed_receiver_10.set_index(indexed_index_10, indexed_value_6); }) indexed_receiver_10.set_index(indexed_index_10, indexed_value_6); else indexed_receiver_10.element(indexed_index_10) = indexed_value_6; }, indexed_source_10); return indexed_value_6; }());
+        ([&]() { auto&& indexed_source_10 = out; const auto indexed_index_10 = c; const auto indexed_value_6 = ((((h00 * p0) + ((h10 * dt) * m0)) + (h01 * p1)) + ((h11 * dt) * m1)); std::visit([&](auto& indexed_receiver_10) { if constexpr (requires { indexed_receiver_10.set_index(indexed_index_10, indexed_value_6); }) indexed_receiver_10.set_index(indexed_index_10, indexed_value_6); else detail::write_sample_array_component(indexed_receiver_10, indexed_index_10, indexed_value_6); }, indexed_source_10); return indexed_value_6; }());
       }
       (c += 1.0);
     }
@@ -301,10 +315,10 @@ inline void slerp_flat_quaternion(std::variant<flight::Array<double>, flight::Fl
     (scale0 = (1.0 - alpha));
     (scale1 = alpha);
   }
-  ([&]() { auto&& indexed_source_11 = out; const auto indexed_index_11 = 0.0; const auto indexed_value_7 = ((scale0 * ax) + (scale1 * bx)); std::visit([&](auto& indexed_receiver_11) { if constexpr (requires { indexed_receiver_11.set_index(indexed_index_11, indexed_value_7); }) indexed_receiver_11.set_index(indexed_index_11, indexed_value_7); else indexed_receiver_11.element(indexed_index_11) = indexed_value_7; }, indexed_source_11); return indexed_value_7; }());
-  ([&]() { auto&& indexed_source_12 = out; const auto indexed_index_12 = 1.0; const auto indexed_value_8 = ((scale0 * ay) + (scale1 * by)); std::visit([&](auto& indexed_receiver_12) { if constexpr (requires { indexed_receiver_12.set_index(indexed_index_12, indexed_value_8); }) indexed_receiver_12.set_index(indexed_index_12, indexed_value_8); else indexed_receiver_12.element(indexed_index_12) = indexed_value_8; }, indexed_source_12); return indexed_value_8; }());
-  ([&]() { auto&& indexed_source_13 = out; const auto indexed_index_13 = 2.0; const auto indexed_value_9 = ((scale0 * az) + (scale1 * bz)); std::visit([&](auto& indexed_receiver_13) { if constexpr (requires { indexed_receiver_13.set_index(indexed_index_13, indexed_value_9); }) indexed_receiver_13.set_index(indexed_index_13, indexed_value_9); else indexed_receiver_13.element(indexed_index_13) = indexed_value_9; }, indexed_source_13); return indexed_value_9; }());
-  ([&]() { auto&& indexed_source_14 = out; const auto indexed_index_14 = 3.0; const auto indexed_value_10 = ((scale0 * aw) + (scale1 * bw)); std::visit([&](auto& indexed_receiver_14) { if constexpr (requires { indexed_receiver_14.set_index(indexed_index_14, indexed_value_10); }) indexed_receiver_14.set_index(indexed_index_14, indexed_value_10); else indexed_receiver_14.element(indexed_index_14) = indexed_value_10; }, indexed_source_14); return indexed_value_10; }());
+  ([&]() { auto&& indexed_source_11 = out; const auto indexed_index_11 = 0.0; const auto indexed_value_7 = ((scale0 * ax) + (scale1 * bx)); std::visit([&](auto& indexed_receiver_11) { if constexpr (requires { indexed_receiver_11.set_index(indexed_index_11, indexed_value_7); }) indexed_receiver_11.set_index(indexed_index_11, indexed_value_7); else detail::write_sample_array_component(indexed_receiver_11, indexed_index_11, indexed_value_7); }, indexed_source_11); return indexed_value_7; }());
+  ([&]() { auto&& indexed_source_12 = out; const auto indexed_index_12 = 1.0; const auto indexed_value_8 = ((scale0 * ay) + (scale1 * by)); std::visit([&](auto& indexed_receiver_12) { if constexpr (requires { indexed_receiver_12.set_index(indexed_index_12, indexed_value_8); }) indexed_receiver_12.set_index(indexed_index_12, indexed_value_8); else detail::write_sample_array_component(indexed_receiver_12, indexed_index_12, indexed_value_8); }, indexed_source_12); return indexed_value_8; }());
+  ([&]() { auto&& indexed_source_13 = out; const auto indexed_index_13 = 2.0; const auto indexed_value_9 = ((scale0 * az) + (scale1 * bz)); std::visit([&](auto& indexed_receiver_13) { if constexpr (requires { indexed_receiver_13.set_index(indexed_index_13, indexed_value_9); }) indexed_receiver_13.set_index(indexed_index_13, indexed_value_9); else detail::write_sample_array_component(indexed_receiver_13, indexed_index_13, indexed_value_9); }, indexed_source_13); return indexed_value_9; }());
+  ([&]() { auto&& indexed_source_14 = out; const auto indexed_index_14 = 3.0; const auto indexed_value_10 = ((scale0 * aw) + (scale1 * bw)); std::visit([&](auto& indexed_receiver_14) { if constexpr (requires { indexed_receiver_14.set_index(indexed_index_14, indexed_value_10); }) indexed_receiver_14.set_index(indexed_index_14, indexed_value_10); else detail::write_sample_array_component(indexed_receiver_14, indexed_index_14, indexed_value_10); }, indexed_source_14); return indexed_value_10; }());
 }
 
 
@@ -322,7 +336,7 @@ inline void sample_animation_track(
             if constexpr (requires { selected.set_index(0.0, 0.0); }) {
               selected.set_index(static_cast<double>(component), 0.0);
             } else {
-              selected.element(static_cast<double>(component)) = 0.0;
+              detail::write_sample_array_component(selected, static_cast<double>(component), 0.0);
             }
           },
           out);
@@ -385,7 +399,7 @@ inline void sample_animation_track(
           if constexpr (requires { selected.set_index(0.0, 0.0); }) {
             selected.set_index(component_offset, value);
           } else {
-            selected.element(component_offset) = value;
+            detail::write_sample_array_component(selected, component_offset, value);
           }
         },
         out);
