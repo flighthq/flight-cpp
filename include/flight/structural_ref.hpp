@@ -86,6 +86,15 @@ struct RowWritable {
   using row_type = Row;
 };
 
+// How a declared member's own-key presence is read from its native storage. Engagement alone is not
+// the answer: a REQUIRED nullable (`value: T | null`) and a source-optional (`value?: T`) can share
+// the same std::optional carrier. The emitter supplies this per member.
+enum class MemberPresence {
+  Required,          // always an own key; the carrier itself is the value
+  SourceOptional,    // own key iff the optional carrier is engaged
+  RequiredNullable,  // always an own key; a disengaged carrier is the source null
+};
+
 // A StructuralRef compares this owner identity. A write proxy owns a distinct instance while
 // delegating storage to its target, matching JavaScript Proxy identity and forwarding behavior.
 class RowCell {
@@ -131,13 +140,6 @@ template <typename Value>
 class TypedRowCell : public RowCell {
  public:
   [[nodiscard]] std::type_index value_type() const noexcept final { return typeid(Value); }
-  [[nodiscard]] bool present() const noexcept final {
-    if constexpr (detail::is_std_optional<Value>::value) {
-      return const_cast<TypedRowCell*>(this)->get().has_value();
-    } else {
-      return true;
-    }
-  }
   [[nodiscard]] virtual Value& get() = 0;
   virtual void set(Value value) = 0;
 
@@ -175,7 +177,7 @@ class TypedRowCell : public RowCell {
     return true;
   }
 
-  [[nodiscard]] std::optional<Any> as_any() const final {
+  [[nodiscard]] std::optional<Any> as_any() const override {
     return detail::any_from(const_cast<TypedRowCell<Value>*>(this)->get());
   }
 };
@@ -196,9 +198,29 @@ template <typename Value, typename Getter>
 class NativeRowCell final : public TypedRowCell<Value> {
  public:
   explicit NativeRowCell(Getter getter) : address_(std::addressof(std::invoke(getter))) {}
+  NativeRowCell(Getter getter, MemberPresence presence)
+      : address_(std::addressof(std::invoke(getter))), presence_(presence) {}
 
   [[nodiscard]] Value& get() override { return *address_; }
   void set(Value value) override { *address_ = std::move(value); }
+
+  [[nodiscard]] bool present() const noexcept override {
+    if (presence_ == MemberPresence::SourceOptional) {
+      if constexpr (detail::is_std_optional<Value>::value) {
+        return const_cast<NativeRowCell*>(this)->get().has_value();
+      }
+    }
+    return true;
+  }
+
+  [[nodiscard]] std::optional<Any> as_any() const override {
+    if (presence_ == MemberPresence::RequiredNullable) {
+      if constexpr (detail::is_std_optional<Value>::value) {
+        if (!const_cast<NativeRowCell*>(this)->get().has_value()) return Any(nullptr);
+      }
+    }
+    return detail::any_from(const_cast<NativeRowCell*>(this)->get());
+  }
 
   // The member's own address, taken once while the native object is being bound. Do not retain the
   // accessor: generated accessors capture the object's shared_ptr, and an owner registry entry
@@ -212,6 +234,7 @@ class NativeRowCell final : public TypedRowCell<Value> {
 
  private:
   Value* address_;
+  MemberPresence presence_{MemberPresence::Required};
 };
 
 class RowOwner {
@@ -235,13 +258,18 @@ class RowOwner {
 
   template <typename Getter>
   void bind_named(std::string_view key, Getter getter) {
+    bind_named(key, std::move(getter), MemberPresence::Required);
+  }
+
+  template <typename Getter>
+  void bind_named(std::string_view key, Getter getter, MemberPresence presence) {
     using Reference = std::invoke_result_t<Getter&>;
     static_assert(std::is_lvalue_reference_v<Reference>);
     using Value = std::remove_reference_t<Reference>;
     if (named_cell(key)) return;
     set_named_cell(
         key,
-        std::make_shared<NativeRowCell<Value, Getter>>(std::move(getter)));
+        std::make_shared<NativeRowCell<Value, Getter>>(std::move(getter), presence));
   }
 
   template <typename Value>

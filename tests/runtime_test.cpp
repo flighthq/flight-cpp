@@ -41,6 +41,8 @@ struct PresenceNative final : public flight::ReferenceEnabled {
   std::optional<int> omitted;
   std::optional<int> present_value{3};
   std::optional<flight::Any> present_undefined{flight::Any(flight::undefined)};
+  std::optional<int> required_nullable;
+  std::optional<int> required_value{4};
 };
 
 namespace {
@@ -4748,9 +4750,16 @@ static void test_array_callback_arity() {
 static void test_native_named_presence() {
   const auto object = flight::make_ref<PresenceNative>(PresenceNative{});
   auto owner = flight::detail::owner_for(object);
-  owner->bind_named("omitted", [object]() -> decltype(auto) { return (object->omitted); });
-  owner->bind_named("present_value", [object]() -> decltype(auto) { return (object->present_value); });
-  owner->bind_named("present_undefined", [object]() -> decltype(auto) { return (object->present_undefined); });
+  owner->bind_named("omitted", [object]() -> decltype(auto) { return (object->omitted); },
+                    flight::MemberPresence::SourceOptional);
+  owner->bind_named("present_value", [object]() -> decltype(auto) { return (object->present_value); },
+                    flight::MemberPresence::SourceOptional);
+  owner->bind_named("present_undefined", [object]() -> decltype(auto) { return (object->present_undefined); },
+                    flight::MemberPresence::SourceOptional);
+  owner->bind_named("required_nullable", [object]() -> decltype(auto) { return (object->required_nullable); },
+                    flight::MemberPresence::RequiredNullable);
+  owner->bind_named("required_value", [object]() -> decltype(auto) { return (object->required_value); },
+                    flight::MemberPresence::RequiredNullable);
   const flight::StructuralRef<flight::RowOf<flight::Ref<PresenceNative>>> row(object);
   const auto properties = flight::named_properties(row);
   const auto keys = properties.keys();
@@ -4759,14 +4768,30 @@ static void test_native_named_presence() {
     return std::find(keys.begin(), keys.end(), wanted) != keys.end();
   };
   check(!contains("omitted") && !properties.has(flight::String("omitted")),
-        "a disengaged optional is omitted: not enumerated and not an own key");
+        "a source-optional disengaged member is omitted: not enumerated and not an own key");
   check(contains("present_value") && properties.get(flight::String("present_value")).as_number() == 3.0,
-        "an engaged optional enumerates and reads its value");
+        "a source-optional engaged member enumerates and reads its value");
   check(contains("present_undefined") && properties.has(flight::String("present_undefined")) &&
             properties.get(flight::String("present_undefined")).is_undefined(),
-        "an engaged optional holding undefined is an own key, distinct from omission");
+        "a source-optional engaged undefined is an own key, distinct from omission");
+  check(contains("required_nullable") && properties.has(flight::String("required_nullable")) &&
+            properties.get(flight::String("required_nullable")).is_null(),
+        "a REQUIRED nullable (disengaged optional carrier) is an own key whose value is null");
+  check(contains("required_value") &&
+            properties.get(flight::String("required_value")).as_number() == 4.0,
+        "a REQUIRED nullable with a present value enumerates and reads it");
   check(properties.get(flight::String("omitted")).is_undefined(),
         "reading an omitted key answers undefined");
+  const std::vector<flight::String> expected{
+      flight::String("present_value"), flight::String("present_undefined"),
+      flight::String("required_nullable"), flight::String("required_value")};
+  check(keys == expected, "own-key order follows declaration order with omitted members skipped");
+  owner->named_cell("present_value")->assign_absent();
+  const auto after_delete = flight::named_properties(row);
+  const auto after_keys = after_delete.keys();
+  check(!after_delete.has(flight::String("present_value")) &&
+            std::find(after_keys.begin(), after_keys.end(), flight::String("present_value")) == after_keys.end(),
+        "deleting an own member removes it from enumeration and presence on the same owner");
 }
 
 int main() {
