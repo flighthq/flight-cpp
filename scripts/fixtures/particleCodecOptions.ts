@@ -24,3 +24,13 @@ void sameDocumentFunction;
 void retainedDocument;
 
 export {};
+
+// Required is the identity on this already-required result shape; writes remain permitted.
+type PlainResult = { config: Config; diagnostics: string[] };
+type ViewResult = Required<PlainResult>;
+declare const plainResult: PlainResult;
+declare const viewResult: ViewResult;
+const asView: ViewResult = plainResult;
+const asPlain: PlainResult = viewResult;
+asView.config = asPlain.config;
+asPlain.diagnostics = asView.diagnostics;
