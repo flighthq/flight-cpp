@@ -35,7 +35,7 @@ int main() {
   for (std::size_t index = 0; index < units.length(); ++index) {
     const auto match = alias.exec(units);
     check(match && match->index == static_cast<double>(index) && match->input == units &&
-          match->capture(1) == units.slice(index, index + 1), "exec uses original UTF16 units and index");
+          match->capture(1) == units.slice(static_cast<std::ptrdiff_t>(index), static_cast<std::ptrdiff_t>(index + 1)), "exec uses original UTF16 units and index");
   }
   check(!expression.exec(units), "failed global exec resets shared lastIndex");
   check(alias.exec(units)->index == 0.0, "alias sees lastIndex reset");
@@ -56,7 +56,7 @@ int main() {
       });
   String expected;
   for (std::size_t i = 0; i < units.length(); ++i)
-    expected = expected + units.slice(i, i + 1) + String::from_number(static_cast<double>(i));
+    expected = expected + units.slice(static_cast<std::ptrdiff_t>(i), static_cast<std::ptrdiff_t>(i + 1)) + String::from_number(static_cast<double>(i));
   check(replaced == expected, "callback captures and offsets preserve original UTF16");
   check(units.replace(RegExp("x"), String("$'")) == units.slice(1) + units.slice(1),
         "replacement suffix preserves lone surrogates");
