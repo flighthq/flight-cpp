@@ -895,3 +895,9 @@ The requested focused package-label check was run once and remains **FAIL** at t
 material helper's extra image/texture/types labels. The existing GL readonly test already had its
 types label; explicit includes now name the nominal types it directly uses. The new SWF test likewise
 names its direct effects/types dependencies. No unchanged GL native test was rerun.
+
+
+The follow-up Spine JSON transform-preset audit is outside this declared-heritage subset: its source
+is an anonymous `satisfies Record` table without an `extends` edge. The existing
+[satisfies-table request](satisfies-record-member-carrier.md#g3-declared-heritage-audit-of-the-spine-transform-presets)
+retains that owner boundary and builder7's recorded follow-on failures; no new workaround or test gain.

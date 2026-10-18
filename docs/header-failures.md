@@ -3734,6 +3734,11 @@ success, copied owner or narrower JSON/schema is supplied. Only the existing req
 slice and two compact owned root/row lines change; shared table/C++/runtime/repairs/patches/manifest/pins,
 foreign rows and the earlier Spine binary disposition are unchanged.
 
+**G3 heritage audit:** the actual locked table is an object literal with `satisfies Record`, not an
+interface declaring an `extends` edge. The compatible native-interface-heritage fix cannot reach this
+anonymous-owner crossing. Keep the existing [satisfies-table request](compiler-requests/satisfies-record-member-carrier.md#g3-declared-heritage-audit-of-the-spine-transform-presets),
+recorded failure and builder7's0/13 follow-on evidence; no workaround, generation or native rerun.
+
 ### 144. `other-1e3a0d33` — G2 recheck of 1 header(s)
 
 - original cause: readonly preset tuple emits erased Any cells, then mixes an element with a shared preset Ref

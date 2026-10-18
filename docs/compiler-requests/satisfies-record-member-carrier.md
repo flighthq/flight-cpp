@@ -188,3 +188,21 @@ compact owned product lines (one cluster/one failed row) link the actual preset 
 related erased-array/JSON/retained-callee requests. C++, shared owners/presets, runtime, source patches,
 repairs, generation inventory and pins are unchanged; unchanged C++ is not rerun. Foreign compact
 products, worklist entries, previous binary disposition and historical/G1 totals remain intact.
+
+
+## G3 declared-heritage audit of the Spine transform presets
+
+At Flight `a627849`, `TransformMode2D.ts` exports an object-literal table ending in
+`satisfies Record<string, TransformInherit2D>`. Each preset remains an anonymous inferred object;
+there is no interface declaration or `extends TransformInherit2D` edge. `TransformInherit2D` itself
+is the four independent boolean fields, and `Bone2D.transformMode`, `createPlaceholderBone2D` and
+`spineTransformMode` use that nominal result contract. The generated table still owns anonymous
+`reflection_rotation_scale_translation_*` objects.
+
+The compatible declared-primary-base compiler rule therefore has no heritage edge to follow here.
+Giving that anonymous owner a base merely because its members match would add a separate structural
+owner rule, beyond the qualified interface-heritage subset. Retain this existing satisfies-table
+request: preserve each original shared preset reference, every four-axis combination accepted by
+TransformInherit2D and the parser's positional recovery behavior. No per-header workaround, copied
+preset or narrower bone field is supplied. This is an actual locked-source/generated-carrier audit;
+no generation or native test was run, and builder7's recorded **0/13** follow-on failures are unchanged.
