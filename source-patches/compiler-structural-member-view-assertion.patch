@@ -38,7 +38,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    for (const [bindingId, targetType] of collectCppContextualBindingStorageTargetTypesCpp(module, context)) {
      contextualBindingStorageTargetTypes.set(bindingId, targetType);
    }
-@@ -3094,6 +3103,13 @@
+@@ -3161,6 +3170,13 @@
    }
    const caughtValueRebinding = 'pattern' in declaration ? undefined : emitCppCaughtValueRebindingCpp(declaration, context);
    if (caughtValueRebinding) return [caughtValueRebinding];
@@ -52,7 +52,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    const name = getBindingTargetName(declaration.binding, context);
    const arrayElement = context.arrayElementBindingIds.has(declaration.binding.id);
    const externalCallResultPresence = context.externalCallResultPresenceBindings.get(declaration.binding.id);
-@@ -3148,6 +3164,12 @@
+@@ -3215,6 +3231,12 @@
    const caughtValueRebinding = emitCppCaughtValueRebindingCpp(variable, context);
    if (caughtValueRebinding) return caughtValueRebinding;
    const name = getBindingTargetName(variable.binding, context);
@@ -65,7 +65,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    const arrayElement = context.arrayElementBindingIds.has(variable.binding.id);
    const lengthProvenNullableArrayElement =
      arrayElement && context.lengthProvenNullableArrayElementBindingIds.has(variable.binding.id);
-@@ -5874,6 +5896,16 @@
+@@ -5941,6 +5963,16 @@
      case 'identifier': {
        if (
          expression.reference.kind === 'binding' &&
@@ -82,7 +82,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
          context.dependentCallablePacks.has(expression.reference.binding.id)
        ) {
          emissionError(
-@@ -6611,6 +6643,8 @@
+@@ -6681,6 +6713,8 @@
        return construction(initializer);
      }
      case 'property': {
@@ -91,7 +91,22 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
        if (isCppJsonReadValueCpp(expression.object, context) && isCppJsonDataPropertyNameCpp(expression.name)) {
          context.includes.add('flight/structural_ref.hpp');
          const key = emitLiteral(expression.name, context);
-@@ -16969,6 +17003,129 @@
+@@ -13795,6 +13829,14 @@
+     expression.left.kind === 'identifier' && expression.left.reference.kind === 'ambient'
+       ? expression.right
+       : expression.left;
++  const memberViewPresence = emitCppStructuralMemberViewPresenceTestCpp(
++    operand,
++    evidence.literal,
++    expression.operator === '!=' || expression.operator === '!==',
++    expression.operator === '===' || expression.operator === '!==',
++    context,
++  );
++  if (memberViewPresence) return memberViewPresence;
+   if (evidence.admitsNull && evidence.admitsUndefined) {
+     const operandType = getCppNullishComparisonOperandTypeCpp(operand, context);
+     const union = operandType ? getIrUnionTypeCpp(operandType, context, new Set()) : undefined;
+@@ -17071,6 +17113,216 @@
    return resolveCppClassForTypeCpp(type, context) !== undefined;
  }
  
@@ -180,13 +195,61 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
 +  module: Readonly<IrModule>,
 +  context: EmitContext,
 +): ReadonlySet<string> {
-+  const result = new Set<string>();
++  const candidates = new Set<string>();
 +  analyzeIrModuleTraversal(module, {
 +    variable(variable) {
 +      if (!('binding' in variable) || variable.initializer === undefined) return;
-+      if (getCppStructuralMemberViewCastSourceCpp(variable.initializer, context)) result.add(variable.binding.id);
++      if (getCppStructuralMemberViewCastSourceCpp(variable.initializer, context)) candidates.add(variable.binding.id);
 +    },
 +  });
++  if (candidates.size === 0) return candidates;
++  // The view is a READ-ONLY window onto the source object: it holds no writable cell and no carrier a
++  // caller could pass on. A binding is lowered only when every one of its uses is a member read, so a
++  // write to a member (assignment target) or any escape (argument, return, initializer, operand) keeps
++  // the function's existing refusal instead of emitting an invalid view use. Counting every reference
++  // of the binding against the references that appear as a property's object proves exactly that.
++  const references = new Map<string, number>();
++  const propertyObjects = new Map<string, number>();
++  const written = new Set<string>();
++  const bump = (counts: Map<string, number>, id: string) => counts.set(id, (counts.get(id) ?? 0) + 1);
++  const writtenBindingId = (target: Readonly<IrExpression>): string | undefined => {
++    let current = target;
++    while (current.kind === 'property') current = current.object;
++    return current.kind === 'identifier' &&
++      current.reference.kind === 'binding' &&
++      candidates.has(current.reference.binding.id)
++      ? current.reference.binding.id
++      : undefined;
++  };
++  analyzeIrModuleTraversal(module, {
++    expression(expression) {
++      if (
++        expression.kind === 'identifier' &&
++        expression.reference.kind === 'binding' &&
++        candidates.has(expression.reference.binding.id)
++      ) {
++        bump(references, expression.reference.binding.id);
++      }
++      if (
++        expression.kind === 'property' &&
++        expression.object.kind === 'identifier' &&
++        expression.object.reference.kind === 'binding' &&
++        candidates.has(expression.object.reference.binding.id)
++      ) {
++        bump(propertyObjects, expression.object.reference.binding.id);
++      }
++      if (expression.kind === 'assignment') {
++        const writtenId = writtenBindingId(expression.left);
++        if (writtenId !== undefined) written.add(writtenId);
++      }
++    },
++  });
++  const result = new Set<string>();
++  for (const id of candidates) {
++    if (written.has(id)) continue;
++    if ((references.get(id) ?? 0) !== (propertyObjects.get(id) ?? 0)) continue;
++    result.add(id);
++  }
 +  return result;
 +}
 +
@@ -206,7 +269,11 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
 +      'cpp-structural-member-view-optional-read-unrepresented',
 +    );
 +  }
-+  const memberType = getIrExpressionTypeEvidenceCpp(expression, context);
++  // The STORED cell's carrier, never a flow-narrowed present type: the view reads the cell the object
++  // recorded, and a guard that narrowed the source type does not change what the cell holds. The
++  // presence and access lanes unwrap that carrier at the use.
++  const memberType =
++    getCppDeclaredPropertyReadTypeCpp(expression, context) ?? getIrExpressionTypeEvidenceCpp(expression, context);
 +  if (memberType === undefined) {
 +    emissionError(
 +      context,
@@ -218,21 +285,68 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
 +  return `(${emitIdentifierReference(expression.object.reference, context)}).read<${emitType(memberType, context)}>(${JSON.stringify(expression.name)})`;
 +}
 +
++// A nullish comparison on a member read through a structural member view. MemberValue::has_value tests
++// the recorded CELL; the member's own absence lives one layer inside, so the two questions are answered
++// separately and never collapsed. A missing cell is the source's undefined; a stored absent member is
++// the member's declared sentinel.
++function emitCppStructuralMemberViewPresenceTestCpp(
++  operand: Readonly<IrExpression>,
++  sentinel: 'null' | 'undefined',
++  present: boolean,
++  strict: boolean,
++  context: EmitContext,
++): string | undefined {
++  if (
++    operand.kind !== 'property' ||
++    operand.object.kind !== 'identifier' ||
++    operand.object.reference.kind !== 'binding' ||
++    !context.structuralMemberViewBindingIds.has(operand.object.reference.binding.id)
++  ) {
++    return undefined;
++  }
++  const memberType = getIrExpressionTypeEvidenceCpp(operand, context);
++  if (memberType === undefined || !hasIrTypeAbsentMember(memberType)) return undefined;
++  const read = emitCppStructuralMemberViewReadCpp(operand, context);
++  if (read === undefined) return undefined;
++  const cell = getGeneratedTargetName('memberViewRead', context);
++  const absent = !strict
++    ? `!(${cell}.has_value() && ${cell}.value().has_value())`
++    : sentinel === 'null'
++      ? `(${cell}.has_value() && !${cell}.value().has_value())`
++      : irTypeIncludesUndefinedCpp(memberType)
++        ? `!(${cell}.has_value() && ${cell}.value().has_value())`
++        : `!${cell}.has_value()`;
++  const result = present ? `!(${absent})` : `(${absent})`;
++  return `([&]() { const auto& ${cell} = ${read}; return ${result}; }())`;
++}
++
  function getCppNamedBindingIdCpp(type: Readonly<IrType>): string | undefined {
    return type.kind === 'named' && type.reference.kind === 'binding' ? type.reference.binding.id : undefined;
  }
-@@ -34164,6 +34321,16 @@
+@@ -34281,6 +34533,28 @@
  function memberOp(object: Readonly<IrExpression>, context: EmitContext): string {
    if (isSuperAccess(object)) return '::';
    if (isThisAccess(object)) return '->';
-+  // A member read from a structural member view yields a MemberValue; calls and size reads go through
-+  // the value its operator-> exposes, which fails AT the operation when the source member is absent.
++  // A member read from a structural member view yields a MemberValue over the member's stored carrier.
++  // A value-class member (Array, Set, callable) reaches its methods through the MemberValue's own
++  // operator->. A REFERENCE member needs one more dereference because the stored carrier is a shared
++  // pointer, and a nullable reference member carries its null inside an optional, so the present owner
++  // is two unwraps deep. Every unwrap happens at the use, which is where the source's absent member
++  // would throw.
 +  if (
 +    object.kind === 'property' &&
 +    object.object.kind === 'identifier' &&
 +    object.object.reference.kind === 'binding' &&
 +    context.structuralMemberViewBindingIds.has(object.object.reference.binding.id)
 +  ) {
++    const memberType =
++      getCppDeclaredPropertyReadTypeCpp(object, context) ?? getIrExpressionTypeEvidenceCpp(object, context);
++    const memberAbsent = memberType !== undefined && hasIrTypeAbsentMember(memberType);
++    const presentType =
++      memberType && memberAbsent ? getCppNonNullableType(memberType, context, new Set()) : memberType;
++    if (presentType && hasFlightReferenceRepresentationCpp(presentType, context)) {
++      return memberAbsent ? '.value().value()->' : '.value()->';
++    }
 +    return '->';
 +  }
    // A binding whose storage an external binding declared holds exactly what the profile named: a result
@@ -242,7 +356,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppStructuralMemberView.test.ts b
 new file mode 100644
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppStructuralMemberView.test.ts
-@@ -0,0 +1,80 @@
+@@ -0,0 +1,112 @@
 +import ts from 'typescript';
 +import { expect, it } from 'vitest';
 +
@@ -298,7 +412,7 @@ new file mode 100644
 +  expect(output).toContain('for (auto x : (internal).read<flight::Array<double>>("xs"))');
 +});
 +
-+it('refuses to pass, return, assign, or mutate a structural member view', () => {
++it('keeps the refusal for an asserted local that escapes as a value', () => {
 +  expect(() =>
 +    emit(`
 +      interface ResourceLoader { onProgress: number }
@@ -308,7 +422,39 @@ new file mode 100644
 +        return internal;
 +      }
 +    `),
-+  ).toThrow(/structural member view/);
++  ).toThrow(/no heritage to cast along|structural member view/);
++});
++
++it('keeps the refusal for an asserted local whose member is written', () => {
++  expect(() =>
++    emit(`
++      interface ResourceLoader { onProgress: number }
++      interface ResourceLoaderInternal extends ResourceLoader { started: boolean; total: number }
++      export function reset(loader: ResourceLoader): void {
++        const internal = loader as ResourceLoaderInternal;
++        internal.total = 0;
++      }
++    `),
++  ).toThrow(/no heritage to cast along|structural member view/);
++});
++
++it('reads a nullable reference member through both absence layers', () => {
++  const output = emit(`
++    interface ItemSignals { onItemComplete: number }
++    interface ResourceLoader { onProgress: number }
++    interface ResourceLoaderInternal extends ResourceLoader {
++      itemSignals: ItemSignals | null;
++    }
++    export function dispose(loader: ResourceLoader): number {
++      const internal = loader as ResourceLoaderInternal;
++      if (internal.itemSignals !== null) return internal.itemSignals.onItemComplete;
++      return 0;
++    }
++  `);
++  // The cell's own presence and the member's stored null are tested separately.
++  expect(output).toMatch(/member_view_read\.has_value\(\) && !member_view_read\.value\(\)\.has_value\(\)/);
++  // A reference member reaches its members through the present owner.
++  expect(output).toContain('read<std::optional<flight::Ref<ItemSignals>>>("itemSignals").value().value()->on_item_complete');
 +});
 +
 +it('keeps the refusal when the asserted interface does not extend the source', () => {
