@@ -1,5 +1,6 @@
 // Independent boundary controls. This supplies no built-in codec adapter or parser implementation.
 #include <flight/particles_formats/starling_pex_parse.hpp>
+#include <flight/particles_formats/libgdx_parse.hpp>
 #include <flight/types/particle_format_codec.hpp>
 
 #include <functional>
@@ -140,5 +141,36 @@ int main() {
           "base result view retains and recovers the original exact owner");
   }
   check(lifetime.expired(), "result view releases original owner after last reference");
+  // Conditional exact-shape follow-on: original libGDX public functions and original result owner.
+  // The retained full descriptor is refused earlier at its optional trim detector, so this supplies
+  // no installed Libgdx codec adapter or built-in registry claim.
+  using LibOptions = flight::types::LibgdxParseOptions;
+  using LibResult = flight::types::LibgdxParseResult;
+  using LibNative = Config (*)(flight::String, std::optional<flight::Ref<LibOptions>>);
+  using LibNativeDocument = flight::Ref<LibResult> (*)(flight::String, std::optional<flight::Ref<LibOptions>>);
+  static_assert(std::is_same_v<decltype(&flight::particles_formats::parse_libgdx_particle), LibNative>);
+  static_assert(std::is_same_v<decltype(&flight::particles_formats::parse_libgdx_particle_document), LibNativeDocument>);
+  const flight::String lib_input = "Particle Effect\nScale\nlowMin: 32\nlowMax: 32\nhighMin: 32\nhighMax: 32\n";
+  auto lib_options = flight::make_ref<LibOptions>();
+  lib_options->texture_size = 2;
+  auto lib_result = flight::particles_formats::parse_libgdx_particle_document(lib_input, lib_options);
+  check(flight::particles_formats::parse_libgdx_particle(lib_input, lib_options)->scale_min == 16 &&
+        lib_result->config->scale_min == 16 && lib_result->document->scale->high_min == 32,
+        "original libGDX public native functions preserve options and extra document");
+  lib_options->texture_size = 4;
+  check(flight::particles_formats::parse_libgdx_particle(lib_input, lib_options)->scale_min == 8,
+        "native libGDX alias update remains live");
+  using LibFull = flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<LibResult>>>>;
+  const LibFull lib_full(lib_result);
+  const BaseRow lib_base(lib_full);
+  flight::row_set<flight::RowKey<"config">>(lib_base, config);
+  check(lib_base.identity() == lib_full.identity() && lib_result->config == config &&
+        lib_base.shared_exact_object<LibResult>() == lib_result && lib_result->document->scale->high_min == 32,
+        "libGDX base result keeps original owner, writable cells and extra document");
+  const std::function<Config(flight::String, std::optional<flight::Ref<LibOptions>>)> lib_named =
+      flight::NamedFunction<Config(flight::String, std::optional<flight::Ref<LibOptions>>)>::from<
+          &flight::particles_formats::parse_libgdx_particle>(flight::particles_formats::parse_libgdx_particle);
+  check(flight::callable_identity_equal_named<&flight::particles_formats::parse_libgdx_particle>(lib_named),
+        "original libGDX named declaration identity is represented");
   return failures == 0 ? 0 : 1;
 }

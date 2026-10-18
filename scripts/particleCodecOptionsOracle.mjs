@@ -27,6 +27,7 @@ const sources = {
   curves: 'particles/src/curve.ts',
   unity: 'particles-formats/src/unityParse.ts',
   designer: 'particles-formats/src/particleDesignerParse.ts',
+  libgdx: 'particles-formats/src/libgdxParse.ts',
   importdiagnostics: 'importdiagnostics/src/importDiagnosticCollector.ts',
   math: 'math/src/constants.ts',
   types: 'types/src/ImportDiagnostic.ts',
@@ -81,8 +82,11 @@ try {
   // Approved sibling assignments use the same one-number readonly-owner rule. Preserve each
   // original body's ordering: Unity document reads options before parsing; config reads after.
   for (const family of [
+    { name: 'libgdx', config: 'parseLibgdxParticle', document: 'parseLibgdxParticleDocument',
+      key: 'textureSize', input: 'Particle Effect\nScale\nlowMin: 32\nlowMax: 32\nhighMin: 32\nhighMax: 32\n', fallback: 1,
+      measure: config => config.scaleMin, expected: value => 32 / value, invalid: '' },
     { name: 'unity', config: 'parseUnityParticle', document: 'parseUnityParticleDocument',
-      key: 'pixelsPerUnit', input: '{}', fallback: 100, measure: config => config.speedMin,
+      key: 'pixelsPerUnit', input: '{}', fallback: 100, invalid: 'bad', measure: config => config.speedMin,
       expected: value => 5 * value },
     { name: 'designer', config: 'parseParticleDesignerPlist', document: 'parseParticleDesignerPlistDocument',
       key: 'textureSize', input: '<plist><dict/></plist>', fallback: 1,
@@ -115,10 +119,10 @@ try {
         alias.config = replacement;
         check(original.config === replacement && original.document === owner, method + ': writable same result retains extra document owner');
       }
-      if (family.name === 'unity') {
+      if (family.name === 'unity' || family.name === 'libgdx') {
         const before = reads;
-        assert.throws(() => slot.parse('bad', options));
-        check(reads === before + (document ? 1 : 0), method + ': authored validation/options ordering');
+        assert.throws(() => slot.parse(family.invalid, options));
+        check(reads === before + (family.name === 'unity' && document ? 1 : 0), method + ': authored validation/options ordering');
       }
       check(((...values) => callback(...values)) !== slot.parse, method + ': wrapper is a distinct source function');
     }
