@@ -1,6 +1,10 @@
 // Consumes the whole original public header, including its shared texture-factory dependency.
 // Source cases: Flight a627849, scene3d-formats/src/objMaterialHelpers.test.ts.
+#include <flight/image/image_resource_reference.hpp>
 #include <flight/scene3d_formats/obj_material_helpers.hpp>
+#include <flight/types/image_resource_reference.hpp>
+#include <flight/types/scene_3d_document.hpp>
+#include <flight/types/texture.hpp>
 
 #include <cmath>
 #include <iostream>
