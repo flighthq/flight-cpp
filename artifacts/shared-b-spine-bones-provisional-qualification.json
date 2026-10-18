@@ -1,0 +1,119 @@
+{
+  "schema": "flight-cpp-shared-b-bones-provisional-qualification/1",
+  "status": "provisional-original-public-consumer-pass; exact-six-header-partial; awaiting-shared-coherence",
+  "sharedOutput": {
+    "parcel": "builder2-f892e565",
+    "outputCommit": "6e1aa571",
+    "frozenHead": "33777898",
+    "base": "5f0c98ee",
+    "compilerPatches": 117,
+    "totalSourcePatches": 319,
+    "flightPin": "a62784923f3be814463286c9fb28edfe6ab15789",
+    "compilerPin": "806d257d2f4100de745cc97340e61c2f301b0f24",
+    "normalGeneratedPaths": 475,
+    "packages": [
+      "@flighthq/types",
+      "@flighthq/render",
+      "@flighthq/render-wgpu",
+      "@flighthq/skeleton2d-formats"
+    ],
+    "completeBaseIncludeHeaders": 3153,
+    "qualificationMethod": "full frozen base include tree plus complete generated/include B diff in scratch; no generated product edit or new SDK worker",
+    "finalSharedCoherenceAccepted": false
+  },
+  "runtime": {
+    "checkedCodeCommit": "70d9bb0f",
+    "sameCodeIntegratedBase": "a76a5634",
+    "newReadonlyFacadeUnusedByFrozenBSourceAbi": true
+  },
+  "publicConsumer": {
+    "source": "tests/generated_skeleton2d_formats_spine_bones_test.cpp",
+    "sourceSha256": "a5183bee19072bc8b99c3fcbac527172e3185cf21b85d0a1e75d133ae42590e6",
+    "wholeOriginalSourceModules": 6,
+    "sourceCases": 60,
+    "publicFlagCombinations": 16,
+    "compileExit": 0,
+    "linkExit": 0,
+    "runExit": 0,
+    "runOutput": "60 whole-source binary bone cases; all16 public flag combinations",
+    "executedBinary": {
+      "uncompressedBytes": 56958568,
+      "sha256": "97540bb5b7d6c35a395885f56224e0c7e1e5dbfb6e173e4bdea64d054c32b26a",
+      "compressedBytes": 8299120,
+      "path": "/tmp/builder5-shared-b-qualification/spine-bones-native.gz",
+      "nativeRunExit": 0
+    },
+    "noExtractionOrStubs": true
+  },
+  "exactSixHeaders": {
+    "pass": 1,
+    "fail": 5,
+    "unattempted": 0,
+    "results": [
+      {
+        "header": "flight/skeleton2d_formats/spine_binary_bones_handler.hpp",
+        "exit": 0,
+        "seconds": 51.47,
+        "log": "/tmp/builder5-shared-b-qualification/spine_binary_bones_handler.retry.log",
+        "sha256": "2eeb24f447c58ced6d92edcbd95f179a8b493a8abd6b21dc92e6485747742fe0",
+        "firstCause": null,
+        "setupFailure": false
+      },
+      {
+        "header": "flight/skeleton2d_formats/spine_binary_full.hpp",
+        "exit": 1,
+        "seconds": 93.88,
+        "log": "/tmp/builder5-shared-b-qualification/spine_binary_full.log",
+        "sha256": "fda31c8802d2d3db4b28694d9cb5a47ca4be591aaab0c642cc5787d2e6329a4d",
+        "firstCause": "/tmp/builder5-shared-b-qualification/generated/include/flight/skeleton2d_formats/spine_binary_skins_handler.hpp:274:33: error: use of undeclared identifier 'read_spine_binary_attachment'",
+        "setupFailure": false
+      },
+      {
+        "header": "flight/skeleton2d_formats/spine_binary_handlers.hpp",
+        "exit": 1,
+        "seconds": 74.75,
+        "log": "/tmp/builder5-shared-b-qualification/spine_binary_handlers.retry.log",
+        "sha256": "b9f65068b7b74df7d28b1a125ae65ac81048c0fbd7a9921a2fafbb781026fcda",
+        "firstCause": "/tmp/builder5-shared-b-qualification/generated/include/flight/skeleton2d_formats/spine_binary_skins_handler.hpp:274:33: error: use of undeclared identifier 'read_spine_binary_attachment'",
+        "setupFailure": false
+      },
+      {
+        "header": "flight/skeleton2d_formats/spine_binary_parse.hpp",
+        "exit": 1,
+        "seconds": 92.98,
+        "log": "/tmp/builder5-shared-b-qualification/spine_binary_parse.retry.log",
+        "sha256": "1b185a9c13146845f76d0de99c38eced57824311ef42e08a8f7dd7bbd405e223",
+        "firstCause": "/tmp/builder5-shared-b-qualification/generated/include/flight/skeleton2d_formats/spine_binary_skins_handler.hpp:274:33: error: use of undeclared identifier 'read_spine_binary_attachment'",
+        "setupFailure": false
+      },
+      {
+        "header": "flight/skeleton2d_formats/spine_binary_section_handlers.hpp",
+        "exit": 1,
+        "seconds": 80.87,
+        "log": "/tmp/builder5-shared-b-qualification/spine_binary_section_handlers.retry.log",
+        "sha256": "63164340fe24e6a71135a3d0cfebd6ca69bc381024473ba9905f5a8d037b9b31",
+        "firstCause": "/tmp/builder5-shared-b-qualification/generated/include/flight/skeleton2d_formats/spine_binary_skins_handler.hpp:274:33: error: use of undeclared identifier 'read_spine_binary_attachment'",
+        "setupFailure": false
+      },
+      {
+        "header": "flight/skeleton2d_formats/spine_json_bones_handler.hpp",
+        "exit": 1,
+        "seconds": 52.9,
+        "log": "/tmp/builder5-shared-b-qualification/spine_json_bones_handler.retry.log",
+        "sha256": "1d748a5ff42571c94004d24dc9a6c96632a230567c7088b1b0671eded8a57133",
+        "firstCause": "/tmp/builder5-shared-b-qualification/generated/include/flight/skeleton2d_formats/spine_json_bones_handler.hpp:85:672: error: invalid operands to binary expression ('std::variant<flight::String, flight::Null, flight::Undefined>' and 'Any')",
+        "setupFailure": false
+      }
+    ],
+    "setupCorrection": "Five first attempts hit explicit NoSpaceLeft and were retried after lossless scratch archiving, using sameClang22 with -g0. Those initial setup errors are excluded from final product results; genuine first full-header omitted-callee failure was retained."
+  },
+  "accounting": {
+    "headerRowsChanged": 0,
+    "headerPromotions": 0,
+    "packageOrGlobalPass": false,
+    "lottieNativeCasesRun": 0,
+    "lottieNativeCaseDenominator": 32,
+    "exactPrevious21": "0PASS21FAIL frozen history"
+  },
+  "next": "Obtain shared coherence acceptance and qualify accepted installed output by preserved provenance; primary original Lottie closure continues."
+}
