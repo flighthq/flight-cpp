@@ -1,0 +1,80 @@
+{
+  "schema": "flight-cpp-erased-array-selection-qualification/1",
+  "status": "compiler-preparation-qualified; whole-public-Lottie-consumer-pending",
+  "sourceCommit": "72ff69b47ae06f592afada696107cafb5da3c251",
+  "compiler": {
+    "rawPin": "806d257d2f4100de745cc97340e61c2f301b0f24",
+    "compilerPatches": 114,
+    "totalSourcePatches": 316,
+    "patch": "source-patches/compiler-erased-array-selection-and-fill.patch",
+    "patchSha256": "726eeaa6c62e2957869f8e8af77e10c6e061c2be4fb0a5764bfdea03352d3507",
+    "backendSha256": "5e43b93f30407502b489b8c90945d92d62cd26ee4ed3058ef1d2af63ff030a87",
+    "portableFixtureSha256": "82aa47e1767b2cbe86107a5cd2d38886d17e9506a1706162f6163b8a697e8b72",
+    "orderedApplyAndRawClean": true
+  },
+  "runtime": {
+    "jsonScalarHeaderSha256": "2b18caf84193e0302aeae4f604f330375c80c51dd06d161aeeedcb0b99f5130d",
+    "symbolTypeErrorFixActuallyLanded": "732e2ecd",
+    "correctedReferenceAllocationFloorActuallyLanded": "d4d4c346",
+    "arrayCallbackRuntimeAlreadyIntegrated": true
+  },
+  "verification": {
+    "productionStrict": {
+      "exit": 0
+    },
+    "ownedFixtureStrict": {
+      "exit": 0
+    },
+    "focusedVitest": {
+      "files": 9,
+      "tests": 136,
+      "pass": 136,
+      "fail": 0,
+      "skipped": 0,
+      "exit": 0
+    },
+    "sourcePatchAutomation": {
+      "pass": 2,
+      "fail": 0,
+      "exit": 0
+    },
+    "incomingNullableJsonRegistration": {
+      "exit": 0,
+      "actualSummary": "Test Files  1 passed (1)\n      Tests  36 passed (36)\n   Start at  09:42:58\n   Duration  7.83s (transform 3.80s, setup 0ms, import 5.18s, tests 1.75s, environment 0ms)"
+    },
+    "rootNoEmit": {
+      "exit": 2,
+      "limitation": "Foreign fixture contract errors; this lane is not a pass."
+    }
+  },
+  "originalHelperPreparation": {
+    "upstreamModule": "packages/scene2d-formats/src/lottieDocument.ts",
+    "moduleSha256": "fb768b9622f2ade7301341f674db8cd64e00d3e39f09cd9aaf7aac1f1780a55b",
+    "wholeOriginalFunctions": [
+      "lottieNumericValue",
+      "handleVaries"
+    ],
+    "sourceBodyChanged": false,
+    "compiledAndLinked": true,
+    "nativeChecks": 301,
+    "fail": 0,
+    "exit": 0,
+    "preparationOnly": true,
+    "newSymbolControl": true
+  },
+  "publicBoundary": {
+    "originalPublicConsumerCases": 32,
+    "nativeCasesRun": 0,
+    "qualified": false,
+    "normalSdkRegeneratedForThisPatch": false,
+    "requiredNext": "Continue whole original body/callee closure, normal scoped generation after input/slot coordination, original public32 consumer COMPILE/LINK/RUN and exact21 header accounting."
+  },
+  "scope": {
+    "erasedArraySelection": "same original owner; only the authored fallback literal allocates",
+    "completeFill": "unchanged numeric binding; source allocation length checks retained; observed/partial/assigned/escaped fills refuse",
+    "coercion": "Number uses the existing operation carrier; source exceptions and lazy defaults retained",
+    "callback": "receiver array type recovered only for unresolved third instance-array parameter; same owner; Array.from distinct",
+    "nativeArrayEscape": "explicit refusal; no copying or cast",
+    "fullClosurePrototype": "Excluded from this carried compiler patch; its original generic field/union bodies remain under active qualification."
+  }
+}
