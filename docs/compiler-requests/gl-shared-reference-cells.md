@@ -36,9 +36,10 @@ same-owner returns, readonly reads, nested writes, clear/presence and lifetime c
 
 ## Activation and qualification
 
-The two actual declarations are recorded in `tests/fixtures/gl_cell_views/carriers.json`. They remain
-**held** from the normal `structural-value-carriers.json` profile pending compatible normal generation
-and override rederivation. The inherited `registryMiss` callable prerequisite is now qualified by
+The two actual declarations in `tests/fixtures/gl_cell_views/carriers.json` are now also inputs in the
+normal `structural-value-carriers.json` profile for the coordinated types generation. Installed GL
+qualification remains **pending** until that generation and compatible override rederivation complete.
+The inherited `registryMiss` callable prerequisite is qualified by
 [original declaration identity](inherited-callable-declaration-owner.md): the actual pinned three-module
 compiler check retains GL state/registries/runtime native bases and the two inherited physical cells.
 No heritage gate is bypassed. Callable helper ABI spelling changes require generated modules and their
@@ -51,3 +52,4 @@ The direct C++ test and complete compiler-emitted native fixture cover the two p
 original source fixture supplies 26 source observables. These are preparation controls, not normal GL SDK,
 backend execution, public registry consumer, or package qualification. Existing GL target-copy work
 remains separately held; Canvas and DOM backend work is outside this scope.
+
