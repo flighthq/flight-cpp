@@ -37,7 +37,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 8 | `other-40da43f7` | 11 | 2D, 3D, ANIM | compiler (shared fix qualified) | historical assignment labels after nine measured passes; remaining assigned headers have later blockers; three follow-ons unmeasured |
 | 9 | `static-cast-assertion-9674a66c` | 17 | 2D | compiler | a TypeScript `as` on `JSON.parse` is emitted as a `static_cast` from `JsonValue` to an unrelated `Ref<T>` *(request filed)* |
 | 10 | `call-has-no-matching-076d207f` | 14 | WGPU | runtime (fixed) | typed `create_pipeline_layout` descriptor overload; G2 recheck: 0 pass, 14 fail at `create_bind_group_layout` |
-| 11 | `other-e9936ce6` | 13 | 3D | compiler | a pair literal the declared element type spells as `std::tuple<A, B>` is emitted as `flight::Array{...}`, so class-template ded... *(request filed)* |
+| 11 | `other-e9936ce6` | 3 | 3D | compiler (patch adopted) | a pair literal the declared element type spells as `std::tuple<A, B>` is emitted as `flight::Array{...}`, so class-template ded... *(G2: 10/13 pass after the contextual tuple-literal lowering; the 3 remaining are past this diagnostic -- gltf at its `JSON.parse(...) as GltfDocument` cast, md5/obj at missing `collect_*_features`)* |
 | 12 | `call-has-no-matching-d6950545` | 12 | 2D, CORE | compiler *(existing requests)* | generic `get_node_child_count<Traits>` called without the inferred trait on a non-deducible `RowMerge` parameter (command: `NodeAny`; SVG/Lottie: `Node2D` via heritage) |
 | 13 | `no-viable-conversion-9c3803c5` | 9 | 2D, WGPU | compiler *(existing request)* | generic `noop_renderer_data(…, NodeAny)` stored in `Scene2DRenderer.create_data`, whose `Node2D` does not widen to `NodeAny` |
 | 14 | `no-viable-conversion-dfea2d92` | 9 | 3D | compiler | a value is passed where its declared type cannot receive it |
@@ -637,7 +637,7 @@ All 14 now fail at the next call in `wgpu_shader.hpp`:
 That shape is the [descriptor literal request](compiler-requests/external-descriptor-literal-construction.md),
 so no second request is filed.
 
-### 11. `other-e9936ce6` — 13 header(s)
+### 11. `other-e9936ce6` — G2 recheck of 13 header(s), 10 pass
 
 - cause: a pair literal the declared element type spells as `std::tuple<A, B>` is emitted as `flight::Array{...}`, so class-template deduction fails
 - lanes: 3D
@@ -646,6 +646,11 @@ so no second request is filed.
 - first failure at: `flight/scene3d_formats/collada_feature_requirements.hpp:24`
 - example: `no viable constructor or deduction guide for deduction of template arguments of 'Array'`
 - compiler request: `docs/compiler-requests/array-pair-literal-deduction.md`
+- G2: `source-patches/compiler-contextual-tuple-element-array-literal.patch` lowers the dense array literal
+  at a tuple-typed position through the tuple's own representation; adopted and regenerated, the cluster
+  measures 10/13. The three remaining rows are past this defect: `gltf_requirements` fails at the
+  `JSON.parse(...) as GltfDocument` static cast, `md5_mesh_requirements` and `obj_requirements` at
+  `collect_md5_mesh_features` / `collect_obj_features` not being generated.
 
 ### 12. `call-has-no-matching-d6950545` — G2 recheck of 12 header(s)
 
