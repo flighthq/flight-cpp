@@ -24,6 +24,18 @@ int main() {
     check(!captures->capture(index), "non-index and missing capture remain undefined");
   }
   check(flight::regexp_capture_value(captures->capture(2)).empty(), "empty member receiver is present");
+  const flight::Array<String> names{String("a"), String()};
+  check(!names.includes(captures->capture(1)), "includes preserves missing capture as undefined");
+  check(names.includes(captures->capture(2)), "includes retains a present empty capture");
+  check(names.includes(RegExp("(a)").exec("a")->capture(1)) && names.includes("a"),
+        "includes retains present capture and ordinary String searches");
+  const flight::Array<std::optional<String>> optionalNames{std::nullopt, String()};
+  check(optionalNames.includes(captures->capture(1)) && optionalNames.includes(captures->capture(2)),
+        "optional element arrays keep undefined and empty as separate searchable values");
+  const flight::Array<double> numbers{std::numeric_limits<double>::quiet_NaN(), -0.0};
+  check(numbers.includes(std::optional<double>{std::numeric_limits<double>::quiet_NaN()}) &&
+        numbers.includes(std::optional<double>{0.0}) && !numbers.includes(std::optional<double>{}),
+        "optional searches retain SameValueZero and missing absence");
   bool threw = false;
   try { static_cast<void>(flight::regexp_capture_value(captures->capture(1))); }
   catch (const flight::TypeError& error) { threw = error.name() == String("TypeError"); }

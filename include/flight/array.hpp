@@ -324,6 +324,14 @@ class Array {
     });
   }
 
+  // A search can be absent even when this array's elements cannot be undefined. Arrays with
+  // optional elements keep their own undefined equality through the ordinary overload above.
+  template <typename Searched>
+    requires (std::same_as<Searched, Value> && !detail::is_optional_element<Value>)
+  [[nodiscard]] bool includes(const std::optional<Searched>& searched) const {
+    return searched.has_value() && includes(*searched);
+  }
+
   [[nodiscard]] std::ptrdiff_t index_of(const Value& searched) const {
     const auto found = std::ranges::find_if(*values_, [&](const Value& value) {
       return same_value_zero(value, searched);

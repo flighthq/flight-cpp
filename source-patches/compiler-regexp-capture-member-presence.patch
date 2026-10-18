@@ -51,6 +51,22 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
              expression.callee.object,
              context,
              receiverExpectedType,
+@@ -4735,7 +4735,15 @@
+               expression.callee.member.receiver === 'array' &&
+               expression.arguments.length === 1,
+           );
++          const captureSearch =
++            getCppRuntimeProfile(context.options) === 'flight-cpp' &&
++            expression.callee.member.receiver === 'array' &&
++            expression.callee.member.name === 'includes';
+           const args = expression.arguments.map((argument, index) => {
++            if (captureSearch && index === 0) {
++              const capture = getCppRegExpCaptureStorageCpp(argument, context);
++              if (capture) return capture;
++            }
+             const argumentExpectedType =
+               getCppContextualArrayCallbackTypeCpp(expression, expectedType, index, context) ??
+               getIrCallArgumentExpectedTypeCpp(expression, index, context);
 @@ -6751,7 +6758,7 @@
        if (memberEvidence && !isCppExpressionVariantUnionCpp(expression.object, context)) {
          const binding = getCompilerCppAmbientMemberBinding(memberEvidence, getCppRuntimeProfile(context.options));
@@ -402,11 +418,23 @@ diff --git a/packages/compiler-types/src/compilerAccessSemanticIntermediateRepre
    readonly receiverEvaluation: 'once';
    readonly receiverNullish: 'excluded' | 'possible';
    readonly receiverType: IrType;
+diff --git a/packages/compiler-backend-cpp/src/cppAmbientMemberBinding.ts b/packages/compiler-backend-cpp/src/cppAmbientMemberBinding.ts
+--- a/packages/compiler-backend-cpp/src/cppAmbientMemberBinding.ts
++++ b/packages/compiler-backend-cpp/src/cppAmbientMemberBinding.ts
+@@ -103,6 +103,8 @@
+   'string.toLowerCase': { kind: 'method', targetName: 'to_lower' },
+   'string.toUpperCase': { kind: 'method', targetName: 'to_upper' },
+   'string.trim': { kind: 'method', targetName: 'trim' },
++  'string.trimEnd': { kind: 'method', targetName: 'trim_end' },
++  'string.trimStart': { kind: 'method', targetName: 'trim_start' },
+   'task.catch': { kind: 'method', targetName: 'catch_error' },
+   'task.finally': { kind: 'method', targetName: 'finally' },
+   'task.then': { kind: 'method', targetName: 'then' },
 diff --git a/packages/compiler-backend-cpp/src/cppRegExpCaptureMemberPresence.test.ts b/packages/compiler-backend-cpp/src/cppRegExpCaptureMemberPresence.test.ts
 new file mode 100644
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppRegExpCaptureMemberPresence.test.ts
-@@ -0,0 +1,313 @@
+@@ -0,0 +1,397 @@
 +import { execFileSync } from 'node:child_process';
 +import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 +import { tmpdir } from 'node:os';
@@ -592,6 +620,68 @@ new file mode 100644
 +  const capture = match[1];
 +  return !!capture;
 +}
++
++export function localTrimEnd(value: string): string {
++  const match = /(a)?b/.exec(value);
++  if (match === null) return 'none';
++  const capture = match[1];
++  return capture.trimEnd();
++}
++export function directTrimEnd(value: string): string {
++  const match = /(a*)b/.exec(value);
++  if (match === null) return 'none';
++  return match[1].trimEnd();
++}
++export function destructuredTrimEnd(value: string): boolean {
++  const match = /(.*)b/.exec(value);
++  if (match === null) return false;
++  const [full, capture] = match;
++  return capture.trimEnd().endsWith('/');
++}
++export function destructuredTrimMissing(value: string): string {
++  const match = /(a)?b/.exec(value);
++  if (match === null) return 'none';
++  const [full, capture] = match;
++  return capture.trimEnd();
++}
++export function localTrimStart(value: string): string {
++  const match = /(.*)b/.exec(value);
++  if (match === null) return 'none';
++  const capture = match[1];
++  return capture.trimStart();
++}
++export function plainTrim(value: string): string {
++  return value.trimEnd() + ':' + value.trimStart();
++}
++
++export function captureIncludes(value: string): boolean {
++  const match = /(a)?b/.exec(value);
++  if (match === null) return false;
++  const capture = match[1];
++  return ['a', ''].includes(capture);
++}
++export function typedCaptureIncludes(value: string): boolean {
++  const match = /(a)?b/.exec(value);
++  if (match === null) return false;
++  const capture: string | undefined = match[1];
++  return ['a', ''].includes(capture);
++}
++export function captureIncludesEmpty(value: string): boolean {
++  const match = /(a*)b/.exec(value);
++  if (match === null) return false;
++  const [full, capture] = match;
++  return ['a', ''].includes(capture);
++}
++let includesOrder = 0;
++function includesArray(): string[] { includesOrder = includesOrder * 10 + 1; return ['a', '']; }
++function includesKey(): number { includesOrder = includesOrder * 10 + 2; return 1; }
++export function resetIncludes(): void { includesOrder = 0; }
++export function includesCount(): number { return includesOrder; }
++export function orderedIncludes(value: string): boolean {
++  const match = /(a)?b/.exec(value);
++  if (match === null) return false;
++  return includesArray().includes(match[includesKey()]);
++}
 +`;
 +
 +function emit(text = source): string {
@@ -690,6 +780,28 @@ new file mode 100644
 +  if (!rhsThrew || fixture::or_count() != 3 || fixture::local_or_unmatched("z") != String("none") ||
 +      fixture::or_count() != 3) return fail(25);
 +  fixture::throw_or_fallback(false);
++  bool trimMissing = false;
++  try { static_cast<void>(fixture::local_trim_end("b")); }
++  catch (const flight::TypeError&) { trimMissing = true; }
++  if (!trimMissing || fixture::local_trim_end("ab") != String("a") ||
++      fixture::direct_trim_end("b") != String("")) return fail(26);
++  const auto trailing = String(u"  /\\u00a0\\ufeffb");
++  if (!fixture::destructured_trim_end(trailing) || fixture::destructured_trim_end("b") ||
++      fixture::local_trim_start(String(u"\\u00a0\\ufeff  ab")) != String("a")) return fail(27);
++  bool destructuredMissing = false;
++  try { static_cast<void>(fixture::destructured_trim_missing("b")); }
++  catch (const flight::TypeError&) { destructuredMissing = true; }
++  if (!destructuredMissing || fixture::destructured_trim_missing("ab") != String("a") ||
++      fixture::plain_trim("  a  ") != String("  a:a  ")) return fail(28);
++  if (fixture::capture_includes("b") || !fixture::capture_includes("ab") ||
++      !fixture::capture_includes_empty("b") || !fixture::capture_includes_empty("ab")) return fail(29);
++  fixture::reset_includes();
++  if (fixture::ordered_includes("b") || fixture::includes_count() != 12) return fail(30);
++  fixture::reset_includes();
++  if (!fixture::ordered_includes("ab") || fixture::includes_count() != 12) return fail(30);
++  fixture::reset_includes();
++  if (fixture::ordered_includes("z") || fixture::includes_count() != 0) return fail(30);
++  if (fixture::typed_capture_includes("b") || !fixture::typed_capture_includes("ab")) return fail(31);
 +  bool continuationMissing = false;
 +  try { static_cast<void>(fixture::continuation("b")); }
 +  catch (const flight::TypeError&) { continuationMissing = true; }
