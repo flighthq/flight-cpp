@@ -756,7 +756,7 @@ which is the source's own operation on a possibly non-array object.
 
 Measured and carried: new `cppErasedArrayLengthIndex.test.ts` 5 pass; package typecheck clean
 except a pre-existing peer test file; focused regressions 7 pass; the patch is stack-positioned and
-all 69 compiler patches apply in order and build. Scoped generation of `skeleton2d-formats` with the
+all 71 compiler patches apply in order and build. Scoped generation of `skeleton2d-formats` with the
 composed floor emitted 50/59 modules and changed 12 headers; the scoped `-j2` compile then passed
 `dragon_bones_section_counts.hpp` (and the existing `spine_parse_helpers` override), with the real
 counter consumer `tests/generated_skeleton2d_formats_dragon_bones_section_counts_test.cpp`
