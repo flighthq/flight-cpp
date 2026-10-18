@@ -258,6 +258,32 @@ class Any final {
     return result;
   }
 
+  // An EXPLICIT object-reference box for a value-class object (for example a DOMException made by a
+  // source `new`). The shared_ptr is the object's only identity and lifetime: boxing does not copy,
+  // stringify, coerce, or invent row/error relationships. In particular `error_if()` stays empty for
+  // a type that is not an Error subclass, so a value class never falsely claims error semantics.
+  // This is deliberately not a general conversion: callers (and the emitter) must name this boxing
+  // at the exact `new` boundary whose declared context is an erased value.
+  template <typename Object>
+  [[nodiscard]] static Any object_reference(std::shared_ptr<Object> reference) {
+    if (!reference) return Any(null);
+    Any result;
+    result.value_ = detail::AnyObject{std::static_pointer_cast<void>(std::move(reference)),
+                                      std::type_index(typeid(Object)), nullptr, nullptr};
+    return result;
+  }
+
+  // Recovers an explicitly boxed object reference at its exact type. A different type is empty; the
+  // answer is the SAME object (shared identity/lifetime), never a value copy.
+  template <typename Object>
+  [[nodiscard]] std::shared_ptr<Object> object_reference_if() const noexcept {
+    const auto* stored = std::get_if<detail::AnyObject>(&value_);
+    if (stored == nullptr || !stored->object || stored->type != std::type_index(typeid(Object))) {
+      return {};
+    }
+    return std::static_pointer_cast<Object>(stored->object);
+  }
+
   // A callable. `typeof` reports `function`, and copies of one callable share one identity.
   template <typename Callable>
   [[nodiscard]] static Any function(Callable callable) {

@@ -4331,6 +4331,45 @@ static void test_self_reference() {
         "and the registry does not resurrect an object whose owner is gone");
 }
 
+// Explicit Any object-reference boxing for a value-class `new` object: same identity, lifetime,
+// exact type, observable properties, and no invented error/row semantics.
+static void test_any_object_reference_boxing() {
+  std::weak_ptr<flight::DOMException> observer;
+  {
+    auto exception = std::make_shared<flight::DOMException>(
+        flight::String("Load skipped due to fail-fast error policy"), flight::String("AbortError"));
+    observer = exception;
+    const auto boxed = flight::Any::object_reference(exception);
+    check(boxed.kind() == flight::AnyKind::object && boxed.held_type() == std::type_index(typeid(flight::DOMException)),
+          "an explicitly boxed value-class object keeps its object kind and exact type");
+    const auto recovered = boxed.object_reference_if<flight::DOMException>();
+    check(recovered == exception && recovered->name == flight::String("AbortError") &&
+              recovered->message == flight::String("Load skipped due to fail-fast error policy") &&
+              recovered->code == 20.0,
+          "the boxed object is the SAME object, with its class name, message and code observable");
+    check(!boxed.object_reference_if<flight::String>(),
+          "an unknown cast rejects instead of reinterpreting the boxed object");
+    check(!boxed.error_if(),
+          "a non-Error value class does not claim error semantics");
+    auto copy = boxed;
+    check(copy.object_reference_if<flight::DOMException>() == exception,
+          "copying the Any preserves the boxed object's identity");
+    std::shared_ptr<flight::DOMException> rejected;
+    std::function<void(flight::Any)> reject = [&](flight::Any value) {
+      rejected = value.object_reference_if<flight::DOMException>();
+    };
+    reject(copy);
+    check(rejected == exception, "a reject(Any) consumer receives the SAME object that was boxed");
+    auto move_source = boxed;
+    auto moved = std::move(move_source);
+    check(moved.object_reference_if<flight::DOMException>() == exception,
+          "moving the Any preserves the boxed object's identity");
+    exception.reset();
+    check(!observer.expired(), "the boxed object lives as long as the Any that owns it");
+  }
+  check(observer.expired(), "the boxed object is released when the last Any is gone");
+}
+
 int main() {
   test_array();
   test_array_get_optional_index();
@@ -4354,6 +4393,7 @@ int main() {
   test_json_record();
   test_any_to_string();
   test_erased_ref();
+  test_any_object_reference_boxing();
   test_ambient_statics();
   test_self_reference();
   test_audio_context();
