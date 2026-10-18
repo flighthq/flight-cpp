@@ -1,0 +1,682 @@
+{
+  "schema": "flight-original-lottie-bezier-carrier-boundary/1",
+  "base": "6746e743",
+  "compilerPatchCount": 136,
+  "backendSha256": "0552823a3af11a5a21bedda4a8192d9633736aa475ef5439f134aed2b6565571",
+  "sourceGraph": "saved1467-module Flight203 graph; selected original Bezier source unchanged, not a refreshed208 graph",
+  "originalModuleEmission": {
+    "result": "REFUSED",
+    "rule": "cpp-erased-value-assertion-unrepresented",
+    "source": "packages/scene2d-formats/src/lottieBezierPath.ts",
+    "line": 58,
+    "logSha256": "d9f1706615793f5c29213a30ff9212fb38719c942d53cdb2bb35bc74d1ced878"
+  },
+  "wholeOriginalSourceOracle": {
+    "schema": "flight-lottie-bezier-original-source-boundary/1",
+    "rawPin": "a62784923f3be814463286c9fb28edfe6ab15789",
+    "rawSourceSha256": "da3f167f812fc52463da4e6de9c9ae346373312f18c7c6f50f5f40c713115ce2",
+    "patchedSourceSha256": "da3f167f812fc52463da4e6de9c9ae346373312f18c7c6f50f5f40c713115ce2",
+    "wholeOriginalModule": true,
+    "replacementBodies": false,
+    "loadedModuleCounts": [
+      1081,
+      1087
+    ],
+    "summary": {
+      "cases": 20,
+      "pass": 20,
+      "fail": 0
+    },
+    "cases": [
+      {
+        "kind": "undefined",
+        "raw": {
+          "selection": {
+            "present": false,
+            "sameOwner": false,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": null
+        },
+        "patched": {
+          "selection": {
+            "present": false,
+            "sameOwner": false,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": null
+        },
+        "equal": true
+      },
+      {
+        "kind": "null",
+        "raw": {
+          "selection": {
+            "present": false,
+            "sameOwner": false,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": null
+        },
+        "patched": {
+          "selection": {
+            "present": false,
+            "sameOwner": false,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": null
+        },
+        "equal": true
+      },
+      {
+        "kind": "number",
+        "raw": {
+          "selection": {
+            "present": false,
+            "sameOwner": false,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": null
+        },
+        "patched": {
+          "selection": {
+            "present": false,
+            "sameOwner": false,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": null
+        },
+        "equal": true
+      },
+      {
+        "kind": "string",
+        "raw": {
+          "selection": {
+            "present": false,
+            "sameOwner": false,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": null
+        },
+        "patched": {
+          "selection": {
+            "present": false,
+            "sameOwner": false,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": null
+        },
+        "equal": true
+      },
+      {
+        "kind": "empty-array",
+        "raw": {
+          "selection": {
+            "present": false,
+            "sameOwner": false,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": null
+        },
+        "patched": {
+          "selection": {
+            "present": false,
+            "sameOwner": false,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": null
+        },
+        "equal": true
+      },
+      {
+        "kind": "wrapper-hole",
+        "raw": {
+          "selection": {
+            "present": false,
+            "sameOwner": false,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": null
+        },
+        "patched": {
+          "selection": {
+            "present": false,
+            "sameOwner": false,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": null
+        },
+        "equal": true
+      },
+      {
+        "kind": "empty-object",
+        "raw": {
+          "selection": {
+            "present": false,
+            "sameOwner": false,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": null
+        },
+        "patched": {
+          "selection": {
+            "present": false,
+            "sameOwner": false,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": null
+        },
+        "equal": true
+      },
+      {
+        "kind": "wrong-number-v",
+        "raw": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "error": "TypeError",
+            "message": "Cannot read properties of undefined (reading '0')",
+            "reads": 0,
+            "writes": 0
+          }
+        },
+        "patched": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "error": "TypeError",
+            "message": "Cannot read properties of undefined (reading '0')",
+            "reads": 0,
+            "writes": 0
+          }
+        },
+        "equal": true
+      },
+      {
+        "kind": "present-undefined-v",
+        "raw": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "error": "TypeError",
+            "message": "Cannot read properties of undefined (reading 'length')",
+            "reads": 0,
+            "writes": 0
+          }
+        },
+        "patched": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "error": "TypeError",
+            "message": "Cannot read properties of undefined (reading 'length')",
+            "reads": 0,
+            "writes": 0
+          }
+        },
+        "equal": true
+      },
+      {
+        "kind": "wrapped-wrong-v",
+        "raw": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "error": "TypeError",
+            "message": "Cannot read properties of undefined (reading '0')",
+            "reads": 0,
+            "writes": 0
+          }
+        },
+        "patched": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "error": "TypeError",
+            "message": "Cannot read properties of undefined (reading '0')",
+            "reads": 0,
+            "writes": 0
+          }
+        },
+        "equal": true
+      },
+      {
+        "kind": "inherited-v",
+        "raw": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "error": "TypeError",
+            "message": "Cannot read properties of undefined (reading '0')",
+            "reads": 0,
+            "writes": 0
+          }
+        },
+        "patched": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "error": "TypeError",
+            "message": "Cannot read properties of undefined (reading '0')",
+            "reads": 0,
+            "writes": 0
+          }
+        },
+        "equal": true
+      },
+      {
+        "kind": "empty-v",
+        "raw": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "returned": true,
+            "reads": 0,
+            "writes": 0
+          }
+        },
+        "patched": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "returned": true,
+            "reads": 0,
+            "writes": 0
+          }
+        },
+        "equal": true
+      },
+      {
+        "kind": "one-point",
+        "raw": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "returned": true,
+            "reads": 0,
+            "writes": 0
+          }
+        },
+        "patched": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "returned": true,
+            "reads": 0,
+            "writes": 0
+          }
+        },
+        "equal": true
+      },
+      {
+        "kind": "live-owner",
+        "raw": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "sameOwner": true,
+            "live": true
+          }
+        },
+        "patched": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "sameOwner": true,
+            "live": true
+          }
+        },
+        "equal": true
+      },
+      {
+        "kind": "live-wrapped-owner",
+        "raw": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "sameOwner": true,
+            "live": true
+          }
+        },
+        "patched": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "sameOwner": true,
+            "live": true
+          }
+        },
+        "equal": true
+      },
+      {
+        "kind": "getter-wrong-v",
+        "raw": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "error": "TypeError",
+            "message": "Cannot read properties of undefined (reading '0')",
+            "reads": 2,
+            "writes": 0
+          }
+        },
+        "patched": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "error": "TypeError",
+            "message": "Cannot read properties of undefined (reading '0')",
+            "reads": 2,
+            "writes": 0
+          }
+        },
+        "equal": true
+      },
+      {
+        "kind": "getter-throws-v",
+        "raw": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "error": "RangeError",
+            "message": "original v getter",
+            "reads": 1,
+            "writes": 0
+          }
+        },
+        "patched": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "error": "RangeError",
+            "message": "original v getter",
+            "reads": 1,
+            "writes": 0
+          }
+        },
+        "equal": true
+      },
+      {
+        "kind": "inherited-getter-v",
+        "raw": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "error": "TypeError",
+            "message": "Cannot read properties of undefined (reading '0')",
+            "reads": 2,
+            "writes": 0
+          }
+        },
+        "patched": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "error": "TypeError",
+            "message": "Cannot read properties of undefined (reading '0')",
+            "reads": 2,
+            "writes": 0
+          }
+        },
+        "equal": true
+      },
+      {
+        "kind": "changing-getter-v",
+        "raw": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "error": "TypeError",
+            "message": "Cannot read properties of undefined (reading '0')",
+            "reads": 2,
+            "writes": 0
+          }
+        },
+        "patched": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "error": "TypeError",
+            "message": "Cannot read properties of undefined (reading '0')",
+            "reads": 2,
+            "writes": 0
+          }
+        },
+        "equal": true
+      },
+      {
+        "kind": "flatten-string-coordinate",
+        "raw": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "values": [
+              "x",
+              2
+            ],
+            "types": [
+              "string",
+              "number"
+            ],
+            "order": [
+              "v",
+              "i",
+              "o"
+            ],
+            "reads": 1,
+            "writes": 0
+          }
+        },
+        "patched": {
+          "selection": {
+            "present": true,
+            "sameOwner": true,
+            "reads": 0,
+            "writes": 0,
+            "error": null
+          },
+          "later": {
+            "values": [
+              "x",
+              2
+            ],
+            "types": [
+              "string",
+              "number"
+            ],
+            "order": [
+              "v",
+              "i",
+              "o"
+            ],
+            "reads": 1,
+            "writes": 0
+          }
+        },
+        "equal": true
+      }
+    ]
+  },
+  "nativeCapabilityProbe": {
+    "source": "artifacts/lottie-bezier-carrier-boundary.cpp",
+    "sourceSha256": "938ac512d315006c5341c56b3dd57d0daa78e5c78fc6faf078f61bc607cf30e2",
+    "command": "cxx-hostcache -std=c++20 -ffp-contract=off -pthread -I include -I generated/include artifacts/lottie-bezier-carrier-boundary.cpp -o <hostcache>/bezier-carrier-boundary; run executable",
+    "checks": 8,
+    "failures": 0,
+    "observations": [
+      "number-v typed read: std::bad_cast",
+      "nested-json-v typed read: std::bad_cast",
+      "8 checks, 0 failures"
+    ],
+    "meaning": "Existing raw row APIs retain original parsed owner/live values/lifetime. Current typed native nested Array<double> member rejects both number-v and nested raw JSON array. This is a bounded API limitation probe, not native original Bezier execution.",
+    "initialProbeCorrection": "RowOwner view identity was first compared to the source object pointer; fixed only the probe to compare shared_native_object, preserving actual source-object identity."
+  },
+  "requiredBehavior": [
+    "presence-only assertion without getter or nested-array validation",
+    "same original object/array-element owner, live cell writes and escaped lifetime",
+    "raw nested member/sequence/scalar domain and original error/getter timing",
+    "original flatten result can contain a string despite its erased number[] annotation",
+    "native and raw callable boundaries must retain their actual original owners and value domains"
+  ],
+  "forbiddenShortcuts": [
+    "stronger schema/array guard",
+    "eager copy/materialization",
+    "native LottieShapePath fabrication",
+    "global scalar ABI widening",
+    "replacement original function body"
+  ],
+  "status": "Ordinary cast/carrier repair insufficient: retain refusal pending bounded raw-value emission and call-boundary strategy with complete original consumer qualification. No compiler/runtime product change or native Bezier pass claimed."
+}
