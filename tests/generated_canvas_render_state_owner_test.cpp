@@ -5,14 +5,15 @@
 // entity-runtime slot, so the read must return the very runtime that was written -- not a copy -- and the
 // state and its runtime must stay two distinct allocations.
 //
-// It targets the CANVAS accessors, not the render twin, and therefore compiles only against a
-// regeneration that carries them: read/write_canvas_render_state_runtime_owner live in
-// flight/types/canvas_render_state.hpp and are emitted by the canvas render-state source patch. It must
-// therefore be registered atomically with the regeneration that moves that header.
+// The whole original Canvas module must also compile and expose its actual runtime getter and helpers.
+// Its public state constructor and private registry builder remain refused; neither is supplied here.
 #include <flight/render/render_state.hpp>
+#include <flight/scene2d_canvas/canvas_render_state.hpp>
 #include <flight/types/canvas_render_state.hpp>
 
+#include <cmath>
 #include <iostream>
+#include <limits>
 #include <optional>
 
 namespace {
@@ -76,6 +77,71 @@ int main() {
         "each canvas state keeps the runtime written to it");
   check(flight::types::read_canvas_render_state_runtime_owner(state).get() == runtime.get(),
         "writing a runtime to a second state does not disturb the first");
+
+  const auto stateRef = flight::structural_ref_cast<CanvasState>(state);
+  check(stateRef.get() == state.shared_owner().get(), "the public helper receives the original state owner");
+  auto getter = &flight::scene2d_canvas::get_canvas_render_state_runtime;
+  check(getter(stateRef).get() == runtime.get(), "the original public getter returns the attached runtime");
+  const auto runtimeAlias = getter(stateRef);
+  runtimeAlias->current_alpha = 0.25;
+  check(runtime->current_alpha == 0.25, "the public getter retains writable runtime identity");
+
+  flight::types::write_canvas_render_state_runtime_owner(state, otherRuntime);
+  check(getter(stateRef).get() == otherRuntime.get(), "the getter reads a replacement attachment on each call");
+  check(runtimeAlias.get() == runtime.get(), "replacing the attachment preserves a previously returned owner");
+  flight::types::write_canvas_render_state_runtime_owner(state, runtime);
+  auto resolvers = flight::make_ref<flight::types::CanvasTextureResolvers>();
+  runtime->canvas_texture_resolvers = resolvers;
+  check(flight::scene2d_canvas::get_canvas_render_state_texture_resolvers(stateRef).get() == resolvers.get(),
+        "the public texture resolver getter returns the exact stored owner");
+
+  int callbacks = 0;
+  bool callbackOwnersMatch = true;
+  for (int ordinal : {1, 2}) {
+    flight::scene2d_canvas::register_canvas_render_state_teardown(stateRef, [&, ordinal](CanvasState received) {
+      callbacks = callbacks * 10 + ordinal;
+      callbackOwnersMatch = callbackOwnersMatch && received.get() == stateRef.get();
+    });
+  }
+  check(callbacks == 0 && runtime->teardowns.size() == 2, "registration appends callbacks without executing them");
+  for (const auto& callback : runtime->teardowns) callback(stateRef);
+  check(callbacks == 12 && callbackOwnersMatch, "stored callbacks preserve order and state identity");
+
+  stateRef->allow_smoothing = true;
+  for (const auto& filter : {"nearest", "nearest-mipmap", "linear", "Nearest", ""}) {
+    const bool expected = flight::String(filter).starts_with(flight::String("nearest")) == false;
+    check(flight::scene2d_canvas::resolve_canvas_texture_smoothing(stateRef, flight::String(filter)) == expected,
+          "smoothing retains the exact case-sensitive nearest prefix rule");
+  }
+  stateRef->allow_smoothing = false;
+  check(!flight::scene2d_canvas::resolve_canvas_texture_smoothing(stateRef, flight::String("linear")),
+        "state policy disables texture smoothing");
+
+  runtime->current_alpha = std::numeric_limits<double>::quiet_NaN();
+  flight::scene2d_canvas::set_canvas_global_alpha(stateRef, 0.5);
+  check(runtime->current_alpha == 0.5 && stateRef->context.global_alpha == 0.5,
+        "the actual alpha helper writes runtime and context");
+  stateRef->context.global_alpha = 0.75;
+  flight::scene2d_canvas::set_canvas_global_alpha(stateRef, 0.5);
+  check(stateRef->context.global_alpha == 0.75, "equal cached alpha skips the context write");
+  runtime->current_alpha = 0.0;
+  flight::scene2d_canvas::set_canvas_global_alpha(stateRef, -0.0);
+  check(!std::signbit(runtime->current_alpha) && stateRef->context.global_alpha == 0.75,
+        "signed zeros compare equal without replacing cached storage");
+  flight::scene2d_canvas::set_canvas_global_alpha(stateRef, std::numeric_limits<double>::quiet_NaN());
+  check(std::isnan(runtime->current_alpha) && std::isnan(stateRef->context.global_alpha),
+        "NaN alpha is preserved and reaches the context");
+  stateRef->context.global_alpha = 0.75;
+  flight::scene2d_canvas::set_canvas_global_alpha(stateRef, std::numeric_limits<double>::quiet_NaN());
+  check(std::isnan(stateRef->context.global_alpha), "NaN does not take the equal-alpha shortcut");
+
+  runtime->image_smoothing_enabled = true;
+  flight::scene2d_canvas::set_canvas_image_smoothing(stateRef, false);
+  check(!runtime->image_smoothing_enabled && !stateRef->context.image_smoothing_enabled,
+        "the actual image smoothing helper writes runtime and context");
+  stateRef->context.image_smoothing_enabled = true;
+  flight::scene2d_canvas::set_canvas_image_smoothing(stateRef, false);
+  check(stateRef->context.image_smoothing_enabled, "equal cached smoothing skips the context write");
 
   if (failures == 0) {
     std::cout << "canvas render-state owner identity: all checks passed\n";
