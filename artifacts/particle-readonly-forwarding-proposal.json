@@ -38,16 +38,16 @@
     "scope": "exact bounded forwarding helper shape; no generalized callback or Record widening"
   },
   "compilerFloor": {
-    "compilerPatches": 122,
-    "totalPatches": 324,
-    "precedingCompilerPatches": 121,
-    "sourceBase": "9ec28ce5",
+    "compilerPatches": 123,
+    "totalPatches": 325,
+    "precedingCompilerPatches": 122,
+    "sourceBase": "a76a5634",
     "baselineStrict": "pass",
     "activeStrict": "pass"
   },
   "currentComposition": {
-    "compiler": 122,
-    "total": 324,
+    "compiler": 123,
+    "total": 325,
     "orderedApply": true,
     "candidateContentIdentical": true,
     "reverseRawBackendIdentical": true,
@@ -901,6 +901,13 @@
       },
       {
         "dependency": "flight-compiler",
+        "digest": "7d33d6372b467a651a6e5e4a662f924dfeaf480a1ee5adcad8ecc6486cb4e841",
+        "id": "compiler-original-optional-slot-and-erased-membership",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
         "digest": "09e0c030079a77564ebfa25915007d0b074c9dea8d83456fe6163c24cd7bbfeb",
         "id": "compiler-readonly-forwarded-options",
         "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
@@ -1018,6 +1025,13 @@
     "nativeChecks": 27,
     "originalTwoHelperAndNativeSignatureProof": "pass"
   },
+  "historical122Qualification": {
+    "strict": "pass",
+    "orderedRawApplyContentAndReverse": "pass",
+    "focusedPassed": 12,
+    "excludedByteIdentical": 10,
+    "nativeChecks": 27
+  },
   "historicalProposal": {
     "commit": "bc8c7e00 / 2ebc9a79 / integratedca9b95d9",
     "compilerFloor": {
@@ -1029,5 +1043,23 @@
     },
     "active": false,
     "nativeChecks": 27
+  },
+  "provisionalSharedBReceipt": {
+    "provisional": true,
+    "acceptedSharedFloor": false,
+    "sourceParcel": "builder2-493af0cc",
+    "normalOutputCommit": "6e1aa571163c9307dd0022c3302fb7b9060a1ced",
+    "frozenSourceHead": "33777898284fc5ea4e8e6bd7ea756a484385dce6",
+    "compilerPatches": 117,
+    "totalPatches": 319,
+    "normalSdkHere": false,
+    "generatedFilesWrittenInRepo": false,
+    "exactPatchedBlobChecks": 443,
+    "knownCoherence": [
+      "scene2d-canvas regen",
+      "render-wgpu-only rerun",
+      "render_state override callable_clear_signals alias"
+    ],
+    "nativeQualification": false
   }
 }
