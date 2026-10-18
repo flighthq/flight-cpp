@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: a patch file rewritten while the patch is applied still reverts cleanly
+ok 1 - a patch file rewritten while the patch is applied still reverts cleanly
+  ---
+  duration_ms: 115.821624
+  type: 'test'
+  ...
+# Subtest: a dead run is recovered even after its patch was renamed in the manifest
+ok 2 - a dead run is recovered even after its patch was renamed in the manifest
+  ---
+  duration_ms: 97.786324
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 517.722434

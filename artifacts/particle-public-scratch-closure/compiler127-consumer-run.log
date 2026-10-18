@@ -1,0 +1,2 @@
+original overlapping detectors retain forward registration order
+libc++abi: terminating due to uncaught exception of type std::logic_error: erased value does not hold the asserted object type

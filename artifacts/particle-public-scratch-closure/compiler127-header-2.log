@@ -1,0 +1,38 @@
+In file included from /tmp/particle-public-native-DBqm6Z/header-2.cpp:1:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/contract.hpp:17:
+In file included from /tmp/builder3-public-closure127/final-native-closure/include/flight/particles_formats/register_built_in_particle_formats.hpp:42:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/spine_parse.hpp:40:
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles/curve.hpp:183:15: warning: equality comparison with extraneous parentheses [-Wparentheses-equality]
+  183 |   if ((seg->f == 0.0)) {
+      |        ~~~~~~~^~~~~~
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles/curve.hpp:183:15: note: remove extraneous parentheses around the comparison to silence this warning
+  183 |   if ((seg->f == 0.0)) {
+      |       ~       ^     ~
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles/curve.hpp:183:15: note: use '=' to turn this equality comparison into an assignment
+  183 |   if ((seg->f == 0.0)) {
+      |               ^~
+      |               =
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles/curve.hpp:194:15: warning: equality comparison with extraneous parentheses [-Wparentheses-equality]
+  194 |   if ((seg->f == 0.0)) {
+      |        ~~~~~~~^~~~~~
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles/curve.hpp:194:15: note: remove extraneous parentheses around the comparison to silence this warning
+  194 |   if ((seg->f == 0.0)) {
+      |       ~       ^     ~
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles/curve.hpp:194:15: note: use '=' to turn this equality comparison into an assignment
+  194 |   if ((seg->f == 0.0)) {
+      |               ^~
+      |               =
+In file included from /tmp/particle-public-native-DBqm6Z/header-2.cpp:1:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/contract.hpp:17:
+In file included from /tmp/builder3-public-closure127/final-native-closure/include/flight/particles_formats/register_built_in_particle_formats.hpp:47:
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/unity_serialize.hpp:63:12: warning: equality comparison with extraneous parentheses [-Wparentheses-equality]
+   63 |   if ((low == high)) {
+      |        ~~~~^~~~~~~
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/unity_serialize.hpp:63:12: note: remove extraneous parentheses around the comparison to silence this warning
+   63 |   if ((low == high)) {
+      |       ~    ^      ~
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/unity_serialize.hpp:63:12: note: use '=' to turn this equality comparison into an assignment
+   63 |   if ((low == high)) {
+      |            ^~
+      |            =
+3 warnings generated.
