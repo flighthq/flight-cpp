@@ -4506,7 +4506,7 @@ static void test_json_owner_shared_view() {
   const bool wrote = first.set(flight::String("c"), flight::Any(3.0));
   const auto second = flight::named_properties(parsed);
   check(!wrote && !second.has(flight::String("c")) && first.keys().size() == 3,
-        "the parsed-JSON owner is read-only through this view: a write is refused and fabricates no member");
+        "a key the parsed object does not declare is not fabricated by a dynamic write; existing members are writable in place");
 }
 
 // Presence-aware JSON scalar cell: the raw value answers every JS operation at the use; only an

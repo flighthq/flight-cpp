@@ -634,6 +634,79 @@ class ReadonlyNamedCell final : public RowCell {
   std::function<Any()> read_;
 };
 
+// A member of a parsed JSON object, writable through the same owner every alias reads. JSON has no
+// `undefined`, so a write of undefined is refused rather than stored or silently erased; absence is
+// `assign_absent` (delete). The cell keeps no copy: a read sees the object's current entry, a write
+// sets it in place, and an object/array value keeps the exact owner it was boxed from.
+class JsonObjectMemberCell final : public RowCell {
+ public:
+  JsonObjectMemberCell(std::weak_ptr<JsonObject> object, String key)
+      : object_(std::move(object)), key_(std::move(key)) {}
+
+  [[nodiscard]] std::type_index value_type() const noexcept override { return typeid(Any); }
+
+  [[nodiscard]] std::optional<Any> as_any() const override {
+    const auto object = object_.lock();
+    if (!object) return std::nullopt;
+    const auto value = object->get(key_);
+    if (!value) return std::nullopt;
+    return Any(*value);
+  }
+
+  bool assign_from(RowCell&) override { return false; }
+
+  bool assign_any(const Any& value) override {
+    const auto object = object_.lock();
+    if (!object || value.is_undefined()) return false;
+    const auto json = any_to_json_value(value);
+    if (!json) return false;
+    object->set(key_, *json);
+    return true;
+  }
+
+  bool assign_absent() override {
+    const auto object = object_.lock();
+    return object && object->erase(key_);
+  }
+
+ private:
+  std::weak_ptr<JsonObject> object_;
+  String key_;
+};
+
+// An index of a parsed JSON array, writable in place. Out-of-range writes are refused: growing an
+// array is insert(), and erasing one shifts the array rather than leaving a hole.
+class JsonArrayIndexCell final : public RowCell {
+ public:
+  JsonArrayIndexCell(std::weak_ptr<JsonArray> array, std::size_t index)
+      : array_(std::move(array)), index_(index) {}
+
+  [[nodiscard]] std::type_index value_type() const noexcept override { return typeid(Any); }
+
+  [[nodiscard]] std::optional<Any> as_any() const override {
+    const auto array = array_.lock();
+    if (!array || index_ >= array->size()) return std::nullopt;
+    return Any((*array)[index_]);
+  }
+
+  bool assign_from(RowCell&) override { return false; }
+
+  bool assign_any(const Any& value) override {
+    const auto array = array_.lock();
+    if (!array || index_ >= array->size() || value.is_undefined()) return false;
+    const auto json = any_to_json_value(value);
+    if (!json) return false;
+    (*array)[index_] = std::move(*json);
+    return true;
+  }
+
+  bool assign_absent() override { return false; }
+
+ private:
+  std::weak_ptr<JsonArray> array_;
+  std::size_t index_;
+};
+
 template <typename Object>
 class JsonRowOwner final : public RowOwner {
  public:
@@ -648,11 +721,7 @@ class JsonRowOwner final : public RowOwner {
     if (!object) return {};
     if constexpr (std::same_as<Object, JsonObject>) {
       if (!object->has(key)) return {};
-      return std::make_shared<ReadonlyNamedCell>([weak = object_, key] {
-        const auto owner = weak.lock();
-        const auto value = owner ? owner->get(key) : std::nullopt;
-        return value ? Any(*value) : Any(undefined);
-      });
+      return std::make_shared<JsonObjectMemberCell>(object_, key);
     } else {
       if (key == String("length")) {
         return std::make_shared<ReadonlyNamedCell>([weak = object_] {
@@ -662,10 +731,7 @@ class JsonRowOwner final : public RowOwner {
       }
       const auto index = record_array_index(key);
       if (!index || *index >= object->size()) return {};
-      return std::make_shared<ReadonlyNamedCell>([weak = object_, index = *index] {
-        const auto owner = weak.lock();
-        return owner && index < owner->size() ? Any((*owner)[index]) : Any(undefined);
-      });
+      return std::make_shared<JsonArrayIndexCell>(object_, *index);
     }
   }
   [[nodiscard]] bool has_named_cell(std::string_view key) const override {
