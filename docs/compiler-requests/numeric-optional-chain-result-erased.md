@@ -41,3 +41,66 @@ The SVG-color parser remains declaration-only, so no color parsing/painting or C
 is implied by its header pass. Other inspected transform/gradient/geometry refusals are not asserted
 as newly measured next errors. A future numeric-carrier fix must reproduce normal emission and verify
 its owned selectors/consumers without changing the source's accepted domain.
+
+## G3 original-header helper availability
+
+At the same pins, the original `flight/scene2d_formats/svg_style.hpp` is now consumable for
+`resolveSvgWinding` and `parseStyleDeclarations`, with the private selector scorer also exercised.
+The public TypeScript declarations, native names and include path are unchanged. No leaf body was
+copied to a new header and no replacement CSS cascade was supplied.
+
+Three carrying patches and one declaration address the complete inclusion boundary:
+
+- `scene2d-svg-selector-numeric-match-length` binds each original global-regexp match once and
+  explicitly guards the match and its length before assigning the numeric counter. Null and
+  undefined still select zero; zero and NaN remain values. Both regexps, id/class/type weights,
+  evaluation order, property-read effects and exceptions are retained without copying a match.
+- `scene2d-svg-declarations-string-prototype-key` preserves a source no-op at this particular
+  fresh `{}` allocation: assigning its already-computed primitive string to the inherited
+  `__proto__` setter creates no own data property. The native `Record.set` would otherwise store
+  that key. The guard follows the original value computation and leaves all real writes intact;
+  it is neither a general Record rule nor a new inherited-prototype lookup capability.
+- `compiler-nullable-map-get-nullish-projection` keeps the original definition-style source
+  unchanged. `parentByElement` is a **Map** with `XmlElement | null` values, represented as
+  `Map<Ref<XmlElement>, optional<Ref<XmlElement>>>`. Its lookup adds an outer optional. The
+  authored `get(element) ?? null` deliberately merges missing and stored-null results. The
+  compiler now uses that actual carrier through `.value_or(std::nullopt)` only for a proven
+  standard Map/ReadonlyMap nullable value and an exactly matching nullable destination. It
+  retains one receiver/key evaluation and the original present owner; lookalike methods and
+  variant-backed projections keep their existing paths. General lookup conversion is not fixed.
+- `scene2d-formats-svg-declare-refused-style` declares only the exact three readonly-row argument
+  carriers and original `Ref<SvgStyle>` result required by the retained definition-style call.
+  The `resolveSvgStyle` body remains refused on its record-index present-payload boundary.
+  `collectCssRules` remains refused on capture storage. Both NOT GENERATED markers remain.
+
+Final normal scoped generation lowered **1467 modules / 30 packages**, selected the one style
+module, and retained its partial header with **0 fully emitted / 1 refused** selected modules,
+**259 applied source patches** and two applicable repair records. The full normal header and
+three owned patch digests plus the exact declaration record are carried; global/package inventory
+counts and other modules' refusal products were not rewritten. Earlier guard-only parent and
+optional-result prototypes did not qualify and are not carried.
+
+The owned original header check is **1 attempted / 1 pass / 0 fail / 0 unattempted**, Clang
+22.1.8, jobs 2, **17.7 seconds**. The registered CMake/Bazel consumer includes this original
+header and runs its emitted bodies: **16 winding, 25 selector and 10 declaration inputs**,
+including spellings/fallbacks, empty/malformed/duplicate/colon-containing values, exact important
+suffix handling, open names, ignored prototype-string assignment, numeric-key order, fresh result
+storage and live result aliases. CMake build/link passes; CTest
+`flight_cpp.generated_svg_style` is **1/1 PASS**, 0.01 seconds (0.03 seconds total).
+
+The actual original/patched source oracle also passes those scalar/own-data cases and **294**
+instrumented nullish match/length, read-order and exception controls. Four source-only parent/cache
+scenarios retain the original source contract; they do not qualify the native cascade. Ten direct
+compiler controls cover object/number/string/boolean Map and ReadonlyMap values plus non-Map
+counterexamples. Five actually emitted native probe functions pass absent/null/present identity,
+false/empty string/signed zero/NaN, single receiver/key evaluation order and exception identity.
+The mechanism suite passes **31**, skips **1**, fails **0**. The compiler TypeScript build passes;
+its local Vitest and Oxlint binaries are absent, and its check launcher is absent from
+`.script-build`, so those upstream gates are not claimed as passed. No network setup was run.
+
+A forced reference to the exact refused resolver compiles to an object and fails to link **only**
+on `resolve_svg_style` with its three original readonly rows. This declaration supplies no style
+resolution, definition traversal or cache behavior. No native XML import, CSS collection/cascade,
+painting, geometry or gradient execution is claimed. The two older geometry/gradient include
+rows were not rerun and remain recorded failures; the old numeric cluster retains those two
+members. Historical G1 and prior color-check counts remain historical.

@@ -486,6 +486,23 @@ or edited. The preceding 2/16 result and table counts remain the historical Numb
 Only the three owned header rows, removed missing-name cluster and receiving style-cluster
 membership/coverage change. Existing G1 provenance and all foreign rows remain intact.
 
+#### G3 SVG style helpers through the original public header
+
+The owned `svg_style.hpp` now completes **1 attempted / 1 pass / 0 fail / 0 unattempted**,
+Clang 22.1.8, jobs 2, **17.7 seconds**. The
+[numeric/source and nullable-Map compiler repairs](compiler-requests/numeric-optional-chain-result-erased.md#g3-original-header-helper-availability)
+reproduce the full normal partial header. Actual original-header consumer build/link and CTest
+**1/1 PASS**, 0.01 seconds, exercise 16 winding, 25 selector and 10 declaration source inputs,
+including empty/malformed values, exact suffixes, own-key/order/alias/fresh-storage behavior.
+No leaf implementation was copied. Source effect controls and generated nullable-Map native
+probes also pass; the two refused collector/cascade bodies remain omitted. A forced resolver
+reference compiles but links unsuccessfully only on its exact missing symbol.
+
+Only this owned row moves to PASS, keeping G1 provenance and the resolved numeric cause.
+`no-viable-conversion-a21c880d` retains the **two unrerun** geometry/gradient include rows;
+those failures and all historical counts remain unchanged. No CSS/cascade/painting or whole
+module/package completeness is claimed. Compiler dev-tool limits are recorded in the request.
+
 #### G2 SVG transform readonly Matrix repair
 
 The subsequent owned one-header check completes **1 attempted / 1 pass / 0 fail /
