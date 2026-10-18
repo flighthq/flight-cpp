@@ -3,6 +3,8 @@
 #include <concepts>
 #include <iterator>
 #include <mutex>
+#include <optional>
+#include <typeindex>
 #include <unordered_map>
 #include <memory>
 #include <type_traits>
@@ -128,6 +130,142 @@ template <typename Value>
 using Ref =
     typename detail::reference_shape<Value, decltype(detail::complete_probe<Value>(0))::value>::type;
 
+// CONSTRUCTION-TIME CONCRETE OWNER PROVENANCE, AND THE DEFERRED REFINEMENT VIEW.
+//
+// A derived interface may narrow an inherited reference cell to a native interface derived from the
+// base's. Native heritage keeps ONE cell, typed by the base, so the source getter returns whatever
+// object is stored: no check, no cast, no throw. A base-typed write is legal and may store either a
+// genuine derived allocation or a base-only one, and a later base member read must still work.
+//
+// The only evidence that survives every write is what the object IS, captured where the object is
+// allocated. `make_ref` therefore registers the concrete type of an opted-in type, keyed at each of
+// its native base subobject addresses. A widened reference to a genuine derived allocation still
+// finds its concrete type; a base-only allocation has no such record. The registration holds the
+// object weakly, so it cannot extend a lifetime, and address reuse is checked on every lookup.
+//
+// `RefinedOwnerView` is the getter's return value. It never checks at construction: base members are
+// served through `operator->` for every concrete owner, exactly as the source serves inherited
+// members through a widened reference. Only a DERIVED capability is asked for, through `as()`, and
+// absence is returned rather than thrown, so a missing derived property fails at the operation that
+// requires it, not at the read and not for inherited base members.
+template <typename Type>
+struct RefinementConstructionRegistration {
+  static void register_owner(const std::shared_ptr<Type>&) {}
+};
+
+namespace detail {
+
+struct RefinedOwnerMetadata final {
+  std::weak_ptr<void> owner;
+  std::type_index concrete{typeid(void)};
+  bool (*accepts)(std::type_index) noexcept{nullptr};
+};
+
+struct RefinedOwnerRegistry final {
+  std::mutex mutex;
+  std::unordered_map<const void*, RefinedOwnerMetadata> entries;
+  std::size_t sweep_threshold{64};
+};
+
+[[nodiscard]] inline RefinedOwnerRegistry& refined_owner_registry() {
+  static RefinedOwnerRegistry registry;
+  return registry;
+}
+
+inline void remember_refined_owner(const void* address,
+                                   const std::shared_ptr<void>& owner,
+                                   std::type_index concrete,
+                                   bool (*accepts)(std::type_index) noexcept) {
+  auto& registry = refined_owner_registry();
+  const std::lock_guard lock(registry.mutex);
+  if (registry.entries.size() >= registry.sweep_threshold) {
+    for (auto entry = registry.entries.begin(); entry != registry.entries.end();) {
+      entry = entry->second.owner.expired() ? registry.entries.erase(entry) : std::next(entry);
+    }
+    registry.sweep_threshold = registry.entries.size() * 2 + 64;
+  }
+  registry.entries.insert_or_assign(address, RefinedOwnerMetadata{owner, concrete, accepts});
+}
+
+[[nodiscard]] inline std::optional<RefinedOwnerMetadata> recall_refined_owner(const void* address) {
+  auto& registry = refined_owner_registry();
+  const std::lock_guard lock(registry.mutex);
+  const auto found = registry.entries.find(address);
+  if (found == registry.entries.end()) return std::nullopt;
+  if (found->second.owner.expired()) {
+    registry.entries.erase(found);
+    return std::nullopt;
+  }
+  return found->second;
+}
+
+} // namespace detail
+
+template <typename... Accepted>
+[[nodiscard]] bool refinement_type_matches(std::type_index expected) noexcept {
+  static_assert(sizeof...(Accepted) > 0);
+  return ((expected == std::type_index(typeid(Accepted))) || ...);
+}
+
+// Records the concrete allocation at every native base subobject address the source can widen it
+// to. `Concrete` and every `NativeBase` are accepted by the capability query, which is exactly the
+// set of reads the concrete type can serve.
+template <typename Concrete, typename... NativeBases>
+void register_refined_owner(const std::shared_ptr<Concrete>& object) {
+  static_assert(sizeof...(NativeBases) > 0);
+  static_assert((std::derived_from<Concrete, NativeBases> && ...));
+  if (!object) return;
+  auto erased = std::static_pointer_cast<void>(object);
+  ((detail::remember_refined_owner(
+        static_cast<const void*>(static_cast<NativeBases*>(object.get())),
+        erased,
+        std::type_index(typeid(Concrete)),
+        &refinement_type_matches<Concrete, NativeBases...>)),
+   ...);
+}
+
+template <typename Derived, typename Base>
+class RefinedOwnerView final {
+ public:
+  RefinedOwnerView() = default;
+  explicit RefinedOwnerView(Ref<Base> value) : value_(std::optional<Ref<Base>>{std::move(value)}) {}
+  // The generated getter hands over the cell's optional directly. An absent slot is an empty view,
+  // not a construction failure: absence fails at the member access that requires a value.
+  explicit RefinedOwnerView(std::optional<Ref<Base>> value) : value_(std::move(value)) {}
+
+  [[nodiscard]] Ref<Base> base() const { return value_.value_or(nullptr); }
+  [[nodiscard]] bool has_value() const noexcept { return value_.has_value() && static_cast<bool>(*value_); }
+  [[nodiscard]] explicit operator bool() const noexcept { return has_value(); }
+
+  // Inherited (base) members: served for every concrete owner, including a base-only allocation.
+  // No capability check, so this is exactly the source's widened base read.
+  [[nodiscard]] Ref<Base> operator->() const { return value_.value(); }
+
+  // A derived capability. Absence is reported, not thrown: the caller's next operation on the value
+  // is where the source would first observe the missing capability.
+  [[nodiscard]] std::optional<Ref<Derived>> as() const {
+    static_assert(std::derived_from<Derived, Base>,
+                  "a refined owner view narrows along declared native heritage");
+    if (!value_ || !*value_) return std::nullopt;
+    const auto metadata = detail::recall_refined_owner(static_cast<const void*>((*value_).get()));
+    if (!metadata || !metadata->accepts ||
+        !metadata->accepts(std::type_index(typeid(Derived)))) {
+      return std::nullopt;
+    }
+    return std::optional<Ref<Derived>>{std::static_pointer_cast<Derived>(*value_)};
+  }
+
+  friend bool operator==(const RefinedOwnerView& left, const RefinedOwnerView& right) noexcept {
+    return left.value_ == right.value_;
+  }
+  friend bool operator==(const RefinedOwnerView& left, const Ref<Base>& right) noexcept {
+    return left.value_ == std::optional<Ref<Base>>{right};
+  }
+
+ private:
+  std::optional<Ref<Base>> value_{};
+};
+
 template <typename Value, typename... Arguments>
 [[nodiscard]] Ref<Value> make_ref(Arguments&&... arguments) {
   // A type that names itself through `Ref`, directly or through another type that names it back, is
@@ -150,6 +288,10 @@ template <typename Value, typename... Arguments>
     if constexpr (std::derived_from<Value, SelfReferencing>) {
       detail::remember_self_reference(reference);
     }
+    // The concrete allocation is recorded here, before any later widening or base-typed write can
+    // erase the only place its type was known. The primary registration is a no-op; only a type the
+    // emitter marks as a native refinement owner supplies one.
+    RefinementConstructionRegistration<Value>::register_owner(reference);
     return reference;
   }
 }

@@ -45,6 +45,25 @@ struct TestEntity : public flight::ReferenceEnabled {
   std::optional<flight::Ref<TestReference>> entity_runtime_key;
 };
 
+// A native derived owner with a construction-time registration, standing in for
+// CanvasRenderStateRuntime deriving from RenderStateRuntime.
+struct RefinedTestRuntime : public TestReference {
+  int derived_value{0};
+};
+
+} // namespace
+
+namespace flight {
+template <>
+struct RefinementConstructionRegistration<::RefinedTestRuntime> {
+  static void register_owner(const std::shared_ptr<::RefinedTestRuntime>& object) {
+    flight::register_refined_owner<::RefinedTestRuntime, ::TestReference>(object);
+  }
+};
+} // namespace flight
+
+namespace {
+
 struct TestImageFacet final {};
 struct TestMenuFacet final {};
 struct TestTrayCapabilities {
@@ -4329,6 +4348,60 @@ static void test_self_reference() {
         "and the registry does not resurrect an object whose owner is gone");
 }
 
+// Construction-time concrete-owner provenance: a genuine derived allocation survives widening,
+// including a view created only AFTER the widening; a base-only allocation serves base members and
+// reports the derived capability absent; absence is reported at the read and fails at the use.
+static void test_refined_owner_construction_provenance() {
+  using View = flight::RefinedOwnerView<RefinedTestRuntime, TestReference>;
+
+  const auto derived = flight::make_ref<RefinedTestRuntime>(RefinedTestRuntime{.derived_value = 7});
+  flight::Ref<TestReference> widened = derived; // widening happens before any view exists
+  const View view(widened);
+  check(view.has_value() && view.base() == widened,
+        "the refined view returns the stored base object without a check");
+  check(view->value == 0, "an inherited base member is served for a genuine derived allocation");
+  const auto capability = view.as();
+  check(capability.has_value() && capability.value() == derived && capability.value()->derived_value == 7,
+        "the derived capability is recovered after widening from construction-time provenance");
+
+  const View empty;
+  check(!empty.has_value() && !empty.as().has_value(),
+        "an empty view reports absence without throwing");
+  bool base_failed = false;
+  try {
+    (void)empty->value;
+  } catch (const std::bad_optional_access&) {
+    base_failed = true;
+  }
+  check(base_failed, "a base member read on an absent owner fails at that access");
+
+  const auto base_only = flight::make_ref<TestReference>(TestReference{.value = 3});
+  const View base_view(base_only);
+  check(base_view->value == 3,
+        "a base-only owner still serves inherited base members through the same view");
+  check(!base_view.as().has_value(),
+        "a base-only owner reports the derived capability absent, without throwing at the read");
+  bool used = false;
+  try {
+    (void)base_view.as().value();
+  } catch (const std::bad_optional_access&) {
+    used = true;
+  }
+  check(used, "the failure occurs at the operation that requires the missing derived capability");
+
+  const View captured(widened);
+  const auto replacement = flight::make_ref<RefinedTestRuntime>(RefinedTestRuntime{.derived_value = 9});
+  flight::Ref<TestReference> stored = replacement;
+  check(captured.as().value() == derived, "a view keeps the object it observed");
+  const View after(stored);
+  check(after.as().value() == replacement,
+        "a view created after a replacement observes the new concrete owner");
+  flight::Ref<TestReference> base_stored = base_only;
+  const View replaced(base_stored);
+  check(!replaced.as().has_value() && replaced->value == 3,
+        "a base-only replacement observes the base-only concrete owner");
+}
+
 int main() {
   test_array();
   test_array_get_optional_index();
@@ -4352,6 +4425,7 @@ int main() {
   test_json_record();
   test_any_to_string();
   test_erased_ref();
+  test_refined_owner_construction_provenance();
   test_ambient_statics();
   test_self_reference();
   test_audio_context();
