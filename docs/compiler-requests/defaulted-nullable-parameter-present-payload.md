@@ -36,6 +36,14 @@ baseline's four failing gates:36 formatting paths, four lint diagnostics,12 impo
 and five foreign fixture type errors. The new test passes its own formatting and lint checks.
 Repository source-patch, emission-repair and package-label automation passes33/33.
 
+Compiling the complete original document also instantiates its explicit
+`add_node_child<Ref<Node2DTraits>>` call. The partial hierarchy override already has a native
+Node2D overload; the explicit argument bypasses it and instantiates incompatible generic owner
+recovery and NodeAny signal code. An exact Node2DTraits specialization delegates to that existing
+overload. The pinned source's `addNodeChild` likewise delegates to `addNodeChildAt` at the current
+child count. The specialization supplies no new graph implementation or owner conversion, and the
+override retains its explicit unsupported signal-owner limitation and partial status.
+
 The registered original full-header `applySvgElementAppearance` consumer covers omitted/undefined/null,
 no-transform retention, author/geometry composition and order, live readonly Matrix cells, original
 target/style behavior and final geometry lifetime. Its execution and normal scoped SDK generation

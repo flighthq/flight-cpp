@@ -534,4 +534,10 @@ inline flight::types::Node2D add_node_child(flight::types::Node2D target, flight
   auto children = native_node_2d_runtime(target)->children;
   return add_node_child_at(target, child, children ? static_cast<double>(children->size()) : 0);
 }
+// Explicit emitted trait arguments must select the same native Node2D lane.
+template <>
+inline flight::types::Node2D add_node_child<flight::Ref<flight::types::Node2DTraits>>(
+    flight::types::Node2D target, flight::types::Node2D child) {
+  return add_node_child(target, child);
+}
 } // namespace flight::node

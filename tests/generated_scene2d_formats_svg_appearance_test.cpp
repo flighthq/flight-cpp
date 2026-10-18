@@ -4,6 +4,8 @@
 #include <cmath>
 #include <iostream>
 #include <memory>
+#include <stdexcept>
+#include <string>
 #include <type_traits>
 
 namespace {
@@ -28,9 +30,81 @@ void transform(const types::Node2D& target, double x, double y, double sx, doubl
         std::abs(flight::row_get<flight::RowKey<"scaleY">>(target) - sy) < 1e-10,
         "original transform helpers apply the expected ordered matrix product");
 }
+
+void explicit_node2d_hierarchy() {
+  // The original document body names the explicit-trait entry even when only appearance is called.
+  const auto emitted = &flight::node::add_node_child<flight::Ref<types::Node2DTraits>>;
+  auto parent = flight::scene2d::create_display_object();
+  auto child = flight::scene2d::create_display_object();
+  auto sibling = flight::scene2d::create_display_object();
+  auto next_parent = flight::scene2d::create_display_object();
+  auto parent_runtime = flight::node::native_node_2d_runtime(parent);
+  auto child_runtime = flight::node::native_node_2d_runtime(child);
+  auto next_runtime = flight::node::native_node_2d_runtime(next_parent);
+  int parent_reads = 0, child_reads = 0, allowed = 0;
+  parent_runtime->can_add_child = [&](auto actual_parent, auto actual_child) {
+    ++allowed;
+    check(actual_parent.shared_owner() == parent.shared_owner() &&
+          actual_child.shared_owner() == child.shared_owner(), "the guard receives the original rows");
+    return true;
+  };
+  const auto result = emitted(([&] { ++parent_reads; return parent; })(),
+                              ([&] { ++child_reads; return child; })());
+  check(parent_reads == 1 && child_reads == 1 && allowed == 1,
+        "explicit trait dispatch evaluates arguments and the source guard once without recursion");
+  check(result.shared_owner() == child.shared_owner() &&
+        !result.shared_owner().owner_before(child.shared_owner()) &&
+        !child.shared_owner().owner_before(result.shared_owner()) &&
+        child_runtime->parent->shared_owner() == parent.shared_owner(),
+        "explicit trait dispatch retains the original row owners and control blocks");
+  flight::row_set<flight::RowKey<"x">>(result, 37.0);
+  check(flight::row_get<flight::RowKey<"x">>(child) == 37.0,
+        "the returned child keeps its original live cells");
+  auto retained_children = parent_runtime->children.value();
+  parent_runtime->can_add_child = [](auto, auto) { return true; };
+  flight::node::add_node_child(parent, sibling);
+  emitted(parent, child);
+  check(retained_children.size() == 2 && retained_children.element(0) == sibling &&
+        retained_children.element(1) == child, "explicit and inferred entries share the ordered child array");
+  const auto revision = parent_runtime->children_id;
+  const auto parent_reference = child_runtime->parent_reference_id;
+  emitted(parent, child);
+  check(parent_runtime->children_id == revision && child_runtime->parent_reference_id == parent_reference,
+        "appending the existing last child preserves hierarchy revisions");
+  emitted(next_parent, child);
+  check(retained_children.size() == 1 && retained_children.element(0) == sibling &&
+        next_runtime->children->element(0).shared_owner() == child.shared_owner() &&
+        child_runtime->parent->shared_owner() == next_parent.shared_owner(),
+        "reparenting updates the retained graph without replacement rows");
+  auto thrown = std::make_shared<int>(73);
+  next_runtime->can_add_child = [&](auto, auto) -> bool { throw thrown; };
+  bool exact_throw = false;
+  try { emitted(next_parent, child); }
+  catch (const std::shared_ptr<int>& caught) { exact_throw = caught == thrown; }
+  check(exact_throw && next_runtime->children->element(0) == child,
+        "the original guard exception propagates without changing the graph");
+
+  auto unsupported = flight::scene2d::create_display_object();
+  auto detached = flight::scene2d::create_display_object();
+  auto unsupported_runtime = flight::node::native_node_2d_runtime(unsupported);
+  unsupported_runtime->node_signals = flight::make_ref<types::NodeSignals>();
+  bool direct_rejected = false, explicit_rejected = false;
+  try { flight::node::add_node_child(unsupported, detached); }
+  catch (const std::logic_error& error) {
+    direct_rejected = std::string(error.what()) == "Native Node2D hierarchy signal owner binding is unavailable";
+  }
+  try { emitted(unsupported, detached); }
+  catch (const std::logic_error& error) {
+    explicit_rejected = std::string(error.what()) == "Native Node2D hierarchy signal owner binding is unavailable";
+  }
+  check(direct_rejected && explicit_rejected && !unsupported_runtime->children &&
+        !flight::node::native_node_2d_runtime(detached)->parent,
+        "both entries retain the explicit unsupported signal-owner limitation");
+}
 }
 
 int main() {
+  explicit_node2d_hierarchy();
   auto target = flight::scene2d::create_display_object();
   const auto target_owner = target.shared_owner();
   auto element = flight::make_ref<types::XmlElement>();
