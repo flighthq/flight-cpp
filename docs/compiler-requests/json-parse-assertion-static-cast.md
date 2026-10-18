@@ -702,3 +702,25 @@ nominal union remain separate partial boundaries. No installed header promotion,
 fully faithful parser/package result or global sweep follows from these fixture
 results. Compact evidence is in
 [the qualification record](../../artifacts/json-assertion-scalar-row-qualification.json).
+
+
+### Nullable-root readiness correction
+
+A later readiness probe used the **whole original `parseLottieDocument`
+function and complete original type module**, with controlled kind/null wrappers.
+After the source null guard, narrowed nominal evidence incorrectly folded six
+primitive-root `typeof` results to `"object"` (6/20 failures; native build passed,
+run exited 1). The backend now resolves the elected row from its stored binding
+type and uses occurrence presence to unwrap the optional exactly once. The same
+raw parser matches its executed TypeScript oracle **20/20**, native exit 0.
+
+The portable fourth fixture reproduces the nullable parse/guard shape without an
+external checkout and compares 30 checks across ten roots against its own
+executed TypeScript. Current verification is **4/4 owned tests plus 99/99 private
+JSON preservation tests**, all unskipped. All 109 ordered patches and the strict
+build pass; the relevant existing backend comparison remains **27 pass / 1 same
+failure** against the retained 108-patch baseline, all 1576 names/statuses equal.
+The preceding 125/125 and raw-schema 586/586 results are historical focused proof;
+they do not establish original public parser behavior. The approved single scoped
+Lottie run can now proceed in the confirmed slot, followed by original public
+consumer and exact-header measurement. No generated header changed in this fix.

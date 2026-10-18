@@ -691,7 +691,7 @@
 +          compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
 +        }).outputText,
 +      )(reference);
-+      const roots = ['null', '0', '30', 'false', 'true', '\"\"', '\"ab\"', '[]', '{}', '['];
++      const roots = ['null', '0', '30', 'false', 'true', '""', '"ab"', '[]', '{}', '['];
 +      const checks = roots.flatMap((source) =>
 +        ['guardedKind', 'guardedTruth', 'guardedNull'].map((name) => {
 +          const expected = reference[name]!(source);

@@ -6,11 +6,12 @@
   "orderedApplyFromRawClean": "pass",
   "strictBuild": "pass",
   "focused": {
-    "files": 8,
-    "pass": 125,
+    "files": 5,
+    "pass": 103,
     "fail": 0,
     "skipped": 0,
-    "ownedFixtureTests": 3,
+    "ownedFixtureTests": 4,
+    "privateJsonPreservationTests": 99,
     "includesFourthPrivateJsonGraph": true
   },
   "sameFloorBackendParity": {
@@ -56,7 +57,7 @@
     "counterexampleDisposition": "Consumed already-owned builder6 parsed-JSON ToPrimitive runtime correction; source input matrix unchanged.",
     "sourceOracleSha256": "36830bd5a2a66c2d807742e64a3e4c73b6b23f0878a474b08435230e20b52014"
   },
-  "sourcePatchSha256": "62eaf403e486abbbf895a6d370f5dc7abc08d5ee5797ad82b99bb507ab94c906",
+  "sourcePatchSha256": "552a72253c68a66b043fa604af7135545012d8ee0b40e789597c6518fe793100",
   "semantics": "Exact named JSON-asserted schemas only; existing StructuralRef ABI and original owner/root retained. Raw scalar cells retain typeof, truth/nullish, operation-specific coercion, concatenation, UTF16 relations and strict/loose equality. Native scalar sinks explicitly use shared out-of-profile errors. No schema copies/global scalar ABI or original Flight body edits.",
   "negativeControls": [
     "unrelated equal-shape row keeps row_get",
@@ -65,7 +66,7 @@
     "unknown members keep current path",
     "seven unrelated controls byte-identical"
   ],
-  "currentReadiness": "Qualified focused compiler preparation; original public Lottie/Aseprite consumers and exact21 header qualification pending one coordinated scoped run after actual slot check.",
+  "currentReadiness": "Nullable raw-parser readiness counterexample corrected and qualified. One approved scoped Lottie SDK run and original public consumers/exact21 header qualification follow confirmed slot; no installed/header result yet.",
   "sdkGeneration": "not run",
   "originalPublicConsumer": "pending",
   "headerRowsChanged": 0,
@@ -75,5 +76,44 @@
     "Aseprite two-owner nominal union assertion",
     "unsupported scalar/native escape shapes not exercised by the focused capability"
   ],
-  "globalOrPackagePassClaim": false
+  "globalOrPackagePassClaim": false,
+  "previousFocusedHistorical": {
+    "files": 8,
+    "pass": 125,
+    "fail": 0,
+    "skipped": 0,
+    "ownedFixtureTests": 3,
+    "includesFourthPrivateJsonGraph": true
+  },
+  "nullableRootFollowup": {
+    "cause": "A narrowed-present identifier retained a nullable JSON row in storage, but nominal narrowed type evidence folded primitive root typeof to object.",
+    "fix": "Resolve the elected row from stored binding type; use occurrence presence to project an already narrowed optional exactly once.",
+    "originalParserSource": "packages/scene2d-formats/src/lottieDocument.ts#parseLottieDocument",
+    "parserFunctionWhole": true,
+    "schemaModuleWhole": true,
+    "sourceWrapperSha256": "3af5c35d02ec3fa24938985f08024375821fe6057e76607a4ef3834fcac10c59",
+    "sourceOracleSha256": "491ea6adaad9657c9832343dc980e25b840f4a0644ccff26c4fffe1b142cd987",
+    "before": {
+      "checks": 20,
+      "failures": 6,
+      "compileExit": 0,
+      "runExit": 1
+    },
+    "after": {
+      "checks": 20,
+      "failures": 0,
+      "compileExit": 0,
+      "runExit": 0,
+      "expectations": "Executed original extracted TypeScript parser plus controlled kind/null wrappers"
+    },
+    "portableRegression": {
+      "checks": 30,
+      "rootsIncludingSyntaxError": 10,
+      "oracle": "Same self-contained TypeScript source executed under Node; no external checkout required"
+    },
+    "current109OrderedApply": "pass",
+    "strictBuild": "pass",
+    "privateJsonPreservation": "99/99 pass",
+    "backendParity": "same108 baseline27pass1fail; candidate27pass1fail;1576names/statuses identical"
+  }
 }
