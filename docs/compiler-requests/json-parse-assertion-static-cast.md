@@ -775,3 +775,18 @@ those of the frozen 110-patch generation. No additional SDK run was performed.
 The numeric helper's original array selection now retains the selected `Any` array owner and immutable aliases. Guarded element reads retain null, undefined and live mutations; nullish fallbacks remain lazy, and `Number` uses the shared scalar operation carrier, including Unicode whitespace and source `TypeError` for noncallable conversion members and Symbols. A sized output array is admitted only after a complete-fill proof over an unchanged numeric bound. Native array escapes, partial fills and intervening observations still refuse. Compound typed-array guards retain their branch evidence, writes target the original variant storage, and unresolved third instance-array callback parameters recover the receiver array type.
 
 The carried patch passes 136 focused tests and two patch-automation tests on the ordered 114-compiler-patch stack. The complete original numeric and handle helpers separately compile, link and pass 301 native checks against their source oracle. These helper checks are preparation: the whole original public Lottie body/callee closure and its 32-case installed consumer remain pending, and this change makes no SDK or header promotion claim. The separate qualification artifact records the exact input hashes and the failing root-wide fixture typecheck lane.
+
+
+The generic-array and nested-owner preparation is qualified in
+[generic-array-owner-qualification.json](../../artifacts/generic-array-owner-qualification.json).
+The compiler keeps the original generic data owner for the exact ambient array predicate, carries
+live guarded reads, and selects narrowed fields using the original named alias or row carrier's
+slot order. Presence-context refinement is bounded to original absence-carrying bindings; ordinary
+calls, unguarded generic fields, class owners and invalidated field facts do not gain that proof.
+The new native fixtures exercise both slot order and mutations through the same nested owners.
+Production and owned strict checks pass, as do 38 focused tests without skips, 15 native fixture
+checks and 301 checks on the two untouched original helpers. Three guarded-path controls fail in
+both the preceding 117-patch floor and this 118-patch composition; those results are recorded as
+failures. Complete original-module emission now retains every body except
+`createLottiePositionSampler`, whose filtered-track callback still lacks nullable-element presence
+evidence. This preparation changes no SDK output and makes no public 32-case or exact 21-header promotion.
