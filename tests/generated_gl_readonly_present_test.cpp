@@ -46,6 +46,9 @@ void check_target_base_cells(const std::shared_ptr<Target>& target) {
   // buildable on the preceding flat declarations as well as that snapshot.
   if constexpr (std::is_base_of_v<types::GlRenderTarget, Target>) {
     flight::Ref<types::GlRenderTarget> base = target;
+    check(base->framebuffer.has_value() ==
+              !std::is_same_v<Target, types::GlScreenRenderTarget>,
+          "render target factory changed its original framebuffer presence");
     check(!base.owner_before(target) && !target.owner_before(base) &&
               &base->entity_runtime_key == &target->entity_runtime_key &&
               &base->gl == &target->gl && &base->width == &target->width &&

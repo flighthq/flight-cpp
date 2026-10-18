@@ -62,7 +62,7 @@ inline flight::Ref<GlScreenRenderTarget> create_gl_screen_render_target(GlContex
   auto target = flight::make_ref<GlScreenRenderTarget>();
   target->entity_runtime_key = std::nullopt;
   target->gl = gl;
-  target->framebuffer = flight::null;
+  target->framebuffer = decltype(GlScreenRenderTarget::framebuffer){};
   target->width = static_cast<double>(gl.drawing_buffer_width());
   target->height = static_cast<double>(gl.drawing_buffer_height());
   target->color_attachments = 1.0;
