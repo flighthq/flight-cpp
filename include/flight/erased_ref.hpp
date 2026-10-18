@@ -45,6 +45,28 @@ class ErasedRef final {
                           : std::shared_ptr<void>()),
         type_(object_ ? std::type_index(typeid(Object)) : std::type_index(typeid(void))) {}
 
+  // Records one explicitly declared public base while the concrete owner is still known. This
+  // adds a separate capability; exact `as`/`holds`, identity and the original concrete type do not
+  // change. The alias is adjusted by the proven C++ upcast and shares the original control block.
+  template <typename Base, typename Object>
+    requires(std::same_as<Base, std::remove_cv_t<Base>> && std::derived_from<Object, Base>)
+  [[nodiscard]] static ErasedRef with_declared_base(std::shared_ptr<Object> reference) {
+    ErasedRef result(reference);
+    if (reference) {
+      result.declared_base_object_ = std::static_pointer_cast<Base>(std::move(reference));
+      result.declared_base_type_ = std::type_index(typeid(Base));
+    }
+    return result;
+  }
+
+  // Recovers only the base capability explicitly recorded at insertion. No relationship is
+  // inferred from an erased pointer, and no downcast or unrelated type recovery is performed.
+  template <typename Base>
+  [[nodiscard]] Ref<Base> declared_base_as() const noexcept {
+    if (!declared_base_object_ || declared_base_type_ != std::type_index(typeid(Base))) return {};
+    return std::static_pointer_cast<Base>(declared_base_object_);
+  }
+
   [[nodiscard]] explicit operator bool() const noexcept { return static_cast<bool>(object_); }
   [[nodiscard]] bool has_value() const noexcept { return static_cast<bool>(object_); }
 
@@ -89,6 +111,8 @@ class ErasedRef final {
 
   std::shared_ptr<void> object_;
   std::type_index type_{typeid(void)};
+  std::shared_ptr<void> declared_base_object_;
+  std::type_index declared_base_type_{typeid(void)};
 };
 
 // `getEntityBindingAs<Type>(source)`: the binding read at one type, or nothing. The optional is the

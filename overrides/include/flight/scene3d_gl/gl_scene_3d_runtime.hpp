@@ -52,7 +52,11 @@ inline void destroy_gl_scene_3d_runtime(flight::Ref<flight::types::GlRenderState
   for (const auto& [for_of_key, for_of_value] : scene.value()->program_cache) {
     static_cast<void>(for_of_key);
     auto value = for_of_value;
-    auto program = flight::erased_ref_as<flight::types::GlMeshProgram>(value);
+    auto program = value.declared_base_as<flight::types::GlMeshProgram>();
+    if (!program) program = flight::erased_ref_as<flight::types::GlMeshProgram>(value);
+    if (!program) {
+      throw flight::Error(flight::String("Scene3D program cache entry lacks its declared program capability"));
+    }
     gl.delete_program(program->program);
   }
   scene.value()->program_cache.clear();

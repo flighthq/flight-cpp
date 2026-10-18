@@ -131,7 +131,7 @@ inline flight::Ref<flight::types::Mesh> clone_mesh(
     values.set(matrix->m);
     clone_runtime->local_matrix4 =
         flight::make_ref<flight::types::Matrix4>(flight::types::Matrix4{
-            .entity_runtime_key = std::nullopt, .m = std::move(values)});
+            .m = std::move(values)});
     ++clone_runtime->local_transform_id;
     clone_runtime->local_transform_using_local_transform_id =
         clone_runtime->local_transform_id;

@@ -15,7 +15,9 @@
 #include <array>
 #include <cmath>
 #include <exception>
+#include <functional>
 #include <iostream>
+#include <memory>
 #include <optional>
 #include <type_traits>
 
@@ -26,6 +28,9 @@ using SourceView = flight::StructuralRef<flight::RowReadonly<flight::RowOf<fligh
 using DestView = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<types::GlRenderTarget>>>>;
 using PresentDest = std::optional<std::optional<DestView>>;
 using State = flight::Ref<types::GlRenderState>;
+struct ExternalProgramPadding { double application_data = 3.0; };
+struct ExternalProgram : ExternalProgramPadding, types::GlMeshProgram {};
+struct UnrelatedCachedOwner { int value = 0; };
 static_assert(std::is_same_v<decltype(&render_gl::present_gl_render_target), void (*)(State, SourceView, PresentDest)>);
 static_assert(std::is_same_v<decltype(&render_gl::draw_gl_linear_to_srgb_pass), void (*)(State, SourceView, std::optional<DestView>)>);
 
@@ -45,9 +50,12 @@ void check_rederived_program_and_callbacks(const State& state) {
   check(first == second && !first.owner_before(second) && !second.owner_before(first),
         "the classic compiler callback replaced its cached program owner");
   const auto gl = state->gl;
+  const auto actual_model = gl.get_uniform_location(first->program, flight::String("u_model"));
+  const auto actual_view_projection = gl.get_uniform_location(first->program, flight::String("u_viewProjection"));
   check(first->loc_model.has_value() && first->loc_view_projection.has_value() &&
-            first->loc_model == gl.get_uniform_location(first->program, flight::String("u_model")) &&
-            first->loc_view_projection == gl.get_uniform_location(first->program, flight::String("u_viewProjection")),
+            actual_model.has_value() && actual_view_projection.has_value() &&
+            first->loc_model->native_name() == actual_model->native_name() &&
+            first->loc_view_projection->native_name() == actual_view_projection->native_name(),
         "the classic factory lost its inherited program or live GL locations");
   using ProgramRead = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<types::GlMeshProgram>>>>;
   const ProgramRead program(first);
@@ -78,6 +86,52 @@ void check_rederived_program_and_callbacks(const State& state) {
   check(scene::compose_gl_pbr_extension_source(scene::pbr_extension_declarations, contributions) ==
             flight::String("live\nB0") && contributions.element(0) == a && contributions.element(1) == b,
         "the PBR callbacks copied contribution owners or hid a live source cell");
+  std::weak_ptr<ExternalProgram> external_lifetime;
+  {
+    const auto runtime = scene::get_gl_scene_3d_runtime(state);
+    const flight::String cache_key("external-application-program");
+    flight::Ref<ExternalProgram> created;
+    int compilations = 0;
+    const std::function<flight::Ref<ExternalProgram>(flight::host_sdl::WebGl2Context)> compile =
+        [&](flight::host_sdl::WebGl2Context owner_gl) {
+          ++compilations;
+          created = flight::make_ref<ExternalProgram>();
+          created->program = scene::compile_gl_program(owner_gl, flight::String(
+              "#version 300 es\nlayout(location=0) in vec3 p;\nvoid main(){gl_Position=vec4(p,1.0);}\n"),
+              flight::String("#version 300 es\nprecision highp float;\nout vec4 c;\nvoid main(){c=vec4(1.0);}\n"));
+          return created;
+        };
+    const auto external = scene::ensure_gl_scene_3d_program<flight::Ref<ExternalProgram>>(
+        state, cache_key, compile);
+    const auto again = scene::ensure_gl_scene_3d_program<flight::Ref<ExternalProgram>>(
+        state, cache_key, compile);
+    external_lifetime = external;
+    const auto cached = runtime->program_cache.get(cache_key);
+    check(compilations == 1 && external == created && external == again &&
+              !external.owner_before(created) && !created.owner_before(external) &&
+              cached.has_value() && cached->as<ExternalProgram>() == external &&
+              !cached->as<types::GlMeshProgram>(),
+          "the generic program cache lost its exact arbitrary derived owner");
+    const auto base = cached ? cached->declared_base_as<types::GlMeshProgram>() : nullptr;
+    check(base && base.get() == static_cast<types::GlMeshProgram*>(external.get()) &&
+              !base.owner_before(external) && !external.owner_before(base) &&
+              !cached->declared_base_as<types::GlClassicProgram>(),
+          "the generic cache inferred a type or replaced its declared base owner");
+    scene::destroy_gl_scene_3d_runtime(state);
+    check(runtime->program_cache.size() == 0 && !scene::scene_runtimes.has(state) &&
+              !static_cast<bool>(external->program) && !static_cast<bool>(first->program),
+          "actual scene teardown did not delete and clear every cached program");
+  }
+  check(external_lifetime.expired(), "a destroyed generic cache retained its derived program");
+  const auto invalid_runtime = scene::get_gl_scene_3d_runtime(state);
+  const flight::String invalid_key("unrelated-cache-owner");
+  invalid_runtime->program_cache.set(invalid_key, flight::make_ref<UnrelatedCachedOwner>());
+  bool rejected = false;
+  try { scene::destroy_gl_scene_3d_runtime(state); }
+  catch (const flight::Error&) { rejected = true; }
+  check(rejected && invalid_runtime->program_cache.has(invalid_key),
+        "scene teardown accepted or silently discarded an unrelated cache owner");
+  static_cast<void>(invalid_runtime->program_cache.erase(invalid_key));
   scene::destroy_gl_scene_3d_runtime(state);
   check(gl.get_error() == gl.no_error, "rederived program checks raised a real GL error");
 }

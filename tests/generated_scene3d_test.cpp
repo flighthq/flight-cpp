@@ -190,6 +190,18 @@ int main() {
             flight::node::get_node_local_matrix4(mesh)->m.get_index(12.0) ==
                 9.0,
         "direct local matrices are copied, retained, and marked detached");
+  const auto detached_clone = scene3d::clone_mesh(mesh);
+  const auto source_matrix = flight::node::get_node_local_matrix4(mesh);
+  const auto cloned_matrix = flight::node::get_node_local_matrix4(detached_clone);
+  check(cloned_matrix != source_matrix &&
+            (cloned_matrix.owner_before(source_matrix) || source_matrix.owner_before(cloned_matrix)) &&
+            !cloned_matrix->entity_runtime_key.has_value() &&
+            flight::node::is_node_local_matrix4_detached(detached_clone) &&
+            cloned_matrix->m.get_index(12.0) == source_matrix->m.get_index(12.0),
+        "a detached clone owns its matrix and preserves inherited runtime absence");
+  cloned_matrix->m.set_index(12.0, -7.0);
+  check(source_matrix->m.get_index(12.0) == 9.0,
+        "a detached clone shares its source matrix storage");
   flight::node::sync_node_transform_3d_from_matrix4(mesh);
   check(!flight::node::is_node_local_matrix4_detached(mesh) &&
             std::abs(mesh->position->x - 9.0) < 1e-6 &&

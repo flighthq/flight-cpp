@@ -199,7 +199,8 @@ inline T ensure_gl_scene_3d_program(flight::Ref<flight::types::GlRenderState> st
     return flight::erased_ref_as<typename T::element_type>(runtime->program_cache.get(key));
   }
   T program = compile(state->gl);
-  runtime->program_cache.set(key, program);
+  runtime->program_cache.set(
+      key, flight::ErasedRef::with_declared_base<flight::types::GlMeshProgram>(program));
   return program;
 }
 

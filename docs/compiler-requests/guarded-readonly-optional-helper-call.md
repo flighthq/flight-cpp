@@ -235,3 +235,33 @@ Verification for this reconciliation is pending the changed original Scene3D GL 
 expanded existing public GL consumer. The latter includes the complete retained shaded prelude for
 compilation, without replacing its missing snippet-table guard. Global override integrity will be
 recorded separately from renderer/package completeness.
+
+
+The required real-consumer check exposed two additional native qualification defects. The existing
+mesh clone copy directly designated an inherited `Entity.entity_runtime_key` inside a `Matrix4`
+aggregate. It now retains that slot's default absence and keeps the fresh matrix/control block and
+copied Float32Array; the existing Scene3D clone consumer checks both owners and mutation isolation.
+
+The program cache retained a concrete derived owner in `ErasedRef` and recovered it at that exact
+type on cache hits, but teardown incorrectly asked the same exact erasure for `GlMeshProgram`.
+That base query returned empty and was dereferenced. `ErasedRef::with_declared_base<Base>` now
+records an explicit public, unambiguous C++ base alias while the original object type is known.
+`declared_base_as<Base>` checks only that recorded capability. Original exact `as`/`holds`, held type,
+identity and concrete-owner recovery are unchanged; no relationship is guessed after erasure.
+The alias has the compiler-proved pointer adjustment and original shared control block, with no
+copied object, allocation of a replacement program, downcast, or list of known subclasses.
+
+The generic native program-cache insertion records its declared `GlMeshProgram` capability;
+teardown uses it, accepts existing exact-base entries, and rejects an unrelated unproved cache
+entry explicitly. Actual cache/cleanup testing includes an application-defined program subclass
+with multiple inheritance, one compile across repeated cache calls, original concrete and base
+control-block identity, real GL program deletion/cache clearing, final owner release and unrelated
+entry rejection. Core coverage checks ordinary exact erasure, explicit base access, unrelated and
+private-base rejection, adjusted/live cells, copy/move, null and final lifetime. These checks are
+pending the rebuilt consumers; the observed crash is kept red until the capability fix passes.
+
+Fresh `get_uniform_location` queries create distinct host handle identities even for the same GL
+location. The new test correctly compares their native GL locations and independently checks the
+readonly view's live original cell; it does not require those fresh wrapper identities to match.
+Existing classic/PBR source-key spread and classic lit-location omissions remain explicit partial
+debts. No full classic, shaded or package completion follows from these bounded checks.
