@@ -60,7 +60,7 @@ void check(const char* label, bool result) {
 template<class Object> Common common_for(const std::shared_ptr<Object>& source) {
   const auto runtime = flight::row_get<decltype(Object::entity_runtime_key)>(
       View<Object>(source), flight::types::entity_runtime_key).value();
-  Common common(View<typename decltype(runtime)::element_type>(runtime));
+  Common common{View<typename decltype(runtime)::element_type>(runtime)};
   auto bind = [&](const char* key, auto member) {
     std::weak_ptr<typename decltype(runtime)::element_type> weak = runtime;
     common.shared_owner()->bind_named(key, [weak, member]() -> decltype(auto) {
