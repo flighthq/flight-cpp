@@ -15,6 +15,11 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
+import {
+  classInterfaceAdoptionOptions,
+  loadClassInterfaceAdoptions,
+  unmatchedClassInterfaceAdoptionSites,
+} from './classInterfaceAdoptions.mjs';
 import { loadDeferredPackages, nonTerminatingPackages } from './deferredPackages.mjs';
 import { resolveDependency } from './dependencyLock.mjs';
 import {
@@ -171,6 +176,7 @@ const declaredRepairs = loadEmissionRepairs(root);
 const deferredPackages = loadDeferredPackages(root);
 const sourcePatches = loadSourcePatches(root);
 const structuralValueCarriers = loadStructuralValueCarriers(root);
+const classInterfaceAdoptions = loadClassInterfaceAdoptions(root);
 reportPendingSourcePatches(loadPendingSourcePatches(root));
 for (const dependency of [compiler, flight]) {
   const recovery = recoverStalePatches(sourcePatches, dependency);
@@ -375,13 +381,22 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
     })),
   );
   process.stderr.write(`DEBUG profiles=${profiles.length} names=${profileTypeNames(profiles).length} sample=${profileTypeNames(profiles).slice(0,3).join('|')}\n`);
-  const unmatchedCarrierSites = unmatchedStructuralValueCarrierSites(
-    structuralValueCarriers,
-    new Map(packageDescriptors.map((package_) => [package_.name, package_.sources.map((source) => source.contents)])),
+  const packageSourceText = new Map(
+    packageDescriptors.map((package_) => [package_.name, package_.sources.map((source) => source.contents)]),
   );
+  const unmatchedCarrierSites = unmatchedStructuralValueCarrierSites(structuralValueCarriers, packageSourceText);
   if (unmatchedCarrierSites.length > 0) {
     throw new Error(
       `structural-value-carriers.json declares sites the pinned source no longer has:\n  ${unmatchedCarrierSites.join('\n  ')}`,
+    );
+  }
+  const unmatchedInterfaceAdoptions = unmatchedClassInterfaceAdoptionSites(
+    classInterfaceAdoptions,
+    packageSourceText,
+  );
+  if (unmatchedInterfaceAdoptions.length > 0) {
+    throw new Error(
+      `class-interface-adoptions.json declares requirements the pinned source no longer satisfies:\n  ${unmatchedInterfaceAdoptions.join('\n  ')}`,
     );
   }
   const compilation = compileTypeScriptPackageGraph({
@@ -397,6 +412,9 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
       runtimeProfile: 'flight-cpp',
       ...(structuralValueCarriers.length > 0
         ? { structuralValueCarriers: structuralValueCarrierOptions(structuralValueCarriers) }
+        : {}),
+      ...(classInterfaceAdoptions.length > 0
+        ? { classInterfaceAdoptions: classInterfaceAdoptionOptions(classInterfaceAdoptions) }
         : {}),
       upstreamCommit: flightDependency.commit,
     },

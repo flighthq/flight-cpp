@@ -139,4 +139,37 @@ satisfy, are untouched.
 Measured: the focused test emits the adoption (and leaves a same-class argument alone); the emitted
 fixture compiles as C++20 against the pinned runtime; the compiler builds with all 115 patches and
 the stack applies/reverts clean. This covers the SWF placement helpers that take the concrete
-reader; the forward half (a class instance at an interface parameter) remains the declared-site view.
+reader.
+
+## Landed: the forward half, as a declared native interface base
+
+`compiler-class-interface-heritage` makes a DECLARED class/interface pair one C++ type hierarchy
+instead of two unrelated structs, so the forward conversion is the ordinary base reference conversion
+and no new type is emitted:
+
+- the class is emitted `: public <interface>` (instead of `flight::ReferenceEnabled`; the interface
+  already derives it);
+- the interface's data members ARE the class's cells: the class's duplicate field declarations are
+  omitted and their initializers run in the constructor, exactly like an inherited abstract field;
+- each interface method member — std::function storage in the emitted interface — is bound in the
+  constructor to the class method of the same name, named through the base because the class's method
+  hides the inherited member.
+
+A `Ref<Class>` therefore converts implicitly to `Ref<Interface>` over the SAME control block, and a
+field write through either name is one cell. The reverse `require_owner<Class>` already recovers that
+same allocation from the control-block record, so both directions share one owner, one set of live
+cells, and one lifetime. There is no adapter, no copied struct, no member-access lowering, and no new
+runtime family.
+
+The pair is bounded twice. It is declared, never inferred: `class-interface-adoptions.json` names the
+interface, the class, the reverse call sites, and `derive: true`, and generation refuses a declared
+source requirement the pin no longer has. And the backend adopts only when the class declares no base
+of its own and every interface member has a compatible class member — same type, readonly and
+optionality for data, matching parameters and result for methods — with a plain instance method a
+thunk can forward to. A class that declares its own base, or an interface member whose signature the
+class cannot forward, keeps the previous class shape and the previous diagnostic.
+
+One bounded consequence is recorded rather than hidden: the thunks capture the object, so a copy of a
+class instance would leave the copy's inherited method members pointing at the original. Emitted class
+instances are allocated once through `make_ref` and passed by `Ref`, which is the only use the declared
+pair covers today; a value-copied class would need its own re-binding and is not claimed.

@@ -1,0 +1,291 @@
+diff --git a/packages/compiler-backend-cpp/src/cppClassInterfaceHeritage.test.ts b/packages/compiler-backend-cpp/src/cppClassInterfaceHeritage.test.ts
+new file mode 100644
+index 0000000..ec9f3b7
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppClassInterfaceHeritage.test.ts
+@@ -0,0 +1,93 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import type { CppCompilerBackendOptions } from '../../compiler-types/src/index.js';
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++type Adoption = NonNullable<CppCompilerBackendOptions['classInterfaceAdoptions']>[number];
++
++function adoption(interfaceName: string, className: string): Adoption {
++  return { class: className, derive: true, interface: interfaceName, parameters: [] };
++}
++
++function emit(source: string, adoptions: readonly Adoption[] = []): string {
++  const sourceFile = ts.createSourceFile(
++    '/flight/packages/example/src/classInterfaceHeritage.ts',
++    source,
++    ts.ScriptTarget.Latest,
++    true,
++  );
++  const result = lowerTypeScriptSource(sourceFile, {
++    packageName: '@flighthq/example',
++    upstreamDirectory: '/flight',
++  });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp', classInterfaceAdoptions: adoptions }).contents;
++}
++
++const paired = `
++  interface R { pos: number; label: string; read(): number; advance(amount: number): void }
++  class C {
++    pos = 3;
++    label: string;
++    constructor(label: string) { this.label = label; }
++    read(): number { this.pos += 1; return this.pos; }
++    advance(amount: number): void { this.pos += amount; }
++  }
++`;
++
++it('emits the declared interface as the class native base', () => {
++  const output = emit(paired, [adoption('R', 'C')]);
++  expect(output).toContain('struct C : public flighthq_example::R {');
++  expect(output).not.toContain('struct C : public flight::ReferenceEnabled {');
++});
++
++it('shares the interface data members instead of declaring a second cell', () => {
++  const output = emit(paired, [adoption('R', 'C')]);
++  const start = output.indexOf('struct C : public flighthq_example::R {');
++  const classBody = output.slice(start, output.indexOf('\n};', start));
++  expect(classBody).not.toContain('double pos;');
++  expect(classBody).not.toContain('flight::String label;');
++  expect(classBody).toContain('this->pos = 3.0;');
++  expect(classBody).toContain('this->label = label)');
++});
++
++it('forwards each interface method member to the class method of the same name', () => {
++  const output = emit(paired, [adoption('R', 'C')]);
++  expect(output).toContain('flighthq_example::R::read = [this]() { return this->read(); };');
++  expect(output).toContain('flighthq_example::R::advance = [this](double amount) { this->advance(amount); };');
++});
++
++it('leaves an undeclared class exactly as it was', () => {
++  const output = emit(paired);
++  expect(output).toContain('struct C : public flight::ReferenceEnabled {');
++  expect(output).not.toContain('::R::read =');
++});
++
++it('does not adopt when the class declares a base of its own', () => {
++  const output = emit(
++    `
++      interface R { pos: number; read(): number }
++      class Base { pos = 0; }
++      class C extends Base { read(): number { this.pos += 1; return this.pos; } }
++    `,
++    [adoption('R', 'C')],
++  );
++  expect(output).toContain('struct C : public Base {');
++  expect(output).not.toContain('::R::read =');
++});
++
++it('does not adopt an interface member the class cannot forward', () => {
++  // TypeScript's structural check accepts a method with fewer parameters, but the emitted interface
++  // member has storage of its own signature, so there is no thunk that would forward it faithfully.
++  const output = emit(
++    `
++      interface R { pos: number; read(marker: number): number }
++      class C { pos = 0; read(): number { return 1; } }
++    `,
++    [adoption('R', 'C')],
++  );
++  expect(output).toContain('struct C : public flight::ReferenceEnabled {');
++  expect(output).not.toContain('::R::read =');
++});
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index dfa7bbd..3744cfc 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -2250,13 +2250,39 @@ function emitClass(declaration: Readonly<IrClassDeclaration>, outer: EmitContext
+   const name = getBindingTargetName(declaration.binding, context);
+   const typeParams = emitTypeParameters(declaration.typeParameters, context);
+   assertCppClassBaseCompletenessCpp(declaration, context);
++  // A DECLARED class/interface heritage pair makes the interface the class's native base, so a class
++  // value IS the interface the source passes it as: the interface's cells are the class's own storage
++  // and its method members forward to the class's methods. Undeclared or incompatible pairs keep the
++  // class exactly as it was, and the forward reference keeps its existing diagnostic.
++  const interfaceHeritage = getCppClassInterfaceHeritageCpp(declaration, context);
++  if (interfaceHeritage) {
++    context.includes.add(
++      getCppIncludeDirectivePath(getCppModuleIncludeDirective(interfaceHeritage.module, context.options)),
++    );
++  }
+   const extendsClause = declaration.extends
+     ? ` : public ${emitType(declaration.extends, context, 'storage')}`
+-    : getCppRuntimeProfile(context.options) === 'flight-cpp'
+-      ? ' : public flight::ReferenceEnabled'
+-      : '';
++    : interfaceHeritage
++      ? ` : public ${interfaceHeritage.typeName}`
++      : getCppRuntimeProfile(context.options) === 'flight-cpp'
++        ? ' : public flight::ReferenceEnabled'
++        : '';
+   const overriddenMethods = getIrClassInheritedMethodNamesCpp(declaration, context);
+-  const inheritedAbstractFields = getIrClassInheritedAbstractFieldNamesCpp(declaration, context);
++  const inheritedAbstractFields = new Set([
++    ...getIrClassInheritedAbstractFieldNamesCpp(declaration, context),
++    // A data member the interface already declares IS the class's cell: declaring it again would give
++    // the two views separate storage. Its initializer runs in the constructor body, like an inherited
++    // abstract field's.
++    ...(interfaceHeritage?.declaration.properties ?? [])
++      .filter((property) => property.type.kind !== 'function')
++      .map((property) => property.name),
++  ]);
++  // Interface methods are storage in the emitted interface (std::function members), so each one is
++  // bound to the class method that implements it. The thunk names the base explicitly because the
++  // class's own method of the same name hides the inherited member for unqualified lookup.
++  const interfaceThunkInits = interfaceHeritage
++    ? emitCppInterfaceMethodThunkInitializersCpp(interfaceHeritage, declaration, context)
++    : [];
+   const hasSubclass = hasIrModuleSubclassCpp(declaration, context);
+   const lines: string[] = [];
+   if (typeParams) lines.push(`template ${typeParams}`);
+@@ -2318,6 +2344,7 @@ function emitClass(declaration: Readonly<IrClassDeclaration>, outer: EmitContext
+       ? declaration.classConstructor.body.filter((statement) => !isSuperCallStatement(statement))
+       : declaration.classConstructor.body;
+     lines.push(`  ${name}(${params})${initList} {`);
++    lines.push(...interfaceThunkInits);
+     lines.push(...baseFieldInits);
+     lines.push(
+       ...indentSourceLines(
+@@ -2330,8 +2357,9 @@ function emitClass(declaration: Readonly<IrClassDeclaration>, outer: EmitContext
+       ),
+     );
+     lines.push('  }');
+-  } else if (baseFieldInits.length > 0) {
++  } else if (baseFieldInits.length > 0 || interfaceThunkInits.length > 0) {
+     lines.push(`  ${name}() {`);
++    lines.push(...interfaceThunkInits);
+     lines.push(...baseFieldInits);
+     lines.push('  }');
+   }
+@@ -19552,6 +19580,105 @@ function isCppClassInterfaceMemberCompatibleCpp(
+   return areCppTypesRepresentationEquivalent(field.type, property.type, context);
+ }
+ 
++// The interface a class declares as its native base, resolved from the class's own imports. Only a
++// DECLARED pair adopts, the class must have no base of its own (one native interface base is the
++// bounded shape), and every interface member must be one the class can actually satisfy: a data
++// member needs the compatible field checked above, a method needs a plain instance method a thunk can
++// forward to. An interface member the class cannot satisfy leaves the class untouched, which keeps the
++// forward reference's existing diagnostic rather than inventing a body.
++function getCppClassInterfaceHeritageCpp(
++  declaration: Readonly<IrClassDeclaration>,
++  context: EmitContext,
++): Readonly<{
++  declaration: Readonly<IrInterfaceDeclaration>;
++  module: Readonly<IrModule>;
++  typeName: string;
++}> | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return undefined;
++  if (declaration.extends !== undefined || declaration.typeParameters.length > 0) return undefined;
++  const adoption = (context.options.classInterfaceAdoptions ?? []).find(
++    (candidate) => candidate.derive === true && candidate.class === declaration.binding.name,
++  );
++  if (!adoption) return undefined;
++  // The declaration is resolved by name across the whole program, not from this module's imports: the
++  // class that implements the interface need not mention it, which is exactly the structural case.
++  const matches = [...context.directBindingOwners.values()].flatMap((owner) =>
++    owner !== null &&
++    owner.declaration.kind === 'interface' &&
++    owner.declaration.binding.name === adoption.interface
++      ? [{ declaration: owner.declaration, module: owner.module }]
++      : [],
++  );
++  if (matches.length !== 1) return undefined;
++  const match = matches[0]!;
++  const interfaceDeclaration = match.declaration;
++  if (interfaceDeclaration.typeParameters.length > 0) return undefined;
++  const adoptable = interfaceDeclaration.properties.every(
++    (property) =>
++      !property.optional &&
++      property.phantom !== true &&
++      isCppClassInterfaceMemberCompatibleCpp(property, { declaration }, context) &&
++      isCppClassInterfaceThunkForwardableCpp(property, declaration),
++  );
++  if (!adoptable) return undefined;
++  const targetName =
++    context.targetNameMaps.get(getCppModuleIdentityKey(match.module))?.get(interfaceDeclaration.binding.id) ??
++    safeCppTypeName(interfaceDeclaration.binding.name);
++  const namespace = getCppCompilerPackageNamespace(match.module.packageName, context.options.packageTargets);
++  return {
++    declaration: interfaceDeclaration,
++    module: match.module,
++    typeName: namespace ? `${namespace}::${targetName}` : targetName,
++  };
++}
++
++// A data member needs no forwarding: the class's field IS the interface's cell once the duplicate
++// declaration is omitted. A method member is storage in the emitted interface, so the class must have
++// one plain instance method whose signature the thunk can take over exactly; an optional or rest
++// parameter, a generic, an async method, an accessor, a static, or a method with no body has no
++// faithful forward.
++function isCppClassInterfaceThunkForwardableCpp(
++  property: Readonly<IrObjectTypeProperty>,
++  declaration: Readonly<IrClassDeclaration>,
++): boolean {
++  if (property.type.kind !== 'function') return true;
++  if (property.type.typeParameters.length > 0) return false;
++  if (property.type.parameters.some((parameter) => parameter.optional || parameter.rest)) return false;
++  const method = declaration.methods.find((candidate) => candidate.name === property.name);
++  if (!method) return false;
++  if (method.static || method.async || method.abstract || method.accessor !== undefined) return false;
++  return method.parameters.every((parameter) => parameter.initializer === undefined);
++}
++
++// Binds each inherited interface method member to the class method of the same name. The member is
++// named through the base type because the class method hides it for unqualified lookup; the capture is
++// the object itself, and the thunk dies with the member it lives in, so it never outlives the owner.
++function emitCppInterfaceMethodThunkInitializersCpp(
++  heritage: Readonly<{ declaration: Readonly<IrInterfaceDeclaration>; typeName: string }>,
++  declaration: Readonly<IrClassDeclaration>,
++  context: EmitContext,
++): string[] {
++  const interfaceType = heritage.typeName;
++  const lines: string[] = [];
++  for (const property of heritage.declaration.properties) {
++    if (property.type.kind !== 'function') continue;
++    const method = declaration.methods.find((candidate) => candidate.name === property.name);
++    if (!method) continue;
++    const forward = property.type.parameters.map((parameter, index) => ({
++      name: safeCppName(parameter.name === '' ? `argument_${index}` : parameter.name),
++      type: emitType(parameter.type, context),
++    }));
++    const parameters = forward.map((parameter) => `${parameter.type} ${parameter.name}`);
++    const call = `this->${safeCppName(method.name)}(${forward.map((parameter) => parameter.name).join(', ')})`;
++    const returnsVoid = emitType(property.type.returns, context) === 'void';
++    const body = returnsVoid ? `${call};` : `return ${call};`;
++    lines.push(
++      `    ${interfaceType}::${safeCppName(property.name)} = [this](${parameters.join(', ')}) { ${body} };`,
++    );
++  }
++  return lines;
++}
++
+ function getCppInterfaceDeclarationCpp(
+   type: Readonly<IrType>,
+   context: EmitContext,
+diff --git a/packages/compiler-types/src/compilerBackendContract.ts b/packages/compiler-types/src/compilerBackendContract.ts
+index d388494..dca4687 100644
+--- a/packages/compiler-types/src/compilerBackendContract.ts
++++ b/packages/compiler-types/src/compilerBackendContract.ts
+@@ -292,6 +292,14 @@ export interface CppCompilerStructuralValueCarrier {
+ 
+ export interface CppCompilerClassInterfaceAdoption {
+   readonly class: string;
++  /**
++   * Emit the class with the interface as its native base, so a class value IS the interface: the
++   * interface's data members are the class's own storage (the class's duplicate declarations are
++   * omitted) and each interface method member is thunked to the class method of the same name. The
++   * class must declare no base of its own. A forward reference then converts by the ordinary base
++   * adjustment, sharing the allocation, and the reverse recovery still finds the same owner.
++   */
++  readonly derive?: boolean | undefined;
+   readonly interface: string;
+   readonly parameters: readonly Readonly<{ function: string; package: string; parameter: string }>[];
+ }

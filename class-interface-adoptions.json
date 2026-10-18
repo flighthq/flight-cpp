@@ -1,0 +1,18 @@
+{
+  "schema": "flight-cpp-class-interface-adoptions/1",
+  "adoptions": [
+    {
+      "id": "swf-reader-implements-tag-reader",
+      "interface": "SwfTagReader",
+      "interfacePackage": "@flighthq/types",
+      "class": "SwfReader",
+      "classPackage": "@flighthq/swf",
+      "derive": true,
+      "reason": "readSwfTimeline passes the SwfReader it allocated to each dispatched SwfTagHandler.parse(body: SwfTagReader, ...), and the placement handlers pass that interface-typed body to readSwfFilterList(reader: SwfReader, ...). The class is the only allocation of the interface in the SDK: handlers advance pos, bitPosition and valid on it and the caller reads them back, so a copy or an adapter split the mutable state. Emitting the interface as the class's native base makes the forward call the ordinary base adjustment over one allocation, and the reverse recovery finds that same allocation.",
+      "request": "docs/compiler-requests/class-instance-as-implemented-interface.md",
+      "parameters": [
+        { "package": "@flighthq/swf", "function": "readSwfFilterList", "parameter": "reader" }
+      ]
+    }
+  ]
+}

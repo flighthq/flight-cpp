@@ -5624,6 +5624,23 @@
       "expires": "when the class/interface adoption emits from the shared view family for both directions, or the runtime offers an implicit same-owner conversion",
       "appliedOn": "2026-10-18",
       "verification": "New cppInterfaceToClassOwnerAdoption.test.ts: 5 pass (declared pair+site emits flight::require_owner<C>(r) with the reference include; an undeclared pair does not adopt; a declared pair at an undeclared site does not adopt; a class method whose parameter signature differs does not adopt even where TypeScript accepts the call; an argument already declared as the class is untouched). The adoption is gated by DECLARED class/interface pairs and sites (classInterfaceAdoptions) and requires per-member compatibility: type, readonly and optionality for data, parameter types and result for methods. A value not allocated as the class throws NativeScalarEscapeError at the call (honest partial; not every structural interface object is claimed valid). Build exit 0; stack applies/reverts clean."
+    },
+    {
+      "id": "compiler-class-interface-heritage",
+      "dependency": "flight-compiler",
+      "patch": "compiler-class-interface-heritage.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/swf",
+      "answers": "diagnostic",
+      "refusal": "emitted SWF forward dispatch diagnostic: no known conversion from 'Ref<flight::swf::SwfReader>' to 'Ref<flight::types::SwfTagReader>' at family.parse(body, ...) in swf_timeline_parse.hpp and the headers that include it -- a class instance passed where the interface its members satisfy is declared",
+      "rewrite": "At a DECLARED class/interface pair (classInterfaceAdoptions entry with derive: true) the class is emitted with the interface as its native base instead of flight::ReferenceEnabled. The interface's data members are the class's own storage: the class's duplicate field declarations are omitted and their initializers run in the constructor like an inherited abstract field's. Each interface method member (std::function storage in the emitted interface) is bound in the constructor to the class method of the same name, through the base because the class method hides the inherited member. A class value handed to the interface's parameter is then the ordinary base reference conversion over ONE allocation, and the reverse require_owner still recovers that same owner. The pair adopts only when the class declares no base of its own and every interface member has a compatible class member a plain instance method can forward to; otherwise the class is emitted exactly as before.",
+      "equivalence": "No copy, adapter or second owner: a SwfReader IS a SwfTagReader at the base subobject of the same allocation, so field writes through either name are the same cell and method calls reach the class's own implementation; the thunk takes exactly the interface method's parameters and forwards them. The interface struct itself is unchanged, so every other consumer of SwfTagReader is untouched. The declared pair is the only class gaining the base; a structural look-alike class does not.",
+      "verification": "New cppClassInterfaceHeritage.test.ts: 6 pass (declared pair emits `struct C : public <ns>::R` with no ReferenceEnabled base; the interface data members are not redeclared and their initializers run in the constructor; each interface method member is thunked to the class method with the interface's own parameter types; an undeclared pair keeps the original shape; a class with its own base is not adopted; an interface member whose signature the class cannot forward is not adopted). Adjacent reverse/carrier tests 14 pass. Native probe: a derived class with inherited data fields and thunked std::function members shares cells both ways over the same address and require_owner returns the same allocation.",
+      "whyNotUpstreamFirst": "The shared class/interface adoption primitive is still a compiler-side lane (docs/compiler-requests/class-instance-as-implemented-interface.md); this is its forward half, and the declared pair keeps it bounded to the SWF reader until the runtime offers an implicit same-owner conversion.",
+      "unblocks": "swf_timeline_parse.hpp and the SWF handler headers that pass the allocated SwfReader to SwfTagHandler.parse(body: SwfTagReader, ...)",
+      "expires": "when the class/interface adoption emits from the shared view family for both directions, or the runtime offers an implicit same-owner conversion",
+      "appliedOn": "2026-10-18"
     }
   ]
 }
