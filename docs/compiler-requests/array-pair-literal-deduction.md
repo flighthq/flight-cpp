@@ -64,6 +64,10 @@ array path, so an ordinary nested array literal is unchanged.
   `gltf_requirements` fails at the `JSON.parse(...) as GltfDocument` static_cast, and
   `md5_mesh_requirements` / `obj_requirements` at `collect_md5_mesh_features` / `collect_obj_features`
   not being generated.
+- The public requirement-table consumer `tests/generated_scene3d_formats_requirements_test.cpp` (registered
+  in CMake and Bazel) builds and passes against the regenerated tables: all seven keep their source key order,
+  each feature maps to its exact requirement, a requirement keeps its owner identity across lookups, and an
+  absent feature stays absent.
 
 **Not taken.** A deduction guide `Array(First, Second) -> Array<std::tuple<First, Second>>` compiles the
 line but produces an `Array` where the declared element is the `std::tuple` itself, which is the wrong
