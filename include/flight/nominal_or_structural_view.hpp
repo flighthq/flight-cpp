@@ -79,9 +79,36 @@ class NominalOrStructuralView final {
   // The caller supplies the proven native field and the emitted symbol identity; no attachment is used.
   template <auto Field, typename Holder, typename Value>
   static auto write_symbol_cell(const std::shared_ptr<Holder>& holder, const Symbol& key, Value value) {
-    auto result = write_cell((*holder).*Field, std::move(value));
+    auto result = [&]() {
+      if constexpr (requires { write_cell((*holder).*Field, std::move(value)); }) {
+        return write_cell((*holder).*Field, std::move(value));
+      } else {
+        // A base writer already holds the cell's declared payload. Ordinary C++ assignment checks
+        // that direction; it neither recovers a derived owner nor changes the storage type.
+        ((*holder).*Field) = value;
+        return value;
+      }
+    }();
     detail::owner_for(holder)->mark_symbol_written(key);
     return result;
+  }
+
+  // Construction and readonly rows use the same native cell's declared storage. Project the value
+  // before row_set so a derived reference cannot miss a base-reference cell and fall into an attachment.
+  template <typename Holder, auto Field, typename Schema>
+  [[nodiscard]] static auto read_row_cell(const StructuralRef<Schema>& row, const Symbol& key) {
+    using Cell = std::remove_cvref_t<decltype(std::declval<Holder>().*Field)>;
+    return read_cell(row_get<Cell>(row, key));
+  }
+  template <typename Schema, typename Value>
+  static Value write_row_cell(const StructuralRef<Schema>& row, const Symbol& key, Value value) {
+    row_set(row, key, cell_value(value));
+    return value;
+  }
+  template <typename Key, typename Schema, typename Value>
+  static Value write_row_cell(const StructuralRef<Schema>& row, Value value) {
+    row_set<Key>(row, cell_value(value));
+    return value;
   }
 
   // The partial native escape is explicit. Carrying, storing, comparing, or reading the object by
@@ -158,6 +185,12 @@ class NominalOrStructuralView final {
   }
 
  private:
+  [[nodiscard]] static Ref<Base> cell_value(const NominalOrStructuralView& value) { return value.object(); }
+  [[nodiscard]] static std::optional<Ref<Base>> cell_value(const std::optional<NominalOrStructuralView>& value) {
+    return value ? std::optional<Ref<Base>>{value->object()} : std::nullopt;
+  }
+  template <typename Value>
+  [[nodiscard]] static Value cell_value(const Value& value) { return value; }
   // A member the object really declares, but with a type this carrier cannot read (a caller-declared
   // callback whose parameter is the nominal owner, for one), cannot be reached faithfully. Report it
   // where it is accessed rather than treating it as absent, which would silently skip a call the source

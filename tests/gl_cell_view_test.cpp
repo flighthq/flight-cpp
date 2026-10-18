@@ -117,6 +117,14 @@ int main() {
   check(row.shared_owner()->symbol_cell(key)->storage_address() == &empty->entity_runtime_key,
         "symbol view reaches physical cell");
   check(!row.shared_owner()->has_dynamic_value(key), "no attachment substitutes for physical cell");
+  RuntimeView::write_row_cell(row, key, RuntimeView(first));
+  check(empty->entity_runtime_key == first &&
+        RuntimeView::read_row_cell<State, &State::entity_runtime_key>(row, key)->native() == first,
+        "construction and readonly row projection uses the base cell type");
+  RuntimeView::write_row_cell(row, key, std::nullopt);
+  check(!empty->entity_runtime_key && !row.shared_owner()->has_dynamic_value(key),
+        "row clear stays physical without a derived-reference attachment");
+
 
   {
     auto owner = flight::make_ref<GlRuntime>();
