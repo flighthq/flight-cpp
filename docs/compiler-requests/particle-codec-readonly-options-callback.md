@@ -139,6 +139,10 @@ root guard and symbol own-presence changes, has these results:
   a Vitest run. The separate emitted native control supplies the semantic checks for this change.
 - Registered runtime, named-origin and public native particle-boundary CTest targets pass 3/3.
   The origin target checks signatures, compatible raw pointers, effects/errors and translation units.
+- An isolated copy of the actual emitted Required codec declaration also passes the registered
+  boundary consumer at native build/link/run, using unchanged installed public Starling bodies.
+  Original result owner, writable cells, extra document and lifetime checks pass. This is an emitted
+  header diagnostic, not normal Types output or installed callback qualification.
 - `scripts/particleCodecOptionsNativeOracle.mjs` compiles and runs a synthetic fixture emitted by
   the production compiler. It checks the unchanged native ABI, schema-only and native shared options,
   live getter/default/error behavior, original function identity and writable original result/document.

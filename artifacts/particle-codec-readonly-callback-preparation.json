@@ -522,6 +522,14 @@
         "types/src/ImportDiagnostic.ts": "b56593c1baf28ae733c9fdce62e96fee96bfa9ea3628a7c271a8464f45bdf8ae"
       },
       "scope": "Original-source counterexamples and protocol controls only; no compiler adapter or built-in registry qualification."
+    },
+    "isolatedEmittedResultDeclarationNative": {
+      "buildLinkRun": "pass",
+      "headerSha256": "a003a62b2c45c9a7c99a43c949c1b00e970de10a4e6a5497587b1cb12c38f0b7",
+      "source": "Actual emitted ParticleFormatCodec header; unchanged installed public Starling bodies and current runtime",
+      "sameOriginalOwnerAndWritableCells": true,
+      "extraDocumentRetained": true,
+      "normalSdkOutput": false
     }
   },
   "originalGraphDiagnostic": {
