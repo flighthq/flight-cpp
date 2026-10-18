@@ -248,7 +248,7 @@ new file mode 100644
 +import { expect, it } from 'vitest';
 +import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
 +import { emitIrModuleCpp } from './cppCompilerBackend.js';
-+export const source = `export interface Document{j?:0|1|2} export function align(document:Readonly<Document>):string{return document.j===1?'right':document.j===2?'center':'left';}`;
++export const source = `export interface Document{value?:0|1|2} export function align(document:Readonly<Document>):string{return document.value===1?'right':document.value===2?'center':'left';}`;
 +function emit(text = source) {
 +  const [result] = lowerTypeScriptSources([
 +    {
@@ -271,7 +271,7 @@ new file mode 100644
 +it('still refuses strict null narrowing that leaves a different sentinel reachable', () => {
 +  expect(() =>
 +    emit(
-+      'export interface Document{j?:number|null} export function read(document:Readonly<Document>):number|undefined{if(document.j!==null)return document.j;return 0;}',
++      'export interface Document{value?:number|null} export function read(document:Readonly<Document>):number|undefined{if(document.value!==null)return document.value;return 0;}',
 +    ),
 +  ).toThrow('still admits absence');
 +});
@@ -285,7 +285,7 @@ new file mode 100644
 +    const dir = mkdtempSync(path.join(tmpdir(), 'flight-optional-literal-range-'));
 +    try {
 +      writeFileSync(path.join(dir, 'probe.hpp'), emit());
-+      const js = {} as { align: (document: { j?: number | undefined }) => string };
++      const js = {} as { align: (document: { value?: number | undefined }) => string };
 +      new Function(
 +        'exports',
 +        ts.transpileModule(source, {
@@ -295,7 +295,7 @@ new file mode 100644
 +      const cases = [undefined, 0, 1, 2, 3, -1, NaN, Infinity]
 +        .map(
 +          (value) =>
-+            `{${value !== undefined},${value === undefined ? '0' : Number.isNaN(value) ? 'std::numeric_limits<double>::quiet_NaN()' : value === Infinity ? 'std::numeric_limits<double>::infinity()' : value},${JSON.stringify(js.align({ j: value }))}}`,
++            `{${value !== undefined},${value === undefined ? '0' : Number.isNaN(value) ? 'std::numeric_limits<double>::quiet_NaN()' : value === Infinity ? 'std::numeric_limits<double>::infinity()' : value},${JSON.stringify(js.align({ value }))}}`,
 +        )
 +        .join(',');
 +      const input = path.join(dir, 'native.cpp'),
@@ -307,8 +307,8 @@ new file mode 100644
 +#include <limits>
 +int main(){int checks=0,failures=0;auto check=[&](bool ok){++checks;if(!ok)++failures;};auto owner=flight::make_ref<probe::Document>();
 +using Row=flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<probe::Document>>>>;Row row(owner);
-+struct Case{bool present;double value;const char* expected;};for(const auto& item:std::initializer_list<Case>{${cases}}){owner->j=item.present?std::optional<double>(item.value):std::nullopt;check(probe::align(row)==flight::String(item.expected));}
-+owner->j=1;check(probe::align(row)==flight::String("right"));owner->j.reset();check(probe::align(row)==flight::String("left"));
++struct Case{bool present;double value;const char* expected;};for(const auto& item:std::initializer_list<Case>{${cases}}){owner->value=item.present?std::optional<double>(item.value):std::nullopt;check(probe::align(row)==flight::String(item.expected));}
++owner->value=1;check(probe::align(row)==flight::String("right"));owner->value.reset();check(probe::align(row)==flight::String("left"));
 +std::cout<<checks<<" checks, "<<failures<<" failures\\n";return failures?1:0;}`,
 +      );
 +      execFileSync(toolchain!.command, createCppExecutableArguments(toolchain!, input, binary, [dir, ...includes]), {
@@ -470,13 +470,13 @@ new file mode 100644
 +#include <memory>
 +#include <type_traits>
 +struct State{double value=13;};
-+int main(){int checks=0,failures=0;auto check=[&](bool ok){++checks;if(!ok)++failures;};int calls=0;
++int main(){int checks=0,failures=0;auto check=[&](bool ok){++checks;if(!ok){++failures;std::cerr<<"check "<<checks<<" failed\\n";}};int calls=0;
 +auto first=probe::call([&]{++calls;return 7.0;});check(first&&calls==1);check(flight::row_get<flight::RowKey<"value">>(*first)==7);
 +using Row=typename decltype(first)::value_type;using Mutable=flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<domain::View>>>>;static_assert(!std::is_convertible_v<Row,Mutable>);
 +auto second=probe::call([&]{++calls;return 7.0;});check(first->identity()!=second->identity());check(calls==2&&flight::row_get<flight::RowKey<"value">>(*second)==7);check(!domain::build(std::nullopt));
 +bool threw=false;try{(void)probe::call([]()->double{throw flight::TypeError("original");});}catch(const flight::TypeError&){threw=true;}check(threw);
 +std::weak_ptr<State> state_lifetime;std::optional<Row> retained;{auto state=std::make_shared<State>();state_lifetime=state;retained=probe::call([state]{return state->value;});}check(state_lifetime.expired());check(flight::row_get<flight::RowKey<"value">>(*retained)==13);
-+std::weak_ptr<flight::RowOwner> owner_lifetime=first->shared_owner();check(!owner_lifetime.expired());first.reset();check(owner_lifetime.expired());
++std::weak_ptr<void> owner_lifetime=first->shared_native_object()?first->shared_native_object():std::static_pointer_cast<void>(first->shared_owner());check(!owner_lifetime.expired());first.reset();check(owner_lifetime.expired());
 +std::cout<<checks<<" checks, "<<failures<<" failures\\n";return failures?1:0;}`,
 +      );
 +      execFileSync(toolchain!.command, createCppExecutableArguments(toolchain!, input, binary, [dir, ...includes]), {
