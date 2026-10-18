@@ -4386,6 +4386,23 @@
       "unblocks": "Existing SVG winding and style-declaration helpers through their original full svg_style.hpp; does not implement the refused CSS-rule collector or style cascade.",
       "expires": "when numeric optional-chain results retain their numeric carrier through nullish coalescing, or Flight adopts the equivalent explicit guards.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "scene2d-svg-declarations-string-prototype-key",
+      "dependency": "flight",
+      "patch": "scene2d-svg-declarations-string-prototype-key.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/scene2d-formats/src/svgStyle.ts",
+      "package": "@flighthq/scene2d-formats",
+      "answers": "diagnostic",
+      "refusal": "A generated plain-object string-property write becomes Record.set; __proto__ then incorrectly creates an own entry instead of leaving the fresh ordinary source object unchanged.",
+      "rewrite": "At this fresh ordinary-object allocation only, skip the __proto__ assignment whose right side is always the already-computed primitive string propertyValue. Keep parsing every input, computing the same name/value, and every other record write unchanged.",
+      "equivalence": "The source allocates {} with the standard inherited __proto__ setter. Assigning a primitive string to that setter does nothing: it neither creates an own data property nor changes the prototype. The extra name guard has the same result and evaluates after the original slicing/trimming/important removal, so no input parsing or value work is skipped. This is not a rule for null-prototype dictionaries, explicit own __proto__ properties, object-valued writes or general Record storage. Both parses return fresh objects, preserve real stored keys and overwrite/order behavior, and accept the same string domain.",
+      "verification": "The source oracle compares original/patched own entries for the __proto__/constructor/toString counterexample alongside all declaration inputs. Native original-header consumer must omit that own key while retaining neighboring keys, fresh storage, aliases, overwrite and numeric-key order; qualify exact normal generation and scoped original-header compile.",
+      "whyNotUpstreamFirst": "This closed parser always writes primitive strings into a newly created ordinary object. Its source no-op can be stated explicitly without changing the global Record runtime or copying a returned record.",
+      "unblocks": "Source-faithful own-data result for parseStyleDeclarations __proto__ input in the original SVG style module; no general inherited-prototype lookup capability is supplied.",
+      "expires": "when emitted ordinary-object string writes preserve the inherited __proto__ setter no-op, or Flight explicitly guards this assignment.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }

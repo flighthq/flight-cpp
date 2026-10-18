@@ -1,0 +1,7 @@
+--- a/packages/scene2d-formats/src/svgStyle.ts
++++ b/packages/scene2d-formats/src/svgStyle.ts
+@@ -88,3 +88,3 @@
+       .replace(/\s*!important\s*$/, '');
+-    if (name !== '') declarations[name] = propertyValue;
++    if (name !== '' && name !== '__proto__') declarations[name] = propertyValue;
+   }
