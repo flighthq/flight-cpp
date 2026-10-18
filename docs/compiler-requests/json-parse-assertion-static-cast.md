@@ -438,3 +438,35 @@ JSON-backed row whose typed reads project a scalar and refuse a structured membe
 requested. It covers the 15 Lottie rows, the 2 `scene2d-resources` importers, and the 4 Aseprite rows in
 `other-4e22e4de`. A per-site source patch cannot express it, and a cast or a hand-written mapper would carry a
 copy of a schema the compiler already knows.
+
+## Required-scalar mismatch: options and counterexamples
+
+Pinned counterexamples, all in the bounded Lottie unit (`lottieDocument.ts:288,591-604`,
+`lottieCounts.ts:54-55`):
+
+- `fr: 30` — division and `isValid` work; this is the supported case.
+- `fr: null` — `document.fr` is `null`; `(op - ip) / null` is `±Infinity`/`NaN`, and
+  `typeof fr === 'number'` is false, so `isValid` answers false. A typed `double fr` cannot store
+  `null`; coercing it to `0` happens to keep `isValid` false but changes the division result.
+- `fr` absent — `document.fr` is `undefined`; `typeof` false and the division is `NaN`. A typed cell
+  must represent absence, not a default `0`.
+- `fr: "30"` (wrong type) — `typeof` false so `isValid` false, while `(op - ip) / "30"` coerces
+  numerically to the same 30. A strict double projection and a coercing one disagree at use, not at
+  the read.
+
+Options:
+
+1. Lazy typed projection with a presence-aware scalar cell: `null`, absence and wrong type are
+   retained distinctly; numeric/boolean operations follow JavaScript at the use; structured members
+   are refused unless a nested projection is requested. Partial, well-typed projections are marked
+   explicitly. Smallest faithful option; reuses the existing member-value/view family (one family,
+   shared with builder2).
+2. Throw or refuse at the member read. Simple, but it changes the source's numeric coercion and
+   `isValid` answers (the `"30"` case), so it cannot be the universal rule.
+3. Runtime-wide scalar carrier: every typed cell uses a JS-numeric value with nullish/coercion
+   semantics. Broadest; only if the runtime intends JavaScript coercion globally, and it must still
+   keep null-vs-absence and access-time errors.
+
+Decision requested from Foreman/Manager before implementation: 1 with an explicit
+null/absence/wrong-type policy (recommended), or 3. No coercion or runtime-wide scalar change will be
+chosen unilaterally, and no wrong-typed fixture will be claimed to pass.
