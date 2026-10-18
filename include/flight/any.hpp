@@ -248,6 +248,12 @@ class Any final {
   template <typename Value>
   Any(const std::optional<Value>& value) : Any(value ? Any(*value) : Any(undefined)) {}
 
+  // An optional native reference has the same erased reading as its original reference. Keep
+  // omission distinct from an engaged null reference, and retain the exact object and its lifetime.
+  template <typename Object>
+  Any(const std::optional<std::shared_ptr<Object>>& value)
+      : Any(value ? Any::object(*value) : Any(undefined)) {}
+
   // An object reference keeps its concrete type. A null reference is `null`, not an object,
   // because that is what a JavaScript object-typed binding holding nothing is.
   template <typename Object>
