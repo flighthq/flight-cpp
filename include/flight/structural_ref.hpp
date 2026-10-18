@@ -2408,15 +2408,21 @@ class NamedProperties final {
     if (!owner_) return Any(undefined);
     if (owner_->named_own_marked()) {
       if (!owner_->named_own_contains(key.to_utf8())) return Any(undefined);
+      const auto unmasked = owner_->named_cell_unmasked(key.to_utf8());
+      std::optional<Any> current;
+      if (unmasked) current = unmasked->as_any();
+      // A carrier holding a value is live: a native write after construction must be visible through
+      // every alias, so it wins over what the literal authored. When the carrier holds nothing (a
+      // disengaged optional, or a stored undefined), the construction sentinel decides null vs
+      // undefined -- that is the authored distinction the carrier no longer carries.
+      if (current && !current->is_undefined()) return *std::move(current);
       if (const auto sentinel = owner_->named_own_sentinel(key.to_utf8())) {
         if (*sentinel == ConstructedKeySentinel::Null) return Any(nullptr);
         if (*sentinel == ConstructedKeySentinel::Undefined) return Any(undefined);
       }
-      const auto unmasked = owner_->named_cell_unmasked(key.to_utf8());
       if (!unmasked) return Any(undefined);
-      auto value = unmasked->as_any();
-      if (!value) throw UnrepresentedProperty(key.to_utf8(), unmasked->value_type());
-      return *std::move(value);
+      if (!current) throw UnrepresentedProperty(key.to_utf8(), unmasked->value_type());
+      return *std::move(current);
     }
     const auto cell = owner_->string_key_cell(key);
     if (!cell) return Any(undefined);
@@ -2458,24 +2464,28 @@ class NamedProperties final {
   bool set(const String& key, const Any& value) const {
     if (!owner_) return false;
     const auto name = key.to_utf8();
+    const bool marked = owner_->named_own_marked();
     auto cell = owner_->string_key_cell(key);
-    if (!cell && owner_->named_own_marked()) {
+    if (!cell && marked) {
       // JavaScript assignment of a declared but un-authored member makes it own; a member with no
       // native storage at all remains unsupported (false below).
       cell = owner_->named_cell_unmasked(name);
-      if (!cell) return false;
-      owner_->mark_named_own_key(name, value.is_undefined() ? ConstructedKeySentinel::Undefined
-                                                            : ConstructedKeySentinel::Value);
-    } else if (cell && owner_->named_own_marked()) {
-      owner_->mark_named_own_key(name, value.is_undefined() ? ConstructedKeySentinel::Undefined
-                                                            : ConstructedKeySentinel::Value);
     }
     if (!cell) return false;
     owner_->before_named_write(name);
-    // An authored undefined is presence, not deletion: only a carrier that can hold present-undefined
-    // takes the clear path. JSON cannot, so its write is refused as before and the key stays as it was.
-    if (value.is_undefined() && cell->undefined_is_absence()) return cell->assign_absent();
-    return cell->assign_any(value);
+    // The write happens FIRST. Presence, order and the construction sentinel are recorded only when
+    // the carrier accepts the value, so a rejected write (a wrong type, or undefined into JSON) leaves
+    // the object exactly as it was -- no key invented, no order changed.
+    if (value.is_undefined() && cell->undefined_is_absence()) {
+      if (!cell->assign_absent()) return false;
+    } else if (!cell->assign_any(value)) {
+      return false;
+    }
+    if (marked) {
+      owner_->mark_named_own_key(name, value.is_undefined() ? ConstructedKeySentinel::Undefined
+                                                            : ConstructedKeySentinel::Value);
+    }
+    return true;
   }
 
   // Delete-through-the-view: remove the own key from enumeration/presence on the same owner and

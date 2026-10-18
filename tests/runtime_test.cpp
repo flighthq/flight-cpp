@@ -4850,6 +4850,40 @@ static void test_constructed_own_keys() {
         "delete removes the own key from presence and order on the same owner");
 }
 
+
+// The two live/atomic controls for the constructed own-key API: a native write after construction is
+// visible through the named view (the authored sentinel does not mask a live carrier), and a rejected
+// write changes nothing -- no key invented, no order changed.
+static void test_constructed_presence_live_and_atomic() {
+  struct LiveModel : flight::ReferenceEnabled {
+    std::optional<double> value;
+    std::optional<flight::String> text;
+  };
+  const auto model = flight::make_ref<LiveModel>();
+  {
+    auto owner = flight::detail::owner_for(model);
+    owner->bind_named("value", [model]() -> decltype(auto) { return (model->value); },
+                      flight::MemberPresence::RequiredNullable);
+    owner->bind_named("text", [model]() -> decltype(auto) { return (model->text); },
+                      flight::MemberPresence::SourceOptional);
+  }
+  flight::mark_constructed_own_named_properties(
+      model, {flight::ConstructedOwnKey{flight::String("value"), flight::ConstructedKeySentinel::Null}});
+  auto properties = flight::named_properties(model);
+  check(properties.get(flight::String("value")).is_null(),
+        "an authored null reads null before any native write");
+  model->value = 7.0;
+  properties = flight::named_properties(model);
+  check(properties.get(flight::String("value")).kind() == flight::AnyKind::number &&
+            properties.get(flight::String("value")).as_number() == 7.0,
+        "a live native write after construction is visible through the named view");
+  const auto before = properties.keys();
+  const bool refused = properties.set(flight::String("text"), flight::Any(13.0));
+  const auto reread = flight::named_properties(model);
+  check(!refused && !reread.has(flight::String("text")) && reread.keys() == before,
+        "a rejected write leaves presence, order and storage untouched");
+}
+
 int main() {
   test_array();
   test_array_callback_arity();
@@ -4875,6 +4909,7 @@ int main() {
   test_json_mutable_storage();
   test_native_named_presence();
   test_constructed_own_keys();
+  test_constructed_presence_live_and_atomic();
   test_json_owner_shared_view();
   test_json_scalar_cell();
   test_json_scalar_member_projection();
