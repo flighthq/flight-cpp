@@ -14,6 +14,8 @@ The earlier compiler-127 scratch run passed all four header compiles and compile
 
 For a later compiler composition, `--baseline-compiler` records output drift without relabeling the supplied pair. It requires the exact compiler hash in the existing scratch qualification, unchanged original diagnostic IR, and byte-identical re-emission of the supplied pair by that qualified baseline compiler. The current compiler's output hashes and whether each remains byte-identical are recorded separately; its native consumer must be qualified independently. Compiler 134 adds authored own-key metadata to the original diagnostic severity literal and collector allocation, with the readonly field and parameter declarations unchanged.
 
+[The bounded compiler-134 qualification](../../artifacts/particle-public-composition134.json) passes all 70 focused emission checks and the exact original 210-check native consumer, including all eight callbacks and 32 detector cases. The native consumer was also repeated successfully after a delivered structural-row presence change; the compiler freeze remained identical at 134 compiler / 207 Flight / 341 total patches. All 3,153 archived provider headers remain unchanged. The earlier four independent header passes and 129 source checks are retained with exact input hashes; neither suite was repeated. Normal particles generation is waiting for builder2's actual coherent Types and importdiagnostics snapshot. No normal run or inventory promotion followed this composition check.
+
 ## Later normal regeneration dependencies
 
 | Owner / package | Required declaration or output | Dependency |

@@ -1,0 +1,22 @@
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: current compiler disagrees with supplied original flight/importdiagnostics/import_diagnostic_collector.hpp
++ actual - expected
+
++ 'df9b6331d733d50fb3aff610fe1b401fec11e321ebda71a1204c617fd957f4a6'
+- '9d7a8965fe002cb8000a6b3f3230005942e4254282726119023251200289c630'
+
+    at file:///home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/scripts/particlePublicScratchClosure.mjs:99:10
+    at Array.map (<anonymous>)
+    at file:///home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/scripts/particlePublicScratchClosure.mjs:96:90 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'df9b6331d733d50fb3aff610fe1b401fec11e321ebda71a1204c617fd957f4a6',
+  expected: '9d7a8965fe002cb8000a6b3f3230005942e4254282726119023251200289c630',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v22.22.1
