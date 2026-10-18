@@ -423,3 +423,44 @@ controls checked. No parser source or accepted input domain changed.
 
 The preparation alone promoted no historical inventory row. Final normal generation and installed-header
 qualification are recorded in the Pixi section above.
+
+
+## Spine particle guarded read graph preparation
+
+`compiler-private-guarded-json-read-flow.patch` extends the private read proof to the original
+Spine particle parser. The two-statement `requireSpineRecord` guard returns its original value;
+every actual caller must trace to the original one-parse producer or one of its JSON descendants.
+Its result may only be ignored, passed to a proven private reader, or stored in an immutable
+uncaptured local used solely for property reads. Exported, escaping, compared, aliased, mutated,
+defaulted and mixed native/JSON callers retain the prior Record boundary.
+
+Synchronous immutable local functions used only as direct callees can read the same private owner.
+The exact `error instanceof Error ? error.message : String(error)` observation is accepted only in
+an already-string parse-only catch. Guarded erased array elements retain their checked kind, and a
+literal mapper with a closed mutation-free private call graph visits the original dense array.
+Only the source-authored result array and fresh keyframe literals allocate. A fresh local range
+literal chooses its one representation-equivalent contextual owner at its authored allocation;
+it does not convert an existing object into a schema. Its high-before-low evaluation and exact
+thrown owner are preserved. Stable numeric field tag checks supply the immediate bitwise/default
+expression without an unchecked Any conversion.
+
+The ordered 88-patch compiler stack applies, builds and emits the complete unchanged
+original module byte-identically to the diagnostic compiler. Direct API checks pass nine prior ABI
+comparisons, two guarded producer cases and fourteen exclusions, direct capture (one/four), syntax
+fallback (one/four), indexed narrowing (one/one), fresh factory (one/one) and erased map (one/four).
+An emitted native fixture checks fresh range owner identity, authored order/count, exact thrown owner,
+and fresh mapped results retaining live original JSON element aliases. The carried Vitest fixture
+has not run because Vitest is unavailable.
+
+Both original public entrypoints compile, link and execute against the diagnostic header with the
+normal duplicate-struct alias repair. They match the untouched pinned TypeScript parser, real
+factory, curve and diagnostic bodies for 704 inputs and 1408 calls: all 52 config and 24 document
+fields, 99,505 numeric reads, 6,408 exact UTF16 strings and 268 curve arrays. Each source invocation
+parses exactly once. Signed zero and nonfinite kinds are exact; finite values are exact except
+directionX/Y's 1e-12 libm tolerance. Application validation messages and ordering are exact;
+built-in JSON syntax diagnostic wording remains implementation dependent.
+
+This is preparation evidence. Normal scoped generation, installed public consumer qualification
+and the four requested header measurements are pending. No inventory row or historical25 gain is
+claimed. The independent Unity, returned schema, Lottie, Aseprite, TexturePacker and glTF nominal
+JSON boundaries remain open.
