@@ -1881,3 +1881,13 @@ cc_test(
     size = "small",
     deps = ["//:cpp", "//:sdk_preview"],
 )
+
+cc_test(
+    name = "generated_effects_effect_defaults_test",
+    srcs = ["generated_effects_effect_defaults_test.cpp"],
+    size = "small",
+    deps = [
+        "//:cpp",
+        "//:sdk_preview",
+    ],
+)

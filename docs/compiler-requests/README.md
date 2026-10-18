@@ -706,6 +706,9 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 - [A typed array passed to a `readonly unknown[]` parameter needs a readonly element view](typed-array-into-readonly-unknown-array-parameter.md) —
   `@flighthq/scene3d-gl` fake GL error audit: `number[]` into `setError(..., readonly unknown[])` lowers as
   `Array<double>` against `Array<Any>`. Nothing is carried.
+- [A numeric enum interpolated into a template literal has no string conversion](numeric-enum-template-literal-interpolation.md) —
+  `@flighthq/render` `renderRegistryGuards.ts`: `${registry}` over a numeric enum lowers to
+  `flight::to_string(enum class)`; it should stringify the enum's number. Nothing is carried.
 
 - [Computed Record deletion must remove the property](record-computed-delete.md) —
   shared mutable dictionary deletion, primitive missing-key storage and erased local

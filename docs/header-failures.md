@@ -29,8 +29,8 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | --- | --- | --- | --- | --- | --- |
 | 1 | `call-has-no-matching-9c08d665` | 117 | WGPU | compiler patch (applied) | bound WebGPU descriptor literals emitted untyped *(G3 resolved: descriptor failure cleared; 0 pass, all 117 to `undeclared-identifier-aef2cf8f`)* |
 | 2 | `missing-member-b1a6d5cf` | 40 | 2D | retire obsolete repair | own same-namespace using repair inserts lookup before definition *(compiler request withdrawn; G3 original-consumer qualification pending)* |
-| 3 | `in-operator-not-lowered-b1eae4af` | 32 | 2D, 3D, GL, PLAT, WGPU | compiler | the TypeScript `in` operator is emitted verbatim; G2 particle3D joins this existing cause *(existing request extended)* |
-| 4 | `undeclared-identifier-993e82f1` | 30 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(request filed; builder4/G2)* |
+| 3 | `in-operator-not-lowered-b1eae4af` | 1 | 2D, 3D, GL, PLAT, WGPU | compiler | the TypeScript `in` operator is emitted verbatim; G2 particle3D joins this existing cause *(existing request extended)* |
+| 4 | `undeclared-identifier-993e82f1` | 51 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(request filed; builder4/G2)* |
 | 5 | `call-has-no-matching-3882b3e9` | 28 | 2D, 3D, TEXT | compiler | bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier *(request filed; builder4/G2; +1 from `obj_standard_pbr_material_handler.hpp` after its module emitted; +1 from `md5_skeleton_handler.hpp` after the mesh override bridges)* |
 | 6 | `other-52e846a6` | 2 pass / 17 advanced | ANIM | compiler *(landed)* | the nullable-element lift landed: the root binder and its clip caller compile, and the other 17 rows advanced to later causes (named-view/Record split, optional-element narrowing, retained refused calls) |
 | 7 | `call-has-no-matching-47410fe2` | 16 | 2D, 3D | runtime (fixed) | Number is now a callable conversion object; G2 recheck: 2 pass, 14 fail at later compiler diagnostics |
@@ -77,7 +77,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 48 | `other-4e22e4de` | 4 | 2D | compiler | JSON.parse assertion casts JsonValue to the Aseprite document-owner variant *(existing request extended)* |
 | 49 | `other-5611a858` | 4 | ANIM | declaration repair (applied) | ColorScaleBiasAdjustment heritage restored; G2: 1 pass, 3 compiler failures |
 | 50 | `other-d6be4352` | 4 original | ANIM | [qualification](compiler-requests/parsed-json-object-shape-reads.md#g2-current-pin-pixi-inventory-qualification) | retired: Pixi1 pass; three barrels follow existing Spine Record-owner cause31b754c5 |
-| 51 | `static-assertion-00a0e75d` | 4 | 3D, WGPU | [compiler request](compiler-requests/type-predicate-narrowing-not-applied.md) | an `isMesh` type predicate narrows the guarded value in source, but the emitter reads `geometry` from the un-narrowed `Node3D` row |
+| 51 | `static-assertion-00a0e75d` | 6 | 3D, WGPU | [compiler request](compiler-requests/type-predicate-narrowing-not-applied.md) | an `isMesh` type predicate narrows the guarded value in source, but the emitter reads `geometry` from the un-narrowed `Node3D` row |
 | 52 | `undeclared-identifier-0fc9e20f` | 4 | 2D | declaration repair (applied) | omitted artboard-import-context declaration supplied; G2: 0 pass, 4 fail at the next omitted callee; function remains unlinkable |
 | 53 | `undeclared-identifier-69b85faa` | 4 | PLAT | declaration repair (applied) | omitted untrack callee declaration supplied; G2: 0 pass, 4 fail at the next omitted callee; function remains unlinkable |
 | 58 | `undeclared-identifier-7d64d9c1` | 4 | GL | compiler | the emitter refuses the `glCustomShaderEffectRunner` binding and its resolver but still emits the registration call that passes... *(request filed)* |
@@ -342,7 +342,23 @@ The next diagnostic boundary is Canvas destruction's refined runtime-owner conve
 That mechanism is being coordinated separately. No whole-header/public-consumer pass, automatic
 40-header promotion, copied helper, stub, suppressed teardown or weakened readonly protection is claimed.
 
-### 3. `in-operator-not-lowered-b1eae4af` — 32 current header(s), 31 in G1
+### 3. `in-operator-not-lowered-b1eae4af` — G2 recheck of 32 header(s): 1 remains, 31 moved to follow-ons
+
+**Membership activation (G2, builder).** `compiler-membership-test-presence` lowers `in` on Record, structural-row
+and required-declared receivers, and refuses the unrepresentable rest. Re-measured with GCC 15.2 at `-j2`: **0/32
+pass**, 31/32 now stop past the membership site. `compiler-symbol-membership-variant-arm` (pending) gives the last
+one, `wgpu_render_state.hpp:259`, its `EntityRuntimeKey` variant-arm test.
+
+| follow-on cluster | headers | first failure | cause |
+| --- | --- | --- | --- |
+| `undeclared-identifier-993e82f1` (builder4) | 21 | `flight/interaction/interaction_manager.hpp:722` | the `Traits` template parameter leaks, as in the existing cluster |
+| `no-matching-function-115b0ff2` | 8 | `flight/render/render_registry_guards.hpp:127` | a numeric enum in a template literal; [new request](compiler-requests/numeric-enum-template-literal-interpolation.md) |
+| `static-assertion-00a0e75d` | 2 | `explain_scene_3d_pipeline_coverage.hpp:45`, `gl_particle_emitter_3d.hpp:121` | a type predicate's narrowing is not applied |
+| `in-operator-not-lowered-b1eae4af` (stays) | 1 | `flight/render_wgpu/wgpu_render_state.hpp:259` | unique-symbol key on a variant receiver |
+
+The public consumer `tests/generated_effects_effect_defaults_test.cpp` passes in full on `effect_defaults.hpp`.
+It covers defaults filling, explicit zero and explicit values winning, the carry-over that `key in entry` gates,
+and an unknown kind returning `false`. The last case is enabled by `compiler-record-missing-key-falsiness-guard`.
 
 - cause: the TypeScript `in` operator is emitted verbatim as C++ `in`
 - lanes: 2D, 3D, GL, PLAT, WGPU
@@ -387,7 +403,7 @@ G2 particle follow-on: after the attribute-location binding fix, the owned
 at line 113. It joins this cause as the 32nd current failure and adds the 3D lane. No unowned row was
 recompiled or changed. See the [measured particle site](compiler-requests/membership-test-lowered-literally.md#g2-particle-3d-reaches-the-previously-latent-membership-site).
 
-### 4. `undeclared-identifier-993e82f1` — 30 header(s) *(builder4/G2)*
+### 4. `undeclared-identifier-993e82f1` — 51 header(s) *(builder4/G2)*
 
 - cause: the template parameter name `Traits` leaks into emitted code as a free identifier
 - subject: `Traits`
@@ -1483,7 +1499,7 @@ All 13 changed headers plus 2 unchanged Pixi barrels were attempted:10 pass / 5 
 were already passing. The target remains15/18 emitted,3 refused; no whole-package/all 25 claim or
 global sweep reset. The original JSON owner remains live; no parser/tree/Record copy or public ABI change.
 
-### 51. `static-assertion-00a0e75d` — 4 header(s)
+### 51. `static-assertion-00a0e75d` — 6 header(s)
 
 - cause: a call to a user-defined type predicate (`isMesh`) narrows the guarded value in TypeScript,
   but the emitter keeps the declared `Node3D` row and reads the narrowed-only `geometry` property from

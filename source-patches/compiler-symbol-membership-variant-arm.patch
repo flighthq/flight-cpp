@@ -1,0 +1,117 @@
+diff --git a/packages/compiler-backend-cpp/src/cppSymbolMembershipArm.test.ts b/packages/compiler-backend-cpp/src/cppSymbolMembershipArm.test.ts
+new file mode 100644
+index 0000000..9cb4203
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppSymbolMembershipArm.test.ts
+@@ -0,0 +1,47 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile(
++    '/flight/packages/example/src/symbolMembershipArm.ts',
++    source,
++    ts.ScriptTarget.Latest,
++    true,
++  );
++  const result = lowerTypeScriptSource(sourceFile, {
++    packageName: '@flighthq/example',
++    upstreamDirectory: '/flight',
++  });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++const shapes = `
++  export const RuntimeKey: unique symbol = Symbol('runtime');
++  export interface EntityRuntime { id: number }
++  export interface Entity { [RuntimeKey]: EntityRuntime | undefined; kind: string }
++  export interface DeviceState extends Entity { device: number }
++  export interface StateRuntime extends EntityRuntime { context: number }
++`;
++
++it('tests the one arm that declares a required unique-symbol key', () => {
++  const output = emit(`${shapes}
++    export function pick(value: DeviceState | StateRuntime): number { return RuntimeKey in value ? 1 : 2; }
++  `);
++
++  expect(output).toContain('std::variant<flight::Ref<StateRuntime>, flight::Ref<DeviceState>> value');
++  expect(output).toContain('return (value.index() == 1 ? 1.0 : 2.0);');
++  expect(output).not.toContain('runtime_key in value');
++});
++
++it('takes no arm test when another arm declares the symbol key optionally', () => {
++  const output = emit(`${shapes}
++    export interface Detached { [RuntimeKey]?: EntityRuntime; kind: string; detached: true }
++    export function pick(value: DeviceState | Detached): number { return RuntimeKey in value ? 1 : 2; }
++  `);
++
++  expect(output).not.toMatch(/value\\.index\\(\\) == \\d \\? 1\\.0 : 2\\.0/);
++});
+diff --git a/packages/compiler-semantic/src/typeScriptSemanticLowering.ts b/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
+index eebe6e3..9fdb2b9 100644
+--- a/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
++++ b/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
+@@ -7506,23 +7506,53 @@ function getTypeScriptInUnionMemberTestEvidence(
+   test: ts.Expression,
+   context: LoweringContext,
+ ): IrUnionMemberTestEvidence | undefined {
+-  if (!ts.isStringLiteralLike(property)) return undefined;
++  // A unique-symbol key (`EntityRuntimeKey in value`) names its member by value identity, which is the
++  // `computedKey` the member's shape retains, never by the storage spelling a string key would match.
++  const symbolKey =
++    !ts.isStringLiteralLike(property) &&
++    (context.checker.getTypeAtLocation(property).flags & ts.TypeFlags.UniqueESSymbol) !== 0
++      ? lowerTypeScriptTypePropertyValueNameReference(property, context)
++      : undefined;
++  if (!ts.isStringLiteralLike(property) && !symbolKey) return undefined;
+   const subject = unwrapTypeScriptParenthesizedExpression(test);
+   if (!ts.isIdentifier(subject)) return undefined;
+   const source = getTypeScriptUnionBindingEvidence(subject, context);
+   if (!source) return undefined;
+-  const matches = source.type.types.filter((member) => {
++  const declaredBy = (member: Readonly<IrType>) => {
+     const shape = getIrTypeConstructionTargetShape(member, context);
+-    const candidate =
+-      shape?.kind === 'object'
+-        ? shape.properties.find((memberProperty) => memberProperty.name === property.text)
+-        : undefined;
++    return shape?.kind === 'object'
++      ? shape.properties.find((memberProperty) =>
++          symbolKey
++            ? memberProperty.computedKey !== undefined &&
++              isSameIrValueNameReference(memberProperty.computedKey, symbolKey)
++            : ts.isStringLiteralLike(property) && memberProperty.name === property.text,
++        )
++      : undefined;
++  };
++  const matches = source.type.types.filter((member) => {
++    const candidate = declaredBy(member);
+     // An optional declaration may be absent at runtime, so a false `in` result cannot exclude its arm.
+     return candidate !== undefined && !candidate.optional;
+   });
++  // A symbol key is answered by the arm alone, so no other arm may declare it at all: an arm that
++  // declares it optionally could hold it, and the arm test would then answer false for a present key.
++  if (symbolKey && source.type.types.filter((member) => declaredBy(member) !== undefined).length !== 1) {
++    return undefined;
++  }
+   return matches.length === 1 ? { binding: source.binding, member: matches[0]!, whenResult: true } : undefined;
+ }
+ 
++function isSameIrValueNameReference(left: Readonly<IrValueNameReference>, right: Readonly<IrValueNameReference>): boolean {
++  if (left.kind === 'ambient' || right.kind === 'ambient') {
++    return left.kind === 'ambient' && right.kind === 'ambient' && left.name === right.name;
++  }
++  return (
++    left.binding.id === right.binding.id &&
++    left.path.length === right.path.length &&
++    left.path.every((segment, index) => segment === right.path[index])
++  );
++}
++
+ function getTypeScriptInstanceofUnionMemberTestEvidence(
+   test: ts.Expression,
+   constructor: ts.Expression,

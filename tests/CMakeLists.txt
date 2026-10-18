@@ -2324,3 +2324,15 @@ target_include_directories(flight_cpp_generated_scene2d_formats_css_rules_tests 
 target_link_libraries(flight_cpp_generated_scene2d_formats_css_rules_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_scene2d_formats_css_rules COMMAND flight_cpp_generated_scene2d_formats_css_rules_tests)
 flight_cpp_package_test_labels(flight_cpp.generated_scene2d_formats_css_rules scene2d-formats)
+
+add_executable(flight_cpp_generated_effects_effect_defaults_tests generated_effects_effect_defaults_test.cpp)
+target_include_directories(
+  flight_cpp_generated_effects_effect_defaults_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(
+  flight_cpp_generated_effects_effect_defaults_tests
+  PRIVATE Flight::Cpp Flight::SdkPreview
+)
+add_test(NAME flight_cpp.generated_effects_effect_defaults COMMAND flight_cpp_generated_effects_effect_defaults_tests)
+flight_cpp_package_test_labels(flight_cpp.generated_effects_effect_defaults effects types)
