@@ -5097,7 +5097,7 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 78,
+      "line": 74,
       "module": "packages/scene2d-formats/src/lottieCounts.ts",
       "package": "@flighthq/scene2d-formats",
       "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieCounts.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",

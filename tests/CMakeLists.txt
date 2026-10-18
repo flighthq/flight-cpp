@@ -2219,3 +2219,15 @@ add_test(NAME flight_cpp.generated_scene2d_dom_merge_options COMMAND flight_cpp_
 flight_cpp_package_test_labels(flight_cpp.generated_scene2d_dom_merge_options scene2d-dom)
 
 flight_cpp_package_test_labels(flight_cpp.generated_svg_style scene2d-formats)
+
+add_executable(flight_cpp_generated_scene2d_formats_lottie_counts_tests generated_scene2d_formats_lottie_counts_test.cpp)
+target_include_directories(
+  flight_cpp_generated_scene2d_formats_lottie_counts_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(
+  flight_cpp_generated_scene2d_formats_lottie_counts_tests
+  PRIVATE Flight::Cpp Flight::SdkPreview
+)
+add_test(NAME flight_cpp.generated_scene2d_formats_lottie_counts COMMAND flight_cpp_generated_scene2d_formats_lottie_counts_tests)
+flight_cpp_package_test_labels(flight_cpp.generated_scene2d_formats_lottie_counts scene2d-formats)

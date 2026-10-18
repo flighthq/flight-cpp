@@ -5455,6 +5455,13 @@
     },
     {
       "dependency": "flight",
+      "digest": "98f7aae5b4f798dde31c50fd1d5ada718a274b7a7b3ce20ee3693be79dbce64b",
+      "id": "scene2d-formats-lottie-frame-rate-narrowed-local",
+      "module": "packages/scene2d-formats/src/lottieCounts.ts",
+      "package": "@flighthq/scene2d-formats"
+    },
+    {
+      "dependency": "flight",
       "digest": "3796a8f0b5dc208e6d5da424d5638b37992877d6169d3157bd5f194df682c601",
       "id": "registry-kind-map-keys-value-parameter",
       "module": "packages/registry/src/registryTable.ts",

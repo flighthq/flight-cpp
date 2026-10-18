@@ -3,8 +3,8 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function tallyMasks -- source line 78
-//   missing: function tallyShapeItems -- source line 95
+//   missing: function tallyMasks -- source line 74
+//   missing: function tallyShapeItems -- source line 91
 //   missing: function collectLottieCounts -- source line 3
 #include <flight/any.hpp>
 #include <flight/array.hpp>
@@ -23,7 +23,11 @@ namespace flight::scene2d_formats {
 using flight::types::Shape;
 
 inline bool is_lottie_document(flight::Record<flight::String, flight::Any> record) {
-  return ((((flight::is_array(record.get(flight::String("layers")).value()) && (record.get(flight::String("fr")).value().type_of() == flight::String("number"))) && (record.get(flight::String("fr")).value() > 0.0)) && (record.get(flight::String("ip")).value().type_of() == flight::String("number"))) && (record.get(flight::String("op")).value().type_of() == flight::String("number")));
+  if (!flight::is_array(record.get(flight::String("layers")).value())) {
+    return false;
+  }
+  auto fr = record.get(flight::String("fr")).value();
+  return ((((fr.type_of() == flight::String("number")) && (fr.as_number() > 0.0)) && (record.get(flight::String("ip")).value().type_of() == flight::String("number"))) && (record.get(flight::String("op")).value().type_of() == flight::String("number")));
 }
 
 inline flight::Map<double, flight::String> lottie_layer_features = flight::Map<double, flight::String>({{flight::types::lottie_layer_kind->image, flight::String("layer.image")}, {flight::types::lottie_layer_kind->null, flight::String("layer.null")}, {flight::types::lottie_layer_kind->precomposition, flight::String("layer.precomposition")}, {flight::types::lottie_layer_kind->shape, flight::String("layer.shape")}, {flight::types::lottie_layer_kind->solid, flight::String("layer.solid")}, {flight::types::lottie_layer_kind->text, flight::String("layer.text")}});
@@ -37,7 +41,7 @@ inline flight::Array<flight::String> lottie_mask_condition_features = flight::Ar
 inline flight::Map<flight::String, flight::String> lottie_mask_features = flight::Map<flight::String, flight::String>({{flight::types::lottie_mask_kind->additive, flight::String("mask.additive")}, {flight::types::lottie_mask_kind->darken, flight::String("mask.darken")}, {flight::types::lottie_mask_kind->difference, flight::String("mask.difference")}, {flight::types::lottie_mask_kind->intersect, flight::String("mask.intersect")}, {flight::types::lottie_mask_kind->lighten, flight::String("mask.lighten")}, {flight::types::lottie_mask_kind->subtract, flight::String("mask.subtract")}});
 
 
-// NOT GENERATED: function tallyMasks -- source line 78
+// NOT GENERATED: function tallyMasks -- source line 74
 // refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
 //
 // The source it stood for:
@@ -68,7 +72,7 @@ inline flight::Array<flight::String> get_lottie_feature_names() {
 }
 
 
-// NOT GENERATED: function tallyShapeItems -- source line 95
+// NOT GENERATED: function tallyShapeItems -- source line 91
 // refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
 //
 // The source it stood for:

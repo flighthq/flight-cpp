@@ -1,0 +1,20 @@
+diff --git a/packages/scene2d-formats/src/lottieCounts.ts b/packages/scene2d-formats/src/lottieCounts.ts
+--- a/packages/scene2d-formats/src/lottieCounts.ts
++++ b/packages/scene2d-formats/src/lottieCounts.ts
+@@ -49,13 +49,9 @@ export function getLottieFeatureNames(): readonly string[] {
+ }
+ 
+ function isLottieDocument(record: Readonly<Record<string, unknown>>): boolean {
+-  return (
+-    Array.isArray(record.layers) &&
+-    typeof record.fr === 'number' &&
+-    record.fr > 0 &&
+-    typeof record.ip === 'number' &&
+-    typeof record.op === 'number'
+-  );
++  if (!Array.isArray(record.layers)) return false;
++  const fr = record.fr;
++  return typeof fr === 'number' && fr > 0 && typeof record.ip === 'number' && typeof record.op === 'number';
+ }
+ 
+ /**
