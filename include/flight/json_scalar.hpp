@@ -510,26 +510,57 @@ class JsonRootRowOwner final : public RowOwner {
   [[nodiscard]] std::shared_ptr<RowCell> named_cell(std::string_view name) const override {
     require_member_access();
     const auto key = String::from_utf8(name);
-    if (root_.kind() != AnyKind::string || !string_member_present(key)) return {};
-    const Any root = root_;
-    return std::make_shared<detail::ReadonlyNamedCell>([root, key] { return read_json_data_property(root, key); });
+    if (root_.kind() == AnyKind::string) {
+      if (!string_member_present(key)) return {};
+      const Any root = root_;
+      return std::make_shared<detail::ReadonlyNamedCell>([root, key] { return read_json_data_property(root, key); });
+    }
+    // A native (or boxed) array root owns `length` and its indices, exactly as JavaScript does. A boxed
+    // native Array reaches here because it has no erased row owner of its own.
+    if (root_.is_array()) {
+      const Any root = root_;
+      if (key == String("length")) {
+        return std::make_shared<detail::ReadonlyNamedCell>(
+            [root] { return Any(static_cast<double>(root.array_size())); });
+      }
+      const auto index = detail::record_array_index(key);
+      if (!index || *index >= root.array_size()) return {};
+      return std::make_shared<detail::ReadonlyNamedCell>(
+          [root, position = *index] { return root.array_get(static_cast<double>(position)).value_or(Any(undefined)); });
+    }
+    return {};
   }
 
   [[nodiscard]] bool has_named_cell(std::string_view name) const override {
     require_member_access();
-    if (root_.kind() != AnyKind::string) return false;
-    return string_member_present(String::from_utf8(name));
+    const auto key = String::from_utf8(name);
+    if (root_.kind() == AnyKind::string) return string_member_present(key);
+    if (root_.is_array()) {
+      if (key == String("length")) return true;
+      const auto index = detail::record_array_index(key);
+      return index && *index < root_.array_size();
+    }
+    return false;
   }
 
   [[nodiscard]] std::optional<std::vector<String>> enumerable_string_keys() const override {
     require_member_access();
     std::vector<String> keys;
-    if (root_.kind() != AnyKind::string) return keys;
-    const auto& units = root_.as_string().native();
-    for (std::size_t index = 0; index < units.size(); ++index) {
-      keys.push_back(String::from_number(static_cast<double>(index)));
+    if (root_.kind() == AnyKind::string) {
+      const auto& units = root_.as_string().native();
+      for (std::size_t index = 0; index < units.size(); ++index) {
+        keys.push_back(String::from_number(static_cast<double>(index)));
+      }
+      keys.push_back(String("length"));
+      return keys;
     }
-    keys.push_back(String("length"));
+    // Object.keys(array) enumerates the indices; `length` is present for `in` but not enumerable.
+    if (root_.is_array()) {
+      const auto size = root_.array_size();
+      for (std::size_t index = 0; index < size; ++index) {
+        keys.push_back(String::from_number(static_cast<double>(index)));
+      }
+    }
     return keys;
   }
 

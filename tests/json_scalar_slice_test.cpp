@@ -448,6 +448,26 @@ void test_json_scalar_symbol() {
 
 } // namespace
 
+
+namespace {
+
+// A native Array root reaches the assertion row through the bounded root owner (a boxed native Array
+// has no erased row owner). Its members must still answer like JavaScript: `length` is a present
+// number and each index is present, so a native metadata frameTags.length is not missing.
+void test_json_native_array_root_members() {
+  using RowSchema = flight::RowReadonly<flight::RowOf<flight::Any>>;
+  const flight::Any tags = flight::Any(flight::Array<double>{1.0, 2.0});
+  const auto row = flight::json_assertion_row<RowSchema>(tags);
+  assert(flight::json_row_is_array(row) && flight::json_row_length(row) == 2.0);
+  const auto length = flight::read_json_scalar_row_member(row, flight::String("length"));
+  assert(length.is_present() && length.as_native_number() == 2.0);
+  assert(flight::json_row_has(row, flight::String("0")) && flight::json_row_has(row, flight::String("1")) &&
+         !flight::json_row_has(row, flight::String("2")));
+  assert(flight::read_json_scalar_row_member(row, flight::String("1")).to_number() == 2.0);
+}
+
+} // namespace
+
 int main() {
   using flight::Any;
   using flight::JsonScalarCell;
@@ -461,6 +481,7 @@ int main() {
   test_json_conversion_edges();
   test_json_member_array_replacement();
   test_json_native_owner_raw();
+  test_json_native_array_root_members();
   test_json_scalar_utf16_relational();
   test_json_any_bridge();
   test_json_scalar_symbol();
