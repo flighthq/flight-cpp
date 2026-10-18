@@ -168,6 +168,13 @@ cc_test(
 )
 
 cc_test(
+    name = "nullish_or_lazy_test",
+    srcs = ["nullish_or_lazy_test.cpp"],
+    size = "small",
+    deps = ["//:cpp"],
+)
+
+cc_test(
     name = "runtime_hierarchy_reuse_test",
     srcs = ["runtime_hierarchy_reuse_test.cpp"],
     size = "small",

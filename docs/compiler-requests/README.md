@@ -17,6 +17,9 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 
 | Carried patch | Compiler request |
 | --- | --- |
+| [`compiler-erased-host-result-evidence.patch`](../../source-patches/compiler-erased-host-result-evidence.patch) | [Results naming an unresolved external host type have no type evidence](erased-host-result-evidence.md) |
+| [`compiler-lazy-nullish-fallback.patch`](../../source-patches/compiler-lazy-nullish-fallback.patch) | [The generic `??` fallback evaluates its right operand even when the left is present](eager-nullish-fallback.md) |
+| [`compiler-structural-value-carrier-host-handle-read.patch`](../../source-patches/compiler-structural-value-carrier-host-handle-read.patch) | [A predicate-narrowed value escapes as the derived nominal owner (host-handle member reads)](narrowed-value-escape.md) |
 | [`compiler-checked-derived-member-read.patch`](../../source-patches/compiler-checked-derived-member-read.patch) | [A member read through a predicate-narrowed base value](checked-derived-member-read.md) |
 | [`compiler-erased-external-member-presence.patch`](../../source-patches/compiler-erased-external-member-presence.patch) | [A null guard on a member of an erased external type](erased-external-member-presence.md) |
 | [`compiler-interface-absence-refinement-heritage.patch`](../../source-patches/compiler-interface-absence-refinement-heritage.patch) | [Absence-only interface refinements keep native heritage](interface-absence-refinement-heritage.md) |

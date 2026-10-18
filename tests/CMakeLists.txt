@@ -39,10 +39,10 @@ target_link_libraries(flight_cpp_json_dynamic_view_tests PRIVATE Flight::Cpp)
 flight_cpp_set_project_warnings(flight_cpp_json_dynamic_view_tests)
 add_test(NAME flight_cpp.json_dynamic_view COMMAND flight_cpp_json_dynamic_view_tests)
 
-add_executable(flight_cpp_nullish_or_tests nullish_or_test.cpp)
-target_link_libraries(flight_cpp_nullish_or_tests PRIVATE Flight::Cpp)
-flight_cpp_set_project_warnings(flight_cpp_nullish_or_tests)
-add_test(NAME flight_cpp.nullish_or COMMAND flight_cpp_nullish_or_tests)
+add_executable(flight_cpp_nullish_or_lazy_tests nullish_or_lazy_test.cpp)
+target_link_libraries(flight_cpp_nullish_or_lazy_tests PRIVATE Flight::Cpp)
+flight_cpp_set_project_warnings(flight_cpp_nullish_or_lazy_tests)
+add_test(NAME flight_cpp.nullish_or_lazy COMMAND flight_cpp_nullish_or_lazy_tests)
 
 add_executable(flight_cpp_async_closure_tests async_closure_test.cpp)
 target_link_libraries(flight_cpp_async_closure_tests PRIVATE Flight::Cpp)
@@ -155,6 +155,11 @@ add_executable(flight_cpp_runtime_hierarchy_reuse_tests runtime_hierarchy_reuse_
 target_link_libraries(flight_cpp_runtime_hierarchy_reuse_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 flight_cpp_set_project_warnings(flight_cpp_runtime_hierarchy_reuse_tests)
 add_test(NAME flight_cpp.runtime_hierarchy_reuse COMMAND flight_cpp_runtime_hierarchy_reuse_tests)
+
+add_executable(flight_cpp_nullish_or_lazy_tests nullish_or_lazy_test.cpp)
+target_link_libraries(flight_cpp_nullish_or_lazy_tests PRIVATE Flight::Cpp)
+flight_cpp_set_project_warnings(flight_cpp_nullish_or_lazy_tests)
+add_test(NAME flight_cpp.nullish_or_lazy COMMAND flight_cpp_nullish_or_lazy_tests)
 
 add_executable(flight_cpp_union_kind_tests union_kind_test.cpp)
 target_link_libraries(flight_cpp_union_kind_tests PRIVATE Flight::Cpp)

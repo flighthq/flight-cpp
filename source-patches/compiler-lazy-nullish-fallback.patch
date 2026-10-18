@@ -1,0 +1,118 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index bc40c53..1021b2f 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -5108,7 +5108,37 @@ function emitExpression(
+         );
+         if (optionalSingle) return optionalSingle;
+         context.includes.add('optional');
+-        return `${emitOptionalExpressionCpp(expression.left, context, leftType)}.value_or(${emitExpression(expression.right, context, expectedType, true, denseArrayLengthInitialized)})`;
++        const coalesceLeft = emitOptionalExpressionCpp(expression.left, context, leftType);
++        const coalesceRight = emitExpression(expression.right, context, expectedType, true, denseArrayLengthInitialized);
++        // `??` evaluates its right operand only when the left is nullish, and the left exactly once.
++        // `optional::value_or(u)` evaluates `u` first, so every right operand -- a call, a getter, an
++        // assignment, a throw -- would run every time. The shared lazy primitive flight::nullish_or
++        // (flight/presence.hpp) takes the right operand as a thunk and calls it only for an absent left.
++        // A literal or `undefined` fallback has no evaluation at all -- nothing to call, read or throw -- so
++        // evaluating it first is unobservable and value_or keeps its exact spelling. Every other fallback,
++        // identifiers and member reads included (a getter, a proxy or an ordering can observe them), is lazy.
++        if (expression.right.kind === 'literal' || expression.right.kind === 'undefinedValue') {
++          return `${coalesceLeft}.value_or(${coalesceRight})`;
++        }
++        // The result is the left's payload, or that payload's optional when the fallback can itself be absent:
++        // nothing is flattened into a value that does not exist.
++        // With no IR type for the left, its payload is named from the emitted left itself, in an unevaluated
++        // context, so the left still runs exactly once.
++        const coalescePayload = leftType
++          ? emitType(getCppNonNullableType(leftType, context, new Set()) ?? leftType, context)
++          : `typename std::remove_cvref_t<decltype(${coalesceLeft})>::value_type`;
++        const fallbackType = getIrExpressionTypeEvidenceCpp(expression.right, context);
++        const fallbackMayBeAbsent = fallbackType !== undefined && hasIrTypeAbsentMember(fallbackType);
++        const coalesceTarget = fallbackMayBeAbsent ? `std::optional<${coalescePayload}>` : coalescePayload;
++        context.includes.add('flight/presence.hpp');
++        const coalesced = `flight::nullish_or<${coalesceTarget}>(${coalesceLeft}, [&]() -> ${coalesceTarget} { return ${coalesceRight}; })`;
++        // Entering a slot declared as an opaque host handle, an absent result is that handle's declared absence
++        // carrier.
++        if (expectedType && fallbackMayBeAbsent && isCppExternalHostHandleTypeCpp(expectedType, context)) {
++          context.includes.add('flight/host_handle_absence.hpp');
++          return `flight::host_handle_or_absent(${coalesced})`;
++        }
++        return coalesced;
+       }
+       const logicalOr = emitCppValueLogicalOrExpression(expression, context, expectedType);
+       if (logicalOr) return logicalOr;
+diff --git a/packages/compiler-backend-cpp/src/cppLazyNullishFallback.test.ts b/packages/compiler-backend-cpp/src/cppLazyNullishFallback.test.ts
+new file mode 100644
+index 0000000..c270bb6
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppLazyNullishFallback.test.ts
+@@ -0,0 +1,69 @@
++import { describe, expect, it } from 'vitest';
++
++import ts from 'typescript';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++// `a ?? b` evaluates `b` only when `a` is null or undefined, and `a` exactly once. std::optional::value_or
++// evaluates its argument first, so the generic fallback lowers through the shared lazy primitive
++// flight::nullish_or (flight/presence.hpp), which takes the right operand as a thunk. Only a literal or `undefined` fallback -- no evaluation at all -- keeps value_or.
++// Identifiers and member reads are lazy too: a getter, a proxy or an ordering can observe them. A fallback
++// that may itself be absent, entering a slot declared as an opaque host handle, crosses through that
++// handle's declared absence carrier (flight::host_handle_or_absent; it does not compile for any other type).
++const declarations = `export interface Source { value: number | null; read(): number }
++export interface Screen { presentationView: View | null; acquireView: (() => View) | null }
++`;
++const bindings = {
++  bindings: [
++    {
++      headers: ['host/view.hpp'],
++      nullability: 'non-null' as const,
++      ownership: 'shared' as const,
++      sourceName: 'View',
++      space: 'type' as const,
++      targetName: 'host::View',
++    },
++  ],
++  schema: 'flight-cpp-external-bindings/1' as const,
++};
++
++function emit(body: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/math/src/coalesce.ts', declarations + body, ts.ScriptTarget.Latest, true);
++  const lowered = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/math', upstreamDirectory: '/flight' });
++  expect(lowered.diagnostics).toEqual([]);
++  return emitIrModuleCpp(lowered.module, { externalBindings: bindings, runtimeProfile: 'flight-cpp' }).contents;
++}
++
++describe('lazy nullish-coalescing fallback', () => {
++  it('evaluates a call fallback only when the left is absent', () => {
++    const contents = emit(
++      'export function make(): View { throw new Error("make"); }\nexport function f(s: Screen): View | undefined { return s.acquireView?.() ?? make(); }',
++    );
++    expect(contents).toContain('#include <flight/presence.hpp>');
++    expect(contents).toContain('flight::nullish_or<host::View>(');
++    expect(contents).toContain('[&]() -> host::View { return make(); })');
++    expect(contents).not.toContain('.value_or(make())');
++  });
++
++  it('keeps identifier and member-read fallbacks lazy', () => {
++    expect(emit('export function f(s: Screen, other: View): View | undefined { return s.acquireView?.() ?? other; }')).toContain(
++      '[&]() -> host::View { return other; })',
++    );
++    expect(
++      emit('export function f(s: Screen, t: Screen): View | null | undefined { return s.acquireView?.() ?? t.presentationView; }'),
++    ).toContain('flight::nullish_or<std::optional<host::View>>(');
++  });
++
++  it('leaves the primitive coalesce lowering, which already tests presence first, unchanged', () => {
++    const contents = emit('export function f(s: Source): number { return s.value ?? s.read(); }');
++    expect(contents).toContain('if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return s->read();');
++    expect(contents).not.toContain('nullish_or');
++  });
++
++  it('crosses an absent-capable fallback into a host-handle slot through its absence carrier', () => {
++    const contents = emit('export function f(s: Screen): View { return s.acquireView?.() ?? s.presentationView; }');
++    expect(contents).toContain('#include <flight/host_handle_absence.hpp>');
++    expect(contents).toContain('return flight::host_handle_or_absent(flight::nullish_or<std::optional<host::View>>(');
++  });
++});

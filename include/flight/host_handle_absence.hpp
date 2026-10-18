@@ -1,5 +1,7 @@
 #pragma once
 
+#include <optional>
+
 namespace flight {
 
 // An opaque host handle that a host profile declares can stand for a SOURCE-ABSENT value at a read or
@@ -23,6 +25,14 @@ template <typename Handle>
                 "this type is not a declared opaque host-handle absence carrier; a missing member of it "
                 "has no native representation");
   return Handle{};
+}
+
+// A possibly-absent handle crossing into a slot declared as the handle itself: the present handle as it is,
+// or the declared absent handle, so a later use fails where JavaScript's use of null would. Only a declared
+// carrier compiles.
+template <typename Handle>
+[[nodiscard]] Handle host_handle_or_absent(std::optional<Handle> value) noexcept {
+  return value.has_value() ? std::move(*value) : absent_host_handle<Handle>();
 }
 
 } // namespace flight

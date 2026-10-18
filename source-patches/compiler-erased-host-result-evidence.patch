@@ -1,0 +1,208 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index c9e1c58..bc40c53 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -3448,6 +3448,24 @@ function emitVariable(variable: Readonly<IrVariable>, context: EmitContext): str
+         variable.type.element.types.some((type) => type.kind === 'unknown')))
+       ? getIrExpressionTypeEvidenceCpp(variable.initializer, context)
+       : undefined;
++  // A local whose checker type is a union with an ERASED member -- `cb?.(x) ?? host.call()` where the host
++  // result type is not resolved, typed `Tex | any` -- is stored as its initializer's evidence when that
++  // evidence is complete: every arm is then a known type (the declared callable return, a binding's declared
++  // call result). Evidence that still contains an unknown member does not replace the declared type.
++  const erasedArmInitializerType =
++    !inferredInitializerType &&
++    !arrayElement &&
++    !variable.mutable &&
++    variable.initializer &&
++    variable.type?.kind === 'union' &&
++    variable.type.types.some((type) => type.kind === 'unknown')
++      ? (() => {
++          const evidence = getIrExpressionTypeEvidenceCpp(variable.initializer!, context);
++          if (!evidence || evidence.kind === 'unknown') return undefined;
++          const members = evidence.kind === 'union' ? evidence.types : [evidence];
++          return members.some((member) => member.kind === 'unknown') ? undefined : evidence;
++        })()
++      : undefined;
+   const collectionInitializerRefinement =
+     !arrayElement && variable.type && variable.initializer?.kind === 'call'
+       ? getCppRuntimeCollectionResultRefinementCpp(variable.initializer, variable.type, context)
+@@ -3492,6 +3510,7 @@ function emitVariable(variable: Readonly<IrVariable>, context: EmitContext): str
+     ? undefined
+     : (context.preservedInitializerTypes.get(variable.binding.id) ??
+       carrierInitializerType ??
++      erasedArmInitializerType ??
+       importedAliasCarrierInitializerType ??
+       invariantCollectionInitializerType ??
+       guardedVariantInitializerType ??
+@@ -26328,6 +26347,14 @@ function getIrCallReturnTypeCpp(
+   if (expression.callee.kind === 'function') return expression.callee.returns;
+   const objectProjection = getCppObjectProjectionCallResultTypeCpp(expression, context);
+   if (objectProjection) return objectProjection;
++  if (expression.optional && expression.semantics.resultType.kind === 'unknown') {
++    const returns = getCppOptionalCallDeclaredReturnTypeCpp(expression, context);
++    if (returns) return { kind: 'union', types: [returns, { kind: 'undefined' }] };
++  }
++  if (!expression.optional && expression.semantics.resultType.kind === 'unknown') {
++    const bound = getCppErasedExternalCallBoundResultTypeCpp(expression, context);
++    if (bound) return bound;
++  }
+   // An overload call's checker-selected result is narrower than the implementation signature by
+   // design. Prefer that recorded selection before resolving the implementation declaration, or a
+   // package-graph session which has already indexed the callee widens the same call that an isolated
+@@ -34663,6 +34690,40 @@ function assertIrExpressionHasNoDualSentinelOptionalChainCpp(
+   }
+ }
+ 
++// `receiver.callback?.(...)` whose result the checker erased -- the callable returns an external host type its
++// program does not resolve -- still has a declared callable: the member's own declared type names one function
++// signature, and its return type is the semantic evidence for the call's present value. Only an erased result
++// consults it, and only a single declared function signature answers; anything else stays unproven.
++function getCppOptionalCallDeclaredReturnTypeCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'call' }>>,
++  context: EmitContext,
++): Readonly<IrType> | undefined {
++  if (expression.callee.kind !== 'property') return undefined;
++  const declared = getCppDeclaredPropertyReadTypeCpp(expression.callee, context);
++  const callables = (declared?.kind === 'union' ? declared.types : declared ? [declared] : []).filter(
++    (member) => member.kind !== 'null' && member.kind !== 'undefined',
++  );
++  const returns = callables.length === 1 && callables[0]!.kind === 'function' ? callables[0]!.returns : undefined;
++  return returns && returns.kind !== 'unknown' ? returns : undefined;
++}
++
++// A call on an external host receiver whose result the checker erased, where the binding profile declares the
++// member's result type (`callResultType`). That declared C++ type is the evidence, read back as the source type
++// the same profile binds to it, so every later rule (absence, unions, members) treats it as that type. Only a
++// unique type binding of exactly that target answers; a declared result with no source type stays unproven.
++function getCppErasedExternalCallBoundResultTypeCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'call' }>>,
++  context: EmitContext,
++): Readonly<IrType> | undefined {
++  const target = getCppExternalCallResultTargetCpp(expression, context);
++  if (!target) return undefined;
++  const sources = (context.options.externalBindings?.bindings ?? []).filter(
++    (binding) => binding.space === 'type' && binding.targetName === target,
++  );
++  if (sources.length !== 1) return undefined;
++  return { kind: 'named', reference: { kind: 'ambient', name: sources[0]!.sourceName }, typeArguments: [] };
++}
++
+ function emitOptionalCallExpressionCpp(
+   expression: Readonly<Extract<IrExpression, { kind: 'call' }>>,
+   context: EmitContext,
+@@ -34678,7 +34739,9 @@ function emitOptionalCallExpressionCpp(
+   // This is the same projection used by optional member calls, and it preserves both authored sentinel
+   // tags without choosing one, casting the callable, or introducing side storage.
+   const receiverProjection = getCppOptionalChainReceiverProjectionCpp(semantics.receiverType, context);
+-  const valueType = emitOptionalChainPayloadIrTypeCpp(semantics.valueType, context);
++  const valueType =
++    (semantics.valueType.kind === 'unknown' ? getCppOptionalCallDeclaredReturnTypeCpp(expression, context) : undefined) ??
++    emitOptionalChainPayloadIrTypeCpp(semantics.valueType, context);
+   const callee = emitOptionalChainReceiverCpp(expression.callee, context);
+   const arguments_ = appendCppOmittedInvocationArguments(
+     expression,
+diff --git a/packages/compiler-backend-cpp/src/cppErasedHostResultEvidence.test.ts b/packages/compiler-backend-cpp/src/cppErasedHostResultEvidence.test.ts
+new file mode 100644
+index 0000000..df45b2c
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppErasedHostResultEvidence.test.ts
+@@ -0,0 +1,98 @@
++import { describe, expect, it } from 'vitest';
++
++import ts from 'typescript';
++
++import { isBackendEmissionFailure } from '../../compiler-emission/src/index.js';
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++// The lowering's program does not resolve external host types (WebGPU), so the checker erases every result
++// that names one to `any`. Three bounded sources of evidence answer for such a result, and only for an
++// erased one -- a type the checker recorded is never replaced:
++//   - an optional call `receiver.callback?.(...)` takes the member's DECLARED callable return;
++//   - a call on an external host receiver takes the binding profile's declared `callResultType`, read back
++//     as the one source type the same profile binds to it;
++//   - a local the checker types `T | any` is stored as its initializer's evidence when that is complete.
++const declarations = `export interface Screen {
++  context: Ctx;
++  presentationView: View | null;
++  acquireCaptureTexture: ((target: Screen) => Tex) | null;
++}
++`;
++const handle = (sourceName: string, targetName: string, members: readonly (readonly [string, string, string?])[] = []) => ({
++  headers: ['host/view.hpp'],
++  ...(members.length > 0
++    ? {
++        members: members.map(([sourceMember, target, result]) => ({
++          parameters: [],
++          sourceMember,
++          targetName: target,
++          ...(result ? { callResultType: result } : {}),
++        })),
++      }
++    : {}),
++  nullability: 'non-null' as const,
++  ownership: 'shared' as const,
++  sourceName,
++  space: 'type' as const,
++  targetName,
++});
++const bindings = (withResults: boolean) => ({
++  bindings: [
++    handle('Ctx', 'host::Ctx', [['getCurrentTexture', 'get_current_texture', withResults ? 'host::Tex' : undefined]]),
++    handle('View', 'host::View'),
++    handle('Tex', 'host::Tex', [['createView', 'create_view', withResults ? 'host::View' : undefined]]),
++  ],
++  schema: 'flight-cpp-external-bindings/1' as const,
++});
++
++function emit(body: string, withResults = true): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/math/src/erased.ts', declarations + body, ts.ScriptTarget.Latest, true);
++  const lowered = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/math', upstreamDirectory: '/flight' });
++  expect(lowered.diagnostics).toEqual([]);
++  return emitIrModuleCpp(lowered.module, { externalBindings: bindings(withResults), runtimeProfile: 'flight-cpp' }).contents;
++}
++
++function refusal(body: string, withResults = true): string | undefined {
++  try {
++    emit(body, withResults);
++  } catch (error) {
++    if (isBackendEmissionFailure(error)) return error.rule;
++    throw error;
++  }
++  return undefined;
++}
++
++describe('evidence for results the checker erased', () => {
++  it('types an erased optional call by the member declared callable return', () => {
++    const contents = emit('export function f(t: Screen): Tex | undefined { return t.acquireCaptureTexture?.(t); }');
++    expect(contents).toContain('([&]() -> std::optional<host::Tex> { auto optional_chain_receiver = t->acquire_capture_texture;');
++    expect(contents).not.toContain('std::optional<flight::Any>');
++  });
++
++  it('types an erased host call by the binding declared call result', () => {
++    const contents = emit('export function f(t: Screen): void { t.presentationView = t.context.getCurrentTexture().createView(); }');
++    expect(contents).toContain('(t->presentation_view = std::optional<host::View>{t->context.get_current_texture().create_view()});');
++  });
++
++  it('keeps an erased host call unproven when the profile declares no result', () => {
++    expect(refusal('export function f(t: Screen): void { t.presentationView = t.context.getCurrentTexture().createView(); }', false)).toBe(
++      'cpp-contextual-union-missing-expression-type:optionalSingle',
++    );
++  });
++
++  it('stores a local typed with an erased arm as its complete initializer evidence', () => {
++    const contents = emit(
++      'export function f(t: Screen): void { const texture = t.acquireCaptureTexture?.(t) ?? t.context.getCurrentTexture(); t.presentationView = texture.createView(); }',
++    );
++    expect(contents).toContain('auto texture = ');
++    expect(contents).toContain('(t->presentation_view = std::optional<host::View>{texture.create_view()});');
++  });
++
++  it('never replaces a result the checker recorded', () => {
++    const contents = emit(
++      'export interface Counter { next: ((step: number) => number) | null }\nexport function f(c: Counter): number | undefined { return c.next?.(1); }',
++    );
++    expect(contents).toContain('-> std::optional<double>');
++  });
++});

@@ -5352,6 +5352,57 @@
       "unblocks": "Preparation for original lottieNumericValue/handleVaries and retained array callbacks. Whole original public Lottie body/callees and32-case consumer still require further qualification.",
       "expires": "When the upstream C++ backend preserves erased array selection, complete-fill evidence, compound array guards and contextual callback receiver arguments with the same owner and source operation semantics.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-erased-host-result-evidence",
+      "dependency": "flight-compiler",
+      "patch": "compiler-erased-host-result-evidence.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/render-wgpu",
+      "answers": "diagnostic",
+      "refusal": "bindWgpuScreenRenderTarget is refused with cpp-contextual-union-missing-expression-type. The lowering's program does not resolve WebGPU types, so the checker erases `target.acquireCaptureTexture?.(target)`, `target.context.getCurrentTexture()` and the local they initialize to `any`. The optional call then lowers to std::optional<flight::Any> and nothing types the host call's result.",
+      "rewrite": "Three bounded evidence sources, each consulted ONLY for a result the checker erased (resultType unknown), so a recorded type is never replaced. (1) An optional call `receiver.callback?.(...)` takes the member's DECLARED callable return, plus undefined, when the declared member names exactly one function signature; the optional-call lambda is typed by it. (2) A call on an external host receiver takes the binding profile's declared callResultType, read back as the one source type the profile binds to that target; no unique binding means unproven. (3) A local the checker types `T | any` is stored as its initializer's evidence when that evidence has no unknown member.",
+      "equivalence": "Each answer is a type the source itself declares (the member's callable signature) or the host profile declares for the bound operation, and C++ checks every use against it. Evaluation, absence, identity and order are unchanged; only erased type evidence is supplied.",
+      "verification": "5 focused fixtures in cppErasedHostResultEvidence.test.ts: the declared callable return; the binding call result; an undeclared result staying unproven; an erased-arm local; a recorded type never replaced. A control without the patch fails the 3 positive cases. Native: the emitted bindWgpuScreenRenderTarget compiles and runs (scratch harness).",
+      "whyNotUpstreamFirst": "The erasure is environmental (the lowering program has no WebGPU types); upstream resolving them would remove the need.",
+      "unblocks": "bindWgpuScreenRenderTarget, with compiler-lazy-nullish-fallback and the GPUCanvasContext.getCurrentTexture binding.",
+      "expires": "when the lowering's program resolves the external host types, so the checker records these results itself.",
+      "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-lazy-nullish-fallback",
+      "dependency": "flight-compiler",
+      "patch": "compiler-lazy-nullish-fallback.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/render-wgpu",
+      "answers": "diagnostic",
+      "refusal": "Not a refusal but a mislowering, corpus-wide: the generic `a ?? b` fallback emitted `a.value_or(b)`, and std::optional::value_or evaluates `b` first. A call, getter, assignment or throw in the fallback then ran even when `a` was present. In bindWgpuScreenRenderTarget that is `getCurrentTexture()` running when a capture texture exists, and throwing on an unavailable host where JS would not.",
+      "rewrite": "The generic fallback lowers to the SHARED lazy primitive flight::nullish_or<Target>(left, [&]() -> Target { return right; }) (flight/presence.hpp, introduced by compiler-asserted-empty-object-fallback; no second helper). Target is the left's payload, or std::optional<payload> when the fallback can itself be absent. The left is evaluated once and the thunk is called only for an absent left. A literal or `undefined` fallback (no evaluation at all) keeps value_or. Identifiers and member reads are lazy, because a getter, proxy or ordering can observe them. Entering a slot declared as an opaque host handle, that result crosses through flight::host_handle_or_absent, which compiles only for a declared absence carrier. The primitive coalesce paths, which already test presence first, are unchanged.",
+      "equivalence": "This is exactly ECMAScript `??`: the left is evaluated once, the right only when the left is null or undefined, and a present left (false, 0, '', the same reference) is the result. An absent host handle maps to the profile's declared empty handle, as JS would carry null.",
+      "verification": "4 focused fixtures in cppLazyNullishFallback.test.ts: a call fallback is lazy; identifier and member-read fallbacks are lazy; the primitive path is unchanged; the host-handle absence carrier is used. A control without the patch fails 3. Runtime: tests/nullish_or_lazy_test.cpp exercises the shared primitive in exactly the emitted forms (13 checks: left once; fallback only when absent; false, 0 and empty string present; same Ref; a throwing fallback throws only when run; an optional Target stays absent). The runtime helper flight::host_handle_or_absent lives in flight/host_handle_absence.hpp. Backend-suite parity: 0 new failures.",
+      "whyNotUpstreamFirst": "It relies on runtime helpers (flight::nullish_or, flight::host_handle_or_absent) that only this runtime defines.",
+      "unblocks": "A correct bindWgpuScreenRenderTarget, and every emitted `x ?? f()` whose fallback has effects.",
+      "expires": "when upstream lowers `??` with a lazily evaluated fallback.",
+      "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-structural-value-carrier-host-handle-read",
+      "dependency": "flight-compiler",
+      "patch": "compiler-structural-value-carrier-host-handle-read.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/render-wgpu",
+      "answers": "diagnostic",
+      "refusal": "A carried required member of an opaque host-handle type (`target.context` on a carried WgpuScreenRenderTarget) was emitted as the carrier's MemberValue<Handle>, so a method call on it (`.get_current_texture()`) did not compile.",
+      "rewrite": "A carried read of a required member whose type is an opaque host handle (shared, non-null external binding) projects `.value()`. A handle has no number, string or truthiness reading for MemberValue to supply, so a missing member fails at the read, which is its use. Primitive members keep MemberValue.",
+      "equivalence": "The same member of the same object is read. The handle is used as itself, and absence fails where JavaScript's use of the missing member would.",
+      "verification": "1 focused fixture added to cppStructuralValueCarrier.test.ts (9 total); a control without the patch fails it. The emitted carried bindWgpuScreenRenderTarget compiles.",
+      "whyNotUpstreamFirst": "It extends this repository's structural-value carrier lowering.",
+      "unblocks": "The carried bindWgpuScreenRenderTarget.",
+      "expires": "with compiler-structural-value-carrier.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }

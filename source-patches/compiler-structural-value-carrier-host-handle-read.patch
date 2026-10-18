@@ -1,0 +1,61 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 1021b2f..b3fa925 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -16526,7 +16526,11 @@ function emitCppStructuralValueCarrierMemberReadCpp(
+   context.includes.add('flight/structural_ref.hpp');
+   const read = `${receiver}.template ${optionalMember ? 'read_optional' : 'read'}<flight::RowKey<${JSON.stringify(expression.name)}>, ${access}>()`;
+   // A read the source proved present after a guard on the member projects that present value.
+-  return optionalMember && expression.presence === 'narrowedPresent' ? `${read}.value()` : read;
++  if (optionalMember) return expression.presence === 'narrowedPresent' ? `${read}.value()` : read;
++  // A required member of an opaque host-handle type has no number, string or truthiness reading for
++  // MemberValue to supply; it is used as the handle (a method call on it), so it is projected here, and a
++  // missing one fails at this read.
++  return isCppExternalHostHandleTypeCpp(memberType, context) ? `${read}.value()` : read;
+ }
+ 
+ function getCppStructuralValueCarrierAccessCpp(
+diff --git a/packages/compiler-backend-cpp/src/cppStructuralValueCarrier.test.ts b/packages/compiler-backend-cpp/src/cppStructuralValueCarrier.test.ts
+index 31caadd..d3a497c 100644
+--- a/packages/compiler-backend-cpp/src/cppStructuralValueCarrier.test.ts
++++ b/packages/compiler-backend-cpp/src/cppStructuralValueCarrier.test.ts
+@@ -143,6 +143,39 @@ describe('declared structural-value carrier sites', () => {
+     expect(salvaged).toContain(`std::optional<std::function<void(${carrier}, double)>> encode_capture;`);
+   });
+ 
++  it('projects a required host-handle member read through the carrier so it can be used as the handle', () => {
++    const hostSource = `export interface Target { context: Ctx | null; width: number }
++export interface Screen extends Target { readonly context: Ctx; label: string }
++export function useScreen(t: Screen): void { t.context.present(); }
++`;
++    const sourceFile = ts.createSourceFile('/flight/packages/math/src/handle.ts', hostSource, ts.ScriptTarget.Latest, true);
++    const lowered = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/math', upstreamDirectory: '/flight' });
++    expect(lowered.diagnostics).toEqual([]);
++    const contents = emitIrModuleCpp(lowered.module, {
++      externalBindings: {
++        bindings: [
++          {
++            headers: ['host/view.hpp'],
++            members: [{ parameters: [], sourceMember: 'present', targetName: 'present' }],
++            nullability: 'non-null',
++            ownership: 'shared',
++            sourceName: 'Ctx',
++            space: 'type',
++            targetName: 'host::Ctx',
++          },
++        ],
++        schema: 'flight-cpp-external-bindings/1',
++      },
++      runtimeProfile: 'flight-cpp',
++      structuralValueCarriers: [
++        { base: 'Target', nominal: 'Screen', parameters: [{ function: 'useScreen', parameter: 't' }], target: carrier },
++      ],
++    }).contents;
++    // The handle is the member's value, so a missing member fails at this read; a primitive member keeps
++    // MemberValue's own number/string/truthiness readings.
++    expect(contents).toContain('t.template read<flight::RowKey<"context">, host::Ctx, &Screen::context>().value().present();');
++  });
++
+   it('refuses a compound write to a carried member', () => {
+     let rule: string | undefined;
+     try {
