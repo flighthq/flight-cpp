@@ -70,6 +70,9 @@ class JsonScalarCell final {
       case AnyKind::undefined: return std::numeric_limits<double>::quiet_NaN();
       case AnyKind::boolean: return value_.as_boolean() ? 1.0 : 0.0;
       case AnyKind::string: return parse_number(value_.as_string());
+      case AnyKind::symbol:
+        // ToNumber of a Symbol throws; it is never NaN.
+        throw TypeError("Cannot convert a Symbol value to a number");
       default:
         // ToNumber of a composite is ToNumber(ToPrimitive(x)): [] -> "" -> 0, [30] -> "30" -> 30,
         // [1,2] -> "1,2" -> NaN, {} -> "[object Object]" -> NaN.
@@ -141,6 +144,15 @@ class JsonScalarCell final {
   // the result is string concatenation. The result stays a raw-valued cell so downstream operations
   // keep their source semantics (e.g. "30" + 2 -> "302", then ToNumber if used numerically).
   [[nodiscard]] static JsonScalarCell add(const JsonScalarCell& left, const JsonScalarCell& right) {
+    // A Symbol cannot be converted implicitly by `+`: string concatenation and numeric addition both
+    // throw, with the message of the conversion the source would have attempted. Explicit
+    // String(symbol) remains available through to_string().
+    if (left.primitive_is_symbol() || right.primitive_is_symbol()) {
+      if (left.primitive_is_string() || right.primitive_is_string()) {
+        throw TypeError("Cannot convert a Symbol value to a string");
+      }
+      throw TypeError("Cannot convert a Symbol value to a number");
+    }
     if (left.primitive_is_string() || right.primitive_is_string()) {
       return JsonScalarCell{Any(left.to_string() + right.to_string())};
     }
@@ -222,6 +234,10 @@ class JsonScalarCell final {
 
   // ToPrimitive's string question for the operators above. Strings and JSON objects/arrays (whose
   // primitive form is a string) answer true; number/boolean/null/undefined answer false.
+  [[nodiscard]] bool primitive_is_symbol() const noexcept {
+    return present_ && value_.kind() == AnyKind::symbol;
+  }
+
   [[nodiscard]] bool primitive_is_string() const noexcept {
     if (!present_) return false;
     switch (value_.kind()) {

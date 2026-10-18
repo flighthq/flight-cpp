@@ -408,6 +408,46 @@ void test_json_native_owner_raw() {
 
 } // namespace
 
+namespace {
+
+// Number(Symbol) throws TypeError; explicit String(symbol) stays available; implicit concat throws.
+void test_json_scalar_symbol() {
+  const flight::JsonScalarCell symbol{flight::Any(flight::Symbol(flight::String("s")))};
+  assert(symbol.type_of() == "symbol");
+  bool number_threw = false;
+  try {
+    (void)symbol.to_number();
+  } catch (const flight::TypeError&) {
+    number_threw = true;
+  }
+  assert(number_threw);
+  bool plus_number_threw = false;
+  try {
+    (void)(symbol + 1.0);
+  } catch (const flight::TypeError&) {
+    plus_number_threw = true;
+  }
+  assert(plus_number_threw);
+  bool plus_string_threw = false;
+  try {
+    (void)(symbol + flight::JsonScalarCell{flight::Any(flight::String(""))});
+  } catch (const flight::TypeError&) {
+    plus_string_threw = true;
+  }
+  assert(plus_string_threw);
+  bool relational_threw = false;
+  try {
+    (void)(symbol < 1.0);
+  } catch (const flight::TypeError&) {
+    relational_threw = true;
+  }
+  assert(relational_threw);
+  // Explicit String(symbol) is distinct from the implicit conversions above.
+  assert(symbol.to_string() == flight::String("Symbol(s)"));
+}
+
+} // namespace
+
 int main() {
   using flight::Any;
   using flight::JsonScalarCell;
@@ -423,6 +463,7 @@ int main() {
   test_json_native_owner_raw();
   test_json_scalar_utf16_relational();
   test_json_any_bridge();
+  test_json_scalar_symbol();
 
   const auto document = flight::Json::parse(flight::String("{\"fr\":30,\"bad\":\"x\"}"));
   const Any receiver(document);
