@@ -1,0 +1,235 @@
+{
+  "schema": "flight-lottie-bezier-read-iterator-components/1",
+  "scope": "Private native component qualification of existing runtime APIs. No product runtime, compiler, public ABI, generated code, source patch, or storage-family change.",
+  "nativeOriginalBezierQualified": false,
+  "publicAbiActivated": false,
+  "sdkRunsStarted": 0,
+  "qualificationAtCommit": "446f51a27c0e2f64c2ddedc9000b763f75e18786",
+  "baseAtQualification": "d5adda332bceccc93319bbd1ee428fa7d16a2879",
+  "probe": {
+    "file": "scripts/fixtures/lottieBezierReadIteratorComponents.cpp",
+    "sha256": "ddcb9b6f656106b529ec1decef82d2fd982efd92ef3a54dcf3b4878b7c7065f6"
+  },
+  "toolchain": {
+    "zigVersion": "0.17.0",
+    "wrapper": {
+      "file": "out/tooling/zig-cxx-build",
+      "sha256": "77ac4f6596763c9bd00cd449d304b0f6e3986303e7890cdac746fdadf60a257f"
+    }
+  },
+  "compile": {
+    "command": "out/tooling/zig-cxx-build -std=c++20 -ffp-contract=off -g0 -I include -I generated/include scripts/fixtures/lottieBezierReadIteratorComponents.cpp -o ../scratch-archives/bezier-erased/read-iterator-components",
+    "exitCode": 0,
+    "generatedHeadersUsedByProbe": false
+  },
+  "run": {
+    "command": "../scratch-archives/bezier-erased/read-iterator-components",
+    "exitCode": 0,
+    "checks": 24,
+    "failures": 0,
+    "inheritedPresenceWithoutRead": true,
+    "ownReaderCannotReadInheritedGetter": true,
+    "sameGetterException": true,
+    "utf16Units": [
+      55357,
+      56898
+    ],
+    "liveSharedCursor": true,
+    "foreignIteratorRefused": true
+  },
+  "checks": [
+    {
+      "index": 1,
+      "name": "registered inherited presence",
+      "result": "pass"
+    },
+    {
+      "index": 2,
+      "name": "presence invokes zero getters",
+      "result": "pass"
+    },
+    {
+      "index": 3,
+      "name": "same native object after assertion",
+      "result": "pass"
+    },
+    {
+      "index": 4,
+      "name": "same RowOwner after assertion",
+      "result": "pass"
+    },
+    {
+      "index": 5,
+      "name": "own-key presence excludes inherited accessor",
+      "result": "pass"
+    },
+    {
+      "index": 6,
+      "name": "own JSON read is absent and invokes zero getters",
+      "result": "pass"
+    },
+    {
+      "index": 7,
+      "name": "inherited accessor typeof refuses without getter read",
+      "result": "pass"
+    },
+    {
+      "index": 8,
+      "name": "direct getter instrumentation control",
+      "result": "pass"
+    },
+    {
+      "index": 9,
+      "name": "own accessor presence does not evaluate reader",
+      "result": "pass"
+    },
+    {
+      "index": 10,
+      "name": "member capture retains exact thrown exception",
+      "result": "pass"
+    },
+    {
+      "index": 11,
+      "name": "v then i getter error precedes iterator acquisition and o read",
+      "result": "pass"
+    },
+    {
+      "index": 12,
+      "name": "string iteration yields one surrogate pair",
+      "result": "pass"
+    },
+    {
+      "index": 13,
+      "name": "point index zero yields high UTF-16 unit",
+      "result": "pass"
+    },
+    {
+      "index": 14,
+      "name": "point index one yields low UTF-16 unit",
+      "result": "pass"
+    },
+    {
+      "index": 15,
+      "name": "string iterator exhausted",
+      "result": "pass"
+    },
+    {
+      "index": 16,
+      "name": "lone surrogate remains one unit",
+      "result": "pass"
+    },
+    {
+      "index": 17,
+      "name": "first parsed-array value",
+      "result": "pass"
+    },
+    {
+      "index": 18,
+      "name": "shared live cursor sees appended value",
+      "result": "pass"
+    },
+    {
+      "index": 19,
+      "name": "parsed-array cursor exhausted",
+      "result": "pass"
+    },
+    {
+      "index": 20,
+      "name": "shared cursor stays exhausted after later append",
+      "result": "pass"
+    },
+    {
+      "index": 21,
+      "name": "present undefined yielded",
+      "result": "pass"
+    },
+    {
+      "index": 22,
+      "name": "null point indexing throws TypeError",
+      "result": "pass"
+    },
+    {
+      "index": 23,
+      "name": "noniterable primitive throws TypeError",
+      "result": "pass"
+    },
+    {
+      "index": 24,
+      "name": "foreign iterator explicitly refuses",
+      "result": "pass"
+    }
+  ],
+  "runtimeInputs": {
+    "trackedIncludeFileCount": 101,
+    "manifestFormat": "UTF-8 sorted lines: sha256, two spaces, repo-relative path, newline",
+    "manifestSha256": "f6347d91b7f8efd0039ac5c228306101411e67577ec4edf2c01f8ffd1dbead65",
+    "relevantHeaders": [
+      {
+        "file": "include/flight/json_scalar.hpp",
+        "sha256": "9be83c2fc02ad5e3b6c3c26973717e86e9481a5907ba15fd717ca196b3c7b342"
+      },
+      {
+        "file": "include/flight/structural_ref.hpp",
+        "sha256": "5a7831b47e95b0ec42b0780ea0201d1a7dc0184917ba02c2e0996af1199eaa55"
+      },
+      {
+        "file": "include/flight/array.hpp",
+        "sha256": "401291511c6cbbaca5c7ec8cb7610bb879f7624275c1df4230acd07d729c3478"
+      },
+      {
+        "file": "include/flight/sequence_view.hpp",
+        "sha256": "1789491560deccdef7d1274704926bf6b7a3fb114f9cb20da3b5f7d2794100e9"
+      },
+      {
+        "file": "include/flight/string.hpp",
+        "sha256": "037d79430e5d3fcd548d2610d5cf5c8a8cbca59af1c1085595bdceafe4e9a287"
+      },
+      {
+        "file": "include/flight/prototype.hpp",
+        "sha256": "1da81440d6727fcc36a0676cab1058c1cdc9aaa4fa42ee9b75c5daada1acfc9c"
+      },
+      {
+        "file": "include/flight/any.hpp",
+        "sha256": "acfb00704fa2501e446c22dbd7aa287d2efd350c5cc25a311113a628604d6979"
+      }
+    ]
+  },
+  "reusedEvidence": {
+    "receipt": {
+      "file": "artifacts/lottie-bezier-raw-return-design.json",
+      "sha256": "2231ae1704db49db0c7a06eaa3c8eb6ba4c554832305b84c9833b19329afdbe5"
+    },
+    "sourceCases": 20,
+    "ownerControls": 8,
+    "additionalOriginalSourceCases": 8,
+    "additionalOriginalModulesLoaded": 1250,
+    "originalReturnCarrierComponents": 10,
+    "repeatedHere": false
+  },
+  "boundaries": [
+    "Own JSON readers do not dispatch inherited getter values; inherited presence and accessor typeof refusal are distinct operations.",
+    "ReadonlyNamedCell ordering uses a private schema-only owner, not a new public native object schema or a generated getter bridge.",
+    "The array/string adapter is private fixture code over the existing live ArrayIterator; no installed general iterable factory is claimed.",
+    "Foreign Symbol.iterator protocol remains explicitly unrepresented at iteration use; no selection guard is tightened.",
+    "Physical raw Path/AnimationTrack storage and public entry activation remain held for the Manager scope decision."
+  ],
+  "excludedAttempt": {
+    "compileExitCode": 1,
+    "reason": "Fixture called private String.size(); corrected only the fixture to the public native().size() UTF-16 storage API before qualification.",
+    "log": "artifacts/lottie-bezier-read-iterator-components/initial-build.log"
+  },
+  "logs": [
+    {
+      "file": "artifacts/lottie-bezier-read-iterator-components/build.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "artifacts/lottie-bezier-read-iterator-components/run.log",
+      "sha256": "1e140f34aa605cafea3ef0d327ab82803740adf48e8a80f399984bafe6a288d8"
+    },
+    {
+      "file": "artifacts/lottie-bezier-read-iterator-components/initial-build.log",
+      "sha256": "d1ad433bf4f6b3b03a94844ce21b662302f6f5359c44d0be9550ab2331d7397c"
+    }
+  ]
+}

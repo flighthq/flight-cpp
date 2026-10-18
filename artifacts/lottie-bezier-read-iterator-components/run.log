@@ -1,0 +1,1 @@
+{"checks":24,"failures":0,"inheritedPresenceWithoutRead":true,"ownReaderCannotReadInheritedGetter":true,"sameGetterException":true,"utf16Units":[55357,56898],"liveSharedCursor":true,"foreignIteratorRefused":true}

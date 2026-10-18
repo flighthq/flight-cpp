@@ -1,0 +1,7 @@
+scripts/fixtures/lottieBezierReadIteratorComponents.cpp:92:49: error: 'size' is a private member of 'flight::String'
+   92 |   check(!first.done && first.value->as_string().size() == 2);
+      |                                                 ^
+include/flight/string.hpp:548:27: note: declared private here
+  548 |   [[nodiscard]] size_type size() const noexcept { return value_.size(); }
+      |                           ^
+1 error generated.
