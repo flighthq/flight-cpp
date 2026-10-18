@@ -11,6 +11,9 @@
 #include <flight/string.hpp>
 
 namespace flight {
+
+class Any;
+
 namespace detail {
 
 template <typename>
@@ -56,6 +59,8 @@ struct ToBoolean final {
       return (*this)(static_cast<std::underlying_type_t<Type>>(value));
     } else if constexpr (std::same_as<Type, String>) {
       return !value.empty();
+    } else if constexpr (std::same_as<Type, Any>) {
+      return value.to_boolean();
     } else if constexpr (
         std::same_as<Type, Undefined> || std::same_as<Type, Null> ||
         std::same_as<Type, std::nullptr_t> || std::same_as<Type, std::monostate>) {

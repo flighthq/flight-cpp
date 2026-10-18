@@ -16,6 +16,15 @@ int main() {
   using flight::Any;
   using flight::JsonValue;
   using flight::String;
+  for (const auto value : {Any(), Any(flight::null), Any(false), Any(0), Any(-0.0),
+                           Any(std::numeric_limits<double>::quiet_NaN()), Any(String())}) {
+    check(!flight::to_boolean(value) && !flight::to_boolean(std::optional<Any>(value)),
+          "shared truthiness preserves erased falsy primitive values");
+  }
+  for (const auto value : {Any(true), Any(1), Any(String("s")), Any(flight::Json::parse("{}")),
+                           Any(flight::Json::parse("[]"))}) {
+    check(flight::to_boolean(value), "shared truthiness observes erased truthy primitives and empty objects");
+  }
   auto doc = flight::Json::parse(R"({"bones":[null,2,{"x":1}],"obj":{"n":1},"null":null,"false":false,"zero":0,"str":"s","2":2,"1":1,"01":3,"4294967295":4})");
   auto alias = doc;
   check(!flight::is_array(doc), "parsed objects are not arrays");
