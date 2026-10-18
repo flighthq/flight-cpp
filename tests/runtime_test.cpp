@@ -4620,6 +4620,35 @@ static void test_json_scalar_cell() {
   static_assert(!std::is_constructible_v<double, flight::JsonScalarCell>);
 }
 
+// Compiled projection API for a typed member on a parsed-JSON receiver: raw value + presence.
+static void test_json_scalar_member_projection() {
+  using flight::JsonScalarCell;
+  const auto object = flight::Json::parse(
+      flight::String("{\"fr\":30,\"nil\":null,\"text\":\"30\",\"flag\":true}"));
+  const auto fr = flight::read_json_scalar_member(object, flight::String("fr"));
+  const auto nil = flight::read_json_scalar_member(object, flight::String("nil"));
+  const auto missing = flight::read_json_scalar_member(object, flight::String("absent"));
+  const auto text = flight::read_json_scalar_member(object, flight::String("text"));
+  const auto flag = flight::read_json_scalar_member(object, flight::String("flag"));
+  check(fr.is_present() && fr.type_of() == "number" && fr.as_native_number() == 30.0,
+        "a present number projects to the cell and passes the native escape");
+  check(nil.is_present() && nil.type_of() == "object" && nil.is_nullish() && nil.to_number() == 0.0,
+        "a present null stays nullish with ToNumber 0");
+  bool escaped = false;
+  try {
+    (void)nil.as_native_number();
+  } catch (const flight::NativeScalarEscapeError&) {
+    escaped = true;
+  }
+  check(escaped, "a present null is out of profile only at the native double escape");
+  check(missing.is_absent() && missing.type_of() == "undefined" && std::isnan(missing.to_number()),
+        "a missing key projects as absent/undefined");
+  check(text.type_of() == "string" && text.to_number() == 30.0,
+        "a wrong-typed numeric string keeps its type and ToNumbers at the use");
+  check(flag.type_of() == "boolean" && flag.to_boolean() && flag.to_number() == 1.0,
+        "a boolean keeps its type with JS truthiness/ToNumber");
+}
+
 int main() {
   test_array();
   test_array_get_optional_index();
@@ -4643,6 +4672,7 @@ int main() {
   test_json_record();
   test_json_owner_shared_view();
   test_json_scalar_cell();
+  test_json_scalar_member_projection();
   test_any_to_string();
   test_erased_ref();
   test_any_object_reference_boxing();

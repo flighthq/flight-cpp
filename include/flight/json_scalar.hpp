@@ -21,7 +21,9 @@
 
 #include <flight/any.hpp>
 #include <flight/boolean.hpp>
+#include <flight/json.hpp>
 #include <flight/string.hpp>
+#include <flight/structural_ref.hpp>
 
 namespace flight {
 
@@ -214,5 +216,15 @@ class JsonScalarCell final {
   Any value_{};
   bool present_{false};
 };
+
+// The projection the emitter will call for a typed member read on a parsed-JSON receiver: the named
+// member keeps its RAW JSON value and explicit presence. A missing key is absent; a present null,
+// string, boolean, array or object is preserved as-is for the approved operations and only errors at
+// a native-double escape.
+[[nodiscard]] inline JsonScalarCell read_json_scalar_member(const JsonValue& object, const String& key) {
+  const auto properties = named_properties(object);
+  if (!properties.has(key)) return JsonScalarCell{};
+  return JsonScalarCell{properties.get(key)};
+}
 
 } // namespace flight
