@@ -75,3 +75,13 @@ The adjacent return correction is now carried separately as
 with its exact optional-storage guards and focused evidence in the existing
 [readonly-view request](readonly-view-to-writable.md#g3-matching-present-readonly-returns).
 Normal scoped regeneration and original-header qualification remain queued for a generation slot.
+
+With the predicted readonly return also corrected in the diagnostic full-header copy, the actual
+whole-header consumer next fails in `destroy_canvas_render_state`: the original `CanvasRenderState`
+cannot enter `destroy_render_state(Ref<RenderState>)`. The flattened states have different refined
+runtime-owner cells, so a copied base prefix or a second runtime would break live identity. This is
+the existing [render-state teardown heritage boundary](interface-heritage-widening.md#g2-gl-view-destruction-instantiates-the-deferred-state-teardown),
+now reached through Canvas. It remains outside the compatible-storage heritage subset. No teardown
+body is suppressed and no fake conversion is supplied; the existing passing types/render owner test
+is unchanged. This diagnostic run executes no public Canvas helper and is not a final regenerated
+header qualification or a resolved-cause claim.
