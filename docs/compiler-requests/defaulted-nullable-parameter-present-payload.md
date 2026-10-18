@@ -14,9 +14,10 @@ blocks five original SVG consumers. No source caller or readonly contract needs 
 uses the emitter's existing initialized-binding read before projecting the declared nullable union.
 Shared captured defaults already project initialization in their binding read and keep that rule.
 An optional nullable parameter has the same separate caller-presence layer after both source
-sentinels are excluded. Ordinary/module bindings retain their original identifier-reference path.
+sentinels are excluded. Its sentinel tests inspect the original caller-presence carrier even when a
+preceding strict guard narrowed the value; projecting that value first would test the wrong layer. Ordinary/module bindings retain their original identifier-reference path.
 
-Nine compiler regression groups cover same/imported readonly owners, conditional/early guards,
+Ten compiler regression groups cover same/imported readonly owners, conditional/early guards,
 primitive payloads, captured values and mutable shared cells, nonnull defaults, union arms,
 required/optional controls and reachable absence. The old backend fails the new behavioral guards.
 The source oracle and emitted native fixture preserve defaults/null/undefined, original row/native
@@ -26,6 +27,17 @@ are byte-identical to baseline. Raw806d257 and the ordered84-patch backend use t
 and both fail native compilation at the actual helper argument; the candidate compiles and runs.
 This independently transpiles the raw backend and does not claim a full raw compiler build.
 
-The current compiler production build passes. Final adjacent regression checks, repository automation,
-normal scoped SDK generation and the original SVG public-consumer check remain pending. This work
-has no package/tier or full SVG import completion claim.
+The fresh ordered85-patch compiler archive applies and builds successfully, and all19 focused
+checks pass. A private reversal of the68 touched source paths restores the raw pinned bytes.
+The supplemental source/native optional-nullable and shared-default checks pass. Across503 relevant
+existing backend tests, baseline and candidate both have469 passes and the same34 failures, with
+1071 unrelated tests unselected and no new failures. The full static check retains exactly the
+baseline's four failing gates:36 formatting paths, four lint diagnostics,12 import-order diagnostics
+and five foreign fixture type errors. The new test passes its own formatting and lint checks.
+Repository source-patch, emission-repair and package-label automation passes33/33.
+
+The registered original full-header `applySvgElementAppearance` consumer covers omitted/undefined/null,
+no-transform retention, author/geometry composition and order, live readonly Matrix cells, original
+target/style behavior and final geometry lifetime. Its execution and normal scoped SDK generation
+remain pending serialized package-writer coordination. No package/tier or full SVG import completion
+claim follows from the compiler and synthetic native checks.
