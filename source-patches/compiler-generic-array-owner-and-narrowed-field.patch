@@ -1,0 +1,718 @@
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -401,6 +401,7 @@
+   // proof -- a non-array receiver throws where JavaScript answers undefined -- so the fact is scoped
+   // to the statements the guard dominates and is withdrawn when the binding is assigned.
+   erasedArrayProvenBindingIds: ReadonlySet<string>;
++  erasedArrayProvenPaths: ReadonlySet<string>;
+   // A bare `object` parameter normally carries identity only, which is the ABI used by WeakMap
+   // keys and attached Record views. Parameters in this set cross a storage boundary that later
+   // recovers their concrete type, so they must retain the type tag carried by `ErasedRef`.
+@@ -768,6 +769,7 @@
+     directBindingOwners: directBindingOwners ?? createCppDirectBindingOwners(sourceModules),
+     erasedDynamicStorageBindingIds,
+     erasedArrayProvenBindingIds: new Set(),
++    erasedArrayProvenPaths: new Set(),
+     erasedObjectParameterBindingIds,
+     exceptionPointerBindingIds: exceptionPointerBindings.exceptionPointers,
+     reboundExceptionPointers: exceptionPointerBindings.rebound,
+@@ -3420,6 +3422,15 @@
+       'cpp-uninitialized-variable-missing-type-evidence',
+     );
+   }
++  if (
++    variable.initializer &&
++    isCppGenericArrayElementReadCpp(variable.initializer, context) &&
++    variable.type?.kind === 'unknown'
++  ) {
++    context.erasedDynamicStorageBindingIds = new Set([...context.erasedDynamicStorageBindingIds, variable.binding.id]);
++    context.preservedInitializerTypes.set(variable.binding.id, { kind: 'unknown', source: 'unknown' });
++    return `${variable.mutable ? '' : 'const '}flight::Any ${getBindingTargetName(variable.binding, context)} = ${emitExpression(variable.initializer, context)};`;
++  }
+   if (!variable.mutable && variable.initializer) {
+     const selected = isCppErasedArraySelectionCpp(variable.initializer, context);
+     const alias =
+@@ -4669,6 +4680,8 @@
+ ): string {
+   const jsonProjection = emitCppJsonProjectionExpressionCpp(expression, context, expectedType);
+   if (jsonProjection !== undefined) return jsonProjection;
++  const genericArrayRead = emitCppGenericArrayPathReadCpp(expression, context);
++  if (genericArrayRead) return genericArrayRead;
+   const erasedArraySelection = emitCppErasedArraySelectionCpp(expression, context, expectedType);
+   if (erasedArraySelection !== undefined) return erasedArraySelection;
+   const erasedNumber = emitCppErasedNumberCoercionCpp(expression, context);
+@@ -7586,9 +7599,10 @@
+       if (expression.member || expression.object.kind === 'property') {
+         assertCppPresentOptionalStorageMemberReceiverCpp(expression, context);
+       }
+-      if (getCppStructuralRowExpressionPlanCpp(expression.object, context)) {
++      const structuralRowReceiver = getCppStructuralRowExpressionPlanCpp(expression.object, context);
++      if (structuralRowReceiver) {
+         context.includes.add('flight/structural_ref.hpp');
+-        return `flight::row_get<flight::RowKey<${JSON.stringify(expression.name)}>>(${emitExpression(expression.object, context)})`;
++        return `flight::row_get<flight::RowKey<${JSON.stringify(expression.name)}>>(${emitCppStructuralRowReceiverCpp(expression.object, structuralRowReceiver, context)})`;
+       }
+       // A resolved member names ONE receiver kind, and the analysis will resolve one across a union
+       // whose alternatives agree on it -- `Float32Array | Uint8Array` both answer `length` as a typed
+@@ -12390,7 +12404,7 @@
+         statement.consequent.kind === 'continue' ||
+         statement.consequent.kind === 'break')
+     ) {
+-      statementContext = getCppUnionOrArrayBranchContextCpp(statement.condition, false, statementContext);
++      statementContext = getCppConditionBranchContextCpp(statement.condition, false, statementContext);
+     }
+     // Recorded AFTER the withdrawal, because a terminating guard's own body may call or construct -- the
+     // `throw new Error(...)` the source writes to report the bad case -- and that runs only on the path
+@@ -16460,8 +16474,7 @@
+   const union = bindingType ? getIrUnionTypeCpp(bindingType, context, new Set()) : undefined;
+   const plan = union ? getCppUnionRepresentationPlan(union, context) : undefined;
+   const narrowedType =
+-    context.narrowedBindingTypes.get(bindingId) ??
+-    expression.narrowedType ??
++    getCppEffectiveNarrowedBindingTypeCpp(expression, context) ??
+     (expression.presence === 'narrowedPresent' && union
+       ? createIrTypeEvidenceUnionCpp(
+           union.types.filter((member) => member.kind !== 'null' && member.kind !== 'undefined'),
+@@ -17293,6 +17306,25 @@
+     );
+   }
+   const union = getIrUnionTypeCpp(payload, context, new Set());
++  const narrowed =
++    receiver.kind === 'identifier'
++      ? getCppEffectiveNarrowedBindingTypeCpp(receiver, context)
++      : receiver.kind === 'property'
++        ? receiver.narrowedType
++        : undefined;
++  // Presence removes the optional wrapper; a separate source member proof can select one of the
++  // original payload slots. Keep that slot instead of demanding the declared union have only one.
++  if (
++    union &&
++    narrowed &&
++    !hasIrTypeAbsentMember(narrowed) &&
++    getCppVariantAlternativesMatchingUnionMemberEvidenceCpp(
++      getCppVariantRepresentationForInspection(union, context),
++      narrowed,
++      context,
++    ).length === 1
++  )
++    return;
+   if (union && getCppUnionRepresentationPlan(union, context).valueSlots.length !== 1) {
+     emissionError(
+       context,
+@@ -17575,6 +17607,7 @@
+   operandType: Readonly<IrType> | undefined,
+   context: EmitContext,
+ ): boolean {
++  if (isCppGenericArrayElementReadCpp(operand, context)) return true;
+   if (isCppJsonReadValueCpp(operand, context)) return true;
+   if (isCppErasedDynamicPropertyReadCpp(operand, context)) return true;
+   if (operand.kind === 'binary' && operand.operator === '??') {
+@@ -20376,8 +20409,16 @@
+   expression: Readonly<Extract<IrExpression, { kind: 'call' }>>,
+   context: EmitContext,
+ ): string | undefined {
++  const argument = expression.arguments[0];
++  if (
++    isCppAmbientArrayPredicateCpp(expression) &&
++    argument &&
++    getCppGenericVariantArrayPropertyCpp(argument, context)
++  ) {
++    context.includes.add('flight/array.hpp');
++    return `flight::is_array(${emitCppGenericVariantArrayPropertyCpp(argument, context)})`;
++  }
+   const evidence = getCppVariantPropertyArrayPredicateEvidenceCpp(expression, context);
+-  const argument = expression.arguments[0];
+   if (!evidence || argument?.kind !== 'property') return undefined;
+   context.includes.add('flight/array.hpp');
+   context.includes.add('variant');
+@@ -20442,22 +20483,27 @@
+   context: EmitContext,
+   includeCalls: boolean,
+ ): EmitContext {
+-  if (context.guardedPathKinds.size === 0) return context;
++  if (context.guardedPathKinds.size === 0 && context.erasedArrayProvenPaths.size === 0) return context;
+   const mutating = collectCppGuardedPathMutationCpp(statement);
+   // TypeScript invalidates a narrowing of a PROPERTY ACCESS at any call, because the call may write it; a
+   // read after one has no proof and is emitted without a projection rather than with a stale one. A call the
+   // READ ITSELF sits inside is not that: its arguments are evaluated before it runs, which is why a
+   // statement's own calls are considered only for the statements AFTER it.
+   if (includeCalls && mutating.unbounded) {
+-    return { ...context, guardedPathKinds: new Map() };
+-  }
++    return { ...context, guardedPathKinds: new Map(), erasedArrayProvenPaths: new Set() };
++  }
++  const erasedArrayProvenPaths = new Set(
++    [...context.erasedArrayProvenPaths].filter(
++      (key) => !mutating.paths.some((path) => key === path || key.startsWith(`${path}.`)),
++    ),
++  );
+   const withdrawn = [...context.guardedPathKinds.keys()].filter((key) =>
+     mutating.paths.some((path) => key === path || key.startsWith(`${path}.`)),
+   );
+-  if (withdrawn.length === 0) return context;
++  if (withdrawn.length === 0 && erasedArrayProvenPaths.size === context.erasedArrayProvenPaths.size) return context;
+   const guardedPathKinds = new Map(context.guardedPathKinds);
+   for (const key of withdrawn) guardedPathKinds.delete(key);
+-  return { ...context, guardedPathKinds };
++  return { ...context, guardedPathKinds, erasedArrayProvenPaths };
+ }
+ 
+ function collectCppGuardedPathMutationCpp(
+@@ -20518,6 +20564,9 @@
+   context: EmitContext,
+ ): EmitContext {
+   let branch = getCppUnionOrArrayBranchContextCpp(condition, result, context);
++  const paths = getCppGenericArrayConditionPathsCpp(condition, result, context);
++  if (paths.length > 0)
++    branch = { ...branch, erasedArrayProvenPaths: new Set([...branch.erasedArrayProvenPaths, ...paths]) };
+   // These selected locals carry exactly Record | null. Only the original strict null test proves
+   // the optional view present; truthiness, unrelated tests and the other branch prove nothing.
+   if (condition.kind === 'binary' && ((condition.operator === '!==' && result) || (condition.operator === '===' && !result))) {
+@@ -20640,7 +20689,7 @@
+   );
+   if (exact.length > 0) return exact;
+   const discriminated = representation.alternatives.filter((alternative) =>
+-    areCppUnionMemberDiscriminantsEquivalent(alternative.runtimeType, member, context),
++    alternative.members.some((source) => areCppUnionMemberDiscriminantsEquivalent(source, member, context)),
+   );
+   if (discriminated.length > 0) return discriminated;
+   return representation.alternatives.filter((alternative) =>
+@@ -21083,12 +21132,34 @@
+   return getCppVariantMemberReceiverCpp(type);
+ }
+ 
++// A backend presence guard removes absence but does not erase a later source occurrence's more
++// precise member proof. Keep the occurrence when the context still names several present alternatives.
++function getCppEffectiveNarrowedBindingTypeCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'identifier' }>>,
++  context: EmitContext,
++): Readonly<IrType> | undefined {
++  if (expression.reference.kind !== 'binding') return expression.narrowedType;
++  const contextual = context.narrowedBindingTypes.get(expression.reference.binding.id);
++  const source = expression.narrowedType;
++  const contextualUnion = contextual ? getIrUnionTypeCpp(contextual, context, new Set()) : undefined;
++  const stored = getCppBindingTypeCpp(expression.reference.binding.id, context);
++  const storedUnion = stored ? getIrUnionTypeCpp(stored, context, new Set()) : undefined;
++  const presenceContext = storedUnion?.types.some((member) => member.kind === 'null' || member.kind === 'undefined');
++  return presenceContext &&
++    source &&
++    contextualUnion &&
++    contextualUnion.types.length > 1 &&
++    !getIrUnionTypeCpp(source, context, new Set())
++    ? source
++    : (contextual ?? source);
++}
++
+ function emitNarrowedUnionMemberCpp(
+   expression: Readonly<Extract<IrExpression, { kind: 'identifier' }>>,
+   context: EmitContext,
+ ): string | undefined {
+   if (expression.reference.kind !== 'binding') return undefined;
+-  const narrowedType = context.narrowedBindingTypes.get(expression.reference.binding.id) ?? expression.narrowedType;
++  const narrowedType = getCppEffectiveNarrowedBindingTypeCpp(expression, context);
+   if (!expression.narrowedMember && !narrowedType) return undefined;
+   const bindingType = getCppBindingTypeCpp(expression.reference.binding.id, context);
+   const union = bindingType ? getIrUnionTypeCpp(bindingType, context, new Set()) : undefined;
+@@ -21152,7 +21223,7 @@
+   if (carrier === undefined || expression.kind !== 'identifier' || expression.reference.kind !== 'binding') {
+     return undefined;
+   }
+-  const narrowedType = context.narrowedBindingTypes.get(expression.reference.binding.id) ?? expression.narrowedType;
++  const narrowedType = getCppEffectiveNarrowedBindingTypeCpp(expression, context);
+   if (!narrowedType) return undefined;
+   const bindingType = getCppBindingTypeCpp(expression.reference.binding.id, context);
+   const union = bindingType ? getIrUnionTypeCpp(bindingType, context, new Set()) : undefined;
+@@ -21166,7 +21237,11 @@
+   context: EmitContext,
+ ): string | undefined {
+   if (!expression.narrowedType) return undefined;
+-  const declaredType = expression.type?.kind === 'unknown' ? undefined : expression.type;
++  const storedType = getCppDeclaredPropertyReadTypeCpp(expression, context);
++  const declaredAlias = storedType?.kind === 'named' && getIrUnionTypeCpp(storedType, context, new Set());
++  const declaredType =
++    (declaredAlias || getCppStructuralRowExpressionPlanCpp(expression.object, context) ? storedType : undefined) ??
++    (expression.type?.kind === 'unknown' ? undefined : expression.type);
+   const union = declaredType ? getIrUnionTypeCpp(declaredType, context, new Set()) : undefined;
+   if (!union) return undefined;
+   // This helper owns both union selection and the optional projection. Re-emitting the carrier with the
+@@ -21389,7 +21464,7 @@
+     : [];
+   const discriminantMatches = narrowedType
+     ? sourceAlternatives.filter(({ alternative }) =>
+-        areCppUnionMemberDiscriminantsEquivalent(alternative.runtimeType, narrowedType, context),
++        alternative.members.some((source) => areCppUnionMemberDiscriminantsEquivalent(source, narrowedType, context)),
+       )
+     : [];
+   const representationMatches = narrowedType
+@@ -21984,6 +22059,16 @@
+     getIrUnionTypeCpp(expectedType, context, new Set());
+   if (!union || expression.kind === 'conditional') return undefined;
+   const plan = getCppUnionRepresentationPlan(union, context);
++  const originalSlot = getCppNarrowedOriginalVariantSlotCpp(expression, plan, context);
++  if (originalSlot !== undefined) {
++    return emitCppUnionValueConstruction(
++      emitExpression(expression, context, undefined, false),
++      plan.valueSlots[originalSlot]!.targetType,
++      union,
++      plan.kind,
++      context,
++    );
++  }
+   const recordStorage = getCppPrimitiveRecordReadStorageTypeCpp(expression, context);
+   if (recordStorage?.kind === 'union' && plan.sentinels.undefined !== 'absent') {
+     const sourcePlan = getCppUnionRepresentationPlan(recordStorage, context);
+@@ -22960,6 +23045,38 @@
+ // unchanged -- same object, no conversion -- and only when the answer is unique on both sides: the member is held
+ // by exactly one source slot, and exactly one destination slot has that slot's carrier. A value that is not a
+ // narrowed binding, or whose declared type is itself the single-member struct, is not this case.
++function getCppNarrowedOriginalVariantSlotCpp(
++  expression: Readonly<IrExpression>,
++  destination: ReturnType<typeof getCppUnionRepresentationPlan>,
++  context: EmitContext,
++): number | undefined {
++  if (expression.kind !== 'identifier' || expression.reference.kind !== 'binding') return undefined;
++  const narrowed = getCppEffectiveNarrowedBindingTypeCpp(expression, context);
++  if (!narrowed && !expression.narrowedMember) return undefined;
++  const declared = getCppBindingTypeCpp(expression.reference.binding.id, context);
++  const union = declared ? getIrVariantUnionTypeCpp(declared, context, new Set()) : undefined;
++  if (!union) return undefined;
++  const representation = getCppVariantRepresentationForInspection(union, context);
++  if (representation.direct) return undefined;
++  const named = expression.narrowedMember
++    ? representation.alternatives.filter((alternative) =>
++        alternative.members.some((member) => getIrUnionMemberNameCpp(member) === expression.narrowedMember),
++      )
++    : [];
++  const matching =
++    named.length === 1
++      ? named
++      : narrowed
++        ? getCppVariantAlternativesMatchingUnionMemberEvidenceCpp(representation, narrowed, context)
++        : [];
++  if (matching.length !== 1) return undefined;
++  const source = qualifyCppDeclaringModuleTypeCpp(matching[0]!.targetType, context);
++  const targets = destination.valueSlots.flatMap((slot, index) =>
++    qualifyCppDeclaringModuleTypeCpp(slot.targetType, context) === source ? [index] : [],
++  );
++  return targets.length === 1 ? targets[0] : undefined;
++}
++
+ function getCppCoalescedNarrowedMemberValueSlotCpp(
+   expression: Readonly<IrExpression>,
+   runtimeType: Readonly<IrType>,
+@@ -22968,7 +23085,7 @@
+ ): number | undefined {
+   if (expression.kind !== 'identifier' || expression.reference.kind !== 'binding') return undefined;
+   const bindingId = expression.reference.binding.id;
+-  const narrowedType = context.narrowedBindingTypes.get(bindingId) ?? expression.narrowedType;
++  const narrowedType = getCppEffectiveNarrowedBindingTypeCpp(expression, context);
+   if (!narrowedType || getIrUnionTypeCpp(narrowedType, context, new Set())) return undefined;
+   const bindingType = getCppBindingTypeCpp(bindingId, context);
+   const sourceUnion = bindingType ? getIrUnionTypeCpp(bindingType, context, new Set()) : undefined;
+@@ -26020,6 +26137,20 @@
+   expression: Readonly<Extract<IrExpression, { kind: 'binary' }>>,
+   context: EmitContext,
+ ): string | undefined {
++  if (
++    expression.right.kind === 'cast' &&
++    getCppNamedPropertiesViewExpressionCpp(expression.right, context) &&
++    hasCppErasedDynamicTestOperandCpp(
++      expression.right.expression,
++      getIrExpressionTypeEvidenceCpp(expression.right.expression, context),
++      context,
++    ) &&
++    expression.left.kind === 'literal' &&
++    typeof expression.left.value === 'string'
++  ) {
++    context.includes.add('flight/structural_ref.hpp');
++    return `flight::has_property(${emitExpression(expression.right.expression, context)}, flight::String::from_utf8(flight::RowKey<${JSON.stringify(expression.left.value)}>::name.view()))`;
++  }
+   if (getCppNamedPropertiesViewExpressionCpp(expression.right, context)) {
+     emissionError(
+       context,
+@@ -30476,6 +30607,7 @@
+   expression: Readonly<IrExpression>,
+   context: EmitContext,
+ ): Readonly<IrType> | undefined {
++  if (isCppGenericArrayElementReadCpp(expression, context)) return { kind: 'unknown', source: 'unknown' };
+   if (isCppJsonArrayLengthReadCpp(expression, context)) return { kind: 'primitive', name: 'number' };
+   switch (expression.kind) {
+     case 'array': {
+@@ -31150,7 +31282,7 @@
+   if (expression.reference.kind !== 'binding') return undefined;
+   const bindingId = expression.reference.binding.id;
+   const declaredType = getCppBindingTypeCpp(bindingId, context);
+-  const narrowedType = context.narrowedBindingTypes.get(bindingId) ?? expression.narrowedType;
++  const narrowedType = getCppEffectiveNarrowedBindingTypeCpp(expression, context);
+   const importedAliasCarrierUnion = declaredType
+     ? getCppOptionalImportedAliasCarrierUnionCpp(declaredType, context)
+     : undefined;
+@@ -34626,6 +34758,115 @@
+ 
+ // Selecting a guarded erased array keeps its existing owner. Only the source-authored fallback
+ // literal allocates; a concrete array escape still needs an exact represented recovery.
++// A generic field can hold either a declared array or an open type argument. Read that data field
++// through the existing checked owner view for array predicates and guarded reads; the public field
++// and function ABI retain their original types, and every read still reaches the original owner.
++function getCppGenericVariantArrayPropertyCpp(expression: Readonly<IrExpression>, context: EmitContext): boolean {
++  if (
++    getCppRuntimeProfile(context.options) !== 'flight-cpp' ||
++    expression.kind !== 'property' ||
++    expression.optional ||
++    expression.object.kind !== 'identifier' ||
++    expression.object.reference.kind !== 'binding'
++  )
++    return false;
++  const declared = getCppBindingTypeCpp(expression.object.reference.binding.id, context);
++  const union = declared ? getIrVariantUnionTypeCpp(declared, context, new Set()) : undefined;
++  if (!union) return false;
++  if (union.types.some((member) => resolveCppClassForTypeCpp(member, context))) return false;
++  const properties = union.types.map((member) => getIrObjectPropertyTypeCpp(member, expression.name, context));
++  return (
++    properties.every((type) => type !== undefined) &&
++    properties.some(
++      (type) =>
++        type?.kind === 'named' && type.reference.kind === 'binding' && type.reference.binding.kind === 'typeParameter',
++    ) &&
++    properties.some((type) => type !== undefined && getIrArrayTypeCpp(type, context, new Set()) !== undefined)
++  );
++}
++
++function emitCppGenericVariantArrayPropertyCpp(expression: Readonly<IrExpression>, context: EmitContext): string {
++  if (
++    expression.kind !== 'property' ||
++    expression.object.kind !== 'identifier' ||
++    expression.object.reference.kind !== 'binding'
++  ) {
++    emissionError(context, 'a generic array field read requires its declared owner');
++  }
++  context.includes.add('flight/structural_ref.hpp');
++  context.includes.add('variant');
++  return `std::visit([](const auto& array_field_owner) { return flight::named_properties(array_field_owner).get(${`flight::String::from_utf8(flight::RowKey<${JSON.stringify(expression.name)}>::name.view())`}); }, ${emitInitializedBindingValueCpp(expression.object.reference.binding, context)})`;
++}
++
++function isCppAmbientArrayPredicateCpp(expression: Readonly<IrExpression>): boolean {
++  return (
++    expression.kind === 'call' &&
++    !expression.optional &&
++    expression.arguments.length === 1 &&
++    expression.callee.kind === 'property' &&
++    !expression.callee.optional &&
++    expression.callee.name === 'isArray' &&
++    expression.callee.object.kind === 'identifier' &&
++    expression.callee.object.reference.kind === 'ambient' &&
++    expression.callee.object.reference.name === 'Array'
++  );
++}
++
++function getCppGenericArrayConditionPathsCpp(
++  condition: Readonly<IrExpression>,
++  expected: boolean,
++  context: EmitContext,
++): readonly string[] {
++  if (condition.kind === 'unary' && condition.operator === '!')
++    return getCppGenericArrayConditionPathsCpp(condition.operand, !expected, context);
++  if (
++    condition.kind === 'binary' &&
++    ((condition.operator === '||' && !expected) || (condition.operator === '&&' && expected))
++  ) {
++    const effects = collectCppGuardedPathMutationCpp({ kind: 'expression', expression: condition.right });
++    if (effects.unbounded || effects.paths.length > 0) return [];
++    return [
++      ...getCppGenericArrayConditionPathsCpp(condition.left, expected, context),
++      ...getCppGenericArrayConditionPathsCpp(condition.right, expected, context),
++    ];
++  }
++  if (!expected || condition.kind !== 'call' || !isCppAmbientArrayPredicateCpp(condition)) return [];
++  const argument = condition.arguments[0]!;
++  const key = getCppGenericVariantArrayPropertyCpp(argument, context) ? getCppGuardedPathKeyCpp(argument) : undefined;
++  return key ? [key] : [];
++}
++
++function isCppGenericArrayElementReadCpp(expression: Readonly<IrExpression>, context: EmitContext): boolean {
++  const path =
++    expression.kind === 'element' && !expression.optional ? getCppGuardedPathKeyCpp(expression.object) : undefined;
++  return (
++    path !== undefined &&
++    context.erasedArrayProvenPaths.has(path) &&
++    getCppGenericVariantArrayPropertyCpp((expression as Extract<IrExpression, { kind: 'element' }>).object, context)
++  );
++}
++
++function emitCppGenericArrayPathReadCpp(expression: Readonly<IrExpression>, context: EmitContext): string | undefined {
++  const receiver =
++    expression.kind === 'element' || (expression.kind === 'property' && expression.name === 'length')
++      ? expression.object
++      : undefined;
++  const path = receiver ? getCppGuardedPathKeyCpp(receiver) : undefined;
++  if (
++    !receiver ||
++    path === undefined ||
++    !context.erasedArrayProvenPaths.has(path) ||
++    !getCppGenericVariantArrayPropertyCpp(receiver, context)
++  )
++    return undefined;
++  const value = emitCppGenericVariantArrayPropertyCpp(receiver, context);
++  if (expression.kind === 'property') return `static_cast<double>(${value}.array_size())`;
++  if (expression.kind !== 'element') return undefined;
++  const array = getGeneratedTargetName('genericArrayReceiver', context);
++  const index = getGeneratedTargetName('genericArrayIndex', context);
++  return `([&]() -> flight::Any { const auto ${array} = ${value}; const double ${index} = ${emitExpression(expression.index, context)}; return ${array}.array_get(${index}).value_or(flight::Any(flight::undefined)); }())`;
++}
++
+ function isCppErasedArraySelectionCpp(
+   expression: Readonly<IrExpression>,
+   context: EmitContext,
+@@ -35029,7 +35270,14 @@
+     const payload = emitType(expectedType, context);
+     const receiver = `${emitExpression(expression.object.object, context)}.get(${emitExpression(expression.object.index, context)})`;
+     context.includes.add('optional');
+-    return `([&]() -> std::optional<${payload}> { auto optional_chain_receiver = ${receiver}; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().${getCppOptionalChainMemberAccessCpp(expression, context)}; }())`;
++    const elementType = getIrExpressionTypeEvidenceCpp(expression.object, context);
++    const row = elementType
++      ? context.referenceRepresentationPlanner.resolveStructuralRow(elementType, context.module)
++      : undefined;
++    const member = row
++      ? `flight::row_get<flight::RowKey<${JSON.stringify(expression.name)}>>(optional_chain_receiver.value())`
++      : `optional_chain_receiver.value()${elementType && hasFlightReferenceRepresentationCpp(elementType, context) ? '->' : '.'}${getCppOptionalChainMemberAccessCpp(expression, context)}`;
++    return `([&]() -> std::optional<${payload}> { auto optional_chain_receiver = ${receiver}; if (!optional_chain_receiver.has_value()) return std::nullopt; return ${member}; }())`;
+   }
+   return emitExpression(
+     expression,
+@@ -36535,6 +36783,25 @@
+   );
+ }
+ 
++function emitCppStructuralRowReceiverCpp(
++  expression: Readonly<IrExpression>,
++  row: Readonly<CompilerCppStructuralRowPlan>,
++  context: EmitContext,
++): string {
++  const value = emitExpression(expression, context);
++  if (expression.kind !== 'identifier' || expression.reference.kind !== 'binding') return value;
++  const stored = getCppBindingTypeCpp(expression.reference.binding.id, context);
++  const union = stored ? getIrUnionTypeCpp(stored, context, new Set()) : undefined;
++  const plan = union ? getCppUnionRepresentationPlan(union, context) : undefined;
++  if (
++    !plan ||
++    !['multiVariant', 'optionalVariant', 'dualSentinelVariant'].includes(plan.kind) ||
++    !plan.valueSlots.some((slot) => slot.targetType.startsWith('flight::Ref<'))
++  )
++    return value;
++  return `${emitCppStructuralRowReferenceTypeCpp(row, context)}(${value})`;
++}
++
+ function getCppStructuralRowExpressionPlanCpp(
+   expression: Readonly<IrExpression>,
+   context: EmitContext,
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppGenericArrayPropertyPredicate.test.ts
+@@ -0,0 +1,208 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const includes = collectCppRuntimeIncludeDirectories(resolveDependency(root, 'flight-cpp').directory);
++const toolchain = findCppCompilerToolchain();
++const source = `
++export interface Entry<T> { tick:number; data?:T }
++export interface Single<T> { mode?:0; value:T }
++export interface Sequence<T> { mode:1; value:Entry<T>[] }
++export type Holder<T> = Single<T> | Sequence<T>;
++export function hasEntries<T>(holder:Readonly<Holder<T>>):boolean {
++  if(!Array.isArray(holder.value)||holder.value.length===0)return false;
++  const first:unknown=holder.value[0];
++  return typeof first==='object'&&first!==null&&'tick' in(first as Record<string,unknown>);
++}
++export function first<T>(holder:Readonly<Holder<T>>|undefined):T|undefined {
++  if(holder===undefined)return undefined;
++  if(!isSequence(holder))return holder.value;
++  return holder.value[0]?.data;
++}
++function isSequence<T>(holder:Readonly<Holder<T>>):holder is Readonly<Sequence<T>>{
++  return holder.mode===1;
++}
++`;
++function emit(text = source): string {
++  const [lowered] = lowerTypeScriptSources([
++    {
++      sourceFile: ts.createSourceFile('/flight/packages/example/src/generic.ts', text, ts.ScriptTarget.Latest, true),
++      packageName: '@flighthq/example',
++      upstreamDirectory: '/flight',
++    },
++  ]);
++  expect(lowered!.diagnostics).toEqual([]);
++  return emitIrModuleCpp(lowered!.module, {
++    runtimeProfile: 'flight-cpp',
++    packageTargets: { '@flighthq/example': { namespace: 'probe', includePrefix: 'probe' } },
++  }).contents;
++}
++it('uses a checked view of generic fields for structure predicates and retains source member narrowing after presence', () => {
++  const output = emit();
++  expect(output).toContain(
++    'flight::named_properties(array_field_owner).get(flight::String::from_utf8(flight::RowKey<"value">::name.view()))',
++  );
++  expect(output).toContain('.array_size()');
++  expect(output).toContain('.array_get(');
++  expect(output).toContain(
++    'flight::has_property(first, flight::String::from_utf8(flight::RowKey<"tick">::name.view()))',
++  );
++  expect(output).not.toContain('NOT GENERATED');
++});
++it('does not assume an open generic field is an array without a source predicate', () => {
++  expect(() =>
++    emit(source + `export function unguarded<T>(holder:Readonly<Holder<T>>):number{return holder.value.length;}`),
++  ).toThrow('property length on a C++ variant requires proven union member access');
++});
++it('withdraws a field proof after a call or assignment to its receiver', () => {
++  for (const operation of ['change();', 'holder=replacement;']) {
++    expect(() =>
++      emit(
++        source +
++          `export function changed<T>(holder:Readonly<Holder<T>>,replacement:Readonly<Holder<T>>,change:()=>void):number{if(!Array.isArray(holder.value))return 0;${operation}return holder.value.length;}`,
++      ),
++    ).toThrow('property length on a C++ variant requires proven union member access');
++  }
++});
++it.skipIf(!toolchain || includes.length === 0)(
++  'compiles generic array/scalar owners and compares their data predicates with the source',
++  () => {
++    const reference = {} as { hasEntries: (holder: unknown) => boolean; first: (holder: unknown) => unknown };
++    new Function(
++      'exports',
++      ts.transpileModule(source, {
++        compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
++      }).outputText,
++    )(reference);
++    const directory = mkdtempSync(path.join(tmpdir(), 'flight-generic-array-predicate-'));
++    try {
++      writeFileSync(path.join(directory, 'generic.hpp'), emit());
++      let cpp =
++        '#include "generic.hpp"\n#include <iostream>\nnamespace flight::detail { template<> inline void bind_generated_row_members<probe::Entry<double>>(RowOwner& owner, const std::shared_ptr<probe::Entry<double>>& object) { owner.bind_named("tick",[object]() -> decltype(auto) {return (object->tick);}); owner.bind_named("data",[object]() -> decltype(auto) {return (object->data);}); } }\nint main(){int checks=0,failures=0;auto check=[&](bool ok){++checks;if(!ok){++failures;std::cerr<<"failed "<<checks<<"\\n";}};\n';
++      cpp += `auto scalar=flight::make_ref<probe::Single<double>>();scalar->value=8;check(probe::has_entries<double>(scalar)==${reference.hasEntries({ value: 8 })});check(probe::first<double>(scalar).value()==8);\n`;
++      cpp += `auto empty=flight::make_ref<probe::Sequence<double>>();empty->mode=1;check(probe::has_entries<double>(empty)==${reference.hasEntries({ mode: 1, value: [] })});\n`;
++      cpp += `auto entry=flight::make_ref<probe::Entry<double>>();entry->tick=2;entry->data=4;empty->value.push(entry);check(probe::has_entries<double>(empty)==${reference.hasEntries({ mode: 1, value: [{ tick: 2, data: 4 }] })});check(probe::first<double>(empty).value()==4);\n`;
++      cpp += `auto numbers=flight::make_ref<probe::Single<flight::Array<double>>>();numbers->value=flight::Array<double>{1,2};check(probe::has_entries<flight::Array<double>>(numbers)==${reference.hasEntries({ value: [1, 2] })});auto kept=probe::first<flight::Array<double>>(numbers).value();check(kept==numbers->value);\n`;
++      cpp += 'std::cout<<checks<<" checks, "<<failures<<" failures\\n";return failures?1:0;}\n';
++      const input = path.join(directory, 'native.cpp'),
++        output = path.join(directory, getCppExecutableName(toolchain!, 'native'));
++      writeFileSync(input, cpp);
++      execFileSync(
++        toolchain!.command,
++        createCppExecutableArguments(toolchain!, input, output, [directory, ...includes]),
++        { stdio: 'pipe' },
++      );
++      try {
++        expect(execFileSync(output, [], { encoding: 'utf8', stdio: 'pipe' })).toContain('7 checks, 0 failures');
++      } catch (error) {
++        const e = error as { stdout?: Buffer; stderr?: Buffer };
++        throw Error(String(e.stdout ?? '') + String(e.stderr ?? ''));
++      }
++    } finally {
++      rmSync(directory, { recursive: true, force: true });
++    }
++  },
++  120000,
++);
++
++const nestedSource = `
++export interface Event<T> { time:number; value?:T }
++export interface Fixed<T> { kind?:0; value:T }
++export interface Changing<T> { kind:1; value:Event<T>[] }
++export type Value<T> = Fixed<T> | Changing<T>;
++export interface Split { split:true; x:Value<number>; y:Value<number> }
++export type Position = Value<number[]> | Split;
++export interface Transform { position?:Position }
++function isSplit(position:Readonly<Position>|undefined):position is Readonly<{split:true;x:Value<number>;y:Value<number>}>{
++ return position!==undefined && 'split'in position && position.split===true && 'x'in position && 'y'in position;
++}
++function isChanging<T>(value:Readonly<Value<T>>):value is Readonly<Changing<T>>{return value.kind===1;}
++export function sample(position:Readonly<Position>|undefined):number{
++ if(position===undefined)return -1;
++ if(isSplit(position))return isChanging(position.x)?position.x.value[0]?.value??-2:position.x.value;
++ return -3;
++}
++export function readTransform(transform:Readonly<Transform>|undefined):number{
++ if(transform===undefined)return -1;
++ if(isSplit(transform.position))return isChanging(transform.position.x)?transform.position.x.value[0]?.value??-2:transform.position.x.value;
++ return -3;
++}
++`;
++it('projects a proven optional union member and a nested source discriminator from their original slots', () => {
++  const output = emit(nestedSource);
++  expect(output).not.toContain('NOT GENERATED');
++  expect(output).toContain('std::get<');
++  expect(output).toContain('position.value()');
++});
++it.skipIf(!toolchain || includes.length === 0)(
++  'compiles nested optional and source discriminator projections against the original owners',
++  () => {
++    const reference = {} as { sample: (position: unknown) => number; readTransform: (transform: unknown) => number };
++    new Function(
++      'exports',
++      ts.transpileModule(nestedSource, {
++        compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
++      }).outputText,
++    )(reference);
++    const directory = mkdtempSync(path.join(tmpdir(), 'flight-nested-union-projection-'));
++    try {
++      writeFileSync(path.join(directory, 'nested.hpp'), emit(nestedSource));
++      const input = path.join(directory, 'native.cpp'),
++        output = path.join(directory, getCppExecutableName(toolchain!, 'native'));
++      writeFileSync(
++        input,
++        `#include "nested.hpp"
++#include <iostream>
++int main(){int checks=0,failures=0;auto check=[&](bool ok){++checks;if(!ok){++failures;std::cerr<<"failed "<<checks<<"\\n";}};
++check(probe::sample(std::nullopt)==${reference.sample(undefined)});
++auto fixed=flight::make_ref<probe::Fixed<double>>();fixed->value=5;
++auto split=flight::make_ref<probe::Split>();split->split=true;split->x=fixed;split->y=fixed;
++std::optional<probe::Position> position{probe::Position{split}};
++check(probe::sample(position)==${reference.sample({ split: true, x: { value: 5 }, y: { value: 5 } })});
++auto transform=flight::make_ref<probe::Transform>();transform->position=position;
++using TransformRow=flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<probe::Transform>>>>;
++check(probe::read_transform(std::optional{TransformRow(transform)})==${reference.readTransform({ position: { split: true, x: { value: 5 }, y: { value: 5 } } })});
++auto changing=flight::make_ref<probe::Changing<double>>();changing->kind=1;auto event=flight::make_ref<probe::Event<double>>();event->value=7;changing->value.push(event);split->x=changing;
++check(probe::sample(position)==${reference.sample({ split: true, x: { kind: 1, value: [{ value: 7 }] }, y: { value: 5 } })});
++event->value=9;check(probe::sample(position)==9);
++event->value.reset();check(probe::sample(position)==${reference.sample({ split: true, x: { kind: 1, value: [{}] }, y: { value: 5 } })});
++changing->value.clear();check(probe::sample(position)==-2);
++transform->position.reset();check(probe::read_transform(std::optional{TransformRow(transform)})==${reference.readTransform({})});
++std::cout<<checks<<" checks, "<<failures<<" failures\\n";return failures?1:0;}
++`,
++      );
++      execFileSync(
++        toolchain!.command,
++        createCppExecutableArguments(toolchain!, input, output, [directory, ...includes]),
++        { stdio: 'pipe' },
++      );
++      expect(execFileSync(output, [], { encoding: 'utf8', stdio: 'pipe' })).toContain('8 checks, 0 failures');
++    } finally {
++      rmSync(directory, { recursive: true, force: true });
++    }
++  },
++  120000,
++);
++
++it('does not replace an ordinary call that receives the same generic field', () => {
++  const output = emit(
++    source +
++      `export function visit<T>(holder:Readonly<Holder<T>>,accept:(value:unknown)=>boolean):boolean{return accept(holder.value);}`,
++  );
++  expect(output).toContain('return accept(');
++});
