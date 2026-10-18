@@ -247,9 +247,30 @@ checker. It records:
   table, then run. A Mesh viewed through a Node row reports `materials` as present and a plain Node does not.
   For a Record, an own key is present, an absent key is not, and `toString` is.
 
-**Not yet active.** The patch file is committed, but its `source-patches/manifest.json` entry is deliberately
-left out. Generation applies only listed patches, so no peer's scoped run changes until a regeneration slot adopts
-it. The entry, with this verification text, is added in that commit.
+**Activated (preparation; not yet qualified).** Commit `cc41e83a` adds the manifest entry and retires
+`effects-membership-test-defaults`. It re-derives `gl_shadow_map`'s override: `isShadowInstancedMesh` is now the
+generated `row_has` instead of a kind comparison. It also adds a guard: a key declared required by an
+**asserted** receiver (`value as T`) is refused rather than answered `true`, because the checked recovery would
+throw where the source asks the object (`render_cache` `isRenderCacheAdapter`). Scoped generation ran for
+effects, interaction, render and scene3d-gl, followed by a render-only re-run for that guard. Only the
+membership hunks are kept; closure-dependent foreign drift is restored. GCC 15.2 `-fsyntax-only` at `-j2` on the
+current base:
+
+| set | result |
+|---|---|
+| `effect_defaults.hpp`, `gl_shadow_map.hpp` | **2 pass** |
+| the 32 `in-operator-not-lowered-b1eae4af` headers | **0/32 pass**; 31/32 now stop past the membership site |
+| 21 interaction/gui | `interaction_manager.hpp:722` `'Traits' was not declared`, already present behind `:510` |
+| 8 render-registry includers | `render_registry_guards.hpp:127` `to_string(RenderRegistryTable)`, after the nominal `device in state` refusal |
+| `explain_scene_3d_pipeline_coverage` | `row_get<"materials">` on the unnarrowed NodeAny row (`static-assertion-00a0e75d`) |
+| `gl_particle_emitter_3d` | `:121`, past the membership site at `:113` |
+| `render_wgpu/wgpu_shader` | still `in`: the `EntityRuntimeKey` symbol key on a variant, outside this patch |
+
+The compiler suites fail on the identical set with and without the patch on the 69-, 75- and 84-patch stacks (0
+new). **Not claimed:** the `normalizeEffect` consumer passes its membership cases but throws `bad_optional_access`
+for an unknown kind, at `defaults.get(kind).value()`. That is a typed **non-erased** Record missing-key read, a
+separate cause; a type-only `| undefined` annotation does not change the emission. The header-status rows move
+when that consumer qualifies.
 
 **Owed at the regeneration that adopts it:**
 - `repairs/emission-repairs.json` `effects-membership-test-defaults` will match nothing. The emitter then writes
