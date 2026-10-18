@@ -1,0 +1,285 @@
+{
+  "schema": "flight-cpp-common-runtime-original-bounds-component/1",
+  "qualification": "ISOLATED COMPONENT ONLY; no product accessor/caller activation, native factory/image39 or full B qualification",
+  "native": {
+    "checks": 57,
+    "failures": 0,
+    "labels": [
+      "flat SpriteRuntime has no fabricated generic base",
+      "world bounds invalidation follows mixed owners",
+      "common view keeps exact allocation",
+      "common view recovers original runtime",
+      "adapted stamp is original physical cell",
+      "common parent is original physical cell",
+      "parent write retains original source identity",
+      "appearance invalidation keeps uint32 wrap",
+      "transform invalidation writes exact field",
+      "parent invalidation writes exact stamps",
+      "children mutation is shared with native runtime",
+      "common callback is stored original cell",
+      "common callback retains function pointer",
+      "common callback receives original source views",
+      "native writes remain live through saved view",
+      "replacement updates one physical optional",
+      "saved common view keeps previous allocation",
+      "clear reaches physical optional without dynamic shadow",
+      "absent runtime fails at exact physical lookup",
+      "saved common view owns detached runtime lifetime",
+      "last view release destroys detached runtime",
+      "common view keeps exact allocation",
+      "common view recovers original runtime",
+      "adapted stamp is original physical cell",
+      "common parent is original physical cell",
+      "parent write retains original source identity",
+      "appearance invalidation keeps uint32 wrap",
+      "transform invalidation writes exact field",
+      "parent invalidation writes exact stamps",
+      "children mutation is shared with native runtime",
+      "common callback is stored original cell",
+      "common callback retains function pointer",
+      "common callback receives original source views",
+      "native writes remain live through saved view",
+      "replacement updates one physical optional",
+      "saved common view keeps previous allocation",
+      "clear reaches physical optional without dynamic shadow",
+      "absent runtime fails at exact physical lookup",
+      "saved common view owns detached runtime lifetime",
+      "last view release destroys detached runtime",
+      "stored compute retains original source function",
+      "stored validity retains original source function",
+      "bounds argument retains original Sprite owner",
+      "source getter returns original runtime owner",
+      "actual validity rejects stale null stamp",
+      "actual bounds null branch zeros size and preserves origin",
+      "actual bounds writes exact null texture/version",
+      "actual validity accepts refreshed null stamp",
+      "actual validity rejects new texture identity",
+      "actual bounds executes texture helper and scales",
+      "actual bounds caches original texture/version",
+      "actual validity accepts exact texture stamp",
+      "actual validity rejects live version mutation",
+      "actual bounds quarter turn uses source dimensions",
+      "same-version replacement still invalidates identity",
+      "actual bounds missing source returns zero",
+      "actual bounds clear resets texture/version"
+    ],
+    "commands": {
+      "command": [
+        "/tmp/builder5-json-exact21-128/cxx-hostcache",
+        "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/SDL3-3.4.10/include",
+        "-DFLIGHT_SPRITE_SOURCE_HEADER=\"/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-sprite-runtime-builder4-input/current136-diagnostic/include/flight/scene2d/sprite.hpp\"",
+        "-std=c++20",
+        "-ffp-contract=off",
+        "-pthread",
+        "-ferror-limit=1",
+        "-I/tmp/builder5-sprite-runtime-design/generated-slot-overlay",
+        "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-sprite-runtime-carrier-inputs/overrides/include",
+        "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-sprite-runtime-carrier-inputs/generated/include",
+        "-Ioverrides/include",
+        "-Igenerated/include",
+        "-Iinclude",
+        "artifacts/sprite-runtime-common-operations.cpp",
+        "-o",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-sprite-runtime-common-operations"
+      ],
+      "environment": {
+        "TMPDIR": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-exact21-128/tmp"
+      },
+      "hashes": {
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-sprite-runtime-builder4-input/current136-diagnostic/include/flight/scene2d/sprite.hpp": "eb5ad41b1caf9cf54ee866bf8214c3da9f0c6fdeeab3379de442cff612cb4f8e",
+        "/tmp/builder5-sprite-runtime-design/generated-slot-overlay/flight/types/sprite.hpp": "20c2631d4fa530c3f9f4afb2b6b0921bdf35a3180145574bb01333471f26f835",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-sprite-runtime-carrier-inputs/overrides/include/flight/types/node.hpp": "989800edde294cedac4717ec895b644e56d4d9ddc7cf0da687a89ad3a4633e2e",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-sprite-runtime-carrier-inputs/generated/include/flight/types/node_2d.hpp": "10d543c0e479ae856562c21683980c63376369b6f29c1b48545e9e2226bbb5ff",
+        "artifacts/sprite-runtime-common-operations.cpp": "b693dcad80379a978c15de62ef6e6eeef8b29b1fe2e81c5708f9ca1032817796"
+      }
+    },
+    "localRowAdapter": "Three missing stamp keys describe actual declared Generic fields. Existing RowOwner binds those exact native cells with weak captures; no SDK edit, copied state or replacement row/native owner."
+  },
+  "source": {
+    "rawChecks": 12,
+    "effectiveChecks": 12,
+    "cases": [
+      {
+        "label": "null",
+        "x": 3,
+        "y": 4,
+        "width": 0,
+        "height": 0,
+        "version": -1,
+        "valid": true
+      },
+      {
+        "label": "scaled",
+        "x": 3,
+        "y": 4,
+        "width": 40,
+        "height": 30,
+        "version": 7,
+        "valid": true
+      },
+      {
+        "label": "quarter-turn",
+        "x": 3,
+        "y": 4,
+        "width": 20,
+        "height": 60,
+        "version": 8,
+        "valid": true
+      },
+      {
+        "label": "unbound",
+        "x": 3,
+        "y": 4,
+        "width": 0,
+        "height": 0,
+        "version": 8,
+        "valid": true
+      },
+      {
+        "label": "cleared",
+        "x": 3,
+        "y": 4,
+        "width": 0,
+        "height": 0,
+        "version": -1,
+        "valid": true
+      }
+    ],
+    "rawModules": [
+      {
+        "file": "packages/scene2d/src/sprite.ts",
+        "sha256": "f9173ef2d83ff62f408697a2591bb1a998b68004025d0dbaa4da65e8661025be"
+      },
+      {
+        "file": "packages/types/src/Entity.ts",
+        "sha256": "c3961efff8938ca7c5dd26b4e14da66159e1f9f0ec218e13ca8bbd271a3fedd4"
+      },
+      {
+        "file": "packages/scene2d/src/displayObject.ts",
+        "sha256": "e7bdb330930355357438f211bbd6b9210fcb603b1b54d9663552c5655fed780f"
+      },
+      {
+        "file": "packages/types/src/Sprite.ts",
+        "sha256": "554c99db988d8297c80ca5cf764912d1338a64b862df0af307e4dabc713e0c82"
+      },
+      {
+        "file": "packages/entity/src/entity.ts",
+        "sha256": "d48c455a664722c3df349aadd667e599d2700273baf71158253aaa4d77bbec48"
+      },
+      {
+        "file": "packages/node/src/node.ts",
+        "sha256": "1deb121241a80cb6c519c2ccab7489cb6d59005fbb5eca93790d498b16dc5ed4"
+      },
+      {
+        "file": "packages/entity/src/runtime.ts",
+        "sha256": "09f8b8e9e5c7ae9d6de28655cf3d65bae5af564f73b8109e127365a78af679dc"
+      },
+      {
+        "file": "packages/types/src/Node2D.ts",
+        "sha256": "36158b6ff6c08bc50e70a9093e512f8917e9d04ed75d355d142d4ec99b2cc171"
+      },
+      {
+        "file": "packages/node/src/hasTransform2d.ts",
+        "sha256": "d67ce7e52d6ac87a9f7a91bd9de525f9f445681a4f2acfd0ab9ebc0519d68207"
+      },
+      {
+        "file": "packages/node/src/hasBoundsRectangle.ts",
+        "sha256": "e2499c13f2db06aaf0941fe66b36302398d42deb6c2febc4b288f6a2eb17325d"
+      },
+      {
+        "file": "packages/node/src/hasAppearance.ts",
+        "sha256": "47e8b863567d04381c0180f575bba02a4500d18ad6f4f389e853e025076a68e8"
+      },
+      {
+        "file": "packages/node/src/hasBlendMode.ts",
+        "sha256": "f12f6714144126fec7842353d0bf6e4115effbe98c25dd4071cd14a8278a7e50"
+      },
+      {
+        "file": "packages/node/src/hasMaterial.ts",
+        "sha256": "3fb07fb820e0453ecdfa8afc0b409df775680ded679ad6410dcd21877f9b3647"
+      },
+      {
+        "file": "packages/node/src/hasClip.ts",
+        "sha256": "e078ca597fe69c31163cd5872d0dbd9333557a733d6930223d138d07a1c4fe45"
+      },
+      {
+        "file": "packages/texture/src/texture.ts",
+        "sha256": "eafc209e786cf3059c7568bd13282a3a1808303eaa1cfb2f6d805998080712da"
+      }
+    ],
+    "effectiveModules": [
+      {
+        "file": "packages/scene2d/src/sprite.ts",
+        "sha256": "532237b7baed413564ae5189b9f27b34c0e50ea6eb7fda03bfea859a9ac635a6"
+      },
+      {
+        "file": "packages/types/src/Entity.ts",
+        "sha256": "c3961efff8938ca7c5dd26b4e14da66159e1f9f0ec218e13ca8bbd271a3fedd4"
+      },
+      {
+        "file": "packages/scene2d/src/displayObject.ts",
+        "sha256": "e7bdb330930355357438f211bbd6b9210fcb603b1b54d9663552c5655fed780f"
+      },
+      {
+        "file": "packages/types/src/Sprite.ts",
+        "sha256": "cd31aa79e336d19dbf6835fdd0899604e82dcaac8c8f49e8e3d045b78a45be26"
+      },
+      {
+        "file": "packages/entity/src/entity.ts",
+        "sha256": "d48c455a664722c3df349aadd667e599d2700273baf71158253aaa4d77bbec48"
+      },
+      {
+        "file": "packages/node/src/node.ts",
+        "sha256": "88cdcc9b10b93bea798b9c4e8af71fec61cbf580cfbb41aa6abebd0b7f65aadb"
+      },
+      {
+        "file": "packages/types/src/Node2D.ts",
+        "sha256": "36158b6ff6c08bc50e70a9093e512f8917e9d04ed75d355d142d4ec99b2cc171"
+      },
+      {
+        "file": "packages/node/src/hasTransform2d.ts",
+        "sha256": "d67ce7e52d6ac87a9f7a91bd9de525f9f445681a4f2acfd0ab9ebc0519d68207"
+      },
+      {
+        "file": "packages/node/src/hasBoundsRectangle.ts",
+        "sha256": "2b1822e0941a61d64fabb4c27d760497110e3c1ecbb0ddddbd99744526e2c8ac"
+      },
+      {
+        "file": "packages/node/src/hasAppearance.ts",
+        "sha256": "47e8b863567d04381c0180f575bba02a4500d18ad6f4f389e853e025076a68e8"
+      },
+      {
+        "file": "packages/node/src/hasBlendMode.ts",
+        "sha256": "f12f6714144126fec7842353d0bf6e4115effbe98c25dd4071cd14a8278a7e50"
+      },
+      {
+        "file": "packages/node/src/hasMaterial.ts",
+        "sha256": "3fb07fb820e0453ecdfa8afc0b409df775680ded679ad6410dcd21877f9b3647"
+      },
+      {
+        "file": "packages/node/src/hasClip.ts",
+        "sha256": "e078ca597fe69c31163cd5872d0dbd9333557a733d6930223d138d07a1c4fe45"
+      },
+      {
+        "file": "packages/texture/src/texture.ts",
+        "sha256": "eafc209e786cf3059c7568bd13282a3a1808303eaa1cfb2f6d805998080712da"
+      }
+    ]
+  },
+  "repairs": {
+    "kind": "declarations only in the component TU",
+    "functions": [
+      "initialize_sprite_renderer_data",
+      "create_sprite"
+    ],
+    "evidence": "Whole immutable emitted header retains both exact NOT GENERATED markers and calls; no function definitions supplied. Neither refused call executes."
+  },
+  "limits": [
+    "Original retained effective emitted bounds/getter/data bodies execute; JavaScript also executes raw/effective originals. No source body was replaced.",
+    "Stored std::function target retains the actual emitted compute/validity function pointer; receiver is a same-owner readonly view of the original Sprite.",
+    "The actual texture helper in the installed native texture override runs; no SDL image decoding/rendering/factory consumer runs.",
+    "Generic Node controls qualify common runtime owner operations, not a complete Node2D authored-trait implementation.",
+    "Earlier accepted20+25 native proof freezes remain unchanged; this is an additional57-check component.",
+    "Initial probe failures (template deduction, missing SDK row metadata, adapter declaration spelling) remain in proof logs; one compile was deliberately stopped for a probe declaration correction."
+  ]
+}
