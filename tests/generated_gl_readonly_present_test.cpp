@@ -30,7 +30,7 @@ using PresentDest = std::optional<std::optional<DestView>>;
 using State = flight::Ref<types::GlRenderState>;
 struct ExternalProgramPadding { double application_data = 3.0; };
 struct ExternalProgram : ExternalProgramPadding, types::GlMeshProgram {};
-struct UnrelatedCachedOwner { int value = 0; };
+struct UnrelatedCachedOwner : flight::ReferenceEnabled { int value = 0; };
 static_assert(std::is_same_v<decltype(&render_gl::present_gl_render_target), void (*)(State, SourceView, PresentDest)>);
 static_assert(std::is_same_v<decltype(&render_gl::draw_gl_linear_to_srgb_pass), void (*)(State, SourceView, std::optional<DestView>)>);
 
