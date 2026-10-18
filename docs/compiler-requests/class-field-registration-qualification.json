@@ -1,0 +1,485 @@
+{
+ "subject": "compiler-class-field-registration scratch qualification (no SDK generation)",
+ "composition": "base 78dd6146 manifest compiler stack plus compiler-class-field-registration",
+ "method": "The exact registration lines emitted for the real AbcReader (class text from abc/src/abcFile.ts) and swf/src/swfReader.ts were inserted after each class's register_class_prototype line in scratch copies of the generated headers. A native fixture computed `k in r` and `typeof r[k]` for each key, and the same table was computed by node from the real sources transpiled with useDefineForClassFields, fresh and after writing pos/valid.",
+ "expectedLines": [
+  "inline const bool flight_class_fields_AbcReader = flight::register_class_fields<AbcReader>({{\"pos\", [](const void* object) { return flight::class_field_typeof(static_cast<const AbcReader*>(object)->pos, nullptr); }}, {\"valid\", [](const void* object) { return flight::class_field_typeof(static_cast<const AbcReader*>(object)->valid, nullptr); }}, {\"source\", [](const void* object) { return flight::class_field_typeof(static_cast<const AbcReader*>(object)->source, nullptr); }}});",
+  "inline const bool flight_class_fields_SwfReader = flight::register_class_fields<SwfReader>({{\"bitPosition\", [](const void* object) { return flight::class_field_typeof(static_cast<const SwfReader*>(object)->bit_position, nullptr); }}, {\"pos\", [](const void* object) { return flight::class_field_typeof(static_cast<const SwfReader*>(object)->pos, nullptr); }}, {\"valid\", [](const void* object) { return flight::class_field_typeof(static_cast<const SwfReader*>(object)->valid, nullptr); }}, {\"source\", [](const void* object) { return flight::class_field_typeof(static_cast<const SwfReader*>(object)->source, nullptr); }}, {\"end\", [](const void* object) { return flight::class_field_typeof(static_cast<const SwfReader*>(object)->end, nullptr); }}});"
+ ],
+ "result": {
+  "answers": 112,
+  "match": 112,
+  "refused": 0,
+  "mismatch": 0,
+  "classRegisteredWithoutFieldsRefusesUnknownName": true,
+  "noMemberRan": true
+ },
+ "oracle": {
+  "abcFresh": {
+   "pos": [
+    true,
+    "number"
+   ],
+   "valid": [
+    true,
+    "boolean"
+   ],
+   "source": [
+    true,
+    "object"
+   ],
+   "bitPosition": [
+    false,
+    "undefined"
+   ],
+   "end": [
+    false,
+    "undefined"
+   ],
+   "readUint8": [
+    true,
+    "function"
+   ],
+   "readFixed8": [
+    false,
+    "undefined"
+   ],
+   "readVarInt": [
+    true,
+    "function"
+   ],
+   "remaining": [
+    true,
+    "function"
+   ],
+   "alignToByte": [
+    false,
+    "undefined"
+   ],
+   "constructor": [
+    true,
+    "function"
+   ],
+   "toString": [
+    true,
+    "function"
+   ],
+   "hasOwnProperty": [
+    true,
+    "function"
+   ],
+   "nope": [
+    false,
+    "undefined"
+   ]
+  },
+  "swfFresh": {
+   "pos": [
+    true,
+    "number"
+   ],
+   "valid": [
+    true,
+    "boolean"
+   ],
+   "source": [
+    true,
+    "object"
+   ],
+   "bitPosition": [
+    true,
+    "number"
+   ],
+   "end": [
+    true,
+    "number"
+   ],
+   "readUint8": [
+    true,
+    "function"
+   ],
+   "readFixed8": [
+    true,
+    "function"
+   ],
+   "readVarInt": [
+    false,
+    "undefined"
+   ],
+   "remaining": [
+    false,
+    "undefined"
+   ],
+   "alignToByte": [
+    true,
+    "function"
+   ],
+   "constructor": [
+    true,
+    "function"
+   ],
+   "toString": [
+    true,
+    "function"
+   ],
+   "hasOwnProperty": [
+    true,
+    "function"
+   ],
+   "nope": [
+    false,
+    "undefined"
+   ]
+  },
+  "abcWritten": {
+   "pos": [
+    true,
+    "number"
+   ],
+   "valid": [
+    true,
+    "boolean"
+   ],
+   "source": [
+    true,
+    "object"
+   ],
+   "bitPosition": [
+    false,
+    "undefined"
+   ],
+   "end": [
+    false,
+    "undefined"
+   ],
+   "readUint8": [
+    true,
+    "function"
+   ],
+   "readFixed8": [
+    false,
+    "undefined"
+   ],
+   "readVarInt": [
+    true,
+    "function"
+   ],
+   "remaining": [
+    true,
+    "function"
+   ],
+   "alignToByte": [
+    false,
+    "undefined"
+   ],
+   "constructor": [
+    true,
+    "function"
+   ],
+   "toString": [
+    true,
+    "function"
+   ],
+   "hasOwnProperty": [
+    true,
+    "function"
+   ],
+   "nope": [
+    false,
+    "undefined"
+   ]
+  },
+  "swfWritten": {
+   "pos": [
+    true,
+    "number"
+   ],
+   "valid": [
+    true,
+    "boolean"
+   ],
+   "source": [
+    true,
+    "object"
+   ],
+   "bitPosition": [
+    true,
+    "number"
+   ],
+   "end": [
+    true,
+    "number"
+   ],
+   "readUint8": [
+    true,
+    "function"
+   ],
+   "readFixed8": [
+    true,
+    "function"
+   ],
+   "readVarInt": [
+    false,
+    "undefined"
+   ],
+   "remaining": [
+    false,
+    "undefined"
+   ],
+   "alignToByte": [
+    true,
+    "function"
+   ],
+   "constructor": [
+    true,
+    "function"
+   ],
+   "toString": [
+    true,
+    "function"
+   ],
+   "hasOwnProperty": [
+    true,
+    "function"
+   ],
+   "nope": [
+    false,
+    "undefined"
+   ]
+  }
+ },
+ "native": {
+  "abcFresh": {
+   "pos": [
+    true,
+    "number"
+   ],
+   "valid": [
+    true,
+    "boolean"
+   ],
+   "source": [
+    true,
+    "object"
+   ],
+   "bitPosition": [
+    false,
+    "undefined"
+   ],
+   "end": [
+    false,
+    "undefined"
+   ],
+   "readUint8": [
+    true,
+    "function"
+   ],
+   "readFixed8": [
+    false,
+    "undefined"
+   ],
+   "readVarInt": [
+    true,
+    "function"
+   ],
+   "remaining": [
+    true,
+    "function"
+   ],
+   "alignToByte": [
+    false,
+    "undefined"
+   ],
+   "constructor": [
+    true,
+    "function"
+   ],
+   "toString": [
+    true,
+    "function"
+   ],
+   "hasOwnProperty": [
+    true,
+    "function"
+   ],
+   "nope": [
+    false,
+    "undefined"
+   ]
+  },
+  "swfFresh": {
+   "pos": [
+    true,
+    "number"
+   ],
+   "valid": [
+    true,
+    "boolean"
+   ],
+   "source": [
+    true,
+    "object"
+   ],
+   "bitPosition": [
+    true,
+    "number"
+   ],
+   "end": [
+    true,
+    "number"
+   ],
+   "readUint8": [
+    true,
+    "function"
+   ],
+   "readFixed8": [
+    true,
+    "function"
+   ],
+   "readVarInt": [
+    false,
+    "undefined"
+   ],
+   "remaining": [
+    false,
+    "undefined"
+   ],
+   "alignToByte": [
+    true,
+    "function"
+   ],
+   "constructor": [
+    true,
+    "function"
+   ],
+   "toString": [
+    true,
+    "function"
+   ],
+   "hasOwnProperty": [
+    true,
+    "function"
+   ],
+   "nope": [
+    false,
+    "undefined"
+   ]
+  },
+  "abcWritten": {
+   "pos": [
+    true,
+    "number"
+   ],
+   "valid": [
+    true,
+    "boolean"
+   ],
+   "source": [
+    true,
+    "object"
+   ],
+   "bitPosition": [
+    false,
+    "undefined"
+   ],
+   "end": [
+    false,
+    "undefined"
+   ],
+   "readUint8": [
+    true,
+    "function"
+   ],
+   "readFixed8": [
+    false,
+    "undefined"
+   ],
+   "readVarInt": [
+    true,
+    "function"
+   ],
+   "remaining": [
+    true,
+    "function"
+   ],
+   "alignToByte": [
+    false,
+    "undefined"
+   ],
+   "constructor": [
+    true,
+    "function"
+   ],
+   "toString": [
+    true,
+    "function"
+   ],
+   "hasOwnProperty": [
+    true,
+    "function"
+   ],
+   "nope": [
+    false,
+    "undefined"
+   ]
+  },
+  "swfWritten": {
+   "pos": [
+    true,
+    "number"
+   ],
+   "valid": [
+    true,
+    "boolean"
+   ],
+   "source": [
+    true,
+    "object"
+   ],
+   "bitPosition": [
+    true,
+    "number"
+   ],
+   "end": [
+    true,
+    "number"
+   ],
+   "readUint8": [
+    true,
+    "function"
+   ],
+   "readFixed8": [
+    true,
+    "function"
+   ],
+   "readVarInt": [
+    false,
+    "undefined"
+   ],
+   "remaining": [
+    false,
+    "undefined"
+   ],
+   "alignToByte": [
+    true,
+    "function"
+   ],
+   "constructor": [
+    true,
+    "function"
+   ],
+   "toString": [
+    true,
+    "function"
+   ],
+   "hasOwnProperty": [
+    true,
+    "function"
+   ],
+   "nope": [
+    false,
+    "undefined"
+   ]
+  }
+ }
+}

@@ -5828,6 +5828,23 @@
       "unblocks": "Fresh nested mapped indexed-access object allocation in the whole original image caller; downstream original callee ABI remains separately qualified.",
       "expires": "When upstream uses the same proven concrete object carrier for fresh allocation and contextual storage.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-class-field-registration",
+      "dependency": "flight-compiler",
+      "patch": "compiler-class-field-registration.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "diagnostic",
+      "refusal": "Erased `in` and `typeof` on an emitted class instance refuse its own fields: the class registration records only prototype members, and the member table binds only keys emitted as RowKeys, so `'pos' in abcReader` (true in JavaScript) has no answer.",
+      "rewrite": "Each non-generic class also emits flight::register_class_fields<C>({...}): its declared instance fields from the IR (not static, declare, abstract, branded or #private), each with a typeof reader whose disengaged answer the field's source type decides (undefined, null's object, or none when it admits both).",
+      "equivalence": "Flight compiles class fields with define semantics, so every declared field is an own property from construction whatever it holds. A fully registered class answers in/typeof from its declared fields, its prototype chain and Object.prototype alone; the reader reads the stored value and calls nothing, and a value its carrier cannot classify is refused.",
+      "whyNotUpstreamFirst": "Carried through the established compiler patch stack against the exact pin.",
+      "unblocks": "Erased in/typeof on AbcReader, SwfReader, DeflateBitWriter, InflateState, the scene-document YAML parser and lexer, and the swf test-helper classes, once those slices are regenerated (coordinated by foreman; not generated with this activation).",
+      "expires": "when upstream lowers class-instance own-field presence and typeof.",
+      "appliedOn": "2026-10-18",
+      "verification": "cppClassFieldRegistration plus the erased-member suites pass; full backend+semantic 0 new with vs without. Scratch qualification at the current composition: the exact emitted registration lines for the real AbcReader and SwfReader, inserted into their headers, match a JavaScript oracle run on the real transpiled sources for 112/112 in/typeof answers (fields, readonly parameter property, interface-inherited storage, methods, constructor/toString/hasOwnProperty, foreign and unknown names, fresh and after live writes); a class registered without fields still refuses unplaceable names; no member ran."
     }
   ]
 }
