@@ -46,3 +46,52 @@ The measured Unity unit is one passing header and three failed barrels, all four
 The particle package remains partial at 17/18 emitted modules. Later retained refusals in
 registration and the nullable JSON Record helper are separate boundaries; this first error
 does not establish that clearing it will qualify the barrels or registry behavior.
+
+## Exact decision boundary and independent controls
+
+The strict type fixture `scripts/fixtures/particleCodecOptions.ts` admits the original assignment,
+an ordinary structural options literal, direct function identity comparisons and a result assertion
+that reads the original extra document. `scripts/particleCodecOptionsOracle.mjs` executes the
+untouched pinned Starling, factory, constants and diagnostics bodies: twelve checks pass for the
+two callback identities, structural getter/live reads, one argument evaluation, absent options and
+fields, present undefined, failure before options access, the exact thrown owner and retained
+document surface. A field-only result copy and a forwarding function are explicit counterexamples,
+not proposed implementations.
+
+The installed callback slots are still:
+
+```cpp
+// Existing public parser ABI; must remain callable with this exact native function-pointer type.
+Config parse_starling_pex(String, optional<Ref<StarlingPexParseOptions>>);
+// Existing codec slot; source callers may provide a row with no native Starling allocation.
+std::function<Config(String, optional<ReadonlyParseOptionsRow>)> parse_to_config;
+```
+
+The document slot has an additional owner boundary. Its current result is an owning
+`Ref<config_diagnostics_...>`, whereas the public parser returns `Ref<StarlingPexParseResult>`
+with the real `document` property. A copy of only the statically declared fields would replace
+the original result owner and lose a property the source actually returns. Clearing the options
+error alone does not establish a sound document callback.
+
+The existing contextual callable entrypoint deliberately does nothing when both signatures have
+the same arity. Its lower-level parameter conversion can project native owners into rows; it
+cannot manufacture the nominal owner this opposite direction requires. Extending that arity
+guard alone therefore supplies no proof. Existing `NominalOrStructuralView` needs a native base
+reference and exposes native escape; it does not represent every schema-only options row.
+
+A possible implementation shape is one private original-body implementation over a readonly
+view plus the unchanged native public wrapper, with contextual calls entering the private body.
+That would still require preserving the original named function identity through an adapted
+`std::function`, and preserving the original document result owner through the declared result
+surface. Current `Function` shares identity only within its signature; an arbitrary forwarding
+lambda in `std::function` correctly reports that identity is unavailable. There is no qualified
+cross-signature named-origin protocol here. Choosing that protocol and any public result-carrier
+change is an architecture decision, not permission to copy fields or cast a function pointer.
+
+The registered native boundary fixture keeps the real public parser function-pointer type and
+checks that a structural row is not implicitly convertible to nominal options. Its independent
+one-member row protocol uses the installed `size` key: the normal SDK has no `textureSize` key
+entry until a real lowered row read asks for one. No generated member metadata is fabricated, and
+these protocol checks do not claim an installed particle-options view or codec adapter. Mutating,
+escaping, identity-observing and opaque parameter uses remain required exclusions for any future
+private specialization proof. No extra SDK or header promotion is authorized by these fixtures.
