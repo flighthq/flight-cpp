@@ -80,6 +80,8 @@ int main() {
   throws<flight::TypeError>([] { (void)flight::json_scalar_values(Any(7.0)); });
   throws<flight::TypeError>([] { (void)flight::read_json_scalar_property(Any(flight::null), "0"); });
   throws<flight::OutOfProfileError>([&] { (void)flight::json_scalar_values(erased); });
+  throws<flight::OutOfProfileError>([] { (void)flight::read_json_scalar_property(Any::function([] { return 1.0; }), "0"); });
+  throws<flight::OutOfProfileError>([] { (void)flight::read_json_scalar_property(Any::external(7), "0"); });
   throws<flight::NativeScalarEscapeError>([] { (void)flight::JsonScalarCell{Any(false)}.as_native_number(); });
   const std::optional<double> missing;
   assert(flight::json_property_value(missing, Any(flight::null)).is_null());

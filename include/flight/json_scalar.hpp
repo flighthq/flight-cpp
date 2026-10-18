@@ -420,6 +420,9 @@ class JsonScalarCell final {
     }
     throw OutOfProfileError("raw array property outside the represented index and length reads");
   }
+  if (value.kind() == AnyKind::function || value.kind() == AnyKind::external) {
+    throw OutOfProfileError("raw property read on an unrepresented function or external owner");
+  }
   const auto properties = named_properties(value);
   if (properties.presence_ambiguous(key)) {
     throw OutOfProfileError("raw property read cannot distinguish null from omitted storage");

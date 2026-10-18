@@ -1,0 +1,25 @@
+# Bounded Bezier projection on existing numeric storage
+
+The approved profile retains `Path.data: Array<double>`, `AnimationTrack.values: SequenceView<double>`, and numeric sample arrays. The alternative raw storage family in [the earlier return design](lottie-bezier-raw-return-design.md) remains declined. This change uses existing `Any`, `JsonScalarCell`, assertion rows, and live `ArrayIterator` carriers. No Flight source body or native storage ABI changes.
+
+The compiler elects a genuinely erased assertion to a named readonly interface only when its member types are scalar values or finite nested arrays/tuples of scalars. The assertion keeps the original owner without reading members or validating their declared types. Its nested property/index reads remain raw cells. Mutable assertions, unrelated schemas, callable/recursive shapes, and unrepresented native calls do not acquire this election.
+
+The original `toLottieShapePath` guard stays intact, including inherited presence and its lack of a `v` read. The complete original four-function module is emitted from the saved 1,467-module Flight203 graph; this is **not** a refreshed Flight208 graph or an SDK generation. The selected Bezier source is unchanged from Flight pin `a62784923f3be814463286c9fb28edfe6ab15789`, SHA256 `da3f167f812fc52463da4e6de9c9ae346373312f18c7c6f50f5f40c713115ce2`. Qualification records the current compiler patch composition separately.
+
+Raw array iteration observes the same live owner and re-reads its length on each `next()`. String iteration advances by code point; indexing the yielded string still reads UTF-16 code units. The source-authored `[path.v, path.i, path.o]` allocation captures all three reads before acquiring the first inner iterator. Each represented native call captures every source argument, in order, before performing ordered checked native conversions. A later coordinate getter's original exception therefore precedes an earlier coordinate's numeric escape failure.
+
+Getter value dispatch is separate from presence and `typeof` metadata. A callback is registered for the boxed native type, checks it with `object_reference_if`, then calls the actual getter on that same owner. The registry releases its lock before the call. Presence does not call a getter; the existing accessor-`typeof` refusal stays explicit. Getter-result boxing preserves represented native arrays, references, raw values and assertion rows, and refuses carriers whose identity or null/undefined sentinel it cannot represent. Unrepresented function/external member reads refuse rather than becoming absent/defaulted coordinates.
+
+## Qualification and limits
+
+The exact commands, hashes, measured checks and fixture classifications are recorded in `artifacts/lottie-bezier-numeric-projection.json`. The source oracle executes complete original modules and verifies every loaded module blob against the raw Flight pin. The native fixture consumes the complete emitted original Bezier header, including creation, flattening, selection and unflattening. It also exercises the existing public numeric animation constructor/sampler; it does not substitute for or qualify the whole original native `createLottieTrack` module.
+
+Numeric Bezier observations and represented source getter/owner/error/iteration behavior are compared normally. Nonnumeric coordinates reach `JsonScalarCell::as_native_number()` only at numeric storage escape and raise the shared `NativeScalarEscapeError` out-of-profile family. These rows are **PARTIAL**, not source-equivalence PASS: the original JavaScript can store those values. String/false/object coordinates are not coerced, defaulted or rejected by a stricter shape guard.
+
+Foreign iterator protocols, unregistered/ambiguous native property metadata, unrepresented getter-value carriers, arbitrary class-heritage layouts, async/labelled raw iteration and unrepresented callable escapes remain explicit partial boundaries. This is a bounded profile, not a whole Lottie/factory/SVG/SDK promotion.
+
+## Independent numeric sampler counterexample
+
+The expanded probe found an existing consumer gap with an ordinary numeric track. The original source `sampleAnimationTrack([], track, 0)` grows the output to contain the first numeric keyframe. The current native override's `copy_keyframe_value` writes the `Array<double>` alternative through `element(index)`, which throws `std::range_error` when the output starts empty. The original initial probe aborted at this operation; that failed run is retained.
+
+The final fixture records each empty-output failure separately, then tests a **separate preallocated-output** call against the original source's same preallocated call. Preallocation does not turn the empty-output failure into a pass. Neither numeric storage nor the sampler implementation is changed in this Bezier patch. The empty-output rows remain PARTIAL and require a separately scoped consumer repair; no full numeric sampler parity is claimed.

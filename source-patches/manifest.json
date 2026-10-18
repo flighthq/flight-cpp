@@ -5862,6 +5862,23 @@
       "unblocks": "A nullable imported non-exported return used in a null guard no longer folds to a constant true; the guarded member read is only reachable for a present value. The SWF correction has no null test and was not exposed to this fold; this is the general compiler cause it surfaced.",
       "expires": "when upstream resolves an imported non-exported return type's declaring declaration in the nullish-comparison storage evidence, or lowers a nullable reference carrier's null test itself.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-erased-readonly-json-projection",
+      "dependency": "flight-compiler",
+      "patch": "compiler-erased-readonly-json-projection.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "diagnostic",
+      "refusal": "cpp-erased-value-assertion-unrepresented",
+      "rewrite": "Elect a genuinely erased assertion only to a named readonly interface whose members are scalars or finite nested array/tuple scalar shapes. Reuse the existing assertion row, preserve raw nested property/index reads in JsonScalarCell, iterate represented raw arrays live and strings by code point, and capture every native call argument before ordered checked numeric conversions. Emit separate exact-boxed-type getter callbacks using checked object_reference_if and the existing getter method.",
+      "equivalence": "The original assertion performs no member read and preserves its original owner. No source guard is narrowed, no JSON tree or native array is materialized from the input, and source operands are read once in source order before an actual native escape. Native numeric storage stays Array<double>/SequenceView<double>; nonnumeric escapes are explicitly PARTIAL through the shared NativeScalarEscapeError policy, not claimed source equivalence. No raw core storage family, function-body substitution or global Scalar ABI.",
+      "verification": "See artifacts/lottie-bezier-numeric-projection.json for the exact measured qualification and remaining boundaries. Focused generic emission controls, complete original Bezier emission/native numeric consumers, original-source oracle, getter owner/exception/order, string/live iteration and strict native escapes are qualified separately. The unrelated empty sampler output growth counterexample is retained as PARTIAL. No SDK or inventory promotion.",
+      "whyNotUpstreamFirst": "The locked compiler needs the runtime existing-family raw read/iterator/getter operations in this repository to preserve this producer. The patch is bounded to an elected readonly named schema; mutable assertions, unrelated schemas, callable/recursive schemas, foreign protocols and unrepresented calls retain explicit boundaries.",
+      "unblocks": "Complete original lottieBezierPath.ts on the retained native numeric storage profile; nonnumeric fixtures and unrelated consumer gaps remain explicitly partial.",
+      "expires": "when upstream emits bounded erased readonly projections, source-ordered raw native escapes and exact getter value readers against the runtime contract.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }

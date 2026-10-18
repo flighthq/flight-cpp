@@ -60,3 +60,7 @@ Manager parcel `manager-88c65f63` records the user decision to decline the addit
 Before the native escape, the JSON projection must preserve source iteration, evaluation order, errors and owner identity. At the escape, numeric coordinates convert; nonnumeric coordinates fail with the shared documented `JsonScalarCell` out-of-profile error, without coercion, defaults or stronger input guards. Lottie rows whose fixtures carry nonnumeric Bezier coordinates remain partial for this native numeric storage boundary. Numeric fixtures proceed with normal qualification.
 
 The measured counterexamples and declined alternative remain recorded in this document and in [the carrier boundary evidence](../../artifacts/lottie-bezier-carrier-boundary.json). This decision does not turn component evidence into native original Bezier qualification or change the historical Exact21 results.
+
+## Existing-family numeric implementation
+
+The approved numeric-profile implementation and its exact qualification are recorded in [the bounded projection request](lottie-bezier-numeric-projection.md) and `artifacts/lottie-bezier-numeric-projection.json`. It retains the original module and numeric native storage, with raw owner-preserving reads before checked escapes. Nonnumeric storage rows remain PARTIAL. The expanded native consumer also retains an independent numeric sampler empty-output growth counterexample; that failure is not normalized into a pass. The earlier raw-storage alternative remains declined.
