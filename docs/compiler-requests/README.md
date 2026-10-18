@@ -45,6 +45,7 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 | [`compiler-contextual-imported-union-owner.patch`](../../source-patches/compiler-contextual-imported-union-owner.patch) | [Contextual construction of an imported union](compiler-contextual-imported-union-owner.md) |
 | [`compiler-erased-ref-weak-map-view.patch`](../../source-patches/compiler-erased-ref-weak-map-view.patch) | [Checked typed view of an erased WeakMap](compiler-erased-ref-weak-map-view.md) |
 | [`compiler-typed-record-missing-key.patch`](../../source-patches/compiler-typed-record-missing-key.patch) | [A typed Record read of a missing key yields undefined](typed-record-missing-key-read.md) |
+| [`compiler-nullable-element-dual-sentinel.patch`](../../source-patches/compiler-nullable-element-dual-sentinel.patch) | [A nullable array element written into a dual-sentinel slot](nullable-array-element-into-dual-sentinel-slot.md) |
 | [`compiler-error-stack-cause-presence.patch`](../../source-patches/compiler-error-stack-cause-presence.patch) | [Runtime-declared Error members and their presence tests](compiler-error-stack-cause-presence.md) |
 | [`compiler-exact-variant-owner-priority.patch`](../../source-patches/compiler-exact-variant-owner-priority.patch) | [Exact variant owners must outrank shape matches](compiler-exact-variant-owner-priority.md) |
 | [`compiler-external-optional-result-widening.patch`](../../source-patches/compiler-external-optional-result-widening.patch) | [External optional result widening](compiler-external-optional-result-widening.md) |
@@ -555,6 +556,8 @@ patch has retired because the fix landed upstream keep their row, marked, as the
   `TransformMode2D` presets stored into `Bone2D.transformMode` emit as an unrelated anonymous struct; silent until C++ compile.
 - [Reading the elements of an erased array must use the runtime's exact array recovery](erased-array-element-reading.md) —
   14 skeleton2d-formats JSON parser modules; the runtime's `AnyArray` and `external_if<Array<T>>` already exist.
+- [A nullable array element written into a slot that also admits undefined must lift through the array's outer/inner read](nullable-array-element-into-dual-sentinel-slot.md) —
+  skeleton2d's slot attachment binder and the Spine/DragonBones handlers that reach it; carried by the `compiler-nullable-element-dual-sentinel` patch, which keeps a stored null distinct from an index JavaScript reads as undefined.
 - [An object literal passed to an optional `Record` parameter must be constructed before the optional](object-literal-into-optional-record-argument.md) —
   diagnostic details in five format packages; shared compiler materialization and original 3DS consumer qualified; existing detail-local patches retained for expiry audit.
 - [Owning arrays, readonly-row arrays and number buffers need conversions where they meet](animation-readonly-row-array-carriers.md) —
