@@ -36,6 +36,13 @@ struct MemberViewDerived : public MemberViewBase {
   bool paused{false};
 };
 
+// Native object with omitted optionals vs engaged ones, including an engaged present undefined.
+struct PresenceNative final : public flight::ReferenceEnabled {
+  std::optional<int> omitted;
+  std::optional<int> present_value{3};
+  std::optional<flight::Any> present_undefined{flight::Any(flight::undefined)};
+};
+
 namespace {
 
 int failures = 0;
@@ -4736,6 +4743,32 @@ static void test_array_callback_arity() {
   check(receiver_first == 1.0, "for_each passes the receiver array as the third argument");
 }
 
+// Own-key enumeration is engagement, not a value filter: a disengaged optional is not an own key,
+// while an engaged optional holding undefined IS an own key.
+static void test_native_named_presence() {
+  const auto object = flight::make_ref<PresenceNative>(PresenceNative{});
+  auto owner = flight::detail::owner_for(object);
+  owner->bind_named("omitted", [object]() -> decltype(auto) { return (object->omitted); });
+  owner->bind_named("present_value", [object]() -> decltype(auto) { return (object->present_value); });
+  owner->bind_named("present_undefined", [object]() -> decltype(auto) { return (object->present_undefined); });
+  const flight::StructuralRef<flight::RowOf<flight::Ref<PresenceNative>>> row(object);
+  const auto properties = flight::named_properties(row);
+  const auto keys = properties.keys();
+  const auto contains = [&](const char* name) {
+    const auto wanted = flight::String(name);
+    return std::find(keys.begin(), keys.end(), wanted) != keys.end();
+  };
+  check(!contains("omitted") && !properties.has(flight::String("omitted")),
+        "a disengaged optional is omitted: not enumerated and not an own key");
+  check(contains("present_value") && properties.get(flight::String("present_value")).as_number() == 3.0,
+        "an engaged optional enumerates and reads its value");
+  check(contains("present_undefined") && properties.has(flight::String("present_undefined")) &&
+            properties.get(flight::String("present_undefined")).is_undefined(),
+        "an engaged optional holding undefined is an own key, distinct from omission");
+  check(properties.get(flight::String("omitted")).is_undefined(),
+        "reading an omitted key answers undefined");
+}
+
 int main() {
   test_array();
   test_array_callback_arity();
@@ -4759,6 +4792,7 @@ int main() {
   test_base64();
   test_json_record();
   test_json_mutable_storage();
+  test_native_named_presence();
   test_json_owner_shared_view();
   test_json_scalar_cell();
   test_json_scalar_member_projection();
