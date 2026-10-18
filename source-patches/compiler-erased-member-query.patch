@@ -1,5 +1,5 @@
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-index 225d6b8..77bfc3d 100644
+index 7af8595..c82790e 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 @@ -2383,6 +2383,23 @@ function emitClass(declaration: Readonly<IrClassDeclaration>, outer: EmitContext
@@ -26,7 +26,7 @@ index 225d6b8..77bfc3d 100644
    return lines;
  }
  
-@@ -8697,6 +8714,21 @@ function emitExpression(
+@@ -8718,6 +8735,21 @@ function emitExpression(
          }
          const closedKeyTypeof = emitCppClosedKeyElementTypeofCpp(expression.operand, context);
          if (closedKeyTypeof) return closedKeyTypeof;
@@ -48,9 +48,9 @@ index 225d6b8..77bfc3d 100644
          const value = getCppStaticTypeofValueCpp(expression.operand, context);
          if (value) {
            return getCppRuntimeProfile(context.options) === 'flight-cpp'
-@@ -27067,6 +27099,14 @@ function emitCppMembershipTestCpp(
+@@ -27181,6 +27213,14 @@ function emitCppMembershipTestCpp(
      context.includes.add('flight/structural_ref.hpp');
-     return `flight::has_property(${emitExpression(expression.right.expression, context)}, flight::String::from_utf8(flight::RowKey<${JSON.stringify(expression.left.value)}>::name.view()))`;
+     return `flight::has_property(${emitExpression(expression.right, context)}, flight::String::from_utf8(flight::RowKey<${JSON.stringify(expression.left.value)}>::name.view()))`;
    }
 +  const erasedReceiver = getCppErasedMemberReceiverCpp(expression.right, context);
 +  if (erasedReceiver && expression.semantics.membershipTest?.key.kind !== 'symbol') {
@@ -63,7 +63,7 @@ index 225d6b8..77bfc3d 100644
    if (getCppNamedPropertiesViewExpressionCpp(expression.right, context)) {
      emissionError(
        context,
-@@ -27299,6 +27339,23 @@ function getCppReferenceStorageSubjectTypeCpp(type: Readonly<IrType>, context: E
+@@ -27413,6 +27453,23 @@ function getCppReferenceStorageSubjectTypeCpp(type: Readonly<IrType>, context: E
    }
  }
  
@@ -89,10 +89,10 @@ index 225d6b8..77bfc3d 100644
  }
 diff --git a/packages/compiler-backend-cpp/src/cppErasedMemberQuery.test.ts b/packages/compiler-backend-cpp/src/cppErasedMemberQuery.test.ts
 new file mode 100644
-index 0000000..040927c
+index 0000000..cbedae8
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppErasedMemberQuery.test.ts
-@@ -0,0 +1,46 @@
+@@ -0,0 +1,49 @@
 +import ts from 'typescript';
 +import { expect, it } from 'vitest';
 +
@@ -127,7 +127,10 @@ index 0000000..040927c
 +    export function hasName(value: unknown): boolean { return typeof value === 'object' && value !== null && 'name' in value; }
 +  `);
 +
-+  expect(output).toContain('flight::has_property(value, flight::String("name"))');
++  // The literal key is taken by the established erased-operand lowering, which spells it through RowKey; it
++  // is the same runtime query. A receiver typed `object` is stored as flight::Ref<void>, not flight::Any, so
++  // neither lowering reaches `key in value` there: that remains raw text, a gap this patch does not close.
++  expect(output).toContain('flight::has_property(value, flight::String::from_utf8(flight::RowKey<"name">::name.view()))');
 +});
 +
 +it('registers each non-generic class prototype so erased queries see its methods', () => {
