@@ -1,0 +1,16 @@
+diff --git a/packages/types/src/ParticleFormatCodec.ts b/packages/types/src/ParticleFormatCodec.ts
+--- a/packages/types/src/ParticleFormatCodec.ts
++++ b/packages/types/src/ParticleFormatCodec.ts
+@@ -13,10 +13,10 @@
+   parseToDocument(
+     text: string,
+     options?: Readonly<ParseParticleConfigOptions>,
+-  ): {
++  ): Required<{
+     config: ParticleEmitterConfig;
+     diagnostics: ImportDiagnostic[];
+-  };
++  }>;
+   /** Serialize `config` to the format string when the format supports export.
+    *  May accept optional options via closure capture in the codec implementation. */
+   serialize?(config: Readonly<ParticleEmitterConfig>): ParticleSerializeResult;

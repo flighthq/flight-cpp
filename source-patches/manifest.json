@@ -5267,6 +5267,23 @@
       "expires": "when upstream lowers unique-symbol presence to written presence and writes computed literal members at native construction.",
       "appliedOn": "2026-10-18",
       "verification": "cppSymbolOwnPresence.test.ts 3/3; full backend+semantic failure set identical with and without (0 new); scoped generation of the seven packages kept only the scene_document.hpp isMaterialEntity hunk; tests/generated_symbol_own_presence_test.cpp checks the sink and material presence, and a mutant reverting the override write is killed."
+    },
+    {
+      "id": "particle-codec-document-result-owned-view",
+      "dependency": "flight",
+      "patch": "particle-codec-document-result-owned-view.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/types/src/ParticleFormatCodec.ts",
+      "package": "@flighthq/types",
+      "answers": "diagnostic",
+      "refusal": "The structural document callback result is emitted as an owning anonymous Ref, which cannot retain the original named parser result and its extra document property.",
+      "rewrite": "Wrap the existing two-required-field return type in Required<...>, an equivalent writable mapped view that the existing structural row family can represent without copying the returned owner.",
+      "equivalence": "Both config and diagnostics are already required; Required changes no TypeScript member, readonly authority, accepted input, property presence, runtime operation or source body. The emitted view must retain the original parser result owner and its extra document field, with writes reaching that same owner. No parser public native Ref signature changes.",
+      "verification": "Focused strict source witness and twelve untouched-source identity/getter/evaluation/error/result controls pass. Production109 compiler probe emits the existing writable RowRequired result view; plain/full-shape Pick retains owning storage. Installed exact-result-to-writable-base-row native owner/write/extra-document/lifetime controls pass on nonwithdrawn provenance. Compiler adapter, normal Types writer output and installed codec qualification pending; no header gain claimed.",
+      "whyNotUpstreamFirst": "This type-only equivalent exposes the existing structural view representation at the bounded Manager-approved codec result boundary without changing parser algorithms.",
+      "unblocks": "Same-owner ParticleFormatCodec.parseToDocument result carrier; full callback adaptation and normal coordinated generation remain separate.",
+      "expires": "When the compiler preserves original structural callback result owners through the unmodified plain object result type.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }
