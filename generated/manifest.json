@@ -5230,17 +5230,17 @@
       "package": "@flighthq/skeleton2d-formats"
     },
     {
-      "dependency": "flight",
-      "digest": "740298fad36a994cce0e9cb8684ba55141285ee92cf46db0cd1000dd393bd40c",
-      "id": "skeleton2d-formats-diagnostic-detail-number-locals",
-      "module": "packages/skeleton2d-formats/src/spineBinaryParse.ts",
+      "dependency": "flight-compiler",
+      "digest": "63b092e04423d5df5692b68ec65a4a6b464ef26f3840d4386c18995b58b134b5",
+      "id": "compiler-single-carrier-union-member",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
       "package": "@flighthq/skeleton2d-formats"
     },
     {
       "dependency": "flight",
-      "digest": "ad1a693c823352807701ff91b636e45287a933c44b9f9dbdd42a89dd3992788f",
-      "id": "skeleton2d-formats-census-unknown-attachment-exit",
-      "module": "packages/skeleton2d-formats/src/spineBinarySectionCounts.ts",
+      "digest": "740298fad36a994cce0e9cb8684ba55141285ee92cf46db0cd1000dd393bd40c",
+      "id": "skeleton2d-formats-diagnostic-detail-number-locals",
+      "module": "packages/skeleton2d-formats/src/spineBinaryParse.ts",
       "package": "@flighthq/skeleton2d-formats"
     },
     {
@@ -5431,6 +5431,13 @@
       "id": "layout-flex-basis-unknown-comparison",
       "module": "packages/layout/src/flexLayout.ts",
       "package": "@flighthq/layout"
+    },
+    {
+      "dependency": "flight",
+      "digest": "ad1a693c823352807701ff91b636e45287a933c44b9f9dbdd42a89dd3992788f",
+      "id": "skeleton2d-formats-census-unknown-attachment-exit",
+      "module": "packages/skeleton2d-formats/src/spineBinarySectionCounts.ts",
+      "package": "@flighthq/skeleton2d-formats"
     },
     {
       "dependency": "flight",
