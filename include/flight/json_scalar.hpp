@@ -127,6 +127,83 @@ class JsonScalarCell final {
     return !std::isnan(left) && !std::isnan(right) && left == right;
   }
 
+  // JavaScript binary operations on this cell use ToNumber explicitly; these are operations, not
+  // native conversions. A non-number participates through its ToNumber (NaN comparisons are false),
+  // preserving raw-value semantics without an implicit native wrapper.
+  [[nodiscard]] friend double operator+(const JsonScalarCell& left, const JsonScalarCell& right) {
+    return left.to_number() + right.to_number();
+  }
+  [[nodiscard]] friend double operator-(const JsonScalarCell& left, const JsonScalarCell& right) {
+    return left.to_number() - right.to_number();
+  }
+  [[nodiscard]] friend double operator*(const JsonScalarCell& left, const JsonScalarCell& right) {
+    return left.to_number() * right.to_number();
+  }
+  [[nodiscard]] friend double operator/(const JsonScalarCell& left, const JsonScalarCell& right) {
+    return left.to_number() / right.to_number();
+  }
+  [[nodiscard]] friend bool operator<(const JsonScalarCell& left, const JsonScalarCell& right) {
+    return left.to_number() < right.to_number();
+  }
+  [[nodiscard]] friend bool operator>(const JsonScalarCell& left, const JsonScalarCell& right) {
+    return left.to_number() > right.to_number();
+  }
+  [[nodiscard]] friend bool operator<=(const JsonScalarCell& left, const JsonScalarCell& right) {
+    return left.to_number() <= right.to_number();
+  }
+  [[nodiscard]] friend bool operator>=(const JsonScalarCell& left, const JsonScalarCell& right) {
+    return left.to_number() >= right.to_number();
+  }
+
+  [[nodiscard]] friend double operator+(const JsonScalarCell& left, double right) {
+    return left.to_number() + right;
+  }
+  [[nodiscard]] friend double operator+(double left, const JsonScalarCell& right) {
+    return left + right.to_number();
+  }
+  [[nodiscard]] friend double operator-(const JsonScalarCell& left, double right) {
+    return left.to_number() - right;
+  }
+  [[nodiscard]] friend double operator-(double left, const JsonScalarCell& right) {
+    return left - right.to_number();
+  }
+  [[nodiscard]] friend double operator*(const JsonScalarCell& left, double right) {
+    return left.to_number() * right;
+  }
+  [[nodiscard]] friend double operator*(double left, const JsonScalarCell& right) {
+    return left * right.to_number();
+  }
+  [[nodiscard]] friend double operator/(const JsonScalarCell& left, double right) {
+    return left.to_number() / right;
+  }
+  [[nodiscard]] friend double operator/(double left, const JsonScalarCell& right) {
+    return left / right.to_number();
+  }
+  [[nodiscard]] friend bool operator<(const JsonScalarCell& left, double right) {
+    return left.to_number() < right;
+  }
+  [[nodiscard]] friend bool operator<(double left, const JsonScalarCell& right) {
+    return left < right.to_number();
+  }
+  [[nodiscard]] friend bool operator>(const JsonScalarCell& left, double right) {
+    return left.to_number() > right;
+  }
+  [[nodiscard]] friend bool operator>(double left, const JsonScalarCell& right) {
+    return left > right.to_number();
+  }
+  [[nodiscard]] friend bool operator<=(const JsonScalarCell& left, double right) {
+    return left.to_number() <= right;
+  }
+  [[nodiscard]] friend bool operator<=(double left, const JsonScalarCell& right) {
+    return left <= right.to_number();
+  }
+  [[nodiscard]] friend bool operator>=(const JsonScalarCell& left, double right) {
+    return left.to_number() >= right;
+  }
+  [[nodiscard]] friend bool operator>=(double left, const JsonScalarCell& right) {
+    return left >= right.to_number();
+  }
+
   // Escape to a native double: only an actual number converts. Any other present value (and an
   // absent one) is out of profile and raises the dedicated error.
   [[nodiscard]] double as_native_number() const {

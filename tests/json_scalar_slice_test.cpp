@@ -27,9 +27,12 @@ int main() {
   const JsonScalarCell bad = flight::read_json_scalar_property(receiver, flight::String("bad"));
   const JsonScalarCell absent = flight::read_json_scalar_property(receiver, flight::String("missing"));
 
-  // Arithmetic on a proven JSON number property: explicit ToNumber, source evaluation order intact.
-  const double duration = (100.0 - 10.0) / fr.to_number();
+  // Arithmetic on a proven JSON number property: explicit ToNumber through the cell operations,
+  // source evaluation order intact.
+  const double duration = (100.0 - 10.0) / fr;
   assert(duration == 3.0);
+  assert(fr + 2.0 == 32.0 && fr * 2.0 == 60.0 && fr - 10.0 == 20.0);
+  assert(fr > 0.0 && bad > 0.0 == false);
   assert(fr.type_of() == "number" && !fr.is_nullish() && fr.to_boolean());
 
   // typeof observes the RAW value, not the declared type.
