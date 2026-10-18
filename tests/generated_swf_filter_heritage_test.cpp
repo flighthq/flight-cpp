@@ -1,6 +1,9 @@
 // Normal semantic heritage must keep the original SWF parser usable and retain
 // the same concrete allocation, inherited cells and shared-array lifetime.
+#include <flight/effects/blur_effect.hpp>
 #include <flight/swf/swf_filter.hpp>
+#include <flight/types/effect.hpp>
+#include <flight/types/entity.hpp>
 
 #include <cstdio>
 #include <memory>

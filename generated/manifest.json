@@ -3596,42 +3596,6 @@
         "flight/scene2d_formats/svg_style.hpp"
       ],
       "id": "scene2d-formats-svg-declare-refused-style"
-    },
-    {
-      "files": [],
-      "id": "effects-drop-shadow-effect-interface-heritage"
-    },
-    {
-      "files": [],
-      "id": "effects-inner-shadow-effect-interface-heritage"
-    },
-    {
-      "files": [],
-      "id": "effects-bevel-effect-interface-heritage"
-    },
-    {
-      "files": [],
-      "id": "effects-blur-effect-interface-heritage"
-    },
-    {
-      "files": [],
-      "id": "effects-convolution-effect-interface-heritage"
-    },
-    {
-      "files": [],
-      "id": "effects-gradient-bevel-effect-interface-heritage"
-    },
-    {
-      "files": [],
-      "id": "effects-gradient-glow-effect-interface-heritage"
-    },
-    {
-      "files": [],
-      "id": "effects-inner-glow-effect-interface-heritage"
-    },
-    {
-      "files": [],
-      "id": "effects-outer-glow-effect-interface-heritage"
     }
   ],
   "sourcePatches": [
