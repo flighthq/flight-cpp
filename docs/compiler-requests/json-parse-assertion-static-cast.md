@@ -829,3 +829,10 @@ headers and coherent SDK qualification remain pending; no previous header failur
 is promoted. Undefined/hole writes and unsupported native scalar boundaries retain
 explicit errors/refusals and PARTIAL status. Exact hashes, measured scopes and
 commands are recorded in [the qualification artifact](../../artifacts/aseprite-json-document-view-qualification.json).
+
+After the incoming typed-empty-fallback iteration patch, the **120-patch** ordered
+composition applies, reverses to the raw compiler, and reapplies byte-identically.
+Its strict production build, six focused suites (**64/64, zero skips**) and two
+patch-automation tests pass after the implementation commit. All three original
+parser headers and production metadata remain byte-identical to the executed
+1,577-check consumer inputs. The normal four-header qualification is still pending.
