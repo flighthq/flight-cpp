@@ -518,7 +518,7 @@ class JsonRootRowOwner final : public RowOwner {
   }
 
   [[nodiscard]] const Any& root() const noexcept { return root_; }
-  [[nodiscard]] bool is_nullish() const noexcept { return root_.is_null(); }
+  [[nodiscard]] bool is_nullish() const noexcept { return root_.is_nullish(); }
 
   [[nodiscard]] std::optional<Any> raw_value() const override { return root_; }
 
@@ -539,7 +539,7 @@ class JsonRootRowOwner final : public RowOwner {
 
  private:
   void require_member_access() const {
-    if (root_.is_null()) throw TypeError("Cannot read properties of null or undefined");
+    if (root_.is_nullish()) throw TypeError("Cannot read properties of null or undefined");
   }
 
   [[nodiscard]] bool string_member_present(const String& key) const {

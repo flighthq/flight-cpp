@@ -265,6 +265,23 @@ void test_json_any_bridge() {
   assert(flight::read_json_scalar_row_member(primitive_row, flight::String("x")).is_absent());
   assert(flight::json_row_raw(primitive_row).as_number() == 30.0);
 
+  // Undefined root (Any default): nullish like null, typeof undefined, direct member read throws
+  // TypeError at the read, while the ?. lowering can test is_nullish first and yield undefined.
+  const flight::Any undefined_root;
+  const auto undefined_row = flight::json_assertion_row<RowSchema>(undefined_root);
+  assert(flight::json_row_is_nullish(undefined_row));
+  assert(flight::json_row_type_of(undefined_row) == "undefined");
+  assert(!flight::json_row_to_boolean(undefined_row));
+  {
+    bool undefined_threw = false;
+    try {
+      (void)flight::read_json_scalar_row_member(undefined_row, flight::String("x"));
+    } catch (const flight::TypeError&) {
+      undefined_threw = true;
+    }
+    assert(undefined_threw);
+  }
+
   // Null root: raw retained as null; member read throws TypeError at the read.
   const flight::Any null_root(flight::null);
   const auto null_row = flight::json_assertion_row<RowSchema>(null_root);
