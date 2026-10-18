@@ -212,8 +212,8 @@ inline String number_to_fixed(double value, double digits_value = 0.0) {
 }
 
 inline double parse_int(const String& input, double radix_value = 0.0) {
-  const std::string encoded = input.to_utf8();
-  std::string_view text = detail::trim_number_text(encoded);
+  const std::string encoded = detail::trim_leading_number_text(input);
+  std::string_view text = encoded;
   bool negative = false;
   if (!text.empty() && (text.front() == '+' || text.front() == '-')) {
     negative = text.front() == '-';

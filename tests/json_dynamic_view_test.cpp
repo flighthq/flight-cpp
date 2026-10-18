@@ -16,6 +16,22 @@ int main() {
   using flight::Any;
   using flight::JsonValue;
   using flight::String;
+  // A JSON string stays in the full UTF16 domain when the original importer passes a channel
+  // slice to parseInt. Strip source whitespace before UTF8 encoding, as parseFloat already does.
+  for (const auto unit : {0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x0020, 0x00A0,
+                          0x1680, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005,
+                          0x2006, 0x2007, 0x2008, 0x2009, 0x200A, 0x2028, 0x2029,
+                          0x202F, 0x205F, 0x3000, 0xFEFF}) {
+    const auto prefix = String::from_char_code(unit);
+    check(flight::parse_int(prefix + String("1f"), 16) == 31 &&
+          flight::parse_int(prefix + String("-0x10tail")) == -16 &&
+          std::signbit(flight::parse_int(prefix + String("-0"))),
+          "parseInt trims every ECMAScript whitespace/line-terminator code unit before sign and radix");
+  }
+  for (const auto unit : {0x0085, 0x180E, 0x200B, 0xD800, 0xDC00, 0xFFFD}) {
+    check(std::isnan(flight::parse_int(String::from_char_code(unit) + String("1f"), 16)),
+          "parseInt does not strip other Unicode units or lone surrogates");
+  }
   for (const auto value : {Any(), Any(flight::null), Any(false), Any(0), Any(-0.0),
                            Any(std::numeric_limits<double>::quiet_NaN()), Any(String())}) {
     check(!flight::to_boolean(value) && !flight::to_boolean(std::optional<Any>(value)),
