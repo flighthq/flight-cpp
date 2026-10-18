@@ -1,0 +1,443 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -336,6 +336,9 @@
+   jsonAssertionBindingRows: Map<string, Readonly<CompilerCppStructuralRowPlan>>;
+   jsonStringProvenPaths: ReadonlySet<string>;
+   privateJsonRecordProducerIds: Set<string>;
++  privateNullableJsonRecordProducerIds: Set<string>;
++  nullableJsonRecordBindingIds: Set<string>;
++  privateNullableJsonRecordReturns: Map<Readonly<IrExpression>, Readonly<{ condition: Readonly<IrExpression>; source: Readonly<IrExpression> }>>;
+   privateJsonRecordReturns: Map<Readonly<IrExpression>, Readonly<IrExpression>>;
+   privateGuardedRecordProducerIds: Set<string>;
+   jsonSyntaxCatchBindingIds: ReadonlySet<string>;
+@@ -746,6 +749,9 @@
+     jsonAssertionBindingRows: new Map(),
+     jsonStringProvenPaths: new Set(),
+     privateJsonRecordProducerIds: new Set(),
++    privateNullableJsonRecordProducerIds: new Set(),
++    nullableJsonRecordBindingIds: new Set(),
++    privateNullableJsonRecordReturns: new Map(),
+     privateJsonRecordReturns: new Map(),
+     privateGuardedRecordProducerIds: new Set(),
+     jsonSyntaxCatchBindingIds: new Set(),
+@@ -810,6 +816,7 @@
+   }
+   collectCppPrivateGuardedRecordReadFlowCpp(module, context);
+   collectCppPrivateJsonRecordReadFlowCpp(module, context);
++  collectCppPrivateNullableJsonRecordReadFlowCpp(module, context);
+   collectCppPrivateJsonShapeReadsCpp(module, context);
+   for (const [bindingId, targetType] of collectCppExternalBindingStorageTargetTypesCpp(module, context)) {
+     externalBindingStorageTargetTypes.set(bindingId, targetType);
+@@ -2464,7 +2471,8 @@
+     returnsAbsent: hasIrTypeAbsentMember(declaration.returns),
+   };
+   if (declaration.async) context.includes.add('coroutine');
+-  const returnType = (context.privateJsonRecordProducerIds.has(declaration.binding.id) || context.privateGuardedRecordProducerIds.has(declaration.binding.id))
++  const returnType = context.privateNullableJsonRecordProducerIds.has(declaration.binding.id)
++    ? 'std::optional<flight::NamedProperties>' : (context.privateJsonRecordProducerIds.has(declaration.binding.id) || context.privateGuardedRecordProducerIds.has(declaration.binding.id))
+     ? 'flight::NamedProperties' : emitType(declaration.returns, context);
+   const template = emitCppFunctionTemplate(declaration.typeParameters, declaration.parameters, context);
+   const params = declaration.parameters.map((parameter) => emitParameter(parameter, context)).join(', ');
+@@ -2536,7 +2544,8 @@
+   // A mutually recursive group publishes its defaults on the prototypes that make the cycle
+   // callable. Repeating either parameter or template defaults on the definitions is ill-formed C++.
+   const includeDefaults = !context.forwardDeclaredFunctionBindingIds.has(declaration.binding.id);
+-  const returnType = (context.privateJsonRecordProducerIds.has(declaration.binding.id) || context.privateGuardedRecordProducerIds.has(declaration.binding.id))
++  const returnType = context.privateNullableJsonRecordProducerIds.has(declaration.binding.id)
++    ? 'std::optional<flight::NamedProperties>' : (context.privateJsonRecordProducerIds.has(declaration.binding.id) || context.privateGuardedRecordProducerIds.has(declaration.binding.id))
+     ? 'flight::NamedProperties' : emitType(declaration.returns, context);
+   const template = emitCppFunctionTemplate(
+     declaration.typeParameters,
+@@ -3370,6 +3379,7 @@
+   if (exceptionPointer) context.includes.add('exception');
+   const type =
+     (exceptionPointer ? 'std::exception_ptr' : undefined) ??
++    (context.nullableJsonRecordBindingIds.has(declaration.binding.id) ? 'std::optional<flight::NamedProperties>' : undefined) ??
+     (context.jsonReadValueBindingIds.has(declaration.binding.id) ? 'flight::Any' : undefined) ??
+     (context.readonlyRecordReadViewBindingIds.has(declaration.binding.id) ? 'flight::NamedProperties' : undefined) ??
+     getCppNamedPropertiesStorageTypeCpp(declaration.initializer, context) ??
+@@ -3516,6 +3526,7 @@
+   if (exceptionPointer) context.includes.add('exception');
+   const type =
+     (exceptionPointer ? 'std::exception_ptr' : undefined) ??
++    (context.nullableJsonRecordBindingIds.has(variable.binding.id) ? 'std::optional<flight::NamedProperties>' : undefined) ??
+     (context.jsonReadValueBindingIds.has(variable.binding.id) ? 'flight::Any' : undefined) ??
+     (context.readonlyRecordReadViewBindingIds.has(variable.binding.id) ? 'flight::NamedProperties' : undefined) ??
+     getCppNamedPropertiesStorageTypeCpp(variable.initializer, context) ??
+@@ -6377,6 +6388,8 @@
+       // an absent key as `undefined`. This is checked before the `Record` path because the view's
+       // declared type IS `Record<string, unknown>`, and only the storage tells the two apart.
+       if (getCppNamedPropertiesViewExpressionCpp(expression.object, context)) {
++        if (expression.object.kind === 'identifier' && expression.object.reference.kind === 'binding' &&
++            context.nullableJsonRecordBindingIds.has(expression.object.reference.binding.id)) assertCppPresentOptionalStorageMemberReceiverCpp(expression, context);
+         const record = getCppRecordTypeArgumentsCpp(objectType, context, new Set());
+         if (record && emitType(record.key, context) === 'flight::String') {
+           return `${object}.get(${emitCppRequiredRecordKeyCpp(expression.index, record.key, context)})`;
+@@ -7437,6 +7450,8 @@
+         return `([&]() -> flight::Any { const auto& ${receiver} = ${value}; if (${receiver}.is_nullish()) return flight::undefined; return flight::read_json_data_property(${receiver}, ${key}); }())`;
+       }
+       if (!expression.optional && getCppNamedPropertiesViewExpressionCpp(expression.object, context)) {
++        if (expression.object.kind === 'identifier' && expression.object.reference.kind === 'binding' &&
++            context.nullableJsonRecordBindingIds.has(expression.object.reference.binding.id)) assertCppPresentOptionalStorageMemberReceiverCpp(expression, context);
+         context.includes.add('flight/structural_ref.hpp');
+         return `${emitExpression(expression.object, context)}.get(${emitLiteral(expression.name, context)})`;
+       }
+@@ -10166,7 +10181,8 @@
+       context.jsonReadRecordBindingIds.has(expression.reference.binding.id)) ||
+     (expression.kind === 'call' && !expression.optional && expression.callee.kind === 'identifier' &&
+       expression.callee.reference.kind === 'binding' &&
+-      context.privateJsonRecordProducerIds.has(expression.callee.reference.binding.id));
++      (context.privateJsonRecordProducerIds.has(expression.callee.reference.binding.id) ||
++       context.privateNullableJsonRecordProducerIds.has(expression.callee.reference.binding.id)));
+ }
+ 
+ function isCppJsonArrayLengthReadCpp(expression: Readonly<IrExpression>, context: EmitContext): boolean {
+@@ -10198,7 +10214,8 @@
+ }
+ 
+ function collectCppPrivateJsonShapeReadsCpp(module: Readonly<IrModule>, context: EmitContext): void {
+-  if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || context.privateJsonRecordProducerIds.size === 0) return;
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp' ||
++      context.privateJsonRecordProducerIds.size + context.privateNullableJsonRecordProducerIds.size === 0) return;
+   const exported = new Set(module.exports.flatMap((item) => item.kind === 'local' ? [item.binding.id] : []));
+   const captured = new Set(createIrModuleClosureCapturePlanCpp(module).bindings.map((capture) => capture.binding.id));
+   const functions = module.declarations.filter((declaration): declaration is Extract<IrModule['declarations'][number], { kind: 'function' }> => declaration.kind === 'function');
+@@ -10306,7 +10323,8 @@
+       (origin(value.whenFalse) || ownLiteral(value.whenFalse));
+     if (value.kind === 'binary' && value.operator === '??') return (origin(value.left) || ownLiteral(value.left)) &&
+       (origin(value.right) || ownLiteral(value.right));
+-    return value.kind === 'call' && context.privateJsonRecordProducerIds.has(callId(value) ?? '');
++    return value.kind === 'call' && (context.privateJsonRecordProducerIds.has(callId(value) ?? '') ||
++      context.privateNullableJsonRecordProducerIds.has(callId(value) ?? ''));
+   };
+   let originChanged = true;
+   while (originChanged) {
+@@ -10716,6 +10734,106 @@
+     for (const [localId, local] of locals) if (local.producer === id) context.readonlyRecordReadViewBindingIds.add(localId);
+   }
+   if (context.privateJsonRecordProducerIds.size > 0) context.includes.add('flight/structural_ref.hpp');
++}
++
++// The nullable sibling of the closed JSON producer lane. Recognize the original parse/guard/return
++// inside one try/catch, then require every producer call and every immutable local owner use to stay
++// inside reads, proven private readers or exact null tests. No public Record or escaping owner changes.
++function collectCppPrivateNullableJsonRecordReadFlowCpp(module: Readonly<IrModule>, context: EmitContext): void {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return;
++  const exported = new Set(module.exports.flatMap(item => item.kind === 'local' ? [item.binding.id] : []));
++  const declarations = module.declarations.filter((d): d is Extract<IrModule['declarations'][number], { kind: 'function' }> => d.kind === 'function');
++  const functions = new Map(declarations.map(d => [d.binding.id, d]));
++  const references = new Map<string, Readonly<IrExpression>[]>();
++  const calls: Readonly<Extract<IrExpression, { kind: 'call' }>>[] = [];
++  const variables: Readonly<IrVariable>[] = [];
++  const callees = new Set<Readonly<IrExpression>>(), reads = new Set<Readonly<IrExpression>>(), nullTests = new Set<Readonly<IrExpression>>();
++  const writes = new Set<string>();
++  const callId = (e: Readonly<IrExpression>): string | undefined => e.kind === 'call' && !e.optional &&
++    e.callee.kind === 'identifier' && e.callee.reference.kind === 'binding' ? e.callee.reference.binding.id : undefined;
++  const binding = (e: Readonly<IrExpression>, id: string): boolean => e.kind === 'identifier' && e.reference.kind === 'binding' && e.reference.binding.id === id;
++  const nil = (e: Readonly<IrExpression>): boolean => e.kind === 'literal' && e.value === null;
++  analyzeIrModuleTraversal(module, {
++    variable(variable) { if ('binding' in variable) variables.push(variable); },
++    expression(e) {
++      if (e.kind === 'identifier' && e.reference.kind === 'binding') references.set(e.reference.binding.id, [...references.get(e.reference.binding.id) ?? [], e]);
++      if (e.kind === 'call') {
++        calls.push(e); if (!e.optional) callees.add(e.callee);
++        functions.get(callId(e) ?? '')?.parameters.forEach((p, i) => {
++          if (context.readonlyRecordReadViewBindingIds.has(p.binding.id) && e.arguments[i]) reads.add(e.arguments[i]!);
++        });
++      }
++      if (e.kind === 'property' && !e.optional && isCppJsonDataPropertyNameCpp(e.name)) reads.add(e.object);
++      if (e.kind === 'element' && !e.optional && e.index.kind === 'literal' && typeof e.index.value === 'string' && isCppJsonDataPropertyNameCpp(e.index.value)) reads.add(e.object);
++      if (e.kind === 'binary' && ['===', '!=='].includes(e.operator)) {
++        if (nil(e.left)) nullTests.add(e.right); if (nil(e.right)) nullTests.add(e.left);
++      }
++      const target = e.kind === 'assignment' ? e.left : e.kind === 'unary' && ['++', '--', 'delete'].includes(e.operator) ? e.operand : undefined;
++      if (target) analyzeIrExpressionSubtreeTraversal(target, { expression(value) {
++        if (value.kind === 'identifier' && value.reference.kind === 'binding') writes.add(value.reference.binding.id);
++      }});
++    },
++  });
++  const captured = new Set(createIrModuleClosureCapturePlanCpp(module).bindings.map(c => c.binding.id));
++  const globals = new Set(module.declarations.flatMap(d => d.kind === 'variable' && 'binding' in d ? [d.binding.id] : []));
++  const candidates = new Map<string, Readonly<{ result: Readonly<IrExpression>; condition: Readonly<IrExpression>; source: Readonly<IrExpression> }>>();
++  for (const d of declarations) {
++    const parts = getIrUnionTypeCpp(d.returns, context, new Set())?.types;
++    if (d.exported || exported.has(d.binding.id) || d.namespaceMember || d.async || d.typeParameters.length || d.overloads.length ||
++        !parts || parts.length !== 2 || !parts.some(t => t.kind === 'null') || !parts.some(t => isCppPrivateUnknownRecordReadTypeCpp(t, context)) ||
++        (references.get(d.binding.id) ?? []).some(e => !callees.has(e)) || d.body.length !== 1) continue;
++    const attempt = d.body[0];
++    if (attempt?.kind !== 'try' || attempt.finallyBody || !attempt.catchClause) continue;
++    const body = attempt.tryBody.kind === 'block' ? attempt.tryBody.statements : [attempt.tryBody];
++    const caught = attempt.catchClause.body.kind === 'block' ? attempt.catchClause.body.statements : [attempt.catchClause.body];
++    if (body.length !== 2 || caught.length !== 1 || caught[0]?.kind !== 'return' || !caught[0].expression || !nil(caught[0].expression)) continue;
++    const first = body[0], last = body[1];
++    if (first?.kind !== 'variable' || first.declarations.length !== 1 || last?.kind !== 'return' || last.expression?.kind !== 'conditional') continue;
++    const local = first.declarations[0]!; if (!('binding' in local) || local.mutable || !local.initializer) continue;
++    const parse = local.initializer;
++    if (parse.kind !== 'call' || parse.optional || parse.arguments.length !== 1 || parse.callee.kind !== 'property' || parse.callee.optional || parse.callee.name !== 'parse' ||
++        parse.callee.object.kind !== 'identifier' || parse.callee.object.reference.kind !== 'ambient' || parse.callee.object.reference.name !== 'JSON') continue;
++    const input = parse.arguments[0]!, inputType = getIrExpressionTypeEvidenceCpp(input, context);
++    if (!['identifier', 'literal'].includes(input.kind) || !inputType || !isCppStringValueTypeCpp(inputType, context, new Set())) continue;
++    const result = last.expression, cast = result.whenTrue;
++    if (cast.kind !== 'cast' || !isCppPrivateUnknownRecordReadTypeCpp(cast.type, context) || !binding(cast.expression, local.binding.id) || !nil(result.whenFalse)) continue;
++    let nonNull = 0, object = 0, nonArray = 0;
++    const pureGuard = (e: Readonly<IrExpression>): boolean => {
++      if (e.kind === 'binary' && e.operator === '&&') return pureGuard(e.left) && pureGuard(e.right);
++      if (e.kind === 'binary' && e.operator === '!==' && ((binding(e.left, local.binding.id) && nil(e.right)) || (binding(e.right, local.binding.id) && nil(e.left)))) { ++nonNull; return true; }
++      if (e.kind === 'binary' && e.operator === '===') {
++        const tag = getCppTypeofTagComparisonCpp(e.left, e.right);
++        if (tag?.tag === 'object' && binding(tag.operand, local.binding.id)) { ++object; return true; }
++      }
++      if (e.kind !== 'unary' || e.operator !== '!' || e.operand.kind !== 'call') return false;
++      const call = e.operand;
++      if (call.optional || call.arguments.length !== 1 || !binding(call.arguments[0]!, local.binding.id) || call.callee.kind !== 'property' || call.callee.optional || call.callee.name !== 'isArray' ||
++          call.callee.object.kind !== 'identifier' || call.callee.object.reference.kind !== 'ambient' || call.callee.object.reference.name !== 'Array') return false;
++      ++nonArray; return true;
++    };
++    if (pureGuard(result.condition) && nonNull === 1 && object === 1 && nonArray === 1) candidates.set(d.binding.id, { result, condition: result.condition, source: cast.expression });
++  }
++  if (!candidates.size) return;
++  const locals = new Map<string, string>();
++  for (const variable of variables) {
++    if (!('binding' in variable) || variable.mutable || !variable.initializer || captured.has(variable.binding.id) || globals.has(variable.binding.id) || writes.has(variable.binding.id)) continue;
++    const producer = callId(variable.initializer); if (!producer || !candidates.has(producer)) continue;
++    const uses = references.get(variable.binding.id) ?? [];
++    if (uses.length && uses.every(e => reads.has(e) || nullTests.has(e))) locals.set(variable.binding.id, producer);
++  }
++  const initializers = new Set(variables.flatMap(v => 'binding' in v && locals.has(v.binding.id) && v.initializer ? [v.initializer] : []));
++  for (const [id, plan] of candidates) {
++    const uses = calls.filter(call => callId(call) === id);
++    if (!uses.length || uses.some(call => !initializers.has(call) && !nullTests.has(call))) continue;
++    context.privateNullableJsonRecordProducerIds.add(id);
++    context.privateNullableJsonRecordReturns.set(plan.result, { condition: plan.condition, source: plan.source });
++    for (const [local, producer] of locals) if (producer === id) {
++      context.nullableJsonRecordBindingIds.add(local);
++      context.readonlyRecordReadViewBindingIds.add(local);
++      context.jsonReadRecordBindingIds.add(local);
++    }
++  }
++  if (context.privateNullableJsonRecordProducerIds.size) { context.includes.add('optional'); context.includes.add('flight/structural_ref.hpp'); }
+ }
+ 
+ function isCppReadonlyUnknownRecordViewTypeCpp(
+@@ -11870,6 +11988,8 @@
+       return lines;
+     }
+     case 'return': {
++      const nullableJsonReturn = statement.expression ? context.privateNullableJsonRecordReturns.get(statement.expression) : undefined;
++      if (nullableJsonReturn) return [`return (${emitExpression(nullableJsonReturn.condition, context)} ? std::optional<flight::NamedProperties>{flight::named_properties(${emitExpression(nullableJsonReturn.source, context)})} : std::nullopt);`];
+       const jsonReadSource = statement.expression ? context.privateJsonRecordReturns.get(statement.expression) : undefined;
+       if (jsonReadSource) return [`return flight::named_properties(${emitExpression(jsonReadSource, context)});`];
+       if (context.finallyReturnVar) {
+@@ -17031,11 +17151,12 @@
+ }
+ 
+ function assertCppPresentOptionalStorageMemberReceiverCpp(
+-  expression: Readonly<Extract<IrExpression, { kind: 'property' }>>,
++  expression: Readonly<Extract<IrExpression, { kind: 'property' | 'element' }>>,
+   context: EmitContext,
+ ): void {
++  const name = expression.kind === 'property' ? expression.name : '[index]';
+   const receiver = expression.object;
+-  if (getCppRegExpCaptureMemberStorageCpp(expression, context)) return;
++  if (expression.kind === 'property' && getCppRegExpCaptureMemberStorageCpp(expression, context)) return;
+   if (!hasCppAbsenceStorageCpp(receiver, context)) return;
+   // An indexed read inside a `for (let i = 0; i < x.length; i++)` loop is proven in bounds by that
+   // loop's own condition, so the member applies to the present element; the emitter spells the read
+@@ -17047,7 +17168,7 @@
+   if (!hasCppPresentExpressionStorageProofCpp(receiver, context)) {
+     emissionError(
+       context,
+-      `member ${expression.name} on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- \`x !== null\` leaves undefined and \`x !== undefined\` leaves null -- so the guard that proves presence is the loose \`x != null\`, or a local bound from the storage and tested the same way`,
++      `member ${name} on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- \`x !== null\` leaves undefined and \`x !== undefined\` leaves null -- so the guard that proves presence is the loose \`x != null\`, or a local bound from the storage and tested the same way`,
+       'cpp-member-projection-without-present-storage',
+     );
+   }
+@@ -17061,7 +17182,7 @@
+   if (!payload) {
+     emissionError(
+       context,
+-      `member ${expression.name} on optional C++ storage requires one present payload domain`,
++      `member ${name} on optional C++ storage requires one present payload domain`,
+       'cpp-member-projection-multiple-present-domains',
+     );
+   }
+@@ -17069,7 +17190,7 @@
+   if (union && getCppUnionRepresentationPlan(union, context).valueSlots.length !== 1) {
+     emissionError(
+       context,
+-      `member ${expression.name} on optional C++ storage requires one present payload domain`,
++      `member ${name} on optional C++ storage requires one present payload domain`,
+       'cpp-member-projection-multiple-present-domains',
+     );
+   }
+@@ -20271,6 +20392,17 @@
+   context: EmitContext,
+ ): EmitContext {
+   let branch = getCppUnionOrArrayBranchContextCpp(condition, result, context);
++  // These selected locals carry exactly Record | null. Only the original strict null test proves
++  // the optional view present; truthiness, unrelated tests and the other branch prove nothing.
++  if (condition.kind === 'binary' && ((condition.operator === '!==' && result) || (condition.operator === '===' && !result))) {
++    const operand = condition.left.kind === 'literal' && condition.left.value === null ? condition.right :
++      condition.right.kind === 'literal' && condition.right.value === null ? condition.left : undefined;
++    if (operand?.kind === 'identifier' && operand.reference.kind === 'binding' && context.nullableJsonRecordBindingIds.has(operand.reference.binding.id)) {
++      const type = getCppBindingTypeCpp(operand.reference.binding.id, context);
++      const present = type ? getCppNonNullableType(type, context, new Set()) : undefined;
++      if (present) branch = { ...branch, narrowedBindingTypes: new Map(branch.narrowedBindingTypes).set(operand.reference.binding.id, present) };
++    }
++  }
+   const tag = condition.kind === 'binary' && ['===', '=='].includes(condition.operator) && result
+     ? getCppTypeofTagComparisonCpp(condition.left, condition.right) : undefined;
+   if (tag?.tag === 'string' && isCppJsonReadValueCpp(tag.operand, context)) {
+@@ -26344,8 +26476,9 @@
+     // bare unknown; lookalike methods never produce `recovered` and retain their recorded callable result.
+     const returns = recovered ?? callableReturns;
+     if (returns && returns.kind !== 'unknown') {
+-      return (getCppRegExpCaptureMemberMaySkipCpp(expression.callee, context) ??
+-        expression.callee.optionalChain.receiverNullish === 'possible')
++      return (getCppOptionalIndexedStringTrimResultTypeEvidenceCpp(expression, context) !== undefined ||
++        (getCppRegExpCaptureMemberMaySkipCpp(expression.callee, context) ??
++        expression.callee.optionalChain.receiverNullish === 'possible'))
+         ? { kind: 'union', types: [returns, { kind: 'undefined' }] }
+         : returns;
+     }
+@@ -27039,7 +27172,7 @@
+     callee.name === 'find' &&
+     (reconstructedArray !== undefined ||
+       (reconstructedTuple !== undefined && getIrHomogeneousTupleElementTypeCpp(reconstructedTuple) !== undefined));
+-  if (receiver === 'string') {
++  if (receiver === 'string' || (receiver === undefined && reconstructedReceiver?.kind === 'primitive' && reconstructedReceiver.name === 'string')) {
+     if (callee.name === 'match') {
+       return createIrTypeEvidenceUnionCpp([
+         {
+@@ -27178,11 +27311,26 @@
+   return recovered && !hasIrTypeAbsentMember(recovered) ? recovered : undefined;
+ }
+ 
++function getCppOptionalIndexedStringTrimResultTypeEvidenceCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'call' }>>, context: EmitContext,
++): Readonly<IrType> | undefined {
++  const callee = expression.callee;
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || expression.optional || expression.semantics.optionalChain ||
++      callee.kind !== 'property' || !callee.optional || !callee.optionalChain || callee.name !== 'trim' || expression.arguments.length ||
++      callee.object.kind !== 'element' || callee.object.optional || callee.object.semantics.optionalChain) return undefined;
++  const array = getIrArrayTypeCpp(getIrExpressionTypeEvidenceCpp(callee.object.object, context), context, new Set());
++  if (!array || array.element.kind !== 'primitive' || array.element.name !== 'string') return undefined;
++  const payload = emitOptionalChainPayloadIrTypeCpp(callee.optionalChain.receiverType, context);
++  return (payload.kind === 'primitive' && payload.name === 'string') || payload.kind === 'unknown'
++    ? { kind: 'primitive', name: 'string' } : undefined;
++}
++
+ function getCppOptionalPropertyCallResultTypeEvidenceCpp(
+   expression: Readonly<Extract<IrExpression, { kind: 'call' }>>,
+   context: EmitContext,
+ ): Readonly<IrType> | undefined {
+   return (
++    getCppOptionalIndexedStringTrimResultTypeEvidenceCpp(expression, context) ??
+     getCppOptionalCollectionPropertyCallValueTypeEvidenceCpp(expression, context) ??
+     getCppOptionalCollectionPropertyCallResultTypeEvidenceCpp(expression, context) ??
+     getCppRuntimeMemberCallResultTypeEvidence(expression, context) ??
+@@ -27386,6 +27534,7 @@
+   'toLowerCase',
+   'toUpperCase',
+   'trim',
++  'trimStart',
+ ]);
+ const cppNumberReturningStringCallNames = new Set(['charCodeAt', 'indexOf', 'lastIndexOf']);
+ const cppBooleanReturningStringCallNames = new Set(['endsWith', 'includes', 'startsWith']);
+@@ -34764,6 +34913,10 @@
+       });
+     if (continuation) return continuation;
+   }
++  if (getCppOptionalIndexedStringTrimResultTypeEvidenceCpp(expression, context)) {
++    context.includes.add('optional');
++    return `([&]() -> std::optional<flight::String> { auto optional_chain_receiver = ${emitOptionalChainReceiverCpp(callee.object, context)}; if (${receiverProjection.absent}) return std::nullopt; return ${receiverProjection.value}.trim(); }())`;
++  }
+   if (semantics.receiverNullish === 'excluded' && !captureStorage) {
+     return emitExpression({ ...expression, callee: { ...callee, optional: false } }, context, contextualArray);
+   }
+diff --git a/packages/compiler-backend-cpp/src/cppNullableJsonRegistration.test.ts b/packages/compiler-backend-cpp/src/cppNullableJsonRegistration.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppNullableJsonRegistration.test.ts
+@@ -0,0 +1,80 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const result = lowerTypeScriptSource(ts.createSourceFile('/flight/packages/example/src/registration.ts', source, ts.ScriptTarget.Latest, true), { packageName: '@flighthq/example', upstreamDirectory: '/flight' });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++function attempt(source: string): string | undefined {
++  try { return emit(source); } catch (error) {
++    if (typeof error !== 'object' || error === null || !('kind' in error) || error.kind !== 'backend-emission') throw error;
++    return undefined;
++  }
++}
++const producer = `function parseJsonObject(text:string):Record<string,unknown>|null{try{const value:unknown=JSON.parse(text);return value!==null&&typeof value==='object'&&!Array.isArray(value)?(value as Record<string,unknown>):null;}catch{return null;}}`;
++const read = `export function run(text:string):unknown{const obj=parseJsonObject(text);return obj!==null?obj.marker:undefined;}`;
++it.each([
++ ['guarded property', read],
++ ['guarded index', read.replace('obj.marker', "obj['marker']")],
++ ['opposite strict branch', read.replace('obj!==null?obj.marker:undefined', 'obj===null?undefined:obj.marker')],
++ ['short circuit', `export function run(text:string):boolean{const obj=parseJsonObject(text);return obj!==null&&obj.marker!==undefined;}`],
++ ['private reader', `function read(obj:Record<string,unknown>):unknown{return obj.marker;}export function run(text:string):unknown{const obj=parseJsonObject(text);return obj!==null?read(obj):undefined;}`],
++ ['direct null test', `export function run(text:string):boolean{return parseJsonObject(text)!==null;}`],
++] as const)('retains the original nullable JSON owner for %s', (_name, source) => {
++ const output=emit(producer+source);
++ expect(output).toContain('std::optional<flight::NamedProperties> parse_json_object');
++ expect(output).toContain('std::optional<flight::NamedProperties>{flight::named_properties(value)}');
++ expect(output).not.toContain('static_cast<flight::Record');
++});
++const exclusions: readonly (readonly [string,string])[] = [
++ ['public producer', producer.replace('function parseJsonObject','export function parseJsonObject')+read],
++ ['returned call', producer+`export function run(text:string):Record<string,unknown>|null{return parseJsonObject(text);}`],
++ ['returned local', producer+read.replace('return obj!==null?obj.marker:undefined','return obj')],
++ ['alias', producer+read.replace('return obj!==null?', 'const alias=obj;return obj!==null?')],
++ ['identity', producer+read.replace('return obj!==null?obj.marker:undefined', 'return obj===parseJsonObject(text)')],
++ ['capture', producer+read.replace('return obj!==null?obj.marker:undefined', 'return ()=>obj')],
++ ['mutable local', producer+read.replace('const obj=', 'let obj=')],
++ ['mutation', producer+read.replace('return obj!==null?', 'if(obj!==null)obj.marker=3;return obj!==null?')],
++ ['nested mutation', producer+read.replace('return obj!==null?', 'if(obj!==null)(obj.marker as Record<string,unknown>).x=3;return obj!==null?')],
++ ['opaque sink', producer+`export function sink(v:unknown):void{}`+read.replace('return obj!==null?', 'sink(obj);return obj!==null?')],
++ ['global', producer+`const obj=parseJsonObject('{}');export function run():boolean{return obj!==null;}`],
++ ['producer callback', producer+`export function run(){return parseJsonObject;}`],
++ ['missing array guard', producer.replace('&&!Array.isArray(value)', '')+read],
++ ['missing null guard', producer.replace('value!==null&&', '')+read],
++ ['missing typeof guard', producer.replace("typeof value==='object'&&", '')+read],
++ ['effectful guard', producer.replace('value!==null&&', 'effect()&&value!==null&&')+`export function effect():boolean{return true;}`+read],
++ ['extra parse', producer.replace('return value!==null', 'JSON.parse(text);return value!==null')+read],
++ ['catch rethrow', producer.replace('catch{return null;}', 'catch(e){throw e;}')+read],
++ ['finally', producer.replace('catch{return null;}', 'catch{return null;}finally{effect();}')+`export function effect():void{}`+read],
++ ['optional invocation', producer+`export function run(text:string):boolean{return parseJsonObject?.(text)!==null;}`],
++];
++it.each(exclusions)('retains the preceding nullable producer lane for %s', (_name, source) => {
++ const output=attempt(source); if(output) expect(output).not.toContain('std::optional<flight::NamedProperties> parse_json_object');
++});
++it.each([
++ ['unguarded', read.replace('obj!==null?obj.marker:undefined','obj.marker')],
++ ['wrong branch', read.replace('obj!==null?obj.marker:undefined','obj===null?obj.marker:undefined')],
++] as const)('requires the original positive null guard: %s', (_name, source) => {expect(attempt(producer+source)).toBeUndefined();});
++it.each([
++ ['exact detector', `export const detect=(text:string)=>text.trimStart().split('\\n')[0]?.trim()==='Particle Effect';`],
++ ['indexed callbacks', `export function run(values:()=>string[],index:()=>number):string|undefined{return values()[index()]?.trim();}`],
++] as const)('emits one optional indexed builtin String trim: %s', (_name, source) => {
++ const output=emit(source);expect(output).toContain('auto optional_chain_receiver =');expect(output).toContain('if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().trim();');
++});
++const stringExclusions: readonly (readonly [string,string])[] = [
++ ['unknown',`export function run(a:unknown[]):unknown{return a[0]?.trim();}`],
++ ['number',`export function run(a:number[]):unknown{return a[0]?.trim();}`],
++ ['nullable string',`export function run(a:(string|null)[]):unknown{return a[0]?.trim();}`],
++ ['undefined string',`export function run(a:(string|undefined)[]):unknown{return a[0]?.trim();}`],
++ ['unknown member',`export function run(a:string[]):unknown{return a[0]?.unbound();}`],
++ ['arguments',`export function run(a:string[]):unknown{return a[0]?.trim(1);}`],
++ ['optional array',`export function run(a:string[]|undefined):unknown{return a?.[0]?.trim();}`],
++ ['optional call',`export function run(a:string[]):unknown{return a[0]?.trim?.();}`],
++ ['lookalike',`interface Item{trim():string;}export function run(a:Item[]):unknown{return a[0]?.trim();}`],
++];
++it.each(stringExclusions.filter(([name]) => !['nullable string', 'undefined string', 'optional array'].includes(name)))('does not select builtin indexed trim for %s', (_name, source) => {
++ const output=attempt(source);if(output)expect(output).not.toContain('-> std::optional<flight::String> { auto optional_chain_receiver');
++});
