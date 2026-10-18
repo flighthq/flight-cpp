@@ -1,0 +1,285 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -324,6 +324,7 @@
+   bindingClasses: ReadonlyMap<string, Readonly<IrClassDeclaration>>;
+   bindingInitializers: ReadonlyMap<string, Readonly<IrExpression>>;
+   immutableInitializerBindingIds: ReadonlySet<string>;
++  indexedNullableReadExpressions?: ReadonlyMap<Readonly<IrExpression>, string>;
+   readonlyRecordReadViewBindingIds: Set<string>;
+   jsonReadRecordBindingIds: Set<string>;
+   jsonReadValueBindingIds: Set<string>;
+@@ -4037,6 +4038,12 @@
+   constructExpectedUnion = true,
+   denseArrayLengthInitialized = false,
+ ): string {
++  const indexedRead = context.indexedNullableReadExpressions?.get(expression);
++  if (indexedRead !== undefined) return indexedRead;
++  const indexedMember = emitCppGuardedIndexedNullableMemberCpp(expression, context, (next) =>
++    emitExpression(expression, next, expectedType, constructExpectedUnion, denseArrayLengthInitialized),
++  );
++  if (indexedMember) return indexedMember;
+   const syntaxMessage = getCppSyntaxMessageFallbackBindingCpp(expression);
+   if (syntaxMessage && context.jsonSyntaxCatchBindingIds.has(syntaxMessage)) {
+     context.includes.add('flight/string.hpp');
+@@ -15385,6 +15392,65 @@
+   );
+ }
+ 
++// Keep the indexed local's undefined/null carrier intact until a member is actually evaluated.
++// A source null guard narrows its payload, but does not prove an unchecked Array index exists.
++function emitCppGuardedIndexedNullableMemberCpp(
++  expression: Readonly<IrExpression>,
++  context: EmitContext,
++  render: (next: EmitContext) => string,
++): string | undefined {
++  const access =
++    expression.kind === 'call' && expression.callee.kind === 'property'
++      ? expression.callee
++      : expression.kind === 'property' || expression.kind === 'element'
++        ? expression
++        : undefined;
++  if (
++    !access ||
++    access.optional ||
++    (access.kind === 'property' ? access.optionalChain !== undefined : access.semantics.optionalChain !== undefined) ||
++    context.indexedNullableReadExpressions?.has(access.object)
++  )
++    return undefined;
++  const receiver = access.object;
++  if (receiver.kind !== 'identifier' || receiver.reference.kind !== 'binding') return undefined;
++  const id = receiver.reference.binding.id;
++  if (
++    !context.immutableInitializerBindingIds.has(id) ||
++    context.lengthProvenNullableArrayElementBindingIds.has(id) ||
++    !hasCppPresentBindingStorageProofCpp(receiver, context)
++  )
++    return undefined;
++  const type = getIrExpressionTypeEvidenceCpp(receiver, context);
++  if (!type || hasIrTypeAbsentMember(type)) return undefined;
++  const plan = getCppIndexedNullableElementPresencePlanCpp(receiver, context);
++  if (!plan?.binding || plan.elementSentinel === 'none') return undefined;
++  const initializer = context.bindingInitializers.get(id);
++  if (initializer?.kind !== 'element') return undefined;
++  const array = getIrArrayTypeCpp(getIrExpressionTypeEvidenceCpp(initializer.object, context), context, new Set());
++  const union = array ? getIrUnionTypeCpp(array.element, context, new Set()) : undefined;
++  if (!union || getCppUnionRepresentationPlan(union, context).kind !== 'optionalSingle') return undefined;
++  context.includes.add('flight/error.hpp');
++  context.includes.add('flight/structural_ref.hpp');
++  context.includes.add('type_traits');
++  const project = (value: string): string =>
++    `([&](const auto& indexed_member) -> decltype(auto) { if (!indexed_member.has_value()) throw flight::TypeError("Cannot read properties of undefined"); if constexpr (flight::detail::optional_traits<std::remove_cvref_t<decltype(indexed_member.value())>>::optional) { if (!indexed_member.value().has_value()) throw flight::TypeError("Cannot read properties of ${plan.elementSentinel}"); return (indexed_member.value().value()); } else { return (indexed_member.value()); } }(${value}))`;
++  const substitutions = new Map(context.indexedNullableReadExpressions);
++  if (access.kind !== 'element') {
++    substitutions.set(receiver, project(plan.value));
++    return render({ ...context, indexedNullableReadExpressions: substitutions });
++  }
++  // JavaScript evaluates a computed key before requiring a non-nullish object. Cache both reads
++  // before the checked projection; a key's effects or exact exception must precede that TypeError.
++  const object = getGeneratedTargetName('indexedMemberObject', context);
++  const index = getGeneratedTargetName('indexedMemberKey', context);
++  const key = emitExpression(access.index, context);
++  substitutions.set(receiver, project(object));
++  substitutions.set(access.index, index);
++  const body = render({ ...context, indexedNullableReadExpressions: substitutions });
++  return `([&]() -> decltype(auto) { const auto& ${object} = ${plan.value}; const auto ${index} = ${key}; return ${body}; }())`;
++}
++
+ interface CppIndexedNullableElementPresencePlan {
+   // The sentinel the element type stores as optional absence, i.e. what the inner layer means.
+   // `none` when the element type stores no absence: then only the outer layer exists.
+diff --git a/packages/compiler-backend-cpp/src/cppGuardedIndexedNullableMember.test.ts b/packages/compiler-backend-cpp/src/cppGuardedIndexedNullableMember.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppGuardedIndexedNullableMember.test.ts
+@@ -0,0 +1,190 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import {
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const toolchain = findCppCompilerToolchain();
++const includes = [path.join(resolveDependency(root, 'flight-cpp').directory, 'include')];
++const source = String.raw`
++export function strictLength(slots: (number[] | null)[], i: number): number {
++  const value = slots[i]; if (value === null) return -1; return value.length;
++}
++export function looseLength(slots: (number[] | null)[], i: number): number {
++  const value = slots[i]; if (value == null) return -1; return value.length;
++}
++export function bothLength(slots: (number[] | null)[], i: number): number {
++  const value = slots[i]; if (value === null || value === undefined) return -1; return value.length;
++}
++export function state(slots: (number[] | null)[], i: number): number {
++  const value = slots[i]; if (value === undefined) return 0; if (value === null) return 1; return 2;
++}
++export function undefinedLength(slots: (number[] | undefined)[], i: number): number {
++  const value = slots[i]; if (value === undefined) return -1; return value.length;
++}
++export function singleLayer(slots: number[][], i: number): number {
++  const value = slots[i]; if (value === undefined) return -1; return value.length;
++}
++export function loop(slots: (number[] | null)[], values: number): number {
++  let n = 0;
++  for (let i = 0; i < slots.length; i++) {
++    const points = slots[i]; if (points === null) continue;
++    for (let v = 0; v < values && (v + 1) * 4 <= points.length; v++) n += points[v * 4];
++  }
++  return n;
++}
++let events = 0;
++function key(): number { events = events * 10 + 3; return 0; }
++function receiver(slots: (number[] | null)[]): (number[] | null)[] { events = events * 10 + 1; return slots; }
++function initialKey(i: number): number { events = events * 10 + 2; return i; }
++export function reset(): void { events = 0; }
++export function count(): number { return events; }
++export function ordered(slots: (number[] | null)[], i: number): number {
++  const value = receiver(slots)[initialKey(i)]; if (value === null) return -1; return value[key()];
++}
++export function push(slots: (number[] | null)[], i: number, action: () => number): number {
++  const value = slots[i]; if (value === null) return -1; return value.push(action());
++}
++export function indexThrow(slots: (number[] | null)[], i: number, action: () => number): number {
++  const value = slots[i]; if (value === null) return -1; return value[action()];
++}
++export function ordinary(value: number[] | null): number {
++  if (value === null) return -1; return value.length;
++}
++export function captured(slots: (number[] | null)[], i: number): () => number {
++  const value = slots[i]; if (value === null || i < 0) return () => -1;
++  return () => value[0] + value.length;
++}
++export function trim(slots: (string | null)[], i: number): string {
++  const value = slots[i]; if (value === null) return 'null'; return value.trim();
++}
++export class Cell { value = 1; }
++export function mutateCell(slots: (Cell | null)[], i: number): number {
++  const value = slots[i]; if (value === null) return -1; value.value += 2; return value.value;
++}
++`;
++
++function emit(): string {
++  const [lowered] = lowerTypeScriptSources([
++    {
++      packageName: '@flighthq/math',
++      upstreamDirectory: '/flight',
++      sourceFile: ts.createSourceFile(
++        '/flight/packages/math/src/indexedMember.ts',
++        source,
++        ts.ScriptTarget.Latest,
++        true,
++      ),
++    },
++  ]);
++  return emitIrModuleCpp(lowered!.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++describe('guarded indexed nullable member reads', () => {
++  it('keeps two-layer local storage and existing sentinel predicates', () => {
++    const output = emit();
++    expect(output).toContain('std::optional<std::optional<flight::Array<double>>> value');
++    expect(output).toContain('Cannot read properties of undefined');
++    expect(output).toContain('presence_operand.value().has_value()');
++  });
++  it.skipIf(!toolchain || !includes.length)(
++    'runs actual emitted guarded members, state and error order',
++    () => {
++      if (!toolchain) throw new Error('toolchain missing');
++      const directory = mkdtempSync(path.join(tmpdir(), 'flight-indexed-nullable-member-'));
++      try {
++        const input = path.join(directory, 'member.cpp');
++        const binary = path.join(directory, getCppExecutableName(toolchain, 'member'));
++        writeFileSync(
++          input,
++          emit() +
++            `
++#include <iostream>
++int main() {
++  using flight::Array; namespace f = flighthq_math;
++  const auto fail = [](int n) { std::cerr << "indexed fixture " << n << std::endl; return n; };
++  const Array<double> live{1.0,2.0,3.0,4.0};
++  const Array<std::optional<Array<double>>> slots{std::nullopt,live};
++  if (f::state(slots,0) != 1 || f::state(slots,1) != 2 || f::state(slots,9) != 0) return fail(1);
++  if (f::strict_length(slots,0) != -1 || f::strict_length(slots,1) != 4 ||
++      f::loose_length(slots,0) != -1 || f::loose_length(slots,9) != -1 ||
++      f::both_length(slots,9) != -1 || f::both_length(slots,1) != 4) return fail(2);
++  for (double i : {-1.0,0.5,9.0,std::numeric_limits<double>::quiet_NaN(),std::numeric_limits<double>::infinity()}) {
++    if (f::state(slots,i) != 0 || f::loose_length(slots,i) != -1 || f::both_length(slots,i) != -1) return fail(3);
++    bool type = false; try { static_cast<void>(f::strict_length(slots,i)); }
++    catch (const flight::TypeError&) { type = true; }
++    if (!type) return fail(4);
++  }
++  if (f::undefined_length(slots,0) != -1 || f::undefined_length(slots,9) != -1 ||
++      f::undefined_length(slots,1) != 4 || f::single_layer(Array<Array<double>>{live},0) != 4 ||
++      f::single_layer(Array<Array<double>>{live},9) != -1 || f::ordinary(live) != 4 ||
++      f::ordinary(std::nullopt) != -1 || f::loop(slots,1) != 1) return fail(5);
++  f::reset(); if (f::ordered(slots,1) != 1 || f::count() != 123) return fail(6);
++  f::reset(); if (f::ordered(slots,0) != -1 || f::count() != 12) return fail(7);
++  f::reset(); bool orderedType = false; try { static_cast<void>(f::ordered(slots,9)); }
++  catch (const flight::TypeError&) { orderedType = true; }
++  if (!orderedType || f::count() != 123) return fail(8);
++  int calls = 0; const auto action = [&]() { ++calls; return 7.0; };
++  bool methodType = false; try { static_cast<void>(f::push(slots,9,action)); }
++  catch (const flight::TypeError&) { methodType = true; }
++  if (!methodType || calls != 0 || f::push(slots,0,action) != -1 || calls != 0) return fail(9);
++  if (f::push(slots,1,action) != 5 || calls != 1 || live.size() != 5 || live.element(4) != 7 ||
++      slots.element(1)->identity() != live.identity()) return fail(10);
++  const auto thrown = std::make_shared<int>(42); bool exact = false;
++  const auto throwing = [&]() -> double { ++calls; throw thrown; };
++  try { static_cast<void>(f::push(slots,1,throwing)); }
++  catch (const std::shared_ptr<int>& value) { exact = value == thrown && !value.owner_before(thrown) && !thrown.owner_before(value); }
++  if (!exact || calls != 2 || live.size() != 5) return fail(11);
++  exact = false; try { static_cast<void>(f::index_throw(slots,9,throwing)); }
++  catch (const std::shared_ptr<int>& value) { exact = value == thrown; }
++  if (!exact || calls != 3) return fail(12);
++  const auto kept = f::captured(slots,1);
++  if (kept() != 6) return fail(15);
++  live.element(0) = 9;
++  if (kept() != 14) return fail(15);
++  live.element(0) = 1;
++  const auto absent = f::captured(slots,9); bool lateType = false;
++  try { static_cast<void>(absent()); } catch (const flight::TypeError&) { lateType = true; }
++  if (!lateType || f::captured(slots,0)() != -1) return fail(15);
++  const Array<std::optional<flight::String>> texts{std::nullopt,flight::String(""),flight::String(" a ")};
++  if (f::trim(texts,0) != flight::String("null") || f::trim(texts,1) != flight::String("") ||
++      f::trim(texts,2) != flight::String("a")) return fail(13);
++  bool textType = false; try { static_cast<void>(f::trim(texts,9)); }
++  catch (const flight::TypeError&) { textType = true; }
++  if (!textType) return fail(13);
++  const auto cell = std::make_shared<f::Cell>();
++  const Array<std::optional<flight::Ref<f::Cell>>> cells{std::nullopt,cell};
++  const auto owners = cell.use_count();
++  if (f::mutate_cell(cells,1) != 3 || cell->value != 3 || cell.use_count() != owners ||
++      cells.element(1)->get() != cell.get() || f::mutate_cell(cells,0) != -1) return fail(14);
++  bool cellType = false; try { static_cast<void>(f::mutate_cell(cells,9)); }
++  catch (const flight::TypeError&) { cellType = true; }
++  if (!cellType || cell->value != 3) return fail(14);
++}
++`,
++        );
++        execFileSync(toolchain.command, createCppExecutableArguments(toolchain, input, binary, includes), {
++          encoding: 'utf8',
++          stdio: 'pipe',
++        });
++        execFileSync(binary, [], { encoding: 'utf8', stdio: 'pipe' });
++      } finally {
++        rmSync(directory, { recursive: true, force: true });
++      }
++    },
++    120000,
++  );
++});

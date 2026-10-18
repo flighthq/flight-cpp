@@ -201,11 +201,16 @@ The emitter now tests the *inner* optional correctly, but the bound local keeps 
 (`std::optional<std::optional<flight::Array<double>>>`) and the guarded length/index reads unwrap
 one layer, leaving `std::optional<flight::Array<double>>` where `size()`/`element()` are called.
 
-After the guard the source value is known to be the engaged array, so the faithful reads are the
-same live array's `size()` and indexed element, with no copy, no fresh array and no discarded
-absence channel: the outer bounds layer is still what an unguarded read would report as undefined.
+The guard excludes the inner null element, while an unchecked indexed undefined remains reachable.
+The faithful member reads select the same live array when present and throw TypeError at the original
+operation for that remaining undefined, without copying or flattening the local's carrier. A computed
+key must run before the missing-receiver error; method arguments must run after the receiver check.
 This is the narrowing counterpart of the presence lowering above, and the same rule applies to
 every guarded read of a doubly optional element. Measured in the scoped `-j2` survey after the
 nullable-element lift landed: 8 Spine binary handlers fail on this first diagnostic, one bound
 local each, all pointing at `spine_binary_bone_timeline_handler.hpp:88`. Recorded as
 `missing-member-00139043` in [`generated/header-status.json`](../../generated/header-status.json).
+
+The bounded `compiler-guarded-indexed-nullable-member` correction applies at member operations on immutable indexed locals with a single optional element representation and the existing present-payload proof. The declaration and null/undefined comparisons retain both layers. A generic checked receiver adapts to the actual stored carrier; it preserves the original array storage, object owner and live cells. Computed indexing caches its base and key before checking the receiver, including a key's exact thrown owner. Method lookup checks the receiver before arguments. The ordinary binding and defaulted-parameter projections remain on their established paths.
+
+Scratch qualification reproduces the old native optional<Array>.size failure and passes 15 emitted native checkpoint groups and 71 comparisons with the unchanged TypeScript fixture. Controls include null/undefined states, negative/out-of-range/fractional/NaN/Infinity indices, both guards, nullable undefined elements, ordinary single-layer reads, String/array/object payloads, shared ownership, live mutation and delayed captured reads. Two focused length-proven test failures are identical on the saved baseline; the final required-member predicate and broader prototype both have identical outcomes to the saved baseline on 328 existing backend tests (305 pass, 23 fail, 1236 unselected each). Original optional-chain operations are excluded, with five optional/defaulted emissions byte-identical to baseline. The final declared 96-patch stack applies and builds, reproduces the owned helper, dispatch and full fixture exactly, and passes the two native fixture tests. The fixture IR is byte-identical across the 92-to-96 frontend advance. The prepared public consumer includes the complete original header and calls buildSpineBinarySegmentEasings, using 11 untouched-source cases, 42 numeric samples and the original diagnostic callee. Its normal scoped output, actual execution and eight affected header checks remain pending.
