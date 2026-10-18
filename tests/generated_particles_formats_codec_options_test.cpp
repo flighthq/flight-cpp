@@ -63,12 +63,12 @@ int main() {
   flight::row_set<Size>(writable, std::optional<double>{8});
   check(native->size == 8 && read_size(readonly) == 8, "alias writes use physical cell");
 
-  const auto literal = flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<Options>>>>(
+  const auto literal = flight::make_structural_ref<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<Options>>>>>(
       flight::row_field<Size>(std::optional<double>{3}));
   check(!literal.shared_exact_object<Options>() && !literal.shared_exact_object<NativeOptions>(),
         "source-valid structural options need no nominal allocation");
   check(read_size(literal) == 3, "structural options keep their original field");
-  const auto absent = flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<Options>>>>();
+  const auto absent = flight::make_structural_ref<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<Options>>>>>();
   check(read_size(std::nullopt) == 1 && read_size(absent) == 1, "absent options and omitted field default");
 
   auto cell = std::make_shared<ObservableCell>();
