@@ -1899,3 +1899,10 @@ cc_test(
         "//:sdk_preview",
     ],
 )
+
+cc_test(
+    name = "generated_scene2d_formats_svg_appearance_test",
+    srcs = ["generated_scene2d_formats_svg_appearance_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
