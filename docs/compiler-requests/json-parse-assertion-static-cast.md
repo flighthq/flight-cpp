@@ -538,3 +538,20 @@ it must be covered by a native-parameter/return/array fixture, not only by the c
 and array reads, not scalars; they need a nested JSON row or their own explicit operation set. Until they are
 lowered, any header that reads one stays PARTIAL, and the 21-header count reports fully-faithful versus
 mismatch/structured partial separately.
+
+## Measurement set and the fully-faithful / partial split
+
+The approved count is over 21 headers: the 17 in `static-cast-assertion-9674a66c` (15 `scene2d-formats`
+Lottie rows plus 2 `scene2d-resources` importers) and the 4 Aseprite rows in `other-4e22e4de`
+(`spritesheet_formats/_internal_index`, `aseprite_parse`, `contract`, `spritesheet_detect`).
+
+Classification, decided by what the header actually reaches, not by whether it compiles:
+- **fully faithful**: every JSON-asserted value the header reaches is read through operations this design
+  represents -- scalar members through `JsonScalarCell`, and no structured member read on a JSON-backed
+  receiver is reachable from it. Its consumer must build, run, and preserve the source's behavior.
+- **mismatch / structured partial**: the header reaches a structured member (`layers`, nested objects) or an
+  escape whose value is not an actual number where the source would have coerced or compared it. It stays
+  PARTIAL by name; it is not counted as faithful and no full PASS is claimed for it.
+
+Neither class is closed by a blanket refusal: a refusal of a structured read is a report of remaining work,
+not a qualification.
