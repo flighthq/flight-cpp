@@ -98,3 +98,30 @@ read(): number { ... } }` and `use(c)` emits `return use(c);` — a `Ref<C>` pas
 declared, with no refusal and no conversion. The emitter has no lane for a class value at a
 structurally satisfied interface parameter; C++ rejects it later, which is exactly how the SWF
 headers fail. This is the call-site the bounded view must occupy (see the prepared mapping above).
+
+## Measured constraint on the existing declared-carrier mechanism
+
+`applyCppStructuralValueCarriersCpp` retypes a declared parameter/field by SUBSTITUTING the nominal
+type with the carrier's `target`, an existing C++ type. Measured against the SWF pair:
+
+- `flight::NominalOrStructuralView<Nominal, Base>` requires `Nominal` to be a `Base` object (its
+  constructor stores `Ref<Nominal>` into `Ref<Base>`, and `of` recovers `Nominal` from a `Ref<Base>`).
+  `SwfReader` is not a `SwfTagReader` object in C++, so the template cannot be instantiated for this
+  pair; builder2's contract confirms this and recommends an emitted site-specific view instead.
+- The retyping path can therefore name only a type that already exists. A class-to-interface view is
+  a NEW generated type (accessor cells mirroring the interface's data members over the class's own
+  fields, plus method thunks calling the class's methods), which the declared-carrier mechanism does
+  not emit.
+
+Implementation increments for the bounded view (authorized shape b):
+
+1. a declared-site kind naming `interface` and `class` plus the parameter/callback sites, validated
+   against the pinned source like the existing carriers;
+2. emit the view struct once, in the package that declares the interface, with `name()` /
+   `set_name(value)` accessors for each interface data member and a thunk per interface method;
+3. retype the declared sites to the view type, and lower member access on a view-typed receiver:
+   a property read to `receiver.name()`, a property write to `receiver.set_name(value)`, a method
+   call to the thunk of the same spelling;
+4. at a call argument where a class reference reaches a view-typed parameter, construct the view
+   from the class reference and wrap it in an aliasing `Ref<View>` sharing the class's control block;
+   at the reverse positions emit `flight::require_owner<Class>(interfaceRef)`.
