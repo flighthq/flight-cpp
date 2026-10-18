@@ -203,6 +203,14 @@ class WgpuObject final {
     return unavailable<WgpuTextureViewTag>("createView");
   }
 
+  // GPUCanvasContext.getCurrentTexture. This host binds no WebGPU provider, so the canvas has no swap chain
+  // to hand out: the operation reports itself unavailable, like every other provider operation here.
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuCanvasContextTag>
+  [[nodiscard]] WgpuObject<WgpuTextureTag> get_current_texture(Arguments&&...) const {
+    return unavailable<WgpuTextureTag>("getCurrentTexture");
+  }
+
   template <typename... Arguments>
     requires std::same_as<Tag, WgpuCommandEncoderTag>
   [[nodiscard]] WgpuObject<WgpuRenderPassEncoderTag> begin_render_pass(Arguments&&...) const {
