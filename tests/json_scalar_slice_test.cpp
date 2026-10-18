@@ -56,12 +56,56 @@ void test_json_structural_row() {
 
 } // namespace
 
+namespace {
+
+// Assertion carrier: raw root preserved (null vs primitive vs object), member dispatch bounded.
+void test_json_assertion_row() {
+  using Schema = flight::RowReadonly<flight::RowOf<flight::Any>>;
+  using Assertion = flight::JsonAssertionRow<Schema>;
+
+  const Assertion object(flight::Json::parse(flight::String("{\"fr\":30}")));
+  assert(object.is_object_root() && !object.is_nullish() && object.type_of() == "object");
+  assert(object.read_member(flight::String("fr")).as_native_number() == 30.0);
+
+  const Assertion null_root(flight::Json::parse(flight::String("null")));
+  assert(null_root.is_nullish() && null_root.type_of() == "object" && !null_root.to_boolean());
+  bool threw = false;
+  try {
+    (void)null_root.read_member(flight::String("fr"));
+  } catch (const flight::TypeError&) {
+    threw = true;
+  }
+  assert(threw);
+
+  const Assertion number_root(flight::Json::parse(flight::String("30")));
+  assert(!number_root.is_object_root() && !number_root.is_nullish() &&
+         number_root.type_of() == "number" && number_root.to_boolean() &&
+         number_root.to_number() == 30.0 &&
+         number_root.read_member(flight::String("fr")).is_absent());
+
+  const Assertion string_root(flight::Json::parse(flight::String("\"x\"")));
+  assert(string_root.type_of() == "string" && string_root.to_boolean() &&
+         string_root.to_number() != string_root.to_number());  // NaN
+}
+
+// Relational strings compare UTF-16 code units: a supplementary character's high surrogate (D83D)
+// sorts before U+FFFD (FFFD), while UTF-8 byte order would sort U+FFFD first.
+void test_json_scalar_utf16_relational() {
+  const flight::JsonScalarCell smile{flight::Any(flight::String("\u{1F600}"))};
+  const flight::JsonScalarCell replacement{flight::Any(flight::String("\uFFFD"))};
+  assert(smile < replacement && !(replacement < smile));
+}
+
+} // namespace
+
 int main() {
   using flight::Any;
   using flight::JsonScalarCell;
 
   test_row_receiver_projection();
   test_json_structural_row();
+  test_json_assertion_row();
+  test_json_scalar_utf16_relational();
 
   const auto document = flight::Json::parse(flight::String("{\"fr\":30,\"bad\":\"x\"}"));
   const Any receiver(document);

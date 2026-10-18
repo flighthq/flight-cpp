@@ -369,4 +369,55 @@ template <typename Schema>
   return StructuralRef<Schema>::from_owner(properties.shared_owner());
 }
 
+// A bounded assertion carrier for `JSON.parse(x) as Document`. It retains the ORIGINAL JsonValue root
+// as well as the object-backed row, so a null root stays null and a primitive root keeps its own
+// truthiness/typeof/ToNumber semantics; only an object root dispatches member reads into the row.
+// No schema copy, no recursive materialization, no global ABI.
+template <typename Schema>
+class JsonAssertionRow final {
+ public:
+  explicit JsonAssertionRow(JsonValue value) : value_(std::move(value)) {}
+
+  [[nodiscard]] const JsonValue& raw() const noexcept { return value_; }
+  [[nodiscard]] bool is_object_root() const noexcept { return value_.kind() == JsonValue::Kind::object; }
+  [[nodiscard]] std::optional<StructuralRef<Schema>> row() const {
+    return json_structural_row<Schema>(value_);
+  }
+
+  [[nodiscard]] bool is_nullish() const noexcept { return value_.kind() == JsonValue::Kind::null; }
+
+  [[nodiscard]] bool to_boolean() const {
+    return Any(value_).to_boolean();
+  }
+
+  [[nodiscard]] std::string_view type_of() const noexcept {
+    switch (value_.kind()) {
+      case JsonValue::Kind::null: return "object";
+      case JsonValue::Kind::boolean: return "boolean";
+      case JsonValue::Kind::number: return "number";
+      case JsonValue::Kind::string: return "string";
+      case JsonValue::Kind::array:
+      case JsonValue::Kind::object: return "object";
+    }
+    return "undefined";
+  }
+
+  [[nodiscard]] double to_number() const {
+    return JsonScalarCell{Any(value_)}.to_number();
+  }
+
+  // Member dispatch: an object root reads the row's raw scalar cell; a primitive root answers
+  // undefined (no throw); a null root throws TypeError exactly at the member read.
+  [[nodiscard]] JsonScalarCell read_member(const String& key) const {
+    if (is_nullish()) throw TypeError("Cannot read properties of null or undefined");
+    if (!is_object_root()) return JsonScalarCell{};
+    const auto object_row = row();
+    if (!object_row) return JsonScalarCell{};
+    return read_json_scalar_row_member(*object_row, key);
+  }
+
+ private:
+  JsonValue value_;
+};
+
 } // namespace flight
