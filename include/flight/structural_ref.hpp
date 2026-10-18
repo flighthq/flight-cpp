@@ -215,6 +215,12 @@ class RowOwner {
   [[nodiscard]] virtual std::shared_ptr<void> native_object() const noexcept { return {}; }
   [[nodiscard]] virtual std::type_index native_type() const noexcept { return typeid(void); }
 
+  // The erased value this owner is a view of, when it can name one EXACTLY. A native owner boxes the
+  // live object it holds (an Array keeps its array identity), a parsed-JSON owner boxes its exact
+  // JsonObject/JsonArray, and a bounded root owner boxes the raw root. The default answers nothing:
+  // an owner that cannot name its value says so instead of guessing a replacement.
+  [[nodiscard]] virtual std::optional<Any> raw_value() const { return std::nullopt; }
+
   template <typename Getter>
   void bind_named(std::string_view key, Getter getter) {
     using Reference = std::invoke_result_t<Getter&>;
@@ -521,6 +527,13 @@ class NativeRowOwner final : public RowOwner {
 
   [[nodiscard]] std::type_index native_type() const noexcept override { return typeid(Object); }
 
+  [[nodiscard]] std::optional<Any> raw_value() const override {
+    const auto object = object_.lock();
+    if (!object) return std::nullopt;
+    if constexpr (requires(const Object& value) { Any(value); }) return Any(*object);
+    return Any::object(object_.lock());
+  }
+
  private:
   std::weak_ptr<Object> object_;
 };
@@ -713,6 +726,12 @@ class JsonRowOwner final : public RowOwner {
   explicit JsonRowOwner(const std::shared_ptr<Object>& object) : object_(object) {}
   [[nodiscard]] std::shared_ptr<void> native_object() const noexcept override { return object_.lock(); }
   [[nodiscard]] std::type_index native_type() const noexcept override { return typeid(Object); }
+
+  [[nodiscard]] std::optional<Any> raw_value() const override {
+    const auto object = object_.lock();
+    if (!object) return std::nullopt;
+    return Any(JsonValue(object));
+  }
   [[nodiscard]] std::shared_ptr<RowCell> named_cell(std::string_view name) const override {
     return string_key_cell(String::from_utf8(name));
   }

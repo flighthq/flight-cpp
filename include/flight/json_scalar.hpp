@@ -520,6 +520,8 @@ class JsonRootRowOwner final : public RowOwner {
   [[nodiscard]] const Any& root() const noexcept { return root_; }
   [[nodiscard]] bool is_nullish() const noexcept { return root_.is_null(); }
 
+  [[nodiscard]] std::optional<Any> raw_value() const override { return root_; }
+
   [[nodiscard]] bool to_boolean() const noexcept { return root_.to_boolean(); }
 
   [[nodiscard]] double to_number() const { return JsonScalarCell{root_}.to_number(); }
@@ -606,12 +608,17 @@ template <typename Schema>
 
 template <typename Schema>
 [[nodiscard]] inline bool json_row_is_object(const StructuralRef<Schema>& row) {
-  return json_row_object(row) != nullptr;
+  if (json_row_object(row)) return true;
+  // A native owner's boxed value is an object the same way; an array or a primitive is not.
+  const Any raw = json_row_raw(row);
+  return raw.kind() == AnyKind::object && !raw.is_array();
 }
 
 template <typename Schema>
 [[nodiscard]] inline bool json_row_is_array(const StructuralRef<Schema>& row) {
-  return json_row_array(row) != nullptr;
+  if (json_row_array(row)) return true;
+  const Any raw = json_row_raw(row);
+  return raw.is_array();
 }
 
 template <typename Schema>
@@ -630,7 +637,8 @@ template <typename Schema>
     }
     return true;
   }
-  return false;
+  const auto view = named_properties(row);
+  return view.shared_owner() && view.has(key);
 }
 
 template <typename Schema>
@@ -643,6 +651,8 @@ template <typename Schema>
     const auto index = detail::record_array_index(key);
     if (index && *index < array->size()) return Any((*array)[*index]);
   }
+  const auto view = named_properties(row);
+  if (view.shared_owner() && view.has(key)) return view.get(key);
   return Any(undefined);
 }
 
@@ -671,18 +681,21 @@ template <typename Schema>
 
 template <typename Schema>
 [[nodiscard]] inline double json_row_length(const StructuralRef<Schema>& row) {
-  const auto array = json_row_array(row);
-  return array ? static_cast<double>(array->size()) : 0.0;
+  if (const auto array = json_row_array(row)) return static_cast<double>(array->size());
+  const Any raw = json_row_raw(row);
+  return raw.is_array() ? static_cast<double>(raw.array_size()) : 0.0;
 }
 
 template <typename Schema>
 [[nodiscard]] inline Any json_row_index(const StructuralRef<Schema>& row, double index) {
-  const auto array = json_row_array(row);
-  if (!array || !std::isfinite(index) || index < 0 || std::floor(index) != index ||
-      index >= static_cast<double>(array->size())) {
-    return Any(undefined);
+  if (!std::isfinite(index) || index < 0 || std::floor(index) != index) return Any(undefined);
+  if (const auto array = json_row_array(row)) {
+    if (index >= static_cast<double>(array->size())) return Any(undefined);
+    return Any((*array)[static_cast<std::size_t>(index)]);
   }
-  return Any((*array)[static_cast<std::size_t>(index)]);
+  const Any raw = json_row_raw(row);
+  if (!raw.is_array()) return Any(undefined);
+  return raw.array_get(index).value_or(Any(undefined));
 }
 
 template <typename Schema>
@@ -739,13 +752,7 @@ template <typename Schema>
 [[nodiscard]] inline Any json_row_raw(const StructuralRef<Schema>& row) {
   const auto owner = row.shared_owner();
   if (!owner) return Any();
-  if (owner->native_type() == typeid(JsonObject)) {
-    return Any(JsonValue(std::static_pointer_cast<JsonObject>(owner->native_object())));
-  }
-  if (owner->native_type() == typeid(JsonArray)) {
-    return Any(JsonValue(std::static_pointer_cast<JsonArray>(owner->native_object())));
-  }
-  if (const auto root = std::dynamic_pointer_cast<JsonRootRowOwner>(owner)) return root->root();
+  if (const auto raw = owner->raw_value()) return *raw;
   return Any();
 }
 

@@ -356,6 +356,41 @@ void test_json_member_array_replacement() {
 
 } // namespace
 
+
+namespace {
+
+// Native owners reach the same raw/recovery helpers through the owner seam: a native object row
+// boxes its exact live object, and a native Array owner is recognized as an array with its real
+// length and elements -- no guessed cast and no copy.
+void test_json_native_owner_raw() {
+  struct NativeDoc : flight::ReferenceEnabled {
+    flight::Array<double> items;
+  };
+  const auto doc = flight::make_ref<NativeDoc>();
+  doc->items = flight::Array<double>{1.0, 2.0};
+  // Emitted code binds its generated member table; a hand-written test type binds the member here.
+  {
+    auto owner = flight::detail::owner_for(doc);
+    owner->bind_named("items", [doc]() -> decltype(auto) { return (doc->items); });
+  }
+  using DocRow = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<NativeDoc>>>>;
+  const auto row = DocRow(doc);
+  const auto raw = flight::json_row_raw(row);
+  assert(raw.kind() == flight::AnyKind::object && !raw.is_array());
+  assert(flight::json_row_is_object(row) && !flight::json_row_is_array(row));
+  assert(flight::json_row_has(row, flight::String("items")));
+  assert(flight::json_row_member(row, flight::String("items")).is_array());
+
+  const auto array = std::make_shared<flight::Array<double>>(flight::Array<double>{3.0, 4.0});
+  using ArrayRow = flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::Array<double>>>>>;
+  const auto array_row = ArrayRow(array);
+  assert(flight::json_row_is_array(array_row) && flight::json_row_length(array_row) == 2.0);
+  assert(flight::json_row_index(array_row, 1.0).as_number() == 4.0);
+  assert(flight::json_row_raw(array_row).identity() == flight::Any(*array).identity());
+}
+
+} // namespace
+
 int main() {
   using flight::Any;
   using flight::JsonScalarCell;
@@ -368,6 +403,7 @@ int main() {
   test_json_row_writes();
   test_json_conversion_edges();
   test_json_member_array_replacement();
+  test_json_native_owner_raw();
   test_json_scalar_utf16_relational();
   test_json_any_bridge();
 
