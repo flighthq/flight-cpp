@@ -279,11 +279,15 @@ int main() {
     power::enable_power_signals(power_entity);
 
     std::vector<const void*> payloads;
+    // Every payload is RETAINED while identities are compared: an address is an identity only while its
+    // object is alive, and a payload dropped after delivery may have its storage reused by the next one.
+    std::vector<StatusView> held_payloads;
     int charged = 0;
     int discharged = 0;
     std::vector<String> thermal_states;
     connect(power_entity->on_change.value(), [&](StatusView status_view) {
       payloads.push_back(status_view.identity());
+      held_payloads.push_back(status_view);
     });
     connect(power_entity->on_charging.value(), [&]() { ++charged; });
     connect(power_entity->on_discharging.value(), [&]() { ++discharged; });
@@ -302,6 +306,12 @@ int main() {
 
     status->is_charging = true;
     fire(change);
+    {
+      const auto earliest = held_payloads.front().shared_exact_object<PowerStatus>();
+      const auto latest = held_payloads.back().shared_exact_object<PowerStatus>();
+      check(earliest && latest && earliest != latest && !earliest->is_charging && latest->is_charging,
+            "an earlier payload keeps its own snapshot after a later event publishes a different one");
+    }
     fire(change);
     check(charged == 1, "a repeat of the same charging state is not an edge");
     status->is_charging = false;

@@ -294,10 +294,14 @@ int main() {
     int offline_events = 0;
     std::vector<const void*> payload_ids;
     std::vector<String> payload_types;
+    // Every payload is RETAINED (captured by value) while identities are compared: an address is an
+    // identity only while its object is alive, and a dropped payload's storage may be reused by the next.
+    std::vector<std::function<String()>> held_payloads;
     unknown->on_online->emit = [&]() { ++online_events; };
     unknown->on_offline->emit = [&]() { ++offline_events; };
     unknown->on_change->emit = [&](auto status) {
       payload_ids.push_back(status.identity());
+      held_payloads.push_back([status]() { return flight::row_get<flight::RowKey<"type">>(status); });
       payload_types.push_back(flight::row_get<flight::RowKey<"type">>(status));
     };
 
@@ -341,6 +345,13 @@ int main() {
     }
     if (!check(all_distinct,
                "two change events shared one payload object, or a payload kept a later value")) {
+      return 1;
+    }
+    bool snapshots_kept = held_payloads.size() == payload_types.size();
+    for (std::size_t i = 0; snapshots_kept && i < held_payloads.size(); ++i) {
+      if (held_payloads[i]() != payload_types[i]) snapshots_kept = false;
+    }
+    if (!check(snapshots_kept, "a retained payload changed after a later notification was published")) {
       return 1;
     }
   }
