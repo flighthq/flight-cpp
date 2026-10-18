@@ -632,3 +632,30 @@ and a parsed one take the same path.
 The multi-site operation half is the remaining edit. It cannot be landed as the read substitution alone: the
 cell has no implicit numeric conversion, so an unmapped use site fails to compile rather than silently
 coercing -- which is the intended safety property, and also why the two halves must land together.
+
+## A binding-scoped JSON-row set cannot reach the Lottie reads
+
+The source splits the two operations across functions:
+
+```ts
+function parseLottieDocument(source: string | Readonly<LottieDocument>): Readonly<LottieDocument> | null {
+  if (typeof source !== 'string') return source;
+  try { return JSON.parse(source) as LottieDocument; } catch { return null; }
+}
+function isValidLottieDocument(document: Readonly<LottieDocument>): boolean { /* reads document.fr ... */ }
+```
+
+The assertion is in `parseLottieDocument`; every one of the 42 `row_get` reads is in `isValidLottieDocument` (and
+its callers), on a PARAMETER that may hold either the caller's native document or the parsed one. A provenance
+set keyed to the binding the assertion initializes stops at that function's boundary, so it marks none of the 42
+reads and the cluster cannot move.
+
+Two routes, and only these:
+- key the read substitution on the row read itself (declared scalar member of a structural row), which needs no
+  provenance because `read_json_scalar_row_member` reads a native owner and a JSON owner identically; or
+- carry the set interprocedurally, which means proving that every caller passes a parsed row into the parameter
+  -- for `isValidLottieDocument` that is false by construction, since callers pass a native document too.
+
+The first is the only route that matches the source's own shape: one function serves both owners, so its reads
+must be owner-agnostic. Worth settling before the backend patch, because the second route cannot be made
+sound here and the first changes which expressions the operation lane must cover.
