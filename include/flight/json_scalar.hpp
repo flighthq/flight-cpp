@@ -267,17 +267,26 @@ class JsonScalarCell final {
       }
       return joined;
     }
+    if (const auto object = value.object_reference_if<JsonObject>()) {
+      // JSON cannot hold a callable, so an own `toString` is necessarily non-callable. It shadows
+      // Object.prototype.toString, Object.prototype.valueOf returns the object itself (not a
+      // primitive), and OrdinaryToPrimitive therefore cannot complete -- JavaScript throws.
+      if (object->has(String("toString"))) throw TypeError("Cannot convert object to primitive value");
+    }
     return String("[object Object]");
   }
 
   [[nodiscard]] static double parse_number(const String& text) {
-    const std::string raw = text.to_utf8();
+    // ECMAScript trims its own whitespace set (including U+00A0, U+2028/9, U+3000, U+FEFF), so the
+    // shared UTF-16 predicate decides -- the same one the typed number conversion uses. Trimming the
+    // UTF-8 bytes with isspace would leave a non-breaking space in front of the digits and read NaN.
+    const auto& units = text.native();
     std::size_t begin = 0;
-    std::size_t finish = raw.size();
-    while (begin < finish && std::isspace(static_cast<unsigned char>(raw[begin]))) ++begin;
-    while (finish > begin && std::isspace(static_cast<unsigned char>(raw[finish - 1]))) --finish;
+    std::size_t finish = units.size();
+    while (begin < finish && detail::number_whitespace(units[begin])) ++begin;
+    while (finish > begin && detail::number_whitespace(units[finish - 1])) --finish;
     if (begin == finish) return 0.0;  // Number("") and whitespace-only is 0
-    const std::string value = raw.substr(begin, finish - begin);
+    const std::string value = String(std::u16string(units.begin() + begin, units.begin() + finish)).to_utf8();
 
     // Radix prefixes: accepted only without a sign, exactly as JavaScript Number().
     if (value.size() > 2 && value[0] == '0') {

@@ -4718,8 +4718,27 @@ static void test_json_mutable_storage() {
         "erase keeps the same array identity and the remaining order");
 }
 
+
+// JavaScript calls an array callback with (element, index, array) and the function decides how many
+// it declares. A zero-argument callback must be callable, and the third argument must be the
+// receiver's own storage -- same identity, live contents -- not a copy of the elements.
+static void test_array_callback_arity() {
+  const flight::Array<double> values{1.0, 2.0, 3.0};
+  const auto zero = values.map([]() { return 7.0; });
+  check(zero.size() == 3.0 && zero.element(0.0) == 7.0,
+        "a zero-argument callback is invoked with no arguments");
+  const auto three = values.filter([](double value, double index, const flight::Array<double>& all) {
+    return all.element(0.0) == 1.0 && index < all.size() && value == all.element(index);
+  });
+  check(three.size() == 3.0, "a three-argument callback receives the receiver array itself");
+  double receiver_first = 0.0;
+  values.for_each([&](double, double, const flight::Array<double>& all) { receiver_first = all.element(0.0); });
+  check(receiver_first == 1.0, "for_each passes the receiver array as the third argument");
+}
+
 int main() {
   test_array();
+  test_array_callback_arity();
   test_array_get_optional_index();
   test_array_is_array_optional_payload();
   test_null_carrier_selects_the_null_arm();

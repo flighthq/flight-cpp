@@ -280,6 +280,53 @@ void test_json_any_bridge() {
 
 } // namespace
 
+
+namespace {
+
+// Two conversion cases the Node oracle distinguishes and the runtime must match.
+//   Number("\u00A030\u00A0") is 30: ECMAScript trims its own whitespace set, not ASCII isspace.
+//   Number({"toString":3}) throws TypeError: an own non-callable toString shadows the prototype and
+//   OrdinaryToPrimitive cannot complete; the same happens inside an array join.
+void test_json_conversion_edges() {
+  const auto cell = [](const char* text) {
+    return flight::JsonScalarCell{flight::Any(flight::Json::parse(flight::String(text)))};
+  };
+  const auto spaced = cell("\"\u00A030\u00A0\"");
+  assert(spaced.to_number() == 30.0);
+  const auto wide = cell("\"\u300012\uFEFF\"");
+  assert(wide.to_number() == 12.0);
+
+  const auto shadow = cell("{\"toString\":3}");
+  bool threw = false;
+  try {
+    (void)shadow.to_number();
+  } catch (const flight::TypeError&) {
+    threw = true;
+  }
+  assert(threw);
+  threw = false;
+  try {
+    (void)shadow.to_string();
+  } catch (const flight::TypeError&) {
+    threw = true;
+  }
+  assert(threw);
+
+  const auto joined = cell("[{\"toString\":3}]");
+  threw = false;
+  try {
+    (void)joined.to_string();
+  } catch (const flight::TypeError&) {
+    threw = true;
+  }
+  assert(threw);
+
+  const auto plain = cell("{}");
+  assert(std::isnan(plain.to_number()) && plain.to_string() == flight::String("[object Object]"));
+}
+
+} // namespace
+
 int main() {
   using flight::Any;
   using flight::JsonScalarCell;
@@ -290,6 +337,7 @@ int main() {
   test_json_assertion_row_adapter();
   test_json_composite_operations();
   test_json_row_writes();
+  test_json_conversion_edges();
   test_json_scalar_utf16_relational();
   test_json_any_bridge();
 
