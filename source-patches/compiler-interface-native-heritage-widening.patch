@@ -1,8 +1,8 @@
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
-index adf936f..0a19b46 100644
+index adf936f..2789d2f 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
-@@ -2845,6 +2845,141 @@ describe('createCppCompilerBackend', () => {
+@@ -2845,6 +2845,159 @@ describe('createCppCompilerBackend', () => {
      expect(emitted[0]?.contents).toContain('flighthq_models::Model');
    });
  
@@ -141,10 +141,28 @@ index adf936f..0a19b46 100644
 +    expect(failure.rule).toBe('cpp-contextual-union-inequivalent');
 +  });
 +
++  it('initializes native interface base cells on one owner in source evaluation order', () => {
++    const result = lower(
++      'native-interface-construction.ts',
++      `
++      export interface Base { value: number; }
++      export interface Derived extends Base { extra: number; }
++      export function create(next: () => number): Derived { return { extra: next(), value: next() }; }
++    `,
++    );
++    const contents = emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++    expect(contents).toContain('struct Derived : public Base');
++    expect(contents.match(/next\(\)/gu)).toHaveLength(2);
++    expect(contents).not.toContain('Derived{.value');
++    expect(contents).toContain('->value =');
++    expect(contents).toContain('Derived{.extra =');
++    expect(contents.indexOf('auto object_member_extra')).toBeLessThan(contents.indexOf('auto object_member_value'));
++  });
++
    it('reports expected target-lowering refusals as backend emission failures', () => {
      const module = lower('external-heritage.ts', 'export interface Derived extends External {}').module;
  
-@@ -6487,7 +6622,7 @@ describe('createCppCompilerBackend', () => {
+@@ -6487,7 +6640,7 @@ describe('createCppCompilerBackend', () => {
      ).toBe('compiler-restriction');
    });
  
@@ -153,7 +171,7 @@ index adf936f..0a19b46 100644
      const result = lower(
        'satisfies-union-arm-owner.ts',
        `interface RuntimeBase { binding: object | null; uid?: string }
-@@ -6532,19 +6667,10 @@ describe('createCppCompilerBackend', () => {
+@@ -6532,19 +6685,10 @@ describe('createCppCompilerBackend', () => {
           return state;
         }`,
      );
@@ -177,7 +195,7 @@ index adf936f..0a19b46 100644
    });
  
    it('stores the spritesheet registry result in its optional declared owner', () => {
-@@ -8005,7 +8131,7 @@ describe('createCppCompilerBackend', () => {
+@@ -8005,7 +8149,7 @@ describe('createCppCompilerBackend', () => {
      expect(emitted).not.toContain('make_ref<TextureSource>');
    });
  
@@ -186,7 +204,7 @@ index adf936f..0a19b46 100644
      const moduleResolution: CompilerModuleResolutionPlan = {
        edges: [
          {
-@@ -8093,18 +8219,12 @@ describe('createCppCompilerBackend', () => {
+@@ -8093,18 +8237,12 @@ describe('createCppCompilerBackend', () => {
      const failure = captureBackendEmissionFailure(() => session.emitModule(modules[1]!));
  
      expect(results.flatMap((result) => result.diagnostics)).toEqual([]);
@@ -209,7 +227,7 @@ index adf936f..0a19b46 100644
      const lowerSources = (attributeType: string, valueType: string) =>
        lower(
          'sceneHitAttributes.ts',
-@@ -8120,27 +8240,13 @@ describe('createCppCompilerBackend', () => {
+@@ -8120,27 +8258,13 @@ describe('createCppCompilerBackend', () => {
          emitIrModuleCpp(lowerSources(attributeType, valueType), { runtimeProfile: 'flight-cpp' }),
        );
  
@@ -244,7 +262,7 @@ index adf936f..0a19b46 100644
  
      // The same assignment with no heritage at all is one carrier on both sides, so it lowers: the refusal is
      // about the two owners and not about nullable assignment to an interface-typed member.
-@@ -9781,13 +9887,9 @@ int main() {
+@@ -9781,13 +9905,9 @@ int main() {
        emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }),
      );
  
@@ -261,7 +279,7 @@ index adf936f..0a19b46 100644
    });
  
    it('classifies an optional render proxy base owner asserted as its wider interface', () => {
-@@ -49371,7 +49473,7 @@ export function omitKeys<Key extends keyof Provider>(): Omit<Provider, Key> {
+@@ -49371,7 +49491,7 @@ export function omitKeys<Key extends keyof Provider>(): Omit<Provider, Key> {
      expect(emitted).toContain('set_guard(std::optional<std::function<void(Release)>>{warn});');
    });
  
@@ -270,7 +288,7 @@ index adf936f..0a19b46 100644
      const resolution: CompilerModuleResolutionPlan = {
        edges: [
          {
-@@ -49414,14 +49516,11 @@ export function omitKeys<Key extends keyof Provider>(): Omit<Provider, Key> {
+@@ -49414,14 +49534,11 @@ export function omitKeys<Key extends keyof Provider>(): Omit<Provider, Key> {
      );
  
      expect(results.flatMap((result) => result.diagnostics)).toEqual([]);
@@ -290,7 +308,7 @@ index adf936f..0a19b46 100644
    });
  
    it('selects the FlightDocument registry arm and refuses its projected resource array', () => {
-@@ -49992,7 +50091,7 @@ export function omitKeys<Key extends keyof Provider>(): Omit<Provider, Key> {
+@@ -49992,7 +50109,7 @@ export function omitKeys<Key extends keyof Provider>(): Omit<Provider, Key> {
      expect(emitted).toContain('.key = std::optional<flight::Symbol>{key}');
    });
  
@@ -299,7 +317,7 @@ index adf936f..0a19b46 100644
      const resolution: CompilerModuleResolutionPlan = {
        edges: [
          {
-@@ -50102,14 +50201,9 @@ export function omitKeys<Key extends keyof Provider>(): Omit<Provider, Key> {
+@@ -50102,14 +50219,9 @@ export function omitKeys<Key extends keyof Provider>(): Omit<Provider, Key> {
        },
      });
  
@@ -317,7 +335,7 @@ index adf936f..0a19b46 100644
  
      const anonymousFailure = captureBackendEmissionFailure(() => session.emitModule(modules[5]!));
      const nullableFailure = captureBackendEmissionFailure(() => session.emitModule(modules[6]!));
-@@ -50121,7 +50215,7 @@ export function omitKeys<Key extends keyof Provider>(): Omit<Provider, Key> {
+@@ -50121,7 +50233,7 @@ export function omitKeys<Key extends keyof Provider>(): Omit<Provider, Key> {
      expect(nullableFailure.message).toContain(
        'Narrow or convert the source expression so each of its alternatives names exactly one destination union alternative.',
      );
@@ -326,7 +344,7 @@ index adf936f..0a19b46 100644
      expect(incompatibleFailure.rule).toBe('cpp-contextual-union-value-type-unrepresented');
    });
  
-@@ -52104,7 +52198,7 @@ export function omitKeys<Key extends keyof Provider>(): Omit<Provider, Key> {
+@@ -52104,7 +52216,7 @@ export function omitKeys<Key extends keyof Provider>(): Omit<Provider, Key> {
      ).toContain('take(value)');
    });
  
@@ -335,7 +353,7 @@ index adf936f..0a19b46 100644
      const shared = `export interface SelectionBase { readonly kind: string }
         export interface LassoSelection extends SelectionBase { readonly points: readonly number[] }
         export interface MarqueeSelection extends SelectionBase { readonly x: number }
-@@ -52115,23 +52209,16 @@ export function omitKeys<Key extends keyof Provider>(): Omit<Provider, Key> {
+@@ -52115,23 +52227,16 @@ export function omitKeys<Key extends keyof Provider>(): Omit<Provider, Key> {
          emitIrModuleCpp(lower('selectionState.ts', `${shared}${body}`).module, { runtimeProfile: 'flight-cpp' }),
        );
  
@@ -370,19 +388,20 @@ index adf936f..0a19b46 100644
  
      // A union with no heritage relation is NOT claimed by that rule: it keeps the generic conversion refusal
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-index 145a6da..d581e36 100644
+index 145a6da..0d8267d 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-@@ -396,6 +396,8 @@ interface EmitContext {
+@@ -396,6 +396,9 @@ interface EmitContext {
    returnsAbsent: boolean;
    sharedCaptureTargetNames: ReadonlyMap<string, string>;
    sourceModules: readonly Readonly<IrModule>[];
 +  interfaceInheritanceModules: Map<string, Readonly<IrModule>>;
++  interfaceHeritageImporterIndex: CppModuleImporterIndex;
 +  interfaceHeritageResolution?: Readonly<CompilerModuleResolutionPlan> | undefined;
    structuralCastBindingRows: ReadonlyMap<string, Readonly<CompilerCppStructuralRowPlan>>;
    // `Object.entries` physically returns std::tuple rows even when both slots have the same type.
    // Keep that runtime representation attached to immutable array storage, callback parameters, and
-@@ -621,7 +623,10 @@ function emitIrModuleCppWithContext(
+@@ -621,7 +624,10 @@ function emitIrModuleCppWithContext(
    const typeParameterConstraints = collectCppTypeParameterConstraintsCpp(module);
    const closureCapturePlan = createIrModuleClosureCapturePlanCpp(module);
    const capturedReferentOnlyBindingIds = new Set<string>();
@@ -394,16 +413,17 @@ index 145a6da..d581e36 100644
    const recursiveTypeAliasBindingIds = collectCppRecursiveTypeAliasBindingIds(module, declarationDependencies);
    const mutuallyRecursiveFunctionGroups = collectCppMutuallyRecursiveFunctionGroups(module, declarationDependencies);
    const forwardDeclaredFunctionBindingIds = new Set(
-@@ -646,6 +651,8 @@ function emitIrModuleCppWithContext(
+@@ -646,6 +652,9 @@ function emitIrModuleCppWithContext(
    );
    const context: EmitContext = {
      activeDependentCallablePackIds: new Set(),
 +    interfaceInheritanceModules: new Map(),
++    interfaceHeritageImporterIndex: resolvedModuleImporterIndex,
 +    interfaceHeritageResolution: moduleResolution,
      anonymousStructs: new Map(),
      anonymousStructTypeParameters: [],
      arrayElementBindingIds,
-@@ -2340,11 +2347,16 @@ function emitInterface(declaration: Readonly<IrInterfaceDeclaration>, outer: Emi
+@@ -2340,11 +2349,16 @@ function emitInterface(declaration: Readonly<IrInterfaceDeclaration>, outer: Emi
    const typeParams = emitTypeParameters(declaration.typeParameters, context);
    const lines: string[] = [];
    if (typeParams) lines.push(`template ${typeParams}`);
@@ -423,7 +443,7 @@ index 145a6da..d581e36 100644
      if (isCppNonEmittingObjectPropertyCpp(property)) continue;
      const propertyStorage = emitCppObjectPropertyStorageCpp(
        property,
-@@ -2359,6 +2371,166 @@ function emitInterface(declaration: Readonly<IrInterfaceDeclaration>, outer: Emi
+@@ -2359,6 +2373,174 @@ function emitInterface(declaration: Readonly<IrInterfaceDeclaration>, outer: Emi
    return lines;
  }
  
@@ -465,10 +485,7 @@ index 145a6da..d581e36 100644
 +  const ownerKey = getCppModuleIdentityKey(owner.module);
 +  const currentKey = getCppModuleIdentityKey(originalModule);
 +  if (ownerKey !== currentKey) {
-+    const reaching = collectCppModuleKeysReachingCpp(
-+      originalModule,
-+      createCppModuleImporterIndex(context.sourceModules, context.referenceRepresentationPlanner),
-+    );
++    const reaching = collectCppModuleKeysReachingCpp(originalModule, context.interfaceHeritageImporterIndex);
 +    if (reaching.has(ownerKey)) return undefined;
 +  }
 +  let flattened = context.interfaceInheritanceModules.get(ownerKey);
@@ -536,6 +553,47 @@ index 145a6da..d581e36 100644
 +  return { base, inheritedNames };
 +}
 +
++function getCppInterfaceNativeHeritageForTypeCpp(
++  source: Readonly<IrType>,
++  context: EmitContext,
++): Readonly<CppInterfaceNativeHeritage> | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || source.kind !== 'named') return undefined;
++  const sourceModule = getCppNamedTypeBindingModuleCpp(source, context);
++  const owner = getCppNominalTypeDeclarationOwnerCpp(source, sourceModule, context);
++  if (owner?.declaration.kind !== 'interface') return undefined;
++  const ownerKey = getCppModuleIdentityKey(owner.module);
++  let flattened = context.interfaceInheritanceModules.get(ownerKey);
++  if (!flattened) {
++    flattened = createCompilerLoweringPassInterfaceInheritanceCpp(
++      context.sourceModules,
++      context.interfaceHeritageResolution,
++    ).lowerIrModule(owner.module);
++    context.interfaceInheritanceModules.set(ownerKey, flattened);
++  }
++  const declaration = flattened.declarations.find(
++    (candidate) =>
++      candidate.kind === 'interface' &&
++      'binding' in owner.declaration &&
++      candidate.binding.id === owner.declaration.binding.id,
++  );
++  if (declaration?.kind !== 'interface') return undefined;
++  const ownerContext: EmitContext = {
++    ...context,
++    module: flattened,
++    currentInterface: declaration,
++    targetNames: new Map(context.targetNameMaps.get(ownerKey) ?? []),
++    anonymousStructTypeParameters: mergeIrTypeParametersCpp(
++      context.anonymousStructTypeParameters,
++      declaration.typeParameters,
++    ),
++  };
++  const heritage = getCppInterfaceNativeHeritageCpp(declaration, ownerContext);
++  if (!heritage) return undefined;
++  const substitutions = createIrTypeParameterSubstitutionPlan(owner.declaration.typeParameters, source.typeArguments);
++  const base = resolveIrTypeStructuralSubstitution(heritage.base, substitutions);
++  return base.kind === 'named' ? { base, inheritedNames: heritage.inheritedNames } : undefined;
++}
++
 +// This proof is directional. It authorizes ordinary shared-pointer widening only; an assertion
 +// from a base owner to a derived owner still needs the existing checked recovery contract.
 +function isCppNativeInterfaceDerivedFromCpp(
@@ -552,45 +610,28 @@ index 145a6da..d581e36 100644
 +  if (!sourceIdentity || !targetIdentity) return false;
 +  if (sourceIdentity === targetIdentity) return true;
 +  if (visited.has(sourceIdentity)) return false;
-+  const owner = getCppNominalTypeDeclarationOwnerCpp(source, sourceModule, context);
-+  if (owner?.declaration.kind !== 'interface') return false;
-+  const ownerKey = getCppModuleIdentityKey(owner.module);
-+  let flattened = context.interfaceInheritanceModules.get(ownerKey);
-+  if (!flattened) {
-+    flattened = createCompilerLoweringPassInterfaceInheritanceCpp(
-+      context.sourceModules,
-+      context.interfaceHeritageResolution,
-+    ).lowerIrModule(owner.module);
-+    context.interfaceInheritanceModules.set(ownerKey, flattened);
-+  }
-+  const declaration = flattened.declarations.find(
-+    (candidate) =>
-+      candidate.kind === 'interface' &&
-+      'binding' in owner.declaration &&
-+      candidate.binding.id === owner.declaration.binding.id,
-+  );
-+  if (declaration?.kind !== 'interface') return false;
-+  const ownerContext: EmitContext = {
-+    ...context,
-+    module: flattened,
-+    currentInterface: declaration,
-+    targetNames: new Map(context.targetNameMaps.get(ownerKey) ?? []),
-+    anonymousStructTypeParameters: mergeIrTypeParametersCpp(
-+      context.anonymousStructTypeParameters,
-+      declaration.typeParameters,
-+    ),
-+  };
-+  const heritage = getCppInterfaceNativeHeritageCpp(declaration, ownerContext);
++  const heritage = getCppInterfaceNativeHeritageForTypeCpp(source, context);
 +  if (!heritage) return false;
-+  const substitutions = createIrTypeParameterSubstitutionPlan(owner.declaration.typeParameters, source.typeArguments);
-+  const base = resolveIrTypeStructuralSubstitution(heritage.base, substitutions);
-+  return isCppNativeInterfaceDerivedFromCpp(base, target, ownerContext, new Set(visited).add(sourceIdentity));
++  return isCppNativeInterfaceDerivedFromCpp(heritage.base, target, context, new Set(visited).add(sourceIdentity));
 +}
 +
  function emitCppGeneratedSymbolBindingsCpp(module: Readonly<IrModule>, context: EmitContext): string[] {
    if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return [];
    const plans = module.declarations.flatMap((declaration): CppGeneratedSymbolBindingPlan[] => {
-@@ -17410,6 +17582,15 @@ function emitContextualUnionExpressionInContextCpp(
+@@ -5988,7 +6170,11 @@ function emitExpression(
+         constructionType.kind === 'intersection'
+           ? getCppNominalIntersectionBaseCpp(constructionType, context)
+           : undefined;
+-      const inheritedNames = new Set(nominalBase?.properties.map((property) => property.name) ?? []);
++      const nativeInterfaceBase = getCppInterfaceNativeHeritageForTypeCpp(constructionType, context);
++      const inheritedNames = new Set([
++        ...(nominalBase?.properties.map((property) => property.name) ?? []),
++        ...(nativeInterfaceBase?.inheritedNames ?? []),
++      ]);
+       const inheritedProperties = properties.filter((property) => inheritedNames.has(property.name));
+       if (loweredAccessorConstruction) {
+         const values = new Map<Readonly<IrObjectMember>, string>();
+@@ -17410,6 +17596,15 @@ function emitContextualUnionExpressionInContextCpp(
          context,
        );
      }
@@ -606,7 +647,7 @@ index 145a6da..d581e36 100644
      const interfaceHeritageGap = getCppInterfaceHeritageUnionCarrierGapCpp(expressionPlan, plan, context);
      if (interfaceHeritageGap) {
        emissionError(
-@@ -18010,6 +18191,44 @@ function hasCppDistinctIntersectionUnionOwnersCpp(
+@@ -18010,6 +18205,44 @@ function hasCppDistinctIntersectionUnionOwnersCpp(
    });
  }
  
@@ -651,7 +692,7 @@ index 145a6da..d581e36 100644
  interface CppInterfaceHeritageUnionCarrierGap {
    readonly source: Readonly<IrType>;
    readonly sourceCarrier: string;
-@@ -18041,6 +18260,7 @@ function getCppInterfaceHeritageValueCarrierGapCpp(
+@@ -18041,6 +18274,7 @@ function getCppInterfaceHeritageValueCarrierGapCpp(
      if (!isCppNominalTypeDerivedFromCpp(source, sourceModule, target, targetModule, context, new Set())) {
        return [];
      }
@@ -659,7 +700,7 @@ index 145a6da..d581e36 100644
      return [{ source, sourceCarrier, target, targetCarrier: slot.targetType }];
    });
    return matches.length === 1 ? matches[0] : undefined;
-@@ -18719,13 +18939,9 @@ function hasCppCompatibleCallableReturnRepresentationCpp(
+@@ -18719,13 +18953,9 @@ function hasCppCompatibleCallableReturnRepresentationCpp(
    const sourceType = sourcePlan.valueSlots[0]!.runtimeType;
    const targetType = targetPlan.valueSlots[0]!.runtimeType;
    if (sourceType.kind !== 'named' || targetType.kind !== 'named') return false;
@@ -676,7 +717,7 @@ index 145a6da..d581e36 100644
    );
  }
  
-@@ -20487,7 +20703,10 @@ function getCppConcreteNamedUnionValueSlotCpp(
+@@ -20487,7 +20717,10 @@ function getCppConcreteNamedUnionValueSlotCpp(
            { kind: 'union', types: [alternative, { kind: 'null' }] },
            isolatedContext,
          );
@@ -687,7 +728,7 @@ index 145a6da..d581e36 100644
            isCppNominalTypeDerivedFromCpp(
              concreteSource,
              sourceModule,
-@@ -25248,6 +25467,7 @@ function getIrUnionMemberNameCpp(type: Readonly<IrType>): string | undefined {
+@@ -25248,6 +25481,7 @@ function getIrUnionMemberNameCpp(type: Readonly<IrType>): string | undefined {
  
  function collectIrModuleDeclarationDependenciesCpp(
    module: Readonly<IrModule>,
@@ -695,7 +736,7 @@ index 145a6da..d581e36 100644
  ): ReadonlyMap<Readonly<IrDeclaration>, ReadonlySet<Readonly<IrDeclaration>>> {
    const declarationsByBindingId = new Map(
      module.declarations.flatMap((declaration) =>
-@@ -25276,6 +25496,18 @@ function collectIrModuleDeclarationDependenciesCpp(
+@@ -25276,6 +25510,18 @@ function collectIrModuleDeclarationDependenciesCpp(
          },
        },
      );
