@@ -1,5 +1,5 @@
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-index 460a08d..8b85e01 100644
+index 460a08d..383f05c 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 @@ -5552,7 +5552,16 @@ function emitExpression(
@@ -20,11 +20,17 @@ index 460a08d..8b85e01 100644
        }
        const closedKeys = getCppClosedElementKeyNamesCpp(expression, context);
        if (closedKeys) return emitCppClosedKeyElementSelectionCpp(expression, closedKeys, context);
-@@ -6748,7 +6757,14 @@ function emitExpression(
+@@ -6747,8 +6756,19 @@ function emitExpression(
+         const record = receiverEvidence
            ? getCppRecordTypeArgumentsCpp(receiverEvidence, context, new Set())
            : undefined;
-         if (record && emitType(record.key, context) === 'flight::String') {
+-        if (record && emitType(record.key, context) === 'flight::String') {
 -          return `${emitExpression(expression.object, context)}.get(flight::String(${JSON.stringify(expression.name)})).value()`;
++        if (
++          record &&
++          emitType(record.key, context) === 'flight::String' &&
++          !getCppNamedPropertiesViewExpressionCpp(expression.object, context)
++        ) {
 +          const lookup = `${emitExpression(expression.object, context)}.get(flight::String(${JSON.stringify(expression.name)}))`;
 +          // Same rule as the indexed read: a missing own key is `undefined` for an erased value type,
 +          // not an absent carrier, so the read keeps the erased value and answers undefined.
