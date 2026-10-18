@@ -481,5 +481,356 @@
     "undefined"
    ]
   }
+ },
+ "inherited": {
+  "subject": "base-declared field typeof: a derived class lists the instance fields it inherits, read through its own type; an erased object boxed at a class with subclasses is answered from its make_ref-recorded exact allocation",
+  "source": "export class Shape {\n  static made = 0;\n  kind = 'shape';\n  protected area = 0;\n  label?: string;\n  link: Shape | null = null;\n  #secret = 1;\n  get perimeter(): number {\n    this.label = \"got\";\n    return 4;\n  }\n  describe(): string {\n    return this.kind + this.#secret;\n  }\n}\nexport class Square extends Shape {\n  side = 2;\n  area = 4;\n}\n",
+  "expectedLines": [
+   "inline const bool flight_class_prototype_Shape = flight::register_class_prototype<Shape>(flight::ClassPrototype{{\"describe\"}, {\"perimeter\"}, std::nullopt, true});",
+   "inline const bool flight_class_fields_Shape = flight::register_class_fields<Shape>({{\"kind\", [](const void* object) { return flight::class_field_typeof(static_cast<const Shape*>(object)->kind, nullptr); }}, {\"area\", [](const void* object) { return flight::class_field_typeof(static_cast<const Shape*>(object)->area, nullptr); }}, {\"label\", [](const void* object) { return flight::class_field_typeof(static_cast<const Shape*>(object)->label, \"undefined\"); }}, {\"link\", [](const void* object) { return flight::class_field_typeof(static_cast<const Shape*>(object)->link, \"object\"); }}});",
+   "inline const bool flight_class_prototype_Square = flight::register_class_prototype<Square>(flight::ClassPrototype{{}, {}, std::type_index(typeid(Shape)), false});",
+   "inline const bool flight_class_fields_Square = flight::register_class_fields<Square>({{\"side\", [](const void* object) { return flight::class_field_typeof(static_cast<const Square*>(object)->side, nullptr); }}, {\"area\", [](const void* object) { return flight::class_field_typeof(static_cast<const Square*>(object)->area, nullptr); }}, {\"kind\", [](const void* object) { return flight::class_field_typeof(static_cast<const Square*>(object)->kind, nullptr); }}, {\"label\", [](const void* object) { return flight::class_field_typeof(static_cast<const Square*>(object)->label, \"undefined\"); }}, {\"link\", [](const void* object) { return flight::class_field_typeof(static_cast<const Square*>(object)->link, \"object\"); }}});"
+  ],
+  "result": {
+   "answers": 78,
+   "match": 75,
+   "refused": 3,
+   "refusedWhy": "typeof of the `perimeter` getter: JavaScript runs the getter; the runtime refuses rather than run it",
+   "mismatch": 0,
+   "getterNotRun": true,
+   "unrecordedAllocationRefusedEverywhere": true
+  },
+  "excluded": [
+   "static made (absent, as on the instance)",
+   "#secret (absent as a string key)"
+  ],
+  "oracle": {
+   "shape": {
+    "kind": [
+     true,
+     "string"
+    ],
+    "area": [
+     true,
+     "number"
+    ],
+    "label": [
+     true,
+     "undefined"
+    ],
+    "link": [
+     true,
+     "object"
+    ],
+    "side": [
+     false,
+     "undefined"
+    ],
+    "describe": [
+     true,
+     "function"
+    ],
+    "made": [
+     false,
+     "undefined"
+    ],
+    "secret": [
+     false,
+     "undefined"
+    ],
+    "#secret": [
+     false,
+     "undefined"
+    ],
+    "constructor": [
+     true,
+     "function"
+    ],
+    "toString": [
+     true,
+     "function"
+    ],
+    "nope": [
+     false,
+     "undefined"
+    ],
+    "perimeter": [
+     true,
+     "number"
+    ]
+   },
+   "square": {
+    "kind": [
+     true,
+     "string"
+    ],
+    "area": [
+     true,
+     "number"
+    ],
+    "label": [
+     true,
+     "undefined"
+    ],
+    "link": [
+     true,
+     "object"
+    ],
+    "side": [
+     true,
+     "number"
+    ],
+    "describe": [
+     true,
+     "function"
+    ],
+    "made": [
+     false,
+     "undefined"
+    ],
+    "secret": [
+     false,
+     "undefined"
+    ],
+    "#secret": [
+     false,
+     "undefined"
+    ],
+    "constructor": [
+     true,
+     "function"
+    ],
+    "toString": [
+     true,
+     "function"
+    ],
+    "nope": [
+     false,
+     "undefined"
+    ],
+    "perimeter": [
+     true,
+     "number"
+    ]
+   },
+   "squareAsShape": {
+    "kind": [
+     true,
+     "string"
+    ],
+    "area": [
+     true,
+     "number"
+    ],
+    "label": [
+     true,
+     "undefined"
+    ],
+    "link": [
+     true,
+     "object"
+    ],
+    "side": [
+     true,
+     "number"
+    ],
+    "describe": [
+     true,
+     "function"
+    ],
+    "made": [
+     false,
+     "undefined"
+    ],
+    "secret": [
+     false,
+     "undefined"
+    ],
+    "#secret": [
+     false,
+     "undefined"
+    ],
+    "constructor": [
+     true,
+     "function"
+    ],
+    "toString": [
+     true,
+     "function"
+    ],
+    "nope": [
+     false,
+     "undefined"
+    ],
+    "perimeter": [
+     true,
+     "number"
+    ]
+   }
+  },
+  "native": {
+   "shape": {
+    "kind": [
+     true,
+     "string"
+    ],
+    "area": [
+     true,
+     "number"
+    ],
+    "label": [
+     true,
+     "undefined"
+    ],
+    "link": [
+     true,
+     "object"
+    ],
+    "side": [
+     false,
+     "undefined"
+    ],
+    "describe": [
+     true,
+     "function"
+    ],
+    "made": [
+     false,
+     "undefined"
+    ],
+    "secret": [
+     false,
+     "undefined"
+    ],
+    "#secret": [
+     false,
+     "undefined"
+    ],
+    "constructor": [
+     true,
+     "function"
+    ],
+    "toString": [
+     true,
+     "function"
+    ],
+    "nope": [
+     false,
+     "undefined"
+    ],
+    "perimeter": [
+     true,
+     "REFUSED"
+    ]
+   },
+   "square": {
+    "kind": [
+     true,
+     "string"
+    ],
+    "area": [
+     true,
+     "number"
+    ],
+    "label": [
+     true,
+     "undefined"
+    ],
+    "link": [
+     true,
+     "object"
+    ],
+    "side": [
+     true,
+     "number"
+    ],
+    "describe": [
+     true,
+     "function"
+    ],
+    "made": [
+     false,
+     "undefined"
+    ],
+    "secret": [
+     false,
+     "undefined"
+    ],
+    "#secret": [
+     false,
+     "undefined"
+    ],
+    "constructor": [
+     true,
+     "function"
+    ],
+    "toString": [
+     true,
+     "function"
+    ],
+    "nope": [
+     false,
+     "undefined"
+    ],
+    "perimeter": [
+     true,
+     "REFUSED"
+    ]
+   },
+   "squareAsShape": {
+    "kind": [
+     true,
+     "string"
+    ],
+    "area": [
+     true,
+     "number"
+    ],
+    "label": [
+     true,
+     "undefined"
+    ],
+    "link": [
+     true,
+     "object"
+    ],
+    "side": [
+     true,
+     "number"
+    ],
+    "describe": [
+     true,
+     "function"
+    ],
+    "made": [
+     false,
+     "undefined"
+    ],
+    "secret": [
+     false,
+     "undefined"
+    ],
+    "#secret": [
+     false,
+     "undefined"
+    ],
+    "constructor": [
+     true,
+     "function"
+    ],
+    "toString": [
+     true,
+     "function"
+    ],
+    "nope": [
+     false,
+     "undefined"
+    ],
+    "perimeter": [
+     true,
+     "REFUSED"
+    ]
+   }
+  }
  }
 }

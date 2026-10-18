@@ -1,9 +1,9 @@
 diff --git a/packages/compiler-backend-cpp/src/cppClassFieldRegistration.test.ts b/packages/compiler-backend-cpp/src/cppClassFieldRegistration.test.ts
 new file mode 100644
-index 0000000..04c66ba
+index 0000000..f003fd2
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppClassFieldRegistration.test.ts
-@@ -0,0 +1,36 @@
+@@ -0,0 +1,48 @@
 +import { writeFileSync } from 'node:fs';
 +import ts from 'typescript';
 +import { expect, it } from 'vitest';
@@ -40,11 +40,23 @@ index 0000000..04c66ba
 +  expect(output).toContain('{"start", [](const void* object)');
 +  expect(output).not.toContain('{"count", [](const void* object)');
 +});
++
++it('lists the fields a derived class inherits, read through the derived type', () => {
++  const output = emit(`
++    export class Shape { kind = 'shape'; protected area = 0; #secret = 1; static made = 0; }
++    export class Square extends Shape { side = 2; area = 4; }
++  `);
++
++  expect(output).toContain(
++    'inline const bool flight_class_fields_Square = flight::register_class_fields<Square>({{"side", [](const void* object) { return flight::class_field_typeof(static_cast<const Square*>(object)->side, nullptr); }}, {"area", [](const void* object) { return flight::class_field_typeof(static_cast<const Square*>(object)->area, nullptr); }}, {"kind", [](const void* object) { return flight::class_field_typeof(static_cast<const Square*>(object)->kind, nullptr); }}});',
++  );
++  expect(output).toContain('flight::register_class_prototype<Shape>(flight::ClassPrototype{{}, {}, std::nullopt, true});');
++});
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-index 5616d29..ca687b2 100644
+index dbbccef..dccc0f1 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-@@ -2427,6 +2427,26 @@ function emitClass(declaration: Readonly<IrClassDeclaration>, outer: EmitContext
+@@ -2427,6 +2427,46 @@ function emitClass(declaration: Readonly<IrClassDeclaration>, outer: EmitContext
      lines.push(
        `inline const bool flight_class_prototype_${name} = flight::register_class_prototype<${name}>(flight::ClassPrototype{{${methods}}, {${accessors}}, ${base}, ${hasSubclass ? 'true' : 'false'}});`,
      );
@@ -56,9 +68,29 @@ index 5616d29..ca687b2 100644
 +    // The fields come from the IR, not the emitted struct, so storage inherited from an interface base
 +    // (a field the class does not re-declare) is still listed and still reachable by name.
 +    context.includes.add('flight/structural_ref.hpp');
-+    const ownFields = declaration.fields.filter(
-+      (field) => !field.static && !field.declare && !field.abstract && !field.branded && !field.name.startsWith('#'),
-+    );
++    type ClassField = (typeof declaration.fields)[number];
++    const isInstanceField = (field: Readonly<ClassField>): boolean =>
++      !field.static && !field.declare && !field.abstract && !field.branded && !field.name.startsWith('#');
++    const ownFields: Readonly<ClassField>[] = declaration.fields.filter(isInstanceField);
++    // Fields this class inherits from its base CLASS chain are own properties of its instances too (the base
++    // constructor defines them). They are listed here, read through THIS class's type -- C++ inheritance
++    // makes the base member reachable from it -- so a typeof on a derived instance never applies a reader
++    // to a layout it was not written for. A base the emitter cannot resolve contributes nothing, and the
++    // runtime then refuses typeof of that base's fields on this class rather than guessing.
++    const listed = new Set(ownFields.map((field) => field.name));
++    let baseReference = declaration.extends;
++    let baseModule = context.module;
++    for (let depth = 0; baseReference && depth < 64; depth += 1) {
++      const base = getCppClassDeclarationRefCpp(baseReference, baseModule, context);
++      if (!base) break;
++      for (const field of base.declaration.fields) {
++        if (!isInstanceField(field) || listed.has(field.name)) continue;
++        listed.add(field.name);
++        ownFields.push(field);
++      }
++      baseReference = base.declaration.extends;
++      baseModule = base.module;
++    }
 +    const fieldEntries = ownFields.map((field) => {
 +      const admitsUndefined = field.optional || isCppTypeAdmittingUndefinedCpp(field.type, context);
 +      const admitsNull = isCppTypeAdmittingNullCpp(field.type, context);
