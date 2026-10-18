@@ -14,7 +14,7 @@ int main(){
  {
   auto parsed=flight::Json::parse(R"({"v":7})");auto object=parsed.object_owner();lifetime=object;
   auto row=flight::json_assertion_row<Schema>(flight::Any(parsed));retained=row;
-  check(row.identity()==object.get());
+  check(row.shared_native_object().get()==object.get());
   check(flight::json_row_member(row,"v").as_number()==7);
   bool nativeReadRejected=false;try{(void)flight::row_get<flight::RowKey<"v">>(row);}catch(const std::exception& error){nativeReadRejected=true;std::cout<<"number-v typed read: "<<error.what()<<'\n';}
   check(nativeReadRejected);
