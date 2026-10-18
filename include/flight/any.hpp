@@ -534,6 +534,14 @@ class Any final {
     return stored->row_owner(stored->object);
   }
 
+  // The held object's erased pointer, sharing ownership, or null for every other kind. For identity and for
+  // recovering the allocation's recorded exact type; reaching the object at a type still goes through
+  // `object_if`, which checks.
+  [[nodiscard]] std::shared_ptr<void> held_object() const noexcept {
+    const auto* stored = std::get_if<detail::AnyObject>(&value_);
+    return stored ? stored->object : nullptr;
+  }
+
   [[nodiscard]] std::type_index held_type() const noexcept {
     if (const auto* stored = std::get_if<detail::AnyObject>(&value_)) return stored->type;
     if (const auto* array = std::get_if<detail::AnyArray>(&value_)) return array->type;

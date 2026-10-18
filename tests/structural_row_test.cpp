@@ -1328,13 +1328,15 @@ int main() {
     check(accessor_refused, "typeof of an inherited accessor would run its getter, so it is refused");
     bool subclassed_refused = false;
     try {
-      static_cast<void>(flight::has_property(flight::Any::object(flight::make_ref<TestPrototypeBase>()),
+      static_cast<void>(flight::has_property(flight::Any::object(std::make_shared<TestPrototypeBase>()),
                                              flight::String("shared")));
     } catch (const flight::OutOfProfileError&) {
       subclassed_refused = true;
     }
     check(test_prototype_base_registered && subclassed_refused,
-          "a class with subclasses is refused without the object's exact type");
+          "a class with subclasses is refused when no allocation record proves the object's exact type");
+    check(flight::has_property(flight::Any::object(flight::make_ref<TestPrototypeBase>()), flight::String("shared")),
+          "and answered when make_ref recorded that the object is exactly that class");
   }
 
   // One owner, not two: a write through the typed row is visible through the erased view, and the

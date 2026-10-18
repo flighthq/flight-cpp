@@ -115,6 +115,14 @@ bool register_class_property_readers(std::vector<ClassPropertyReader> readers) {
   return std::nullopt;
 }
 
+// Whether `type` is a registered class that an emitted class extends.
+[[nodiscard]] inline bool class_has_subclasses(std::type_index type) {
+  auto& registry = detail::class_prototype_registry();
+  const std::lock_guard lock(registry.mutex);
+  const auto found = registry.classes.find(type);
+  return found != registry.classes.end() && found->second.has_subclasses;
+}
+
 [[nodiscard]] inline bool is_registered_class(std::type_index type) {
   auto& registry = detail::class_prototype_registry();
   const std::lock_guard lock(registry.mutex);
@@ -124,15 +132,17 @@ bool register_class_property_readers(std::vector<ClassPropertyReader> readers) {
 // Walks the registered prototype chain of `type` for `key`. An unregistered type has no class
 // prototype (it is a plain object, whose prototype is Object.prototype) and answers `none`. Reaching a
 // registered class with subclasses refuses, because the stored type is not proven to be the exact one.
-// The class field named `key` on the chain of `type`, and whether `type` itself declares it (only then may
-// its reader be applied to an object of `type`). Refuses, like find_inherited_member, a class with emitted
-// subclasses, because the stored type is not proven to be the object's exact one.
+// The class field named `key` on the chain of `type`, and whether `type` itself lists it (only then may its
+// reader be applied to an object of `type`; a derived class lists the fields it inherits, read through its
+// own type). Refuses, like find_inherited_member, a starting class with emitted subclasses unless the
+// caller has proven `type` is the object's exact one.
 struct ClassFieldHit final {
   ClassField field;
   bool declared_by_exact_type = false;
 };
 
-[[nodiscard]] inline std::optional<ClassFieldHit> find_class_field(std::type_index type, std::string_view key) {
+[[nodiscard]] inline std::optional<ClassFieldHit> find_class_field(std::type_index type, std::string_view key,
+                                                                   bool exact_type_proven = false) {
   auto& registry = detail::class_prototype_registry();
   const std::lock_guard lock(registry.mutex);
   std::optional<std::type_index> current = type;
@@ -140,7 +150,7 @@ struct ClassFieldHit final {
   while (current) {
     const auto found = registry.classes.find(*current);
     if (found == registry.classes.end()) return std::nullopt;
-    if (found->second.has_subclasses) {
+    if (exact && found->second.has_subclasses && !exact_type_proven) {
       throw OutOfProfileError("a class with emitted subclasses is reached without the object's exact type");
     }
     if (const auto fields = registry.fields.find(*current); fields != registry.fields.end()) {
@@ -169,16 +179,21 @@ struct ClassFieldHit final {
   return true;
 }
 
-[[nodiscard]] inline InheritedMemberKind find_inherited_member(std::type_index type, std::string_view key) {
+[[nodiscard]] inline InheritedMemberKind find_inherited_member(std::type_index type, std::string_view key,
+                                                              bool exact_type_proven = false) {
   auto& registry = detail::class_prototype_registry();
   const std::lock_guard lock(registry.mutex);
   std::optional<std::type_index> current = type;
+  bool start = true;
   while (current) {
     const auto found = registry.classes.find(*current);
     if (found == registry.classes.end()) return InheritedMemberKind::none;
-    if (found->second.has_subclasses) {
+    // Only the STARTING type can be a stand-in for a subclass; a base reached by walking up from a
+    // proven type is exactly what that object inherits.
+    if (start && found->second.has_subclasses && !exact_type_proven) {
       throw OutOfProfileError("a class with emitted subclasses is reached without the object's exact type");
     }
+    start = false;
     for (const auto& name : found->second.methods) {
       if (name == key) return InheritedMemberKind::method;
     }

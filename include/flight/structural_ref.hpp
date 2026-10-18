@@ -2784,6 +2784,28 @@ template <typename Value>
 // function or external value, an object whose type never reached the row machinery, a class whose
 // subclasses its stored type does not rule out, a key a native row does not bind -- raises
 // OutOfProfileError instead of answering. "Absent" is answered only by an owner that knows every own key.
+namespace detail {
+
+// The class an erased object answers for: the type it was boxed at, or -- when that is a registered class
+// with emitted subclasses, so the object may be a subclass -- the exact type make_ref recorded for its
+// allocation, with that allocation's own address for the field readers. `exact` is false only when the
+// boxed type has subclasses and no record proves which one the object is; the lookups then refuse.
+struct ErasedClassTarget final {
+  std::type_index type;
+  const void* object;
+  bool exact;
+};
+
+[[nodiscard]] inline ErasedClassTarget erased_class_target(const Any& value) {
+  const auto held = value.held_object();
+  const auto type = value.held_type();
+  if (!class_has_subclasses(type)) return {type, held.get(), true};
+  if (const auto identity = recoverable_owner_identity(held)) return {identity->type, identity->object.get(), true};
+  return {type, held.get(), false};
+}
+
+} // namespace detail
+
 [[nodiscard]] inline bool has_property(const Any& value, const String& key) {
   switch (value.kind()) {
     case AnyKind::object:
@@ -2811,23 +2833,24 @@ template <typename Value>
   }
   const auto view = named_properties(value);
   if (!view) throw OutOfProfileError("`in` on an object whose type never reached the row machinery");
+  const auto target = detail::erased_class_target(value);
   // A fully registered class names its complete own key set -- its declared fields (own from construction
   // under define semantics, whatever they hold) -- so the answer comes from that registration alone. Its
   // bound cells are not consulted: a STATIC member satisfies the member table's binding too, and is not
   // an instance property.
-  if (is_complete_registered_class(value.held_type())) {
-    if (find_class_field(value.held_type(), key.to_utf8())) return true;
-    if (find_inherited_member(value.held_type(), key.to_utf8()) != InheritedMemberKind::none) return true;
+  if (is_complete_registered_class(target.type)) {
+    if (find_class_field(target.type, key.to_utf8(), target.exact)) return true;
+    if (find_inherited_member(target.type, key.to_utf8(), target.exact) != InheritedMemberKind::none) return true;
     return is_object_prototype_property(key);
   }
-  if (find_class_field(value.held_type(), key.to_utf8())) return true;
+  if (find_class_field(target.type, key.to_utf8(), target.exact)) return true;
   if (view.presence_ambiguous(key)) {
     throw OutOfProfileError("`in` on an unset optional member bound without a presence policy: null and omitted differ");
   }
   if (view.has(key)) return true;
-  if (find_inherited_member(value.held_type(), key.to_utf8()) != InheritedMemberKind::none) return true;
+  if (find_inherited_member(target.type, key.to_utf8(), target.exact) != InheritedMemberKind::none) return true;
   if (is_object_prototype_property(key)) return true;
-  if (is_complete_registered_class(value.held_type())) return false;
+  if (is_complete_registered_class(target.type)) return false;
   if (!view.knows_every_key()) {
     throw OutOfProfileError("`in` on a native object for a key its bound members lack: it may be an unbound declared field");
   }
@@ -2852,17 +2875,18 @@ template <typename Value>
   if (value.is_array()) throw OutOfProfileError("typeof of a member of an erased array");
   const auto view = named_properties(value);
   if (!view) throw OutOfProfileError("typeof of a member of an object whose type never reached the row machinery");
-  const bool complete_class = is_complete_registered_class(value.held_type());
-  if (const auto field = find_class_field(value.held_type(), key.to_utf8())) {
+  const auto target = detail::erased_class_target(value);
+  const bool complete_class = is_complete_registered_class(target.type);
+  if (const auto field = find_class_field(target.type, key.to_utf8(), target.exact)) {
     if (!field->declared_by_exact_type || field->field.type_of == nullptr) {
-      throw OutOfProfileError("typeof of a class field declared by a base class: its reader is for the base layout");
+      throw OutOfProfileError("typeof of a class field the exact class does not list: no reader for this layout");
     }
-    const char* answer = field->field.type_of(value.erased_ref().identity());
+    const char* answer = field->field.type_of(target.object);
     if (answer == nullptr) throw OutOfProfileError("typeof of a class field whose stored value cannot say: null and undefined share its carrier");
     return String(answer);
   }
   if (complete_class) {
-    switch (find_inherited_member(value.held_type(), key.to_utf8())) {
+    switch (find_inherited_member(target.type, key.to_utf8(), target.exact)) {
       case InheritedMemberKind::method:
         return String("function");
       case InheritedMemberKind::accessor:
@@ -2877,7 +2901,7 @@ template <typename Value>
     throw OutOfProfileError("typeof of an unset optional member bound without a presence policy: null and omitted differ");
   }
   if (view.has(key)) return view.get(key).type_of();
-  switch (find_inherited_member(value.held_type(), key.to_utf8())) {
+  switch (find_inherited_member(target.type, key.to_utf8(), target.exact)) {
     case InheritedMemberKind::method:
       return String("function");
     case InheritedMemberKind::accessor:
@@ -2887,7 +2911,7 @@ template <typename Value>
   }
   if (key.to_utf8() == "__proto__") throw OutOfProfileError("typeof of __proto__ reads the prototype accessor");
   if (is_object_prototype_property(key)) return String("function");
-  if (is_complete_registered_class(value.held_type())) return String("undefined");
+  if (is_complete_registered_class(target.type)) return String("undefined");
   if (!view.knows_every_key()) {
     throw OutOfProfileError("typeof of a member a native object's bound members lack: it may be an unbound declared field");
   }
