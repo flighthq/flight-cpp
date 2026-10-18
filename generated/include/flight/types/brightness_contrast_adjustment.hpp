@@ -19,10 +19,7 @@ struct BrightnessContrastAdjustment;
 
 namespace flight::types {
 
-struct BrightnessContrastAdjustment : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
-  flight::Array<double> color_matrix;
+struct BrightnessContrastAdjustment : public flight::types::ColorMatrixAdjustment {
   std::optional<double> brightness;
   std::optional<double> contrast;
 };

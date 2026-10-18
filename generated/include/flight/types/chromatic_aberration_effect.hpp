@@ -18,9 +18,7 @@ struct ChromaticAberrationEffect;
 
 namespace flight::types {
 
-struct ChromaticAberrationEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct ChromaticAberrationEffect : public flight::types::Effect {
   std::optional<double> intensity;
   std::optional<bool> radial;
 };

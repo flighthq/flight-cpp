@@ -18,9 +18,7 @@ struct LensDistortionEffect;
 
 namespace flight::types {
 
-struct LensDistortionEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct LensDistortionEffect : public flight::types::Effect {
   std::optional<double> amount;
   std::optional<double> scale;
 };

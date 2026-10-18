@@ -30,8 +30,7 @@ using BitmapFontEncoding = flight::String;
 
 namespace flight::types {
 
-struct BitmapFont : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct BitmapFont : public flight::types::Entity {
   BitmapFontEncoding encoding;
   flight::Map<double, flight::Ref<flight::types::GlyphEntry>> glyphs;
   flight::Map<double, double> kerning;

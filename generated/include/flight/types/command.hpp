@@ -36,8 +36,7 @@ using CommandBindingTable = flight::Map<flight::String, flight::Ref<CommandBindi
 
 namespace flight::types {
 
-struct Command : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Command : public flight::types::Entity {
   flight::String kind;
   flight::String label;
 };
@@ -48,8 +47,7 @@ struct CommandBinding : public flight::ReferenceEnabled {
   std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Command>>>>)> undo;
 };
 
-struct CommandHistory : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct CommandHistory : public flight::types::Entity {
   CommandBindingTable bindings;
   flight::Array<flight::Ref<Command>> entries;
   double index;

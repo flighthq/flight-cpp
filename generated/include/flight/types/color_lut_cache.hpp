@@ -20,8 +20,7 @@ struct ColorLutCache;
 
 namespace flight::types {
 
-struct ColorLutCache : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct ColorLutCache : public flight::types::Entity {
   std::optional<flight::String> signature;
   std::optional<flight::Ref<flight::types::ColorLut>> lut;
 };

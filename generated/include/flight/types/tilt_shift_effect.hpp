@@ -18,9 +18,7 @@ struct TiltShiftEffect;
 
 namespace flight::types {
 
-struct TiltShiftEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct TiltShiftEffect : public flight::types::Effect {
   std::optional<double> center;
   std::optional<double> width;
   std::optional<double> blur;

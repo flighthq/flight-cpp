@@ -25,8 +25,7 @@ using AudioBusMixerGuard = std::function<void(flight::String, flight::Structural
 
 namespace flight::types {
 
-struct AudioBus : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct AudioBus : public flight::types::Entity {
   double gain;
   bool muted;
   flight::String name;
@@ -40,8 +39,7 @@ struct AudioBusOptions : public flight::ReferenceEnabled {
   std::optional<double> pan;
 };
 
-struct AudioMixer : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct AudioMixer : public flight::types::Entity {
   double master_gain;
   bool master_muted;
 };

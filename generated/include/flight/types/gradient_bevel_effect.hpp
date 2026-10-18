@@ -19,7 +19,7 @@ struct GradientBevelEffect;
 
 namespace flight::types {
 
-struct GradientBevelEffect : public Effect {
+struct GradientBevelEffect : public flight::types::Effect {
   flight::Array<double> alphas;
   std::optional<double> angle;
   std::optional<flight::String> bevel_type;

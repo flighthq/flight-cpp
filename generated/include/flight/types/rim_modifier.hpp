@@ -20,10 +20,7 @@ struct RimModifier;
 
 namespace flight::types {
 
-struct RimModifier : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
-  flight::String slot;
+struct RimModifier : public flight::types::Modifier {
   double color;
   std::optional<double> power;
   std::optional<double> intensity;

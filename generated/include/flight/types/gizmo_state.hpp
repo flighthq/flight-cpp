@@ -3,7 +3,6 @@
 #include <flight/structural_ref.hpp>
 #include <flight/types/hierarchy_node.hpp>
 #include <functional>
-#include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -72,8 +71,7 @@ struct GizmoSignals : public flight::ReferenceEnabled {
 };
 
 template <typename NodeType>
-struct GizmoState : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct GizmoState : public flight::types::Entity {
 };
 
 } // namespace flight::types

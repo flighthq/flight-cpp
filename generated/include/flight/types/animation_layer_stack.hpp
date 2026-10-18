@@ -37,8 +37,7 @@ struct AnimationLayerOptions : public flight::ReferenceEnabled {
   std::optional<double> weight;
 };
 
-struct AnimationLayer : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct AnimationLayer : public flight::types::Entity {
   bool additive;
   std::optional<flight::Ref<flight::types::AnimationBlendTree>> blend_tree;
   std::optional<flight::Array<double>> channel_indices;
@@ -56,8 +55,7 @@ struct AnimationLayerStackChannel : public flight::ReferenceEnabled {
   flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<AnimationLayerStackChannelSource>>>>> sources;
 };
 
-struct AnimationLayerStack : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct AnimationLayerStack : public flight::types::Entity {
   flight::Array<flight::Ref<flight::types::AnimationPlayer>> advance_scratch;
   flight::Array<flight::Ref<flight::types::AnimationBlendTree>> blend_trees;
   flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<AnimationLayerStackChannel>>>>> channels;

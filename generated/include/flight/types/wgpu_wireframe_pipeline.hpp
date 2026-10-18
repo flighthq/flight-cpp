@@ -2,7 +2,6 @@
 #pragma once
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/string.hpp>
-#include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -21,14 +20,7 @@ struct WgpuWireframeUpload;
 
 namespace flight::types {
 
-struct WgpuWireframePipeline : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  bool has_ibl_group;
-  bool has_pbr_sample_group;
-  bool has_shadow_group;
-  flight::host_sdl::WgpuBindGroupLayout material_bind_group_layout;
-  flight::host_sdl::WgpuRenderPipeline pipeline;
-  bool skinned;
+struct WgpuWireframePipeline : public flight::types::WgpuMeshPipeline {
 };
 
 struct WgpuWireframeUpload : public flight::ReferenceEnabled {

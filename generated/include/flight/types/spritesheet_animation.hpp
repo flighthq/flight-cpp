@@ -19,8 +19,7 @@ struct SpritesheetAnimation;
 
 namespace flight::types {
 
-struct SpritesheetAnimation : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct SpritesheetAnimation : public flight::types::Entity {
   flight::Array<double> frames;
   double frame_duration;
   std::optional<flight::Array<double>> frame_durations;

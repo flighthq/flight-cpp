@@ -20,8 +20,7 @@ struct CameraShakeOffset;
 
 namespace flight::types {
 
-struct CameraShake : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct CameraShake : public flight::types::Entity {
   double trauma;
   double decay;
   double frequency;
@@ -37,8 +36,7 @@ struct CameraShakeOptions : public flight::ReferenceEnabled {
   std::optional<double> translation_amplitude;
 };
 
-struct CameraShakeOffset : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct CameraShakeOffset : public flight::types::Entity {
   double rotation_x;
   double rotation_y;
   double rotation_z;

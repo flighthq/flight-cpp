@@ -63,9 +63,7 @@ struct texture_uploaded_version_fa13fb47a7a23f0b : public flight::ReferenceEnabl
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_TEXTURE_UPLOADED_VERSION_FA13FB47A7A23F0B
 
-struct GlContextRuntime : public flight::ReferenceEnabled {
-  std::optional<flight::ErasedRef> binding;
-  std::optional<flight::String> uid;
+struct GlContextRuntime : public flight::types::EntityRuntime {
   flight::host_sdl::WebGl2Context gl;
   double references;
   flight::Array<std::function<void(flight::host_sdl::WebGl2Context)>> teardowns;

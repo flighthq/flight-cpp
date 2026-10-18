@@ -18,8 +18,7 @@ struct SpritesheetFrame;
 
 namespace flight::types {
 
-struct SpritesheetFrame : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct SpritesheetFrame : public flight::types::Entity {
   double id;
   double offset_x;
   double offset_y;

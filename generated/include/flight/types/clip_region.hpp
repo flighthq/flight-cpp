@@ -28,8 +28,7 @@ using ClipRegionUseGuard = std::function<void(flight::StructuralRef<flight::RowR
 
 namespace flight::types {
 
-struct ClipRegion : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct ClipRegion : public flight::types::Entity {
   flight::Ref<flight::types::Rectangle> rect;
   std::optional<flight::Array<flight::Array<double>>> contours;
   flight::types::PathWinding winding;

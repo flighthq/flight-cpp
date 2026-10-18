@@ -27,8 +27,7 @@ using ClipNode = flight::StructuralRef<flight::RowMerge<flight::RowMerge<flight:
 
 namespace flight::types {
 
-struct HasClip : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct HasClip : public flight::types::Entity {
   std::optional<flight::Ref<flight::types::ClipRegion>> clip;
 };
 

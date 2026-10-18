@@ -2,7 +2,6 @@
 #pragma once
 #include <flight/structural_ref.hpp>
 #include <functional>
-#include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -35,8 +34,7 @@ struct ik_path_transform_95ff0cd8aed2477c : public flight::ReferenceEnabled {
 
 inline flight::Ref<ik_path_transform_95ff0cd8aed2477c> skeleton_2d_constraint_kind = flight::make_ref<ik_path_transform_95ff0cd8aed2477c>(ik_path_transform_95ff0cd8aed2477c{.ik = flight::String("Skeleton2D.IkConstraint"), .path = flight::String("Skeleton2D.PathConstraint"), .transform = flight::String("Skeleton2D.TransformConstraint")});
 
-struct Skeleton2DConstraint : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Skeleton2DConstraint : public flight::types::Entity {
   Skeleton2DConstraintKind kind;
   double mix;
 };

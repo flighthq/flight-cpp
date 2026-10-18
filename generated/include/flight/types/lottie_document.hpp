@@ -118,42 +118,26 @@ struct LottieShapeItemBase : public flight::ReferenceEnabled {
   flight::String ty;
 };
 
-struct LottieShapePathItem : public flight::ReferenceEnabled {
-  std::optional<bool> hd;
-  std::optional<double> ix;
-  std::optional<flight::String> nm;
-  flight::String ty;
+struct LottieShapePathItem : public LottieShapeItemBase {
   std::optional<double> d;
   std::optional<double> ind;
   LottieAnimatable<flight::Ref<LottieShapePath>> ks;
 };
 
-struct LottieRectangleShapeItem : public flight::ReferenceEnabled {
-  std::optional<bool> hd;
-  std::optional<double> ix;
-  std::optional<flight::String> nm;
-  flight::String ty;
+struct LottieRectangleShapeItem : public LottieShapeItemBase {
   std::optional<double> d;
   LottieAnimatable<flight::Array<double>> p;
   LottieAnimatable<double> r;
   LottieAnimatable<flight::Array<double>> s;
 };
 
-struct LottieEllipseShapeItem : public flight::ReferenceEnabled {
-  std::optional<bool> hd;
-  std::optional<double> ix;
-  std::optional<flight::String> nm;
-  flight::String ty;
+struct LottieEllipseShapeItem : public LottieShapeItemBase {
   std::optional<double> d;
   LottieAnimatable<flight::Array<double>> p;
   LottieAnimatable<flight::Array<double>> s;
 };
 
-struct LottiePolystarShapeItem : public flight::ReferenceEnabled {
-  std::optional<bool> hd;
-  std::optional<double> ix;
-  std::optional<flight::String> nm;
-  flight::String ty;
+struct LottiePolystarShapeItem : public LottieShapeItemBase {
   std::optional<double> d;
   std::optional<LottieAnimatable<double>> ir;
   std::optional<LottieAnimatable<double>> is;
@@ -165,11 +149,7 @@ struct LottiePolystarShapeItem : public flight::ReferenceEnabled {
   double sy;
 };
 
-struct LottieFillShapeItem : public flight::ReferenceEnabled {
-  std::optional<bool> hd;
-  std::optional<double> ix;
-  std::optional<flight::String> nm;
-  flight::String ty;
+struct LottieFillShapeItem : public LottieShapeItemBase {
   std::optional<double> bm;
   LottieAnimatable<flight::Array<double>> c;
   std::optional<double> r;
@@ -182,11 +162,7 @@ struct LottieDashEntry : public flight::ReferenceEnabled {
   LottieAnimatable<double> v;
 };
 
-struct LottieStrokeShapeItem : public flight::ReferenceEnabled {
-  std::optional<bool> hd;
-  std::optional<double> ix;
-  std::optional<flight::String> nm;
-  flight::String ty;
+struct LottieStrokeShapeItem : public LottieShapeItemBase {
   std::optional<double> bm;
   LottieAnimatable<flight::Array<double>> c;
   std::optional<flight::Array<flight::Ref<LottieDashEntry>>> d;
@@ -203,11 +179,7 @@ struct LottieGradient : public flight::ReferenceEnabled {
   LottieAnimatable<flight::Array<double>> k;
 };
 
-struct LottieGradientShapeItem : public flight::ReferenceEnabled {
-  std::optional<bool> hd;
-  std::optional<double> ix;
-  std::optional<flight::String> nm;
-  flight::String ty;
+struct LottieGradientShapeItem : public LottieShapeItemBase {
   std::optional<double> bm;
   std::optional<flight::Array<flight::Ref<LottieDashEntry>>> d;
   LottieAnimatable<flight::Array<double>> e;
@@ -225,11 +197,7 @@ struct LottieGradientShapeItem : public flight::ReferenceEnabled {
   std::optional<LottieAnimatable<double>> w;
 };
 
-struct LottieTransformShapeItem : public flight::ReferenceEnabled {
-  std::optional<bool> hd;
-  std::optional<double> ix;
-  std::optional<flight::String> nm;
-  flight::String ty;
+struct LottieTransformShapeItem : public LottieShapeItemBase {
   std::optional<LottieAnimatable<flight::Array<double>>> a;
   std::optional<LottieAnimatable<double>> o;
   std::optional<LottiePositionProperty> p;
@@ -240,54 +208,30 @@ struct LottieTransformShapeItem : public flight::ReferenceEnabled {
   std::optional<LottieAnimatable<double>> sk;
 };
 
-struct LottieRepeaterTransform : public flight::ReferenceEnabled {
-  std::optional<LottieAnimatable<flight::Array<double>>> a;
-  std::optional<LottieAnimatable<double>> o;
-  std::optional<LottiePositionProperty> p;
-  std::optional<LottieAnimatable<double>> r;
-  std::optional<LottieAnimatable<double>> rz;
-  std::optional<LottieAnimatable<flight::Array<double>>> s;
-  std::optional<LottieAnimatable<double>> sa;
-  std::optional<LottieAnimatable<double>> sk;
+struct LottieRepeaterTransform : public LottieTransform {
   std::optional<LottieAnimatable<double>> eo;
   std::optional<LottieAnimatable<double>> so;
 };
 
-struct LottieTrimPathShapeItem : public flight::ReferenceEnabled {
-  std::optional<bool> hd;
-  std::optional<double> ix;
-  std::optional<flight::String> nm;
-  flight::String ty;
+struct LottieTrimPathShapeItem : public LottieShapeItemBase {
   LottieAnimatable<double> e;
   double m;
   LottieAnimatable<double> o;
   LottieAnimatable<double> s;
 };
 
-struct LottieRepeaterShapeItem : public flight::ReferenceEnabled {
-  std::optional<bool> hd;
-  std::optional<double> ix;
-  std::optional<flight::String> nm;
-  flight::String ty;
+struct LottieRepeaterShapeItem : public LottieShapeItemBase {
   LottieAnimatable<double> c;
   std::optional<double> m;
   LottieAnimatable<double> o;
   flight::Ref<LottieRepeaterTransform> tr;
 };
 
-struct LottieMergePathShapeItem : public flight::ReferenceEnabled {
-  std::optional<bool> hd;
-  std::optional<double> ix;
-  std::optional<flight::String> nm;
-  flight::String ty;
+struct LottieMergePathShapeItem : public LottieShapeItemBase {
   double mm;
 };
 
-struct LottieRoundedCornersShapeItem : public flight::ReferenceEnabled {
-  std::optional<bool> hd;
-  std::optional<double> ix;
-  std::optional<flight::String> nm;
-  flight::String ty;
+struct LottieRoundedCornersShapeItem : public LottieShapeItemBase {
   LottieAnimatable<double> r;
 };
 
@@ -366,11 +310,7 @@ struct LottieShapeItem : public std::variant<flight::Ref<LottieRectangleShapeIte
   using Base::operator=;
 };
 
-struct LottieShapeGroup : public flight::ReferenceEnabled {
-  std::optional<bool> hd;
-  std::optional<double> ix;
-  std::optional<flight::String> nm;
-  flight::String ty;
+struct LottieShapeGroup : public LottieShapeItemBase {
   flight::Array<LottieShapeItem> it;
   std::optional<double> np;
 };

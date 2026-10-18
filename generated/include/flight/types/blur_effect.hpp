@@ -18,7 +18,7 @@ struct BlurEffect;
 
 namespace flight::types {
 
-struct BlurEffect : public Effect {
+struct BlurEffect : public flight::types::Effect {
   std::optional<double> blur_x;
   std::optional<double> blur_y;
 };

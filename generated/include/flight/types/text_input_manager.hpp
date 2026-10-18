@@ -36,8 +36,7 @@ struct TextInputSource : public flight::ReferenceEnabled {
   std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::InputTextData>>>>)>>> on_text_input;
 };
 
-struct TextInputManager : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct TextInputManager : public flight::types::Entity {
   bool enabled;
   std::optional<flight::Ref<flight::types::RichText>> focused;
 };

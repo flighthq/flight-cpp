@@ -2,7 +2,6 @@
 #pragma once
 #include <flight/any.hpp>
 #include <functional>
-#include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -22,8 +21,7 @@ struct SignalScope;
 
 namespace flight::types {
 
-struct SignalScope : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct SignalScope : public flight::types::Entity {
   flight::Array<std::shared_ptr<flight::types::SignalConnection<std::function<void(flight::Array<flight::Any>)>>>> connections;
 };
 

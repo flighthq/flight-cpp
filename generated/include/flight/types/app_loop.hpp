@@ -24,8 +24,7 @@ struct AppLoop;
 
 namespace flight::types {
 
-struct AppLoop : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct AppLoop : public flight::types::Entity {
   double delta_time;
   double elapsed_time;
   double frame_count;

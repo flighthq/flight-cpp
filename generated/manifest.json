@@ -428,7 +428,6 @@
         "flight/types/gizmo_state.hpp",
         "flight/types/gl_context_loss.hpp",
         "flight/types/gui_dialog.hpp",
-        "flight/types/input_manager.hpp",
         "flight/types/input_signals.hpp",
         "flight/types/instanced_mesh_signals.hpp",
         "flight/types/interaction_signals.hpp",
@@ -679,8 +678,6 @@
         "flight/types/bitmap_text.hpp",
         "flight/types/display_object.hpp",
         "flight/types/html_view.hpp",
-        "flight/types/instanced_mesh.hpp",
-        "flight/types/mesh.hpp",
         "flight/types/morph_shape.hpp",
         "flight/types/movie_clip.hpp",
         "flight/types/native_text.hpp",
@@ -3157,9 +3154,7 @@
       "id": "assets-acquire-guard-callable-identity"
     },
     {
-      "files": [
-        "flight/types/command.hpp"
-      ],
+      "files": [],
       "id": "command-interface-heritage"
     },
     {
@@ -3247,21 +3242,15 @@
       "id": "skeleton3d-mesh-weights-exact-geometry-owner"
     },
     {
-      "files": [
-        "flight/types/color_matrix_adjustment.hpp"
-      ],
+      "files": [],
       "id": "adjustments-color-matrix-interface-heritage"
     },
     {
-      "files": [
-        "flight/types/tint_adjustment.hpp"
-      ],
+      "files": [],
       "id": "adjustments-tint-interface-heritage"
     },
     {
-      "files": [
-        "flight/types/color_scale_bias_adjustment.hpp"
-      ],
+      "files": [],
       "id": "adjustments-color-scale-bias-interface-heritage"
     },
     {
@@ -3559,15 +3548,11 @@
       "id": "layout-declare-refused-anchor-resolver"
     },
     {
-      "files": [
-        "flight/types/timeline_cue.hpp"
-      ],
+      "files": [],
       "id": "timeline-audio-cue-interface-heritage"
     },
     {
-      "files": [
-        "flight/types/timeline_cue.hpp"
-      ],
+      "files": [],
       "id": "timeline-stream-audio-cue-interface-heritage"
     },
     {
@@ -3613,57 +3598,39 @@
       "id": "scene2d-formats-svg-declare-refused-style"
     },
     {
-      "files": [
-        "flight/types/drop_shadow_effect.hpp"
-      ],
+      "files": [],
       "id": "effects-drop-shadow-effect-interface-heritage"
     },
     {
-      "files": [
-        "flight/types/inner_shadow_effect.hpp"
-      ],
+      "files": [],
       "id": "effects-inner-shadow-effect-interface-heritage"
     },
     {
-      "files": [
-        "flight/types/bevel_effect.hpp"
-      ],
+      "files": [],
       "id": "effects-bevel-effect-interface-heritage"
     },
     {
-      "files": [
-        "flight/types/blur_effect.hpp"
-      ],
+      "files": [],
       "id": "effects-blur-effect-interface-heritage"
     },
     {
-      "files": [
-        "flight/types/convolution_effect.hpp"
-      ],
+      "files": [],
       "id": "effects-convolution-effect-interface-heritage"
     },
     {
-      "files": [
-        "flight/types/gradient_bevel_effect.hpp"
-      ],
+      "files": [],
       "id": "effects-gradient-bevel-effect-interface-heritage"
     },
     {
-      "files": [
-        "flight/types/gradient_glow_effect.hpp"
-      ],
+      "files": [],
       "id": "effects-gradient-glow-effect-interface-heritage"
     },
     {
-      "files": [
-        "flight/types/inner_glow_effect.hpp"
-      ],
+      "files": [],
       "id": "effects-inner-glow-effect-interface-heritage"
     },
     {
-      "files": [
-        "flight/types/outer_glow_effect.hpp"
-      ],
+      "files": [],
       "id": "effects-outer-glow-effect-interface-heritage"
     }
   ],
@@ -4607,10 +4574,10 @@
       "package": "@flighthq/mesh"
     },
     {
-      "dependency": "flight",
-      "digest": "52c4a9162d6d319c8ab0670f804d31d616e4e2d11e67c74fd06747c4f2a7c8b9",
-      "id": "texture-like-concrete-value-arms",
-      "module": "packages/types/src/Texture.ts",
+      "dependency": "flight-compiler",
+      "digest": "8ae3e02fb34baaba6cfa8bb200b31bd57a647bb011e1e3343bde2bc3c6532346",
+      "id": "compiler-interface-native-heritage-widening",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
       "package": "@flighthq/types"
     },
     {
@@ -4657,10 +4624,10 @@
     },
     {
       "dependency": "flight",
-      "digest": "9ec7259170dcb0e5bef12d3efc81f2fd7fc50b6ab0b3d5b74fc4e0a9c6155699",
-      "id": "texture-source-concrete-value-arms",
-      "module": "packages/types/src/TextureSourceValue.ts and cube Texture source storage",
-      "package": "@flighthq/types and @flighthq/scene3d-gl"
+      "digest": "52c4a9162d6d319c8ab0670f804d31d616e4e2d11e67c74fd06747c4f2a7c8b9",
+      "id": "texture-like-concrete-value-arms",
+      "module": "packages/types/src/Texture.ts",
+      "package": "@flighthq/types"
     },
     {
       "dependency": "flight",
@@ -4811,10 +4778,10 @@
     },
     {
       "dependency": "flight",
-      "digest": "e80816253df8001eb96e1e5ee3119d6ef35f1df8bcc8522e062a3b1559405dea",
-      "id": "scene3d-exact-owner-boundaries",
-      "module": "Scene3D node traits/construction, billboards, meshes, animation, document assembly, appearance, instance colors, and opt-in diagnostics",
-      "package": "@flighthq/scene3d and @flighthq/types"
+      "digest": "9ec7259170dcb0e5bef12d3efc81f2fd7fc50b6ab0b3d5b74fc4e0a9c6155699",
+      "id": "texture-source-concrete-value-arms",
+      "module": "packages/types/src/TextureSourceValue.ts and cube Texture source storage",
+      "package": "@flighthq/types and @flighthq/scene3d-gl"
     },
     {
       "dependency": "flight",
@@ -4822,6 +4789,13 @@
       "id": "scene3d-gl-lazy-uniform-location-boundaries",
       "module": "packages/scene3d-gl/src/glMeshProgram.ts",
       "package": "@flighthq/scene3d-gl"
+    },
+    {
+      "dependency": "flight",
+      "digest": "e80816253df8001eb96e1e5ee3119d6ef35f1df8bcc8522e062a3b1559405dea",
+      "id": "scene3d-exact-owner-boundaries",
+      "module": "Scene3D node traits/construction, billboards, meshes, animation, document assembly, appearance, instance colors, and opt-in diagnostics",
+      "package": "@flighthq/scene3d and @flighthq/types"
     },
     {
       "dependency": "flight",

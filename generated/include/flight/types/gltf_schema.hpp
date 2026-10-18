@@ -204,10 +204,7 @@ struct GltfPbrMetallicRoughness : public flight::ReferenceEnabled {
   std::optional<flight::Ref<GltfTextureInfo>> metallic_roughness_texture;
 };
 
-struct GltfNormalTextureInfo : public flight::ReferenceEnabled {
-  double index;
-  std::optional<double> tex_coord;
-  std::optional<flight::Ref<khr_texture_transform_f8da05e9a4f875a5>> extensions;
+struct GltfNormalTextureInfo : public GltfTextureInfo {
   std::optional<double> scale;
 };
 
@@ -219,10 +216,7 @@ struct GltfMaterialsClearcoat : public flight::ReferenceEnabled {
   std::optional<flight::Ref<GltfTextureInfo>> clearcoat_texture;
 };
 
-struct GltfOcclusionTextureInfo : public flight::ReferenceEnabled {
-  double index;
-  std::optional<double> tex_coord;
-  std::optional<flight::Ref<khr_texture_transform_f8da05e9a4f875a5>> extensions;
+struct GltfOcclusionTextureInfo : public GltfTextureInfo {
   std::optional<double> strength;
 };
 

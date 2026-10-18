@@ -18,9 +18,7 @@ struct FilmGrainEffect;
 
 namespace flight::types {
 
-struct FilmGrainEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct FilmGrainEffect : public flight::types::Effect {
   std::optional<double> intensity;
   std::optional<double> size;
   std::optional<double> seed;

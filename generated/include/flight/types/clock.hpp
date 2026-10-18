@@ -21,8 +21,7 @@ struct Clock;
 
 namespace flight::types {
 
-struct Clock : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Clock : public flight::types::Entity {
   double scale;
   bool paused;
   double delta_time;

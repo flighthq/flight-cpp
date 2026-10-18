@@ -33,8 +33,7 @@ using StatusBarStyleEntryHandle = double;
 
 namespace flight::types {
 
-struct StatusBarInfo : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct StatusBarInfo : public flight::types::Entity {
   double color;
   double height;
   bool overlays_content;
@@ -74,8 +73,7 @@ struct HostStatusBarVisibilityCapability : public flight::ReferenceEnabled {
   std::function<void(bool, std::optional<StatusBarAnimation>)> set_visible;
 };
 
-struct StatusBar : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct StatusBar : public flight::types::Entity {
   std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<StatusBarInfo>>>>)>>> on_change;
 };
 

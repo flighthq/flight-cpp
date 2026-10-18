@@ -2,7 +2,6 @@
 #pragma once
 #include <flight/structural_ref.hpp>
 #include <functional>
-#include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -32,8 +31,7 @@ struct InputSignals;
 
 namespace flight::types {
 
-struct InputSignals : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct InputSignals : public flight::types::Entity {
   std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::InputGamepadAxisData>>>>)>>> on_gamepad_axis_move;
   std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::InputGamepadButtonData>>>>)>>> on_gamepad_button_down;
   std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::InputGamepadButtonData>>>>)>>> on_gamepad_button_up;

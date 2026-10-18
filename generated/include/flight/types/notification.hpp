@@ -112,15 +112,13 @@ struct NotificationSchedule : public flight::ReferenceEnabled {
   std::optional<flight::String> repeat;
 };
 
-struct Notification : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Notification : public flight::types::Entity {
   flight::String id;
   flight::String tag;
   flight::String title;
 };
 
-struct ScheduledNotification : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct ScheduledNotification : public flight::types::Entity {
   flight::String id;
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<NotificationRequest>>>> request;
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<NotificationSchedule>>>> schedule;
@@ -252,28 +250,23 @@ using NotificationSubscriptionDetachOutcome = std::variant<flight::Ref<reason_re
 
 using NotificationSubscriptionDisposeOutcome = std::variant<flight::Ref<attach_failed_reason_release_failed_a670bac8ba62ef94>, flight::Ref<reason_43a745d20647bfb6>>;
 
-struct NotificationActionSubscription : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct NotificationActionSubscription : public flight::types::Entity {
   std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Notification>>>>, flight::String)>>> on_notification_action;
 };
 
-struct NotificationClickSubscription : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct NotificationClickSubscription : public flight::types::Entity {
   std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Notification>>>>)>>> on_notification_click;
 };
 
-struct NotificationDismissSubscription : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct NotificationDismissSubscription : public flight::types::Entity {
   std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Notification>>>>)>>> on_notification_dismiss;
 };
 
-struct NotificationReplySubscription : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct NotificationReplySubscription : public flight::types::Entity {
   std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Notification>>>>, flight::String, flight::String)>>> on_notification_reply;
 };
 
-struct NotificationReceivedSubscription : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct NotificationReceivedSubscription : public flight::types::Entity {
   std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Notification>>>>)>>> on_notification_received;
 };
 

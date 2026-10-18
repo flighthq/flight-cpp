@@ -23,8 +23,7 @@ struct NodeInteractionState;
 
 namespace flight::types {
 
-struct NodeInteractionState : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct NodeInteractionState : public flight::types::Entity {
   bool hit_test_enabled;
   bool children_hit_test_enabled;
   std::optional<flight::types::HitArea> hit_area;

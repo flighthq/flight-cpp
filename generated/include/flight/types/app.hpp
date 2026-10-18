@@ -66,8 +66,7 @@ struct AppLoginItemLike : public flight::ReferenceEnabled {
   std::optional<flight::Array<flight::String>> args;
 };
 
-struct AppEvents : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct AppEvents : public flight::types::Entity {
   std::shared_ptr<flight::types::Signal<std::function<void()>>> on_activate;
   std::shared_ptr<flight::types::Signal<std::function<void()>>> on_all_windows_closed;
   std::shared_ptr<flight::types::Signal<std::function<void(flight::String)>>> on_open_file;

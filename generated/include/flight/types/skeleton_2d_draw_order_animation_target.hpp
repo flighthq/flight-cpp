@@ -27,8 +27,7 @@ struct Skeleton2DDrawOrderAnimationTarget;
 namespace flight::types {
 
 template <typename Traits>
-struct Skeleton2DDrawOrderAnimationTarget : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Skeleton2DDrawOrderAnimationTarget : public flight::types::Entity {
   flight::String kind;
   flight::Array<std::optional<std::shared_ptr<flight::types::Node<Traits>>>> nodes;
   std::shared_ptr<flight::types::NodeOrderList<Traits>> order_list;

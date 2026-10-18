@@ -2,10 +2,8 @@
 #pragma once
 #include <flight/any.hpp>
 #include <flight/canvas_2d.hpp>
-#include <flight/structural_ref.hpp>
 #include <flight/types/shape_command.hpp>
 #include <functional>
-#include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -30,10 +28,7 @@ using CanvasShapeHandler = std::function<void(flight::CanvasRenderingContext2D, 
 namespace flight::types {
 
 template <typename K>
-struct CanvasShapeCommand : public flight::ReferenceEnabled {
-  K key;
-  std::optional<std::function<void(flight::Ref<flight::types::ShapeBoundsContext>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>>)>> fill_bounds;
-  std::optional<std::function<void(flight::Ref<flight::types::ShapeBoundsContext>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>>)>> stroke_bounds;
+struct CanvasShapeCommand : public flight::types::ShapeBoundsCommand<K> {
   CanvasShapeHandler draw;
 };
 

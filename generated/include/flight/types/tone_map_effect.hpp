@@ -19,9 +19,7 @@ using ToneMapOperator = flight::String;
 
 namespace flight::types {
 
-struct ToneMapEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct ToneMapEffect : public flight::types::Effect {
   std::optional<ToneMapOperator> operator_;
   std::optional<double> exposure;
   std::optional<double> white;

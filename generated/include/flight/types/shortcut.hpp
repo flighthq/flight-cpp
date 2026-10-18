@@ -2,7 +2,6 @@
 #pragma once
 #include <flight/structural_ref.hpp>
 #include <functional>
-#include <optional>
 #include <variant>
 #include <flight/runtime.hpp>
 
@@ -30,14 +29,12 @@ struct HostShortcutQueryCapability;
 
 namespace flight::types {
 
-struct GlobalShortcut : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct GlobalShortcut : public flight::types::Entity {
   flight::String accelerator;
   std::shared_ptr<flight::types::Signal<std::function<void()>>> on_trigger;
 };
 
-struct ShortcutTriggerSubscription : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct ShortcutTriggerSubscription : public flight::types::Entity {
 };
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_SHORTCUT_760C69092525EE35

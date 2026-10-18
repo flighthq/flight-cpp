@@ -18,9 +18,7 @@ struct VolumetricLightEffect;
 
 namespace flight::types {
 
-struct VolumetricLightEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct VolumetricLightEffect : public flight::types::Effect {
   std::optional<double> density;
   std::optional<double> light_color;
   std::optional<double> light_x;

@@ -40,8 +40,7 @@ struct CanvasSavedPassState : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::CanvasRenderTarget>> target;
 };
 
-struct CanvasRenderPass : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct CanvasRenderPass : public flight::types::Entity {
   flight::CanvasRenderingContext2D context;
   flight::Ref<CanvasSavedPassState> saved;
   flight::Ref<flight::types::CanvasRenderState> state;

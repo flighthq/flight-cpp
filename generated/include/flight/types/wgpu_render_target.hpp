@@ -36,9 +36,7 @@ struct WgpuRenderTargetPool : public flight::ReferenceEnabled {
 
 namespace flight::types {
 
-struct WgpuRenderTarget : public flight::ReferenceEnabled {
-  double height;
-  double width;
+struct WgpuRenderTarget : public flight::types::RenderTargetDimensions {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   double color_attachments;
   flight::types::RenderTargetColorSpace color_space;

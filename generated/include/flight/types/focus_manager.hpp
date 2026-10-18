@@ -42,8 +42,7 @@ using FocusNavigationInput = flight::Ref<flight::types::InputSignals>;
 namespace flight::types {
 
 template <typename N>
-struct FocusManager : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct FocusManager : public flight::types::Entity {
   std::optional<N> focused;
   N root;
   bool wrap;

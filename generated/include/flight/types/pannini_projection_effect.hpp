@@ -18,9 +18,7 @@ struct PanniniProjectionEffect;
 
 namespace flight::types {
 
-struct PanniniProjectionEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct PanniniProjectionEffect : public flight::types::Effect {
   std::optional<double> compression;
   std::optional<double> crop;
 };

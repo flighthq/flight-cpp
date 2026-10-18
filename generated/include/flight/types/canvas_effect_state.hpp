@@ -35,8 +35,7 @@ using CanvasEffectRunner = std::function<void(flight::StructuralRef<flight::RowR
 
 namespace flight::types {
 
-struct CanvasRenderTargetPool : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct CanvasRenderTargetPool : public flight::types::Entity {
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostCanvasCapability>>>> canvas_host;
   flight::Array<flight::Ref<flight::types::CanvasTextureRenderTarget>> free;
   flight::Array<flight::Ref<flight::types::CanvasTextureRenderTarget>> in_use;

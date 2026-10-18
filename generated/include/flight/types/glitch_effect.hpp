@@ -18,9 +18,7 @@ struct GlitchEffect;
 
 namespace flight::types {
 
-struct GlitchEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct GlitchEffect : public flight::types::Effect {
   std::optional<double> intensity;
   std::optional<double> block_size;
   std::optional<double> color_shift;

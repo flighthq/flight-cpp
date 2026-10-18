@@ -20,10 +20,7 @@ using ColorBlindType = flight::String;
 
 namespace flight::types {
 
-struct ColorBlindSimulationAdjustment : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
-  flight::Array<double> color_matrix;
+struct ColorBlindSimulationAdjustment : public flight::types::ColorMatrixAdjustment {
   std::optional<ColorBlindType> type;
 };
 

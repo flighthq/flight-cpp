@@ -22,8 +22,7 @@ struct OrbitCameraControllerOptions;
 
 namespace flight::types {
 
-struct OrbitCameraController : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct OrbitCameraController : public flight::types::Entity {
   double azimuth;
   double distance;
   double goal_azimuth;

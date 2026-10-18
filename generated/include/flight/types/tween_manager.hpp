@@ -2,7 +2,6 @@
 #pragma once
 #include <flight/any.hpp>
 #include <flight/erased_ref.hpp>
-#include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -23,8 +22,7 @@ struct TweenManager;
 
 namespace flight::types {
 
-struct TweenManager : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct TweenManager : public flight::types::Entity {
   flight::String brand;
   flight::types::EasingFunction default_ease;
   flight::Map<flight::ErasedRef, flight::Array<flight::Ref<flight::types::Tween<flight::Any>>>> tweens;

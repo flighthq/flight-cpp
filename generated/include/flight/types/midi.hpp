@@ -57,12 +57,10 @@ struct MidiEventReleaseOutcome : public flight::ReferenceEnabled {
 
 namespace flight::types {
 
-struct MidiAccess : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct MidiAccess : public flight::types::Entity {
 };
 
-struct MidiInputPort : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct MidiInputPort : public flight::types::Entity {
   flight::String id;
   std::optional<flight::String> manufacturer;
   std::optional<flight::String> name;
@@ -70,8 +68,7 @@ struct MidiInputPort : public flight::ReferenceEnabled {
   std::optional<flight::String> version;
 };
 
-struct MidiOutputPort : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct MidiOutputPort : public flight::types::Entity {
   flight::String id;
   std::optional<flight::String> manufacturer;
   std::optional<flight::String> name;
@@ -183,8 +180,7 @@ struct failures_reason_f82a2518cf67b45c : public flight::ReferenceEnabled {
 
 using MidiPortDisposeOutcome = std::variant<flight::Ref<failures_reason_f82a2518cf67b45c>, flight::Ref<reason_43a745d20647bfb6>>;
 
-struct MidiEventAttachment : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct MidiEventAttachment : public flight::types::Entity {
   std::function<flight::Task<flight::Ref<MidiEventReleaseOutcome>>()> release;
 };
 
@@ -221,18 +217,15 @@ using MidiSubscriptionDetachOutcome = std::variant<flight::Ref<reason_release_fa
 
 using MidiSubscriptionDisposeOutcome = std::variant<flight::Ref<attach_failed_reason_release_failed_a670bac8ba62ef94>, flight::Ref<reason_43a745d20647bfb6>>;
 
-struct MidiAccessStateSubscription : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct MidiAccessStateSubscription : public flight::types::Entity {
   std::shared_ptr<flight::types::Signal<std::function<void(MidiPort)>>> on_midi_access_state_change;
 };
 
-struct MidiInputMessageSubscription : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct MidiInputMessageSubscription : public flight::types::Entity {
   std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<MidiInputMessage>>>>)>>> on_midi_input_message;
 };
 
-struct MidiPortStateSubscription : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct MidiPortStateSubscription : public flight::types::Entity {
   std::shared_ptr<flight::types::Signal<std::function<void(MidiPort)>>> on_midi_port_state_change;
 };
 
@@ -258,21 +251,11 @@ struct MidiPortResourceOperations : public flight::ReferenceEnabled {
   std::function<flight::Task<void>()> open;
 };
 
-struct MidiInputPortResourceOperations : public flight::ReferenceEnabled {
-  std::function<flight::Task<MidiEventBackendAttachOutcome>(std::function<void()>)> attach_state_change;
-  std::function<flight::Task<void>()> close;
-  std::function<MidiPortConnection()> get_connection;
-  std::function<MidiPortState()> get_state;
-  std::function<flight::Task<void>()> open;
+struct MidiInputPortResourceOperations : public MidiPortResourceOperations {
   std::function<flight::Task<MidiEventBackendAttachOutcome>(std::function<void(flight::Uint8Array, double)>)> attach_message;
 };
 
-struct MidiOutputPortResourceOperations : public flight::ReferenceEnabled {
-  std::function<flight::Task<MidiEventBackendAttachOutcome>(std::function<void()>)> attach_state_change;
-  std::function<flight::Task<void>()> close;
-  std::function<MidiPortConnection()> get_connection;
-  std::function<MidiPortState()> get_state;
-  std::function<flight::Task<void>()> open;
+struct MidiOutputPortResourceOperations : public MidiPortResourceOperations {
   std::function<void(flight::Array<double>, std::optional<double>)> send;
 };
 

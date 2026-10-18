@@ -18,9 +18,7 @@ struct FxaaEffect;
 
 namespace flight::types {
 
-struct FxaaEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct FxaaEffect : public flight::types::Effect {
   std::optional<double> edge_threshold;
   std::optional<double> subpixel;
 };

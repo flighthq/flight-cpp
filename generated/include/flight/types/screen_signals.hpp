@@ -2,7 +2,6 @@
 #pragma once
 #include <flight/structural_ref.hpp>
 #include <functional>
-#include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -27,15 +26,13 @@ struct ScreenPermissionChange;
 
 namespace flight::types {
 
-struct ScreenSignals : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct ScreenSignals : public flight::types::Entity {
   std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ScreenInfo>>>>)>>> on_screen_added;
   std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ScreenChangeEvent>>>>)>>> on_screen_metrics_changed;
   std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ScreenInfo>>>>)>>> on_screen_removed;
 };
 
-struct ScreenPermissionChange : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct ScreenPermissionChange : public flight::types::Entity {
   std::shared_ptr<flight::types::Signal<std::function<void(flight::types::ScreenPermissionState)>>> on_change;
 };
 

@@ -2,7 +2,6 @@
 #pragma once
 #include <flight/abort.hpp>
 #include <flight/any.hpp>
-#include <flight/erased_ref.hpp>
 #include <flight/host/timers.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -133,8 +132,7 @@ struct error_outcome_cfa38b2f61f29ba3 : public flight::ReferenceEnabled {
 
 using TrayCreateCapabilityResult = std::variant<flight::Ref<error_outcome_cfa38b2f61f29ba3>, flight::Ref<outcome_bd967408cf2a4c5c>>;
 
-struct TrayCreateFailedResult : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct TrayCreateFailedResult : public flight::types::Entity {
   std::optional<flight::Any> error;
   flight::String outcome;
 };
@@ -233,13 +231,12 @@ using TrayBalloonRemoveResult = std::variant<flight::Ref<error_outcome_cfa38b2f6
 
 using TrayReleaseResult = std::variant<flight::Ref<error_outcome_cfa38b2f61f29ba3>, flight::Ref<outcome_bd967408cf2a4c5c>>;
 
-struct TrayReleaseRuntime : public flight::ReferenceEnabled {
-  std::function<flight::Task<TrayReleaseResult>()> release;
-  bool released;
-};
-
 struct TrayEventRelease : public flight::ReferenceEnabled {
   std::function<flight::Task<TrayReleaseResult>()> release;
+};
+
+struct TrayReleaseRuntime : public TrayEventRelease {
+  bool released;
 };
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_OUTCOME_RELEASE_35B93FE95822E195
@@ -261,8 +258,7 @@ struct TrayIcon : public flight::ReferenceEnabled {
 };
 
 template <typename Tray>
-struct TrayCreateSuccessResult : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct TrayCreateSuccessResult : public flight::types::Entity {
   flight::String outcome;
   Tray tray;
 };
@@ -303,9 +299,7 @@ struct HostTrayLifecycleCapability : public flight::ReferenceEnabled {
   std::function<flight::Array<flight::Ref<TrayIcon>>()> list;
 };
 
-struct TrayRuntime : public flight::ReferenceEnabled {
-  std::optional<flight::ErasedRef> binding;
-  std::optional<flight::String> uid;
+struct TrayRuntime : public flight::types::EntityRuntime {
   double animation_generation;
   std::optional<flight::host::TimerHandle> animation_timer;
   flight::Task<void> animation_write_tail;

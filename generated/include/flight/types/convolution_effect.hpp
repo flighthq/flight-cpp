@@ -18,7 +18,7 @@ struct ConvolutionEffect;
 
 namespace flight::types {
 
-struct ConvolutionEffect : public Effect {
+struct ConvolutionEffect : public flight::types::Effect {
   flight::Array<double> matrix;
   double matrix_x;
   double matrix_y;

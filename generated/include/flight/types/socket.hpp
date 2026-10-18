@@ -53,8 +53,7 @@ struct SocketCloseInfo : public flight::ReferenceEnabled {
   bool was_clean;
 };
 
-struct SocketSignals : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct SocketSignals : public flight::types::Entity {
   std::shared_ptr<flight::types::Signal<std::function<void()>>> on_socket_open;
   std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SocketMessage>>>>)>>> on_socket_message;
   std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SocketCloseInfo>>>>)>>> on_socket_close;
@@ -97,8 +96,7 @@ struct SocketRuntime : public flight::ReferenceEnabled {
   bool disposed;
 };
 
-struct Socket : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Socket : public flight::types::Entity {
   flight::String url;
   flight::Ref<SocketRuntime> runtime;
 };

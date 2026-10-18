@@ -28,8 +28,7 @@ struct AnimationPlayer;
 
 namespace flight::types {
 
-struct AnimationPlayer : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct AnimationPlayer : public flight::types::Entity {
   flight::Ref<flight::types::AnimationClip> clip;
   bool loop;
   std::optional<flight::types::AnimationLoopMode> loop_mode;

@@ -43,8 +43,7 @@ struct FlightDocumentTokenResolution : public flight::ReferenceEnabled {
 
 using FlightDocumentTokenResolver = std::function<std::optional<flight::types::FlightDocumentValue>(flight::types::FlightDocumentValue, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<FlightDocumentToken>>>>)>;
 
-struct FlightDocumentTokenResolverRegistry : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct FlightDocumentTokenResolverRegistry : public flight::types::Entity {
   flight::Map<flight::String, FlightDocumentTokenResolver> resolvers;
 };
 

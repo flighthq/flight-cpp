@@ -2,7 +2,6 @@
 #pragma once
 #include <flight/any.hpp>
 #include <functional>
-#include <optional>
 #include <variant>
 #include <flight/runtime.hpp>
 
@@ -43,8 +42,7 @@ struct HostIpcSendCapability : public flight::ReferenceEnabled {
 };
 
 template <typename Target>
-struct HostIpcTargetedSendCapability : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct HostIpcTargetedSendCapability : public flight::types::Entity {
   std::function<void(Target, flight::String, flight::Array<flight::Any>)> send;
 };
 

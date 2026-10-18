@@ -18,9 +18,7 @@ struct ScanlinesEffect;
 
 namespace flight::types {
 
-struct ScanlinesEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct ScanlinesEffect : public flight::types::Effect {
   std::optional<double> count;
   std::optional<double> intensity;
 };

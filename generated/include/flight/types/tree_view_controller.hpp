@@ -34,8 +34,7 @@ struct TreeViewControllerSignals;
 
 namespace flight::types {
 
-struct TreeViewController : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct TreeViewController : public flight::types::Entity {
 };
 
 struct TreeViewControllerItem : public flight::ReferenceEnabled {
@@ -44,8 +43,7 @@ struct TreeViewControllerItem : public flight::ReferenceEnabled {
   flight::types::Node2D visual;
 };
 
-struct TreeViewControllerOptions : public flight::ReferenceEnabled {
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::GuiTransitionDescriptor>>>> transition;
+struct TreeViewControllerOptions : public flight::types::GuiControllerOptions {
   flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TreeViewControllerItem>>>>> items;
   std::variant<flight::Ref<TreeViewControllerItem>, flight::Null, flight::Undefined> selected_item = std::variant<flight::Ref<TreeViewControllerItem>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };

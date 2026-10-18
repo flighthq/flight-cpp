@@ -30,8 +30,7 @@ struct Timeline;
 
 namespace flight::types {
 
-struct Timeline : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Timeline : public flight::types::Entity {
   std::optional<flight::Ref<flight::types::TimelineSource>> source;
   std::optional<flight::types::Node2D> target;
   double current_frame;

@@ -18,9 +18,7 @@ struct FilmEmulationEffect;
 
 namespace flight::types {
 
-struct FilmEmulationEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct FilmEmulationEffect : public flight::types::Effect {
   std::optional<double> gate_weave;
   std::optional<double> grain_intensity;
   std::optional<double> halation_radius;

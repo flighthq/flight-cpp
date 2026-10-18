@@ -182,16 +182,14 @@ struct CollisionVendorShape2D : public flight::ReferenceEnabled {
 
 using CollisionShape2D = std::variant<flight::Ref<x_y_half_w_half_h_rotation_kind_8ffcea5c657a2268>, flight::Ref<x0_y0_x1_y1_radius_kind_768ba062d07f3ff6>, flight::Ref<x_y_radius_kind_90fbb3b4c4569518>, flight::Ref<x_y_kind_35ad667397176b0f>, flight::Ref<points_kind_9b00ebdad27cdb4e>, flight::Ref<x0_y0_x1_y1_kind_d4f616534491406f>, flight::Ref<min_x_min_y_max_x_max_y_kind_329d6080b4f31db4>, flight::Ref<CollisionVendorShape2D>>;
 
-struct CollisionManifold2D : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct CollisionManifold2D : public flight::types::Entity {
   bool overlapping;
   double normal_x;
   double normal_y;
   double depth;
 };
 
-struct CollisionRaycastHit2D : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct CollisionRaycastHit2D : public flight::types::Entity {
   double fraction;
   double x;
   double y;
@@ -199,8 +197,7 @@ struct CollisionRaycastHit2D : public flight::ReferenceEnabled {
   double normal_y;
 };
 
-struct CollisionTimeOfImpact2D : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct CollisionTimeOfImpact2D : public flight::types::Entity {
   double fraction;
   double x;
   double y;
@@ -228,8 +225,7 @@ struct CollisionContactPoint2D : public flight::ReferenceEnabled {
   double feature_id;
 };
 
-struct CollisionContactManifold2D : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct CollisionContactManifold2D : public flight::types::Entity {
   bool overlapping;
   double normal_x;
   double normal_y;
@@ -400,8 +396,7 @@ struct CollisionVendorShape3D : public flight::ReferenceEnabled {
 
 using CollisionShape3D = std::variant<flight::Ref<x_y_z_radius_kind_b0bc53ca3f0e8006>, flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>, flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>, flight::Ref<min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>, flight::Ref<points_kind_35a8f5f2a3a8bd66>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>, flight::Ref<CollisionVendorShape3D>>;
 
-struct CollisionTriangleMesh3D : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct CollisionTriangleMesh3D : public flight::types::Entity {
   flight::String kind;
   flight::Array<double> points;
   flight::Array<double> indices;
@@ -415,8 +410,7 @@ struct CollisionTriangleMesh3D : public flight::ReferenceEnabled {
   double rotation_w;
 };
 
-struct CollisionHeightfield3D : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct CollisionHeightfield3D : public flight::types::Entity {
   flight::String kind;
   double columns;
   double rows;
@@ -435,8 +429,7 @@ struct CollisionHeightfield3D : public flight::ReferenceEnabled {
 
 using CollisionColliderShape3D = std::variant<flight::Ref<x_y_z_radius_kind_b0bc53ca3f0e8006>, flight::Ref<apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539>, flight::Ref<x_y_z_half_x_half_y_half_z_rotation_x_rotation_y_rotation_z_rotation_w_kind_bdd50a8e154d5a6a>, flight::Ref<min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a>, flight::Ref<points_kind_35a8f5f2a3a8bd66>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b>, flight::Ref<x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8>, flight::Ref<CollisionHeightfield3D>, flight::Ref<CollisionTriangleMesh3D>>;
 
-struct CollisionManifold3D : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct CollisionManifold3D : public flight::types::Entity {
   bool overlapping;
   double normal_x;
   double normal_y;
@@ -465,8 +458,7 @@ struct CollisionContactPoint3D : public flight::ReferenceEnabled {
   double feature_id;
 };
 
-struct CollisionContactManifold3D : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct CollisionContactManifold3D : public flight::types::Entity {
   bool overlapping;
   double normal_x;
   double normal_y;
@@ -479,8 +471,7 @@ inline const double max_collision_contact_points_3_d = 4.0;
 
 using CollisionFaceQuery3D = std::function<double(CollisionShape3D, double, double, double, flight::Array<double>)>;
 
-struct CollisionRaycastHit3D : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct CollisionRaycastHit3D : public flight::types::Entity {
   double fraction;
   double x;
   double y;
@@ -490,8 +481,7 @@ struct CollisionRaycastHit3D : public flight::ReferenceEnabled {
   double normal_z;
 };
 
-struct CollisionDistance3D : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct CollisionDistance3D : public flight::types::Entity {
   double distance;
   double direction_x;
   double direction_y;
@@ -505,8 +495,7 @@ struct CollisionDistance3D : public flight::ReferenceEnabled {
   bool overlapping;
 };
 
-struct CollisionTimeOfImpact3D : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct CollisionTimeOfImpact3D : public flight::types::Entity {
   double fraction;
   double x;
   double y;

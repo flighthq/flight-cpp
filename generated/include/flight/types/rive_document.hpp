@@ -105,8 +105,7 @@ struct RiveArtboardGraph : public flight::ReferenceEnabled {
   flight::Array<double> parent_indices;
 };
 
-struct RiveObjectGraph : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct RiveObjectGraph : public flight::types::Entity {
   flight::Array<flight::Ref<RiveArtboardGraph>> artboards;
 };
 
@@ -165,8 +164,7 @@ struct one_shot_loop_ping_pong_2203806199bef46d : public flight::ReferenceEnable
 
 inline flight::Ref<one_shot_loop_ping_pong_2203806199bef46d> rive_animation_loop = flight::make_ref<one_shot_loop_ping_pong_2203806199bef46d>(one_shot_loop_ping_pong_2203806199bef46d{.one_shot = flight::String("OneShot"), .loop = flight::String("Loop"), .ping_pong = flight::String("PingPong")});
 
-struct RiveSkeleton2DImport : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct RiveSkeleton2DImport : public flight::types::Entity {
   flight::Array<double> bone_indices;
   flight::Ref<flight::types::Skeleton2D> skeleton;
 };
@@ -222,14 +220,12 @@ struct RivePathRecord : public flight::ReferenceEnabled {
   flight::types::PathWinding winding;
 };
 
-struct RiveDocumentImportResult : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct RiveDocumentImportResult : public flight::types::Entity {
   flight::Array<flight::Ref<RiveArtboardImport>> artboards;
   flight::Array<flight::Ref<RiveFileAsset>> assets;
 };
 
-struct RiveScene2DDocumentResult : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct RiveScene2DDocumentResult : public flight::types::Entity {
   flight::Array<flight::types::ImageResourceReference> image_resources;
   flight::Ref<RiveDocumentImportResult> imported;
   flight::types::DisplayObject root;

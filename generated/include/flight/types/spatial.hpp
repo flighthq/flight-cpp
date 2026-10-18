@@ -2,7 +2,6 @@
 #pragma once
 #include <flight/structural_ref.hpp>
 #include <functional>
-#include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -73,8 +72,7 @@ struct SpatialIndexRuntime2D : public flight::ReferenceEnabled {
   flight::Ref<SpatialIndexBackend2D> backend;
 };
 
-struct SpatialIndex2D : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct SpatialIndex2D : public flight::types::Entity {
   flight::Ref<SpatialIndexRuntime2D> runtime;
 };
 
@@ -94,8 +92,7 @@ struct SpatialIndexRuntime3D : public flight::ReferenceEnabled {
   flight::Ref<SpatialIndexBackend3D> backend;
 };
 
-struct SpatialIndex3D : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct SpatialIndex3D : public flight::types::Entity {
   flight::Ref<SpatialIndexRuntime3D> runtime;
 };
 

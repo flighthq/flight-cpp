@@ -37,8 +37,7 @@ struct WgpuPresentationSurface : public flight::ReferenceEnabled {
   double width;
 };
 
-struct WgpuHostAcquisition : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct WgpuHostAcquisition : public flight::types::Entity {
   flight::host_sdl::WgpuCanvasContext context;
   flight::host_sdl::WgpuDevice device;
   flight::String format;

@@ -30,8 +30,7 @@ using TextMeasureFunction = std::function<double(flight::String, flight::Ref<fli
 
 namespace flight::types {
 
-struct TextLayoutGroup : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct TextLayoutGroup : public flight::types::Entity {
   double ascent;
   double descent;
   double end_index;
@@ -63,8 +62,7 @@ struct TextLayoutParams : public flight::ReferenceEnabled {
   std::optional<bool> word_wrap;
 };
 
-struct TextLayoutResult : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct TextLayoutResult : public flight::types::Entity {
   flight::Array<flight::Ref<TextLayoutGroup>> groups;
   flight::Array<double> line_ascents;
   flight::Array<double> line_descents;

@@ -31,8 +31,7 @@ struct SignalData : public flight::ReferenceEnabled {
 };
 
 template <typename T>
-struct Signal : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Signal : public flight::types::Entity {
   std::optional<std::shared_ptr<SignalData<T>>> data;
   T emit;
 };

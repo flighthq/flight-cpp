@@ -44,8 +44,7 @@ struct GlRenderTextureEntry : public flight::ReferenceEnabled {
   flight::Ref<flight::types::GlTextureRenderTarget> target;
 };
 
-struct GlRenderTexturePool : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct GlRenderTexturePool : public flight::types::Entity {
   std::optional<flight::host_sdl::WebGl2Context> context;
   bool destroyed;
   flight::Ref<flight::types::GlTextureRenderTargetPool> effect_targets;

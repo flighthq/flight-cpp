@@ -39,52 +39,19 @@ struct TiledLayerBase : public flight::ReferenceEnabled {
   flight::Array<flight::Ref<flight::types::TiledProperty>> properties;
 };
 
-struct TiledTileLayer : public flight::ReferenceEnabled {
-  double id;
-  flight::String name;
-  double opacity;
-  bool visible;
-  double offset_x;
-  double offset_y;
-  std::optional<double> tint_color;
-  double parallax_x;
-  double parallax_y;
-  flight::String class_;
-  flight::Array<flight::Ref<flight::types::TiledProperty>> properties;
+struct TiledTileLayer : public TiledLayerBase {
   flight::String type;
   double width;
   double height;
   flight::Uint32Array data;
 };
 
-struct TiledObjectGroup : public flight::ReferenceEnabled {
-  double id;
-  flight::String name;
-  double opacity;
-  bool visible;
-  double offset_x;
-  double offset_y;
-  std::optional<double> tint_color;
-  double parallax_x;
-  double parallax_y;
-  flight::String class_;
-  flight::Array<flight::Ref<flight::types::TiledProperty>> properties;
+struct TiledObjectGroup : public TiledLayerBase {
   flight::String type;
   flight::Array<flight::Ref<flight::types::TiledObject>> objects;
 };
 
-struct TiledImageLayer : public flight::ReferenceEnabled {
-  double id;
-  flight::String name;
-  double opacity;
-  bool visible;
-  double offset_x;
-  double offset_y;
-  std::optional<double> tint_color;
-  double parallax_x;
-  double parallax_y;
-  flight::String class_;
-  flight::Array<flight::Ref<flight::types::TiledProperty>> properties;
+struct TiledImageLayer : public TiledLayerBase {
   flight::String type;
   flight::String image;
   bool repeat_x;
@@ -97,18 +64,7 @@ struct TiledLayer : public std::variant<flight::Ref<TiledGroupLayer>, flight::Re
   using Base::operator=;
 };
 
-struct TiledGroupLayer : public flight::ReferenceEnabled {
-  double id;
-  flight::String name;
-  double opacity;
-  bool visible;
-  double offset_x;
-  double offset_y;
-  std::optional<double> tint_color;
-  double parallax_x;
-  double parallax_y;
-  flight::String class_;
-  flight::Array<flight::Ref<flight::types::TiledProperty>> properties;
+struct TiledGroupLayer : public TiledLayerBase {
   flight::String type;
   flight::Array<TiledLayer> layers;
 };

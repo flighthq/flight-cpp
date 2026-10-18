@@ -21,14 +21,12 @@ using MaterialLike = flight::Ref<Material>;
 
 namespace flight::types {
 
-struct Material : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Material : public flight::types::Entity {
   flight::String kind;
   std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };
 
-struct MaterialData : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct MaterialData : public flight::types::Entity {
 };
 
 } // namespace flight::types

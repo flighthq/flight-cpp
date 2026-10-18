@@ -2,7 +2,6 @@
 #pragma once
 #include <flight/any.hpp>
 #include <functional>
-#include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -24,8 +23,7 @@ struct ResourceLoader;
 
 namespace flight::types {
 
-struct ResourceLoader : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct ResourceLoader : public flight::types::Entity {
   std::shared_ptr<flight::types::Signal<std::function<void()>>> on_cancel;
   std::shared_ptr<flight::types::Signal<std::function<void(flight::Array<flight::Ref<flight::types::ResourceLoadReport>>)>>> on_complete;
   std::shared_ptr<flight::types::Signal<std::function<void(flight::Any, flight::String)>>> on_error;

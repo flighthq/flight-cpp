@@ -18,9 +18,7 @@ struct SharpenEffect;
 
 namespace flight::types {
 
-struct SharpenEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct SharpenEffect : public flight::types::Effect {
   std::optional<double> amount;
 };
 

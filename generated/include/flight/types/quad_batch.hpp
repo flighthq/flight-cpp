@@ -59,8 +59,7 @@ struct QuadBatch;
 
 namespace flight::types {
 
-struct QuadBatchData : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct QuadBatchData : public flight::types::Node2DData {
   std::optional<flight::Ref<flight::types::TextureAtlas>> atlas;
   flight::Uint16Array ids;
   double instance_count;

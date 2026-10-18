@@ -40,12 +40,10 @@ using TextInputControllerKeyboardData = flight::StructuralRef<flight::RowReadonl
 
 namespace flight::types {
 
-struct TextInputController : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct TextInputController : public flight::types::Entity {
 };
 
-struct TextInputControllerOptions : public flight::ReferenceEnabled {
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::GuiTransitionDescriptor>>>> transition;
+struct TextInputControllerOptions : public flight::types::GuiControllerOptions {
   std::optional<flight::types::Node2D> background;
   std::optional<flight::types::Node2D> caret;
   std::optional<flight::Ref<flight::types::TextInputSource>> input;

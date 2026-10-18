@@ -18,8 +18,7 @@ struct Viewport;
 
 namespace flight::types {
 
-struct Viewport : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Viewport : public flight::types::Entity {
   double device_pixel_ratio;
   double height;
   double width;

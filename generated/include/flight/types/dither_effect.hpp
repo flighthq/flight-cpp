@@ -18,9 +18,7 @@ struct DitherEffect;
 
 namespace flight::types {
 
-struct DitherEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct DitherEffect : public flight::types::Effect {
   std::optional<double> levels;
 };
 

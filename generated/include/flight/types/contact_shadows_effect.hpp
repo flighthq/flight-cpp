@@ -18,9 +18,7 @@ struct ContactShadowsEffect;
 
 namespace flight::types {
 
-struct ContactShadowsEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct ContactShadowsEffect : public flight::types::Effect {
   std::optional<double> distance;
   std::optional<double> opacity;
   std::optional<double> samples;

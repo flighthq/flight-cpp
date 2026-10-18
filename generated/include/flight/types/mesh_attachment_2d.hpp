@@ -21,10 +21,7 @@ struct MeshAttachment2D;
 
 namespace flight::types {
 
-struct MeshAttachment2D : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
-  std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+struct MeshAttachment2D : public flight::types::Attachment2D {
   std::variant<flight::Ref<flight::types::Skin2D>, flight::Null, flight::Undefined> skin = std::variant<flight::Ref<flight::types::Skin2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   flight::Uint16Array triangles;
   flight::Float32Array uvs;

@@ -20,8 +20,7 @@ struct FontUrl;
 
 namespace flight::types {
 
-struct FontResource : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct FontResource : public flight::types::Entity {
   flight::String family;
   std::optional<flight::FontFace> face;
 };

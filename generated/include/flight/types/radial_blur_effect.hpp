@@ -18,9 +18,7 @@ struct RadialBlurEffect;
 
 namespace flight::types {
 
-struct RadialBlurEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct RadialBlurEffect : public flight::types::Effect {
   std::optional<double> center_x;
   std::optional<double> center_y;
   std::optional<double> strength;

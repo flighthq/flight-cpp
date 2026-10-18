@@ -19,9 +19,7 @@ struct CompositeEffect;
 
 namespace flight::types {
 
-struct CompositeEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct CompositeEffect : public flight::types::Effect {
   flight::String operator_;
   std::optional<flight::String> backdrop_key;
 };

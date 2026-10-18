@@ -20,8 +20,7 @@ struct SelectableRichTextManager;
 
 namespace flight::types {
 
-struct SelectableRichTextManager : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct SelectableRichTextManager : public flight::types::Entity {
   std::optional<flight::Ref<flight::types::RichText>> focused;
 };
 

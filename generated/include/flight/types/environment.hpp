@@ -23,9 +23,7 @@ struct Environment;
 
 namespace flight::types {
 
-struct Environment : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct Environment : public flight::types::Light {
   bool enabled;
   std::optional<flight::types::Texture> environment;
   double intensity;

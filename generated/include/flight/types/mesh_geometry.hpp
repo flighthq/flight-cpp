@@ -2,7 +2,6 @@
 #pragma once
 #include <flight/array_buffer.hpp>
 #include <flight/data_view.hpp>
-#include <flight/erased_ref.hpp>
 #include <flight/symbol.hpp>
 #include <optional>
 #include <variant>
@@ -71,9 +70,7 @@ struct buffer_byte_offset_byte_length_view_cb5f900d5c8eb8e9 : public flight::Ref
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BUFFER_BYTE_OFFSET_BYTE_LENGTH_VIEW_CB5F900D5C8EB8E9
 
-struct MeshGeometryRuntime : public flight::ReferenceEnabled {
-  std::optional<flight::ErasedRef> binding;
-  std::optional<flight::String> uid;
+struct MeshGeometryRuntime : public flight::types::EntityRuntime {
   std::optional<flight::Ref<buffer_byte_offset_byte_length_view_cb5f900d5c8eb8e9>> attribute_data_view;
   double bounds_version;
   std::optional<flight::Ref<flight::types::MeshMorphBindPose>> morph_bind_pose;

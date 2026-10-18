@@ -34,8 +34,7 @@ struct VideoPlayOptions : public flight::ReferenceEnabled {
   std::optional<double> playback_rate;
 };
 
-struct VideoResource : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct VideoResource : public flight::types::Entity {
   std::optional<flight::types::HostImageSource> element;
   std::optional<flight::String> object_url;
   bool owns_element;

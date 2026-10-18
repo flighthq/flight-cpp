@@ -33,8 +33,7 @@ struct attachment_color_46836ea6f2a2f33a : public flight::ReferenceEnabled {
 
 inline flight::Ref<attachment_color_46836ea6f2a2f33a> skeleton_2d_slot_animation_path = flight::make_ref<attachment_color_46836ea6f2a2f33a>(attachment_color_46836ea6f2a2f33a{.attachment = flight::String("Attachment"), .color = flight::String("Color")});
 
-struct Skeleton2DSlotAnimationTarget : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Skeleton2DSlotAnimationTarget : public flight::types::Entity {
   std::variant<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>, flight::Null, flight::Undefined> attachments = std::variant<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   flight::String kind;
   Skeleton2DSlotAnimationPath path;

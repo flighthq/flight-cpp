@@ -25,8 +25,7 @@ struct RadioGroupControllerSignals;
 
 namespace flight::types {
 
-struct RadioGroupController : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct RadioGroupController : public flight::types::Entity {
 };
 
 struct RadioGroupControllerOptions : public flight::ReferenceEnabled {

@@ -43,8 +43,7 @@ struct WgpuSavedPassState : public flight::ReferenceEnabled {
   flight::Array<flight::Ref<flight::types::WgpuScissorRect>> scissor_stack;
 };
 
-struct WgpuRenderPass : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct WgpuRenderPass : public flight::types::Entity {
   flight::host_sdl::WgpuTextureView color_view;
   std::optional<flight::host_sdl::WgpuRenderPassEncoder> encoder;
   bool owns_frame;

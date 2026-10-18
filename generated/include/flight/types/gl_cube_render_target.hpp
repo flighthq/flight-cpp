@@ -22,8 +22,7 @@ struct GlCubeRenderTargetOptions;
 
 namespace flight::types {
 
-struct GlCubeRenderTarget : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct GlCubeRenderTarget : public flight::types::Entity {
   flight::host_sdl::WebGl2Context gl;
   flight::types::RenderTargetColorSpace color_space;
   std::optional<flight::host_sdl::WebGlRenderbuffer> depth_stencil_renderbuffer;

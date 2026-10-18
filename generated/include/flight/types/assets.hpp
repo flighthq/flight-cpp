@@ -79,8 +79,7 @@ struct AssetLibraryRuntime : public flight::ReferenceEnabled {
   flight::Map<flight::String, flight::Array<flight::String>> groups;
 };
 
-struct AssetLibrary : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct AssetLibrary : public flight::types::Entity {
   flight::Ref<AssetLibraryRuntime> runtime;
 };
 

@@ -70,8 +70,7 @@ using Node2DRuntimeFactory = std::function<R(std::optional<flight::StructuralRef
 
 namespace flight::types {
 
-struct Node2DData : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Node2DData : public flight::types::NodeData {
 };
 
 struct Node2DTraits : public flight::ReferenceEnabled {

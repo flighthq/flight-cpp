@@ -56,15 +56,13 @@ struct error_unavailable_c3d7aa9ed027183a : public flight::ReferenceEnabled {
 
 inline flight::Ref<error_unavailable_c3d7aa9ed027183a> audio_resource_failure_kind = flight::make_ref<error_unavailable_c3d7aa9ed027183a>(error_unavailable_c3d7aa9ed027183a{.error = flight::String("Error"), .unavailable = flight::String("Unavailable")});
 
-struct AudioResourceFailure : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct AudioResourceFailure : public flight::types::Entity {
   AudioResourceFailureKind kind;
   flight::String message;
   std::optional<flight::String> name;
 };
 
-struct AudioResourceReferenceBase : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct AudioResourceReferenceBase : public flight::types::Entity {
   std::optional<flight::Ref<AudioResourceFailure>> failure;
   std::optional<flight::String> mime_type;
   std::optional<flight::String> name;
@@ -72,24 +70,12 @@ struct AudioResourceReferenceBase : public flight::ReferenceEnabled {
   flight::types::ResourceResolutionState state;
 };
 
-struct EmbeddedAudioResourceReference : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::optional<flight::Ref<AudioResourceFailure>> failure;
-  std::optional<flight::String> mime_type;
-  std::optional<flight::String> name;
-  flight::Ref<flight::types::AudioResource> resource;
-  flight::types::ResourceResolutionState state;
+struct EmbeddedAudioResourceReference : public AudioResourceReferenceBase {
   flight::String kind;
   flight::Uint8Array bytes;
 };
 
-struct ExternalAudioResourceReference : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::optional<flight::Ref<AudioResourceFailure>> failure;
-  std::optional<flight::String> mime_type;
-  std::optional<flight::String> name;
-  flight::Ref<flight::types::AudioResource> resource;
-  flight::types::ResourceResolutionState state;
+struct ExternalAudioResourceReference : public AudioResourceReferenceBase {
   flight::String kind;
   flight::String uri;
   std::optional<flight::String> base_path;

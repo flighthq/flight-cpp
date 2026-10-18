@@ -48,42 +48,27 @@ struct SceneCoverageRemedy : public flight::ReferenceEnabled {
   flight::String registrar;
 };
 
-struct SatisfiedSceneCoverageEntry : public flight::ReferenceEnabled {
-  flight::types::RequirementFacet facet;
-  flight::String kind;
-  flight::types::RenderRegistryTable registry;
+struct SatisfiedSceneCoverageEntry : public SceneCoverageEntryBase {
   flight::String coverage;
 };
 
-struct UnregisteredSceneCoverageEntry : public flight::ReferenceEnabled {
-  flight::types::RequirementFacet facet;
-  flight::String kind;
-  flight::types::RenderRegistryTable registry;
+struct UnregisteredSceneCoverageEntry : public SceneCoverageEntryBase {
   flight::String module;
   flight::String registrar;
   flight::String coverage;
 };
 
-struct UnavailableSceneCoverageEntry : public flight::ReferenceEnabled {
-  flight::types::RequirementFacet facet;
-  flight::String kind;
-  flight::types::RenderRegistryTable registry;
+struct UnavailableSceneCoverageEntry : public SceneCoverageEntryBase {
   flight::String coverage;
 };
 
-struct FallbackRemediableSceneCoverageEntry : public flight::ReferenceEnabled {
-  flight::types::RequirementFacet facet;
-  flight::String kind;
-  flight::types::RenderRegistryTable registry;
+struct FallbackRemediableSceneCoverageEntry : public SceneCoverageEntryBase {
   flight::String module;
   flight::String registrar;
   flight::String coverage;
 };
 
-struct FallbackUnavailableSceneCoverageEntry : public flight::ReferenceEnabled {
-  flight::types::RequirementFacet facet;
-  flight::String kind;
-  flight::types::RenderRegistryTable registry;
+struct FallbackUnavailableSceneCoverageEntry : public SceneCoverageEntryBase {
   flight::String coverage;
 };
 

@@ -25,8 +25,7 @@ enum class TextureAtlasRotation {
   Clockwise90 = 1,
 };
 
-struct TextureAtlasRegion : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct TextureAtlasRegion : public flight::types::Entity {
   double height;
   double id;
   std::optional<flight::String> name;

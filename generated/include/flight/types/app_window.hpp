@@ -48,8 +48,7 @@ struct WindowResizeTargetHandle : public flight::ReferenceEnabled {
 
 namespace flight::types {
 
-struct AppWindow : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct AppWindow : public flight::types::Entity {
   flight::String title;
   double x;
   double y;

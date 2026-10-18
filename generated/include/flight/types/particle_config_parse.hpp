@@ -27,8 +27,7 @@ struct ParticleConfigParseResult;
 
 namespace flight::types {
 
-struct ParseParticleConfigOptions : public flight::ReferenceEnabled {
-  std::optional<double> texture_size;
+struct ParseParticleConfigOptions : public flight::types::ParticleDesignerParseOptions {
   std::optional<double> pixels_per_unit;
 };
 

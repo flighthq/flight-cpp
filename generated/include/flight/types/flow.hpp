@@ -31,8 +31,7 @@ struct FlowState : public flight::ReferenceEnabled {
   std::optional<bool> update_below;
 };
 
-struct FlowStack : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct FlowStack : public flight::types::Entity {
   flight::Array<flight::Ref<FlowState>> states;
 };
 

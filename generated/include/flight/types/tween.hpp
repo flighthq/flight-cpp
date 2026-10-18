@@ -2,7 +2,6 @@
 #pragma once
 #include <flight/any.hpp>
 #include <functional>
-#include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -29,8 +28,7 @@ using NumericProps = flight::Any;
 namespace flight::types {
 
 template <typename T>
-struct Tween : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Tween : public flight::types::Entity {
   bool complete;
   double delay;
   double duration;

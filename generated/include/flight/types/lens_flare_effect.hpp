@@ -18,9 +18,7 @@ struct LensFlareEffect;
 
 namespace flight::types {
 
-struct LensFlareEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct LensFlareEffect : public flight::types::Effect {
   std::optional<double> threshold;
   std::optional<double> intensity;
   std::optional<double> ghosts;

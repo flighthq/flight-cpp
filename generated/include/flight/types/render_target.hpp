@@ -71,15 +71,7 @@ struct RenderTargetDescriptor : public flight::ReferenceEnabled {
   std::optional<RenderTargetColorSpace> color_space;
 };
 
-struct RenderTarget : public flight::ReferenceEnabled {
-  double width;
-  double height;
-  std::optional<RenderTargetFormat> format;
-  std::optional<double> color_attachments;
-  std::optional<flight::Array<RenderTargetFormat>> color_formats;
-  std::optional<double> sample_count;
-  std::optional<RenderTargetDepth> depth;
-  std::optional<RenderTargetColorSpace> color_space;
+struct RenderTarget : public RenderTargetDescriptor {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::Ref<flight::types::AlphaType> alpha_type;
   flight::String gamut;
@@ -87,15 +79,7 @@ struct RenderTarget : public flight::ReferenceEnabled {
   double version;
 };
 
-struct ResolvedRenderTargetDescriptor : public flight::ReferenceEnabled {
-  double width;
-  double height;
-  RenderTargetFormat format;
-  double color_attachments;
-  flight::Array<RenderTargetFormat> color_formats;
-  double sample_count;
-  RenderTargetDepth depth;
-  RenderTargetColorSpace color_space;
+struct ResolvedRenderTargetDescriptor : public RenderTargetAxes {
 };
 
 } // namespace flight::types

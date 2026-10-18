@@ -18,9 +18,7 @@ struct LensDirtEffect;
 
 namespace flight::types {
 
-struct LensDirtEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct LensDirtEffect : public flight::types::Effect {
   std::optional<double> intensity;
   std::optional<double> threshold;
   std::optional<double> seed;

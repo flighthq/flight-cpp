@@ -36,8 +36,7 @@ struct ParsedProtocolUrl : public flight::ReferenceEnabled {
   flight::Record<flight::String, flight::String> query;
 };
 
-struct ProtocolHandler : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct ProtocolHandler : public flight::types::Entity {
   std::shared_ptr<flight::types::Signal<std::function<void(flight::String)>>> on_open_url;
 };
 

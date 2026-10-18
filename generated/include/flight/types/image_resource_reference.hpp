@@ -61,39 +61,27 @@ struct error_unavailable_c3d7aa9ed027183a : public flight::ReferenceEnabled {
 
 inline flight::Ref<error_unavailable_c3d7aa9ed027183a> image_resource_failure_kind = flight::make_ref<error_unavailable_c3d7aa9ed027183a>(error_unavailable_c3d7aa9ed027183a{.error = flight::String("Error"), .unavailable = flight::String("Unavailable")});
 
-struct ImageResourceFailure : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct ImageResourceFailure : public flight::types::Entity {
   ImageResourceFailureKind kind;
   flight::String message;
   std::optional<flight::String> name;
 };
 
-struct ImageResourceReferenceBase : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct ImageResourceReferenceBase : public flight::types::Entity {
   std::optional<flight::Ref<ImageResourceFailure>> failure;
   std::optional<flight::String> mime_type;
   flight::types::ResourceResolutionState state;
   std::optional<flight::Array<flight::types::Texture>> textures;
 };
 
-struct EmbeddedImageResourceReference : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::optional<flight::Ref<ImageResourceFailure>> failure;
-  std::optional<flight::String> mime_type;
-  flight::types::ResourceResolutionState state;
-  std::optional<flight::Array<flight::types::Texture>> textures;
+struct EmbeddedImageResourceReference : public ImageResourceReferenceBase {
   flight::String kind;
   flight::types::AlphaType alpha_type;
   std::optional<flight::Ref<flight::types::ImageBitmapComposition>> bitmap_composition;
   flight::Uint8Array bytes;
 };
 
-struct ExternalImageResourceReference : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::optional<flight::Ref<ImageResourceFailure>> failure;
-  std::optional<flight::String> mime_type;
-  flight::types::ResourceResolutionState state;
-  std::optional<flight::Array<flight::types::Texture>> textures;
+struct ExternalImageResourceReference : public ImageResourceReferenceBase {
   flight::String kind;
   flight::String uri;
   std::optional<flight::String> base_path;

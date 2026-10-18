@@ -46,8 +46,7 @@ using TextureLike = std::variant<flight::Ref<Texture2DArray>, flight::Ref<Textur
 
 namespace flight::types {
 
-struct TextureCommon : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct TextureCommon : public flight::types::Entity {
   bool flip_x;
   bool flip_y;
   flight::Ref<flight::types::Vector2> uv_offset;
@@ -58,58 +57,22 @@ struct TextureCommon : public flight::ReferenceEnabled {
   double version;
 };
 
-struct Texture2D : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  bool flip_x;
-  bool flip_y;
-  flight::Ref<flight::types::Vector2> uv_offset;
-  double uv_rotation;
-  flight::Ref<flight::types::Vector2> uv_scale;
-  TextureColorSpace color_space;
-  flight::Ref<flight::types::Sampler> sampler;
-  double version;
+struct Texture2D : public TextureCommon {
   flight::String dimension;
   std::optional<flight::types::TextureSourceValue> source;
 };
 
-struct Texture2DArray : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  bool flip_x;
-  bool flip_y;
-  flight::Ref<flight::types::Vector2> uv_offset;
-  double uv_rotation;
-  flight::Ref<flight::types::Vector2> uv_scale;
-  TextureColorSpace color_space;
-  flight::Ref<flight::types::Sampler> sampler;
-  double version;
+struct Texture2DArray : public TextureCommon {
   flight::String dimension;
   flight::Array<std::optional<flight::types::TextureSourceValue>> sources;
 };
 
-struct Texture3D : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  bool flip_x;
-  bool flip_y;
-  flight::Ref<flight::types::Vector2> uv_offset;
-  double uv_rotation;
-  flight::Ref<flight::types::Vector2> uv_scale;
-  TextureColorSpace color_space;
-  flight::Ref<flight::types::Sampler> sampler;
-  double version;
+struct Texture3D : public TextureCommon {
   flight::String dimension;
   std::optional<flight::Ref<flight::types::VoxelGrid>> source;
 };
 
-struct TextureCube : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  bool flip_x;
-  bool flip_y;
-  flight::Ref<flight::types::Vector2> uv_offset;
-  double uv_rotation;
-  flight::Ref<flight::types::Vector2> uv_scale;
-  TextureColorSpace color_space;
-  flight::Ref<flight::types::Sampler> sampler;
-  double version;
+struct TextureCube : public TextureCommon {
   flight::String dimension;
   TextureSourceCubeFaces sources;
 };

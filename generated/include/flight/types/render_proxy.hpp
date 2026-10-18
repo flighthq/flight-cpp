@@ -32,8 +32,7 @@ struct RenderProxy;
 
 namespace flight::types {
 
-struct RenderProxy : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct RenderProxy : public flight::types::Entity {
   flight::types::NodeAny source;
   flight::String kind;
   std::optional<flight::Ref<RenderProxy>> next;

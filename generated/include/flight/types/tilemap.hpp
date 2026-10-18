@@ -57,8 +57,7 @@ struct Tilemap;
 
 namespace flight::types {
 
-struct TilemapData : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct TilemapData : public flight::types::Node2DData {
   std::optional<flight::Ref<flight::types::TextureAtlas>> atlas;
   double columns;
   double rows;

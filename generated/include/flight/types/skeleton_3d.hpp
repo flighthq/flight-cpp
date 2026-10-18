@@ -21,8 +21,7 @@ struct Skeleton3D;
 
 namespace flight::types {
 
-struct Skeleton3D : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Skeleton3D : public flight::types::Entity {
   flight::Float32Array inverse_bind_matrices;
   flight::Float32Array joint_matrices;
   flight::Float32Array normal_matrices;

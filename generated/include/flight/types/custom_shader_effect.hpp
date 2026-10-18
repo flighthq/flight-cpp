@@ -20,9 +20,7 @@ struct CustomShaderEffect;
 
 namespace flight::types {
 
-struct CustomShaderEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct CustomShaderEffect : public flight::types::Effect {
   flight::String shader_key;
   std::optional<flight::Record<flight::String, std::variant<flight::Array<double>, double>>> uniforms;
 };

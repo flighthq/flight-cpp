@@ -18,9 +18,7 @@ struct CameraMotionBlurEffect;
 
 namespace flight::types {
 
-struct CameraMotionBlurEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct CameraMotionBlurEffect : public flight::types::Effect {
   std::optional<double> intensity;
   std::optional<double> samples;
 };

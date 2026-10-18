@@ -89,15 +89,13 @@ struct FlightDocument : public flight::ReferenceEnabled {
   double version;
 };
 
-struct FlightDocumentScene2DMaterialization : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct FlightDocumentScene2DMaterialization : public flight::types::Entity {
   flight::Array<flight::Ref<flight::types::FlightDocumentInteractiveStateBinding<flight::types::Node2D>>> interactive_state_bindings;
   flight::Array<flight::Ref<flight::types::FlightDocumentLayoutBinding<flight::types::Node2D>>> layout_bindings;
   flight::Ref<flight::types::Scene2D> scene;
 };
 
-struct FlightDocumentScene3DMaterialization : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct FlightDocumentScene3DMaterialization : public flight::types::Entity {
   flight::Array<flight::Ref<flight::types::Camera3D>> cameras;
   flight::Array<flight::Ref<flight::types::FlightDocumentInteractiveStateBinding<flight::Ref<flight::types::Node3D>>>> interactive_state_bindings;
   flight::Array<flight::Ref<flight::types::FlightDocumentLayoutBinding<flight::Ref<flight::types::Node3D>>>> layout_bindings;

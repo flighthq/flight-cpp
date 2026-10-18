@@ -40,8 +40,7 @@ struct LottieDocumentImportOptions : public flight::ReferenceEnabled {
   std::optional<flight::Array<flight::Ref<flight::types::LottieShapeItemHandlerEntry>>> shape_item_handlers;
 };
 
-struct LottieDocumentImportResult : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct LottieDocumentImportResult : public flight::types::Entity {
   flight::Array<flight::Ref<flight::types::LottieAdvancedBlend>> advanced_blends;
   flight::Ref<flight::types::AnimationClip> clip;
   double duration;

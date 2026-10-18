@@ -24,8 +24,7 @@ struct GlShapeRendererData;
 
 namespace flight::types {
 
-struct GlShapeRendererData : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct GlShapeRendererData : public flight::types::RendererData {
   std::optional<flight::Ref<flight::types::ImageResource>> image;
   double last_content_id;
   double last_h;

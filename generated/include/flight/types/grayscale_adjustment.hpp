@@ -19,10 +19,7 @@ struct GrayscaleAdjustment;
 
 namespace flight::types {
 
-struct GrayscaleAdjustment : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
-  flight::Array<double> color_matrix;
+struct GrayscaleAdjustment : public flight::types::ColorMatrixAdjustment {
   std::optional<double> intensity;
 };
 

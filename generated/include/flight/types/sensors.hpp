@@ -44,16 +44,14 @@ struct SensorReading : public flight::ReferenceEnabled {
   double timestamp;
 };
 
-struct AmbientLightReading : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct AmbientLightReading : public flight::types::Entity {
   SensorAccuracy accuracy;
   double interval;
   double timestamp;
   double illuminance;
 };
 
-struct MotionReading : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct MotionReading : public flight::types::Entity {
   SensorAccuracy accuracy;
   double interval;
   double timestamp;
@@ -62,8 +60,7 @@ struct MotionReading : public flight::ReferenceEnabled {
   double z;
 };
 
-struct OrientationReading : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct OrientationReading : public flight::types::Entity {
   SensorAccuracy accuracy;
   double interval;
   double timestamp;
@@ -74,8 +71,7 @@ struct OrientationReading : public flight::ReferenceEnabled {
   double heading;
 };
 
-struct PressureReading : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct PressureReading : public flight::types::Entity {
   SensorAccuracy accuracy;
   double interval;
   double timestamp;
@@ -83,8 +79,7 @@ struct PressureReading : public flight::ReferenceEnabled {
   double pressure;
 };
 
-struct ProximityReading : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct ProximityReading : public flight::types::Entity {
   SensorAccuracy accuracy;
   double interval;
   double timestamp;
@@ -93,8 +88,7 @@ struct ProximityReading : public flight::ReferenceEnabled {
   bool near;
 };
 
-struct QuaternionReading : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct QuaternionReading : public flight::types::Entity {
   SensorAccuracy accuracy;
   double interval;
   double timestamp;
@@ -104,8 +98,7 @@ struct QuaternionReading : public flight::ReferenceEnabled {
   double z;
 };
 
-struct RotationRateReading : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct RotationRateReading : public flight::types::Entity {
   SensorAccuracy accuracy;
   double interval;
   double timestamp;
@@ -138,8 +131,7 @@ struct HostSensorsCapability : public flight::ReferenceEnabled {
   std::function<std::function<void()>(std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<QuaternionReading>>>>)>, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SensorSubscribeOptions>>>>>)> subscribe_quaternion;
 };
 
-struct Sensors : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Sensors : public flight::types::Entity {
   std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<OrientationReading>>>>)>>> on_absolute_orientation;
   std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<MotionReading>>>>)>>> on_accelerometer;
   std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<AmbientLightReading>>>>)>>> on_ambient_light;

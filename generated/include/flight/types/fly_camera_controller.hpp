@@ -22,8 +22,7 @@ struct FlyCameraControllerOptions;
 
 namespace flight::types {
 
-struct FlyCameraController : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct FlyCameraController : public flight::types::Entity {
   double goal_pitch;
   double goal_yaw;
   double max_pitch;

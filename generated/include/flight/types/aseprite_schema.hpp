@@ -66,13 +66,7 @@ struct AsepriteBaseFrame : public flight::ReferenceEnabled {
   bool trimmed;
 };
 
-struct AsepriteArrayFrame : public flight::ReferenceEnabled {
-  double duration;
-  flight::Ref<AsepriteRect> frame;
-  bool rotated;
-  flight::Ref<AsepriteSize> source_size;
-  flight::Ref<AsepriteRect> sprite_source_size;
-  bool trimmed;
+struct AsepriteArrayFrame : public AsepriteBaseFrame {
   flight::String filename;
 };
 

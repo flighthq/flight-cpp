@@ -50,13 +50,7 @@ struct TextureAtlasAsepriteBaseFrame : public flight::ReferenceEnabled {
 
 using TextureAtlasAsepriteHashFrame = flight::Ref<TextureAtlasAsepriteBaseFrame>;
 
-struct TextureAtlasAsepriteArrayFrame : public flight::ReferenceEnabled {
-  double duration;
-  flight::Ref<TextureAtlasAsepriteRect> frame;
-  bool rotated;
-  flight::Ref<TextureAtlasAsepriteSize> source_size;
-  flight::Ref<TextureAtlasAsepriteRect> sprite_source_size;
-  bool trimmed;
+struct TextureAtlasAsepriteArrayFrame : public TextureAtlasAsepriteBaseFrame {
   flight::String filename;
 };
 

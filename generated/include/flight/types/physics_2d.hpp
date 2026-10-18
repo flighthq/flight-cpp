@@ -99,8 +99,7 @@ struct Physics2DCollisionFilter : public flight::ReferenceEnabled {
   double group_index;
 };
 
-struct Physics2DCollider : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics2DCollider : public flight::types::Entity {
   flight::types::CollisionBuiltInShape2D local;
   flight::types::CollisionBuiltInShape2D world;
   flight::Ref<Physics2DMaterial> material;
@@ -115,8 +114,7 @@ struct Physics2DMassData : public flight::ReferenceEnabled {
   double center_y;
 };
 
-struct RigidBody2D : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct RigidBody2D : public flight::types::Entity {
   double index;
   Physics2DBodyType type;
   double x;
@@ -206,8 +204,7 @@ struct Physics2DStepExplanation : public flight::ReferenceEnabled {
   flight::String status;
 };
 
-struct Physics2DJoint : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics2DJoint : public flight::types::Entity {
   Physics2DJointKind kind;
   double body_a;
   double body_b;
@@ -238,49 +235,13 @@ struct Physics2DJointEvents : public flight::ReferenceEnabled {
   flight::Array<flight::Ref<Physics2DBrokenJoint>> broke;
 };
 
-struct Physics2DDistanceJoint : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  Physics2DJointKind kind;
-  double body_a;
-  double body_b;
-  double local_anchor_ax;
-  double local_anchor_ay;
-  double local_anchor_bx;
-  double local_anchor_by;
-  bool collide_connected;
-  double impulse0;
-  double impulse1;
-  double impulse2;
-  double r_ax;
-  double r_ay;
-  double r_bx;
-  double r_by;
-  double break_force;
-  double break_torque;
+struct Physics2DDistanceJoint : public Physics2DJoint {
   double length;
   double frequency_hz;
   double damping_ratio;
 };
 
-struct Physics2DRevoluteJoint : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  Physics2DJointKind kind;
-  double body_a;
-  double body_b;
-  double local_anchor_ax;
-  double local_anchor_ay;
-  double local_anchor_bx;
-  double local_anchor_by;
-  bool collide_connected;
-  double impulse0;
-  double impulse1;
-  double impulse2;
-  double r_ax;
-  double r_ay;
-  double r_bx;
-  double r_by;
-  double break_force;
-  double break_torque;
+struct Physics2DRevoluteJoint : public Physics2DJoint {
   bool enable_motor;
   double motor_speed;
   double max_motor_torque;
@@ -294,69 +255,15 @@ struct Physics2DRevoluteJoint : public flight::ReferenceEnabled {
   double limit_damping_ratio;
 };
 
-struct Physics2DWeldJoint : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  Physics2DJointKind kind;
-  double body_a;
-  double body_b;
-  double local_anchor_ax;
-  double local_anchor_ay;
-  double local_anchor_bx;
-  double local_anchor_by;
-  bool collide_connected;
-  double impulse0;
-  double impulse1;
-  double impulse2;
-  double r_ax;
-  double r_ay;
-  double r_bx;
-  double r_by;
-  double break_force;
-  double break_torque;
+struct Physics2DWeldJoint : public Physics2DJoint {
   double reference_angle;
 };
 
-struct Physics2DRopeJoint : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  Physics2DJointKind kind;
-  double body_a;
-  double body_b;
-  double local_anchor_ax;
-  double local_anchor_ay;
-  double local_anchor_bx;
-  double local_anchor_by;
-  bool collide_connected;
-  double impulse0;
-  double impulse1;
-  double impulse2;
-  double r_ax;
-  double r_ay;
-  double r_bx;
-  double r_by;
-  double break_force;
-  double break_torque;
+struct Physics2DRopeJoint : public Physics2DJoint {
   double max_length;
 };
 
-struct Physics2DPulleyJoint : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  Physics2DJointKind kind;
-  double body_a;
-  double body_b;
-  double local_anchor_ax;
-  double local_anchor_ay;
-  double local_anchor_bx;
-  double local_anchor_by;
-  bool collide_connected;
-  double impulse0;
-  double impulse1;
-  double impulse2;
-  double r_ax;
-  double r_ay;
-  double r_bx;
-  double r_by;
-  double break_force;
-  double break_torque;
+struct Physics2DPulleyJoint : public Physics2DJoint {
   double ground_anchor_ax;
   double ground_anchor_ay;
   double ground_anchor_bx;
@@ -365,25 +272,7 @@ struct Physics2DPulleyJoint : public flight::ReferenceEnabled {
   double constant;
 };
 
-struct Physics2DGearJoint : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  Physics2DJointKind kind;
-  double body_a;
-  double body_b;
-  double local_anchor_ax;
-  double local_anchor_ay;
-  double local_anchor_bx;
-  double local_anchor_by;
-  bool collide_connected;
-  double impulse0;
-  double impulse1;
-  double impulse2;
-  double r_ax;
-  double r_ay;
-  double r_bx;
-  double r_by;
-  double break_force;
-  double break_torque;
+struct Physics2DGearJoint : public Physics2DJoint {
   Physics2DGearCoordinateKind coordinate_a;
   Physics2DGearCoordinateKind coordinate_b;
   double axis_ax;
@@ -394,25 +283,7 @@ struct Physics2DGearJoint : public flight::ReferenceEnabled {
   double constant;
 };
 
-struct Physics2DPrismaticJoint : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  Physics2DJointKind kind;
-  double body_a;
-  double body_b;
-  double local_anchor_ax;
-  double local_anchor_ay;
-  double local_anchor_bx;
-  double local_anchor_by;
-  bool collide_connected;
-  double impulse0;
-  double impulse1;
-  double impulse2;
-  double r_ax;
-  double r_ay;
-  double r_bx;
-  double r_by;
-  double break_force;
-  double break_torque;
+struct Physics2DPrismaticJoint : public Physics2DJoint {
   double local_axis_ax;
   double local_axis_ay;
   double reference_angle;
@@ -428,25 +299,7 @@ struct Physics2DPrismaticJoint : public flight::ReferenceEnabled {
   double limit_damping_ratio;
 };
 
-struct Physics2DWheelJoint : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  Physics2DJointKind kind;
-  double body_a;
-  double body_b;
-  double local_anchor_ax;
-  double local_anchor_ay;
-  double local_anchor_bx;
-  double local_anchor_by;
-  bool collide_connected;
-  double impulse0;
-  double impulse1;
-  double impulse2;
-  double r_ax;
-  double r_ay;
-  double r_bx;
-  double r_by;
-  double break_force;
-  double break_torque;
+struct Physics2DWheelJoint : public Physics2DJoint {
   double local_axis_ax;
   double local_axis_ay;
   double rest_translation;
@@ -458,25 +311,7 @@ struct Physics2DWheelJoint : public flight::ReferenceEnabled {
   double motor_impulse;
 };
 
-struct Physics2DMouseJoint : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  Physics2DJointKind kind;
-  double body_a;
-  double body_b;
-  double local_anchor_ax;
-  double local_anchor_ay;
-  double local_anchor_bx;
-  double local_anchor_by;
-  bool collide_connected;
-  double impulse0;
-  double impulse1;
-  double impulse2;
-  double r_ax;
-  double r_ay;
-  double r_bx;
-  double r_by;
-  double break_force;
-  double break_torque;
+struct Physics2DMouseJoint : public Physics2DJoint {
   double target_x;
   double target_y;
   double max_force;
@@ -496,31 +331,13 @@ struct Physics2DJointOptions : public flight::ReferenceEnabled {
   std::optional<double> break_torque;
 };
 
-struct Physics2DDistanceJointOptions : public flight::ReferenceEnabled {
-  double body_a;
-  double body_b;
-  std::optional<double> local_anchor_ax;
-  std::optional<double> local_anchor_ay;
-  std::optional<double> local_anchor_bx;
-  std::optional<double> local_anchor_by;
-  std::optional<bool> collide_connected;
-  std::optional<double> break_force;
-  std::optional<double> break_torque;
+struct Physics2DDistanceJointOptions : public Physics2DJointOptions {
   double length;
   std::optional<double> frequency_hz;
   std::optional<double> damping_ratio;
 };
 
-struct Physics2DRevoluteJointOptions : public flight::ReferenceEnabled {
-  double body_a;
-  double body_b;
-  std::optional<double> local_anchor_ax;
-  std::optional<double> local_anchor_ay;
-  std::optional<double> local_anchor_bx;
-  std::optional<double> local_anchor_by;
-  std::optional<bool> collide_connected;
-  std::optional<double> break_force;
-  std::optional<double> break_torque;
+struct Physics2DRevoluteJointOptions : public Physics2DJointOptions {
   std::optional<bool> enable_motor;
   std::optional<double> motor_speed;
   std::optional<double> max_motor_torque;
@@ -533,42 +350,15 @@ struct Physics2DRevoluteJointOptions : public flight::ReferenceEnabled {
   std::optional<double> limit_damping_ratio;
 };
 
-struct Physics2DWeldJointOptions : public flight::ReferenceEnabled {
-  double body_a;
-  double body_b;
-  std::optional<double> local_anchor_ax;
-  std::optional<double> local_anchor_ay;
-  std::optional<double> local_anchor_bx;
-  std::optional<double> local_anchor_by;
-  std::optional<bool> collide_connected;
-  std::optional<double> break_force;
-  std::optional<double> break_torque;
+struct Physics2DWeldJointOptions : public Physics2DJointOptions {
   std::optional<double> reference_angle;
 };
 
-struct Physics2DRopeJointOptions : public flight::ReferenceEnabled {
-  double body_a;
-  double body_b;
-  std::optional<double> local_anchor_ax;
-  std::optional<double> local_anchor_ay;
-  std::optional<double> local_anchor_bx;
-  std::optional<double> local_anchor_by;
-  std::optional<bool> collide_connected;
-  std::optional<double> break_force;
-  std::optional<double> break_torque;
+struct Physics2DRopeJointOptions : public Physics2DJointOptions {
   double max_length;
 };
 
-struct Physics2DPulleyJointOptions : public flight::ReferenceEnabled {
-  double body_a;
-  double body_b;
-  std::optional<double> local_anchor_ax;
-  std::optional<double> local_anchor_ay;
-  std::optional<double> local_anchor_bx;
-  std::optional<double> local_anchor_by;
-  std::optional<bool> collide_connected;
-  std::optional<double> break_force;
-  std::optional<double> break_torque;
+struct Physics2DPulleyJointOptions : public Physics2DJointOptions {
   double ground_anchor_ax;
   double ground_anchor_ay;
   double ground_anchor_bx;
@@ -577,16 +367,7 @@ struct Physics2DPulleyJointOptions : public flight::ReferenceEnabled {
   std::optional<double> ratio;
 };
 
-struct Physics2DGearJointOptions : public flight::ReferenceEnabled {
-  double body_a;
-  double body_b;
-  std::optional<double> local_anchor_ax;
-  std::optional<double> local_anchor_ay;
-  std::optional<double> local_anchor_bx;
-  std::optional<double> local_anchor_by;
-  std::optional<bool> collide_connected;
-  std::optional<double> break_force;
-  std::optional<double> break_torque;
+struct Physics2DGearJointOptions : public Physics2DJointOptions {
   Physics2DGearCoordinateKind coordinate_a;
   Physics2DGearCoordinateKind coordinate_b;
   double constant;
@@ -597,16 +378,7 @@ struct Physics2DGearJointOptions : public flight::ReferenceEnabled {
   std::optional<double> ratio;
 };
 
-struct Physics2DPrismaticJointOptions : public flight::ReferenceEnabled {
-  double body_a;
-  double body_b;
-  std::optional<double> local_anchor_ax;
-  std::optional<double> local_anchor_ay;
-  std::optional<double> local_anchor_bx;
-  std::optional<double> local_anchor_by;
-  std::optional<bool> collide_connected;
-  std::optional<double> break_force;
-  std::optional<double> break_torque;
+struct Physics2DPrismaticJointOptions : public Physics2DJointOptions {
   std::optional<double> local_axis_ax;
   std::optional<double> local_axis_ay;
   std::optional<double> reference_angle;
@@ -621,16 +393,7 @@ struct Physics2DPrismaticJointOptions : public flight::ReferenceEnabled {
   std::optional<double> limit_damping_ratio;
 };
 
-struct Physics2DWheelJointOptions : public flight::ReferenceEnabled {
-  double body_a;
-  double body_b;
-  std::optional<double> local_anchor_ax;
-  std::optional<double> local_anchor_ay;
-  std::optional<double> local_anchor_bx;
-  std::optional<double> local_anchor_by;
-  std::optional<bool> collide_connected;
-  std::optional<double> break_force;
-  std::optional<double> break_torque;
+struct Physics2DWheelJointOptions : public Physics2DJointOptions {
   std::optional<double> local_axis_ax;
   std::optional<double> local_axis_ay;
   std::optional<double> rest_translation;
@@ -665,8 +428,7 @@ struct Physics2DQueryHit : public flight::ReferenceEnabled {
   double collider_index;
 };
 
-struct Physics2DQueryResult : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics2DQueryResult : public flight::types::Entity {
   flight::Array<flight::Ref<Physics2DQueryHit>> hits;
   double hit_count;
 };
@@ -680,10 +442,7 @@ struct Physics2DQueryFilter : public flight::ReferenceEnabled {
   bool include_static;
 };
 
-struct Physics2DRayHit : public flight::ReferenceEnabled {
-  flight::Ref<RigidBody2D> body;
-  flight::Ref<Physics2DCollider> collider;
-  double collider_index;
+struct Physics2DRayHit : public Physics2DQueryHit {
   double fraction;
   double x;
   double y;
@@ -691,14 +450,12 @@ struct Physics2DRayHit : public flight::ReferenceEnabled {
   double normal_y;
 };
 
-struct Physics2DRayResult : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics2DRayResult : public flight::types::Entity {
   flight::Array<flight::Ref<Physics2DRayHit>> hits;
   double hit_count;
 };
 
-struct Physics2DShapeCastResult : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics2DShapeCastResult : public flight::types::Entity {
   std::optional<flight::Ref<RigidBody2D>> body;
   std::optional<flight::Ref<Physics2DCollider>> collider;
   double collider_index;
@@ -733,8 +490,7 @@ struct Physics2DJointResolutionExplanation : public flight::ReferenceEnabled {
   flight::String status;
 };
 
-struct Physics2DJointReaction : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics2DJointReaction : public flight::types::Entity {
   double force_x;
   double force_y;
   double torque;
@@ -759,8 +515,7 @@ struct Physics2DDebugCircle : public flight::ReferenceEnabled {
   double radius;
 };
 
-struct Physics2DDebugGeometry : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics2DDebugGeometry : public flight::types::Entity {
   flight::Array<flight::Ref<Physics2DDebugLine>> lines;
   double line_count;
   flight::Array<flight::Ref<Physics2DDebugCircle>> circles;
@@ -782,8 +537,7 @@ struct Physics2DContactHooks : public flight::ReferenceEnabled {
   std::optional<std::function<void(flight::Ref<Physics2DWorld>, flight::Ref<Physics2DContact>)>> post_solve;
 };
 
-struct Physics2DWorld : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics2DWorld : public flight::types::Entity {
   double version;
   flight::Array<flight::Ref<RigidBody2D>> bodies;
   flight::Map<double, flight::Ref<RigidBody2D>> body_by_index;

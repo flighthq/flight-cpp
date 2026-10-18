@@ -26,8 +26,7 @@ struct TimelineSource;
 
 namespace flight::types {
 
-struct TimelineSource : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct TimelineSource : public flight::types::Entity {
   double total_frames;
   flight::Array<flight::Ref<flight::types::TimelineLabel>> labels;
   flight::Array<flight::Ref<flight::types::TimelineCue>> cues;

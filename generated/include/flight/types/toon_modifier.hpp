@@ -20,10 +20,7 @@ struct ToonModifier;
 
 namespace flight::types {
 
-struct ToonModifier : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
-  flight::String slot;
+struct ToonModifier : public flight::types::Modifier {
   double steps;
   std::optional<double> smoothness;
 };

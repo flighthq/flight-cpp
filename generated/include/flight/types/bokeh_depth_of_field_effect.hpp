@@ -18,9 +18,7 @@ struct BokehDepthOfFieldEffect;
 
 namespace flight::types {
 
-struct BokehDepthOfFieldEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct BokehDepthOfFieldEffect : public flight::types::Effect {
   std::optional<double> focus_distance;
   std::optional<double> focus_range;
   std::optional<double> max_blur;

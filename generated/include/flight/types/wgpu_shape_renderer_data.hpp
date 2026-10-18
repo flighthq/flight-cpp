@@ -26,8 +26,7 @@ struct WgpuShapeRendererData;
 
 namespace flight::types {
 
-struct WgpuShapeRendererData : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct WgpuShapeRendererData : public flight::types::RendererData {
   std::optional<flight::Ref<flight::types::ImageResource>> image;
   double last_content_id;
   double last_h;

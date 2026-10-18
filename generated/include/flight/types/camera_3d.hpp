@@ -30,28 +30,24 @@ using Camera3DLike = flight::Ref<Camera3D>;
 
 namespace flight::types {
 
-struct PerspectiveProjection : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct PerspectiveProjection : public flight::types::Entity {
   double aspect;
   double fov_y;
   flight::String kind;
 };
 
-struct OrthographicProjection : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct OrthographicProjection : public flight::types::Entity {
   double half_height;
   double half_width;
   flight::String kind;
 };
 
-struct RawProjection : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct RawProjection : public flight::types::Entity {
   flight::String kind;
   flight::Ref<flight::types::Matrix4> matrix;
 };
 
-struct Camera3D : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Camera3D : public flight::types::Entity {
   double far;
   flight::Ref<flight::types::Matrix4> inverse_view_projection;
   flight::Ref<flight::types::Vector2> jitter;

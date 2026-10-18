@@ -53,13 +53,7 @@ struct TexturePackerAtlasHashFrame : public flight::ReferenceEnabled {
   bool trimmed;
 };
 
-struct TexturePackerAtlasArrayFrame : public flight::ReferenceEnabled {
-  flight::Ref<TexturePackerAtlasRect> frame;
-  std::optional<flight::Ref<TexturePackerAtlasPivot>> pivot;
-  bool rotated;
-  flight::Ref<TexturePackerAtlasSize> source_size;
-  flight::Ref<TexturePackerAtlasRect> sprite_source_size;
-  bool trimmed;
+struct TexturePackerAtlasArrayFrame : public TexturePackerAtlasHashFrame {
   flight::String filename;
 };
 

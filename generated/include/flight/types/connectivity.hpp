@@ -65,8 +65,7 @@ struct HostConnectivityReachabilityCapability : public flight::ReferenceEnabled 
   std::function<flight::Task<flight::Ref<ConnectivityReachability>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<ConnectivityReachabilityOptions>>>>, flight::Ref<ConnectivityReachability>)> detect_reachability;
 };
 
-struct Connectivity : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Connectivity : public flight::types::Entity {
   std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<ConnectivityStatus>>>>)>>> on_change;
   std::shared_ptr<flight::types::Signal<std::function<void(ConnectivityConnectionType)>>> on_connection_type_change;
   std::shared_ptr<flight::types::Signal<std::function<void(bool)>>> on_metered_change;

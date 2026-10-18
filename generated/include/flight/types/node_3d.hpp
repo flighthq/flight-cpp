@@ -50,9 +50,7 @@ namespace flight::types {
 
 inline const flight::String node_3d_kind = flight::String("Node3D");
 
-struct Node3DTraits : public flight::ReferenceEnabled {
-  double alpha;
-  bool visible;
+struct Node3DTraits : public flight::types::HasAppearance {
   flight::Ref<flight::types::Vector3> position;
   flight::Ref<flight::types::Quaternion> rotation;
   flight::Ref<flight::types::Vector3> scale;

@@ -38,10 +38,7 @@ struct height_map_sine_06a0264a98b6176e : public flight::ReferenceEnabled {
 
 inline flight::Ref<height_map_sine_06a0264a98b6176e> vertex_displace_modifier_source = flight::make_ref<height_map_sine_06a0264a98b6176e>(height_map_sine_06a0264a98b6176e{.height_map = flight::String("HeightMap"), .sine = flight::String("Sine")});
 
-struct VertexDisplaceModifier : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
-  flight::String slot;
+struct VertexDisplaceModifier : public flight::types::Modifier {
   VertexDisplaceModifierSource source;
   double amplitude;
   std::optional<flight::types::Vector3Like> axis;

@@ -29,8 +29,7 @@ using Scene3DRuntime = flight::Ref<flight::types::EntityRuntime>;
 
 namespace flight::types {
 
-struct Scene3D : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Scene3D : public flight::types::Entity {
   flight::Record<flight::String, flight::Ref<flight::types::AnimationClip>> animations;
   std::optional<flight::Ref<flight::types::Scene3DMetadata>> metadata;
   flight::Array<flight::types::ImageResourceReference> resources;

@@ -100,8 +100,7 @@ struct Physics3DCollisionFilter : public flight::ReferenceEnabled {
   double group_index;
 };
 
-struct Physics3DCollider : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics3DCollider : public flight::types::Entity {
   flight::types::CollisionColliderShape3D local;
   flight::types::CollisionColliderShape3D world;
   flight::Ref<Physics3DMaterial> material;
@@ -109,8 +108,7 @@ struct Physics3DCollider : public flight::ReferenceEnabled {
   bool sensor;
 };
 
-struct Physics3DMassData : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics3DMassData : public flight::types::Entity {
   double mass;
   double inertia_xx;
   double inertia_yy;
@@ -123,8 +121,7 @@ struct Physics3DMassData : public flight::ReferenceEnabled {
   double center_z;
 };
 
-struct RigidBody3D : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct RigidBody3D : public flight::types::Entity {
   double index;
   Physics3DBodyType type;
   double x;
@@ -180,8 +177,7 @@ struct RigidBody3D : public flight::ReferenceEnabled {
   flight::Array<flight::Ref<Physics3DCollider>> colliders;
 };
 
-struct Physics3DContactPoint : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics3DContactPoint : public flight::types::Entity {
   double x;
   double y;
   double z;
@@ -195,8 +191,7 @@ struct Physics3DContactPoint : public flight::ReferenceEnabled {
   double r_bz;
 };
 
-struct Physics3DContact : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics3DContact : public flight::types::Entity {
   double body_a;
   double body_b;
   double collider_a;
@@ -218,8 +213,7 @@ struct Physics3DContactEvents : public flight::ReferenceEnabled {
   flight::Array<flight::Ref<Physics3DContact>> ended;
 };
 
-struct Physics3DContactConstraintPoint : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics3DContactConstraintPoint : public flight::types::Entity {
   double feature_id;
   double normal_impulse;
   double tangent_impulse0;
@@ -230,8 +224,7 @@ struct Physics3DContactConstraintPoint : public flight::ReferenceEnabled {
   double bias;
 };
 
-struct Physics3DContactConstraint : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics3DContactConstraint : public flight::types::Entity {
   double contact;
   double tangent0_x;
   double tangent0_y;
@@ -304,8 +297,7 @@ struct Physics3DJointExplanation : public flight::ReferenceEnabled {
   flight::String status;
 };
 
-struct Physics3DJoint : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics3DJoint : public flight::types::Entity {
   Physics3DJointKind kind;
   double body_a;
   double body_b;
@@ -344,8 +336,7 @@ struct Physics3DJointFrames : public flight::ReferenceEnabled {
   double local_rotation_bw;
 };
 
-struct Physics3DJointReaction : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics3DJointReaction : public flight::types::Entity {
   double force_x;
   double force_y;
   double force_z;
@@ -372,18 +363,7 @@ struct Physics3DJointOptions : public flight::ReferenceEnabled {
   std::optional<double> break_torque;
 };
 
-struct Physics3DJointFrameOptions : public flight::ReferenceEnabled {
-  double body_a;
-  double body_b;
-  std::optional<double> local_anchor_ax;
-  std::optional<double> local_anchor_ay;
-  std::optional<double> local_anchor_az;
-  std::optional<double> local_anchor_bx;
-  std::optional<double> local_anchor_by;
-  std::optional<double> local_anchor_bz;
-  std::optional<bool> collide_connected;
-  std::optional<double> break_force;
-  std::optional<double> break_torque;
+struct Physics3DJointFrameOptions : public Physics3DJointOptions {
   std::optional<double> local_rotation_ax;
   std::optional<double> local_rotation_ay;
   std::optional<double> local_rotation_az;
@@ -394,33 +374,7 @@ struct Physics3DJointFrameOptions : public flight::ReferenceEnabled {
   std::optional<double> local_rotation_bw;
 };
 
-struct Physics3DDistanceJoint : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  Physics3DJointKind kind;
-  double body_a;
-  double body_b;
-  double local_anchor_ax;
-  double local_anchor_ay;
-  double local_anchor_az;
-  double local_anchor_bx;
-  double local_anchor_by;
-  double local_anchor_bz;
-  bool collide_connected;
-  double break_force;
-  double break_torque;
-  bool broken;
-  double impulse0;
-  double impulse1;
-  double impulse2;
-  double impulse3;
-  double impulse4;
-  double impulse5;
-  double r_ax;
-  double r_ay;
-  double r_az;
-  double r_bx;
-  double r_by;
-  double r_bz;
+struct Physics3DDistanceJoint : public Physics3DJoint {
   double length;
   bool enable_spring;
   double frequency_hz;
@@ -432,18 +386,7 @@ struct Physics3DDistanceJoint : public flight::ReferenceEnabled {
   double upper_limit_impulse;
 };
 
-struct Physics3DDistanceJointOptions : public flight::ReferenceEnabled {
-  double body_a;
-  double body_b;
-  std::optional<double> local_anchor_ax;
-  std::optional<double> local_anchor_ay;
-  std::optional<double> local_anchor_az;
-  std::optional<double> local_anchor_bx;
-  std::optional<double> local_anchor_by;
-  std::optional<double> local_anchor_bz;
-  std::optional<bool> collide_connected;
-  std::optional<double> break_force;
-  std::optional<double> break_torque;
+struct Physics3DDistanceJointOptions : public Physics3DJointOptions {
   std::optional<double> length;
   std::optional<bool> enable_spring;
   std::optional<double> frequency_hz;
@@ -490,33 +433,7 @@ struct Physics3DFixedJoint : public flight::ReferenceEnabled {
   double local_rotation_bw;
 };
 
-struct Physics3DHingeJoint : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  Physics3DJointKind kind;
-  double body_a;
-  double body_b;
-  double local_anchor_ax;
-  double local_anchor_ay;
-  double local_anchor_az;
-  double local_anchor_bx;
-  double local_anchor_by;
-  double local_anchor_bz;
-  bool collide_connected;
-  double break_force;
-  double break_torque;
-  bool broken;
-  double impulse0;
-  double impulse1;
-  double impulse2;
-  double impulse3;
-  double impulse4;
-  double impulse5;
-  double r_ax;
-  double r_ay;
-  double r_az;
-  double r_bx;
-  double r_by;
-  double r_bz;
+struct Physics3DHingeJoint : public Physics3DJoint {
   double local_rotation_ax;
   double local_rotation_ay;
   double local_rotation_az;
@@ -539,26 +456,7 @@ struct Physics3DHingeJoint : public flight::ReferenceEnabled {
   double upper_limit_impulse;
 };
 
-struct Physics3DHingeJointOptions : public flight::ReferenceEnabled {
-  double body_a;
-  double body_b;
-  std::optional<double> local_anchor_ax;
-  std::optional<double> local_anchor_ay;
-  std::optional<double> local_anchor_az;
-  std::optional<double> local_anchor_bx;
-  std::optional<double> local_anchor_by;
-  std::optional<double> local_anchor_bz;
-  std::optional<bool> collide_connected;
-  std::optional<double> break_force;
-  std::optional<double> break_torque;
-  std::optional<double> local_rotation_ax;
-  std::optional<double> local_rotation_ay;
-  std::optional<double> local_rotation_az;
-  std::optional<double> local_rotation_aw;
-  std::optional<double> local_rotation_bx;
-  std::optional<double> local_rotation_by;
-  std::optional<double> local_rotation_bz;
-  std::optional<double> local_rotation_bw;
+struct Physics3DHingeJointOptions : public Physics3DJointFrameOptions {
   std::optional<bool> enable_limit;
   std::optional<double> lower_angle;
   std::optional<double> upper_angle;
@@ -570,33 +468,7 @@ struct Physics3DHingeJointOptions : public flight::ReferenceEnabled {
   std::optional<double> limit_damping_ratio;
 };
 
-struct Physics3DSliderJoint : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  Physics3DJointKind kind;
-  double body_a;
-  double body_b;
-  double local_anchor_ax;
-  double local_anchor_ay;
-  double local_anchor_az;
-  double local_anchor_bx;
-  double local_anchor_by;
-  double local_anchor_bz;
-  bool collide_connected;
-  double break_force;
-  double break_torque;
-  bool broken;
-  double impulse0;
-  double impulse1;
-  double impulse2;
-  double impulse3;
-  double impulse4;
-  double impulse5;
-  double r_ax;
-  double r_ay;
-  double r_az;
-  double r_bx;
-  double r_by;
-  double r_bz;
+struct Physics3DSliderJoint : public Physics3DJoint {
   double local_rotation_ax;
   double local_rotation_ay;
   double local_rotation_az;
@@ -619,26 +491,7 @@ struct Physics3DSliderJoint : public flight::ReferenceEnabled {
   double upper_limit_impulse;
 };
 
-struct Physics3DSliderJointOptions : public flight::ReferenceEnabled {
-  double body_a;
-  double body_b;
-  std::optional<double> local_anchor_ax;
-  std::optional<double> local_anchor_ay;
-  std::optional<double> local_anchor_az;
-  std::optional<double> local_anchor_bx;
-  std::optional<double> local_anchor_by;
-  std::optional<double> local_anchor_bz;
-  std::optional<bool> collide_connected;
-  std::optional<double> break_force;
-  std::optional<double> break_torque;
-  std::optional<double> local_rotation_ax;
-  std::optional<double> local_rotation_ay;
-  std::optional<double> local_rotation_az;
-  std::optional<double> local_rotation_aw;
-  std::optional<double> local_rotation_bx;
-  std::optional<double> local_rotation_by;
-  std::optional<double> local_rotation_bz;
-  std::optional<double> local_rotation_bw;
+struct Physics3DSliderJointOptions : public Physics3DJointFrameOptions {
   std::optional<bool> enable_limit;
   std::optional<double> lower_translation;
   std::optional<double> upper_translation;
@@ -650,33 +503,7 @@ struct Physics3DSliderJointOptions : public flight::ReferenceEnabled {
   std::optional<double> limit_damping_ratio;
 };
 
-struct Physics3DConeTwistJoint : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  Physics3DJointKind kind;
-  double body_a;
-  double body_b;
-  double local_anchor_ax;
-  double local_anchor_ay;
-  double local_anchor_az;
-  double local_anchor_bx;
-  double local_anchor_by;
-  double local_anchor_bz;
-  bool collide_connected;
-  double break_force;
-  double break_torque;
-  bool broken;
-  double impulse0;
-  double impulse1;
-  double impulse2;
-  double impulse3;
-  double impulse4;
-  double impulse5;
-  double r_ax;
-  double r_ay;
-  double r_az;
-  double r_bx;
-  double r_by;
-  double r_bz;
+struct Physics3DConeTwistJoint : public Physics3DJoint {
   double local_rotation_ax;
   double local_rotation_ay;
   double local_rotation_az;
@@ -699,26 +526,7 @@ struct Physics3DConeTwistJoint : public flight::ReferenceEnabled {
   double upper_twist_impulse;
 };
 
-struct Physics3DConeTwistJointOptions : public flight::ReferenceEnabled {
-  double body_a;
-  double body_b;
-  std::optional<double> local_anchor_ax;
-  std::optional<double> local_anchor_ay;
-  std::optional<double> local_anchor_az;
-  std::optional<double> local_anchor_bx;
-  std::optional<double> local_anchor_by;
-  std::optional<double> local_anchor_bz;
-  std::optional<bool> collide_connected;
-  std::optional<double> break_force;
-  std::optional<double> break_torque;
-  std::optional<double> local_rotation_ax;
-  std::optional<double> local_rotation_ay;
-  std::optional<double> local_rotation_az;
-  std::optional<double> local_rotation_aw;
-  std::optional<double> local_rotation_bx;
-  std::optional<double> local_rotation_by;
-  std::optional<double> local_rotation_bz;
-  std::optional<double> local_rotation_bw;
+struct Physics3DConeTwistJointOptions : public Physics3DJointFrameOptions {
   std::optional<bool> enable_swing_limit;
   std::optional<double> swing_limit_y;
   std::optional<double> swing_limit_z;
@@ -730,33 +538,7 @@ struct Physics3DConeTwistJointOptions : public flight::ReferenceEnabled {
   std::optional<double> limit_damping_ratio;
 };
 
-struct Physics3DGeneric6DofJoint : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  Physics3DJointKind kind;
-  double body_a;
-  double body_b;
-  double local_anchor_ax;
-  double local_anchor_ay;
-  double local_anchor_az;
-  double local_anchor_bx;
-  double local_anchor_by;
-  double local_anchor_bz;
-  bool collide_connected;
-  double break_force;
-  double break_torque;
-  bool broken;
-  double impulse0;
-  double impulse1;
-  double impulse2;
-  double impulse3;
-  double impulse4;
-  double impulse5;
-  double r_ax;
-  double r_ay;
-  double r_az;
-  double r_bx;
-  double r_by;
-  double r_bz;
+struct Physics3DGeneric6DofJoint : public Physics3DJoint {
   double local_rotation_ax;
   double local_rotation_ay;
   double local_rotation_az;
@@ -784,26 +566,7 @@ struct Physics3DGeneric6DofJoint : public flight::ReferenceEnabled {
   flight::Array<double> upper_limit_impulses;
 };
 
-struct Physics3DGeneric6DofJointOptions : public flight::ReferenceEnabled {
-  double body_a;
-  double body_b;
-  std::optional<double> local_anchor_ax;
-  std::optional<double> local_anchor_ay;
-  std::optional<double> local_anchor_az;
-  std::optional<double> local_anchor_bx;
-  std::optional<double> local_anchor_by;
-  std::optional<double> local_anchor_bz;
-  std::optional<bool> collide_connected;
-  std::optional<double> break_force;
-  std::optional<double> break_torque;
-  std::optional<double> local_rotation_ax;
-  std::optional<double> local_rotation_ay;
-  std::optional<double> local_rotation_az;
-  std::optional<double> local_rotation_aw;
-  std::optional<double> local_rotation_bx;
-  std::optional<double> local_rotation_by;
-  std::optional<double> local_rotation_bz;
-  std::optional<double> local_rotation_bw;
+struct Physics3DGeneric6DofJointOptions : public Physics3DJointFrameOptions {
   std::optional<double> lower_linear_x;
   std::optional<double> lower_linear_y;
   std::optional<double> lower_linear_z;
@@ -827,8 +590,7 @@ struct Physics3DQueryHit : public flight::ReferenceEnabled {
   double collider_index;
 };
 
-struct Physics3DQueryResult : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics3DQueryResult : public flight::types::Entity {
   flight::Array<flight::Ref<Physics3DQueryHit>> hits;
   double hit_count;
 };
@@ -842,10 +604,7 @@ struct Physics3DQueryFilter : public flight::ReferenceEnabled {
   bool include_static;
 };
 
-struct Physics3DRayHit : public flight::ReferenceEnabled {
-  flight::Ref<RigidBody3D> body;
-  flight::Ref<Physics3DCollider> collider;
-  double collider_index;
+struct Physics3DRayHit : public Physics3DQueryHit {
   double fraction;
   double x;
   double y;
@@ -855,14 +614,12 @@ struct Physics3DRayHit : public flight::ReferenceEnabled {
   double normal_z;
 };
 
-struct Physics3DRayResult : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics3DRayResult : public flight::types::Entity {
   flight::Array<flight::Ref<Physics3DRayHit>> hits;
   double hit_count;
 };
 
-struct Physics3DShapeCastResult : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics3DShapeCastResult : public flight::types::Entity {
   std::optional<flight::Ref<RigidBody3D>> body;
   std::optional<flight::Ref<Physics3DCollider>> collider;
   double collider_index;
@@ -898,8 +655,7 @@ struct Physics3DDebugSphere : public flight::ReferenceEnabled {
   double radius;
 };
 
-struct Physics3DDebugGeometry : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics3DDebugGeometry : public flight::types::Entity {
   flight::Array<flight::Ref<Physics3DDebugLine>> lines;
   double line_count;
   flight::Array<flight::Ref<Physics3DDebugSphere>> spheres;
@@ -932,8 +688,7 @@ struct Physics3DJointSolver : public flight::ReferenceEnabled {
   std::optional<std::function<void(flight::Ref<Physics3DJoint>)>> clear_accumulated_impulses;
 };
 
-struct Physics3DWorld : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics3DWorld : public flight::types::Entity {
   double version;
   flight::Array<flight::Ref<RigidBody3D>> bodies;
   flight::Map<double, flight::Ref<RigidBody3D>> body_by_index;

@@ -18,9 +18,7 @@ struct AutoExposureEffect;
 
 namespace flight::types {
 
-struct AutoExposureEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct AutoExposureEffect : public flight::types::Effect {
   std::optional<double> adaptation_speed;
   std::optional<double> exposure_compensation;
   std::optional<double> max_exposure;

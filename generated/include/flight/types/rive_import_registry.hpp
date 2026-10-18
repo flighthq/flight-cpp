@@ -45,8 +45,7 @@ struct RiveImportRegistry : public flight::ReferenceEnabled {
   flight::Map<double, flight::Ref<RiveCoreObjectHandler>> handlers;
 };
 
-struct RiveArtboardImportContext : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct RiveArtboardImportContext : public flight::types::Entity {
   flight::Array<flight::Ref<flight::types::RiveAdvancedBlend>> advanced_blends;
   flight::Array<flight::Ref<flight::types::RiveAnimationClip>> animations;
   flight::Ref<flight::types::RiveArtboardGraph> artboard;
@@ -63,8 +62,7 @@ struct RiveArtboardImportContext : public flight::ReferenceEnabled {
   flight::Array<flight::Ref<flight::types::RiveStateMachineDescriptor>> state_machines;
 };
 
-struct RiveDocumentImportContext : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct RiveDocumentImportContext : public flight::types::Entity {
   flight::Array<flight::Ref<flight::types::RiveFileAsset>> assets;
   std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics;
   flight::Array<flight::Ref<flight::types::RiveCoreObject>> objects;

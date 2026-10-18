@@ -19,9 +19,7 @@ struct BlendEffect;
 
 namespace flight::types {
 
-struct BlendEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct BlendEffect : public flight::types::Effect {
   flight::String mode;
   std::optional<flight::String> backdrop_key;
   std::optional<double> opacity;

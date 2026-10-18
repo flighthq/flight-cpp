@@ -154,9 +154,7 @@ struct WebWorkerStoragePersistenceApi : public flight::ReferenceEnabled {
   std::function<flight::Task<bool>()> persisted;
 };
 
-struct WebWindowStoragePersistenceApi : public flight::ReferenceEnabled {
-  std::function<flight::Task<flight::types::PermissionState>()> get_permission_state;
-  std::function<flight::Task<bool>()> persisted;
+struct WebWindowStoragePersistenceApi : public WebWorkerStoragePersistenceApi {
   std::function<flight::Task<bool>()> persist;
 };
 
@@ -287,8 +285,7 @@ struct StorageNamespace : public flight::ReferenceEnabled {
   flight::String prefix;
 };
 
-struct StorageSignals : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct StorageSignals : public flight::types::Entity {
   std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<StorageChange>>>>)>>> on_change;
 };
 

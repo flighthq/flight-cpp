@@ -28,8 +28,7 @@ struct AnimationStateMachine;
 
 namespace flight::types {
 
-struct AnimationStateMachineState : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct AnimationStateMachineState : public flight::types::Entity {
   flight::Ref<flight::types::AnimationBlendTree> blend_tree;
   flight::String name;
 };
@@ -39,8 +38,7 @@ struct AnimationStateMachineChannel : public flight::ReferenceEnabled {
   flight::Array<std::optional<double>> state_channel_indices;
 };
 
-struct AnimationStateMachine : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct AnimationStateMachine : public flight::types::Entity {
   flight::Array<flight::Ref<flight::types::AnimationPlayer>> advance_scratch;
   flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<AnimationStateMachineChannel>>>>> channels;
   double current_state_index;

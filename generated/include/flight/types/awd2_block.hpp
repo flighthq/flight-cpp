@@ -158,8 +158,7 @@ struct Awd2ParsedTexture : public flight::ReferenceEnabled {
   std::optional<flight::String> url;
 };
 
-struct Awd2ParseState : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Awd2ParseState : public flight::types::Entity {
   flight::Map<double, flight::Ref<Awd2ParsedCamera>> cameras;
   flight::Map<double, flight::Ref<Awd2ParsedContainer>> containers;
   std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics;

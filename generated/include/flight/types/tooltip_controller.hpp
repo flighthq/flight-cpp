@@ -30,12 +30,10 @@ struct TooltipControllerOptions;
 
 namespace flight::types {
 
-struct TooltipController : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct TooltipController : public flight::types::Entity {
 };
 
-struct TooltipControllerOptions : public flight::ReferenceEnabled {
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::GuiTransitionDescriptor>>>> transition;
+struct TooltipControllerOptions : public flight::types::GuiControllerOptions {
   flight::types::Node2D content;
   std::optional<double> delay;
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector2Like>>>> offset;

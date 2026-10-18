@@ -38,8 +38,7 @@ using GuiDialogCloseReason = flight::String;
 
 namespace flight::types {
 
-struct GuiDialog : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct GuiDialog : public flight::types::Entity {
 };
 
 struct GuiDialogCloseResult : public flight::ReferenceEnabled {
@@ -55,8 +54,7 @@ struct GuiDialogEntry : public flight::ReferenceEnabled {
   flight::types::Node2D root;
 };
 
-struct GuiDialogOptions : public flight::ReferenceEnabled {
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::GuiTransitionDescriptor>>>> transition;
+struct GuiDialogOptions : public flight::types::GuiControllerOptions {
   std::optional<flight::types::Node2D> backdrop;
   std::optional<flight::Ref<flight::types::FocusManager<flight::types::Node2D>>> focus_manager;
 };

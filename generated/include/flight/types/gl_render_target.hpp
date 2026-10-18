@@ -26,8 +26,7 @@ struct GlTextureRenderTargetPool;
 
 namespace flight::types {
 
-struct GlRenderTarget : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct GlRenderTarget : public flight::types::Entity {
   double height;
   double width;
   flight::host_sdl::WebGl2Context gl;
@@ -67,8 +66,7 @@ struct GlTextureRenderTarget : public flight::ReferenceEnabled {
   std::optional<flight::host_sdl::WebGlRenderbuffer> depth_stencil_renderbuffer;
 };
 
-struct GlTextureRenderTargetPool : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct GlTextureRenderTargetPool : public flight::types::Entity {
   flight::Array<flight::Ref<GlTextureRenderTarget>> free;
 };
 

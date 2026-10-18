@@ -27,10 +27,7 @@ struct AnimatedNormalModifier;
 
 namespace flight::types {
 
-struct AnimatedNormalModifier : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
-  flight::String slot;
+struct AnimatedNormalModifier : public flight::types::Modifier {
   std::optional<flight::types::Texture> map;
   flight::types::Vector2Like scroll;
   std::optional<double> strength;

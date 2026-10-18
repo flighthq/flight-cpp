@@ -40,8 +40,7 @@ struct CanvasRenderTextureEntry : public flight::ReferenceEnabled {
   flight::Ref<flight::types::CanvasTextureRenderTarget> target;
 };
 
-struct CanvasRenderTexturePool : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct CanvasRenderTexturePool : public flight::types::Entity {
   bool destroyed;
   flight::Ref<flight::types::CanvasRenderTargetPool> effect_targets;
   flight::Array<flight::Ref<flight::types::RenderTexture>> free;

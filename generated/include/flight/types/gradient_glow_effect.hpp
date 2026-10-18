@@ -19,7 +19,7 @@ struct GradientGlowEffect;
 
 namespace flight::types {
 
-struct GradientGlowEffect : public Effect {
+struct GradientGlowEffect : public flight::types::Effect {
   flight::Array<double> alphas;
   std::optional<double> blur_x;
   std::optional<double> blur_y;

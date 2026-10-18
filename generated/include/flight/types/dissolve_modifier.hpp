@@ -25,10 +25,7 @@ struct DissolveModifier;
 
 namespace flight::types {
 
-struct DissolveModifier : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
-  flight::String slot;
+struct DissolveModifier : public flight::types::Modifier {
   double threshold;
   double edge_color;
   std::optional<double> edge_width;

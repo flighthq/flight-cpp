@@ -19,7 +19,7 @@ struct BevelEffect;
 
 namespace flight::types {
 
-struct BevelEffect : public Effect {
+struct BevelEffect : public flight::types::Effect {
   std::optional<double> angle;
   std::optional<flight::String> bevel_type;
   std::optional<double> blur_x;

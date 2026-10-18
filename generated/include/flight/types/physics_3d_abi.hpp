@@ -46,23 +46,20 @@ using Physics3DAbiStepStatus = flight::String;
 
 namespace flight::types {
 
-struct Physics3DAbiExecutionResult : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics3DAbiExecutionResult : public flight::types::Entity {
   Physics3DAbiExecutionStatus status;
   double command_index;
   double byte_offset;
   double command_kind;
 };
 
-struct Physics3DAbiCommandBuffer : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics3DAbiCommandBuffer : public flight::types::Entity {
   flight::Uint8Array data;
   double byte_length;
   double command_count;
 };
 
-struct Physics3DAbiBodyBuffer : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics3DAbiBodyBuffer : public flight::types::Entity {
   flight::Uint32Array ids;
   flight::Uint32Array flags;
   flight::Float64Array values;
@@ -70,8 +67,7 @@ struct Physics3DAbiBodyBuffer : public flight::ReferenceEnabled {
   double required_count;
 };
 
-struct Physics3DAbiContactBuffer : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics3DAbiContactBuffer : public flight::types::Entity {
   flight::Uint32Array ids;
   flight::Uint32Array flags;
   flight::Uint32Array point_starts;
@@ -91,8 +87,7 @@ struct Physics3DAbiContactHooks : public flight::ReferenceEnabled {
   std::optional<std::function<void(flight::Ref<Physics3DAbiContactBuffer>)>> post_solve;
 };
 
-struct Physics3DAbiJointBuffer : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics3DAbiJointBuffer : public flight::types::Entity {
   flight::Uint32Array ids;
   flight::Uint32Array flags;
   flight::Float64Array values;
@@ -100,8 +95,7 @@ struct Physics3DAbiJointBuffer : public flight::ReferenceEnabled {
   double required_count;
 };
 
-struct Physics3DAbiQueryBuffer : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics3DAbiQueryBuffer : public flight::types::Entity {
   flight::Uint32Array body_ids;
   flight::Uint32Array collider_ids;
   flight::Float64Array values;
@@ -109,8 +103,7 @@ struct Physics3DAbiQueryBuffer : public flight::ReferenceEnabled {
   double required_count;
 };
 
-struct Physics3DAbi : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Physics3DAbi : public flight::types::Entity {
   double version;
   double capabilities;
   std::function<Physics3DAbiWorldHandle()> create_world;

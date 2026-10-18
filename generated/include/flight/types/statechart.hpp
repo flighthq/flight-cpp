@@ -124,8 +124,7 @@ struct StatechartTransitionExplanation : public flight::ReferenceEnabled {
   double transition_index;
 };
 
-struct StatechartInstance : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct StatechartInstance : public flight::types::Entity {
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Statechart>>>> chart;
   std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<StatechartInstance>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<StatechartTransitionExplanation>>>>)>> duration_guard;
   flight::Float64Array input_values;

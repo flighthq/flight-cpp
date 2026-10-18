@@ -69,8 +69,7 @@ struct NativeTextStyle : public flight::ReferenceEnabled {
   std::optional<double> size;
 };
 
-struct NativeTextData : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct NativeTextData : public flight::types::Node2DData {
   flight::types::TextAutoSize auto_size;
   double height;
   flight::Ref<NativeTextStyle> style;

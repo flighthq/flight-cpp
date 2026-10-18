@@ -27,8 +27,7 @@ using CanvasRenderTargetSurfaceOwnership = flight::String;
 
 namespace flight::types {
 
-struct CanvasRenderTarget : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct CanvasRenderTarget : public flight::types::Entity {
   double height;
   double width;
   flight::host_sdl::GlCanvas canvas;

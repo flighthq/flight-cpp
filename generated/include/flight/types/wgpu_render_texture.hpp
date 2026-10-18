@@ -42,8 +42,7 @@ struct WgpuRenderTextureEntry : public flight::ReferenceEnabled {
   flight::Ref<flight::types::WgpuTextureRenderTarget> target;
 };
 
-struct WgpuRenderTexturePool : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct WgpuRenderTexturePool : public flight::types::Entity {
   std::optional<flight::host_sdl::WgpuDevice> device;
   bool destroyed;
   flight::Ref<flight::types::WgpuRenderTargetPool> effect_targets;

@@ -36,8 +36,7 @@ struct AnimationCrossfadeOptions : public flight::ReferenceEnabled {
   std::optional<flight::types::EasingFunction> curve;
 };
 
-struct AnimationCrossfade : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct AnimationCrossfade : public flight::types::Entity {
   flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<AnimationCrossfadeChannel>>>>> channels;
   flight::types::EasingFunction curve;
   double duration;

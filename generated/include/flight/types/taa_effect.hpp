@@ -18,9 +18,7 @@ struct TaaEffect;
 
 namespace flight::types {
 
-struct TaaEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct TaaEffect : public flight::types::Effect {
   std::optional<double> feedback;
 };
 

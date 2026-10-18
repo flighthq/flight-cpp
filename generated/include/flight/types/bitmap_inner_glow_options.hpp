@@ -16,10 +16,7 @@ struct BitmapInnerGlowOptions;
 
 namespace flight::types {
 
-struct BitmapInnerGlowOptions : public flight::ReferenceEnabled {
-  std::optional<double> radius_x;
-  std::optional<double> radius_y;
-  std::optional<double> passes;
+struct BitmapInnerGlowOptions : public flight::types::BitmapShadowBlurOptions {
   std::optional<double> color;
   std::optional<double> intensity;
 };

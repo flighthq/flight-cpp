@@ -23,9 +23,7 @@ using BitmapDisplacementEffectEdgeMode = flight::String;
 
 namespace flight::types {
 
-struct BitmapDisplacementEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct BitmapDisplacementEffect : public flight::types::Effect {
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Texture2D>>>>> map;
   std::optional<double> component_x;
   std::optional<double> component_y;

@@ -254,37 +254,7 @@ struct SwfTagTimelineState : public flight::ReferenceEnabled {
   double stream_start_frame;
 };
 
-struct SwfTagParseResult : public flight::ReferenceEnabled {
-  flight::Array<flight::Ref<bytes_named_a0691cdc21805510>> abc_blobs;
-  std::optional<double> background_color;
-  flight::Map<double, flight::Ref<SwfTagRectangle>> character_bounds;
-  flight::Set<double> defined_characters;
-  flight::types::SwfTagHandlerDispatch dispatch;
-  std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics;
-  flight::Map<double, std::function<flight::Ref<flight::types::RichText>(std::function<flight::String(double)>)>> edit_texts;
-  flight::Map<double, flight::Array<double>> font_code_points;
-  flight::Map<double, flight::String> font_names;
-  flight::Map<double, flight::Ref<flight::types::GlyphOutlineSource>> font_outline_sources;
-  flight::Map<double, flight::Ref<bytes_mime_type_0f132ce875cdb3fc>> images;
-  flight::Map<double, flight::Map<flight::String, flight::Ref<flight::types::Texture2D>>> image_textures;
-  flight::Map<double, flight::Ref<character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_54bb0d6b87e110d7>> jpeg_alpha_payloads;
-  std::optional<flight::Uint8Array> jpeg_tables;
-  flight::Map<double, flight::String> linkages;
-  flight::Map<double, flight::Ref<end_start_b3d703e568b779f1>> morph_bounds;
-  flight::Map<double, std::function<std::optional<flight::Ref<flight::types::MorphShape>>()>> morph_shapes;
-  flight::Array<flight::Ref<character_id_script_7fe7df2e7341fc1a>> pending_init_actions;
-  flight::Array<flight::Ref<character_id_end_source_start_version_3182d1468e182b72>> pending_texts;
-  double remaining_frame_entries;
-  flight::Map<double, flight::Ref<SwfTagRectangle>> scaling_grids;
-  flight::Map<double, flight::Ref<flight::types::Shape>> shapes;
-  flight::Array<flight::Ref<class_name_cue_ca53ee8b35497d37>> sound_cues_awaiting_class;
-  flight::Array<flight::Ref<character_id_cue_1789e18ad131005e>> sound_cues_awaiting_rate;
-  flight::Map<double, flight::Ref<flight::types::AudioResource>> sound_resources;
-  flight::Map<double, flight::Ref<bytes_mime_type_sample_rate_5485cac285dc53ee>> sounds;
-  flight::Map<double, flight::Ref<SwfTimeline>> sprites;
-  flight::Array<flight::Ref<bytes_mime_type_resource_0c07297b9c0324ff>> stream_sounds;
-  flight::Map<double, flight::Ref<flight::types::Texture2D>> video_textures;
-  flight::Map<double, flight::Ref<codec_id_deblocking_frame_count_height_smoothing_width_e646285bb518325f>> videos;
+struct SwfTagParseResult : public SwfTagParseState {
   flight::Ref<SwfTimeline> timeline;
 };
 

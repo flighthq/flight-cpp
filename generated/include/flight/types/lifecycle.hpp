@@ -35,8 +35,7 @@ struct HostLifecycleCapability : public flight::ReferenceEnabled {
   std::optional<std::function<std::function<void()>(std::function<void(AppMemoryPressure)>)>> subscribe_memory_warning;
 };
 
-struct AppLifecycle : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct AppLifecycle : public flight::types::Entity {
   std::shared_ptr<flight::types::Signal<std::function<void(AppLifecycleState)>>> on_state_change;
   std::shared_ptr<flight::types::Signal<std::function<void()>>> on_resume;
   std::shared_ptr<flight::types::Signal<std::function<void()>>> on_pause;

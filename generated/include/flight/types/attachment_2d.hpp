@@ -19,8 +19,7 @@ struct Attachment2D;
 
 namespace flight::types {
 
-struct Attachment2D : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Attachment2D : public flight::types::Entity {
   flight::String kind;
   std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };

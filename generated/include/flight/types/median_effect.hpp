@@ -18,9 +18,7 @@ struct MedianEffect;
 
 namespace flight::types {
 
-struct MedianEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct MedianEffect : public flight::types::Effect {
   std::optional<double> radius;
 };
 

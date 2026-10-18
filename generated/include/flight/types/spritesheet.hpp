@@ -25,8 +25,7 @@ struct Spritesheet;
 
 namespace flight::types {
 
-struct Spritesheet : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Spritesheet : public flight::types::Entity {
   std::optional<flight::Ref<flight::types::TextureAtlas>> atlas;
   flight::Record<flight::String, flight::Ref<flight::types::SpritesheetAnimation>> animations;
   flight::Array<flight::Ref<flight::types::SpritesheetFrame>> frames;

@@ -18,9 +18,7 @@ struct GodRaysEffect;
 
 namespace flight::types {
 
-struct GodRaysEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct GodRaysEffect : public flight::types::Effect {
   std::optional<double> center_x;
   std::optional<double> center_y;
   std::optional<double> density;

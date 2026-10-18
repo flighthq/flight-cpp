@@ -19,10 +19,7 @@ struct ShapeStrokeRegion;
 
 namespace flight::types {
 
-struct ShapeStrokeRegion : public flight::ReferenceEnabled {
-  flight::Ref<flight::types::Path> path;
-  double color;
-  double alpha;
+struct ShapeStrokeRegion : public flight::types::ShapeFillRegion {
   flight::Ref<flight::types::StrokeStyle> style;
 };
 

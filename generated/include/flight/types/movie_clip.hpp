@@ -58,8 +58,7 @@ struct MovieClip;
 
 namespace flight::types {
 
-struct MovieClipData : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct MovieClipData : public flight::types::Node2DData {
   std::optional<flight::Ref<flight::types::Timeline>> timeline;
 };
 

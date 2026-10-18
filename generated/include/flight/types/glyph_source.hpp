@@ -52,8 +52,7 @@ struct GlyphMetrics : public flight::ReferenceEnabled {
   double line_gap;
 };
 
-struct GlyphSource : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct GlyphSource : public flight::types::Entity {
   std::function<std::optional<flight::Ref<flight::types::TextureSource>>(std::optional<double>)> get_glyph_atlas_image;
   std::function<std::optional<flight::Ref<GlyphEntry>>(double)> get_glyph_entry;
   std::function<double(double, double)> get_glyph_kerning;
@@ -126,8 +125,7 @@ struct GlyphAtlasRuntime : public flight::ReferenceEnabled {
   flight::Ref<flight::types::Bitmap> bitmap;
 };
 
-struct GlyphAtlas : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct GlyphAtlas : public flight::types::Entity {
   flight::Ref<GlyphAtlasRuntime> runtime;
 };
 

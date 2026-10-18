@@ -3,7 +3,6 @@
 #include <flight/structural_ref.hpp>
 #include <flight/types/node.hpp>
 #include <functional>
-#include <optional>
 #include <variant>
 #include <flight/runtime.hpp>
 
@@ -29,8 +28,7 @@ using NodeOrderListEntryVisitor = std::function<std::variant<bool, void>(flight:
 namespace flight::types {
 
 template <typename Traits>
-struct NodeOrderList : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct NodeOrderList : public flight::types::Entity {
   double entry_count;
   flight::Array<flight::types::NodeOf<Traits>> nodes;
   flight::Array<double> sort_keys;

@@ -55,8 +55,7 @@ using GlAppRenderView = flight::Ref<AppRenderView<flight::Ref<flight::types::GlR
 namespace flight::types {
 
 template <typename State, typename Target>
-struct AppRenderView : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct AppRenderView : public flight::types::Entity {
   State render_state;
   Target render_target;
   flight::Ref<flight::types::Viewport> viewport;
@@ -69,8 +68,7 @@ struct GlAppRenderViewOptions : public flight::ReferenceEnabled {
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<AppRenderViewTargetOptions>>>>> target;
 };
 
-struct GlRenderViewResources : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct GlRenderViewResources : public flight::types::Entity {
   flight::Ref<flight::types::GlRenderState> render_state;
   flight::Ref<flight::types::GlTextureRenderTarget> render_target;
   flight::Ref<flight::types::Viewport> viewport;

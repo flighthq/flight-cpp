@@ -29,8 +29,7 @@ struct Scene2DDocument;
 
 namespace flight::types {
 
-struct Scene2DSlotReference : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Scene2DSlotReference : public flight::types::Entity {
   std::optional<flight::types::Node2D> content;
   std::optional<flight::String> linkage;
   flight::String name;
@@ -38,8 +37,7 @@ struct Scene2DSlotReference : public flight::ReferenceEnabled {
   flight::types::Node2D target;
 };
 
-struct Scene2DDocument : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Scene2DDocument : public flight::types::Entity {
   flight::Array<flight::types::AudioResourceReference> audio_resources;
   std::optional<double> background_color;
   flight::Array<flight::types::ImageResourceReference> image_resources;

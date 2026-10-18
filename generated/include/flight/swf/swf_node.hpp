@@ -47,8 +47,7 @@ struct SwfMovieClipData;
 
 namespace flight::swf {
 
-struct SwfAuthoredBoundsData : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct SwfAuthoredBoundsData : public flight::types::NodeData {
   flight::Ref<flight::types::SwfTagRectangle> authored_bounds;
 };
 
@@ -150,9 +149,7 @@ inline flight::types::DisplayObject create_swf_display_object(std::optional<flig
 // flight::Ref<flight::types::SpriteData>. The compiler will not reinterpret the owner, cast it, copy or
 // materialize a replacement, or add side storage.
 
-struct SwfMorphBoundsData : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::Ref<flight::types::SwfTagRectangle> authored_bounds;
+struct SwfMorphBoundsData : public SwfAuthoredBoundsData {
   flight::Ref<flight::types::SwfTagRectangle> morph_end_bounds;
   flight::Ref<flight::types::SwfTagRectangle> morph_start_bounds;
 };
@@ -237,9 +234,7 @@ struct SwfMorphBoundsData : public flight::ReferenceEnabled {
 // than asserting past flight::Ref<flight::types::MorphShapeData>. The compiler will not reinterpret the owner,
 // cast it, copy or materialize a replacement, or add side storage.
 
-struct SwfMovieClipData : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::optional<flight::Ref<flight::types::Timeline>> timeline;
+struct SwfMovieClipData : public flight::types::MovieClipData {
   flight::Ref<flight::types::SwfTagRectangle> authored_bounds;
 };
 

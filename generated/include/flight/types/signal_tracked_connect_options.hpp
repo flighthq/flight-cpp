@@ -18,9 +18,7 @@ struct SignalTrackedConnectOptions;
 
 namespace flight::types {
 
-struct SignalTrackedConnectOptions : public flight::ReferenceEnabled {
-  std::optional<bool> once;
-  std::optional<double> priority;
+struct SignalTrackedConnectOptions : public flight::types::SignalConnectOptions {
   std::optional<flight::Ref<flight::types::SignalScope>> scope;
 };
 

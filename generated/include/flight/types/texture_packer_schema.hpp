@@ -62,13 +62,7 @@ struct TexturePackerHashFrame : public flight::ReferenceEnabled {
   bool trimmed;
 };
 
-struct TexturePackerArrayFrame : public flight::ReferenceEnabled {
-  flight::Ref<TexturePackerRect> frame;
-  std::optional<flight::Ref<TexturePackerPivot>> pivot;
-  bool rotated;
-  flight::Ref<TexturePackerSize> source_size;
-  flight::Ref<TexturePackerRect> sprite_source_size;
-  bool trimmed;
+struct TexturePackerArrayFrame : public TexturePackerHashFrame {
   flight::String filename;
 };
 

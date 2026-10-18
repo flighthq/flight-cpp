@@ -20,8 +20,7 @@ struct Scene3DHit;
 
 namespace flight::types {
 
-struct Scene3DHit : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Scene3DHit : public flight::types::Entity {
   std::optional<flight::Ref<flight::types::Mesh>> node;
   double distance;
   double triangle_index;

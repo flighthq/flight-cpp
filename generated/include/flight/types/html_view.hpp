@@ -55,8 +55,7 @@ struct HtmlView;
 
 namespace flight::types {
 
-struct HtmlViewData : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct HtmlViewData : public flight::types::Node2DData {
   std::optional<flight::host_sdl::HtmlElement> element;
   double height;
   double width;

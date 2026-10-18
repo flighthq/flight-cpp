@@ -46,8 +46,7 @@ struct SwfNodeAppearance : public flight::ReferenceEnabled {
   flight::types::Node2D node;
 };
 
-struct SwfDocumentImport : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct SwfDocumentImport : public flight::types::Entity {
   flight::Array<flight::Ref<SwfNodeAppearance>> appearances;
   flight::Ref<flight::types::Scene2DDocument> document;
   flight::Array<flight::Ref<SwfJpegAlphaPayload>> jpeg_alpha_payloads;

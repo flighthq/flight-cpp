@@ -23,8 +23,7 @@ struct TextShaperSignals;
 
 namespace flight::types {
 
-struct TextShaperSignals : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct TextShaperSignals : public flight::types::Entity {
   std::shared_ptr<flight::types::Signal<std::function<void(std::optional<flight::Ref<flight::types::HostTextShaperCapability>>)>>> on_backend_changed;
 };
 

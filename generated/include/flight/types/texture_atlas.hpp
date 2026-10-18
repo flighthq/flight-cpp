@@ -22,8 +22,7 @@ struct TextureAtlas;
 
 namespace flight::types {
 
-struct TextureAtlas : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct TextureAtlas : public flight::types::Entity {
   double image_height;
   std::optional<flight::String> image_name;
   double image_width;

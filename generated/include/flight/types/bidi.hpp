@@ -26,8 +26,7 @@ using BidiDirection = flight::String;
 
 namespace flight::types {
 
-struct BidiClassKernel : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct BidiClassKernel : public flight::types::Entity {
   std::function<BidiClass(double)> get_bidi_class;
 };
 

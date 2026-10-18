@@ -19,7 +19,7 @@ struct DropShadowEffect;
 
 namespace flight::types {
 
-struct DropShadowEffect : public Effect {
+struct DropShadowEffect : public flight::types::Effect {
   std::optional<double> alpha;
   std::optional<double> angle;
   std::optional<double> blur_x;

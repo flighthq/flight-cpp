@@ -29,8 +29,7 @@ using ScreenPermissionState = flight::String;
 
 namespace flight::types {
 
-struct ScreenInfo : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct ScreenInfo : public flight::types::Entity {
   double id;
   double x;
   double y;

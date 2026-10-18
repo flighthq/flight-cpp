@@ -39,8 +39,7 @@ struct VelocitySample : public flight::ReferenceEnabled {
   double explicit_frame_id;
 };
 
-struct VelocityField : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct VelocityField : public flight::types::Entity {
   flight::WeakMap<flight::Ref<void>, flight::Ref<VelocitySample>> samples;
   double frame_id;
 };

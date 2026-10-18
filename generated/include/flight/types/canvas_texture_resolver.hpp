@@ -62,8 +62,7 @@ struct element_surface_flip_x_flip_y_image_version_source_texture_version_uv_off
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ELEMENT_SURFACE_FLIP_X_FLIP_Y_IMAGE_VERSION_SOURCE_TEXTURE_VERSION_UV_OFFSET_X_UV_OFFSET_Y_UV_ROTATION_UV_SCALE_X_UV_SCALE_Y_7C2A24BD28162299
 
-struct CanvasTextureResolvers : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct CanvasTextureResolvers : public flight::types::Entity {
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostCanvasCapability>>>> canvas_host;
   std::variant<flight::Map<flight::String, CanvasTextureResolver>, flight::Null, flight::Undefined> registry = std::variant<flight::Map<flight::String, CanvasTextureResolver>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   std::optional<flight::WeakMap<flight::Ref<flight::types::Bitmap>, flight::Ref<CanvasBitmapElementCacheEntry>>> bitmap_element_cache;

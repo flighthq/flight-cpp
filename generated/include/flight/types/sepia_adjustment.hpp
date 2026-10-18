@@ -19,10 +19,7 @@ struct SepiaAdjustment;
 
 namespace flight::types {
 
-struct SepiaAdjustment : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
-  flight::Array<double> color_matrix;
+struct SepiaAdjustment : public flight::types::ColorMatrixAdjustment {
   std::optional<double> intensity;
 };
 

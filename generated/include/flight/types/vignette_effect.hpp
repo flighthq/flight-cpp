@@ -18,9 +18,7 @@ struct VignetteEffect;
 
 namespace flight::types {
 
-struct VignetteEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct VignetteEffect : public flight::types::Effect {
   std::optional<double> intensity;
   std::optional<double> radius;
   std::optional<double> softness;

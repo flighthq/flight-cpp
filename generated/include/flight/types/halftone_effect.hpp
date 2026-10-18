@@ -18,9 +18,7 @@ struct HalftoneEffect;
 
 namespace flight::types {
 
-struct HalftoneEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct HalftoneEffect : public flight::types::Effect {
   std::optional<double> scale;
   std::optional<double> angle;
 };

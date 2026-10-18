@@ -23,8 +23,7 @@ struct Camera2DOptions;
 
 namespace flight::types {
 
-struct Camera2D : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Camera2D : public flight::types::Entity {
   double rotation;
   double x;
   double y;

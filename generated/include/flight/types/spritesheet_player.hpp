@@ -23,8 +23,7 @@ struct SpritesheetPlayer;
 
 namespace flight::types {
 
-struct SpritesheetPlayer : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct SpritesheetPlayer : public flight::types::Entity {
   std::optional<flight::Ref<flight::types::SpritesheetAnimation>> animation;
   bool complete;
   double elapsed;

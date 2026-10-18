@@ -2,7 +2,6 @@
 #pragma once
 #include <flight/any.hpp>
 #include <flight/conditional_facet_ref.hpp>
-#include <flight/erased_ref.hpp>
 #include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <flight/types/node.hpp>
@@ -44,9 +43,7 @@ namespace flight::types {
 struct node_interactive_state_binding_facet final {};
 using NodeInteractiveStateBinding = flight::FacetRef<flight::types::Entity, node_interactive_state_binding_facet>;
 
-struct NodeInteractiveStateBindingRuntime : public flight::ReferenceEnabled {
-  std::optional<flight::ErasedRef> binding;
-  std::optional<flight::String> uid;
+struct NodeInteractiveStateBindingRuntime : public flight::types::EntityRuntime {
   bool disposed;
 };
 

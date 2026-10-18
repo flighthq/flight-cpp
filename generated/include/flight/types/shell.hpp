@@ -82,8 +82,7 @@ struct ShellProcessExitStatus : public flight::ReferenceEnabled {
   std::optional<flight::String> signal;
 };
 
-struct ShellProcess : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct ShellProcess : public flight::types::Entity {
   flight::Task<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<ShellProcessExitStatus>>>>> exit;
   flight::ReadableStream<flight::Uint8Array> stderr;
   flight::WritableStream<flight::Uint8Array> stdin;

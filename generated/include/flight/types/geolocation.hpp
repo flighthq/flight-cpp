@@ -28,8 +28,7 @@ struct GeolocationAccessOutcome : public flight::ReferenceEnabled {
 
 namespace flight::types {
 
-struct GeolocationPosition : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct GeolocationPosition : public flight::types::Entity {
   double latitude;
   double longitude;
   double accuracy;

@@ -33,8 +33,7 @@ struct AudioPlayOptions : public flight::ReferenceEnabled {
   std::optional<double> playback_rate;
 };
 
-struct AudioResource : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct AudioResource : public flight::types::Entity {
   std::optional<flight::AudioBuffer> buffer;
 };
 

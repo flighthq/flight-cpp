@@ -133,8 +133,7 @@ struct change_keep_awake_status_suspension_eb7f373e5d66d29a : public flight::Ref
 
 using WebPowerCapabilities = flight::StructuralRef<flight::RowRequired<flight::RowOf<flight::Ref<change_keep_awake_status_suspension_eb7f373e5d66d29a>>>>;
 
-struct Power : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Power : public flight::types::Entity {
   std::optional<std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<PowerStatus>>>>)>>>> on_change;
   std::optional<std::shared_ptr<flight::types::Signal<std::function<void()>>>> on_charging;
   std::optional<std::shared_ptr<flight::types::Signal<std::function<void()>>>> on_discharging;

@@ -18,9 +18,7 @@ struct PosterizeEffect;
 
 namespace flight::types {
 
-struct PosterizeEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct PosterizeEffect : public flight::types::Effect {
   std::optional<double> levels;
 };
 

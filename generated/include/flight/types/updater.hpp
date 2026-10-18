@@ -34,8 +34,7 @@ struct UpdateInfo : public flight::ReferenceEnabled {
   std::optional<flight::String> version;
 };
 
-struct DownloadedUpdate : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct DownloadedUpdate : public flight::types::Entity {
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<UpdateInfo>>>> info;
 };
 

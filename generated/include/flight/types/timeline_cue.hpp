@@ -57,8 +57,7 @@ struct advance_seek_db8d408cc8d60758 : public flight::ReferenceEnabled {
 
 inline flight::Ref<advance_seek_db8d408cc8d60758> timeline_frame_entry_cause = flight::make_ref<advance_seek_db8d408cc8d60758>(advance_seek_db8d408cc8d60758{.advance = flight::String("Advance"), .seek = flight::String("Seek")});
 
-struct TimelineCue : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct TimelineCue : public flight::types::Entity {
   double frame;
   flight::String kind;
 };
@@ -85,18 +84,12 @@ struct TimelineStreamAudioCue : public TimelineCue {
   flight::Ref<flight::types::AudioResource> resource;
 };
 
-struct TimelineGotoCue : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  double frame;
-  flight::String kind;
+struct TimelineGotoCue : public TimelineCue {
   std::optional<double> target_frame;
   std::optional<flight::String> target_label;
 };
 
-struct TimelinePlaybackCue : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  double frame;
-  flight::String kind;
+struct TimelinePlaybackCue : public TimelineCue {
 };
 
 struct TimelineCueHandlerEntry : public flight::ReferenceEnabled {
@@ -105,8 +98,7 @@ struct TimelineCueHandlerEntry : public flight::ReferenceEnabled {
   flight::String kind;
 };
 
-struct TimelineCueRegistry : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct TimelineCueRegistry : public flight::types::Entity {
   flight::Array<flight::Ref<TimelineCueHandlerEntry>> entries;
 };
 

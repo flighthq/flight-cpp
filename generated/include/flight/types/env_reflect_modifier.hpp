@@ -20,10 +20,7 @@ struct EnvReflectModifier;
 
 namespace flight::types {
 
-struct EnvReflectModifier : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
-  flight::String slot;
+struct EnvReflectModifier : public flight::types::Modifier {
   double tint;
   std::optional<double> intensity;
   std::optional<double> fresnel_bias;

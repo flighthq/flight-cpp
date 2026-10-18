@@ -59,8 +59,7 @@ struct Shape;
 
 namespace flight::types {
 
-struct ShapeData : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct ShapeData : public flight::types::Node2DData {
   flight::Array<flight::types::ShapeCommandToken> commands;
 };
 

@@ -57,8 +57,7 @@ struct ParticleEmitter2D;
 
 namespace flight::types {
 
-struct ParticleEmitterData : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct ParticleEmitterData : public flight::types::Node2DData {
   flight::Float32Array alphas;
   std::optional<flight::Ref<flight::types::TextureAtlas>> atlas;
   flight::Float32Array colors;

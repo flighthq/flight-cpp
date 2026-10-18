@@ -2,7 +2,6 @@
 #pragma once
 #include <flight/host_sdl/webgl.hpp>
 #include <optional>
-#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -26,25 +25,7 @@ struct GlMatcapDefineKey : public flight::ReferenceEnabled {
   std::optional<bool> has_skin;
 };
 
-struct GlMatcapProgram : public flight::ReferenceEnabled {
-  std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined> loc_color_scale = std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined> loc_color_bias = std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined> loc_color_matrix0 = std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined> loc_color_matrix1 = std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined> loc_color_matrix2 = std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined> loc_color_matrix3 = std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined> loc_color_matrix_offset = std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined> loc_object_alpha = std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined> loc_alpha_is_coverage = std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined> loc_joint_texture = std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined> loc_instance_palette = std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined> loc_instance_color_palette = std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined> loc_joint_normal_texture = std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::optional<flight::host_sdl::WebGlUniformLocation> loc_model;
-  std::optional<flight::host_sdl::WebGlUniformLocation> loc_normal_matrix;
-  std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined> loc_uv_transform = std::variant<flight::host_sdl::WebGlUniformLocation, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::optional<flight::host_sdl::WebGlUniformLocation> loc_view_projection;
-  flight::host_sdl::WebGlProgram program;
+struct GlMatcapProgram : public flight::types::GlMeshProgram {
   std::optional<flight::host_sdl::WebGlUniformLocation> loc_alpha_cutoff;
   std::optional<flight::host_sdl::WebGlUniformLocation> loc_matcap;
   std::optional<flight::host_sdl::WebGlUniformLocation> loc_tint;

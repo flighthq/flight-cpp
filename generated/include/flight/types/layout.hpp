@@ -153,8 +153,7 @@ struct LayoutResolutionExplanation : public flight::ReferenceEnabled {
   std::optional<flight::String> resolver_kind;
 };
 
-struct LayoutState : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct LayoutState : public flight::types::Entity {
   std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<LayoutResolutionExplanation>>>>)>> guard;
   double last_failure_actual_length;
   std::optional<flight::String> last_failure_kind;

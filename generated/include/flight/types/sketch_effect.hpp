@@ -18,9 +18,7 @@ struct SketchEffect;
 
 namespace flight::types {
 
-struct SketchEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct SketchEffect : public flight::types::Effect {
   std::optional<double> strength;
 };
 

@@ -22,8 +22,7 @@ struct AnimationTrack;
 
 namespace flight::types {
 
-struct AnimationTrack : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct AnimationTrack : public flight::types::Entity {
   flight::types::AnimationInterpolation interpolation;
   flight::SequenceView<double> times;
   flight::SequenceView<double> values;

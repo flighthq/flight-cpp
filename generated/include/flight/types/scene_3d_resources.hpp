@@ -82,14 +82,12 @@ struct Scene3DResourceEvent : public flight::ReferenceEnabled {
   flight::types::Texture texture;
 };
 
-struct Scene3DResourceSignals : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Scene3DResourceSignals : public flight::types::Entity {
   std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Scene3DResourceEvent>>>>)>>> on_resource_failed;
   std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Scene3DResourceEvent>>>>)>>> on_resource_resolved;
 };
 
-struct Scene3DResourceResolver : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Scene3DResourceResolver : public flight::types::Entity {
   flight::types::ImageResourceFetch fetch;
   std::optional<flight::Ref<flight::types::HostImageDecodeCapabilities>> image_decode;
   flight::Ref<Scene3DMaterialTextureRegistry> registry;
@@ -117,11 +115,7 @@ struct Scene3DResourceResolverRuntime : public flight::ReferenceEnabled {
 
 inline const flight::Symbol scene_3d_resource_resolver_runtime_key = flight::Symbol(flight::String("Scene3DResourceResolverRuntime"));
 
-struct Scene3DResourceResolverWithRuntime : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::types::ImageResourceFetch fetch;
-  std::optional<flight::Ref<flight::types::HostImageDecodeCapabilities>> image_decode;
-  flight::Ref<Scene3DMaterialTextureRegistry> registry;
+struct Scene3DResourceResolverWithRuntime : public Scene3DResourceResolver {
   flight::Ref<Scene3DResourceResolverRuntime> scene_3d_resource_resolver_runtime_key;
 };
 
@@ -137,9 +131,7 @@ struct Scene3DDocumentLoadOptions : public flight::ReferenceEnabled {
   std::optional<flight::AbortSignal> signal;
 };
 
-struct GltfScene3DDocumentLoadOptions : public flight::ReferenceEnabled {
-  std::optional<std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Scene3DDocumentLoadProgress>>>>)>>>> progress;
-  std::optional<flight::AbortSignal> signal;
+struct GltfScene3DDocumentLoadOptions : public Scene3DDocumentLoadOptions {
   std::optional<flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>>> core_feature_handlers;
   std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics;
   std::optional<flight::Array<flight::Ref<flight::types::GltfExtensionHandler>>> extension_handlers;
@@ -150,25 +142,17 @@ struct Scene3DResourceLoadProgress : public flight::ReferenceEnabled {
   double total;
 };
 
-struct LoadScene3DResourcesOptions : public flight::ReferenceEnabled {
-  std::optional<std::function<bool(flight::types::Texture, flight::types::ImageResourceReference)>> select;
-  std::optional<std::function<double(flight::types::Texture, flight::types::ImageResourceReference)>> priority;
-  std::optional<std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Scene3DResourceLoadProgress>>>>)>>>> progress;
-};
-
 struct ResolveScene3DResourcesOptions : public flight::ReferenceEnabled {
   std::optional<std::function<bool(flight::types::Texture, flight::types::ImageResourceReference)>> select;
-};
-
-struct Scene3DResourceResolution : public flight::ReferenceEnabled {
-  flight::types::ImageResourceReference ref;
-  flight::Array<flight::types::Texture> textures;
-  flight::Ref<flight::types::TextureSource> source;
 };
 
 struct Scene3DResourceWorkingSet : public flight::ReferenceEnabled {
   flight::types::ImageResourceReference ref;
   flight::Array<flight::types::Texture> textures;
+};
+
+struct Scene3DResourceResolution : public Scene3DResourceWorkingSet {
+  flight::Ref<flight::types::TextureSource> source;
 };
 
 struct Scene3DResources : public flight::ReferenceEnabled {
@@ -177,9 +161,12 @@ struct Scene3DResources : public flight::ReferenceEnabled {
   flight::Array<flight::Ref<Scene3DResourceWorkingSet>> unresolved;
 };
 
-struct UpdateScene3DResourceStreamingOptions : public flight::ReferenceEnabled {
-  std::optional<std::function<bool(flight::types::Texture, flight::types::ImageResourceReference)>> select;
+struct UpdateScene3DResourceStreamingOptions : public ResolveScene3DResourcesOptions {
   std::optional<std::function<double(flight::types::Texture, flight::types::ImageResourceReference)>> priority;
+};
+
+struct LoadScene3DResourcesOptions : public UpdateScene3DResourceStreamingOptions {
+  std::optional<std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Scene3DResourceLoadProgress>>>>)>>>> progress;
 };
 
 struct Scene3DResourceRevealOptions : public flight::ReferenceEnabled {

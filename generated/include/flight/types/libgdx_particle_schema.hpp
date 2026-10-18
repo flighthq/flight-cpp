@@ -33,14 +33,7 @@ struct LibgdxRangeValue : public flight::ReferenceEnabled {
   flight::Array<double> timeline;
 };
 
-struct LibgdxActiveRangeValue : public flight::ReferenceEnabled {
-  double low_min;
-  double low_max;
-  double high_min;
-  double high_max;
-  bool relative;
-  flight::Array<double> scaling;
-  flight::Array<double> timeline;
+struct LibgdxActiveRangeValue : public LibgdxRangeValue {
   bool active;
 };
 

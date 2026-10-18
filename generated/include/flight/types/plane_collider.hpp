@@ -16,9 +16,7 @@ struct PlaneCollider;
 
 namespace flight::types {
 
-struct PlaneCollider : public flight::ReferenceEnabled {
-  std::optional<double> restitution;
-  std::optional<double> friction;
+struct PlaneCollider : public flight::types::CollisionResponse {
   flight::String kind;
   double nx;
   double ny;

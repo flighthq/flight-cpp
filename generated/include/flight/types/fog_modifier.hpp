@@ -32,10 +32,7 @@ struct exponential_exponential2_linear_e0edf2e00f1a208c : public flight::Referen
 
 inline flight::Ref<exponential_exponential2_linear_e0edf2e00f1a208c> fog_modifier_mode = flight::make_ref<exponential_exponential2_linear_e0edf2e00f1a208c>(exponential_exponential2_linear_e0edf2e00f1a208c{.exponential = flight::String("Exponential"), .exponential2 = flight::String("Exponential2"), .linear = flight::String("Linear")});
 
-struct FogModifier : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
-  flight::String slot;
+struct FogModifier : public flight::types::Modifier {
   double color;
   std::optional<FogModifierMode> mode;
   std::optional<double> near;

@@ -18,9 +18,7 @@ struct SsaoEffect;
 
 namespace flight::types {
 
-struct SsaoEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct SsaoEffect : public flight::types::Effect {
   std::optional<double> radius;
   std::optional<double> intensity;
   std::optional<double> bias;

@@ -30,8 +30,7 @@ using Scene3DLightsLike = flight::Ref<Scene3DLights>;
 
 namespace flight::types {
 
-struct Scene3DLights : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Scene3DLights : public flight::types::Entity {
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AmbientLight>>>>> ambient;
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::DirectionalLight>>>>> directional;
   std::optional<flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HemisphereLight>>>>>> hemisphere;

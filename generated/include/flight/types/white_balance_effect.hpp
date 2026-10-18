@@ -18,9 +18,7 @@ struct WhiteBalanceEffect;
 
 namespace flight::types {
 
-struct WhiteBalanceEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct WhiteBalanceEffect : public flight::types::Effect {
   std::optional<double> temperature;
   std::optional<double> tint;
 };

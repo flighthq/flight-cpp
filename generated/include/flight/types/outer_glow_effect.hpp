@@ -19,7 +19,7 @@ struct OuterGlowEffect;
 
 namespace flight::types {
 
-struct OuterGlowEffect : public Effect {
+struct OuterGlowEffect : public flight::types::Effect {
   std::optional<double> alpha;
   std::optional<double> blur_x;
   std::optional<double> blur_y;

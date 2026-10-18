@@ -18,9 +18,7 @@ struct ScreenSpaceFogEffect;
 
 namespace flight::types {
 
-struct ScreenSpaceFogEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct ScreenSpaceFogEffect : public flight::types::Effect {
   std::optional<double> color;
   std::optional<double> near;
   std::optional<double> far;

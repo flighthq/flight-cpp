@@ -113,8 +113,7 @@ struct layer_priority_f56394ad56f4d5a1 : public flight::ReferenceEnabled {
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_LAYER_PRIORITY_F56394AD56F4D5A1
 
 template <typename N>
-struct InteractionManager : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct InteractionManager : public flight::types::Entity {
   std::optional<flight::Ref<flight::types::CursorBackend>> cursor_backend;
   std::optional<N> cursor_target;
   std::optional<flight::Array<flight::Ref<layer_priority_f56394ad56f4d5a1<N>>>> dispatch_layers;

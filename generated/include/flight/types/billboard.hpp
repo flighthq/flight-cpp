@@ -47,17 +47,7 @@ using BillboardRuntime = flight::Ref<flight::types::Node3DRuntime>;
 
 namespace flight::types {
 
-struct Billboard : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::NodeData>> data;
-  bool enabled;
-  flight::String kind;
-  std::optional<flight::String> name;
-  std::optional<flight::Ref<flight::types::Node3DRuntime>> entity_runtime_key;
-  double alpha;
-  bool visible;
-  flight::Ref<flight::types::Vector3> position;
-  flight::Ref<flight::types::Quaternion> rotation;
-  flight::Ref<flight::types::Vector3> scale;
+struct Billboard : public flight::types::Node3D {
   flight::Ref<flight::types::MeshGeometry> geometry;
   flight::Array<std::optional<flight::types::Material3DValue>> materials;
   BillboardMode mode;

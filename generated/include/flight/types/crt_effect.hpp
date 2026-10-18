@@ -18,9 +18,7 @@ struct CrtEffect;
 
 namespace flight::types {
 
-struct CrtEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct CrtEffect : public flight::types::Effect {
   std::optional<double> curvature;
   std::optional<double> scanline_intensity;
   std::optional<double> vignette;

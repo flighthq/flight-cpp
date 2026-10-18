@@ -18,9 +18,7 @@ struct DirectionalBlurEffect;
 
 namespace flight::types {
 
-struct DirectionalBlurEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct DirectionalBlurEffect : public flight::types::Effect {
   std::optional<double> angle;
   std::optional<double> length;
   std::optional<double> samples;

@@ -102,9 +102,7 @@ struct MorphShapeGradientEndpointExplanation : public flight::ReferenceEnabled {
   bool supported;
 };
 
-struct MorphShapeLineEndpoint : public flight::ReferenceEnabled {
-  std::optional<double> alpha;
-  double color;
+struct MorphShapeLineEndpoint : public MorphShapeColorEndpoint {
   double thickness;
 };
 

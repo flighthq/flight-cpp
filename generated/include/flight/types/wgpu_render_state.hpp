@@ -154,8 +154,7 @@ struct WgpuColorAdjustmentFlush : public flight::ReferenceEnabled {
   flight::host_sdl::WgpuShaderModule module;
 };
 
-struct WgpuBindGroupLayouts : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct WgpuBindGroupLayouts : public flight::types::Entity {
   flight::host_sdl::WgpuBindGroupLayout texture_bind_group_layout;
   flight::host_sdl::WgpuBindGroupLayout uniform_bind_group_layout;
 };
@@ -216,24 +215,13 @@ struct WgpuTextureResource : public flight::ReferenceEnabled {
   flight::host_sdl::WgpuTextureView view;
 };
 
-struct WgpuTextureEntry : public flight::ReferenceEnabled {
-  double mip_level_count;
-  std::optional<bool> straight_alpha;
-  flight::host_sdl::WgpuTexture texture;
-  flight::host_sdl::WgpuTextureView view;
+struct WgpuTextureEntry : public WgpuTextureResource {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   WgpuTextureBindings bindings;
   std::optional<flight::host_sdl::WgpuSampler> sampler;
 };
 
-struct WgpuTextureSourceTextureEntry : public flight::ReferenceEnabled {
-  double mip_level_count;
-  std::optional<bool> straight_alpha;
-  flight::host_sdl::WgpuTexture texture;
-  flight::host_sdl::WgpuTextureView view;
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  WgpuTextureBindings bindings;
-  std::optional<flight::host_sdl::WgpuSampler> sampler;
+struct WgpuTextureSourceTextureEntry : public WgpuTextureEntry {
   double version;
 };
 

@@ -23,8 +23,7 @@ struct SpriteIdentityRendererData;
 
 namespace flight::types {
 
-struct SpriteIdentityRendererData : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct SpriteIdentityRendererData : public flight::types::RendererData {
   std::optional<flight::types::Texture> texture_identity;
   double texture_version;
 };

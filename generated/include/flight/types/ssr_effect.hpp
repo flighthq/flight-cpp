@@ -18,9 +18,7 @@ struct SsrEffect;
 
 namespace flight::types {
 
-struct SsrEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct SsrEffect : public flight::types::Effect {
   std::optional<double> max_distance;
   std::optional<double> resolution;
   std::optional<double> steps;

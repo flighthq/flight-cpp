@@ -63,8 +63,7 @@ using BitmapTextAlign = flight::String;
 
 namespace flight::types {
 
-struct BitmapTextData : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct BitmapTextData : public flight::types::Node2DData {
   BitmapTextAlign align;
   flight::String ellipsis;
   std::optional<flight::Ref<flight::types::GlyphSource>> glyph_source;

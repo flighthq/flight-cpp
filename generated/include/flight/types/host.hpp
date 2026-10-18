@@ -640,8 +640,7 @@ struct HostWindowCapabilities : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::HostWindowZOrderCapability>> z_order;
 };
 
-struct Host : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct Host : public flight::types::Entity {
   flight::Ref<HostAccessibilityCapabilities> accessibility;
   flight::Ref<HostAppCapabilities> app;
   flight::Ref<HostAudioCapabilities> audio;

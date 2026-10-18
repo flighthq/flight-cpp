@@ -37,10 +37,7 @@ struct away_from_light_ignore_toward_light_d325b674a07a6f10 : public flight::Ref
 
 inline flight::Ref<away_from_light_ignore_toward_light_d325b674a07a6f10> emissive_modifier_facing = flight::make_ref<away_from_light_ignore_toward_light_d325b674a07a6f10>(away_from_light_ignore_toward_light_d325b674a07a6f10{.away_from_light = flight::String("AwayFromLight"), .ignore = flight::String("Ignore"), .toward_light = flight::String("TowardLight")});
 
-struct EmissiveModifier : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
-  flight::String slot;
+struct EmissiveModifier : public flight::types::Modifier {
   double color;
   double strength;
   std::optional<flight::types::Texture> mask;

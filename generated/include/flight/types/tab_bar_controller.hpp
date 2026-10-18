@@ -33,8 +33,7 @@ struct TabBarControllerSignals;
 
 namespace flight::types {
 
-struct TabBarController : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct TabBarController : public flight::types::Entity {
 };
 
 struct TabBarControllerItem : public flight::ReferenceEnabled {
@@ -42,8 +41,7 @@ struct TabBarControllerItem : public flight::ReferenceEnabled {
   flight::types::Node2D unselected_state;
 };
 
-struct TabBarControllerOptions : public flight::ReferenceEnabled {
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::GuiTransitionDescriptor>>>> transition;
+struct TabBarControllerOptions : public flight::types::GuiControllerOptions {
   std::optional<double> selected_index;
   flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TabBarControllerItem>>>>> tabs;
 };
