@@ -88,12 +88,12 @@ int main() {
   check(rules[0] != rules[1] && rules[0]->declarations.identity() == rules[1]->declarations.identity() &&
         rules[1]->declarations.identity() != rules[2]->declarations.identity(), "authored rule and shared declaration owners");
   rules[0]->declarations.set("fill", "changed");
-  check(rules[1]->declarations.get("fill") == String("changed") &&
-        rules[2]->declarations.get("fill") == String("blue"), "live shared declarations within one matched block");
+  check(rules[1]->declarations.get(String("fill")) == String("changed") &&
+        rules[2]->declarations.get(String("fill")) == String("blue"), "live shared declarations within one matched block");
   auto again = collect(root);
   check(again.identity() != rules.identity() && again[0] != rules[0] &&
         again[0]->declarations.identity() != rules[0]->declarations.identity() &&
-        again[0]->declarations.get("fill") == String("red"), "fresh call owners and unchanged input");
+        again[0]->declarations.get(String("fill")) == String("red"), "fresh call owners and unchanged input");
   first->text = "path{}";
   auto changed = collect(root);
   check(changed.size() == 2 && changed[0]->selector == String("path") && changed[1]->order == 1,
