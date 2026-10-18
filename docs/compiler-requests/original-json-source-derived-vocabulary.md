@@ -1,0 +1,13 @@
+# Original helper vocabulary and cap/join closure
+
+The structural table is a pure function of emitted headers and overrides. `scripts/structuralMembers.mjs` collects actual `flight::RowKey` uses; `scripts/packageScope.mjs` rerenders that table from the merged normal header tree. Type declarations alone do not supply uses hidden inside omitted scene2d-format bodies.
+
+The bounded scratch reproduction feeds that exact renderer the installed header tree with nine qualified compiler136 original header replacements and actual overrides. It derives19 additional keys, retires none, and preserves the existing computed-cell names. This is scratch dependency evidence, not a package generation, new SDK inventory, hand-edited key table, or normal write. Adding the complete original stroke module as a tenth replacement produces byte-identical metadata.
+
+With the derived table, the actual three-header SDL compile finishes: polystar passes; gradient reaches the omitted `mapLottieLineCap` dependency; text reaches the anonymous native member-owner mismatch between its existing Types `k` holder and the helper's optional holder. The table fixes the missing-key cause; these results retain the remaining causes.
+
+The whole original `lottieStrokeShapeItem.ts` now emits under compiler136, including both cap/join functions and its complete handler. Its only normal emission repair is the declared unqualified type-name repair. No extracted helper, copied replacement body, stub or fabricated definition is needed. The native consumer includes both complete original gradient and stroke headers and compares actual cap/join calls with data obtained by executing the original JavaScript module.
+
+Normal output sequencing must keep these dependencies distinct. Builder2 first owns the agreed Types/importdiagnostics pair. The later corrected scene2d-formats slice must include `lottieDocument`, gradient, polystar, text, image and the original stroke dependency; the shared renderer then derives the helper keys from those actual merged bodies. Node/revision and resources slices remain conditional on their actual source-derived dependency/output changes. No additional writer or output run is authorized by this plan.
+
+Bezier raw-value/return-domain design belongs to Builder3 and remains unresolved. The image options factory belongs to Builder4 with Types/Sprite owned by Builder2. The text holder-owner mismatch still needs source-derived ownership resolution; different anonymous shapes must not be aliased or copied merely to satisfy C++. Header compilation alone does not establish complete handler behavior, erase these obligations, or promote the historical Exact21 denominator.
