@@ -4810,6 +4810,23 @@
       "unblocks": "The three refused render-pass lifecycle functions in render_wgpu/wgpu_render_pass.hpp, once the heritage and base-to-derived assertion layers of bindWgpuRenderPassTarget are also carried.",
       "expires": "when the lowering's program resolves the external types (so the checker narrows the member path itself), or upstream extends syntactic presence recovery to member paths.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-interface-absence-refinement-heritage",
+      "dependency": "flight-compiler",
+      "patch": "compiler-interface-absence-refinement-heritage.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/render-wgpu",
+      "answers": "diagnostic",
+      "refusal": "WgpuScreenRenderTarget and WgpuTextureRenderTarget redeclare WgpuRenderTarget's `context: GPUCanvasContext | null` as `GPUCanvasContext` and `null`. compiler-interface-native-heritage-widening requires identical member storage, so both stay flattened independent owners. A texture or screen target then cannot be passed as Ref<WgpuRenderTarget> (beginWgpuRenderPass), and bindWgpuRenderPassTarget's base-to-derived read has no heritage at all. GL's GlScreen/GlTextureRenderTarget `framebuffer` refinement is the same shape.",
+      "rewrite": "Extends getCppInterfaceNativeHeritageCpp: a derived member that narrows its base member by ABSENCE ONLY keeps native heritage. That means the same present payload type with fewer absent kinds, or a null/undefined-only member. Such members are recorded as refinedMembers mapped to the base cell's type. Native-heritage computation gains a re-entrancy guard. The storage type of a refined member read, an assignment's destination type, and a derived literal's inherited-field value type all use the base cell's type. A present-only refinement read is lifted to the existing narrowed-present projection (the refinement is the presence proof). Write targets are never lifted. A payload-changing refinement still stays flattened; builder4's corresponding fixture now names that case.",
+      "equivalence": "Every value a narrower member admits is a value the base member admits, so one cell represents both declarations exactly, with no shadow member, copy or second storage. Widening a derived owner to the base is the same shared_ptr allocation. Writes through either owner land in the one cell and are visible through both, as JavaScript's single property is. A present-only read projects that cell's payload. A null-only write empties it.",
+      "verification": "6 focused fixtures in cppInterfaceAbsenceRefinementHeritage.test.ts cover derived struct shapes, same-reference widening, the present-only payload read, the null-only presence test, writes through both owners (never into the payload), and literal construction of an inherited cell. A native probe compiled the emitted module against the runtime and ran it (exit 0): it checks same-owner widening, base/derived write visibility in the single cell, and the null write emptying it. Backend plus semantic suites: exactly 1 new failure on the 80-patch stack, builder4's old-policy fixture, updated in this patch to the payload-changing case. The production build typechecks.",
+      "whyNotUpstreamFirst": "The pinned source declares these relations; only the C++ backend's storage-equality rule erases them. This extends the carried heritage patch's own rule to absence-only refinements, which need no new storage.",
+      "unblocks": "Native heritage for absence-only interface refinements, including the WGPU and GL render-target subtypes. With the base-to-derived member read (next patch), bindWgpuRenderPassTarget and the 117 rows behind it.",
+      "expires": "when upstream preserves interface heritage for absence-only member refinements.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }

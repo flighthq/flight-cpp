@@ -1,0 +1,320 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+index ee1f8ba..5653ab2 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -2925,11 +2925,11 @@ describe('createCppCompilerBackend', () => {
+     expect(contents).toContain('has_value()');
+   });
+ 
+-  it('keeps storage-changing interface refinements off the native heritage path', () => {
++  it('keeps payload-changing interface refinements off the native heritage path', () => {
+     const result = lower(
+       'native-interface-refinement.ts',
+       `
+-      export interface Base { slot: number | null; }
++      export interface Base { slot: number | string | null; }
+       export interface Derived extends Base { slot: number; extra: number; }
+       export function nullable(value: Derived | null): Base | null { return value; }
+     `,
+@@ -2941,7 +2941,7 @@ describe('createCppCompilerBackend', () => {
+     const types = lower(
+       'native-interface-refinement-types.ts',
+       `
+-      export interface Base { slot: number | null; }
++      export interface Base { slot: number | string | null; }
+       export interface Derived extends Base { slot: number; extra: number; }
+     `,
+     );
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 890a81b..b406dc0 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -2459,15 +2459,36 @@ function emitInterface(declaration: Readonly<IrInterfaceDeclaration>, outer: Emi
+ interface CppInterfaceNativeHeritage {
+   readonly base: Readonly<IrTypeReference>;
+   readonly inheritedNames: ReadonlySet<string>;
++  // Members the derived declaration narrows by absence alone (`T | null` to `T`, or to `null`). They
++  // share the base's single cell, so their storage is the base member's type, mapped here.
++  readonly refinedMembers: ReadonlyMap<string, Readonly<IrType>>;
+ }
+ 
+ // A source refinement may change a member's native carrier (including a computed runtime slot).
+ // Sharing a base then requires a live typed projection, not a second shadow member. Only retain
+ // one declared primary base when its complete flattened storage matches the derived declaration.
+ // Other source bases remain flattened members; they are not claimed as native pointer paths.
++// Computing a declaration's heritage emits its members' storage types, and a member whose type reaches
++// the declaration again re-enters this question. While it is being answered the declaration has no
++// heritage to offer, which is the flattened answer this function would also give if it declined.
++const cppInterfaceNativeHeritageInProgress = new Set<Readonly<IrInterfaceDeclaration>>();
++
+ function getCppInterfaceNativeHeritageCpp(
+   declaration: Readonly<IrInterfaceDeclaration>,
+   context: EmitContext,
++): Readonly<CppInterfaceNativeHeritage> | undefined {
++  if (cppInterfaceNativeHeritageInProgress.has(declaration)) return undefined;
++  cppInterfaceNativeHeritageInProgress.add(declaration);
++  try {
++    return computeCppInterfaceNativeHeritageCpp(declaration, context);
++  } finally {
++    cppInterfaceNativeHeritageInProgress.delete(declaration);
++  }
++}
++
++function computeCppInterfaceNativeHeritageCpp(
++  declaration: Readonly<IrInterfaceDeclaration>,
++  context: EmitContext,
+ ): Readonly<CppInterfaceNativeHeritage> | undefined {
+   if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return undefined;
+   const originalModule =
+@@ -2527,6 +2548,7 @@ function getCppInterfaceNativeHeritageCpp(
+   };
+   const derivedContext = { ...context, anonymousStructs: new Map(), includes: new Set<string>() };
+   const inheritedNames = new Set<string>();
++  const refinedMembers = new Map<string, Readonly<IrType>>();
+   for (const property of baseDeclaration.properties) {
+     if (isCppNonEmittingObjectPropertyCpp(property)) continue;
+     const derived = declaration.properties.find((candidate) => candidate.name === property.name);
+@@ -2555,11 +2577,48 @@ function getCppInterfaceNativeHeritageCpp(
+       qualifyCppDeclaringModuleTypeCpp(storage.type, baseContext) !==
+         qualifyCppDeclaringModuleTypeCpp(derivedStorage.type, derivedContext) ||
+       storage.initializer !== derivedStorage.initializer
+-    )
+-      return undefined;
++    ) {
++      if (!isCppAbsenceSubsetRefinementCpp(substituted, derived, baseContext, derivedContext)) return undefined;
++      refinedMembers.set(property.name, substituted.optional ? createIrTypeEvidenceUnionCpp([substituted.type, { kind: 'undefined' }]) ?? substituted.type : substituted.type);
++    }
+     inheritedNames.add(property.name);
+   }
+-  return { base, inheritedNames };
++  return { base, inheritedNames, refinedMembers };
++}
++
++// A derived member that narrows its base member by ABSENCE ONLY: the same present payload type with
++// fewer absent kinds (`T | null` to `T`), or no payload at all (`T | null` to `null`). Such a member is
++// a reading of the base member, not new storage: every value it admits is one the base cell can hold,
++// so the derived owner keeps that single cell and no shadow member is introduced. Anything that changes
++// the payload domain -- another payload type, or a non-absence narrowing -- stays off native heritage.
++function isCppAbsenceSubsetRefinementCpp(
++  base: Readonly<IrObjectTypeProperty>,
++  derived: Readonly<IrObjectTypeProperty>,
++  baseContext: EmitContext,
++  derivedContext: EmitContext,
++): boolean {
++  const absentKinds = (property: Readonly<IrObjectTypeProperty>): Set<'null' | 'undefined'> => {
++    const kinds = new Set<'null' | 'undefined'>();
++    const members = property.type.kind === 'union' ? property.type.types : [property.type];
++    for (const member of members) {
++      if (member.kind === 'null') kinds.add('null');
++      if (member.kind === 'undefined') kinds.add('undefined');
++    }
++    if (property.optional) kinds.add('undefined');
++    return kinds;
++  };
++  const baseAbsent = absentKinds(base);
++  const derivedAbsent = absentKinds(derived);
++  if (baseAbsent.size === 0 || [...derivedAbsent].some((kind) => !baseAbsent.has(kind))) return false;
++  const present = (type: Readonly<IrType>): readonly Readonly<IrType>[] =>
++    (type.kind === 'union' ? type.types : [type]).filter((member) => member.kind !== 'null' && member.kind !== 'undefined');
++  const basePresent = present(base.type);
++  const derivedPresent = present(derived.type);
++  if (derivedPresent.length === 0) return derivedAbsent.size > 0;
++  if (derivedAbsent.size === baseAbsent.size) return false;
++  const spell = (members: readonly Readonly<IrType>[], context: EmitContext) =>
++    members.map((member) => qualifyCppDeclaringModuleTypeCpp(emitType(member, context), context)).sort().join('|');
++  return spell(basePresent, baseContext) === spell(derivedPresent, derivedContext);
+ }
+ 
+ function getCppInterfaceNativeHeritageForTypeCpp(
+@@ -2600,7 +2659,15 @@ function getCppInterfaceNativeHeritageForTypeCpp(
+   if (!heritage) return undefined;
+   const substitutions = createIrTypeParameterSubstitutionPlan(owner.declaration.typeParameters, source.typeArguments);
+   const base = resolveIrTypeStructuralSubstitution(heritage.base, substitutions);
+-  return base.kind === 'named' ? { base, inheritedNames: heritage.inheritedNames } : undefined;
++  return base.kind === 'named'
++    ? {
++        base,
++        inheritedNames: heritage.inheritedNames,
++        refinedMembers: new Map(
++          [...heritage.refinedMembers].map(([name, type]) => [name, resolveIrTypeStructuralSubstitution(type, substitutions)]),
++        ),
++      }
++    : undefined;
+ }
+ 
+ // This proof is directional. It authorizes ordinary shared-pointer widening only; an assertion
+@@ -6452,7 +6519,10 @@ function emitExpression(
+       }
+       const constructionOwner = getCppTypeReferenceOwnerModuleCpp(constructionType, context);
+       const emitPropertyValue = (property: (typeof properties)[number]): string => {
+-        const propertyType = getIrObjectPropertyTypeCpp(constructionType, property.name, context);
++        // A member the construction type refines by absence is written into the base's single cell.
++        const propertyType =
++          getCppRefinedMemberStorageTypeCpp(constructionType, property.name, context) ??
++          getIrObjectPropertyTypeCpp(constructionType, property.name, context);
+         return (
+           (constructionOwner.packageName !== context.module.packageName && propertyType
+             ? emitCppForeignAnonymousObjectValueCpp(property.value, propertyType, constructionOwner, context)
+@@ -6600,7 +6670,13 @@ function emitExpression(
+         context.includes.add('flight/optional_variant.hpp');
+         return `flight::union_kind_or_throw<${guardedPathKind}>(${storage})`;
+       }
+-      const narrowedPresent = emitCppNarrowedPresentAccessCpp(expression, context, expectedType);
++      const narrowedPresent = emitCppNarrowedPresentAccessCpp(
++        !(cppRefinedPresentReadMarker in expression) && isCppPresentRefinedMemberReadCpp(expression, context)
++          ? ({ ...expression, presence: 'narrowedPresent', [cppRefinedPresentReadMarker]: true } as typeof expression)
++          : expression,
++        context,
++        expectedType,
++      );
+       if (narrowedPresent) return narrowedPresent;
+       const erasedIndexNamedProperty = emitCppErasedIndexNamedPropertyReadCpp(expression, context);
+       if (erasedIndexNamedProperty) return erasedIndexNamedProperty;
+@@ -13964,6 +14040,7 @@ function hasCppPresentBindingStorageProofCpp(
+ 
+ function hasCppPresentExpressionStorageProofCpp(expression: Readonly<IrExpression>, context: EmitContext): boolean {
+   if (expression.kind === 'identifier') return hasCppPresentBindingStorageProofCpp(expression, context);
++  if (isCppPresentRefinedMemberReadCpp(expression, context)) return true;
+   return (
+     ((expression.kind === 'property' || expression.kind === 'element') && expression.presence === 'narrowedPresent') ||
+     (expression.kind === 'element' && context.immediateDenseArrayElementPresence.has(expression))
+@@ -14121,6 +14198,29 @@ function hasCppAbsenceStorageCpp(expression: Readonly<IrExpression>, context: Em
+ // from `Base | null` to `Derived`: the read is Derived, but the carrier is still optional<Ref<Base>>.
+ // Recover the declaration through the receiver rather than asking the property expression, whose
+ // narrowedType is supposed to win for every value-side question.
++// Marks a read already lifted to its refinement's presence proof. Object spread copies symbol-keyed
++// properties, so the carrier spelling emitted beneath the proof keeps the mark and is not lifted again.
++const cppRefinedPresentReadMarker = Symbol('cppRefinedPresentRead');
++
++// The base cell's type for a member the receiver's native interface heritage refines by absence alone.
++function getCppRefinedMemberStorageTypeCpp(
++  receiverType: Readonly<IrType>,
++  name: string,
++  context: EmitContext,
++): Readonly<IrType> | undefined {
++  return getCppInterfaceNativeHeritageForTypeCpp(receiverType, context)?.refinedMembers.get(name);
++}
++
++// A read of a member the receiver's type refines to present-only is proven present by that refinement:
++// the derived declaration admits no absence, and the base cell it reads holds the same payload.
++function isCppPresentRefinedMemberReadCpp(expression: Readonly<IrExpression>, context: EmitContext): boolean {
++  if (expression.kind !== 'property' || getCppRuntimeProfile(context.options) !== 'flight-cpp') return false;
++  const receiverType = getIrExpressionTypeEvidenceCpp(expression.object, context);
++  if (!receiverType || !getCppRefinedMemberStorageTypeCpp(receiverType, expression.name, context)) return false;
++  const declared = getIrObjectPropertyTypeCpp(receiverType, expression.name, context);
++  return declared !== undefined && !hasIrTypeAbsentMember(declared);
++}
++
+ function getCppDeclaredPropertyReadTypeCpp(
+   expression: Readonly<Extract<IrExpression, { kind: 'property' }>>,
+   context: EmitContext,
+@@ -14129,6 +14229,8 @@ function getCppDeclaredPropertyReadTypeCpp(
+   if (!receiverType) return undefined;
+   const row = getCppStructuralRowExpressionPlanCpp(expression.object, context);
+   const objectType = row ? getCppStructuralRowObjectTypeCpp(row) : receiverType;
++  const refinedStorage = !row && objectType ? getCppRefinedMemberStorageTypeCpp(objectType, expression.name, context) : undefined;
++  if (refinedStorage) return refinedStorage;
+   const propertyType = objectType ? getIrObjectPropertyTypeCpp(objectType, expression.name, context) : undefined;
+   if (!propertyType || !row || !isCppStructuralRowPropertyOptionalCpp(row)) return propertyType;
+   // A property that ALREADY admits absence keeps the representation it has. Unioning a second undefined
+@@ -29825,7 +29927,11 @@ function getIrExpressionClassAccessorCpp(
+   return declaration?.methods.some((method) => method.accessor === accessor && method.name === name) ?? false;
+ }
+ 
+-function emitAssignmentTargetCpp(expression: Readonly<IrExpression>, context: EmitContext): string {
++function emitAssignmentTargetCpp(target: Readonly<IrExpression>, context: EmitContext): string {
++  // A write target is the cell itself. A refined member read is lifted to its payload, but a write
++  // must reach the base cell's own storage, so the target carries the mark that suppresses the lift.
++  const expression: Readonly<IrExpression> =
++    target.kind === 'property' ? ({ ...target, [cppRefinedPresentReadMarker]: true } as Readonly<IrExpression>) : target;
+   if (
+     expression.kind === 'element' &&
+     getCppRuntimeProfile(context.options) === 'flight-cpp' &&
+@@ -30997,7 +31103,18 @@ function getIrAssignmentTargetTypeCpp(
+ ): Readonly<IrType> | undefined {
+   const structuralProperty =
+     expression.kind === 'element' ? getCppStructuralRowComputedPropertyCpp(expression, context) : undefined;
++  // A write through a refined member lands in the base's single cell, so its destination is that cell's
++  // type: `texture.context = null` writes the base optional's empty state, not a separate null field.
++  const refinedReceiver =
++    expression.kind === 'property' && !expression.optional
++      ? getIrExpressionTypeEvidenceCpp(expression.object, context)
++      : undefined;
++  const refinedStorage =
++    refinedReceiver && expression.kind === 'property'
++      ? getCppRefinedMemberStorageTypeCpp(refinedReceiver, expression.name, context)
++      : undefined;
+   return (
++    refinedStorage ??
+     structuralProperty?.type ??
+     (expression.kind === 'element' ? getCppClosedKeyElementWriteTypeCpp(expression, context) : undefined) ??
+     getIrExpressionBindingTypeCpp(expression, context) ??
+diff --git a/packages/compiler-backend-cpp/src/cppInterfaceAbsenceRefinementHeritage.test.ts b/packages/compiler-backend-cpp/src/cppInterfaceAbsenceRefinementHeritage.test.ts
+new file mode 100644
+index 0000000..0e2ea64
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppInterfaceAbsenceRefinementHeritage.test.ts
+@@ -0,0 +1,63 @@
++import { describe, expect, it } from 'vitest';
++
++import ts from 'typescript';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++// A derived interface may narrow a base member by ABSENCE alone: WgpuRenderTarget declares
++// `context: GPUCanvasContext | null`, and its screen and texture targets redeclare it as `GPUCanvasContext`
++// and `null`. Every value the narrower member admits is one the base cell holds, so the derived owner keeps
++// native C++ heritage and reads and writes that single base cell. No shadow member and no copy is made.
++// A present-only refinement reads the cell's payload (the refinement is the presence proof); a write
++// through either owner lands in the same cell; a null-only write empties it. A refinement that changes
++// the payload domain stays off native heritage (see cppCompilerBackend.test.ts).
++const declarations = `export interface Ctx { id: number }
++export interface Target { context: Ctx | null; width: number }
++export interface Screen extends Target { readonly context: Ctx; swap: number }
++export interface Texture extends Target { readonly context: null; view: number }
++`;
++
++function emit(body: string) {
++  const sourceFile = ts.createSourceFile('/flight/packages/math/src/targets.ts', declarations + body, ts.ScriptTarget.Latest, true);
++  const lowered = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/math', upstreamDirectory: '/flight' });
++  expect(lowered.diagnostics).toEqual([]);
++  return emitIrModuleCpp(lowered.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++describe('absence-only interface refinements on native heritage', () => {
++  it('derives both refinements from the base and keeps the one base cell', () => {
++    const contents = emit('');
++    expect(contents).toContain('struct Target : public flight::ReferenceEnabled {\n  std::optional<flight::Ref<Ctx>> context;');
++    expect(contents).toContain('struct Screen : public Target {\n  double swap;\n};');
++    expect(contents).toContain('struct Texture : public Target {\n  double view;\n};');
++  });
++
++  it('widens each derived owner to the base as the same reference', () => {
++    expect(emit('export function f(s: Screen): Target { return s; }')).toContain('flight::Ref<Target> f(flight::Ref<Screen> s) {\n  return s;');
++    expect(emit('export function f(t: Texture): Target { return t; }')).toContain('flight::Ref<Target> f(flight::Ref<Texture> t) {\n  return t;');
++  });
++
++  it('reads a present-only refinement through the base cell payload', () => {
++    expect(emit('export function f(s: Screen): number { return s.context.id; }')).toContain('return s->context.value()->id;');
++  });
++
++  it('tests a null-only refinement against the base cell', () => {
++    expect(emit('export function f(t: Texture): boolean { return t.context === null; }')).toContain('return !t->context.has_value();');
++  });
++
++  it('writes through either owner into the base cell, never into its payload', () => {
++    const screen = emit('export function f(s: Screen, c: Ctx): void { s.context = c; }');
++    expect(screen).toContain('(s->context = std::optional<flight::Ref<Ctx>>{c});');
++    expect(screen).not.toContain('context.value() =');
++    expect(emit('export function f(t: Texture): void { t.context = null; }')).toContain('(t->context = std::nullopt);');
++  });
++
++  it('constructs a derived literal with its inherited cell written after its own members', () => {
++    const contents = emit('export function f(): Texture { return { context: null, width: 3, view: 7 }; }');
++    expect(contents).toContain('auto object_member_context = std::nullopt;');
++    expect(contents).toContain('Texture{.view = object_member_view}');
++    expect(contents).toContain('->context = object_member_context;');
++    expect(contents).toContain('->width = object_member_width;');
++  });
++});
