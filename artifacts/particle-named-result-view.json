@@ -49,16 +49,116 @@
   },
   "patch": {
     "file": "source-patches/compiler-named-required-result-view.patch",
-    "sha256": "daa9babbed4c74097f63f115d24376229e5e5d1c55433f9b492354a19038cde0"
+    "sha256": "813375db2c9fbdd07e194025d72e667bfda3210e4301d64f81a9b1b021eaf3b4"
+  },
+  "originalNative": {
+    "compiled": true,
+    "compileExit": 0,
+    "source": {
+      "strict": true,
+      "checks": 15,
+      "originalPublicDeclaration": true,
+      "originalBodies": true,
+      "sourceHashes": {
+        "particles-formats/src/pixiParse.ts": "13cb19a58dfd4c6559b170bfd496487339e1abfbba99cb3fa8552dbb557391ab",
+        "importdiagnostics/src/importDiagnosticCollector.ts": "5aab6518a367bf77e95168a553875de04ea9fa91d2ac7e561d76c76e12efa215",
+        "math/src/constants.ts": "81b1771fa6df3dbaf350ce79a7d43ec8981ee60e7349eebcdd2af92e4412aedf",
+        "particles/src/particleEmitterConfig.ts": "77a2f7a28c06a03a73d0e7b52d93f3e739448351b985bc6f697c78e5459e30ac",
+        "particles/src/curve.ts": "a0af9f5497161fde7072a877fb8d1cb5b89e7ce5fb4e0eefb83717ef5688ecc5",
+        "types/src/ImportDiagnostic.ts": "b56593c1baf28ae733c9fdce62e96fee96bfa9ea3628a7c271a8464f45bdf8ae",
+        "types/src/ParticleFormatKind.ts": "f64c52f3f0fc9302eb7ab89ce298f3e78bbc67ea1db2be66822bd63630601ba5",
+        "types/src/ParticleConfigParse.ts": "9f6112360c2e8c354e0ed476bc7ea15d926e50cf549a4bfd0dd0a43cbeb84be2",
+        "types/src/ParticleFormatCodec.ts": "358ac4621fdef099551a33aa08afc27e16a31d9f9fb7280ffc817cc6b04dfbcf",
+        "types/src/ParticleFormatDescriptor.ts": "2f05ed87e4bceaa861e834053141a30eb464eed7a1ea31f8e979ad6b1692f5d3",
+        "types/src/ParticleEmitterConfig.ts": "95b0764b4cbc447ef74f1ff89d537a19c64c01cfb237e7718986868ae31715a5",
+        "types/src/ParticleCurve.ts": "19b9ce4d922cea06abb6091cb055bf4bb64812d2250a2e9e0dd161e254eeaf88",
+        "types/src/ParticleSerializeResult.ts": "1b46b9b8ff6772a4199e629a01f67ea485bcf4192a1d37baa3d1b86b6533ed7b",
+        "types/src/NonEntityCreateResult.ts": "27250e4d661f90b18c29fbb8335628b453c8eba3d3c39e450920c426c09f5fe7",
+        "types/src/LibgdxParticleSchema.ts": "40c97ed6d2416159c3f41c6d883c05fdf6ad92a1d848d6b732efa4bcbcfa32c2",
+        "types/src/ParticleDesignerSchema.ts": "5f12c203d88f5535daa1eaae6f9c08e8680b994d279ce82ecbb578bed1a6fc36",
+        "types/src/PixiParseResult.ts": "b626a71483f4eab2e53d3686cfc837e113b616bd50681eab29c239e45e4bc81e",
+        "types/src/SpineParticleSchema.ts": "2d1f9144aaa4e1a06d23d21fe0fed83b0337af349111a4c0c75073b024f263ce",
+        "types/src/StarlingPexSchema.ts": "e593d0dc15f11f697364a416f93b8604fc3a9f2c1da27763b0204e5b96736bce",
+        "types/src/UnitySchema.ts": "63041525e043df157215f132d4270e1f1efb28e295de4183311cc39c9353a9df",
+        "particles-formats/src/spineParse.ts": "51485edfdac2fc2fad2865f94100b138e32d003c09c0750282ffdff8c7075de5"
+      }
+    },
+    "fixture": {
+      "file": "scripts/fixtures/particleNamedOriginalResultConsumer.ts",
+      "sha256": "5ec4ca16a73912e89e5b56e2d8838379055eecc0d578a3d745e7048617259374"
+    },
+    "nativeFixture": {
+      "file": "scripts/fixtures/particleNamedOriginalResultConsumer.cpp",
+      "sha256": "c774f780c45d7f0a51a63f4c1f9e665c6087525fc725bd6fa7404707191463a8"
+    },
+    "rawEmissionSha256": "8cf2f74f7f2ed8d1d5de391d7280c3965c952c4a8d55790e8eb2531bf875b56a",
+    "emittedSha256": "ecd21d3cefd4d1f1a3db5c4aa42b75a4a13e5e244d345bc3c4549616bda631f6",
+    "normalMechanicalAliases": {
+      "files": [
+        "flight/particles_formats/particle_named_original_result_consumer.hpp"
+      ],
+      "structs": [
+        "config_diagnostics_c75f552162a3a41d"
+      ]
+    },
+    "headers": [
+      {
+        "file": "flight/particles_formats/pixi_parse.hpp",
+        "sha256": "f49eb7dca53f60d5606cb25f52a6c3066a19cf65fc60978cfa2b3d1cc9948c56"
+      },
+      {
+        "file": "flight/particles_formats/spine_parse.hpp",
+        "sha256": "52d5d835d7a54abcfedf828ba6e4057a14714b0454b13336e26d5a890183a662"
+      },
+      {
+        "file": "flight/types/particle_format_codec.hpp",
+        "sha256": "fb6266f7b4fc0dfc484144ad867c9a8e5ad871e8263e1695ea56ddde8c638740"
+      },
+      {
+        "file": "flight/types/pixi_parse_result.hpp",
+        "sha256": "55a597505843cd0dddbba5b3b3a909db70140a634bec2370ca34f0deb7104a82"
+      },
+      {
+        "file": "flight/types/spine_particle_schema.hpp",
+        "sha256": "ebc04849d03553507a76c690440526038f7fd0cbd75cddeed6d7cddcd7d0229c"
+      },
+      {
+        "file": "flight/importdiagnostics/import_diagnostic_collector.hpp",
+        "sha256": "b65779e7bbf718844a30f067cbad7e419b97b8461049fd45367e41685e8bdba8"
+      },
+      {
+        "file": "flight/types/import_diagnostic.hpp",
+        "sha256": "3eed0241998872b997acf46f202e2f22b9105539fbd0910a9673254c2602a1f8"
+      },
+      {
+        "file": "flight/sdk/structural_members.hpp",
+        "sha256": "b4e1140c54ff6baed7343cc49d591632552bea6d9c2a047cdc6b44e296a124f6"
+      }
+    ],
+    "normalSdk": false,
+    "scope": "Only two original callbacks through the actual public codec slot on unchanged selected inventory; normal public barrels and eight earlier callbacks remain separately unqualified.",
+    "runExit": 0,
+    "native": {
+      "checks": 42,
+      "failures": 0,
+      "originalCallbacks": 2
+    },
+    "inventoryUnchanged": true
   },
   "normalSdk": false,
   "scope": "Approved result-only same-owner source and synthetic native qualification. Actual original Pixi/Spine modules are byte-identical; only two existing descriptor result wrappers change. Installed normal output retains its separately reported failures; no SDK/header/package promotion.",
+  "qualificationAtCommit": "87e6f5472d0845a9b8070de97867959d67865c6e",
   "composition": {
-    "compiler": 126,
-    "total": 328,
+    "compiler": 127,
+    "total": 330,
     "orderedApply": true,
     "candidateContentIdentical": true,
     "reverseRawBackendIdentical": true,
+    "allPatchedTrackedContentIdentical": true,
+    "comparedPatchedFiles": 1875,
+    "allOriginalTrackedRestored": true,
+    "comparedRestoredFiles": 1784,
+    "newPatchFilesRemoved": 91,
     "records": [
       {
         "dependency": "flight-compiler",
@@ -937,7 +1037,14 @@
       },
       {
         "dependency": "flight-compiler",
-        "digest": "daa9babbed4c74097f63f115d24376229e5e5d1c55433f9b492354a19038cde0",
+        "digest": "63270bc87ce794fb48f468ae0a20613cdd9d3756279bfcc39e0dc28d9cf328ad",
+        "id": "compiler-generic-nullish-callable-default",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/node"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "813375db2c9fbdd07e194025d72e667bfda3210e4301d64f81a9b1b021eaf3b4",
         "id": "compiler-named-required-result-view",
         "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
         "package": "@flighthq/particles-formats"
@@ -993,6 +1100,14 @@
       },
       {
         "name": "keeps the existing result lane for excluded shape: primitive diagnostic cells",
+        "pass": true
+      },
+      {
+        "name": "keeps the existing result lane for excluded shape: primitive config alias",
+        "pass": true
+      },
+      {
+        "name": "keeps the existing result lane for excluded shape: primitive diagnostic alias",
         "pass": true
       },
       {
@@ -1091,6 +1206,14 @@
       },
       {
         "name": "primitive diagnostic cells",
+        "unchanged": true
+      },
+      {
+        "name": "primitive config alias",
+        "unchanged": true
+      },
+      {
+        "name": "primitive diagnostic alias",
         "unchanged": true
       },
       {
@@ -1655,8 +1778,8 @@
     ]
   },
   "strict": {
-    "baseline125Production": "pass",
-    "candidate126Production": "pass",
+    "baseline126Production": "pass",
+    "candidate127Production": "pass",
     "ownedTestWithLocalTestApiDeclaration": "pass",
     "notVitest": true
   },
@@ -1668,5 +1791,61 @@
   "postCommitSourcePatchAutomation": {
     "passed": 2,
     "failed": 0
-  }
+  },
+  "nominalEmissionsUnchangedAfterCarrierNarrowing": true,
+  "qualifiedCompiler": {
+    "sourceSha256": "29a0a860bf943ff46c030c1e35feec414634661696212e783799fb5d45ce884f",
+    "compiledJavaScriptSha256": "065090e98151a640614630a31060c264b17422037380dddb276eaafc0214a9c7",
+    "typescriptVersion": "5.9.3",
+    "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24"
+  },
+  "runtimeInputs": {
+    "commit": "87e6f5472d0845a9b8070de97867959d67865c6e",
+    "files": [
+      {
+        "file": "include/flight/structural_ref.hpp",
+        "sha256": "6698befa2c710c713c4414c90064a522f25d2d3a5f59187aea95866ae5a2af6f"
+      },
+      {
+        "file": "include/flight/callable.hpp",
+        "sha256": "7f57c33fb238ae2061223f4ec0f68ebb313db95deeffd6ae4a45acd15f98a72f"
+      },
+      {
+        "file": "include/flight/runtime.hpp",
+        "sha256": "d638f983e9c605a42dfc8f6f83e5f30348e135e5ab88e305b00994a124f44a21"
+      },
+      {
+        "file": "scripts/emissionRepairs.mjs",
+        "sha256": "ace88911cce678139100425762626f6ca8397d79c9f066242c39355ec02a75d2"
+      }
+    ]
+  },
+  "normalQualification": {
+    "artifact": "artifacts/particle-normal-qualification.json",
+    "sharedBProvisional": true,
+    "normalSdkRunsHere": 1,
+    "newSdkRunsForThisChange": 0,
+    "originalEightFamilyCallbacksExecuted": 0,
+    "fullPublicConsumerQualified": false,
+    "exactFourHeadersPromoted": 0,
+    "remainingCause": "Coherent normal Types/importdiagnostics output for compiler124 readonly detail carrier; full public/8callbacks/exact4 require later authorized qualification."
+  },
+  "logs": [
+    {
+      "file": "artifacts/particle-named-result-view/native-build.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "artifacts/particle-named-result-view/native-run.log",
+      "sha256": "7d260d477b2a8eecedb09d65e5ad5fd552f29f55a5907d8fe757e999b065cf7d"
+    },
+    {
+      "file": "artifacts/particle-named-result-view/original-native-build.log",
+      "sha256": "78ca5a877183b38a81bf6feb9e0e4e954c3e87548fea8302877aa1198be0f07c"
+    },
+    {
+      "file": "artifacts/particle-named-result-view/original-native-run.log",
+      "sha256": "7bee553450cf3fb3e850ca06756f208481c27ce75a32df381eef9feb15de568b"
+    }
+  ]
 }
