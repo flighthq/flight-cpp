@@ -62,26 +62,8 @@ struct WgpuEffectPassState : public flight::ReferenceEnabled {
 
 inline flight::WeakMap<flight::Ref<WgpuRenderState>, flight::Ref<WgpuEffectPassState>> effect_pass_states = flight::WeakMap<flight::Ref<WgpuRenderState>, flight::Ref<WgpuEffectPassState>>();
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_UNIFORM_BUFFER_UNIFORM_DATA_UNIFORM_DATA_I32_UNIFORM_OFFSET_UNIFORM_STRIDE_UNIFORM_SLOTS_UNIFORM_BGLAYOUT_UNIFORM_BG_TEXTURE_BGLAYOUT_TEXTURE_BGS_SAMPLER_FORMAT_E74550EE8F9954DA
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_UNIFORM_BUFFER_UNIFORM_DATA_UNIFORM_DATA_I32_UNIFORM_OFFSET_UNIFORM_STRIDE_UNIFORM_SLOTS_UNIFORM_BGLAYOUT_UNIFORM_BG_TEXTURE_BGLAYOUT_TEXTURE_BGS_SAMPLER_FORMAT_E74550EE8F9954DA
-struct uniform_buffer_uniform_data_uniform_data_i32_uniform_offset_uniform_stride_uniform_slots_uniform_bglayout_uniform_bg_texture_bglayout_texture_bgs_sampler_format_e74550ee8f9954da : public flight::ReferenceEnabled {
-  flight::host_sdl::WgpuBuffer uniform_buffer;
-  flight::Float32Array uniform_data;
-  flight::Int32Array uniform_data_i32;
-  double uniform_offset;
-  double uniform_stride;
-  double uniform_slots;
-  flight::host_sdl::WgpuBindGroupLayout uniform_bglayout;
-  flight::host_sdl::WgpuBindGroup uniform_bg;
-  flight::host_sdl::WgpuBindGroupLayout texture_bglayout;
-  flight::WeakMap<flight::host_sdl::WgpuTextureView, flight::host_sdl::WgpuBindGroup, flight::host_sdl::WgpuTextureViewWeakPolicy> texture_bgs;
-  flight::host_sdl::WgpuSampler sampler;
-  flight::String format;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_UNIFORM_BUFFER_UNIFORM_DATA_UNIFORM_DATA_I32_UNIFORM_OFFSET_UNIFORM_STRIDE_UNIFORM_SLOTS_UNIFORM_BGLAYOUT_UNIFORM_BG_TEXTURE_BGLAYOUT_TEXTURE_BGS_SAMPLER_FORMAT_E74550EE8F9954DA
-
 inline flight::Ref<WgpuEffectPassState> get_or_create_effect_pass_state(flight::Ref<flight::types::WgpuRenderState> state) {
-  std::optional<flight::Ref<uniform_buffer_uniform_data_uniform_data_i32_uniform_offset_uniform_stride_uniform_slots_uniform_bglayout_uniform_bg_texture_bglayout_texture_bgs_sampler_format_e74550ee8f9954da>> fs = effect_pass_states.get(state);
+  std::optional<flight::Ref<WgpuEffectPassState>> fs = effect_pass_states.get(state);
   if (fs.has_value()) {
     return fs.value();
   }
@@ -97,7 +79,7 @@ inline flight::Ref<WgpuEffectPassState> get_or_create_effect_pass_state(flight::
   auto uniform_bg = device.create_bind_group(([&]() { flight::host_sdl::WgpuBindGroupDescriptor external_gpubind_group_descriptor{}; external_gpubind_group_descriptor.layout = uniform_bglayout; external_gpubind_group_descriptor.entries = flight::Array<flight::host_sdl::WgpuBindGroupEntry>{([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry{}; external_gpubind_group_entry.binding = 0.0; external_gpubind_group_entry.resource = ([&]() { flight::host_sdl::WgpuBufferBinding external_gpubuffer_binding{}; external_gpubuffer_binding.buffer = uniform_buffer; external_gpubuffer_binding.size = stride; return external_gpubuffer_binding; }()); return external_gpubind_group_entry; }())}; return external_gpubind_group_descriptor; }()));
   auto texture_bglayout = device.create_bind_group_layout(([&]() { flight::host_sdl::WgpuBindGroupLayoutDescriptor external_gpubind_group_layout_descriptor_2{}; external_gpubind_group_layout_descriptor_2.entries = flight::Array<flight::host_sdl::WgpuBindGroupLayoutEntry>{([&]() { flight::host_sdl::WgpuBindGroupLayoutEntry external_gpubind_group_layout_entry_2{}; external_gpubind_group_layout_entry_2.binding = 0.0; external_gpubind_group_layout_entry_2.visibility = flight::host_sdl::wgpu_shader_stage_fragment; external_gpubind_group_layout_entry_2.texture = ([&]() { flight::host_sdl::WgpuTextureBindingLayout external_gputexture_binding_layout{};  return external_gputexture_binding_layout; }()); return external_gpubind_group_layout_entry_2; }()), ([&]() { flight::host_sdl::WgpuBindGroupLayoutEntry external_gpubind_group_layout_entry_3{}; external_gpubind_group_layout_entry_3.binding = 1.0; external_gpubind_group_layout_entry_3.visibility = flight::host_sdl::wgpu_shader_stage_fragment; external_gpubind_group_layout_entry_3.sampler = ([&]() { flight::host_sdl::WgpuSamplerBindingLayout external_gpusampler_binding_layout{};  return external_gpusampler_binding_layout; }()); return external_gpubind_group_layout_entry_3; }())}; return external_gpubind_group_layout_descriptor_2; }()));
   auto sampler = device.create_sampler(([&]() { flight::host_sdl::WgpuSamplerDescriptor external_gpusampler_descriptor{}; external_gpusampler_descriptor.min_filter = flight::String("linear"); external_gpusampler_descriptor.mag_filter = flight::String("linear"); external_gpusampler_descriptor.address_mode_u = flight::String("clamp-to-edge"); external_gpusampler_descriptor.address_mode_v = flight::String("clamp-to-edge"); return external_gpusampler_descriptor; }()));
-  (fs = std::optional<flight::Ref<uniform_buffer_uniform_data_uniform_data_i32_uniform_offset_uniform_stride_uniform_slots_uniform_bglayout_uniform_bg_texture_bglayout_texture_bgs_sampler_format_e74550ee8f9954da>>{flight::make_ref<uniform_buffer_uniform_data_uniform_data_i32_uniform_offset_uniform_stride_uniform_slots_uniform_bglayout_uniform_bg_texture_bglayout_texture_bgs_sampler_format_e74550ee8f9954da>(uniform_buffer_uniform_data_uniform_data_i32_uniform_offset_uniform_stride_uniform_slots_uniform_bglayout_uniform_bg_texture_bglayout_texture_bgs_sampler_format_e74550ee8f9954da{.uniform_buffer = uniform_buffer, .uniform_data = uniform_data, .uniform_data_i32 = uniform_data_i32, .uniform_offset = 0.0, .uniform_stride = stride, .uniform_slots = slots, .uniform_bglayout = uniform_bglayout, .uniform_bg = uniform_bg, .texture_bglayout = texture_bglayout, .texture_bgs = flight::WeakMap<flight::host_sdl::WgpuTextureView, flight::host_sdl::WgpuBindGroup, flight::host_sdl::WgpuTextureViewWeakPolicy>(), .sampler = sampler, .format = format})});
+  (fs = std::optional<flight::Ref<WgpuEffectPassState>>{flight::make_ref<WgpuEffectPassState>(WgpuEffectPassState{.uniform_buffer = uniform_buffer, .uniform_data = uniform_data, .uniform_data_i32 = uniform_data_i32, .uniform_offset = 0.0, .uniform_stride = stride, .uniform_slots = slots, .uniform_bglayout = uniform_bglayout, .uniform_bg = uniform_bg, .texture_bglayout = texture_bglayout, .texture_bgs = flight::WeakMap<flight::host_sdl::WgpuTextureView, flight::host_sdl::WgpuBindGroup, flight::host_sdl::WgpuTextureViewWeakPolicy>(), .sampler = sampler, .format = format})});
   effect_pass_states.set(state, fs.value());
   return fs.value();
 }
@@ -234,7 +216,7 @@ inline void draw_wgpu_effect_pass(flight::Ref<WgpuRenderState> state, flight::Re
 
 inline flight::host_sdl::WgpuBlendState get_blend_state(WgpuEffectBlendMode blend) {
   if ((blend == flight::String("replace"))) {
-    return replace_blend;
+    return replace_blend_flight_value_variable__u000052__u000045__u000050__u00004c__u000041__u000043__u000045__u00005f__u000042__u00004c__u000045__u00004e__u000044__flight_private_4737a767cebcc963;
   }
   if ((blend == flight::String("erase"))) {
     return erase_blend;
@@ -306,7 +288,7 @@ inline flight::Ref<WgpuEffectPipeline> create_wgpu_effect_pipeline(
     flight::String fragment_wgsl,
     std::optional<WgpuEffectBlendMode> blend = std::nullopt) {
   auto out = flight::make_ref<WgpuEffectPipeline>();
-  initialize_wgpu_effect_pipeline(out, state, fragment_wgsl, blend);
+  initialize_wgpu_effect_pipeline_flight_value_function_initialize_u000057_gpu_u000045_ffect_u000050_ipeline_flight_private_4737a767cebcc963(out, state, fragment_wgsl, blend);
   return out;
 }
 
