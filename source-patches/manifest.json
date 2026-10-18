@@ -4996,6 +4996,23 @@
       "expires": "when upstream lowers a unique-symbol `in` over a closed union to its single required declaring arm.",
       "appliedOn": "2026-10-18",
       "verification": "cppSymbolMembershipArm.test.ts 2/2 (single required arm takes index test; an optional declarer on another arm takes none); full compiler-backend-cpp+compiler-semantic suite failure set identical with and without (0 new). Activated by one scoped @flighthq/render-wgpu generation on the 93-patch stack: wgpu_render_state.hpp:260 now emits `device_state_or_runtime.index() == 1` (the WgpuDeviceState arm), the only kept hunk. GCC 15.2: wgpu_shader moves to the retained refused getWgpuDeviceRuntime (undeclared-identifier-afcc7131); wgpu_render_state still stops first at wgpu_render_pass.hpp:130 (undeclared-identifier-aef2cf8f). No public consumer runs yet: createWgpuRenderStateRuntime calls the refused getWgpuDeviceRuntime."
+    },
+    {
+      "id": "compiler-numeric-enum-string-conversion",
+      "dependency": "flight-compiler",
+      "patch": "compiler-numeric-enum-string-conversion.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppNumericEnumStringConversion.test.ts",
+      "package": "@flighthq/render",
+      "answers": "diagnostic",
+      "refusal": "A numeric enum in a template literal or String(value) reaches flight::to_string(enum class), which has no overload. A merged numeric enum namespace instead silently takes bool conversion. RenderRegistryTable in the original recordRenderRegistriesMiss log key exposes the diagnostic in eight inherited membership rows.",
+      "rewrite": "At the explicit source conversion, resolve numeric enum declarations and aliases through their actual module/import owners and convert their existing value through double before the runtime number formatter. Preserve optional and discriminated-union storage while selecting only numeric enum alternatives. Empty enums use the numeric carrier rather than vacuously becoming string wrappers. String enums and non-enum conversions retain existing emission.",
+      "equivalence": "JavaScript numeric enum values stringify as numbers, including duplicate-valued and unnamed represented values; reverse-map names are not the value text. Reads and callbacks run once and propagate the same thrown owners. Null/undefined remain distinct; string enum values, booleans, strings, primitive number formatting and caller domains remain unchanged. No enum-name lookup, map, owner allocation, broad runtime overload or enum storage narrowing is introduced.",
+      "whyNotUpstreamFirst": "The pinned source has the intended semantics. This pin-bound emitter correction uses the existing runtime number formatter and keeps the original operations and enum declarations.",
+      "unblocks": "The numeric enum conversion in the original render registry-miss key. Preparation only: the original public registry consumer and eight affected headers still await independent membership/RenderState owner support for getRenderRegistriesMissMessage.",
+      "expires": "when upstream preserves numeric enum values at explicit string conversions, including aliases, imports, namespace wrappers and nullable/variant carriers (docs/compiler-requests/numeric-enum-template-literal-interpolation.md).",
+      "appliedOn": "2026-10-18",
+      "verification": "PREPARATION ONLY. Initial92-patch compiler baseline and candidate buildPASS. New2/2focusedPASS, zero skipped; real emitted native executables match39original-source results in local and barrel-imported modes (78comparisons): numeric/empty/namespace enums, duplicate aliases and reverse-map countercontrols, unnamed values, String/template/member/alias operations, nullable/undefined/mixed/dual/optional-variant storage, wrapper -0/NaN/Infinity, Unicode/nonenum controls, producer once and exact thrown owner. Both tests fail OLD92, including actual native enum to_string compile errors. Separate complete emitted numeric namespace control compiles on both: OLDwrong true vs corrected2. Existing18enum/template/sentinel focused controlsPASS/1557unselected. Own test/snippet format+lintPASS; full static baseline/candidate retain identical7/10red gates (three lack archive Git metadata),38format paths,4lint,12order and6foreignfixture type diagnostics; no new source diagnostics. Current ordered-stack recomposition and original public consumer/header qualification remain pending; no eight-row gain, fullenum-object/reverse-map capability, package or global completion claim."
     }
   ]
 }

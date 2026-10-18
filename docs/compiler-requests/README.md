@@ -711,7 +711,8 @@ patch has retired because the fix landed upstream keep their row, marked, as the
   `Array<double>` against `Array<Any>`. Nothing is carried.
 - [A numeric enum interpolated into a template literal has no string conversion](numeric-enum-template-literal-interpolation.md) —
   `@flighthq/render` `renderRegistryGuards.ts`: `${registry}` over a numeric enum lowers to
-  `flight::to_string(enum class)`; it should stringify the enum's number. Nothing is carried.
+  `flight::to_string(enum class)`; prepared explicit numeric conversion passes source/native controls.
+  The original registry consumer and eight rows still await independent membership owner support.
 
 - [Computed Record deletion must remove the property](record-computed-delete.md) —
   shared mutable dictionary deletion, primitive missing-key storage and erased local

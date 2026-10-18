@@ -1,0 +1,320 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -2224,7 +2224,8 @@
+ 
+ function emitEnum(declaration: Readonly<IrEnumDeclaration>, context: EmitContext): string[] {
+   const name = getBindingTargetName(declaration.binding, context);
+-  const allStringValues = declaration.members.every((member) => typeof member.value === 'string');
++  const allStringValues =
++    declaration.members.length > 0 && declaration.members.every((member) => typeof member.value === 'string');
+   const namespaceFunctions = getIrEnumNamespaceFunctionsCpp(declaration, context);
+   if (namespaceFunctions.length > 0) {
+     if (allStringValues) {
+@@ -7220,6 +7221,38 @@
+     : undefined;
+ }
+ 
++// Numeric enum values are numbers in JavaScript, including unnamed values and duplicate-valued
++// members. The declaration, rather than a C++ name or a reverse-map lookup, proves that conversion.
++function isCppNumericEnumStringTypeCpp(
++  type: Readonly<IrType> | undefined,
++  context: EmitContext,
++  visited: ReadonlySet<string> = new Set(),
++): boolean {
++  if (type?.kind !== 'named') return false;
++  const owner = getCppNamedTypeDeclarationOwnerCpp(type, getCppNamedTypeBindingModuleCpp(type, context), context);
++  if (owner?.declaration.kind === 'enum') {
++    return owner.declaration.members.every((member) => typeof member.value === 'number');
++  }
++  if (owner?.declaration.kind !== 'typeAlias') return false;
++  const key = `${getCppModuleIdentityKey(owner.module)}\0${owner.declaration.binding.id}`;
++  if (visited.has(key)) return false;
++  const target = resolveCppTypeAliasTarget(type, context);
++  return (
++    target !== undefined &&
++    isCppNumericEnumStringTypeCpp(target, { ...context, module: owner.module }, new Set(visited).add(key))
++  );
++}
++
++function emitCppExplicitStringValueConversionCpp(
++  value: string,
++  type: Readonly<IrType> | undefined,
++  context: EmitContext,
++): string {
++  return isCppNumericEnumStringTypeCpp(type, context)
++    ? `flight::to_string(static_cast<double>(${value}))`
++    : `flight::to_string(${value})`;
++}
++
+ // Template substitutions and the global String function perform JavaScript ToString conversion.
+ // A single-sentinel union uses std::optional for storage, but its representation plan still records
+ // whether absence came from null or undefined; that source distinction determines the text. Keep
+@@ -7238,26 +7271,51 @@
+   const emitted = emitExpression(expression, context);
+   const type = getIrExpressionTypeEvidenceCpp(expression, context);
+   const union = type ? getIrUnionTypeCpp(type, context, new Set()) : undefined;
+-  if (!union) return `flight::to_string(${emitted})`;
++  if (!union) {
++    if (expression.kind === 'property') {
++      const enumeration = getCppEnumDeclarationForObjectCpp(expression.object, context);
++      if (enumeration?.members.some((member) => member.name === expression.name && typeof member.value === 'number')) {
++        return `flight::to_string(static_cast<double>(${emitted}))`;
++      }
++    }
++    return emitCppExplicitStringValueConversionCpp(emitted, type, context);
++  }
+   const plan = getCppUnionRepresentationPlan(union, context);
+-  if (plan.kind === 'singleValue') return `flight::to_string(${emitted})`;
++  if (plan.kind === 'singleValue') {
++    return emitCppExplicitStringValueConversionCpp(emitted, plan.valueSlots[0]?.runtimeType, context);
++  }
++  const numericTargets = [
++    ...new Set(
++      plan.valueSlots
++        .filter((slot) => isCppNumericEnumStringTypeCpp(slot.runtimeType, context))
++        .map((slot) => slot.targetType),
++    ),
++  ];
++  const variantConversion =
++    numericTargets.length === 0 ? 'flight::to_string(value)' : `flight::to_string(static_cast<double>(value))`;
++  const numericCondition = numericTargets.map((target) => `std::is_same_v<Value, ${target}>`).join(' || ');
++  if (numericTargets.length > 0) context.includes.add('type_traits');
++  const visitor =
++    numericTargets.length === 0
++      ? '[](const auto& value) { return flight::to_string(value); }'
++      : `[](const auto& value) -> flight::String { using Value = std::remove_cvref_t<decltype(value)>; if constexpr (${numericCondition}) return ${variantConversion}; else return flight::to_string(value); }`;
+   if (plan.kind === 'multiVariant') {
+     context.includes.add('variant');
+-    return `std::visit([](const auto& value) { return flight::to_string(value); }, ${emitted})`;
++    return `std::visit(${visitor}, ${emitted})`;
+   }
+   if (plan.kind === 'dualSentinelVariant') {
+     context.includes.add('flight/presence.hpp');
+     context.includes.add('type_traits');
+     context.includes.add('variant');
+-    return `std::visit([](const auto& value) -> flight::String { using Value = std::remove_cvref_t<decltype(value)>; if constexpr (std::is_same_v<Value, flight::Null>) return flight::String("null"); else if constexpr (std::is_same_v<Value, flight::Undefined>) return flight::String("undefined"); else return flight::to_string(value); }, ${emitted})`;
++    return `std::visit([](const auto& value) -> flight::String { using Value = std::remove_cvref_t<decltype(value)>; if constexpr (std::is_same_v<Value, flight::Null>) return flight::String("null"); else if constexpr (std::is_same_v<Value, flight::Undefined>) return flight::String("undefined"); ${numericTargets.length === 0 ? 'else return flight::to_string(value);' : `else if constexpr (${numericCondition}) return ${variantConversion}; else return flight::to_string(value);`} }, ${emitted})`;
+   }
+   const absence = plan.sentinels.null === 'optionalAbsence' ? 'null' : 'undefined';
+   context.includes.add('optional');
+   if (plan.kind === 'optionalSingle') {
+-    return `([&]() { const auto& string_conversion_value = ${emitted}; return string_conversion_value.has_value() ? flight::to_string(string_conversion_value.value()) : flight::String("${absence}"); }())`;
++    return `([&]() { const auto& string_conversion_value = ${emitted}; return string_conversion_value.has_value() ? ${emitCppExplicitStringValueConversionCpp('string_conversion_value.value()', plan.valueSlots[0]?.runtimeType, context)} : flight::String("${absence}"); }())`;
+   }
+   context.includes.add('variant');
+-  return `([&]() -> flight::String { const auto& string_conversion_value = ${emitted}; if (!string_conversion_value.has_value()) return flight::String("${absence}"); return std::visit([](const auto& value) { return flight::to_string(value); }, string_conversion_value.value()); }())`;
++  return `([&]() -> flight::String { const auto& string_conversion_value = ${emitted}; if (!string_conversion_value.has_value()) return flight::String("${absence}"); return std::visit(${visitor}, string_conversion_value.value()); }())`;
+ }
+ 
+ // Flow narrowing may name the nominal subject of Readonly<T> even though the binding keeps a
+diff --git a/packages/compiler-backend-cpp/src/cppNumericEnumStringConversion.test.ts b/packages/compiler-backend-cpp/src/cppNumericEnumStringConversion.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppNumericEnumStringConversion.test.ts
+@@ -0,0 +1,205 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import type { CompilerModuleResolutionPlan } from '../../compiler-types/src/index.js';
++import { createCppCompilerBackend } from './cppCompilerBackend.js';
++
++const declarations =
++  "export enum Mode { Zero = 0, Negative = -3, Alias = -3, High = 1048577 }\nexport enum Label { NumericText = '0', Name = 'MaterialRenderer' }\nexport enum Decorated { Zero = 0, Flag = 2 }\nexport namespace Decorated { export function accepts(value: number): boolean { return value !== 0; } }\nexport enum Empty {}\nexport type Alias = Mode;\n";
++const operations =
++  'export function byEmpty(value: Empty): string { return `${value}`; }\nexport function byTemplate(value: Mode): string { return `value:${value}`; }\nexport function byString(value: Mode): string { return String(value); }\nexport function byAlias(value: Alias): string { return `${value}`; }\nexport function byMember(): string { return `${Mode.Alias}`; }\nexport function byStringEnum(value: Label): string { return `${value}`; }\nexport function byDecorated(value: Decorated): string { return `${value}`; }\nexport function byNullable(value: Mode | null): string { return `${value}`; }\nexport function byOptional(value: Mode | undefined): string { return String(value); }\nexport function byMixed(value: Mode | Label | boolean): string { return `${value}`; }\nexport function byDual(value: Mode | null | undefined): string { return `${value}`; }\nexport function byUnion(value: Mode | string | null): string { return String(value); }\nexport function evaluated(read: () => Mode): string { return `${read()}`; }\nexport function plainNumber(value: number): string { return `${value}`; }\nexport function plainString(value: string): string { return String(value); }\nexport function plainBoolean(value: boolean): string { return `${value}`; }\n';
++const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const runtime = resolveDependency(repositoryRoot, 'flight-cpp');
++const includes = collectCppRuntimeIncludeDirectories(runtime.directory);
++const toolchain = findCppCompilerToolchain();
++
++function emitEnumStrings(imported: boolean) {
++  const provider = '@flighthq/enum-owner';
++  const consumer = '@flighthq/enum-check';
++  const source = (packageName: string, file: string, code: string) => ({
++    packageName,
++    sourceFile: ts.createSourceFile(
++      `/flight/packages/${packageName.slice('@flighthq/'.length)}/src/${file}.ts`,
++      code,
++      ts.ScriptTarget.Latest,
++      true,
++    ),
++    upstreamDirectory: '/flight',
++  });
++  const moduleResolution: CompilerModuleResolutionPlan = {
++    edges: [
++      {
++        specifier: '@flighthq/enum-owner/contract',
++        target: { packageName: provider, source: 'packages/enum-owner/src/contract.ts' },
++      },
++      { specifier: './values', target: { packageName: provider, source: 'packages/enum-owner/src/values.ts' } },
++    ],
++    schema: 'flight-compiler-module-resolution/1',
++  };
++  const results = lowerTypeScriptSources(
++    imported
++      ? [
++          source(provider, 'values', declarations),
++          source(provider, 'contract', "export * from './values';"),
++          source(
++            consumer,
++            'fixture',
++            "import { Mode, Label, Decorated, Empty, type Alias } from '@flighthq/enum-owner/contract';" + operations,
++          ),
++        ]
++      : [source(consumer, 'fixture', declarations + operations)],
++    moduleResolution,
++  );
++  expect(results.flatMap((result) => result.diagnostics)).toEqual([]);
++  const modules = results.map((result) => result.module);
++  const session = createCppCompilerBackend().createEmissionSession!({
++    moduleResolution,
++    modules,
++    options: {
++      packageTargets: {
++        [provider]: { includePrefix: 'fixture/owner', namespace: 'enum_owner' },
++        [consumer]: { includePrefix: 'fixture/check', namespace: 'enum_check' },
++      },
++      runtimeProfile: 'flight-cpp',
++    },
++  });
++  return modules.flatMap((module) => session.emitModule(module));
++}
++
++const cases = [
++  ['n::by_template(t::Mode::Zero)', 'n.byTemplate(n.Mode.Zero)'],
++  ['n::by_template(t::Mode::Negative)', 'n.byTemplate(n.Mode.Negative)'],
++  ['n::by_template(t::Mode::Alias)', 'n.byTemplate(n.Mode.Alias)'],
++  ['n::by_template(t::Mode::High)', 'n.byTemplate(n.Mode.High)'],
++  ['n::by_string(static_cast<t::Mode>(41))', 'n.byString(41)'],
++  ['n::by_string(static_cast<t::Mode>(-2147483647 - 1))', 'n.byString(-2147483648)'],
++  ['n::by_string(static_cast<t::Mode>(2147483647))', 'n.byString(2147483647)'],
++  ['n::by_alias(t::Mode::Negative)', 'n.byAlias(n.Mode.Negative)'],
++  ['n::by_member()', 'n.byMember()'],
++  ['n::by_empty(static_cast<t::Empty>(19))', 'n.byEmpty(19)'],
++  ['n::by_string_enum(t::Label::NumericText)', 'n.byStringEnum(n.Label.NumericText)'],
++  ['n::by_string_enum(t::Label::Name)', 'n.byStringEnum(n.Label.Name)'],
++  ['n::by_decorated(t::Decorated(0))', 'n.byDecorated(0)'],
++  ['n::by_decorated(t::Decorated(-3))', 'n.byDecorated(-3)'],
++  ['n::by_decorated(t::Decorated(2))', 'n.byDecorated(2)'],
++  ['n::by_decorated(t::Decorated(1.5))', 'n.byDecorated(1.5)'],
++  ['n::by_decorated(t::Decorated(-0.0))', 'n.byDecorated(-0)'],
++  ['n::by_decorated(t::Decorated(std::numeric_limits<double>::quiet_NaN()))', 'n.byDecorated(NaN)'],
++  ['n::by_decorated(t::Decorated(std::numeric_limits<double>::infinity()))', 'n.byDecorated(Infinity)'],
++  ['n::by_nullable(t::Mode::Negative)', 'n.byNullable(n.Mode.Negative)'],
++  ['n::by_nullable(std::nullopt)', 'n.byNullable(null)'],
++  ['n::by_optional(t::Mode::High)', 'n.byOptional(n.Mode.High)'],
++  ['n::by_optional(std::nullopt)', 'n.byOptional(undefined)'],
++  ['n::by_mixed(t::Mode::Negative)', 'n.byMixed(n.Mode.Negative)'],
++  ['n::by_mixed(t::Label::Name)', 'n.byMixed(n.Label.Name)'],
++  ['n::by_mixed(false)', 'n.byMixed(false)'],
++  ['n::by_dual(t::Mode::High)', 'n.byDual(n.Mode.High)'],
++  ['n::by_dual(flight::null)', 'n.byDual(null)'],
++  ['n::by_dual(flight::undefined)', 'n.byDual(undefined)'],
++  ['n::by_union(std::variant<t::Mode, flight::String>(t::Mode::Negative))', 'n.byUnion(n.Mode.Negative)'],
++  ['n::by_union(std::variant<t::Mode, flight::String>(flight::String("unknown-name")))', 'n.byUnion("unknown-name")'],
++  ['n::by_union(std::nullopt)', 'n.byUnion(null)'],
++  ['n::plain_number(-0.0)', 'n.plainNumber(-0)'],
++  ['n::plain_number(std::numeric_limits<double>::quiet_NaN())', 'n.plainNumber(NaN)'],
++  ['n::plain_string(flight::String("λ😀"))', 'n.plainString("λ😀")'],
++  ['n::plain_boolean(true)', 'n.plainBoolean(true)'],
++] as const;
++
++describe('emitIrModuleCpp', () => {
++  it('uses declared numeric enum values through local and barrel-imported source operations', () => {
++    for (const imported of [false, true]) {
++      const files = emitEnumStrings(imported);
++      const consumer = files.find((file) => file.path.endsWith('/fixture.hpp'))!.contents;
++      expect(consumer).not.toContain('NOT GENERATED');
++      expect(consumer).toContain('flight::to_string(static_cast<double>(value))');
++      expect(consumer).toContain('flight::to_string(static_cast<double>(string_conversion_value.value()))');
++      expect(consumer).toContain('std::is_same_v<Value,');
++      expect(consumer).toContain('flight::String("null")');
++      expect(consumer).toContain('flight::String("undefined")');
++      expect(consumer).toContain('inline flight::String plain_boolean(bool value)');
++      expect(consumer).not.toContain('row_get');
++    }
++  });
++
++  it.skipIf(!toolchain || includes.length === 0)(
++    'matches source conversion, aliases, unnamed values, sentinels and evaluation in native execution',
++    () => {
++      const directory = mkdtempSync(path.join(tmpdir(), 'flight-enum-string-'));
++      try {
++        const source = declarations + operations;
++        writeFileSync(
++          path.join(directory, 'oracle.mjs'),
++          ts.transpileModule(source, {
++            compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
++          }).outputText,
++        );
++        writeFileSync(
++          path.join(directory, 'oracle-driver.mjs'),
++          `import * as n from './oracle.mjs';
++const values = [${cases.map((item) => item[1]).join(',')}];
++let reads = 0; values.push(n.evaluated(() => { ++reads; return -3; })); values.push(String(reads));
++const marker = {}; try { n.evaluated(() => { throw marker; }); } catch (caught) { values.push(String(caught === marker)); }
++if (n.Mode[-3] !== 'Alias' || String(n.Mode.Negative) !== '-3' || n.Mode[41] !== undefined) throw Error('source reverse-map control changed');
++console.log(JSON.stringify(values));`,
++        );
++        const expected = JSON.parse(
++          execFileSync(process.execPath, [path.join(directory, 'oracle-driver.mjs')], { encoding: 'utf8' }),
++        ) as string[];
++        expect(expected).toHaveLength(cases.length + 3);
++        for (const imported of [false, true]) {
++          for (const file of emitEnumStrings(imported)) {
++            const output = path.join(directory, file.path);
++            mkdirSync(path.dirname(output), { recursive: true });
++            writeFileSync(output, file.contents);
++          }
++          const native = path.join(directory, 'native.cpp');
++          writeFileSync(
++            native,
++            `#include "fixture/check/fixture.hpp"
++#include <iostream>
++#include <limits>
++#include <memory>
++namespace n = enum_check;
++namespace t = ${imported ? 'enum_owner' : 'enum_check'};
++int main() {
++auto print = [](const flight::String& value) { std::cout << value.to_utf8() << '\\n'; };
++${cases.map((item) => `print(${item[0]});`).join('\n')}
++int reads = 0;
++print(n::evaluated([&] { ++reads; return t::Mode::Negative; }));
++print(flight::to_string(reads));
++auto marker = std::make_shared<int>(17); bool exact = false;
++try { n::evaluated([&]() -> t::Mode { throw marker; }); }
++catch (const std::shared_ptr<int>& caught) { exact = caught == marker && !caught.owner_before(marker) && !marker.owner_before(caught); }
++print(flight::to_string(exact));
++}`,
++          );
++          const executable = path.join(directory, getCppExecutableName(toolchain!, imported ? 'imported' : 'local'));
++          execFileSync(
++            toolchain!.command,
++            [...createCppExecutableArguments(toolchain!, native, executable, [directory, ...includes])],
++            { encoding: 'utf8', stdio: 'pipe' },
++          );
++          const actual = execFileSync(executable, [], { encoding: 'utf8' }).trimEnd().split('\n');
++          expect(actual).toEqual(expected);
++        }
++      } finally {
++        rmSync(directory, { recursive: true, force: true });
++      }
++    },
++    120_000,
++  );
++});
