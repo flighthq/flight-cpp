@@ -89,7 +89,7 @@ int main() {
   // Code-point iteration and subsequent UTF-16 index reads are different source operations.
   auto text = component_iterator(Any(flight::String("🙂")));
   const auto first = text.next();
-  check(!first.done && first.value->as_string().size() == 2);
+  check(!first.done && first.value->as_string().native().size() == 2);
   const auto high = flight::read_json_scalar_property(*first.value, "0").raw().as_string();
   const auto low = flight::read_json_scalar_property(*first.value, "1").raw().as_string();
   check(high.native().size() == 1 && high.native()[0] == 55357);
