@@ -665,6 +665,23 @@ add_test(
   COMMAND flight_cpp_generated_scene3d_formats_tests
 )
 
+add_executable(
+  flight_cpp_generated_scene3d_formats_requirements_tests
+  generated_scene3d_formats_requirements_test.cpp
+)
+target_include_directories(
+  flight_cpp_generated_scene3d_formats_requirements_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(
+  flight_cpp_generated_scene3d_formats_requirements_tests
+  PRIVATE Flight::Cpp Flight::SdkPreview
+)
+add_test(
+  NAME flight_cpp.generated_scene3d_formats_requirements
+  COMMAND flight_cpp_generated_scene3d_formats_requirements_tests
+)
+
 add_executable(flight_cpp_generated_obj_material_helpers_tests generated_obj_material_helpers_test.cpp)
 target_link_libraries(flight_cpp_generated_obj_material_helpers_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_obj_material_helpers COMMAND flight_cpp_generated_obj_material_helpers_tests)
@@ -1847,6 +1864,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_shading shading)
 flight_cpp_package_test_labels(flight_cpp.generated_scene3d materials mesh node scene3d)
 flight_cpp_package_test_labels(flight_cpp.generated_scene3d_kind_reexports scene3d)
 flight_cpp_package_test_labels(flight_cpp.generated_scene3d_formats scene3d-formats)
+flight_cpp_package_test_labels(flight_cpp.generated_scene3d_formats_requirements scene3d-formats)
 flight_cpp_package_test_labels(flight_cpp.generated_obj_material_helpers image scene3d-formats types)
 flight_cpp_package_test_labels(flight_cpp.generated_scene3d_resources scene3d-resources)
 flight_cpp_package_test_labels(flight_cpp.generated_mesh geometry mesh)
