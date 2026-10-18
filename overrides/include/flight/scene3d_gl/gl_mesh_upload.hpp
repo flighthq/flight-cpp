@@ -110,7 +110,7 @@ inline flight::Float32Array build_skin_bind_vertices(flight::StructuralRef<fligh
   return out;
 }
 
-inline flight::Record<flight::String, double> attribute_location = {{flight::String("color0"), 4.0}, {flight::String("joints0"), 6.0}, {flight::String("normal"), 1.0}, {flight::String("position"), 0.0}, {flight::String("tangent"), 2.0}, {flight::String("uv0"), 3.0}, {flight::String("uv1"), 5.0}, {flight::String("weights0"), 7.0}};
+inline flight::Record<flight::String, double> attribute_location = flight::Record<flight::String, double>{{flight::String("color0"), 4.0}, {flight::String("joints0"), 6.0}, {flight::String("normal"), 1.0}, {flight::String("position"), 0.0}, {flight::String("tangent"), 2.0}, {flight::String("uv0"), 3.0}, {flight::String("uv1"), 5.0}, {flight::String("weights0"), 7.0}};
 
 inline std::tuple<double, double, bool> resolve_gl_vertex_format(flight::host_sdl::WebGl2Context gl, flight::String format) {
   {
@@ -176,14 +176,14 @@ inline flight::Ref<flight::types::GlMeshUpload> ensure_gl_mesh_upload(flight::Re
   }
   gl.bind_vertex_array(upload.value()->vao);
   gl.bind_buffer(gl.array_buffer, upload.value()->vertex_buffer);
-  gl.buffer_data(gl.array_buffer, (bind_pose.has_value() ? build_skin_bind_vertices(geometry, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshSkinBindPose>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MeshSkinBindPose>>>>(bind_pose.value()))) : flight::row_get<flight::RowKey<"vertices">>(geometry)), gl.static_draw);
+  gl.buffer_data(gl.array_buffer, (bind_pose.has_value() ? build_skin_bind_vertices(geometry, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshSkinBindPose>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshSkinBindPose>>>>(bind_pose.value()))) : flight::row_get<flight::RowKey<"vertices">>(geometry)), gl.static_draw);
   (upload.value()->skin_bind_uploaded = std::optional<bool>{bind_pose.has_value()});
   const double stride = flight::row_get<flight::RowKey<"layout">>(geometry)->stride;
   {
     double i = 0.0;
     while ((i < static_cast<double>(flight::row_get<flight::RowKey<"layout">>(geometry)->attributes.size()))) {
       {
-        bind_gl_vertex_attribute(gl, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VertexAttribute>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VertexAttribute>>>>(flight::row_get<flight::RowKey<"layout">>(geometry)->attributes.element(i))), stride);
+        bind_gl_vertex_attribute(gl, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VertexAttribute>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VertexAttribute>>>>(flight::row_get<flight::RowKey<"layout">>(geometry)->attributes.element(i))), stride);
       }
       (i += 1.0);
     }

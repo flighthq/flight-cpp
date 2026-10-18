@@ -8,6 +8,7 @@
 //   missing: function renderGlScene3DShadowMap -- source line 39
 #include <cmath>
 #include <cstdint>
+#include <flight/callable.hpp>
 #include <flight/host_sdl/webgl.hpp>
 #include <flight/number.hpp>
 #include <flight/structural_ref.hpp>
@@ -157,7 +158,7 @@ inline void draw_gl_scene_3d_shadow_map(flight::Ref<flight::types::GlRenderState
     (runtime->shadow_target = std::optional<flight::Ref<flight::types::GlTextureRenderTarget>>{flight::render_gl::create_gl_texture_render_target(state, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderTargetDescriptor>>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderTargetDescriptor>>>>(flight::row_field<flight::RowKey<"depth">>(std::optional<flight::String>{flight::String("depth-stencil-sampled")}), flight::row_field<flight::RowKey<"height">>(flight::types::directional_shadow_map_size), flight::row_field<flight::RowKey<"width">>(flight::types::directional_shadow_map_size))), std::nullopt)});
   }
   auto target = runtime->shadow_target.value();
-  const double normal_bias_world = (flight::row_get<flight::RowKey<"normalBias">>(directional_light.value()) * flight::camera::get_orthographic_projection_texel_size(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::OrthographicProjection>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::OrthographicProjection>>>>(std::get<0>(flight::row_get<flight::RowKey<"projection">>(shadow_camera)))), target->width, target->height));
+  const double normal_bias_world = (flight::row_get<flight::RowKey<"normalBias">>(directional_light.value()) * flight::camera::get_orthographic_projection_texel_size(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::OrthographicProjection>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::OrthographicProjection>>>>(std::get<0>(flight::row_get<flight::RowKey<"projection">>(shadow_camera)))), target->width, target->height));
   flight::Ref<flight::types::Matrix4> matrix = ([&]() -> flight::Ref<flight::types::Matrix4> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Ref<flight::types::Matrix4>> { auto optional_chain_receiver = previous_shadow; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->matrix; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt); }());
   flight::camera::get_camera_3d_view_projection_matrix4(matrix, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>>(shadow_camera), 1.0);
   const auto skin_feature = runtime->mesh_skin_feature;
@@ -176,7 +177,7 @@ inline void draw_gl_scene_3d_shadow_map(flight::Ref<flight::types::GlRenderState
   gl.cull_face(gl.front);
   gl.clear(flight::bitwise_or(gl.depth_buffer_bit, gl.color_buffer_bit));
   const auto bound_program_capture = flight::make_binding_cell(std::optional<flight::Ref<flight::types::GlMeshProgram>>{std::nullopt});
-  flight::node::for_each_node_descendant<flight::Ref<flight::types::Node3DTraits>>(scene, [=](flight::types::NodeOf<flight::Ref<flight::types::Node3DTraits>> node) {
+  flight::node::for_each_node_descendant<flight::Ref<flight::types::Node3DTraits>>(scene, flight::Function<void(flight::types::NodeOf<flight::Ref<flight::types::Node3DTraits>>)>{[=](flight::types::NodeOf<flight::Ref<flight::types::Node3DTraits>> node) {
   if (!is_shadow_mesh(node)) {
     return;
   }
@@ -211,7 +212,7 @@ inline void draw_gl_scene_3d_shadow_map(flight::Ref<flight::types::GlRenderState
   else {
     if (skinned) {
       if (!skinned_program_capture.read_binding().has_value()) {
-        skinned_program_capture.rebind(std::optional<flight::Ref<flight::types::GlMeshProgram>>{flight::scene3d_gl::ensure_gl_scene_3d_program<flight::Ref<flight::types::GlMeshProgram>>(state, flight::String("shadow:depth:skin"), [skin](flight::host_sdl::WebGl2Context owner_gl) { return compile_shadow_depth_skinned_program(owner_gl, (*skin)->vertex_declarations_glsl); })});
+        skinned_program_capture.rebind(std::optional<flight::Ref<flight::types::GlMeshProgram>>{flight::scene3d_gl::ensure_gl_scene_3d_program<flight::Ref<flight::types::GlMeshProgram>>(state, flight::String("shadow:depth:skin"), flight::Function<flight::Ref<flight::types::GlMeshProgram>(flight::host_sdl::WebGl2Context)>{[skin](flight::host_sdl::WebGl2Context owner_gl) { return compile_shadow_depth_skinned_program(owner_gl, (*skin)->vertex_declarations_glsl); }})});
       }
       (program = skinned_program_capture.read_binding().value());
     }
@@ -268,7 +269,7 @@ inline void draw_gl_scene_3d_shadow_map(flight::Ref<flight::types::GlRenderState
       gl.draw_arrays(upload->primitive_mode, 0.0, upload->index_count);
     }
   }
-});
+}});
   gl.active_texture(gl.texture0);
   gl.bind_framebuffer(gl.framebuffer, prev_framebuffer);
   gl.viewport(prev_viewport.element(0.0), prev_viewport.element(1.0), prev_viewport.element(2.0), prev_viewport.element(3.0));

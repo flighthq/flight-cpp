@@ -203,3 +203,35 @@ After generation, `npm run overrides:check` reports 227 declared overrides, 13 s
 unresolved entries and zero unmanifested headers. The 13 retained native Scene3D GL copies require
 separate source audits; no override body or digest is changed in this compiler task. The result is
 not a global override-integrity pass. Existing refusal, renderer and package debts remain explicit.
+
+
+### Native override source reconciliation
+
+The 13 retained Scene3D GL override digests exposed by this normal generation are owned follow-up,
+not new header-family gains. Every recorded old digest matches the generated file immediately before
+`ff4af3cfb1c83df7cff8befac708d070577d1109`. Each native copy is compared against that exact baseline
+and current normal output. Twelve native bodies are rederived; the partial preset is unchanged after
+an explicit source-equivalence proof. No new SDK run, compiler change, source-domain narrowing or
+status/tier promotion is involved. None of the 13 is byte-identical to current normal functionality,
+and no override is retired on that basis.
+
+| Retained native module | Current source delta and retained native contract |
+| --- | --- |
+| `gl_scene_3d_runtime` | Four readonly palette-destruction projections; original weak-map/cache owners, palette cells and teardown order remain. Cleanup hook stays refused. |
+| `gl_standard_pbr_mesh_material_renderer` | Readonly helpers and callback boxes; exact StandardPbr owner extraction and direct already-readonly active-program payload remain. |
+| `scene_3d_gl_pipeline` | The entire normal delta is one anonymous-carrier alpha rename plus one readonly projection. Applying just those substitutions to the old normal bytes reproduces the new normal bytes exactly. The 19-line native options/preset body remains byte-identical and StandardPbr-only. |
+| `gl_classic_prelude` | Callback/key projections and inherited program-field assignments on the same new owner; native nested optional feature selection remains. |
+| `gl_mesh_upload` | Explicit Record initializer and two readonly projections; native index/buffer domains, upload owners and GL order remain. |
+| `gl_pbr_extension_registry` | Six callback boxes and two readonly shader-context projections; native optional concrete Texture union, all alternatives and owners remain. |
+| `gl_pbr_prelude` | Six contribution-map callback boxes; section/evaluation order, live contribution owners and nested optional feature selection remain. |
+| `gl_pbr_program_cache` | Callback/key projections and inherited mesh fields; all 24 native lit-location spread assignments remain because normal emission still omits that spread. |
+| `gl_shaded_prelude` | 38 readonly modifier projections, callback and inherited program fields; full modifier domain and nested optional feature selection remain. Snippet-table guard stays declaration-only and full shaded assembly stays unavailable. |
+| `gl_mesh_program` | One readonly viewport-state projection; native mesh/UV/uniform/draw helpers and TextureLike domain remain. A conflicting obsolete normal helper block is not restored. |
+| `gl_pbr_standard_block` | Eight readonly texture projections; current alternative set, concrete owners and native uniform binding remain. |
+| `gl_shadow_map` | Readonly camera and callback boxes; exact native Mesh/InstancedMesh owners, skin capture, geometry/upload/instance owners and optional uniform semantics remain. Normal generic trait/anonymous-name changes do not replace the native concrete world-matrix calls. |
+| `render_gl_scene_3d` | Three readonly matrix projections and a trait declaration; native default material/light owner, authored evaluation order, kind checks, registry misses and actual partition/sort/bind/draw loop remain. |
+
+Verification for this reconciliation is pending the changed original Scene3D GL render consumer and
+expanded existing public GL consumer. The latter includes the complete retained shaded prelude for
+compilation, without replacing its missing snippet-table guard. Global override integrity will be
+recorded separately from renderer/package completeness.

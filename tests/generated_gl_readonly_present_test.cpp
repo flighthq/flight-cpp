@@ -5,6 +5,9 @@
 #include <flight/render_gl/gl_render_target.hpp>
 #include <flight/scene3d_gl/present_gl_scene_3d.hpp>
 #include <flight/scene3d_gl/gl_custom_shader_mesh_material_renderer.hpp>
+#include <flight/scene3d_gl/gl_classic_prelude.hpp>
+#include <flight/scene3d_gl/gl_pbr_prelude.hpp>
+#include <flight/scene3d_gl/gl_shaded_prelude.hpp>
 #include <flight/types/gl_custom_material_shader_source.hpp>
 #include <flight/types/gl_render_state.hpp>
 #include <flight/types/gl_render_target.hpp>
@@ -29,6 +32,54 @@ static_assert(std::is_same_v<decltype(&render_gl::draw_gl_linear_to_srgb_pass), 
 int failures = 0;
 void check(bool condition, const char* message) {
   if (!condition) { std::cerr << "FAIL: " << message << '\n'; ++failures; }
+}
+
+void check_rederived_program_and_callbacks(const State& state) {
+  namespace scene = flight::scene3d_gl;
+  using ClassicRead = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<types::GlClassicDefineKey>>>>;
+  const auto key = flight::make_ref<types::GlClassicDefineKey>();
+  key->lighting_model = flight::String("lambert");
+  const ClassicRead read_key(key);
+  const auto first = scene::ensure_gl_classic_program(state, read_key);
+  const auto second = scene::ensure_gl_classic_program(state, read_key);
+  check(first == second && !first.owner_before(second) && !second.owner_before(first),
+        "the classic compiler callback replaced its cached program owner");
+  const auto gl = state->gl;
+  check(first->loc_model.has_value() && first->loc_view_projection.has_value() &&
+            first->loc_model == gl.get_uniform_location(first->program, flight::String("u_model")) &&
+            first->loc_view_projection == gl.get_uniform_location(first->program, flight::String("u_viewProjection")),
+        "the classic factory lost its inherited program or live GL locations");
+  using ProgramRead = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<types::GlMeshProgram>>>>;
+  const ProgramRead program(first);
+  const auto original_location = first->loc_model;
+  first->loc_model = std::nullopt;
+  check(!flight::row_get<flight::RowKey<"locModel">>(program).has_value(),
+        "a readonly base program copied its original uniform cell");
+  first->loc_model = original_location;
+
+  using Contribution = types::GlPbrExtensionShaderContribution;
+  const auto a = flight::make_ref<Contribution>();
+  const auto b = flight::make_ref<Contribution>();
+  a->fragment_declarations = flight::String("A0"); b->fragment_declarations = flight::String("B0");
+  a->fragment_functions = flight::String("A1"); b->fragment_functions = flight::String("B1");
+  a->apply_surface = flight::String("A2"); b->apply_surface = flight::String("B2");
+  a->contribute_punctual = flight::String("A3"); b->contribute_punctual = flight::String("B3");
+  a->contribute_ibl = flight::String("A4"); b->contribute_ibl = flight::String("B4");
+  a->finalize = flight::String("A5"); b->finalize = flight::String("B5");
+  const flight::Array<flight::Ref<Contribution>> contributions{a, b};
+  const auto body = scene::pbr_extension_declarations + flight::String("|") +
+      scene::pbr_extension_functions + flight::String("|") + scene::pbr_extension_surface +
+      flight::String("|") + scene::pbr_extension_punctual + flight::String("|") +
+      scene::pbr_extension_ibl + flight::String("|") + scene::pbr_extension_finalize;
+  check(scene::compose_gl_pbr_extension_source(body, contributions) ==
+            flight::String("A0\nB0|A1\nB1|A2\nB2|A3\nB3|A4\nB4|A5\nB5"),
+        "the six PBR compiler callbacks changed contribution order or sections");
+  a->fragment_declarations = flight::String("live");
+  check(scene::compose_gl_pbr_extension_source(scene::pbr_extension_declarations, contributions) ==
+            flight::String("live\nB0") && contributions.element(0) == a && contributions.element(1) == b,
+        "the PBR callbacks copied contribution owners or hid a live source cell");
+  scene::destroy_gl_scene_3d_runtime(state);
+  check(gl.get_error() == gl.no_error, "rederived program checks raised a real GL error");
 }
 
 void check_custom_source_handoff(const State& state) {
@@ -89,6 +140,7 @@ void run() {
   flight::host_sdl::GlApplication app({.title="Flight readonly present", .width=16, .height=12, .hidden=true});
   const auto gl = app.context();
   const auto state = render_gl::create_gl_render_state(gl);
+  check_rederived_program_and_callbacks(state);
   check_custom_source_handoff(state);
   const auto runtime = render_gl::get_gl_render_state_runtime(state);
   const auto context = runtime->context;

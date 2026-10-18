@@ -2,6 +2,7 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <flight/callable.hpp>
 #include <flight/host_sdl/webgl.hpp>
 #include <flight/map.hpp>
 #include <flight/structural_ref.hpp>
@@ -59,15 +60,15 @@ inline void register_gl_pbr_extension(flight::Ref<flight::types::GlRenderState> 
 }
 
 inline flight::Ref<flight::types::GlPbrExtensionShaderContext> create_gl_pbr_extension_shader_context(flight::Ref<flight::types::GlRenderState> state) {
-  return flight::make_ref<flight::types::GlPbrExtensionShaderContext>(flight::types::GlPbrExtensionShaderContext{.has_transmission_scene_color = [=]() {
+  return flight::make_ref<flight::types::GlPbrExtensionShaderContext>(flight::types::GlPbrExtensionShaderContext{.has_transmission_scene_color = flight::Function<bool()>{[=]() {
   return flight::scene3d_gl::get_gl_scene_3d_runtime(state)->pbr_transmission_scene_color.has_value();
-}, .is_texture_ready = [=](std::optional<flight::types::Texture> texture) {
+}}, .is_texture_ready = flight::Function<bool(std::optional<flight::types::Texture>)>{[=](std::optional<flight::types::Texture> texture) {
   // The declared slot is optional<Texture>, the concrete reference variant, so the value is passed
   // through unchanged. The previous emission declared the slot over readonly structural views, which is
   // why this carry converted each alternative with structural_ref_cast; the pinned compiler now names
   // the concrete owners directly and the conversion has no place left to happen.
   return flight::scene3d_gl::is_gl_texture_ready(state, texture);
-}});
+}}});
 }
 
 inline flight::Array<double> get_gl_pbr_extension_texture_units(flight::host_sdl::WebGl2Context gl) {
@@ -122,7 +123,7 @@ inline flight::Array<flight::Ref<flight::types::GlPbrExtensionIssue>> explain_gl
             continue;
           }
         }
-        auto contribution = registration.value()->create_shader_contribution(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlPbrExtensionShaderContext>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlPbrExtensionShaderContext>>>>(shader_context)), extension);
+        auto contribution = registration.value()->create_shader_contribution(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlPbrExtensionShaderContext>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlPbrExtensionShaderContext>>>>(shader_context)), extension);
         if ((contribution->samples_transmission_scene_color == true)) {
           (transmission_scene_color_kind = std::optional<flight::String>{extension->kind});
         }
@@ -157,7 +158,7 @@ inline std::optional<flight::Array<flight::Ref<flight::types::GlPbrExtensionShad
         if (!entry.has_value()) {
           return std::nullopt;
         }
-        contributions.push(entry.value()->create_shader_contribution(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlPbrExtensionShaderContext>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlPbrExtensionShaderContext>>>>(context)), extensions.element(i)));
+        contributions.push(entry.value()->create_shader_contribution(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlPbrExtensionShaderContext>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlPbrExtensionShaderContext>>>>(context)), extensions.element(i)));
       }
       (i += 1.0);
     }
@@ -173,7 +174,7 @@ inline flight::Ref<flight::types::GlPbrExtensionBindContext> create_gl_pbr_exten
   flight::host_sdl::WebGl2Context gl = state->gl;
   flight::Array<double> texture_units = get_gl_pbr_extension_texture_units(gl);
   const auto texture_index_capture = flight::make_binding_cell(double{0.0});
-  return ([&]() { auto object_member_bind_transmission_scene_color = [=](flight::String sampler_uniform, flight::String max_lod_uniform) {
+  return ([&]() { auto object_member_bind_transmission_scene_color = flight::Function<bool(flight::String, flight::String)>{[=](flight::String sampler_uniform, flight::String max_lod_uniform) {
   auto scene_color = flight::scene3d_gl::get_gl_scene_3d_runtime(state)->pbr_transmission_scene_color;
   if (!scene_color.has_value()) {
     return false;
@@ -187,7 +188,7 @@ inline flight::Ref<flight::types::GlPbrExtensionBindContext> create_gl_pbr_exten
   gl.uniform1i(gl.get_uniform_location(program, sampler_uniform), unit.value());
   gl.uniform1f(gl.get_uniform_location(program, max_lod_uniform), flight::maximum(0.0, (scene_color.value()->mip_level_count - 1.0)));
   return true;
-}; auto object_member_bind_texture = [=](flight::String sampler_uniform, flight::String uv_set_uniform, flight::String uv_transform_uniform, std::optional<flight::types::Texture> texture, flight::types::PbrUvSet uv_set) {
+}}; auto object_member_bind_texture = flight::Function<bool(flight::String, flight::String, flight::String, std::optional<flight::types::Texture>, flight::types::PbrUvSet)>{[=](flight::String sampler_uniform, flight::String uv_set_uniform, flight::String uv_transform_uniform, std::optional<flight::types::Texture> texture, flight::types::PbrUvSet uv_set) {
   if (!flight::scene3d_gl::is_gl_texture_ready(state, texture)) {
     return false;
   }
@@ -204,12 +205,12 @@ inline flight::Ref<flight::types::GlPbrExtensionBindContext> create_gl_pbr_exten
   flight::texture::get_texture_like_uv_matrix(scratch_uv_matrix_flight_value_variable_scratch_u000055_v_u00004d_atrix_flight_private_2d600eaed31298ca, texture.value());
   gl.uniform_matrix3fv(gl.get_uniform_location(program, uv_transform_uniform), false, scratch_uv_matrix_flight_value_variable_scratch_u000055_v_u00004d_atrix_flight_private_2d600eaed31298ca->m, std::nullopt, std::nullopt);
   return true;
-}; auto object_member_set_float = [=](flight::String uniform, double value) {
+}}; auto object_member_set_float = flight::Function<void(flight::String, double)>{[=](flight::String uniform, double value) {
   gl.uniform1f(gl.get_uniform_location(program, uniform), value);
-}; auto object_member_set_linear_color = [=](flight::String uniform, double color) {
+}}; auto object_member_set_linear_color = flight::Function<void(flight::String, double)>{[=](flight::String uniform, double color) {
   flight::color::unpack_color_to_linear(scratch_rgba_flight_value_variable_scratch_u000052_gba_flight_private_2d600eaed31298ca, color);
   gl.uniform3f(gl.get_uniform_location(program, uniform), scratch_rgba_flight_value_variable_scratch_u000052_gba_flight_private_2d600eaed31298ca.element(0.0), scratch_rgba_flight_value_variable_scratch_u000052_gba_flight_private_2d600eaed31298ca.element(1.0), scratch_rgba_flight_value_variable_scratch_u000052_gba_flight_private_2d600eaed31298ca.element(2.0));
-}; return flight::make_ref<flight::types::GlPbrExtensionBindContext>(flight::types::GlPbrExtensionBindContext{.bind_transmission_scene_color = object_member_bind_transmission_scene_color, .bind_texture = object_member_bind_texture, .set_linear_color = object_member_set_linear_color, .set_float = object_member_set_float}); }());
+}}; return flight::make_ref<flight::types::GlPbrExtensionBindContext>(flight::types::GlPbrExtensionBindContext{.bind_transmission_scene_color = object_member_bind_transmission_scene_color, .bind_texture = object_member_bind_texture, .set_linear_color = object_member_set_linear_color, .set_float = object_member_set_float}); }());
 }
 
 inline bool bind_gl_pbr_extensions(flight::Ref<flight::types::GlRenderState> state, flight::host_sdl::WebGlProgram program, flight::Array<flight::Ref<flight::types::PbrExtension>> extensions) {

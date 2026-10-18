@@ -88,19 +88,19 @@ inline void destroy_gl_scene_3d_runtime(flight::Ref<flight::types::GlRenderState
   }
   (scene.value()->shadow = std::nullopt);
   if (scene.value()->instance_palette.has_value()) {
-    flight::render_gl::destroy_gl_skin_palette_texture(gl, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlSkinPaletteTexture>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlSkinPaletteTexture>>>>(scene.value()->instance_palette.value())));
+    flight::render_gl::destroy_gl_skin_palette_texture(gl, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlSkinPaletteTexture>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlSkinPaletteTexture>>>>(scene.value()->instance_palette.value())));
     (scene.value()->instance_palette = std::nullopt);
   }
   if (scene.value()->instance_color_palette.has_value()) {
-    flight::render_gl::destroy_gl_skin_palette_texture(gl, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlSkinPaletteTexture>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlSkinPaletteTexture>>>>(scene.value()->instance_color_palette.value())));
+    flight::render_gl::destroy_gl_skin_palette_texture(gl, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlSkinPaletteTexture>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlSkinPaletteTexture>>>>(scene.value()->instance_color_palette.value())));
     (scene.value()->instance_color_palette = std::nullopt);
   }
   if (scene.value()->skin_normal_palette.has_value()) {
-    flight::render_gl::destroy_gl_skin_palette_texture(gl, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlSkinPaletteTexture>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlSkinPaletteTexture>>>>(scene.value()->skin_normal_palette.value())));
+    flight::render_gl::destroy_gl_skin_palette_texture(gl, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlSkinPaletteTexture>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlSkinPaletteTexture>>>>(scene.value()->skin_normal_palette.value())));
     (scene.value()->skin_normal_palette = std::nullopt);
   }
   if (scene.value()->skin_palette.has_value()) {
-    flight::render_gl::destroy_gl_skin_palette_texture(gl, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlSkinPaletteTexture>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlSkinPaletteTexture>>>>(scene.value()->skin_palette.value())));
+    flight::render_gl::destroy_gl_skin_palette_texture(gl, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlSkinPaletteTexture>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlSkinPaletteTexture>>>>(scene.value()->skin_palette.value())));
     (scene.value()->skin_palette = std::nullopt);
   }
   ([&]() { auto&& assignment_receiver = scene.value()->blended_draw_list; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
