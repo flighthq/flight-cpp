@@ -1279,7 +1279,12 @@
         "types": [
           "string",
           "number"
-        ]
+        ],
+        "approvedNumericNativeProfile": {
+          "classification": "PARTIAL",
+          "evidence": "artifacts/lottie-bezier-numeric-projection.json",
+          "reason": "Original JavaScript accepts nonnumeric storage; approved numeric native storage refuses with shared NativeScalarEscapeError at escape. String code-point/UTF16 component behavior is represented separately."
+        }
       },
       {
         "name": "original-path-data-return",
@@ -1290,12 +1295,22 @@
         "types": [
           "string",
           "number"
-        ]
+        ],
+        "approvedNumericNativeProfile": {
+          "classification": "PARTIAL",
+          "evidence": "artifacts/lottie-bezier-numeric-projection.json",
+          "reason": "Original JavaScript accepts nonnumeric storage; approved numeric native storage refuses with shared NativeScalarEscapeError at escape. String code-point/UTF16 component behavior is represented separately."
+        }
       },
       {
         "name": "object-coordinate-through-original-callback",
         "sameOwner": true,
-        "liveValue": 9
+        "liveValue": 9,
+        "approvedNumericNativeProfile": {
+          "classification": "PARTIAL",
+          "evidence": "artifacts/lottie-bezier-numeric-projection.json",
+          "reason": "Original JavaScript accepts nonnumeric storage; approved numeric native storage refuses with shared NativeScalarEscapeError at escape. String code-point/UTF16 component behavior is represented separately."
+        }
       },
       {
         "name": "original-unflatten-result",
@@ -1304,7 +1319,12 @@
             "x",
             2
           ]
-        ]
+        ],
+        "approvedNumericNativeProfile": {
+          "classification": "PARTIAL",
+          "evidence": "artifacts/lottie-bezier-numeric-projection.json",
+          "reason": "Original JavaScript accepts nonnumeric storage; approved numeric native storage refuses with shared NativeScalarEscapeError at escape. String code-point/UTF16 component behavior is represented separately."
+        }
       },
       {
         "name": "read-members-before-invalid-v-iteration",
@@ -1313,7 +1333,12 @@
           "i"
         ],
         "error": "RangeError",
-        "sameError": true
+        "sameError": true,
+        "approvedNumericNativeProfile": {
+          "classification": "PASS",
+          "evidence": "artifacts/lottie-bezier-numeric-projection.json",
+          "reason": "Represented original owner/read/error or live iteration behavior qualifies in the bounded native fixture."
+        }
       },
       {
         "name": "string-iterator-and-utf16-point-index",
@@ -1324,7 +1349,12 @@
         "codeUnits": [
           55357,
           56898
-        ]
+        ],
+        "approvedNumericNativeProfile": {
+          "classification": "PARTIAL",
+          "evidence": "artifacts/lottie-bezier-numeric-projection.json",
+          "reason": "Original JavaScript accepts nonnumeric storage; approved numeric native storage refuses with shared NativeScalarEscapeError at escape. String code-point/UTF16 component behavior is represented separately."
+        }
       },
       {
         "name": "live-array-iterator-after-point-getter",
@@ -1333,7 +1363,12 @@
           2,
           3,
           4
-        ]
+        ],
+        "approvedNumericNativeProfile": {
+          "classification": "PASS",
+          "evidence": "artifacts/lottie-bezier-numeric-projection.json",
+          "reason": "Represented original owner/read/error or live iteration behavior qualifies in the bounded native fixture."
+        }
       },
       {
         "name": "only-nullish-coordinates-default",
@@ -1344,7 +1379,12 @@
         "types": [
           "boolean",
           "number"
-        ]
+        ],
+        "approvedNumericNativeProfile": {
+          "classification": "PARTIAL",
+          "evidence": "artifacts/lottie-bezier-numeric-projection.json",
+          "reason": "Original JavaScript accepts nonnumeric storage; approved numeric native storage refuses with shared NativeScalarEscapeError at escape. String code-point/UTF16 component behavior is represented separately."
+        }
       }
     ],
     "nativeBezierQualified": false,
@@ -2752,7 +2792,7 @@
     "log": "artifacts/lottie-bezier-raw-return-design/initial-fixture-build.log"
   },
   "design": "docs/compiler-requests/lottie-bezier-raw-return-design.md",
-  "decisionNeeded": "Additive raw entry plus physical raw Path/track/sample storage scope. Existing numeric ABI cannot represent the measured values; no public ABI/global family implemented.",
+  "decisionNeeded": "RESOLVED by Foreman55d9570c/79839402: retain Path Array<double>, AnimationTrack SequenceView<double>, and numeric sample storage. No raw entry or raw core storage family. Use existing-family bounded raw projection with checked native escapes; nonnumeric storage rows are explicitly PARTIAL.",
   "logs": [
     {
       "file": "artifacts/lottie-bezier-raw-return-design/source-escape.log",
@@ -2770,5 +2810,7 @@
       "file": "artifacts/lottie-bezier-raw-return-design/initial-fixture-build.log",
       "sha256": "4fb29eb7da34933cc1d9703f7c43628e13b8832382be25f3e5f8a82516d68001"
     }
-  ]
+  ],
+  "phase": "Historical raw-return alternative and source counterexamples; superseded by approved numeric profile qualification.",
+  "supersededBy": "artifacts/lottie-bezier-numeric-projection.json"
 }

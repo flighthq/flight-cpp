@@ -1,0 +1,589 @@
+{
+  "schema": "flight-lottie-bezier-numeric-projection/1",
+  "scope": "Approved bounded numeric profile on complete original Bezier functions and the existing public numeric animation consumer. Seven nonnumeric storage checks are policy refusals, explicitly PARTIAL; not whole-source equivalence, native createLottieTrack/factory/SVG or SDK qualification.",
+  "qualificationCodeCommit": "ef4868de67193f233eff4167f7c5ff6d45167357",
+  "base": "a225eea513c712a6ace1b1b4772bb34503c6d8fa",
+  "authority": "Foreman55d9570c and latest79839402: retain numeric Path/AnimationTrack/sample storage; no raw entry or raw storage family.",
+  "storage": {
+    "Path.data": "Array<double>",
+    "AnimationTrack.values": "SequenceView<double>",
+    "sampleOutputs": "Array<double> / Float32Array",
+    "abiChanged": false,
+    "rawEntryAdded": false,
+    "rawCoreStorageFamilyAdded": false
+  },
+  "original": {
+    "flightPin": "a62784923f3be814463286c9fb28edfe6ab15789",
+    "sourceSha256": "da3f167f812fc52463da4e6de9c9ae346373312f18c7c6f50f5f40c713115ce2",
+    "graphModules": 1467,
+    "graph": "Saved Flight203 graph from Builder5; NOT refreshed Flight208",
+    "module": "packages/scene2d-formats/src/lottieBezierPath.ts",
+    "functions": [
+      "createLottieBezierPath",
+      "flattenLottieShapePath",
+      "toLottieShapePath",
+      "unflattenLottieShapePath"
+    ],
+    "allBodiesEmitted": true,
+    "originalIr": {
+      "beforeIrSha256": "52122c4b1e29ef4091403d2cafff232ac271b3f1afac43a3218152224b323a46",
+      "afterIrSha256": "52122c4b1e29ef4091403d2cafff232ac271b3f1afac43a3218152224b323a46",
+      "unchanged": true,
+      "functions": [
+        "createLottieBezierPath",
+        "flattenLottieShapePath",
+        "toLottieShapePath",
+        "unflattenLottieShapePath"
+      ]
+    },
+    "replacementBodies": false,
+    "sourceBodyRewrites": false,
+    "emittedHeaderSha256": "cfbf0abce647d282b5da3ce7a6a541a0efec9c950ff4d85d52b116fe44761589"
+  },
+  "compiler": {
+    "pin": "806d257d2f4100de745cc97340e61c2f301b0f24",
+    "activePatches": 139,
+    "rawPinCompositionMatchesQualifiedCandidate": true,
+    "backendSha256": "58b6c17d42e66bce74ca66316a8b92a17fb635601b5b41baf06467f1065dfc09",
+    "patch": "source-patches/compiler-erased-readonly-json-projection.patch",
+    "patchSha256": "361155c47191d300268f1a24c1f29dc05e7af69e486eb8815028f3df7919a6d6",
+    "sourceManifestSha256": "9dbbd2080f5ef9b5badcf2d13e95f745d4677d3a6bb53d0e1a40d1b056439fe8",
+    "strictBuild": {
+      "command": "node /tmp/builder3-result-owner/compiler/node_modules/typescript/lib/tsc.js -p tsconfig.build.json --tsBuildInfoFile ../bezier-final139.tsbuildinfo",
+      "directory": "scratch-archives/bezier-numeric/compiler-final139",
+      "exitCode": 0,
+      "log": "compiler-final139-build.log"
+    },
+    "focused": {
+      "runner": "Node assert adapter; Vitest unavailable, no install",
+      "outcomes": [
+        {
+          "name": "projects only the elected readonly schema and reads nested values lazily",
+          "pass": true
+        },
+        {
+          "name": "captures both source arguments before either native conversion",
+          "pass": true
+        },
+        {
+          "name": "keeps mutable assertions outside the raw election and callable schemas refused",
+          "pass": true
+        },
+        {
+          "name": "emits a separate checked getter value callback without changing metadata presence",
+          "pass": true
+        }
+      ]
+    },
+    "retainedEmission": {
+      "runner": "Node assert adapter of unchanged original selected test statements; Vitest unavailable",
+      "outcomes": [
+        {
+          "name": "emits a lazy row on the existing public row ABI with explicit native sinks",
+          "pass": true
+        },
+        {
+          "name": "runs 24 malformed-field cases, nine roots and all four native escapes against the TypeScript oracle",
+          "skipped": true,
+          "reason": "native environment gate; native checks run separately"
+        },
+        {
+          "name": "retains ordinary identical-shape rows, nominal owners, structured and unknown member paths",
+          "pass": true
+        },
+        {
+          "name": "keeps primitive roots after a nullable parsed row is narrowed by the source guard",
+          "skipped": true,
+          "reason": "native environment gate; native checks run separately"
+        }
+      ]
+    }
+  },
+  "sourceOracle": {
+    "command": [
+      "node",
+      "scripts/lottieBezierNumericOracle.mjs",
+      "--typescript=/tmp/builder3-result-owner/compiler/node_modules/typescript/lib/typescript.js",
+      "--output=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/numeric-oracle.json"
+    ],
+    "exitCode": 0,
+    "originalVerifiedModuleBlobs": 1250,
+    "cases": 20,
+    "bezierAndOrderCases": 11,
+    "samplerCases": 9,
+    "failures": 0,
+    "names": [
+      "empty",
+      "one-point",
+      "line",
+      "closed-line",
+      "cubic",
+      "closed-cubic",
+      "nullish-flatten-defaults",
+      "flattenLottieShapePath-later-getter-before-escape",
+      "createLottieBezierPath-later-getter-before-escape",
+      "changing-v-getter-keeps-read-order",
+      "sampler-later-value-error-retains-prefix",
+      "zero-keyframes",
+      "step",
+      "linear",
+      "cubic",
+      "quaternion",
+      "existing-tail",
+      "short-array",
+      "short-typed-array",
+      "aliased-values"
+    ],
+    "outputSha256": "793a667fc6088289def264e9e3f53720041b9d36b6da07aa6c53f0153f21d766",
+    "completeOriginalModules": true,
+    "nativeOriginalLottieTrackQualified": false
+  },
+  "native": {
+    "command": [
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/zig-cxx-build",
+      "-std=c++20",
+      "-ffp-contract=off",
+      "-g0",
+      "-w",
+      "-MMD",
+      "-MF",
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/original-numeric-final.d",
+      "-I",
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric",
+      "-I",
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/emitted/include",
+      "-I",
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/include",
+      "-I",
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/overrides/include",
+      "-I",
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/generated/include",
+      "-I",
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/sdl/include",
+      "-I",
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/include",
+      "scripts/fixtures/lottieBezierNumericProjection.cpp",
+      "-o",
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/original-numeric-final"
+    ],
+    "buildExitCode": 0,
+    "run": {
+      "command": "original-numeric-final",
+      "exitCode": 0,
+      "stdout": "{\"checks\":424,\"failures\":0,\"partialNumericEscapes\":7,\"independentEmptySamplerOutputGaps\":0}\n",
+      "stderr": ""
+    },
+    "measured": {
+      "checks": 424,
+      "failures": 0,
+      "partialNumericEscapes": 7,
+      "independentEmptySamplerOutputGaps": 0
+    },
+    "binarySha256": "480c589b4a2dc634c718b8747e7beb442960543516564e7de31b89a1b9d732e6",
+    "scope": "All four original Bezier functions plus numeric public create_animation_track/sample_animation_track; no whole original native Lottie track module",
+    "coverage": [
+      "numeric empty/one/line/closed/cubic Path data and commands",
+      "flatten/unflatten and nullish coordinate defaults",
+      "same input owner, wrapper selection and inherited getter presence without reads",
+      "changing getter order and original exception identity",
+      "all argument reads before ordered native numeric conversion",
+      "live array length and same-owner iteration",
+      "public sampler zero/Step/Linear/Cubic/quaternion",
+      "empty, preallocated, short, long-tail, aliased Array outputs and fixed-length typed outputs",
+      "same sampler output owner and prefix preserved when later value read throws"
+    ]
+  },
+  "partialRows": [
+    {
+      "coordinate": "string",
+      "operation": "flatten",
+      "classification": "PARTIAL",
+      "behavior": "shared NativeScalarEscapeError at numeric native storage escape; source JS stores this nonnumeric value"
+    },
+    {
+      "coordinate": "string",
+      "operation": "createPath",
+      "classification": "PARTIAL",
+      "behavior": "shared NativeScalarEscapeError at numeric native storage escape; source JS stores this nonnumeric value"
+    },
+    {
+      "coordinate": "false",
+      "operation": "flatten",
+      "classification": "PARTIAL",
+      "behavior": "shared NativeScalarEscapeError at numeric native storage escape; source JS stores this nonnumeric value"
+    },
+    {
+      "coordinate": "false",
+      "operation": "createPath",
+      "classification": "PARTIAL",
+      "behavior": "shared NativeScalarEscapeError at numeric native storage escape; source JS stores this nonnumeric value"
+    },
+    {
+      "coordinate": "object",
+      "operation": "flatten",
+      "classification": "PARTIAL",
+      "behavior": "shared NativeScalarEscapeError at numeric native storage escape; source JS stores this nonnumeric value"
+    },
+    {
+      "coordinate": "object",
+      "operation": "createPath",
+      "classification": "PARTIAL",
+      "behavior": "shared NativeScalarEscapeError at numeric native storage escape; source JS stores this nonnumeric value"
+    },
+    {
+      "coordinate": "string iterable with supplementary code point",
+      "operation": "flatten",
+      "classification": "PARTIAL",
+      "behavior": "code-point iterator/UTF16 indexed reads represented; numeric storage escape refuses strings"
+    }
+  ],
+  "runtimeControls": [
+    {
+      "name": "raw-runtime-final",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/zig-cxx-build",
+        "-std=c++20",
+        "-ffp-contract=off",
+        "-g0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-MMD",
+        "-MF",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/raw-runtime-final.d",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/overrides/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/generated/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/sdl/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/include",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/tests/json_raw_projection_test.cpp",
+        "-o",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/raw-runtime-final"
+      ],
+      "buildExitCode": 0,
+      "expectedRunSuccess": true,
+      "runExitCode": 0,
+      "stdout": "",
+      "stderr": "",
+      "binarySha256": "5fbbfaffbd9bf5790ba1870cd96f9829eb08e9175a013277f23fba3af335da09",
+      "pass": true,
+      "elapsedSeconds": 18.04
+    },
+    {
+      "name": "scalar-runtime-final",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/zig-cxx-build",
+        "-std=c++20",
+        "-ffp-contract=off",
+        "-g0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-MMD",
+        "-MF",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/scalar-runtime-final.d",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/overrides/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/generated/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/sdl/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/include",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/tests/json_scalar_slice_test.cpp",
+        "-o",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/scalar-runtime-final"
+      ],
+      "buildExitCode": 0,
+      "expectedRunSuccess": true,
+      "runExitCode": 0,
+      "stdout": "JSON scalar vertical slice: PASS\n",
+      "stderr": "",
+      "binarySha256": "8d6ab811206a1f24bb95c19408e69885fca1c0c64af846f38591f87f810bb3b0",
+      "pass": true,
+      "elapsedSeconds": 18.2
+    },
+    {
+      "name": "foreign-property-final",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/zig-cxx-build",
+        "-std=c++20",
+        "-ffp-contract=off",
+        "-g0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-MMD",
+        "-MF",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/foreign-property-final.d",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/overrides/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/generated/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/sdl/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/include",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/foreign-property-guard.cpp",
+        "-o",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/foreign-property-final"
+      ],
+      "buildExitCode": 0,
+      "expectedRunSuccess": true,
+      "runExitCode": 0,
+      "stdout": "",
+      "stderr": "",
+      "binarySha256": "52dedcb6912385aee27d7799b4d9a127e243dfa48031fa60883f1886806d73f5",
+      "pass": true,
+      "elapsedSeconds": 12.05
+    },
+    {
+      "name": "emitted-class-final",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/zig-cxx-build",
+        "-std=c++20",
+        "-ffp-contract=off",
+        "-g0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-MMD",
+        "-MF",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/emitted-class-final.d",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/class-include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/overrides/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/generated/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/sdl/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/include",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/emitted-class-native.cpp",
+        "-o",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/emitted-class-final"
+      ],
+      "buildExitCode": 0,
+      "expectedRunSuccess": true,
+      "runExitCode": 0,
+      "stdout": "",
+      "stderr": "",
+      "binarySha256": "8bad747ca3bd35bc48d2c3297c255d16fcb517552c4198a5eed8cf3f92d3dceb",
+      "pass": true,
+      "elapsedSeconds": 19.56
+    },
+    {
+      "name": "scalar-regression-final",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/zig-cxx-build",
+        "-std=c++20",
+        "-ffp-contract=off",
+        "-g0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-MMD",
+        "-MF",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/scalar-regression-final.d",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/scalar-regression",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/overrides/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/generated/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/sdl/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/include",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/scalar-regression/native.cpp",
+        "-o",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/scalar-regression-final"
+      ],
+      "buildExitCode": 0,
+      "expectedRunSuccess": true,
+      "runExitCode": 0,
+      "stdout": "586 checks, 0 failures\n",
+      "stderr": "",
+      "binarySha256": "ebcc063dfc3ac28ba9cd60b776e1a8b8f364556af47b391ade378058c1f5345f",
+      "pass": true,
+      "elapsedSeconds": 23.84
+    }
+  ],
+  "samplerRepair": {
+    "path": "overrides/include/flight/animation/animation_track.hpp",
+    "status": "Measured empty numeric output gap RESOLVED",
+    "behavior": "Append at each source-ordered actual write on the same Array owner after reading RHS, preserving tail/prefix. Float32Array remains fixed length; no upfront resize.",
+    "sourceCases": [
+      "zero-keyframes",
+      "step",
+      "linear",
+      "cubic",
+      "quaternion",
+      "existing-tail",
+      "short-array",
+      "short-typed-array",
+      "aliased-values"
+    ],
+    "before": {
+      "command": "before-sampler-native",
+      "exitCode": 1,
+      "stdout": "{\"checks\":364,\"failures\":15,\"partialNumericEscapes\":7,\"independentEmptySamplerOutputGaps\":6}\n",
+      "stderr": "numeric-sampler-empty-output-grows failed\nFAIL 34\nnumeric-sampler-empty-output-grows failed\nFAIL 76\nnumeric-sampler-empty-output-grows failed\nFAIL 123\nnumeric-sampler-empty-output-grows failed\nFAIL 179\nnumeric-sampler-empty-output-grows failed\nFAIL 250\nnumeric-sampler-empty-output-grows failed\nFAIL 294\nsampler source case zero-keyframes: flight::Array index is outside the array\nFAIL 311\nsampler source case step: flight::Array index is outside the array\nFAIL 312\nsampler source case linear: flight::Array index is outside the array\nFAIL 313\nsampler source case cubic: flight::Array index is outside the array\nFAIL 314\nsampler source case quaternion: flight::Array index is outside the array\nFAIL 315\nsampler source case short-array: flight::Array index is outside the array\nFAIL 322\nsampler-later-value-error-retains-prefix: flight::Array index is outside the array\nFAIL 332\nFAIL 333\nFAIL 334\n"
+    },
+    "after": {
+      "checks": 424,
+      "failures": 0,
+      "partialNumericEscapes": 7,
+      "independentEmptySamplerOutputGaps": 0
+    }
+  },
+  "negativeControls": {
+    "conversionOrder": {
+      "provenance": {
+        "subjectSha256": "58b6c17d42e66bce74ca66316a8b92a17fb635601b5b41baf06467f1065dfc09",
+        "mutation": "Only conversions.push becomes evaluations.push at ordered native argument conversion site; source evaluation and all other code unchanged.",
+        "priorMutantExcluded": "Previous mutant also lacked final alias-cycle guard; retained as a development attempt, not the decisive exact guard control."
+      },
+      "result": {
+        "command": [
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/zig-cxx-build",
+          "-std=c++20",
+          "-ffp-contract=off",
+          "-g0",
+          "-w",
+          "-MMD",
+          "-MF",
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/order-mutant-exact.d",
+          "-I",
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/order-mutant-exact/include",
+          "-I",
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric",
+          "-I",
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/include",
+          "-I",
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/overrides/include",
+          "-I",
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/generated/include",
+          "-I",
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/sdl/include",
+          "-I",
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/include",
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/scripts/fixtures/lottieBezierNumericProjection.cpp",
+          "-o",
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/order-mutant-exact-native"
+        ],
+        "buildExitCode": 0,
+        "runExitCode": 1,
+        "stdout": "{\"checks\":424,\"failures\":2,\"partialNumericEscapes\":7,\"independentEmptySamplerOutputGaps\":0}\n",
+        "stderr": "later-coordinate-before-escape: premature native conversion after 1 coordinate read(s): an out-of-profile payload of type 'string' cannot be used where a native value is required\nlater-coordinate-before-escape failed, flatten=1\nFAIL 416\nlater-coordinate-before-escape: premature native conversion after 1 coordinate read(s): an out-of-profile payload of type 'string' cannot be used where a native value is required\nlater-coordinate-before-escape failed, flatten=0\nFAIL 417\n",
+        "binarySha256": "02e3ed11adb45959818e521f474d66c3f3edcfe50e16afb4dc8ff0f5424f4f2b",
+        "pass": true
+      },
+      "requiredName": "later-coordinate-before-escape",
+      "expected": true
+    },
+    "foreignProperty": {
+      "case": "foreign-function-property-read",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "foreign-function-property-read: wrongly returned absent instead of refusing an unrepresented member read\n",
+      "expectedNegative": true
+    },
+    "oldSampler": {
+      "result": {
+        "command": "before-sampler-native",
+        "exitCode": 1,
+        "stdout": "{\"checks\":364,\"failures\":15,\"partialNumericEscapes\":7,\"independentEmptySamplerOutputGaps\":6}\n",
+        "stderr": "numeric-sampler-empty-output-grows failed\nFAIL 34\nnumeric-sampler-empty-output-grows failed\nFAIL 76\nnumeric-sampler-empty-output-grows failed\nFAIL 123\nnumeric-sampler-empty-output-grows failed\nFAIL 179\nnumeric-sampler-empty-output-grows failed\nFAIL 250\nnumeric-sampler-empty-output-grows failed\nFAIL 294\nsampler source case zero-keyframes: flight::Array index is outside the array\nFAIL 311\nsampler source case step: flight::Array index is outside the array\nFAIL 312\nsampler source case linear: flight::Array index is outside the array\nFAIL 313\nsampler source case cubic: flight::Array index is outside the array\nFAIL 314\nsampler source case quaternion: flight::Array index is outside the array\nFAIL 315\nsampler source case short-array: flight::Array index is outside the array\nFAIL 322\nsampler-later-value-error-retains-prefix: flight::Array index is outside the array\nFAIL 332\nFAIL 333\nFAIL 334\n"
+      },
+      "requiredName": "numeric-sampler-empty-output-grows",
+      "expected": true
+    },
+    "preImplementationEmission": {
+      "composition": 137,
+      "rule": "cpp-erased-value-assertion-unrepresented",
+      "sourceLine": 58,
+      "log": "baseline-emission.log"
+    }
+  },
+  "automation": {
+    "command": "node --test scripts/sourcePatches.test.mjs scripts/overrides.test.mjs",
+    "exitCode": 0,
+    "passed": 17,
+    "failed": 0
+  },
+  "unavailableChecks": [
+    {
+      "command": "cmake -S . -B build -DBUILD_TESTING=ON",
+      "result": "NOT RUN: CMake unavailable; recorded local tooling attempt exit127. Project Zig C++20 direct builds run instead."
+    },
+    {
+      "command": "Vitest focused compiler tests",
+      "result": "Vitest unavailable; four new and two retained emission tests run through explicitly recorded Node assert adapter; two retained environment-gated cases skipped, separate original native scalar program586/0."
+    },
+    {
+      "command": "compiler npm run fix",
+      "result": "FAIL: oxlint unavailable; no successful lint/format claim."
+    },
+    {
+      "command": "compiler npm run check",
+      "result": "FAIL: .script-build/repositoryCheck.js unavailable; no repository-wide compiler check claim."
+    }
+  ],
+  "versions": {
+    "node": "v22.22.1",
+    "typescript": "5.9.3",
+    "zig": "0.17.0"
+  },
+  "boundaries": [
+    "Existing numeric native ABI deliberately excludes raw string/bool/object storage; seven rows PARTIAL.",
+    "Unrepresented function/external properties, foreign iterators, unknown/ambiguous class members, arbitrary heritage layouts and unrepresented getter result/call carriers explicitly refuse.",
+    "No whole native createLottieTrack, LottieDocument, factory, SVG, SDK or inventory promotion; SDK runs started:0.",
+    "Existing five RichText product commits/two product paths remain HELD with B; this evidence does not authorize landing them."
+  ],
+  "failedAttemptsRetained": [
+    "initial compiler errors and incorrect mutable-assertion test expectation",
+    "missing Vitest/oxlint/repositoryCheck/CMake",
+    "initial empty-sampler range_error abort; six pre-repair source gaps and final old-sampler15fail control",
+    "initial scalar native missing generated include root abort, corrected final586/0",
+    "initial order mutant uncaught escape abort and later named control with stale cycle guard; excluded in favor of exact one-site mutant",
+    "function-property silent-absence negative before explicit refusal"
+  ],
+  "selectedNativeInputs": {
+    "count": 1151,
+    "file": "selected-native-inputs.json",
+    "sha256": "dd178d04e30f19c78a82fd2ecffe66ca663469188d6bbc3cececeb1d6112e900"
+  },
+  "documentation": "docs/compiler-requests/lottie-bezier-numeric-projection.md",
+  "archive": {
+    "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/builder3-bezier-numeric-qualification-v1.tgz",
+    "sha256": "3f2f08814c061da624e06fd9824dd0ef393da1b9a6cca54696a779e8e60ec92d",
+    "bytes": 9300878,
+    "files": 2916,
+    "memberHashIndex": "archive-member-hashes.json"
+  }
+}
