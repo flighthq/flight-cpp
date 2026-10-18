@@ -20,7 +20,7 @@
     "accessorCalls": 18,
     "diagnosticsAtAccessorCallLines": 0
   },
-  "status": "source-preparation-and-native-owner-qualified; full-original-Lottie-pending",
+  "status": "source-and-native-owner-qualified; whole-original-Lottie-runs-with-four-failures",
   "authority": [
     "manager-a4639758",
     "foreman-944df1fd",
@@ -45,13 +45,43 @@
     "currentWholeNodeCpp": "PASS wholeoriginalNode/revision16nativechecks"
   },
   "wholeOriginalPublic": {
-    "nativeCasesRun": 0,
     "denominator": 32,
-    "buildStatus": "RUNNING",
-    "log": "/tmp/builder5-lottie-body/node-generic-public-native-build.log"
+    "nativeCasesRun": 32,
+    "checksRun": 196,
+    "checkFailures": 4,
+    "caseMatches": 28,
+    "buildStatus": "COMPILE/LINK PASS",
+    "runStatus": "FAIL",
+    "remainingFailure": "All four bad_cast failures originate typed row_get<layers> from original JSON owner before Array.isArray; accepted cases10/20 and rejected null/object cases29/30. No source equivalence claim.",
+    "buildLog": "/tmp/builder5-lottie-body/node-generic-public-native-build.log",
+    "runLog": "/tmp/builder5-lottie-body/node-generic-public-native-run.log",
+    "traceLog": "/tmp/builder5-lottie-cast-trace/run.log",
+    "traceIsDiagnosticOnly": true
   },
   "sourcePatchSha256": "c04ebef3b17b94da6255da035b4d24b1cf640b816178bc7f6cd97a7bed5ef615",
   "compilerPatchSha256": "63270bc87ce794fb48f468ae0a20613cdd9d3756279bfcc39e0dc28d9cf328ad",
   "sdkGenerated": false,
-  "exact21Promotions": 0
+  "exact21Promotions": 0,
+  "implementationCommit": "8bc9108f",
+  "qualifiedAgainstBase": "658c5d45",
+  "managedInputs": {
+    "compiler": 126,
+    "flight": 203,
+    "total": 329,
+    "orderedApplyReverseRawClean": "PASS",
+    "productionStrict": "PASS",
+    "ownedFixtureStrict": "PASS",
+    "callableAbiAndArityControls": {
+      "files": 2,
+      "tests": 11,
+      "skips": 0
+    },
+    "postcommitGenericFallbackNative": {
+      "tests": 3,
+      "checks": 9,
+      "failures": 0,
+      "skips": 0
+    },
+    "sourcePatchAutomationTests": 2
+  }
 }
