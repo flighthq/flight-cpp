@@ -20,6 +20,7 @@
 #include <flight/shape/scale9_shape_commands.hpp>
 #include <flight/shape/shape.hpp>
 #include <flight/shape/shape_commands.hpp>
+#include <flight/shape/shape_stroke.hpp>
 #include <flight/shape/shape_stroke_outline.hpp>
 
 #include <cmath>
