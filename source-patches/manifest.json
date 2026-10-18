@@ -4691,6 +4691,23 @@
       "unblocks": "The loader cancel/fail-fast reject(Any) call and the actual loader consumer.",
       "expires": "when the C++ backend represents a value-class `new` object at an erased boundary with an object carrier itself.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-external-object-field-literal-type",
+      "dependency": "flight-compiler",
+      "patch": "compiler-external-object-field-literal-type.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/render-wgpu",
+      "answers": "diagnostic",
+      "refusal": "Object literals nested in a bound external value construction (WebGPU render-pass attachments, pipeline vertex/fragment/primitive/depth-stencil state, bind-group and layout entries) are emitted as anonymous structural owners, because emitCppExternalObjectConstructionCpp emits every field value without contextual evidence. The runtime descriptor fields cannot hold those owners, so every descriptor-taking call fails with no matching function (docs/compiler-requests/external-descriptor-literal-construction.md).",
+      "rewrite": "Adds optional `literalType` (a declared type-space binding) and `sequence` to the profile's field-assignment contract. The manifest validator rejects a malformed field, a sequence without a type, and a literal type the profile does not bind. A field value is given that bound type (or an array of it) as its expected type only when the value is itself an object literal (an array literal for `sequence`), so the nested literal is constructed through the existing exact field contract. The patch carries focused backend fixtures.",
+      "equivalence": "Field values are still assigned once each in source order inside the same construction lambda, so every side effect keeps its order and count. A field the literal omits is never assigned and keeps the target's default absence. A value that is not a literal (an existing array, a handle, a call result) keeps exactly the emission it had, so no array is rebuilt and no reference is copied or recast. Members the profile does not declare keep the untyped fallback. The literal is constructed as the type it already denotes in the source contract; no field is invented, dropped, coerced or defaulted.",
+      "verification": "6 focused fixtures in cppExternalObjectFieldContextualType.test.ts pass on the full 68-patch stack: nested sequence and single literals, source-order side effects, omitted field, non-literal identity, untyped field and undeclared-member fallback, and unbound/malformed refusals. cppCompilerBackend.test.ts plus cppRuntimeExternalSymbolBinding.test.ts show the same 57 pre-existing failures with and without this patch (none new). The production tsconfig.build typecheck passes. The scoped SDK generation, the -j2 cause-header compile and the previously blocked consumer are PENDING.",
+      "whyNotUpstreamFirst": "The profile already owns the field contract and the compiler already constructs bound values from it; only the nested field values lacked the contract's type. The request records the shape and this carried patch together.",
+      "unblocks": "Descriptor-taking WebGPU calls in render-wgpu, effects-wgpu and scene3d-wgpu, together with the sdl-wgpu profile member parameters and literal types and the runtime render-pass, shader-module and texture-view descriptors. These are boundary availability only: every method stays an honest unavailable result.",
+      "expires": "when the pinned compiler threads a declared field type into nested external construction, or reads the field types of a bound value type itself.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }

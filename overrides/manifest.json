@@ -1038,21 +1038,6 @@
       "authoredOn": "2026-10-07"
     },
     {
-      "id": "effects-wgpu-gradient-ramp-profile-boundary",
-      "path": "flight/effects_wgpu/wgpu_effect_gradient_ramp.hpp",
-      "package": "@flighthq/effects-wgpu",
-      "status": "complete",
-      "derivedFrom": "1c32d9f99d89b09a6e59bab60e824af461cc987f48a2535691a88180f82b9238",
-      "reason": "The retained queue.write_texture call passes two anonymous descriptor literals to a variadic host-profile member; C++ cannot deduce either literal's argument type, so the current generated header does not compile. The pinned compiler moved to 806d257 and emits this module differently; the override keeps its prior emission rather than a text merge of the two, because the merged form was measured against the whole override corpus and compiled worse than the prior emission left alone.",
-      "change": "Keeps emitted CPU ramp generation and cache behavior unchanged while replacing only the unavailable GPU upload with a profile-specific Error.",
-      "equivalence": "No GPU texture can be created through the current host ABI. The override still evaluates CPU ramp construction before the unavailable upload, then returns no fabricated handle and makes no cache entry on failure; all other code is current emitted text.",
-      "whyNotAPatchOrRepair": "The TypeScript correctly calls the WebGPU API. A source rewrite cannot create a native upload path, and a text-only repair cannot type the anonymous descriptor arguments without still reaching deliberately unavailable host operations.",
-      "unblocks": "wgpu_effect_gradient_ramp.hpp compiles independently.",
-      "remaining": "Gradient-ramp texture creation and upload remain unavailable until the SDL host binds a real native WebGPU device and queue ABI.",
-      "expires": "when the SDL-WGPU profile exposes texture creation and queue upload operations.",
-      "authoredOn": "2026-10-14"
-    },
-    {
       "id": "mesh-geometry-runtime-owner",
       "path": "flight/mesh/mesh_geometry.hpp",
       "package": "@flighthq/mesh",

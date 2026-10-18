@@ -69,6 +69,19 @@ class Iterable final {
           });
         }) {}
 
+  // A sequence of present values where the API also admits absent elements (`Iterable<T | null>`):
+  // every element is the array's own current element, so the view stays live, and none is ever absent.
+  // Only absence is added. No element is converted, so this cannot narrow or reinterpret a value.
+  template <typename Element>
+    requires std::same_as<Value, std::optional<Element>>
+  Iterable(Array<Element> values)
+      : factory_([values = std::move(values)] {
+          return Next([values, index = std::size_t{0}]() mutable -> std::optional<Value> {
+            if (index >= values.size()) return std::nullopt;
+            return Value(values[index++]);
+          });
+        }) {}
+
   template <typename Key, typename Mapped, typename Equal>
     requires std::constructible_from<Value, typename Map<Key, Mapped, Equal>::Entry>
   Iterable(Map<Key, Mapped, Equal> values)

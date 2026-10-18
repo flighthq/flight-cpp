@@ -103,3 +103,61 @@ inferred external type — the annotated local, and the bound return domain of a
 as the emitter already does for a parameter. The sibling header is the parameter-form control. This
 does not need a new profile entry; the binding exists. No bake, provider, copied owner or narrowed
 domain is supplied by this repository pending the fix.
+
+## G3 root cause and carried fix
+
+The root was located at flight-compiler `806d257` with no patch applied, and in this repository's profile
+before the change. It has two halves, and neither is an override or emission repair of ours.
+
+**1. The profile declared no typed WebGPU members (our lane).** The pinned backend already constructs a
+bound value type from a literal argument, field by field and independent of key order:
+- the call argument's expected type comes from `getCppExternalInstanceCallParameterExpectedTypeCpp`
+  (`cppCompilerBackend.ts:21929`, consulted first at `:23079`);
+- the object case hands that type to `emitCppExternalObjectConstructionCpp` (`:5635`, defined at `:21962`);
+- the parameter type itself is read by `getCompilerRuntimeExternalInstanceMemberParameterTypeCpp`
+  (`cppRuntimeExternalSymbolBinding.ts:245`) from a member's `parameters` entry;
+- upstream's own fixture "constructs an erased external object parameter by source-ordered field
+  assignment" (`cppCompilerBackend.test.ts:21509`) shows the mechanism working.
+
+`bindings/sdl-wgpu.json` declared `members` only on the five value-space flag namespaces, with zero
+`parameters`. So `createSampler`, `createBuffer`, `beginRenderPass` and their siblings had no contextual
+type, and fell to the untyped source-order braced initializer above. A member the profile leaves undeclared
+keeps that fallback.
+
+**2. Nested field values had no type (pinned backend).** Inside a bound construction, every field value is
+emitted with no expected type (`cppCompilerBackend.ts:22009`:
+`${target}.${field.targetName} = ${emitExpression(property.value, context)}`). The field contract
+(`CppCompilerExternalFieldBinding`, `compilerBackendContract.ts:160`) is only `sourceField` to `targetName`.
+So a nested literal (attachments, vertex, fragment, primitive and depth-stencil state, bind-group and layout
+entries, buffers, attributes) still became an anonymous `make_ref` owner. The IBL BRDF `view: Any` member
+above is the same gap.
+
+**Carried fix (three parts, one commit):**
+- **Compiler:** `source-patches/compiler-external-object-field-literal-type.patch`
+  (`compiler-external-object-field-literal-type`) adds optional `literalType` and `sequence` to the field
+  contract.
+  - It validates them: a malformed field, a sequence without a type, or an unbound literal type is a
+    manifest error.
+  - It gives a field value that bound type, or an array of it, only when the value is itself an object or
+    array literal.
+  - Fields stay in source order and an omitted field is never assigned. A non-literal value keeps exactly
+    its old emission, so no array is rebuilt and no handle is recast.
+  - Six focused fixtures accompany it.
+- **Profile:** `bindings/sdl-wgpu.json` changes in three ways:
+  - Typed member parameters for `GPUDevice` (`createBindGroup`, `createBindGroupLayout`, `createBuffer`,
+    `createPipelineLayout`, `createRenderPipeline`, `createSampler`, `createShaderModule`,
+    `createTexture`), `GPUCommandEncoder.beginRenderPass`, `GPUTexture.createView`, and
+    `GPUQueue.writeTexture` (positions 0 and 2).
+  - Literal types on the nested descriptor fields. A union slot names only its single dictionary arm:
+    `resource` names `GPUBufferBinding`, `size` names `GPUExtent3DDict`, and `origin` names
+    `GPUOrigin3DDict` or `GPUOrigin2DDict`.
+  - Bindings for the six descriptors that were missing: `GPURenderPassDescriptor`, the color and
+    depth-stencil attachments, `GPUPipelineLayoutDescriptor`, `GPUShaderModuleDescriptor` and
+    `GPUTextureViewDescriptor`.
+- **Runtime:** `flight/host_sdl/wgpu.hpp` gains the render-pass, color- and depth-stencil-attachment,
+  shader-module and texture-view descriptor values. `flight/iterable.hpp` gains a live `Array<T>` to
+  `Iterable<std::optional<T>>` view, which only adds absence; it is used for `targets`, `buffers` and
+  `colorAttachments`.
+
+Every method remains the existing `unavailable` body. A compiling call proves boundary availability, not a
+successful GPU operation.

@@ -254,6 +254,30 @@ class WgpuObject final {
     requires std::same_as<Tag, WgpuRenderPassEncoderTag>
   void draw(Arguments&&...) const { unavailable_void("draw"); }
 
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuRenderPassEncoderTag>
+  void draw_indexed(Arguments&&...) const { unavailable_void("drawIndexed"); }
+
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuRenderPassEncoderTag>
+  void set_index_buffer(Arguments&&...) const { unavailable_void("setIndexBuffer"); }
+
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuRenderPassEncoderTag>
+  void set_scissor_rect(Arguments&&...) const { unavailable_void("setScissorRect"); }
+
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuRenderPassEncoderTag>
+  void set_stencil_reference(Arguments&&...) const { unavailable_void("setStencilReference"); }
+
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuRenderPassEncoderTag>
+  void set_vertex_buffer(Arguments&&...) const { unavailable_void("setVertexBuffer"); }
+
+  template <typename... Arguments>
+    requires std::same_as<Tag, WgpuRenderPassEncoderTag>
+  void set_viewport(Arguments&&...) const { unavailable_void("setViewport"); }
+
   void destroy() const
     requires(std::same_as<Tag, WgpuBufferTag> || std::same_as<Tag, WgpuTextureTag>)
   {
@@ -734,6 +758,54 @@ struct WgpuRenderPipelineDescriptor final {
   std::optional<WgpuPrimitiveState> primitive;
   std::optional<WgpuDepthStencilState> depth_stencil;
   std::optional<WgpuMultisampleState> multisample;
+  std::optional<String> label;
+};
+
+// The render-pass, shader-module and texture-view dictionaries. Field names and optionality follow the
+// WebGPU IDL; a member the source omits stays absent. Like every descriptor here these are plain values
+// that the unavailable methods accept, so a call compiles and still reports that no backend exists.
+struct WgpuRenderPassColorAttachment final {
+  WgpuTextureView view;
+  std::optional<double> depth_slice;
+  std::optional<WgpuTextureView> resolve_target;
+  std::optional<WgpuColor> clear_value;
+  String load_op;
+  String store_op;
+};
+
+struct WgpuRenderPassDepthStencilAttachment final {
+  WgpuTextureView view;
+  std::optional<double> depth_clear_value;
+  std::optional<String> depth_load_op;
+  std::optional<String> depth_store_op;
+  std::optional<bool> depth_read_only;
+  std::optional<double> stencil_clear_value;
+  std::optional<String> stencil_load_op;
+  std::optional<String> stencil_store_op;
+  std::optional<bool> stencil_read_only;
+};
+
+struct WgpuRenderPassDescriptor final {
+  Iterable<std::optional<WgpuRenderPassColorAttachment>> color_attachments;
+  std::optional<WgpuRenderPassDepthStencilAttachment> depth_stencil_attachment;
+  std::optional<double> max_draw_count;
+  std::optional<String> label;
+};
+
+struct WgpuShaderModuleDescriptor final {
+  String code;
+  std::optional<String> label;
+};
+
+struct WgpuTextureViewDescriptor final {
+  std::optional<String> format;
+  std::optional<String> dimension;
+  std::optional<double> usage;
+  std::optional<String> aspect;
+  std::optional<double> base_mip_level;
+  std::optional<double> mip_level_count;
+  std::optional<double> base_array_layer;
+  std::optional<double> array_layer_count;
   std::optional<String> label;
 };
 

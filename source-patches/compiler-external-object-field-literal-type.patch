@@ -1,0 +1,325 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index fea33d2..9304be2 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -23941,12 +23941,58 @@ function emitCppExternalObjectConstructionCpp(
+   });
+   addCppExternalBindingHeaders(sourceName, 'type', context);
+   const target = getGeneratedTargetName(`external_${sourceName}`, context);
+-  const statements = assignments.map(
+-    ({ field, property }) => `${target}.${field.targetName} = ${emitExpression(property.value, context)};`,
+-  );
++  // Fields are assigned in SOURCE order, so each value expression is evaluated exactly where the literal
++  // evaluates it. A literal written in a field whose contract names its literal type becomes that bound
++  // type (or an array of it) rather than an anonymous owner. Every other value keeps exactly the evidence
++  // it had, and a field the literal omits is never assigned and keeps the target's own default.
++  const statements = assignments.map(({ field, property }) => {
++    const value = property.value;
++    const literalType = getCppExternalObjectFieldLiteralTypeCpp(field, value);
++    // `flag ? undefined : value` in a typed field: the arms have no common C++ type, so the selection
++    // is lowered as the branch it is. The condition is evaluated once, exactly as the ternary evaluates
++    // it; the present arm is assigned, and the absent arm assigns nothing, which leaves the field in the
++    // same absent state the literal's omission gives it.
++    if (literalType && value.kind === 'conditional') {
++      const absentTrue = isCppUndefinedIdentifierExpressionCpp(value.whenTrue);
++      const absentFalse = isCppUndefinedIdentifierExpressionCpp(value.whenFalse);
++      if (absentTrue !== absentFalse) {
++        const present = absentTrue ? value.whenFalse : value.whenTrue;
++        const branchContext = getCppConditionBranchContextCpp(value.condition, absentFalse, context);
++        const condition = emitCppTruthinessExpression(value.condition, context);
++        return `if (${absentTrue ? `!(${condition})` : condition}) { ${target}.${field.targetName} = ${emitExpression(present, branchContext, literalType)}; }`;
++      }
++    }
++    return `${target}.${field.targetName} = ${emitExpression(value, context, literalType)};`;
++  });
+   return `(${context.namespaceScope ? '[]' : '[&]'}() { ${construction.targetName} ${target}{}; ${statements.join(' ')} return ${target}; }())`;
+ }
+ 
++function isCppUndefinedIdentifierExpressionCpp(expression: Readonly<IrExpression>): boolean {
++  return (
++    expression.kind === 'identifier' &&
++    expression.reference.kind === 'ambient' &&
++    expression.reference.name === 'undefined'
++  );
++}
++
++function getCppExternalObjectFieldLiteralTypeCpp(
++  field: Readonly<{ literalType?: string | undefined; sequence?: boolean | undefined }>,
++  value: Readonly<IrExpression>,
++): Readonly<IrType> | undefined {
++  if (field.literalType === undefined) return undefined;
++  const named: Readonly<IrType> = {
++    kind: 'named',
++    reference: { kind: 'ambient', name: field.literalType },
++    typeArguments: [],
++  };
++  const declared: Readonly<IrType> = field.sequence ? { element: named, kind: 'array', readonly: false } : named;
++  if (value.kind === (field.sequence ? 'array' : 'object')) return declared;
++  // A conditional selects between values of the field's own type, so each arm is given that type: a
++  // literal arm is constructed as it, and any other arm keeps its own value.
++  if (value.kind === 'conditional') return declared;
++  return undefined;
++}
++
+ function getCppExternalInstanceMemberBindingCpp(
+   expression: Readonly<Extract<IrExpression, { kind: 'property' }>>,
+   context: EmitContext,
+diff --git a/packages/compiler-backend-cpp/src/cppExternalObjectFieldContextualType.test.ts b/packages/compiler-backend-cpp/src/cppExternalObjectFieldContextualType.test.ts
+new file mode 100644
+index 0000000..d334800
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppExternalObjectFieldContextualType.test.ts
+@@ -0,0 +1,190 @@
++import { describe, expect, it } from 'vitest';
++
++import ts from 'typescript';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++// A literal passed to a bound external method is constructed field by field from the profile's
++// field-assignment contract. Before a field could name the type its literal constructs, every field VALUE
++// was emitted without contextual evidence, so a nested literal -- a render pass's attachments, a pipeline's
++// vertex state, a layout's entries -- became an anonymous structural owner that the runtime's descriptor
++// cannot hold. A field that declares `literalType` (and `sequence` for an array literal of it) now constructs
++// that bound type from the literal written in it.
++//
++// What must not change: each value is still evaluated once, in source order; a field the literal omits is
++// never assigned; a value that is not a literal -- an existing array, a reference -- keeps exactly its own
++// evidence and identity; a field without a literal type keeps its own evidence; a member the profile does
++// not declare keeps the untyped fallback; and a literal type the profile does not bind is a manifest error,
++// never a silent anonymous owner.
++//
++// The measured sites are the WebGPU descriptor calls in render-wgpu, effects-wgpu and scene3d-wgpu
++// (`encoder.beginRenderPass({ colorAttachments: [{ view, clearValue, loadOp, storeOp }] })` and its siblings).
++const source = `interface HostState { readonly encoder: NativeEncoder; readonly view: NativeView }
++export function run(state: HostState, first: () => number, second: () => string, kept: NativeAttachment[]): void {
++  state.encoder.beginPass({ label: second(), attachments: [{ view: state.view, clear: { r: first(), g: 0 } }], depth: { value: first() } });
++  state.encoder.beginPass({ label: 'kept', attachments: kept });
++  state.encoder.finish({ label: 'x' });
++}`;
++
++type Field = { literalType?: string; sequence?: boolean; sourceField: string; targetName: string };
++
++const valueType = (sourceName: string, targetName: string, fields: readonly Field[]) => ({
++  headers: ['host/x.hpp'],
++  nullability: 'non-null' as const,
++  objectConstruction: { fields, kind: 'field-assignment' as const },
++  ownership: 'value' as const,
++  sourceName,
++  space: 'type' as const,
++  targetName,
++});
++
++const typedClear: Field = { literalType: 'NativeColor', sourceField: 'clear', targetName: 'clear_value' };
++
++function bindings(attachments: Field, clear: Field = typedClear) {
++  return [
++    {
++      headers: ['host/x.hpp'],
++      members: [
++        {
++          parameters: [{ position: 0, sourceType: 'NativePassDescriptor' }],
++          sourceMember: 'beginPass',
++          targetName: 'begin_pass',
++        },
++      ],
++      nullability: 'non-null' as const,
++      ownership: 'shared' as const,
++      sourceName: 'NativeEncoder',
++      space: 'type' as const,
++      targetName: 'host::Encoder',
++    },
++    {
++      headers: ['host/x.hpp'],
++      nullability: 'non-null' as const,
++      ownership: 'shared' as const,
++      sourceName: 'NativeView',
++      space: 'type' as const,
++      targetName: 'host::View',
++    },
++    valueType('NativePassDescriptor', 'host::PassDescriptor', [
++      { sourceField: 'label', targetName: 'label' },
++      attachments,
++      { literalType: 'NativeDepth', sourceField: 'depth', targetName: 'depth' },
++    ]),
++    valueType('NativeAttachment', 'host::Attachment', [
++      { literalType: 'NativeView', sourceField: 'view', targetName: 'view' },
++      clear,
++      { literalType: 'NativeView', sourceField: 'resolve', targetName: 'resolve_target' },
++    ]),
++    valueType('NativeColor', 'host::Color', [
++      { sourceField: 'r', targetName: 'r' },
++      { sourceField: 'g', targetName: 'g' },
++    ]),
++    valueType('NativeDepth', 'host::Depth', [{ sourceField: 'value', targetName: 'depth_value' }]),
++  ];
++}
++
++const typedAttachments: Field = {
++  literalType: 'NativeAttachment',
++  sequence: true,
++  sourceField: 'attachments',
++  targetName: 'attachments',
++};
++
++function emit(profile: ReturnType<typeof bindings>) {
++  const sourceFile = ts.createSourceFile('/flight/packages/math/src/pass.ts', source, ts.ScriptTarget.Latest, true);
++  const lowered = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/math', upstreamDirectory: '/flight' });
++  expect(lowered.diagnostics).toEqual([]);
++  return emitIrModuleCpp(lowered.module, {
++    externalBindings: { bindings: profile, schema: 'flight-cpp-external-bindings/1' },
++    runtimeProfile: 'flight-cpp',
++  }).contents;
++}
++
++describe('external object fields that declare the bound type their literal constructs', () => {
++  it('constructs nested literals as their bound types, in source order', () => {
++    const contents = emit(bindings(typedAttachments));
++    const color =
++      '([&]() { host::Color external_native_color{}; external_native_color.r = first(); external_native_color.g = 0.0; return external_native_color; }())';
++    const attachment = `([&]() { host::Attachment external_native_attachment{}; external_native_attachment.view = state->view; external_native_attachment.clear_value = ${color}; return external_native_attachment; }())`;
++    const depth =
++      '([&]() { host::Depth external_native_depth{}; external_native_depth.depth_value = first(); return external_native_depth; }())';
++    expect(contents).toContain(
++      `state->encoder.begin_pass(([&]() { host::PassDescriptor external_native_pass_descriptor{}; external_native_pass_descriptor.label = second(); external_native_pass_descriptor.attachments = flight::Array<host::Attachment>{${attachment}}; external_native_pass_descriptor.depth = ${depth}; return external_native_pass_descriptor; }()));`,
++    );
++    // Each side effect is evaluated exactly once and where the literal evaluates it: second, then the
++    // attachment's first, then depth's first.
++    const start = contents.indexOf('begin_pass(');
++    const call = contents.slice(start, contents.indexOf('begin_pass(', start + 1));
++    expect(call.match(/second\(\)/gu)).toHaveLength(1);
++    expect(call.match(/first\(\)/gu)).toHaveLength(2);
++    expect(call.indexOf('second()')).toBeLessThan(call.indexOf('first()'));
++    expect(contents).not.toMatch(/make_ref<[a-z_]+_[0-9a-f]{16}>/u);
++  });
++
++  it('never assigns a field the literal omits', () => {
++    const contents = emit(bindings(typedAttachments));
++    expect(contents).not.toContain('resolve_target');
++    expect(contents).toContain(
++      'external_native_pass_descriptor_2.label = flight::String("kept"); external_native_pass_descriptor_2.attachments = kept; return external_native_pass_descriptor_2;',
++    );
++  });
++
++  it('keeps a value that is not a literal as itself rather than rebuilding it', () => {
++    const contents = emit(bindings(typedAttachments));
++    expect(contents).toContain('flight::Array<host::Attachment> kept');
++    expect(contents).toContain('external_native_pass_descriptor_2.attachments = kept;');
++    // `state.view` is a reference, not a literal: it is assigned as the same handle.
++    expect(contents).toContain('external_native_attachment.view = state->view;');
++  });
++
++  it('leaves a field without a literal type to its own evidence', () => {
++    const contents = emit(bindings({ sourceField: 'attachments', targetName: 'attachments' }));
++    expect(contents).not.toContain('flight::Array<host::Attachment>{');
++    expect(contents).not.toContain('host::Attachment external_native_attachment{}');
++    expect(contents).toContain('external_native_pass_descriptor_2.attachments = kept;');
++  });
++
++  it('keeps the untyped fallback for a member the profile does not declare', () => {
++    const fallback = 'state->encoder.finish({.label = flight::String("x")});';
++    expect(emit(bindings(typedAttachments))).toContain(fallback);
++    expect(emit(bindings({ sourceField: 'attachments', targetName: 'attachments' }))).toContain(fallback);
++  });
++
++  it('refuses a literal type the profile does not bind, and a sequence or empty type without one', () => {
++    expect(() => emit(bindings({ ...typedAttachments, literalType: 'NativeMissing' }))).toThrow(
++      'field attachments names unbound literal type NativeMissing',
++    );
++    expect(() => emit(bindings({ sequence: true, sourceField: 'attachments', targetName: 'attachments' }))).toThrow(
++      'malformed or ambiguous object-construction field contract',
++    );
++    expect(() =>
++      emit(bindings(typedAttachments, { literalType: '', sourceField: 'clear', targetName: 'clear_value' })),
++    ).toThrow('malformed or ambiguous object-construction field contract');
++  });
++  it('selects a typed field from a conditional, branching where one arm is absent', () => {
++    const conditional = `interface HostState { readonly encoder: NativeEncoder; readonly view: NativeView }
++export function pick(state: HostState, mask: boolean, color: NativeColor, first: () => boolean): void {
++  state.encoder.beginPass({ label: 'a', attachments: [{ view: state.view, clear: mask ? undefined : color }] });
++  state.encoder.beginPass({ label: 'b', attachments: [{ view: state.view, clear: first() ? color : undefined }] });
++  state.encoder.beginPass({ label: 'c', attachments: [{ view: state.view, clear: mask ? { r: 1, g: 2 } : color }] });
++}`;
++    const sourceFile = ts.createSourceFile('/flight/packages/math/src/pick.ts', conditional, ts.ScriptTarget.Latest, true);
++    const lowered = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/math', upstreamDirectory: '/flight' });
++    expect(lowered.diagnostics).toEqual([]);
++    const contents = emitIrModuleCpp(lowered.module, {
++      externalBindings: { bindings: bindings(typedAttachments), schema: 'flight-cpp-external-bindings/1' },
++      runtimeProfile: 'flight-cpp',
++    }).contents;
++    // The absent arm assigns nothing, so the field keeps the absence an omitted field has; the condition is
++    // evaluated exactly once, before the present arm.
++    expect(contents).toContain('if (!(mask)) { external_native_attachment.clear_value = color; }');
++    expect(contents).toContain('if (first()) { external_native_attachment_2.clear_value = color; }');
++    expect(contents.match(/first\(\)/gu)).toHaveLength(1);
++    expect(contents).not.toContain('std::nullopt : color');
++    // Two present arms stay one ternary, and a literal arm is constructed as the field's bound type.
++    expect(contents).toContain(
++      'external_native_attachment_3.clear_value = (mask ? ([&]() { host::Color external_native_color{}; external_native_color.r = 1.0; external_native_color.g = 2.0; return external_native_color; }()) : color);',
++    );
++  });
++});
+diff --git a/packages/compiler-backend-cpp/src/cppRuntimeExternalSymbolBinding.ts b/packages/compiler-backend-cpp/src/cppRuntimeExternalSymbolBinding.ts
+index ab44de7..444b2cf 100644
+--- a/packages/compiler-backend-cpp/src/cppRuntimeExternalSymbolBinding.ts
++++ b/packages/compiler-backend-cpp/src/cppRuntimeExternalSymbolBinding.ts
+@@ -549,7 +549,11 @@ function getCppCompilerExternalBindings(
+             typeof field.sourceField !== 'string' ||
+             field.sourceField.length === 0 ||
+             typeof field.targetName !== 'string' ||
+-            !isCppExternalBindingFieldTarget(field.targetName),
++            !isCppExternalBindingFieldTarget(field.targetName) ||
++            (field.literalType !== undefined &&
++              (typeof field.literalType !== 'string' || field.literalType.length === 0)) ||
++            (field.sequence !== undefined &&
++              (typeof field.sequence !== 'boolean' || field.literalType === undefined)),
+         ) ||
+         new Set(binding.objectConstruction.fields.map((field) => field.sourceField.normalize('NFC'))).size !==
+           binding.objectConstruction.fields.length ||
+@@ -605,6 +609,8 @@ function getCppCompilerExternalBindings(
+         ? {
+             objectConstruction: {
+               fields: binding.objectConstruction.fields.map((field) => ({
++                ...(field.literalType !== undefined ? { literalType: field.literalType.normalize('NFC') } : {}),
++                ...(field.sequence ? { sequence: true } : {}),
+                 sourceField: field.sourceField.normalize('NFC'),
+                 targetName: field.targetName,
+               })),
+@@ -628,6 +634,19 @@ function getCppCompilerExternalBindings(
+     identities.add(identity);
+   }
+   for (const binding of bindings) {
++    // A typed field names the binding its literal constructs. The profile is the whole contract, so a
++    // literal type the profile does not bind would leave the nested literal with nothing to become;
++    // refuse the manifest rather than fall back to an anonymous owner.
++    for (const field of binding.objectConstruction?.fields ?? []) {
++      if (
++        field.literalType !== undefined &&
++        !bindings.some((candidate) => candidate.sourceName === field.literalType && candidate.space === 'type')
++      ) {
++        throw new TypeError(
++          `C++ external binding ${binding.sourceName} field ${field.sourceField} names unbound literal type ${field.literalType}`,
++        );
++      }
++    }
+     for (const member of binding.members ?? []) {
+       for (const parameter of member.parameters ?? []) {
+         const parameterType = bindings.find(
+diff --git a/packages/compiler-types/src/compilerBackendContract.ts b/packages/compiler-types/src/compilerBackendContract.ts
+index ccdda3e..94750f6 100644
+--- a/packages/compiler-types/src/compilerBackendContract.ts
++++ b/packages/compiler-types/src/compilerBackendContract.ts
+@@ -167,6 +167,12 @@ export interface CppCompilerExternalBindingConstruction {
+ }
+ 
+ export interface CppCompilerExternalFieldBinding {
++  // The bound type an object literal written in this field constructs, when the profile knows it. With
++  // `sequence`, the field holds an array literal and each element is constructed as that type. A literal
++  // then becomes the bound type instead of an anonymous structural owner; any other value keeps its own
++  // evidence. The type must itself be a declared type-space binding.
++  readonly literalType?: string | undefined;
++  readonly sequence?: boolean | undefined;
+   readonly sourceField: string;
+   readonly targetName: string;
+ }
