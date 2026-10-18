@@ -316,3 +316,50 @@ metadata; the native alias behavior continued to pass. Seven cold emission contr
 remain byte-identical. The one necessary normal scoped regeneration, original
 easings consumer and eight-header measurement are still required; this preparation
 claims no installed header or public consumer gain.
+
+### Final normal output and original consumer qualification
+
+The necessary scoped reconciliation from frozen clean `c286680a` uses the qualified
+103 compiler / 201 Flight patches and exits **zero**. Both exact pinned siblings
+are restored rawclean. Normal generation changes two headers and the manifest:
+the bone timeline header selects arrow at the three required `kind` reads while
+retaining the nullable indexed projections; the skins header forwards the original
+private attachment owner through `NamedProperties`, following the qualified private
+Record-reader graph. Neither generated header was edited. The scoped package emits
+51/59 modules with eight refusals still recorded. Generation warns about mixed
+binding-profile provenance in dependency inventory; it does not qualify that inventory.
+
+The registered consumer includes the **complete original bone timeline header**
+and calls the real `build_spine_binary_segment_easings` and its actual easing,
+clamp and diagnostic callees. Configuration, native compilation, linking and
+**1/1 CTest pass** on committed output `14b36e44`. Its 11 unchanged-source cases
+check 42 numeric samples, one original diagnostic and its detail, nullable result
+and slot order, fresh output ownership, the same outer/inner input owners and
+unchanged input values. There is no extracted function or stub. This establishes
+the bounded public easings behavior; it does not establish full parser behavior.
+
+All eight assigned headers finish the Clang22.1.8 `-j2` check:
+
+| Result | Headers (`flight/skeleton2d_formats/`) |
+| --- | --- |
+| PASS | `spine_binary_animations_handler.hpp`, `spine_binary_bone_timeline_handler.hpp`, `spine_binary_slot_timeline_handler.hpp`, `spine_binary_timeline_handlers.hpp` |
+| FAIL | `spine_binary_full.hpp`, `spine_binary_handlers.hpp`, `spine_binary_parse.hpp`, `spine_binary_section_handlers.hpp` |
+
+The four remaining first diagnostics are the already-recorded anonymous shared
+transform preset entering nominal `Ref<TransformInherit2D>` storage at
+`spine_binary_bones_handler.hpp:81`. They join existing
+`no-viable-conversion-f7267dc5`, whose two earlier rows remain unchanged; the
+[satisfies-table request](satisfies-record-member-carrier.md) and
+[preset-owner request](readonly-preset-tuple-element-owner.md) retain that separate
+ownership requirement. No duplicate cause or transform-preset fix is introduced.
+Four rows are promoted, four advance, and `missing-member-edbd79e9` is retired.
+All foreign rows and historical sweep totals are preserved.
+
+The header command exits one for these four compile failures, with zero
+unattempted headers. **All 226 override derivation hashes match** in this final
+run; the earlier frozen96 override drift is historical. The
+[final qualification record](../../artifacts/single-carrier-union-member-qualification.json)
+contains exact generated-output hashes and the full bounded header report. No
+full parser, whole-package, global sweep or global backend pass is claimed;
+the same 29 existing relevant backend failures and the earlier scratch ENOSPC
+automation failure remain recorded above.

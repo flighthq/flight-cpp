@@ -52,8 +52,61 @@
     "comparison": "Every expanded assertion occurrence has identical fullName and status in source order, including repeated titles.",
     "expandedAssertions": 1576
   },
-  "normalScopedReconciliation": "pending",
-  "originalEasingsConsumer": "not yet executable: frozen96 result has the same three baseline kind member errors",
+  "normalScopedReconciliation": {
+    "command": "node scripts/pkgGenerate.mjs skeleton2d-formats -j2 --progress",
+    "frozenInputCommit": "c286680a231b8c0841e3a4535284c11076218958",
+    "compilerPatches": 103,
+    "flightPatches": 201,
+    "exitCode": 0,
+    "bothPinnedCheckoutsRestoredRawClean": true,
+    "changedGeneratedPaths": [
+      "generated/include/flight/skeleton2d_formats/spine_binary_bone_timeline_handler.hpp",
+      "generated/include/flight/skeleton2d_formats/spine_json_skins_handler.hpp",
+      "generated/manifest.json"
+    ],
+    "normalOutputSha256": {
+      "generated/include/flight/skeleton2d_formats/spine_binary_bone_timeline_handler.hpp": "834df99bec4102be27961ce092f6f8b2af27bf0d66c702202bca0f2dbab60c0b",
+      "generated/include/flight/skeleton2d_formats/spine_json_skins_handler.hpp": "f007cad8dd547927235ad0c7db4e34c3ff009c900cf24333a8bba62ef9edee62",
+      "generated/manifest.json": "e54c9c3f604b7bbc13323b9d395300eafe6cf1894642873e77ec491953f4c0bc"
+    },
+    "boneTimelineChange": "Exactly three required kind.values/path accesses select arrow; qualified nullable indexed projections remain present.",
+    "otherNormalHeaderChange": "Private parse_spine_attachment forwards the same owner through NamedProperties, from the qualified private Record-reader graph; no generated header was edited.",
+    "scopedModules": {
+      "emitted": 51,
+      "refused": 8,
+      "total": 59
+    },
+    "closureModules": {
+      "emitted": 1322,
+      "refused": 20,
+      "total": 1342
+    },
+    "generationLimitation": "Normal scoped generation reports mixed binding-profile provenance in dependencies; the actual original consumer and eight headers were measured against the committed output. No global profile/SDK claim."
+  },
+  "originalEasingsConsumer": {
+    "measuredCommit": "14b36e44",
+    "source": "tests/generated_skeleton2d_formats_spine_easings_test.cpp",
+    "sourceSha256": "9c66596cfc229e44e694e3fc7e11d6d9b25cf05f464a31016c2174db9684eb70",
+    "completeOriginalHeader": "flight/skeleton2d_formats/spine_binary_bone_timeline_handler.hpp",
+    "target": "flight_cpp_generated_skeleton2d_formats_spine_easings_tests",
+    "ctest": "flight_cpp.generated_skeleton2d_formats_spine_easings",
+    "configure": "pass",
+    "buildAndLink": "pass",
+    "ctestPass": 1,
+    "ctestFail": 0,
+    "actualExitCode": 0,
+    "unchangedWholeSourceCases": 11,
+    "numericSamples": 42,
+    "originalDiagnosticCases": 1,
+    "checks": [
+      "nullable result and slot order",
+      "actual easing/clamp/diagnostic callees",
+      "fresh result owner",
+      "same outer and inner input owners",
+      "unchanged input array values"
+    ],
+    "noExtractionOrStub": true
+  },
   "historicalHeaderPromotions": 0,
   "declared99": {
     "orderedApply": "pass",
@@ -154,5 +207,76 @@
       "compiler-loop-bound-indexed-element-member": "145c9f1cd24d89af939b992c70dbe621f4bbd181cba18486c4d151b639a92cda",
       "compiler-single-carrier-union-member": "63b092e04423d5df5692b68ec65a4a6b464ef26f3840d4386c18995b58b134b5"
     }
+  },
+  "finalScopedHeaderCompilation": {
+    "schema": "flight-sdk-header-compilation/2",
+    "compiler": {
+      "command": "/tmp/builder5-generic/bin/c++",
+      "version": "clang version 22.1.8"
+    },
+    "generated": {
+      "compilerRevision": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "sourceRevisions": [
+        "a62784923f3be814463286c9fb28edfe6ab15789"
+      ]
+    },
+    "run": {
+      "complete": true,
+      "elapsedSeconds": 243.3,
+      "headerSelection": "explicit",
+      "jobs": 2
+    },
+    "summary": {
+      "attemptedHeaders": 8,
+      "failedHeaders": 4,
+      "passedHeaders": 4,
+      "totalHeaders": 8,
+      "unattemptedHeaders": 0
+    },
+    "failures": [
+      {
+        "diagnostic": "no viable conversion from 'Ref<reflection_rotation_scale_translation_9dff6858eecb0eb4>' to 'Ref<flight::types::TransformInherit2D>'",
+        "header": "flight/skeleton2d_formats/spine_binary_full.hpp",
+        "location": "flight/skeleton2d_formats/spine_binary_bones_handler.hpp:81"
+      },
+      {
+        "diagnostic": "no viable conversion from 'Ref<reflection_rotation_scale_translation_9dff6858eecb0eb4>' to 'Ref<flight::types::TransformInherit2D>'",
+        "header": "flight/skeleton2d_formats/spine_binary_handlers.hpp",
+        "location": "flight/skeleton2d_formats/spine_binary_bones_handler.hpp:81"
+      },
+      {
+        "diagnostic": "no viable conversion from 'Ref<reflection_rotation_scale_translation_9dff6858eecb0eb4>' to 'Ref<flight::types::TransformInherit2D>'",
+        "header": "flight/skeleton2d_formats/spine_binary_parse.hpp",
+        "location": "flight/skeleton2d_formats/spine_binary_bones_handler.hpp:81"
+      },
+      {
+        "diagnostic": "no viable conversion from 'Ref<reflection_rotation_scale_translation_9dff6858eecb0eb4>' to 'Ref<flight::types::TransformInherit2D>'",
+        "header": "flight/skeleton2d_formats/spine_binary_section_handlers.hpp",
+        "location": "flight/skeleton2d_formats/spine_binary_bones_handler.hpp:81"
+      }
+    ],
+    "passed": [
+      "flight/skeleton2d_formats/spine_binary_animations_handler.hpp",
+      "flight/skeleton2d_formats/spine_binary_bone_timeline_handler.hpp",
+      "flight/skeleton2d_formats/spine_binary_slot_timeline_handler.hpp",
+      "flight/skeleton2d_formats/spine_binary_timeline_handlers.hpp"
+    ],
+    "unattempted": [],
+    "actualExitCode": 1,
+    "allOverrideDerivationHashesMatch": 226,
+    "remainingCluster": "no-viable-conversion-f7267dc5"
+  },
+  "currentHeaderPromotions": 4,
+  "ledgerUpdate": {
+    "ownedRows": 8,
+    "promoted": 4,
+    "advancedToExistingPresetOwnerCause": 4,
+    "retiredCluster": "missing-member-edbd79e9",
+    "existingPresetOwnerClusterHeaders": {
+      "before": 2,
+      "after": 6
+    },
+    "foreignHeaderRowsUnchanged": true,
+    "historicalSweepTotalsUnchanged": true
   }
 }

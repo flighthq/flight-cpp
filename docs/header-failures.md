@@ -5680,5 +5680,26 @@ all now first failing at `kind.values` on a required `flight::Ref` parameter at
 change. The registered original whole-header easings consumer also fails at the same
 three pre-existing `kind.values`/`kind.path` accesses and has not executed. See the
 [existing request and frozen evidence](compiler-requests/nullable-array-element-null-test.md#frozen96-normal-output-and-nonnullable-parameter-follow-on).
-The separately authorized type-query/indexed parameter carrier correction remains
-active; no whole-package or public native behavior pass is claimed.
+This is the historical frozen96 result. The separately authorized type-query
+parameter correction and final qualification follow below.
+
+The final frozen103 normal scoped generation exits zero with exactly two headers
+and the manifest changed. The three required `kind` reads now use the selected
+reference carrier, and the qualified nullable projections remain present. The
+actual registered complete-header easings consumer configures, builds, links and
+passes **1/1 CTest**, covering 11 unchanged-source cases, 42 numeric samples, one
+diagnostic, original input ownership and unchanged values.
+
+The final exact eight-header Clang22.1.8 `-j2` result is **4 PASS / 4 FAIL / 0
+unattempted**. Animations, bone timeline, slot timeline and timeline handlers pass.
+Full, handlers, parse and section handlers reach the existing anonymous transform
+preset owner conversion at `spine_binary_bones_handler.hpp:81`. Those four rows join
+`no-viable-conversion-f7267dc5` (two existing rows plus four measured callers); the
+existing [satisfies-table request](compiler-requests/satisfies-record-member-carrier.md)
+records this separate owner requirement. The old `missing-member-edbd79e9` cluster
+is retired. Only the eight assigned rows change; foreign rows and the historical
+sweep totals remain intact. The command exits one for the four compile failures;
+all226 override derivations match. See the
+[final request evidence](compiler-requests/nullable-array-element-null-test.md#final-normal-output-and-original-consumer-qualification)
+and [bounded report](../artifacts/single-carrier-union-member-qualification.json).
+No full parser, whole-package or global sweep pass is claimed.
