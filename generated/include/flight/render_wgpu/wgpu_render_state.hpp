@@ -257,7 +257,7 @@ inline const double ring_slot_count = 4096.0;
 
 inline flight::Ref<flight::types::WgpuRenderStateRuntime> create_wgpu_render_state_runtime(std::variant<flight::Ref<flight::types::WgpuRenderStateRuntime>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuDeviceState>>>>> device_state_or_runtime, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuRenderStateOptions>>>>> options = std::nullopt) {
   options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuRenderStateOptions>>>>());
-  auto device_runtime = ((flight::types::entity_runtime_key in device_state_or_runtime) ? get_wgpu_device_runtime(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuDeviceState>>>>>(device_state_or_runtime)) : std::get<flight::Ref<flight::types::WgpuRenderStateRuntime>>(device_state_or_runtime)->context);
+  auto device_runtime = (device_state_or_runtime.index() == 1 ? get_wgpu_device_runtime(std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuDeviceState>>>>>(device_state_or_runtime)) : std::get<flight::Ref<flight::types::WgpuRenderStateRuntime>>(device_state_or_runtime)->context);
   return create_wgpu_render_state_runtime_internal(device_runtime, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuRenderRegistries>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::WgpuRenderRegistries>>>>(build_wgpu_render_registries(options.value()))));
 }
 

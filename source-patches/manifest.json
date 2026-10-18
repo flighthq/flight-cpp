@@ -4979,6 +4979,23 @@
       "expires": "when inferred receiver shapes retain the member's written union without this member-wise lowering, or upstream lowers the member type node without collapsing `T | unknown`",
       "appliedOn": "2026-10-18",
       "verification": "New cppCompilerBackend test 'projects an instanceOf-guarded written union member through an inferred receiver': parameter and awaited receivers both emit union_kind_or_throw<flight::ArrayBuffer>(response->body) and never the unprojected form. Regression parity measured across typeScriptSemanticLowering.test.ts + cppCompilerBackend.test.ts: 82 failures with and 82 without the patch, identical titles. Patch applies and reverts at its stack position."
+    },
+    {
+      "id": "compiler-symbol-membership-variant-arm",
+      "dependency": "flight-compiler",
+      "patch": "compiler-symbol-membership-variant-arm.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts and packages/compiler-backend-cpp/src/cppSymbolMembershipArm.test.ts",
+      "package": "@flighthq/compiler-semantic",
+      "answers": "diagnostic",
+      "refusal": "`EntityRuntimeKey in deviceStateOrRuntime` (a unique-symbol key on a two-arm union receiver) is emitted verbatim as `(entity_runtime_key in value)` (`expected ')' before 'in'`, render_wgpu/wgpu_render_state.hpp:259), because the union-member evidence for `in` accepts only string-literal keys.",
+      "rewrite": "The semantic union-member evidence for `in` also accepts a unique-symbol key: it matches each arm's shape property by its retained computedKey value identity (never by storage spelling), and takes the arm test only when exactly one arm declares the key, that arm declares it required, and no other arm declares it at all (optional or required).",
+      "equivalence": "TypeScript narrows `key in value` over a closed union to the arms that declare the key. When exactly one arm declares the symbol key and declares it required, a value of that arm always has the property (present even when its value is undefined, as allocateEntity writes it) and a value of any other arm cannot, so testing the arm is the source's own answer; it reads no value, so present-undefined stays present. Any arm declaring the key optionally, or a second declaring arm, refuses the arm test and leaves the existing lowering.",
+      "whyNotUpstreamFirst": "This extends the existing compiler membership evidence through the established patch stack against the exact pin.",
+      "unblocks": "createWgpuRenderStateRuntime's device-state/runtime dispatch in render_wgpu/wgpu_render_state.hpp (the last in-operator-not-lowered-b1eae4af row, render_wgpu/wgpu_shader).",
+      "expires": "when upstream lowers a unique-symbol `in` over a closed union to its single required declaring arm.",
+      "appliedOn": "2026-10-18",
+      "verification": "cppSymbolMembershipArm.test.ts 2/2 (single required arm takes index test; an optional declarer on another arm takes none); full compiler-backend-cpp+compiler-semantic suite failure set identical with and without (0 new). Activated by one scoped @flighthq/render-wgpu generation on the 93-patch stack: wgpu_render_state.hpp:260 now emits `device_state_or_runtime.index() == 1` (the WgpuDeviceState arm), the only kept hunk. GCC 15.2: wgpu_shader moves to the retained refused getWgpuDeviceRuntime (undeclared-identifier-afcc7131); wgpu_render_state still stops first at wgpu_render_pass.hpp:130 (undeclared-identifier-aef2cf8f). No public consumer runs yet: createWgpuRenderStateRuntime calls the refused getWgpuDeviceRuntime."
     }
   ]
 }

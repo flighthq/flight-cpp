@@ -29,7 +29,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | --- | --- | --- | --- | --- | --- |
 | 1 | `call-has-no-matching-9c08d665` | 117 | WGPU | compiler patch (applied) | bound WebGPU descriptor literals emitted untyped *(G3 resolved: descriptor failure cleared; 0 pass, all 117 to `undeclared-identifier-aef2cf8f`)* |
 | 2 | `missing-member-b1a6d5cf` | 40 | 2D | retire obsolete repair | own same-namespace using repair inserts lookup before definition *(compiler request withdrawn; G3 original-consumer qualification pending)* |
-| 3 | `in-operator-not-lowered-b1eae4af` | 1 | 2D, 3D, GL, PLAT, WGPU | compiler | the TypeScript `in` operator is emitted verbatim; G2 particle3D joins this existing cause *(existing request extended)* |
+| 3 | `in-operator-not-lowered-b1eae4af` | 0 | 2D, 3D, GL, PLAT, WGPU | compiler patch (fixed) | the TypeScript `in` operator is emitted verbatim; G2 particle3D joins this existing cause *(existing request extended)* |
 | 4 | `undeclared-identifier-993e82f1` | 51 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(request filed; builder4/G2)* |
 | 5 | `call-has-no-matching-3882b3e9` | 28 | 2D, 3D, TEXT | compiler | bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier *(request filed; builder4/G2; +1 from `obj_standard_pbr_material_handler.hpp` after its module emitted; +1 from `md5_skeleton_handler.hpp` after the mesh override bridges)* |
 | 6 | `other-52e846a6` | 2 pass / 17 advanced | ANIM | compiler *(landed)* | the nullable-element lift landed: the root binder and its clip caller compile, and the other 17 rows advanced to later causes (named-view/Record split, optional-element narrowing, retained refused calls) |
@@ -346,15 +346,15 @@ That mechanism is being coordinated separately. No whole-header/public-consumer 
 
 **Membership activation (G2, builder).** `compiler-membership-test-presence` lowers `in` on Record, structural-row
 and required-declared receivers, and refuses the unrepresentable rest. Re-measured with GCC 15.2 at `-j2`: **0/32
-pass**, 31/32 now stop past the membership site. `compiler-symbol-membership-variant-arm` (pending) gives the last
-one, `wgpu_render_state.hpp:259`, its `EntityRuntimeKey` variant-arm test.
+pass**, 31/32 now stop past the membership site. `compiler-symbol-membership-variant-arm` (activated with one scoped render-wgpu generation) gives the last
+one, `wgpu_render_state.hpp:259`, its `EntityRuntimeKey` variant-arm test, so the cluster is empty.
 
 | follow-on cluster | headers | first failure | cause |
 | --- | --- | --- | --- |
 | `undeclared-identifier-993e82f1` (builder4) | 21 | `flight/interaction/interaction_manager.hpp:722` | the `Traits` template parameter leaks, as in the existing cluster |
 | `no-matching-function-115b0ff2` | 8 | `flight/render/render_registry_guards.hpp:127` | a numeric enum in a template literal; [new request](compiler-requests/numeric-enum-template-literal-interpolation.md) |
 | `static-assertion-00a0e75d` | 2 | `explain_scene_3d_pipeline_coverage.hpp:45`, `gl_particle_emitter_3d.hpp:121` | a type predicate's narrowing is not applied |
-| `in-operator-not-lowered-b1eae4af` (stays) | 1 | `flight/render_wgpu/wgpu_render_state.hpp:259` | unique-symbol key on a variant receiver |
+| `undeclared-identifier-afcc7131` | 1 | `flight/render_wgpu/wgpu_render_state.hpp:260` | after `compiler-symbol-membership-variant-arm` gave the `EntityRuntimeKey` variant its arm test (`index() == 1`, the WgpuDeviceState arm), the retained `getWgpuDeviceRuntime` is refused at `cpp-structural-assertion-owner-unproven` |
 
 The public consumer `tests/generated_effects_effect_defaults_test.cpp` passes in full on `effect_defaults.hpp`.
 It covers defaults filling, explicit zero and explicit values winning, the carry-over that `key in entry` gates,
