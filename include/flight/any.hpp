@@ -73,6 +73,11 @@ class Any;
 
 namespace detail {
 
+// Defined after Any is complete; erased array readers use the same checked element boxing as
+// named-property readers, without changing the array's own storage or exact recovery type.
+template <typename Value>
+[[nodiscard]] std::optional<Any> any_from(const Value& value);
+
 // Recovers the structural row owner of an erased object reference.
 //
 // An `Any` keeps its object as a `shared_ptr<void>` plus a `type_index`, which is enough to hand
@@ -151,6 +156,8 @@ struct AnyArray final {
   std::shared_ptr<const std::any> value;
   std::type_index type{typeid(void)};
   const void* identity{nullptr};
+  std::size_t (*size)(const std::any&){nullptr};
+  std::optional<Any> (*get)(const std::any&, double){nullptr};
 
   [[nodiscard]] friend bool operator==(const AnyArray& left, const AnyArray& right) noexcept {
     return left.identity == right.identity;
@@ -191,7 +198,15 @@ class Any final {
   Any(Array<Value> value)
       : value_(detail::AnyArray{
             std::make_shared<const std::any>(std::in_place_type<Array<Value>>, value),
-            std::type_index(typeid(Array<Value>)), value.identity()}) {}
+            std::type_index(typeid(Array<Value>)), value.identity(),
+            [](const std::any& stored) { return std::any_cast<const Array<Value>&>(stored).size(); },
+            [](const std::any& stored, double index) -> std::optional<Any> {
+              const auto element = std::any_cast<const Array<Value>&>(stored).get(index);
+              if (!element) return std::nullopt;
+              auto boxed = detail::any_from(*element);
+              if (!boxed) throw BadAnyAccess();
+              return boxed;
+            }}) {}
 
   template <typename Value>
   Any(const std::optional<Value>& value) : Any(value ? Any(*value) : Any(undefined)) {}
@@ -282,6 +297,24 @@ class Any final {
   // `Array.isArray(value)`: whether this holds an array. An array is an object to `typeof` and to kind(),
   // so this is the one question that tells it apart from a plain object.
   [[nodiscard]] bool is_array() const noexcept { return std::holds_alternative<detail::AnyArray>(value_); }
+
+  // Explicit erased-array reads. These consult the original typed shared storage on every call;
+  // Array.isArray proves array-ness, not Array<Any> or any other particular element type.
+  [[nodiscard]] std::size_t array_size() const {
+    const auto* array = std::get_if<detail::AnyArray>(&value_);
+    if (!array || !array->value || !array->size) throw BadAnyAccess();
+    return array->size(*array->value);
+  }
+
+  // As with Array<T>::get, an invalid/missing index is absent; a present undefined or null element
+  // remains an engaged Any. A present element with no represented erased reading throws instead
+  // of being mistaken for an absent index. Non-array receivers also throw, without coercion.
+  [[nodiscard]] std::optional<Any> array_get(double index) const {
+    const auto* array = std::get_if<detail::AnyArray>(&value_);
+    if (!array || !array->value || !array->get) throw BadAnyAccess();
+    return array->get(*array->value, index);
+  }
+
   [[nodiscard]] bool is_null() const noexcept { return kind() == AnyKind::null; }
 
   // `== null` in TypeScript: the one test that admits both absent values and nothing else.

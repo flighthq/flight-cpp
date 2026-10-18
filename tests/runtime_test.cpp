@@ -1576,6 +1576,103 @@ void test_any_array_and_optional_boxing() {
         "Any maps an empty optional to undefined and a present optional to its value");
 }
 
+void test_any_live_array_reads() {
+  flight::Array<double> numbers{0.25, -0.0};
+  const flight::Any boxed(numbers);
+  const auto alias = boxed;
+  check(boxed.array_size() == 2 && boxed.external_if<flight::Array<double>>() &&
+            !boxed.external_if<flight::Array<flight::Any>>(),
+        "erased reads must retain exact typed storage rather than construct an Any array");
+  check(boxed.array_get(0.0)->as_number() == 0.25 &&
+            std::signbit(boxed.array_get(1.0)->as_number()),
+        "typed numeric cells retain fractional values and negative zero");
+  numbers.push(9.5);
+  check(alias.array_size() == 3 && alias.array_get(2.0)->as_number() == 9.5,
+        "erased length and index reads see later pushes through the original alias");
+  numbers[0] = 7.25;
+  (void)numbers.splice(1, 1);
+  check(boxed.array_size() == 2 && boxed.array_get(0.0)->as_number() == 7.25 &&
+            boxed.array_get(1.0)->as_number() == 9.5 && !boxed.array_get(2.0),
+        "erased reads see replacement and splice without keeping stale cells or length");
+  const auto identity = boxed.identity();
+  numbers = flight::Array<double>{100.0};
+  check(boxed.identity() == identity && boxed.array_get(0.0)->as_number() == 7.25,
+        "rebinding the source variable must not replace the already-boxed array storage");
+
+  for (double index : {-1.0, 0.5, 2.0, std::numeric_limits<double>::infinity(),
+                       -std::numeric_limits<double>::infinity(),
+                       std::numeric_limits<double>::quiet_NaN(), 1e100}) {
+    check(!boxed.array_get(index), "invalid numeric array properties must be absent without coercion or overflow");
+  }
+  check(boxed.array_get(-0.0)->as_number() == 7.25,
+        "negative zero denotes the same array index as positive zero");
+
+  using Mixed = std::variant<double, flight::String, bool, flight::Ref<TestReference>, flight::Null>;
+  auto object = flight::make_ref<TestReference>(TestReference{{}, 11});
+  flight::Array<Mixed> mixed{0.75, flight::String("1"), true, object, flight::null};
+  const flight::Any typed_mixed(mixed);
+  check(typed_mixed.array_get(0.0)->as_number() == 0.75 &&
+            typed_mixed.array_get(1.0)->as_string() == flight::String("1") &&
+            typed_mixed.array_get(2.0)->as_boolean() &&
+            typed_mixed.array_get(3.0)->object_if<TestReference>() == object &&
+            typed_mixed.array_get(4.0)->is_null(),
+        "heterogeneous typed array cells preserve active type and exact object reference");
+  mixed[0] = flight::String("changed");
+  object->value = 17;
+  check(typed_mixed.array_get(0.0)->as_string() == flight::String("changed") &&
+            typed_mixed.array_get(3.0)->object_if<TestReference>()->value == 17,
+        "typed erased reads observe active-arm and original object mutations");
+
+  flight::Array<flight::Any> dynamic{flight::Any(flight::undefined), flight::Any(flight::null),
+                                    flight::Any(mixed)};
+  const flight::Any erased(dynamic);
+  check(erased.array_get(0.0).has_value() && erased.array_get(0.0)->is_undefined() &&
+            erased.array_get(1.0).has_value() && erased.array_get(1.0)->is_null() &&
+            !erased.array_get(3.0),
+        "present undefined, present null and an absent index remain distinct");
+  check(erased.array_get(2.0)->strict_equals(typed_mixed) &&
+            erased.array_get(2.0)->array_get(3.0)->object_if<TestReference>() == object,
+        "nested array reads retain the original nested array and object identities");
+  const flight::Any strings(flight::Array<flight::String>{flight::String("text")});
+  const flight::Any bits(flight::Array<bool>{true, false});
+  const flight::Any optional(flight::Array<std::optional<double>>{std::nullopt, 4.0});
+  check(strings.array_get(0.0)->as_string() == flight::String("text") &&
+            bits.array_get(0.0)->as_boolean() && !bits.array_get(1.0)->as_boolean() &&
+            optional.array_get(0.0)->is_undefined() && optional.array_get(1.0)->as_number() == 4.0,
+        "string, vector-bool and optional cells use their original typed storage and boxing rules");
+  dynamic.clear();
+  check(erased.array_size() == 0 && !erased.array_get(0.0),
+        "clearing the original array makes existing erased aliases empty");
+
+  for (const auto& nonarray : {flight::Any(), flight::Any(flight::null), flight::Any(3.0),
+                               flight::Any(flight::String("text")), flight::Any::object(object),
+                               flight::Any::external(flight::Float32Array(2U))}) {
+    bool size_rejected = false, index_rejected = false;
+    try { (void)nonarray.array_size(); } catch (const flight::BadAnyAccess&) { size_rejected = true; }
+    try { (void)nonarray.array_get(0.0); } catch (const flight::BadAnyAccess&) { index_rejected = true; }
+    check(!nonarray.is_array() && size_rejected && index_rejected,
+          "non-array and typed-array-buffer receivers must reject erased Array reads");
+  }
+  struct Unrepresented { int value; };
+  const flight::Any unsupported(flight::Array<Unrepresented>{{1}});
+  bool rejected = false;
+  try { (void)unsupported.array_get(0.0); } catch (const flight::BadAnyAccess&) { rejected = true; }
+  check(unsupported.array_size() == 1 && !unsupported.array_get(1.0) && rejected,
+        "a present unrepresented cell must throw rather than disappear or become a fake value");
+
+  std::weak_ptr<TestReference> weak;
+  flight::Any retained;
+  {
+    auto temporary = flight::make_ref<TestReference>(TestReference{{}, 23});
+    weak = temporary;
+    retained = flight::Any(flight::Array<flight::Ref<TestReference>>{temporary});
+  }
+  check(!weak.expired() && retained.array_get(0.0)->object_if<TestReference>()->value == 23,
+        "the erased array retains its original storage and elements after source handles expire");
+  retained = flight::Any();
+  check(weak.expired(), "discarding the erased array releases its retained storage and elements");
+}
+
 // A requires-expression only absorbs failures during template substitution, so the operand types have
 // to arrive as template parameters for this to be a question rather than a hard error.
 template <typename Value, typename Options>
@@ -4228,6 +4325,7 @@ int main() {
   test_any_domain();
   test_attached_properties();
   test_any_array_and_optional_boxing();
+  test_any_live_array_reads();
   test_symbol_absent_description();
   test_error_from_caught_exception();
   test_callable_identity_slot_list();
