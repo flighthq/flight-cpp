@@ -36,3 +36,19 @@ focused control).
 Carried by `compiler-loop-bound-indexed-element-member`, with focused tests for the loop-bound and
 nullable-refusal cases. It expires when the backend proves an indexed read in bounds from its
 enclosing loop without this collected set.
+
+
+## Composition preservation
+
+The integrated patch initially contained eight unrelated reverse hunks that
+removed the nullable indexed-member projection and private Record-reader
+forwarding. The surgical correction removes only those eight hunks (170lines);
+all loop additions, the complete original fixture and final initializer guard
+remain byte-identical. The two affected functions match the qualified99 floor
+exactly after composition. The corrected103 declared stack applies/builds and
+passes28 focused tests, including both indexed-member families, private
+forwarding and inherited native-owner behavior. The same corrected102 full
+relevant backend selection remains451 PASS/same29 FAIL across480 selected
+existing cases, with no changed expanded assertion occurrences. This establishes
+composition preservation; scene3d-formats output and its original public
+requirements consumer remain the generating owner's separate qualification.

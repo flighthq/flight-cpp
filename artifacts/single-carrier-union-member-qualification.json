@@ -82,5 +82,77 @@
     }
   },
   "candidateBackendSha256": "b80f62b13e66548c4529c7ea736e0256b770814aec22bb5b16000cb097219613",
-  "fixtureSha256": "5685e305cfe904169a5d23810f10b396f0863592a5b80e595fb838892f384bdc"
+  "fixtureSha256": "5685e305cfe904169a5d23810f10b396f0863592a5b80e595fb838892f384bdc",
+  "finalQualifiedCompilerPatches": 103,
+  "currentFloorQualification": {
+    "orderedApply": "pass",
+    "rawCleanBetweenStacks": true,
+    "strictBuild": "pass",
+    "focused": {
+      "pass": 28,
+      "fail": 0,
+      "skipped": 0,
+      "newQuery": 4,
+      "nullable": 2,
+      "inheritedAlias": 4,
+      "loop": 2,
+      "privateForward": 16
+    },
+    "bothWholeFixtureIr99To103ByteIdentical": true,
+    "coldEmissionControlsThrough103ByteIdentical": 7,
+    "sameFloorFullRelevantParity": {
+      "compilerPatches": 102,
+      "selected": 480,
+      "pass": 451,
+      "sameBaselineFail": 29,
+      "unselected": 1096,
+      "expandedAssertions": 1576,
+      "changedAssertions": [],
+      "baselineFailedTitles": [
+        "createCppCompilerBackend passes glTF resolved and carried texture unions through their exact imported alias",
+        "createCppCompilerBackend resolves shaded material indexed map options into their exact texture union",
+        "createCppCompilerBackend preserves the imported texture union representation through a readonly assertion",
+        "createCppCompilerBackend unwraps a proven-present optional property before receiver and structural assertion use",
+        "createCppCompilerBackend keeps an imported host-image alias intact for a contextual callable result",
+        "createCppCompilerBackend classifies attachment names as one required nullable live cell",
+        "createCppCompilerBackend classifies material names as one required nullable live cell",
+        "createCppCompilerBackend classifies bounding-box point storage as two required nullable owner cells",
+        "createCppCompilerBackend classifies clipping point storage as two required nullable owner cells",
+        "createCppCompilerBackend classifies mesh point storage as two required nullable owner cells",
+        "createCppCompilerBackend refuses a for-of source alias that names multiple runtime alternatives",
+        "createCppCompilerBackend reads one shared payload from optional variants produced by local and imported factories",
+        "createCppCompilerBackend recovers indexed utility and RegExp call result evidence",
+        "emitIrModuleCpp uses downstream member and constructor result evidence for unresolved mutable storage",
+        "emitIrModuleCpp plans non-null and nullable imported GL and WGPU ErasedRef cache views",
+        "emitIrModuleCpp emits a finite imported-key mapped construction as complete optional storage",
+        "emitIrModuleCpp requires declared dynamic storage for open effect default writes",
+        "emitIrModuleCpp stores the surviving SWF morph bitmap resolver in its nullable callable carrier",
+        "emitIrModuleCpp names the asserted intersection a class reference cannot be narrowed to",
+        "emitIrModuleCpp attributes typeof after an erased array predicate to the missing runtime extraction",
+        "emitIrModuleCpp uses a present Partial property as optional return construction evidence",
+        "emitIrModuleCpp keeps an optional imported registry lookup in its exact entry union",
+        "emitIrModuleCpp leaves nested readonly-array defaults to the runtime declaration",
+        "emitIrModuleCpp constructs an imported nullable base row in a callback-bearing render call",
+        "emitIrModuleCpp conditional capability facets narrows a nullable generic node row to its explicit transform extension",
+        "emitIrModuleCpp conditional capability facets adapts a callable with optional trailing source parameters",
+        "emitIrModuleCpp conditional capability facets adapts a callable parameter from a narrower structural view to its accepted base view",
+        "emitIrModuleCpp conditional capability facets keeps a direct imported collection element on its declared union alias",
+        "emitIrModuleCpp conditional capability facets widens a present nominal variant into a nullable readonly-view variant"
+      ]
+    },
+    "compositionRepair": {
+      "removedOnlyUnrelatedReverseHunks": 8,
+      "removedLines": 170,
+      "loopAdditionsFullFixtureAndFinalGuardPreservedByteForByte": true,
+      "nullableHelperFieldDispatchRestored": true,
+      "privateRecordForwardingFunctionByteIdenticalToQualified99": true,
+      "installedCorrectionCommit": "ed211d40"
+    },
+    "controlledPatchDigests": {
+      "compiler-private-record-forwarded-reads": "a627d6138a16a8964a09ff984ef439636f83d111973550fa317cb98dbfa95410",
+      "compiler-guarded-indexed-nullable-member": "39af02d1a83f3cdca42ab0c843b9660faa08d2223162c9ea8166a3115980b509",
+      "compiler-loop-bound-indexed-element-member": "145c9f1cd24d89af939b992c70dbe621f4bbd181cba18486c4d151b639a92cda",
+      "compiler-single-carrier-union-member": "63b092e04423d5df5692b68ec65a4a6b464ef26f3840d4386c18995b58b134b5"
+    }
+  }
 }

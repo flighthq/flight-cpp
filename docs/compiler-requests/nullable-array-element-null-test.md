@@ -291,3 +291,28 @@ exhausted disk space; automatic cleanup completed, so that run is not a code
 regression pass. The one necessary normal scoped reconciliation remains pending;
 this preparation does not promote a header or claim that the public easings
 consumer has executed.
+
+
+### Final corrected103 preparation
+
+A composition audit before the second generation caught eight unrelated reverse
+hunks in the loop-bound indexed-element patch: they removed the integrated
+nullable field/dispatch/helper and the transitive private Record-reader proof.
+Only those eight hunks (170lines) were removed. All intended loop additions, the
+full loop fixture and its final initializer guard stayed byte-identical. The
+nullable helper and private reader function now match their qualified99 versions
+exactly; the loop implementation and new reference-operator block are preserved.
+
+On the **same corrected102 floor**, the full relevant existing backend selection
+is identical before/after the operator fix: **451 PASS / same29 FAIL /1096
+unselected**,480 selected, with all1576 expanded assertion occurrences matching
+by name and status. The final103 declared stack then applies from rawclean and
+builds strictly. Both complete query/nullable fixture IR snapshots are identical
+from99 through103, and **28/28 focused tests pass**: query4, nullable2, inherited
+alias4, loop2 and private forwarding16. Native tests retain original shared owners,
+live cells, capture lifetime and exact callback exception owners. The earlier
+failed alias text expectation was updated by its owner for the new native-base
+metadata; the native alias behavior continued to pass. Seven cold emission controls
+remain byte-identical. The one necessary normal scoped regeneration, original
+easings consumer and eight-header measurement are still required; this preparation
+claims no installed header or public consumer gain.
