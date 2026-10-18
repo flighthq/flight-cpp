@@ -93,11 +93,33 @@ assert.equal(hash(normalizeHelpers(registrationFile.contents)), hash(normalizeHe
 // than treating another compiler's patch count as proof of an identical declaration floor.
 const diagnostics = path.resolve(args['--diagnostics']);
 const suppliedProvenance = JSON.parse(fs.readFileSync(path.join(diagnostics, 'provenance.json')));
+let diagnosticBaseline, baselineSession, baselineQualification;
+if (args['--baseline-compiler']) {
+  // Composition may legitimately change generated bodies. Keep the independently supplied pair
+  // tied to its actual qualified compiler and exact original IR before recording the new output.
+  const qualificationFile = 'artifacts/particle-public-scratch-closure.json';
+  baselineQualification = JSON.parse(fs.readFileSync(path.join(root, qualificationFile)));
+  const baselineCompiler = path.resolve(args['--baseline-compiler']);
+  const sha256 = hash(fs.readFileSync(baselineCompiler));
+  assert.equal(sha256, baselineQualification.qualifiedCompiler.backendSha256);
+  assert.equal(hash(input), baselineQualification.emission.inputContextSha256);
+  const baselineBackend = await import(pathToFileURL(baselineCompiler));
+  baselineSession = baselineBackend.createCppCompilerBackend().createEmissionSession(context);
+  diagnosticBaseline = { qualificationFile, compilerBackendSha256: sha256, originalModuleIrUnchanged: true };
+}
 const diagnosticParity = emitted.filter(file => diagnosticSources.includes(file.source)).map(file => {
   const supplied = fs.readFileSync(path.join(diagnostics, 'include', file.path));
   assert.equal(hash(supplied), suppliedProvenance.headerSha256[file.path]);
-  assert.equal(hash(file.contents), hash(supplied), 'current compiler disagrees with supplied original ' + file.path);
-  return { file: file.path, sha256: hash(supplied), byteIdentical: true };
+  if (baselineSession) {
+    const prior = baselineQualification.emission.files.find(prior => prior.file === file.path);
+    assert.equal(file.moduleIrSha256, prior.moduleIrSha256, 'composition changed original diagnostic IR');
+    const baseline = baselineSession.emitModule(selected.find(module => module.source === file.source));
+    assert.equal(baseline.length, 1);
+    assert.equal(hash(baseline[0].contents), hash(supplied), 'qualified baseline disagrees with supplied original ' + file.path);
+  } else {
+    assert.equal(hash(file.contents), hash(supplied), 'current compiler disagrees with supplied original ' + file.path);
+  }
+  return { file: file.path, sha256: hash(file.contents), suppliedSha256: hash(supplied), byteIdentical: hash(file.contents) === hash(supplied), ...(baselineSession ? { suppliedByteIdenticalToQualifiedBaseline: true } : {}) };
 });
 
 // Existing inventory definitions are immutable witnesses for the ordinary derived duplicate
@@ -145,7 +167,7 @@ const report = {
   runtimeCommit: spawnSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).stdout.trim(),
   compilerBackendSha256: hash(fs.readFileSync(path.resolve(args['--compiler']))),
   inputContextSha256: hash(input), freshContextSha256: hash(freshContext), originalRegistrationIrUnchanged: true, registrationChangesOnlyGeneratedHelperIdentities: true, helperCalls, sourcePatches, sources, declaredTypeOnlyPatch: { file: patch, sha256: hash(fs.readFileSync(path.join(root, patch))) },
-  suppliedProvenance, diagnosticParity, repairs, aliases, canonicalIncludes: includes,
+  suppliedProvenance, diagnosticBaseline, diagnosticParity, repairs, aliases, canonicalIncludes: includes,
   files: emitted.map((file, index) => ({ ...raw[index], sha256: hash(file.contents) })),
   frozenProviders: providers.map((file, index) => ({ file: file.path, sha256: providerHashes[index] })),
   providerBytesUnchanged: true,
