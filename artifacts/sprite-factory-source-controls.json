@@ -201,5 +201,29 @@
     "Custom factory callbacks are caller supplied fixture callbacks through the original createNode2D API, not replacements for source providers.",
     "Builder2 owns Types/Sprite carriers and B coherence; this proof does not qualify those overrides or claim a native Sprite owner.",
     "No normal output/header promotion, package result, B acceptance, draw or framebuffer claim."
-  ]
+  ],
+  "evidenceArchive": {
+    "path": ".scratch-archive/builder4-sprite-factory-boundary-proof.tgz",
+    "sha256": "5f0f967df7554742088383e580c1b09617f6e3a4074582ab5173f901561d7d0d",
+    "members": 56
+  },
+  "unqualifiedTypeOnlyExperiment": {
+    "state": "Scratch only; NOT product implementation, strict pass, native pass or closure.",
+    "method": "Pass exact Sprite/SpriteData/SpriteRuntime type arguments through original allocation sites and initializers. All three transpiled JavaScript token streams match the preceding qualified effective files exactly;39source controls still pass.",
+    "emission": "Actual full graph completed. createSprite and createSpriteRuntime now emit with no assertion/body replacement; dependent createNodeRuntime and createNode2D are still refused. Two renderer helper refusals remain.",
+    "newlyExposedPrerequisites": [
+      {
+        "function": "createNodeRuntime",
+        "rule": "cpp-intersection-member-shapeless",
+        "message": "Generic result-owner constraint shape expansion reaches NoInfer with unknown argument; no represented shape."
+      },
+      {
+        "function": "createNode2D",
+        "rule": "cpp-contextual-union-inequivalent",
+        "message": "Generic readonly PartialNode<N> row cannot convert to inferred NodeInitialization<NodeData> row."
+      }
+    ],
+    "strictTypeScript": "NOT PASS: baseline has220diagnostics including two owned-module diagnostics; candidate also has220 including two owned-module diagnostics, one changed by generic data inference. No zero-regression/strict qualification claimed.",
+    "native": "NOT RUN; agreed native Sprite symbol slot still stores unrelated generic NodeRuntime instead of exact SpriteRuntime. Builder2 owns carrier repair."
+  }
 }
