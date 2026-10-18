@@ -4486,6 +4486,28 @@ static void test_structural_member_view_absence() {
   check(call_failed, "an actual member call on an absent array fails at the call");
 }
 
+// Shared view / JSON owner: identity, order, live writes, and absence-vs-null on a parsed object.
+static void test_json_owner_shared_view() {
+  const auto parsed = flight::Json::parse(flight::String("{\"b\":2,\"a\":null,\"1\":true}"));
+  const auto first = flight::named_properties(parsed);
+  check(first && first.has(flight::String("b")) && first.has(flight::String("a")) &&
+            !first.has(flight::String("missing")),
+        "the parsed JSON object exposes its own keys through the shared view");
+  check(first.get(flight::String("b")).as_number() == 2.0 &&
+            first.get(flight::String("a")).kind() == flight::AnyKind::null &&
+            first.get(flight::String("missing")).is_undefined(),
+        "a present null value is distinct from an absent member");
+  const auto keys = first.keys();
+  check(keys.size() == 3 && keys[0] == flight::String("1") &&
+            ((keys[1] == flight::String("b") && keys[2] == flight::String("a")) ||
+             (keys[1] == flight::String("a") && keys[2] == flight::String("b"))),
+        "JSON own-key order: integer-like keys first, then source order");
+  const bool wrote = first.set(flight::String("c"), flight::Any(3.0));
+  const auto second = flight::named_properties(parsed);
+  check(!wrote && !second.has(flight::String("c")) && first.keys().size() == 3,
+        "the parsed-JSON owner is read-only through this view: a write is refused and fabricates no member");
+}
+
 int main() {
   test_array();
   test_array_get_optional_index();
@@ -4507,6 +4529,7 @@ int main() {
   test_binary_data();
   test_base64();
   test_json_record();
+  test_json_owner_shared_view();
   test_any_to_string();
   test_erased_ref();
   test_any_object_reference_boxing();
