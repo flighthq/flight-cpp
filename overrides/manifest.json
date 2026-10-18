@@ -3580,6 +3580,22 @@
       "remaining": "CanvasHost/ImageHost overloads and the browser singleton renderer are unavailable on this native profile; callers explicitly supply their native glyph capability. Font selection/shaping is limited to the supplied glyph capability.",
       "expires": "when the compiler retains runtime heritage and can emit a native glyph-capability text renderer.",
       "authoredOn": "2026-10-17"
+    },
+    {
+      "id": "skeleton2d-formats-spine-parse-helpers-erased-array",
+      "path": "flight/skeleton2d_formats/spine_parse_helpers.hpp",
+      "package": "@flighthq/skeleton2d-formats",
+      "status": "complete",
+      "supplies": "packages/skeleton2d-formats/src/spineParseHelpers.ts",
+      "derivedFrom": "247249e767fe8b26c2c34f81cd22e72399c430ce93c97ea74531ef3df981f375",
+      "reason": "The 806d257 emission of spineParseHelpers.ts does not compile, so no consumer of the module (including clampUnit) can include it. After `Array.isArray` on an unknown value it reads `raw.length` / `curve.length` as `named_properties(x).get(\"length\")`, which is an Any and has no length behind it, because `named_properties` only sees AnyObject owners. It indexes `curve[i]` with a subscript flight::Any does not have. It passes each diagnostic detail object literal as a bare braced pair list into the optional<Record> parameter (docs/compiler-requests/optional-record-literal-not-materialized.md). And it reads `keys[i].curve` with `.value()`, which throws for a keyframe that has no `curve`, where TypeScript reads undefined.",
+      "change": "Seven expressions differ from the generated 806d257 header; every other byte is the emission:\n- The three erased length reads become `static_cast<double>(x.array_size())`.\n- The four `curve[offset + k]` reads become `curve.array_get(offset + k).value_or(flight::Any(flight::undefined))`.\n- The `curve` member read becomes `.value_or(flight::Any(flight::undefined))`.\n- The three detail literals name `flight::Record<String, variant<bool, double, String>>{...}` inside the optional slot.",
+      "equivalence": "`Any::array_size` and `Any::array_get` read the live original typed array storage without copying it, whatever element type it was boxed at, so the length and elements are the array's current ones, as JavaScript reads them. A missing, fractional or past-end index is absent, which `value_or(undefined)` turns into the undefined that `numberOr` maps to its fallback, as in the source. An absent `curve` member is undefined, so `Array.isArray` is false and the interval eases to null, as the source does instead of throwing. Each diagnostic detail Record holds the same single key and numeric value and is engaged in its optional, as the literal is. clampUnit, indexOfBone, indexOfSpineSlot, numberOr, parseSpineColor, the constants and every declaration are unchanged.",
+      "whyNotAPatchOrRepair": "No faithful TypeScript spelling reads an erased array: each respelling measured in docs/compiler-requests/erased-array-element-reading.md is refused or fails to compile, and asserting the curve's element type would narrow its domain. An emission repair may only add behaviorless text, while these are changed expressions. The runtime half is the checked erased-array API (`Any::array_size` / `array_get`), which is now supplied.",
+      "unblocks": "flight/skeleton2d_formats/spine_parse_helpers.hpp compiles, so clampUnit and the other Spine parse helpers are consumable through the original public header.",
+      "remaining": "None in this module's emitted declarations or behavior. The `Array.isArray(unknown)` guard depends on the runtime's free `flight::is_array(const Any&)` (being added by builder4); without it the generic catch-all returns false for every boxed array.",
+      "expires": "when the pinned compiler lowers erased array length/index reads through the checked Any array API, names the optional diagnostic Record, and reads an absent Record member as undefined for spineParseHelpers.ts.",
+      "authoredOn": "2026-10-18"
     }
   ]
 }
