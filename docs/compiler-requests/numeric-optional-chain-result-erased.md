@@ -135,3 +135,14 @@ so it is not a runtime qualification. Full native source-case checks, the ordere
 source/compiler stack and normal scoped generation are in progress. Declaration-only
 repairs will be retired only alongside their actual emitted definitions. No complete
 SVG import, CSS collection, five-caller or package claim is made.
+
+Code-first whole-body native diagnostics now compile, link and run: the original public
+gradient parser exercises inherited fresh arrays/stops/colors, stable sorting, live
+inherited changes and authored parent/currentColor/opacity/offset behavior. A second
+consumer matches untouched pinned TypeScript for 34 complete style cases covering all
+22 fields and 88 color cases, plus original cache/owner controls. It uses an explicit
+Unicode test-host service for its Unicode corpus. The diagnostic invokes the unchanged
+normal compiler leaf-module routing and structural-key renderer over the actual source
+graph; it does not replace production helpers. The two declaration-only repairs are
+retired in preparation for normal generation of their actual definitions. Final normal
+SDK and registered-consumer qualification remain required.

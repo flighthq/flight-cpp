@@ -697,3 +697,8 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 - [A typed array passed to a `readonly unknown[]` parameter needs a readonly element view](typed-array-into-readonly-unknown-array-parameter.md) —
   `@flighthq/scene3d-gl` fake GL error audit: `number[]` into `setError(..., readonly unknown[])` lowers as
   `Array<double>` against `Array<Any>`. Nothing is carried.
+
+- [Computed Record deletion must remove the property](record-computed-delete.md) —
+  shared mutable dictionary deletion, primitive missing-key storage and erased local
+  presence assertions enable the actual SVG style/color parser closure. Code-first
+  whole-body consumers pass; normal generation/final qualification is in progress.

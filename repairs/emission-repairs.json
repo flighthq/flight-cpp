@@ -9431,19 +9431,6 @@
       "expires": "when the emitter uses its long-form lowering at every partial row_get in a three-state position; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "scene2d-formats-declare-refused-svg-color",
-      "kind": "declare-refused-function",
-      "appliesTo": "flight/scene2d_formats/svg_color.hpp",
-      "symbol": "parse_svg_color",
-      "refusedFunction": "parseSvgColor",
-      "declaration": "std::optional<flight::Ref<flight::types::SvgColor>> parse_svg_color(flight::String value);",
-      "sourceDeclaration": "packages/scene2d-formats/src/svgColor.ts:16 -- parseSvgColor(value: string): SvgColor | null. Retained resolveSvgColor passes its original String or inherited currentColor String and returns optional<Ref<SvgColor>>.",
-      "diagnostic": "use of undeclared identifier 'parse_svg_color'",
-      "defect": "The emitter refuses parseSvgColor at split on an indexed regexp capture while retaining resolveSvgColor calling it. Exact String-to-existing optional SvgColor reference declaration only; no color parser/body, replacement color, schema owner or narrower color syntax is supplied. Calls to parser or resolver must remain exact missing-parser link failures. Requests: docs/compiler-requests/optional-index-member-present-flow.md and docs/compiler-requests/retained-declaration-calls-omitted-callee.md.",
-      "expectedWhen": "always",
-      "expires": "when parseSvgColor emits or its retained direct call disappears; the exact marker/call/no-definition witnesses stop matching and sdk:check rejects an obsolete repair."
-    },
-    {
       "id": "scene2d-formats-svg-transform-readonly-matrix",
       "kind": "respell-reference-member-access",
       "appliesTo": "flight/scene2d_formats/svg_transform.hpp",
@@ -9466,19 +9453,6 @@
       "defect": "The mutable-local lowering confuses rebinding `current` with mutating its readonly referent and inserts an invalid readonly-to-writable structural conversion before storing the value in the binding cell; the cell value is already the readonly target view, so the round trip establishes nothing. This is the same defect already carried for effects-canvas and effects-wgpu. Keep the same live target owner and the same rebind sequence; no writable authority, cast relaxation, copied target, or effect/runner behavior. Request: docs/compiler-requests/readonly-view-to-writable.md.",
       "expectedWhen": "always",
       "expires": "when a rebindable readonly structural view initializes its binding cell without a writable round trip; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "scene2d-formats-svg-declare-refused-style",
-      "kind": "declare-refused-function",
-      "appliesTo": "flight/scene2d_formats/svg_style.hpp",
-      "symbol": "resolve_svg_style",
-      "refusedFunction": "resolveSvgStyle",
-      "declaration": "flight::Ref<flight::types::SvgStyle> resolve_svg_style(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>> element, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>> parent_style, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgImportContext>>>> context);",
-      "sourceDeclaration": "packages/scene2d-formats/src/svgStyle.ts -- resolveSvgStyle(element: Readonly<XmlElement>, parentStyle: Readonly<SvgStyle>, context: Readonly<SvgImportContext>): SvgStyle; omitted while resolveSvgDefinitionStyle retains its exact three readonly-row call.",
-      "diagnostic": "use of undeclared identifier 'resolve_svg_style' after correcting the selector-specificity numeric carrier",
-      "defect": "The compiler refuses the cascade body on a record-index present-payload projection but retains its caller. Declare only the exact three readonly row parameter carriers and original Ref<SvgStyle> result already required by that retained call. No body, cache, copied owner, default style replacement or cascade success; direct/definition-style calls stay unavailable at link. Existing winding/declaration bodies are exercised through the original whole header.",
-      "expectedWhen": "always",
-      "expires": "when resolveSvgStyle emits and its exact NOT GENERATED marker disappears; sdk:check rejects an obsolete repair."
     }
   ]
 }
