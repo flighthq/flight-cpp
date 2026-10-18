@@ -488,8 +488,30 @@ void check_readonly_nullable_cells() {
   check(projection_rejected, "nullable projection must reject unrelated stored types rather than report absence");
 }
 
+// Typed row_set(nullopt) is a source undefined ASSIGNMENT (own key, undefined sentinel), while the
+// explicit typed delete removes the own key from the same owner.
+void test_typed_nullopt_presence_and_delete() {
+  using Options = flight::types::AmbientLightOptions;
+  const auto options = flight::make_ref<Options>(Options{});
+  const flight::StructuralRef<flight::RowOf<flight::Ref<Options>>> row(options);
+  flight::mark_constructed_own_named_properties(
+      options,
+      {flight::ConstructedOwnKey{flight::String("color"), flight::ConstructedKeySentinel::Value}});
+  flight::row_set<flight::RowKey<"color">>(row, std::nullopt);
+  auto properties = flight::named_properties(row);
+  check(properties.has(flight::String("color")) &&
+            properties.get(flight::String("color")).is_undefined(),
+        "typed row_set(nullopt) keeps the key own with the undefined sentinel");
+  check(properties.keys() == std::vector<flight::String>{flight::String("color")},
+        "typed undefined assignment keeps the authored own-key order");
+  check(flight::row_delete<flight::RowKey<"color">>(row) &&
+            !flight::named_properties(row).has(flight::String("color")),
+        "typed delete removes the own key on the same owner");
+}
+
 int main() {
   check_readonly_nullable_cells();
+  test_typed_nullopt_presence_and_delete();
   test_derived_carrier_view();
   // A Partial<T> object literal is an option bag: its supplied field is present, its omitted field
   // is absent, and constructing it must not collide optional row storage with T's bare native

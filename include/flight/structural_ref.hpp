@@ -120,6 +120,11 @@ class RowCell {
   // undefined there is refused rather than turned into a delete.
   [[nodiscard]] virtual bool carries_undefined_presence() const noexcept { return false; }
 
+  // Whether an undefined assignment is represented by DISENGAGING this cell (an optional carrier)
+  // rather than by storing the undefined value (a variant that has an Undefined arm). Only the
+  // optional form takes the clear path; a variant keeps the engaged Undefined alternative.
+  [[nodiscard]] virtual bool undefined_is_absence() const noexcept { return false; }
+
   // The address of the member this cell reads, for a cell that reads one, and null for a cell whose
   // value it owns itself. It is the only thing a C++20 runtime can use to recover SOURCE
   // DECLARATION ORDER: [class.mem] guarantees that later non-static data members with the same
@@ -156,6 +161,7 @@ class TypedRowCell : public RowCell {
   [[nodiscard]] std::type_index value_type() const noexcept final { return typeid(Value); }
 
   [[nodiscard]] bool carries_undefined_presence() const noexcept final { return true; }
+  [[nodiscard]] bool undefined_is_absence() const noexcept final { return detail::is_std_optional<Value>::value; }
   [[nodiscard]] virtual Value& get() = 0;
   virtual void set(Value value) = 0;
 
@@ -2025,6 +2031,17 @@ void row_set(const StructuralRef<Schema>& target, Value&& value) {
       std::same_as<std::remove_cvref_t<Value>, std::nullptr_t> &&
       detail::optional_traits<Expected>::optional && !std::constructible_from<Expected, Value&&>;
   static_assert(!std::is_void_v<Expected>, "structural row schema does not contain the requested property");
+  // A typed named write makes the member an own key on a constructed object (same owner), keeping
+  // the sentinel: nullopt is source undefined, an unrepresentable nullptr is source null, anything
+  // else is a value.
+  constexpr ConstructedKeySentinel written_sentinel =
+      writes_unrepresentable_null_as_absence
+          ? ConstructedKeySentinel::Null
+          : (std::same_as<std::remove_cvref_t<Value>, std::nullopt_t> ? ConstructedKeySentinel::Undefined
+                                                                     : ConstructedKeySentinel::Value);
+  if (target.shared_owner()) {
+    target.shared_owner()->mark_named_own_key(Key::name.view(), written_sentinel);
+  }
   static_assert(writes_unrepresentable_null_as_absence || std::constructible_from<Expected, Value&&>,
                 "structural row write has an incompatible value type");
   if (!target.shared_owner()) throw std::bad_weak_ptr();
@@ -2047,6 +2064,18 @@ void row_set(const StructuralRef<Schema>& target, Value&& value) {
   } else {
     target.shared_owner()->set_named_value(Key::name.view(), Expected(std::forward<Value>(value)));
   }
+}
+
+// Explicit delete for a typed named key: removes the key from the constructed own list and clears
+// the native optional. Distinct from a `row_set(..., std::nullopt)` assignment, which leaves the key
+// own with the undefined sentinel.
+template <typename Key, typename Schema>
+bool row_delete(const StructuralRef<Schema>& target) {
+  static_assert(!detail::schema_readonly<Schema>, "a readonly structural row cannot be written");
+  if (!target.shared_owner()) throw std::bad_weak_ptr();
+  target.shared_owner()->remove_named_own_key(Key::name.view());
+  if (auto cell = target.shared_owner()->named_cell_unmasked(Key::name.view())) return cell->assign_absent();
+  return false;
 }
 
 // Computed-symbol read. The owner's computed cell is consulted FIRST, because it is the only one of
@@ -2445,7 +2474,7 @@ class NamedProperties final {
     owner_->before_named_write(name);
     // An authored undefined is presence, not deletion: only a carrier that can hold present-undefined
     // takes the clear path. JSON cannot, so its write is refused as before and the key stays as it was.
-    if (value.is_undefined() && cell->carries_undefined_presence()) return cell->assign_absent();
+    if (value.is_undefined() && cell->undefined_is_absence()) return cell->assign_absent();
     return cell->assign_any(value);
   }
 
