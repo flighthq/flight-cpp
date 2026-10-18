@@ -523,7 +523,7 @@
   "runtimeInputSha256": {
     "include/flight/sequence_view.hpp": "1789491560deccdef7d1274704926bf6b7a3fb114f9cb20da3b5f7d2794100e9",
     "include/flight/json_scalar.hpp": "9be83c2fc02ad5e3b6c3c26973717e86e9481a5907ba15fd717ca196b3c7b342",
-    "include/flight/structural_ref.hpp": "6698befa2c710c713c4414c90064a522f25d2d3a5f59187aea95866ae5a2af6f",
+    "include/flight/structural_ref.hpp": "2713de3cdbacbb817aa120aa433308e0988c58b51ccad53614d609c5ae3be32d",
     "include/flight/any.hpp": "acfb00704fa2501e446c22dbd7aa287d2efd350c5cc25a311113a628604d6979"
   },
   "dependencyPins": {
@@ -540,5 +540,42 @@
     "sourceOracle": "/tmp/builder5-lottie-body/layers127-original-source32-oracle.log"
   },
   "qualificationScope": "Whole original public 32-case source oracle equivalence; installed SDK and inputs beyond these cases have no new success claim.",
-  "evidenceBundle": "builder5-whole-original-lottie32-qualified.tgz (attached to handoff; frozen five emitted headers, unchanged generated driver/oracle and logs)"
+  "evidenceBundle": "builder5-whole-original-lottie32-qualified.tgz (attached to handoff; frozen five emitted headers, unchanged generated driver/oracle and logs)",
+  "rebasedImplementationCommits": [
+    "8d95602d",
+    "f6eda802"
+  ],
+  "rebasedProofCommit": "e6a6f80d",
+  "handoffBaseCommit": "1c6b0201",
+  "postBaseRuntimeQualification": {
+    "runtimeBase": "7e106a01",
+    "change": "JS integer own-key order, preserves incoming presence/live-write/atomic-rejection floor",
+    "wholeOriginalPublicCompile": "PASS",
+    "wholeOriginalPublicLink": "PASS",
+    "casesRun": 32,
+    "checks": 220,
+    "failures": 0,
+    "runtimeOwnerCTest": "PASS30checks",
+    "buildLog": "/tmp/builder5-lottie-body/layers127-base7e-original-public-build.log",
+    "runLog": "/tmp/builder5-lottie-body/layers127-base7e-original-public-run.log",
+    "binarySha256": "61b6bde60171113929728efdc87731066462fbbaedd1e225b579cfb828329e65",
+    "structuralRefSha256": "2713de3cdbacbb817aa120aa433308e0988c58b51ccad53614d609c5ae3be32d"
+  },
+  "laterBaseChanges": {
+    "commits": [
+      "568e09f1",
+      "2fa5148e",
+      "15ff7761",
+      "2fc80a0b",
+      "1c6b0201"
+    ],
+    "scope": "Particle named-result compiler patch, source fixtures/docs/proofs only; no C++ runtime or installed header changes. Manifest merge preserves both entries.",
+    "manifestCompilerCount": 128,
+    "manifestFlightCount": 203,
+    "manifestTotal": 331,
+    "qualificationCompilerCount": 127,
+    "qualificationFlightCount": 203,
+    "qualificationTotal": 330,
+    "newCompilerOutputCoherence": "PENDING shared-output plan; no new generation for Builder3 or normal SDK. Existing exact127/330 output/provenance shared perForemanf6e265a5. Incoming named-result patch git-apply--check over qualified127 research compiler PASS."
+  }
 }
