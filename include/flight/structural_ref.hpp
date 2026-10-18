@@ -115,6 +115,11 @@ class RowCell {
 
   [[nodiscard]] virtual std::type_index value_type() const noexcept = 0;
 
+  // Whether this cell's carrier can hold JavaScript's present-undefined. A native optional can (a
+  // disengaged carrier means the source wrote undefined); JSON storage cannot, so a write of
+  // undefined there is refused rather than turned into a delete.
+  [[nodiscard]] virtual bool carries_undefined_presence() const noexcept { return false; }
+
   // The address of the member this cell reads, for a cell that reads one, and null for a cell whose
   // value it owns itself. It is the only thing a C++20 runtime can use to recover SOURCE
   // DECLARATION ORDER: [class.mem] guarantees that later non-static data members with the same
@@ -149,6 +154,8 @@ template <typename Value>
 class TypedRowCell : public RowCell {
  public:
   [[nodiscard]] std::type_index value_type() const noexcept final { return typeid(Value); }
+
+  [[nodiscard]] bool carries_undefined_presence() const noexcept final { return true; }
   [[nodiscard]] virtual Value& get() = 0;
   virtual void set(Value value) = 0;
 
@@ -339,23 +346,6 @@ class RowOwner {
       return keys;
     }
     return std::nullopt;
-  }
-
-  // EXPLICIT SOURCE OWN PRESENCE for a constructed native object. A source object literal names its
-  // own keys, and that list -- not the C++ carrier's engagement -- decides presence and order: an
-  // authored `key: null` or `key: undefined` is own even when its carrier is a disengaged optional,
-  // and a declared member the literal omitted is not own even when its carrier is engaged. Recorded
-  // once, after construction, on the owner every view of the object already shares. First spelling
-  // and first position win; a repeated key is ignored.
-  void mark_named_own_properties(std::initializer_list<String> keys) {
-    named_own_order_.clear();
-    named_own_marked_ = true;
-    for (const auto& key : keys) {
-      const auto name = key.to_utf8();
-      if (String::from_utf8(name) != key) continue;  // a lossy spelling names no native member
-      if (std::find(named_own_order_.begin(), named_own_order_.end(), name) != named_own_order_.end()) continue;
-      named_own_order_.push_back(name);
-    }
   }
 
   void mark_named_own_properties(std::initializer_list<ConstructedOwnKey> keys) {
@@ -2453,7 +2443,9 @@ class NamedProperties final {
     }
     if (!cell) return false;
     owner_->before_named_write(name);
-    if (value.is_undefined()) return cell->assign_absent();
+    // An authored undefined is presence, not deletion: only a carrier that can hold present-undefined
+    // takes the clear path. JSON cannot, so its write is refused as before and the key stays as it was.
+    if (value.is_undefined() && cell->carries_undefined_presence()) return cell->assign_absent();
     return cell->assign_any(value);
   }
 
@@ -2507,16 +2499,6 @@ template <typename Object>
 const std::shared_ptr<Object>& mark_constructed_own_property(const std::shared_ptr<Object>& object,
                                                              const Symbol& key) {
   if (object) detail::owner_for(object)->mark_symbol_written(key);
-  return object;
-}
-
-// The string-key form of the construction mark: the exact own keys the source literal authored, in
-// authored order, recorded on the same owner every view shares. Returns the same pointer and control
-// block; it reads no member, copies no schema or value and replaces no owner.
-template <typename Object>
-const std::shared_ptr<Object>& mark_constructed_own_named_properties(
-    const std::shared_ptr<Object>& object, std::initializer_list<String> sourceKeys) {
-  if (object) detail::owner_for(object)->mark_named_own_properties(sourceKeys);
   return object;
 }
 
