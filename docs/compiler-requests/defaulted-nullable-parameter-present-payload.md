@@ -46,6 +46,17 @@ override retains its explicit unsupported signal-owner limitation and partial st
 
 The registered original full-header `applySvgElementAppearance` consumer covers omitted/undefined/null,
 no-transform retention, author/geometry composition and order, live readonly Matrix cells, original
-target/style behavior and final geometry lifetime. Its execution and normal scoped SDK generation
-remain pending serialized package-writer coordination. No package/tier or full SVG import completion
-claim follows from the compiler and synthetic native checks.
+target/style behavior and final geometry lifetime. Its ten transform expectations also pass against
+the whole original pinned TypeScript functions and their real callees. One shared normal
+`scene2d-formats` generation completed successfully from frozen `0ff7a4b4`, with 86 ordered compiler
+patches and 201 Flight patches. The consumer uses the exact three complete `svg_style`, `svg_color`
+and `svg_document` headers from output `ec06bc2f`, without another generation or body substitutions.
+
+The registered CMake target builds and its CTest passes with the bounded hierarchy forwarding entry.
+Additional checks execute that explicit entry and preserve original row/control-block identity, live
+cells, retained child-array order, reparenting, no-op revisions, single argument/guard evaluation,
+exact guard exceptions and the existing unsupported signal-owner error. Override integrity passes
+226/226. After reconciling the delivered base, all 1,129 compiled project inputs other than the three
+shared generated headers remain byte-identical to the tested snapshot. The shared generation metadata
+is reconciled by its package writer. These checks establish this public appearance consumer; they do
+not establish a package/tier gain or full SVG import completion.
