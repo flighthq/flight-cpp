@@ -1,0 +1,255 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -5756,6 +5756,11 @@
+           ? emitCppStructuralRowAssignment(expression.left, right, context)
+           : undefined;
+       if (structuralRowAssignment) return structuralRowAssignment;
++      const constructedMemberAssignment =
++        expression.operator === '='
++          ? emitCppConstructedMemberAssignmentCpp(expression.left, right, context)
++          : undefined;
++      if (constructedMemberAssignment) return constructedMemberAssignment;
+       const recordIndexedAssignment =
+         expression.operator === '=' && getCppRuntimeProfile(context.options) === 'flight-cpp'
+           ? emitCppRecordIndexedAssignmentCpp(expression.left, right, context)
+@@ -8302,7 +8307,26 @@
+           const storageType =
+             getCppReferenceValueAliasStorageTypeCpp(constructionType, context, new Set()) ??
+             emitType(constructionType, context, 'storage');
+-          const made = `flight::make_ref<${storageType}>(${storageType}${initializer})`;
++          let made = `flight::make_ref<${storageType}>(${storageType}${initializer})`;
++          // Native storage defaults cannot tell an omitted key from an authored undefined/null.
++          // Record only source keys, in source order, after their original value evaluation and
++          // allocation. This annotates the same RowOwner; it never reads or copies a member.
++          // Spreads/accessors/computed keys keep their existing specialized construction paths.
++          const nativePlan = context.referenceRepresentationPlanner.plan(constructionType, context.module);
++          if (
++            nativePlan.kind === 'represented' &&
++            ['interface', 'objectAlias', 'anonymousObject'].includes(nativePlan.category) &&
++            expression.members.every((member) => member.kind === 'property')
++          ) {
++            const ownKeys = properties.map((property) => {
++              const propertyType = getIrObjectPropertyTypeCpp(constructionType, property.name, context);
++              const sentinel = getCppConstructedMemberSentinelCpp(propertyType, context);
++              return `{flight::String(${JSON.stringify(property.name)}), flight::ConstructedKeySentinel::${sentinel}}`;
++            });
++            context.includes.add('flight/structural_ref.hpp');
++            context.includes.add('initializer_list');
++            made = `flight::mark_constructed_own_named_properties(${made}, std::initializer_list<flight::ConstructedOwnKey>{${ownKeys.join(', ')}})`;
++          }
+           if (computedMembers.length === 0) return made;
+           return emitCppNominalComputedMemberConstructionCpp(made, storageType, computedMembers, constructionProperties, context);
+         }
+@@ -8722,6 +8746,8 @@
+       if (recordDelete) return recordDelete;
+       const structuralRowDelete = emitCppStructuralRowDeleteCpp(expression, context);
+       if (structuralRowDelete) return structuralRowDelete;
++      const constructedMemberDelete = emitCppConstructedMemberDeleteCpp(expression, context);
++      if (constructedMemberDelete) return constructedMemberDelete;
+       const nullishNegation = emitCppNullishObjectNegation(expression, context);
+       if (nullishNegation) return nullishNegation;
+       if (
+@@ -35566,6 +35592,76 @@
+   );
+ }
+ 
++// Literal key metadata describes storage, not a snapshot of a native value. A null-only optional
++// needs a null fallback for its disengaged carrier; represented alternatives remain cell-owned.
++function getCppConstructedMemberSentinelCpp(
++  type: Readonly<IrType> | undefined,
++  context: EmitContext,
++): 'Null' | 'Value' {
++  const union = type ? getIrUnionTypeCpp(type, context, new Set()) : undefined;
++  const plan = union ? getCppUnionRepresentationPlan(union, context) : undefined;
++  return plan?.sentinels.null === 'optionalAbsence' && plan.sentinels.undefined === 'absent' ? 'Null' : 'Value';
++}
++
++// A subsequent source assignment must add an omitted native key on its original owner. Keep the
++// original typed member assignment (including evaluation and return carrier), then record presence.
++// Class constructors use a raw receiver before shared ownership exists, and retain their existing
++// lowering, together with external/accessor storage. Only native literal representations participate.
++function emitCppConstructedMemberAssignmentCpp(
++  target: Readonly<IrExpression>,
++  value: string,
++  context: EmitContext,
++): string | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || target.kind !== 'property') return undefined;
++  const type = getIrExpressionTypeEvidenceCpp(target.object, context);
++  if (!type || getIrExpressionClassAccessorCpp(target.object, target.name, 'set', context)) return undefined;
++  const plan = context.referenceRepresentationPlanner.plan(type, context.module);
++  if (
++    plan.kind !== 'represented' ||
++    !['interface', 'objectAlias', 'anonymousObject'].includes(plan.category) ||
++    !hasFlightReferenceRepresentationCpp(type, context)
++  )
++    return undefined;
++  const property = getIrObjectPropertyTypeCpp(type, target.name, context);
++  if (!property) return undefined;
++  const receiver = getGeneratedTargetName('member_write_receiver', context);
++  const result = getGeneratedTargetName('member_write_result', context);
++  const sentinel = getCppConstructedMemberSentinelCpp(property, context);
++  context.includes.add('flight/structural_ref.hpp');
++  return `([&]() { const auto ${receiver} = ${emitExpression(target.object, context)}; auto ${result} = (${receiver}->${safeCppName(target.name)} = ${value}); flight::named_properties(${receiver}).shared_owner()->mark_named_own_key(${JSON.stringify(target.name)}, flight::ConstructedKeySentinel::${sentinel}); return ${result}; }())`;
++}
++
++// Source delete is distinct from assignment of undefined. A declared optional data field of an
++// exact native subject has a disengageable carrier, so row_delete clears it and removes own presence.
++function emitCppConstructedMemberDeleteCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'unary' }>>,
++  context: EmitContext,
++): string | undefined {
++  if (
++    getCppRuntimeProfile(context.options) !== 'flight-cpp' ||
++    expression.operator !== 'delete' ||
++    expression.operand.kind !== 'property'
++  )
++    return undefined;
++  const target = expression.operand;
++  const type = getIrExpressionTypeEvidenceCpp(target.object, context);
++  if (!type || getIrExpressionClassAccessorCpp(target.object, target.name, 'get', context)) return undefined;
++  const plan = context.referenceRepresentationPlanner.plan(type, context.module);
++  if (
++    plan.kind !== 'represented' ||
++    !['interface', 'objectAlias', 'anonymousObject'].includes(plan.category) ||
++    !hasFlightReferenceRepresentationCpp(type, context)
++  )
++    return undefined;
++  const property = context.referenceRepresentationPlanner
++    .resolveObjectShape(type, context.module)
++    ?.find((member) => member.name === target.name);
++  if (!property?.optional || property.readonly) return undefined;
++  context.includes.add('flight/structural_ref.hpp');
++  const rowType = `flight::StructuralRef<flight::RowWritable<flight::RowOf<${emitType(type, context)}>>>`;
++  return `flight::row_delete<flight::RowKey<${JSON.stringify(target.name)}>>(${rowType}(${emitExpression(target.object, context)}))`;
++}
++
+ function emitCppStructuralRowAssignment(
+   target: Readonly<IrExpression>,
+   value: string,
+diff --git a/packages/compiler-backend-cpp/src/cppNativeLiteralPresence.test.ts b/packages/compiler-backend-cpp/src/cppNativeLiteralPresence.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppNativeLiteralPresence.test.ts
+@@ -0,0 +1,121 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const toolchain = findCppCompilerToolchain();
++const includes = collectCppRuntimeIncludeDirectories(resolveDependency(root, 'flight-cpp').directory);
++const source = `export interface Meta{image:string;layers?:string[];scale?:string;size:number|null}
++let calls=0;
++function nullable():number|null{calls=calls*10+2;return null}
++function label():string{calls=calls*10+1;return 'native'}
++export function make():Meta{return {size:nullable(),scale:undefined,image:label()}}
++export function empty():Meta{return {image:'empty',size:null}}
++export function trace():number{return calls}
++export function write(value:Meta):void{value.layers=[];value.scale=undefined;value.image='changed'}
++export function erase(value:Meta):boolean{return delete value.scale}
++class Plain{value=0;constructor(value:number){this.value=value}}
++export function classValue():number{return new Plain(5).value}`;
++function emit(): string {
++  const [lowered] = lowerTypeScriptSources([
++    {
++      packageName: '@flighthq/probe',
++      upstreamDirectory: '/flight',
++      sourceFile: ts.createSourceFile('/flight/packages/probe/src/probe.ts', source, ts.ScriptTarget.Latest, true),
++    },
++  ]);
++  expect(lowered!.diagnostics).toEqual([]);
++  return emitIrModuleCpp(lowered!.module, {
++    runtimeProfile: 'flight-cpp',
++    packageTargets: { '@flighthq/probe': { namespace: 'probe', includePrefix: 'fixture' } },
++  }).contents;
++}
++it.skipIf(!toolchain || includes.length === 0)(
++  'retains authored null/undefined/omission/order and the original native owner',
++  () => {
++    const js: Record<string, (...args: unknown[]) => unknown> = {};
++    new Function(
++      'exports',
++      ts.transpileModule(source, {
++        compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
++      }).outputText,
++    )(js);
++    const expected = js.make!() as Record<string, unknown>;
++    const cppKeys = (value: Record<string, unknown>) =>
++      Object.keys(value)
++        .map((key) => 'flight::String(' + JSON.stringify(key) + ')')
++        .join(',');
++    const keys = cppKeys(expected);
++    const erased = js.erase!(expected);
++    const eraseAgain = js.erase!(expected);
++    const erasedKeys = cppKeys(expected);
++    expected.scale = undefined;
++    const readdedKeys = cppKeys(expected);
++    const written = js.empty!() as Record<string, unknown>;
++    js.write!(written);
++    const writtenKeys = cppKeys(written);
++    const directory = mkdtempSync(path.join(tmpdir(), 'flight-native-literal-presence-'));
++    try {
++      const header = emit();
++      expect(header).not.toContain('NOT GENERATED');
++      writeFileSync(path.join(directory, 'probe.hpp'), header);
++      const code = `#include "probe.hpp"
++#include <iostream>
++#include <stdexcept>
++int main(){try{
++(void)(sizeof(flight::RowKey<"image">)+sizeof(flight::RowKey<"layers">)+sizeof(flight::RowKey<"scale">)+sizeof(flight::RowKey<"size">));
++int checks=0;auto check=[&](bool value){++checks;if(!value)throw std::runtime_error("native presence control "+std::to_string(checks));};
++auto native=probe::make();auto alias=native;const auto row=flight::StructuralRef<flight::RowOf<flight::Ref<probe::Meta>>>(native);const auto properties=flight::named_properties(row);
++check(properties.keys()==std::vector<flight::String>{${keys}});
++check(probe::trace()==${String(js.trace!())});
++check(properties.has(flight::String("size"))&&properties.get(flight::String("size")).is_null());
++check(properties.has(flight::String("scale"))&&properties.get(flight::String("scale")).is_undefined());
++check(!properties.has(flight::String("layers"))&&properties.get(flight::String("layers")).is_undefined());
++const auto originalKeys=properties.keys();check(!properties.set(flight::String("layers"),flight::Any(13.0)));
++check(!properties.has(flight::String("layers"))&&properties.keys()==originalKeys);
++check(row.shared_object()==native&&alias==native);check(flight::named_properties(alias).shared_owner()==row.shared_owner());
++native->size=7;check(properties.get(flight::String("size")).as_number()==7);
++native->size.reset();check(properties.get(flight::String("size")).is_null());
++const auto empty=probe::empty();check(flight::named_properties(empty).keys()==std::vector<flight::String>{flight::String("image"),flight::String("size")});
++check(!flight::named_properties(empty).has(flight::String("scale")));
++check(probe::erase(native)==${String(erased)});
++check(!flight::named_properties(alias).has(flight::String("scale")));check(flight::named_properties(alias).keys()==std::vector<flight::String>{${erasedKeys}});check(probe::erase(native)==${String(eraseAgain)});
++check(properties.set(flight::String("scale"),flight::Any(flight::undefined)));
++check(flight::named_properties(alias).has(flight::String("scale"))&&flight::named_properties(alias).get(flight::String("scale")).is_undefined());
++check(flight::named_properties(alias).keys()==std::vector<flight::String>{${readdedKeys}});
++probe::write(empty);check(flight::named_properties(empty).has(flight::String("layers")));
++check(flight::named_properties(empty).has(flight::String("scale"))&&flight::named_properties(empty).get(flight::String("scale")).is_undefined());
++check(flight::named_properties(empty).keys()==std::vector<flight::String>{${writtenKeys}});
++check(flight::named_properties(empty).get(flight::String("image")).as_string()==flight::String("changed"));
++check(probe::class_value()==${String(js.classValue!())});
++std::cout<<checks<<" original source native-literal presence controls PASS\\n";
++}catch(const std::exception& error){std::cerr<<error.what()<<"\\n";return 1;}}`;
++      const input = path.join(directory, 'native.cpp'),
++        output = path.join(directory, getCppExecutableName(toolchain!, 'native'));
++      writeFileSync(input, code);
++      execFileSync(
++        toolchain!.command,
++        createCppExecutableArguments(toolchain!, input, output, [directory, ...includes]),
++        { stdio: 'pipe' },
++      );
++      expect(execFileSync(output, [], { encoding: 'utf8', stdio: 'pipe' })).toContain(
++        '25 original source native-literal presence controls PASS',
++      );
++    } finally {
++      rmSync(directory, { recursive: true, force: true });
++    }
++  },
++  120000,
++);

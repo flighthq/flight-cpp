@@ -1,0 +1,126 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -5001,15 +5001,21 @@
+       if (member && isCppJsonDocumentNativeResultMemberCpp(receiver, member, context))
+         return `flight::row_get<flight::RowKey<${JSON.stringify(expression.name)}>>(${object})`;
+       const structured = member && isCppJsonDocumentStructuredTypeCpp(member, context);
++      // Parameter context may remove only the optional wrapper around the same raw structured
++      // value. Reproject its existing owner; absence and malformed shapes still fail at original use.
++      const projected =
++        structured && expectedType && isCppJsonDocumentProjectionTypeCpp(expectedType, context)
++          ? expectedType
++          : member;
+       const read = (owner: string) =>
+         structured
+-          ? `flight::json_assertion_row<${emitCppJsonDocumentSchemaCpp(member!, context)}>(flight::read_json_scalar_row_member(${owner}, ${key}).raw())`
++          ? `flight::json_assertion_row<${emitCppJsonDocumentSchemaCpp(projected!, context)}>(flight::read_json_scalar_row_member(${owner}, ${key}).raw())`
+           : `flight::read_json_scalar_row_member(${owner}, ${key})`;
+       let value = read(object);
+       if (expression.optional) {
+         const owner = getGeneratedTargetName('jsonOptionalReceiver', context);
+         const missing = structured
+-          ? `flight::json_assertion_row<${emitCppJsonDocumentSchemaCpp(member!, context)}>(flight::Any(flight::undefined))`
++          ? `flight::json_assertion_row<${emitCppJsonDocumentSchemaCpp(projected!, context)}>(flight::Any(flight::undefined))`
+           : 'flight::JsonScalarCell{}';
+         value = `([&]() { const auto ${owner} = ${object}; if (flight::json_row_is_nullish(${owner})) return ${missing}; return ${read(owner)}; }())`;
+       }
+diff --git a/packages/compiler-backend-cpp/src/cppJsonOptionalMemberArgument.test.ts b/packages/compiler-backend-cpp/src/cppJsonOptionalMemberArgument.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppJsonOptionalMemberArgument.test.ts
+@@ -0,0 +1,94 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const toolchain = findCppCompilerToolchain();
++const includes = collectCppRuntimeIncludeDirectories(resolveDependency(root, 'flight-cpp').directory);
++const source = `interface Tag{name:string}
++interface Meta{frameTags?:Tag[]}
++interface ArrayDocument{frames:{filename:string}[];meta:Meta}
++interface HashDocument{frames:Record<string,{duration:number}>;meta:Meta}
++type Document=ArrayDocument|HashDocument;
++function names(tags:Tag[]):string[]{return tags.map(tag=>tag.name)}
++export function parse(source:string):string[]{const doc=JSON.parse(source) as Document;return doc.meta.frameTags?names(doc.meta.frameTags):[]}`;
++it.skipIf(!toolchain || includes.length === 0)(
++  'forwards an optional raw JSON array to the original required-array helper without reading it early',
++  () => {
++    const [lowered] = lowerTypeScriptSources([
++      {
++        packageName: '@flighthq/probe',
++        upstreamDirectory: '/flight',
++        sourceFile: ts.createSourceFile('/flight/packages/probe/src/probe.ts', source, ts.ScriptTarget.Latest, true),
++      },
++    ]);
++    expect(lowered!.diagnostics).toEqual([]);
++    const header = emitIrModuleCpp(lowered!.module, {
++      runtimeProfile: 'flight-cpp',
++      packageTargets: { '@flighthq/probe': { namespace: 'probe', includePrefix: 'fixture' } },
++    }).contents;
++    expect(header).not.toContain('NOT GENERATED');
++    const oracle: Record<string, (source: string) => unknown> = {};
++    new Function(
++      'exports',
++      ts.transpileModule(source, {
++        compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
++      }).outputText,
++    )(oracle);
++    const cases = [
++      '{"frames":[],"meta":{}}',
++      '{"frames":{},"meta":{"frameTags":null}}',
++      '{"frames":[],"meta":{"frameTags":[]}}',
++      '{"frames":[],"meta":{"frameTags":[{"name":"one"},{"name":"two"}]}}',
++      '{"frames":[],"meta":{"frameTags":{}}}',
++      '{"frames":[],"meta":{"frameTags":"bad"}}',
++    ];
++    const controls = cases
++      .map((input) => {
++        let expected: unknown;
++        try {
++          expected = oracle.parse!(input);
++        } catch (error) {
++          expect(error).toBeInstanceOf(TypeError);
++          return `try{(void)probe::parse(flight::String(${JSON.stringify(input)}));throw std::runtime_error("missing source TypeError");}catch(const flight::TypeError&){++checks;}`;
++        }
++        const values = (expected as string[]).map((value) => 'flight::String(' + JSON.stringify(value) + ')').join(',');
++        return `check(([&](){const auto actual=probe::parse(flight::String(${JSON.stringify(input)}));const std::vector<flight::String> expected{${values}};if(actual.size()!=expected.size())return false;for(std::size_t i=0;i<expected.size();++i)if(actual[i]!=expected[i])return false;return true;})());`;
++      })
++      .join('\n');
++    const dir = mkdtempSync(path.join(tmpdir(), 'flight-json-optional-argument-'));
++    try {
++      writeFileSync(path.join(dir, 'probe.hpp'), header);
++      const input = path.join(dir, 'native.cpp'),
++        output = path.join(dir, getCppExecutableName(toolchain!, 'native'));
++      writeFileSync(
++        input,
++        `#include "probe.hpp"
++#include <iostream>
++#include <stdexcept>
++int main(){try{int checks=0;auto check=[&](bool value){++checks;if(!value)throw std::runtime_error("optional argument mismatch");};${controls}std::cout<<checks<<" source optional-array argument controls PASS\\n";}catch(const std::exception& error){std::cerr<<error.what()<<"\\n";return 1;}}`,
++      );
++      execFileSync(toolchain!.command, createCppExecutableArguments(toolchain!, input, output, [dir, ...includes]), {
++        stdio: 'pipe',
++      });
++      expect(execFileSync(output, [], { encoding: 'utf8' })).toContain(
++        '6 source optional-array argument controls PASS',
++      );
++    } finally {
++      rmSync(dir, { recursive: true, force: true });
++    }
++  },
++  120000,
++);

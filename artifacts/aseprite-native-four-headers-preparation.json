@@ -1,0 +1,53 @@
+{
+  "kind": "DIAGNOSTIC original source overlay, not normal output/header or SDK promotion",
+  "compilerPatchCount": 133,
+  "flightPatchCount": 204,
+  "originalSourceCount": 1175,
+  "runtime": "5ac31f0971475bf84cb8beff9649d69db6ca7bd9",
+  "commandExit": 1,
+  "commandNonzeroReason": "Eight foreign overrides stale against provisional B; all four selected headers compile. Builder2 owns this override/type coherence lane.",
+  "staleForeignOverrides": [
+    "types-log-sink-reference-parameter",
+    "native-e2e-render-scene_render",
+    "native-e2e-render-render_target",
+    "native-scene2d-gl-render-render-proxy",
+    "native-scene2d-gl-render-render-state",
+    "native-scene2d-gl-types-node",
+    "native-scene2d-gl-types-sprite",
+    "text-label-native-runtime-heritage"
+  ],
+  "headerReport": {
+    "schema": "flight-sdk-header-compilation/2",
+    "compiler": {
+      "command": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/build/tooling/zig-c++",
+      "version": "clang version 22.1.8"
+    },
+    "generated": {
+      "compilerRevision": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "sourceRevisions": [
+        "a62784923f3be814463286c9fb28edfe6ab15789"
+      ]
+    },
+    "run": {
+      "complete": true,
+      "elapsedSeconds": 887.9,
+      "headerSelection": "explicit",
+      "jobs": 1
+    },
+    "summary": {
+      "attemptedHeaders": 4,
+      "failedHeaders": 0,
+      "passedHeaders": 4,
+      "totalHeaders": 4,
+      "unattemptedHeaders": 0
+    },
+    "failures": [],
+    "passed": [
+      "flight/spritesheet_formats/_internal_index.hpp",
+      "flight/spritesheet_formats/aseprite_parse.hpp",
+      "flight/spritesheet_formats/contract.hpp",
+      "flight/spritesheet_formats/spritesheet_detect.hpp"
+    ],
+    "unattempted": []
+  }
+}

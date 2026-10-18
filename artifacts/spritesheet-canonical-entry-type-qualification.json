@@ -1,0 +1,396 @@
+{
+  "schema": "flight-cpp-spritesheet-canonical-entry-type-qualification/1",
+  "status": "PASS scoped source/native/compiler/original-four-header preparation; normal regeneration and actual sdk:check held",
+  "patch": "source-patches/spritesheet-formats-canonical-entry-type.patch",
+  "patchSha256": "ff5c331c3ab3f9837610f17db21bf4c3d1b7718bf7c0cc80226eca5d04655ebd",
+  "sourcePin": "a62784923f3be814463286c9fb28edfe6ab15789",
+  "flightPatchCount": 204,
+  "compilerPatchCount": 133,
+  "sourceProof": {
+    "scope": "source erased type-alias preparation; complete original spritesheetDetect public tests and actual dependency bodies; native proof separate",
+    "sourceTests": [
+      "installs a named format and nothing else",
+      "installs nothing for empty options, rather than falling back to the built-ins",
+      "detects TexturePacker JSON",
+      "detects Aseprite JSON",
+      "detects Starling XML",
+      "detects Cocos plist XML",
+      "does not claim a ParticleDesigner emitter plist",
+      "does not claim %s #0",
+      "does not claim %s #1",
+      "does not claim %s #2",
+      "does not claim %s #3",
+      "detects both the old and new Cocos frame vocabularies",
+      "detects what Flight own Cocos serializer writes, including an empty sheet",
+      "detects a sheet containing a frame named frames",
+      "detects libGDX atlas",
+      "returns null for unknown format",
+      "returns the registered entry for a known kind",
+      "returns null for an unknown kind",
+      "reflects a format registered via registerSpritesheetFormat",
+      "enumerates sorted bound kinds and stops naming one after it is unregistered",
+      "auto-detects and parses TexturePacker JSON",
+      "auto-detects and parses Aseprite JSON",
+      "auto-detects and parses Starling XML",
+      "forwards supplied image dimensions to the Starling parser",
+      "returns null for unknown format",
+      "respects explicit formatKind override",
+      "passes frameDuration option to parsers",
+      "allows registering a custom format",
+      "an Aseprite export also satisfies the TexturePacker detector",
+      "resolves an overlapping document to the narrower format, not the broader one",
+      "parses an overlapping document with the narrower parser",
+      "places Aseprite before the broader TexturePacker",
+      "covers exactly the built-in kinds the registry holds",
+      "carries the entry identity the registry holds for each kind",
+      "names each kind once",
+      "removes a format from detection and direct resolution"
+    ],
+    "checks": 60,
+    "canonicalEntry": {
+      "sameFieldsAndCallbacks": true,
+      "publicParameterAndReadonlyResultIdentical": true,
+      "beforeSha256": "bff33e1a95da42f9231b1a370390a9e7a6b9748d342585d8610cca10ed74e9db",
+      "afterSha256": "19e88c9c3d7f7071506db76237ff989018874da9189648648c76e5041351ca9a",
+      "completeJavaScriptSha256": "795fb93e25dbc2653d34dfa75eb10b36f3fe661967edfef9b03029a6c2c1ff06",
+      "byteIdenticalJavaScript": true
+    },
+    "runtimeJavaScriptShaUnchangedFromPrivateOnly": true
+  },
+  "limitations": [
+    "No new normal SDK generation has occurred: installed outputs retain the previously approved121compiler/202Flight run.",
+    "Actual sdk:check regenerates its requested17-package closure and still needs Foreman slot/disk authorization.",
+    "Provisional B dependency coherence and its eight stale foreign overrides remain held by builder2.",
+    "No normal header, inventory,117-package or public GL promotion follows from diagnostic native success."
+  ],
+  "rawSourceProof": {
+    "scope": "source erased type-alias preparation; complete original spritesheetDetect public tests and actual dependency bodies; native proof separate",
+    "sourceTests": [
+      "installs a named format and nothing else",
+      "installs nothing for empty options, rather than falling back to the built-ins",
+      "detects TexturePacker JSON",
+      "detects Aseprite JSON",
+      "detects Starling XML",
+      "detects Cocos plist XML",
+      "does not claim a ParticleDesigner emitter plist",
+      "does not claim %s #0",
+      "does not claim %s #1",
+      "does not claim %s #2",
+      "does not claim %s #3",
+      "detects both the old and new Cocos frame vocabularies",
+      "detects what Flight own Cocos serializer writes, including an empty sheet",
+      "detects a sheet containing a frame named frames",
+      "detects libGDX atlas",
+      "returns null for unknown format",
+      "returns the registered entry for a known kind",
+      "returns null for an unknown kind",
+      "reflects a format registered via registerSpritesheetFormat",
+      "enumerates sorted bound kinds and stops naming one after it is unregistered",
+      "auto-detects and parses TexturePacker JSON",
+      "auto-detects and parses Aseprite JSON",
+      "auto-detects and parses Starling XML",
+      "forwards supplied image dimensions to the Starling parser",
+      "returns null for unknown format",
+      "respects explicit formatKind override",
+      "passes frameDuration option to parsers",
+      "allows registering a custom format",
+      "an Aseprite export also satisfies the TexturePacker detector",
+      "resolves an overlapping document to the narrower format, not the broader one",
+      "parses an overlapping document with the narrower parser",
+      "places Aseprite before the broader TexturePacker",
+      "covers exactly the built-in kinds the registry holds",
+      "carries the entry identity the registry holds for each kind",
+      "names each kind once",
+      "removes a format from detection and direct resolution"
+    ],
+    "checks": 58,
+    "canonicalEntry": {
+      "sameFieldsAndCallbacks": true,
+      "beforeSha256": "a8df38fa61ea6971d536312482b9f79641f3b7ffea743cb82a9c86b15f2c41f2",
+      "afterSha256": "50cf223259ea7bd6f4762a00e78132d3412309a684a2eae3115d8c96944f8986",
+      "completeJavaScriptSha256": "87984e6b17af2c98bee73809c56fb547ef88821153f24f5963684d7dd8d97407",
+      "byteIdenticalJavaScript": true
+    }
+  },
+  "sourceStackRoundtrip": {
+    "patches": 204,
+    "compilerFloor": 133,
+    "rawRestoredClean": true,
+    "reappliedPaths": 280,
+    "allPatchedBytesEqual": true,
+    "emissionInputBytesEqual": true
+  },
+  "sourcePatchAutomation": {
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0
+  },
+  "priorPrivateOnlyPreparation": {
+    "patchSha256": "c2131244bce51e5414e9048f6b87466787a0fce6533ac7a2157107df18922228",
+    "sourceProof": {
+      "scope": "source erased type-alias preparation; complete original spritesheetDetect public tests and actual dependency bodies; native proof separate",
+      "sourceTests": [
+        "installs a named format and nothing else",
+        "installs nothing for empty options, rather than falling back to the built-ins",
+        "detects TexturePacker JSON",
+        "detects Aseprite JSON",
+        "detects Starling XML",
+        "detects Cocos plist XML",
+        "does not claim a ParticleDesigner emitter plist",
+        "does not claim %s #0",
+        "does not claim %s #1",
+        "does not claim %s #2",
+        "does not claim %s #3",
+        "detects both the old and new Cocos frame vocabularies",
+        "detects what Flight own Cocos serializer writes, including an empty sheet",
+        "detects a sheet containing a frame named frames",
+        "detects libGDX atlas",
+        "returns null for unknown format",
+        "returns the registered entry for a known kind",
+        "returns null for an unknown kind",
+        "reflects a format registered via registerSpritesheetFormat",
+        "enumerates sorted bound kinds and stops naming one after it is unregistered",
+        "auto-detects and parses TexturePacker JSON",
+        "auto-detects and parses Aseprite JSON",
+        "auto-detects and parses Starling XML",
+        "forwards supplied image dimensions to the Starling parser",
+        "returns null for unknown format",
+        "respects explicit formatKind override",
+        "passes frameDuration option to parsers",
+        "allows registering a custom format",
+        "an Aseprite export also satisfies the TexturePacker detector",
+        "resolves an overlapping document to the narrower format, not the broader one",
+        "parses an overlapping document with the narrower parser",
+        "places Aseprite before the broader TexturePacker",
+        "covers exactly the built-in kinds the registry holds",
+        "carries the entry identity the registry holds for each kind",
+        "names each kind once",
+        "removes a format from detection and direct resolution"
+      ],
+      "checks": 58,
+      "canonicalEntry": {
+        "sameFieldsAndCallbacks": true,
+        "beforeSha256": "bff33e1a95da42f9231b1a370390a9e7a6b9748d342585d8610cca10ed74e9db",
+        "afterSha256": "484e43e5836273d79fb2394adbc3f4caf4e01bc9a9c5b3ad362bd4459ee7f3ce",
+        "completeJavaScriptSha256": "795fb93e25dbc2653d34dfa75eb10b36f3fe661967edfef9b03029a6c2c1ff06",
+        "byteIdenticalJavaScript": true
+      }
+    },
+    "roundtrip": {
+      "patches": 204,
+      "compilerFloor": 130,
+      "rawRestoredClean": true,
+      "reappliedPaths": 280,
+      "allPatchedBytesEqual": true,
+      "emissionInputBytesEqual": true
+    },
+    "emissionModules": 7,
+    "sourceCount": 1175,
+    "refusedOriginalModules": 0,
+    "nativeWholeHeaderCompileExit": 1,
+    "cause": "original anonymous registerSpritesheetFormat entry cannot convert to private canonical entry Ref; lookup result also has duplicated anonymous schema. Test-harness template deduction corrected separately."
+  },
+  "compilerOrderedRoundtrip": {
+    "rawPin": "806d257d2f4100de745cc97340e61c2f301b0f24",
+    "patchCount": 133,
+    "rawRestoredClean": true,
+    "reappliedPaths": 117,
+    "allPatchedBytesEqual": true,
+    "sourceRoot": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-canonical-entry-compiler133",
+    "repoHead": "c8ead726f8579aff356b80f1b0ff597e158d0b21"
+  },
+  "strictCompilerBuildExit": 0,
+  "outsideClosureFlightPatches": [
+    "node-mutable-runtime-retained-owner-parameter",
+    "swf-button-definition-dual-sentinel-locals",
+    "swf-legacy-place-object-dual-sentinel-locals"
+  ],
+  "outsideClosureQualification": "Current repo207Flight = frozen original203 + own entry alias + three patches outside the17-package1175-source emission closure; no source difference in this closure inferred beyond the alias.",
+  "nativeTestDriverSha256": "920ac962ad8c46ad626c830b409d57c61d3911345fb7952e9710c6e9338f7294",
+  "nativeTestScope": "Whole original public registry bodies, actual built-in parser/factory/serializer dependencies, original source fixture cases, source entry identity/order and additional callback live alias/options/result/lifetime controls. No extracted parser body, value copy, fake registration implementation or manual owner cell binding.",
+  "nativeTestDriver": "artifacts/spritesheet-canonical-entry-public-native.cpp",
+  "nativeReproduction": {
+    "cxx": "g++15.2.0",
+    "languageFlags": [
+      "-std=c++20",
+      "-ffp-contract=off",
+      "-O0"
+    ],
+    "includeOrder": [
+      "isolated seven-original-module overlay",
+      "frozen runtime overrides/include",
+      "exact provisional B normal generated/include",
+      "frozen runtime include"
+    ],
+    "driver": "artifacts/spritesheet-canonical-entry-public-native.cpp",
+    "compileAndRun": {
+      "compileExit": 0,
+      "linkExit": 0,
+      "runExit": 0,
+      "checks": 54,
+      "output": "54 whole-original public registry checks passed",
+      "runtime": "5ac31f0971475bf84cb8beff9649d69db6ca7bd9",
+      "publicBodies": "whole original registry and real built-in parser/factory/serializer dependency bodies",
+      "normalSdkGeneration": false
+    }
+  },
+  "wholeOriginalEmission": {
+    "sourceCount": 1175,
+    "packages": [
+      "entity",
+      "geometry",
+      "image",
+      "image-codec",
+      "importdiagnostics",
+      "log",
+      "math",
+      "registry",
+      "requirement",
+      "signals",
+      "spritesheet",
+      "spritesheet-formats",
+      "texture",
+      "textureatlas",
+      "textureatlas-formats",
+      "types",
+      "xml"
+    ],
+    "compilerPatchCount": 133,
+    "selectedModules": [
+      {
+        "path": "flight/spritesheet_formats/aseprite_parse.hpp",
+        "refused": []
+      },
+      {
+        "path": "flight/spritesheet_formats/libgdx_atlas_parse.hpp",
+        "refused": []
+      },
+      {
+        "path": "flight/spritesheet_formats/spritesheet_detect.hpp",
+        "refused": []
+      },
+      {
+        "path": "flight/spritesheet_formats/starling_parse.hpp",
+        "refused": []
+      },
+      {
+        "path": "flight/spritesheet_formats/texture_packer_parse.hpp",
+        "refused": []
+      },
+      {
+        "path": "flight/textureatlas_formats/texture_atlas_aseprite_parse.hpp",
+        "refused": []
+      },
+      {
+        "path": "flight/textureatlas_formats/texture_packer_atlas_parse.hpp",
+        "refused": []
+      }
+    ],
+    "completeBodies": true,
+    "normalFactoryAliasRepairs": {
+      "files": [
+        "flight/spritesheet_formats/aseprite_parse.hpp",
+        "flight/spritesheet_formats/libgdx_atlas_parse.hpp",
+        "flight/spritesheet_formats/starling_parse.hpp",
+        "flight/spritesheet_formats/texture_packer_parse.hpp",
+        "flight/textureatlas_formats/texture_atlas_aseprite_parse.hpp",
+        "flight/textureatlas_formats/texture_packer_atlas_parse.hpp"
+      ],
+      "structs": [
+        "entity_runtime_key_animations_frames_image_file_image_height_image_width_scale_fca52e21c591e40d",
+        "entity_runtime_key_direction_frame_duration_frame_durations_frame_names_repeat_count_name_origin_x_origin_y_295ef68241b6918e",
+        "entity_runtime_key_height_name_offset_x_offset_y_pivot_x_pivot_y_rotated_source_height_source_width_width_x_y_764be38b43135437",
+        "height_id_name_original_height_original_width_page_name_pivot_x_pivot_y_rotation_source_x_source_y_trimmed_x_y_width_cc6b37d497b99a10"
+      ]
+    },
+    "normalSdkGeneration": false
+  },
+  "priorSixModuleByteComparison": [
+    {
+      "path": "flight/spritesheet_formats/aseprite_parse.hpp",
+      "byteIdentical": true
+    },
+    {
+      "path": "flight/spritesheet_formats/libgdx_atlas_parse.hpp",
+      "byteIdentical": true
+    },
+    {
+      "path": "flight/spritesheet_formats/starling_parse.hpp",
+      "byteIdentical": true
+    },
+    {
+      "path": "flight/spritesheet_formats/texture_packer_parse.hpp",
+      "byteIdentical": true
+    },
+    {
+      "path": "flight/textureatlas_formats/texture_atlas_aseprite_parse.hpp",
+      "byteIdentical": true
+    },
+    {
+      "path": "flight/textureatlas_formats/texture_packer_atlas_parse.hpp",
+      "byteIdentical": true
+    }
+  ],
+  "compilerRegressions": {
+    "files": 8,
+    "tests": 32,
+    "passed": 32,
+    "failed": 0,
+    "skipped": 0,
+    "runtime": "5ac31f0971475bf84cb8beff9649d69db6ca7bd9",
+    "reportSha256": "b802ba7f3672976916b622434ac68348cd492049dddf5f159113e61ce6a4e753"
+  },
+  "originalFourHeaders": {
+    "kind": "DIAGNOSTIC original source overlay, not normal output/header or SDK promotion",
+    "compilerPatchCount": 133,
+    "flightPatchCount": 204,
+    "originalSourceCount": 1175,
+    "runtime": "5ac31f0971475bf84cb8beff9649d69db6ca7bd9",
+    "commandExit": 1,
+    "commandNonzeroReason": "Eight foreign overrides stale against provisional B; all four selected headers compile. Builder2 owns this override/type coherence lane.",
+    "staleForeignOverrides": [
+      "types-log-sink-reference-parameter",
+      "native-e2e-render-scene_render",
+      "native-e2e-render-render_target",
+      "native-scene2d-gl-render-render-proxy",
+      "native-scene2d-gl-render-render-state",
+      "native-scene2d-gl-types-node",
+      "native-scene2d-gl-types-sprite",
+      "text-label-native-runtime-heritage"
+    ],
+    "headerReport": {
+      "schema": "flight-sdk-header-compilation/2",
+      "compiler": {
+        "command": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/build/tooling/zig-c++",
+        "version": "clang version 22.1.8"
+      },
+      "generated": {
+        "compilerRevision": "806d257d2f4100de745cc97340e61c2f301b0f24",
+        "sourceRevisions": [
+          "a62784923f3be814463286c9fb28edfe6ab15789"
+        ]
+      },
+      "run": {
+        "complete": true,
+        "elapsedSeconds": 887.9,
+        "headerSelection": "explicit",
+        "jobs": 1
+      },
+      "summary": {
+        "attemptedHeaders": 4,
+        "failedHeaders": 0,
+        "passedHeaders": 4,
+        "totalHeaders": 4,
+        "unattemptedHeaders": 0
+      },
+      "failures": [],
+      "passed": [
+        "flight/spritesheet_formats/_internal_index.hpp",
+        "flight/spritesheet_formats/aseprite_parse.hpp",
+        "flight/spritesheet_formats/contract.hpp",
+        "flight/spritesheet_formats/spritesheet_detect.hpp"
+      ],
+      "unattempted": []
+    }
+  }
+}

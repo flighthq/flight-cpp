@@ -862,3 +862,61 @@ forwarding and passes 53 focused tests without skips, with 10 new emitted-native
 runtime checks. All bodies in the original Lottie, diagnostic type and collector modules emit.
 The whole public consumer still requires its native closure proof; no SDK or Types generation,
 public 32-case success, or exact 21-header promotion is inferred.
+
+
+### Normal formats output with 121 compiler patches output and stronger public qualification (2026-10-18)
+
+The approved single grouped formats run exited zero on the archived 121 compiler / 323
+patch input set and provisional B 6e1aa571 dependencies. All 1,150 frozen B dependency
+headers and 323 initial patch payload hashes still match. The 19 own generated paths
+were committed before native checks; the superseded atlas Aseprite override was removed
+so the checks consume the original emitted parser bodies. Root shared metadata was
+canonically merged rather than importing the foreign B package slices. The output
+retains explicit mixed-profile warnings for 14 dependency packages.
+
+The official original four-header check attempted all four with Zig/Clang 22 and
+real SDL3 flags: **1 pass / 3 fail**. `aseprite_parse.hpp` passes. The two barrels and
+`spritesheet_detect.hpp` fail because retained callers name refused `inferAnimations`
+helpers in LibGDX and Starling. Their successful regex matches have mandatory groups,
+but the conservative capture carrier lacks proof at the Map key argument. A separate
+source-equivalence preparation adds only erased assertions at those proven uses; no
+normal replacement generation or header promotion has occurred.
+
+The expanded whole original public consumer compiles and links with GNU C++15 against
+the full archived 9ec runtime and exact provisional B dependencies. Its strict run
+**fails** at the first newly checked syntax-fallback document snapshot: native
+`AsepriteMeta` enumerates omitted `layers` and `slices` keys. A diagnostic run continues
+while retaining this failure, reaches 2,443 checks, and finishes nonzero with exactly
+three such key-count failures. All remaining checks report no failure, including
+valid raw document snapshots, returned owner identity, live nested writes, array/hash
+replacement before the next authored discriminator use, separate parse roots and
+eight valid-JSON error-at-use cases. Builder6 owns the constructed native presence
+question. Earlier 1,577-check proof covered data/diagnostics and native compatibility;
+it did not assert these seven source document snapshots.
+
+The required `sdk:check` reproduction remains pending a coordinated generation slot.
+The current no-further-generation hold is honored. B remains provisional, and none of
+these results establishes a complete SDK, public GL path, ABI or capability gain.
+
+
+The six erased capture assertions now have complete-module JavaScript equivalence
+and 64 source controls on both the raw pin and composed input. All 203 Flight patches
+reverse to a clean pin and reapply byte-exactly. The two whole original helper headers
+emit without refusal and compile/link/run 34 native controls on the archived runtime.
+This remains isolated preparation. The follow-up four-header diagnostic still reports
+1 pass / 3 fail, with the first cause moving to an obsolete TexturePacker atlas override
+whose native-only signature rejects the newly emitted raw document view.
+
+The unchanged 2,443-check public consumer passes on the complete `7d06f37d` runtime,
+but this is diagnostic evidence only. A separate native counterexample shows that
+runtime's global optional-engagement rule hides required nullable own properties.
+Actual GL context source authors required nullable keys as `null`; their generated
+C++ storage is also optional, so storage engagement cannot prove source omission.
+Foreman accepted the regression and assigned builder6 the runtime correction and
+builder4 the compiler construction hook. Explicit authored presence and order must
+remain on the same owner, with null, undefined, omission, aliases and deletion kept
+distinct. A safe runtime and compiler API is being agreed before qualification.
+
+Native literal construction now needs authored own-key metadata. The separate compiler-native-literal-own-presence patch records explicit source keys after the existing value evaluations and make_ref on the same owner, with a null fallback for null-only optional storage. It retains live native cells, records subsequent typed field assignments, and uses row_delete for exact optional native data-field deletion. Spreads, accessors, and computed construction retain their specialized lowering.
+
+The unchanged expanded original public consumer passes2443 field checks with all seven document snapshots on the corrected complete runtime and isolated whole-module emission. The required-nullable and live-alias/rejected-write counterexamples also pass. This is preparation evidence: final packaged checks and the normal four-header/sdk:check reproduction remain open. Numeric index keys exposed a separate runtime ordering counterexample, reported to builder6; this work does not claim that broader key ordering is qualified.

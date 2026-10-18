@@ -1,0 +1,47 @@
+diff --git a/packages/spritesheet-formats/src/spritesheetDetect.ts b/packages/spritesheet-formats/src/spritesheetDetect.ts
+--- a/packages/spritesheet-formats/src/spritesheetDetect.ts
++++ b/packages/spritesheet-formats/src/spritesheetDetect.ts
+@@ -1,6 +1,7 @@
+ import { getKindMapKeys, withKindMapEntry, withoutKindMapEntry } from '@flighthq/registry/contract';
+ import type {
+   SpritesheetFormatDescriptor,
++  SpritesheetFormatEntry,
+   SpritesheetImportOptions,
+   Kind,
+   SpritesheetData,
+@@ -21,10 +22,7 @@
+ import { parseStarlingSpritesheet } from './starlingParse.ts';
+ import { parseTexturePackerSpritesheet } from './texturePackerParse.ts';
+ 
+-interface FormatEntry {
+-  detect: (text: string) => boolean;
+-  parse: (text: string, options: SpritesheetParseOptions) => SpritesheetData;
+-}
++type FormatEntry = SpritesheetFormatEntry;
+ 
+ interface RegisteredFormatEntry {
+   entry: FormatEntry;
+@@ -136,10 +134,7 @@
+  *  Returns the `{ detect, parse }` entry for the given kind, or `null` when no
+  *  format with that kind has been registered. Useful for introspecting which formats
+  *  are in the registry or for building meta-dispatch logic on top of the registry. */
+-export function getSpritesheetFormat(kind: SpritesheetFormatKind): Readonly<{
+-  detect: (text: string) => boolean;
+-  parse: (text: string, options: SpritesheetParseOptions) => SpritesheetData;
+-}> | null {
++export function getSpritesheetFormat(kind: SpritesheetFormatKind): Readonly<FormatEntry> | null {
+   return getRegistry().get(kind)?.entry ?? null;
+ }
+ 
+@@ -176,10 +171,7 @@
+  *  (e.g. `'acme.MyAtlas'`) to avoid colliding with built-ins. */
+ export function registerSpritesheetFormat(
+   kind: SpritesheetFormatKind,
+-  entry: {
+-    detect: (text: string) => boolean;
+-    parse: (text: string, options: SpritesheetParseOptions) => SpritesheetData;
+-  },
++  entry: FormatEntry,
+ ): void {
+   bindSpritesheetFormat(kind, entry);
+ }

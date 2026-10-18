@@ -1,0 +1,34 @@
+diff --git a/packages/spritesheet-formats/src/libgdxAtlasParse.ts b/packages/spritesheet-formats/src/libgdxAtlasParse.ts
+--- a/packages/spritesheet-formats/src/libgdxAtlasParse.ts
++++ b/packages/spritesheet-formats/src/libgdxAtlasParse.ts
+@@ -198,10 +198,10 @@
+     const match = noExt.match(/^(.*?)_?(\d+)$/);
+     if (!match) continue;
+     const [, base, numStr] = match;
+-    const index = parseInt(numStr, 10);
+-    const bucket = groups.get(base);
++    const index = parseInt(numStr!, 10);
++    const bucket = groups.get(base!);
+     if (bucket) bucket.push({ index, name });
+-    else groups.set(base, [{ index, name }]);
++    else groups.set(base!, [{ index, name }]);
+   }
+ 
+   const animations: SpritesheetAnimationData[] = [];
+diff --git a/packages/spritesheet-formats/src/starlingParse.ts b/packages/spritesheet-formats/src/starlingParse.ts
+--- a/packages/spritesheet-formats/src/starlingParse.ts
++++ b/packages/spritesheet-formats/src/starlingParse.ts
+@@ -97,10 +97,10 @@
+     const match = noExt.match(/^(.*?)_?(\d+)$/);
+     if (!match) continue;
+     const [, base, numStr] = match;
+-    const index = parseInt(numStr, 10);
+-    const bucket = groups.get(base);
++    const index = parseInt(numStr!, 10);
++    const bucket = groups.get(base!);
+     if (bucket) bucket.push({ index, name });
+-    else groups.set(base, [{ index, name }]);
++    else groups.set(base!, [{ index, name }]);
+   }
+ 
+   const animations: SpritesheetAnimationData[] = [];
