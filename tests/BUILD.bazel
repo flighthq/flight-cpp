@@ -93,6 +93,13 @@ cc_test(
 # Links the SDK preview for the generated structural member table; named row members do not resolve
 # against the runtime alone.
 cc_test(
+    name = "named_function_origin_test",
+    srcs = ["named_function_origin_test.cpp"],
+    size = "small",
+    deps = ["//:cpp"],
+)
+
+cc_test(
     name = "structural_row_test",
     srcs = ["structural_row_test.cpp"],
     size = "small",
