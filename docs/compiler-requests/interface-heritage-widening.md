@@ -1004,3 +1004,44 @@ and the same three failures on both backends: glTF texture widening expectations
 carrier collapse, and imported collection-alias spelling. This is baseline parity, not a clean suite.
 The repository source-patch automation passes both tests. Broader static gates were not rerun for this
 unit; the preceding preparation recorded existing static failures.
+
+
+## G3 GL two-cell view contract and current API counterexample
+
+Manager `2c728248` approves exactly two payload relations: the `EntityRuntimeKey` cell viewed as
+`RenderStateRuntime | undefined` / `GlRenderStateRuntime | undefined`, and the runtime's `registries`
+cell viewed as `RenderRegistries` / `GlRenderRegistries`. This authorizes reuse of builder2's shared
+primitive; it does not relax native heritage/storage checks or authorize a copied/shadow/attachment
+cell, an unchecked downcast, or another view family. WGPU generation remains a separate coordinated
+unit with builder2 as its sole writer.
+
+The preserved [source contract](../../tests/fixtures/gl_cell_views/source_contract.ts) passes strict
+TypeScript checking and all **26 source assertions**. Base/derived references share both owners and
+physical properties, see replacement in both directions and clearing, preserve callable identity and
+map mutation, and distinguish a missing symbol property from one written as `undefined`. Interned
+symbol identity differs from a unique symbol with the same description. A legal base write can place a
+base-only payload in the property; reading that value stays lazy, and its absent derived member is
+`undefined`. At an actual typed native GL escape, that unsupported payload must instead raise the one
+shared `flight::NativeScalarEscapeError`, keeping the native site explicitly partial. No earlier
+view/by-name read may throw or synthesize an empty reference.
+
+The [current API probe](../../tests/fixtures/gl_cell_views/current_api_probe.cpp) builds and runs
+against the current row APIs and the exact shared out-of-profile header (SHA256
+`bbac1c1b51addd0332b0b2ff30a6c1c29bb1acf0dc8b58af5a8ce58986861052`). It deliberately uses
+by-owner projections over the two source-related, independently emitted native shapes to expose the
+missing payload bridge; this is not a claim that the compiler currently authorizes that projection,
+a native GL implementation, or an original public consumer.
+
+The [observations](../../tests/fixtures/gl_cell_views/baseline_observations.json) show five concrete
+gaps in these legacy operations: a valid derived runtime is read as an empty base optional; a raw
+registry read throws `bad_cast`; a base write leaves the physical derived slot unchanged and creates
+an attachment entry; clearing the physical slot then leaves a stale base read from that attachment.
+The probe also confirms one symbol cell, written-undefined presence, distinct unique-symbol identity,
+and retained/released object lifetime. These controls explain why using the legacy operations directly
+would be incorrect; they do not recommend that fallback as an implementation.
+
+The shared primitive and concrete construction registration remain required inputs from builder2.
+The membership helper is also held on that registration: building an owner only after a value has
+already widened to a base pointer loses the derived declared cells. The original registry consumer and
+all eight historical headers remain unqualified until the coordinated normal output is available.
+No runtime implementation or SDK output changes are included in this counterexample checkpoint.

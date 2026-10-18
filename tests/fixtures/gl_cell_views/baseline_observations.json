@@ -1,0 +1,61 @@
+{
+  "expected": {
+    "onePhysicalSymbolCell": true,
+    "baseReadsPresentRuntime": true,
+    "baseRegistryRawReadIsLazy": true,
+    "baseOnlyRuntimeWriteChangesPhysicalCell": true,
+    "legacyWriteUsesAttachment": false,
+    "baseClearVisibleToDerived": true,
+    "baseReadAfterClearIsUndefined": true,
+    "absentIsNotPresent": true,
+    "writtenUndefinedIsPresent": true,
+    "sameDescriptionSymbolDistinct": true,
+    "baseViewRetainsOwner": true,
+    "lastViewReleasesOwner": true
+  },
+  "observed": {
+    "onePhysicalSymbolCell": true,
+    "baseReadsPresentRuntime": false,
+    "baseRegistryRawReadIsLazy": false,
+    "baseOnlyRuntimeWriteChangesPhysicalCell": false,
+    "legacyWriteUsesAttachment": true,
+    "baseClearVisibleToDerived": true,
+    "baseReadAfterClearIsUndefined": false,
+    "absentIsNotPresent": true,
+    "writtenUndefinedIsPresent": true,
+    "sameDescriptionSymbolDistinct": true,
+    "baseViewRetainsOwner": true,
+    "lastViewReleasesOwner": true
+  },
+  "differences": {
+    "baseReadsPresentRuntime": {
+      "sourceOrRequired": true,
+      "nativeCurrent": false
+    },
+    "baseRegistryRawReadIsLazy": {
+      "sourceOrRequired": true,
+      "nativeCurrent": false
+    },
+    "baseOnlyRuntimeWriteChangesPhysicalCell": {
+      "sourceOrRequired": true,
+      "nativeCurrent": false
+    },
+    "legacyWriteUsesAttachment": {
+      "sourceOrRequired": false,
+      "nativeCurrent": true
+    },
+    "baseReadAfterClearIsUndefined": {
+      "sourceOrRequired": true,
+      "nativeCurrent": false
+    }
+  },
+  "notAnImplementation": true,
+  "notAPublicConsumer": true,
+  "sourceCaseCount": 26,
+  "sourceStrictTypecheck": "pass",
+  "scope": [
+    "EntityRuntimeKey optional RenderStateRuntime/GlRenderStateRuntime",
+    "runtime.registries RenderRegistries/GlRenderRegistries"
+  ],
+  "nativeBoundary": "Probes existing legacy row access over source-related schemas; does not assert compiler authorization of that projection or implement the approved typed-view primitive."
+}
