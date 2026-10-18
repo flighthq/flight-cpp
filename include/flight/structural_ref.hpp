@@ -5,6 +5,7 @@
 #include <concepts>
 #include <cstddef>
 #include <functional>
+#include <limits>
 #include <memory>
 #include <mutex>
 #include <optional>
@@ -979,8 +980,25 @@ class MemberValue final {
 
   [[nodiscard]] bool has_value() const noexcept { return value_.has_value(); }
   [[nodiscard]] const Value& value() const { return value_.value(); }
+  // A member CALL or iteration on an absent value is the source's TypeError: fail at that operation.
   [[nodiscard]] const Value* operator->() const { return &value_.value(); }
-  [[nodiscard]] operator const Value&() const { return value_.value(); }
+
+  // Numeric use of an absent value is JavaScript's `undefined` in a numeric context: NaN, so
+  // comparisons are false and arithmetic yields NaN. It is NOT a use-time throw.
+  [[nodiscard]] operator Value() const
+    requires std::floating_point<Value>
+  {
+    return value_.value_or(std::numeric_limits<Value>::quiet_NaN());
+  }
+
+  // Every other value use (copying a string/object, passing it on) fails at the use when absent;
+  // member calls and iteration already fail above at the operation.
+  [[nodiscard]] operator const Value&() const
+    requires(!std::floating_point<Value>)
+  {
+    return value_.value();
+  }
+
   [[nodiscard]] bool to_boolean() const noexcept {
     return value_.has_value() && ToBoolean{}(*value_);
   }

@@ -4453,7 +4453,24 @@ static void test_structural_member_view_absence() {
   } catch (const std::bad_optional_access&) {
     use_failed = true;
   }
-  check(use_failed, "using an absent member fails at the use, not at the read");
+  check(use_failed, "an explicit value() of an absent member fails at the use");
+
+  // Source numeric semantics for a present `started` with missing total/loaded/totalWeight:
+  // `undefined === 0` is false, `undefined > 0` is false, `undefined / undefined` is NaN -- no
+  // generic conversion throw. Member calls on an absent array still fail AT the call (TypeError).
+  const auto total = view.read<double>("total");
+  const auto total_weight = view.read<double>("totalWeight");
+  const auto loaded = view.read<double>("loaded");
+  check(!(total == 0.0) && !(total_weight > 0.0) && std::isnan(loaded / total),
+        "missing numeric members follow JS NaN/false-comparison semantics, not a conversion throw");
+  const auto absent_array = empty_view.read<flight::Array<int>>("reports");
+  bool call_failed = false;
+  try {
+    (void)absent_array->size();
+  } catch (const std::bad_optional_access&) {
+    call_failed = true;
+  }
+  check(call_failed, "an actual member call on an absent array fails at the call");
 }
 
 int main() {
