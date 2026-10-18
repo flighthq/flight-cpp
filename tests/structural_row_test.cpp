@@ -21,6 +21,15 @@
 namespace {
 
 // A base and a derived record with native heritage, so make_ref records the derived allocation.
+// A plain record whose cells hold each JavaScript value kind typeof distinguishes. The erased view binds
+// cells through the generated SDK member table, so every field uses a name the SDK emits.
+struct TestTypeofCells : public flight::ReferenceEnabled {
+  double count = 2.0;
+  flight::String label = flight::String("text");
+  bool visible = true;
+  std::optional<flight::Ref<TestTypeofCells>> child;
+  std::optional<double> duration;
+};
 struct TestProvenanceBase : public flight::ReferenceEnabled {
   double radius = 0.0;
 };
@@ -1135,6 +1144,55 @@ int main() {
       null_threw = true;
     }
     check(null_threw, "`in` on a null reference throws TypeError");
+  }
+
+  // ERASED typeof OF EACH VALUE KIND, AND THE ERRORS `in` AND A MEMBER READ RAISE. typeof answers from the
+  // own cell's present value; a cell holding undefined and a key never declared both answer "undefined";
+  // `in` distinguishes them only by presence. `in` on any primitive, and a member read of undefined, throw
+  // TypeError as JavaScript does; arrays and functions are refused rather than answered from a guess.
+  {
+    auto cells = flight::make_ref<TestTypeofCells>();
+    cells->child = flight::make_ref<TestTypeofCells>();
+    const auto value = flight::Any::object(cells);
+    check(flight::member_typeof(value, flight::String("count")) == flight::String("number") &&
+              flight::member_typeof(value, flight::String("label")) == flight::String("string") &&
+              flight::member_typeof(value, flight::String("visible")) == flight::String("boolean") &&
+              flight::member_typeof(value, flight::String("child")) == flight::String("object"),
+          "typeof reads each present cell's own value kind");
+    check(flight::member_typeof(value, flight::String("duration")) == flight::String("undefined") &&
+              flight::member_typeof(value, flight::String("neverDeclared")) == flight::String("undefined"),
+          "an unset optional cell and an undeclared key are both typeof undefined");
+    check(flight::has_property(value, flight::String("count")) && flight::has_property(value, flight::String("visible")) &&
+              flight::has_property(value, flight::String("hasOwnProperty")) &&
+              !flight::has_property(value, flight::String("neverDeclared")),
+          "`in` reports declared cells and Object.prototype names, not undeclared keys");
+    const auto throws_type_error = [](auto&& query) {
+      try {
+        query();
+      } catch (const flight::TypeError&) {
+        return true;
+      }
+      return false;
+    };
+    check(throws_type_error([] { static_cast<void>(flight::has_property(flight::Any(), flight::String("x"))); }) &&
+              throws_type_error([] { static_cast<void>(flight::has_property(flight::Any(flight::null), flight::String("x"))); }) &&
+              throws_type_error([] { static_cast<void>(flight::has_property(flight::Any(flight::String("s")), flight::String("length"))); }) &&
+              throws_type_error([] { static_cast<void>(flight::has_property(flight::Any(true), flight::String("x"))); }),
+          "`in` on undefined, null, a string or a boolean throws TypeError");
+    check(throws_type_error([] { static_cast<void>(flight::member_typeof(flight::Any(), flight::String("x"))); }),
+          "reading a member of undefined throws TypeError");
+    const auto refused = [](auto&& query) {
+      try {
+        query();
+      } catch (const flight::OutOfProfileError&) {
+        return true;
+      }
+      return false;
+    };
+    const auto array = flight::Any(flight::Array<flight::Any>{flight::Any(1.0)});
+    check(refused([&] { static_cast<void>(flight::has_property(array, flight::String("length"))); }) &&
+              refused([&] { static_cast<void>(flight::member_typeof(array, flight::String("length"))); }),
+          "an erased array's members are refused, not answered");
   }
 
   // ERASED PRESENCE AND TYPEOF THROUGH THE PROTOTYPE CHAIN. `key in value` and `typeof value.key` on an
