@@ -31,8 +31,34 @@ int main() {
   // source evaluation order intact.
   const double duration = (100.0 - 10.0) / fr;
   assert(duration == 3.0);
-  assert(fr + 2.0 == 32.0 && fr * 2.0 == 60.0 && fr - 10.0 == 20.0);
+  assert((fr + 2.0).as_native_number() == 32.0 && fr * 2.0 == 60.0 && fr - 10.0 == 20.0);
   assert(fr > 0.0 && bad > 0.0 == false);
+
+  // `+` is ToPrimitive, not universal ToNumber: a string operand concatenates in both orders.
+  const JsonScalarCell thirty_text{Any(flight::String("30"))};
+  const JsonScalarCell two{Any(2.0)};
+  const JsonScalarCell concat_left = thirty_text + two;
+  const JsonScalarCell concat_right = two + thirty_text;
+  const JsonScalarCell concat_both = thirty_text + thirty_text;
+  assert(concat_left.type_of() == "string" && concat_left.to_string() == flight::String("302"));
+  assert(concat_right.type_of() == "string" && concat_right.to_string() == flight::String("230"));
+  assert(concat_both.to_string() == flight::String("3030"));
+  assert(thirty_text - two == 28.0 && thirty_text * two == 60.0 && thirty_text / two == 15.0);
+
+  // Relational: two strings are lexical; mixed string/number is ToNumber. NaN comparisons false.
+  const JsonScalarCell five_text{Any(flight::String("5"))};
+  assert(thirty_text < five_text);          // "30" < "5" lexically true
+  assert(!(thirty_text < two));             // 30 < 2 numerically false
+  assert(two < thirty_text);                // 2 < 30 numerically true
+  assert(!(absent > 0.0) && !(absent < 0.0));  // NaN comparisons false
+
+  // null/undefined/NaN in `+`: null is 0 numerically, undefined/NaN stay NaN.
+  const JsonScalarCell null_value{Any(flight::null)};
+  const JsonScalarCell undefined_value;
+  const JsonScalarCell nan_value{Any(std::numeric_limits<double>::quiet_NaN())};
+  assert((null_value + two).to_number() == 2.0);
+  assert(std::isnan((undefined_value + two).to_number()));
+  assert(std::isnan((nan_value + two).to_number()));
   assert(fr.type_of() == "number" && !fr.is_nullish() && fr.to_boolean());
 
   // typeof observes the RAW value, not the declared type.

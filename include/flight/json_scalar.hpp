@@ -119,39 +119,28 @@ class JsonScalarCell final {
     return !std::isnan(left) && !std::isnan(right) && left == right;
   }
 
-  // JavaScript binary operations on this cell use ToNumber explicitly; these are operations, not
-  // native conversions. A non-number participates through its ToNumber (NaN comparisons are false),
-  // preserving raw-value semantics without an implicit native wrapper.
-  [[nodiscard]] friend double operator+(const JsonScalarCell& left, const JsonScalarCell& right) {
-    return left.to_number() + right.to_number();
+  // JavaScript `+` is NOT universal ToNumber: ToPrimitive first, and if EITHER primitive is a string
+  // the result is string concatenation. The result stays a raw-valued cell so downstream operations
+  // keep their source semantics (e.g. "30" + 2 -> "302", then ToNumber if used numerically).
+  [[nodiscard]] static JsonScalarCell add(const JsonScalarCell& left, const JsonScalarCell& right) {
+    if (left.primitive_is_string() || right.primitive_is_string()) {
+      return JsonScalarCell{Any(left.to_string() + right.to_string())};
+    }
+    return JsonScalarCell{Any(left.to_number() + right.to_number())};
   }
-  [[nodiscard]] friend double operator-(const JsonScalarCell& left, const JsonScalarCell& right) {
-    return left.to_number() - right.to_number();
+  [[nodiscard]] friend JsonScalarCell operator+(const JsonScalarCell& left, const JsonScalarCell& right) {
+    return add(left, right);
   }
-  [[nodiscard]] friend double operator*(const JsonScalarCell& left, const JsonScalarCell& right) {
-    return left.to_number() * right.to_number();
+  [[nodiscard]] friend JsonScalarCell operator+(const JsonScalarCell& left, double right) {
+    return add(left, JsonScalarCell{Any(right)});
   }
-  [[nodiscard]] friend double operator/(const JsonScalarCell& left, const JsonScalarCell& right) {
-    return left.to_number() / right.to_number();
-  }
-  [[nodiscard]] friend bool operator<(const JsonScalarCell& left, const JsonScalarCell& right) {
-    return left.to_number() < right.to_number();
-  }
-  [[nodiscard]] friend bool operator>(const JsonScalarCell& left, const JsonScalarCell& right) {
-    return left.to_number() > right.to_number();
-  }
-  [[nodiscard]] friend bool operator<=(const JsonScalarCell& left, const JsonScalarCell& right) {
-    return left.to_number() <= right.to_number();
-  }
-  [[nodiscard]] friend bool operator>=(const JsonScalarCell& left, const JsonScalarCell& right) {
-    return left.to_number() >= right.to_number();
+  [[nodiscard]] friend JsonScalarCell operator+(double left, const JsonScalarCell& right) {
+    return add(JsonScalarCell{Any(left)}, right);
   }
 
-  [[nodiscard]] friend double operator+(const JsonScalarCell& left, double right) {
-    return left.to_number() + right;
-  }
-  [[nodiscard]] friend double operator+(double left, const JsonScalarCell& right) {
-    return left + right.to_number();
+  // - * / are numeric (ToNumber both); the raw cells only enter through that operation.
+  [[nodiscard]] friend double operator-(const JsonScalarCell& left, const JsonScalarCell& right) {
+    return left.to_number() - right.to_number();
   }
   [[nodiscard]] friend double operator-(const JsonScalarCell& left, double right) {
     return left.to_number() - right;
@@ -159,11 +148,17 @@ class JsonScalarCell final {
   [[nodiscard]] friend double operator-(double left, const JsonScalarCell& right) {
     return left - right.to_number();
   }
+  [[nodiscard]] friend double operator*(const JsonScalarCell& left, const JsonScalarCell& right) {
+    return left.to_number() * right.to_number();
+  }
   [[nodiscard]] friend double operator*(const JsonScalarCell& left, double right) {
     return left.to_number() * right;
   }
   [[nodiscard]] friend double operator*(double left, const JsonScalarCell& right) {
     return left * right.to_number();
+  }
+  [[nodiscard]] friend double operator/(const JsonScalarCell& left, const JsonScalarCell& right) {
+    return left.to_number() / right.to_number();
   }
   [[nodiscard]] friend double operator/(const JsonScalarCell& left, double right) {
     return left.to_number() / right;
@@ -171,29 +166,55 @@ class JsonScalarCell final {
   [[nodiscard]] friend double operator/(double left, const JsonScalarCell& right) {
     return left / right.to_number();
   }
-  [[nodiscard]] friend bool operator<(const JsonScalarCell& left, double right) {
-    return left.to_number() < right;
+
+  // Relational: ToPrimitive both; string/string is LEXICAL, every other combination is ToNumber.
+  // NaN makes each comparison false.
+  [[nodiscard]] static bool less(const JsonScalarCell& left, const JsonScalarCell& right) {
+    if (left.primitive_is_string() && right.primitive_is_string()) {
+      return left.to_string().native() < right.to_string().native();
+    }
+    return left.to_number() < right.to_number();
   }
-  [[nodiscard]] friend bool operator<(double left, const JsonScalarCell& right) {
-    return left < right.to_number();
+  [[nodiscard]] static bool less_equal(const JsonScalarCell& left, const JsonScalarCell& right) {
+    if (left.primitive_is_string() && right.primitive_is_string()) {
+      return left.to_string().native() <= right.to_string().native();
+    }
+    const double l = left.to_number();
+    const double r = right.to_number();
+    return !std::isnan(l) && !std::isnan(r) && l <= r;
   }
-  [[nodiscard]] friend bool operator>(const JsonScalarCell& left, double right) {
-    return left.to_number() > right;
+  [[nodiscard]] static bool greater(const JsonScalarCell& left, const JsonScalarCell& right) {
+    return less(right, left);
   }
-  [[nodiscard]] friend bool operator>(double left, const JsonScalarCell& right) {
-    return left > right.to_number();
+  [[nodiscard]] static bool greater_equal(const JsonScalarCell& left, const JsonScalarCell& right) {
+    return less_equal(right, left);
   }
-  [[nodiscard]] friend bool operator<=(const JsonScalarCell& left, double right) {
-    return left.to_number() <= right;
-  }
-  [[nodiscard]] friend bool operator<=(double left, const JsonScalarCell& right) {
-    return left <= right.to_number();
-  }
-  [[nodiscard]] friend bool operator>=(const JsonScalarCell& left, double right) {
-    return left.to_number() >= right;
-  }
-  [[nodiscard]] friend bool operator>=(double left, const JsonScalarCell& right) {
-    return left >= right.to_number();
+  [[nodiscard]] friend bool operator<(const JsonScalarCell& l, const JsonScalarCell& r) { return less(l, r); }
+  [[nodiscard]] friend bool operator>(const JsonScalarCell& l, const JsonScalarCell& r) { return greater(l, r); }
+  [[nodiscard]] friend bool operator<=(const JsonScalarCell& l, const JsonScalarCell& r) { return less_equal(l, r); }
+  [[nodiscard]] friend bool operator>=(const JsonScalarCell& l, const JsonScalarCell& r) { return greater_equal(l, r); }
+  [[nodiscard]] friend bool operator<(const JsonScalarCell& l, double r) { return less(l, JsonScalarCell{Any(r)}); }
+  [[nodiscard]] friend bool operator<(double l, const JsonScalarCell& r) { return less(JsonScalarCell{Any(l)}, r); }
+  [[nodiscard]] friend bool operator>(const JsonScalarCell& l, double r) { return greater(l, JsonScalarCell{Any(r)}); }
+  [[nodiscard]] friend bool operator>(double l, const JsonScalarCell& r) { return greater(JsonScalarCell{Any(l)}, r); }
+  [[nodiscard]] friend bool operator<=(const JsonScalarCell& l, double r) { return less_equal(l, JsonScalarCell{Any(r)}); }
+  [[nodiscard]] friend bool operator<=(double l, const JsonScalarCell& r) { return less_equal(JsonScalarCell{Any(l)}, r); }
+  [[nodiscard]] friend bool operator>=(const JsonScalarCell& l, double r) { return greater_equal(l, JsonScalarCell{Any(r)}); }
+  [[nodiscard]] friend bool operator>=(double l, const JsonScalarCell& r) { return greater_equal(JsonScalarCell{Any(l)}, r); }
+
+  // ToPrimitive's string question for the operators above. Strings and JSON objects/arrays (whose
+  // primitive form is a string) answer true; number/boolean/null/undefined answer false.
+  [[nodiscard]] bool primitive_is_string() const noexcept {
+    if (!present_) return false;
+    switch (value_.kind()) {
+      case AnyKind::string:
+      case AnyKind::object:
+      case AnyKind::external:
+      case AnyKind::function:
+        return true;
+      default:
+        return false;
+    }
   }
 
   // Escape to a native double: only an actual number converts. Any other present value (and an
