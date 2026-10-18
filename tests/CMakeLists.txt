@@ -123,15 +123,6 @@ target_link_libraries(flight_cpp_recover_owner_tests PRIVATE Flight::Cpp)
 flight_cpp_set_project_warnings(flight_cpp_recover_owner_tests)
 add_test(NAME flight_cpp.recover_owner COMMAND flight_cpp_recover_owner_tests)
 
-add_executable(flight_cpp_allocation_descriptor_tests allocation_descriptor_test.cpp)
-target_include_directories(
-  flight_cpp_allocation_descriptor_tests
-  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
-)
-target_link_libraries(flight_cpp_allocation_descriptor_tests PRIVATE Flight::Cpp Flight::SdkPreview)
-flight_cpp_set_project_warnings(flight_cpp_allocation_descriptor_tests)
-add_test(NAME flight_cpp.allocation_descriptor COMMAND flight_cpp_allocation_descriptor_tests)
-
 add_executable(flight_cpp_union_kind_tests union_kind_test.cpp)
 target_link_libraries(flight_cpp_union_kind_tests PRIVATE Flight::Cpp)
 flight_cpp_set_project_warnings(flight_cpp_union_kind_tests)

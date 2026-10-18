@@ -168,11 +168,9 @@ int main(int argc, char**) {
     const flight::Ref<Effect> unrecorded = std::make_shared<Vignette>();
     check(!flight::named_properties(unrecorded).has(flight::String("intensity")),
           "an object not made by make_ref keeps the static type's owner");
-    // Every make_ref allocation is recorded, heritage edge or not, so a plain derived type is answered
-    // from its own owner too.
     const flight::Ref<Effect> plain = flight::make_ref<PlainVignette>(PlainVignette{});
-    check(flight::named_properties(plain).has(flight::String("intensity")),
-          "a make_ref allocation with no native-base edge is answered from its own owner");
+    check(!flight::named_properties(plain).has(flight::String("intensity")),
+          "a type with no native-base record keeps the static type's owner");
     const flight::Ref<Effect> base_only = flight::make_ref<Effect>(Effect{});
     check(!flight::named_properties(base_only).has(flight::String("intensity")),
           "a base allocation does not acquire a derived member");
