@@ -1,4 +1,15 @@
-# A local re-export is emitted as a `using` before the declaration it names
+# An obsolete repair inserts a same-namespace `using` before its definition
+
+G3 corrects this request's original attribution. At Flight `a627849` and compiler `806d257`,
+`canvasRenderState.ts` directly declares `export function getCanvasRenderStateRuntime`; it has no
+local re-export. The compiler represents that export as an IR local binding and emits the function
+directly. Both a direct-export fixture and an authored `export { getCanvasRenderStateRuntime }`
+fixture produce no same-namespace using-declaration.
+
+The failing line below comes from the repository's
+`scene2d-canvas-unqualified-scene2d-canvas-names` emission repair. Its package-wide symbol match also
+matches the defining function, inserts a self-include, and places a redundant using-declaration before
+the definition. Applying that repair alone to either actual compiler fixture reproduces both insertions.
 
 ## Reproduction
 
@@ -25,21 +36,38 @@ every header that includes this one fails with
 error: no member named 'get_canvas_render_state_runtime' in namespace 'flight::scene2d_canvas'
 ```
 
-The `using` comes from a **local re-export** in the TypeScript
-(`export { getCanvasRenderStateRuntime }`), which is a no-op when the declaration is already in scope.
+The using-declaration looks up the current namespace's own function before it has been declared.
+It does not represent a missing source export or a separate callable owner.
 
 ## Required shape
 
-A same-namespace `using`-declaration introduces no name, so it is only ever a rename into scope. For a local
-re-export the emitter should either emit it after the module's own declarations, or omit it — both leave the
-emitted program identical, because the name is already visible in that namespace.
+Retain the compiler's local definition and ordinary dependency includes. At the current pin,
+`emitReexportsCpp` already emits no declaration for a local export or an unrenamed same-package
+re-export. Imported calls use the exact declaring namespace and allocated function name.
 
 ## Affected
 
 34 headers at the G1 sweep, all of them importers of `scene2d-canvas`: the canvas render-state family itself
 plus `scene2d-canvas` consumers in 2D, 3D, PLAT, TEXT and WGPU. G1 cluster `missing-member-b1a6d5cf`.
 
-## What this repository carries meanwhile
+## G3 repair retirement
 
-Nothing yet: the cluster is open and every header in it fails. The fix is a one-line ordering change in the
-emitter rather than a workaround here, which is why no override was taken.
+The obsolete repair is removed from `repairs/emission-repairs.json`; no compiler patch is needed for
+this cause. Its recorded generated footprint is exactly `canvas_render_state.hpp` and
+`canvas_render_surface.hpp`. The latter already has the compiler's real owner-header include, exact
+function prototype and qualified calls. Focused two-module compiler graphs verify the dependency
+include and original callable through both direct/local exports and an aliased source import.
+
+The declared-repair regression in `scripts/emissionRepairs.test.mjs` applies the complete current
+repair configuration to the definition and its dependent header. It preserves the definition, required
+include and qualified call byte for byte, including a repeated repair pass. Removing the obsolete
+entry changes no source declaration, initialization, import order, storage, function body or recursion;
+it introduces no forwarding function, copied owner, stub, or declaration for a refused body.
+
+A diagnostic-only copy with just the obsolete using/self-include removed gets past that lookup but
+still fails in the transitive `canvas_render_surface.hpp`: `get_canvas_host` constructs a writable
+`HostCanvasCapability` row from an existing readonly row before returning a readonly row. The runtime
+correctly rejects adding writes. The original Canvas header includes its texture resolver, which
+includes that surface header, so the actual public getter/helper consumer remains blocked there.
+No helper execution or automatic promotion of the historical 40-header family follows from retirement.
+Normal scoped regeneration and original-header qualification remain queued for a generation slot.
