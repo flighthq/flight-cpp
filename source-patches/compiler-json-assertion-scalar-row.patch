@@ -7,19 +7,19 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    jsonReadShapeAssertions: Set<Readonly<IrExpression>>;
 +  jsonScalarCellBindingIds: Set<string>;
 +  jsonAssertionBindingRows: Map<string, Readonly<CompilerCppStructuralRowPlan>>;
+   jsonStringProvenPaths: ReadonlySet<string>;
    privateJsonRecordProducerIds: Set<string>;
    privateJsonRecordReturns: Map<Readonly<IrExpression>, Readonly<IrExpression>>;
-   privateGuardedRecordProducerIds: Set<string>;
-@@ -737,6 +739,8 @@
+@@ -738,6 +740,8 @@
      jsonReadRecordBindingIds: new Set(),
      jsonReadValueBindingIds: new Set(),
      jsonReadShapeAssertions: new Set(),
 +    jsonScalarCellBindingIds: new Set(),
 +    jsonAssertionBindingRows: new Map(),
+     jsonStringProvenPaths: new Set(),
      privateJsonRecordProducerIds: new Set(),
      privateJsonRecordReturns: new Map(),
-     privateGuardedRecordProducerIds: new Set(),
-@@ -3389,6 +3393,17 @@
+@@ -3391,6 +3395,17 @@
        'cpp-uninitialized-variable-missing-type-evidence',
      );
    }
@@ -37,7 +37,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    const caughtValueRebinding = emitCppCaughtValueRebindingCpp(variable, context);
    if (caughtValueRebinding) return caughtValueRebinding;
    const name = getBindingTargetName(variable.binding, context);
-@@ -4198,6 +4213,236 @@
+@@ -4200,6 +4215,361 @@
    return `([&]() -> ${slot.targetType} { const auto& ${valueName} = ${left}; if (${absent}) return ${fallback}; return std::get<${String(plan.valueSlots.indexOf(slot))}>(${valueName}); }())`;
  }
  
@@ -46,14 +46,22 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
 +const cppJsonProjectionSchemas = new WeakMap<CompilerCppReferenceRepresentationPlanner, ReadonlySet<string>>();
 +
 +function isCppJsonParseCallCpp(expression: Readonly<IrExpression>): boolean {
-+  return expression.kind === 'call' && !expression.optional && expression.arguments.length === 1 &&
-+    expression.callee.kind === 'property' && !expression.callee.optional && expression.callee.name === 'parse' &&
-+    expression.callee.object.kind === 'identifier' && expression.callee.object.reference.kind === 'ambient' &&
-+    expression.callee.object.reference.name === 'JSON';
++  return (
++    expression.kind === 'call' &&
++    !expression.optional &&
++    expression.arguments.length === 1 &&
++    expression.callee.kind === 'property' &&
++    !expression.callee.optional &&
++    expression.callee.name === 'parse' &&
++    expression.callee.object.kind === 'identifier' &&
++    expression.callee.object.reference.kind === 'ambient' &&
++    expression.callee.object.reference.name === 'JSON'
++  );
 +}
 +
 +function getCppJsonSchemaIdentityCpp(type: Readonly<IrType>, context: EmitContext): string | undefined {
-+  const row = context.referenceRepresentationPlanner.resolveStructuralRow(type, context.module) ??
++  const row =
++    context.referenceRepresentationPlanner.resolveStructuralRow(type, context.module) ??
 +    getCppStructuralProjectionRowCpp(type, context);
 +  const object = row ? getCppStructuralRowObjectTypeCpp(row) : undefined;
 +  if (object?.kind !== 'named') return undefined;
@@ -68,30 +76,34 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
 +  const schemas = new Set<string>();
 +  cppJsonProjectionSchemas.set(context.referenceRepresentationPlanner, schemas);
 +  for (const module of context.sourceModules) {
-+    const moduleContext = {...context, module};
-+    analyzeIrModuleTraversal(module, {expression(expression) {
-+      if (expression.kind !== 'cast' || !isCppJsonParseCallCpp(expression.expression)) return;
-+      const identity = getCppJsonSchemaIdentityCpp(expression.type, moduleContext);
-+      if (identity) schemas.add(identity);
-+    }});
++    const moduleContext = { ...context, module };
++    analyzeIrModuleTraversal(module, {
++      expression(expression) {
++        if (expression.kind !== 'cast' || !isCppJsonParseCallCpp(expression.expression)) return;
++        const identity = getCppJsonSchemaIdentityCpp(expression.type, moduleContext);
++        if (identity) schemas.add(identity);
++      },
++    });
 +  }
 +  return schemas;
 +}
 +
-+function getCppJsonProjectionRowCpp(expression: Readonly<IrExpression>, context: EmitContext):
-+  Readonly<{row: Readonly<CompilerCppStructuralRowPlan>; optional: boolean}> | undefined {
++function getCppJsonProjectionRowCpp(
++  expression: Readonly<IrExpression>,
++  context: EmitContext,
++): Readonly<{ row: Readonly<CompilerCppStructuralRowPlan>; optional: boolean }> | undefined {
 +  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return undefined;
 +  let row = getCppStructuralRowExpressionPlanCpp(expression, context);
 +  const type = getIrExpressionTypeEvidenceCpp(expression, context);
 +  const union = type ? getIrUnionTypeCpp(type, context, new Set()) : undefined;
-+  const values = union?.types.filter(t => t.kind !== 'null' && t.kind !== 'undefined');
++  const values = union?.types.filter((t) => t.kind !== 'null' && t.kind !== 'undefined');
 +  const optional = Boolean(values && values.length === 1 && union!.types.length > 1);
 +  if (!row && optional) row = context.referenceRepresentationPlanner.resolveStructuralRow(values![0]!, context.module);
 +  if (!row && expression.kind === 'cast' && isCppJsonParseCallCpp(expression.expression))
 +    row = getCppStructuralProjectionRowCpp(expression.type, context);
 +  const object = row ? getCppStructuralRowObjectTypeCpp(row) : undefined;
 +  const identity = object ? getCppJsonSchemaIdentityCpp(object, context) : undefined;
-+  return row && identity && getCppJsonProjectionSchemasCpp(context).has(identity) ? {row, optional} : undefined;
++  return row && identity && getCppJsonProjectionSchemasCpp(context).has(identity) ? { row, optional } : undefined;
 +}
 +
 +function isCppJsonScalarMemberCpp(expression: Readonly<IrExpression>, context: EmitContext): boolean {
@@ -100,10 +112,16 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
 +  const object = plan ? getCppStructuralRowObjectTypeCpp(plan.row) : undefined;
 +  const type = object ? getIrObjectPropertyTypeCpp(object, expression.name, context) : undefined;
 +  const members = type ? (getIrUnionTypeCpp(type, context, new Set())?.types ?? [type]) : [];
-+  return members.length > 0 && members.every(member =>
-+    member.kind === 'null' || member.kind === 'undefined' ||
-+    member.kind === 'literal' && ['number', 'boolean', 'string'].includes(typeof member.value) ||
-+    member.kind === 'primitive' && ['number', 'boolean', 'string'].includes(member.name));
++  return (
++    members.length > 0 &&
++    members.every(
++      (member) =>
++        member.kind === 'null' ||
++        member.kind === 'undefined' ||
++        (member.kind === 'literal' && ['number', 'boolean', 'string'].includes(typeof member.value)) ||
++        (member.kind === 'primitive' && ['number', 'boolean', 'string'].includes(member.name)),
++    )
++  );
 +}
 +
 +function isCppJsonScalarCellExpressionCpp(expression: Readonly<IrExpression>, context: EmitContext): boolean {
@@ -113,21 +131,36 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
 +    return context.jsonScalarCellBindingIds.has(expression.reference.binding.id);
 +  if (expression.kind === 'cast') return isCppJsonScalarCellExpressionCpp(expression.expression, context);
 +  if (expression.kind === 'binary' && ['+', '??', '&&', '||'].includes(expression.operator))
-+    return isCppJsonScalarCellExpressionCpp(expression.left, context) || isCppJsonScalarCellExpressionCpp(expression.right, context);
-+  if (expression.kind === 'conditional') return isCppJsonScalarCellExpressionCpp(expression.whenTrue, context) ||
-+    isCppJsonScalarCellExpressionCpp(expression.whenFalse, context);
++    return (
++      isCppJsonScalarCellExpressionCpp(expression.left, context) ||
++      isCppJsonScalarCellExpressionCpp(expression.right, context)
++    );
++  if (expression.kind === 'conditional')
++    return (
++      isCppJsonScalarCellExpressionCpp(expression.whenTrue, context) ||
++      isCppJsonScalarCellExpressionCpp(expression.whenFalse, context)
++    );
 +  return false;
 +}
 +
 +function emitCppJsonScalarOperandCpp(expression: Readonly<IrExpression>, context: EmitContext): string {
 +  if (isCppJsonScalarCellExpressionCpp(expression, context)) return emitExpression(expression, context);
-+  const value = expression.kind === 'literal' && expression.value === null ? 'flight::null' :
-+    expression.kind === 'identifier' && expression.reference.kind === 'ambient' && expression.reference.name === 'undefined'
-+      ? 'flight::undefined' : emitExpression(expression, context);
++  const value =
++    expression.kind === 'literal' && expression.value === null
++      ? 'flight::null'
++      : expression.kind === 'identifier' &&
++          expression.reference.kind === 'ambient' &&
++          expression.reference.name === 'undefined'
++        ? 'flight::undefined'
++        : emitExpression(expression, context);
 +  return `flight::JsonScalarCell{flight::Any(${value})}`;
 +}
 +
-+function emitCppJsonScalarEscapeCpp(value: string, expectedType: Readonly<IrType> | undefined, context: EmitContext): string {
++function emitCppJsonScalarEscapeCpp(
++  value: string,
++  expectedType: Readonly<IrType> | undefined,
++  context: EmitContext,
++): string {
 +  if (!expectedType) return value;
 +  if (isCppAliasResolvedErasedDynamicValueTypeCpp(expectedType, context)) return `(${value}).raw()`;
 +  const native = emitType(expectedType, context);
@@ -137,20 +170,32 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
 +    const kind = native === 'bool' ? 'boolean' : 'string';
 +    return `([&]() -> ${native} { const auto ${cell} = ${value}; if (${cell}.is_present() && ${cell}.raw().kind() == flight::AnyKind::${kind}) return ${cell}.raw().as_${kind}(); throw flight::NativeScalarEscapeError(${cell}.type_of()); }())`;
 +  }
-+  emissionError(context, `JSON scalar escape to ${native} requires an explicit represented native scalar boundary`, 'cpp-json-scalar-native-escape-unrepresented');
++  emissionError(
++    context,
++    `JSON scalar escape to ${native} requires an explicit represented native scalar boundary`,
++    'cpp-json-scalar-native-escape-unrepresented',
++  );
 +}
 +
-+function emitCppJsonProjectionExpressionCpp(expression: Readonly<IrExpression>, context: EmitContext,
-+  expectedType?: Readonly<IrType>): string | undefined {
++function emitCppJsonProjectionExpressionCpp(
++  expression: Readonly<IrExpression>,
++  context: EmitContext,
++  expectedType?: Readonly<IrType>,
++): string | undefined {
 +  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return undefined;
 +  const include = () => context.includes.add('flight/json_scalar.hpp');
-+  const finishCell = (value: string) => { include(); return emitCppJsonScalarEscapeCpp(value, expectedType, context); };
++  const finishCell = (value: string) => {
++    include();
++    return emitCppJsonScalarEscapeCpp(value, expectedType, context);
++  };
 +  if (expression.kind === 'cast' && isCppJsonParseCallCpp(expression.expression)) {
 +    const asserted = getCppStructuralProjectionRowCpp(expression.type, context);
 +    if (!asserted || !getCppJsonSchemaIdentityCpp(expression.type, context)) return undefined;
 +    const union = expectedType ? getIrUnionTypeCpp(expectedType, context, new Set()) : undefined;
-+    const expected = union?.types.find(t => t.kind !== 'null' && t.kind !== 'undefined') ?? expectedType;
-+    const row = expected ? context.referenceRepresentationPlanner.resolveStructuralRow(expected, context.module) ?? asserted : asserted;
++    const expected = union?.types.find((t) => t.kind !== 'null' && t.kind !== 'undefined') ?? expectedType;
++    const row = expected
++      ? (context.referenceRepresentationPlanner.resolveStructuralRow(expected, context.module) ?? asserted)
++      : asserted;
 +    include();
 +    return `flight::json_assertion_row<${emitCppStructuralRowSchemaTypeCpp(row, context)}>(${emitExpression(expression.expression, context)})`;
 +  }
@@ -163,29 +208,53 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
 +      return finishCell(`flight::read_json_scalar_row_member(${receiver}, ${key})`);
 +    const value = getGeneratedTargetName('jsonRowReceiver', context);
 +    const row = plan.optional ? `${value}.value()` : value;
-+    const absent = plan.optional ? `!${value}.has_value() || flight::json_row_is_nullish(${row})` : `flight::json_row_is_nullish(${row})`;
-+    const missing = expression.optional ? 'return flight::JsonScalarCell{};' : 'throw flight::TypeError("Cannot read properties of null or undefined");';
-+    return finishCell(`([&]() -> flight::JsonScalarCell { const auto ${value} = ${receiver}; if (${absent}) { ${missing} } return flight::read_json_scalar_row_member(${row}, ${key}); }())`);
++    const absent = plan.optional
++      ? `!${value}.has_value() || flight::json_row_is_nullish(${row})`
++      : `flight::json_row_is_nullish(${row})`;
++    const missing = expression.optional
++      ? 'return flight::JsonScalarCell{};'
++      : 'throw flight::TypeError("Cannot read properties of null or undefined");';
++    return finishCell(
++      `([&]() -> flight::JsonScalarCell { const auto ${value} = ${receiver}; if (${absent}) { ${missing} } return flight::read_json_scalar_row_member(${row}, ${key}); }())`,
++    );
 +  }
-+  if (expression.kind === 'identifier' && expression.reference.kind === 'binding' &&
-+      context.jsonScalarCellBindingIds.has(expression.reference.binding.id))
++  if (
++    expression.kind === 'identifier' &&
++    expression.reference.kind === 'binding' &&
++    context.jsonScalarCellBindingIds.has(expression.reference.binding.id)
++  )
 +    return finishCell(emitIdentifierReference(expression.reference, context));
 +  if (expression.kind === 'cast' && isCppJsonScalarCellExpressionCpp(expression.expression, context))
 +    return finishCell(emitExpression(expression.expression, context));
-+  if (expression.kind === 'assignment' && expression.operator === '=' && expression.left.kind === 'identifier' &&
-+      expression.left.reference.kind === 'binding' && context.jsonScalarCellBindingIds.has(expression.left.reference.binding.id)) {
++  if (
++    expression.kind === 'assignment' &&
++    expression.operator === '=' &&
++    expression.left.kind === 'identifier' &&
++    expression.left.reference.kind === 'binding' &&
++    context.jsonScalarCellBindingIds.has(expression.left.reference.binding.id)
++  ) {
 +    include();
-+    return finishCell(`(${emitIdentifierReference(expression.left.reference, context)} = ${emitCppJsonScalarOperandCpp(expression.right, context)})`);
++    return finishCell(
++      `(${emitIdentifierReference(expression.left.reference, context)} = ${emitCppJsonScalarOperandCpp(expression.right, context)})`,
++    );
 +  }
 +  if (expression.kind === 'binary') {
-+    const typeofOperand = expression.left.kind === 'unary' && expression.left.operator === 'typeof' ? expression.left.operand :
-+      expression.right.kind === 'unary' && expression.right.operator === 'typeof' ? expression.right.operand : undefined;
-+    if (typeofOperand && (isCppJsonScalarCellExpressionCpp(typeofOperand, context) || getCppJsonProjectionRowCpp(typeofOperand, context)) &&
-+        ['===','==','!==','!='].includes(expression.operator)) {
++    const typeofOperand =
++      expression.left.kind === 'unary' && expression.left.operator === 'typeof'
++        ? expression.left.operand
++        : expression.right.kind === 'unary' && expression.right.operator === 'typeof'
++          ? expression.right.operand
++          : undefined;
++    if (
++      typeofOperand &&
++      (isCppJsonScalarCellExpressionCpp(typeofOperand, context) ||
++        getCppJsonProjectionRowCpp(typeofOperand, context)) &&
++      ['===', '==', '!==', '!='].includes(expression.operator)
++    ) {
 +      include();
 +      const left = getGeneratedTargetName('jsonTypeofLeft', context);
 +      const right = getGeneratedTargetName('jsonTypeofRight', context);
-+      return `([&]() -> bool { const auto ${left} = ${emitExpression(expression.left, context)}; const auto ${right} = ${emitExpression(expression.right, context)}; return ${left} ${['!=','!=='].includes(expression.operator) ? '!=' : '=='} ${right}; }())`;
++      return `([&]() -> bool { const auto ${left} = ${emitExpression(expression.left, context)}; const auto ${right} = ${emitExpression(expression.right, context)}; return ${left} ${['!=', '!=='].includes(expression.operator) ? '!=' : '=='} ${right}; }())`;
 +    }
 +    const leftCell = isCppJsonScalarCellExpressionCpp(expression.left, context);
 +    const rightCell = isCppJsonScalarCellExpressionCpp(expression.right, context);
@@ -195,29 +264,54 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
 +      const right = getGeneratedTargetName('jsonScalarRight', context);
 +      const begin = `const auto ${left} = ${emitCppJsonScalarOperandCpp(expression.left, context)}; `;
 +      if (['??', '&&', '||'].includes(expression.operator)) {
-+        const keep = expression.operator === '??' ? `!${left}.is_nullish()` :
-+          expression.operator === '&&' ? `!${left}.to_boolean()` : `${left}.to_boolean()`;
-+        return finishCell(`([&]() -> flight::JsonScalarCell { ${begin}if (${keep}) return ${left}; return ${emitCppJsonScalarOperandCpp(expression.right, context)}; }())`);
++        const keep =
++          expression.operator === '??'
++            ? `!${left}.is_nullish()`
++            : expression.operator === '&&'
++              ? `!${left}.to_boolean()`
++              : `${left}.to_boolean()`;
++        return finishCell(
++          `([&]() -> flight::JsonScalarCell { ${begin}if (${keep}) return ${left}; return ${emitCppJsonScalarOperandCpp(expression.right, context)}; }())`,
++        );
 +      }
 +      const both = begin + `const auto ${right} = ${emitCppJsonScalarOperandCpp(expression.right, context)}; `;
 +      if (expression.operator === '+')
-+        return finishCell(`([&]() -> flight::JsonScalarCell { ${both}return flight::JsonScalarCell::add(${left}, ${right}); }())`);
-+      const equality = ['===', '!=='].includes(expression.operator) ? 'strict_equals' : ['==', '!='].includes(expression.operator) ? 'loose_equals' : undefined;
-+      if (equality) return `([&]() -> bool { ${both}return ${['!=', '!=='].includes(expression.operator) ? '!' : ''}${left}.${equality}(${right}); }())`;
-+      const compare = ({'<':'less','<=':'less_equal','>':'greater','>=':'greater_equal'} as Record<string,string>)[expression.operator];
++        return finishCell(
++          `([&]() -> flight::JsonScalarCell { ${both}return flight::JsonScalarCell::add(${left}, ${right}); }())`,
++        );
++      const equality = ['===', '!=='].includes(expression.operator)
++        ? 'strict_equals'
++        : ['==', '!='].includes(expression.operator)
++          ? 'loose_equals'
++          : undefined;
++      if (equality)
++        return `([&]() -> bool { ${both}return ${['!=', '!=='].includes(expression.operator) ? '!' : ''}${left}.${equality}(${right}); }())`;
++      const compare = (
++        { '<': 'less', '<=': 'less_equal', '>': 'greater', '>=': 'greater_equal' } as Record<string, string>
++      )[expression.operator];
 +      if (compare) return `([&]() -> bool { ${both}return flight::JsonScalarCell::${compare}(${left}, ${right}); }())`;
 +      if (['-', '*', '/'].includes(expression.operator))
 +        return `([&]() -> double { ${both}return ${left}.to_number() ${expression.operator} ${right}.to_number(); }())`;
-+      emissionError(context, `JSON scalar operator ${expression.operator} is not represented by the bounded lazy scalar lane`, 'cpp-json-scalar-operation-unrepresented');
++      emissionError(
++        context,
++        `JSON scalar operator ${expression.operator} is not represented by the bounded lazy scalar lane`,
++        'cpp-json-scalar-operation-unrepresented',
++      );
 +    }
-+    const sentinel = expression.left.kind === 'literal' && expression.left.value === null ? expression.right :
-+      expression.right.kind === 'literal' && expression.right.value === null ? expression.left : undefined;
++    const sentinel =
++      expression.left.kind === 'literal' && expression.left.value === null
++        ? expression.right
++        : expression.right.kind === 'literal' && expression.right.value === null
++          ? expression.left
++          : undefined;
 +    const plan = sentinel ? getCppJsonProjectionRowCpp(sentinel, context) : undefined;
-+    if (sentinel && plan && ['===','==','!==','!='].includes(expression.operator)) {
++    if (sentinel && plan && ['===', '==', '!==', '!='].includes(expression.operator)) {
 +      include();
 +      const value = getGeneratedTargetName('jsonRootValue', context);
-+      const test = plan.optional ? `!${value}.has_value() || flight::json_row_is_nullish(${value}.value())` : `flight::json_row_is_nullish(${value})`;
-+      return `([&]() -> bool { const auto ${value} = ${emitExpression(sentinel, context)}; return ${['!==','!='].includes(expression.operator) ? '!' : ''}(${test}); }())`;
++      const test = plan.optional
++        ? `!${value}.has_value() || flight::json_row_is_nullish(${value}.value())`
++        : `flight::json_row_is_nullish(${value})`;
++      return `([&]() -> bool { const auto ${value} = ${emitExpression(sentinel, context)}; return ${['!==', '!='].includes(expression.operator) ? '!' : ''}(${test}); }())`;
 +    }
 +  }
 +  if (expression.kind === 'unary') {
@@ -228,44 +322,75 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
 +      if (expression.operator === '!') return `!${value}.to_boolean()`;
 +      if (expression.operator === '+') return `${value}.unary_plus()`;
 +      if (expression.operator === '-') return `${value}.unary_minus()`;
-+      emissionError(context, `JSON scalar unary ${expression.operator} is not represented`, 'cpp-json-scalar-operation-unrepresented');
++      emissionError(
++        context,
++        `JSON scalar unary ${expression.operator} is not represented`,
++        'cpp-json-scalar-operation-unrepresented',
++      );
 +    }
 +    const plan = getCppJsonProjectionRowCpp(expression.operand, context);
 +    if (plan && expression.operator === '!') {
 +      include();
 +      const value = getGeneratedTargetName('jsonRootValue', context);
-+      const test = plan.optional ? `${value}.has_value() && flight::json_row_to_boolean(${value}.value())` : `flight::json_row_to_boolean(${value})`;
++      const test = plan.optional
++        ? `${value}.has_value() && flight::json_row_to_boolean(${value}.value())`
++        : `flight::json_row_to_boolean(${value})`;
 +      return `([&]() -> bool { const auto ${value} = ${emitExpression(expression.operand, context)}; return !(${test}); }())`;
 +    }
 +    if (plan && expression.operator === 'typeof') {
 +      include();
 +      const value = getGeneratedTargetName('jsonRootValue', context);
-+      const result = plan.optional ? `${value}.has_value() ? flight::String(flight::json_row_type_of(${value}.value())) : flight::String("object")` : `flight::String(flight::json_row_type_of(${value}))`;
++      const result = plan.optional
++        ? `${value}.has_value() ? flight::String(flight::json_row_type_of(${value}.value())) : flight::String("object")`
++        : `flight::String(flight::json_row_type_of(${value}))`;
 +      return `([&]() -> flight::String { const auto ${value} = ${emitExpression(expression.operand, context)}; return ${result}; }())`;
 +    }
 +  }
-+  if (expression.kind === 'call' && expression.arguments.length === 1 &&
-+      isCppJsonScalarCellExpressionCpp(expression.arguments[0]!, context)) {
++  if (
++    expression.kind === 'call' &&
++    expression.arguments.length === 1 &&
++    isCppJsonScalarCellExpressionCpp(expression.arguments[0]!, context)
++  ) {
 +    const callee = expression.callee;
 +    const value = `(${emitExpression(expression.arguments[0]!, context)})`;
-+    if (callee.kind === 'property' && callee.object.kind === 'identifier' &&
-+        callee.object.reference.kind === 'ambient' && callee.object.reference.name === 'Number' &&
-+        ['isFinite','isNaN'].includes(callee.name)) {
-+      include(); return `${value}.${callee.name === 'isFinite' ? 'is_finite' : 'is_nan'}()`;
++    if (
++      callee.kind === 'property' &&
++      callee.object.kind === 'identifier' &&
++      callee.object.reference.kind === 'ambient' &&
++      callee.object.reference.name === 'Number' &&
++      ['isFinite', 'isNaN'].includes(callee.name)
++    ) {
++      include();
++      return `${value}.${callee.name === 'isFinite' ? 'is_finite' : 'is_nan'}()`;
 +    }
 +    if (callee.kind === 'identifier' && callee.reference.kind === 'ambient') {
-+      const method = ({Number:'to_number',String:'to_string',Boolean:'to_boolean'} as Record<string,string>)[callee.reference.name];
-+      if (method) { include(); return `${value}.${method}()`; }
++      const method = ({ Number: 'to_number', String: 'to_string', Boolean: 'to_boolean' } as Record<string, string>)[
++        callee.reference.name
++      ];
++      if (method) {
++        include();
++        return `${value}.${method}()`;
++      }
 +    }
 +  }
 +  if (expression.kind === 'conditional' && isCppJsonScalarCellExpressionCpp(expression, context)) {
 +    include();
-+    return finishCell(`(${emitCppTruthinessExpression(expression.condition, context)} ? ${emitCppJsonScalarOperandCpp(expression.whenTrue, context)} : ${emitCppJsonScalarOperandCpp(expression.whenFalse, context)})`);
++    return finishCell(
++      `(${emitCppTruthinessExpression(expression.condition, context)} ? ${emitCppJsonScalarOperandCpp(expression.whenTrue, context)} : ${emitCppJsonScalarOperandCpp(expression.whenFalse, context)})`,
++    );
 +  }
-+  if (expression.kind === 'template' && expression.parts.some(part => typeof part !== 'string' && isCppJsonScalarCellExpressionCpp(part, context))) {
++  if (
++    expression.kind === 'template' &&
++    expression.parts.some((part) => typeof part !== 'string' && isCppJsonScalarCellExpressionCpp(part, context))
++  ) {
 +    include();
 +    const text = getGeneratedTargetName('jsonTemplateText', context);
-+    const steps = expression.parts.map(part => `${text} = ${text} + ${typeof part === 'string' ? emitLiteral(part, context) : `(${emitCppJsonScalarOperandCpp(part, context)}).to_string()`};`).join(' ');
++    const steps = expression.parts
++      .map(
++        (part) =>
++          `${text} = ${text} + ${typeof part === 'string' ? emitLiteral(part, context) : `(${emitCppJsonScalarOperandCpp(part, context)}).to_string()`};`,
++      )
++      .join(' ');
 +    return `([&]() -> flight::String { flight::String ${text}; ${steps} return ${text}; }())`;
 +  }
 +  return undefined;
@@ -274,7 +399,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
  function emitExpression(
    expression: Readonly<IrExpression>,
    context: EmitContext,
-@@ -4205,6 +4450,8 @@
+@@ -4207,6 +4577,8 @@
    constructExpectedUnion = true,
    denseArrayLengthInitialized = false,
  ): string {
@@ -283,7 +408,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    const indexedRead = context.indexedNullableReadExpressions?.get(expression);
    if (indexedRead !== undefined) return indexedRead;
    const indexedMember = emitCppGuardedIndexedNullableMemberCpp(expression, context, (next) =>
-@@ -32622,6 +32869,15 @@
+@@ -32902,6 +33274,16 @@
  }
  
  function emitCppTruthinessExpression(expression: Readonly<IrExpression>, context: EmitContext): string {
@@ -296,15 +421,243 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
 +    return `([&]() -> bool { const auto ${value} = ${emitExpression(expression, context)}; return ${test}; }())`;
 +  }
 +
++
    if (
      getCppRuntimeProfile(context.options) === 'flight-cpp' &&
      expression.kind === 'binary' &&
-@@ -35062,7 +35318,7 @@
+@@ -35343,7 +35725,9 @@
  ): Readonly<CompilerCppStructuralRowPlan> | undefined {
    if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return undefined;
    if (expression.kind === 'identifier' && expression.reference.kind === 'binding') {
 -    const bindingRow = context.structuralCastBindingRows.get(expression.reference.binding.id);
-+    const bindingRow = context.jsonAssertionBindingRows.get(expression.reference.binding.id) ?? context.structuralCastBindingRows.get(expression.reference.binding.id);
++    const bindingRow =
++      context.jsonAssertionBindingRows.get(expression.reference.binding.id) ??
++      context.structuralCastBindingRows.get(expression.reference.binding.id);
      if (bindingRow) return bindingRow;
    }
    const type = getIrExpressionTypeEvidenceCpp(expression, context);
+diff --git a/packages/compiler-backend-cpp/src/cppJsonAssertionScalarRow.test.ts b/packages/compiler-backend-cpp/src/cppJsonAssertionScalarRow.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppJsonAssertionScalarRow.test.ts
+@@ -0,0 +1,220 @@
++import { execFileSync } from 'node:child_process';
++import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const includes = collectCppRuntimeIncludeDirectories(resolveDependency(root, 'flight-cpp').directory);
++const toolchain = findCppCompilerToolchain();
++const source =
++  'interface LottieDocument { fr:number; ip:number; op:number; w:number; h:number; layers:unknown[]; }\nexport function parse(source: string): Readonly<LottieDocument> {\n  return JSON.parse(source) as LottieDocument;\n}\nexport function rootType(source: string): string { const doc = JSON.parse(source) as Readonly<LottieDocument>; return typeof doc; }\nexport function rootTruth(source: string): boolean { const doc = JSON.parse(source) as Readonly<LottieDocument>; return !!doc; }\nexport function rootNull(source: string): boolean { const doc = JSON.parse(source) as Readonly<LottieDocument>; return doc === null; }\nexport function kind(doc: Readonly<LottieDocument>): string { return typeof doc.fr; }\nexport function finite(doc: Readonly<LottieDocument>): boolean { return Number.isFinite(doc.fr); }\nexport function nan(doc: Readonly<LottieDocument>): boolean { return Number.isNaN(doc.fr); }\nexport function truth(doc: Readonly<LottieDocument>): boolean { return !!doc.fr; }\nexport function numeric(doc: Readonly<LottieDocument>): number { return +doc.fr; }\nexport function negative(doc: Readonly<LottieDocument>): number { return -doc.fr; }\nexport function duration(doc: Readonly<LottieDocument>): number { return (doc.op - doc.ip) / doc.fr; }\nexport function concat(doc: Readonly<LottieDocument>): unknown { return doc.fr + 2; }\nexport function reverseConcat(doc: Readonly<LottieDocument>): unknown { return 2 + doc.fr; }\nexport function addPair(doc: Readonly<LottieDocument>): unknown { return doc.fr + doc.ip; }\nexport function less(doc: Readonly<LottieDocument>): boolean { return doc.fr < doc.ip; }\nexport function lessEqual(doc: Readonly<LottieDocument>): boolean { return doc.fr <= doc.ip; }\nexport function strict(doc: Readonly<LottieDocument>): boolean { return doc.fr === doc.ip; }\nexport function loose(doc: Readonly<LottieDocument>): boolean { return doc.fr == doc.ip; }\nexport function nullish(doc: Readonly<LottieDocument>): string { return String(doc.fr ?? 17); }\nexport function stringValue(doc: Readonly<LottieDocument>): string { return `${doc.fr}`; }\nexport function alias(doc: Readonly<LottieDocument>): number { const a = doc.fr; const b = a; return +b; }\nexport function nativeReturn(doc: Readonly<LottieDocument>): number { return doc.fr; }\nexport function nativeSink(value: number): number { return value; }\nexport function nativeParameter(doc: Readonly<LottieDocument>): number { return nativeSink(doc.fr); }\nexport function nativeArray(doc: Readonly<LottieDocument>): number[] { return [doc.fr]; }\nexport function nativeField(doc: Readonly<LottieDocument>): {value:number} { return {value:doc.fr}; }\nexport function sourceValid(doc: Readonly<LottieDocument>): boolean { return Number.isFinite(doc.fr) && doc.fr > 0 && Number.isFinite(doc.ip) && Number.isFinite(doc.op) && doc.op >= doc.ip && Number.isFinite(doc.w) && Number.isFinite(doc.h); }\n';
++function emit(text = source): string {
++  const [result] = lowerTypeScriptSources([
++    {
++      packageName: '@flighthq/jsonfixture',
++      upstreamDirectory: '/flight',
++      sourceFile: ts.createSourceFile('/flight/packages/jsonfixture/src/probe.ts', text, ts.ScriptTarget.Latest, true),
++    },
++  ]);
++  expect(result!.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result!.module, {
++    runtimeProfile: 'flight-cpp',
++    packageTargets: { '@flighthq/jsonfixture': { namespace: 'probe', includePrefix: 'fixture' } },
++  }).contents;
++}
++function nativeProgram(): string {
++  const exports = {} as Record<string, (value: unknown) => unknown> & {
++    rootType: (value: string) => string;
++    rootTruth: (value: string) => boolean;
++    rootNull: (value: string) => boolean;
++  };
++  new Function(
++    'exports',
++    ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } })
++      .outputText,
++  )(exports);
++  const roots = ['null', '0', '30', 'false', 'true', '""', '"ab"', '[]', '{}'];
++  const values = [
++    30,
++    null,
++    undefined,
++    '30',
++    '0',
++    '',
++    true,
++    false,
++    0,
++    -3,
++    0.5,
++    '0x10',
++    'Infinity',
++    'NaN',
++    'invalid',
++    '😀',
++    '\ufffd',
++    [],
++    [30],
++    [1, 2],
++    {},
++  ];
++  const inputs = values.map((fr) => JSON.stringify({ fr, ip: 1, op: 60, w: 100, h: 50 }));
++  inputs.push(
++    '{"fr":-0,"ip":1,"op":60,"w":100,"h":50}',
++    JSON.stringify({ fr: '01', ip: '1' }),
++    JSON.stringify({ fr: '😀', ip: '\ufffd' }),
++  );
++  const scalarNames = [
++    'kind',
++    'finite',
++    'nan',
++    'truth',
++    'numeric',
++    'negative',
++    'duration',
++    'concat',
++    'reverseConcat',
++    'addPair',
++    'less',
++    'lessEqual',
++    'strict',
++    'loose',
++    'nullish',
++    'stringValue',
++    'alias',
++    'sourceValid',
++  ] as const;
++  const names = (n: string) => n.replace(/[A-Z]/g, (x) => '_' + x.toLowerCase());
++  type Encoded = string | number | boolean | null | undefined | { number: string };
++  const encoded = (v: unknown): Encoded => {
++    if (typeof v === 'number')
++      return Number.isNaN(v)
++        ? { number: 'nan' }
++        : v === Infinity
++          ? { number: 'inf' }
++          : v === -Infinity
++            ? { number: '-inf' }
++            : Object.is(v, -0)
++              ? { number: '-0' }
++              : v;
++    if (v === null || v === undefined || typeof v === 'string' || typeof v === 'boolean') return v;
++    throw new Error('Unexpected oracle result');
++  };
++  const result = {
++    roots: roots.map((source) => ({
++      source,
++      type: exports.rootType(source),
++      truth: exports.rootTruth(source),
++      null: exports.rootNull(source),
++    })),
++    cases: inputs.map((source) => ({
++      source,
++      results: Object.fromEntries(scalarNames.map((n) => [n, encoded(exports[n]!(JSON.parse(source)))])),
++    })),
++  };
++
++  const str = (s: string) => 'flight::String(' + JSON.stringify(s) + ')';
++  const double = (v: Encoded): string => {
++    if (v && typeof v === 'object')
++      return v.number === 'nan' ? 'NAN' : v.number === 'inf' ? 'INFINITY' : v.number === '-inf' ? '-INFINITY' : '-0.0';
++    if (typeof v === 'number') return String(v) + (Number.isInteger(v) ? '.0' : '');
++    throw new Error('Expected numeric oracle result');
++  };
++  let cpp = `#include "fixture/probe.hpp"\n#include <cmath>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <type_traits>\nint checks=0,failures=0;\nvoid check(bool good,const char* message){++checks;if(!good){++failures;std::cerr<<"FAIL "<<message<<"\\n";}}\nvoid check_number(double a,double b,const char*m){check(std::isnan(b)?std::isnan(a):(a==b && (b!=0 || std::signbit(a)==std::signbit(b))),m);}\ntemplate<class F> void checked(F f,const char*m){try{f();}catch(const std::exception&e){++checks;++failures;std::cerr<<"THROW "<<m<<": "<<e.what()<<"\\n";}}\nint main(){\n`;
++  for (const [i, r] of result.roots.entries())
++    for (const [fn, key] of [
++      ['rootType', 'type'],
++      ['rootTruth', 'truth'],
++      ['rootNull', 'null'],
++    ] as const) {
++      const value = typeof r[key] === 'string' ? str(r[key]) : String(r[key]);
++      cpp += `checked([&]{check(probe::${names(fn)}(${str(r.source)})==${value},"root${i}.${fn}");},"root${i}.${fn}");\n`;
++    }
++  for (const [i, c] of result.cases.entries()) {
++    cpp += `{const auto doc=probe::parse(${str(c.source)});\n`;
++    for (const fn of scalarNames) {
++      const v = c.results[fn];
++      const tag = `case${i}.${fn}`;
++      const call = `probe::${names(fn)}(doc)`;
++      if (['concat', 'reverseConcat', 'addPair'].includes(fn))
++        cpp += `checked([&]{const auto a=${call};${typeof v === 'string' ? `check(a.kind()==flight::AnyKind::string && a.as_string()==${str(v)},"${tag}");` : `check(a.kind()==flight::AnyKind::number,"${tag}.kind");if(a.kind()==flight::AnyKind::number)check_number(a.as_number(),${double(v)},"${tag}");`}},"${tag}");\n`;
++      else if (typeof v === 'string') cpp += `checked([&]{check(${call}==${str(v)},"${tag}");},"${tag}");\n`;
++      else if (typeof v === 'boolean') cpp += `checked([&]{check(${call}==${v},"${tag}");},"${tag}");\n`;
++      else cpp += `checked([&]{check_number(${call},${double(v)},"${tag}");},"${tag}");\n`;
++    }
++    const parsed = JSON.parse(c.source);
++    const numeric = typeof parsed.fr === 'number';
++    for (const [fn, access] of [
++      ['nativeReturn', ''],
++      ['nativeParameter', ''],
++      ['nativeArray', '.element(0)'],
++      ['nativeField', '->value'],
++    ] as const) {
++      const tag = `case${i}.${fn}`;
++      const call = `probe::${names(fn)}(doc)${access}`;
++      cpp += numeric
++        ? `checked([&]{check_number(${call},${double(encoded(parsed.fr))},"${tag}");},"${tag}");\n`
++        : `{bool escaped=false;try{(void)(${call});}catch(const flight::NativeScalarEscapeError&){escaped=true;}catch(...){check(false,"${tag}.wrongerror");}check(escaped,"${tag}.escape");}\n`;
++    }
++    cpp += '}\n';
++  }
++  cpp += `{auto native=flight::make_ref<probe::LottieDocument>();native->fr=30;native->ip=0;native->op=60;native->w=10;native->h=20;using Row=flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<probe::LottieDocument>>>>;Row row(native);check(probe::numeric(row)==30,"native.read");native->fr=12;check(probe::native_return(row)==12,"native.livewrite");check(row.shared_owner()->native_object().get()==native.get(),"native.owner");}\n`;
++  cpp += `{const auto row=probe::parse(flight::String("null"));bool threw=false;try{(void)probe::kind(row);}catch(const flight::TypeError&){threw=true;}check(threw,"null.direct-read-typeerror");}\n`;
++  cpp += `static_assert(!std::is_convertible_v<flight::JsonScalarCell,double>);\nstd::cout<<checks<<" checks, "<<failures<<" failures\\n";return failures?1:0;}\n`;
++
++  return cpp;
++}
++describe('JSON assertion rows retain raw roots and scalar operation semantics', () => {
++  it('emits a lazy row on the existing public row ABI with explicit native sinks', () => {
++    const code = emit();
++    expect(code).toContain('flight::json_assertion_row<');
++    expect(code).toContain('flight::StructuralRef<flight::RowReadonly<');
++    expect(code).not.toContain('flight::JsonAssertionRow<');
++    expect(code).not.toMatch(/static_cast<[^;]*Json::parse/u);
++  });
++  it.skipIf(!toolchain || includes.length === 0)(
++    'runs 24 malformed-field cases, nine roots and all four native escapes against the TypeScript oracle',
++    () => {
++      const dir = mkdtempSync(path.join(tmpdir(), 'flight-json-scalar-row-'));
++      try {
++        mkdirSync(path.join(dir, 'fixture'), { recursive: true });
++        writeFileSync(path.join(dir, 'fixture/probe.hpp'), emit());
++        const input = path.join(dir, 'native.cpp');
++        const output = path.join(dir, getCppExecutableName(toolchain!, 'native'));
++        writeFileSync(input, nativeProgram());
++        execFileSync(toolchain!.command, createCppExecutableArguments(toolchain!, input, output, [dir, ...includes]), {
++          encoding: 'utf8',
++          stdio: 'pipe',
++        });
++        expect(execFileSync(output, [], { encoding: 'utf8', stdio: 'pipe' })).toContain('586 checks, 0 failures');
++      } finally {
++        rmSync(dir, { recursive: true, force: true });
++      }
++    },
++    120000,
++  );
++  it('retains ordinary identical-shape rows, nominal owners, structured and unknown member paths', () => {
++    const code = emit(`interface Target{fr:number;nested:Other;raw:unknown}interface Other{fr:number}
++   export function parse(s:string):Readonly<Target>{return JSON.parse(s) as Target;}
++   export function scalar(d:Readonly<Target>):number{return d.fr;}
++   export function other(d:Readonly<Other>):number{return d.fr;}
++   export function nominal(d:Other):number{return d.fr;}
++   export function nested(d:Readonly<Target>):Other{return d.nested;}
++   export function raw(d:Readonly<Target>):unknown{return d.raw;}`);
++    expect(code.match(/read_json_scalar_row_member/gu)).toHaveLength(1);
++    expect(code).toContain('flight::row_get<flight::RowKey<"fr">>(d)');
++    expect(code).toContain('flight::row_get<flight::RowKey<"nested">>(d)');
++    expect(code).toContain('flight::row_get<flight::RowKey<"raw">>(d)');
++    expect(code).toContain('return d->fr;');
++  });
++});
