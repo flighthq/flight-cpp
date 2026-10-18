@@ -1,0 +1,7 @@
+scripts/fixtures/lottieBezierReturnCarrier.cpp:29:31: error: no member named 'array_get' in 'flight::JsonValue'
+   29 |     const auto object = input.array_get(0)->object_owner(); lifetime = object;
+      |                         ~~~~~ ^
+scripts/fixtures/lottieBezierReturnCarrier.cpp:33:66: error: no member named 'array_get' in 'flight::JsonValue'
+   33 |     check(object_result[0].raw().identity() == flight::Any(input.array_get(0).value()).identity());
+      |                                                            ~~~~~ ^
+2 errors generated.
