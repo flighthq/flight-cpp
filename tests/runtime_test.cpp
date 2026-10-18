@@ -1,5 +1,6 @@
 #include <flight/audio_context.hpp>
 #include <flight/runtime.hpp>
+#include <flight/json_scalar.hpp>
 #include <flight/host/console.hpp>
 #include <flight/host/performance.hpp>
 #include <flight/host/timers.hpp>
@@ -4508,6 +4509,58 @@ static void test_json_owner_shared_view() {
         "the parsed-JSON owner is read-only through this view: a write is refused and fabricates no member");
 }
 
+// Presence-aware JSON scalar cell: the raw value answers every JS operation at the use; only an
+// actual native-double escape requires a number and raises the dedicated out-of-profile error.
+static void test_json_scalar_cell() {
+  using flight::Any;
+  using flight::JsonScalarCell;
+  const JsonScalarCell absent;
+  check(absent.is_absent() && absent.type_of() == "undefined" && !absent.to_boolean() && absent.is_nullish() &&
+            std::isnan(absent.to_number()),
+        "absent JSON scalar: typeof undefined, falsy, nullish, ToNumber NaN");
+  bool escaped = false;
+  try {
+    (void)absent.as_native_number();
+  } catch (const flight::NativeScalarEscapeError&) {
+    escaped = true;
+  }
+  check(escaped, "an absent value is out of profile only at the native double escape");
+
+  const JsonScalarCell null_value{Any(flight::null)};
+  check(null_value.is_present() && null_value.type_of() == "object" && !null_value.to_boolean() &&
+            null_value.is_nullish() && null_value.to_number() == 0.0,
+        "null JSON scalar: present, typeof object, falsy, nullish, ToNumber 0");
+  check(null_value.loose_equals(absent) && !null_value.strict_equals(absent),
+        "null == undefined is true while strict equality is false");
+
+  const JsonScalarCell number{Any(2.0)};
+  check(number.type_of() == "number" && number.to_boolean() && number.to_number() == 2.0 &&
+            number.as_native_number() == 2.0,
+        "a number preserves typeof/truthiness/ToNumber and passes the native escape");
+  const JsonScalarCell string_value{Any(flight::String("30"))};
+  check(string_value.type_of() == "string" && string_value.to_boolean() &&
+            string_value.to_number() == 30.0 && string_value.unary_minus() == -30.0,
+        "a numeric string stays a string for typeof but ToNumber drives arithmetic/unary +/-");
+  const JsonScalarCell number_thirty{Any(30.0)};
+  check(!string_value.strict_equals(number_thirty) && string_value.loose_equals(number_thirty),
+        "strict equality distinguishes number from string; loose equality compares ToNumber");
+  escaped = false;
+  try {
+    (void)string_value.as_native_number();
+  } catch (const flight::NativeScalarEscapeError&) {
+    escaped = true;
+  }
+  check(escaped, "a wrong-typed value errors only at the native double escape, never at the read");
+  const JsonScalarCell false_value{Any(false)};
+  const JsonScalarCell empty_text{Any(flight::String(""))};
+  check(false_value.type_of() == "boolean" && !false_value.to_boolean() && false_value.to_number() == 0.0 &&
+            !empty_text.to_boolean() && empty_text.to_number() == 0.0,
+        "stored false and empty string are present yet falsy, with ToNumber 0");
+  check(number.to_string() == flight::String("2") && string_value.to_string() == flight::String("30") &&
+            absent.to_string() == flight::String("undefined"),
+        "ToString keeps the raw scalar (undefined for absence)");
+}
+
 int main() {
   test_array();
   test_array_get_optional_index();
@@ -4530,6 +4583,7 @@ int main() {
   test_base64();
   test_json_record();
   test_json_owner_shared_view();
+  test_json_scalar_cell();
   test_any_to_string();
   test_erased_ref();
   test_any_object_reference_boxing();
