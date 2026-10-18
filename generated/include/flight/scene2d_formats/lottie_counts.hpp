@@ -3,12 +3,12 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function tallyMasks -- source line 74
-//   missing: function tallyShapeItems -- source line 91
 //   missing: function collectLottieCounts -- source line 3
 #include <flight/any.hpp>
 #include <flight/array.hpp>
 #include <flight/record.hpp>
+#include <flight/structural_ref.hpp>
+#include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -40,30 +40,37 @@ inline flight::Array<flight::String> lottie_mask_condition_features = flight::Ar
 
 inline flight::Map<flight::String, flight::String> lottie_mask_features = flight::Map<flight::String, flight::String>({{flight::types::lottie_mask_kind->additive, flight::String("mask.additive")}, {flight::types::lottie_mask_kind->darken, flight::String("mask.darken")}, {flight::types::lottie_mask_kind->difference, flight::String("mask.difference")}, {flight::types::lottie_mask_kind->intersect, flight::String("mask.intersect")}, {flight::types::lottie_mask_kind->lighten, flight::String("mask.lighten")}, {flight::types::lottie_mask_kind->subtract, flight::String("mask.subtract")}});
 
-
-// NOT GENERATED: function tallyMasks -- source line 74
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   function tallyMasks(counts: Map<string, number>, raw: unknown): void {
-//     if (!Array.isArray(raw)) return;
-//     let active = 0;
-//     for (const entry of raw) {
-//       if (entry === null || typeof entry !== 'object') continue;
-//       const mask = entry as Record<string, unknown>;
-//       const mode = mask.mode;
-//       if (typeof mode !== 'string' || mode === LottieMaskKind.None) continue;
-//       active++;
-//       const kind = LOTTIE_MASK_FEATURES.get(mode);
-//       if (kind !== undefined) counts.set(kind, (counts.get(kind) ?? 0) + 1);
-//       if (mask.inv === true) counts.set(LOTTIE_MASK_INVERTED, (counts.get(LOTTIE_MASK_INVERTED) ?? 0) + 1);
-//     }
-//     // Counted once per layer, because the condition is the layer having several — not each mask being one of several.
-//     if (active > 1) counts.set(LOTTIE_MASK_MULTIPLE, (counts.get(LOTTIE_MASK_MULTIPLE) ?? 0) + 1);
-//   }
-//   
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieCounts.ts: a presence
-// test against null has no absence channel in the emitted C++ storage for identifier
+inline void tally_masks(flight::Map<flight::String, double> counts, flight::Any raw) {
+  if (!flight::is_array(raw)) {
+    return;
+  }
+  double active = 0.0;
+  {
+    const auto for_of_source = raw;
+    for (double for_of_index = 0.0; for_of_index < static_cast<double>(for_of_source.array_size()); for_of_index += 1.0) {
+      auto entry = for_of_source.array_get(for_of_index).value_or(flight::Any(flight::undefined));
+      if ((([&]() { const auto& presence_operand = entry; return presence_operand.is_null(); }()) || (entry.type_of() != flight::String("object")))) {
+        continue;
+      }
+      flight::NamedProperties mask = flight::named_properties(entry);
+      auto mode = mask.get(flight::String("mode")).value();
+      if (((mode.type_of() != flight::String("string")) || (mode.as_string() == flight::types::lottie_mask_kind->none))) {
+        continue;
+      }
+      active++;
+      const std::optional<flight::String> kind = lottie_mask_features.get(mode.as_string());
+      if (kind.has_value()) {
+        counts.set(kind.value(), (([&]() -> double { auto nullish_coalesce_left = counts.get(kind.value()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()) + 1.0));
+      }
+      if ((mask.get(flight::String("inv")).value() == true)) {
+        counts.set(lottie_mask_inverted, (([&]() -> double { auto nullish_coalesce_left = counts.get(lottie_mask_inverted); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()) + 1.0));
+      }
+    }
+  }
+  if ((active > 1.0)) {
+    counts.set(lottie_mask_multiple, (([&]() -> double { auto nullish_coalesce_left = counts.get(lottie_mask_multiple); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()) + 1.0));
+  }
+}
 
 inline flight::Map<flight::String, flight::String> lottie_shape_item_features = flight::Map<flight::String, flight::String>({{flight::types::lottie_shape_item_kind->ellipse, flight::String("shape.ellipse")}, {flight::types::lottie_shape_item_kind->fill, flight::String("shape.fill")}, {flight::types::lottie_shape_item_kind->gradient_fill, flight::String("shape.gradientFill")}, {flight::types::lottie_shape_item_kind->gradient_stroke, flight::String("shape.gradientStroke")}, {flight::types::lottie_shape_item_kind->path, flight::String("shape.path")}, {flight::types::lottie_shape_item_kind->polystar, flight::String("shape.polystar")}, {flight::types::lottie_shape_item_kind->rectangle, flight::String("shape.rectangle")}, {flight::types::lottie_shape_item_kind->stroke, flight::String("shape.stroke")}, {flight::types::lottie_shape_item_kind->trim_path, flight::String("shape.trimPath")}});
 
@@ -71,29 +78,31 @@ inline flight::Array<flight::String> get_lottie_feature_names() {
   return ([&]() { flight::Array<flight::String> array_spread_result; { auto&& array_spread_collection = lottie_layer_features; for (const auto& [array_spread_key, array_spread_mapped_value] : array_spread_collection) { static_cast<void>(array_spread_key); array_spread_result.push(array_spread_mapped_value); } } { auto&& array_spread_collection_2 = lottie_mask_features; for (const auto& [array_spread_key_2, array_spread_mapped_value_2] : array_spread_collection_2) { static_cast<void>(array_spread_key_2); array_spread_result.push(array_spread_mapped_value_2); } } for (const auto& array_spread_item : lottie_mask_condition_features) { array_spread_result.push(array_spread_item); } { auto&& array_spread_collection_3 = lottie_shape_item_features; for (const auto& [array_spread_key_3, array_spread_mapped_value_3] : array_spread_collection_3) { static_cast<void>(array_spread_key_3); array_spread_result.push(array_spread_mapped_value_3); } } return array_spread_result; }()).sort();
 }
 
-
-// NOT GENERATED: function tallyShapeItems -- source line 91
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   function tallyShapeItems(counts: Map<string, number>, raw: unknown): void {
-//     if (!Array.isArray(raw)) return;
-//     for (const entry of raw) {
-//       if (entry === null || typeof entry !== 'object') continue;
-//       const item = entry as Record<string, unknown>;
-//       const ty = item.ty;
-//       if (typeof ty === 'string') {
-//         const kind = LOTTIE_SHAPE_ITEM_FEATURES.get(ty);
-//         if (kind !== undefined) counts.set(kind, (counts.get(kind) ?? 0) + 1);
-//       }
-//       if (ty === 'gr') {
-//         tallyShapeItems(counts, item.it);
-//       }
-//     }
-//   }
-//   
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieCounts.ts: a presence
-// test against null has no absence channel in the emitted C++ storage for identifier
+inline void tally_shape_items(flight::Map<flight::String, double> counts, flight::Any raw) {
+  if (!flight::is_array(raw)) {
+    return;
+  }
+  {
+    const auto for_of_source_2 = raw;
+    for (double for_of_index_2 = 0.0; for_of_index_2 < static_cast<double>(for_of_source_2.array_size()); for_of_index_2 += 1.0) {
+      auto entry = for_of_source_2.array_get(for_of_index_2).value_or(flight::Any(flight::undefined));
+      if ((([&]() { const auto& presence_operand = entry; return presence_operand.is_null(); }()) || (entry.type_of() != flight::String("object")))) {
+        continue;
+      }
+      flight::NamedProperties item = flight::named_properties(entry);
+      auto ty = item.get(flight::String("ty")).value();
+      if ((ty.type_of() == flight::String("string"))) {
+        const std::optional<flight::String> kind = lottie_shape_item_features.get(ty.as_string());
+        if (kind.has_value()) {
+          counts.set(kind.value(), (([&]() -> double { auto nullish_coalesce_left = counts.get(kind.value()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()) + 1.0));
+        }
+      }
+      if ((ty == flight::String("gr"))) {
+        tally_shape_items(counts, item.get(flight::String("it")).value());
+      }
+    }
+  }
+}
 
 
 // NOT GENERATED: function collectLottieCounts -- source line 3

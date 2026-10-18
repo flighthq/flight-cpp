@@ -25417,7 +25417,7 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "compiler-restriction",
+      "classification": "target-runtime",
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
@@ -25442,7 +25442,7 @@
         "source": "packages/scene2d-formats/src/lottieCounts.ts"
       },
       "path": "flight/scene2d_formats/lottie_counts.hpp",
-      "rule": "cpp-presence-test-without-absence-storage",
+      "rule": "cpp-erased-array-assertion-runtime-required",
       "status": "refused-placeholder"
     },
     {
