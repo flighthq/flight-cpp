@@ -1,0 +1,141 @@
+{
+  "schema": "flight-cpp-gl-public-source-observable-controls/1",
+  "scope": "Original TypeScript bodies and original lazy-resolved dependency bodies ONLY; no generated C++, native consumer, SDK or GPU draw qualification.",
+  "checks": 24,
+  "observed": [
+    "runtime factory retains exact context and increments shared reference",
+    "installed callback and repeated public opt-in share one signal owner",
+    "installed callback deduplicates by state/table/kind",
+    "registry warning level and channel",
+    "GL material diagnostic route",
+    "GL texture diagnostic route",
+    "each public explanation owns fresh array and miss records",
+    "retained explanation snapshot does not grow with later callback",
+    "first callback leaves second state explanation untouched",
+    "base public teardown clears callback and traversal stack on same runtime",
+    "retained callback cannot reach cleared guard listener after teardown",
+    "public teardown retains runtime owner and earlier explanation",
+    "first teardown leaves second callback live",
+    "first teardown receives original state owner",
+    "second teardown receives original state owner",
+    "GL teardown iterates snapshot in order and clears callback added during teardown",
+    "shared-context teardown decrements once and retains original runtime owner",
+    "GL teardown is idempotent with no repeated callbacks",
+    "unregistered material and default remain null without built-in fallback",
+    "material registration owns fresh table while retaining exact renderer",
+    "public get/resolve preserve descriptor and callback identity",
+    "last registration wins without mutating retained material table",
+    "material resolution reads same material live kind",
+    "explicit standard registration supplies the source fallback"
+  ],
+  "sourceFiles": [
+    {
+      "path": "packages/entity/src/entity.ts",
+      "sha256": "d48c455a664722c3df349aadd667e599d2700273baf71158253aaa4d77bbec48"
+    },
+    {
+      "path": "packages/entity/src/runtime.ts",
+      "sha256": "09f8b8e9e5c7ae9d6de28655cf3d65bae5af564f73b8109e127365a78af679dc"
+    },
+    {
+      "path": "packages/log/src/log.ts",
+      "sha256": "3aa16ec21695ddb9de69a5b5fadc882760a3064f29a402875f29861ed7794020"
+    },
+    {
+      "path": "packages/registry/src/registryTable.ts",
+      "sha256": "6ef4a41875ed9774bb5835579374c8cc63392782f608bd4c11c8343a64f93d12"
+    },
+    {
+      "path": "packages/render-gl/src/glQuadMaterialRegistry.ts",
+      "sha256": "6badcc1fd143283fe7dbaaaaba4a59ce4988463556618abd8765d1239e388d8b"
+    },
+    {
+      "path": "packages/render-gl/src/glRenderState.ts",
+      "sha256": "151483a86760c71322bd94c05bc18af76411e8273119e046a39d4cf3c4d3745f"
+    },
+    {
+      "path": "packages/render/src/renderRegistryGuards.ts",
+      "sha256": "7e29c00d74b7b2fef808f066be7a06a427ff50d60c56e9cf3970952354344a15"
+    },
+    {
+      "path": "packages/render/src/renderRegistrySignals.ts",
+      "sha256": "fbf00f4ffbe454de778f9c800d7651f2af0ebce8d137130484f385601e7fd13a"
+    },
+    {
+      "path": "packages/render/src/renderState.ts",
+      "sha256": "4db13ab43bcdc931f67acab3f48cbd63a8ba3df78476594e09ce303000775f9d"
+    },
+    {
+      "path": "packages/signals/src/emitter.ts",
+      "sha256": "508fa8b9d3d5d940971878e9544131b0b3ab7c249bc5b184c173635935b3208f"
+    },
+    {
+      "path": "packages/signals/src/internal.ts",
+      "sha256": "beaaabf5cdbdd8002bf5d4652e53bc8796d97813805abc2324b44f94a304643d"
+    },
+    {
+      "path": "packages/signals/src/signal.ts",
+      "sha256": "a9b434ff35695f6815523281e39fed6dbe2bb34c874b8f9643997094cad447cb"
+    },
+    {
+      "path": "packages/signals/src/slot.ts",
+      "sha256": "3d76379074ab35427e502c7f8e5e77a288bb71239c22ec20848aebe9a58d1d41"
+    },
+    {
+      "path": "packages/types/src/BlendMode.ts",
+      "sha256": "3b77cdcede0a790d1d73027711e1f2348fdaa3f149aa7aa5e6ba7880c648ee04"
+    },
+    {
+      "path": "packages/types/src/Entity.ts",
+      "sha256": "c3961efff8938ca7c5dd26b4e14da66159e1f9f0ec218e13ca8bbd271a3fedd4"
+    },
+    {
+      "path": "packages/types/src/Log.ts",
+      "sha256": "2378b6327a9a8abdc30425da520f07636d1cf64f3224be8724f513dcc64ca3d5"
+    },
+    {
+      "path": "packages/types/src/RenderRegistrySignals.ts",
+      "sha256": "5a88449506593804a707bf5e213539d2353b9669806e9bfec0fcae4c9393155b"
+    },
+    {
+      "path": "packages/types/src/StandardMaterial.ts",
+      "sha256": "b318303e6ad1b9f3f5e1571c4b1e97ff82d9605ccb7d0c7f8f777ed21642050d"
+    }
+  ],
+  "nativeConsumer": {
+    "path": "artifacts/gl-public-registry-consumer.cpp",
+    "state": "NOT RUN: actual builder2 registry helper/body plus B inheritance/coherent output pending"
+  },
+  "limits": [
+    "Shared-context teardown branch only; no last-context GPU resource destruction.",
+    "Material get/register/resolve identity is checked; no GPU draw dispatch, program or frame claim.",
+    "Existing generated_scene2d_gl_owners_test.cpp already checks concrete Material2D owner/live kind and proxy teardown; not rerun or changed.",
+    "No generated/provider/header/override/pin changes, target-copy scope or SDK runs."
+  ],
+  "review": {
+    "authority": "Foreman747f3f5f: bounded existing-consumer source/native harness review only; no new header arc, provider/generated body changes, target-copy scope or SDK.",
+    "concreteGapsCorrected": [
+      "Prepared public consumer directly emitted signal instead of invoking installed runtime registryMiss callback. Added installed-callback owner/dispatch checks.",
+      "Prepared GL state incorrectly expected resolveCanvasTexture diagnostic. Actual original source oracle requires resolveGlTexture; corrected expected message.",
+      "Prepared public consumer did not retain an explanation across later callback or teardown. Added independent array snapshot, prior length and state-local diagnostic checks.",
+      "Prepared public consumer did not prove retained emitter listener cleared by public base teardown. Added retained callback after destroy, stable misses/log count and other state still live."
+    ],
+    "existingCoverageRetained": [
+      {
+        "path": "/tmp/builder4-gl-cell-views/normal-gl-prep/gl-runtime-factory-consumer.cpp",
+        "sha256": "c1db42e302d2472c24b0358e14e52971b9ff46adfaeceda27e74208e64d61b31",
+        "review": "Already asserts original-state teardown callback identity/order, deferred late callback, shared context reference decrement and idempotence; no duplicate native harness needed. Native remains pending existing GL/B floor."
+      },
+      {
+        "path": "tests/generated_scene2d_gl_owners_test.cpp",
+        "sha256": "21063e79681022ac41a8e060ced81ce984f2e5ccf60b582951ec7bf708a8aa31",
+        "review": "Existing material control retains concrete Material2D owner/live kind, renderer callback state/data identities, proxy teardown and quad packet values. Reviewed only, not changed or rerun."
+      }
+    ],
+    "nativeConsumerBeforeSha256": "c458e06b70f99a584a7863c0a3284cb9068dcbc748af9f7c2e393c46e42c22c3",
+    "nativeConsumerAfterSha256": "1eae565067851bcaee0a9d1201e35f1144d4e6090b6cf892bd6eed85f86a594e",
+    "nativeIncludesUnchanged": true,
+    "drawDispatch": "Actual GPU draw dispatch/frame is not established by owner/registry/packet checks. No draw or provider test added under this bounded instruction. Existing target-copy/scene3D draw lane remains excluded; no support promotion.",
+    "nextConcreteBlocker": "Actual builder2 registry helper/body, B RenderState heritage and coherent correctedB snapshot/regression results. Conditional formats start remains gated by actual2output."
+  }
+}
