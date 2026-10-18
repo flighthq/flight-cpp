@@ -135,7 +135,7 @@ private:
  std::shared_ptr<UnicodeFailure> failure_;
 };
 int main(){try{const flight::UnicodeServiceScope unicode(std::make_shared<CorpusUnicodeService>());
-{auto context=flight::make_ref<types::SvgImportContext>(); auto source=element({{String("style"),String("font-family: é😀")}});
+{auto context=flight::make_ref<types::SvgImportContext>(); auto source=element({{String("style"),String("É😀: unused; font-family: é😀")}});
  auto fault=std::make_shared<UnicodeFailure>(); bool caught=false;
  {const flight::UnicodeServiceScope failing(std::make_shared<FailingUnicodeService>(fault));
   try { svg::resolve_svg_definition_style(view(source),context); }
