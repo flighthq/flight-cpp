@@ -306,6 +306,24 @@ class Array {
     return result;
   }
 
+  // A proven filter projection stores a narrower carrier in the one fresh result array. Snapshot
+  // each source value before invoking user code, so replacing or growing the input cannot change
+  // the value selected for this result slot or invalidate the predicate's argument.
+  template <typename Predicate, typename Project>
+  [[nodiscard]] auto filter_projected(Predicate&& predicate, Project&& project) const {
+    using Result = std::remove_cvref_t<std::invoke_result_t<Project&, const Value&>>;
+    Array<Result> result;
+    const size_type length = size();
+    for (size_type index = 0; index < length; ++index) {
+      if (index >= size()) continue;
+      const Value value = (*values_)[index];
+      if (detail::invoke_array_method_callback(predicate, value, index, *this)) {
+        result.push(std::invoke(project, value));
+      }
+    }
+    return result;
+  }
+
   template <typename Predicate>
   [[nodiscard]] std::optional<Value> find(Predicate predicate) const {
     for (size_type index = 0; index < size(); ++index) {

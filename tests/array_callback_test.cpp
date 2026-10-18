@@ -55,6 +55,27 @@ int main() {
   try { (void)source.map([]() -> double { throw std::runtime_error("callback"); }); }
   catch (const std::runtime_error&) { threw = true; }
   check(threw, "callback exceptions propagate without replacement");
+  flight::Array<std::optional<double>> nullable{std::nullopt, 4.0, 8.0};
+  int projected_calls = 0;
+  const auto projected = nullable.filter_projected(
+      [&](std::optional<double> value, double index, const auto& all) {
+        ++projected_calls;
+        check(all == nullable, "projected filter receives the original owner");
+        if (index == 1) { all.element(1) = 9; all.push(12.0); }
+        return value.has_value();
+      }, [](const auto& value) { return value.value(); });
+  check(projected_calls == 3 && projected.size() == 2, "filter snapshots its initial length");
+  check(projected.element(0) == 4 && nullable.element(1).value() == 9,
+        "filter retains the source value read before the callback writes its slot");
+  const auto shortened = nullable.filter_projected(
+      [&](const auto& value, double index) { if (index == 0) nullable.clear(); return value.has_value(); },
+      [](const auto& value) { return value.value(); });
+  check(shortened.empty(), "filter skips indices removed by a callback");
+  bool projected_threw = false;
+  try { (void)source.filter_projected([]() -> bool { throw std::runtime_error("predicate"); },
+                                    [](double value) { return value; }); }
+  catch (const std::runtime_error&) { projected_threw = true; }
+  check(projected_threw, "projected filter preserves predicate exceptions");
   std::cout << checks << " checks, " << failures << " failures\n";
   return failures ? 1 : 0;
 }
