@@ -11,6 +11,13 @@ cc_test(
 )
 
 cc_test(
+    name = "array_callback_test",
+    srcs = ["array_callback_test.cpp"],
+    size = "small",
+    deps = ["//:cpp"],
+)
+
+cc_test(
     name = "erased_ref_base_capability_test",
     srcs = ["erased_ref_base_capability_test.cpp"],
     size = "small",

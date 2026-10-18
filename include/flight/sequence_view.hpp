@@ -211,7 +211,7 @@ class SequenceView {
   //
   // Mirrors `Array::map` exactly, including passing the INDEX as the callback's second argument and
   // deducing the element type from what the callback returns, so emitted code that works over an Array
-  // works unchanged over a view. `detail::invoke_array_callback` is what makes a one-argument callback
+  // works unchanged over a view. `detail::invoke_array_method_callback` is what makes a one-argument callback
   // acceptable too, which is the common case in emitted code.
   // `Array.prototype.filter` over a read-only view, returning a real Array as JavaScript does. Like
   // `flat_map` above, the view is untouched and the result is a new Array, so nothing depends on the view
@@ -222,22 +222,22 @@ class SequenceView {
     Array<Value> result;
     for (size_type index = 0; index < size(); ++index) {
       const Value element = (*this)[index];
-      if (detail::invoke_array_callback(predicate, element, index)) result.push(element);
+      if (detail::invoke_array_method_callback(predicate, element, index, *this)) result.push(element);
     }
     return result;
   }
 
   template <typename Transform>
   [[nodiscard]] auto flat_map(Transform&& transform) const
-      -> Array<typename std::remove_cvref_t<decltype(detail::invoke_array_callback(
-          transform, std::declval<const Value&>(), std::declval<size_type>()))>::value_type> {
-    using Mapped = std::remove_cvref_t<decltype(detail::invoke_array_callback(
-        transform, std::declval<const Value&>(), std::declval<size_type>()))>;
+      -> Array<typename std::remove_cvref_t<decltype(detail::invoke_array_method_callback(
+          transform, std::declval<const Value&>(), std::declval<size_type>(), std::declval<const SequenceView&>()))>::value_type> {
+    using Mapped = std::remove_cvref_t<decltype(detail::invoke_array_method_callback(
+        transform, std::declval<const Value&>(), std::declval<size_type>(), std::declval<const SequenceView&>()))>;
     using Result = typename Mapped::value_type;
     Array<Result> result;
     for (size_type index = 0; index < size(); ++index) {
       const Value element = (*this)[index];
-      const auto mapped = detail::invoke_array_callback(transform, element, index);
+      const auto mapped = detail::invoke_array_method_callback(transform, element, index, *this);
       for (const auto& value : mapped) result.push(value);
     }
     return result;
@@ -245,14 +245,14 @@ class SequenceView {
 
   template <typename Transform>
   [[nodiscard]] auto map(Transform&& transform) const
-      -> Array<std::remove_cvref_t<decltype(detail::invoke_array_callback(
-          transform, std::declval<const Value&>(), std::declval<size_type>()))>> {
-    using Result = std::remove_cvref_t<decltype(detail::invoke_array_callback(
-        transform, std::declval<const Value&>(), std::declval<size_type>()))>;
+      -> Array<std::remove_cvref_t<decltype(detail::invoke_array_method_callback(
+          transform, std::declval<const Value&>(), std::declval<size_type>(), std::declval<const SequenceView&>()))>> {
+    using Result = std::remove_cvref_t<decltype(detail::invoke_array_method_callback(
+        transform, std::declval<const Value&>(), std::declval<size_type>(), std::declval<const SequenceView&>()))>;
     Array<Result> result;
     for (size_type index = 0; index < size(); ++index) {
       const Value element = (*this)[index];
-      result.push(detail::invoke_array_callback(transform, element, index));
+      result.push(detail::invoke_array_method_callback(transform, element, index, *this));
     }
     return result;
   }

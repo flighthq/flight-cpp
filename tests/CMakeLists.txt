@@ -14,6 +14,11 @@ flight_cpp_set_project_warnings(flight_cpp_runtime_tests)
 
 add_test(NAME flight_cpp.runtime COMMAND flight_cpp_runtime_tests)
 
+add_executable(flight_cpp_array_callback_tests array_callback_test.cpp)
+target_link_libraries(flight_cpp_array_callback_tests PRIVATE Flight::Cpp)
+flight_cpp_set_project_warnings(flight_cpp_array_callback_tests)
+add_test(NAME flight_cpp.array_callback COMMAND flight_cpp_array_callback_tests)
+
 add_executable(flight_cpp_json_scalar_slice_tests json_scalar_slice_test.cpp)
 target_link_libraries(flight_cpp_json_scalar_slice_tests PRIVATE Flight::Cpp)
 flight_cpp_set_project_warnings(flight_cpp_json_scalar_slice_tests)

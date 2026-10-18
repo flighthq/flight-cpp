@@ -39,8 +39,22 @@ template <typename Function, typename Element>
 decltype(auto) invoke_array_callback(Function& function, Element&& element, std::size_t index) {
   if constexpr (std::invocable<Function&, Element, double>) {
     return std::invoke(function, std::forward<Element>(element), static_cast<double>(index));
-  } else {
+  } else if constexpr (std::invocable<Function&, Element>) {
     return std::invoke(function, std::forward<Element>(element));
+  } else {
+    return std::invoke(function);
+  }
+}
+
+// Instance methods pass the same source array as their third argument. Array.from uses the two-
+// argument helper above: its mapper receives value/index, without a source-array argument.
+template <typename Function, typename Element, typename Receiver>
+decltype(auto) invoke_array_method_callback(Function& function, Element&& element, std::size_t index,
+                                          const Receiver& receiver) {
+  if constexpr (std::invocable<Function&, Element, double, const Receiver&>) {
+    return std::invoke(function, std::forward<Element>(element), static_cast<double>(index), receiver);
+  } else {
+    return invoke_array_callback(function, std::forward<Element>(element), index);
   }
 }
 
@@ -266,7 +280,7 @@ class Array {
   template <typename Predicate>
   [[nodiscard]] bool every(Predicate predicate) const {
     for (size_type index = 0; index < size(); ++index) {
-      if (!detail::invoke_array_callback(predicate, (*values_)[index], index)) return false;
+      if (!detail::invoke_array_method_callback(predicate, (*values_)[index], index, *this)) return false;
     }
     return true;
   }
@@ -287,7 +301,7 @@ class Array {
     Array result;
     for (size_type index = 0; index < size(); ++index) {
       const auto& value = (*values_)[index];
-      if (detail::invoke_array_callback(predicate, value, index)) result.values_->push_back(value);
+      if (detail::invoke_array_method_callback(predicate, value, index, *this)) result.values_->push_back(value);
     }
     return result;
   }
@@ -296,7 +310,7 @@ class Array {
   [[nodiscard]] std::optional<Value> find(Predicate predicate) const {
     for (size_type index = 0; index < size(); ++index) {
       const auto& value = (*values_)[index];
-      if (detail::invoke_array_callback(predicate, value, index)) return value;
+      if (detail::invoke_array_method_callback(predicate, value, index, *this)) return value;
     }
     return std::nullopt;
   }
@@ -304,7 +318,7 @@ class Array {
   template <typename Predicate>
   [[nodiscard]] std::ptrdiff_t find_index(Predicate predicate) const {
     for (size_type index = 0; index < size(); ++index) {
-      if (detail::invoke_array_callback(predicate, (*values_)[index], index)) {
+      if (detail::invoke_array_method_callback(predicate, (*values_)[index], index, *this)) {
         return static_cast<std::ptrdiff_t>(index);
       }
     }
@@ -314,7 +328,7 @@ class Array {
   template <typename Function>
   void for_each(Function function) const {
     for (size_type index = 0; index < size(); ++index) {
-      detail::invoke_array_callback(function, (*values_)[index], index);
+      detail::invoke_array_method_callback(function, (*values_)[index], index, *this);
     }
   }
 
@@ -393,14 +407,14 @@ class Array {
 
   template <typename Transform>
   [[nodiscard]] auto flat_map(Transform&& transform) const
-      -> Array<typename std::remove_cvref_t<decltype(detail::invoke_array_callback(
-          transform, std::declval<const Value&>(), std::declval<size_type>()))>::value_type> {
-    using Mapped = std::remove_cvref_t<decltype(detail::invoke_array_callback(
-        transform, std::declval<const Value&>(), std::declval<size_type>()))>;
+      -> Array<typename std::remove_cvref_t<decltype(detail::invoke_array_method_callback(
+          transform, std::declval<const Value&>(), std::declval<size_type>(), std::declval<const Array&>()))>::value_type> {
+    using Mapped = std::remove_cvref_t<decltype(detail::invoke_array_method_callback(
+        transform, std::declval<const Value&>(), std::declval<size_type>(), std::declval<const Array&>()))>;
     using Result = typename Mapped::value_type;
     Array<Result> result;
     for (size_type index = 0; index < size(); ++index) {
-      const auto mapped = detail::invoke_array_callback(transform, (*values_)[index], index);
+      const auto mapped = detail::invoke_array_method_callback(transform, (*values_)[index], index, *this);
       for (const auto& value : mapped) result.push(value);
     }
     return result;
@@ -408,13 +422,13 @@ class Array {
 
   template <typename Transform>
   [[nodiscard]] auto map(Transform&& transform) const
-      -> Array<std::remove_cvref_t<decltype(detail::invoke_array_callback(
-          transform, std::declval<const Value&>(), std::declval<size_type>()))>> {
-    using Result = std::remove_cvref_t<decltype(detail::invoke_array_callback(
-        transform, std::declval<const Value&>(), std::declval<size_type>()))>;
+      -> Array<std::remove_cvref_t<decltype(detail::invoke_array_method_callback(
+          transform, std::declval<const Value&>(), std::declval<size_type>(), std::declval<const Array&>()))>> {
+    using Result = std::remove_cvref_t<decltype(detail::invoke_array_method_callback(
+        transform, std::declval<const Value&>(), std::declval<size_type>(), std::declval<const Array&>()))>;
     Array<Result> result;
     for (size_type index = 0; index < size(); ++index) {
-      result.push(detail::invoke_array_callback(transform, (*values_)[index], index));
+      result.push(detail::invoke_array_method_callback(transform, (*values_)[index], index, *this));
     }
     return result;
   }
@@ -485,7 +499,7 @@ class Array {
   template <typename Predicate>
   [[nodiscard]] bool some(Predicate predicate) const {
     for (size_type index = 0; index < size(); ++index) {
-      if (detail::invoke_array_callback(predicate, (*values_)[index], index)) return true;
+      if (detail::invoke_array_method_callback(predicate, (*values_)[index], index, *this)) return true;
     }
     return false;
   }
