@@ -139,24 +139,24 @@ inline PexDict parse_pex_xml(flight::String xml) {
   flight::RegExp attr_re = flight::RegExp(flight::String("<attribute\\b([^>]*)\\/>"), flight::String("gi"));
   std::optional<flight::RegExpExecArray> m;
   while ((m = attr_re.exec(xml)).has_value()) {
-    const flight::String tag = m.value().element(1.0);
-    const std::optional<flight::String> name = extract_attr(tag, flight::String("name"));
-    const std::optional<flight::String> value = extract_attr(tag, flight::String("value"));
+    const std::optional<flight::String> tag = m.value().capture(1.0);
+    const std::optional<flight::String> name = extract_attr(tag.value(), flight::String("name"));
+    const std::optional<flight::String> value = extract_attr(tag.value(), flight::String("value"));
     if ((name.has_value() && value.has_value())) {
       ([&]() { auto assignment_value = value.value(); dict.set(std::optional<flight::String>{name.value()}.value(), assignment_value); return assignment_value; }());
     }
   }
   flight::RegExp col_re = flight::RegExp(flight::String("<attribute\\b([^>]*)\\/>"), flight::String("gi"));
   while ((m = col_re.exec(xml)).has_value()) {
-    const flight::String tag_2 = m.value().element(1.0);
-    const std::optional<flight::String> name_2 = extract_attr(tag_2, flight::String("name"));
+    const std::optional<flight::String> tag_2 = m.value().capture(1.0);
+    const std::optional<flight::String> name_2 = extract_attr(tag_2.value(), flight::String("name"));
     if (!name_2.has_value()) {
       continue;
     }
-    const std::optional<flight::String> red = extract_attr(tag_2, flight::String("red"));
-    const std::optional<flight::String> green = extract_attr(tag_2, flight::String("green"));
-    const std::optional<flight::String> blue = extract_attr(tag_2, flight::String("blue"));
-    const std::optional<flight::String> alpha = extract_attr(tag_2, flight::String("alpha"));
+    const std::optional<flight::String> red = extract_attr(tag_2.value(), flight::String("red"));
+    const std::optional<flight::String> green = extract_attr(tag_2.value(), flight::String("green"));
+    const std::optional<flight::String> blue = extract_attr(tag_2.value(), flight::String("blue"));
+    const std::optional<flight::String> alpha = extract_attr(tag_2.value(), flight::String("alpha"));
     if (red.has_value()) {
       ([&]() { auto assignment_value = red.value(); dict.set(flight::String("") + flight::to_string(name_2.value()) + flight::String(".red"), assignment_value); return assignment_value; }());
     }
@@ -176,38 +176,38 @@ inline PexDict parse_pex_xml(flight::String xml) {
   double last_tag_end = 0.0;
   while ((m = tag_re.exec(xml)).has_value()) {
     flight::RegExpExecArray array_pattern_value = m.value();
-    const flight::String full = array_pattern_value.element(0.0);
-    const flight::String close = array_pattern_value.element(1.0);
-    const flight::String name_3 = array_pattern_value.element(2.0);
-    const flight::String attrs = array_pattern_value.element(3.0);
-    const bool is_self_close = (attrs.trim_end().ends_with(flight::String("/")) || full.ends_with(flight::String("/>")));
+    const std::optional<flight::String> full = array_pattern_value.capture(0.0);
+    const std::optional<flight::String> close = array_pattern_value.capture(1.0);
+    const std::optional<flight::String> name_3 = array_pattern_value.capture(2.0);
+    const std::optional<flight::String> attrs = array_pattern_value.capture(3.0);
+    const bool is_self_close = (attrs.trim_end().ends_with(flight::String("/")) || flight::regexp_capture_value(full).ends_with(flight::String("/>")));
     const flight::String text = xml.slice(last_tag_end, m.value().index).trim();
-    (last_tag_end = (m.value().index + static_cast<double>(full.length())));
+    (last_tag_end = (m.value().index + static_cast<double>(flight::regexp_capture_value(full).length())));
     if ((!flight::to_boolean(close) && !is_self_close)) {
-      if ((name_3 == flight::String("key"))) {
+      if ((name_3.value() == flight::String("key"))) {
         (in_tag = std::optional<flight::String>{flight::String("key")});
       }
       else {
-        if ((((name_3 == flight::String("integer")) || (name_3 == flight::String("real"))) || (name_3 == flight::String("string")))) {
-          (in_tag = std::optional<flight::String>{name_3});
+        if ((((name_3.value() == flight::String("integer")) || (name_3.value() == flight::String("real"))) || (name_3.value() == flight::String("string")))) {
+          (in_tag = std::optional<flight::String>{name_3.value()});
         }
       }
     }
     else {
       if (is_self_close) {
-        if (((((name_3 == flight::String("true")) || (name_3 == flight::String("false"))) && current_key.has_value()) && !pex_dict_has(dict, current_key.value()))) {
-          ([&]() { auto assignment_value = name_3; dict.set(std::optional<flight::String>{current_key.value()}.value(), assignment_value); return assignment_value; }());
+        if (((((name_3.value() == flight::String("true")) || (name_3.value() == flight::String("false"))) && current_key.has_value()) && !pex_dict_has(dict, current_key.value()))) {
+          ([&]() { auto assignment_value = name_3.value(); dict.set(std::optional<flight::String>{current_key.value()}.value(), assignment_value); return assignment_value; }());
           (current_key = std::nullopt);
         }
       }
       else {
-        if (((name_3 == flight::String("key")) && (in_tag == flight::String("key")))) {
+        if (((name_3.value() == flight::String("key")) && (in_tag == flight::String("key")))) {
           (current_key = ([&]() -> std::optional<flight::String> { auto logical_or_value_2 = text; if (flight::to_boolean(logical_or_value_2)) return logical_or_value_2; return std::nullopt; }()));
           (in_tag = std::nullopt);
         }
         else {
           if ((current_key.has_value() && !pex_dict_has(dict, current_key.value()))) {
-            if (((((name_3 == flight::String("integer")) || (name_3 == flight::String("real"))) || (name_3 == flight::String("string"))) && (in_tag == name_3))) {
+            if (((((name_3.value() == flight::String("integer")) || (name_3.value() == flight::String("real"))) || (name_3.value() == flight::String("string"))) && (in_tag == name_3.value()))) {
               ([&]() { auto assignment_value = text; dict.set(std::optional<flight::String>{current_key.value()}.value(), assignment_value); return assignment_value; }());
               (current_key = std::nullopt);
               (in_tag = std::nullopt);

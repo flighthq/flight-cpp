@@ -4334,6 +4334,13 @@
       "package": "@flighthq/particles-formats"
     },
     {
+      "dependency": "flight-compiler",
+      "digest": "69fa8e0df693a62904323d858a98fe51dd8af6aaa6153d6ca5f2ef7f98235899",
+      "id": "compiler-private-guarded-json-read-flow",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppPrivateGuardedJsonReadFlow.test.ts",
+      "package": "@flighthq/particles-formats"
+    },
+    {
       "dependency": "flight",
       "digest": "7d53ff4c20ec3b2a3384036ce096a8d48a235432cf4e8eadd61206942de1d2e2",
       "id": "particles-formats-string-operations",
@@ -6741,9 +6748,9 @@
       "bindingProfileSet": "sha256:2602f15df98afbc4055416765f444e85bee83a6c5fad13b420301f8fa344ca71",
       "cppIncludePrefix": "flight/particles_formats",
       "cppNamespace": "flight::particles_formats",
-      "emittedModules": 15,
+      "emittedModules": 16,
       "package": "@flighthq/particles-formats",
-      "refusedModules": 3,
+      "refusedModules": 2,
       "source": {
         "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"

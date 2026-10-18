@@ -2296,6 +2296,11 @@
       "source": "packages/particles-formats/src/pixiParse.ts"
     },
     {
+      "name": "SpineParse",
+      "packageName": "@flighthq/particles-formats",
+      "source": "packages/particles-formats/src/spineParse.ts"
+    },
+    {
       "name": "SpineSerialize",
       "packageName": "@flighthq/particles-formats",
       "source": "packages/particles-formats/src/spineSerialize.ts"
@@ -24569,6 +24574,16 @@
           "name": "PixiParse",
           "packageName": "@flighthq/particles-formats",
           "source": "packages/particles-formats/src/pixiParse.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "SpineParse",
+          "packageName": "@flighthq/particles-formats",
+          "source": "packages/particles-formats/src/spineParse.ts"
         }
       ]
     },
@@ -311684,6 +311699,776 @@
           ]
         }
       ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:ccdcca3573966df731afc28dd8f60c480f924d7d3672e3719cfe7834c97af20f",
+            "line": 1,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",9]",
+            "kind": "import",
+            "name": "reportImportDiagnostic",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "reportImportDiagnostic",
+            "kind": "dependency",
+            "module": {
+              "name": "ImportDiagnosticCollector",
+              "packageName": "@flighthq/importdiagnostics",
+              "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:9297ab84587f4b5413e65a55a7dacc75024a9110900c90c78222c62eaad5b8c3",
+            "line": 2,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",88]",
+            "kind": "import",
+            "name": "DEG_TO_RAD",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "DEG_TO_RAD",
+            "kind": "dependency",
+            "module": {
+              "name": "Constants",
+              "packageName": "@flighthq/math",
+              "source": "packages/math/src/constants.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:e16302f414831e40aaf112b35484a5290110e093ad12cf81697523be95d413df",
+            "line": 4,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",144]",
+            "kind": "import",
+            "name": "createParticleEmitterConfig",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createParticleEmitterConfig",
+            "kind": "dependency",
+            "module": {
+              "name": "ParticleEmitterConfig",
+              "packageName": "@flighthq/particles",
+              "source": "packages/particles/src/particleEmitterConfig.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:9a58386728356e40bdfd4d95f4ff017f2dd8e60152a5a91ec2c527c3aedbc424",
+            "line": 5,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",175]",
+            "kind": "import",
+            "name": "particleColorCurveFromKeyframes",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "particleColorCurveFromKeyframes",
+            "kind": "dependency",
+            "module": {
+              "name": "Curve",
+              "packageName": "@flighthq/particles",
+              "source": "packages/particles/src/curve.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:e24a4db27e0b9e15d49268e93444c44018600339264366cd841a76ed4b2fad5d",
+            "line": 6,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",210]",
+            "kind": "import",
+            "name": "particleCurveFromKeyframes",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "particleCurveFromKeyframes",
+            "kind": "dependency",
+            "module": {
+              "name": "Curve",
+              "packageName": "@flighthq/particles",
+              "source": "packages/particles/src/curve.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:4ed29d9b9c788211ee983240067a7fabe2c29c3555a536a2250a5c90c9f8e21b",
+            "line": 20,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",540]",
+            "kind": "import",
+            "name": "ImportDiagnosticSeverity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "ImportDiagnosticSeverity",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:83eb92c91e717d66b9bcd762b981a9871b4b2631b078cfeca0030063e0eaec5f",
+            "line": 26,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",931]",
+            "kind": "function",
+            "name": "parseSpineJson",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:0dd79c0b1921f190b805d57273be5c9d4ba24d22ef4eb7344b498e9d14d168f5",
+            "line": 42,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",1441]",
+            "kind": "function",
+            "name": "rangeMid",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:cdf683fd0a83764eca351c1274184c070165e3707aae33868664d2b16083892e",
+            "line": 50,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",1692]",
+            "kind": "function",
+            "name": "rangeLow",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:bd28d54baf90aac8137f530247ea40e9998242a8104dfee9ecca3e2b030b3ba0",
+            "line": 54,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",1839]",
+            "kind": "function",
+            "name": "rangeHigh",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:d7e03c2ea3bd321e45403b562778daa91b596461e4e8687d597e4336df1aa5d1",
+            "line": 58,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",1989]",
+            "kind": "function",
+            "name": "hexToRgb",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:696c7cf28332c1b18a6ee767f3310a842b24aa8313896811829ac2e86ebf23d7",
+            "line": 68,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",2448]",
+            "kind": "function",
+            "name": "firstTintColor",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:3e1c2aba868b5f426e2b322b513b6bc1928db2c43e7ffb3aebd39b2174df45ad",
+            "line": 73,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",2722]",
+            "kind": "function",
+            "name": "lastTintColor",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:b9d6271b082bc4318bb34c6270409795d60a7ae36a0a742a46a5c6a1b8620d48",
+            "line": 78,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",3024]",
+            "kind": "function",
+            "name": "firstAlpha",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:87c15621d81c3eca051ff8ffc5aeb81afed64b3255a2f7e849b9979ec72d4818",
+            "line": 83,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",3252]",
+            "kind": "function",
+            "name": "lastAlpha",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:66141a503639e2ccfbad3d37926266a6cdc18020d0f11b4f68ac76942175660a",
+            "line": 89,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",3509]",
+            "kind": "function",
+            "name": "invalidSpineEntry",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:a773473684c7ff95e2c41a621d4a82fac8dc36f5dda7d01940d09a8840f75308",
+            "line": 93,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",3663]",
+            "kind": "function",
+            "name": "isUnknownRecord",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:124e65905fce852cef9ba9a83f9a20f78f64880b335d25b725ffd70b72aa82af",
+            "line": 97,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",3822]",
+            "kind": "function",
+            "name": "requireSpineRecord",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:14bf92fe2402931326279582dd05cda5c5a6218e23515f3465e2458bca26a681",
+            "line": 102,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",3999]",
+            "kind": "function",
+            "name": "readSpineImages",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:8947e239fb7813770ea9d5986451d013b8400095b64ee565bac3352756c07ebb",
+            "line": 113,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",4324]",
+            "kind": "function",
+            "name": "validateSpineNestedEntries",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:3214691fb2f4ae6c49266f1d4e67505db4dd63310e5e01352668ca43896c3e79",
+            "line": 119,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",4540]",
+            "kind": "function",
+            "name": "validateSpineRecordEntries",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:7007ae5db6959b5357b0b33f4ec2c73b319f71b6462c59f1581b917b0d5aa83f",
+            "line": 124,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",4742]",
+            "kind": "function",
+            "name": "rawToConfig",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:33ce6382e71aa08abcfa642dd32e9d1fe3a24cccc5a0c077378a9f97bed1d470",
+            "line": 187,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",7761]",
+            "kind": "function",
+            "name": "collectSpineDiagnostics",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:dca6be54cff610e1102d76fedc031bb90d7ddcc6dca512db2325adc4bbbf4d3a",
+            "line": 225,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",9144]",
+            "kind": "function",
+            "name": "tintKeyframesToCurve",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:ceb68443a3d20d39d668a4752c4a19f77de833afbac6e9f7b8037241c98a9eb4",
+            "line": 236,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",9670]",
+            "kind": "function",
+            "name": "alphaKeyframesToCurve",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:ede1c0bb842b8d905328da4aef288be69dad8c54b8e8a8afb2728fb3a3a90a9e",
+            "line": 249,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",10169]",
+            "kind": "function",
+            "name": "spineBlendMode",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:6680028fcaa9c8cedccb6d2df5a28133d133c25e764e8055e430cab0b814183a",
+            "line": 257,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",10424]",
+            "kind": "function",
+            "name": "spineDocumentBlendMode",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:37bfa8d55951e4fd5360c9452b337f3601180291fb8019ae8e6b580d2292205d",
+            "line": 262,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",10620]",
+            "kind": "function",
+            "name": "spineSpawnShape",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:3926425c10556a325a1477dec752e5f584201bb6c050014481c8a4bc570018ae",
+            "line": 267,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",10782]",
+            "kind": "function",
+            "name": "rawToDocument",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:5b90ce7e59c1d5e8f90e12000b845cc9180262a84ead168dcd2104c866aedb56",
+            "line": 340,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",13480]",
+            "kind": "function",
+            "name": "parseSpineParticle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:d3abe33e8f24832f471167a51151b7d1f16a2e3d90bfacfcba9a84843f9ae6c2",
+            "line": 346,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineParse.ts\",13744]",
+            "kind": "function",
+            "name": "parseSpineParticleDocument",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SpineParse",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts"
+          },
+          "specifier": "@flighthq/importdiagnostics/contract",
+          "target": {
+            "name": "ImportDiagnosticCollector",
+            "packageName": "@flighthq/importdiagnostics",
+            "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SpineParse",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts"
+          },
+          "specifier": "@flighthq/math/contract",
+          "target": {
+            "name": "Constants",
+            "packageName": "@flighthq/math",
+            "source": "packages/math/src/constants.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SpineParse",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts"
+          },
+          "importedNames": [
+            "particleColorCurveFromKeyframes",
+            "particleCurveFromKeyframes"
+          ],
+          "specifier": "@flighthq/particles/contract",
+          "target": {
+            "name": "Curve",
+            "packageName": "@flighthq/particles",
+            "source": "packages/particles/src/curve.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SpineParse",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts"
+          },
+          "importedNames": [
+            "createParticleEmitterConfig"
+          ],
+          "specifier": "@flighthq/particles/contract",
+          "target": {
+            "name": "ParticleEmitterConfig",
+            "packageName": "@flighthq/particles",
+            "source": "packages/particles/src/particleEmitterConfig.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SpineParse",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineParse.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "SpineParse",
+        "packageName": "@flighthq/particles-formats",
+        "source": "packages/particles-formats/src/spineParse.ts"
+      },
+      "steps": []
     },
     {
       "bindings": [

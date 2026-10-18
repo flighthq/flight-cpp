@@ -57,46 +57,46 @@ inline ParticleDesignerRawDict parse_plist_raw_dict(flight::String xml) {
   std::optional<flight::RegExpExecArray> m;
   while ((m = tag_re.exec(xml)).has_value()) {
     flight::RegExpExecArray array_pattern_value = m.value();
-    const flight::String full = array_pattern_value.element(0.0);
-    const flight::String close = array_pattern_value.element(1.0);
-    const flight::String name = array_pattern_value.element(2.0);
-    const flight::String attrs = array_pattern_value.element(3.0);
-    const bool is_self_close = (attrs.trim().ends_with(flight::String("/")) || full.ends_with(flight::String("/>")));
+    const std::optional<flight::String> full = array_pattern_value.capture(0.0);
+    const std::optional<flight::String> close = array_pattern_value.capture(1.0);
+    const std::optional<flight::String> name = array_pattern_value.capture(2.0);
+    const std::optional<flight::String> attrs = array_pattern_value.capture(3.0);
+    const bool is_self_close = (flight::regexp_capture_value(attrs).trim().ends_with(flight::String("/")) || flight::regexp_capture_value(full).ends_with(flight::String("/>")));
     const flight::String text = xml.slice(last_tag_end, m.value().index).trim();
-    (last_tag_end = (m.value().index + static_cast<double>(full.length())));
+    (last_tag_end = (m.value().index + static_cast<double>(flight::regexp_capture_value(full).length())));
     if ((!flight::to_boolean(close) && !is_self_close)) {
-      if ((name == flight::String("key"))) {
+      if ((name.value() == flight::String("key"))) {
         (in_tag = std::optional<flight::String>{flight::String("key")});
       }
       else {
-        if ((((name == flight::String("integer")) || (name == flight::String("real"))) || (name == flight::String("string")))) {
-          (in_tag = std::optional<flight::String>{name});
+        if ((((name.value() == flight::String("integer")) || (name.value() == flight::String("real"))) || (name.value() == flight::String("string")))) {
+          (in_tag = std::optional<flight::String>{name.value()});
         }
       }
     }
     else {
       if (is_self_close) {
-        if ((((name == flight::String("true")) || (name == flight::String("false"))) && current_key.has_value())) {
-          ([&]() { auto assignment_value = std::variant<bool, double, flight::String>{std::in_place_type<bool>, (name == flight::String("true"))}; result.set(std::optional<flight::String>{current_key.value()}.value(), assignment_value); return assignment_value; }());
+        if ((((name.value() == flight::String("true")) || (name.value() == flight::String("false"))) && current_key.has_value())) {
+          ([&]() { auto assignment_value = std::variant<bool, double, flight::String>{std::in_place_type<bool>, (name.value() == flight::String("true"))}; result.set(std::optional<flight::String>{current_key.value()}.value(), assignment_value); return assignment_value; }());
           (current_key = std::nullopt);
         }
       }
       else {
-        if (((name == flight::String("key")) && (in_tag == flight::String("key")))) {
+        if (((name.value() == flight::String("key")) && (in_tag == flight::String("key")))) {
           (current_key = ([&]() -> std::optional<flight::String> { auto logical_or_value = text; if (flight::to_boolean(logical_or_value)) return logical_or_value; return std::nullopt; }()));
           (in_tag = std::nullopt);
         }
         else {
           if (current_key.has_value()) {
-            if (((name == flight::String("integer")) && (in_tag == flight::String("integer")))) {
+            if (((name.value() == flight::String("integer")) && (in_tag == flight::String("integer")))) {
               ([&]() { auto assignment_value = std::variant<bool, double, flight::String>{std::in_place_type<double>, flight::parse_int(text, 10.0)}; result.set(std::optional<flight::String>{current_key.value()}.value(), assignment_value); return assignment_value; }());
             }
             else {
-              if (((name == flight::String("real")) && (in_tag == flight::String("real")))) {
+              if (((name.value() == flight::String("real")) && (in_tag == flight::String("real")))) {
                 ([&]() { auto assignment_value = std::variant<bool, double, flight::String>{std::in_place_type<double>, flight::parse_float(text)}; result.set(std::optional<flight::String>{current_key.value()}.value(), assignment_value); return assignment_value; }());
               }
               else {
-                if (((name == flight::String("string")) && (in_tag == flight::String("string")))) {
+                if (((name.value() == flight::String("string")) && (in_tag == flight::String("string")))) {
                   ([&]() { auto assignment_value = std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, unescape_xml(text)}; result.set(std::optional<flight::String>{current_key.value()}.value(), assignment_value); return assignment_value; }());
                 }
               }

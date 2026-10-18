@@ -16752,7 +16752,6 @@
       "path": "flight/particles_formats/contract.hpp",
       "refusedDependencies": [
         "@flighthq/particles-formats/packages/particles-formats/src/registerBuiltInParticleFormats.ts",
-        "@flighthq/particles-formats/packages/particles-formats/src/spineParse.ts",
         "@flighthq/particles-formats/packages/particles-formats/src/unityParse.ts"
       ],
       "status": "dependency-incomplete"
@@ -16920,37 +16919,9 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "target-runtime",
       "consumers": [
         "@flighthq/particles-formats/packages/particles-formats/src/contract.ts",
         "@flighthq/particles-formats/packages/particles-formats/src/registerBuiltInParticleFormats.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:0af9ad09676916216c69b9c5244b6085a81b2d822aa657136442728334b64e23",
-        "sha256:0dc0ef19bfdacaf06a3a25771e19d6d99d0a7da9d0f4332480b6e01a96d521fd",
-        "sha256:1279221710863d338f52554d39653161c3bffee632db468f31e46117334b20ff",
-        "sha256:2049cd8109ec794e99b6ba5108246c245ffe451693c9067147a651a732aaf603",
-        "sha256:319078d465b9b178b2a7065b87ca318e899918bb6857ec35ded5e39fdfddb200",
-        "sha256:371437f45a51b7662a1b314d7fbbc5ad93d3a46870e381635695217822614a32",
-        "sha256:39f82c4517f116b1c3c2e8c6c195e1c0a3f200dcf0ef172d0b13f4270e10e909",
-        "sha256:4a2bd5b6d7e6896cec92a6d2f0b376caf9c083ce61e09cfec56190e232ef8cf8",
-        "sha256:5275cc236894e3b37510e2203f2fff65807d0502cbd2711db5ad27b8bae87ee4",
-        "sha256:55ca1373bb6d68c31a610891f9cdec2cdb9f0effc0144ccdc59047870b51560e",
-        "sha256:5a52d25e37a48136e703eaa71dd4a1d67adc7d0a71674ba3eafda1f2d844404f",
-        "sha256:85e13368ec69684005b1de2568838150a77311c8a749859ed84beecd0fc003b0",
-        "sha256:953abcc50b593c8dc79012bc31763e2cab6083e005018b80d8a8d86607807635",
-        "sha256:9fd3b52ac2ef033a35ed75e61b50c6a7f980a1c1a708e1605b24553c1e3a44c9",
-        "sha256:aeba4ee7b093dec28f9f56a592e9026f990593b86ad43affe3d745f16ac9fa44",
-        "sha256:b43b9ce44736f2b61a1db8c27201bcc7ad67c5a7c75edcb784307846fa8bbb1f",
-        "sha256:bc9539232cf46bd957d7e49794ea35c6d7a59d37c1d2f50ea39b255b6adeb9ef",
-        "sha256:c4040854e64a25d0df61546df6307282f1885a2c4a92626e5bf6cf5e7cfa1696",
-        "sha256:d2f375903e361cbe8530bd776c0629b946422c0250d3e374ed7ec6318b4ecabc",
-        "sha256:de1a0f9f4fe52138b7e2ac3dd1d4a3e8f041b73d2a7905ec2b7e18af13eaf4a7",
-        "sha256:de7309190323f26f4e62ec97dfcd4ef0beb5477005e9943859ee9c5ce2a4be51",
-        "sha256:e2ccf4f4da68cddc469bc21c5769043dcef380cc6ac35a07a12a96db079c94e3",
-        "sha256:e3a5cc90f228d8209b4e74462fad29736ef31c7dc21f755fa162b4a134bfe5a0",
-        "sha256:f06e33f65e782ec2035476521f82888e7841acdd0634d0beb7fde78728b48d6f",
-        "sha256:f182d9c874bd30fd3401b7957994f0b39dfd464e63a2119be7f3fb50b75e71bc"
       ],
       "module": {
         "name": "SpineParse",
@@ -16958,8 +16929,7 @@
         "source": "packages/particles-formats/src/spineParse.ts"
       },
       "path": "flight/particles_formats/spine_parse.hpp",
-      "rule": "cpp-erased-array-predicate-runtime-required",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "consumers": [
