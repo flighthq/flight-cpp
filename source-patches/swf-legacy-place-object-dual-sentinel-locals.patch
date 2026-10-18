@@ -1,0 +1,24 @@
+diff --git a/packages/swf/src/swfPlaceObjectHandler.ts b/packages/swf/src/swfPlaceObjectHandler.ts
+index cf9ce69..89bc593 100644
+--- a/packages/swf/src/swfPlaceObjectHandler.ts
++++ b/packages/swf/src/swfPlaceObjectHandler.ts
+@@ -63,14 +63,17 @@ function readLegacyPlaceObject(body: SwfTagReader, placements: Map<number, SwfTa
+   const matrix = readSwfMatrix(body);
+   const colorTransform = body.pos < body.end ? readSwfColorTransform(body, 3) : null;
+   if (!body.valid || characterId === 0) return;
++  // One represented domain: the nullable transform is the only absence, and the member is the
++  // source's required nullable array.
++  const colorAdjustments = colorTransform !== null ? colorTransform.colorAdjustments : null;
+   placements.set(depth, {
+     advancedBlendMode: null,
+     alpha: 1,
+     blendMode: BlendMode.Normal,
+     characterId,
+     clipDepth: 0,
+-    colorAdjustments: colorTransform?.colorAdjustments ?? null,
+-    colorTransformAdjustments: colorTransform?.colorAdjustments ?? null,
++    colorAdjustments,
++    colorTransformAdjustments: colorAdjustments,
+     depth,
+     directLinkage: null,
+     effects: EMPTY_EFFECTS,

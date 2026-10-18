@@ -1,0 +1,26 @@
+diff --git a/packages/swf/src/swfControlHandler.ts b/packages/swf/src/swfControlHandler.ts
+index c6faa4f..646db80 100644
+--- a/packages/swf/src/swfControlHandler.ts
++++ b/packages/swf/src/swfControlHandler.ts
+@@ -160,14 +160,18 @@ function readSwfButtonDefinition(body: SwfTagReader, state: SwfTagParseState, ve
+       );
+     }
+     if ((flags & BUTTON_STATE_UP) !== 0 && characterId !== 0) {
++      // The two source sentinels are separated explicitly: a nullable color transform is the only
++      // reason the chain could be absent, and each member then has one represented domain.
++      const colorAlpha = colorTransform !== null ? colorTransform.alpha : 1;
++      const colorAdjustments = colorTransform !== null ? colorTransform.colorAdjustments : null;
+       placements.set(depth, {
+         advancedBlendMode: null,
+-        alpha: colorTransform?.alpha ?? 1,
++        alpha: colorAlpha,
+         blendMode: BlendMode.Normal,
+         characterId,
+         clipDepth: 0,
+-        colorAdjustments: colorTransform?.colorAdjustments ?? null,
+-        colorTransformAdjustments: colorTransform?.colorAdjustments ?? null,
++        colorAdjustments,
++        colorTransformAdjustments: colorAdjustments,
+         depth,
+         directLinkage: null,
+         effects: EMPTY_EFFECTS,
