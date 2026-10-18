@@ -20,6 +20,20 @@ flight::Ref<flight::types::Sprite> create_sprite(flight::StructuralRef<flight::R
 }
 #include FLIGHT_SPRITE_SOURCE_HEADER
 
+// Local adapter metadata for declared native cells absent from the frozen SDK key vocabulary.
+// The SDK table stays unchanged; each binding below names the original physical field.
+namespace flight::detail {
+template<> struct schema_member<RowKey<"worldBoundsUsingWorldTransformId">, RowOf<Ref<types::NodeRuntime<Ref<types::Node2DTraits>>>>>> {
+  using type = decltype(types::NodeRuntime<Ref<types::Node2DTraits>>::world_bounds_using_world_transform_id);
+};
+template<> struct schema_member<RowKey<"worldBoundsUsingLocalBoundsId">, RowOf<Ref<types::NodeRuntime<Ref<types::Node2DTraits>>>>>> {
+  using type = decltype(types::NodeRuntime<Ref<types::Node2DTraits>>::world_bounds_using_local_bounds_id);
+};
+template<> struct schema_member<RowKey<"worldTransformUsingParentTransformId">, RowOf<Ref<types::NodeRuntime<Ref<types::Node2DTraits>>>>>> {
+  using type = decltype(types::NodeRuntime<Ref<types::Node2DTraits>>::world_transform_using_parent_transform_id);
+};
+}
+
 namespace component {
 using Traits = flight::Ref<flight::types::Node2DTraits>;
 using Generic = flight::types::NodeRuntime<Traits>;
@@ -46,7 +60,20 @@ void check(const char* label, bool result) {
 template<class Object> Common common_for(const std::shared_ptr<Object>& source) {
   const auto runtime = flight::row_get<decltype(Object::entity_runtime_key)>(
       View<Object>(source), flight::types::entity_runtime_key).value();
-  return Common(View<typename decltype(runtime)::element_type>(runtime));
+  Common common(View<typename decltype(runtime)::element_type>(runtime));
+  auto bind = [&](const char* key, auto member) {
+    std::weak_ptr<typename decltype(runtime)::element_type> weak = runtime;
+    common.shared_owner()->bind_named(key, [weak, member]() -> decltype(auto) {
+      auto live = weak.lock();
+      if (!live) throw std::bad_weak_ptr();
+      return (live.get()->*member);
+    });
+  };
+  using Runtime = typename decltype(runtime)::element_type;
+  bind("worldBoundsUsingWorldTransformId", &Runtime::world_bounds_using_world_transform_id);
+  bind("worldBoundsUsingLocalBoundsId", &Runtime::world_bounds_using_local_bounds_id);
+  bind("worldTransformUsingParentTransformId", &Runtime::world_transform_using_parent_transform_id);
+  return common;
 }
 Common common_for(Node source) {
   if (auto exact = source.shared_exact_object<Sprite>()) return common_for(exact);
@@ -72,6 +99,7 @@ void common_operations(const std::shared_ptr<Object>& source,
   auto common = common_for(source);
   check("common view keeps exact allocation", common.shared_native_object().get() == runtime.get());
   check("common view recovers original runtime", common.template shared_exact_object<Runtime>() == runtime);
+  check("adapted stamp is original physical cell", &flight::row_get<flight::RowKey<"worldBoundsUsingLocalBoundsId">>(common) == &runtime->world_bounds_using_local_bounds_id);
   check("common parent is original physical cell", &flight::row_get<flight::RowKey<"parent">>(common) == &runtime->parent);
   flight::row_set<flight::RowKey<"parent">>(common, std::optional<Node>{parent});
   check("parent write retains original source identity", runtime->parent && runtime->parent->identity() == parent.identity());
