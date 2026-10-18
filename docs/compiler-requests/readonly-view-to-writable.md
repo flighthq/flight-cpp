@@ -390,8 +390,8 @@ single evaluation and distinct readonly/writable contexts. The four existing pre
 groups pass. The independently transpiled raw `806d257` backend and a separately built preceding
 72-patch backend reproduce the writable intermediate on the same frontend IR; this is an emitter
 origin spotcheck, not a full raw compiler build. Writable and invalid-readonly-call controls retain
-byte-identical output. Normal generation and the actual previously blocked public consumer remain
-required; no header, renderer or package promotion is claimed by this preparation.
+byte-identical output. The qualification below covers one scoped normal generation and the original
+public consumer; it does not establish a 16-header gain or complete renderer/package coverage.
 
 The declared 73-patch compiler stack applies and builds. Its nine focused groups pass. A native
 fixture matching the existing readonly bind-to-draw storage compiles, links and runs with the emitted
@@ -400,8 +400,35 @@ guards, attachment replacement, single evaluation, exact thrown owner and final 
 The preceding compiler's output fails at the writable intermediate; the readonly-to-writable negative
 remains rejected. The writable-call and invalid-readonly-call emitted controls remain byte-identical.
 
-The compiler static check retains four preexisting failing gates: formatting, lint, import ordering
+The compiler static check on the 73-patch floor retains four preexisting failing gates: formatting, lint, import ordering
 and five foreign fixture type diagnostics. Touched-file lint and the new test's formatting pass. The
 source archive initially lacked Git index context for documentation/license enumeration; both gates
 pass with the pinned index used read-only against that archive. No dependency checkout is modified.
-Normal SDK generation and the original public-consumer check remain pending capacity coordination.
+
+After the clean base update, the combined 76-patch compiler stack also applies, builds and passes
+all nine focused tests (five helper-projection tests and four existing present-readonly returns).
+Reversing all 76 patches after those checks restores all 1784 tracked source files exactly to the
+clean raw pin and removes every added patch source file. This does not require a second SDK run.
+
+One coordinated normal `node scripts/pkgGenerate.mjs @flighthq/scene3d-gl --progress` run exits zero.
+The owned package remains 64/69 modules emitted with five existing refusals; 51 headers change through
+normal generation, and the inventory remains uniformly pinned to Flight `a627849`. The temporary
+closure reports 1539/1643 modules emitted across 36 packages and 104 refusals; those are closure
+counts, not a package or whole-SDK qualification. The independent Scene2D GL viewport source-patch
+warning remains. No generated C++ is hand-edited. All 16 historical present-program call sites now
+retain readonly intermediates by content audit; they have not been counted as 16 native header passes.
+
+The existing `flight_cpp_generated_gl_readonly_present_tests` consumer compiles and links with the
+full original generated `gl_custom_shader_mesh_material_renderer.hpp`, including its original bind
+and draw bodies. Its registered `flight_cpp.generated_gl_readonly_present` CTest passes (1/1).
+Alongside the existing real SDL GL presentation checks, the public source registration/getter path
+checks absent lookup, the same readonly row and native owner/control block, live original vertex
+cells, last-write lookup after re-registration, and retained views/persistent registry snapshots.
+No caller cast, narrowed source domain or replacement renderer is used. This runtime test does not
+execute renderer bind/draw; the separately emitted native fixture checks the guarded argument seam.
+It does not qualify the full renderer or package.
+
+After generation, `npm run overrides:check` reports 227 declared overrides, 13 source drifts, zero
+unresolved entries and zero unmanifested headers. The 13 retained native Scene3D GL copies require
+separate source audits; no override body or digest is changed in this compiler task. The result is
+not a global override-integrity pass. Existing refusal, renderer and package debts remain explicit.
