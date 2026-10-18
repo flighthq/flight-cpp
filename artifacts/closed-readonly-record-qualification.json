@@ -72,9 +72,17 @@
     "freshLoweredDependencyModules": 1467,
     "lottieSourceSha256": "fb768b9622f2ade7301341f674db8cd64e00d3e39f09cd9aaf7aac1f1780a55b",
     "emissionLog": "/tmp/builder5-lottie-body/readonly124-original-closure.log",
-    "publicCompile": "running after normal declared Lottie repairs and dependency-checked alias derivation",
+    "publicCompile": "FAIL exit1 after normal repairs with all3 whole original modules; native0/32run",
     "nativePublicCasesRun": 0,
-    "publicCaseDenominator": 32
+    "publicCaseDenominator": 32,
+    "remainingNativeBoundaries": [
+      "mask readonly optional array payload coalesce",
+      "marker-event fresh object into optional Any",
+      "unused generic type parameter on foreign anonymous animation-track options owner",
+      "installed node revision merged-row native recovery",
+      "partial nullable name cell construction"
+    ],
+    "publicCompileLog": "/tmp/builder5-lottie-body/readonly124-public-native-build.log"
   },
   "setupCorrections": [
     "Earlier new native fixture attempts hit explicit ENOSPC; discarded as setup failures. Lossless hash-verified archiving of own completed scratch binaries freed disk, and sameClang22 -g0 retry passed."
