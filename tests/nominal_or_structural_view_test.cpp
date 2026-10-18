@@ -31,6 +31,22 @@ struct CallerScreen : Target {
 
 using ScreenView = flight::NominalOrStructuralView<Screen, Target>;
 
+// The base-reference owner case (VignetteEffect widened to Ref<Effect> before its first by-name use).
+struct Effect : flight::ReferenceEnabled {
+  double width{0.0};
+};
+struct Vignette : Effect {
+  using flight_native_base = Effect;
+  double intensity{0.0};
+};
+struct StrongVignette : Vignette {
+  using flight_native_base = Vignette;
+  double capture_width{0.0};
+};
+struct PlainVignette : Effect {
+  double intensity{0.0};
+};
+
 int failures = 0;
 void check(bool ok, const char* what) {
   if (!ok) {
@@ -126,6 +142,38 @@ int main(int argc, char**) {
           "the transient owner is not observable through any other view");
     reader.reset();
     check(watch.expired(), "the object expires once its external references drop");
+  }
+
+  // A make_ref allocation reached first through a BASE reference gets the owner of the type it was
+  // allocated as: its derived member is present by name, and the owner is the one an exact-type access
+  // sees too. Without a recorded allocation, the owner stays at the static type given -- never a guess.
+  {
+    auto vignette = flight::make_ref<Vignette>(Vignette{});
+    vignette->intensity = 0.5;
+    const flight::Ref<Effect> widened = vignette;
+    const auto named = flight::named_properties(widened);
+    check(named.has(flight::String("intensity")), "a widened make_ref allocation answers its derived member by name");
+    check(named.has(flight::String("intensity")) && named.get(flight::String("intensity")).as_number() == 0.5,
+          "the derived member reads its live value");
+    check(flight::detail::owner_for(vignette) == flight::detail::owner_for(widened),
+          "the base-reference and exact-type accesses share one owner");
+
+    auto strong = flight::make_ref<StrongVignette>(StrongVignette{});
+    strong->capture_width = 3.0;
+    const flight::Ref<Effect> strong_widened = strong;
+    const auto strong_named = flight::named_properties(strong_widened);
+    check(strong_named.has(flight::String("intensity")) && strong_named.has(flight::String("captureWidth")),
+          "a subclass allocation binds its own members and its parents'");
+
+    const flight::Ref<Effect> unrecorded = std::make_shared<Vignette>();
+    check(!flight::named_properties(unrecorded).has(flight::String("intensity")),
+          "an object not made by make_ref keeps the static type's owner");
+    const flight::Ref<Effect> plain = flight::make_ref<PlainVignette>(PlainVignette{});
+    check(!flight::named_properties(plain).has(flight::String("intensity")),
+          "a type with no native-base record keeps the static type's owner");
+    const flight::Ref<Effect> base_only = flight::make_ref<Effect>(Effect{});
+    check(!flight::named_properties(base_only).has(flight::String("intensity")),
+          "a base allocation does not acquire a derived member");
   }
 
   if (argc > 1) check(caller->presentation_view == 9.0, "mutant: demand that the second bind overwrote");

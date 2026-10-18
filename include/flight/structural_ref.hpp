@@ -721,8 +721,28 @@ class JsonRowOwner final : public RowOwner {
 template <typename Object>
 [[nodiscard]] std::shared_ptr<RowOwner> owner_for(const std::shared_ptr<Object>& object) {
   auto& registry = owner_registry();
-  const std::lock_guard lock(registry.mutex);
   const auto key = static_cast<const void*>(object.get());
+  if constexpr (!std::same_as<Object, JsonObject> && !std::same_as<Object, JsonArray>) {
+    {
+      const std::lock_guard lock(registry.mutex);
+      if (const auto found = registry.entries.find(key); found != registry.entries.end()) {
+        if (!found->second.object.expired()) return found->second.owner;
+        registry.entries.erase(found);
+      }
+    }
+    // An object reached through a base reference gets the owner of the type it was ALLOCATED as, when
+    // flight::make_ref recorded that type: a by-name read of a member only the derived type declares must
+    // not depend on which static type happened to create the owner first. Only the recorded allocation at
+    // this same address qualifies; anything else -- an object not made by make_ref, a type with no
+    // recorded record, a base at another address -- keeps the owner of the static type it was given, as
+    // before, rather than a guessed one. Taken outside the registry lock: the exact-type owner_for locks it.
+    if (const auto identity = recoverable_owner_identity(object);
+        identity && identity->type != std::type_index(typeid(Object)) && identity->own_row_owner &&
+        identity->object.get() == key) {
+      if (auto exact = std::static_pointer_cast<RowOwner>(identity->own_row_owner(identity->object))) return exact;
+    }
+  }
+  const std::lock_guard lock(registry.mutex);
   if (const auto found = registry.entries.find(key); found != registry.entries.end()) {
     if (!found->second.object.expired()) return found->second.owner;
     registry.entries.erase(found);
