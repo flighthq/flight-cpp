@@ -52,6 +52,15 @@ int main() {
   assert(two < thirty_text);                // 2 < 30 numerically true
   assert(!(absent > 0.0) && !(absent < 0.0));  // NaN comparisons false
 
+  // Loose equality: string/string is exact lexical equality, never ToNumber ("01" != "1"),
+  // while mixed string/number compares ToNumber ("30" == 30, strict false).
+  const JsonScalarCell text_01{Any(flight::String("01"))};
+  const JsonScalarCell text_1{Any(flight::String("1"))};
+  const JsonScalarCell number_one{Any(1.0)};
+  assert(!text_01.loose_equals(text_1) && text_01.strict_equals(text_1) == false);
+  assert(text_1.loose_equals(number_one) && !text_1.strict_equals(number_one));
+  assert(thirty_text.loose_equals(thirty_text) && !thirty_text.loose_equals(number_one));
+
   // null/undefined/NaN in `+`: null is 0 numerically, undefined/NaN stay NaN.
   const JsonScalarCell null_value{Any(flight::null)};
   const JsonScalarCell undefined_value;
