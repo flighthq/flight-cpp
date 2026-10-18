@@ -338,6 +338,10 @@ What it refuses instead of answering:
   share one disengaged carrier.
 
 Still open (not covered here):
-- A registered class's own fields that are not member-table keys are refused by the erased `in`/`typeof`
-  queries. Registering field names would close it.
+- A registered class's own fields that are not member-table keys: closed by
+  `source-patches/compiler-class-field-registration.patch` (INACTIVE). Each non-generic class also emits
+  `flight::register_class_fields<C>({...})`, listing its declared instance fields from the IR. Those are own
+  under define semantics, and the list includes storage inherited from an interface base. Each entry has a
+  typeof reader. A fully registered class then answers `in` and `typeof` from that registration alone,
+  never from table-bound cells, which a static member also satisfies.
 - A receiver typed `object` is emitted as `flight::Ref<void>`, so `key in value` there is still raw text.

@@ -1,0 +1,73 @@
+diff --git a/packages/compiler-backend-cpp/src/cppClassFieldRegistration.test.ts b/packages/compiler-backend-cpp/src/cppClassFieldRegistration.test.ts
+new file mode 100644
+index 0000000..04c66ba
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppClassFieldRegistration.test.ts
+@@ -0,0 +1,36 @@
++import { writeFileSync } from 'node:fs';
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/example/src/classFieldRegistration.ts', source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/example', upstreamDirectory: '/flight' });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++it('registers each own instance field with the disengaged typeof its source type decides', () => {
++  const output = emit(`
++    export class Cursor {
++      static count = 0;
++      pos = 0;
++      label?: string;
++      link: Cursor | null = null;
++      either: string | null | undefined = undefined;
++      constructor(readonly start: number) {}
++      advance(): number { return this.pos++; }
++    }
++  `);
++  if (process.env.FLIGHT_EMIT_PROBE) writeFileSync(process.env.FLIGHT_EMIT_PROBE, output);
++
++  expect(output).toContain('inline const bool flight_class_fields_Cursor = flight::register_class_fields<Cursor>({');
++  expect(output).toContain('{"pos", [](const void* object) { return flight::class_field_typeof(static_cast<const Cursor*>(object)->pos, nullptr); }}');
++  expect(output).toContain('{"label", [](const void* object) { return flight::class_field_typeof(static_cast<const Cursor*>(object)->label, "undefined"); }}');
++  expect(output).toContain('{"link", [](const void* object) { return flight::class_field_typeof(static_cast<const Cursor*>(object)->link, "object"); }}');
++  expect(output).toContain('{"either", [](const void* object) { return flight::class_field_typeof(static_cast<const Cursor*>(object)->either, nullptr); }}');
++  expect(output).toContain('{"start", [](const void* object)');
++  expect(output).not.toContain('{"count", [](const void* object)');
++});
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 5616d29..ca687b2 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -2427,6 +2427,26 @@ function emitClass(declaration: Readonly<IrClassDeclaration>, outer: EmitContext
+     lines.push(
+       `inline const bool flight_class_prototype_${name} = flight::register_class_prototype<${name}>(flight::ClassPrototype{{${methods}}, {${accessors}}, ${base}, ${hasSubclass ? 'true' : 'false'}});`,
+     );
++    // The class's OWN instance fields. Flight compiles class fields with define semantics, so every declared
++    // field (not `declare`, abstract, static, branded or #private) is an own property from construction:
++    // `key in object` needs only the name. Each reader answers typeof of the field's value from an object of
++    // this exact class; a disengaged carrier answers what the field's source type makes it -- undefined,
++    // or null's "object" -- and nothing when the type admits both, so the runtime refuses rather than picks.
++    // The fields come from the IR, not the emitted struct, so storage inherited from an interface base
++    // (a field the class does not re-declare) is still listed and still reachable by name.
++    context.includes.add('flight/structural_ref.hpp');
++    const ownFields = declaration.fields.filter(
++      (field) => !field.static && !field.declare && !field.abstract && !field.branded && !field.name.startsWith('#'),
++    );
++    const fieldEntries = ownFields.map((field) => {
++      const admitsUndefined = field.optional || isCppTypeAdmittingUndefinedCpp(field.type, context);
++      const admitsNull = isCppTypeAdmittingNullCpp(field.type, context);
++      const disengaged = admitsUndefined && admitsNull ? 'nullptr' : admitsUndefined ? '"undefined"' : admitsNull ? '"object"' : 'nullptr';
++      return `{${JSON.stringify(field.name)}, [](const void* object) { return flight::class_field_typeof(static_cast<const ${name}*>(object)->${safeCppName(field.name)}, ${disengaged}); }}`;
++    });
++    lines.push(
++      `inline const bool flight_class_fields_${name} = flight::register_class_fields<${name}>({${fieldEntries.join(', ')}});`,
++    );
+   }
+   return lines;
+ }
