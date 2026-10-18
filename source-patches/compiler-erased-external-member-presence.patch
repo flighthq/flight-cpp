@@ -1,0 +1,405 @@
+diff --git a/packages/compiler-backend-cpp/src/cppErasedExternalMemberPresence.test.ts b/packages/compiler-backend-cpp/src/cppErasedExternalMemberPresence.test.ts
+new file mode 100644
+index 0000000..fb9db31
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppErasedExternalMemberPresence.test.ts
+@@ -0,0 +1,110 @@
++import { describe, expect, it } from 'vitest';
++
++import ts from 'typescript';
++
++import { isBackendEmissionFailure } from '../../compiler-emission/src/index.js';
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++// An external type is erased to `any` in the program the lowering builds, and that erases the `| null`
++// beside it: `encoder: NativeEncoder | null` reaches the checker as `any`, so TypeScript's flow narrowing
++// of `pass.encoder` after `if (pass.encoder !== null)` is invisible and the member call refused. Binding
++// references already recover the narrowing syntactically; this is the same closed proof for the
++// `binding.member` path TypeScript narrows. The guard must exclude every absent kind the member's own
++// declaration admits, and a write to the member or its receiver before the read -- or anywhere in an
++// enclosing loop -- withdraws it. A write target is never itself narrowed.
++//
++// The measured site is @flighthq/render-wgpu's wgpuRenderPass.ts (`pass.encoder`, `runtime.renderPass`).
++const bindings = {
++  bindings: [
++    {
++      headers: ['host/encoder.hpp'],
++      nullability: 'non-null' as const,
++      ownership: 'shared' as const,
++      sourceName: 'NativeEncoder',
++      space: 'type' as const,
++      targetName: 'host::Encoder',
++    },
++  ],
++  schema: 'flight-cpp-external-bindings/1' as const,
++};
++
++function emit(source: string) {
++  const sourceFile = ts.createSourceFile('/flight/packages/math/src/pass.ts', source, ts.ScriptTarget.Latest, true);
++  const lowered = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/math', upstreamDirectory: '/flight' });
++  expect(lowered.diagnostics).toEqual([]);
++  return emitIrModuleCpp(lowered.module, { externalBindings: bindings, runtimeProfile: 'flight-cpp' }).contents;
++}
++
++function refusal(source: string) {
++  try {
++    emit(source);
++  } catch (error) {
++    if (isBackendEmissionFailure(error)) return error.rule;
++    throw error;
++  }
++  return undefined;
++}
++
++const pass = 'export interface Pass { encoder: NativeEncoder | null }\n';
++
++describe('a guarded member of erased external type', () => {
++  it('reads the payload inside a block guard and clears the storage, not the payload', () => {
++    const contents = emit(
++      `${pass}export function end(pass: Pass): void { if (pass.encoder !== null) { pass.encoder.end(); pass.encoder = null; } }`,
++    );
++    expect(contents).toContain('if (pass->encoder.has_value()) {');
++    expect(contents).toContain('pass->encoder.value().end();');
++    expect(contents).toContain('(pass->encoder = std::nullopt);');
++    expect(contents).not.toContain('encoder.value() = nullptr');
++  });
++
++  it('reads the payload after an early-return guard', () => {
++    const contents = emit(
++      `${pass}export function suspend(pass: Pass): void { if (pass.encoder === null) return; pass.encoder.end(); }`,
++    );
++    expect(contents).toContain('if (!pass->encoder.has_value()) {');
++    expect(contents).toContain('pass->encoder.value().end();');
++  });
++
++  it('accepts && and the else branch of an absent test', () => {
++    expect(
++      emit(`${pass}export function a(pass: Pass): boolean { return pass.encoder !== null && pass.encoder.finish(); }`),
++    ).toContain('pass->encoder.value().finish()');
++    expect(
++      emit(`${pass}export function b(pass: Pass): void { if (pass.encoder === null) { return; } else { pass.encoder.end(); } }`),
++    ).toContain('pass->encoder.value().end();');
++  });
++
++  it('needs a loose test when the declaration admits both null and undefined', () => {
++    const both = 'export interface Pass { encoder?: NativeEncoder | null }\n';
++    expect(
++      refusal(`${both}export function bad(pass: Pass): void { if (pass.encoder !== null) { pass.encoder.end(); } }`),
++    ).toBe('cpp-member-projection-without-present-storage');
++    expect(emit(`${both}export function ok(pass: Pass): void { if (pass.encoder != null) { pass.encoder.end(); } }`)).toContain(
++      '.end();',
++    );
++  });
++
++  it('withdraws the proof after a write, inside a loop that writes, and for another receiver', () => {
++    const rule = 'cpp-member-projection-without-present-storage';
++    expect(
++      refusal(
++        `${pass}export function a(pass: Pass, next: NativeEncoder | null): void { if (pass.encoder !== null) { pass.encoder = next; pass.encoder.end(); } }`,
++      ),
++    ).toBe(rule);
++    expect(
++      refusal(
++        `${pass}export function b(pass: Pass, next: () => NativeEncoder | null): void { if (pass.encoder === null) return; while (true) { pass.encoder.end(); pass.encoder = next(); } }`,
++      ),
++    ).toBe(rule);
++    expect(
++      refusal(`${pass}export function c(pass: Pass, other: Pass): void { if (other.encoder !== null) { pass.encoder.end(); } }`),
++    ).toBe(rule);
++    expect(
++      refusal(
++        `${pass}export function d(pass: Pass, swap: Pass): void { if (pass.encoder !== null) { pass = swap; pass.encoder.end(); } }`,
++      ),
++    ).toBe(rule);
++  });
++});
+diff --git a/packages/compiler-semantic/src/typeScriptSemanticLowering.ts b/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
+index fab9e4e..a996eaa 100644
+--- a/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
++++ b/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
+@@ -7935,7 +7935,11 @@ function getTypeScriptAccessPresence(
+       (member) => (member.flags & (ts.TypeFlags.Undefined | ts.TypeFlags.Null | ts.TypeFlags.Void)) !== 0,
+     )
+   ) {
+-    return {};
++    // An external member type is erased to `any` in the lowering's program, which also erases the
++    // `| null` beside it, so the checker has no absence to remove. Read the declaration instead.
++    return isTypeScriptErasedType(declared) && hasTypeScriptSyntacticAccessPresence(node, context)
++      ? { presence: 'narrowedPresent' }
++      : {};
+   }
+   const flow = context.checker.getTypeAtLocation(node);
+   const members = flow.isUnion() ? flow.types : [flow];
+@@ -7945,7 +7949,270 @@ function getTypeScriptAccessPresence(
+   const indeterminate = members.some(
+     (member) => (member.flags & (ts.TypeFlags.Any | ts.TypeFlags.Unknown | ts.TypeFlags.TypeParameter)) !== 0,
+   );
+-  return !absent && !indeterminate ? { presence: 'narrowedPresent' } : {};
++  if (!absent && !indeterminate) return { presence: 'narrowedPresent' };
++  return !absent && members.some(isTypeScriptErasedType) && hasTypeScriptSyntacticAccessPresence(node, context)
++    ? { presence: 'narrowedPresent' }
++    : {};
++}
++
++// `any` is what an unresolved external type becomes in the lowering's program. `unknown` and type
++// parameters are real TypeScript types with their own narrowing, so they never take this path.
++function isTypeScriptErasedType(type: ts.Type): boolean {
++  return (type.flags & ts.TypeFlags.Any) !== 0;
++}
++
++// The property-path counterpart of `hasTypeScriptSyntacticReferencePresence`: the reference is
++// `binding.member`, the reading TypeScript's own flow analysis narrows when the member's type is
++// resolved. It applies only where the checker cannot answer -- an external member type erased to `any` --
++// and it is closed: the member's declaration names its absent kinds (`| null`, `| undefined`, `?`), the
++// guard must exclude every one of them, and any assignment to the member or to its receiver binding
++// between the guard and the read withdraws the proof, exactly as it withdraws TypeScript's narrowing.
++function hasTypeScriptSyntacticAccessPresence(
++  node: ts.ElementAccessExpression | ts.PropertyAccessExpression,
++  context: LoweringContext,
++): boolean {
++  if (!ts.isPropertyAccessExpression(node) || !ts.isIdentifier(node.expression)) return false;
++  // A write target is not a read: `binding.member = null` must reach the member's own storage, so the
++  // narrowing never applies to the left side of an assignment, an increment, or a destructuring target.
++  if (isTypeScriptAccessWriteTarget(node)) return false;
++  // Purely syntactic precondition first: some enclosing guard must compare this same spelling with a
++  // nullish literal. Checker queries can resolve and cache types, so none is made for a read that no
++  // guard could cover.
++  if (!hasTypeScriptEnclosingNullishGuardSpelling(node)) return false;
++  const receiver = context.checker.getSymbolAtLocation(node.expression);
++  const member = context.checker.getSymbolAtLocation(node.name);
++  if (!receiver || !member) return false;
++  const absentKinds = getTypeScriptDeclaredMemberAbsentKinds(member);
++  if (absentKinds.size === 0) return false;
++  const path = { member: node.name.text, receiver };
++  for (let child: ts.Node = node, parent = node.parent; parent; child = parent, parent = parent.parent) {
++    if (ts.isFunctionLike(parent)) break;
++    // A loop re-enters its body: a write anywhere in it can precede this read on a later iteration.
++    if (ts.isIterationStatement(parent, false) && doesTypeScriptNodeAssignAccessPath(parent, path, context)) {
++      return false;
++    }
++    if (ts.isBlock(parent)) {
++      const index = parent.statements.findIndex((statement) => isTypeScriptNodeWithin(node, statement));
++      for (let prior = index - 1; prior >= 0; prior--) {
++        const statement = parent.statements[prior]!;
++        if (
++          ts.isIfStatement(statement) &&
++          !statement.elseStatement &&
++          doesTypeScriptStatementExitBlock(statement.thenStatement) &&
++          getTypeScriptAccessPathNullishTest(statement.expression, path, absentKinds, context) === 'absent'
++        ) {
++          return true;
++        }
++        if (doesTypeScriptNodeAssignAccessPath(statement, path, context)) return false;
++      }
++      // The read itself sits in statement `index`; a write earlier inside that same statement is
++      // covered when the walk reaches the enclosing block of that write.
++    }
++    if (ts.isIfStatement(parent)) {
++      const test = getTypeScriptAccessPathNullishTest(parent.expression, path, absentKinds, context);
++      if (test === 'present' && isTypeScriptNodeWithin(child, parent.thenStatement)) return true;
++      if (test === 'absent' && parent.elseStatement && isTypeScriptNodeWithin(child, parent.elseStatement)) {
++        return true;
++      }
++    }
++    if (ts.isBinaryExpression(parent) && isTypeScriptNodeWithin(child, parent.right)) {
++      const test = getTypeScriptAccessPathNullishTest(parent.left, path, absentKinds, context);
++      if (parent.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken && test === 'present') return true;
++      if (parent.operatorToken.kind === ts.SyntaxKind.BarBarToken && test === 'absent') return true;
++    }
++    if (ts.isConditionalExpression(parent)) {
++      const test = getTypeScriptAccessPathNullishTest(parent.condition, path, absentKinds, context);
++      if (test === 'present' && isTypeScriptNodeWithin(child, parent.whenTrue)) return true;
++      if (test === 'absent' && isTypeScriptNodeWithin(child, parent.whenFalse)) return true;
++    }
++  }
++  return false;
++}
++
++function hasTypeScriptEnclosingNullishGuardSpelling(node: ts.PropertyAccessExpression): boolean {
++  const spelling = `${(node.expression as ts.Identifier).text}.${node.name.text}`;
++  const mentions = (expression: ts.Node): boolean => {
++    let found = false;
++    const visit = (current: ts.Node): void => {
++      if (found) return;
++      if (
++        ts.isBinaryExpression(current) &&
++        (current.right.kind === ts.SyntaxKind.NullKeyword ||
++          current.left.kind === ts.SyntaxKind.NullKeyword ||
++          (ts.isIdentifier(current.right) && current.right.text === 'undefined') ||
++          (ts.isIdentifier(current.left) && current.left.text === 'undefined'))
++      ) {
++        const other = current.right.kind === ts.SyntaxKind.NullKeyword || ts.isIdentifier(current.right) ? current.left : current.right;
++        if (ts.isPropertyAccessExpression(other) && ts.isIdentifier(other.expression) &&
++            `${other.expression.text}.${other.name.text}` === spelling) {
++          found = true;
++          return;
++        }
++      }
++      ts.forEachChild(current, visit);
++    };
++    visit(expression);
++    return found;
++  };
++  for (let parent = node.parent; parent; parent = parent.parent) {
++    if (ts.isFunctionLike(parent)) return false;
++    if (ts.isIfStatement(parent) && mentions(parent.expression)) return true;
++    if (ts.isConditionalExpression(parent) && mentions(parent.condition)) return true;
++    if (ts.isBinaryExpression(parent) && mentions(parent.left)) return true;
++    if (ts.isBlock(parent) && parent.statements.some((statement) => ts.isIfStatement(statement) && mentions(statement.expression))) {
++      return true;
++    }
++  }
++  return false;
++}
++
++function isTypeScriptAccessWriteTarget(node: ts.Expression): boolean {
++  let current: ts.Node = node;
++  while (ts.isParenthesizedExpression(current.parent)) current = current.parent;
++  const parent = current.parent;
++  if (
++    ts.isBinaryExpression(parent) &&
++    parent.left === current &&
++    parent.operatorToken.kind >= ts.SyntaxKind.FirstAssignment &&
++    parent.operatorToken.kind <= ts.SyntaxKind.LastAssignment
++  ) {
++    return true;
++  }
++  if (
++    (ts.isPrefixUnaryExpression(parent) || ts.isPostfixUnaryExpression(parent)) &&
++    (parent.operator === ts.SyntaxKind.PlusPlusToken || parent.operator === ts.SyntaxKind.MinusMinusToken)
++  ) {
++    return true;
++  }
++  return ts.isArrayLiteralExpression(parent) || ts.isShorthandPropertyAssignment(parent) || ts.isPropertyAssignment(parent)
++    ? isTypeScriptDestructuringTarget(parent)
++    : false;
++}
++
++function isTypeScriptDestructuringTarget(node: ts.Node): boolean {
++  for (let current: ts.Node = node; current.parent; current = current.parent) {
++    const parent = current.parent;
++    if (ts.isBinaryExpression(parent) && parent.left === current) {
++      return parent.operatorToken.kind === ts.SyntaxKind.EqualsToken;
++    }
++    if (!(ts.isArrayLiteralExpression(parent) || ts.isObjectLiteralExpression(parent) ||
++          ts.isPropertyAssignment(parent) || ts.isShorthandPropertyAssignment(parent) ||
++          ts.isSpreadElement(parent) || ts.isSpreadAssignment(parent) || ts.isParenthesizedExpression(parent))) {
++      return false;
++    }
++  }
++  return false;
++}
++
++// The absent kinds a member's own declaration admits, read from its type syntax because the checked
++// type is erased: `T | null`, `T | undefined`, `T | null | undefined`, and an optional `?` member.
++function getTypeScriptDeclaredMemberAbsentKinds(member: ts.Symbol): ReadonlySet<'null' | 'undefined'> {
++  const kinds = new Set<'null' | 'undefined'>();
++  const declaration = member.valueDeclaration ?? member.declarations?.[0];
++  if (!declaration || !(ts.isPropertySignature(declaration) || ts.isPropertyDeclaration(declaration))) return kinds;
++  if (declaration.questionToken) kinds.add('undefined');
++  const visit = (type: ts.TypeNode | undefined): void => {
++    if (!type) return;
++    if (ts.isParenthesizedTypeNode(type)) return visit(type.type);
++    if (ts.isUnionTypeNode(type)) return type.types.forEach(visit);
++    if (ts.isLiteralTypeNode(type) && type.literal.kind === ts.SyntaxKind.NullKeyword) kinds.add('null');
++    if (type.kind === ts.SyntaxKind.UndefinedKeyword) kinds.add('undefined');
++  };
++  visit(declaration.type);
++  return kinds;
++}
++
++function isTypeScriptAccessPathReference(
++  expression: ts.Expression,
++  path: Readonly<{ member: string; receiver: ts.Symbol }>,
++  context: LoweringContext,
++): boolean {
++  while (ts.isParenthesizedExpression(expression)) expression = expression.expression;
++  return (
++    ts.isPropertyAccessExpression(expression) &&
++    expression.name.text === path.member &&
++    ts.isIdentifier(expression.expression) &&
++    context.checker.getSymbolAtLocation(expression.expression) === path.receiver
++  );
++}
++
++// 'present' when the expression is true exactly when the path holds none of its absent kinds, and
++// 'absent' when it is true exactly when the path holds one of them. A strict test excludes only the
++// kind it names, so it proves presence only when that is the declaration's sole absent kind; the loose
++// `!= null` / `== null` covers both.
++function getTypeScriptAccessPathNullishTest(
++  expression: ts.Expression,
++  path: Readonly<{ member: string; receiver: ts.Symbol }>,
++  absentKinds: ReadonlySet<'null' | 'undefined'>,
++  context: LoweringContext,
++): 'absent' | 'present' | undefined {
++  while (ts.isParenthesizedExpression(expression)) expression = expression.expression;
++  if (!ts.isBinaryExpression(expression)) return undefined;
++  const operator = expression.operatorToken.kind;
++  const isNullish = (side: ts.Expression): 'null' | 'undefined' | undefined =>
++    side.kind === ts.SyntaxKind.NullKeyword
++      ? 'null'
++      : ts.isIdentifier(side) && side.text === 'undefined'
++        ? 'undefined'
++        : undefined;
++  const kind = isTypeScriptAccessPathReference(expression.left, path, context)
++    ? isNullish(expression.right)
++    : isTypeScriptAccessPathReference(expression.right, path, context)
++      ? isNullish(expression.left)
++      : undefined;
++  if (!kind) return undefined;
++  const loose =
++    operator === ts.SyntaxKind.EqualsEqualsToken || operator === ts.SyntaxKind.ExclamationEqualsToken;
++  const strict =
++    operator === ts.SyntaxKind.EqualsEqualsEqualsToken || operator === ts.SyntaxKind.ExclamationEqualsEqualsToken;
++  if (!loose && !strict) return undefined;
++  const covers = loose || (absentKinds.size === 1 && absentKinds.has(kind));
++  if (!covers) return undefined;
++  const negated =
++    operator === ts.SyntaxKind.ExclamationEqualsToken || operator === ts.SyntaxKind.ExclamationEqualsEqualsToken;
++  return negated ? 'present' : 'absent';
++}
++
++// Whether a statement writes the path or rebinds its receiver: `binding.member = ...`, a compound or
++// logical assignment to it, `++`/`--`, a destructuring target, or `binding = ...`.
++function doesTypeScriptNodeAssignAccessPath(
++  node: ts.Node,
++  path: Readonly<{ member: string; receiver: ts.Symbol }>,
++  context: LoweringContext,
++): boolean {
++  let assigns = false;
++  const targets = (target: ts.Expression): boolean => {
++    while (ts.isParenthesizedExpression(target)) target = target.expression;
++    if (isTypeScriptAccessPathReference(target, path, context)) return true;
++    if (ts.isIdentifier(target)) return context.checker.getSymbolAtLocation(target) === path.receiver;
++    if (ts.isObjectLiteralExpression(target) || ts.isArrayLiteralExpression(target)) {
++      return target.getChildren().some((child) => ts.isExpression(child) && targets(child));
++    }
++    return false;
++  };
++  const visit = (current: ts.Node): void => {
++    if (assigns || ts.isFunctionLike(current)) return;
++    if (
++      ts.isBinaryExpression(current) &&
++      current.operatorToken.kind >= ts.SyntaxKind.FirstAssignment &&
++      current.operatorToken.kind <= ts.SyntaxKind.LastAssignment &&
++      targets(current.left)
++    ) {
++      assigns = true;
++      return;
++    }
++    if (
++      (ts.isPrefixUnaryExpression(current) || ts.isPostfixUnaryExpression(current)) &&
++      (current.operator === ts.SyntaxKind.PlusPlusToken || current.operator === ts.SyntaxKind.MinusMinusToken) &&
++      targets(current.operand)
++    ) {
++      assigns = true;
++      return;
++    }
++    ts.forEachChild(current, visit);
++  };
++  visit(node);
++  return assigns;
+ }
+ 
+ function hasTypeScriptSyntacticReferencePresence(
