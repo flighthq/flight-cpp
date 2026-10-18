@@ -701,8 +701,9 @@ narrowed by `Array.isArray` emitted `for (auto entry : raw)` with `raw` as `flig
 `begin()`, so the loop could not compile; the loop binding also had no emitted storage or type
 evidence, so `entry === null` refused with `cpp-presence-test-without-absence-storage` (and
 `typeof entry` refused for the same missing evidence). This is the root behind the erased-array sites
-in the retained-call population: `scene2d-gl` `glVelocity`'s child walk and the
-`skeleton2d-formats` Spine JSON handlers, whose refused bodies call each other.
+in the retained-call population: the `skeleton2d-formats` Spine JSON handlers and the DragonBones
+display loops, measured at generation. `scene2d-gl` `glVelocity`'s nearby presence-test refusal is a
+typed-union root, not this erased-array one.
 
 Source patch `compiler-erased-array-iteration` lowers exactly that shape through the runtime reads
 above: evaluate the iterable once, read `Any::array_size()` each step
