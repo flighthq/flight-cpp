@@ -97,10 +97,10 @@ index 0000000..1277cc1
 +  });
 +});
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-index febb327..234b54c 100644
+index 746b211..a3092fb 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-@@ -2453,6 +2453,9 @@ function emitInterface(declaration: Readonly<IrInterfaceDeclaration>, outer: Emi
+@@ -2470,6 +2470,9 @@ function emitInterface(declaration: Readonly<IrInterfaceDeclaration>, outer: Emi
        ? ' : public flight::ReferenceEnabled'
        : '';
    lines.push(`struct ${name}${base} {`);
@@ -110,16 +110,16 @@ index febb327..234b54c 100644
    const emittedMemberNames = new Set<string>();
    for (const property of declaration.properties) {
      if (heritage?.inheritedNames.has(property.name)) continue;
-@@ -6692,6 +6695,8 @@ function emitExpression(
-       return construction(initializer);
-     }
+@@ -6745,6 +6748,8 @@ function emitExpression(
      case 'property': {
+       const structuralMemberViewRead = emitCppStructuralMemberViewReadCpp(expression, context);
+       if (structuralMemberViewRead) return structuralMemberViewRead;
 +      const checkedDerivedMember = emitCppCheckedDerivedMemberReadCpp(expression, context);
 +      if (checkedDerivedMember) return checkedDerivedMember;
        if (isCppJsonReadValueCpp(expression.object, context) && isCppJsonDataPropertyNameCpp(expression.name)) {
          context.includes.add('flight/structural_ref.hpp');
          const key = emitLiteral(expression.name, context);
-@@ -14654,6 +14659,72 @@ function hasCppAbsenceStorageCpp(expression: Readonly<IrExpression>, context: Em
+@@ -15123,6 +15128,72 @@ function hasCppAbsenceStorageCpp(expression: Readonly<IrExpression>, context: Em
  // from `Base | null` to `Derived`: the read is Derived, but the carrier is still optional<Ref<Base>>.
  // Recover the declaration through the receiver rather than asking the property expression, whose
  // narrowedType is supposed to win for every value-side question.
@@ -192,7 +192,7 @@ index febb327..234b54c 100644
  // Marks a read already lifted to its refinement's presence proof. Object spread copies symbol-keyed
  // properties, so the carrier spelling emitted beneath the proof keeps the mark and is not lifted again.
  const cppRefinedPresentReadMarker = Symbol('cppRefinedPresentRead');
-@@ -14663,8 +14734,18 @@ function getCppRefinedMemberStorageTypeCpp(
+@@ -15132,8 +15203,18 @@ function getCppRefinedMemberStorageTypeCpp(
    receiverType: Readonly<IrType>,
    name: string,
    context: EmitContext,

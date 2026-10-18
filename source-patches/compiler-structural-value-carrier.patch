@@ -1,5 +1,5 @@
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-index 234b54c..ac2d0d6 100644
+index a3092fb..63ec3fe 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 @@ -1,3 +1,4 @@
@@ -7,7 +7,7 @@ index 234b54c..ac2d0d6 100644
  import path from 'node:path';
  import { isDeepStrictEqual } from 'node:util';
  
-@@ -470,7 +471,12 @@ interface AnonymousStructNaming {
+@@ -476,7 +477,12 @@ interface AnonymousStructNaming {
  
  export function createCppCompilerBackend(): CompilerBackend<CppCompilerBackendOptions> {
    return {
@@ -21,7 +21,7 @@ index 234b54c..ac2d0d6 100644
        const referenceRepresentationPlanner = createIrTypeReferenceRepresentationPlannerCpp(
          modules,
          moduleResolution,
-@@ -500,7 +506,8 @@ export function createCppCompilerBackend(): CompilerBackend<CppCompilerBackendOp
+@@ -506,7 +512,8 @@ export function createCppCompilerBackend(): CompilerBackend<CppCompilerBackendOp
          unionArmIdentities,
        };
        return Object.freeze({
@@ -31,7 +31,7 @@ index 234b54c..ac2d0d6 100644
            return [
              emitIrModuleCppWithContext(
                module,
-@@ -547,8 +554,10 @@ export function createCppCompilerBackend(): CompilerBackend<CppCompilerBackendOp
+@@ -553,8 +560,10 @@ export function createCppCompilerBackend(): CompilerBackend<CppCompilerBackendOp
          },
        });
      },
@@ -44,7 +44,7 @@ index 234b54c..ac2d0d6 100644
      },
      emitRefusalPlaceholder(module, refusal, options) {
        return emitCppRefusalPlaceholder(module, refusal, options);
-@@ -561,7 +570,9 @@ export function emitIrModuleCpp(
+@@ -567,7 +576,9 @@ export function emitIrModuleCpp(
    sourceModule: Readonly<IrModule>,
    options: Readonly<CppCompilerBackendOptions> = {},
  ): EmittedFile {
@@ -55,7 +55,7 @@ index 234b54c..ac2d0d6 100644
  }
  
  function emitIrModuleCppWithContext(
-@@ -3257,9 +3268,27 @@ function emitVariable(variable: Readonly<IrVariable>, context: EmitContext): str
+@@ -3287,9 +3298,27 @@ function emitVariable(variable: Readonly<IrVariable>, context: EmitContext): str
      !arrayElement && !variable.mutable && variable.initializer?.kind === 'call'
        ? getCppImportedAliasCarrierCallResultTypeCpp(variable.initializer, context)
        : undefined;
@@ -83,7 +83,7 @@ index 234b54c..ac2d0d6 100644
        importedAliasCarrierInitializerType ??
        invariantCollectionInitializerType ??
        guardedVariantInitializerType ??
-@@ -4012,6 +4041,8 @@ function emitExpression(
+@@ -4049,6 +4078,8 @@ function emitExpression(
        hasCppRegExpExecArrayIndexedReceiverCpp(expression, context)
      )
        return emitOptionalExpressionCpp(expression, context, expectedType);
@@ -92,7 +92,7 @@ index 234b54c..ac2d0d6 100644
      const voidValueConversion = emitCppContextualVoidValueCpp(expression, expectedType, context);
      if (voidValueConversion) return voidValueConversion;
      const erasedDynamicConversion = emitCppContextualErasedDynamicValueCpp(expression, expectedType, context);
-@@ -4044,6 +4075,8 @@ function emitExpression(
+@@ -4081,6 +4112,8 @@ function emitExpression(
      case 'array':
        return emitArrayExpressionCpp(expression, context, expectedType);
      case 'assignment': {
@@ -101,8 +101,8 @@ index 234b54c..ac2d0d6 100644
        if (
          (expression.left.kind === 'property' || expression.left.kind === 'element') &&
          getCppExternalNumericPropertyViewAccessPlanCpp(expression.left, context)
-@@ -6697,6 +6730,8 @@ function emitExpression(
-     case 'property': {
+@@ -6750,6 +6783,8 @@ function emitExpression(
+       if (structuralMemberViewRead) return structuralMemberViewRead;
        const checkedDerivedMember = emitCppCheckedDerivedMemberReadCpp(expression, context);
        if (checkedDerivedMember) return checkedDerivedMember;
 +      const carrierMember = emitCppStructuralValueCarrierMemberReadCpp(expression, context);
@@ -110,7 +110,7 @@ index 234b54c..ac2d0d6 100644
        if (isCppJsonReadValueCpp(expression.object, context) && isCppJsonDataPropertyNameCpp(expression.name)) {
          context.includes.add('flight/structural_ref.hpp');
          const key = emitLiteral(expression.name, context);
-@@ -14725,6 +14760,92 @@ function isCppExternalHostHandleTypeCpp(type: Readonly<IrType>, context: EmitCon
+@@ -15194,6 +15229,92 @@ function isCppExternalHostHandleTypeCpp(type: Readonly<IrType>, context: EmitCon
    return evidence?.ownership === 'shared' && evidence.nullability === 'non-null';
  }
  
@@ -203,7 +203,7 @@ index 234b54c..ac2d0d6 100644
  // Marks a read already lifted to its refinement's presence proof. Object spread copies symbol-keyed
  // properties, so the carrier spelling emitted beneath the proof keeps the mark and is not lifted again.
  const cppRefinedPresentReadMarker = Symbol('cppRefinedPresentRead');
-@@ -14768,6 +14889,8 @@ function getCppDeclaredPropertyReadTypeCpp(
+@@ -15237,6 +15358,8 @@ function getCppDeclaredPropertyReadTypeCpp(
    const objectType = row ? getCppStructuralRowObjectTypeCpp(row) : receiverType;
    const refinedStorage = !row && objectType ? getCppRefinedMemberStorageTypeCpp(objectType, expression.name, context) : undefined;
    if (refinedStorage) return refinedStorage;
@@ -212,7 +212,7 @@ index 234b54c..ac2d0d6 100644
    const propertyType = objectType ? getIrObjectPropertyTypeCpp(objectType, expression.name, context) : undefined;
    if (!propertyType || !row || !isCppStructuralRowPropertyOptionalCpp(row)) return propertyType;
    // A property that ALREADY admits absence keeps the representation it has. Unioning a second undefined
-@@ -23082,6 +23205,13 @@ function getIrExpressionTypeForUnionConstructionCpp(
+@@ -23764,6 +23887,13 @@ function getIrExpressionTypeForUnionConstructionCpp(
      case 'element':
        return getIrExpressionTypeEvidenceCpp(expression, context);
      case 'property': {
