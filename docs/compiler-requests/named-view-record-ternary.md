@@ -74,3 +74,35 @@ through. Nothing is carried: no materializing conversion, no handler adapter, an
 `spine_json_section_handlers`, `spine_json_handlers` and `spine_json_full` reach this header through their
 includes and were not recompiled. The next error in this header (an optional `Record` diagnostic detail at
 `:76`) was noted but not analysed in this unit.
+
+## G2: the join and the membership lowerings now depend on each other (2026-10-18)
+
+The membership request landed as a carried compiler patch (`compiler-membership-test-presence`), and it
+interacts with this one in the same three rows. `dragonBonesParseHelpers.ts` reads:
+
+```ts
+const t = raw !== null && typeof raw === 'object' ? (raw as Record<string, unknown>) : {};
+...
+if ('rotate' in t) ...
+```
+
+If this request is implemented as it specifies -- both arms emitted as `flight::NamedProperties`, preserving
+the alias -- then `t` is a named-property view, and the landed membership lowering **refuses** `'rotate' in t`
+by name (`cpp-membership-test-unrepresented`): `NamedProperties::has` answers own keys only, and the view does
+not know the viewed object's prototype. The join alone therefore moves these rows from one compile error to a
+named refusal, not to a compiling header.
+
+The refusal is conservative rather than wrong: `rotate` is not an `Object.prototype` name, and a parsed JSON
+object's prototype *is* `Object.prototype`, so own-key presence and `in` agree for this key. But the emitter
+cannot prove that from the declared type: `raw` is `unknown` at this boundary, and nothing records that every
+caller passes a JSON object. Joining on `Record` instead would make membership compile, at the cost of copying
+every property into new storage and breaking the alias this request exists to protect.
+
+So the two requests are one decision, not two independent fixes. The faithful resolution needs one of:
+- a prototype-known evidence chain for the viewed object (`raw` proven to be a parsed JSON object), on which
+  the membership lowering may answer `has(key)` for a key that is not an `Object.prototype` name; or
+- a view that answers the full prototype-chain question for a known-plain owner, so `in` over it is exact with
+  no per-site proof.
+
+Neither is a per-site lowering. Recorded here so the next attempt does not implement the join alone and
+report the rows as advanced when they are not.
