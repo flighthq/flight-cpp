@@ -412,9 +412,63 @@ class JsonScalarCell final {
     }
     return JsonScalarCell{read_json_data_property(value, key)};
   }
+  if (value.is_array()) {
+    if (key == String("length")) return JsonScalarCell{Any(static_cast<double>(value.array_size()))};
+    if (const auto index = detail::record_array_index(key)) {
+      const auto element = value.array_get(static_cast<double>(*index));
+      return element ? JsonScalarCell{*element} : JsonScalarCell{};
+    }
+    throw OutOfProfileError("raw array property outside the represented index and length reads");
+  }
   const auto properties = named_properties(value);
-  if (!properties.has(key)) return JsonScalarCell{};
-  return JsonScalarCell{properties.get(key)};
+  if (properties.presence_ambiguous(key)) {
+    throw OutOfProfileError("raw property read cannot distinguish null from omitted storage");
+  }
+  if (properties.has(key)) return JsonScalarCell{properties.get(key)};
+  if (value.kind() == AnyKind::object) {
+    if (find_class_field(value.held_type(), key.to_utf8())) {
+      throw OutOfProfileError("raw class field has no represented value cell");
+    }
+    if (const auto reader = find_exact_class_property_reader(value.held_type(), key.to_utf8())) {
+      if (!reader->read) throw OutOfProfileError("raw property reader is not represented");
+      return JsonScalarCell{reader->read(value)};
+    }
+  }
+  if (value.kind() == AnyKind::object && has_property(value, key)) {
+    throw OutOfProfileError("raw inherited property value requires its represented getter or method reader");
+  }
+  return JsonScalarCell{};
+}
+
+// The represented Array iterator re-reads the original owner's live length on every next().
+// String iteration advances by code point; subsequent indexed reads still use UTF-16 code units.
+// Foreign iterator methods are refused at acquisition, after source evaluation, without narrowing
+// the assertion or eagerly traversing the value.
+[[nodiscard]] inline ArrayIterator<Any> json_scalar_values(Any source) {
+  if (source.is_array()) {
+    return ArrayIterator<Any>([source](std::size_t& index) -> std::optional<Any> {
+      if (index >= source.array_size()) return std::nullopt;
+      return source.array_get(static_cast<double>(index++)).value_or(Any(undefined));
+    });
+  }
+  if (source.kind() == AnyKind::string) {
+    return ArrayIterator<Any>([text = source.as_string()](std::size_t& index) -> std::optional<Any> {
+      const auto& units = text.native();
+      if (index >= units.size()) return std::nullopt;
+      const auto start = index++;
+      if (units[start] >= 0xd800 && units[start] <= 0xdbff && index < units.size() &&
+          units[index] >= 0xdc00 && units[index] <= 0xdfff) ++index;
+      return Any(String(units.substr(start, index - start)));
+    });
+  }
+  if (source.kind() == AnyKind::object && source.held_type() == typeid(JsonObject)) {
+    throw TypeError("value is not iterable");
+  }
+  if (source.kind() == AnyKind::object || source.kind() == AnyKind::function ||
+      source.kind() == AnyKind::external) {
+    throw OutOfProfileError("foreign Symbol.iterator protocol is not represented by the raw scalar iterator");
+  }
+  throw TypeError("value is not iterable");
 }
 
 // The row-receiver form the 42 proven Lottie row reads use: a structural row over the parsed JSON
@@ -802,6 +856,31 @@ template <typename Schema>
   if (!owner) return Any();
   if (const auto raw = owner->raw_value()) return *raw;
   return Any();
+}
+
+// Box a getter's returned native value only where the existing carrier retains that value exactly.
+// Optional storage needs the source-declared disengaged sentinel; an ambiguous carrier refuses.
+// A value record or callable cannot acquire an object/function identity by being boxed here.
+template <typename Value>
+[[nodiscard]] Any json_property_value(const Value& value, std::optional<Any> disengaged = std::nullopt) {
+  using Stored = std::remove_cvref_t<Value>;
+  if constexpr (detail::is_std_optional<Stored>::value) {
+    if (!value) {
+      if (disengaged) return *disengaged;
+      throw OutOfProfileError("getter result has ambiguous null and undefined storage");
+    }
+    return json_property_value(*value);
+  } else if constexpr (detail::is_std_variant<Stored>::value) {
+    return std::visit([&](const auto& alternative) { return json_property_value(alternative, disengaged); }, value);
+  } else if constexpr (std::is_constructible_v<Any, const Stored&>) {
+    return Any(value);
+  } else if constexpr (detail::is_shared_reference<Stored>::value) {
+    return Any::object(value);
+  } else if constexpr (requires { typename Stored::schema_type; }) {
+    return json_row_raw(value);
+  } else {
+    throw OutOfProfileError("getter result has no exact erased value carrier");
+  }
 }
 
 // A readonly call parameter observes the original array, including later appends and replacements.

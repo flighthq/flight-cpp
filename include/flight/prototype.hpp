@@ -15,6 +15,15 @@
 
 namespace flight {
 
+class Any;
+
+// A value read is separate from presence/typeof metadata. The callback is registered for the
+// exact boxed type and performs a checked extraction before invoking the source getter.
+struct ClassPropertyReader final {
+  std::string name;
+  Any (*read)(const Any& value){nullptr};
+};
+
 // THE PROTOTYPE CHAIN OF AN EMITTED CLASS. Emitted objects are aggregates: an interface or object
 // literal becomes a struct whose own members are its cells, and its prototype is Object.prototype. A
 // class is different: its methods and accessors live on its prototype, not on the instance, and the
@@ -57,6 +66,7 @@ struct ClassPrototypeRegistry final {
   std::mutex mutex;
   std::map<std::type_index, ClassPrototype> classes;
   std::map<std::type_index, std::vector<ClassField>> fields;
+  std::map<std::type_index, std::vector<ClassPropertyReader>> property_readers;
 };
 
 inline ClassPrototypeRegistry& class_prototype_registry() {
@@ -84,6 +94,25 @@ bool register_class_fields(std::vector<ClassField> fields) {
   const std::lock_guard lock(registry.mutex);
   registry.fields.insert_or_assign(std::type_index(typeid(Class)), std::move(fields));
   return true;
+}
+
+template <typename Class>
+bool register_class_property_readers(std::vector<ClassPropertyReader> readers) {
+  auto& registry = detail::class_prototype_registry();
+  const std::lock_guard lock(registry.mutex);
+  registry.property_readers.insert_or_assign(std::type_index(typeid(Class)), std::move(readers));
+  return true;
+}
+
+// Return the callback by value, then release the registry lock before any getter executes.
+[[nodiscard]] inline std::optional<ClassPropertyReader> find_exact_class_property_reader(
+    std::type_index type, std::string_view key) {
+  auto& registry = detail::class_prototype_registry();
+  const std::lock_guard lock(registry.mutex);
+  const auto readers = registry.property_readers.find(type);
+  if (readers == registry.property_readers.end()) return std::nullopt;
+  for (const auto& reader : readers->second) if (reader.name == key) return reader;
+  return std::nullopt;
 }
 
 [[nodiscard]] inline bool is_registered_class(std::type_index type) {
