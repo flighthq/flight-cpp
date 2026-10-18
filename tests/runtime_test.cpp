@@ -22,6 +22,26 @@
 #include <variant>
 #include <vector>
 
+// An extensible-object pair for the per-member capability fallback, declared at namespace scope so
+// the construction registration can specialize the flight trait.
+struct ExtensibleBaseRuntime : public flight::ReferenceEnabled {
+  int value{0};
+};
+
+struct ExtensibleDerivedRuntime : public ExtensibleBaseRuntime {
+  double current_alpha{0};
+  flight::Array<int> teardowns;
+};
+
+namespace flight {
+template <>
+struct RefinementConstructionRegistration<::ExtensibleDerivedRuntime> {
+  static void register_owner(const std::shared_ptr<::ExtensibleDerivedRuntime>& object) {
+    flight::register_refined_owner<::ExtensibleDerivedRuntime, ::ExtensibleBaseRuntime>(object);
+  }
+};
+} // namespace flight
+
 namespace {
 
 int failures = 0;
@@ -4402,6 +4422,54 @@ static void test_refined_owner_construction_provenance() {
         "a base-only replacement observes the base-only concrete owner");
 }
 
+// A derived member read on a base-only owner is undefined, a write ADDS it to the same object, and
+// only the later operation that requires a value fails. Genuine derived owners use their native
+// fields directly.
+static void test_refined_member_dynamic_fallback() {
+  using View = flight::RefinedOwnerView<ExtensibleDerivedRuntime, ExtensibleBaseRuntime>;
+  const auto base_only = flight::make_ref<ExtensibleBaseRuntime>(ExtensibleBaseRuntime{.value = 1});
+  const View base_view(base_only);
+
+  const auto alpha = flight::refined_member_storage(
+      base_view, "currentAlpha", &ExtensibleDerivedRuntime::current_alpha);
+  check(!alpha.has_value(), "a derived member of a base-only owner reads undefined without throwing");
+  const auto teardowns = flight::refined_member_storage(
+      base_view, "teardowns", &ExtensibleDerivedRuntime::teardowns);
+  check(!teardowns.has_value(), "the missing teardowns member is undefined at the read");
+  bool push_failed = false;
+  try {
+    (void)teardowns.value()->push(1);
+  } catch (const std::bad_optional_access&) {
+    push_failed = true;
+  }
+  check(push_failed, "the failure happens at the later push operation, not at the read");
+
+  flight::write_refined_member(
+      base_view, "currentAlpha", &ExtensibleDerivedRuntime::current_alpha, 0.5);
+  const View second_view(base_only);
+  const auto added = flight::refined_member_storage(
+      second_view, "currentAlpha", &ExtensibleDerivedRuntime::current_alpha);
+  check(added.has_value() && **added == 0.5,
+        "a write adds the member to the SAME owner, visible through another view of that object");
+  check(base_only->value == 1, "the base member of the same object is unchanged by the extension");
+
+  const auto derived = flight::make_ref<ExtensibleDerivedRuntime>(
+      ExtensibleDerivedRuntime{.current_alpha = 2.5});
+  flight::Ref<ExtensibleBaseRuntime> widened = derived;
+  const View derived_view(widened);
+  const auto native = flight::refined_member_storage(
+      derived_view, "currentAlpha", &ExtensibleDerivedRuntime::current_alpha);
+  check(native.has_value() && native.value() == &derived->current_alpha,
+        "a genuine derived owner answers with its native field storage");
+  flight::write_refined_member(
+      derived_view, "currentAlpha", &ExtensibleDerivedRuntime::current_alpha, 1.5);
+  check(derived->current_alpha == 1.5, "a native derived member write lands on the concrete field");
+  const auto native_again = flight::refined_member_storage(
+      View(widened), "currentAlpha", &ExtensibleDerivedRuntime::current_alpha);
+  check(native_again.has_value() && **native_again == 1.5,
+        "the native field remains the same-owner answer after a write");
+}
+
 int main() {
   test_array();
   test_array_get_optional_index();
@@ -4426,6 +4494,7 @@ int main() {
   test_any_to_string();
   test_erased_ref();
   test_refined_owner_construction_provenance();
+  test_refined_member_dynamic_fallback();
   test_ambient_statics();
   test_self_reference();
   test_audio_context();
