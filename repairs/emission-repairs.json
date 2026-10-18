@@ -9453,6 +9453,19 @@
       "defect": "The mutable-local lowering confuses rebinding `current` with mutating its readonly referent and inserts an invalid readonly-to-writable structural conversion before storing the value in the binding cell; the cell value is already the readonly target view, so the round trip establishes nothing. This is the same defect already carried for effects-canvas and effects-wgpu. Keep the same live target owner and the same rebind sequence; no writable authority, cast relaxation, copied target, or effect/runner behavior. Request: docs/compiler-requests/readonly-view-to-writable.md.",
       "expectedWhen": "always",
       "expires": "when a rebindable readonly structural view initializes its binding cell without a writable round trip; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "skeleton2d-declare-refused-binder-registry",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/skeleton2d/skeleton2d_animation_target.hpp",
+      "symbol": "get_skeleton_2d_animation_target_binder_registry",
+      "refusedFunction": "getSkeleton2DAnimationTargetBinderRegistry",
+      "declaration": "flight::Map<flight::String, flight::types::Skeleton2DAnimationTargetBinder> get_skeleton_2d_animation_target_binder_registry();",
+      "sourceDeclaration": "packages/skeleton2d/src/skeleton2dAnimationTarget.ts -- getSkeleton2DAnimationTargetBinderRegistry(): ReadonlyMap<Skeleton2DAnimationTargetKind, Skeleton2DAnimationTargetBinder>; refused as a contextual union value type, while getSkeleton2DAnimationTargetBinder, getSkeleton2DAnimationTargetBinderKinds, registerSkeleton2DAnimationTargetBinder and unregisterSkeleton2DAnimationTargetBinder retain their exact calls.",
+      "diagnostic": "use of undeclared identifier 'get_skeleton_2d_animation_target_binder_registry'",
+      "defect": "The compiler refuses the registry body because the contextual union value type flight::Map<flight::String, bind_skeleton_2d_bone_channel> is not a represented runtime domain (cpp-contextual-union-value-type-unrepresented), but retains four callers that call the emitted symbol in registry positions. Declare only the emitter's own result carrier: the retained calls construct exactly flight::Map<flight::String, flight::types::Skeleton2DAnimationTargetBinder>. Declaration only -- the callers compile and the registry itself stays unavailable at link, never substituted by a hand-written map. The slot binder body is exercised through the original whole header.",
+      "expectedWhen": "always",
+      "expires": "when getSkeleton2DAnimationTargetBinderRegistry emits and its exact NOT GENERATED marker disappears; sdk:check rejects an obsolete repair."
     }
   ]
 }
