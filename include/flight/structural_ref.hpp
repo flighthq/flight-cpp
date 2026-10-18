@@ -2717,6 +2717,67 @@ template <typename Key, typename Object>
   return false;
 }
 
+template <typename Signature>
+class Function;
+
+namespace detail {
+
+template <typename Value>
+struct is_flight_function : std::false_type {};
+template <typename Signature>
+struct is_flight_function<Function<Signature>> : std::true_type {};
+template <typename Signature>
+struct is_flight_function<std::function<Signature>> : std::true_type {};
+
+template <typename Value>
+struct is_std_variant_for_typeof : std::false_type {};
+template <typename... Alternatives>
+struct is_std_variant_for_typeof<std::variant<Alternatives...>> : std::true_type {};
+
+} // namespace detail
+
+// typeof of a class field's stored value, for the readers the emitter registers with a class. A disengaged
+// carrier answers `disengaged` -- "undefined" or "object" as the field's source type decides, or null when
+// that type admits both -- and a value kind with no mapping answers null. Reads the value; calls nothing.
+template <typename Value>
+[[nodiscard]] const char* class_field_typeof(const Value& value, const char* disengaged) {
+  if constexpr (detail::is_std_optional<Value>::value) {
+    return value ? class_field_typeof(*value, disengaged) : disengaged;
+  } else if constexpr (detail::is_std_variant_for_typeof<Value>::value) {
+    return std::visit([&](const auto& alternative) { return class_field_typeof(alternative, disengaged); }, value);
+  } else if constexpr (std::same_as<Value, Undefined>) {
+    return "undefined";
+  } else if constexpr (std::same_as<Value, Null>) {
+    return "object";
+  } else if constexpr (std::same_as<Value, bool>) {
+    return "boolean";
+  } else if constexpr (std::is_arithmetic_v<Value> || std::is_enum_v<Value>) {
+    return "number";
+  } else if constexpr (std::same_as<Value, String>) {
+    return "string";
+  } else if constexpr (std::same_as<Value, Symbol>) {
+    return "symbol";
+  } else if constexpr (std::same_as<Value, Any>) {
+    switch (value.kind()) {
+      case AnyKind::undefined: return "undefined";
+      case AnyKind::null: return "object";
+      case AnyKind::boolean: return "boolean";
+      case AnyKind::number: return "number";
+      case AnyKind::string: return "string";
+      case AnyKind::symbol: return "symbol";
+      case AnyKind::function: return "function";
+      case AnyKind::object: return "object";
+      default: return nullptr;
+    }
+  } else if constexpr (detail::is_flight_function<Value>::value) {
+    return value ? "function" : disengaged;
+  } else if constexpr (std::is_class_v<Value>) {
+    return "object";
+  } else {
+    return nullptr;
+  }
+}
+
 // `key in value` for an erased value, as JavaScript answers it: a non-object throws TypeError; an object
 // has the key when it is an own cell, a member of its registered class prototype chain, or an own name of
 // Object.prototype. No value is read and no getter runs. What this runtime cannot see -- a
@@ -2750,12 +2811,23 @@ template <typename Key, typename Object>
   }
   const auto view = named_properties(value);
   if (!view) throw OutOfProfileError("`in` on an object whose type never reached the row machinery");
+  // A fully registered class names its complete own key set -- its declared fields (own from construction
+  // under define semantics, whatever they hold) -- so the answer comes from that registration alone. Its
+  // bound cells are not consulted: a STATIC member satisfies the member table's binding too, and is not
+  // an instance property.
+  if (is_complete_registered_class(value.held_type())) {
+    if (find_class_field(value.held_type(), key.to_utf8())) return true;
+    if (find_inherited_member(value.held_type(), key.to_utf8()) != InheritedMemberKind::none) return true;
+    return is_object_prototype_property(key);
+  }
+  if (find_class_field(value.held_type(), key.to_utf8())) return true;
   if (view.presence_ambiguous(key)) {
     throw OutOfProfileError("`in` on an unset optional member bound without a presence policy: null and omitted differ");
   }
   if (view.has(key)) return true;
   if (find_inherited_member(value.held_type(), key.to_utf8()) != InheritedMemberKind::none) return true;
   if (is_object_prototype_property(key)) return true;
+  if (is_complete_registered_class(value.held_type())) return false;
   if (!view.knows_every_key()) {
     throw OutOfProfileError("`in` on a native object for a key its bound members lack: it may be an unbound declared field");
   }
@@ -2780,6 +2852,27 @@ template <typename Key, typename Object>
   if (value.is_array()) throw OutOfProfileError("typeof of a member of an erased array");
   const auto view = named_properties(value);
   if (!view) throw OutOfProfileError("typeof of a member of an object whose type never reached the row machinery");
+  const bool complete_class = is_complete_registered_class(value.held_type());
+  if (const auto field = find_class_field(value.held_type(), key.to_utf8())) {
+    if (!field->declared_by_exact_type || field->field.type_of == nullptr) {
+      throw OutOfProfileError("typeof of a class field declared by a base class: its reader is for the base layout");
+    }
+    const char* answer = field->field.type_of(value.erased_ref().identity());
+    if (answer == nullptr) throw OutOfProfileError("typeof of a class field whose stored value cannot say: null and undefined share its carrier");
+    return String(answer);
+  }
+  if (complete_class) {
+    switch (find_inherited_member(value.held_type(), key.to_utf8())) {
+      case InheritedMemberKind::method:
+        return String("function");
+      case InheritedMemberKind::accessor:
+        throw OutOfProfileError("typeof of an inherited accessor would run its getter");
+      case InheritedMemberKind::none:
+        break;
+    }
+    if (key.to_utf8() == "__proto__") throw OutOfProfileError("typeof of __proto__ reads the prototype accessor");
+    return String(is_object_prototype_property(key) ? "function" : "undefined");
+  }
   if (view.presence_ambiguous(key)) {
     throw OutOfProfileError("typeof of an unset optional member bound without a presence policy: null and omitted differ");
   }
@@ -2794,6 +2887,7 @@ template <typename Key, typename Object>
   }
   if (key.to_utf8() == "__proto__") throw OutOfProfileError("typeof of __proto__ reads the prototype accessor");
   if (is_object_prototype_property(key)) return String("function");
+  if (is_complete_registered_class(value.held_type())) return String("undefined");
   if (!view.knows_every_key()) {
     throw OutOfProfileError("typeof of a member a native object's bound members lack: it may be an unbound declared field");
   }

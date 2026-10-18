@@ -42,11 +42,17 @@ struct TestProvenanceDerived : public TestProvenanceBase {
 // emitted class, plus a base that an emitted class extends.
 struct TestPrototypeClass : public flight::ReferenceEnabled {
   double value = 1.0;
+  double pos = 4.0;                 // a declared field whose name the generated member table does not bind
+  std::optional<double> mark;       // `mark?: number`: disengaged reads as undefined
+  static inline double count = 0.0;  // a static member the member table's binding would also reach
   double twice() const { return value * 2.0; }
 };
 struct TestPrototypeBase : public flight::ReferenceEnabled {};
 inline const bool test_prototype_class_registered = flight::register_class_prototype<TestPrototypeClass>(
     flight::ClassPrototype{{"twice"}, {"size"}, std::nullopt, false});
+inline const bool test_prototype_class_fields_registered = flight::register_class_fields<TestPrototypeClass>(
+    {{"pos", [](const void* object) { return flight::class_field_typeof(static_cast<const TestPrototypeClass*>(object)->pos, "undefined"); }},
+     {"mark", [](const void* object) { return flight::class_field_typeof(static_cast<const TestPrototypeClass*>(object)->mark, "undefined"); }}});
 inline const bool test_prototype_base_registered = flight::register_class_prototype<TestPrototypeBase>(
     flight::ClassPrototype{{"shared"}, {}, std::nullopt, true});
 
@@ -1297,13 +1303,20 @@ int main() {
     check(test_prototype_class_registered && flight::has_property(instance, flight::String("twice")) &&
               flight::has_property(instance, flight::String("size")),
           "a registered class reports its prototype methods and accessors");
-    bool other_name_refused = false;
-    try {
-      static_cast<void>(flight::has_property(instance, flight::String("absent")));
-    } catch (const flight::OutOfProfileError&) {
-      other_name_refused = true;
-    }
-    check(other_name_refused, "a name neither bound nor registered is refused: the instance's own fields are not all bound");
+    // The class registers its own fields too, so its key set is complete: unbound fields answer, an
+    // unset optional field is still own (define semantics) and typeof undefined, and other names are absent.
+    check(flight::has_property(instance, flight::String("pos")) &&
+              flight::member_typeof(instance, flight::String("pos")) == flight::String("number"),
+          "a registered field the member table does not bind is own, with its value's typeof");
+    check(flight::has_property(instance, flight::String("mark")) &&
+              flight::member_typeof(instance, flight::String("mark")) == flight::String("undefined"),
+          "an unset optional class field is still an own key, typeof undefined");
+    check(!flight::has_property(instance, flight::String("absent")) &&
+              flight::member_typeof(instance, flight::String("absent")) == flight::String("undefined"),
+          "a fully registered class answers other names absent");
+    check(!flight::has_property(instance, flight::String("count")) &&
+              flight::member_typeof(instance, flight::String("count")) == flight::String("undefined"),
+          "a static member is not an instance property, even though the member table binds it");
     check(flight::member_typeof(instance, flight::String("twice")) == flight::String("function"),
           "an inherited method is a function");
     bool accessor_refused = false;
