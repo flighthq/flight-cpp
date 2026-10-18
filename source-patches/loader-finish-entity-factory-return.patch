@@ -1,0 +1,13 @@
+diff --git a/packages/loader/src/resourceLoader.ts b/packages/loader/src/resourceLoader.ts
+index a8df692..075e0f5 100644
+--- a/packages/loader/src/resourceLoader.ts
++++ b/packages/loader/src/resourceLoader.ts
+@@ -183,7 +183,7 @@ export function cancelResourceLoad(loader: ResourceLoader): void {
+ export function createResourceLoader(options?: Readonly<ResourceLoaderOptions>): ResourceLoader {
+   const out = allocateEntity<ResourceLoaderInternal>();
+   initializeResourceLoader(out, options);
+-  return out;
++  return finishEntity(out);
+ }
+ 
+ export function disposeResourceLoader(loader: ResourceLoader): void {

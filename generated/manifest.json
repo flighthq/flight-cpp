@@ -4104,6 +4104,13 @@
     },
     {
       "dependency": "flight",
+      "digest": "47c13685be95c1bf034e9e2876411e04b7520c70890da14f96621b31de85e1f6",
+      "id": "loader-finish-entity-factory-return",
+      "module": "packages/loader/src/resourceLoader.ts",
+      "package": "@flighthq/loader"
+    },
+    {
+      "dependency": "flight",
       "digest": "ca5d08ae4b693a6118e553067d8c460e68065ffc4b39b6ff4ba29555efa9f867",
       "id": "scene2d-resources-fetch-arity",
       "module": "packages/scene2d-resources/src/loadScene2DAudioResources.ts and packages/scene2d-resources/src/loadScene2DImageResources.ts",
