@@ -1,0 +1,164 @@
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -2614,7 +2614,8 @@
+     if (
+       qualifyCppDeclaringModuleTypeCpp(storage.type, baseContext) !==
+         qualifyCppDeclaringModuleTypeCpp(derivedStorage.type, derivedContext) ||
+-      storage.initializer !== derivedStorage.initializer
++      qualifyCppDeclaringModuleTypeCpp(storage.initializer ?? '', baseContext) !==
++        qualifyCppDeclaringModuleTypeCpp(derivedStorage.initializer ?? '', derivedContext)
+     ) {
+       if (!isCppAbsenceSubsetRefinementCpp(substituted, derived, baseContext, derivedContext)) return undefined;
+       refinedMembers.set(property.name, substituted.optional ? createIrTypeEvidenceUnionCpp([substituted.type, { kind: 'undefined' }]) ?? substituted.type : substituted.type);
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppInheritedCallableInitializer.test.ts
+@@ -0,0 +1,149 @@
++import { execFileSync } from 'node:child_process';
++import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import type { CompilerModuleResolutionPlan } from '../../compiler-types/src/index.js';
++import { createCppCompilerBackend } from './cppCompilerBackend.js';
++
++function emit(refined = false) {
++  const source = (file: string, text: string) => ({
++    packageName: '@flighthq/registry-cell',
++    sourceFile: ts.createSourceFile(
++      `/flight/packages/registry-cell/src/${file}.ts`,
++      text,
++      ts.ScriptTarget.Latest,
++      true,
++    ),
++    upstreamDirectory: '/flight',
++  });
++  const moduleResolution: CompilerModuleResolutionPlan = {
++    schema: 'flight-compiler-module-resolution/1',
++    edges: [
++      {
++        specifier: './base.ts',
++        target: { packageName: '@flighthq/registry-cell', source: 'packages/registry-cell/src/base.ts' },
++      },
++    ],
++  };
++  const lowered = lowerTypeScriptSources(
++    [
++      source(
++        'base',
++        `export interface State { count: number }
++export interface Registries { callback?: ((state: State) => void) | null }`,
++      ),
++      source(
++        'derived',
++        `import type { Registries${refined ? ', State' : ''} } from './base.ts';
++export interface GlRegistries extends Registries {
++  ${refined ? 'callback?: ((state: State) => number) | null;' : ''}
++  tag: number;
++}
++export function makeGl(): GlRegistries { return { tag: 7 }; }`,
++      ),
++    ],
++    moduleResolution,
++  );
++  expect(lowered.flatMap((result) => result.diagnostics)).toEqual([]);
++  const modules = lowered.map((result) => result.module);
++  const session = createCppCompilerBackend().createEmissionSession!({
++    modules,
++    moduleResolution,
++    options: {
++      runtimeProfile: 'flight-cpp',
++      packageTargets: { '@flighthq/registry-cell': { namespace: 'registry_cell', includePrefix: 'fixture' } },
++    },
++  });
++  return modules.flatMap((module) => session.emitModule(module));
++}
++
++const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const runtime = resolveDependency(repositoryRoot, 'flight-cpp');
++const includes = collectCppRuntimeIncludeDirectories(runtime.directory);
++const toolchain = findCppCompilerToolchain();
++
++describe('inherited callable initializers compare in their declaring namespace', () => {
++  it('shares the identical callback cell despite local versus qualified initializer spelling', () => {
++    const derived = emit().find((file) => file.path.endsWith('/derived.hpp'))!.contents;
++    expect(derived).toContain('struct GlRegistries : public registry_cell::Registries {\n  double tag;\n};');
++    expect(derived).not.toContain('callback;');
++    expect(derived).not.toContain('NOT GENERATED');
++  });
++
++  it('keeps a changed callback result carrier off native heritage', () => {
++    const derived = emit(true).find((file) => file.path.endsWith('/derived.hpp'))!.contents;
++    expect(derived).toContain('struct GlRegistries : public flight::ReferenceEnabled {');
++    expect(derived).toContain('std::function<double(');
++  });
++
++  it.skipIf(!toolchain || includes.length === 0)(
++    'keeps one callable cell with exact absence and live replacement through base and derived owners',
++    () => {
++      const directory = mkdtempSync(path.join(tmpdir(), 'flight-callback-cell-'));
++      try {
++        for (const file of emit()) {
++          const output = path.join(directory, file.path);
++          mkdirSync(path.dirname(output), { recursive: true });
++          writeFileSync(output, file.contents);
++        }
++        const native = path.join(directory, 'native.cpp');
++        writeFileSync(
++          native,
++          `#include "fixture/derived.hpp"
++#include <cassert>
++#include <memory>
++#include <type_traits>
++namespace n = registry_cell;
++using Callback = std::function<void(flight::Ref<n::State>)>;
++int main() {
++  static_assert(std::is_base_of_v<n::Registries, n::GlRegistries>);
++  auto derived = n::make_gl();
++  flight::Ref<n::Registries> base = derived;
++  assert(base.get() == derived.get());
++  assert(!base.owner_before(derived) && !derived.owner_before(base));
++  assert(&base->callback == &derived->callback);
++  assert(std::holds_alternative<flight::Undefined>(base->callback));
++  assert(derived->tag == 7);
++  base->callback = flight::null;
++  assert(std::holds_alternative<flight::Null>(derived->callback));
++  auto state = flight::make_ref<n::State>(); state->count = 0;
++  int calls = 0;
++  base->callback = Callback([&](auto owner) { ++calls; assert(owner == state); owner->count += 3; });
++  std::get<Callback>(derived->callback)(state);
++  assert(calls == 1 && state->count == 3);
++  derived->callback = Callback([&](auto owner) { ++calls; assert(owner == state); owner->count += 5; });
++  std::get<Callback>(base->callback)(state);
++  assert(calls == 2 && state->count == 8);
++  derived->callback = flight::undefined;
++  assert(std::holds_alternative<flight::Undefined>(base->callback));
++  std::weak_ptr<n::GlRegistries> weak = derived;
++  derived.reset(); assert(!weak.expired()); base.reset(); assert(weak.expired());
++}`,
++        );
++        const executable = path.join(directory, getCppExecutableName(toolchain!, 'callback-cell'));
++        execFileSync(
++          toolchain!.command,
++          createCppExecutableArguments(toolchain!, native, executable, [directory, ...includes]),
++          { encoding: 'utf8', stdio: 'pipe' },
++        );
++        execFileSync(executable, [], { encoding: 'utf8' });
++      } finally {
++        rmSync(directory, { recursive: true, force: true });
++      }
++    },
++    120_000,
++  );
++});

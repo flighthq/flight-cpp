@@ -5132,6 +5132,23 @@
       "expires": "when member emission follows the same selected single reference carrier as type emission for collapsed literal object union arms.",
       "appliedOn": "2026-10-18",
       "verification": "Current98 baseline strict build PASS. New fixture baseline2FAIL/2PASS, with full emitted native compile failing6Ref dot-member operations. Candidate strict build PASS; combined10focused testsPASS including4new,2nullable and4inheritedalias with full emitted native owner/live-cell/delayed-lifetime/exact callback error controls. Whole unchanged TypeScript source19checksPASS. Existing backend234selected224PASS/same10FAIL/1342unselected; all1576expanded assertion occurrences have identical titles/statuses baseline/candidate. Seven cold array/String/optional/defaulted/optional-chain/variant/row emissions byte-identical. Fixture format/lint PASS. Final declared99 orderedapply/rawclean-between PASS, wholebackend+fullfixture byte-identical to qualified candidate, strictbuild and4/4newfocused/native PASS. Sourcepatch automation2/package-label1 PASS. Broader63automation31PASS/32FAIL solely scratch ENOSPC while copying package fixtures; automatic cleanup completed, not a code regression pass. One necessary normal skeleton reconciliation/public consumer/eight headers pending; no promotion."
+    },
+    {
+      "id": "compiler-inherited-callable-initializer-qualification",
+      "dependency": "flight-compiler",
+      "patch": "compiler-inherited-callable-initializer-qualification.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/types",
+      "answers": "diagnostic",
+      "refusal": "GlRenderRegistries/WgpuRenderRegistries inherit colorAdjustments with identical native storage, but the base initializer names local RenderState and the derived initializer names flight::types::RenderState. Native heritage already qualifies the storage type comparison and then incorrectly rejects the raw initializer spelling.",
+      "rewrite": "Compare inherited object-property initializers through the same existing declaring-module qualification used for their storage types. Keep all storage/refinement/identity checks and emitted initializer contents unchanged.",
+      "equivalence": "The local and fully qualified names resolve to the same C++ type and initialize the same std::variant Undefined arm. Qualification is used only to compare already-emitted initializers, never to evaluate or rewrite them. Compatible heritage retains the original owner/control block/lifetime and one callback cell, including Null versus Undefined and mutations through both owner views. A changed callback result carrier remains unrepresented.",
+      "verification": "Preparation on exact raw pin plus98 preceding patches: ordered apply and baseline/candidate strict builds PASS. New3/3 focused tests PASS zeroSkipped with full emitted native callback-cell consumer; old98 fails2/3 including native base conversion. Native checks owner/control-block/lifetime, one field address, default Undefined, explicit Null, callback replacement through both views, same State payload and exactly-once effects. Independent8 absence/export-owner tests PASS; existing42 selection has39PASS/3FAIL on candidate, with exact baseline comparison recorded in the request. Compiler-only actual201patchedFlight three-module check now emits GlRenderRegistries and WgpuRenderRegistries : RenderRegistries; actual GL state/runtime payload refinements remain refused. No SDK/public registry/eight-header/whole-cause claim.",
+      "whyNotUpstreamFirst": "The pinned source already inherits these storage-identical fields. Only a namespace spelling comparison blocks the shared compiler heritage correction; carrying this against its locked pin preserves the source and avoids copied override declarations.",
+      "unblocks": "Compatible inherited callable-variant initializer storage, including the native registries base relation required by the approved GL registries live-cell view. Supplies neither of the two GL payload bridges, owner registration, membership helper or public consumer qualification.",
+      "expires": "when the C++ backend compares inherited initializers with the same declaration-owner qualification as their native field storage.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }

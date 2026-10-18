@@ -1045,3 +1045,38 @@ The membership helper is also held on that registration: building an owner only 
 already widened to a base pointer loses the derived declared cells. The original registry consumer and
 all eight historical headers remain unqualified until the coordinated normal output is available.
 No runtime implementation or SDK output changes are included in this counterexample checkpoint.
+
+
+## G3 inherited callable initializer qualification (preparation)
+
+Within the approved GL registries relation, `GlRenderRegistries` and `WgpuRenderRegistries` have
+storage-identical inherited `colorAdjustments` callback variants. The native heritage check already
+qualifies their field types, but compares initializer strings directly: the base names its local
+`RenderState`, while the derived spelling qualifies it with `flight::types`. These initialize exactly
+the same `Undefined` arm of the same C++ variant.
+
+[`compiler-inherited-callable-initializer-qualification.patch`](../../source-patches/compiler-inherited-callable-initializer-qualification.patch)
+uses the existing declaring-module qualifier for that comparison too. It changes no emitted initializer
+or runtime storage, and retains all native heritage/storage/refinement checks. There is no type-name
+exception, new payload relation, unchecked cast or replacement owner.
+
+At the compiler pin plus 98 preceding patches, strict baseline/candidate builds pass. The three new
+focused tests pass without skips, including compilation and execution of complete emitted headers.
+The native consumer checks one allocation/control block and callback field address, retained lifetime,
+default `Undefined` versus explicit `Null`, live callable replacement through both owner views, the
+same callback argument owner and exactly-once effects. A callback whose result carrier changes still
+stays off native heritage. The preceding backend fails two of these three tests, including native
+base conversion. Eight related absence/export-owner controls pass; the existing 42-test alias/heritage
+selection retains three failures, with the baseline comparison recorded below.
+
+The compiler-only actual-source check (three emitted modules, current 201 Flight patches) now gives
+both GL/WGPU registries their declared `RenderRegistries` base. GL state/runtime payload refinements
+still correctly fail the storage boundary; neither approved live-cell bridge is implemented by this
+patch. Builder2's exact shared primitive/registration floor remains required, and WGPU uses its single
+normal package writer. No SDK, original registry consumer, eight-header or whole-cause result is claimed.
+
+The current 98-patch baseline and candidate 99-patch selection each report exactly **39 passes and
+three identical failures** (glTF texture widening expectations, host-image carrier collapse and
+imported collection-alias spelling). No new failure is attributed to this initializer comparison.
+The patch applies to the exact preceding backend, produces the tested backend/test bytes, and reverses
+to that baseline while removing only its new test. Broader static gates are not claimed as passing.
