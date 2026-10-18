@@ -5399,6 +5399,13 @@
       "id": "registry-kind-map-keys-value-parameter",
       "module": "packages/registry/src/registryTable.ts",
       "package": "@flighthq/registry"
+    },
+    {
+      "dependency": "flight",
+      "digest": "6a9401faad526209b961b362bf7225a152c9bf656e1103baa387cbae99fe95a1",
+      "id": "scene3d-formats-obj-texture-2d-owner",
+      "module": "packages/scene3d-formats/src/shared.ts and objMaterialHelpers.ts",
+      "package": "@flighthq/scene3d-formats"
     }
   ],
   "duplicateStructuralStructAliases": {

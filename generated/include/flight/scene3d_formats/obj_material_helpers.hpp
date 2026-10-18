@@ -16,6 +16,7 @@ namespace flight::types { struct EmbeddedImageResourceReference; }
 namespace flight::types { struct ExternalImageResourceReference; }
 namespace flight::types { struct MeshGeometry; }
 namespace flight::types { struct MeshMorph; }
+namespace flight::types { struct Sampler; }
 namespace flight::types { struct Scene3DDocument; }
 namespace flight::types { struct Scene3DDocumentAnimation; }
 namespace flight::types { struct Scene3DDocumentCamera; }
@@ -30,6 +31,8 @@ namespace flight::types { struct Texture2DArray; }
 namespace flight::types { struct Texture3D; }
 namespace flight::types { struct TextureCube; }
 namespace flight::types { struct Transform3D; }
+namespace flight::types { struct Vector2; }
+namespace flight::types { struct VoxelGrid; }
 
 #include <flight/types/animation_track.hpp>
 #include <flight/types/camera_3d.hpp>
@@ -40,11 +43,15 @@ namespace flight::types { struct Transform3D; }
 #include <flight/types/matrix4.hpp>
 #include <flight/types/mesh_geometry.hpp>
 #include <flight/types/morph_target.hpp>
+#include <flight/types/sampler.hpp>
 #include <flight/types/scene_3d_animation_path.hpp>
 #include <flight/types/scene_3d_document.hpp>
 #include <flight/types/scene_3d_metadata.hpp>
 #include <flight/types/texture.hpp>
+#include <flight/types/texture_source_value.hpp>
 #include <flight/types/transform_3d.hpp>
+#include <flight/types/vector2.hpp>
+#include <flight/types/voxel_grid.hpp>
 #include <flight/scene3d_formats/shared.hpp>
 
 namespace flight::scene3d_formats {
@@ -70,7 +77,9 @@ inline std::optional<flight::types::Texture> external_obj_texture(std::optional<
     return std::nullopt;
   }
   flight::types::Texture texture = flight::scene3d_formats::create_external_texture_ref(uri.value(), std::nullopt, document->resources);
-  (std::visit([](const auto& value) { return value->color_space; }, texture) = color_space);
+  if (texture.index() == 2) {
+    (std::get<2>(texture)->color_space = color_space);
+  }
   return std::visit([&](const auto& contextual_union_value) -> std::optional<std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>> { using contextual_union_value_type = std::decay_t<decltype(contextual_union_value)>; if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::Texture2DArray>>) return std::optional<std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::Texture2DArray>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::TextureCube>>) return std::optional<std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::TextureCube>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::Texture2D>>) return std::optional<std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::Texture2D>>, contextual_union_value}; else return std::optional<std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::Texture3D>>, contextual_union_value}; }, texture);
 }
 

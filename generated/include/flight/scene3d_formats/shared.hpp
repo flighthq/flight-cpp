@@ -2,6 +2,7 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
 #include <random>
@@ -97,7 +98,7 @@ inline flight::types::Texture create_embedded_texture_ref(flight::Uint8Array byt
     (resource = std::optional<flight::Ref<flight::types::EmbeddedImageResourceReference>>{flight::image::create_embedded_image_resource_reference(bytes, mime_type, std::nullopt)});
     ([&]() -> std::optional<double> { auto optional_chain_receiver = resources; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().push(resource.value()); }());
   }
-  return std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, flight::texture::create_texture({.resource = resource.value()})};
+  return std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, flight::texture::create_texture_2d(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CreateTexture2DOptions>>>>(flight::row_field<flight::RowKey<"resource">>(std::variant<flight::Ref<flight::types::EmbeddedImageResourceReference>, flight::Ref<flight::types::ExternalImageResourceReference>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::EmbeddedImageResourceReference>>, resource.value()})))};
 }
 
 inline flight::types::Texture create_external_texture_ref(flight::String uri, std::optional<std::optional<flight::String>> base_path = std::nullopt, std::optional<flight::Array<flight::types::ImageResourceReference>> resources = std::nullopt) {
@@ -107,7 +108,7 @@ inline flight::types::Texture create_external_texture_ref(flight::String uri, st
     (resource = std::optional<flight::Ref<flight::types::ExternalImageResourceReference>>{flight::image::create_external_image_resource_reference(uri, base_path.value())});
     ([&]() -> std::optional<double> { auto optional_chain_receiver = resources; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().push(resource.value()); }());
   }
-  return std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, flight::texture::create_texture({.resource = resource.value()})};
+  return std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, flight::texture::create_texture_2d(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CreateTexture2DOptions>>>>(flight::row_field<flight::RowKey<"resource">>(std::variant<flight::Ref<flight::types::EmbeddedImageResourceReference>, flight::Ref<flight::types::ExternalImageResourceReference>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::ExternalImageResourceReference>>, resource.value()})))};
 }
 
 inline void negate_vec3_z(flight::Array<double> values) {
