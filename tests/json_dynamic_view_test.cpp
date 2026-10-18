@@ -60,6 +60,10 @@ int main() {
   check(array_view.keys() == std::vector<String>{"0", "1", "2"} && array_view.has("length") &&
         array_view.get("length").as_number() == 3 && !array_view.has("01"),
         "array own indices enumerate while length is nonenumerable");
+  check(array_view.get(-0.0).is_null() && array_view.has(1.0) &&
+        array_view.get(std::variant<String, double>(1.0)).as_number() == 2 &&
+        array_view.get(std::variant<String, double>(String("1"))).as_number() == 2,
+        "numeric and mixed string/number keys retain JavaScript property spelling");
   alias.as_object().get("bones")->as_array().push(4);
   check(array.array_size() == 4 && array_view.keys().size() == 4 && array_view.get("3").as_number() == 4,
         "retained array and named views observe growth without stale cells");

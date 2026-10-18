@@ -1870,6 +1870,14 @@ class NamedProperties final {
     return owner_ != nullptr && owner_->named_cell(name) != nullptr;
   }
 
+  [[nodiscard]] bool has(double key) const { return has(String::from_number(key)); }
+
+  template <typename... Keys>
+    requires((std::same_as<Keys, String> || std::same_as<Keys, double>) && ...)
+  [[nodiscard]] bool has(const std::variant<Keys...>& key) const {
+    return std::visit([&](const auto& value) { return has(value); }, key);
+  }
+
   // `value[name]`. An absent key reads as `undefined`, which is what reading a missing property
   // yields in JavaScript -- `has` is the question that separates absence from a stored `undefined`.
   // A present property whose type has no erased reading throws `UnrepresentedProperty` rather than
@@ -1882,6 +1890,16 @@ class NamedProperties final {
     auto value = cell->as_any();
     if (!value) throw UnrepresentedProperty(name, cell->value_type());
     return *std::move(value);
+  }
+
+  // TypeScript permits numeric indexing on a string-indexed Record. As with Record's canonical
+  // keys, the number selects its JavaScript property spelling; it never changes the owner.
+  [[nodiscard]] Any get(double key) const { return get(String::from_number(key)); }
+
+  template <typename... Keys>
+    requires((std::same_as<Keys, String> || std::same_as<Keys, double>) && ...)
+  [[nodiscard]] Any get(const std::variant<Keys...>& key) const {
+    return std::visit([&](const auto& value) { return get(value); }, key);
   }
 
   // The dynamic keyed WRITE: `(target as Record<string, unknown>)[key] = value`.
