@@ -1,0 +1,163 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 710bbf6..a5adec2 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -2220,6 +2220,23 @@ function emitClass(declaration: Readonly<IrClassDeclaration>, outer: EmitContext
+     lines.push('  }');
+   }
+   lines.push('};');
++  // The class's prototype members, which the instance struct carries as member functions that no row
++  // cell reports: `key in object` and `typeof object.key` on an erased instance ask this table after the
++  // object's own cells. A generic class has no single runtime type to key the table by, so it is not
++  // registered, and an erased query that reaches one of its instances answers from its own cells only.
++  if (getCppRuntimeProfile(context.options) === 'flight-cpp' && declaration.typeParameters.length === 0) {
++    context.includes.add('flight/prototype.hpp');
++    const instanceMembers = declaration.methods.filter((method) => !method.static);
++    const quote = (names: readonly string[]): string => [...new Set(names)].map((n) => JSON.stringify(n)).join(', ');
++    const methods = quote(instanceMembers.filter((method) => !method.accessor).map((method) => method.name));
++    const accessors = quote(instanceMembers.filter((method) => method.accessor).map((method) => method.name));
++    const base = declaration.extends
++      ? `std::type_index(typeid(${emitType(declaration.extends, context, 'storage')}))`
++      : 'std::nullopt';
++    lines.push(
++      `inline const bool flight_class_prototype_${name} = flight::register_class_prototype<${name}>(flight::ClassPrototype{{${methods}}, {${accessors}}, ${base}, ${hasSubclass ? 'true' : 'false'}});`,
++    );
++  }
+   return lines;
+ }
+ 
+@@ -7094,6 +7111,21 @@ function emitExpression(
+         }
+         const closedKeyTypeof = emitCppClosedKeyElementTypeofCpp(expression.operand, context);
+         if (closedKeyTypeof) return closedKeyTypeof;
++        // `typeof (value as T).name` with an erased `value`: the assertion validates nothing, so the
++        // member's type is the real object's, read from its own cells and prototype chain -- never folded
++        // from the asserted declaration.
++        if (
++          getCppRuntimeProfile(context.options) === 'flight-cpp' &&
++          expression.operand.kind === 'property' &&
++          !expression.operand.optional &&
++          expression.operand.object.kind === 'cast'
++        ) {
++          const erasedObject = getCppErasedMemberReceiverCpp(expression.operand.object, context);
++          if (erasedObject) {
++            context.includes.add('flight/structural_ref.hpp');
++            return `flight::member_typeof(${emitExpression(erasedObject, context)}, flight::String(${JSON.stringify(expression.operand.name)}))`;
++          }
++        }
+         const value = getCppStaticTypeofValueCpp(expression.operand, context);
+         if (value) {
+           return getCppRuntimeProfile(context.options) === 'flight-cpp'
+@@ -24356,6 +24388,14 @@ function emitCppMembershipTestCpp(
+   expression: Readonly<Extract<IrExpression, { kind: 'binary' }>>,
+   context: EmitContext,
+ ): string | undefined {
++  const erasedReceiver = getCppErasedMemberReceiverCpp(expression.right, context);
++  if (erasedReceiver && expression.semantics.membershipTest?.key.kind !== 'symbol') {
++    const evidence = expression.semantics.membershipTest;
++    if (evidence) {
++      context.includes.add('flight/structural_ref.hpp');
++      return `flight::has_property(${emitExpression(erasedReceiver, context)}, ${emitExpression(expression.left, context)})`;
++    }
++  }
+   if (getCppNamedPropertiesViewExpressionCpp(expression.right, context)) {
+     emissionError(
+       context,
+@@ -24588,6 +24628,23 @@ function getCppReferenceStorageSubjectTypeCpp(type: Readonly<IrType>, context: E
+   }
+ }
+ 
++// The erased value a member query must ask: the receiver itself when it is held as `flight::Any`, or the
++// operand of an assertion (`value as T`) when that operand is. An assertion names a type the object is not
++// proven to have, so the question goes to the object, through the runtime's own-cell and prototype-chain
++// queries, rather than to the asserted declaration.
++function getCppErasedMemberReceiverCpp(
++  expression: Readonly<IrExpression>,
++  context: EmitContext,
++): Readonly<IrExpression> | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return undefined;
++  const isErased = (candidate: Readonly<IrExpression>): boolean => {
++    const type = getIrExpressionTypeEvidenceCpp(candidate, context);
++    return type !== undefined && emitType(type, context) === 'flight::Any';
++  };
++  if (expression.kind === 'cast') return isErased(expression.expression) ? expression.expression : undefined;
++  return isErased(expression) ? expression : undefined;
++}
++
+ function isCppObjectPrototypePropertyNameCpp(name: string): boolean {
+   return cppObjectPrototypePropertyNames.has(name);
+ }
+diff --git a/packages/compiler-backend-cpp/src/cppErasedMemberQuery.test.ts b/packages/compiler-backend-cpp/src/cppErasedMemberQuery.test.ts
+new file mode 100644
+index 0000000..040927c
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppErasedMemberQuery.test.ts
+@@ -0,0 +1,46 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/example/src/erasedMemberQuery.ts', source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/example', upstreamDirectory: '/flight' });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++const adapter = 'export interface Adapter { adapt: () => void; cache: number; name: string }';
++
++it('asks the erased object, not the asserted declaration, for typeof of a member and for `in`', () => {
++  const output = emit(`${adapter}
++    export function isAdapter(value: unknown): boolean {
++      return typeof value === 'object' && value !== null &&
++        typeof (value as Adapter).adapt === 'function' && 'cache' in (value as Adapter);
++    }
++  `);
++
++  expect(output).toContain('flight::member_typeof(value, flight::String("adapt")) == flight::String("function")');
++  expect(output).toContain('flight::has_property(value, flight::String("cache"))');
++  expect(output).not.toContain('flight::String("function") == flight::String("function")');
++});
++
++it('answers `in` on a bare erased receiver, with a dynamic key too', () => {
++  const output = emit(`
++    export function hasKey(value: object, key: string): boolean { return key in value; }
++    export function hasName(value: unknown): boolean { return typeof value === 'object' && value !== null && 'name' in value; }
++  `);
++
++  expect(output).toContain('flight::has_property(value, flight::String("name"))');
++});
++
++it('registers each non-generic class prototype so erased queries see its methods', () => {
++  const output = emit(`
++    export class Reader { pos = 0; next(): number { return this.pos++; } get done(): boolean { return this.pos > 3; } }
++  `);
++
++  expect(output).toContain(
++    'inline const bool flight_class_prototype_Reader = flight::register_class_prototype<Reader>(flight::ClassPrototype{{"next"}, {"done"}, std::nullopt, false});',
++  );
++});
+diff --git a/packages/compiler-backend-cpp/src/cppMembershipTest.test.ts b/packages/compiler-backend-cpp/src/cppMembershipTest.test.ts
+index 2c7dada..8a9899f 100644
+--- a/packages/compiler-backend-cpp/src/cppMembershipTest.test.ts
++++ b/packages/compiler-backend-cpp/src/cppMembershipTest.test.ts
+@@ -82,14 +82,15 @@ it('refuses an optional key, an assignable optional declarer, a nominal receiver
+       export function hasDevice(state: RenderState): boolean { return 'device' in state; }
+     `),
+   ).toContain('cannot hold a value that declares it');
++  // An asserted receiver over an erased value asks the object itself (compiler-erased-member-query).
+   expect(
+-    refusal(`
++    emit(`
+       export interface Adapter { cache: number; adapt: () => void }
+       export function isAdapter(value: unknown): boolean {
+         return typeof value === 'object' && value !== null && 'cache' in (value as Adapter);
+       }
+     `),
+-  ).toContain('declared by an ASSERTED receiver type');
++  ).toContain('flight::has_property(value, flight::String("cache"))');
+   expect(
+     refusal(`
+       export function hasRotate(raw: unknown): boolean {
