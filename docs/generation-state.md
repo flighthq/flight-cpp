@@ -63,6 +63,22 @@ way this repository has overstated itself.
 `@flighthq/statusbar` emits all three of its modules and not one of its headers compiles. Emission is
 not evidence.
 
+An independent exported helper can be stranded by another function in its original public header.
+For example, at `eb4021fa` (Flight `a627849` / compiler `806d257`), `clampChannel` and `packObjColor`
+have emitted definitions in
+[`obj_material_helpers.hpp`](../generated/include/flight/scene3d_formats/obj_material_helpers.hpp),
+but including that header reaches the unrelated failing texture factory in `shared.hpp`.
+[`lottie_counts.hpp`](../generated/include/flight/scene2d_formats/lottie_counts.hpp) similarly contains
+`getLottieFeatureNames`, while a private document predicate fails on an `Any` numeric comparison.
+These are recorded include failures, not proof that either helper can be consumed independently.
+
+The `PARTIAL` banner's phrase "Everything else compiled" in the Lottie and DragonBones helper
+headers describes the emitter's stage; it is not a native header-compile result. Emitted definitions
+and upstream parity-test names therefore do not establish API availability. Qualifying a helper
+requires consuming its original public header and compiling, linking and running the actual call
+with the required semantics. A copied helper or a declaration for an unavailable body does not
+establish that result. This clarification changes no header status or support tier.
+
 `npm run sdk:tiers` reports rung 1 and rung 2 together, per package: **27 of 154 packages shippable**
 (26 ready, 1 assisted), 78 partial, 48 blocked, 1 deferred.
 
