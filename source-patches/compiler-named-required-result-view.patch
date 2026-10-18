@@ -1,0 +1,171 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -25559,9 +25559,12 @@
+   const erasedReturn = isCppAnySourcedDynamicValueCpp(sourceType.returns)
+     ? emitCppErasedCallableReturnCpp(invocation, target.returns, context)
+     : undefined;
+-  const structuralReturn = structuralOptionalReturn
+-    ? emitCppCallableOptionalStructuralReturnCpp(invocation, sourceType.returns, target.returns, context)
+-    : undefined;
++  const namedRequiredResultView = declaredFunction && hasCppNamedRequiredResultViewCpp(declaredFunction, target, context);
++  const structuralReturn = namedRequiredResultView
++    ? `${returns}(flight::StructuralRef<flight::RowWritable<flight::RowOf<${emitType(sourceType.returns, context)}>>>(${invocation}))`
++    : structuralOptionalReturn
++      ? emitCppCallableOptionalStructuralReturnCpp(invocation, sourceType.returns, target.returns, context)
++      : undefined;
+   const body =
+     erasedReturn === undefined
+       ? structuralReturn === undefined
+@@ -25571,7 +25574,15 @@
+         : `return ${structuralReturn};`
+       : `return ${erasedReturn};`;
+   const capture = declaredFunction ? '' : `${sourceName} = ${emittedSource}`;
+-  return `[${capture}](${parameters.join(', ')}) -> ${returns} { ${body} }`;
++  const adapter = `[${capture}](${parameters.join(', ')}) -> ${returns} { ${body} }`;
++  if (namedRequiredResultView) {
++    const callable = emitType(target, context);
++    if (callable.startsWith('std::function<')) {
++      context.includes.add('flight/callable.hpp');
++      return `flight::NamedFunction<${callable.slice('std::function<'.length, -1)}>::from<&${sourceName}>(${adapter})`;
++    }
++  }
++  return adapter;
+ }
+ 
+ // A callable object already owns the callable state and any attached properties. Viewing it as a plain
+@@ -28046,6 +28057,34 @@
+     return originalIdentity !== undefined && originalIdentity === targetIdentity &&
+       emitType(original.type, context) === emitType(property.type, context);
+   });
++}
++
++// The existing arity wrapper already ignores the contextual options argument. This plan changes
++// only its returned owner: two required writable cells over their exact canonical declarations.
++function hasCppNamedRequiredResultViewCpp(
++  declaration: Readonly<IrFunctionDeclaration>,
++  target: Readonly<Extract<IrType, { kind: 'function' }>>,
++  context: EmitContext,
++): boolean {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || declaration.async || declaration.namespaceMember ||
++      declaration.typeParameters.length || declaration.overloads.length || declaration.parameters.length !== 1 ||
++      target.typeParameters.length || target.parameters.length !== 2 || target.parameters.some(p => p.rest)) return false;
++  const text = declaration.parameters[0], targetText = target.parameters[0], options = target.parameters[1];
++  if (!text || text.optional || text.rest || text.initializer || text.type.kind !== 'primitive' || text.type.name !== 'string' ||
++      !targetText || targetText.optional || targetText.type.kind !== 'primitive' || targetText.type.name !== 'string' ||
++      !options?.optional || declaration.returns.kind !== 'named' || declaration.returns.reference.kind !== 'binding' ||
++      context.referenceRepresentationPlanner.resolveStructuralRow(declaration.returns, getCppNamedTypeBindingModuleCpp(declaration.returns, context))) return false;
++  const optionRow = context.referenceRepresentationPlanner.resolveStructuralRow(options.type, context.module);
++  const optionProperties = resolveCppObjectShapeInTypeOwnerCpp(options.type, context)?.filter(p => !p.phantom);
++  if (!optionRow || !isCppStructuralRowReadonlyCpp(optionRow) || optionProperties?.length !== 2 ||
++      optionProperties.some(p => p.computedKey || !p.optional || p.type.kind !== 'primitive' || p.type.name !== 'number')) return false;
++  const resultProperties = resolveCppObjectShapeInTypeOwnerCpp(target.returns, context)?.filter(p => !p.phantom);
++  if (resultProperties?.length !== 2 || resultProperties.some(p => p.computedKey || p.optional || p.readonly)) return false;
++  const config = resultProperties.find(p => p.name === 'config'), diagnostics = resultProperties.find(p => p.name === 'diagnostics');
++  if (!config || config.type.kind !== 'named' || config.type.reference.kind !== 'binding' ||
++      !diagnostics || diagnostics.type.kind !== 'array' || diagnostics.type.readonly ||
++      diagnostics.type.element.kind !== 'named' || diagnostics.type.element.reference.kind !== 'binding') return false;
++  return hasCppReadonlyCallableResultViewCpp(declaration.returns, target.returns, context);
+ }
+ 
+ function emitCppReadonlyNamedCallableCpp(
+@@ -39216,8 +39255,10 @@
+   const leftCallable = left ? getCppPlainCallableTypeCpp(left, context) : undefined;
+   const rightCallable = right ? getCppPlainCallableTypeCpp(right, context) : undefined;
+   if (!leftCallable || !rightCallable || leftCallable.typeParameters.length || rightCallable.typeParameters.length) return undefined;
+-  const leftSelected = leftDeclaration && getCppReadonlyCallableOptionsPlanCpp(leftDeclaration, context);
+-  const rightSelected = rightDeclaration && getCppReadonlyCallableOptionsPlanCpp(rightDeclaration, context);
++  const leftSelected = leftDeclaration && (getCppReadonlyCallableOptionsPlanCpp(leftDeclaration, context) ||
++    hasCppNamedRequiredResultViewCpp(leftDeclaration, rightCallable, context));
++  const rightSelected = rightDeclaration && (getCppReadonlyCallableOptionsPlanCpp(rightDeclaration, context) ||
++    hasCppNamedRequiredResultViewCpp(rightDeclaration, leftCallable, context));
+   const invert = expression.operator === '!==' ? '!' : '';
+   if (leftSelected || rightSelected) {
+     context.includes.add('flight/callable.hpp');
+diff --git a/packages/compiler-backend-cpp/src/cppNamedRequiredResultView.test.ts b/packages/compiler-backend-cpp/src/cppNamedRequiredResultView.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppNamedRequiredResultView.test.ts
+@@ -0,0 +1,82 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++import { lowerTypeScriptSource, lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { createCppCompilerBackend, emitIrModuleCpp } from './cppCompilerBackend.js';
++function emit(source: string): string {
++  const result = lowerTypeScriptSource(ts.createSourceFile('/flight/packages/example/src/result.ts', source, ts.ScriptTarget.Latest, true), { packageName: '@flighthq/example', upstreamDirectory: '/flight' });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++function attempt(source: string): string | undefined {
++  try { return emit(source); } catch (error) {
++    if (typeof error !== 'object' || error === null || !('kind' in error) || error.kind !== 'backend-emission') throw error;
++    return undefined;
++  }
++}
++const prefix = `interface Config{size:number}interface Diagnostic{code:number}interface Document{size:number}interface Result{config:Config;diagnostics:Diagnostic[];document:Document}interface Options{size?:number;width?:number}`;
++const selected = prefix + `interface Codec{parse(text:string,options?:Readonly<Options>):Required<{config:Config;diagnostics:Diagnostic[]}>}export function parse(text:string):Result{return {config:{size:1},diagnostics:[],document:{size:2}}}export const codec:Codec={parse};`;
++it('projects the exact result owner inside the existing one-to-two arity wrapper', () => {
++  const output = emit(selected);
++  expect(output).toContain('inline flight::Ref<Result> parse(flight::String text)');
++  expect(output).toContain('::from<&parse>');
++  expect(output).toContain('flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<Result>>>>(parse(contextual_callable_argument0))');
++  expect(output).not.toContain('_flight_readonly_options_');
++  expect(output).not.toContain('structural_ref_cast');
++  expect(output).not.toMatch(/make_ref<config_diagnostics_/);
++});
++it('also retains an owner with exactly the two required base fields', () => {
++  const source = selected.replace(';document:Document', '').replace(',document:{size:2}', '');
++  expect(emit(source)).toContain('::from<&parse>');
++});
++it('compares the stored result wrapper to the original named declaration', () => {
++  expect(emit(selected + `export function same():boolean{return codec.parse===parse}`)).toContain('callable_identity_equal_named<&parse>');
++});
++const excluded: readonly (readonly [string, string])[] = [
++ ['mutable contextual options', selected.replace('options?:Readonly<Options>', 'options?:Options')],
++ ['required contextual options', selected.replace('options?:Readonly<Options>', 'options:Readonly<Options>')],
++ ['three option fields', selected.replace('width?:number', 'width?:number;other?:number')],
++ ['non-numeric option field', selected.replace('width?:number', 'width?:string')],
++ ['plain anonymous target', selected.replace('Required<{config:Config;diagnostics:Diagnostic[]}>', '{config:Config;diagnostics:Diagnostic[]}')],
++ ['readonly target', selected.replace('Required<{config:Config;diagnostics:Diagnostic[]}>', 'Readonly<{config:Config;diagnostics:Diagnostic[]}>')],
++ ['extra target cell', selected.replace('Required<{config:Config;diagnostics:Diagnostic[]}>', 'Required<{config:Config;diagnostics:Diagnostic[];document:Document}>')],
++ ['renamed target cell', selected.replace('Required<{config:Config;diagnostics:Diagnostic[]}>', 'Required<{value:Config;diagnostics:Diagnostic[]}>')],
++ ['primitive diagnostic cells', selected.replaceAll('Diagnostic[]', 'number[]')],
++ ['readonly source config', selected.replace('Result{config:Config;', 'Result{readonly config:Config;')],
++ ['optional source config', selected.replace('Result{config:Config;', 'Result{config?:Config;')],
++ ['readonly source diagnostics', selected.replace('Result{config:Config;diagnostics:Diagnostic[];', 'Result{config:Config;readonly diagnostics:Diagnostic[];')],
++ ['other canonical config', selected.replace('interface Result{config:Config;', 'interface OtherConfig{size:number}interface Result{config:OtherConfig;')],
++ ['other canonical diagnostic', selected.replace('interface Result{config:Config;diagnostics:Diagnostic[];', 'interface OtherDiagnostic{code:number}interface Result{config:Config;diagnostics:OtherDiagnostic[];')],
++ ['generic source', selected.replace('function parse(text:string)', 'function parse<T>(text:string)')],
++ ['defaulted source text', selected.replace('function parse(text:string)', 'function parse(text:string="default")')],
++ ['optional source text', selected.replace('function parse(text:string)', 'function parse(text?:string)')],
++ ['zero source parameters', selected.replace('function parse(text:string)', 'function parse()')],
++ ['two source parameters', selected.replace('function parse(text:string)', 'function parse(text:string,options?:Options)')],
++ ['source binding alias', selected.replace('export const codec:Codec={parse};', 'export const alias=parse;export const codec:Codec={parse:alias};')],
++ ['function literal', selected.replace('export const codec:Codec={parse};', 'export const codec:Codec={parse:(text:string):Result=>parse(text)};')],
++ ['async source', selected.replace('function parse(text:string):Result', 'async function parse(text:string):Promise<Result>')],
++ ['overloaded source', selected.replace('export function parse(text:string):Result', 'export function parse(text:string):Result;export function parse(text:string):Result')],
++];
++it.each(excluded)('keeps the existing result lane for excluded shape: %s', (_name, source) => {
++  const output = attempt(source);
++  if (output !== undefined) expect(output).not.toContain('::from<&parse>');
++});
++it('resolves imports and barrel aliases to the same original result-cell declarations', () => {
++  for (const distinct of [false, true]) {
++    const sources = {
++      domain: `export interface Config{size:number}export interface Diagnostic{code:number}export interface Document{size:number}`,
++      other: `export interface Config{size:number}export interface Diagnostic{code:number}`,
++      barrel: `export type{Config,Diagnostic}from './domain.ts';`,
++      result: `import type{Config,Diagnostic,Document}from './domain.ts';export interface Result{config:Config;diagnostics:Diagnostic[];document:Document}`,
++      parser: `import type{Result}from './result.ts';export function parse(text:string):Result{return {config:{size:1},diagnostics:[],document:{size:2}}}`,
++      codec: `import type{Config,Diagnostic}from '${distinct ? './other.ts' : './barrel.ts'}';export interface Options{size?:number;width?:number}export interface Codec{parse(text:string,options?:Readonly<Options>):Required<{config:Config;diagnostics:Diagnostic[]}>}`,
++      consumer: `import type{Codec}from './codec.ts';import{parse as original}from './parser.ts';export const codec:Codec={parse:original};export function same():boolean{return codec.parse===original}`,
++    };
++    const moduleResolution = {schema:'flight-compiler-module-resolution/1' as const,edges:Object.keys(sources).map(name=>({specifier:'./'+name+'.ts',target:{packageName:'@flighthq/example',source:'packages/example/src/'+name+'.ts'}}))};
++    const lowered = lowerTypeScriptSources(Object.entries(sources).map(([name,text])=>({packageName:'@flighthq/example',upstreamDirectory:'/flight',sourceFile:ts.createSourceFile('/flight/packages/example/src/'+name+'.ts',text,ts.ScriptTarget.Latest,true)})),moduleResolution);
++    expect(lowered.flatMap(r=>r.diagnostics)).toEqual([]);
++    const modules=lowered.map(r=>r.module),session=createCppCompilerBackend().createEmissionSession!({modules,moduleResolution,options:{runtimeProfile:'flight-cpp'}});
++    const output=session.emitModule(modules[6]!)[0]!.contents;
++    if(distinct) expect(output).not.toContain('::from<&');
++    else { expect(output).toMatch(/::from<&[^>]*parse>/);expect(output).toContain('flight::RowWritable<flight::RowOf<flight::Ref<');expect(output).toContain('callable_identity_equal_named<'); }
++  }
++});
