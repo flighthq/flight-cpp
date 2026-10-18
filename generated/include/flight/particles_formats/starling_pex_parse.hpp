@@ -180,7 +180,7 @@ inline PexDict parse_pex_xml(flight::String xml) {
     const std::optional<flight::String> close = array_pattern_value.capture(1.0);
     const std::optional<flight::String> name_3 = array_pattern_value.capture(2.0);
     const std::optional<flight::String> attrs = array_pattern_value.capture(3.0);
-    const bool is_self_close = (attrs.trim_end().ends_with(flight::String("/")) || flight::regexp_capture_value(full).ends_with(flight::String("/>")));
+    const bool is_self_close = (flight::regexp_capture_value(attrs).trim_end().ends_with(flight::String("/")) || flight::regexp_capture_value(full).ends_with(flight::String("/>")));
     const flight::String text = xml.slice(last_tag_end, m.value().index).trim();
     (last_tag_end = (m.value().index + static_cast<double>(flight::regexp_capture_value(full).length())));
     if ((!flight::to_boolean(close) && !is_self_close)) {
