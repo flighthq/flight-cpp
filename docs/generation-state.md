@@ -6104,3 +6104,114 @@ Disposition: the committed order is the full-run exact output, and the authorita
 current on exactly this private-order path and is expected to report it on a clean checkout. Do not
 reconcile by committing the scoped order without a full regeneration, which would trade one
 not-current state for the other; and do not treat it as an API or aggregate-order change.
+
+## Exported helpers inside failing module headers
+
+Investigated at Flight `a62784923f3be814463286c9fb28edfe6ab15789` / compiler
+`806d257d2f4100de745cc97340e61c2f301b0f24`. A generated function can be correct while its
+containing header remains unusable: C++ checks the other non-template function definitions when
+the header is included, even when the consumer calls only the correct function.
+
+The concrete case is `clampUnit` in `packages/skeleton2d-formats/src/spineParseHelpers.ts`.
+Its emitted `flight::skeleton2d_formats::clamp_unit(double)` preserves the original comparison
+order and returns the original argument on the final branch, including NaN and negative zero.
+The source module has nine exported declarations. The helper's syntax references only its
+`value` parameter, but that fact alone does not establish the module's initialization effects.
+The same generated `spine_parse_helpers.hpp` also defines the array-reading and diagnostic
+functions that currently prevent inclusion. A function-level source oracle cannot qualify this
+public header.
+
+### Current boundaries and a checked counterexample
+
+`scripts/sdkGeneration.mjs` forwards `--emit-path-prefix` as `emitPathPrefixes` to
+`compileTypeScriptPackageGraph`. It selects source **modules**, not declarations. The existing
+scoped-context patch correctly retains the complete semantic module set; narrowing that set
+again would lose imported owners and name allocation context.
+
+In the pinned compiler, `packages/compiler-backend-cpp/src/cppCompilerBackend.ts` owns
+`createCppCompilerBackend`, `emitIrModuleCppWithContext`, `emitImports`, and the module header
+path calculation. Its session returns one header per `emitModule` call. The emitter first
+plans declaration dependencies, recursive function groups, names, reference representations,
+and publication order, then writes all the retained definitions into that header. Imports and
+re-exports include the resolved module header. The downstream SDK script receives completed
+file text, rather than a declaration-to-fragment plan.
+
+A bounded probe through the pinned public compiler API lowered these two fixture modules in
+one session with an explicit resolution edge and the `flight-cpp` runtime profile:
+
+```ts
+// helpers.ts
+export function clampUnit(value: number): number {
+  return value < 0 ? 0 : value > 1 ? 1 : value;
+}
+export function unrelated(value: unknown): number {
+  if (Array.isArray(value)) return value.length;
+  return 0;
+}
+// facade.ts
+export { clampUnit } from './helpers.js';
+```
+
+Result: two modules produced two headers. `helpers.hpp` contained both definitions;
+`facade.hpp` included the whole `helpers.hpp` and defined no copy. A named re-export therefore
+does not provide isolation. This checks output organization, not native compilation, the
+fixture's behavior, or the original Spine header. No native compile, SDK regeneration, pin
+change, or inventory/status rewrite was needed for this investigation.
+
+### Smallest route for the current Spine consumer
+
+Repair the complete containing header, then compile, link, and run a consumer that includes
+`<flight/skeleton2d_formats/spine_parse_helpers.hpp>` and calls the original symbol. The header
+owner is addressing erased-array length/index reads using the separate runtime array capability,
+plus the diagnostic payload's optional-record construction. Those are independent of
+`clampUnit`; neither requires moving its TypeScript declaration, adding a duplicate body, or
+introducing a new include path. The full-header repair and its consumer checks own the result;
+this investigation does not anticipate a pass. No isolation mechanism is needed for this case
+if that repair succeeds.
+
+### Minimal general isolation change, owned by the compiler
+
+For a later case whose unrelated bodies cannot yet be repaired, add an opt-in C++ header layout
+in `compiler-backend-cpp`, rather than a downstream text extractor or source API rearrangement:
+
+1. Retain the complete session's owner, type, and target-name planning. Use declaration binding
+   identities to partition definitions. The existing `collectIrModuleDeclarationDependenciesCpp`
+   and `collectCppMutuallyRecursiveFunctionGroups` supply local dependency evidence and recursive
+   groups; extend the plan for imported bindings, signature/default-argument types, and emitted
+   anonymous support definitions. They are not already a complete fragment planner.
+2. Give each dependency group one defining fragment, with the original namespace and allocated
+   symbol names. A function shared by two exported helpers must have one definition in one
+   shared fragment, not two generated copies. Keep recursive groups together. Collect each
+   fragment's includes from its own dependencies, instead of copying the whole module's include
+   set. Otherwise isolation still pulls in the failing body.
+3. Preserve shared storage and ordered initialization separately. Consult the existing
+   `compiler-module` evaluation plan and its runtime versus type-only dependency edges. Body
+   independence does not permit dropping imported side effects, duplicating a module variable,
+   replacing a live binding with its value, or reordering a throwing initializer. Initially
+   decline fragment isolation where these obligations cannot be represented; keep the ordinary
+   module output and report the limitation. In particular, syntactically pure `clampUnit` alone
+   is insufficient evidence that all of its module imports can disappear.
+4. Keep the original header as an aggregate over **all** its fragments, including bodies with
+   known native failures and all refusal markers. Emit each body once. Put fragment includes at
+   file scope and preserve the planned declaration/initialization order. Additional leaf include
+   paths are a target layout choice; the TypeScript export identity and native callable identity
+   stay unchanged. Including both a leaf and the aggregate must not redefine a function or state.
+5. Return the fragments and aggregate through the existing multi-file backend contract:
+   `CompilerBackendEmissionSession.emitModule` already returns `readonly EmittedFile[]`.
+   Preserve file dependencies and original module/declaration provenance, and expose the mapping
+   from an exported binding to its consumable fragment. The default single-module API and layout
+   remain valid. The SDK writer already iterates emitted files; audit its package merge, include
+   canonicalization, override precedence and file inventory when wiring the new layout through.
+
+The compiler owns emitted layout and dependency planning; a downstream emission repair may add
+declarations but cannot introduce this behavior. No local text-splitting workaround is carried.
+The original aggregate's compile result must remain an independent gate: a passing leaf consumer
+does not clear its failed row, close a refusal, or make the package complete.
+
+Acceptance requires actual generated leaf and aggregate consumers, including both together and
+from separate translation units; a dependency shared by two helpers; mutual recursion; imported
+owner/name collisions; anonymous signature support; shared mutable state/address identity;
+ordered initialization and exceptions; and named re-exports. Check NaN, infinities, boundaries,
+and negative zero for the actual clamp consumer. A selected helper that depends on an unavailable
+body must retain that dependency and fail honestly. Only compiler-owned partitioning with those
+checks justifies a general facility; the bounded probe above establishes its absence today.
