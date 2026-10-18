@@ -1,0 +1,90 @@
+In file included from scripts/fixtures/svgTextRichBranch.cpp:2:
+generated/include/flight/scene2d_formats/svg_text_element.hpp:283:17: error: use of undeclared identifier 'create_svg_text_format'
+  283 |   auto format = create_svg_text_format(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>(style)), std::nullopt);
+      |                 ^~~~~~~~~~~~~~~~~~~~~~
+generated/include/flight/scene2d_formats/svg_text_element.hpp:288:67: error: no viable conversion from 'optional<std::shared_ptr<flight::scene2d_formats::SvgTextRun>>' to 'optional<flight::Ref<opacity_style_text_1e215ae1fa2ab6b5>>'
+  288 |   std::optional<flight::Ref<opacity_style_text_1e215ae1fa2ab6b5>> last_run = runs.get((static_cast<double>(runs.size()) - 1.0));
+      |                                                                   ^          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+out/tooling/python/ziglang/lib/libcxx/include/optional:904:35: note: candidate constructor not viable: no known conversion from 'std::optional<std::shared_ptr<flight::scene2d_formats::SvgTextRun>>' to 'const optional<std::shared_ptr<flight::scene2d_formats::opacity_style_text_1e215ae1fa2ab6b5>> &' for 1st argument
+  904 |   _LIBCPP_HIDE_FROM_ABI constexpr optional(const optional&) = default;
+      |                                   ^        ~~~~~~~~~~~~~~~
+out/tooling/python/ziglang/lib/libcxx/include/optional:905:35: note: candidate constructor not viable: no known conversion from 'std::optional<std::shared_ptr<flight::scene2d_formats::SvgTextRun>>' to 'optional<std::shared_ptr<flight::scene2d_formats::opacity_style_text_1e215ae1fa2ab6b5>> &&' for 1st argument
+  905 |   _LIBCPP_HIDE_FROM_ABI constexpr optional(optional&&)      = default;
+      |                                   ^        ~~~~~~~~~~
+out/tooling/python/ziglang/lib/libcxx/include/optional:906:35: note: candidate constructor not viable: no known conversion from 'std::optional<std::shared_ptr<flight::scene2d_formats::SvgTextRun>>' to 'nullopt_t' for 1st argument
+  906 |   _LIBCPP_HIDE_FROM_ABI constexpr optional(nullopt_t) noexcept {}
+      |                                   ^        ~~~~~~~~~
+out/tooling/python/ziglang/lib/libcxx/include/optional:922:35: note: candidate template ignored: requirement 'std::optional<std::shared_ptr<flight::scene2d_formats::opacity_style_text_1e215ae1fa2ab6b5>>::_CheckOptionalArgsConstructor::__enable_implicit()' was not satisfied [with _Up = std::optional<std::shared_ptr<flight::scene2d_formats::SvgTextRun>>]
+  922 |   _LIBCPP_HIDE_FROM_ABI constexpr optional(_Up&& __v)
+      |                                   ^
+out/tooling/python/ziglang/lib/libcxx/include/optional:940:55: note: candidate template ignored: requirement 'std::__check_tuple_constructor_fail::__enable_implicit()' was not satisfied [with _Up = std::shared_ptr<flight::scene2d_formats::SvgTextRun>]
+  940 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 optional(const optional<_Up>& __v)
+      |                                                       ^
+out/tooling/python/ziglang/lib/libcxx/include/optional:958:55: note: candidate template ignored: requirement 'std::__check_tuple_constructor_fail::__enable_implicit()' was not satisfied [with _Up = std::shared_ptr<flight::scene2d_formats::SvgTextRun>]
+  958 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 optional(optional<_Up>&& __v)
+      |                                                       ^
+out/tooling/python/ziglang/lib/libcxx/include/optional:912:44: note: explicit constructor is not a candidate
+  912 |   _LIBCPP_HIDE_FROM_ABI constexpr explicit optional(_InPlaceT, _Args&&... __args)
+      |                                            ^
+out/tooling/python/ziglang/lib/libcxx/include/optional:931:44: note: explicit constructor is not a candidate
+  931 |   _LIBCPP_HIDE_FROM_ABI constexpr explicit optional(_Up&& __v)
+      |                                            ^
+out/tooling/python/ziglang/lib/libcxx/include/optional:948:64: note: explicit constructor is not a candidate
+  948 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 explicit optional(const optional<_Up>& __v)
+      |                                                                ^
+out/tooling/python/ziglang/lib/libcxx/include/optional:966:64: note: explicit constructor is not a candidate
+  966 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 explicit optional(optional<_Up>&& __v)
+      |                                                                ^
+In file included from scripts/fixtures/svgTextRichBranch.cpp:2:
+generated/include/flight/scene2d_formats/svg_text_element.hpp:298:64: error: use of undeclared identifier 'create_svg_text_format'
+  298 |       ranges.push(flight::textlayout::create_text_format_range(create_svg_text_format(run->style, run->opacity), offset, end));
+      |                                                                ^~~~~~~~~~~~~~~~~~~~~~
+generated/include/flight/scene2d_formats/svg_text_element.hpp:303:649: error: incompatible operand types ('std::optional<flight::Ref<flight::types::XmlElement>>' (aka 'std::optional<std::shared_ptr<flight::types::XmlElement>>') and 'flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>' (aka 'flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::XmlElement>>>>'))
+  303 |   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>> x_element = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>(((!flight::scene2d_formats::svg_attribute(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(element), flight::String("x")).has_value() && ([&]() { const auto& presence_operand = first_tspan; return presence_operand.has_value(); }())) ? first_tspan : element)));
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ^ ~~~~~~~~~~~   ~~~~~~~
+generated/include/flight/scene2d_formats/svg_text_element.hpp:304:649: error: incompatible operand types ('std::optional<flight::Ref<flight::types::XmlElement>>' (aka 'std::optional<std::shared_ptr<flight::types::XmlElement>>') and 'flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>' (aka 'flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::XmlElement>>>>'))
+  304 |   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>> y_element = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>(((!flight::scene2d_formats::svg_attribute(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(element), flight::String("y")).has_value() && ([&]() { const auto& presence_operand = first_tspan; return presence_operand.has_value(); }())) ? first_tspan : element)));
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ^ ~~~~~~~~~~~   ~~~~~~~
+generated/include/flight/scene2d_formats/svg_text_element.hpp:309:287: error: no matching conversion for functional-style cast from 'std::optional<flight::Ref<flight::types::XmlElement>>' (aka 'std::optional<std::shared_ptr<flight::types::XmlElement>>') to 'flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>' (aka 'flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::XmlElement>>>>')
+  309 |   if (has_flattened_svg_text_position(tspans, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>(first_tspan))})) {
+      |                                                                                                                                                                                                                                                                                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+include/flight/structural_ref.hpp:1783:7: note: candidate constructor (the implicit copy constructor) not viable: no known conversion from 'std::optional<flight::Ref<flight::types::XmlElement>>' (aka 'std::optional<std::shared_ptr<flight::types::XmlElement>>') to 'const StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::XmlElement>>>>' for 1st argument
+ 1783 | class StructuralRef {
+      |       ^~~~~~~~~~~~~
+include/flight/structural_ref.hpp:1783:7: note: candidate constructor (the implicit move constructor) not viable: no known conversion from 'std::optional<flight::Ref<flight::types::XmlElement>>' (aka 'std::optional<std::shared_ptr<flight::types::XmlElement>>') to 'StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::XmlElement>>>>' for 1st argument
+ 1783 | class StructuralRef {
+      |       ^~~~~~~~~~~~~
+include/flight/structural_ref.hpp:1793:3: note: candidate template ignored: could not match 'std::shared_ptr' against 'std::optional'
+ 1793 |   StructuralRef(std::shared_ptr<Type> object) {
+      |   ^
+include/flight/structural_ref.hpp:1815:3: note: candidate template ignored: could not match 'std::shared_ptr' against 'std::optional'
+ 1815 |   StructuralRef(std::shared_ptr<Type> object) {
+      |   ^
+include/flight/structural_ref.hpp:1834:3: note: candidate template ignored: could not match 'StructuralRef' against 'std::optional'
+ 1834 |   StructuralRef(const StructuralRef<OtherSchema>& other)
+      |   ^
+include/flight/structural_ref.hpp:1868:3: note: candidate template ignored: could not match 'std::variant' against 'std::optional'
+ 1868 |   StructuralRef(const std::variant<Alternatives...>& alternatives)
+      |   ^
+include/flight/structural_ref.hpp:1789:3: note: candidate constructor not viable: requires 0 arguments, but 1 was provided
+ 1789 |   StructuralRef() = default;
+      |   ^
+scripts/fixtures/svgTextRichBranch.cpp:21:23: error: no matching function for call to 'read'
+   21 |   context->registry = read(svg::create_svg_registry());
+      |                       ^~~~
+scripts/fixtures/svgTextRichBranch.cpp:5:24: note: candidate template ignored: couldn't infer template argument 'T'
+    5 | template<class T> auto read(const flight::Ref<T>& value) {
+      |                        ^
+scripts/fixtures/svgTextRichBranch.cpp:25:20: error: no matching function for call to 'read'
+   25 |   input->element = read(element); input->parent_style = read(svg::default_svg_style); input->import = context;
+      |                    ^~~~
+scripts/fixtures/svgTextRichBranch.cpp:5:24: note: candidate template ignored: couldn't infer template argument 'T'
+    5 | template<class T> auto read(const flight::Ref<T>& value) {
+      |                        ^
+scripts/fixtures/svgTextRichBranch.cpp:25:57: error: no matching function for call to 'read'
+   25 |   input->element = read(element); input->parent_style = read(svg::default_svg_style); input->import = context;
+      |                                                         ^~~~
+scripts/fixtures/svgTextRichBranch.cpp:5:24: note: candidate template ignored: couldn't infer template argument 'T'
+    5 | template<class T> auto read(const flight::Ref<T>& value) {
+      |                        ^
+out/tooling/zig-cxx-build: line 7: 366592 Aborted                    ZIG_GLOBAL_CACHE_DIR="$cache_dir" "$script_dir/python/ziglang/zig" c++ "$@"

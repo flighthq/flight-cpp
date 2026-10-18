@@ -1,0 +1,341 @@
+{
+  "schema": "flight-rich-text-data-b-coherence/1",
+  "scope": "Bounded seven inherited-designator coherence repair, original default colors and separate format owners, explicit unsupported supplied-option entries. No compiler/Types/runtime-core/generated/SDK change.",
+  "wholeOriginalFactoryQualified": false,
+  "wholeNativeSvgTextQualified": false,
+  "overrideStatus": "partial",
+  "sdkRunsStarted": 0,
+  "buildStartedAtCommit": "0181a126",
+  "baseAtBuild": "55468fed",
+  "source": {
+    "cases": 9,
+    "failures": 0,
+    "originalModuleCount": 1285,
+    "rawPinSourcesVerified": 1285,
+    "pin": "a62784923f3be814463286c9fb28edfe6ab15789",
+    "sourceOracle": {
+      "file": "scripts/richTextFactorySourceOracle.mjs",
+      "sha256": "c057d9125da7dcaa968e8fcb8030fb80de83bcfea18f80819d6c5ef7ffebd5ca"
+    },
+    "observations": [
+      {
+        "name": "original-defaults",
+        "defaults": {
+          "autoSize": "none",
+          "height": 100,
+          "text": "",
+          "verticalAlign": "top",
+          "width": 100,
+          "background": false,
+          "backgroundColor": 4294967295,
+          "border": false,
+          "borderColor": 255,
+          "condenseWhite": false,
+          "maxChars": -1,
+          "mouseWheelEnabled": true,
+          "multiline": true,
+          "scrollH": 0,
+          "scrollV": 1,
+          "selectable": true,
+          "textColor": 255,
+          "wordWrap": false
+        },
+        "distinctFormatOwners": true
+      },
+      {
+        "name": "original-supplied-options",
+        "freshData": true,
+        "width": 310,
+        "height": 220,
+        "text": "hello",
+        "formatOwnerRetained": true
+      },
+      {
+        "name": "original-member-read-order",
+        "order": [
+          "autoSize",
+          "height",
+          "text",
+          "textFormat",
+          "verticalAlign",
+          "width",
+          "background",
+          "backgroundColor",
+          "border",
+          "borderColor",
+          "height",
+          "width",
+          "condenseWhite",
+          "defaultTextFormat",
+          "maxChars",
+          "mouseWheelEnabled",
+          "multiline",
+          "scrollH",
+          "scrollV",
+          "selectable",
+          "textColor",
+          "textFormatRanges",
+          "wordWrap"
+        ]
+      },
+      {
+        "name": "changing-inherited-member-getters",
+        "heightReads": 2,
+        "widthReads": 2,
+        "height": 102,
+        "width": 202
+      },
+      {
+        "name": "getter-error-timing-and-identity",
+        "order": [
+          "autoSize",
+          "height",
+          "text",
+          "textFormat",
+          "verticalAlign",
+          "width",
+          "background"
+        ],
+        "sameError": true,
+        "error": "RangeError"
+      },
+      {
+        "name": "source-authored-range-map",
+        "reads": 2,
+        "freshArray": true,
+        "freshRange": true,
+        "sameNestedFormat": true
+      },
+      {
+        "name": "only-nullish-options-default",
+        "width": 0,
+        "height": 100,
+        "multiline": false,
+        "text": "",
+        "maxChars": 0
+      },
+      {
+        "name": "public-original-node-factory",
+        "kind": "RichText",
+        "alpha": 0.3,
+        "nodeName": "public",
+        "enabled": false,
+        "visible": false,
+        "text": "node data",
+        "width": 302,
+        "sameRuntimeOwner": true
+      },
+      {
+        "name": "whole-original-svg-text-rich-branch",
+        "kind": "RichText",
+        "nodeName": "svg-text",
+        "text": "black red",
+        "width": 10000,
+        "height": 20,
+        "autoSize": "left",
+        "ranges": [
+          {
+            "start": 6,
+            "end": 9,
+            "color": 4278190335
+          }
+        ]
+      }
+    ],
+    "keySourceHashes": {
+      "packages/text/src/richText.ts": "288eb247dc94c0033836847ea03182fe4e45e3b79797205ba89af690a047785c",
+      "packages/text/src/textLabel.ts": "dfb74ef0422a82bac7ed1c603184a47266b1bc634451359babdf56aa5963a114",
+      "packages/scene2d-formats/src/svgTextElement.ts": "b61f6d82d7c4f24c8c00245c6a049a2f7c7a86fe953a0f60b4668f4e7fcaa289"
+    },
+    "fullSourceManifest": {
+      "archiveMember": "evidence/original-source.json",
+      "sha256": "2bf0d36255b68abdcb55806f9d196db0e9ca1ee85f1f31403305d100751539fd"
+    }
+  },
+  "native": {
+    "compileExitCode": 0,
+    "runReturnCode": 0,
+    "observed": {
+      "checks": 26,
+      "failures": 0,
+      "legacyRuntimeUnavailable": true,
+      "dataOptionsRefused": true,
+      "nodeOptionsRefused": true,
+      "scope": "source defaults, inherited owner and mutation components plus explicit options/runtime boundaries"
+    },
+    "fixture": {
+      "file": "scripts/fixtures/richTextInheritedData.cpp",
+      "sha256": "82762cd0e3d46a99a0af952297374aea3ac39be0dbc965ece03d769990a10b2e"
+    },
+    "meaning": "26 checks include explicit partial options/runtime error boundaries; they do not establish source equivalence for those uses."
+  },
+  "svgConsumer": {
+    "compileExitCode": 1,
+    "run": "NOT RUN: actual installed original consumer compilation fails in retained production code, with zero rich-text override/fixture errors.",
+    "errors": [
+      "generated/include/flight/scene2d_formats/svg_text_element.hpp:283:17: error: use of undeclared identifier 'create_svg_text_format'",
+      "generated/include/flight/scene2d_formats/svg_text_element.hpp:288:67: error: no viable conversion from 'optional<std::shared_ptr<flight::scene2d_formats::SvgTextRun>>' to 'optional<flight::Ref<opacity_style_text_1e215ae1fa2ab6b5>>'",
+      "generated/include/flight/scene2d_formats/svg_text_element.hpp:298:64: error: use of undeclared identifier 'create_svg_text_format'",
+      "generated/include/flight/scene2d_formats/svg_text_element.hpp:303:649: error: incompatible operand types ('std::optional<flight::Ref<flight::types::XmlElement>>' (aka 'std::optional<std::shared_ptr<flight::types::XmlElement>>') and 'flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>' (aka 'flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::XmlElement>>>>'))",
+      "generated/include/flight/scene2d_formats/svg_text_element.hpp:304:649: error: incompatible operand types ('std::optional<flight::Ref<flight::types::XmlElement>>' (aka 'std::optional<std::shared_ptr<flight::types::XmlElement>>') and 'flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>' (aka 'flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::XmlElement>>>>'))",
+      "generated/include/flight/scene2d_formats/svg_text_element.hpp:309:287: error: no matching conversion for functional-style cast from 'std::optional<flight::Ref<flight::types::XmlElement>>' (aka 'std::optional<std::shared_ptr<flight::types::XmlElement>>') to 'flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>' (aka 'flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::XmlElement>>>>')",
+      "include/flight/structural_ref.hpp:671:19: error: static assertion failed due to requirement 'dependent_false<flight::types::XmlElement>': structural reference source has an incompatible object type"
+    ],
+    "ownedHeaderErrors": [],
+    "fixtureErrors": [],
+    "fixture": {
+      "file": "scripts/fixtures/svgTextRichBranch.cpp",
+      "sha256": "0cc89462d182f5c4a8dfa30059728116f022c64e2a44991c5ef860d8a496e421"
+    }
+  },
+  "bInputs": {
+    "author": "builder2",
+    "head": "5f79108f34c17751c82d758fc4717d2215dc1d51",
+    "seed": "5f0c98eec377a4ecd88a0109437aeba97c8f3d5c",
+    "preB": "33777898284fc5ea4e8e6bd7ea756a484385dce6",
+    "heldNotLanded": true,
+    "compilerPatches": 118,
+    "compilerPin": "806d257d2f4100de745cc97340e61c2f301b0f24",
+    "deliveredPatches": 9,
+    "headerDelta": {
+      "count": 480,
+      "archiveMember": "b-delta-manifest.json",
+      "sha256": "4458a0ee8cdcee89c2377a1b5691467e627256abe3b48af93037f2dede57a77b"
+    },
+    "selectedHeaderInputs": {
+      "count": 3254,
+      "archiveMember": "evidence/final-b/native-header-inputs.json",
+      "sha256": "a0d50bfbd3128a22e70b86e4eeb5d01f121795048f7fbf3ba0963687d8828eca"
+    },
+    "keyHeaders": [
+      {
+        "header": "flight/text/rich_text.hpp",
+        "file": "overrides/include/flight/text/rich_text.hpp",
+        "sha256": "85ad8a4c4e62ba8f057c81f01647f4ec1514371f00f331c7ee6e99152b6ed4d1"
+      },
+      {
+        "header": "flight/types/node.hpp",
+        "file": "../scratch-archives/rich-text-b/b-delta/overrides/include/flight/types/node.hpp",
+        "sha256": "989800edde294cedac4717ec895b644e56d4d9ddc7cf0da687a89ad3a4633e2e"
+      },
+      {
+        "header": "flight/types/rich_text.hpp",
+        "file": "../scratch-archives/rich-text-b/b-delta/generated/include/flight/types/rich_text.hpp",
+        "sha256": "e4cc5913313fd18fcc2396614506b7d4861e3104022d6f978efdaec975aef763"
+      },
+      {
+        "header": "flight/types/text_label.hpp",
+        "file": "../scratch-archives/rich-text-b/b-delta/overrides/include/flight/types/text_label.hpp",
+        "sha256": "cda2fd418618bc25982e7a56ed91015e3b4e42986c6c55e6827593ba620b3358"
+      }
+    ]
+  },
+  "baseline": {
+    "ownHeaderBeforeExit": 1,
+    "ownHeaderBeforeErrors": 7,
+    "meaning": "Own earlier immutable matching B Types header gate, plus builder2 complete-B SVG-before report. Not a whole-SVG before/after pass comparison."
+  },
+  "partialBoundaries": [
+    "Supplied options throw OutOfProfileError; original getter order/errors and range mapping for those inputs remain unsupported.",
+    "Existing weak RichText runtime registry releases its independent runtime; get_rich_text_runtime throws the recorded Error.",
+    "Eleven omitted declarations remain in the partial manifest.",
+    "Retained SVG missing function and owner/conversion errors keep the native whole consumer unqualified."
+  ],
+  "excludedAttempts": [
+    "Initial baseline probe lacked the existing SDL include path; corrected before the measured seven-error baseline.",
+    "The first linked public consumer aborted at the preexisting weak runtime gap. A premature predicted 19-pass status was withdrawn; final 26 checks explicitly retain that partial failure boundary.",
+    "An obsolete complete-B build was cancelled when Foreman authorized the source default fixes.",
+    "Initial SVG fixture used a nondeducible Ref<T> alias parameter; corrected only the fixture to std::shared_ptr<T> and reran the actual consumer gate."
+  ],
+  "files": [
+    {
+      "file": "overrides/include/flight/text/rich_text.hpp",
+      "sha256": "85ad8a4c4e62ba8f057c81f01647f4ec1514371f00f331c7ee6e99152b6ed4d1"
+    },
+    {
+      "file": "overrides/manifest.json",
+      "sha256": "d0481f32f63ce509083d99958418823eae0a2f4d815048490e97142279219bd7"
+    },
+    {
+      "file": "scripts/richTextFactorySourceOracle.mjs",
+      "sha256": "c057d9125da7dcaa968e8fcb8030fb80de83bcfea18f80819d6c5ef7ffebd5ca"
+    },
+    {
+      "file": "scripts/fixtures/richTextInheritedData.cpp",
+      "sha256": "82762cd0e3d46a99a0af952297374aea3ac39be0dbc965ece03d769990a10b2e"
+    },
+    {
+      "file": "scripts/fixtures/svgTextRichBranch.cpp",
+      "sha256": "0cc89462d182f5c4a8dfa30059728116f022c64e2a44991c5ef860d8a496e421"
+    },
+    {
+      "file": "docs/compiler-requests/rich-text-data-b-coherence.md",
+      "sha256": "da9ac96bae27dc5c95a0f066173ec5c2c0659983e9d057a163bfed3b80d92418"
+    }
+  ],
+  "logs": [
+    {
+      "file": "artifacts/rich-text-data-b-coherence/original-source.log",
+      "sha256": "63d79dea65498f9be2fbc75e419af87df979b71908e5164c47287228d0141e56"
+    },
+    {
+      "file": "artifacts/rich-text-data-b-coherence/native-build.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "artifacts/rich-text-data-b-coherence/native-run.log",
+      "sha256": "f183d4a7970ec8bd9981865bbd4bf290c4fa0b2f29b094d99170ab0d3a21ce35"
+    },
+    {
+      "file": "artifacts/rich-text-data-b-coherence/svg-consumer-build.log",
+      "sha256": "d5f62fd113a61d248722e67752e24562336db3d9aa80a768c3f9effae29dab55"
+    },
+    {
+      "file": "artifacts/rich-text-data-b-coherence/baseline-b-header.log",
+      "sha256": "5b1f6c94a7e545b71b2fb9ab36fee9c8b41c0314b66cb84fa78139ff207ef3b6"
+    },
+    {
+      "file": "artifacts/rich-text-data-b-coherence/builder2-svg-before.log",
+      "sha256": "d6560e9d0c9d4e73d4f849a1614c3ff43cdfa12517fb9310adfdc02a29d7a227"
+    },
+    {
+      "file": "artifacts/rich-text-data-b-coherence/initial-runtime-failure.log",
+      "sha256": "be25cc858b828191983d7c1f40e11b386bc4784c6f0bd36f1beed22ac3aec7b5"
+    },
+    {
+      "file": "artifacts/rich-text-data-b-coherence/initial-svg-fixture-build.log",
+      "sha256": "881ce18c10bda326e8eadc1377e92d11e4a634821abb083d75f3ccfa873095cc"
+    },
+    {
+      "file": "artifacts/rich-text-data-b-coherence/overrides-test.log",
+      "sha256": "839f1e595c3467017153c9a7262d346ffcec61220dc8431726fbfed932bae103"
+    }
+  ],
+  "automation": {
+    "command": "node --test scripts/overrides.test.mjs; node --check scripts/richTextFactorySourceOracle.mjs; git diff --check",
+    "tests": 15,
+    "failures": 0
+  },
+  "commands": {
+    "native": "out/tooling/zig-cxx-build -std=c++20 -ffp-contract=off -g0 -w <ordered include roots> scripts/fixtures/richTextInheritedData.cpp -o <scratch>/final-b/rich-text-public; execute binary",
+    "svg": "same native toolchain/roots with -fsyntax-only -ferror-limit=0 scripts/fixtures/svgTextRichBranch.cpp",
+    "includeRoots": [
+      "<scratch>/b-delta/include",
+      "include",
+      "<scratch>/b-delta/overrides/include",
+      "overrides/include",
+      "<scratch>/b-delta/generated/include",
+      "generated/include",
+      "out/tooling/sdl/include",
+      "out/tooling/include"
+    ],
+    "zigVersion": "0.17.0"
+  },
+  "archive": {
+    "file": "builder3-rich-text-b-qualification.tgz",
+    "bytes": 1055761,
+    "sha256": "3c2ef523f7c4f5d4f28506a06179080bdea4724884b2404afaa4de21261f3f29",
+    "memberCount": 518
+  },
+  "documentation": "docs/compiler-requests/rich-text-data-b-coherence.md"
+}

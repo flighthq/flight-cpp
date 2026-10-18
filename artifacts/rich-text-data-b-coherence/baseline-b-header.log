@@ -1,0 +1,130 @@
+zig: warning: argument unused during compilation: '-c' [-Wunused-command-line-argument]
+In file included from /tmp/builder3-rich-text/rich-text-header.cpp:1:
+In file included from overrides/include/flight/text/rich_text.hpp:20:
+In file included from overrides/include/flight/scene2d/display_object.hpp:32:
+In file included from generated/include/flight/node/node.hpp:31:
+generated/include/flight/signals/slot.hpp:85:14: warning: equality comparison with extraneous parentheses [-Wparentheses-equality]
+   85 |   if ((write == static_cast<double>(data->slots.size()))) {
+      |        ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+generated/include/flight/signals/slot.hpp:85:14: note: remove extraneous parentheses around the comparison to silence this warning
+   85 |   if ((write == static_cast<double>(data->slots.size()))) {
+      |       ~      ^                                         ~
+generated/include/flight/signals/slot.hpp:85:14: note: use '=' to turn this equality comparison into an assignment
+   85 |   if ((write == static_cast<double>(data->slots.size()))) {
+      |              ^~
+      |              =
+In file included from /tmp/builder3-rich-text/rich-text-header.cpp:1:
+In file included from overrides/include/flight/text/rich_text.hpp:20:
+In file included from overrides/include/flight/scene2d/display_object.hpp:32:
+In file included from generated/include/flight/node/node.hpp:33:
+In file included from overrides/include/flight/node/hierarchy.hpp:35:
+In file included from overrides/include/flight/node/node_transform2d.hpp:38:
+generated/include/flight/node/revision.hpp:134:41: warning: equality comparison with extraneous parentheses [-Wparentheses-equality]
+  134 |   if ((world_transform_revision_counter == 0.0)) {
+      |        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+generated/include/flight/node/revision.hpp:134:41: note: remove extraneous parentheses around the comparison to silence this warning
+  134 |   if ((world_transform_revision_counter == 0.0)) {
+      |       ~                                 ^     ~
+generated/include/flight/node/revision.hpp:134:41: note: use '=' to turn this equality comparison into an assignment
+  134 |   if ((world_transform_revision_counter == 0.0)) {
+      |                                         ^~
+      |                                         =
+In file included from /tmp/builder3-rich-text/rich-text-header.cpp:1:
+In file included from overrides/include/flight/text/rich_text.hpp:20:
+In file included from overrides/include/flight/scene2d/display_object.hpp:32:
+In file included from generated/include/flight/node/node.hpp:33:
+overrides/include/flight/node/hierarchy.hpp:502:24: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  502 |     if (index != -1) { children->splice(index, 1.0); invalidate_node_children(tr); invalidate_node_world_bounds(target); }
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+overrides/include/flight/node/hierarchy.hpp:524:7: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  524 |       children->splice(i, 1.0);
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~
+overrides/include/flight/node/hierarchy.hpp:527:3: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  527 |   children->splice(index, 0.0, child);
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /tmp/builder3-rich-text/rich-text-header.cpp:1:
+In file included from overrides/include/flight/text/rich_text.hpp:21:
+In file included from overrides/include/flight/text/text_label.hpp:5:
+In file included from overrides/include/flight/text/text_label_layout.hpp:4:
+generated/include/flight/textlayout/text_layout.hpp:224:46: warning: equality comparison with extraneous parentheses [-Wparentheses-equality]
+  224 |           if ((groups.element(i)->line_index == last_line_index)) {
+      |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
+generated/include/flight/textlayout/text_layout.hpp:224:46: note: remove extraneous parentheses around the comparison to silence this warning
+  224 |           if ((groups.element(i)->line_index == last_line_index)) {
+      |               ~                              ^                 ~
+generated/include/flight/textlayout/text_layout.hpp:224:46: note: use '=' to turn this equality comparison into an assignment
+  224 |           if ((groups.element(i)->line_index == last_line_index)) {
+      |                                              ^~
+      |                                              =
+generated/include/flight/textlayout/text_layout.hpp:224:46: warning: equality comparison with extraneous parentheses [-Wparentheses-equality]
+  224 |           if ((groups.element(i)->line_index == last_line_index)) {
+      |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
+generated/include/flight/textlayout/text_layout.hpp:213:92: note: while substituting into a lambda expression here
+  213 |   check_truncation_capture.update_binding([&](auto& binding_value) { binding_value = [=]() {
+      |                                                                                            ^
+include/flight/reference.hpp:309:12: note: in instantiation of function template specialization 'flight::textlayout::build_groups(flight::Array<flight::Ref<flight::types::TextLayoutGroup>>, flight::Set<double>, flight::String, flight::Array<flight::Ref<flight::types::TextFormatRange>>, flight::Array<double>, double, flight::types::TextMeasureFunction, bool, bool, double, flight::String)::(lambda)::operator()<std::optional<std::function<bool ()>>>' requested here
+  309 |     return std::forward<Update>(update)(*value_);
+      |            ^
+generated/include/flight/textlayout/text_layout.hpp:213:28: note: in instantiation of function template specialization 'flight::BindingCell<std::optional<std::function<bool ()>>>::update_binding<(lambda at generated/include/flight/textlayout/text_layout.hpp:213:43)>' requested here
+  213 |   check_truncation_capture.update_binding([&](auto& binding_value) { binding_value = [=]() {
+      |                            ^
+generated/include/flight/textlayout/text_layout.hpp:224:46: note: remove extraneous parentheses around the comparison to silence this warning
+  224 |           if ((groups.element(i)->line_index == last_line_index)) {
+      |               ~                              ^                 ~
+generated/include/flight/textlayout/text_layout.hpp:224:46: note: use '=' to turn this equality comparison into an assignment
+  224 |           if ((groups.element(i)->line_index == last_line_index)) {
+      |                                              ^~
+      |                                              =
+generated/include/flight/textlayout/text_layout.hpp:389:21: warning: equality comparison with extraneous parentheses [-Wparentheses-equality]
+  389 |     if ((char_count == 0.0)) {
+      |          ~~~~~~~~~~~^~~~~~
+generated/include/flight/textlayout/text_layout.hpp:389:21: note: remove extraneous parentheses around the comparison to silence this warning
+  389 |     if ((char_count == 0.0)) {
+      |         ~           ^     ~
+generated/include/flight/textlayout/text_layout.hpp:389:21: note: use '=' to turn this equality comparison into an assignment
+  389 |     if ((char_count == 0.0)) {
+      |                     ^~
+      |                     =
+generated/include/flight/textlayout/text_layout.hpp:586:28: warning: equality comparison with extraneous parentheses [-Wparentheses-equality]
+  586 |           if ((space_count == 0.0)) {
+      |                ~~~~~~~~~~~~^~~~~~
+generated/include/flight/textlayout/text_layout.hpp:586:28: note: remove extraneous parentheses around the comparison to silence this warning
+  586 |           if ((space_count == 0.0)) {
+      |               ~            ^     ~
+generated/include/flight/textlayout/text_layout.hpp:586:28: note: use '=' to turn this equality comparison into an assignment
+  586 |           if ((space_count == 0.0)) {
+      |                            ^~
+      |                            =
+generated/include/flight/textlayout/text_layout.hpp:682:23: warning: equality comparison with extraneous parentheses [-Wparentheses-equality]
+  682 |   if ((out->num_lines == 0.0)) {
+      |        ~~~~~~~~~~~~~~~^~~~~~
+generated/include/flight/textlayout/text_layout.hpp:682:23: note: remove extraneous parentheses around the comparison to silence this warning
+  682 |   if ((out->num_lines == 0.0)) {
+      |       ~               ^     ~
+generated/include/flight/textlayout/text_layout.hpp:682:23: note: use '=' to turn this equality comparison into an assignment
+  682 |   if ((out->num_lines == 0.0)) {
+      |                       ^~
+      |                       =
+In file included from /tmp/builder3-rich-text/rich-text-header.cpp:1:
+overrides/include/flight/text/rich_text.hpp:55:8: error: field designator 'entity_runtime_key' does not refer to any field in type 'flight::types::RichTextData'
+   55 |       .entity_runtime_key = std::nullopt,
+      |       ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+overrides/include/flight/text/rich_text.hpp:56:8: error: field designator 'auto_size' does not refer to any field in type 'flight::types::RichTextData'
+   56 |       .auto_size = flight::String("none"),
+      |       ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+overrides/include/flight/text/rich_text.hpp:57:8: error: field designator 'height' does not refer to any field in type 'flight::types::RichTextData'
+   57 |       .height = 100.0,
+      |       ~^~~~~~~~~~~~~~
+overrides/include/flight/text/rich_text.hpp:58:8: error: field designator 'text' does not refer to any field in type 'flight::types::RichTextData'
+   58 |       .text = flight::String(""),
+      |       ~^~~~~~~~~~~~~~~~~~~~~~~~~
+overrides/include/flight/text/rich_text.hpp:59:8: error: field designator 'text_format' does not refer to any field in type 'flight::types::RichTextData'
+   59 |       .text_format = format,
+      |       ~^~~~~~~~~~~~~~~~~~~~
+overrides/include/flight/text/rich_text.hpp:60:8: error: field designator 'vertical_align' does not refer to any field in type 'flight::types::RichTextData'
+   60 |       .vertical_align = flight::String("top"),
+      |       ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+overrides/include/flight/text/rich_text.hpp:61:8: error: field designator 'width' does not refer to any field in type 'flight::types::RichTextData'
+   61 |       .width = 100.0,
+      |       ~^~~~~~~~~~~~~
+10 warnings and 7 errors generated.

@@ -1,0 +1,100 @@
+TAP version 13
+# Subtest: an override that references a hash the generated tree does not carry is reported
+ok 1 - an override that references a hash the generated tree does not carry is reported
+  ---
+  duration_ms: 39.849468
+  type: 'test'
+  ...
+# Subtest: an override whose hash references all resolve in the generated tree is not reported
+ok 2 - an override whose hash references all resolve in the generated tree is not reported
+  ---
+  duration_ms: 15.611714
+  type: 'test'
+  ...
+# Subtest: a mention is enough for a hash to resolve, so a live reference is never flagged
+ok 3 - a mention is enough for a hash to resolve, so a live reference is never flagged
+  ---
+  duration_ms: 7.379583
+  type: 'test'
+  ...
+# Subtest: an override with no hash-suffixed identifiers at all is not reported
+ok 4 - an override with no hash-suffixed identifiers at all is not reported
+  ---
+  duration_ms: 13.758377
+  type: 'test'
+  ...
+# Subtest: hashSuffixedIdentifiers reports each identifier once and ignores everything else
+ok 5 - hashSuffixedIdentifiers reports each identifier once and ignores everything else
+  ---
+  duration_ms: 1.137153
+  type: 'test'
+  ...
+# Subtest: a partial override that supplies a module and says what remains is accepted
+ok 6 - a partial override that supplies a module and says what remains is accepted
+  ---
+  duration_ms: 5.974728
+  type: 'test'
+  ...
+# Subtest: a partial override that claims nothing remains is refused
+ok 7 - a partial override that claims nothing remains is refused
+  ---
+  duration_ms: 9.335762
+  type: 'test'
+  ...
+# Subtest: a partial override with no remaining field at all is refused
+ok 8 - a partial override with no remaining field at all is refused
+  ---
+  duration_ms: 5.986509
+  type: 'test'
+  ...
+# Subtest: an incomplete override still may not claim to supply a module
+ok 9 - an incomplete override still may not claim to supply a module
+  ---
+  duration_ms: 8.691924
+  type: 'test'
+  ...
+# Subtest: a complete override that supplies a module still owes nothing
+ok 10 - a complete override that supplies a module still owes nothing
+  ---
+  duration_ms: 4.595701
+  type: 'test'
+  ...
+# Subtest: a header the manifest does not name is reported
+ok 11 - a header the manifest does not name is reported
+  ---
+  duration_ms: 5.039052
+  type: 'test'
+  ...
+# Subtest: a manifested header is not reported
+ok 12 - a manifested header is not reported
+  ---
+  duration_ms: 3.526745
+  type: 'test'
+  ...
+# Subtest: non-header files beside the overrides are not reported
+ok 13 - non-header files beside the overrides are not reported
+  ---
+  duration_ms: 3.297986
+  type: 'test'
+  ...
+# Subtest: every unmanifested header is reported, nested ones included, in a deterministic order
+ok 14 - every unmanifested header is reported, nested ones included, in a deterministic order
+  ---
+  duration_ms: 5.494918
+  type: 'test'
+  ...
+# Subtest: a base path with no include directory reports nothing rather than throwing
+ok 15 - a base path with no include directory reports nothing rather than throwing
+  ---
+  duration_ms: 1.209508
+  type: 'test'
+  ...
+1..15
+# tests 15
+# suites 0
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 604.324669

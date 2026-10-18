@@ -1,0 +1,18 @@
+# command, from repo/ at 5f79108f (B) and at 33777898 (pre-B), with . ../.tools/env.sh:
+c++ -std=c++20 $CXXFLAGS -fsyntax-only -ferror-limit=0 -Ioverrides/include -Iinclude -Igenerated/include -include flight/scene2d_formats/svg_text_element.hpp -x c++ /dev/null
+# B:
+flight/text/rich_text.hpp:55:8: error: field designator 'entity_runtime_key' does not refer to any field in type 'flight::types::RichTextData'
+flight/text/rich_text.hpp:56:8: error: field designator 'auto_size' does not refer to any field in type 'flight::types::RichTextData'
+flight/text/rich_text.hpp:57:8: error: field designator 'height' does not refer to any field in type 'flight::types::RichTextData'
+flight/text/rich_text.hpp:58:8: error: field designator 'text' does not refer to any field in type 'flight::types::RichTextData'
+flight/text/rich_text.hpp:59:8: error: field designator 'text_format' does not refer to any field in type 'flight::types::RichTextData'
+flight/text/rich_text.hpp:60:8: error: field designator 'vertical_align' does not refer to any field in type 'flight::types::RichTextData'
+flight/text/rich_text.hpp:61:8: error: field designator 'width' does not refer to any field in type 'flight::types::RichTextData'
+flight/scene2d_formats/svg_text_element.hpp:167:17: error: no member named 'some' in 'flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::XmlElement>>>>>'
+flight/scene2d_formats/svg_text_element.hpp:283:17: error: use of undeclared identifier 'create_svg_text_format'
+flight/scene2d_formats/svg_text_element.hpp:288:67: error: no viable conversion from 'optional<std::shared_ptr<flight::scene2d_formats::SvgTextRun>>' to 'optional<flight::Ref<opacity_style_text_1e215ae1fa2ab6b5>>'
+flight/scene2d_formats/svg_text_element.hpp:298:64: error: use of undeclared identifier 'create_svg_text_format'
+flight/scene2d_formats/svg_text_element.hpp:303:649: error: incompatible operand types ('std::optional<flight::Ref<flight::types::XmlElement>>' (aka 'std::optional<std::shared_ptr<flight::types::XmlElement>>') and 'flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>' (aka 'flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::XmlElement>>>>'))
+flight/scene2d_formats/svg_text_element.hpp:304:649: error: incompatible operand types ('std::optional<flight::Ref<flight::types::XmlElement>>' (aka 'std::optional<std::shared_ptr<flight::types::XmlElement>>') and 'flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>' (aka 'flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::XmlElement>>>>'))
+flight/scene2d_formats/svg_text_element.hpp:309:287: error: no matching conversion for functional-style cast from 'std::optional<flight::Ref<flight::types::XmlElement>>' (aka 'std::optional<std::shared_ptr<flight::types::XmlElement>>') to 'flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>' (aka 'flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::XmlElement>>>>')
+flight/structural_ref.hpp:492:19: error: static assertion failed due to requirement 'dependent_false<flight::types::XmlElement>': structural reference source has an incompatible object type
