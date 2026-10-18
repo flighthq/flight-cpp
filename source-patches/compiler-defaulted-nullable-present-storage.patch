@@ -1,0 +1,177 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -14469,7 +14469,17 @@
+   if (expression.reference.kind !== 'binding') return undefined;
+   const bindingId = expression.reference.binding.id;
+   if (!hasCppBindingAbsenceStorageCpp(bindingId, context)) return undefined;
+-  const binding = emitIdentifierReference(expression.reference, context);
++  // Defaulted and optional parameters keep ABI presence outside the declared nullable union. A
++  // default consumes undefined but keeps that storage; a present optional nullable read excludes
++  // both sentinels. Project this layer before the union. Shared captured defaults already project
++  // their initializer layer in the binding read.
++  const initializedBinding = context.defaultedParameterIds.has(bindingId)
++    ? emitInitializedBindingValueCpp(expression.reference.binding, context)
++    : emitIdentifierReference(expression.reference, context);
++  const binding =
++    getCppOptionalParameterNullishStorageCpp(expression, context) === 'nestedNullable'
++      ? `${initializedBinding}.value()`
++      : initializedBinding;
+   if (context.externalCallResultPresenceBindings.has(bindingId)) {
+     context.includes.add('optional');
+     return `${binding}.value()`;
+diff --git a/packages/compiler-backend-cpp/src/cppDefaultedNullableBinding.test.ts b/packages/compiler-backend-cpp/src/cppDefaultedNullableBinding.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppDefaultedNullableBinding.test.ts
+@@ -0,0 +1,150 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import type { CompilerModuleResolutionPlan } from '../../compiler-types/src/index.js';
++import { createCppCompilerBackend } from './cppCompilerBackend.js';
++
++function emitDefaultedBinding(code: string, imported = false): string {
++  const packageName = '@flighthq/defaulted-nullable';
++  const ownerPackage = '@flighthq/defaulted-owner';
++  const declarations = 'export interface Owner { value: number }';
++  const helper = 'export function inspect(owner: Readonly<Owner>): number { return owner.value; }';
++  const source = (owner: string, file: string, text: string) => ({
++    packageName: owner,
++    sourceFile: ts.createSourceFile(
++      `/flight/packages/${owner.slice('@flighthq/'.length)}/src/${file}.ts`,
++      text,
++      ts.ScriptTarget.Latest,
++      true,
++    ),
++    upstreamDirectory: '/flight',
++  });
++  const moduleResolution: CompilerModuleResolutionPlan = {
++    edges: [
++      {
++        specifier: '@flighthq/defaulted-owner/contract',
++        target: { packageName: ownerPackage, source: 'packages/defaulted-owner/src/contract.ts' },
++      },
++    ],
++    schema: 'flight-compiler-module-resolution/1',
++  };
++  const results = lowerTypeScriptSources(
++    imported
++      ? [
++          source(ownerPackage, 'contract', declarations),
++          source(
++            packageName,
++            'defaulted',
++            `import type { Owner } from '@flighthq/defaulted-owner/contract'; ${helper} ${code}`,
++          ),
++        ]
++      : [source(packageName, 'defaulted', declarations + helper + code)],
++    moduleResolution,
++  );
++  expect(results.flatMap((result) => result.diagnostics)).toEqual([]);
++  const modules = results.map((result) => result.module);
++  return createCppCompilerBackend().createEmissionSession!({
++    moduleResolution,
++    modules,
++    options: { runtimeProfile: 'flight-cpp' },
++  }).emitModule(modules[modules.length - 1]!)[0]!.contents;
++}
++
++describe('emitIrModuleCpp', () => {
++  it('projects both initialized default storage and its guarded nullable readonly payload', () => {
++    for (const imported of [false, true]) {
++      for (const body of [
++        'return owner === null ? -1 : inspect(owner);',
++        'if (owner === null) return -1; return inspect(owner);',
++      ]) {
++        const text = emitDefaultedBinding(
++          `export function read(owner: Readonly<Owner> | null = null): number { ${body} }`,
++          imported,
++        );
++        expect(text).toContain('owner = owner.value_or(std::nullopt);');
++        expect(text).toContain('inspect(owner.value().value())');
++        expect(text).not.toContain('RowWritable');
++      }
++    }
++  });
++
++  it('uses the same initialized storage rule for a guarded nullable primitive', () => {
++    const text = emitDefaultedBinding(`export function read(value: number | null = null): number {
++      return value === null ? -1 : value + 1;
++    }`);
++    expect(text).toContain('value.value().value()');
++  });
++
++  it('retains the initialized payload in a captured defaulted binding', () => {
++    const text = emitDefaultedBinding(`export function read(owner: Readonly<Owner> | null = null): number {
++      if (owner === null) return -1;
++      return (() => inspect(owner))();
++    }`);
++    expect(text).toContain('inspect(owner.value().value())');
++    expect(text).not.toContain('owner.value().value().value()');
++  });
++
++  it('keeps required and non-defaulted optional controls at one storage projection', () => {
++    const required = emitDefaultedBinding(`export function read(owner: Readonly<Owner> | null): number {
++      return owner === null ? -1 : inspect(owner);
++    }`);
++    const optional = emitDefaultedBinding(`export function read(owner?: Readonly<Owner>): number {
++      return owner === undefined ? -1 : inspect(owner);
++    }`);
++    for (const text of [required, optional]) {
++      expect(text).toContain('inspect(owner.value())');
++      expect(text).not.toContain('owner.value().value()');
++    }
++  });
++
++  it('preserves reachable absence and a non-nullable default without an extra unwrap', () => {
++    const nullable =
++      emitDefaultedBinding(`export function read(owner: Readonly<Owner> | null = null): Readonly<Owner> | null {
++      return owner;
++    }`);
++    expect(nullable).toContain('return owner.value();');
++    expect(nullable).not.toContain('return owner.value().value();');
++    const primitive = emitDefaultedBinding('export function read(value = 3): number { return value; }');
++    expect(primitive).toContain('return value.value();');
++    expect(primitive).not.toContain('value.value().value()');
++  });
++
++  it('keeps a non-null owner default and the guarded payload distinct', () => {
++    const text =
++      emitDefaultedBinding(`export function read(fallback: Readonly<Owner>, owner: Readonly<Owner> | null = fallback): number {
++      return owner === null ? -1 : inspect(owner);
++    }`);
++    expect(text).toContain('owner = owner.value_or(std::optional<');
++    expect(text).toContain('{fallback});');
++    expect(text).toContain('inspect(owner.value().value())');
++  });
++  it('projects an optional nullable parameter only after both source sentinels are excluded', () => {
++    const text = emitDefaultedBinding(`export function read(owner?: Readonly<Owner> | null): number {
++      if (owner === undefined || owner === null) return -1;
++      return inspect(owner);
++    }`);
++    expect(text).toContain('inspect(owner.value().value())');
++  });
++
++  it('does not consume captured default storage twice through a shared binding cell', () => {
++    const text =
++      emitDefaultedBinding(`export function read(replacement: Readonly<Owner>, owner: Readonly<Owner> | null = null): number {
++      const next = () => { if (owner === null) return -1; return inspect(owner); };
++      owner = replacement;
++      return next();
++    }`);
++    expect(text).toMatch(/read_binding\(\)\.value\(\)\.value\(\)/u);
++    expect(text).not.toMatch(/read_binding\(\)\.value\(\)\.value\(\)\.value\(\)/u);
++  });
++
++  it('projects a defaulted union arm after its null and primitive guards', () => {
++    const text = emitDefaultedBinding(`export function read(owner: Readonly<Owner> | number | null = null): number {
++      if (owner === null) return -1;
++      if (typeof owner === 'number') return owner;
++      return inspect(owner);
++    }`);
++    expect(text).toMatch(/inspect\([^\n;]*owner\.value\(\)\.value\(\)/u);
++    expect(text).not.toContain('RowWritable');
++  });
++});
