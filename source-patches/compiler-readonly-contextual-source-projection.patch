@@ -18,6 +18,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    }
    if (sourceRow && targetRow) {
 diff --git a/packages/compiler-backend-cpp/src/cppReadonlyHelperProjection.test.ts b/packages/compiler-backend-cpp/src/cppReadonlyHelperProjection.test.ts
+new file mode 100644
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppReadonlyHelperProjection.test.ts
 @@ -0,0 +1,134 @@
