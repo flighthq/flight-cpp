@@ -125,3 +125,18 @@ Implementation increments for the bounded view (authorized shape b):
 4. at a call argument where a class reference reaches a view-typed parameter, construct the view
    from the class reference and wrap it in an aliasing `Ref<View>` sharing the class's control block;
    at the reverse positions emit `flight::require_owner<Class>(interfaceRef)`.
+
+## Landed: the reverse half (interface value at a class parameter)
+
+`compiler-interface-to-class-owner-adoption` emits
+`flight::require_owner<Class>(argument)` at a call argument whose value is an interface the expected
+class structurally satisfies (every interface property exists on the class by field or method name).
+The concrete owner is recovered from the control-block record of the SAME allocation, or the call
+throws `NativeScalarEscapeError` when the value was not allocated as that class — never a copy,
+downcast or empty reference. Arguments already declared as the class, and pairs the class does not
+satisfy, are untouched.
+
+Measured: the focused test emits the adoption (and leaves a same-class argument alone); the emitted
+fixture compiles as C++20 against the pinned runtime; the compiler builds with all 115 patches and
+the stack applies/reverts clean. This covers the SWF placement helpers that take the concrete
+reader; the forward half (a class instance at an interface parameter) remains the declared-site view.

@@ -1,0 +1,139 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -5422,7 +5422,7 @@
+               getCppContextualArrayCallbackTypeCpp(expression, expectedType, index, context) ??
+               getIrCallArgumentExpectedTypeCpp(expression, index, context);
+             assertCppPresentOptionalCollectionArgumentCpp(expression, argument, index, argumentExpectedType, context);
+-            return emitExpression(
++            const emittedArgument = emitExpression(
+               argument,
+               context,
+               argumentExpectedType &&
+@@ -5430,6 +5430,10 @@
+                 ? undefined
+                 : argumentExpectedType,
+             );
++            return (
++              emitCppInterfaceToClassOwnerAdoptionCpp(argument, emittedArgument, argumentExpectedType, context) ??
++              emittedArgument
++            );
+           });
+           const call = `${receiver}${memberOp(expression.callee.object, context)}${binding.targetName}${emitCppTypeArguments(expression.typeArguments, context)}(${args.join(', ')})`;
+           if (
+@@ -5560,7 +5564,7 @@
+                 'cpp-receiver-reference-unavailable',
+               );
+             }
+-            return emitExpression(
++            const emittedArgument = emitExpression(
+               argument,
+               context,
+               argumentExpectedType &&
+@@ -5568,6 +5572,10 @@
+                 ? undefined
+                 : argumentExpectedType,
+             );
++            return (
++              emitCppInterfaceToClassOwnerAdoptionCpp(argument, emittedArgument, argumentExpectedType, context) ??
++              emittedArgument
++            );
+           }),
+         context,
+       );
+@@ -19386,6 +19394,44 @@
+ // The interface declaration a named type names, wherever it was declared. Interfaces flatten into
+ // independent C++ structs, so this declaration is the heritage evidence the member-view lowering
+ // reads; a class, an unresolved import, or any other type yields undefined and keeps the refusal.
++// An interface value handed to a parameter declared as the class it was written from: the caller
++// holds the same object, and the concrete owner is recovered from the control-block record. This is
++// the reverse half of the class/interface adoption; a value that was not allocated as that class
++// throws the native escape at the call, never a copy and never an empty reference. The forward half
++// (a class instance at an interface parameter) is a generated view at declared sites.
++function emitCppInterfaceToClassOwnerAdoptionCpp(
++  argument: Readonly<IrExpression>,
++  emitted: string,
++  expectedType: Readonly<IrType> | undefined,
++  context: EmitContext,
++): string | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || expectedType === undefined) return undefined;
++  const expected = getCppNonNullableType(expectedType, context, new Set()) ?? expectedType;
++  const classDeclaration = resolveCppClassForTypeCpp(expected, context);
++  if (!classDeclaration) return undefined;
++  const argumentType = getIrExpressionTypeEvidenceCpp(argument, context);
++  if (argumentType === undefined) return undefined;
++  const argumentPresent = getCppNonNullableType(argumentType, context, new Set()) ?? argumentType;
++  if (emitType(argumentPresent, context) === emitType(expected, context)) return undefined;
++  const interfaceDeclaration = getCppInterfaceDeclarationCpp(argumentPresent, context);
++  if (!interfaceDeclaration) return undefined;
++  // Structural satisfaction: every member the interface declares exists on the class by name.
++  const classMembers = new Set<string>([
++    ...classDeclaration.declaration.fields.map((field) => field.name),
++    ...classDeclaration.declaration.methods.map((method) => method.name),
++  ]);
++  if (!interfaceDeclaration.properties.every((property) => classMembers.has(property.name))) return undefined;
++  context.includes.add('flight/reference.hpp');
++  // `require_owner<Target>` returns Ref<Target>, so the template argument is the OBJECT type the
++  // reference names, not the emitted reference type.
++  const referenceType = emitType(expected, context);
++  const objectType =
++    referenceType.startsWith('flight::Ref<') && referenceType.endsWith('>')
++      ? referenceType.slice('flight::Ref<'.length, -1)
++      : referenceType;
++  return `flight::require_owner<${objectType}>(${emitted})`;
++}
++
+ function getCppInterfaceDeclarationCpp(
+   type: Readonly<IrType>,
+   context: EmitContext,
+diff --git a/packages/compiler-backend-cpp/src/cppInterfaceToClassOwnerAdoption.test.ts b/packages/compiler-backend-cpp/src/cppInterfaceToClassOwnerAdoption.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppInterfaceToClassOwnerAdoption.test.ts
+@@ -0,0 +1,46 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile(
++    '/flight/packages/example/src/interfaceToClassOwnerAdoption.ts',
++    source,
++    ts.ScriptTarget.Latest,
++    true,
++  );
++  const result = lowerTypeScriptSource(sourceFile, {
++    packageName: '@flighthq/example',
++    upstreamDirectory: '/flight',
++  });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++it('recovers the concrete class owner from an interface value at a class parameter', () => {
++  const output = emit(`
++    interface R { pos: number; read(): number }
++    class C { pos = 0; read(): number { this.pos += 1; return 1; } }
++    export function take(c: C): number { return c.pos + c.read(); }
++    export function run(r: R): number { return take(r); }
++  `);
++
++  // The reverse half of the class/interface adoption: the interface value names the same object, and
++  // the exact class owner is recovered from its control-block record (or the native escape throws).
++  expect(output).toContain('flight::require_owner<C>(r)');
++  expect(output).toContain('#include <flight/reference.hpp>');
++});
++
++it('leaves an argument already declared as the class untouched', () => {
++  const output = emit(`
++    interface R { pos: number; read(): number }
++    class C { pos = 0; read(): number { return 1; } }
++    export function take(c: C): number { return c.pos; }
++    export function run(c: C): number { return take(c); }
++  `);
++
++  expect(output).toContain('return take(c);');
++  expect(output).not.toContain('require_owner');
++});

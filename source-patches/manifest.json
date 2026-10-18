@@ -5607,6 +5607,23 @@
       "unblocks": "Original Array.isArray(document.layers) and forwarding document.layers into original appendLottieLayers readonly parameter without materialization.",
       "expires": "When upstream inspects the raw retained member and emits equivalent readonly same-owner array projections with native identity/mutation/lifetime/error-timing controls.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-interface-to-class-owner-adoption",
+      "dependency": "flight-compiler",
+      "patch": "compiler-interface-to-class-owner-adoption.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "diagnostic",
+      "refusal": "emitted SWF placement header diagnostic: no viable conversion from 'Ref<flight::types::SwfTagReader>' to 'Ref<flight::swf::SwfReader>' at swf_place_object3_handler.hpp:54 -- an interface value handed to a parameter declared as the class it was written from",
+      "rewrite": "At a call argument where the value's evidence is an interface the expected parameter's class structurally satisfies (every interface property exists on the class by field or method name), emit flight::require_owner<Class>(argument): the concrete owner is recovered from the control-block record of the SAME allocation, or the call throws the native escape when the value was not allocated as that class. Arguments already declared as the class, and pairs whose class does not satisfy the interface, are untouched.",
+      "equivalence": "No copy, downcast or empty reference: the caller passes the same object it holds. A value allocated as the class recovers that exact allocation and keeps all live cells; a value that was not (a caller's own literal) throws NativeScalarEscapeError at the call, which is the source's honest mismatch. This is the reverse half of the class/interface adoption; the forward half remains the declared-site view.",
+      "whyNotUpstreamFirst": "The primitive already records the exact owner; only this backend failed to emit the adoption. docs/compiler-requests/class-instance-as-implemented-interface.md records the request.",
+      "unblocks": "the SWF placement helpers (readSwfFilterList and siblings) that take the concrete reader while their caller holds the interface",
+      "expires": "when the class/interface adoption emits from the shared view family for both directions, or the runtime offers an implicit same-owner conversion",
+      "appliedOn": "2026-10-18",
+      "verification": "New cppInterfaceToClassOwnerAdoption.test.ts: 2 pass (an interface value at a class parameter emits flight::require_owner<C>(r) with the reference include; an argument already declared as the class is untouched and never wrapped). A native probe compiles the emitted fixture as C++20 against the pinned runtime. Build exit 0; stack applies/reverts clean."
     }
   ]
 }
