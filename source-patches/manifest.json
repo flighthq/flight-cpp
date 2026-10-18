@@ -4352,6 +4352,23 @@
       "expires": "when the emitter materializes the selected owned options carrier and writes through union member owners, or Flight adopts the equivalent constructor call and discriminant guard.",
       "appliedOn": "2026-10-17",
       "verification": "Final exact-pin scoped generation emits 2/1448 modules across 26 packages, with 0 refusals, 257 patches and 2 headers repaired by existing emission rules; both pins restore clean. Only two original headers and own provenance carried. Clamp/pack bodies unchanged. Original/final source cases pass. Final Clang 22.1.8 jobs 2 standalone check: 2/2 headers PASS; actual whole-original-header consumer compile/link/run and CTest 1/1 PASS covers numeric edges, unsigned RGBA, actual linear color owner writes, unresolved resource identity/dedup/first-match/attachment order, null/empty URI/basePath/MIME, embedded byte identity and defaults. Pre-guard native control fails exactly both linear color checks; rejected nominal local assertion is not carried. No general overload, decode/provider/import/rendering claim."
+    },
+    {
+      "id": "compiler-erased-array-iteration",
+      "dependency": "flight-compiler",
+      "patch": "compiler-erased-array-iteration.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "refusal",
+      "refusal": "cpp-presence-test-without-absence-storage: a for-of over an unknown value narrowed by Array.isArray emitted a range-for over flight::Any, which has no begin(), so the loop binding had no emitted storage or type evidence and tests on its element refused",
+      "rewrite": "A for-of whose iterable is an erased binding is lowered as an explicit array iteration: the operand is evaluated once into a local, the length is read from Any::array_size() each step (matching %ArrayIteratorPrototype%, which re-reads length on next()), and each element is read with Any::array_get(index).value_or(Any(undefined)), so a hole reads as undefined. The loop binding is recorded with the erased storage it is given and preserves the erased type evidence, so presence and typeof tests lower to the value's own predicates. Every other for-of keeps its existing range-for or collection view.",
+      "equivalence": "JavaScript's for-of over an array runs %ArrayIteratorPrototype%: it evaluates the iterable once, re-reads length before each next(), and yields each element by index, with a hole yielding undefined. The emitted loop does the same against the runtime's erased-array reads, which consult the original typed storage; Any copies share that storage, so mutations stay visible exactly as the source sees them. The element is the erased value the source reads, so strict null/undefined tests and typeof answer from its own kind tag. Typed arrays, unknown[] arrays, MutableMap/Set views, explicitly typed loop variables and every non-erased operand are not matched.",
+      "whyNotUpstreamFirst": "The emitter cannot iterate flight::Any with a range-for, and the runtime already exposes checked array_size/array_get reads for exactly this purpose; the fix is the lowering, not a new runtime capability. Upstream receives docs/compiler-requests/erased-array-element-reading.md.",
+      "unblocks": "The erased-array for-of sites behind the retained-call headers: scene2d-gl glVelocity and the skeleton2d-formats Spine JSON handlers (bones, slots, skins, bone timelines), whose refused bodies call each other; the same shape in other packages once regenerated.",
+      "expires": "when upstream lowers a for-of over an erased array through the runtime array reads and records the loop binding's erased storage (docs/compiler-requests/erased-array-element-reading.md).",
+      "appliedOn": "2026-10-18",
+      "verification": "New cppErasedArrayIteration.test.ts: 2 pass (indexed lowering with is_null/type_of; range-for retained for unknown[] and number[]). compiler-backend-cpp typecheck exit 0; focused cppLengthProvenNullableArrayRead + cppBindingTypeInference: 8 pass. Scratch CLI runs of the refusing shapes at 806d257 + patch: 3/3 and 2/2 modules emitted, 0 refused (before: 1 refused each with cpp-presence-test-without-absence-storage); the emitted headers compile in a consumer TU against the flight-cpp runtime. No committed inventory regeneration was run; the header compile and blocked-consumer gates await a granted slot."
     }
   ]
 }

@@ -1,0 +1,154 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 145a6da..f1d6d83 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -765,6 +765,27 @@ function emitIrModuleCppWithContext(
+       }
+     },
+   });
++  // A for-of binding has no variable-statement initializer for the storage query to read, so its
++  // iterable's storage is the evidence. When that iterable is an erased binding, the element is
++  // emitted through the runtime array reads as the erased carrier, which makes erased storage the
++  // binding's real representation rather than an inference from an annotation. An explicitly typed
++  // loop variable, or any iterable the emitter holds as a concrete carrier, keeps its storage.
++  analyzeIrModuleTraversal(module, {
++    statement(statement) {
++      if (
++        statement.kind !== 'forOf' ||
++        statement.await ||
++        !('binding' in statement.variable) ||
++        (statement.variable.type !== undefined && statement.variable.type.kind !== 'unknown') ||
++        statement.iterable.kind !== 'identifier' ||
++        statement.iterable.reference.kind !== 'binding' ||
++        !erasedDynamicStorageBindingIds.has(statement.iterable.reference.binding.id)
++      ) {
++        return;
++      }
++      erasedDynamicStorageBindingIds.add(statement.variable.binding.id);
++    },
++  });
+   for (const bindingPlan of closureCapturePlan.bindings) {
+     const bindingType = bindingTypes.get(bindingPlan.binding.id);
+     if (
+@@ -9033,6 +9054,47 @@ function emitStatement(statement: Readonly<IrStatement>, context: EmitContext):
+       const iterable = emitExpression(iterableExpression, context, literalElementType ?? narrowedIndexedStorageType);
+       const variableName = getBindingTargetName(statement.variable.binding, context);
+       const sharedCaptureTargetName = context.sharedCaptureTargetNames.get(statement.variable.binding.id);
++      // A for-of over an erased dynamic value has no range-for to fall back on: the operand emits as
++      // `flight::Any`, which has no begin(), and the source's element reads are the erased value's own
++      // tags. `Array.isArray(unknown)` narrows to a bare array whose element type is not represented, so
++      // there is no element type to carry either. Lower the array iterator explicitly: evaluate the
++      // operand once, ask the runtime for its length each step (matching `%ArrayIteratorPrototype%`,
++      // which re-reads length on next()), and read each element as the erased value. A hole in a sparse
++      // array reads as absent, which is `undefined` to the source. The loop binding keeps the erased type
++      // so its presence and typeof tests lower to the value's own predicates instead of asking a
++      // concrete carrier the emitter has no evidence for.
++      const erasedIterable =
++        getCppRuntimeProfile(context.options) === 'flight-cpp' &&
++        !collectionView &&
++        iterableExpression.kind === 'identifier' &&
++        iterableExpression.reference.kind === 'binding' &&
++        context.erasedDynamicStorageBindingIds.has(iterableExpression.reference.binding.id) &&
++        (!statement.variable.type || statement.variable.type.kind === 'unknown');
++      if (erasedIterable && iterableType) {
++        if (sharedCaptureTargetName) {
++          emissionError(
++            context,
++            `shared mutable capture ${statement.variable.binding.name} requires concrete binding type evidence`,
++          );
++        }
++        context.includes.add('flight/any.hpp');
++        context.preservedInitializerTypes.set(statement.variable.binding.id, iterableType);
++        const sourceName = getGeneratedTargetName('forOfSource', context);
++        const indexName = getGeneratedTargetName('forOfIndex', context);
++        return [
++          '{',
++          ...indentSourceLines([
++            `const auto ${sourceName} = ${iterable};`,
++            `for (double ${indexName} = 0.0; ${indexName} < static_cast<double>(${sourceName}.array_size()); ${indexName} += 1.0) {`,
++            ...indentSourceLines([
++              `auto ${variableName} = ${sourceName}.array_get(${indexName}).value_or(flight::Any(flight::undefined));`,
++              ...emitStatementBody(statement.body, context),
++            ]),
++            '}',
++          ]),
++          '}',
++        ];
++      }
+       if (collectionView && !(collectionView.collectionKind === 'set' && collectionView.projection !== 'entry')) {
+         if (sharedCaptureTargetName && !statement.variable.type) {
+           emissionError(
+diff --git a/packages/compiler-backend-cpp/src/cppErasedArrayIteration.test.ts b/packages/compiler-backend-cpp/src/cppErasedArrayIteration.test.ts
+new file mode 100644
+index 0000000..d85afdd
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppErasedArrayIteration.test.ts
+@@ -0,0 +1,68 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile(
++    '/flight/packages/example/src/erasedArrayIteration.ts',
++    source,
++    ts.ScriptTarget.Latest,
++    true,
++  );
++  const result = lowerTypeScriptSource(sourceFile, {
++    packageName: '@flighthq/example',
++    upstreamDirectory: '/flight',
++  });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++it('iterates an erased array through the runtime array reads', () => {
++  const output = emit(`
++    export function countObjects(raw: unknown): number {
++      if (!Array.isArray(raw)) return 0;
++      let count = 0;
++      for (const entry of raw) {
++        if (entry === null) continue;
++        if (typeof entry === 'object') count++;
++      }
++      return count;
++    }
++  `);
++
++  expect(output).toContain('const auto for_of_source = raw;');
++  expect(output).toContain(
++    'for (double for_of_index = 0.0; for_of_index < static_cast<double>(for_of_source.array_size()); for_of_index += 1.0) {',
++  );
++  expect(output).toContain(
++    'auto entry = for_of_source.array_get(for_of_index).value_or(flight::Any(flight::undefined));',
++  );
++  expect(output).toContain('presence_operand.is_null()');
++  expect(output).toContain('entry.type_of()');
++  expect(output).not.toContain('for (auto entry : raw)');
++});
++
++it('keeps the range-for for a represented array and a non-erased element', () => {
++  const output = emit(`
++    export function visitUnknowns(raw: unknown[]): number {
++      let count = 0;
++      for (const entry of raw) {
++        if (entry === null) continue;
++        count++;
++      }
++      return count;
++    }
++    export function sum(numbers: number[]): number {
++      let total = 0;
++      for (const number of numbers) total += number;
++      return total;
++    }
++  `);
++
++  expect(output).toContain('for (auto entry : raw) {');
++  expect(output).toContain('for (auto number : numbers) {');
++  expect(output).not.toContain('array_size()');
++  expect(output).toContain('presence_operand.is_null()');
++});

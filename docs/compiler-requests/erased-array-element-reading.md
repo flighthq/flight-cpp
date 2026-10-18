@@ -693,3 +693,28 @@ the emitter producing that shape itself.
 The consumer proof is recorded in `docs/header-failures.md` cluster 21. The JSON-producer half named above is
 still open: `spine_parse.hpp:152` passes a `flight::JsonValue` to `named_properties` (G2 cluster
 `no-matching-function-b37ddf91`).
+
+## G2 for-of over an erased array: the loop and the element storage
+
+At Flight `a627849` / compiler `806d257`, a `for (const entry of raw)` where `raw: unknown` has been
+narrowed by `Array.isArray` emitted `for (auto entry : raw)` with `raw` as `flight::Any`. `Any` has no
+`begin()`, so the loop could not compile; the loop binding also had no emitted storage or type
+evidence, so `entry === null` refused with `cpp-presence-test-without-absence-storage` (and
+`typeof entry` refused for the same missing evidence). This is the root behind the erased-array sites
+in the retained-call population: `scene2d-gl` `glVelocity`'s child walk and the
+`skeleton2d-formats` Spine JSON handlers, whose refused bodies call each other.
+
+Source patch `compiler-erased-array-iteration` lowers exactly that shape through the runtime reads
+above: evaluate the iterable once, read `Any::array_size()` each step
+(`%ArrayIteratorPrototype%` re-reads length on `next()`), and read each element with
+`Any::array_get(index).value_or(Any(undefined))` so a hole is `undefined`. The loop binding is
+recorded with the erased storage it was given and keeps the erased type evidence, so presence and
+`typeof` tests answer from the value's own tag. `unknown[]`, typed arrays, Map/Set views, explicitly
+typed loop variables and non-erased operands keep their existing lowering.
+
+Measured: new `cppErasedArrayIteration.test.ts` 2 pass; `compiler-backend-cpp` typecheck exit 0;
+focused `cppLengthProvenNullableArrayRead` + `cppBindingTypeInference` 8 pass; scratch CLI runs of
+the two refusing shapes emit 3/3 and 2/2 modules with 0 refusals (before: 1 refused each), and the
+emitted headers compile in a consumer TU against the flight-cpp runtime. The committed inventory has
+not been regenerated; the header-compile and blocked-consumer gates are the next step once a
+generation slot is granted.

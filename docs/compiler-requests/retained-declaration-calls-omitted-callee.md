@@ -225,6 +225,17 @@ establishes for a *name*; this asks for it one step further out, for a *callee*.
 long as the retained header compiles: a partial module that cannot compile is not partial, it is refused,
 and the ledger should say so.
 
+## G2 semantic direction: emit the refused body, not a declaration
+
+The G2 fleet direction is to close this cause by making the refused body emit where the refusal is
+the emitter's, rather than by adding a caller-visible placeholder. The first shared root handled this
+way is the erased-array `for-of`: `compiler-erased-array-iteration` (see
+[erased array element reading](erased-array-element-reading.md#g2-for-of-over-an-erased-array-the-loop-and-the-element-storage))
+lowers the loop through the runtime's `array_size`/`array_get` reads and records the loop binding's
+erased storage, so the Spine JSON handlers and the GL velocity walk no longer refuse that element
+test. Declarations remain a last resort for a callee whose own refusal is a different, unfixed
+semantic gap; they do not implement the body and cannot count as a consumer pass.
+
 ## Distinguish from the requests already filed
 
 [`partial-module-placeholder-qualification.md`](partial-module-placeholder-qualification.md) is about
