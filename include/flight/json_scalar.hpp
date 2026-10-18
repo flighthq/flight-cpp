@@ -508,6 +508,7 @@ class JsonRootRowOwner final : public RowOwner {
     return keys;
   }
 
+  [[nodiscard]] const Any& root() const noexcept { return root_; }
   [[nodiscard]] bool is_nullish() const noexcept { return root_.is_null(); }
 
   [[nodiscard]] bool to_boolean() const noexcept { return root_.to_boolean(); }
@@ -573,6 +574,170 @@ template <typename Schema>
 [[nodiscard]] inline bool json_row_to_boolean(const StructuralRef<Schema>& row) {
   if (const auto* root = dynamic_cast<const JsonRootRowOwner*>(row.shared_owner().get())) return root->to_boolean();
   return true;
+}
+
+
+// Direct, same-owner access to a parsed JSON document carried as a structural row. Every operation
+// works on the row's existing owner: no copy, no second tree, no schema validation and no election of
+// an array-vs-object shape. A value that JSON cannot represent (undefined, symbol, callable, opaque
+// host object) is refused rather than coerced.
+template <typename Schema>
+[[nodiscard]] inline std::shared_ptr<JsonObject> json_row_object(const StructuralRef<Schema>& row) {
+  const auto& owner = row.shared_owner();
+  if (!owner || owner->native_type() != typeid(JsonObject)) return {};
+  return std::static_pointer_cast<JsonObject>(owner->native_object());
+}
+
+template <typename Schema>
+[[nodiscard]] inline std::shared_ptr<JsonArray> json_row_array(const StructuralRef<Schema>& row) {
+  const auto& owner = row.shared_owner();
+  if (!owner || owner->native_type() != typeid(JsonArray)) return {};
+  return std::static_pointer_cast<JsonArray>(owner->native_object());
+}
+
+template <typename Schema>
+[[nodiscard]] inline bool json_row_is_object(const StructuralRef<Schema>& row) {
+  return json_row_object(row) != nullptr;
+}
+
+template <typename Schema>
+[[nodiscard]] inline bool json_row_is_array(const StructuralRef<Schema>& row) {
+  return json_row_array(row) != nullptr;
+}
+
+template <typename Schema>
+[[nodiscard]] inline bool json_row_has(const StructuralRef<Schema>& row, const String& key) {
+  if (const auto object = json_row_object(row)) return object->has(key);
+  if (const auto array = json_row_array(row)) {
+    if (key == String("length")) return true;
+    const auto& digits = key.native();
+    if (digits.empty() || (digits.size() > 1 && digits.front() == u'0')) return false;
+    std::size_t index = 0;
+    for (const auto digit_char : digits) {
+      if (digit_char < u'0' || digit_char > u'9') return false;
+      const auto digit = static_cast<std::size_t>(digit_char - u'0');
+      if (digit >= array->size() || index > (array->size() - 1 - digit) / 10) return false;
+      index = index * 10 + digit;
+    }
+    return true;
+  }
+  return false;
+}
+
+template <typename Schema>
+[[nodiscard]] inline Any json_row_member(const StructuralRef<Schema>& row, const String& key) {
+  if (const auto object = json_row_object(row)) {
+    const auto value = object->get(key);
+    return value ? Any(*value) : Any(undefined);
+  }
+  if (const auto array = json_row_array(row)) {
+    const auto index = detail::record_array_index(key);
+    if (index && *index < array->size()) return Any((*array)[*index]);
+  }
+  return Any(undefined);
+}
+
+template <typename Schema>
+[[nodiscard]] inline NamedProperties json_row_member_view(const StructuralRef<Schema>& row, const String& key) {
+  const Any member = json_row_member(row, key);
+  if (member.is_nullish()) return {};
+  return named_properties(member);
+}
+
+template <typename Schema>
+[[nodiscard]] inline bool json_row_set(const StructuralRef<Schema>& row, const String& key, const Any& value) {
+  const auto object = json_row_object(row);
+  if (!object) return false;
+  const auto json = any_to_json_value(value);
+  if (!json) return false;
+  object->set(key, *json);
+  return true;
+}
+
+template <typename Schema>
+[[nodiscard]] inline bool json_row_erase(const StructuralRef<Schema>& row, const String& key) {
+  const auto object = json_row_object(row);
+  return object && object->erase(key);
+}
+
+template <typename Schema>
+[[nodiscard]] inline double json_row_length(const StructuralRef<Schema>& row) {
+  const auto array = json_row_array(row);
+  return array ? static_cast<double>(array->size()) : 0.0;
+}
+
+template <typename Schema>
+[[nodiscard]] inline Any json_row_index(const StructuralRef<Schema>& row, double index) {
+  const auto array = json_row_array(row);
+  if (!array || !std::isfinite(index) || index < 0 || std::floor(index) != index ||
+      index >= static_cast<double>(array->size())) {
+    return Any(undefined);
+  }
+  return Any((*array)[static_cast<std::size_t>(index)]);
+}
+
+template <typename Schema>
+[[nodiscard]] inline bool json_row_set_index(const StructuralRef<Schema>& row, double index, const Any& value) {
+  const auto array = json_row_array(row);
+  if (!array || !std::isfinite(index) || index < 0 || std::floor(index) != index ||
+      index >= static_cast<double>(array->size())) {
+    return false;
+  }
+  const auto json = any_to_json_value(value);
+  if (!json) return false;
+  (*array)[static_cast<std::size_t>(index)] = *json;
+  return true;
+}
+
+template <typename Schema>
+[[nodiscard]] inline bool json_row_insert(const StructuralRef<Schema>& row, double index, const Any& value) {
+  const auto array = json_row_array(row);
+  if (!array || !std::isfinite(index) || index < 0 || std::floor(index) != index ||
+      index > static_cast<double>(array->size())) {
+    return false;
+  }
+  const auto json = any_to_json_value(value);
+  if (!json) return false;
+  array->insert(static_cast<std::size_t>(index), *json);
+  return true;
+}
+
+template <typename Schema>
+[[nodiscard]] inline bool json_row_erase_index(const StructuralRef<Schema>& row, double index) {
+  const auto array = json_row_array(row);
+  if (!array || !std::isfinite(index) || index < 0 || std::floor(index) != index ||
+      index >= static_cast<double>(array->size())) {
+    return false;
+  }
+  return array->erase(static_cast<std::size_t>(index));
+}
+
+// Any-receiver assertion row for NESTED parsed values: an object/array Any reuses the parsed owner the
+// value already holds; every other Any becomes the bounded root row over that raw value.
+template <typename Schema>
+[[nodiscard]] inline StructuralRef<Schema> json_assertion_row(const Any& value) {
+  if (value.kind() == AnyKind::object) {
+    const auto properties = named_properties(value);
+    if (properties.shared_owner()) return StructuralRef<Schema>::from_owner(properties.shared_owner());
+  }
+  return StructuralRef<Schema>::from_owner(std::make_shared<JsonRootRowOwner>(value));
+}
+
+// The original root an assertion row was built from, retaining its identity: a parsed object/array
+// owner is the same shared container the row reads; a primitive/null root returns its raw Any.
+// This performs NO member read, so it cannot trigger a null member-access TypeError.
+template <typename Schema>
+[[nodiscard]] inline Any json_row_raw(const StructuralRef<Schema>& row) {
+  const auto owner = row.shared_owner();
+  if (!owner) return Any();
+  if (owner->native_type() == typeid(JsonObject)) {
+    return Any(JsonValue(std::static_pointer_cast<JsonObject>(owner->native_object())));
+  }
+  if (owner->native_type() == typeid(JsonArray)) {
+    return Any(JsonValue(std::static_pointer_cast<JsonArray>(owner->native_object())));
+  }
+  if (const auto root = std::dynamic_pointer_cast<JsonRootRowOwner>(owner)) return root->root();
+  return Any();
 }
 
 } // namespace flight

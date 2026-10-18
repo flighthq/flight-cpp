@@ -180,6 +180,106 @@ void test_json_composite_operations() {
 
 } // namespace
 
+
+namespace {
+
+// Same-owner writes into a parsed JSON document carried as a structural row. Every operation mutates
+// the one parsed tree: a write through the row is visible through a fresh view of the same value, an
+// existing member is replaced in place, a missing key is not fabricated by the view, undefined is
+// refused, erase is its own operation, keys keep their exact UTF-16 spelling, and arrays insert,
+// replace and erase in place with the same storage identity.
+void test_json_row_writes() {
+  using RowSchema = flight::RowReadonly<flight::RowOf<flight::Any>>;
+
+  const auto parsed = flight::Json::parse(flight::String("{\"a\":1,\"n\":null}"));
+  const auto row = flight::json_assertion_row<RowSchema>(parsed);
+  assert(flight::json_row_is_object(row) && !flight::json_row_is_array(row));
+
+  assert(flight::json_row_set(row, flight::String("b"), flight::Any(2.0)));
+  const auto view = flight::named_properties(parsed);
+  assert(view.has(flight::String("b")) && view.get(flight::String("b")).as_number() == 2.0);
+
+  assert(flight::json_row_set(row, flight::String("a"), flight::Any(flight::String("x"))));
+  assert(flight::read_json_scalar_row_member(row, flight::String("a")).to_string() == flight::String("x"));
+
+  assert(flight::json_row_has(row, flight::String("n")) && !flight::json_row_has(row, flight::String("missing")));
+  assert(!flight::json_row_set(row, flight::String("u"), flight::Any(flight::undefined)) &&
+         !flight::json_row_has(row, flight::String("u")));
+  assert(flight::json_row_erase(row, flight::String("n")) && !flight::json_row_has(row, flight::String("n")));
+
+  const flight::String smile = flight::String::from_char_code(0xD83D, 0xDE00);
+  assert(flight::json_row_set(row, smile, flight::Any(3.0)) && flight::json_row_has(row, smile));
+
+  const auto array_parsed = flight::Json::parse(flight::String("[10,20]"));
+  const auto array_row = flight::json_assertion_row<RowSchema>(array_parsed);
+  assert(flight::json_row_is_array(array_row) && flight::json_row_length(array_row) == 2.0);
+  assert(flight::json_row_set_index(array_row, 1.0, flight::Any(25.0)) &&
+         flight::json_row_index(array_row, 1.0).as_number() == 25.0);
+  assert(flight::json_row_insert(array_row, 1.0, flight::Any(15.0)) &&
+         flight::json_row_length(array_row) == 3.0 &&
+         flight::json_row_index(array_row, 1.0).as_number() == 15.0);
+  assert(flight::json_row_erase_index(array_row, 0.0) && flight::json_row_length(array_row) == 2.0);
+  assert(flight::named_properties(array_parsed).shared_owner() == array_row.shared_owner());
+
+  const auto nested_parsed = flight::Json::parse(flight::String("{\"meta\":{\"w\":1}}"));
+  const auto nested_row = flight::json_assertion_row<RowSchema>(nested_parsed);
+  auto meta = flight::json_row_member_view(nested_row, flight::String("meta"));
+  assert(meta.has(flight::String("w")));
+  assert(meta.set(flight::String("w"), flight::Any(2.0)));
+  const auto meta_again = flight::json_row_member_view(nested_row, flight::String("meta"));
+  assert(meta_again.get(flight::String("w")).as_number() == 2.0);
+}
+
+} // namespace
+
+namespace {
+
+// Any-receiver bridges: nested object/array roots reuse the parsed owner; raw root retained; mutation
+// between root construction and discrimination is visible; undefined writes are refused explicitly.
+void test_json_any_bridge() {
+  using RowSchema = flight::RowReadonly<flight::RowOf<flight::Any>>;
+
+  const auto parsed = flight::Json::parse(flight::String("{\"fr\":30,\"list\":[1,2]}"));
+  const flight::Any receiver(parsed);
+  const auto row = flight::json_assertion_row<RowSchema>(receiver);
+  assert(flight::read_json_scalar_row_member(row, flight::String("fr")).as_native_number() == 30.0);
+
+  const auto raw = flight::json_row_raw(row);
+  assert(raw.kind() == flight::AnyKind::object);
+  // Same owner: mutate through the recovered root, re-read through the row (live, no copy).
+  const auto owner = raw.object_reference_if<flight::JsonObject>();
+  assert(static_cast<bool>(owner));
+  owner->set(flight::String("fr"), flight::Json::parse(flight::String("31")));
+  assert(flight::read_json_scalar_row_member(row, flight::String("fr")).as_native_number() == 31.0);
+  owner->set(flight::String("added"), flight::Json::parse(flight::String("true")));
+  assert(flight::Json::stringify(raw).to_utf8().find("\"added\":true") != std::string::npos);
+
+  // Undefined write refusal: false, no silent delete/alter, no source-shaped error.
+  const auto properties = flight::named_properties(row);
+  const bool wrote = properties.set(flight::String("fr"), flight::Any());
+  assert(!wrote && owner->get(flight::String("fr"))->as_number() == 31.0);
+
+  // Primitive root through the Any bridge; raw returns the same value; member read is absent.
+  const flight::Any primitive(30.0);
+  const auto primitive_row = flight::json_assertion_row<RowSchema>(primitive);
+  assert(flight::read_json_scalar_row_member(primitive_row, flight::String("x")).is_absent());
+  assert(flight::json_row_raw(primitive_row).as_number() == 30.0);
+
+  // Null root: raw retained as null; member read throws TypeError at the read.
+  const flight::Any null_root(flight::null);
+  const auto null_row = flight::json_assertion_row<RowSchema>(null_root);
+  assert(flight::json_row_raw(null_row).is_null());
+  bool threw = false;
+  try {
+    (void)flight::read_json_scalar_row_member(null_row, flight::String("x"));
+  } catch (const flight::TypeError&) {
+    threw = true;
+  }
+  assert(threw);
+}
+
+} // namespace
+
 int main() {
   using flight::Any;
   using flight::JsonScalarCell;
@@ -189,7 +289,9 @@ int main() {
   test_json_assertion_row();
   test_json_assertion_row_adapter();
   test_json_composite_operations();
+  test_json_row_writes();
   test_json_scalar_utf16_relational();
+  test_json_any_bridge();
 
   const auto document = flight::Json::parse(flight::String("{\"fr\":30,\"bad\":\"x\"}"));
   const Any receiver(document);
