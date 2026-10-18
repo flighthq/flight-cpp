@@ -2403,6 +2403,11 @@ class NamedProperties final {
 
   [[nodiscard]] explicit operator bool() const noexcept { return owner_ != nullptr; }
 
+  // Whether the owner can name EVERY own key -- a JSON object, a dynamic record. A native row binds only
+  // the members the generated member table names, so a key it lacks may still be a declared field: a
+  // question about such a key has no answer here, not the answer "absent".
+  [[nodiscard]] bool knows_every_key() const { return owner_ && owner_->enumerable_string_keys().has_value(); }
+
   // Own enumerable string keys, in source declaration order.
   [[nodiscard]] std::vector<String> keys() const {
     if (!owner_) return {};
@@ -2649,7 +2654,8 @@ template <typename Object>
 // has the key when it is an own cell, a member of its registered class prototype chain, or an own name of
 // Object.prototype. No value is read and no getter runs. What this runtime cannot see -- a
 // function or external value, an object whose type never reached the row machinery, a class whose
-// subclasses its stored type does not rule out -- raises OutOfProfileError instead of answering.
+// subclasses its stored type does not rule out, a key a native row does not bind -- raises
+// OutOfProfileError instead of answering. "Absent" is answered only by an owner that knows every own key.
 [[nodiscard]] inline bool has_property(const Any& value, const String& key) {
   switch (value.kind()) {
     case AnyKind::object:
@@ -2679,7 +2685,11 @@ template <typename Object>
   if (!view) throw OutOfProfileError("`in` on an object whose type never reached the row machinery");
   if (view.has(key)) return true;
   if (find_inherited_member(value.held_type(), key.to_utf8()) != InheritedMemberKind::none) return true;
-  return is_object_prototype_property(key);
+  if (is_object_prototype_property(key)) return true;
+  if (!view.knows_every_key()) {
+    throw OutOfProfileError("`in` on a native object for a key its bound members lack: it may be an unbound declared field");
+  }
+  return false;
 }
 
 // `typeof value.key` for an erased value: the type of the own cell's value, `function` for an inherited
@@ -2711,6 +2721,9 @@ template <typename Object>
   }
   if (key.to_utf8() == "__proto__") throw OutOfProfileError("typeof of __proto__ reads the prototype accessor");
   if (is_object_prototype_property(key)) return String("function");
+  if (!view.knows_every_key()) {
+    throw OutOfProfileError("typeof of a member a native object's bound members lack: it may be an unbound declared field");
+  }
   return String("undefined");
 }
 

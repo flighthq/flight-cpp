@@ -1147,8 +1147,7 @@ int main() {
   }
 
   // ERASED typeof OF EACH VALUE KIND, AND THE ERRORS `in` AND A MEMBER READ RAISE. typeof answers from the
-  // own cell's present value; a cell holding undefined and a key never declared both answer "undefined";
-  // `in` distinguishes them only by presence. `in` on any primitive, and a member read of undefined, throw
+  // own cell's present value; a cell holding undefined answers "undefined". `in` on any primitive, and a member read of undefined, throw
   // TypeError as JavaScript does; arrays and functions are refused rather than answered from a guess.
   {
     auto cells = flight::make_ref<TestTypeofCells>();
@@ -1159,13 +1158,11 @@ int main() {
               flight::member_typeof(value, flight::String("visible")) == flight::String("boolean") &&
               flight::member_typeof(value, flight::String("child")) == flight::String("object"),
           "typeof reads each present cell's own value kind");
-    check(flight::member_typeof(value, flight::String("duration")) == flight::String("undefined") &&
-              flight::member_typeof(value, flight::String("neverDeclared")) == flight::String("undefined"),
-          "an unset optional cell and an undeclared key are both typeof undefined");
+    check(flight::member_typeof(value, flight::String("duration")) == flight::String("undefined"),
+          "an unset optional cell is typeof undefined");
     check(flight::has_property(value, flight::String("count")) && flight::has_property(value, flight::String("visible")) &&
-              flight::has_property(value, flight::String("hasOwnProperty")) &&
-              !flight::has_property(value, flight::String("neverDeclared")),
-          "`in` reports declared cells and Object.prototype names, not undeclared keys");
+              flight::has_property(value, flight::String("hasOwnProperty")),
+          "`in` reports bound cells and Object.prototype names");
     const auto throws_type_error = [](auto&& query) {
       try {
         query();
@@ -1195,17 +1192,74 @@ int main() {
           "an erased array's members are refused, not answered");
   }
 
+  // THE EMITTED ERASED-MEMBER SITES, ON THE JSON VALUES THEIR PARSERS PASS THEM. Each expression is the one
+  // compiler-erased-member-query emits; the headers that hold them are still blocked on other causes, so the
+  // expressions are pinned here. Before the patch the typeof sites asserted the erased value to one C++
+  // struct and threw for every JSON object, and the `in` sites were raw text that did not compile.
+  {
+    const auto parse = [](const char* text) { return flight::Any(flight::Json::parse(flight::String(text))); };
+    // textureatlas-formats hasFrameDuration: typeof (frame as { duration?: unknown }).duration === 'number'.
+    const auto has_frame_duration = [](const flight::Any& frame) {
+      return flight::member_typeof(frame, flight::String("duration")) == flight::String("number");
+    };
+    check(has_frame_duration(parse(R"({"frame":{"x":0},"duration":100})")) &&
+              !has_frame_duration(parse(R"({"frame":{"x":0}})")) && !has_frame_duration(parse(R"({"duration":"100"})")),
+          "hasFrameDuration tells an Aseprite frame from a TexturePacker one");
+    // particles-formats hasMinMaxCurveMode: typeof (value as { mode?: unknown }).mode === 'string'.
+    const auto has_mode = [](const flight::Any& value) {
+      return flight::member_typeof(value, flight::String("mode")) == flight::String("string");
+    };
+    check(has_mode(parse(R"({"mode":"curve"})")) && !has_mode(parse(R"({"mode":2})")) && !has_mode(parse(R"({})")),
+          "hasMinMaxCurveMode reads the mode member's kind");
+    // particles-formats pixi detect: 'start' in obj.alpha || 'end' in obj.alpha.
+    const auto is_range = [](const flight::Any& alpha) {
+      return flight::has_property(alpha, flight::String("start")) || flight::has_property(alpha, flight::String("end"));
+    };
+    check(is_range(parse(R"({"start":1})")) && is_range(parse(R"({"end":0})")) && !is_range(parse(R"({"list":[]})")),
+          "the pixi detector finds a start or end range");
+    // scene2d-formats reportLottieExpression: 'x' in value && typeof value.x === 'string'.
+    const auto is_expression = [](const flight::Any& value) {
+      return flight::has_property(value, flight::String("x")) &&
+             flight::named_properties(value).get(flight::String("x")).type_of() == flight::String("string");
+    };
+    check(is_expression(parse(R"({"k":1,"x":"time*2"})")) && !is_expression(parse(R"({"k":1})")) &&
+              !is_expression(parse(R"({"x":1})")),
+          "reportLottieExpression recognises an expression property");
+  }
+
   // ERASED PRESENCE AND TYPEOF THROUGH THE PROTOTYPE CHAIN. `key in value` and `typeof value.key` on an
   // erased object ask its own cells, then its registered class prototype, then Object.prototype.
   {
     check(flight::has_property(erased, flight::String("intensity")) &&
-              !flight::has_property(erased, flight::String("notAKeyOfThis")) &&
               flight::has_property(erased, flight::String("toString")),
-          "an erased plain object answers own keys, missing keys, and Object.prototype names");
+          "an erased plain object answers its bound own keys and Object.prototype names");
     check(flight::member_typeof(erased, flight::String("intensity")) == flight::String("undefined") &&
-              flight::member_typeof(erased, flight::String("notAKeyOfThis")) == flight::String("undefined") &&
               flight::member_typeof(erased, flight::String("toString")) == flight::String("function"),
-          "typeof reads the own value, a missing key, and an inherited Object.prototype method");
+          "typeof reads the own value and an inherited Object.prototype method");
+    // A native row binds only the members the generated table names, so a key it lacks may be a declared
+    // field: answering "absent" would be a false negative, so it is refused.
+    bool unbound_refused = false;
+    try {
+      static_cast<void>(flight::has_property(erased, flight::String("notAKeyOfThis")));
+    } catch (const flight::OutOfProfileError&) {
+      unbound_refused = true;
+    }
+    bool unbound_typeof_refused = false;
+    try {
+      static_cast<void>(flight::member_typeof(erased, flight::String("notAKeyOfThis")));
+    } catch (const flight::OutOfProfileError&) {
+      unbound_typeof_refused = true;
+    }
+    check(unbound_refused && unbound_typeof_refused, "a key a native row does not bind is refused, never answered absent");
+    // A JSON object knows every own key, so absence is answered as JavaScript answers it.
+    const auto json = flight::Any(flight::Json::parse(flight::String(R"({"duration":1,"name":"a"})")));
+    check(flight::has_property(json, flight::String("duration")) && !flight::has_property(json, flight::String("frame")) &&
+              flight::has_property(json, flight::String("toString")),
+          "a JSON object answers present, absent and Object.prototype keys");
+    check(flight::member_typeof(json, flight::String("duration")) == flight::String("number") &&
+              flight::member_typeof(json, flight::String("name")) == flight::String("string") &&
+              flight::member_typeof(json, flight::String("frame")) == flight::String("undefined"),
+          "typeof on a JSON object reads each member's kind and undefined for an absent one");
     bool threw_type_error = false;
     try {
       static_cast<void>(flight::has_property(flight::Any(1.0), flight::String("x")));
@@ -1223,9 +1277,15 @@ int main() {
 
     const flight::Any instance = flight::Any::object(flight::make_ref<TestPrototypeClass>());
     check(test_prototype_class_registered && flight::has_property(instance, flight::String("twice")) &&
-              flight::has_property(instance, flight::String("size")) &&
-              !flight::has_property(instance, flight::String("absent")),
-          "a registered class reports its prototype methods and accessors, and not other names");
+              flight::has_property(instance, flight::String("size")),
+          "a registered class reports its prototype methods and accessors");
+    bool other_name_refused = false;
+    try {
+      static_cast<void>(flight::has_property(instance, flight::String("absent")));
+    } catch (const flight::OutOfProfileError&) {
+      other_name_refused = true;
+    }
+    check(other_name_refused, "a name neither bound nor registered is refused: the instance's own fields are not all bound");
     check(flight::member_typeof(instance, flight::String("twice")) == flight::String("function"),
           "an inherited method is a function");
     bool accessor_refused = false;
