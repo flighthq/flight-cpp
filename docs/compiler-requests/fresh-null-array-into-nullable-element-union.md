@@ -86,7 +86,10 @@ The normal declared 73-patch stack applies, builds and reverses to a clean pinne
 focused groups and 17 selected existing map/optional-chain/nullish groups pass. The full compiler check
 retains its four known failing gates (format, lint, import order and five foreign fixture type errors).
 A joint 75-patch stack subsequently applies, builds, passes the seven focused groups and reverses cleanly.
-The one normal `scene2d-formats` generation exits zero on that recorded stack: 48 of 80 target modules
+After reconciling the delivered base, the ordered 77-patch compiler stack also applies, builds, passes
+the seven focused groups and reverses to a clean pin. The public lookup is rebuilt and passes again
+after the shared Any runtime update. This is a final-base check, without a later SDK-generation claim.
+The one normal `scene2d-formats` generation exits zero on the recorded 75-patch stack: 48 of 80 target modules
 emit completely and 32 retain refusals. It changes 27 headers and four metadata files. Every existing
 function definition and refusal marker survives; two additional original Lottie property definitions
 replace their old refusal markers. Those additional bodies have no new native qualification claim.
