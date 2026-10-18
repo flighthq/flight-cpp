@@ -1,4 +1,4 @@
-// Re-emit original particle modules and the diagnostic pair into an explicit scratch overlay.
+// Re-emit original registration and the diagnostic pair into an explicit scratch overlay.
 // This does not run SDK generation or write an installed inventory.
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
@@ -31,7 +31,6 @@ const context = JSON.parse(input);
 
 // Refresh whole original modules from the pinned source plus the declared Flight patches.
 // An old saved graph can predate a package's approved local type aliases or own-key reads.
-const codec = 'packages/types/src/ParticleFormatCodec.ts';
 const patch = 'source-patches/particle-codec-document-result-owned-view.patch';
 const diagnosticSources = ['packages/types/src/ImportDiagnostic.ts', 'packages/importdiagnostics/src/importDiagnosticCollector.ts'];
 const refresh = context.modules;
@@ -66,11 +65,14 @@ for (const result of lowered) {
   if (result.module.packageName === '@flighthq/particles-formats' || diagnosticSources.includes(result.module.source)) assert.deepEqual(result.diagnostics, []);
 }
 context.modules = lowered.map(result => result.module);
-const selected = context.modules.filter(module => module.packageName === '@flighthq/particles-formats' || diagnosticSources.includes(module.source));
-assert.equal(selected.length, 20, '18 complete original particle modules plus the original diagnostic pair');
+const freshContext = JSON.stringify(context);
+const freshContextPath = path.join(scratch, 'context.json');
+fs.writeFileSync(freshContextPath, freshContext);
+const selected = context.modules.filter(module => module.source === 'packages/particles-formats/src/registerBuiltInParticleFormats.ts' || diagnosticSources.includes(module.source));
+assert.equal(selected.length, 3, 'complete original registration module plus the original diagnostic pair');
 const session = createCppCompilerBackend().createEmissionSession(context);
 const emitted = selected.flatMap(module => session.emitModule(module).map(file => ({ ...file, source: module.source, moduleIrSha256: hash(JSON.stringify(module)) })));
-assert.equal(emitted.length, 20);
+assert.equal(emitted.length, 3);
 for (const file of emitted) assert.ok(!file.contents.includes('NOT GENERATED'), file.path + ' contains an omitted body');
 
 // Check the independently supplied original pair against this exact emission session, rather
@@ -121,10 +123,10 @@ for (const file of emitted) {
 }
 const report = {
   normalSdk: false, inventoryWritten: false,
-  scope: 'All 18 original particle modules and the original diagnostic type/collector emitted in one current compiler session; existing declared repairs only. Scratch closure on a frozen inventory, with no installed header or package promotion.',
+  scope: 'Complete original registration module and diagnostic type/collector emitted in one current compiler session, over unchanged original headers from the completed normal run; existing declared repairs only. Full public consumer scratch closure, with no installed header or package promotion.',
   runtimeCommit: spawnSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).stdout.trim(),
   compilerBackendSha256: hash(fs.readFileSync(path.resolve(args['--compiler']))),
-  inputContextSha256: hash(input), sourcePatches, sources, declaredTypeOnlyPatch: { file: patch, sha256: hash(fs.readFileSync(path.join(root, patch))) },
+  inputContextSha256: hash(input), freshContextSha256: hash(freshContext), sourcePatches, sources, declaredTypeOnlyPatch: { file: patch, sha256: hash(fs.readFileSync(path.join(root, patch))) },
   suppliedProvenance, diagnosticParity, repairs, aliases, canonicalIncludes: includes,
   files: emitted.map((file, index) => ({ ...raw[index], sha256: hash(file.contents) })),
   frozenProviders: providers.map((file, index) => ({ file: file.path, sha256: providerHashes[index] })),
@@ -134,7 +136,7 @@ fs.writeFileSync(path.join(scratch, 'emission.json'), JSON.stringify(report, nul
 const output = path.resolve(args['--output']); fs.mkdirSync(path.dirname(output), { recursive: true });
 if (args['--cxx']) {
   const result = spawnSync(process.execPath, [path.join(root, 'scripts/particlePublicNativeConsumerOracle.mjs'),
-    ...['--compiler', '--typescript', '--context', '--inventory', '--cxx'].map(key => key + '=' + path.resolve(args[key])),
+    ...['--compiler', '--typescript', '--inventory', '--cxx'].map(key => key + '=' + path.resolve(args[key])), '--context=' + freshContextPath,
     '--overlay=' + scratch, '--output=' + output + '.native.json'], { cwd: root, encoding: 'utf8', maxBuffer: 16 * 1024 * 1024 });
   fs.writeFileSync(output + '.driver.log', result.stdout + result.stderr);
   report.nativeExit = result.status;
