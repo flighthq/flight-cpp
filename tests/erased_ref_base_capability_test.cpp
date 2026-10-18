@@ -6,9 +6,9 @@
 
 namespace {
 struct Padding { double padding = 5.0; };
-struct Base { int value = 7; };
+struct Base : flight::ReferenceEnabled { int value = 7; };
 struct ApplicationOwner : Padding, Base { int application_state = 11; };
-struct Unrelated { int value = 7; };
+struct Unrelated : flight::ReferenceEnabled { int value = 7; };
 class PrivateOwner : private Base {};
 
 template <typename Parent, typename Owner>
