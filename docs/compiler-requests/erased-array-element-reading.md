@@ -715,6 +715,19 @@ typed loop variables and non-erased operands keep their existing lowering.
 Measured: new `cppErasedArrayIteration.test.ts` 2 pass; `compiler-backend-cpp` typecheck exit 0;
 focused `cppLengthProvenNullableArrayRead` + `cppBindingTypeInference` 8 pass; scratch CLI runs of
 the two refusing shapes emit 3/3 and 2/2 modules with 0 refusals (before: 1 refused each), and the
-emitted headers compile in a consumer TU against the flight-cpp runtime. The committed inventory has
-not been regenerated; the header-compile and blocked-consumer gates are the next step once a
-generation slot is granted.
+emitted headers compile in a consumer TU against the flight-cpp runtime.
+
+Generation was then granted and run: `npm run pkg:generate -- skeleton2d-formats -j2` moved the
+package from 43/59 to 50/59 modules emitted (16 → 9 refused) and changed 13 headers. The previously
+omitted `parse_spine_bones`, `parse_spine_slots`, `parse_spine_skins`, `add_spine_bone_channel` and
+the DragonBones display loops now emit as the runtime array iteration, and the inventory rows of
+`dragon_bones_skins_handler` and `dragon_bones_animations_handler`/`skeleton_detect` record their
+progression. The scoped compile at `-j2` then passed 0/13: the erased-array first error is gone from
+every changed header, and each now stops on a distinct next root — `NamedProperties`/`Record`
+(DragonBones animations, skeleton_detect, parse helpers, slots), `optional<Record>` (DragonBones
+parse, spine_parse), `Any`→double (section counts), the `transform_mode_2d` heritage conversion
+(bones), a new `variant == Any` comparison (slots), and the next omitted callees
+(`parse_dragon_bones_display`, `parse_spine_attachment`). The public-consumer compile/link/run is
+therefore **not yet met on a public header**; the lowering itself is verified by the compiler tests
+and the scratch generated consumer. No 96 claim: this subcause covers the erased-array for-of sites
+only.

@@ -4,10 +4,12 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function addDragonBonesSlotColorChannel -- source line 57
-//   missing: function parseDragonBonesSlotTimelines -- source line 87
 #include <flight/any.hpp>
+#include <flight/array.hpp>
+#include <flight/map.hpp>
 #include <flight/record.hpp>
 #include <flight/sequence_view.hpp>
+#include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
 #include <variant>
@@ -100,41 +102,35 @@ inline double color_percent(flight::Any value) {
 // @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSlotTimelineHandler.ts: a presence
 // test against null has no absence channel in the emitted C++ storage for identifier
 
-
-// NOT GENERATED: function parseDragonBonesSlotTimelines -- source line 87
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   function parseDragonBonesSlotTimelines(
-//     channels: AnimationChannel[],
-//     raw: unknown,
-//     slotOrder: ReadonlyMap<string, number>,
-//     displayTable: ReadonlyMap<string, readonly (Attachment2D | null)[]>,
-//     frameRate: number,
-//     unmodeled: Map<string, number>,
-//   ): void {
-//     if (!Array.isArray(raw)) return;
-//     for (const entry of raw) {
-//       if (entry === null || typeof entry !== 'object') continue;
-//       const timeline = entry as Record<string, unknown>;
-//       const name = typeof timeline.name === 'string' ? timeline.name : null;
-//       const slotIndex = name === null ? -1 : (slotOrder.get(name) ?? -1);
-//       if (slotIndex < 0) {
-//         unmodeled.set('slot', (unmodeled.get('slot') ?? 0) + 1);
-//         continue;
-//       }
-//       const displayFrames = dragonBonesFrames(timeline.displayFrame ?? timeline.display, undefined);
-//       if (displayFrames.length > 0) {
-//         addDragonBonesDisplayChannel(channels, displayFrames, slotIndex, displayTable.get(name ?? '') ?? [], frameRate);
-//       }
-//       const colorFrames = dragonBonesFrames(timeline.colorFrame ?? timeline.color, undefined);
-//       if (colorFrames.length > 0) addDragonBonesSlotColorChannel(channels, colorFrames, slotIndex, frameRate);
-//     }
-//   }
-//   
-// cpp emission failed for
-// @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSlotTimelineHandler.ts: a presence
-// test against null has no absence channel in the emitted C++ storage for identifier
+inline void parse_dragon_bones_slot_timelines(flight::Array<flight::Ref<flight::types::AnimationChannel>> channels, flight::Any raw, flight::Map<flight::String, double> slot_order, flight::Map<flight::String, flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>> display_table, double frame_rate, flight::Map<flight::String, double> unmodeled) {
+  if (!flight::is_array(raw)) {
+    return;
+  }
+  {
+    const auto for_of_source = raw;
+    for (double for_of_index = 0.0; for_of_index < static_cast<double>(for_of_source.array_size()); for_of_index += 1.0) {
+      auto entry = for_of_source.array_get(for_of_index).value_or(flight::Any(flight::undefined));
+      if ((([&]() { const auto& presence_operand = entry; return presence_operand.is_null(); }()) || (entry.type_of() != flight::String("object")))) {
+        continue;
+      }
+      flight::NamedProperties timeline = flight::named_properties(entry);
+      const std::optional<flight::String> name = ([&]() -> std::optional<flight::String> { const auto& erased_typeof_carrier = timeline.get(flight::String("name")).value(); if (erased_typeof_carrier.type_of() == flight::String("string")) return std::optional<flight::String>{erased_typeof_carrier.as_string()}; return std::nullopt; }());
+      const double slot_index = (!name.has_value() ? -1.0 : ([&]() -> double { auto nullish_coalesce_left = slot_order.get(name.value()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return -1.0; }()));
+      if ((slot_index < 0.0)) {
+        unmodeled.set(flight::String("slot"), (([&]() -> double { auto nullish_coalesce_left = unmodeled.get(flight::String("slot")); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()) + 1.0));
+        continue;
+      }
+      flight::Array<flight::Record<flight::String, flight::Any>> display_frames = flight::skeleton2d_formats::dragon_bones_frames(timeline.get(flight::String("displayFrame")).value(), std::nullopt);
+      if ((static_cast<double>(display_frames.size()) > 0.0)) {
+        add_dragon_bones_display_channel(channels, display_frames, slot_index, ([&]() -> flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>> { auto nullish_coalesce_left = display_table.get((name.has_value() ? name.value() : flight::String(""))); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>{}; }()), frame_rate);
+      }
+      flight::Array<flight::Record<flight::String, flight::Any>> color_frames = flight::skeleton2d_formats::dragon_bones_frames(timeline.get(flight::String("colorFrame")).value(), std::nullopt);
+      if ((static_cast<double>(color_frames.size()) > 0.0)) {
+        add_dragon_bones_slot_color_channel(channels, color_frames, slot_index, frame_rate);
+      }
+    }
+  }
+}
 
 inline void dragon_bones_slot_timeline_handler(flight::Ref<flight::types::DragonBonesTimelineContext> context, flight::String anim_name, flight::Record<flight::String, flight::Any> anim_entry) {
   parse_dragon_bones_slot_timelines(context->channels, anim_entry.get(flight::String("slot")).value(), context->section->slot_order, context->section->display_table, context->section->frame_rate, context->unmodeled_timeline_counts);

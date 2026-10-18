@@ -3,12 +3,13 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function buildDragonBonesSlotOrder -- source line 84
 //   missing: function parseDragonBonesSkeletonWithRegistry -- source line 7
 #include <cmath>
 #include <flight/any.hpp>
+#include <flight/array.hpp>
 #include <flight/number.hpp>
 #include <flight/record.hpp>
+#include <flight/structural_ref.hpp>
 #include <limits>
 #include <optional>
 #include <variant>
@@ -57,26 +58,28 @@ using flight::types::Skeleton2DImport;
 using flight::types::Skeleton2DImportAnimation;
 using flight::types::Slot2D;
 
-
-// NOT GENERATED: function buildDragonBonesSlotOrder -- source line 84
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   function buildDragonBonesSlotOrder(raw: unknown): Map<string, number> {
-//     const order = new Map<string, number>();
-//     if (!Array.isArray(raw)) return order;
-//     let index = 0;
-//     for (const entry of raw) {
-//       if (entry === null || typeof entry !== 'object') continue;
-//       const name = (entry as Record<string, unknown>).name;
-//       if (typeof name === 'string') order.set(name, index);
-//       index++;
-//     }
-//     return order;
-//   }
-//   
-// cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesParse.ts: a
-// presence test against null has no absence channel in the emitted C++ storage for identifier
+inline flight::Map<flight::String, double> build_dragon_bones_slot_order(flight::Any raw) {
+  auto order = flight::Map<flight::String, double>();
+  if (!flight::is_array(raw)) {
+    return order;
+  }
+  double index = 0.0;
+  {
+    const auto for_of_source = raw;
+    for (double for_of_index = 0.0; for_of_index < static_cast<double>(for_of_source.array_size()); for_of_index += 1.0) {
+      auto entry = for_of_source.array_get(for_of_index).value_or(flight::Any(flight::undefined));
+      if ((([&]() { const auto& presence_operand = entry; return presence_operand.is_null(); }()) || (entry.type_of() != flight::String("object")))) {
+        continue;
+      }
+      auto name = flight::named_properties(entry).get(flight::String("name")).value();
+      if ((name.type_of() == flight::String("string"))) {
+        order.set(name.as_string(), index);
+      }
+      index++;
+    }
+  }
+  return order;
+}
 
 inline double number_or_flight_value_function_number_u00004f_r_flight_private_0748b55b98d2a76f(flight::Any value, double fallback) {
   return ([&]() -> double { const auto& erased_typeof_carrier = value; if (erased_typeof_carrier.type_of() == flight::String("number")) return erased_typeof_carrier.as_number(); return fallback; }());

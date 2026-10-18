@@ -8,11 +8,13 @@
 //   missing: function toUint16Array -- source line 234
 //   missing: function parseSpineMeshAttachment -- source line 94
 //   missing: function parseSpineAttachment -- source line 73
-//   missing: function parseSpineSkins -- source line 156
 #include <flight/any.hpp>
+#include <flight/array.hpp>
 #include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
+#include <optional>
+#include <tuple>
 #include <variant>
 #include <flight/runtime.hpp>
 
@@ -238,51 +240,61 @@ inline flight::Ref<flight::types::RegionAttachment2D> parse_spine_region_attachm
 // avoids the boundary altogether; closing it at the carrier needs either that runtime carrier or interface
 // structs emitted with the heritage as a C++ base relation.
 
-
-// NOT GENERATED: function parseSpineSkins -- source line 156
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   function parseSpineSkins(raw: unknown, slots: readonly Slot2D[], diagnostics?: ImportDiagnostic[]): AttachmentSkin2D[] {
-//     const skins: AttachmentSkin2D[] = [];
-//     const named: [string, unknown][] = [];
-//     if (Array.isArray(raw)) {
-//       for (const skin of raw) {
-//         if (skin === null || typeof skin !== 'object') continue;
-//         const s = skin as Record<string, unknown>;
-//         named.push([typeof s.name === 'string' ? s.name : 'default', s.attachments]);
-//       }
-//     } else if (raw !== null && typeof raw === 'object') {
-//       for (const [name, attachments] of Object.entries(raw as Record<string, unknown>)) named.push([name, attachments]);
-//     }
-//     for (const [name, rawAttachments] of named) {
-//       if (rawAttachments === null || typeof rawAttachments !== 'object') continue;
-//       const attachments: SkinAttachment2D[] = [];
-//       for (const [slotName, slotAttachments] of Object.entries(rawAttachments as Record<string, unknown>)) {
-//         if (slotAttachments === null || typeof slotAttachments !== 'object') continue;
-//         const slotIndex = indexOfSpineSlot(slots, slotName);
-//         for (const [attachmentName, rawAttachment] of Object.entries(slotAttachments as Record<string, unknown>)) {
-//           if (rawAttachment === null || typeof rawAttachment !== 'object') continue;
-//           const attachment = parseSpineAttachment(attachmentName, rawAttachment as Record<string, unknown>, diagnostics);
-//           // A skin entry for a slot the skeleton does not have cannot be applied, so it is dropped rather
-//           // than stored with a -1 index that `setSkeleton2DSkin` would have to re-check every wardrobe change.
-//           if (attachment !== null && slotIndex >= 0) attachments.push({ attachment, name: attachmentName, slotIndex });
-//         }
-//       }
-//       skins.push({ attachments, name });
-//     }
-//     return skins;
-//   }
-//   
-//   // Decodes Spine's variable-influence weighted-vertex stream: per vertex a `boneCount` followed by that many
-//   // `(boneIndex, x, y, weight)` quads. Both the vertex count (from `uvs`) and each `boneCount` are declared IN
-//   // the file, independent of the stream's actual length — so every read is bounded against `rawVerts.length`
-//   // (the independent address anchor): a `boneCount` that would run past the end is clamped to what remains,
-//   // and the recovery is recorded. Without this a corrupt count reads `undefined` (→ NaN) or, with a huge
-//   // value, spins a near-unbounded push loop. `boneIndex` values are file-order indices into the bone array;
-//   // parseSpineBones keeps that array aligned (it never drops a slot) so they stay valid.
-// cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonSkinsHandler.ts:
-// a presence test against null has no absence channel in the emitted C++ storage for identifier
+inline flight::Array<flight::Ref<flight::types::AttachmentSkin2D>> parse_spine_skins(flight::Any raw, flight::Array<flight::Ref<flight::types::Slot2D>> slots, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
+  flight::Array<flight::Ref<flight::types::AttachmentSkin2D>> skins = flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>{};
+  flight::Array<std::tuple<flight::String, flight::Any>> named = flight::Array<std::tuple<flight::String, flight::Any>>{};
+  if (flight::is_array(raw)) {
+    {
+      const auto for_of_source = raw;
+      for (double for_of_index = 0.0; for_of_index < static_cast<double>(for_of_source.array_size()); for_of_index += 1.0) {
+        auto skin = for_of_source.array_get(for_of_index).value_or(flight::Any(flight::undefined));
+        if ((([&]() { const auto& presence_operand = skin; return presence_operand.is_null(); }()) || (skin.type_of() != flight::String("object")))) {
+          continue;
+        }
+        flight::NamedProperties s = flight::named_properties(skin);
+        named.push(std::make_tuple(([&]() -> flight::String { const auto& erased_typeof_carrier_2 = s.get(flight::String("name")).value(); if (erased_typeof_carrier_2.type_of() == flight::String("string")) return erased_typeof_carrier_2.as_string(); return flight::String("default"); }()), s.get(flight::String("attachments")).value()));
+      }
+    }
+  }
+  else {
+    if ((([&]() { const auto& presence_operand = raw; return !presence_operand.is_null(); }()) && (raw.type_of() == flight::String("object")))) {
+      for (auto array_pattern_value : ([&]() { const auto named_view = flight::named_properties(raw); flight::Array<std::tuple<flight::String, flight::Any>> named_entries; for (const auto& named_key : named_view.keys()) { named_entries.push(std::tuple<flight::String, flight::Any>(named_key, named_view.get(named_key))); } return named_entries; }())) {
+        const flight::String name = std::get<0>(array_pattern_value);
+        auto attachments = std::get<1>(array_pattern_value);
+        named.push(std::make_tuple(name, attachments));
+      }
+    }
+  }
+  for (auto array_pattern_value_4 : named) {
+    const flight::String name_2 = std::get<0>(array_pattern_value_4);
+    auto raw_attachments = std::get<1>(array_pattern_value_4);
+    if ((([&]() { const auto& presence_operand = raw_attachments; return presence_operand.is_null(); }()) || (raw_attachments.type_of() != flight::String("object")))) {
+      continue;
+    }
+    flight::Array<flight::Ref<flight::types::SkinAttachment2D>> attachments_2 = flight::Array<flight::Ref<flight::types::SkinAttachment2D>>{};
+    for (auto array_pattern_value_3 : ([&]() { const auto named_view_2 = flight::named_properties(raw_attachments); flight::Array<std::tuple<flight::String, flight::Any>> named_entries_2; for (const auto& named_key_2 : named_view_2.keys()) { named_entries_2.push(std::tuple<flight::String, flight::Any>(named_key_2, named_view_2.get(named_key_2))); } return named_entries_2; }())) {
+      const flight::String slot_name = std::get<0>(array_pattern_value_3);
+      auto slot_attachments = std::get<1>(array_pattern_value_3);
+      if ((([&]() { const auto& presence_operand = slot_attachments; return presence_operand.is_null(); }()) || (slot_attachments.type_of() != flight::String("object")))) {
+        continue;
+      }
+      const double slot_index = flight::skeleton2d_formats::index_of_spine_slot(slots, slot_name);
+      for (auto array_pattern_value_2 : ([&]() { const auto named_view_3 = flight::named_properties(slot_attachments); flight::Array<std::tuple<flight::String, flight::Any>> named_entries_3; for (const auto& named_key_3 : named_view_3.keys()) { named_entries_3.push(std::tuple<flight::String, flight::Any>(named_key_3, named_view_3.get(named_key_3))); } return named_entries_3; }())) {
+        const flight::String attachment_name = std::get<0>(array_pattern_value_2);
+        auto raw_attachment = std::get<1>(array_pattern_value_2);
+        if ((([&]() { const auto& presence_operand = raw_attachment; return presence_operand.is_null(); }()) || (raw_attachment.type_of() != flight::String("object")))) {
+          continue;
+        }
+        auto attachment = parse_spine_attachment(attachment_name, flight::named_properties(raw_attachment), diagnostics);
+        if ((attachment.has_value() && (slot_index >= 0.0))) {
+          attachments_2.push(flight::make_ref<flight::types::SkinAttachment2D>(flight::types::SkinAttachment2D{.attachment = attachment.value(), .name = attachment_name, .slot_index = slot_index}));
+        }
+      }
+    }
+    skins.push(flight::make_ref<flight::types::AttachmentSkin2D>(flight::types::AttachmentSkin2D{.attachments = attachments_2, .name = name_2}));
+  }
+  return skins;
+}
 
 inline void spine_json_skins_section_handler(flight::Ref<flight::types::SpineJsonSectionContext> context) {
   for (auto skin : parse_spine_skins(context->doc.get(flight::String("skins")).value(), context->slots, context->diagnostics)) {

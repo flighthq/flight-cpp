@@ -3636,9 +3636,24 @@
       "source": "packages/skeleton2d/src/slotDeform2D.ts"
     },
     {
+      "name": "DragonBonesParseHelpers",
+      "packageName": "@flighthq/skeleton2d-formats",
+      "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts"
+    },
+    {
       "name": "DragonBonesRegistry",
       "packageName": "@flighthq/skeleton2d-formats",
       "source": "packages/skeleton2d-formats/src/dragonBonesRegistry.ts"
+    },
+    {
+      "name": "DragonBonesSlotsHandler",
+      "packageName": "@flighthq/skeleton2d-formats",
+      "source": "packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts"
+    },
+    {
+      "name": "DragonBonesStubHandlers",
+      "packageName": "@flighthq/skeleton2d-formats",
+      "source": "packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts"
     },
     {
       "name": "SpineBinaryBonesHandler",
@@ -3706,6 +3721,16 @@
       "source": "packages/skeleton2d-formats/src/spineDrawOrder.ts"
     },
     {
+      "name": "SpineJsonBonesHandler",
+      "packageName": "@flighthq/skeleton2d-formats",
+      "source": "packages/skeleton2d-formats/src/spineJsonBonesHandler.ts"
+    },
+    {
+      "name": "SpineJsonDrawOrderTimelineHandler",
+      "packageName": "@flighthq/skeleton2d-formats",
+      "source": "packages/skeleton2d-formats/src/spineJsonDrawOrderTimelineHandler.ts"
+    },
+    {
       "name": "SpineJsonRegistry",
       "packageName": "@flighthq/skeleton2d-formats",
       "source": "packages/skeleton2d-formats/src/spineJsonRegistry.ts"
@@ -3721,9 +3746,19 @@
       "source": "packages/skeleton2d-formats/src/spineJsonSectionCounts.ts"
     },
     {
+      "name": "SpineJsonSlotsHandler",
+      "packageName": "@flighthq/skeleton2d-formats",
+      "source": "packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts"
+    },
+    {
       "name": "SpineJsonStubHandlers",
       "packageName": "@flighthq/skeleton2d-formats",
       "source": "packages/skeleton2d-formats/src/spineJsonStubHandlers.ts"
+    },
+    {
+      "name": "SpineParse",
+      "packageName": "@flighthq/skeleton2d-formats",
+      "source": "packages/skeleton2d-formats/src/spineParse.ts"
     },
     {
       "name": "SpineParseHelpers",
@@ -27096,9 +27131,39 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "DragonBonesParseHelpers",
+          "packageName": "@flighthq/skeleton2d-formats",
+          "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "DragonBonesRegistry",
           "packageName": "@flighthq/skeleton2d-formats",
           "source": "packages/skeleton2d-formats/src/dragonBonesRegistry.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "DragonBonesSlotsHandler",
+          "packageName": "@flighthq/skeleton2d-formats",
+          "source": "packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "DragonBonesStubHandlers",
+          "packageName": "@flighthq/skeleton2d-formats",
+          "source": "packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts"
         }
       ]
     },
@@ -27236,6 +27301,46 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "SpineParseHelpers",
+          "packageName": "@flighthq/skeleton2d-formats",
+          "source": "packages/skeleton2d-formats/src/spineParseHelpers.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "SpineJsonBonesHandler",
+          "packageName": "@flighthq/skeleton2d-formats",
+          "source": "packages/skeleton2d-formats/src/spineJsonBonesHandler.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "SpineParse",
+          "packageName": "@flighthq/skeleton2d-formats",
+          "source": "packages/skeleton2d-formats/src/spineParse.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "SpineJsonDrawOrderTimelineHandler",
+          "packageName": "@flighthq/skeleton2d-formats",
+          "source": "packages/skeleton2d-formats/src/spineJsonDrawOrderTimelineHandler.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "SpineJsonRegistry",
           "packageName": "@flighthq/skeleton2d-formats",
           "source": "packages/skeleton2d-formats/src/spineJsonRegistry.ts"
@@ -27266,9 +27371,9 @@
       "cyclic": false,
       "modules": [
         {
-          "name": "SpineParseHelpers",
+          "name": "SpineJsonSlotsHandler",
           "packageName": "@flighthq/skeleton2d-formats",
-          "source": "packages/skeleton2d-formats/src/spineParseHelpers.ts"
+          "source": "packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts"
         }
       ]
     },
@@ -125702,6 +125807,468 @@
     {
       "bindings": [
         {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:94204dda301537ed1e8dbd32e002b77cd8ec87931ccdb5d8e1b70d826524d158",
+            "line": 1,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts\",9]",
+            "kind": "import",
+            "name": "easeCubicBezier",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "easeCubicBezier",
+            "kind": "dependency",
+            "module": {
+              "name": "EaseCubicBezier",
+              "packageName": "@flighthq/easing",
+              "source": "packages/easing/src/easeCubicBezier.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:ccdcca3573966df731afc28dd8f60c480f924d7d3672e3719cfe7834c97af20f",
+            "line": 2,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts\",70]",
+            "kind": "import",
+            "name": "reportImportDiagnostic",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "reportImportDiagnostic",
+            "kind": "dependency",
+            "module": {
+              "name": "ImportDiagnosticCollector",
+              "packageName": "@flighthq/importdiagnostics",
+              "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:0f929be9716224ec205e53250a82d3078b0c539a2d13f7f3e9fc6d7b698798f2",
+            "line": 5,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts\",257]",
+            "kind": "import",
+            "name": "AnimationInterpolationLinear",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "AnimationInterpolationLinear",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:53c061a43c415d4e71bd635dec533c19ba8e92a22f21456aa3911f13e3db1b2b",
+            "line": 6,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts\",289]",
+            "kind": "import",
+            "name": "AnimationInterpolationStep",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "AnimationInterpolationStep",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:4ed29d9b9c788211ee983240067a7fabe2c29c3555a536a2250a5c90c9f8e21b",
+            "line": 7,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts\",319]",
+            "kind": "import",
+            "name": "ImportDiagnosticSeverity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "ImportDiagnosticSeverity",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:c52c2bf46dd4fa139dfca581aa85cebda9d0f29c34b6dae712ac08470d0a1c5c",
+            "line": 10,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts\",397]",
+            "kind": "function",
+            "name": "buildDragonBonesSegmentEasings",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:ffcfe3a10f7152b83c7a95558162caf142d70007db33b1b71038e9344c05555c",
+            "line": 36,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts\",1141]",
+            "kind": "function",
+            "name": "dragonBonesFrames",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:1b531d01434e17e330aaff9d73b56dd87971a5ada182d784f738ae108d3d540e",
+            "line": 60,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts\",1846]",
+            "kind": "function",
+            "name": "dragonBonesFrameTimes",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:f9985224370af4c509b1f4f1f9e3502fc4c719671aaf072477225eff7dadc0f9",
+            "line": 73,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts\",2192]",
+            "kind": "function",
+            "name": "dragonBonesInterpolation",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:8a4071b53e13f7284b49f5c9e3c9ca369f2bf76233bba83e45ec4e986f90abb1",
+            "line": 99,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts\",3041]",
+            "kind": "function",
+            "name": "numberOr",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:c84b245081be22b36870070c30aa04f0a366d81cecc78be32944350cacd60a0c",
+            "line": 103,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts\",3168]",
+            "kind": "function",
+            "name": "parseDragonBonesBoneTransform",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:5688978c822858c0be26ce6c7c89edd45174e5527374d73a3b9e031589431390",
+            "line": 131,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts\",3837]",
+            "kind": "function",
+            "name": "skipCrumbDragonBonesGroup",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e6887dd93f7d7a7c3d489e164cc3fea07412c3d773d93aec25013e8df8df314d",
+            "line": 143,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts\",4274]",
+            "kind": "function",
+            "name": "clampDragonBonesUnit",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:856c72381e8a79db62f4e31d63a1bea610b2943a63313d48473539d24b64a8cb",
+            "line": 147,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts\",4380]",
+            "kind": "function",
+            "name": "isDragonBonesFrameStepped",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:8b3bbc6f570c1e968e5bf3779db5433b32710756d9708805e2b95599ee71ae78",
+            "line": 154,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts\",4650]",
+            "kind": "variable",
+            "name": "DRAGONBONES_NO_TWEEN",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:7e7dcd140e022a501899b7f6dae0c25b78dc79016bdd31ac0782d0f6a55731f8",
+            "line": 156,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts\",4685]",
+            "kind": "variable",
+            "name": "EMPTY_DRAGONBONES_FRAME",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 1
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "DragonBonesParseHelpers",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts"
+          },
+          "specifier": "@flighthq/easing/contract",
+          "target": {
+            "name": "EaseCubicBezier",
+            "packageName": "@flighthq/easing",
+            "source": "packages/easing/src/easeCubicBezier.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "DragonBonesParseHelpers",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts"
+          },
+          "specifier": "@flighthq/importdiagnostics/contract",
+          "target": {
+            "name": "ImportDiagnosticCollector",
+            "packageName": "@flighthq/importdiagnostics",
+            "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "DragonBonesParseHelpers",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "DragonBonesParseHelpers",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:8b3bbc6f570c1e968e5bf3779db5433b32710756d9708805e2b95599ee71ae78",
+              "line": 154,
+              "packageName": "@flighthq/skeleton2d-formats",
+              "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts",
+              "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts\",4650]",
+              "kind": "variable",
+              "name": "DRAGONBONES_NO_TWEEN",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            9
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:7e7dcd140e022a501899b7f6dae0c25b78dc79016bdd31ac0782d0f6a55731f8",
+              "line": 156,
+              "packageName": "@flighthq/skeleton2d-formats",
+              "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts",
+              "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts\",4685]",
+              "kind": "variable",
+              "name": "EMPTY_DRAGONBONES_FRAME",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            10
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
           "access": "available-after-instantiation",
           "binding": {
             "column": 17,
@@ -126067,6 +126634,594 @@
           "path": [
             "declarations",
             2
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:ccdcca3573966df731afc28dd8f60c480f924d7d3672e3719cfe7834c97af20f",
+            "line": 1,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts\",9]",
+            "kind": "import",
+            "name": "reportImportDiagnostic",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "reportImportDiagnostic",
+            "kind": "dependency",
+            "module": {
+              "name": "ImportDiagnosticCollector",
+              "packageName": "@flighthq/importdiagnostics",
+              "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:4ed29d9b9c788211ee983240067a7fabe2c29c3555a536a2250a5c90c9f8e21b",
+            "line": 3,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts\",203]",
+            "kind": "import",
+            "name": "ImportDiagnosticSeverity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "ImportDiagnosticSeverity",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:8a4071b53e13f7284b49f5c9e3c9ca369f2bf76233bba83e45ec4e986f90abb1",
+            "line": 5,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts\",273]",
+            "kind": "import",
+            "name": "numberOr",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "numberOr",
+            "kind": "dependency",
+            "module": {
+              "name": "DragonBonesParseHelpers",
+              "packageName": "@flighthq/skeleton2d-formats",
+              "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:591fe6cae37ff7cec79c38a97e2b05a86bb63dd56a9167418df99cf22bd8615d",
+            "line": 7,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts\",338]",
+            "kind": "function",
+            "name": "dragonBonesSlotsSectionHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:1ea2b25864ff27fcd37041356829a464c3db56398a5e741dc9db68325dcadb81",
+            "line": 17,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts\",634]",
+            "kind": "variable",
+            "name": "dragonBonesSlotsSectionReader",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:28f936636d1edde5878491f8b764ef8da99aaefc1fed713174f2f54caac74a47",
+            "line": 20,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts\",756]",
+            "kind": "function",
+            "name": "colorChannel",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:75ab4aa20e21ecc662443a6decb714fcce0ff99ace44fa71b627a6b367ea968a",
+            "line": 24,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts\",892]",
+            "kind": "function",
+            "name": "parseDragonBonesColor",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:94a7134f1ba53bca76f427647c721819a0480897538b4badeae0e471829dcf08",
+            "line": 48,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts\",1639]",
+            "kind": "function",
+            "name": "parseDragonBonesSlots",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "DragonBonesSlotsHandler",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts"
+          },
+          "specifier": "./dragonBonesParseHelpers.ts",
+          "target": {
+            "name": "DragonBonesParseHelpers",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "DragonBonesSlotsHandler",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts"
+          },
+          "specifier": "@flighthq/importdiagnostics/contract",
+          "target": {
+            "name": "ImportDiagnosticCollector",
+            "packageName": "@flighthq/importdiagnostics",
+            "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "DragonBonesSlotsHandler",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "DragonBonesSlotsHandler",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:1ea2b25864ff27fcd37041356829a464c3db56398a5e741dc9db68325dcadb81",
+              "line": 17,
+              "packageName": "@flighthq/skeleton2d-formats",
+              "source": "packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts",
+              "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts\",634]",
+              "kind": "variable",
+              "name": "dragonBonesSlotsSectionReader",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:5688978c822858c0be26ce6c7c89edd45174e5527374d73a3b9e031589431390",
+            "line": 3,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts\",113]",
+            "kind": "import",
+            "name": "skipCrumbDragonBonesGroup",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "skipCrumbDragonBonesGroup",
+            "kind": "dependency",
+            "module": {
+              "name": "DragonBonesParseHelpers",
+              "packageName": "@flighthq/skeleton2d-formats",
+              "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:2f8c0f7c4585bba1acb580089a6bcdf32876d180ac5949d61b4e34e32b7a5711",
+            "line": 5,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts\",195]",
+            "kind": "function",
+            "name": "dragonBonesDeformTimelineHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:a812abf4b8b19633f7ec3233a145630c3f71721922635d3975db7b3783599ebf",
+            "line": 13,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts\",479]",
+            "kind": "variable",
+            "name": "dragonBonesDeformTimelineReader",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:a9e0532808efd0869f773e3412cbf8263d4aa67b098b91cbdfa2f8033ba046cf",
+            "line": 19,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts\",684]",
+            "kind": "function",
+            "name": "dragonBonesIkConstraintsSectionHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:a517552d42e81ce984cae5615ae72f910c954f4cfcd4914f7041ffe52c355950",
+            "line": 23,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts\",895]",
+            "kind": "variable",
+            "name": "dragonBonesIkConstraintsSectionReader",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 1
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:1d3e63a42d1dec27da3d73e7bb345e37c61a70150eb5a46c3088e68ccc9d5562",
+            "line": 26,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts\",1040]",
+            "kind": "function",
+            "name": "dragonBonesIkTimelineHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:d581ed745b6f38289719b71ae90d0908ee4346476872407c9d4880e8e2e4ae2e",
+            "line": 34,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts\",1315]",
+            "kind": "variable",
+            "name": "dragonBonesIkTimelineReader",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 2
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:813e24b68415a27f3974980f57fe84e20249caeae55ad988bc6b93c1894f91c4",
+            "line": 40,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts\",1512]",
+            "kind": "function",
+            "name": "dragonBonesZOrderTimelineHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:6e6efdaab13c485b9b885442c56c6c648934fa2cf36e338e99c3fee6d4deb785",
+            "line": 48,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts\",1799]",
+            "kind": "variable",
+            "name": "dragonBonesZOrderTimelineReader",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 3
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "DragonBonesStubHandlers",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts"
+          },
+          "specifier": "./dragonBonesParseHelpers.ts",
+          "target": {
+            "name": "DragonBonesParseHelpers",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "DragonBonesStubHandlers",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "DragonBonesStubHandlers",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:a812abf4b8b19633f7ec3233a145630c3f71721922635d3975db7b3783599ebf",
+              "line": 13,
+              "packageName": "@flighthq/skeleton2d-formats",
+              "source": "packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts",
+              "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts\",479]",
+              "kind": "variable",
+              "name": "dragonBonesDeformTimelineReader",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            1
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:a517552d42e81ce984cae5615ae72f910c954f4cfcd4914f7041ffe52c355950",
+              "line": 23,
+              "packageName": "@flighthq/skeleton2d-formats",
+              "source": "packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts",
+              "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts\",895]",
+              "kind": "variable",
+              "name": "dragonBonesIkConstraintsSectionReader",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            3
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:d581ed745b6f38289719b71ae90d0908ee4346476872407c9d4880e8e2e4ae2e",
+              "line": 34,
+              "packageName": "@flighthq/skeleton2d-formats",
+              "source": "packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts",
+              "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts\",1315]",
+              "kind": "variable",
+              "name": "dragonBonesIkTimelineReader",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            5
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:6e6efdaab13c485b9b885442c56c6c648934fa2cf36e338e99c3fee6d4deb785",
+              "line": 48,
+              "packageName": "@flighthq/skeleton2d-formats",
+              "source": "packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts",
+              "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts\",1799]",
+              "kind": "variable",
+              "name": "dragonBonesZOrderTimelineReader",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            7
           ]
         }
       ]
@@ -307844,6 +308999,425 @@
     {
       "bindings": [
         {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:ccdcca3573966df731afc28dd8f60c480f924d7d3672e3719cfe7834c97af20f",
+            "line": 1,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonBonesHandler.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineJsonBonesHandler.ts\",9]",
+            "kind": "import",
+            "name": "reportImportDiagnostic",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "reportImportDiagnostic",
+            "kind": "dependency",
+            "module": {
+              "name": "ImportDiagnosticCollector",
+              "packageName": "@flighthq/importdiagnostics",
+              "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:4ed29d9b9c788211ee983240067a7fabe2c29c3555a536a2250a5c90c9f8e21b",
+            "line": 3,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonBonesHandler.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineJsonBonesHandler.ts\",207]",
+            "kind": "import",
+            "name": "ImportDiagnosticSeverity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "ImportDiagnosticSeverity",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 36,
+            "fingerprint": "sha256:03e77fe3623f2552b5a217847fbce80e36bdd158d73e391f0ca6398f52bfd87e",
+            "line": 3,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonBonesHandler.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineJsonBonesHandler.ts\",233]",
+            "kind": "import",
+            "name": "TransformMode2D",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "TransformMode2D",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:8a4071b53e13f7284b49f5c9e3c9ca369f2bf76233bba83e45ec4e986f90abb1",
+            "line": 5,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonBonesHandler.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineJsonBonesHandler.ts\",294]",
+            "kind": "import",
+            "name": "numberOr",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "numberOr",
+            "kind": "dependency",
+            "module": {
+              "name": "SpineParseHelpers",
+              "packageName": "@flighthq/skeleton2d-formats",
+              "source": "packages/skeleton2d-formats/src/spineParseHelpers.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:df97454263e89c4c4c87bf565d630a70c03e5f33fb24b8b2b402f120fd34c798",
+            "line": 7,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonBonesHandler.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineJsonBonesHandler.ts\",353]",
+            "kind": "function",
+            "name": "spineJsonBonesSectionHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:dbd9a205dc04dda227239eb700b3c485b085578b3e06210011028a71dcab8de0",
+            "line": 13,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonBonesHandler.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineJsonBonesHandler.ts\",554]",
+            "kind": "variable",
+            "name": "spineJsonBonesSectionReader",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:0d09f7ac96079beb0c0a32ee4c2b43605313dcf4edab23e48484d0a66cd82ec4",
+            "line": 24,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonBonesHandler.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineJsonBonesHandler.ts\",1370]",
+            "kind": "function",
+            "name": "parseSpineBones",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:fb276a95c81a1715fcef7436eac04956dadf6ef6c4cf9956c3585cb995caf609",
+            "line": 69,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonBonesHandler.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineJsonBonesHandler.ts\",2862]",
+            "kind": "function",
+            "name": "createPlaceholderBone2D",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:532f7b08d8761c050df30efb7a0d21b10d59aec0cd50b8e0e8e662f54750ef34",
+            "line": 85,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonBonesHandler.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineJsonBonesHandler.ts\",3118]",
+            "kind": "function",
+            "name": "spineTransformMode",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SpineJsonBonesHandler",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonBonesHandler.ts"
+          },
+          "specifier": "./spineParseHelpers.ts",
+          "target": {
+            "name": "SpineParseHelpers",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineParseHelpers.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SpineJsonBonesHandler",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonBonesHandler.ts"
+          },
+          "specifier": "@flighthq/importdiagnostics/contract",
+          "target": {
+            "name": "ImportDiagnosticCollector",
+            "packageName": "@flighthq/importdiagnostics",
+            "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SpineJsonBonesHandler",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonBonesHandler.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "SpineJsonBonesHandler",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineJsonBonesHandler.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:dbd9a205dc04dda227239eb700b3c485b085578b3e06210011028a71dcab8de0",
+              "line": 13,
+              "packageName": "@flighthq/skeleton2d-formats",
+              "source": "packages/skeleton2d-formats/src/spineJsonBonesHandler.ts",
+              "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineJsonBonesHandler.ts\",554]",
+              "kind": "variable",
+              "name": "spineJsonBonesSectionReader",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:23c017e05edf6022e2ae8304362d85d677c3538b79895908e2dd6fb67271b54d",
+            "line": 3,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonDrawOrderTimelineHandler.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineJsonDrawOrderTimelineHandler.ts\",84]",
+            "kind": "import",
+            "name": "parseSpineDrawOrderTimeline",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "parseSpineDrawOrderTimeline",
+            "kind": "dependency",
+            "module": {
+              "name": "SpineParse",
+              "packageName": "@flighthq/skeleton2d-formats",
+              "source": "packages/skeleton2d-formats/src/spineParse.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:1b28dc81973600c61b30bfd47c4976f57e437bf002bffae41b7b4f2cd5807a29",
+            "line": 5,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonDrawOrderTimelineHandler.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineJsonDrawOrderTimelineHandler.ts\",155]",
+            "kind": "function",
+            "name": "spineJsonDrawOrderTimelineHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:4ec99bd61deed9085e5bdf24b5082a8c034a796e8b8034d31304b077187f2a9e",
+            "line": 17,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonDrawOrderTimelineHandler.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineJsonDrawOrderTimelineHandler.ts\",486]",
+            "kind": "variable",
+            "name": "spineJsonDrawOrderTimelineReader",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SpineJsonDrawOrderTimelineHandler",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonDrawOrderTimelineHandler.ts"
+          },
+          "specifier": "./spineParse.ts",
+          "target": {
+            "name": "SpineParse",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineParse.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SpineJsonDrawOrderTimelineHandler",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonDrawOrderTimelineHandler.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "SpineJsonDrawOrderTimelineHandler",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineJsonDrawOrderTimelineHandler.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:4ec99bd61deed9085e5bdf24b5082a8c034a796e8b8034d31304b077187f2a9e",
+              "line": 17,
+              "packageName": "@flighthq/skeleton2d-formats",
+              "source": "packages/skeleton2d-formats/src/spineJsonDrawOrderTimelineHandler.ts",
+              "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineJsonDrawOrderTimelineHandler.ts\",486]",
+              "kind": "variable",
+              "name": "spineJsonDrawOrderTimelineReader",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
           "access": "available-after-instantiation",
           "binding": {
             "column": 17,
@@ -308621,6 +310195,300 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
+            "fingerprint": "sha256:481436ce06f73a61503e744e80d7386ab4fa53a5ff05e27d7714de9b1a5625d8",
+            "line": 3,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts\",99]",
+            "kind": "import",
+            "name": "parseSpineColor",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "parseSpineColor",
+            "kind": "dependency",
+            "module": {
+              "name": "SpineParseHelpers",
+              "packageName": "@flighthq/skeleton2d-formats",
+              "source": "packages/skeleton2d-formats/src/spineParseHelpers.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:2a8fead888144fba5107ecb618aaff3abc43419ddeff5ae224a671458f65dfba",
+            "line": 5,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts\",165]",
+            "kind": "function",
+            "name": "spineJsonSlotsSectionHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:594a8474a91d49696ad1117c2ea4bd881bc9fb434e8fb316d501b1e7d7afede3",
+            "line": 11,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts\",464]",
+            "kind": "function",
+            "name": "parseSpineSlots",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:3bbfab8c260e4407f434f17cb8e7bb9b65b923a07ea1ce519f6e587fdc5f7e80",
+            "line": 37,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts\",1394]",
+            "kind": "variable",
+            "name": "spineJsonSlotsSectionReader",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SpineJsonSlotsHandler",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts"
+          },
+          "specifier": "./spineParseHelpers.ts",
+          "target": {
+            "name": "SpineParseHelpers",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineParseHelpers.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SpineJsonSlotsHandler",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts"
+          },
+          "importedNames": [
+            "Attachment2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Attachment2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Attachment2D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SpineJsonSlotsHandler",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts"
+          },
+          "importedNames": [
+            "AttachmentSkin2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "AttachmentSkin2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/AttachmentSkin2D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SpineJsonSlotsHandler",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts"
+          },
+          "importedNames": [
+            "Bone2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Bone2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Bone2D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SpineJsonSlotsHandler",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts"
+          },
+          "importedNames": [
+            "ImportDiagnostic"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ImportDiagnostic",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ImportDiagnostic.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SpineJsonSlotsHandler",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts"
+          },
+          "importedNames": [
+            "Skeleton2DImportAnimation"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Skeleton2DImport",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Skeleton2DImport.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SpineJsonSlotsHandler",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts"
+          },
+          "importedNames": [
+            "Skeleton2DSlotDeform"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Skeleton2DSlotDeform",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Skeleton2DSlotDeform.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SpineJsonSlotsHandler",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts"
+          },
+          "importedNames": [
+            "Slot2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Slot2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Slot2D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SpineJsonSlotsHandler",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts"
+          },
+          "importedNames": [
+            "SpineJsonRegistry",
+            "SpineJsonSectionContext",
+            "SpineJsonTimelineContext"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "SpineJsonRegistry",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/SpineJsonRegistry.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SpineJsonSlotsHandler",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts"
+          },
+          "importedNames": [
+            "TransformInherit2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "TransformInherit2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/TransformInherit2D.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "SpineJsonSlotsHandler",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:3bbfab8c260e4407f434f17cb8e7bb9b65b923a07ea1ce519f6e587fdc5f7e80",
+              "line": 37,
+              "packageName": "@flighthq/skeleton2d-formats",
+              "source": "packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts",
+              "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts\",1394]",
+              "kind": "variable",
+              "name": "spineJsonSlotsSectionReader",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
             "fingerprint": "sha256:d9a0a40f238daadc2267909a0c58ffe39b71c945d3a6c8c30e23f0dffa40051a",
             "line": 3,
             "packageName": "@flighthq/skeleton2d-formats",
@@ -309266,6 +311134,354 @@
           ]
         }
       ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:ccdcca3573966df731afc28dd8f60c480f924d7d3672e3719cfe7834c97af20f",
+            "line": 1,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineParse.ts\",9]",
+            "kind": "import",
+            "name": "reportImportDiagnostic",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "reportImportDiagnostic",
+            "kind": "dependency",
+            "module": {
+              "name": "ImportDiagnosticCollector",
+              "packageName": "@flighthq/importdiagnostics",
+              "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:0db281359abc7e593f2e8c24bd8ceacc0c4c6b4b2f62206b048d0e1a100c5e9e",
+            "line": 2,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineParse.ts\",88]",
+            "kind": "import",
+            "name": "createSkeleton2D",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createSkeleton2D",
+            "kind": "dependency",
+            "module": {
+              "name": "Skeleton2d",
+              "packageName": "@flighthq/skeleton2d",
+              "source": "packages/skeleton2d/src/skeleton2d.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:4ed29d9b9c788211ee983240067a7fabe2c29c3555a536a2250a5c90c9f8e21b",
+            "line": 12,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineParse.ts\",352]",
+            "kind": "import",
+            "name": "ImportDiagnosticSeverity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "ImportDiagnosticSeverity",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:7e6df530e99ccedb198accc6698ce9362a4f18c9be820ba198d047872508da3a",
+            "line": 14,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineParse.ts\",422]",
+            "kind": "import",
+            "name": "resolveSpineDrawOrdering",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "resolveSpineDrawOrdering",
+            "kind": "dependency",
+            "module": {
+              "name": "SpineDrawOrder",
+              "packageName": "@flighthq/skeleton2d-formats",
+              "source": "packages/skeleton2d-formats/src/spineDrawOrder.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:19294093bfda513efaa0e72099033dfbf7507b96b592bf8d0a55f2c8e614c519",
+            "line": 15,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineParse.ts\",486]",
+            "kind": "import",
+            "name": "indexOfSpineSlot",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "indexOfSpineSlot",
+            "kind": "dependency",
+            "module": {
+              "name": "SpineParseHelpers",
+              "packageName": "@flighthq/skeleton2d-formats",
+              "source": "packages/skeleton2d-formats/src/spineParseHelpers.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 28,
+            "fingerprint": "sha256:8a4071b53e13f7284b49f5c9e3c9ca369f2bf76233bba83e45ec4e986f90abb1",
+            "line": 15,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineParse.ts\",504]",
+            "kind": "import",
+            "name": "numberOr",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "numberOr",
+            "kind": "dependency",
+            "module": {
+              "name": "SpineParseHelpers",
+              "packageName": "@flighthq/skeleton2d-formats",
+              "source": "packages/skeleton2d-formats/src/spineParseHelpers.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 38,
+            "fingerprint": "sha256:d96d4749eb312b10927cd5ea7d506659f7b9307e707d360955aff0921006afba",
+            "line": 15,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineParse.ts\",514]",
+            "kind": "import",
+            "name": "SPINE_DEFAULT_SKIN_NAME",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "SPINE_DEFAULT_SKIN_NAME",
+            "kind": "dependency",
+            "module": {
+              "name": "SpineParseHelpers",
+              "packageName": "@flighthq/skeleton2d-formats",
+              "source": "packages/skeleton2d-formats/src/spineParseHelpers.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:23c017e05edf6022e2ae8304362d85d677c3538b79895908e2dd6fb67271b54d",
+            "line": 30,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineParse.ts\",1401]",
+            "kind": "function",
+            "name": "parseSpineDrawOrderTimeline",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:58dea2e67eb7b24ffb9466ebbb4bed0197ed6503cd99ad47ecc8797c6f233f3f",
+            "line": 58,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineParse.ts\",2319]",
+            "kind": "function",
+            "name": "parseSpineSkeletonWithRegistry",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:a119b8f8563952faa8b2f706beea63b71e034e7b4beccfab41d22b1936c02610",
+            "line": 90,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineParse.ts\",3225]",
+            "kind": "function",
+            "name": "resolveSpineDrawOrder",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:8e2beb1b78813519aa6167e2f2fe0b711b0b32c0ae6c9481c9dd4d0aa3744312",
+            "line": 104,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineParse.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/spineParse.ts\",3841]",
+            "kind": "function",
+            "name": "resolveSpineSetupAttachments",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SpineParse",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineParse.ts"
+          },
+          "specifier": "./spineDrawOrder.ts",
+          "target": {
+            "name": "SpineDrawOrder",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineDrawOrder.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SpineParse",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineParse.ts"
+          },
+          "specifier": "./spineParseHelpers.ts",
+          "target": {
+            "name": "SpineParseHelpers",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineParseHelpers.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SpineParse",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineParse.ts"
+          },
+          "specifier": "@flighthq/importdiagnostics/contract",
+          "target": {
+            "name": "ImportDiagnosticCollector",
+            "packageName": "@flighthq/importdiagnostics",
+            "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SpineParse",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineParse.ts"
+          },
+          "specifier": "@flighthq/skeleton2d/contract",
+          "target": {
+            "name": "Skeleton2d",
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SpineParse",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/spineParse.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "SpineParse",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineParse.ts"
+      },
+      "steps": []
     },
     {
       "bindings": [

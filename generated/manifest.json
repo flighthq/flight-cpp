@@ -5548,6 +5548,7 @@
       "flight/skeleton2d_formats/spine_binary_bone_timeline_handler.hpp",
       "flight/skeleton2d_formats/spine_binary_bones_handler.hpp",
       "flight/skeleton2d_formats/spine_binary_slot_timeline_handler.hpp",
+      "flight/skeleton2d_formats/spine_json_bone_timeline_handler.hpp",
       "flight/skeleton2d_formats/spine_json_slot_timeline_handler.hpp",
       "flight/socket/enable_socket_guards.hpp",
       "flight/swf/_internal_swf_tag_stream_test_helper.hpp",
@@ -6594,9 +6595,9 @@
     {
       "cppIncludePrefix": "flight/skeleton2d_formats",
       "cppNamespace": "flight::skeleton2d_formats",
-      "emittedModules": 43,
+      "emittedModules": 50,
       "package": "@flighthq/skeleton2d-formats",
-      "refusedModules": 16,
+      "refusedModules": 9,
       "sourceModules": 59
     },
     {
@@ -6888,8 +6889,8 @@
   },
   "summary": {
     "packages": 153,
-    "emittedModules": 2567,
-    "refusedModules": 584,
+    "emittedModules": 2574,
+    "refusedModules": 577,
     "sourceModules": 3151
   }
 }

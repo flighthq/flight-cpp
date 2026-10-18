@@ -3,7 +3,6 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function countAnimationTimelines -- source line 42
 //   missing: function collectDragonBonesSectionCounts -- source line 3
 #include <flight/any.hpp>
 #include <flight/array.hpp>
@@ -16,6 +15,8 @@ static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-cont
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
 #include <flight/shortcut/shortcut.hpp>
+
+#include <flight/types/contract.hpp>
 
 namespace flight::skeleton2d_formats {
 
@@ -40,28 +41,27 @@ inline void tally_timeline_flight_value_function_tally_u000054_imeline_flight_pr
   counts.set(kind, (([&]() -> double { auto nullish_coalesce_left = counts.get(kind); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()) + flight::named_properties(raw).get(flight::String("length"))));
 }
 
-
-// NOT GENERATED: function countAnimationTimelines -- source line 42
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   function countAnimationTimelines(counts: Map<string, number>, raw: unknown): void {
-//     if (!Array.isArray(raw) || raw.length === 0) return;
-//     counts.set(DragonBonesSectionKind.Animations, raw.length);
-//     for (const animEntry of raw) {
-//       if (animEntry === null || typeof animEntry !== 'object') continue;
-//       const anim = animEntry as Record<string, unknown>;
-//       tallyTimeline(counts, anim.bone, DragonBonesTimelineKind.Bone);
-//       tallyTimeline(counts, anim.slot, DragonBonesTimelineKind.Slot);
-//       tallyTimeline(counts, anim.ffd, DragonBonesTimelineKind.Deform);
-//       tallyTimeline(counts, anim.ik, DragonBonesTimelineKind.Ik);
-//       tallyTimeline(counts, anim.zOrder, DragonBonesTimelineKind.ZOrder);
-//     }
-//   }
-//   
-// cpp emission failed for
-// @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSectionCounts.ts: a presence test
-// against null has no absence channel in the emitted C++ storage for identifier
+inline void count_animation_timelines_flight_value_function_count_u000041_nimation_u000054_imelines_flight_private_fee4bf3fb73047fb(flight::Map<flight::String, double> counts, flight::Any raw) {
+  if ((!flight::is_array(raw) || (flight::named_properties(raw).get(flight::String("length")) == 0.0))) {
+    return;
+  }
+  counts.set(flight::types::dragon_bones_section_kind->animations, flight::named_properties(raw).get(flight::String("length")));
+  {
+    const auto for_of_source = raw;
+    for (double for_of_index = 0.0; for_of_index < static_cast<double>(for_of_source.array_size()); for_of_index += 1.0) {
+      auto anim_entry = for_of_source.array_get(for_of_index).value_or(flight::Any(flight::undefined));
+      if ((([&]() { const auto& presence_operand = anim_entry; return presence_operand.is_null(); }()) || (anim_entry.type_of() != flight::String("object")))) {
+        continue;
+      }
+      flight::NamedProperties anim = flight::named_properties(anim_entry);
+      tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_fee4bf3fb73047fb(counts, anim.get(flight::String("bone")).value(), flight::types::dragon_bones_timeline_kind->bone);
+      tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_fee4bf3fb73047fb(counts, anim.get(flight::String("slot")).value(), flight::types::dragon_bones_timeline_kind->slot);
+      tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_fee4bf3fb73047fb(counts, anim.get(flight::String("ffd")).value(), flight::types::dragon_bones_timeline_kind->deform);
+      tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_fee4bf3fb73047fb(counts, anim.get(flight::String("ik")).value(), flight::types::dragon_bones_timeline_kind->ik);
+      tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_fee4bf3fb73047fb(counts, anim.get(flight::String("zOrder")).value(), flight::types::dragon_bones_timeline_kind->zorder);
+    }
+  }
+}
 
 
 // NOT GENERATED: function collectDragonBonesSectionCounts -- source line 3

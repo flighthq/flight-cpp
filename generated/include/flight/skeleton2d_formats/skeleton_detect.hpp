@@ -96,7 +96,7 @@ inline void bind_skeleton_2d_format(flight::String kind, std::function<bool(flig
 
 inline flight::Array<flight::String> get_skeleton_2d_format_kinds() {
   flight::Array<flight::String> kinds = flight::Array<flight::String>{};
-  flight::registry::get_kind_map_keys(kinds, get_registry());
+  flight::registry::get_kind_map_keys<flight::Map<flight::String, flight::Ref<RegisteredSkeletonFormat>>>(kinds, get_registry());
   return kinds;
 }
 

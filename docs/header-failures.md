@@ -254,6 +254,9 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 225 | `undeclared-identifier-f91f1e72` | 1 | 2D | compiler (existing partial native carry) | G2 current effective header1/1 pass; generated Canvas getter/draw owner gaps remain *(builder4)* |
 | 226 | `undeclared-identifier-fcbdae42` | 1 | 2D | compiler *(existing request)* | refused `drawCanvasTextLabel` retained as `.submit` in the renderer aggregate; declaration probe fails at `.create_data` |
 | 227 | `variant-cast-7dd5385f` | 1 | GL | emission repair (applied) | the binding cell for the rebound readonly target view initializes through `RowWritable` and casts straight back; [existing request](compiler-requests/readonly-view-to-writable.md#g2-effects-gl-a-rebindable-readonly-target-stored-through-a-writable-lift) (G2: 1 pass) |
+| 228 | `undeclared-identifier-bfb6be85` | 1 | ANIM | compiler | the erased-array display loop now emits; the header advances to the retained call of the refused `parseDragonBonesDisplay` |
+| 229 | `undeclared-identifier-c4552256` | 1 | ANIM | compiler | the erased-array skins loop now emits; the header advances to the retained call of the refused `parseSpineAttachment` |
+| 230 | `invalid-operands-8af7d18a` | 1 | ANIM | compiler | a narrowed string erased-object read is compared as the full three-state variant against `Any` |
 
 ## Carry clusters
 
@@ -5394,6 +5397,37 @@ The scoped generation re-judged an unrelated duplicate-struct alias in
 order. That product was not carried: the committed alias names the canonical `flight::effects` shape
 that `create_ssao_effect` takes, while the closure's separate struct would disagree with it at that
 call. That header remains on `undeclared-identifier-86212434`; only the target header's change ships.
+
+### 228. `undeclared-identifier-bfb6be85` — 1 header(s)
+
+- cause: after the erased-array for-of lowering, `dragon_bones_skins_handler.hpp` advances from the invalid range expression over `Any` to a retained call of the refused `parseDragonBonesDisplay`
+- lanes: ANIM
+- fix route: compiler — [retained calls](compiler-requests/retained-declaration-calls-omitted-callee.md)
+- first failure at: `flight/skeleton2d_formats/dragon_bones_skins_handler.hpp:377`
+- example: `use of undeclared identifier 'parse_dragon_bones_display'`
+
+This is the erased-array fix's measured progression: the previous first failure (the emitted `for (auto x : raw)` over `flight::Any`) is gone and the header now reaches the next omitted callee. A declaration cannot implement the display parser; the callee's own root must be fixed or its caller refused coherently. No stub, cast or narrowed domain is carried.
+
+### 229. `undeclared-identifier-c4552256` — 1 header(s)
+
+- cause: after the erased-array for-of lowering, `spine_json_skins_handler.hpp` advances from the refused `parseSpineSkins` to the retained call of the refused `parseSpineAttachment`
+- lanes: ANIM
+- fix route: compiler — [retained calls](compiler-requests/retained-declaration-calls-omitted-callee.md)
+- first failure at: `flight/skeleton2d_formats/spine_json_skins_handler.hpp:288`
+- example: `use of undeclared identifier 'parse_spine_attachment'`
+
+The skins module still refuses four attachment/vertex helpers; `parse_spine_skins` now emits, so the header's first error is the next omitted callee. No declaration-only body is carried.
+
+### 230. `invalid-operands-8af7d18a` — 1 header(s)
+
+- cause: a narrowed string read from an erased object is compared as the full three-state variant against `Any`, which has no such comparison
+- lanes: ANIM
+- fix route: compiler
+- first failure at: `flight/skeleton2d_formats/spine_json_slots_handler.hpp:77`
+- example: `invalid operands to binary expression ('std::variant<flight::String, flight::Null, flight::Undefined>' and 'const Any')`
+
+After `parse_spine_slots` emits, the `typeof slot.bone === 'string'` guard narrows the source value, but the comparison re-reads the erased storage as the declared variant. The faithful lowering compares the narrowed string value; no cast or relaxed operator is wanted.
+
 
 ## Scoped G2 PBR registry follow-up
 

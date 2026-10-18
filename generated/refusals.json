@@ -8276,17 +8276,15 @@
       "code": "dependency-refused",
       "module": "packages/skeleton2d-formats/src/contract.ts",
       "package": "@flighthq/skeleton2d-formats",
-      "reason": "dependency ./dragonBonesAnimationsHandler.ts was refused for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesAnimationsHandler.ts",
+      "reason": "dependency ./dragonBonesBoneTimelineHandler.ts was refused for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesBoneTimelineHandler.ts",
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 9,
+      "code": "dependency-refused",
       "module": "packages/skeleton2d-formats/src/dragonBonesAnimationsHandler.ts",
       "package": "@flighthq/skeleton2d-formats",
-      "reason": "cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesAnimationsHandler.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
-      "stage": "emission"
+      "reason": "dependency @flighthq/animation/contract was refused for @flighthq/animation/packages/animation/src/animationClip.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -8323,19 +8321,10 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 84,
+      "line": 7,
       "module": "packages/skeleton2d-formats/src/dragonBonesParse.ts",
       "package": "@flighthq/skeleton2d-formats",
       "reason": "cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesParse.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 36,
-      "module": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts",
-      "package": "@flighthq/skeleton2d-formats",
-      "reason": "cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
       "stage": "emission"
     },
     {
@@ -8348,10 +8337,10 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 42,
+      "line": 3,
       "module": "packages/skeleton2d-formats/src/dragonBonesSectionCounts.ts",
       "package": "@flighthq/skeleton2d-formats",
-      "reason": "cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSectionCounts.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "reason": "cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSectionCounts.ts: an erased C++ value has no identity-preserving reading as flight::Array<flight::Any>: flight::Any has no array alternative or checked exact-array extraction. Keep the value in its exact array type before the erased boundary, or add that carrier and extraction to the runtime; the compiler will not reinterpret the erased value, cast it, or materialize a replacement array",
       "stage": "emission"
     },
     {
@@ -8378,22 +8367,6 @@
       "package": "@flighthq/skeleton2d-formats",
       "reason": "cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSlotTimelineHandler.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
       "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 48,
-      "module": "packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts",
-      "package": "@flighthq/skeleton2d-formats",
-      "reason": "cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
-      "stage": "emission"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts",
-      "package": "@flighthq/skeleton2d-formats",
-      "reason": "dependency ./dragonBonesParseHelpers.ts was refused for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts",
-      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -8498,35 +8471,17 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 81,
+      "code": "dependency-refused",
       "module": "packages/skeleton2d-formats/src/spineJsonBoneTimelineHandler.ts",
       "package": "@flighthq/skeleton2d-formats",
-      "reason": "cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonBoneTimelineHandler.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 24,
-      "module": "packages/skeleton2d-formats/src/spineJsonBonesHandler.ts",
-      "package": "@flighthq/skeleton2d-formats",
-      "reason": "cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonBonesHandler.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
-      "stage": "emission"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/skeleton2d-formats/src/spineJsonDrawOrderTimelineHandler.ts",
-      "package": "@flighthq/skeleton2d-formats",
-      "reason": "dependency ./spineParse.ts was refused for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineParse.ts",
+      "reason": "dependency @flighthq/animation/contract was refused for @flighthq/animation/packages/animation/src/animationClip.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/skeleton2d-formats/src/spineJsonFull.ts",
       "package": "@flighthq/skeleton2d-formats",
-      "reason": "dependency ./spineParse.ts was refused for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineParse.ts",
+      "reason": "dependency ./spineJsonHandlers.ts was refused for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonHandlers.ts",
       "stage": "dependency"
     },
     {
@@ -8560,29 +8515,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 11,
-      "module": "packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts",
-      "package": "@flighthq/skeleton2d-formats",
-      "reason": "cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
-      "stage": "emission"
-    },
-    {
       "code": "dependency-refused",
       "module": "packages/skeleton2d-formats/src/spineJsonTimelineHandlers.ts",
       "package": "@flighthq/skeleton2d-formats",
       "reason": "dependency ./spineJsonBoneTimelineHandler.ts was refused for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonBoneTimelineHandler.ts",
       "stage": "dependency"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 90,
-      "module": "packages/skeleton2d-formats/src/spineParse.ts",
-      "package": "@flighthq/skeleton2d-formats",
-      "reason": "cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineParse.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
-      "stage": "emission"
     },
     {
       "code": "dependency-refused",

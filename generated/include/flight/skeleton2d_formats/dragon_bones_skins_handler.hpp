@@ -370,8 +370,12 @@ inline flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>> pa
   if (!flight::is_array(raw)) {
     return displays;
   }
-  for (auto raw_display : raw) {
-    displays.push(parse_dragon_bones_display(raw_display, remap_bone_index, diagnostics));
+  {
+    const auto for_of_source = raw;
+    for (double for_of_index = 0.0; for_of_index < static_cast<double>(for_of_source.array_size()); for_of_index += 1.0) {
+      auto raw_display = for_of_source.array_get(for_of_index).value_or(flight::Any(flight::undefined));
+      displays.push(parse_dragon_bones_display(raw_display, remap_bone_index, diagnostics));
+    }
   }
   return displays;
 }
