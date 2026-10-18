@@ -339,3 +339,47 @@ runtime, source patches, repairs, generation inventory and pins are unchanged; u
 Foreign compact products/worklist entries and historical/G1 totals remain intact. No fake parser,
 empty-result substitute, copied owner, narrowed input or native parser/curve/serialization/link gain
 is supplied or claimed.
+
+
+## Private JSON read graph preparation
+
+The private Pixi parse/config/diagnostic graph now has a bounded compiler preparation in
+`compiler-private-json-read-flow.patch`. It retains the original parsed JsonObject/JsonArray owner
+through `NamedProperties` only when the private producer performs one parse, applies its original pure
+root guard, and every result reaches read-only private consumers without escaping. The public
+PixiRaw alias and public/returned/callback/captured/compared Record ABIs remain their existing types.
+
+An immutable local assertion to an unknown-field shape can retain `Any` along proven JSON paths.
+It reads the same live owner rather than recovering a native anonymous struct. Direct nullish reads
+throw TypeError; optional chaining skips null and undefined; primitive missing fields retain the
+source defaults. Boxed strings expose their exact UTF16 own indices and length. Prototype operations,
+concrete fields, captures, mutation and opaque forwarding do not enter this data-read lane.
+
+Runtime prerequisites are integrated: Array.isArray recognizes original JSON carriers, the restricted
+JSON data reader retains owner identity, and shared ToBoolean dispatches to the erased value's own
+kind predicate. The new catch proof narrows only an already-string parse-only try whose binding is
+observed solely through asserted Error.message. JSON parser diagnostic wording is implementation
+dependent; no equality to V8's built-in syntax message is claimed.
+
+The current compiler preparation builds on 79 preceding patches. Direct compiler controls retain
+nine public/private ABI comparisons and reject twelve escaping/invalid producer shapes and eight
+ineligible nested shape paths. Seven catch controls distinguish the syntax-only lane. The native
+private fixture passes, including null acceleration throwing after parse while config-only parsing
+succeeds. Runtime/core/structural and all three original Spine/DragonBones consumer regressions pass
+6/6. Vitest is unavailable; the focused fixture is carried without a Vitest run claim.
+
+The untouched full Pixi body emits in a diagnostic over ten packages and 1135 original sources.
+After the normal duplicate-struct alias repair, both public entry points compile/link/run and match
+the untouched pinned TypeScript parser plus actual factory, diagnostics and constants on 568 inputs
+(1136 invocations), including all 52 config fields and diagnostic order. Signed zero and nonfinite
+kinds are exact; finite fields are exact apart from directionX/Y's 1e-12 libm tolerance. The source
+oracle verifies exactly one parse per call. Seven explicit test-host UnicodeService mappings cover
+non-ASCII blend modes, contextual Greek casing and lone UTF16 units; no universal Unicode host
+implementation is claimed. Built-in syntax/TypeError wording remains implementation dependent.
+
+The comparison exposed parseInt's UTF8/ASCII whitespace trimming. The shared runtime now uses its
+existing UTF16 leading-whitespace operation, with all 25 whitespace units and six non-whitespace
+controls checked. No parser source or accepted input domain changed.
+
+Normal scoped generation and final installed-header consumer qualification remain pending.
+These preparations alone promote no historical inventory row.

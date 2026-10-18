@@ -1,0 +1,622 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -325,6 +325,11 @@
+   bindingInitializers: ReadonlyMap<string, Readonly<IrExpression>>;
+   immutableInitializerBindingIds: ReadonlySet<string>;
+   readonlyRecordReadViewBindingIds: Set<string>;
++  jsonReadRecordBindingIds: Set<string>;
++  jsonReadValueBindingIds: Set<string>;
++  jsonReadShapeAssertions: Set<Readonly<IrExpression>>;
++  privateJsonRecordProducerIds: Set<string>;
++  privateJsonRecordReturns: Map<Readonly<IrExpression>, Readonly<IrExpression>>;
+   externalCallResultPresenceBindings: Map<string, Readonly<CppExternalCallResultPresencePlan>>;
+   contextualBindingStorageTargetTypes: Map<string, Readonly<IrType>>;
+   bindingTypes: ReadonlyMap<string, Readonly<IrType>>;
+@@ -700,6 +705,11 @@
+     bindingInitializers: collectIrModuleBindingInitializersCpp(module),
+     immutableInitializerBindingIds: collectIrModuleImmutableInitializerBindingIdsCpp(module),
+     readonlyRecordReadViewBindingIds: new Set(),
++    jsonReadRecordBindingIds: new Set(),
++    jsonReadValueBindingIds: new Set(),
++    jsonReadShapeAssertions: new Set(),
++    privateJsonRecordProducerIds: new Set(),
++    privateJsonRecordReturns: new Map(),
+     bindingTypes,
+     capturedReferentOnlyBindingIds,
+     contextualBindingStorageTargetTypes,
+@@ -756,6 +766,8 @@
+   for (const bindingId of collectCppPrivateReadonlyRecordReadViewsCpp(module, context)) {
+     context.readonlyRecordReadViewBindingIds.add(bindingId);
+   }
++  collectCppPrivateJsonRecordReadFlowCpp(module, context);
++  collectCppPrivateJsonShapeReadsCpp(module, context);
+   for (const [bindingId, targetType] of collectCppExternalBindingStorageTargetTypesCpp(module, context)) {
+     externalBindingStorageTargetTypes.set(bindingId, targetType);
+   }
+@@ -2278,7 +2290,8 @@
+     returnsAbsent: hasIrTypeAbsentMember(declaration.returns),
+   };
+   if (declaration.async) context.includes.add('coroutine');
+-  const returnType = emitType(declaration.returns, context);
++  const returnType = context.privateJsonRecordProducerIds.has(declaration.binding.id)
++    ? 'flight::NamedProperties' : emitType(declaration.returns, context);
+   const template = emitCppFunctionTemplate(declaration.typeParameters, declaration.parameters, context);
+   const params = declaration.parameters.map((parameter) => emitParameter(parameter, context)).join(', ');
+   const lines: string[] = [];
+@@ -2336,7 +2349,8 @@
+   // A mutually recursive group publishes its defaults on the prototypes that make the cycle
+   // callable. Repeating either parameter or template defaults on the definitions is ill-formed C++.
+   const includeDefaults = !context.forwardDeclaredFunctionBindingIds.has(declaration.binding.id);
+-  const returnType = emitType(declaration.returns, context);
++  const returnType = context.privateJsonRecordProducerIds.has(declaration.binding.id)
++    ? 'flight::NamedProperties' : emitType(declaration.returns, context);
+   const template = emitCppFunctionTemplate(
+     declaration.typeParameters,
+     declaration.parameters,
+@@ -3091,6 +3105,8 @@
+   if (exceptionPointer) context.includes.add('exception');
+   const type =
+     (exceptionPointer ? 'std::exception_ptr' : undefined) ??
++    (context.jsonReadValueBindingIds.has(declaration.binding.id) ? 'flight::Any' : undefined) ??
++    (context.readonlyRecordReadViewBindingIds.has(declaration.binding.id) ? 'flight::NamedProperties' : undefined) ??
+     getCppNamedPropertiesStorageTypeCpp(declaration.initializer, context) ??
+     (externalStorageTarget
+       ? externalCallResultPresence
+@@ -3198,6 +3214,8 @@
+   if (exceptionPointer) context.includes.add('exception');
+   const type =
+     (exceptionPointer ? 'std::exception_ptr' : undefined) ??
++    (context.jsonReadValueBindingIds.has(variable.binding.id) ? 'flight::Any' : undefined) ??
++    (context.readonlyRecordReadViewBindingIds.has(variable.binding.id) ? 'flight::NamedProperties' : undefined) ??
+     getCppNamedPropertiesStorageTypeCpp(variable.initializer, context) ??
+     (externalStorageTarget
+       ? externalCallResultPresence
+@@ -6576,6 +6594,14 @@
+       return construction(initializer);
+     }
+     case 'property': {
++      if (isCppJsonReadValueCpp(expression.object, context) && isCppJsonDataPropertyNameCpp(expression.name)) {
++        context.includes.add('flight/structural_ref.hpp');
++        const key = emitLiteral(expression.name, context);
++        const value = emitExpression(expression.object, context);
++        if (!expression.optional) return `flight::read_json_data_property(${value}, ${key})`;
++        const receiver = getGeneratedTargetName('jsonOptionalReceiver', context);
++        return `([&]() -> flight::Any { const auto& ${receiver} = ${value}; if (${receiver}.is_nullish()) return flight::undefined; return flight::read_json_data_property(${receiver}, ${key}); }())`;
++      }
+       if (!expression.optional && getCppNamedPropertiesViewExpressionCpp(expression.object, context)) {
+         context.includes.add('flight/structural_ref.hpp');
+         return `${emitExpression(expression.object, context)}.get(${emitLiteral(expression.name, context)})`;
+@@ -8704,7 +8730,7 @@
+         declaration.async || declaration.overloads.length > 0 || declaration.typeParameters.length > 0) continue;
+     for (const parameter of declaration.parameters) {
+       if (!parameter.optional && !parameter.rest && !parameter.initializer &&
+-          isCppReadonlyUnknownRecordViewTypeCpp(parameter.type, context)) {
++          isCppPrivateUnknownRecordReadTypeCpp(parameter.type, context)) {
+         candidates.set(parameter.binding.id, declaration.binding.id);
+       }
+     }
+@@ -8746,6 +8772,369 @@
+   }
+   return new Set([...candidates].flatMap(([id, helper]) =>
+     used.has(id) && !invalidParameters.has(id) && !invalidHelpers.has(helper) ? [id] : []));
++}
++
++
++function isCppJsonSyntaxMessageOnlyCatchCpp(catchClause: Readonly<IrCatchClause>, context: EmitContext): boolean {
++  if (!catchClause.binding) return true;
++  const binding = catchClause.binding.id;
++  const messageReads = new Set<Readonly<IrExpression>>();
++  const references: Readonly<IrExpression>[] = [];
++  let closure = false;
++  analyzeIrStatementSubtreeTraversal(catchClause.body, {
++    expression(expression) {
++      if (expression.kind === 'function') closure = true;
++      if (expression.kind === 'property' && !expression.optional && expression.name === 'message' && expression.object.kind === 'cast') {
++        const type = expression.object.type;
++        const source = expression.object.expression;
++        if (type.kind === 'named' && type.reference.kind === 'ambient' && type.reference.name === 'Error' &&
++            source.kind === 'identifier' && source.reference.kind === 'binding' && source.reference.binding.id === binding) messageReads.add(source);
++      }
++      if (expression.kind === 'identifier' && expression.reference.kind === 'binding' && expression.reference.binding.id === binding) references.push(expression);
++    },
++  });
++  return !closure && references.length > 0 && references.every((reference) => messageReads.has(reference));
++}
++
++// These names may be inherited from a built-in prototype when an own key is absent. The JSON data
++// lane cannot manufacture those function/accessor values; those operations keep the existing refusal.
++function isCppJsonDataPropertyNameCpp(name: string): boolean {
++  return !new Set([
++    'constructor', '__proto__', '__defineGetter__', '__defineSetter__', '__lookupGetter__', '__lookupSetter__',
++    'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable', 'toLocaleString', 'toString', 'valueOf',
++    'at', 'concat', 'copyWithin', 'fill', 'find', 'findIndex', 'findLast', 'findLastIndex', 'lastIndexOf',
++    'pop', 'push', 'reverse', 'shift', 'unshift', 'slice', 'sort', 'splice', 'includes', 'indexOf', 'join',
++    'keys', 'entries', 'values', 'forEach', 'filter', 'flat', 'flatMap', 'map', 'every', 'some', 'reduce',
++    'reduceRight', 'toReversed', 'toSorted', 'toSpliced', 'with', 'charAt', 'charCodeAt', 'codePointAt',
++    'endsWith', 'localeCompare', 'match', 'matchAll', 'normalize', 'padEnd', 'padStart', 'repeat', 'replace',
++    'replaceAll', 'search', 'split', 'startsWith', 'substring', 'substr', 'toLowerCase', 'toUpperCase',
++    'toLocaleLowerCase', 'toLocaleUpperCase', 'trim', 'trimStart', 'trimEnd', 'trimLeft', 'trimRight',
++    'anchor', 'big', 'blink', 'bold', 'fixed', 'fontcolor', 'fontsize', 'italics', 'link', 'small', 'strike',
++    'sub', 'sup', 'toExponential', 'toFixed', 'toPrecision', 'isWellFormed', 'toWellFormed',
++  ]).has(name);
++}
++
++function isCppJsonReadRecordCpp(expression: Readonly<IrExpression>, context: EmitContext): boolean {
++  return (expression.kind === 'identifier' && expression.reference.kind === 'binding' &&
++      context.jsonReadRecordBindingIds.has(expression.reference.binding.id)) ||
++    (expression.kind === 'call' && !expression.optional && expression.callee.kind === 'identifier' &&
++      expression.callee.reference.kind === 'binding' &&
++      context.privateJsonRecordProducerIds.has(expression.callee.reference.binding.id));
++}
++
++function isCppJsonReadValueCpp(expression: Readonly<IrExpression>, context: EmitContext): boolean {
++  if (expression.kind === 'identifier' && expression.reference.kind === 'binding') {
++    return context.jsonReadValueBindingIds.has(expression.reference.binding.id);
++  }
++  if (expression.kind === 'cast' && context.jsonReadShapeAssertions.has(expression)) return true;
++  if (expression.kind !== 'property' || !isCppJsonDataPropertyNameCpp(expression.name)) return false;
++  return isCppJsonReadRecordCpp(expression.object, context) || isCppJsonReadValueCpp(expression.object, context);
++}
++
++function collectCppPrivateJsonShapeReadsCpp(module: Readonly<IrModule>, context: EmitContext): void {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || context.privateJsonRecordProducerIds.size === 0) return;
++  const exported = new Set(module.exports.flatMap((item) => item.kind === 'local' ? [item.binding.id] : []));
++  const captured = new Set(createIrModuleClosureCapturePlanCpp(module).bindings.map((capture) => capture.binding.id));
++  const functions = module.declarations.filter((declaration): declaration is Extract<IrModule['declarations'][number], { kind: 'function' }> => declaration.kind === 'function');
++  const calls: Readonly<Extract<IrExpression, { kind: 'call' }>>[] = [];
++  const references = new Map<string, Readonly<IrExpression>[]>();
++  const callees = new Set<Readonly<IrExpression>>();
++  const readReceivers = new Set<Readonly<IrExpression>>();
++  const tests = new Set<Readonly<IrExpression>>();
++  const writes = new Set<Readonly<IrExpression>>();
++  const assigned = new Set<string>();
++  const variables: Readonly<IrVariable>[] = [];
++  const markTruthiness = (expression: Readonly<IrExpression>): void => {
++    tests.add(expression);
++    if (expression.kind === 'binary' && ['&&', '||'].includes(expression.operator)) {
++      markTruthiness(expression.left); markTruthiness(expression.right);
++    }
++  };
++  analyzeIrModuleTraversal(module, {
++    variable(variable) { if ('binding' in variable) variables.push(variable); },
++    statement(statement) {
++      if (statement.kind === 'if' || statement.kind === 'while' || statement.kind === 'do') markTruthiness(statement.condition);
++    },
++    expression(expression) {
++      if (expression.kind === 'identifier' && expression.reference.kind === 'binding') {
++        const id = expression.reference.binding.id;
++        references.set(id, [...references.get(id) ?? [], expression]);
++      }
++      if (expression.kind === 'call') { calls.push(expression); if (!expression.optional) callees.add(expression.callee); }
++      if (expression.kind === 'property' && isCppJsonDataPropertyNameCpp(expression.name)) readReceivers.add(expression.object);
++      if (expression.kind === 'conditional') markTruthiness(expression.condition);
++      if (expression.kind === 'unary' && ['!', 'typeof'].includes(expression.operator)) tests.add(expression.operand);
++      if (expression.kind === 'binary' && ['===', '!==', '==', '!='].includes(expression.operator)) {
++        const sentinel = (value: Readonly<IrExpression>): boolean => (value.kind === 'literal' && value.value === null) || (value.kind === 'identifier' && value.reference.kind === 'ambient' && value.reference.name === 'undefined');
++        if (sentinel(expression.left)) tests.add(expression.right);
++        if (sentinel(expression.right)) tests.add(expression.left);
++      }
++      const target = expression.kind === 'assignment' ? expression.left :
++        expression.kind === 'unary' && ['++', '--', 'delete'].includes(expression.operator) ? expression.operand : undefined;
++      if (target) {
++        writes.add(target);
++        if (target.kind === 'identifier' && target.reference.kind === 'binding') assigned.add(target.reference.binding.id);
++      }
++    },
++  });
++  const callId = (expression: Readonly<Extract<IrExpression, { kind: 'call' }>>): string | undefined =>
++    !expression.optional && expression.callee.kind === 'identifier' && expression.callee.reference.kind === 'binding' ?
++      expression.callee.reference.binding.id : undefined;
++  const privateFunctions = functions.filter((declaration) => !declaration.exported && !exported.has(declaration.binding.id) &&
++    !declaration.async && declaration.typeParameters.length === 0 && declaration.overloads.length === 0 &&
++    (references.get(declaration.binding.id) ?? []).every((reference) => callees.has(reference)));
++  // Prove that forwarding a parsed descendant cannot publish it to arbitrary user code or
++  // mutate the JSON graph into a non-JSON owner before a later shape read. Fresh diagnostic/output
++  // objects may still be passed to their declared helpers; only parameter-derived owner paths matter.
++  const effectSafe = new Set(privateFunctions.map((declaration) => declaration.binding.id));
++  const referencesOwner = (expression: Readonly<IrExpression>, roots: ReadonlySet<string>, seen = new Set<string>()): boolean => {
++    if (expression.kind === 'cast') return referencesOwner(expression.expression, roots, seen);
++    const type = getIrExpressionTypeEvidenceCpp(expression, context);
++    if (type?.kind === 'primitive' || type?.kind === 'literal' || type?.kind === 'null' || type?.kind === 'undefined') return false;
++    if (expression.kind === 'identifier' && expression.reference.kind === 'binding') {
++      const id = expression.reference.binding.id;
++      if (roots.has(id)) return true;
++      if (seen.has(id)) return false;
++      const initializer = context.bindingInitializers.get(id);
++      return Boolean(initializer && referencesOwner(initializer, roots, new Set(seen).add(id)));
++    }
++    if (expression.kind === 'property' || expression.kind === 'element') return referencesOwner(expression.object, roots, seen);
++    if (expression.kind === 'unary') return referencesOwner(expression.operand, roots, seen);
++    if (expression.kind === 'conditional') return referencesOwner(expression.whenTrue, roots, seen) || referencesOwner(expression.whenFalse, roots, seen);
++    if (expression.kind === 'binary') return referencesOwner(expression.left, roots, seen) || referencesOwner(expression.right, roots, seen);
++    let owner = false;
++    analyzeIrExpressionSubtreeTraversal(expression, {
++      expression(child) {
++        if (child === expression) return undefined;
++        if (referencesOwner(child, roots, seen)) owner = true;
++        return false;
++      },
++    });
++    return owner;
++  };
++  let removed = true;
++  while (removed) {
++    removed = false;
++    for (const declaration of privateFunctions) {
++      if (!effectSafe.has(declaration.binding.id)) continue;
++      const roots = new Set(declaration.parameters.map((parameter) => parameter.binding.id));
++      let safe = true;
++      for (const statement of declaration.body) analyzeIrStatementSubtreeTraversal(statement, {
++        expression(expression) {
++          const target = expression.kind === 'assignment' ? expression.left :
++            expression.kind === 'unary' && ['++', '--', 'delete'].includes(expression.operator) ? expression.operand : undefined;
++          if (target && (target.kind === 'property' || target.kind === 'element' ||
++              (expression.kind === 'assignment' && referencesOwner(expression.right, roots)))) safe = false;
++          if (expression.kind === 'call' && expression.arguments.some((argument) => referencesOwner(argument, roots)) &&
++              !effectSafe.has(callId(expression) ?? '')) safe = false;
++        },
++      });
++      if (!safe) { effectSafe.delete(declaration.binding.id); removed = true; }
++    }
++  }
++  const privateVariables = new Set<string>();
++  for (const declaration of privateFunctions.filter((item) => effectSafe.has(item.binding.id))) for (const statement of declaration.body) analyzeIrStatementSubtreeTraversal(statement, {
++    expression(expression) { if (expression.kind === 'function') return false; return undefined; },
++    variable(variable) { if ('binding' in variable) privateVariables.add(variable.binding.id); },
++  });
++  for (const variable of variables) if ('binding' in variable && context.readonlyRecordReadViewBindingIds.has(variable.binding.id) &&
++      variable.initializer && isCppJsonReadRecordCpp(variable.initializer, context)) context.jsonReadRecordBindingIds.add(variable.binding.id);
++  const unknownShape = (type: Readonly<IrType>): boolean => {
++    const union = getIrUnionTypeCpp(type, context, new Set());
++    const members = union?.types ?? [type];
++    const objects = members.filter((member): member is Extract<IrType, { kind: 'object' }> => member.kind === 'object');
++    return objects.length === 1 && members.every((member) => ['object', 'null', 'undefined'].includes(member.kind)) &&
++      objects[0]!.kind === 'object' && objects[0]!.properties.every((property) => isCppJsonDataPropertyNameCpp(property.name) &&
++        isCppAliasResolvedErasedDynamicValueTypeCpp(property.type, context));
++  };
++  // Grow only from an already selected, guarded JSON producer. A helper reached from any other
++  // caller has no JSON provenance and keeps the ordinary exact-owner assertion/ABI.
++  let changed = true;
++  while (changed) {
++    changed = false;
++    for (const declaration of privateFunctions) {
++      if (!effectSafe.has(declaration.binding.id)) continue;
++      const uses = calls.filter((call) => callId(call) === declaration.binding.id);
++      if (uses.length === 0) continue;
++      declaration.parameters.forEach((parameter, index) => {
++        const id = parameter.binding.id;
++        if (parameter.optional || parameter.initializer || captured.has(id) || assigned.has(id)) return;
++        if (context.readonlyRecordReadViewBindingIds.has(id) && !context.jsonReadRecordBindingIds.has(id) &&
++            uses.every((call) => call.arguments[index] && isCppJsonReadRecordCpp(call.arguments[index]!, context))) {
++          context.jsonReadRecordBindingIds.add(id); changed = true;
++        }
++        if (isCppAliasResolvedErasedDynamicValueTypeCpp(parameter.type, context) && !context.jsonReadValueBindingIds.has(id) &&
++            uses.every((call) => call.arguments[index] && isCppJsonReadValueCpp(call.arguments[index]!, context))) {
++          context.jsonReadValueBindingIds.add(id); changed = true;
++        }
++      });
++    }
++    for (const variable of variables) {
++      if (!('binding' in variable) || variable.mutable || !privateVariables.has(variable.binding.id) || !variable.initializer ||
++          captured.has(variable.binding.id) || assigned.has(variable.binding.id) || context.jsonReadValueBindingIds.has(variable.binding.id)) continue;
++      const initializer = variable.initializer;
++      if (initializer.kind !== 'cast' || !unknownShape(initializer.type) || !isCppJsonReadValueCpp(initializer.expression, context)) continue;
++      const uses = references.get(variable.binding.id) ?? [];
++      if (uses.length === 0 || uses.some((reference) => !readReceivers.has(reference) && !tests.has(reference))) continue;
++      if ([...writes].some((write) => write.kind === 'property' && write.object.kind === 'identifier' &&
++          write.object.reference.kind === 'binding' && write.object.reference.binding.id === variable.binding.id)) continue;
++      context.jsonReadShapeAssertions.add(initializer);
++      context.jsonReadValueBindingIds.add(variable.binding.id);
++      changed = true;
++    }
++  }
++}
++
++function isCppPrivateUnknownRecordReadTypeCpp(type: Readonly<IrType>, context: EmitContext): boolean {
++  if (isCppReadonlyUnknownRecordViewTypeCpp(type, context)) return true;
++  const record = getCppRecordTypeArgumentsCpp(type, context, new Set());
++  return Boolean(record && record.value.kind === 'unknown' && record.value.source === 'unknown' &&
++    isCppStringValueTypeCpp(record.key, context, new Set()));
++}
++
++// Internal parsed owners may cross a private producer and readonly consumers while every public
++// Record alias/signature stays unchanged. Fail closed if a result is returned, forwarded to an
++// unproven receiver, stored publicly, compared, captured, reassigned, or otherwise escapes.
++function collectCppPrivateJsonRecordReadFlowCpp(module: Readonly<IrModule>, context: EmitContext): void {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return;
++  const exported = new Set(module.exports.flatMap((item) => item.kind === 'local' ? [item.binding.id] : []));
++  const functions = new Map(module.declarations.flatMap((declaration) =>
++    declaration.kind === 'function' ? [[declaration.binding.id, declaration] as const] : []));
++  const calls: Readonly<Extract<IrExpression, { kind: 'call' }>>[] = [];
++  const references = new Map<string, Readonly<IrExpression>[]>();
++  const callees = new Set<Readonly<IrExpression>>();
++  const argumentsRead = new Set<Readonly<IrExpression>>();
++  const callId = (expression: Readonly<IrExpression>): string | undefined =>
++    expression.kind === 'call' && !expression.optional && expression.callee.kind === 'identifier' &&
++    expression.callee.reference.kind === 'binding' ? expression.callee.reference.binding.id : undefined;
++  analyzeIrModuleTraversal(module, {
++    expression(expression) {
++      if (expression.kind === 'call') {
++        calls.push(expression);
++        if (!expression.optional) callees.add(expression.callee);
++        const target = functions.get(callId(expression) ?? '');
++        target?.parameters.forEach((parameter, index) => {
++          if (context.readonlyRecordReadViewBindingIds.has(parameter.binding.id) && expression.arguments[index]) {
++            argumentsRead.add(expression.arguments[index]!);
++          }
++        });
++      }
++      if (expression.kind === 'identifier' && expression.reference.kind === 'binding') {
++        const id = expression.reference.binding.id;
++        references.set(id, [...references.get(id) ?? [], expression]);
++      }
++    },
++  });
++  const captured = new Set(createIrModuleClosureCapturePlanCpp(module).bindings.map((capture) => capture.binding.id));
++  const producers = new Map<string, Readonly<{ result: Readonly<IrExpression>; source: Readonly<IrExpression> }>>();
++  const isBinding = (expression: Readonly<IrExpression>, id: string): boolean =>
++    expression.kind === 'identifier' && expression.reference.kind === 'binding' && expression.reference.binding.id === id;
++  for (const declaration of functions.values()) {
++    const id = declaration.binding.id;
++    if (declaration.exported || exported.has(id) || declaration.async || declaration.typeParameters.length > 0 ||
++        declaration.overloads.length > 0 || !isCppPrivateUnknownRecordReadTypeCpp(declaration.returns, context) ||
++        (references.get(id) ?? []).some((reference) => !callees.has(reference))) continue;
++    // This lane represents the parser's exact declaration/parse/guard/return arc. Additional
++    // statements could publish or mutate the value before it reaches its readonly consumers.
++    if (declaration.body.length !== 4) continue;
++    const first = declaration.body[0];
++    if (first?.kind !== 'variable' || first.declarations.length !== 1) continue;
++    const local = first.declarations[0]!;
++    if (!('binding' in local) || local.initializer || local.type?.kind !== 'unknown') continue;
++    const last = declaration.body.at(-1);
++    if (last?.kind !== 'return' || last.expression?.kind !== 'cast' ||
++        !isCppPrivateUnknownRecordReadTypeCpp(last.expression.type, context)) continue;
++    const source = last.expression.expression;
++    if (source.kind !== 'identifier' || source.reference.kind !== 'binding') continue;
++    const sourceId = source.reference.binding.id;
++    if (local.binding.id !== sourceId) continue;
++    let returns = 0;
++    let parseAssignments = 0;
++    let otherAssignments = false;
++    for (const statement of declaration.body) analyzeIrStatementSubtreeTraversal(statement, {
++      expression(expression) {
++        if (expression.kind === 'function') return false;
++        if (expression.kind !== 'assignment' || !isBinding(expression.left, sourceId)) return undefined;
++        const call = expression.right;
++        const builtinParse = expression.operator === '=' && call.kind === 'call' && !call.optional &&
++          call.arguments.length === 1 && call.callee.kind === 'property' && !call.callee.optional &&
++          call.callee.name === 'parse' && call.callee.object.kind === 'identifier' &&
++          call.callee.object.reference.kind === 'ambient' && call.callee.object.reference.name === 'JSON';
++        if (builtinParse) ++parseAssignments;
++        else otherAssignments = true;
++        return undefined;
++      },
++      statement(statement) { if (statement.kind === 'return') ++returns; },
++    });
++    if (returns !== 1 || parseAssignments !== 1 || otherAssignments) continue;
++    const nullAndNonObject = (condition: Readonly<IrExpression>): readonly [boolean, boolean] => {
++      if (condition.kind !== 'binary') return [false, false];
++      if (condition.operator === '||') {
++        const a = nullAndNonObject(condition.left), b = nullAndNonObject(condition.right);
++        return [a[0] || b[0], a[1] || b[1]];
++      }
++      const nullLiteral = (expression: Readonly<IrExpression>): boolean => expression.kind === 'literal' && expression.value === null;
++      const rejectsNull = ['===', '=='].includes(condition.operator) &&
++        ((isBinding(condition.left, sourceId) && nullLiteral(condition.right)) ||
++         (isBinding(condition.right, sourceId) && nullLiteral(condition.left)));
++      const tag = getCppTypeofTagComparisonCpp(condition.left, condition.right);
++      return [rejectsNull, ['!==', '!='].includes(condition.operator) && tag?.tag === 'object' && isBinding(tag.operand, sourceId)];
++    };
++    const parseTryIndex = declaration.body.findIndex((statement) => {
++      if (statement.kind !== 'try' || statement.finallyBody || !statement.catchClause) return false;
++      const body = statement.tryBody.kind === 'block' ? statement.tryBody.statements : [statement.tryBody];
++      const handler = statement.catchClause.body.kind === 'block' ? statement.catchClause.body.statements : [statement.catchClause.body];
++      if (body.length !== 1 || body[0]!.kind !== 'expression' || handler.length !== 1 || handler[0]!.kind !== 'throw') return false;
++      const assignment = body[0]!.expression;
++      if (assignment.kind !== 'assignment' || !isBinding(assignment.left, sourceId) || assignment.right.kind !== 'call') return false;
++      const input = assignment.right.arguments[0];
++      const type = input ? getIrExpressionTypeEvidenceCpp(input, context) : undefined;
++      return Boolean(input && ['identifier', 'literal'].includes(input.kind) && type && isCppStringValueTypeCpp(type, context, new Set()));
++    });
++    if (parseTryIndex !== 1) continue;
++    const isPureGuard = (condition: Readonly<IrExpression>): boolean => {
++      if (condition.kind === 'binary' && condition.operator === '||') return isPureGuard(condition.left) && isPureGuard(condition.right);
++      const [nullTest, objectTest] = nullAndNonObject(condition);
++      if (nullTest || objectTest) return true;
++      return condition.kind === 'call' && !condition.optional && condition.arguments.length === 1 &&
++        isBinding(condition.arguments[0]!, sourceId) && condition.callee.kind === 'property' &&
++        !condition.callee.optional && condition.callee.name === 'isArray' && condition.callee.object.kind === 'identifier' &&
++        condition.callee.object.reference.kind === 'ambient' && condition.callee.object.reference.name === 'Array';
++    };
++    const guarded = declaration.body.slice(0, -1).some((statement, index) => {
++      if (statement.kind !== 'if') return false;
++      const [rejectsNull, rejectsNonObject] = nullAndNonObject(statement.condition);
++      const body = statement.consequent.kind === 'block' ? statement.consequent.statements : [statement.consequent];
++      return index === 2 && isPureGuard(statement.condition) && rejectsNull && rejectsNonObject && body.length === 1 && body[0]!.kind === 'throw';
++    });
++    if (guarded) producers.set(id, { result: last.expression, source });
++  }
++  if (producers.size === 0) return;
++  const locals = new Map<string, Readonly<{ initializer: Readonly<IrExpression>; producer: string }>>();
++  for (const declaration of functions.values()) {
++    if (declaration.async || declaration.typeParameters.length > 0) continue;
++    for (const statement of declaration.body) analyzeIrStatementSubtreeTraversal(statement, {
++      expression(expression) { if (expression.kind === 'function') return false; return undefined; },
++      variable(variable) {
++        if (!('binding' in variable) || variable.mutable || !variable.initializer || captured.has(variable.binding.id)) return;
++        const producer = callId(variable.initializer);
++        if (!producer || !producers.has(producer)) return;
++        const uses = references.get(variable.binding.id) ?? [];
++        if (uses.length > 0 && uses.every((reference) => argumentsRead.has(reference))) {
++          locals.set(variable.binding.id, { initializer: variable.initializer, producer });
++        }
++      },
++    });
++  }
++  const localInitializers = new Set([...locals.values()].map((local) => local.initializer));
++  for (const [id, producer] of producers) {
++    const uses = calls.filter((call) => callId(call) === id);
++    if (uses.length === 0 || uses.some((call) => !argumentsRead.has(call) && !localInitializers.has(call))) continue;
++    context.privateJsonRecordProducerIds.add(id);
++    context.privateJsonRecordReturns.set(producer.result, producer.source);
++    for (const [localId, local] of locals) if (local.producer === id) context.readonlyRecordReadViewBindingIds.add(localId);
++  }
++  if (context.privateJsonRecordProducerIds.size > 0) context.includes.add('flight/structural_ref.hpp');
+ }
+ 
+ function isCppReadonlyUnknownRecordViewTypeCpp(
+@@ -9855,6 +10244,8 @@
+       return lines;
+     }
+     case 'return': {
++      const jsonReadSource = statement.expression ? context.privateJsonRecordReturns.get(statement.expression) : undefined;
++      if (jsonReadSource) return [`return flight::named_properties(${emitExpression(jsonReadSource, context)});`];
+       if (context.finallyReturnVar) {
+         const lines: string[] = [];
+         if (statement.expression) {
+@@ -9920,7 +10311,7 @@
+         const handler = emitCatchClauseCpp(statement.catchClause, context);
+         if (isCppSyntaxOnlyJsonParseTryCpp(statement, context)) {
+           context.includes.add('flight/json.hpp');
+-          handler[0] = 'catch (const flight::JsonSyntaxError&) {';
++          handler[0] = statement.catchClause.binding ? `catch (const flight::JsonSyntaxError& ${safeCppName(statement.catchClause.binding.name)}) {` : 'catch (const flight::JsonSyntaxError&) {';
+         }
+         lines.push(...handler);
+       }
+@@ -10018,7 +10409,8 @@
+   statement: Readonly<Extract<IrStatement, { kind: 'try' }>>, context: EmitContext,
+ ): boolean {
+   if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || statement.finallyBody ||
+-      !statement.catchClause || statement.catchClause.binding) return false;
++      !statement.catchClause) return false;
++  if (statement.catchClause.binding && !isCppJsonSyntaxMessageOnlyCatchCpp(statement.catchClause, context)) return false;
+   const body = statement.tryBody.kind === 'block' ? statement.tryBody.statements : [statement.tryBody];
+   if (body.length !== 1 || body[0]!.kind !== 'expression') return false;
+   const assignment = body[0]!.expression;
+@@ -14456,7 +14848,7 @@
+   strict: boolean,
+   context: EmitContext,
+ ): string {
+-  if (isCppNamedPropertiesValueReadCpp(operand, context)) {
++  if (isCppJsonReadValueCpp(operand, context) || isCppNamedPropertiesValueReadCpp(operand, context)) {
+     const predicate = strict ? (sentinel === 'null' ? 'is_null' : 'is_undefined') : 'is_nullish';
+     return `([&]() { const auto& presence_operand = ${emitExpression(operand, context)}; return ${present ? '!' : ''}presence_operand.${predicate}(); }())`;
+   }
+@@ -14693,6 +15085,7 @@
+   operandType: Readonly<IrType> | undefined,
+   context: EmitContext,
+ ): boolean {
++  if (isCppJsonReadValueCpp(operand, context)) return true;
+   if (isCppErasedDynamicPropertyReadCpp(operand, context)) return true;
+   if (operand.kind === 'identifier' && operand.reference.kind === 'binding') {
+     const bindingId = operand.reference.binding.id;
+@@ -14720,6 +15113,7 @@
+   context: EmitContext,
+ ): boolean {
+   if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return false;
++  if (context.jsonReadShapeAssertions.has(expression)) return true;
+   const sourceType = getCppNullishComparisonOperandTypeCpp(expression.expression, context);
+   if (!hasCppErasedDynamicTestOperandCpp(expression.expression, sourceType, context)) return false;
+   const union = getIrUnionTypeCpp(expression.type, context, new Set());
+diff --git a/packages/compiler-backend-cpp/src/cppPrivateJsonReadFlow.test.ts b/packages/compiler-backend-cpp/src/cppPrivateJsonReadFlow.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppPrivateJsonReadFlow.test.ts
+@@ -0,0 +1,96 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/example/src/jsonFlow.ts', source, ts.ScriptTarget.Latest, true);
++  const lowered = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/example', upstreamDirectory: '/flight' });
++  expect(lowered.diagnostics).toEqual([]);
++  return emitIrModuleCpp(lowered.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++const producer = `type Raw = Record<string, unknown>;
++function parseRaw(text: string): Raw {
++  let raw: unknown;
++  try { raw = JSON.parse(text); } catch { throw new Error('syntax'); }
++  if (raw === null || typeof raw !== 'object' || Array.isArray(raw)) throw new Error('object');
++  return raw as Raw;
++}`;
++const reader = `function read(raw: Raw): unknown { return raw.n; }
++export function run(text: string): unknown { return read(parseRaw(text)); }`;
++
++it('retains one original parsed owner across a private producer, local and read-only mutable-Record helper', () => {
++  const output = emit(producer + reader + `export function pair(text: string): unknown {
++    const raw = parseRaw(text); read(raw); return read(raw);
++  }`);
++  expect(output).toContain('inline flight::NamedProperties parse_raw');
++  expect(output).toContain('inline flight::Any read(flight::NamedProperties raw)');
++  expect(output).toContain('flight::NamedProperties raw = parse_raw(text)');
++  expect(output).toContain('return flight::named_properties(raw);');
++  expect(output).toContain('using Raw = flight::Record<flight::String, flight::Any>');
++  expect(output).not.toContain('static_cast<Raw>');
++});
++
++it('retains erased nested shapes and distinguishes optional nullish reads from required reads', () => {
++  const output = emit(producer + `function nested(obj: unknown): unknown {
++    const shape = obj as { x?: unknown } | undefined; return shape?.x;
++  } function read(raw: Raw): unknown {
++    const accel = raw.acceleration as { x?: unknown } | undefined;
++    if (accel !== undefined) return accel.x;
++    return nested(raw.n);
++  } export function run(text: string): unknown { return read(parseRaw(text)); }`);
++  expect(output).toContain('flight::Any shape = obj');
++  expect(output).toContain('flight::Any accel = raw.get');
++  expect(output).toContain('read_json_data_property');
++  expect(output).toContain('.is_nullish()');
++  expect(output).toContain('!presence_operand.is_undefined()');
++  expect(output).not.toContain('.object_if<');
++});
++
++it.each([
++  ['exported', producer.replace('function parseRaw', 'export function parseRaw') + reader],
++  ['returned result', producer + reader + `export function escape(text: string): Raw { return parseRaw(text); }`],
++  ['returned local', producer + reader + `export function escape(text: string): Raw { const raw = parseRaw(text); return raw; }`],
++  ['callback', producer + reader + `export function callback(): (text: string) => Raw { return parseRaw; }`],
++  ['comparison', producer + reader + `export function compare(text: string): boolean { const a = parseRaw(text); const b = parseRaw(text); return a === b; }`],
++  ['no root guard', producer.replace("if (raw === null || typeof raw !== 'object' || Array.isArray(raw)) throw new Error('object');", '') + reader],
++  ['guard before parse', producer.replace("try { raw = JSON.parse(text); } catch { throw new Error('syntax'); }", '').replace('let raw: unknown;', "let raw: unknown; if (raw === null || typeof raw !== 'object') throw new Error('object'); try { raw = JSON.parse(text); } catch { throw new Error('syntax'); }") + reader],
++  ['extra parse', producer.replace('return raw as Raw;', 'raw = JSON.parse(text); return raw as Raw;') + reader],
++  ['mutation', producer.replace('return raw as Raw;', '(raw as Record<string, unknown>).n = 3; return raw as Raw;') + reader],
++  ['fallthrough catch', producer.replace("throw new Error('syntax');", '') + reader],
++  ['effectful parse input', producer.replace('text: string): Raw', 'text: () => string): Raw').replace('JSON.parse(text)', 'JSON.parse(text())') + reader.replace('run(text: string)', 'run(text: () => string)')],
++  ['guard side effect', producer.replace('|| Array.isArray(raw)', '|| Array.isArray(raw) || effect(raw)') + `function effect(raw: unknown): boolean { return false; }` + reader],
++] as const)('keeps the ordinary producer ABI for %s', (_name, source) => {
++  expect(emit(source)).not.toContain('flight::NamedProperties parse_raw(');
++});
++
++it.each([
++  ['public', `export function run(obj: unknown): unknown { const shape = obj as { x?: unknown } | undefined; return shape?.x; }`],
++  ['captured', producer + `function read(raw: Raw): () => unknown { const shape = raw.n as { x?: unknown } | undefined; return () => shape?.x; } export function run(text: string): unknown { return read(parseRaw(text)); }`],
++  ['returned', producer + `function read(raw: Raw): { x?: unknown } | undefined { const shape = raw.n as { x?: unknown } | undefined; return shape; } export function run(text: string): unknown { return read(parseRaw(text)); }`],
++  ['concrete field', producer + `function read(raw: Raw): number | undefined { const shape = raw.n as { x?: number } | undefined; return shape?.x; } export function run(text: string): unknown { return read(parseRaw(text)); }`],
++  ['prototype operation', producer + `function read(raw: Raw): unknown { const shape = raw.n as { toString?: unknown } | undefined; return shape?.toString; } export function run(text: string): unknown { return read(parseRaw(text)); }`],
++  ['mixed caller provenance', producer + `function nested(obj: unknown): unknown { const shape = obj as { x?: unknown } | undefined; return shape?.x; } function read(raw: Raw): unknown { return nested(raw.n); } export function run(text: string): unknown { return read(parseRaw(text)); } export function native(obj: unknown): unknown { return nested(obj); }`],
++  ['opaque forwarding', producer + `export function mutate(obj: unknown): void {} function nested(obj: unknown): unknown { mutate(obj); const shape = obj as { x?: unknown } | undefined; return shape?.x; } function read(raw: Raw): unknown { return nested(raw.n); } export function run(text: string): unknown { return read(parseRaw(text)); }`],
++] as const)('does not retain a private JSON shape for %s', (_name, source) => {
++  expect(emit(source)).not.toContain('flight::Any shape =');
++});
++
++it.each([
++  [true, `export function run(text: string): unknown { let raw: unknown; try { raw = JSON.parse(text); } catch (e) { throw new Error('bad ' + (e as Error).message); } return raw; }`],
++  [false, `export function run(text: string): unknown { let raw: unknown; try { raw = JSON.parse(text); } catch (e) { throw e; } return raw; }`],
++  [false, `export function run(text: string): unknown { let raw: unknown; try { raw = JSON.parse(text); } catch (e) { return (e as Error).name; } return raw; }`],
++  [false, `export function run(next: () => string): unknown { let raw: unknown; try { raw = JSON.parse(next()); } catch (e) { throw new Error((e as Error).message); } return raw; }`],
++  [false, `export function run(text: string, next: () => void): unknown { let raw: unknown; try { raw = JSON.parse(text); next(); } catch (e) { throw new Error((e as Error).message); } return raw; }`],
++  [false, `export function run(text: string): unknown { let raw: unknown; try { raw = JSON.parse(text); } catch (e) { return () => (e as Error).message; } return raw; }`],
++] as const)('narrows only parse-only message observation: %s', (syntaxOnly, source) => {
++  expect(emit(source).includes('catch (const flight::JsonSyntaxError&')).toBe(syntaxOnly);
++});
++
++it('refuses a mutated asserted shape instead of electing erased read-only storage', () => {
++  expect(() => emit(producer + `function read(raw: Raw): unknown {
++    const shape = raw.n as { x?: unknown }; shape.x = 3; return shape.x;
++  } export function run(text: string): unknown { return read(parseRaw(text)); }`)).toThrow();
++});
