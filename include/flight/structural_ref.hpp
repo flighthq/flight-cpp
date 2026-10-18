@@ -24,6 +24,7 @@
 #include <flight/boolean.hpp>
 #include <flight/attachment.hpp>
 #include <flight/reference.hpp>
+#include <flight/prototype.hpp>
 #include <flight/record.hpp>
 #include <flight/symbol.hpp>
 
@@ -2214,6 +2215,61 @@ template <typename Object>
   auto owner = value.erased_row_owner();
   if (!owner) return {};
   return NamedProperties(std::static_pointer_cast<RowOwner>(std::move(owner)));
+}
+
+// `key in value` for an erased value, as JavaScript answers it: a non-object throws TypeError; an object
+// has the key when it is an own cell, a member of its registered class prototype chain, or an own name of
+// Object.prototype. No value is read and no getter runs. What this runtime cannot see -- an array, a
+// function or external value, an object whose type never reached the row machinery, a class whose
+// subclasses its stored type does not rule out -- raises OutOfProfileMemberQuery instead of answering.
+[[nodiscard]] inline bool has_property(const Any& value, const String& key) {
+  switch (value.kind()) {
+    case AnyKind::object:
+      break;
+    case AnyKind::function:
+    case AnyKind::external:
+      throw OutOfProfileMemberQuery("`in` on a function or external value: this runtime has no member table for it");
+    default:
+      throw TypeError(String("Cannot use 'in' operator to search for '") + key + String("' in a non-object"));
+  }
+  if (value.is_array()) throw OutOfProfileMemberQuery("`in` on an erased array: its index and length keys are not modelled here");
+  const auto view = named_properties(value);
+  if (!view) throw OutOfProfileMemberQuery("`in` on an object whose type never reached the row machinery");
+  if (view.has(key)) return true;
+  if (find_inherited_member(value.held_type(), key.to_utf8()) != InheritedMemberKind::none) return true;
+  return is_object_prototype_property(key);
+}
+
+// `typeof value.key` for an erased value: the type of the own cell's value, `function` for an inherited
+// method, `undefined` for a key the object does not have. Reading a member of null or undefined throws
+// TypeError, as the property read does in JavaScript. An inherited accessor would run its getter, so it is
+// out of profile, as are the receivers `has_property` cannot see.
+[[nodiscard]] inline String member_typeof(const Any& value, const String& key) {
+  switch (value.kind()) {
+    case AnyKind::object:
+      break;
+    case AnyKind::undefined:
+    case AnyKind::null:
+      throw TypeError(String("Cannot read properties of ") + String(value.kind() == AnyKind::null ? "null" : "undefined") +
+                      String(" (reading '") + key + String("')"));
+    default:
+      throw OutOfProfileMemberQuery("typeof of a member of a primitive, function or external value");
+  }
+  if (value.is_array()) throw OutOfProfileMemberQuery("typeof of a member of an erased array");
+  const auto view = named_properties(value);
+  if (!view) throw OutOfProfileMemberQuery("typeof of a member of an object whose type never reached the row machinery");
+  if (view.has(key)) return view.get(key).type_of();
+  switch (find_inherited_member(value.held_type(), key.to_utf8())) {
+    case InheritedMemberKind::method:
+      return String("function");
+    case InheritedMemberKind::accessor:
+      throw OutOfProfileMemberQuery("typeof of an inherited accessor would run its getter");
+    case InheritedMemberKind::none:
+      break;
+  }
+  if (key.to_utf8() == "__proto__") throw OutOfProfileMemberQuery("typeof of __proto__ reads the prototype accessor");
+  if (is_object_prototype_property(key)) return String("function");
+  return String("undefined");
 }
 
 [[nodiscard]] inline NamedProperties named_properties(const JsonValue& value) {

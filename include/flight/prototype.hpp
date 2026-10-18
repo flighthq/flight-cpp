@@ -1,0 +1,100 @@
+#pragma once
+
+#include <cstdint>
+#include <map>
+#include <mutex>
+#include <optional>
+#include <stdexcept>
+#include <string>
+#include <string_view>
+#include <typeindex>
+#include <typeinfo>
+#include <utility>
+#include <vector>
+
+namespace flight {
+
+// THE PROTOTYPE CHAIN OF AN EMITTED CLASS. Emitted objects are aggregates: an interface or object
+// literal becomes a struct whose own members are its cells, and its prototype is Object.prototype. A
+// class is different: its methods and accessors live on its prototype, not on the instance, and the
+// emitted struct carries them as member functions that no row cell reports. So the emitter registers
+// each class's prototype member names here, keyed by the class's exact C++ type, with the class it
+// extends. `key in object` and `typeof object.key` consult it after the object's own cells.
+//
+// A class that an emitted class extends is registered with `has_subclasses`, because a reference to it
+// may hold a subclass instance whose prototype adds members the registered table does not list; a
+// query that reaches such a class without the object's exact type refuses rather than answering from
+// the base's table.
+struct ClassPrototype final {
+  std::vector<std::string> methods;
+  std::vector<std::string> accessors;
+  std::optional<std::type_index> base;
+  bool has_subclasses = false;
+};
+
+// Raised where the runtime cannot answer a presence or typeof question the way the source would: an
+// array, function or external receiver, an inherited accessor whose value would require running its
+// getter, or a class whose subclasses the stored type cannot rule out. It is an explicit boundary of what
+// this runtime represents, never a stand-in for the source's own answer.
+class OutOfProfileMemberQuery final : public std::logic_error {
+ public:
+  explicit OutOfProfileMemberQuery(const std::string& what) : std::logic_error(what) {}
+};
+
+enum class InheritedMemberKind : std::uint8_t { none, method, accessor };
+
+namespace detail {
+
+struct ClassPrototypeRegistry final {
+  std::mutex mutex;
+  std::map<std::type_index, ClassPrototype> classes;
+};
+
+inline ClassPrototypeRegistry& class_prototype_registry() {
+  static ClassPrototypeRegistry registry;
+  return registry;
+}
+
+} // namespace detail
+
+// Registers `Class`'s prototype members. Used as a namespace-scope initializer by emitted code:
+// `inline const bool flight_class_prototype_X = flight::register_class_prototype<X>({...});`.
+template <typename Class>
+bool register_class_prototype(ClassPrototype prototype) {
+  auto& registry = detail::class_prototype_registry();
+  const std::lock_guard lock(registry.mutex);
+  registry.classes.insert_or_assign(std::type_index(typeid(Class)), std::move(prototype));
+  return true;
+}
+
+[[nodiscard]] inline bool is_registered_class(std::type_index type) {
+  auto& registry = detail::class_prototype_registry();
+  const std::lock_guard lock(registry.mutex);
+  return registry.classes.contains(type);
+}
+
+// Walks the registered prototype chain of `type` for `key`. An unregistered type has no class
+// prototype (it is a plain object, whose prototype is Object.prototype) and answers `none`. Reaching a
+// registered class with subclasses refuses, because the stored type is not proven to be the exact one.
+[[nodiscard]] inline InheritedMemberKind find_inherited_member(std::type_index type, std::string_view key) {
+  auto& registry = detail::class_prototype_registry();
+  const std::lock_guard lock(registry.mutex);
+  std::optional<std::type_index> current = type;
+  while (current) {
+    const auto found = registry.classes.find(*current);
+    if (found == registry.classes.end()) return InheritedMemberKind::none;
+    if (found->second.has_subclasses) {
+      throw OutOfProfileMemberQuery("a class with emitted subclasses is reached without the object's exact type");
+    }
+    for (const auto& name : found->second.methods) {
+      if (name == key) return InheritedMemberKind::method;
+    }
+    for (const auto& name : found->second.accessors) {
+      if (name == key) return InheritedMemberKind::accessor;
+    }
+    current = found->second.base;
+  }
+  return InheritedMemberKind::none;
+}
+
+} // namespace flight

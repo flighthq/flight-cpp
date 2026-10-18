@@ -20,6 +20,18 @@
 
 namespace {
 
+// A class-like aggregate with a prototype method and accessor, registered as the emitter registers an
+// emitted class, plus a base that an emitted class extends.
+struct TestPrototypeClass : public flight::ReferenceEnabled {
+  double value = 1.0;
+  double twice() const { return value * 2.0; }
+};
+struct TestPrototypeBase : public flight::ReferenceEnabled {};
+inline const bool test_prototype_class_registered = flight::register_class_prototype<TestPrototypeClass>(
+    flight::ClassPrototype{{"twice"}, {"size"}, std::nullopt, false});
+inline const bool test_prototype_base_registered = flight::register_class_prototype<TestPrototypeBase>(
+    flight::ClassPrototype{{"shared"}, {}, std::nullopt, true});
+
 int failures = 0;
 
 void check(bool condition, const char* message) {
@@ -1067,6 +1079,57 @@ int main() {
         "and answering `in` over its own string keys only");
   check(erased_view.get(flight::String("intensity")).kind() == flight::AnyKind::undefined,
         "an optional member that holds nothing reads as undefined, not as a missing key");
+
+  // ERASED PRESENCE AND TYPEOF THROUGH THE PROTOTYPE CHAIN. `key in value` and `typeof value.key` on an
+  // erased object ask its own cells, then its registered class prototype, then Object.prototype.
+  {
+    check(flight::has_property(erased, flight::String("intensity")) &&
+              !flight::has_property(erased, flight::String("notAKeyOfThis")) &&
+              flight::has_property(erased, flight::String("toString")),
+          "an erased plain object answers own keys, missing keys, and Object.prototype names");
+    check(flight::member_typeof(erased, flight::String("intensity")) == flight::String("undefined") &&
+              flight::member_typeof(erased, flight::String("notAKeyOfThis")) == flight::String("undefined") &&
+              flight::member_typeof(erased, flight::String("toString")) == flight::String("function"),
+          "typeof reads the own value, a missing key, and an inherited Object.prototype method");
+    bool threw_type_error = false;
+    try {
+      static_cast<void>(flight::has_property(flight::Any(1.0), flight::String("x")));
+    } catch (const flight::TypeError&) {
+      threw_type_error = true;
+    }
+    check(threw_type_error, "`in` on a primitive throws TypeError, as it does in JavaScript");
+    bool threw_null_read = false;
+    try {
+      static_cast<void>(flight::member_typeof(flight::Any(flight::null), flight::String("x")));
+    } catch (const flight::TypeError&) {
+      threw_null_read = true;
+    }
+    check(threw_null_read, "reading a member of null throws TypeError");
+
+    const flight::Any instance = flight::Any::object(flight::make_ref<TestPrototypeClass>());
+    check(test_prototype_class_registered && flight::has_property(instance, flight::String("twice")) &&
+              flight::has_property(instance, flight::String("size")) &&
+              !flight::has_property(instance, flight::String("absent")),
+          "a registered class reports its prototype methods and accessors, and not other names");
+    check(flight::member_typeof(instance, flight::String("twice")) == flight::String("function"),
+          "an inherited method is a function");
+    bool accessor_refused = false;
+    try {
+      static_cast<void>(flight::member_typeof(instance, flight::String("size")));
+    } catch (const flight::OutOfProfileMemberQuery&) {
+      accessor_refused = true;
+    }
+    check(accessor_refused, "typeof of an inherited accessor would run its getter, so it is refused");
+    bool subclassed_refused = false;
+    try {
+      static_cast<void>(flight::has_property(flight::Any::object(flight::make_ref<TestPrototypeBase>()),
+                                             flight::String("shared")));
+    } catch (const flight::OutOfProfileMemberQuery&) {
+      subclassed_refused = true;
+    }
+    check(test_prototype_base_registered && subclassed_refused,
+          "a class with subclasses is refused without the object's exact type");
+  }
 
   // One owner, not two: a write through the typed row is visible through the erased view, and the
   // read that was undefined a moment ago is now the value the object actually holds.
