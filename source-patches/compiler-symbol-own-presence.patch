@@ -1,0 +1,380 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 97bf4f5..710bbf6 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -86,6 +86,7 @@ import type {
+   IrTypeBindingIdentity,
+   IrTypeParameter,
+   IrTupleTypeElement,
++  IrMembershipTestEvidence,
+   IrUnionMemberTestEvidence,
+   IrValueNameReference,
+   IrVariable,
+@@ -6655,6 +6656,9 @@ function emitExpression(
+               return member ? [member] : [];
+             })
+           : properties;
++      const computedMembers = expression.members.filter(
++        (member): member is typeof member & { kind: 'computedProperty' } => member.kind === 'computedProperty',
++      );
+       const construction = (initializer: string): string => {
+         if (
+           getCppRuntimeProfile(context.options) === 'flight-cpp' &&
+@@ -6663,7 +6667,9 @@ function emitExpression(
+           const storageType =
+             getCppReferenceValueAliasStorageTypeCpp(constructionType, context, new Set()) ??
+             emitType(constructionType, context, 'storage');
+-          return `flight::make_ref<${storageType}>(${storageType}${initializer})`;
++          const made = `flight::make_ref<${storageType}>(${storageType}${initializer})`;
++          if (computedMembers.length === 0) return made;
++          return emitCppNominalComputedMemberConstructionCpp(made, storageType, computedMembers, constructionProperties, context);
+         }
+         return initializer;
+       };
+@@ -24368,6 +24374,7 @@ function emitCppMembershipTestCpp(
+     receiverCarrier === 'flight::Any' ||
+     (!receiverCarrier.startsWith('flight::Record<') &&
+       !receiverCarrier.startsWith('flight::Ref<') &&
++      !hasFlightReferenceRepresentationCpp(receiverType, context) &&
+       !getCppStructuralRowExpressionPlanCpp(expression.right, context))
+   ) {
+     return undefined;
+@@ -24381,6 +24388,7 @@ function emitCppMembershipTestCpp(
+     );
+   }
+   const describe = `\`${evidence.key.kind === 'string' ? JSON.stringify(evidence.key.value) : 'key'} in receiver\``;
++  if (evidence.key.kind === 'symbol') return emitCppSymbolMembershipTestCpp(expression, evidence, receiverType, receiverCarrier, context);
+   const receiver = emitExpression(expression.right, context);
+   if (receiverCarrier?.startsWith('flight::Record<')) {
+     if (evidence.key.kind === 'string') {
+@@ -24444,6 +24452,142 @@ function emitCppMembershipTestCpp(
+   return `flight::row_has<flight::RowKey<${JSON.stringify(evidence.key.value)}>>(${receiver})`;
+ }
+ 
++// `uniqueSymbol in receiver`, as the receiver's OWN presence: a recorded write (including a write of
++// `undefined`), an engaged cell, or an attached value -- the runtime's written-presence query, never
++// engagement alone. A nominal reference is answered only when its own struct carries the computed cell,
++// so an owner bound from that static type still reaches the member; anything else needs the concrete
++// owner recorded at construction, and is refused rather than answered from a base layout.
++function emitCppSymbolMembershipTestCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'binary' }>>,
++  evidence: Readonly<IrMembershipTestEvidence>,
++  receiverType: Readonly<IrType>,
++  receiverCarrier: string,
++  context: EmitContext,
++): string {
++  const refuse = (why: string): never =>
++    emissionError(context, `a unique-symbol \`in\` ${why}`, 'cpp-membership-test-unrepresented');
++  if (receiverCarrier.startsWith('flight::Record<')) refuse('on a Record has no symbol-keyed entry query');
++  if (hasCppReceiverAssertionSyntaxCpp(expression.right)) {
++    refuse('on an ASSERTED receiver asks the object itself, which the assertion does not prove');
++  }
++  if (evidence.receiver === 'optional' || evidence.subtypes === 'optional') {
++    refuse('probes a key some reachable type declares optional, and a native write of undefined to an optional cell is not recorded');
++  }
++  const receiver = emitExpression(expression.right, context);
++  if (evidence.receiver === 'required') return `(static_cast<void>(${receiver}), true)`;
++  const key = emitExpression(expression.left, context);
++  context.includes.add('flight/structural_ref.hpp');
++  if (getCppStructuralRowExpressionPlanCpp(expression.right, context)) {
++    return `flight::row_has_own_property(${receiver}, ${key})`;
++  }
++  const keyReference = getIrExpressionValueNameReferenceCpp(expression.left);
++  const shape =
++    receiverCarrier.startsWith('flight::Ref<') || hasFlightReferenceRepresentationCpp(receiverType, context)
++      ? context.referenceRepresentationPlanner.resolveObjectShape(
++          getCppReferenceStorageSubjectTypeCpp(receiverType, context),
++          context.module,
++        )
++      : undefined;
++  const carriesCell =
++    keyReference !== undefined &&
++    keyReference.kind === 'binding' &&
++    shape?.some(
++      (property) =>
++        property.computedKey !== undefined &&
++        property.computedKey.kind === 'binding' &&
++        getCppGeneratedSymbolReferenceCpp(property.computedKey, context).identity ===
++          getCppGeneratedSymbolReferenceCpp(keyReference, context).identity,
++    );
++  if (!carriesCell) {
++    refuse(`on ${receiverCarrier} needs the object's concrete owner: the receiver's own struct does not carry the computed cell`);
++  }
++  return `flight::has_own_property(${receiver}, ${key})`;
++}
++
++// A designated initializer names data members only, so a literal's computed-symbol members
++// (`{ [EntityRuntimeKey]: runtime, kind }`) have no clause in it and were dropped: the value never reached
++// the object, and a member written with `undefined` was indistinguishable from one never written. Each
++// computed member is written onto the constructed object through the runtime's symbol write, which lands
++// on the member cell and records the write, so `key in object` afterwards is the source's answer. The
++// writes follow the construction, so a value whose evaluation could be observed is refused instead of
++// being reordered past the other members.
++function emitCppNominalComputedMemberConstructionCpp(
++  made: string,
++  storageType: string,
++  computedMembers: readonly Readonly<Extract<IrObjectMember, { kind: 'computedProperty' }>>[],
++  constructionProperties: readonly Readonly<IrObjectTypeProperty>[] | undefined,
++  context: EmitContext,
++): string {
++  const result = getGeneratedTargetName('computedConstruction', context);
++  const row = `flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<${storageType}>>>>(${result})`;
++  const writes = computedMembers.map((member) => {
++    const keyReference = getIrExpressionValueNameReferenceCpp(member.key);
++    if (!keyReference) {
++      emissionError(
++        context,
++        'a computed object-literal member needs a symbol key with a value identity to be written onto the constructed object',
++        'cpp-computed-member-construction-unrepresented',
++      );
++    }
++    const value = member.value;
++    const sideEffectFree =
++      value.kind === 'identifier' || value.kind === 'literal' || value.kind === 'undefinedValue';
++    if (!sideEffectFree) {
++      emissionError(
++        context,
++        'a computed object-literal member is written after the native construction, so its value must be free of observable evaluation; bind it to a local before the literal',
++        'cpp-computed-member-construction-unrepresented',
++      );
++    }
++    const property = constructionProperties?.find(
++      (candidate) =>
++        candidate.computedKey !== undefined &&
++        candidate.computedKey.kind === 'binding' &&
++        keyReference.kind === 'binding' &&
++        getCppGeneratedSymbolReferenceCpp(candidate.computedKey, context).identity ===
++          getCppGeneratedSymbolReferenceCpp(keyReference, context).identity,
++    );
++    const isUndefined =
++      value.kind === 'undefinedValue' ||
++      (value.kind === 'identifier' && value.reference.kind === 'ambient' && value.reference.name === 'undefined');
++    const written = isUndefined ? 'std::nullopt' : emitExpression(value, context, property?.type);
++    return `flight::row_set(${row}, ${emitExpression(member.key, context)}, ${written});`;
++  });
++  context.includes.add('flight/structural_ref.hpp');
++  return `(${context.namespaceScope ? '[]' : '[&]'}() { auto ${result} = ${made}; ${writes.join(' ')} return ${result}; }())`;
++}
++
++// The type whose struct a reference is actually stored as. A reference-value alias resolves to its
++// target, and an ambient projection (`Omit<T, K>`, `Pick`, `Readonly`) that the emitter stores as its
++// first argument's struct resolves to that argument: the owner binds that struct's cells, so a member it
++// declares has a cell even where the projection hides the member from the source type.
++function getCppReferenceStorageSubjectTypeCpp(type: Readonly<IrType>, context: EmitContext): Readonly<IrType> {
++  let current: Readonly<IrType> = type;
++  const seen = new Set<string>();
++  for (;;) {
++    if (current.kind !== 'named') return current;
++    const key = JSON.stringify(current);
++    if (seen.has(key)) return current;
++    seen.add(key);
++    if (current.reference.kind === 'binding' && isCppReferenceValueAliasCpp(current, context)) {
++      const target = resolveCppTypeAliasTarget(current, context);
++      if (!target) return current;
++      current = target;
++      continue;
++    }
++    const first = current.typeArguments[0];
++    if (
++      current.reference.kind === 'ambient' &&
++      first &&
++      emitType(current, context, 'storage') === emitType(first, context, 'storage')
++    ) {
++      current = first;
++      continue;
++    }
++    return current;
++  }
++}
++
+ function isCppObjectPrototypePropertyNameCpp(name: string): boolean {
+   return cppObjectPrototypePropertyNames.has(name);
+ }
+diff --git a/packages/compiler-backend-cpp/src/cppSymbolOwnPresence.test.ts b/packages/compiler-backend-cpp/src/cppSymbolOwnPresence.test.ts
+new file mode 100644
+index 0000000..c3ea0e5
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppSymbolOwnPresence.test.ts
+@@ -0,0 +1,70 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/example/src/symbolOwnPresence.ts', source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/example', upstreamDirectory: '/flight' });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++function refusal(source: string): string {
++  try {
++    emit(source);
++  } catch (error) {
++    return String(error);
++  }
++  throw new Error('expected a refusal');
++}
++
++const entity = `
++  export const RuntimeKey: unique symbol = Symbol('runtime');
++  export interface EntityRuntime { id: number }
++  export interface Entity { [RuntimeKey]: EntityRuntime | undefined }
++  export interface Material extends Entity { kind: string }
++  export type MaterialLike = Omit<Material, typeof RuntimeKey>;
++`;
++
++it('answers a unique-symbol `in` on a projected nominal receiver as written presence', () => {
++  const output = emit(`${entity}
++    export function isMaterialEntity(source: MaterialLike): boolean { return RuntimeKey in source; }
++  `);
++
++  expect(output).toContain('return flight::has_own_property(source, runtime_key);');
++  expect(output).not.toContain('runtime_key in source');
++});
++
++it('writes a literal computed-symbol member onto the constructed object, including undefined', () => {
++  const output = emit(`${entity}
++    export function withUndefined(): Material { return { [RuntimeKey]: undefined, kind: 'a' }; }
++    export function withValue(runtime: EntityRuntime): Material { return { [RuntimeKey]: runtime, kind: 'b' }; }
++  `);
++
++  expect(output).toContain(
++    'flight::row_set(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<Material>>>>(computed_construction), runtime_key, std::nullopt);',
++  );
++  expect(output).toMatch(/flight::row_set\(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<Material>>>>\(computed_construction_2\), runtime_key, [^;]*runtime[^;]*\);/);
++});
++
++it('refuses an asserted receiver, an optional declarer, and a side-effecting computed value', () => {
++  expect(
++    refusal(`${entity}
++      export function isEntity(value: unknown): boolean { return RuntimeKey in (value as Material); }
++    `),
++  ).toContain('ASSERTED receiver');
++  expect(
++    refusal(`${entity}
++      export interface Detached { [RuntimeKey]?: EntityRuntime; kind: string }
++      export function isAttached(source: MaterialLike): boolean { return RuntimeKey in source; }
++    `),
++  ).toContain('declares optional');
++  expect(
++    refusal(`${entity}
++      function makeRuntime(): EntityRuntime { return { id: 1 }; }
++      export function built(): Material { return { [RuntimeKey]: makeRuntime(), kind: 'c' }; }
++    `),
++  ).toContain('free of observable evaluation');
++});
+diff --git a/packages/compiler-semantic/src/typeScriptSemanticLowering.ts b/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
+index b3d39d6..277757a 100644
+--- a/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
++++ b/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
+@@ -7366,6 +7366,7 @@ function getTypeScriptMembershipTestEvidence(
+       ? keyType.value
+       : undefined;
+   if (keyValue === undefined) {
++    if (keyType.flags & ts.TypeFlags.UniqueESSymbol) return getTypeScriptSymbolMembershipTestEvidence(node, keyNode, keyType, context);
+     if (!(keyType.flags & ts.TypeFlags.String)) return undefined;
+     return { inherited: false, key: { kind: 'dynamicString' }, receiver: 'undeclared', subtypes: 'none' };
+   }
+@@ -7393,6 +7394,74 @@ function getTypeScriptMembershipTestEvidence(
+   };
+ }
+ 
++// `uniqueSymbol in receiver`: the same three questions as a string key, answered by symbol identity. The
++// receiver's declaration is found by the unique symbol's property name; assignable declarers are the
++// analyzed computed property declarations whose key expression resolves to the same symbol.
++function getTypeScriptSymbolMembershipTestEvidence(
++  node: ts.BinaryExpression,
++  keyNode: ts.Expression,
++  keyType: ts.Type,
++  context: LoweringContext,
++): IrMembershipTestEvidence | undefined {
++  const keySymbol = resolveTypeScriptAliasedSymbol(context.checker.getSymbolAtLocation(keyNode), context);
++  if (!keySymbol) return undefined;
++  const receiverType = context.checker.getTypeAtLocation(node.right);
++  const escapedName = (keyType as ts.UniqueESSymbolType).escapedName;
++  const declared = context.checker.getPropertyOfType(receiverType, ts.unescapeLeadingUnderscores(escapedName));
++  let subtypes: IrMembershipTestEvidence['subtypes'] = 'none';
++  for (const declaration of getTypeScriptComputedPropertyDeclarationsFor(keySymbol, context)) {
++    const container = getTypeScriptPropertyContainerType(declaration, context);
++    if (!container || !isTypeScriptMembershipContainerAssignable(container, receiverType, context)) continue;
++    if (declaration.questionToken) {
++      subtypes = 'optional';
++      break;
++    }
++    subtypes = 'required';
++  }
++  return {
++    inherited: false,
++    key: { kind: 'symbol' },
++    receiver:
++      declared === undefined ? 'undeclared' : declared.flags & ts.SymbolFlags.Optional ? 'optional' : 'required',
++    subtypes,
++  };
++}
++
++function resolveTypeScriptAliasedSymbol(symbol: ts.Symbol | undefined, context: LoweringContext): ts.Symbol | undefined {
++  return symbol && symbol.flags & ts.SymbolFlags.Alias ? context.checker.getAliasedSymbol(symbol) : symbol;
++}
++
++function getTypeScriptComputedPropertyDeclarationsFor(
++  keySymbol: ts.Symbol,
++  context: LoweringContext,
++): readonly (ts.PropertyDeclaration | ts.PropertySignature)[] {
++  let index = typeScriptComputedPropertyDeclarationIndexes.get(context.checker);
++  if (!index) {
++    const built = new Map<ts.Symbol, (ts.PropertyDeclaration | ts.PropertySignature)[]>();
++    const visit = (candidate: ts.Node): void => {
++      if (
++        (ts.isPropertySignature(candidate) || ts.isPropertyDeclaration(candidate)) &&
++        ts.isComputedPropertyName(candidate.name)
++      ) {
++        const resolved = resolveTypeScriptAliasedSymbol(
++          context.checker.getSymbolAtLocation(candidate.name.expression),
++          context,
++        );
++        if (resolved) {
++          const entries = built.get(resolved);
++          if (entries) entries.push(candidate);
++          else built.set(resolved, [candidate]);
++        }
++      }
++      ts.forEachChild(candidate, visit);
++    };
++    for (const sourceFile of context.analysisSourceFiles) visit(sourceFile);
++    index = built;
++    typeScriptComputedPropertyDeclarationIndexes.set(context.checker, index);
++  }
++  return index.get(keySymbol) ?? [];
++}
++
+ function getTypeScriptPropertyContainerType(
+   declaration: ts.PropertyDeclaration | ts.PropertySignature,
+   context: LoweringContext,
+@@ -10788,3 +10857,8 @@ const typeScriptPropertyDeclarationIndexes = new WeakMap<
+   ts.TypeChecker,
+   ReadonlyMap<string, readonly (ts.PropertyDeclaration | ts.PropertySignature)[]>
+ >();
++
++const typeScriptComputedPropertyDeclarationIndexes = new WeakMap<
++  ts.TypeChecker,
++  ReadonlyMap<ts.Symbol, readonly (ts.PropertyDeclaration | ts.PropertySignature)[]>
++>();
+diff --git a/packages/compiler-types/src/compilerOperatorSemanticIntermediateRepresentation.ts b/packages/compiler-types/src/compilerOperatorSemanticIntermediateRepresentation.ts
+index 8b4a27f..0963108 100644
+--- a/packages/compiler-types/src/compilerOperatorSemanticIntermediateRepresentation.ts
++++ b/packages/compiler-types/src/compilerOperatorSemanticIntermediateRepresentation.ts
+@@ -34,7 +34,10 @@ export interface IrAssignmentOperatorSemantics {
+ // object literal; a target that cannot see that prototype must refuse rather than answer false.
+ export interface IrMembershipTestEvidence {
+   readonly inherited: boolean;
+-  readonly key: Readonly<{ kind: 'string'; value: string }> | Readonly<{ kind: 'dynamicString' }>;
++  readonly key:
++    | Readonly<{ kind: 'string'; value: string }>
++    | Readonly<{ kind: 'dynamicString' }>
++    | Readonly<{ kind: 'symbol' }>;
+   readonly receiver: 'optional' | 'required' | 'undeclared';
+   readonly subtypes: 'none' | 'optional' | 'required';
+ }

@@ -716,6 +716,9 @@ patch has retired because the fix landed upstream keep their row, marked, as the
   `@flighthq/render` `renderRegistryGuards.ts`: `${registry}` over a numeric enum lowers to
   `flight::to_string(enum class)`; prepared explicit numeric conversion passes source/native controls.
   The original registry consumer and eight rows still await independent membership owner support.
+- [`typeof` on a member read through an assertion is folded to a constant](asserted-member-typeof-constant-fold.md) —
+  `@flighthq/render` `isRenderCacheAdapter`: `typeof (value as RenderCacheAdapter).adapt === 'function'` emits
+  `"function" == "function"`. It should read the erased value's own member, or refuse. Nothing is carried.
 
 - [Computed Record deletion must remove the property](record-computed-delete.md) —
   shared mutable dictionary deletion, primitive missing-key storage and erased local
