@@ -5623,7 +5623,7 @@
       "unblocks": "the SWF placement helpers (readSwfFilterList and siblings) that take the concrete reader while their caller holds the interface",
       "expires": "when the class/interface adoption emits from the shared view family for both directions, or the runtime offers an implicit same-owner conversion",
       "appliedOn": "2026-10-18",
-      "verification": "New cppInterfaceToClassOwnerAdoption.test.ts: 2 pass (an interface value at a class parameter emits flight::require_owner<C>(r) with the reference include; an argument already declared as the class is untouched and never wrapped). A native probe compiles the emitted fixture as C++20 against the pinned runtime. Build exit 0; stack applies/reverts clean."
+      "verification": "New cppInterfaceToClassOwnerAdoption.test.ts: 5 pass (declared pair+site emits flight::require_owner<C>(r) with the reference include; an undeclared pair does not adopt; a declared pair at an undeclared site does not adopt; a class method whose parameter signature differs does not adopt even where TypeScript accepts the call; an argument already declared as the class is untouched). The adoption is gated by DECLARED class/interface pairs and sites (classInterfaceAdoptions) and requires per-member compatibility: type, readonly and optionality for data, parameter types and result for methods. A value not allocated as the class throws NativeScalarEscapeError at the call (honest partial; not every structural interface object is claimed valid). Build exit 0; stack applies/reverts clean."
     }
   ]
 }
