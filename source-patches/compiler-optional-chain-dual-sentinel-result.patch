@@ -1,0 +1,147 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index d010a9f..9bb8f1e 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -23536,6 +23536,15 @@ function emitContextualUnionExpressionInContextCpp(
+   if (expression.kind === 'call' && isCppExactImportedCarrierCallResultCpp(expression, union, context)) {
+     return emitExpression(expression, context, undefined, false);
+   }
++  // A chain call has three source states, while the optional carrier its own lowering uses keeps two:
++  // an absent link (`undefined`) and a null result from the callee both become optional absence. A
++  // dual-sentinel destination distinguishes them, so reconstruct the chain from the same receiver
++  // projection and invocation instead of converting an optional into the variant, which has no such
++  // constructor. The present value and both sentinels keep the destination's own carriers.
++  if (expression.kind === 'call' && expression.optional) {
++    const dualSentinelChain = emitCppDualSentinelOptionalChainCallCpp(expression, union, plan, context);
++    if (dualSentinelChain) return dualSentinelChain;
++  }
+   if (
+     (expression.kind === 'call' && (expression.optional || expression.semantics.optionalChain)) ||
+     (expression.kind === 'element' && (expression.optional || expression.semantics.optionalChain)) ||
+@@ -37091,6 +37100,48 @@ function getCppErasedExternalCallBoundResultTypeCpp(
+   return { kind: 'named', reference: { kind: 'ambient', name: sources[0]!.sourceName }, typeArguments: [] };
+ }
+ 
++// The dual-sentinel form of a chained call. The plain chain lowering returns `std::optional<payload>`,
++// which erases whether absence came from a missing link or from the callee's own null return; assigning
++// that to the dual-sentinel variant the source type declares has no converting constructor and also
++// loses the authored sentinel. This path evaluates the same receiver projection and the same
++// invocation once, and returns each state with the destination's own carrier: a missing link keeps
++// `undefined`, an empty callee result keeps `null`, and a present result constructs its value slot.
++// It applies only when the destination represents BOTH sentinels with exactly one value slot, so the
++// ambiguous optional form is never chosen for a source that distinguishes them.
++function emitCppDualSentinelOptionalChainCallCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'call' }>>,
++  union: Readonly<Extract<IrType, { kind: 'union' }>>,
++  plan: ReturnType<typeof getCppUnionRepresentationPlan>,
++  context: EmitContext,
++): string | undefined {
++  const semantics = expression.semantics.optionalChain;
++  if (!semantics || semantics.receiverNullish === 'excluded') return undefined;
++  if (plan.kind !== 'dualSentinelVariant' || plan.valueSlots.length !== 1) return undefined;
++  if (plan.sentinels.null === 'absent' || plan.sentinels.undefined === 'absent') return undefined;
++  const receiverProjection = getCppOptionalChainReceiverProjectionCpp(semantics.receiverType, context);
++  const receiverType = emitOptionalChainPayloadIrTypeCpp(semantics.receiverType, context);
++  const callee = emitOptionalChainReceiverCpp(expression.callee, context);
++  const arguments_ = appendCppOmittedInvocationArguments(
++    expression,
++    expression.arguments.map((argument) => emitExpression(argument, context)),
++    context,
++  ).join(', ');
++  const invocation = getCppCallableObjectIrTypeCpp(receiverType, context, new Set())
++    ? `(*${receiverProjection.value})(${arguments_})`
++    : `${receiverProjection.value}(${arguments_})`;
++  const resultType = qualifyCppDeclaringModuleTypeCpp(emitUnionTypeCpp(union, context), context);
++  const slot = plan.valueSlots[0]!;
++  const targetType = qualifyCppDeclaringModuleTypeCpp(slot.targetType, context);
++  const undefinedSentinel = emitCppUnionSentinelConstruction('undefined', union, plan.kind, context);
++  const nullSentinel = emitCppUnionSentinelConstruction('null', union, plan.kind, context);
++  const result = getGeneratedTargetName('optionalChainResult', context);
++  // `getCppOptionalChainReceiverProjectionCpp` spells its projections with this local's name; the
++  // receiver is held once for the absence test and the invocation, never re-evaluated.
++  const present = emitCppUnionValueConstruction(`${result}.value()`, targetType, union, plan.kind, context);
++  context.includes.add('optional');
++  return `([&]() -> ${resultType} { auto optional_chain_receiver = ${callee}; if (${receiverProjection.absent}) return ${undefinedSentinel}; auto ${result} = ${invocation}; if (!${result}.has_value()) return ${nullSentinel}; return ${present}; }())`;
++}
++
+ function emitOptionalCallExpressionCpp(
+   expression: Readonly<Extract<IrExpression, { kind: 'call' }>>,
+   context: EmitContext,
+diff --git a/packages/compiler-backend-cpp/src/cppOptionalChainResultVariant.test.ts b/packages/compiler-backend-cpp/src/cppOptionalChainResultVariant.test.ts
+new file mode 100644
+index 0000000..62489b3
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppOptionalChainResultVariant.test.ts
+@@ -0,0 +1,72 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile(
++    '/flight/packages/example/src/optionalChain.ts',
++    source,
++    ts.ScriptTarget.Latest,
++    true,
++  );
++  const result = lowerTypeScriptSource(sourceFile, {
++    packageName: '@flighthq/example',
++    upstreamDirectory: '/flight',
++  });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++// The source shape is `@flighthq/swf`'s placement-node helper: a callback reached through two
++// optional links returns `Node2D | null`, and the chained call's result is declared
++// `Node2D | null | undefined`. The absent link is `undefined`; the callee's own return may be `null`;
++// and a present character is the node. Both sentinels must survive into the declared variant.
++const dualSentinel = `
++  interface Node2D { x: number }
++  interface Instantiate { createPlacementNode?(parsed: number): Node2D | null }
++  interface Handler { instantiate?: Instantiate }
++  export function create(handlers: readonly Handler[]): number {
++    for (const handler of handlers) {
++      const node: Node2D | null | undefined = handler.instantiate?.createPlacementNode?.(1);
++      void node;
++    }
++    return 0;
++  }
++`;
++
++it('keeps both chain sentinels when the declared result distinguishes null from undefined', () => {
++  const output = emit(dualSentinel);
++  // The declared carrier is the dual-sentinel variant, and the initializer must construct that same
++  // carrier rather than an optional it has no converting constructor from.
++  expect(output).toContain(
++    'std::variant<flight::Ref<Node2D>, flight::Null, flight::Undefined> node = ([&]() -> std::variant<',
++  );
++  // An absent link is undefined, never a collapsed absence.
++  expect(output).toContain('std::in_place_type<flight::Undefined>, flight::undefined');
++  // The callee's own null result stays null.
++  expect(output).toContain('std::in_place_type<flight::Null>, flight::null');
++  // A present result is the value slot, and the receiver is evaluated once for both the absence test
++  // and the invocation.
++  expect(output).toContain('.value()');
++  expect(output.match(/auto optional_chain_receiver =/gu)?.length).toBe(2);
++  expect(output.match(/->create_placement_node/gu)?.length).toBe(1);
++});
++
++it('leaves a chain whose declared result has only one sentinel on the ordinary optional carrier', () => {
++  const output = emit(`
++    interface Node2D { x: number }
++    interface Instantiate { createPlacementNode?(parsed: number): Node2D | null }
++    interface Handler { instantiate?: Instantiate }
++    export function create(handlers: readonly Handler[]): number {
++      for (const handler of handlers) {
++        const node: Node2D | undefined = handler.instantiate?.createPlacementNode?.(1);
++        void node;
++      }
++      return 0;
++    }
++  `);
++  expect(output).toContain('std::optional<flight::Ref<Node2D>> node = ([&]() -> std::optional<');
++  expect(output).not.toContain('std::in_place_type<flight::Undefined>');
++});

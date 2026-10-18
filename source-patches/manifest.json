@@ -5692,6 +5692,23 @@
       "expires": "when upstream lowers erased membership and asserted-member typeof to runtime member queries and records class prototypes.",
       "appliedOn": "2026-10-18",
       "verification": "cppErasedMemberQuery, cppMembershipTest and cppSymbolOwnPresence 12/12; full backend+semantic failure set identical with and without (0 new) over the 113-patch stack; scoped generation of the eight packages kept only the in/typeof lines and registration lines, with no new header errors. tests/generated_class_prototype_presence_test.cpp checks AbcReader and SwfReader; tests/structural_row_test.cpp pins each emitted expression on JSON values plus the TypeError, getter and refusal boundaries; a mutant answering absent for unbound native keys is killed."
+    },
+    {
+      "id": "compiler-optional-chain-dual-sentinel-result",
+      "dependency": "flight-compiler",
+      "patch": "compiler-optional-chain-dual-sentinel-result.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/swf",
+      "answers": "diagnostic",
+      "refusal": "emitted SWF diagnostic at flight/swf/swf_document.hpp:222: no viable conversion from 'std::optional<StructuralRef<RowMerge<RowOf<Node<Node2DTraits>>, RowOf<Node2DTraits>>>>' to 'std::variant<Node2D, flight::Null, flight::Undefined>' -- a chained call's result assigned to the dual-sentinel union its source type declares",
+      "rewrite": "When a contextual dual-sentinel union is the destination of an OPTIONAL CALL (`a?.b?.()`), reconstruct the chain in the destination's carrier instead of converting the optional its own lowering uses: evaluate the existing receiver projection and invocation once, return the `undefined` sentinel when the link is absent, the `null` sentinel when the callee's own result is empty, and the one value slot otherwise. Applied only when the destination represents both sentinels with exactly one value slot; a destination that keeps one sentinel keeps the ordinary optional chain.",
+      "equivalence": "Both authored sentinels survive (an absent link is undefined, the callee's null stays null), the callback runs once per present path and never on an absent link, and a present result is the same reference the callback returned -- no copy, no reconstructed owner, no sentinel collapse. The change is a pure addition on the dual-sentinel contextual path; every other chain destination keeps its previous emission.",
+      "verification": "New cppOptionalChainResultVariant.test.ts: 2 pass (dual-sentinel destination emits both sentinel constructions plus one receiver evaluation and one callback read; a one-sentinel destination keeps std::optional). The emitted expression copied verbatim into a native fixture compiles against the pinned runtime and runs: undefined-link=undefined, undefined-callable=undefined, null-result=null, present=node, calls=2, present Ref identity == returned owner and its cell live. The source oracle prints the same states, identity and two invocations. Managed patch applies after the class/interface heritage entry. Backend regression parity on the same 130-patch base: 87 failed / 1456 passed / 33 skipped BOTH with and without this patch; the failing-title sets are identical (0 new, 0 fixed).",
+      "whyNotUpstreamFirst": "The pin already represents the dual-sentinel source type and already defers chained calls to their own lowering; only the contextual destination was not reconstructed, so the emitted line did not compile. docs/compiler-requests/optional-chain-dual-sentinel-result.md records the request.",
+      "unblocks": "the five SWF headers whose first failure is flight/swf/swf_document.hpp:222 (swf_content_capabilities, swf_document, swf_header, swf_requirements, swf_tag_census)",
+      "expires": "when upstream lowers a chained call directly into the dual-sentinel carrier its declared result type names",
+      "appliedOn": "2026-10-18"
     }
   ]
 }

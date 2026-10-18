@@ -1,0 +1,30 @@
+{
+  "schema": "flight-cpp-optional-chain-dual-sentinel-result/1",
+  "cause": "a chained call (a?.b?.()) whose declared result is T | null | undefined emitted std::optional<T>, which has no conversion to the dual-sentinel variant the declaration names",
+  "site": "packages/swf/src/swfDocument.ts createSwfHandlerPlacementNode; first failure flight/swf/swf_document.hpp:222",
+  "focused": {
+    "test": "packages/compiler-backend-cpp/src/cppOptionalChainResultVariant.test.ts",
+    "result": "2 pass",
+    "covers": [
+      "dual-sentinel destination emits undefined and null sentinel constructions plus the value slot",
+      "one receiver evaluation and one callback read",
+      "a destination with one sentinel keeps std::optional"
+    ]
+  },
+  "native": {
+    "fixture": "the emitted expression copied verbatim, compiled against the pinned runtime",
+    "output": "cases: undefined-link=undefined undefined-callable=undefined null-result=null present=node calls=2",
+    "checks": [
+      "missing link is undefined and never calls the callback",
+      "missing callback is undefined and never calls the callback",
+      "the callee's null result stays null",
+      "the present result is the same Ref the callback returned (held.get() == node.get()) and its cell is live"
+    ],
+    "exit": 0
+  },
+  "source_oracle": {
+    "output": "cases: undefined-link=undefined undefined-callable=undefined null-result=null present=node calls=2 identity=true",
+    "matches_native": true
+  },
+  "patch": "source-patches/compiler-optional-chain-dual-sentinel-result.patch"
+}
