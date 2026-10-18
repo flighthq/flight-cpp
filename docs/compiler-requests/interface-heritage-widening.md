@@ -1080,3 +1080,8 @@ three identical failures** (glTF texture widening expectations, host-image carri
 imported collection-alias spelling). No new failure is attributed to this initializer comparison.
 The patch applies to the exact preceding backend, produces the tested backend/test bytes, and reverses
 to that baseline while removing only its new test. Broader static gates are not claimed as passing.
+
+The inherited-alias and callback fixture body checks permit builder2's emitted `flight_native_base`
+metadata while still excluding inherited shadow cells and verifying native identity/field addresses.
+This keeps the semantic controls compatible with the required owner-registration annotation; it does
+not remove the negative carrier-refinement test or replace native validation with a spelling check.

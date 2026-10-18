@@ -12,7 +12,7 @@
        refinedMembers.set(property.name, substituted.optional ? createIrTypeEvidenceUnionCpp([substituted.type, { kind: 'undefined' }]) ?? substituted.type : substituted.type);
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppInheritedCallableInitializer.test.ts
-@@ -0,0 +1,149 @@
+@@ -0,0 +1,151 @@
 +import { execFileSync } from 'node:child_process';
 +import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 +import { tmpdir } from 'node:os';
@@ -93,8 +93,10 @@
 +describe('inherited callable initializers compare in their declaring namespace', () => {
 +  it('shares the identical callback cell despite local versus qualified initializer spelling', () => {
 +    const derived = emit().find((file) => file.path.endsWith('/derived.hpp'))!.contents;
-+    expect(derived).toContain('struct GlRegistries : public registry_cell::Registries {\n  double tag;\n};');
-+    expect(derived).not.toContain('callback;');
++    expect(derived).toContain('struct GlRegistries : public registry_cell::Registries {');
++    const body = derived.match(/struct GlRegistries : public registry_cell::Registries \{([\s\S]*?)\n\};/u)![1]!;
++    expect(body).toContain('double tag;');
++    expect(body).not.toMatch(/\bcallback\s*[;=]/u);
 +    expect(derived).not.toContain('NOT GENERATED');
 +  });
 +
@@ -162,3 +164,22 @@
 +    120_000,
 +  );
 +});
+--- a/packages/compiler-backend-cpp/src/cppInheritedAliasHeritage.test.ts
++++ b/packages/compiler-backend-cpp/src/cppInheritedAliasHeritage.test.ts
+@@ -109,8 +109,14 @@
+       const base = files.find((file) => file.path.endsWith('/base.hpp'))!.contents;
+       const derived = files.find((file) => file.path.endsWith('/derived.hpp'))!.contents;
+       expect(base).toContain('Policy policy;');
+-      expect(derived).toContain('struct GlState : public alias_owner::Base {\n  double gl;\n};');
+-      expect(derived).toContain('struct WgpuState : public alias_owner::Base {\n  double device;\n};');
++      expect(derived).toContain('struct GlState : public alias_owner::Base {');
++      const glBody = derived.match(/struct GlState : public alias_owner::Base \{([\s\S]*?)\n\};/u)![1]!;
++      expect(glBody).toContain('double gl;');
++      expect(glBody).not.toMatch(/\b(?:policy|code|count|visit|box)\s*[;=]/u);
++      expect(derived).toContain('struct WgpuState : public alias_owner::Base {');
++      const deviceBody = derived.match(/struct WgpuState : public alias_owner::Base \{([\s\S]*?)\n\};/u)![1]!;
++      expect(deviceBody).toContain('double device;');
++      expect(deviceBody).not.toMatch(/\b(?:policy|code|count|visit|box)\s*[;=]/u);
+       expect(derived).toContain('struct GenericState : public GenericBase<double> {');
+       expect(derived).not.toContain('Ref<alias_owner::Policy>');
+       expect(derived).not.toContain('Ref<alias_owner::Numeric>');
