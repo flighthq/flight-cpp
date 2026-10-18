@@ -4846,6 +4846,23 @@
       "verification": "Compiler worktree at 806d257 with the 69-patch stack plus this patch: all 70 apply sequentially with plain git apply. compiler-semantic tsc 0 errors; compiler-backend-cpp tsc 5 errors, identical without this patch (other patches' tests). New cppMembershipTest.test.ts 6 pass. Full compiler-backend-cpp + compiler-semantic vitest: 78 failed / 3004 passed / 33 skipped, the identical 78-failure set as the stack without this patch (0 new, 0 fixed). Emitted Record and row lowerings compiled with g++ 15.2 against this runtime plus the SDK structural member table and run: Mesh-through-Node row true, plain Node false, Record own key true, absent false, toString true."
     },
     {
+      "id": "compiler-defaulted-nullable-present-storage",
+      "dependency": "flight-compiler",
+      "patch": "compiler-defaulted-nullable-present-storage.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppDefaultedNullableBinding.test.ts",
+      "package": "@flighthq/scene2d-formats",
+      "answers": "diagnostic",
+      "refusal": "A defaulted nullable parameter keeps caller-presence storage outside its declared nullable carrier. After a null guard the helper projection removes only one optional, passing the inner optional instead of its readonly payload. applySvgElementAppearance at svg_document.hpp:70 blocks five original SVG consumers.",
+      "rewrite": "Project a defaulted binding through its existing initialized-binding read before projecting the guarded declared union. For a nondefault optional nullable parameter, remove its separately represented undefined layer after full presence proof. Reuse existing captured shared-cell initialization; leave module and ordinary binding reads on their existing path. Optional nullable sentinel comparisons inspect the original caller-presence carrier even when a preceding strict guard narrowed its value; a sentinel test must not project the value it is about to test.",
+      "equivalence": "The default initializer still consumes omitted/undefined arguments and preserves explicit null. A proven-present read selects only existing storage; it neither creates a new reference nor changes readonly authority. Original owner, shared control block, live cells, evaluation order/count, primitive values and exact thrown owners remain unchanged. Reachable absence, required nullable arguments and optional nonnullable arguments retain their existing projections.",
+      "whyNotUpstreamFirst": "The pinned Flight source already has the required semantics. This pin-bound compiler correction retains its complete public domain until the upstream emitter handles the layered parameter storage.",
+      "unblocks": "The original multiplySvgMatrices(authorTransform, geometryTransform) call in applySvgElementAppearance and other guarded defaulted nullable helper arguments. No SVG caller body rewrite or package promotion.",
+      "expires": "when upstream projects initialized parameter presence before a declared nullable payload (docs/compiler-requests/defaulted-nullable-parameter-present-payload.md).",
+      "appliedOn": "2026-10-18",
+      "verification": "Raw806d257 backend and current84-stack backend independently emit the missing payload projection on the same frontend IR; both emitted native fixtures fail at the actual inspect helper call. Candidate production build and emitted native compile/link/run PASS: omitted/undefined/null defaults, conditional/early/captured branches, required/optional/nullable return controls, nonnull default, same readonly row/native owner/control block, live cells, one producer, exact callback/producer thrown owner, signed zero/NaN and final lifetime. Source TypeScript oracle independently PASS. Nine initial focused groups PASS18/18 with adjacent controls; a tenth named strict-sentinel storage guard independently OLDRED before its fix. Supplemental source/native optional-nullable strict sentinels and captured mutable shared defaults PASS, preserving replacement owner/control block/live cells and final release; original defaulted native output remains byte-identical after the sentinel-test correction; old behavior fails five of the initial eight, and the ninth union-arm guard independently fails by name. Final current-floor adjacent tests, full compiler check and necessary normal scoped generation/original SVG consumer are PENDING."
+    },
+    {
       "id": "compiler-regexp-capture-member-presence",
       "dependency": "flight-compiler",
       "patch": "compiler-regexp-capture-member-presence.patch",

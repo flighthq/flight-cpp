@@ -20,11 +20,24 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    if (context.externalCallResultPresenceBindings.has(bindingId)) {
      context.includes.add('optional');
      return `${binding}.value()`;
+@@ -15021,7 +15031,11 @@
+   }
+   if (optionalParameterStorage === 'nestedNullable') {
+     context.includes.add('optional');
+-    const value = emitExpression(operand, context);
++    // Presence tests inspect the ABI carrier even after a preceding guard narrowed its value.
++    const value =
++      operand.kind === 'identifier'
++        ? emitIdentifierReference(operand.reference, context)
++        : emitExpression(operand, context);
+     let test: string;
+     if (!strict) {
+       test = present
 diff --git a/packages/compiler-backend-cpp/src/cppDefaultedNullableBinding.test.ts b/packages/compiler-backend-cpp/src/cppDefaultedNullableBinding.test.ts
 new file mode 100644
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppDefaultedNullableBinding.test.ts
-@@ -0,0 +1,150 @@
+@@ -0,0 +1,160 @@
 +import ts from 'typescript';
 +import { describe, expect, it } from 'vitest';
 +
@@ -173,5 +186,15 @@ new file mode 100644
 +    }`);
 +    expect(text).toMatch(/inspect\([^\n;]*owner\.value\(\)\.value\(\)/u);
 +    expect(text).not.toContain('RowWritable');
++  });
++
++  it('keeps the caller-presence layer while testing null after excluding undefined', () => {
++    const text = emitDefaultedBinding(`export function read(owner?: Readonly<Owner> | null): number {
++      if (owner === undefined) return -1;
++      if (owner === null) return -2;
++      return inspect(owner);
++    }`);
++    expect(text).not.toContain('const auto& presence_operand = owner.value();');
++    expect(text.match(/const auto& presence_operand = owner;/gu)).toHaveLength(2);
 +  });
 +});
