@@ -12,7 +12,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
        const typeArguments = getCppValueRepresentedCallTypeArgumentsCpp(expression, sourceTypeArguments, context);
        const resolveDomain = getCppPromiseResolveDomainTypeArgumentCpp(expression, expectedType, context);
        const invocationTypeArguments = resolveDomain ? [...typeArguments, resolveDomain] : typeArguments;
-@@ -35428,6 +35430,32 @@
+@@ -35428,6 +35430,37 @@
    return 'std::string';
  }
  
@@ -29,7 +29,12 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
 +  if (expression.typeArguments.length > 0) return undefined;
 +  const callee = expression.callee;
 +  if (callee.kind !== 'identifier') return undefined;
-+  const name = callee.reference.kind === 'ambient' ? callee.reference.name : callee.reference.binding.name;
++  const name =
++    callee.reference.kind === 'ambient'
++      ? callee.reference.name
++      : callee.reference.kind === 'binding'
++        ? callee.reference.binding.name
++        : undefined;
 +  if (name !== 'finishEntity') return undefined;
 +  const argument = expression.arguments[0];
 +  if (argument === undefined || argument.kind === 'spread') return undefined;
