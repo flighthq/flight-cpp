@@ -1,0 +1,106 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -9545,6 +9545,28 @@
+     );
+   }
+   if (!expression.elements.some((element) => element?.kind === 'spread')) {
++    // A source array literal is also how a tuple is written at the value: `['k', v]` is what the
++    // checker-selected `readonly ['k' literal, V]` element type of an entries array holds. Emitting it
++    // as an array literal would place an open `Array` where the declared element is a `std::tuple`, so
++    // the literal takes the tuple's own representation -- the same one an IR tuple expression takes --
++    // with each element contextualized by the tuple slot it fills. A rest slot has no fixed arity to
++    // match, and a dense literal cannot fill one, so that case is not this path.
++    const expectedTuple = expectedType ? getIrTupleTypeCpp(expectedType, context, new Set()) : undefined;
++    if (
++      expectedTuple &&
++      expectedTuple.elements.length === expression.elements.length &&
++      expectedTuple.elements.every((element) => !element.rest) &&
++      expression.elements.every((element) => element !== undefined)
++    ) {
++      const elements = expression.elements.map((element, index) => {
++        const target = expectedTuple.elements[index]!;
++        const emitted = emitExpression(element!, context, target.type);
++        if (!target.optional) return emitted;
++        context.includes.add('optional');
++        return `std::make_optional(${emitted})`;
++      });
++      return emitCppTupleConstructionCpp(expectedTuple, elements, context);
++    }
+     // Empty literals cannot deduce a C++ template argument from an element, but the semantic IR retains
+     // the checker-selected construction type precisely for this case. Assertions and nested nullish
+     // fallbacks may arrive without an emitter-supplied expected type, so the expression's own evidence
+diff --git a/packages/compiler-backend-cpp/src/cppTupleElementArrayLiteral.test.ts b/packages/compiler-backend-cpp/src/cppTupleElementArrayLiteral.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppTupleElementArrayLiteral.test.ts
+@@ -0,0 +1,69 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++// A source array literal is how a tuple is written at the value: the checker-selected element type of
++// an entries array is a readonly tuple, and the literal that fills it is a plain array expression. The
++// literal must take the tuple's representation, not an open array's, or the emitted element type is an
++// `Array` where a `std::tuple` is declared and template argument deduction has nothing to deduce from.
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile(
++    '/flight/packages/example/src/tupleElementArrayLiteral.ts',
++    source,
++    ts.ScriptTarget.Latest,
++    true,
++  );
++  const result = lowerTypeScriptSource(sourceFile, {
++    packageName: '@flighthq/example',
++    upstreamDirectory: '/flight',
++  });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++it('emits a heterogeneous pair literal as the tuple its entries array declares', () => {
++  const output = emit(`
++    export interface Requirement { id: string }
++    export const requirements: ReadonlyMap<string, readonly Requirement[]> = new Map([
++      ['Effect.Blinn', [{ id: 'a' }]],
++      ['Material', [{ id: 'b' }]],
++    ]);
++  `);
++
++  expect(output).toContain('flight::Array<std::tuple<flight::String, flight::Array<flight::Ref<Requirement>>>>{');
++  expect(output).toContain('std::make_tuple(flight::String("Effect.Blinn"), ');
++  expect(output).toContain('std::make_tuple(flight::String("Material"), ');
++  expect(output).not.toContain('flight::Array{flight::String(');
++});
++
++it('keeps the homogeneous tuple representation when the declared pair elements share one type', () => {
++  const output = emit(`
++    export const pairs: readonly (readonly [number, number])[] = [[1, 2], [3, 4]];
++  `);
++
++  expect(output).toContain('flight::Array<flight::Array<double>>{');
++  expect(output).toContain('flight::Array<double>{1.0, 2.0}');
++  expect(output).toContain('flight::Array<double>{3.0, 4.0}');
++  expect(output).not.toContain('std::make_tuple(');
++});
++
++it('lifts a present value into an optional tuple slot the declared element type names', () => {
++  const output = emit(`
++    export const pairs: readonly (readonly [string, number?])[] = [['a', 1], ['b']];
++  `);
++
++  expect(output).toContain('flight::Array<std::tuple<flight::String, std::optional<double>>>{');
++  expect(output).toContain('std::make_tuple(flight::String("a"), std::make_optional(1.0))');
++});
++
++it('leaves an ordinary nested array literal to the array element type', () => {
++  const output = emit(`
++    export const values: readonly number[][] = [[1, 2], [3, 4]];
++  `);
++
++  expect(output).toContain('flight::Array<flight::Array<double>>{');
++  expect(output).not.toContain('make_tuple');
++});
