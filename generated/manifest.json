@@ -3605,6 +3605,12 @@
         "flight/scene2d_gl/gl_rich_text.hpp"
       ],
       "id": "scene2d-gl-rich-text-texture-cache-effective-carrier"
+    },
+    {
+      "files": [
+        "flight/scene2d_formats/svg_style.hpp"
+      ],
+      "id": "scene2d-formats-svg-declare-refused-style"
     }
   ],
   "sourcePatches": [
@@ -5406,6 +5412,27 @@
       "id": "scene3d-formats-obj-texture-2d-owner",
       "module": "packages/scene3d-formats/src/shared.ts and objMaterialHelpers.ts",
       "package": "@flighthq/scene3d-formats"
+    },
+    {
+      "dependency": "flight-compiler",
+      "digest": "20d4b5c1b4148c444993dd19fe3d6cb2503b463d020fb71016006077f4f4e8fe",
+      "id": "compiler-nullable-map-get-nullish-projection",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/scene2d-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "5537769e9693b44831ad5676d881b8df6218501fe26bf28521763d9efddfb8e6",
+      "id": "scene2d-svg-selector-numeric-match-length",
+      "module": "packages/scene2d-formats/src/svgStyle.ts",
+      "package": "@flighthq/scene2d-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "ac8441e622c1d0d90582f68b11c0bd8e7f6c52e1de960fef114c1ce7de995f03",
+      "id": "scene2d-svg-declarations-string-prototype-key",
+      "module": "packages/scene2d-formats/src/svgStyle.ts",
+      "package": "@flighthq/scene2d-formats"
     }
   ],
   "duplicateStructuralStructAliases": {

@@ -4,13 +4,11 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function collectCssRules -- source line 41
-//   missing: function resolveSvgStyle -- source line 104
-#include <flight/any.hpp>
+//   missing: function resolveSvgStyle -- source line 114
 #include <flight/record.hpp>
 #include <flight/regexp.hpp>
 #include <flight/structural_ref.hpp>
 #include <optional>
-#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -50,8 +48,22 @@ using flight::types::XmlElement;
 inline flight::Ref<flight::types::SvgStyle> default_svg_style = flight::make_ref<flight::types::SvgStyle>(flight::types::SvgStyle{.clip_rule = flight::String("nonZero"), .color = flight::String("#000000"), .display = flight::String("inline"), .fill = flight::String("#000000"), .fill_opacity = 1.0, .fill_rule = flight::String("nonZero"), .filter = flight::String("none"), .font_family = flight::String("sans-serif"), .font_size = 16.0, .font_style = flight::String("normal"), .font_weight = flight::String("normal"), .opacity = 1.0, .stroke = flight::String("none"), .stroke_dasharray = flight::String("none"), .stroke_dashoffset = 0.0, .stroke_linecap = flight::String("butt"), .stroke_linejoin = flight::String("miter"), .stroke_miterlimit = 4.0, .stroke_opacity = 1.0, .stroke_width = 1.0, .text_anchor = flight::String("start"), .visibility = flight::String("visible")});
 
 inline double get_css_selector_specificity(flight::String selector) {
-  const double ids = ([&]() -> std::optional<flight::Any> { auto optional_chain_receiver = selector.match(flight::RegExp(flight::String("#[\\w-]+"), flight::String("g"))); if (!optional_chain_receiver.has_value()) return std::nullopt; return static_cast<double>(optional_chain_receiver.value().size()); }()).value_or(0.0);
-  const double classes = ([&]() -> std::optional<flight::Any> { auto optional_chain_receiver = selector.match(flight::RegExp(flight::String("\\.[\\w-]+"), flight::String("g"))); if (!optional_chain_receiver.has_value()) return std::nullopt; return static_cast<double>(optional_chain_receiver.value().size()); }()).value_or(0.0);
+  std::optional<flight::RegExpExecArray> id_matches = selector.match(flight::RegExp(flight::String("#[\\w-]+"), flight::String("g")));
+  double ids = 0.0;
+  if (id_matches.has_value()) {
+    const double length = static_cast<double>(id_matches.value().size());
+    if (true) {
+      (ids = length);
+    }
+  }
+  std::optional<flight::RegExpExecArray> class_matches = selector.match(flight::RegExp(flight::String("\\.[\\w-]+"), flight::String("g")));
+  double classes = 0.0;
+  if (class_matches.has_value()) {
+    const double length_2 = static_cast<double>(class_matches.value().size());
+    if (true) {
+      (classes = length_2);
+    }
+  }
   const double has_type = (flight::RegExp(flight::String("^[a-zA-Z_][\\w-]*"), flight::String("")).test(selector) ? 1.0 : 0.0);
   return (((ids * 100.0) + (classes * 10.0)) + has_type);
 }
@@ -79,7 +91,7 @@ inline flight::Record<flight::String, flight::String> parse_style_declarations(f
     }
     const flight::String name = part.slice(0.0, colon).trim();
     const flight::String property_value = part.slice((colon + 1.0)).trim().replace(flight::RegExp(flight::String("\\s*!important\\s*$"), flight::String("")), flight::String(""));
-    if ((name != flight::String(""))) {
+    if (((name != flight::String("")) && (name != flight::String("__proto__")))) {
       ([&]() { auto assignment_value = property_value; declarations.set(name, assignment_value); return assignment_value; }());
     }
   }
@@ -131,7 +143,7 @@ inline flight::types::PathWinding resolve_svg_winding(std::optional<flight::Stri
 inline flight::Array<flight::String> svg_presentation_attributes = flight::Array<flight::String>{flight::String("clip-rule"), flight::String("color"), flight::String("display"), flight::String("fill"), flight::String("fill-opacity"), flight::String("fill-rule"), flight::String("filter"), flight::String("font-family"), flight::String("font-size"), flight::String("font-style"), flight::String("font-weight"), flight::String("opacity"), flight::String("stroke"), flight::String("stroke-dasharray"), flight::String("stroke-dashoffset"), flight::String("stroke-linecap"), flight::String("stroke-linejoin"), flight::String("stroke-miterlimit"), flight::String("stroke-opacity"), flight::String("stroke-width"), flight::String("text-anchor"), flight::String("visibility")};
 
 
-// NOT GENERATED: function resolveSvgStyle -- source line 104
+// NOT GENERATED: function resolveSvgStyle -- source line 114
 // refusal: cpp-member-projection-without-present-storage [compiler-restriction]
 //
 // The source it stood for:
@@ -201,12 +213,14 @@ inline flight::Array<flight::String> svg_presentation_attributes = flight::Array
 // `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound
 // from the storage and tested the same way
 
+flight::Ref<flight::types::SvgStyle> resolve_svg_style(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>> element, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>> parent_style, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgImportContext>>>> context);
+
 inline flight::Ref<flight::types::SvgStyle> resolve_svg_definition_style(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>> element, flight::Ref<flight::types::SvgImportContext> context) {
   auto cached = context->resolved_definition_styles.get(flight::structural_ref_cast<flight::Ref<flight::types::XmlElement>>(element));
   if (cached.has_value()) {
     return cached.value();
   }
-  std::optional<flight::Ref<flight::types::XmlElement>> parent = ([&]() -> std::optional<flight::Ref<flight::types::XmlElement>> { auto nullish_coalesce_left = context->parent_by_element.get(flight::structural_ref_cast<flight::Ref<flight::types::XmlElement>>(element)); if (const auto* alternative = std::get_if<flight::Ref<flight::types::XmlElement>>(&nullish_coalesce_left)) return std::optional<flight::Ref<flight::types::XmlElement>>{*alternative}; return std::nullopt; }());
+  std::optional<flight::Ref<flight::types::XmlElement>> parent = context->parent_by_element.get(flight::structural_ref_cast<flight::Ref<flight::types::XmlElement>>(element)).value_or(std::nullopt);
   auto parent_style = (!parent.has_value() ? default_svg_style : resolve_svg_definition_style(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>(parent.value())), context));
   auto style = resolve_svg_style(element, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>(parent_style)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgImportContext>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SvgImportContext>>>>(context)));
   context->resolved_definition_styles.set(flight::structural_ref_cast<flight::Ref<flight::types::XmlElement>>(element), style);
