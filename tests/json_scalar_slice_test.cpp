@@ -16,9 +16,29 @@ namespace {
 
 } // namespace
 
+namespace {
+
+// A structural row over the parsed JSON owner, as the Lottie receiver is.
+void test_row_receiver_projection() {
+  const auto parsed = flight::Json::parse(flight::String("{\"fr\":30,\"text\":\"30\"}"));
+  const auto properties = flight::named_properties(parsed);
+  using AnyRow = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Any>>>;
+  const auto row = AnyRow::from_owner(properties.shared_owner());
+  const auto fr = flight::read_json_scalar_row_member(row, flight::String("fr"));
+  const auto text = flight::read_json_scalar_row_member(row, flight::String("text"));
+  const auto missing = flight::read_json_scalar_row_member(row, flight::String("absent"));
+  assert(fr.is_present() && fr.as_native_number() == 30.0);
+  assert(text.type_of() == "string" && text.to_number() == 30.0);
+  assert(missing.is_absent());
+}
+
+} // namespace
+
 int main() {
   using flight::Any;
   using flight::JsonScalarCell;
+
+  test_row_receiver_projection();
 
   const auto document = flight::Json::parse(flight::String("{\"fr\":30,\"bad\":\"x\"}"));
   const Any receiver(document);

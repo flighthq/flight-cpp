@@ -346,4 +346,15 @@ class JsonScalarCell final {
   return JsonScalarCell{properties.get(key)};
 }
 
+// The row-receiver form the 42 proven Lottie row reads use: a structural row over the parsed JSON
+// owner, read by declared member name. The value and its presence are the raw JSON cell's; no typed
+// row cell is fabricated and nothing is coerced at the read.
+template <typename Schema>
+[[nodiscard]] inline JsonScalarCell read_json_scalar_row_member(const StructuralRef<Schema>& row,
+                                                                const String& key) {
+  const auto properties = named_properties(row);
+  if (!properties.has(key)) return JsonScalarCell{};
+  return JsonScalarCell{properties.get(key)};
+}
+
 } // namespace flight
