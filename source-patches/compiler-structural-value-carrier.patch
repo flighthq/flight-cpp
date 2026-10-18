@@ -1,5 +1,5 @@
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-index eca41dd..be0cdd8 100644
+index 17c6840..485716f 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 @@ -1,3 +1,4 @@
@@ -7,7 +7,7 @@ index eca41dd..be0cdd8 100644
  import path from 'node:path';
  import { isDeepStrictEqual } from 'node:util';
  
-@@ -480,7 +481,12 @@ interface AnonymousStructNaming {
+@@ -483,7 +484,12 @@ interface AnonymousStructNaming {
  
  export function createCppCompilerBackend(): CompilerBackend<CppCompilerBackendOptions> {
    return {
@@ -21,7 +21,7 @@ index eca41dd..be0cdd8 100644
        const referenceRepresentationPlanner = createIrTypeReferenceRepresentationPlannerCpp(
          modules,
          moduleResolution,
-@@ -510,7 +516,8 @@ export function createCppCompilerBackend(): CompilerBackend<CppCompilerBackendOp
+@@ -513,7 +519,8 @@ export function createCppCompilerBackend(): CompilerBackend<CppCompilerBackendOp
          unionArmIdentities,
        };
        return Object.freeze({
@@ -31,7 +31,16 @@ index eca41dd..be0cdd8 100644
            return [
              emitIrModuleCppWithContext(
                module,
-@@ -557,8 +564,10 @@ export function createCppCompilerBackend(): CompilerBackend<CppCompilerBackendOp
+@@ -555,16 +562,21 @@ export function createCppCompilerBackend(): CompilerBackend<CppCompilerBackendOp
+               },
+             }
+           : {}),
+-        emitRefusalPlaceholder(module: Readonly<IrModule>, refusal: Readonly<CompilerRefusalPlaceholderRequest>) {
+-          return emitCppRefusalPlaceholder(module, refusal, options, graph);
++        emitRefusalPlaceholder(sourceModule: Readonly<IrModule>, refusal: Readonly<CompilerRefusalPlaceholderRequest>) {
++          // A salvaged module is emitted from the same carrier-rewritten declarations as a whole one: its
++          // carried sites must agree with the rewritten graph and options around it.
++          return emitCppRefusalPlaceholder(carriers.original.get(sourceModule) ?? sourceModule, refusal, options, graph);
          },
        });
      },
@@ -42,9 +51,15 @@ index eca41dd..be0cdd8 100644
 +      const module = carriers.original.get(sourceModule) ?? applyCppStructuralValueCarriersCpp([sourceModule], sourceOptions).modules[0]!;
 +      return [emitIrModuleCppWithContext(module, carriers.options, carriers.modules, moduleResolution)];
      },
-     emitRefusalPlaceholder(module, refusal, options) {
-       return emitCppRefusalPlaceholder(module, refusal, options);
-@@ -571,7 +580,9 @@ export function emitIrModuleCpp(
+-    emitRefusalPlaceholder(module, refusal, options) {
+-      return emitCppRefusalPlaceholder(module, refusal, options);
++    emitRefusalPlaceholder(sourceModule, refusal, sourceOptions) {
++      const carriers = applyCppStructuralValueCarriersCpp([sourceModule], sourceOptions);
++      return emitCppRefusalPlaceholder(carriers.modules[0]!, refusal, carriers.options);
+     },
+     name: 'cpp',
+   };
+@@ -574,7 +586,9 @@ export function emitIrModuleCpp(
    sourceModule: Readonly<IrModule>,
    options: Readonly<CppCompilerBackendOptions> = {},
  ): EmittedFile {
@@ -55,7 +70,7 @@ index eca41dd..be0cdd8 100644
  }
  
  function emitIrModuleCppWithContext(
-@@ -3292,9 +3303,27 @@ function emitVariable(variable: Readonly<IrVariable>, context: EmitContext): str
+@@ -3301,9 +3315,27 @@ function emitVariable(variable: Readonly<IrVariable>, context: EmitContext): str
      !arrayElement && !variable.mutable && variable.initializer?.kind === 'call'
        ? getCppImportedAliasCarrierCallResultTypeCpp(variable.initializer, context)
        : undefined;
@@ -83,7 +98,7 @@ index eca41dd..be0cdd8 100644
        importedAliasCarrierInitializerType ??
        invariantCollectionInitializerType ??
        guardedVariantInitializerType ??
-@@ -4054,6 +4083,8 @@ function emitExpression(
+@@ -4069,6 +4101,8 @@ function emitExpression(
        hasCppRegExpExecArrayIndexedReceiverCpp(expression, context)
      )
        return emitOptionalExpressionCpp(expression, context, expectedType);
@@ -92,7 +107,7 @@ index eca41dd..be0cdd8 100644
      const voidValueConversion = emitCppContextualVoidValueCpp(expression, expectedType, context);
      if (voidValueConversion) return voidValueConversion;
      const erasedDynamicConversion = emitCppContextualErasedDynamicValueCpp(expression, expectedType, context);
-@@ -4086,6 +4117,8 @@ function emitExpression(
+@@ -4101,6 +4135,8 @@ function emitExpression(
      case 'array':
        return emitArrayExpressionCpp(expression, context, expectedType);
      case 'assignment': {
@@ -101,7 +116,7 @@ index eca41dd..be0cdd8 100644
        if (
          (expression.left.kind === 'property' || expression.left.kind === 'element') &&
          getCppExternalNumericPropertyViewAccessPlanCpp(expression.left, context)
-@@ -6762,6 +6795,8 @@ function emitExpression(
+@@ -6785,6 +6821,8 @@ function emitExpression(
        if (structuralMemberViewRead) return structuralMemberViewRead;
        const checkedDerivedMember = emitCppCheckedDerivedMemberReadCpp(expression, context);
        if (checkedDerivedMember) return checkedDerivedMember;
@@ -110,7 +125,7 @@ index eca41dd..be0cdd8 100644
        if (isCppJsonReadValueCpp(expression.object, context) && isCppJsonDataPropertyNameCpp(expression.name)) {
          context.includes.add('flight/structural_ref.hpp');
          const key = emitLiteral(expression.name, context);
-@@ -15345,6 +15380,92 @@ function isCppExternalHostHandleTypeCpp(type: Readonly<IrType>, context: EmitCon
+@@ -15454,6 +15492,92 @@ function isCppExternalHostHandleTypeCpp(type: Readonly<IrType>, context: EmitCon
    return evidence?.ownership === 'shared' && evidence.nullability === 'non-null';
  }
  
@@ -203,7 +218,7 @@ index eca41dd..be0cdd8 100644
  // Marks a read already lifted to its refinement's presence proof. Object spread copies symbol-keyed
  // properties, so the carrier spelling emitted beneath the proof keeps the mark and is not lifted again.
  const cppRefinedPresentReadMarker = Symbol('cppRefinedPresentRead');
-@@ -15388,6 +15509,8 @@ function getCppDeclaredPropertyReadTypeCpp(
+@@ -15497,6 +15621,8 @@ function getCppDeclaredPropertyReadTypeCpp(
    const objectType = row ? getCppStructuralRowObjectTypeCpp(row) : receiverType;
    const refinedStorage = !row && objectType ? getCppRefinedMemberStorageTypeCpp(objectType, expression.name, context) : undefined;
    if (refinedStorage) return refinedStorage;
@@ -212,7 +227,7 @@ index eca41dd..be0cdd8 100644
    const propertyType = objectType ? getIrObjectPropertyTypeCpp(objectType, expression.name, context) : undefined;
    if (!propertyType || !row || !isCppStructuralRowPropertyOptionalCpp(row)) return propertyType;
    // A property that ALREADY admits absence keeps the representation it has. Unioning a second undefined
-@@ -23915,6 +24038,13 @@ function getIrExpressionTypeForUnionConstructionCpp(
+@@ -24173,6 +24299,13 @@ function getIrExpressionTypeForUnionConstructionCpp(
      case 'element':
        return getIrExpressionTypeEvidenceCpp(expression, context);
      case 'property': {
@@ -226,19 +241,33 @@ index eca41dd..be0cdd8 100644
        const evidence = getIrExpressionTypeEvidenceCpp(expression, context);
        if (evidence) return evidence;
        // A PROPERTY read through an erased receiver answers a dynamic value: the emitter reaches it
+@@ -28935,7 +29068,12 @@ function getIrExpressionTypeEvidenceCpp(
+             : memberType;
+         }
+       }
+-      const propertyType = getIrPropertyExpressionTypeEvidenceCpp(expression, context);
++      // A member read through a structural-value carrier answers the nominal owner's declared member type:
++      // the carrier's read is typed by that member, whatever object it reaches.
++      const carrier = getCppStructuralValueCarrierPlanCpp(context.options, getIrExpressionTypeEvidenceCpp(expression.object, context));
++      const propertyType = carrier
++        ? getIrObjectPropertyTypeCpp(carrier.nominal, expression.name, context)
++        : getIrPropertyExpressionTypeEvidenceCpp(expression, context);
+       return propertyType && expression.presence === 'narrowedPresent'
+         ? (getCppNonNullableType(propertyType, context, new Set()) ?? propertyType)
+         : propertyType;
 diff --git a/packages/compiler-backend-cpp/src/cppStructuralValueCarrier.test.ts b/packages/compiler-backend-cpp/src/cppStructuralValueCarrier.test.ts
 new file mode 100644
-index 0000000..a003100
+index 0000000..31caadd
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppStructuralValueCarrier.test.ts
-@@ -0,0 +1,134 @@
+@@ -0,0 +1,156 @@
 +import { describe, expect, it } from 'vitest';
 +
 +import ts from 'typescript';
 +
 +import { isBackendEmissionFailure } from '../../compiler-emission/src/index.js';
 +import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
-+import { emitIrModuleCpp } from './cppCompilerBackend.js';
++import { createCppCompilerBackend, emitIrModuleCpp } from './cppCompilerBackend.js';
 +
 +// A narrowed derived-interface value may be any object declaring that type's members, not only one
 +// allocated as it (render-wgpu's screen target binder: `if (isWgpuScreenRenderTarget(target))`). At the
@@ -353,6 +382,28 @@ index 0000000..a003100
 +    expect(readonlyContents).toContain(`std::optional<std::function<void(${carrier}, double)>> encode_capture;`);
 +    expect(readonlyContents).toContain(`inline std::optional<double> end_frame(${carrier} t) {`);
 +    expect(readonlyContents).toContain('end_frame(screen.value());');
++  });
++
++  it('carries the declared sites in a salvaged module whose other declaration is refused', () => {
++    // A module with one refused declaration is emitted by salvage. Its retained declarations must be the
++    // same carrier-rewritten ones a whole module emits, or its carried sites disagree with the rewritten
++    // fields around them.
++    const body = `${source}export function grow(r: Runtime): void { const s = r.frame; if (s !== null) s.presentationView ??= 1; }`;
++    const sourceFile = ts.createSourceFile('/flight/packages/math/src/carrier.ts', body, ts.ScriptTarget.Latest, true);
++    const lowered = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/math', upstreamDirectory: '/flight' });
++    expect(lowered.diagnostics).toEqual([]);
++    const session = createCppCompilerBackend().createEmissionSession!({
++      modules: [lowered.module],
++      options: { runtimeProfile: 'flight-cpp', structuralValueCarriers: carriers },
++    });
++    const salvaged = session.emitRefusalPlaceholder!(lowered.module, {
++      message: 'a compound write to a carried member',
++      rule: 'cpp-structural-value-carrier-compound-write',
++    })!.contents;
++    expect(salvaged).toContain('NOT GENERATED: function grow');
++    expect(salvaged).toContain(`inline double bind_screen(${carrier} t) {`);
++    expect(salvaged).toContain(`(r->frame = ${carrier}::of(t));`);
++    expect(salvaged).toContain(`std::optional<std::function<void(${carrier}, double)>> encode_capture;`);
 +  });
 +
 +  it('refuses a compound write to a carried member', () => {
