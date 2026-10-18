@@ -1,0 +1,136 @@
+{
+  "kind": "Bounded stale generated constructor refresh from actual complete original module emission; no SDK regeneration",
+  "compilerStack": 136,
+  "comparison134To136WholeOriginalModuleEqualIgnoringTerminalNewlineOnly": true,
+  "wholeOriginalModuleRefusals": 0,
+  "sourceCount": 1262,
+  "packages": 15,
+  "oldGeneratedHeaderSha256": "749521544fd008bf89a4e4c77f79727e14002d4cde7d38a0b8e798f95805c59e",
+  "wholeEmission136Sha256": "556e3486a016a99d0d000d81fc442d722ce51bfd66dc927cb2596828b74ec4e8",
+  "afterBoundedHeaderSha256": "6e39ccb584678977ebd140465f0ff7885d1a609b4f4b979fe9986d8bbe4c5fb6",
+  "oldConstructor": "regions.push(([&]() { auto object_member_path = centerline_capture.read_binding().value(); auto object_member_style = style_capture.read_binding().value(); auto object_member_color = color_capture.read_binding(); auto object_member_alpha = alpha_capture.read_binding(); return flight::make_ref<flight::types::ShapeStrokeRegion>(flight::types::ShapeStrokeRegion{.path = object_member_path, .color = object_member_color, .alpha = object_member_alpha, .style = object_member_style}); }()));",
+  "newConstructor": "regions.push(([&]() { auto object_member_path = centerline_capture.read_binding().value(); auto object_member_style = style_capture.read_binding().value(); auto object_member_color = color_capture.read_binding(); auto object_member_alpha = alpha_capture.read_binding(); auto intersection_value = flight::mark_constructed_own_named_properties(flight::make_ref<flight::types::ShapeStrokeRegion>(flight::types::ShapeStrokeRegion{.style = object_member_style}), std::initializer_list<flight::ConstructedOwnKey>{{flight::String(\"path\"), flight::ConstructedKeySentinel::Value}, {flight::String(\"style\"), flight::ConstructedKeySentinel::Value}, {flight::String(\"color\"), flight::ConstructedKeySentinel::Value}, {flight::String(\"alpha\"), flight::ConstructedKeySentinel::Value}}); intersection_value->path = object_member_path; intersection_value->color = object_member_color; intersection_value->alpha = object_member_alpha; return intersection_value; }()));",
+  "criticalDeclarationChanged": false,
+  "nativeTests": "prepared five additive checks in existing generated_shape_test.cpp; not yet run",
+  "baseRefComparison": {
+    "a2fdb53": {
+      "commit": "a2fdb530b5ab462246f47af3d8c1939d606b8bbd",
+      "generated/include/flight/types/shape_stroke_region.hpp": "4b15fa79a95bff4712279be01bbf82b0d4c581f5aaf8982cdbd2e0bcc6c5040f",
+      "generated/include/flight/shape/shape_stroke.hpp": "749521544fd008bf89a4e4c77f79727e14002d4cde7d38a0b8e798f95805c59e",
+      "examples/upstream/camera2d.cpp": "de8ca4a719d39f24bb14c0fd8ab0b69da70ece810f3bd6e6fccdb44f4c560d13"
+    },
+    "4a7dbfd": {
+      "commit": "4a7dbfd4d0ac71062e1a569fb9a8107260099f2c",
+      "generated/include/flight/types/shape_stroke_region.hpp": "1f29e773e3391a56d1c987020991908ea31bd62f9c4e173d7304e26b8bc2b8a6",
+      "generated/include/flight/shape/shape_stroke.hpp": "749521544fd008bf89a4e4c77f79727e14002d4cde7d38a0b8e798f95805c59e",
+      "examples/upstream/camera2d.cpp": "de8ca4a719d39f24bb14c0fd8ab0b69da70ece810f3bd6e6fccdb44f4c560d13"
+    },
+    "HEAD": {
+      "commit": "41f31e43cf96c9bae3f51df6d54c488dc8bf1bb4",
+      "generated/include/flight/types/shape_stroke_region.hpp": "1f29e773e3391a56d1c987020991908ea31bd62f9c4e173d7304e26b8bc2b8a6",
+      "generated/include/flight/shape/shape_stroke.hpp": "749521544fd008bf89a4e4c77f79727e14002d4cde7d38a0b8e798f95805c59e",
+      "examples/upstream/camera2d.cpp": "de8ca4a719d39f24bb14c0fd8ab0b69da70ece810f3bd6e6fccdb44f4c560d13"
+    }
+  },
+  "baselineActualTarget": "cmake --build build/e2e --target flight_cpp_upstream_camera2d -j2; actual EXIT1, scene2d_host.cpp errors shape_stroke.hpp78 inheritedpath/color/alpha",
+  "sourceProof": {
+    "packages/shape/src/shapeStroke.ts": "7f058b6490802953976ab8cbeb4a58a3047ef0ff83ee65a04a17aa0c38635619",
+    "packages/types/src/ShapeFillRegion.ts": "f58bdce9e8484beb837c440cdf28b5db703251d83d42dfad8d7927113ddadfd6",
+    "packages/types/src/ShapeStrokeRegion.ts": "5a5ab510d8868f33e8dbbe23a7a53fa3bb34f5d9324b3039e6a71ea65da64e75"
+  },
+  "repairCommit": "fd25ebf40fd38efc4a9c83fded63eb4bf664b932",
+  "scope": {
+    "oneGeneratedConstructorExpressionRefreshedFromActualEmission": true,
+    "explicitInitializerListInclude": true,
+    "otherGeneratedBodyBytesRetained": true,
+    "shapeStrokeDeclarationUnchanged": true,
+    "newSdkRuns": 0,
+    "newBackendPatches": 0,
+    "newProviderBodies": 0,
+    "existingAssertionsRetained": true
+  },
+  "pending": [],
+  "cameraProjectBuild": {
+    "command": "cmake --build build/e2e --target flight_cpp_upstream_camera2d -j2",
+    "exitCode": 0,
+    "logSha256": "a68e1209f4b0b557b96aaf7b7e651f710650c9aead287a17b7afb1ebee7eefc3",
+    "commit": "fd25ebf4"
+  },
+  "cameraSmoke": {
+    "command": "ctest --test-dir build/e2e --output-on-failure -R '^flight_cpp_upstream_camera2d_smoke$'",
+    "exitCode": 0,
+    "passed": 1,
+    "failed": 0,
+    "testSeconds": 2.71,
+    "frames": 3,
+    "nodes": 122,
+    "fullLogSha256": "fd0537be963f26edc0692cbcf3b294a3448cff345e613bb927d81f78cd66a7f1",
+    "capturedActualFramebuffer": "build/e2e/examples/upstream/camera2d-smoke.ppm",
+    "captureSha256": "99c7fa0fe39b8573d897bd1aaa67f8856cf1360c565a8b588aede8803c89739e"
+  },
+  "relatedGlChecks": {
+    "command": "ctest --test-dir build/camera-regression-checks --output-on-failure -R '^flight_cpp\\.(generated_scene2d_gl_owners|host_sdl_gl_app)$'",
+    "exitCode": 0,
+    "passed": 2,
+    "failed": 0,
+    "fullLogSha256": "c692828f460fe219f4e3f4dc66fef1b603d0548f7ff4d48bedc66417fac52a41"
+  },
+  "fixtureCompileCorrection": {
+    "commit": "a17f2a14",
+    "cause": "New original collector checks needed direct shape_stroke.hpp include; all assertions retained, production constructor unchanged.",
+    "firstAttemptExit": 1,
+    "fixedInclude": true
+  },
+  "status": "PASS actualCamera target and all4targeted CTests; bounded retained constructor refresh, no SDK generation/promotion",
+  "shapeChecks": {
+    "command": "ctest --test-dir build/camera-regression-checks --output-on-failure -R '^flight_cpp\\.generated_shape$'",
+    "exitCode": 0,
+    "passed": 1,
+    "failed": 0,
+    "newAssertions": 5,
+    "fullLogSha256": "b2abade87a413e45fb3de0f26fa0d3856da9d042b5f17e9aff7a72943db0b7ff"
+  },
+  "relatedNativeBuild": {
+    "command": "cmake --build build/camera-regression-checks --target flight_cpp_generated_shape_tests flight_cpp_generated_scene2d_gl_owners_tests flight_cpp_host_sdl_gl_app_tests -j2",
+    "exitCode": 0,
+    "logSha256": "ca974b9c3d4477ed490f5034063420c103dfc00cb1ae9e77c95a3cec653784b8",
+    "debugInfo": "-g0, same project/toolchain/source; suppress debug symbols only"
+  },
+  "limits": [
+    "No declaration changes: required path remains on ShapeFillRegion shared base cell, style remains own ShapeStrokeRegion member.",
+    "No normal SDK/package regeneration, aggregate/header/package qualification promotion or pin change.",
+    "No new backend patch: current136 whole original module already emitted correct inherited initialization.",
+    "No duplicate B output/Types edits. Builder2 owns B regression comparison and its five risk caller output cases.",
+    "Camera product was compiled atfd25; fixture direct include corrected at a17. Product body/hash unchanged by fixture-only fix.",
+    "Accepted/rejected ref comparison proves source/caller identical and declaration heritage delta; the actual baseline built is the available current floor with identical failing pair, not a rerun of all accepted a2 outputs."
+  ],
+  "proofFiles": [
+    "constructor-refresh-preparation.json",
+    "ref-input-comparison.json",
+    "compiler136-input.json",
+    "current-camera-build.log",
+    "fixed-camera-build.log",
+    "camera2d-smoke.log",
+    "camera2d-smoke-full.log",
+    "related-checks-configure.log",
+    "related-checks-build.log",
+    "related-checks-build-corrected.log",
+    "related-gl-checks.log",
+    "related-gl-checks-full.log",
+    "shape-check.log",
+    "shape-check-full.log",
+    "whole-shape-emission.log",
+    "shape-stroke136-emission.log",
+    "compiler136-strict-build.log",
+    "emit-whole-shape-stroke.mjs",
+    "emit-shape-stroke136.mjs",
+    "verify-camera-refresh.py",
+    "emitted/include/flight/shape/shape_stroke.hpp",
+    "emitted136/include/flight/shape/shape_stroke.hpp"
+  ],
+  "proofArchive": {
+    "sha256": "3003910d9176b04a92b0220fb19da5c1ee8409c7c2815716919aa64a34876abd",
+    "bytes": 55942,
+    "scope": "Source/constructor provenance + actual native build/test logs and captured framebuffer; no held normal/atlas/GL diff or B inventory."
+  }
+}
