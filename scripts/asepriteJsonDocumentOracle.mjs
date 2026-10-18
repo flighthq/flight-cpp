@@ -215,6 +215,29 @@ wrongScalar.meta.frameTags = [{ name: 'tag', from: 0, to: 0, direction: 'forward
 const wrongScalarResult = capturedParse(JSON.stringify(wrongScalar));
 check(wrongScalarResult.result.data.animations[0].frameDuration === '80',
   'source wrong native scalar remains raw; native escape must be explicit partial/error');
+const writable = capturedParse(JSON.stringify(document())).result.document;
+const originalKeys = Object.keys(writable.meta);
+const originalLayers = writable.meta.layers;
+writable.meta.layers = undefined;
+check(Object.hasOwn(writable.meta, 'layers') && writable.meta.layers === undefined,
+  'object mutation stores present undefined rather than deleting a key');
+check(Object.keys(writable.meta).join(',') === originalKeys.join(',') &&
+  !Object.hasOwn(JSON.parse(JSON.stringify(writable.meta)), 'layers'),
+  'present undefined keeps object key order and is omitted by JSON serialization');
+writable.meta.layers = originalLayers;
+check(writable.meta.layers === originalLayers && Object.keys(writable.meta).join(',') === originalKeys.join(','),
+  'undefined replacement restores the original nested owner at the same key position');
+delete writable.meta.layers;
+check(!Object.hasOwn(writable.meta, 'layers') && writable.meta.layers === undefined,
+  'explicit object delete is distinct from storing undefined');
+const arrayOwner = writable.frames;
+arrayOwner[0] = undefined;
+check(writable.frames === arrayOwner && arrayOwner.length === 1 && Object.hasOwn(arrayOwner, 0),
+  'array mutation stores undefined in an existing slot without changing owner or length');
+check(JSON.stringify(arrayOwner) === '[null]', 'undefined array slot serializes as null');
+delete arrayOwner[0];
+check(arrayOwner.length === 1 && !Object.hasOwn(arrayOwner, 0) && JSON.stringify(arrayOwner) === '[null]',
+  'explicit array delete makes a hole without shifting or shortening the array');
 
 const sourceHashes = Object.fromEntries([...new Set([...modules.keys(), testsFile])].map(file =>
   [path.relative(packages, file), createHash('sha256').update(fs.readFileSync(file)).digest('hex')]));
