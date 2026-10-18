@@ -173,3 +173,29 @@ One bounded consequence is recorded rather than hidden: the thunks capture the o
 class instance would leave the copy's inherited method members pointing at the original. Emitted class
 instances are allocated once through `make_ref` and passed by `Ref`, which is the only use the declared
 pair covers today; a value-copied class would need its own re-binding and is not claimed.
+
+### Measured at the pin (2026-10-18)
+
+Scoped generation (`npm run pkg:generate -- @flighthq/swf`, EXIT 0) rewrote 33 paths in the swf slice.
+The emitted `swf_reader.hpp` has `struct SwfReader : public flight::types::SwfTagReader` with no
+duplicated data fields and the nine interface method members bound in the constructor;
+`swf_timeline_parse.hpp`'s dispatch passes the class reference by the base conversion; and
+`swf_place_object3_handler.hpp` emits `flight::require_owner<flight::swf::SwfReader>(body)` at the
+declared reverse site.
+
+`scripts/sdkHeaderCompile.mjs` over the original 12 headers: **4 pass, 8 fail, 0 unattempted**, at
+compiler `806d257` / Flight `a627849`, Clang 22.1.8. `swf_timeline_parse.hpp` and
+`swf_place_object3_handler.hpp` — the forward and reverse sites — both pass, as do
+`swf_sprite_handler.hpp` and `swf_sprite_tag_family.hpp`. The other eight advance to causes this
+repair does not own: five to a merged-row to `Node2D` conversion at `swf_document.hpp:222`, two to the
+retained refused `readSwfButtonDefinition`, and one to the retained refused `readLegacyPlaceObject`
+(both refusals are the dual-sentinel optional property result). They were previously masked as later
+diagnostics behind the interface error; see
+[the header worklist](../header-failures.md#33-call-has-no-matching-dd66c064--12-current-headers-5-in-g1).
+
+`tests/generated_swf_reader_owner_view_test.cpp` is now the real forward/reverse consumer over the
+generated types and passes its compile, link and run: one physical cell written and read through both
+names, thunk dispatch advancing the shared cursor, no class-method/inherited-member hiding collision,
+one control block (owner-before equality and one refcount), constructor-initialized inherited cells
+and thunks, `require_owner` recovering the same allocation, `NativeScalarEscapeError` for a foreign
+`make_ref<SwfTagReader>` allocation, and a live thunk after the class reference is dropped.

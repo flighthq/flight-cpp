@@ -59,7 +59,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 30 | `undeclared-identifier-f5e3440f` | 6 | 3D, CORE | [compiler request](compiler-requests/retained-declaration-calls-omitted-callee.md) | createResourceLoader calls initializeResourceLoader after the compiler refuses the initializer |
 | 31 | `call-has-no-matching-5a045ef4` | 5 | ANIM | compiler *(existing request)* | `SwfShapeState` passed to the anonymous writable `pen: { x; y }` parameter without an identity-preserving view |
 | 32 | `call-has-no-matching-b897f03f` | 5 | 3D | [compiler request](compiler-requests/heritage-argument-generic-deduction.md) | the `getNodeSignals` traits argument falls back to the default `Ref<NodeTraits>` instead of the inferred `Node3DTraits` |
-| 33 | `call-has-no-matching-dd66c064` | 12 | ANIM | compiler | an emitted SwfReader class instance cannot be passed as its structural SwfTagReader interface to the parse callback *(existing request)* |
+| 33 | `call-has-no-matching-dd66c064` | 12 | ANIM | compiler *(landed)* | retired: the class/interface native heritage landed; 4 pass (`swf_timeline_parse`, `swf_place_object3_handler`, `swf_sprite_handler`, `swf_sprite_tag_family`), 5 advanced to `call-has-no-matching-37fccde4`, 2 to `undeclared-identifier-3f26ffaf`, 1 to `undeclared-identifier-1e1a12b0` |
 | 34 | `compiler-crash-aba5e9ec` | 5 | 3D | none (no crash serially) | G2 serial `-j1`: status 134 does not reproduce; 1 pass, 3 moved to `variant-cast-ccfedad4`, 1 to `emitter-conversion-2b9a0802` |
 | 35 | `invalid-operands-6d9a155d` | 5 | 2D | [compiler request](compiler-requests/token-discriminant-comparison.md#g2-current-pin-qualification-all-three-paint-guards-use-this-carrier) | three morph-paint guards compare the whole optional token variant with a String |
 | 36 | `missing-member-5e9e8a2c` | 5 | PLAT | compiler | retained cross-module calls name the refused generic graph-bounds helper *(existing requests extended)* |
@@ -758,7 +758,7 @@ that exact undefined symbol. Authored bounds remains unavailable at runtime.
 
 | follow-on cluster | owned headers | first failure | route / cause |
 | --- | --- | --- | --- |
-| `call-has-no-matching-dd66c064` | 5 | `flight/swf/swf_timeline_parse.hpp:122` | compiler: SwfReader class instance has no owner-preserving SwfTagReader interface carrier; [existing request](compiler-requests/class-instance-as-implemented-interface.md) |
+| `call-has-no-matching-dd66c064` | 5 | `flight/swf/swf_timeline_parse.hpp:122` | compiler: SwfReader class instance has no owner-preserving SwfTagReader interface carrier; [existing request](compiler-requests/class-instance-as-implemented-interface.md). **Resolved (2026-10-18):** the native heritage landed and all five advance to `call-has-no-matching-37fccde4` at `swf_document.hpp:222` |
 | `no-viable-conversion-3cfd059c` | 2 | `flight/swf/swf_define_shape_handler.hpp:106` | binding: native copy_shape_commands rejected the readonly source; resolved by the follow-up below |
 
 The five callback failures are `swf_content_capabilities.hpp`, `swf_document.hpp`, `swf_header.hpp`,
@@ -1148,6 +1148,31 @@ This row now links the existing request; no source or generated change was made,
 Five owned SWF rows joined this existing cluster after the declaration repair in section 17.
 The original five G1 rows remain unchanged and were not recompiled. The same mutable reader
 instance must supply interface reads and writes; copying it into an interface owner would change behavior.
+
+**Resolved at the pin (2026-10-18).** The forward and reverse halves landed as one declared native
+hierarchy (`class-interface-adoptions.json`): `SwfReader` is emitted with
+`flight::types::SwfTagReader` as its native base, the interface's data members are the class's own
+cells, its method members are thunked to the class's methods, the dispatch passes the class reference
+by the ordinary base conversion, and the placement helper recovers the same owner with
+`flight::require_owner<SwfReader>`. Recompiled through `scripts/sdkHeaderCompile.mjs` over the same 12
+headers (Clang 22.1.8, compiler `806d257` / Flight `a627849`), **4 pass, 8 fail, 0 unattempted**; the
+one killed compiler process was retried to a pass. `swf_timeline_parse.hpp` (the forward site) and
+`swf_place_object3_handler.hpp` (the reverse site) both pass, as do `swf_sprite_handler.hpp` and
+`swf_sprite_tag_family.hpp`.
+
+The eight remaining headers now first-fail on causes this repair does not own; they were previously
+masked as secondary diagnostics behind the interface error:
+
+| advanced cluster | headers | first failure | cause |
+| --- | --- | --- | --- |
+| `call-has-no-matching-37fccde4` | 5 (`swf_content_capabilities`, `swf_document`, `swf_header`, `swf_requirements`, `swf_tag_census`) | `flight/swf/swf_document.hpp:222` | the placement-node helper's optional `RowMerge<Node<Node2DTraits>>` result has no conversion into the `Node2D` result variant; a compiler lowering gap with no request filed for this exact site yet |
+| `undeclared-identifier-3f26ffaf` | 2 (`swf_control_handler`, `swf_control_tag_family`) | `flight/swf/swf_control_handler.hpp:224` | retained call to `readSwfButtonDefinition`, refused for a dual-sentinel optional property result; [retained-callee request](compiler-requests/retained-declaration-calls-omitted-callee.md) |
+| `undeclared-identifier-1e1a12b0` | 1 (`swf_placement_tag_family`) | `flight/swf/swf_place_object_handler.hpp:107` | retained call to `readLegacyPlaceObject`, refused for the same dual-sentinel optional property result |
+
+A declaration-only repair for the two retained calls is possible with the existing
+`declare-refused-function` mechanism, but it needs a regenerated slice plus positive and
+missing-symbol link validation; that work is not claimed here. The `RowMerge` conversion needs its
+own compiler request. No header is promoted for merely losing its first diagnostic.
 
 ### 34. `compiler-crash-aba5e9ec` — G2 serial recheck of 5 headers
 
