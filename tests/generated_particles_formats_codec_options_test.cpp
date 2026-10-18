@@ -26,6 +26,13 @@ static_assert(!std::is_convertible_v<ActualRead, flight::Ref<NativeOptions>>);
 static_assert(!std::is_convertible_v<Read, flight::Ref<NativeOptions>>);
 static_assert(!std::is_constructible_v<Codec, NativeParse>);
 
+// The same control follows the public slot when its equivalent Required row is generated.
+// Before that normal generation the slot owns a Ref; afterwards it already is a writable row.
+template<typename Carrier> struct ResultView { using type = Carrier; };
+template<typename Object> struct ResultView<flight::Ref<Object>> {
+  using type = flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<Object>>>>;
+};
+
 int failures = 0;
 void check(bool condition, const char* message) {
   if (!condition) { ++failures; std::cerr << "FAIL: " << message << '\n'; }
@@ -114,11 +121,10 @@ int main() {
   // This projection starts with the exact public result Ref, so it does not depend on the withdrawn
   // allocated-type recovery change. The row keeps that same NativeRowOwner through the wider schema.
   using DocumentSlot = decltype(flight::types::ParticleFormatCodec::parse_to_document);
-  using BaseResult = typename std::invoke_result_t<DocumentSlot, flight::String,
-      std::optional<ActualRead>>::element_type;
+  using SlotResult = std::invoke_result_t<DocumentSlot, flight::String, std::optional<ActualRead>>;
   using Result = flight::types::StarlingPexParseResult;
   using FullRow = flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<Result>>>>;
-  using BaseRow = flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<BaseResult>>>>;
+  using BaseRow = typename ResultView<SlotResult>::type;
   std::weak_ptr<Result> lifetime;
   {
     auto original = flight::particles_formats::parse_starling_pex_document("<particleEmitterConfig/>", options);
