@@ -58,6 +58,32 @@ class NominalOrStructuralView final {
     return value;
   }
 
+  // A refined member uses its base's actual field. This needs no allocated-type guess: Field must
+  // be a member applicable to Base itself, and no derived storage is accessed through the pointer.
+  template <typename Key, typename PayloadView, auto Field>
+  [[nodiscard]] auto read_cell_member() const {
+    static_assert(requires(Base& object) { object.*Field; });
+    (void)Key::name;
+    if (!object_) throw std::bad_optional_access();
+    return PayloadView::read_cell((*object_).*Field);
+  }
+  template <typename Key, typename PayloadView, auto Field, typename Value>
+  auto write_cell_member(Value value) const {
+    static_assert(requires(Base& object) { object.*Field; });
+    (void)Key::name;
+    if (!object_) throw std::bad_optional_access();
+    return PayloadView::write_cell((*object_).*Field, std::move(value));
+  }
+
+  // A source computed-key assignment also records written-undefined presence on the same owner.
+  // The caller supplies the proven native field and the emitted symbol identity; no attachment is used.
+  template <auto Field, typename Holder, typename Value>
+  static auto write_symbol_cell(const std::shared_ptr<Holder>& holder, const Symbol& key, Value value) {
+    auto result = write_cell((*holder).*Field, std::move(value));
+    detail::owner_for(holder)->mark_symbol_written(key);
+    return result;
+  }
+
   // The partial native escape is explicit. Carrying, storing, comparing, or reading the object by
   // name never requires a nominal allocation. Only a native operation requiring Nominal does.
   [[nodiscard]] Ref<Nominal> native() const {

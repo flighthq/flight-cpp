@@ -92,6 +92,12 @@ int main() {
   check(!wrong_runtime->read<flight::RowKey<"glFrame">, double, &GlRuntime::gl_frame>().has_value(),
         "base-only runtime derived member reads undefined");
   check(refuses_native(*wrong_runtime), "wrong runtime native escape throws shared error");
+  base_runtime->registries = a;
+  auto nested = wrong_runtime->read_cell_member<flight::RowKey<"registries">, RegistryView, &GlRuntime::registries>();
+  check(nested.native() == a, "a base-only runtime reads its guaranteed physical registries cell without a derived cast");
+  wrong_runtime->write_cell_member<flight::RowKey<"registries">, RegistryView, &GlRuntime::registries>(RegistryView(b));
+  check(base_runtime->registries == b, "nested derived view writes through the guaranteed base cell");
+
 
   // Provenance stays bounded: even a genuine GlRuntime cannot be recovered through an unrecorded base.
   flight::Ref<Runtime> unrecorded = std::make_shared<GlRuntime>();
@@ -104,7 +110,7 @@ int main() {
   auto empty = flight::make_ref<GlState>();
   flight::StructuralRef<flight::RowOf<flight::Ref<State>>> row{flight::Ref<State>(empty)};
   check(!flight::row_has_own_property(row, key), "unwritten runtime is missing");
-  flight::row_set(row, key, std::nullopt);
+  RuntimeView::write_symbol_cell<&GlState::entity_runtime_key>(empty, key, std::optional<RuntimeView>{});
   check(flight::row_has_own_property(row, key) && !RuntimeView::read_cell(empty->entity_runtime_key),
         "written undefined is present while both value views read undefined");
   check(!flight::row_has_own_property(row, flight::Symbol(flight::String("EntityRuntime"))), "same-description symbol is distinct");
