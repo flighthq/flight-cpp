@@ -70,3 +70,5 @@ The following normal qualification remains builder3's responsibility after the a
 Types receipt: one particles run, all eight callbacks, the original JSON/helper/detector paths,
 Unity's header and the three particle barrels, and the installed public consumer. Source controls
 and a negative ABI witness do not promote a header, parser, package or ledger row.
+
+The native fixture now also includes the compiler-emitted original source consumer. `scripts/particlePublicNativeConsumerOracle.mjs` applies the exact declared type-only codec-result patch to the saved source graph and emits both readonly public call edges, all eight named callback identity checks, original registration calls and writable result controls. It then separately compiles the exact four retained headers (Unity parse, internal index, contract, built-in registration; at most two compiler jobs) and builds/runs the public consumer against an explicitly selected actual generated inventory. `--emit-only` is source preparation only and records `compiled: false`; it does not qualify the current installed inventory. SDK and original parser/detector bodies are never written by this oracle.

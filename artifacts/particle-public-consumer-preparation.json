@@ -254,5 +254,62 @@
     "authorHead": "6bb680fc",
     "actualOutputConsumed": false,
     "requiredNext": "Actual exit/commit/floor receipt, then builder3 single particles run and all8 callbacks/JSONhelper/detector/exact4headers/publicconsumers."
+  },
+  "nativeReadonlySourceBridgePreparation": {
+    "normalSdk": false,
+    "scope": "Actual selected generated inventory. Original public TypeScript consumer emitted with the exact declared type-only codec result patch. No local parser/detector/codec implementation or invented public declaration.",
+    "inputContextSha256": "d9c9d27183c2aec6d473b5f6a5243a607d2d8688b496f14739e2d12ae96a1d3e",
+    "declaredTypeOnlyPatch": {
+      "file": "source-patches/particle-codec-document-result-owned-view.patch",
+      "sha256": "306ec6173f117b52c6893fceb79843eba69e29046f14cec376c7ff561044e617"
+    },
+    "sourceConsumer": {
+      "file": "scripts/fixtures/particlePublicConsumer.ts",
+      "sha256": "5f8a80282d769ab018689a7e02c920926090854e9fde3ce391d5a3bda8579e39",
+      "emittedSha256": "5da174c964fc7d66ba9ad64115cb6201e305bdd3d78e081e4d213f5c08ea6685",
+      "helperCalls": [
+        "parse_particle_config_flight_readonly_options_e84f3ed8689bb024",
+        "parse_particle_config_document_flight_readonly_options_b19fbb432e032207"
+      ],
+      "helpersInInstalledHeader": false
+    },
+    "nativeFixture": {
+      "file": "scripts/fixtures/particlePublicConsumer.cpp",
+      "sha256": "f25701042de7b3218c755bee0f4b9562644165578d01f4dc8cf07db2ddbda8e1"
+    },
+    "inventory": [
+      {
+        "file": "flight/particles_formats/unity_parse.hpp",
+        "sha256": "2fd467fbdfc126542078abc87324fa9f5afb94efcb97b18e957a97ee19c18aef"
+      },
+      {
+        "file": "flight/particles_formats/_internal_index.hpp",
+        "sha256": "b13da872914679d2864aa232c0587b31cb844409ca7bf7c7c4def02bad069b09"
+      },
+      {
+        "file": "flight/particles_formats/contract.hpp",
+        "sha256": "99fbfe1f8ca8395cfc36bd34e7b8d7797f1e55e5eac92d28b7a42f8add1f79a7"
+      },
+      {
+        "file": "flight/particles_formats/register_built_in_particle_formats.hpp",
+        "sha256": "4821d9fe1470a1402da05673896363095f6a6ce8fd1a737844c3f42d75acffc3"
+      },
+      {
+        "file": "flight/particles_formats/parse_particle_config.hpp",
+        "sha256": "21ce9f68b8cfdea3c43f955ca756506781b7100fa24ca5e262abc26a2cfe08fb"
+      },
+      {
+        "file": "flight/types/particle_format_codec.hpp",
+        "sha256": "8048732959b3ba9160bc5811ca04a8d031952e5ed0f368c82e521f1f1c7797cd"
+      },
+      {
+        "file": "flight/sdk/structural_members.hpp",
+        "sha256": "976adaef779ac509b0430c27b08e650ef60b6b66e57943840c6512e0582bdbc4"
+      }
+    ],
+    "emitOnly": true,
+    "compiled": false,
+    "headers": [],
+    "inventoryUnchanged": true
   }
 }

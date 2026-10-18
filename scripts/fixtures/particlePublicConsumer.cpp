@@ -1,6 +1,7 @@
 // Pending installed-output consumer. Build only after the real shared Types and particles run.
 // Includes the actual public package; supplies no parser, codec adapter, detector or generated body.
 #include <flight/particles_formats/contract.hpp>
+#include "particle-public-consumer.hpp"
 #include <flight/callable.hpp>
 #include <flight/structural_ref.hpp>
 
@@ -18,7 +19,8 @@ using Config = flight::Ref<types::ParticleEmitterConfig>;
 using Read = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<types::ParseParticleConfigOptions>>>>;
 using Bag = flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<types::ParseParticleConfigOptions>>>>;
 int failures = 0;
-void check(bool value, const char* label) { if (!value) { ++failures; std::cerr << label << '\n'; } }
+int checks = 0;
+void check(bool value, const char* label) { ++checks; if (!value) { ++failures; std::cerr << label << '\n'; } }
 void clear() { for (const auto& kind : api::get_registered_particle_formats()) api::unregister_particle_format(kind); }
 struct Sentinel {};
 struct Cell final : flight::TypedRowCell<std::optional<double>> {
@@ -85,6 +87,20 @@ void family(const Descriptor& descriptor, flight::String input, Measure measure,
   const auto registered = api::parse_registered_particle_format(input, kind, observable);
   check(measure(registered->config) == expected(4) && cell->reads == before + 1 && registered->format == kind, "public registered route forwards the same readonly options owner");
 
+  const int before_public = cell->reads;
+  check(measure(api::public_config(input, produce())) == expected(4) && cell->reads == before_public + 1 && evaluations == 2, "compiler-emitted public config caller forwards original readonly accessor");
+  cell->value = 6;
+  const auto public_document = api::public_document(input, observable);
+  check(measure(public_document->config) == expected(6) && public_document->format == kind && cell->reads == before_public + 2, "compiler-emitted automatic document caller observes same live readonly owner");
+  for (const auto& missing : {std::optional<Read>{}, std::optional<Read>{Read(omitted)}, std::optional<Read>{Read(undefined)}}) {
+    check(measure(api::public_config(input, missing)) == expected(fallback), "public config source caller preserves missing defaults");
+    check(measure(api::public_document(input, missing)->config) == expected(fallback), "public document source caller preserves missing defaults");
+  }
+  const int before_unknown = cell->reads;
+  const auto unknown = api::public_document("unknown input", observable);
+  check(!unknown->format.has_value() && cell->reads == before_unknown, "public detection failure occurs before readonly option reads");
+  check(api::write_callback_result(input, kind, ConfigFunction(input, std::nullopt)), "compiler-emitted writable callback result consumer");
+
   std::weak_ptr<Result> lifetime;
   {
     auto result = codec->parse_to_document(input, literal);
@@ -125,8 +141,20 @@ void family(const Descriptor& descriptor, flight::String input, Measure measure,
   }
   check(matching_error, "actual public registered route catches option error with original diagnostic origin/message");
 
-  // Public mutable-options entrypoints keep their original nominal ABI. This separate control
-  // does not qualify schema-only bags through that ABI; the TypeScript fixture records that edge.
+  const int before_public_error = cell->reads;
+  const auto rejected_public = api::public_document(input, observable);
+  bool matching_public_error = false;
+  for (const auto& crumb : rejected_public->diagnostics) {
+    if (crumb->kind != "particles.parse-error" || crumb->origin != "parseParticleConfigDocument" || !crumb->detail) continue;
+    const auto message = crumb->detail->get("message");
+    const auto* text = message ? std::get_if<flight::String>(&*message) : nullptr;
+    matching_public_error = crumb->severity == "Reject" && text && *text == "options sentinel";
+  }
+  check(matching_public_error && cell->reads == before_public_error + 1, "compiler-emitted public document route preserves getter error diagnostic and origin");
+  check(measure(api::public_config(input, observable)) == measure(api::parse_particle_config("unknown input")) && cell->reads == before_public_error + 2, "compiler-emitted public config route catches getter error at original call");
+
+  // The original nominal public entrypoints remain callable and unambiguous.
+
   auto public_options = flight::make_ref<types::ParseParticleConfigOptions>();
   public_options->texture_size = 2;
   public_options->pixels_per_unit = 2;
@@ -137,9 +165,13 @@ void family(const Descriptor& descriptor, flight::String input, Measure measure,
 
 int main() {
   check(api::get_registered_particle_formats().empty(), "importing actual public package installs nothing");
+  api::install(std::nullopt);
+  check(api::get_registered_particle_formats().empty(), "source consumer absent formats installs nothing");
+  api::install(api::particle_all_formats);
   api::register_built_in_particle_formats();
   api::register_built_in_particle_formats();
   check(api::get_registered_particle_formats().size() == 6, "public installation is idempotent");
+  check(api::named_callbacks_retained(), "actual compiler-emitted public consumer recognizes all eight original named callbacks");
   auto scale = [](const Config& value) { return value->scale_min; };
   auto speed = [](const Config& value) { return value->speed_min; };
   auto size = [](double value) { return 32 / value; };
@@ -156,5 +188,6 @@ int main() {
   const auto libgdx = flight::row_get<flight::RowKey<"codec">>(api::libgdx_particle_format);
   check(libgdx->detect(" \tParticle Effect \r\nmore") && !libgdx->detect("x\nParticle Effect"), "original indexed optional trim detector");
   clear();
+  std::cout << "{\"checks\":" << checks << ",\"failures\":" << failures << ",\"families\":4,\"storedCallbacks\":8}\n";
   return failures ? 1 : 0;
 }
