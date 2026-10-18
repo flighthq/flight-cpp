@@ -9,7 +9,6 @@
 //   missing: function getResourceLoadCounts -- source line 252
 //   missing: function getResourceLoadItemStatus -- source line 265
 //   missing: function getResourceLoadProgress -- source line 287
-//   missing: function initializeResourceLoader -- source line 315
 //   missing: function pauseResourceLoad -- source line 351
 //   missing: function resetResourceLoader -- source line 433
 //   missing: function setResourceLoadPriority -- source line 485
@@ -26,6 +25,7 @@
 #include <cstdint>
 #include <flight/abort.hpp>
 #include <flight/any.hpp>
+#include <flight/callable.hpp>
 #include <flight/dom_exception.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -149,14 +149,7 @@ inline void consume_tokens(flight::Ref<TokenBucket> bucket, double cost) {
   (bucket->tokens = flight::maximum(0.0, (bucket->tokens - cost)));
 }
 
-struct ResourceLoaderInternal : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_cancel;
-  std::shared_ptr<flight::types::Signal<std::function<void(flight::Array<flight::Ref<flight::types::ResourceLoadReport>>)>>> on_complete;
-  std::shared_ptr<flight::types::Signal<std::function<void(flight::Any, flight::String)>>> on_error;
-  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_pause;
-  std::shared_ptr<flight::types::Signal<std::function<void(double)>>> on_progress;
-  std::shared_ptr<flight::types::Signal<std::function<void()>>> on_resume;
+struct ResourceLoaderInternal : public flight::types::ResourceLoader {
   bool cancelled;
   flight::Map<flight::String, flight::Ref<flight::types::ResourceLoadHandle<flight::Any>>> dedupe_map;
   flight::String error_policy;
@@ -408,57 +401,35 @@ struct ResourceLoaderInternal : public flight::ReferenceEnabled {
 // validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a
 // replacement row, or invent side storage
 
-
-// NOT GENERATED: function initializeResourceLoader -- source line 315
-// refusal: cpp-contextual-union-inequivalent [source-portability]
-//
-// The source it stood for:
-//   export function initializeResourceLoader(
-//     out: EntityConstruction<ResourceLoaderInternal>,
-//     options?: Readonly<ResourceLoaderOptions>,
-//   ): void {
-//     const opts = options ?? {};
-//     const throttle =
-//       opts.maxBytesPerSecond !== undefined && opts.maxBytesPerSecond > 0
-//         ? createTokenBucket(opts.maxBytesPerSecond)
-//         : null;
-//     out.cancelled = false;
-//     out.dedupeMap = new Map();
-//     out.errorPolicy = opts.errorPolicy ?? 'continue';
-//     out.generation = 0;
-//     out.inFlight = new Set();
-//     out.itemCounter = 0;
-//     out.itemSignals = null;
-//     out.loaded = 0;
-//     out.maxConcurrent = opts.maxConcurrent ?? 6;
-//     out.onCancel = createSignal();
-//     out.onComplete = createSignal();
-//     out.onError = createSignal();
-//     out.onPause = createSignal();
-//     out.onProgress = createSignal();
-//     out.onResume = createSignal();
-//     out.options = opts;
-//     out.paused = false;
-//     out.pending = [];
-//     out.reports = [];
-//     out.started = false;
-//     out.streaming = opts.streaming ?? false;
-//     out.throttle = throttle;
-//     out.total = 0;
-//     out.totalWeight = 0;
-//     out.weightLoaded = 0;
-//   }
-//   
-// cpp emission failed for @flighthq/loader/packages/loader/src/resourceLoader.ts: contextual C++ union
-// conversion requires equivalent source union evidence: target multiVariant carriers
-// [flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ResourceLoaderOptions>>>>,
-// flight::Ref<anonymous_3e6b344a3b6bd77e>] from binary source optionalSingle carriers
-// [flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ResourceLoaderOptions>>>>].
-// Narrow or convert the source expression so each of its alternatives names exactly one destination union
-// alternative. The carrier lists show which alternatives lack an exact carrier; preserve the declared collection
-// or member union alias before flow expansion. For a Map or WeakMap lookup followed by a rebind, ensure every
-// rebound member already has the declared value owner member's carrier -- a Readonly structural view does not
-// become a mutable nominal Ref.
+inline void initialize_resource_loader(flight::types::EntityConstruction<flight::Ref<ResourceLoaderInternal>> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ResourceLoaderOptions>>>>> options = std::nullopt) {
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ResourceLoaderOptions>>>> opts = (options.has_value() ? options.value() : flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ResourceLoaderOptions>>>>());
+  std::optional<flight::Ref<TokenBucket>> throttle = ((flight::row_get<flight::RowKey<"maxBytesPerSecond">>(opts).has_value() && (flight::row_get<flight::RowKey<"maxBytesPerSecond">>(opts).value() > 0.0)) ? std::optional<flight::Ref<TokenBucket>>{create_token_bucket(flight::row_get<flight::RowKey<"maxBytesPerSecond">>(opts).value())} : std::nullopt);
+  flight::row_set<flight::RowKey<"cancelled">>(out, false);
+  flight::row_set<flight::RowKey<"dedupeMap">>(out, flight::Map<flight::String, flight::Ref<flight::types::ResourceLoadHandle<flight::Any>>>());
+  flight::row_set<flight::RowKey<"errorPolicy">>(out, ([&]() -> flight::String { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"errorPolicy">>(opts); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("continue"); }()));
+  flight::row_set<flight::RowKey<"generation">>(out, 0.0);
+  flight::row_set<flight::RowKey<"inFlight">>(out, flight::Set<flight::Ref<PendingEntry>>());
+  flight::row_set<flight::RowKey<"itemCounter">>(out, 0.0);
+  flight::row_set<flight::RowKey<"itemSignals">>(out, std::nullopt);
+  flight::row_set<flight::RowKey<"loaded">>(out, 0.0);
+  flight::row_set<flight::RowKey<"maxConcurrent">>(out, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"maxConcurrent">>(opts); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 6.0; }()));
+  flight::row_set<flight::RowKey<"onCancel">>(out, flight::signals::create_signal<std::function<void()>>());
+  flight::row_set<flight::RowKey<"onComplete">>(out, flight::signals::create_signal<std::function<void(flight::Array<flight::Ref<flight::types::ResourceLoadReport>>)>>());
+  flight::row_set<flight::RowKey<"onError">>(out, flight::signals::create_signal<std::function<void(flight::Any, flight::String)>>());
+  flight::row_set<flight::RowKey<"onPause">>(out, flight::signals::create_signal<std::function<void()>>());
+  flight::row_set<flight::RowKey<"onProgress">>(out, flight::signals::create_signal<std::function<void(double)>>());
+  flight::row_set<flight::RowKey<"onResume">>(out, flight::signals::create_signal<std::function<void()>>());
+  flight::row_set<flight::RowKey<"options">>(out, opts);
+  flight::row_set<flight::RowKey<"paused">>(out, false);
+  flight::row_set<flight::RowKey<"pending">>(out, flight::Array<flight::Ref<PendingEntry>>{});
+  flight::row_set<flight::RowKey<"reports">>(out, flight::Array<flight::Ref<flight::types::ResourceLoadReport>>{});
+  flight::row_set<flight::RowKey<"started">>(out, false);
+  flight::row_set<flight::RowKey<"streaming">>(out, ([&]() -> bool { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"streaming">>(opts); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return false; }()));
+  flight::row_set<flight::RowKey<"throttle">>(out, throttle);
+  flight::row_set<flight::RowKey<"total">>(out, 0.0);
+  flight::row_set<flight::RowKey<"totalWeight">>(out, 0.0);
+  flight::row_set<flight::RowKey<"weightLoaded">>(out, 0.0);
+}
 
 inline flight::Ref<flight::types::ResourceLoader> create_resource_loader(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ResourceLoaderOptions>>>>> options = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<ResourceLoaderInternal>> out = flight::entity::allocate_entity<flight::Ref<ResourceLoaderInternal>>();
@@ -556,7 +527,7 @@ inline flight::Ref<flight::types::ResourceLoader> create_resource_loader(std::op
 // replacement row, or invent side storage
 
 inline void sort_pending_by_priority(flight::Array<flight::Ref<PendingEntry>> pending) {
-  pending.sort([=](flight::Ref<PendingEntry> a, flight::Ref<PendingEntry> b) { return (b->priority - a->priority); });
+  pending.sort(flight::Function<double(flight::Ref<PendingEntry>, flight::Ref<PendingEntry>)>{[=](flight::Ref<PendingEntry> a, flight::Ref<PendingEntry> b) { return (b->priority - a->priority); }});
 }
 
 
@@ -667,7 +638,7 @@ inline void cancel_remaining_entries(flight::Ref<ResourceLoaderInternal> interna
 }
 
 inline double compute_retry_delay(double attempt, flight::Ref<ResourceLoaderInternal> internal) {
-  const flight::String backoff = ([&]() -> flight::String { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"retryBackoff">>(internal->options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("none"); }());
+  const flight::String backoff = ([&]() -> flight::String { auto nullish_coalesce_left_2 = flight::row_get<flight::RowKey<"retryBackoff">>(internal->options); if (nullish_coalesce_left_2.has_value()) return nullish_coalesce_left_2.value(); return flight::String("none"); }());
   const double base_ms = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"retryBaseDelayMs">>(internal->options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 100.0; }());
   const double max_ms = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"retryMaxDelayMs">>(internal->options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 10000.0; }());
   if ((backoff == flight::String("none"))) {

@@ -390,7 +390,6 @@
         "flight/gui/gui_controller.hpp",
         "flight/interaction/focus_manager.hpp",
         "flight/loader/load.hpp",
-        "flight/loader/resource_loader.hpp",
         "flight/log/log.hpp",
         "flight/media/audio_channel.hpp",
         "flight/media/video_channel.hpp",
@@ -4094,6 +4093,13 @@
       "digest": "cfee5309ac1273a21742f6edcd8405530e813a9038678d553a3c5fb2df930290",
       "id": "loader-request-options-return-type",
       "module": "packages/loader/src/load.ts",
+      "package": "@flighthq/loader"
+    },
+    {
+      "dependency": "flight",
+      "digest": "72c6e93d6ecd01d01a821fe311868c9243d9e9d8b4c5945506a0e3260d60098c",
+      "id": "loader-options-nullish-row-local",
+      "module": "packages/loader/src/resourceLoader.ts",
       "package": "@flighthq/loader"
     },
     {

@@ -5,6 +5,7 @@
 #include <flight/any.hpp>
 #include <flight/array_buffer.hpp>
 #include <flight/blob.hpp>
+#include <flight/callable.hpp>
 #include <flight/optional_variant.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -42,14 +43,14 @@ inline std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<fli
     return flight::make_ref<flight::types::NetRequestOptions>(flight::types::NetRequestOptions{.signal = flight::row_get<flight::RowKey<"signal">>(input.value())});
   }
   auto progress = flight::signals::create_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::NetProgress>>>>)>>();
-  flight::signals::connect_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::NetProgress>>>>)>>(progress, [=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::NetProgress>>>> event) { return flight::signals::emit_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LoadProgress>>>>)>>(flight::row_get<flight::RowKey<"progress">>(input.value()).value(), flight::make_ref<flight::types::LoadProgress>(flight::types::LoadProgress{.url = url, .loaded = flight::row_get<flight::RowKey<"loaded">>(event), .total = flight::row_get<flight::RowKey<"total">>(event), .phase = flight::row_get<flight::RowKey<"phase">>(event)})); }, std::nullopt);
+  flight::signals::connect_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::NetProgress>>>>)>>(progress, flight::Function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::NetProgress>>>>)>{[=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::NetProgress>>>> event) { return flight::signals::emit_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LoadProgress>>>>)>>(flight::row_get<flight::RowKey<"progress">>(input.value()).value(), flight::make_ref<flight::types::LoadProgress>(flight::types::LoadProgress{.url = url, .loaded = flight::row_get<flight::RowKey<"loaded">>(event), .total = flight::row_get<flight::RowKey<"total">>(event), .phase = flight::row_get<flight::RowKey<"phase">>(event)})); }}, std::nullopt);
   return ([&]() { auto object_member_signal = flight::row_get<flight::RowKey<"signal">>(input.value()); auto object_member_progress = std::optional<std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::NetProgress>>>>)>>>>{progress}; return flight::make_ref<flight::types::NetRequestOptions>(flight::types::NetRequestOptions{.progress = object_member_progress, .signal = object_member_signal}); }());
 }
 
 inline flight::Task<std::optional<flight::Uint8Array>> load_bytes(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>> host_net, flight::String url, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LoadOptions>>>>> input = std::nullopt) {
   try {
     auto response = co_await flight::net::send_net_request(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>>>(host_net), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::NetRequest>>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::NetRequest>>>>(flight::row_field<flight::RowKey<"method">>(flight::String("GET")), flight::row_field<flight::RowKey<"responseType">>(std::optional<flight::String>{flight::String("arraybuffer")}), flight::row_field<flight::RowKey<"url">>(url))), request_options(url, input));
-    co_return ((response->ok && (flight::union_kind_if<flight::ArrayBuffer>(response->body) != nullptr)) ? std::optional<flight::Uint8Array>{flight::Uint8Array(flight::union_kind_or_throw<flight::ArrayBuffer>(response->body))} : std::nullopt);
+    co_return ((response->ok && (flight::union_kind_if<flight::ArrayBuffer>(response->body) != nullptr)) ? std::optional<flight::Uint8Array>{flight::Uint8Array(response->body)} : std::nullopt);
   }
   catch (...) {
     co_return std::nullopt;
