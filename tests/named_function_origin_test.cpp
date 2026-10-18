@@ -1,4 +1,5 @@
 #include <flight/callable.hpp>
+#include "named_function_origin_peer.hpp"
 
 #include <iostream>
 #include <memory>
@@ -56,5 +57,13 @@ int main() {
   try { (void)flight::callable_identity_equal(native, erased); }
   catch (const std::logic_error&) { rejected = true; }
   check(rejected, "unknown cross-signature closure identity stays unavailable");
+  const std::function<double(double)> local = flight::NamedFunction<double(double)>::from<&named_origin_test::source>(
+      named_origin_test::source);
+  const auto peer = named_origin_test::from_peer();
+  check(flight::callable_identity_equal(local, peer) &&
+        flight::callable_identity_equal_named<&named_origin_test::source>(peer),
+        "original declaration identity crosses translation units and callback signatures");
+  check(!flight::callable_identity_equal_named<&named_origin_test::other>(peer) && peer(2, false) == 3,
+        "cross-translation-unit same-body declaration stays distinct and calls original body");
   return failures == 0 ? 0 : 1;
 }

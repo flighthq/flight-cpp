@@ -94,7 +94,7 @@ cc_test(
 # against the runtime alone.
 cc_test(
     name = "named_function_origin_test",
-    srcs = ["named_function_origin_test.cpp"],
+    srcs = ["named_function_origin_test.cpp", "named_function_origin_peer.cpp", "named_function_origin_peer.hpp"],
     size = "small",
     deps = ["//:cpp"],
 )
