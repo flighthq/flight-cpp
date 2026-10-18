@@ -169,6 +169,14 @@ inline JsonValue::JsonValue(JsonArray value)
 inline JsonValue::JsonValue(JsonObject value)
     : value_(std::make_shared<JsonObject>(std::move(value))) {}
 
+// Parsed arrays retain their JSON carrier. Array.isArray must inspect that carrier rather than
+// select array.hpp's non-array fallback (or require a conversion to Any first).
+[[nodiscard]] inline bool is_array(const JsonValue& value) noexcept {
+  return value.kind() == JsonValue::Kind::array;
+}
+
+[[nodiscard]] inline constexpr bool is_array(const JsonArray&) noexcept { return true; }
+
 namespace detail {
 
 inline void append_json_string(std::string& output, const String& value) {

@@ -18,6 +18,15 @@ int main() {
   using flight::String;
   auto doc = flight::Json::parse(R"({"bones":[null,2,{"x":1}],"obj":{"n":1},"null":null,"false":false,"zero":0,"str":"s","2":2,"1":1,"01":3,"4294967295":4})");
   auto alias = doc;
+  check(!flight::is_array(doc), "parsed objects are not arrays");
+  for (const auto* text : {"null", "true", "0", "\"s\"", "{}"}) {
+    check(!flight::is_array(flight::Json::parse(text)), "JSON non-arrays keep the array predicate false");
+  }
+  const auto parsed_array = flight::Json::parse("[null,1]");
+  check(flight::is_array(parsed_array) && flight::is_array(parsed_array.as_array()) &&
+        flight::is_array(std::optional<JsonValue>(parsed_array)) &&
+        !flight::is_array(std::optional<JsonValue>()) &&
+        flight::is_array(Any(parsed_array)), "array predicate agrees across parsed, optional and erased storage");
   auto view = flight::named_properties(doc);
   check(view.shared_owner()->native_object().get() == doc.object_owner().get(), "view retains parsed root identity");
   check(view.shared_owner() == flight::named_properties(alias).shared_owner(), "root aliases share their canonical row owner");
