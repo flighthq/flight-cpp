@@ -5439,6 +5439,20 @@
       "id": "swf-filter-effect-owner-pushes",
       "module": "packages/swf/src/swfFilter.ts",
       "package": "@flighthq/swf"
+    },
+    {
+      "dependency": "flight-compiler",
+      "digest": "b9beb845391e546decdb6ea11754f77821ddf5d374fa56ad689363f9559adc1c",
+      "id": "compiler-inferred-invocation-type-arguments",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/shape"
+    },
+    {
+      "dependency": "flight-compiler",
+      "digest": "248f9ea3cafa23026b2cbca59fc9fca90b2b3b4b5e434743daf68e48aadfeaab",
+      "id": "compiler-callable-value-identity",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/shape"
     }
   ],
   "duplicateStructuralStructAliases": {

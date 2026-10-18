@@ -6,6 +6,7 @@
 //   missing: function computeShapeBoundsRectangle -- source line 17
 #include <cmath>
 #include <cstdint>
+#include <flight/callable.hpp>
 #include <flight/number.hpp>
 #include <flight/structural_ref.hpp>
 #include <flight/types/shape_command.hpp>
@@ -61,17 +62,17 @@ struct ShapeCommandArgumentCursorInternal;
 
 namespace flight::shape {
 
-inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_cubic_curve_to = [](flight::Ref<flight::types::ShapeBoundsContext> context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>> command) {
+inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_cubic_curve_to = flight::Function<void(flight::Ref<flight::types::ShapeBoundsContext>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>>)>{[](flight::Ref<flight::types::ShapeBoundsContext> context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>> command) {
   context->cubic_curve_to(std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(0.0)), std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(1.0)), std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(2.0)), std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(3.0)), std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(4.0)), std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(5.0)));
-};
+}};
 
-inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_draw_circle = [](flight::Ref<flight::types::ShapeBoundsContext> context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>> command) {
+inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_draw_circle = flight::Function<void(flight::Ref<flight::types::ShapeBoundsContext>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>>)>{[](flight::Ref<flight::types::ShapeBoundsContext> context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>> command) {
   context->draw_circle(std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(0.0)), std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(1.0)), std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(2.0)));
-};
+}};
 
-inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_draw_ellipse = [](flight::Ref<flight::types::ShapeBoundsContext> context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>> command) {
+inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_draw_ellipse = flight::Function<void(flight::Ref<flight::types::ShapeBoundsContext>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>>)>{[](flight::Ref<flight::types::ShapeBoundsContext> context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>> command) {
   context->draw_ellipse(std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(0.0)), std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(1.0)), std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(2.0)), std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(3.0)));
-};
+}};
 
 struct ShapeBoundsAccumulator : public flight::ReferenceEnabled {
   double max_x;
@@ -117,9 +118,7 @@ struct ShapeBoundsLaneState : public flight::ReferenceEnabled {
   bool writes_stroke;
 };
 
-struct ShapeCommandArgumentCursorInternal : public flight::ReferenceEnabled {
-  double length;
-  std::function<std::variant<flight::Array<double>, flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::Matrix>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>, bool, double, flight::String, flight::Null, flight::Undefined>(double)> get_argument;
+struct ShapeCommandArgumentCursorInternal : public flight::types::ShapeCommandArgumentCursor {
   double argument_count;
   double argument_offset;
   flight::Array<flight::types::ShapeCommandToken> commands;
@@ -134,14 +133,14 @@ inline flight::Ref<ShapeBoundsSegment> create_shape_bounds_segment() {
 }
 
 inline flight::Ref<ShapeCommandArgumentCursorInternal> create_shape_command_argument_cursor(flight::Array<flight::types::ShapeCommandToken> commands) {
-  flight::Ref<ShapeCommandArgumentCursorInternal> cursor = ([&]() { auto object_member_argument_count = 0.0; auto object_member_argument_offset = 0.0; auto object_member_commands = commands; auto object_member_length = [=]() {
+  flight::Ref<ShapeCommandArgumentCursorInternal> cursor = ([&]() { auto object_member_argument_count = 0.0; auto object_member_argument_offset = 0.0; auto object_member_commands = commands; auto object_member_length = flight::Function<double()>{[=]() {
   return cursor->argument_count;
-}; auto object_member_get_argument = [=](double relative_index) -> std::variant<flight::Array<double>, flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::Matrix>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>, bool, double, flight::String, flight::Null, flight::Undefined> {
+}}; auto object_member_get_argument = flight::Function<std::variant<flight::Array<double>, flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::Matrix>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>, bool, double, flight::String, flight::Null, flight::Undefined>(double)>{[=](double relative_index) -> std::variant<flight::Array<double>, flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::Matrix>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>, bool, double, flight::String, flight::Null, flight::Undefined> {
   if (((relative_index < 0.0) || (relative_index >= cursor->argument_count))) {
     return std::variant<flight::Array<double>, flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::Matrix>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>, bool, double, flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   }
   return cursor->commands.element((cursor->argument_offset + relative_index));
-}; auto object_accessor_result = flight::make_ref<ShapeCommandArgumentCursorInternal>(ShapeCommandArgumentCursorInternal{.get_argument = object_member_get_argument, .argument_count = object_member_argument_count, .argument_offset = object_member_argument_offset, .commands = object_member_commands});  auto object_accessor_row = flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<ShapeCommandArgumentCursorInternal>>>>(object_accessor_result); class object_accessor_cell_length final : public flight::TypedRowCell<double> { public: explicit object_accessor_cell_length(std::function<double()> getter) : getter_(std::move(getter)) {} double& get() override { auto next = getter_(); if (value_.has_value()) value_.value() = std::move(next); else value_.emplace(std::move(next)); return value_.value(); } void set(double) override { throw std::logic_error("object getter is readonly"); } private: std::function<double()> getter_; std::optional<double> value_; }; object_accessor_row.shared_owner()->set_named_cell("length", std::make_shared<object_accessor_cell_length>(std::function<double()>{std::move(object_member_length)})); return object_accessor_result; }());
+}}; auto object_accessor_result = flight::make_ref<ShapeCommandArgumentCursorInternal>(ShapeCommandArgumentCursorInternal{.argument_count = object_member_argument_count, .argument_offset = object_member_argument_offset, .commands = object_member_commands}); object_accessor_result->get_argument = object_member_get_argument; auto object_accessor_row = flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<ShapeCommandArgumentCursorInternal>>>>(object_accessor_result); class object_accessor_cell_length final : public flight::TypedRowCell<double> { public: explicit object_accessor_cell_length(std::function<double()> getter) : getter_(std::move(getter)) {} double& get() override { auto next = getter_(); if (value_.has_value()) value_.value() = std::move(next); else value_.emplace(std::move(next)); return value_.value(); } void set(double) override { throw std::logic_error("object getter is readonly"); } private: std::function<double()> getter_; std::optional<double> value_; }; object_accessor_row.shared_owner()->set_named_cell("length", std::make_shared<object_accessor_cell_length>(std::function<double()>{std::move(object_member_length)})); return object_accessor_result; }());
   return cursor;
 }
 
@@ -521,7 +520,7 @@ inline void write_shape_bounds_rectangle(flight::Ref<flight::types::Rectangle> o
   (out->height = (flight::row_get<flight::RowKey<"maxY">>(accumulator) - flight::row_get<flight::RowKey<"minY">>(accumulator)));
 }
 
-inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_draw_path = [](flight::Ref<flight::types::ShapeBoundsContext> context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>> command) {
+inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_draw_path = flight::Function<void(flight::Ref<flight::types::ShapeBoundsContext>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>>)>{[](flight::Ref<flight::types::ShapeBoundsContext> context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>> command) {
   flight::Array<double> path_commands = std::get<flight::Array<double>>(flight::row_get<flight::RowKey<"getArgument">>(command)(0.0));
   flight::Array<double> data = std::get<flight::Array<double>>(flight::row_get<flight::RowKey<"getArgument">>(command)(1.0));
   double data_index = 0.0;
@@ -559,17 +558,17 @@ inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_draw_path =
       }
     }
   }
-};
+}};
 
-inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_draw_rectangle = [](flight::Ref<flight::types::ShapeBoundsContext> context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>> command) {
+inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_draw_rectangle = flight::Function<void(flight::Ref<flight::types::ShapeBoundsContext>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>>)>{[](flight::Ref<flight::types::ShapeBoundsContext> context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>> command) {
   context->draw_rectangle(std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(0.0)), std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(1.0)), std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(2.0)), std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(3.0)));
-};
+}};
 
-inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_draw_rounded_rectangle = [](flight::Ref<flight::types::ShapeBoundsContext> context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>> command) {
+inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_draw_rounded_rectangle = flight::Function<void(flight::Ref<flight::types::ShapeBoundsContext>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>>)>{[](flight::Ref<flight::types::ShapeBoundsContext> context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>> command) {
   context->draw_rounded_rectangle(std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(0.0)), std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(1.0)), std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(2.0)), std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(3.0)), std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(4.0)));
-};
+}};
 
-inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_expand_point_pairs = [](flight::Ref<flight::types::ShapeBoundsContext> context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>> command) {
+inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_expand_point_pairs = flight::Function<void(flight::Ref<flight::types::ShapeBoundsContext>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>>)>{[](flight::Ref<flight::types::ShapeBoundsContext> context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>> command) {
   flight::Array<double> values = std::get<flight::Array<double>>(flight::row_get<flight::RowKey<"getArgument">>(command)(0.0));
   {
     double i = 0.0;
@@ -578,28 +577,28 @@ inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_expand_poin
       (i += 2.0);
     }
   }
-};
+}};
 
-inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_flush = [](flight::Ref<flight::types::ShapeBoundsContext> context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>> ignored_callback_argument) {
+inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_flush = flight::Function<void(flight::Ref<flight::types::ShapeBoundsContext>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>>)>{[](flight::Ref<flight::types::ShapeBoundsContext> context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>> ignored_callback_argument) {
   (void)ignored_callback_argument;
   context->flush_path();
-};
+}};
 
-inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_line_style = [](flight::Ref<flight::types::ShapeBoundsContext> context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>> command) {
+inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_line_style = flight::Function<void(flight::Ref<flight::types::ShapeBoundsContext>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>>)>{[](flight::Ref<flight::types::ShapeBoundsContext> context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>> command) {
   context->set_stroke_style(std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(0.0)), std::get<flight::String>(flight::row_get<flight::RowKey<"getArgument">>(command)(5.0)), std::get<flight::String>(flight::row_get<flight::RowKey<"getArgument">>(command)(6.0)), std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(7.0)));
-};
+}};
 
-inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_line_to = [](flight::Ref<flight::types::ShapeBoundsContext> context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>> command) {
+inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_line_to = flight::Function<void(flight::Ref<flight::types::ShapeBoundsContext>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>>)>{[](flight::Ref<flight::types::ShapeBoundsContext> context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>> command) {
   context->line_to(std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(0.0)), std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(1.0)));
-};
+}};
 
-inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_move_to = [](flight::Ref<flight::types::ShapeBoundsContext> context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>> command) {
+inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_move_to = flight::Function<void(flight::Ref<flight::types::ShapeBoundsContext>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>>)>{[](flight::Ref<flight::types::ShapeBoundsContext> context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>> command) {
   context->move_to(std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(0.0)), std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(1.0)));
-};
+}};
 
-inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_quadratic_curve_to = [](flight::Ref<flight::types::ShapeBoundsContext> context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>> command) {
+inline flight::types::ShapeBoundsCommandHandler default_shape_bounds_quadratic_curve_to = flight::Function<void(flight::Ref<flight::types::ShapeBoundsContext>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>>)>{[](flight::Ref<flight::types::ShapeBoundsContext> context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShapeCommandArgumentCursor>>>> command) {
   context->quadratic_curve_to(std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(0.0)), std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(1.0)), std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(2.0)), std::get<double>(flight::row_get<flight::RowKey<"getArgument">>(command)(3.0)));
-};
+}};
 
 inline flight::Ref<flight::types::ShapeBoundsExplanation> explain_shape_bounds(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Shape>>>> source, std::optional<flight::types::ShapeBoundsMode> mode = std::nullopt) {
   mode = mode.value_or(flight::String("ink"));
@@ -649,7 +648,7 @@ inline void set_shape_bounds_stroke_style(flight::Ref<ShapeBoundsLaneState> stat
 }
 
 inline flight::Ref<flight::types::ShapeBoundsContext> create_shape_bounds_context(flight::Ref<ShapeBoundsLaneState> state) {
-  return flight::make_ref<flight::types::ShapeBoundsContext>(flight::types::ShapeBoundsContext{.close_path = [=]() { return close_shape_bounds_path(state); }, .cubic_curve_to = [=](double control_x1, double control_y1, double control_x2, double control_y2, double x, double y) { return cubic_shape_bounds_curve_to(state, control_x1, control_y1, control_x2, control_y2, x, y); }, .draw_circle = [=](double center_x, double center_y, double radius) { return draw_shape_bounds_circle(state, center_x, center_y, radius); }, .draw_ellipse = [=](double center_x, double center_y, double radius_x, double radius_y) { return draw_shape_bounds_ellipse(state, center_x, center_y, radius_x, radius_y); }, .draw_rectangle = [=](double x, double y, double width, double height) { return draw_shape_bounds_rectangle(state, x, y, width, height); }, .draw_rounded_rectangle = [=](double x, double y, double width, double height, double radius) { return draw_shape_bounds_rounded_rectangle(state, x, y, width, height, radius); }, .expand_point = [=](double x, double y) { return expand_shape_bounds_point_for_lane(state, x, y); }, .flush_path = [=]() { return flush_shape_bounds_path(state); }, .line_to = [=](double x, double y) { return line_shape_bounds_to(state, x, y); }, .move_to = [=](double x, double y) { return move_shape_bounds_to(state, x, y); }, .quadratic_curve_to = [=](double control_x, double control_y, double x, double y) { return quadratic_shape_bounds_curve_to(state, control_x, control_y, x, y); }, .set_stroke_style = [=](double width, flight::types::CapsStyle caps, flight::types::JointStyle joints, double miter_limit) { return set_shape_bounds_stroke_style(state, width, caps, joints, miter_limit); }});
+  return flight::make_ref<flight::types::ShapeBoundsContext>(flight::types::ShapeBoundsContext{.close_path = flight::Function<void()>{[=]() { return close_shape_bounds_path(state); }}, .cubic_curve_to = flight::Function<void(double, double, double, double, double, double)>{[=](double control_x1, double control_y1, double control_x2, double control_y2, double x, double y) { return cubic_shape_bounds_curve_to(state, control_x1, control_y1, control_x2, control_y2, x, y); }}, .draw_circle = flight::Function<void(double, double, double)>{[=](double center_x, double center_y, double radius) { return draw_shape_bounds_circle(state, center_x, center_y, radius); }}, .draw_ellipse = flight::Function<void(double, double, double, double)>{[=](double center_x, double center_y, double radius_x, double radius_y) { return draw_shape_bounds_ellipse(state, center_x, center_y, radius_x, radius_y); }}, .draw_rectangle = flight::Function<void(double, double, double, double)>{[=](double x, double y, double width, double height) { return draw_shape_bounds_rectangle(state, x, y, width, height); }}, .draw_rounded_rectangle = flight::Function<void(double, double, double, double, double)>{[=](double x, double y, double width, double height, double radius) { return draw_shape_bounds_rounded_rectangle(state, x, y, width, height, radius); }}, .expand_point = flight::Function<void(double, double)>{[=](double x, double y) { return expand_shape_bounds_point_for_lane(state, x, y); }}, .flush_path = flight::Function<void()>{[=]() { return flush_shape_bounds_path(state); }}, .line_to = flight::Function<void(double, double)>{[=](double x, double y) { return line_shape_bounds_to(state, x, y); }}, .move_to = flight::Function<void(double, double)>{[=](double x, double y) { return move_shape_bounds_to(state, x, y); }}, .quadratic_curve_to = flight::Function<void(double, double, double, double)>{[=](double control_x, double control_y, double x, double y) { return quadratic_shape_bounds_curve_to(state, control_x, control_y, x, y); }}, .set_stroke_style = flight::Function<void(double, flight::types::CapsStyle, flight::types::JointStyle, double)>{[=](double width, flight::types::CapsStyle caps, flight::types::JointStyle joints, double miter_limit) { return set_shape_bounds_stroke_style(state, width, caps, joints, miter_limit); }}});
 }
 
 inline std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Shape>>>>, flight::types::ShapeBoundsMode, flight::String)>> shape_bounds_guard = std::nullopt;
