@@ -579,3 +579,25 @@ Without this, the emitter lane can be implemented exactly as planned and the 21-
 with no diagnostic change to show for it. Either the typed projection lands with the lane, or the lane is
 scoped to clusters that genuinely use the data read and the Lottie cluster is reported as dependent on the
 typed projection instead.
+
+## The row construction spelling matters (probe result)
+
+Building the JSON-backed row two ways from the same parsed value, with a runtime probe:
+
+```cpp
+using Row = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Any>>>;
+const auto properties = flight::named_properties(parsed);
+Row::from_owner(properties.shared_owner());                    // reads the member correctly
+flight::structural_ref_cast<Row>(properties.shared_owner());   // COMPILES, reads the member wrongly
+```
+
+`from_owner` goes through the owner the JSON value already has (`owner_for<JsonObject>`), so the row's
+cells are the parsed object's members. `structural_ref_cast` over a `shared_ptr<JsonObject>` instead builds
+`StructuralRef<RowWritable<RowOf<std::shared_ptr<JsonObject>>>>` and asks `owner_for` for a
+`std::shared_ptr<JsonObject>` subject -- which is not the `JsonObject` the JSON specialization covers, so the
+owner is a native-binding owner over the wrong subject and every member read misses.
+
+The emitter's assertion lowering must therefore emit
+`Row::from_owner(flight::named_properties(<jsonValue>).shared_owner())`, not `structural_ref_cast` over the
+`JsonObject`. The probe is two lines and worth running in the emitted fixture, because the wrong spelling does
+not fail to compile -- it silently reads absence.
