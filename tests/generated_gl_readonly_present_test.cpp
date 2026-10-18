@@ -117,10 +117,30 @@ void check_rederived_program_and_callbacks(const State& state) {
               !base.owner_before(external) && !external.owner_before(base) &&
               !cached->declared_base_as<types::GlClassicProgram>(),
           "the generic cache inferred a type or replaced its declared base owner");
+    const auto ibl = flight::make_ref<types::GlScene3DIbl>();
+    ibl->brdf_lut = gl.create_texture().value();
+    ibl->irradiance_cube = gl.create_texture().value();
+    ibl->prefiltered_cube = gl.create_texture().value();
+    const auto bake_framebuffer = gl.create_framebuffer().value();
+    const auto environment_cube = gl.create_texture().value();
+    runtime->ibl = ibl;
+    runtime->ibl_bake_framebuffer = bake_framebuffer;
+    runtime->environment_source_cube = environment_cube;
+    runtime->environment_source_cube_face_versions = flight::Array<double>{1.0, 2.0};
+    runtime->active_mesh_program = base;
     scene::destroy_gl_scene_3d_runtime(state);
-    check(runtime->program_cache.size() == 0 && !scene::scene_runtimes.has(state) &&
-              !static_cast<bool>(external->program) && !static_cast<bool>(first->program),
-          "actual scene teardown did not delete and clear every cached program");
+    check(runtime->program_cache.size() == 0 && !runtime->active_mesh_program &&
+              scene::get_gl_scene_3d_runtime(state) == runtime,
+          "teardown did not retain the same cleared runtime for lazy reuse");
+    check(!static_cast<bool>(external->program) && !static_cast<bool>(first->program) &&
+              external->program.native_name() == 0 && first->program.native_name() == 0,
+          "actual scene teardown did not delete every cached GL program");
+    check(!runtime->ibl && !runtime->ibl_bake_framebuffer && !runtime->environment_source_cube &&
+              runtime->environment_source_cube_face_versions.empty() &&
+              !static_cast<bool>(ibl->brdf_lut) && !static_cast<bool>(ibl->irradiance_cube) &&
+              !static_cast<bool>(ibl->prefiltered_cube) && !static_cast<bool>(bake_framebuffer) &&
+              !static_cast<bool>(environment_cube),
+          "full scene teardown did not clear and delete populated IBL/environment resources");
   }
   check(external_lifetime.expired(), "a destroyed generic cache retained its derived program");
   const auto invalid_runtime = scene::get_gl_scene_3d_runtime(state);
