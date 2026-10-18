@@ -90,3 +90,11 @@ The exact call text is the primitive's adoption entry point, taken from builder2
 request fixes only WHERE the adoption is emitted and WHEN it is legal, not the family's own API.
 No copy, downcast or empty fallback is emitted where the satisfaction check fails; that stays the
 existing refusal.
+
+## Measured reproduction of the emitter side
+
+A focused fixture with `interface R { pos: number; read(): number }`, `class C { pos = 0;
+read(): number { ... } }` and `use(c)` emits `return use(c);` — a `Ref<C>` passed where `Ref<R>` is
+declared, with no refusal and no conversion. The emitter has no lane for a class value at a
+structurally satisfied interface parameter; C++ rejects it later, which is exactly how the SWF
+headers fail. This is the call-site the bounded view must occupy (see the prepared mapping above).
