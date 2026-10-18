@@ -98,6 +98,60 @@ class Function<Result(Parameters...)> {
   std::shared_ptr<State> state_;
 };
 
+namespace detail {
+// An object address, never a function-pointer cast. Inline specialization identity is shared by
+// translation units and signatures; aliases of the same declaration name the same specialization.
+template <auto Source>
+inline const unsigned char named_function_origin_tag = 0;
+} // namespace detail
+
+class NamedFunctionOrigin final {
+ public:
+  template <auto Source>
+  [[nodiscard]] static NamedFunctionOrigin of() noexcept {
+    static_assert(std::is_pointer_v<decltype(Source)> &&
+                  std::is_function_v<std::remove_pointer_t<decltype(Source)>>);
+    return NamedFunctionOrigin(&detail::named_function_origin_tag<Source>);
+  }
+  [[nodiscard]] friend bool operator==(NamedFunctionOrigin, NamedFunctionOrigin) noexcept = default;
+
+ private:
+  explicit NamedFunctionOrigin(const void* token) noexcept : token_(token) {}
+  const void* token_;
+};
+
+// An opt-in target for a contextual invocation of one original named declaration. The compiler must
+// prove that Implementation invokes that declaration's original body over owner-preserving views.
+// This adds no conversion or function-pointer reinterpretation. Ordinary Function state/layout and
+// std::function storage remain unchanged. Copies share invocation state through the existing Function.
+template <typename Signature>
+class NamedFunction;
+
+template <typename Result, typename... Parameters>
+class NamedFunction<Result(Parameters...)> final {
+ public:
+  template <auto Source, typename Implementation>
+    requires std::is_invocable_r_v<Result, Implementation&, Parameters...>
+  [[nodiscard]] static NamedFunction from(Implementation&& implementation) {
+    return NamedFunction(NamedFunctionOrigin::of<Source>(),
+                         Function<Result(Parameters...)>(std::forward<Implementation>(implementation)));
+  }
+
+  [[nodiscard]] NamedFunctionOrigin origin() const noexcept { return origin_; }
+  Result operator()(Parameters... parameters) const {
+    return implementation_(std::forward<Parameters>(parameters)...);
+  }
+  [[nodiscard]] friend bool operator==(const NamedFunction& left, const NamedFunction& right) noexcept {
+    return left.origin_ == right.origin_;
+  }
+
+ private:
+  NamedFunction(NamedFunctionOrigin origin, Function<Result(Parameters...)> implementation)
+      : origin_(origin), implementation_(std::move(implementation)) {}
+  NamedFunctionOrigin origin_;
+  Function<Result(Parameters...)> implementation_;
+};
+
 // JavaScript function equality is reference identity. Identity-bearing runtime callables answer it
 // directly; an emitter-erased std::function cannot do so for stateful targets, and guessing from its
 // target type would silently disconnect a different closure. Keep that boundary explicit and fail
@@ -123,6 +177,12 @@ template <typename Result, typename... Parameters>
   if (left_pointer != nullptr && right_pointer != nullptr) {
     return *left_pointer == *right_pointer;
   }
+  using Named = NamedFunction<Result(Parameters...)>;
+  const auto* left_named = left.template target<Named>();
+  const auto* right_named = right.template target<Named>();
+  if (left_named != nullptr && right_named != nullptr) {
+    return left_named->origin() == right_named->origin();
+  }
   // An identity-bearing Flight Function can deliberately cross an ABI surface that still spells
   // its callback as std::function. std::function preserves that target object on copy, so recover
   // the retained Function and compare its shared state just as the non-erased overload does. This
@@ -137,11 +197,38 @@ template <typename Result, typename... Parameters>
   // A declared function and a retained closure are distinct source objects. Both identities are
   // represented here; only an unrecognized target below has lost its identity through erasure.
   if ((left_pointer != nullptr && right_identified != nullptr) ||
-      (left_identified != nullptr && right_pointer != nullptr)) {
+      (left_identified != nullptr && right_pointer != nullptr) ||
+      (left_named != nullptr && right_identified != nullptr) ||
+      (left_identified != nullptr && right_named != nullptr)) {
     return false;
   }
   throw std::logic_error(
       "callable identity is unavailable after std::function erasure");
+}
+
+// Both signature-specific targets carry the same declaration token. Unknown erased closures still
+// fail explicitly: neither their signature nor the shape of their body establishes source identity.
+template <typename LeftResult, typename... LeftParameters, typename RightResult, typename... RightParameters>
+  requires(!std::same_as<LeftResult(LeftParameters...), RightResult(RightParameters...)>)
+[[nodiscard]] bool callable_identity_equal(
+    const std::function<LeftResult(LeftParameters...)>& left,
+    const std::function<RightResult(RightParameters...)>& right) {
+  const auto* left_named = left.template target<NamedFunction<LeftResult(LeftParameters...)>>();
+  const auto* right_named = right.template target<NamedFunction<RightResult(RightParameters...)>>();
+  if (left_named != nullptr && right_named != nullptr) return left_named->origin() == right_named->origin();
+  throw std::logic_error("cross-signature callable identity requires both original named declarations");
+}
+
+// A source comparison with a bare declaration supplies that exact declaration at compile time. A
+// same-signature raw native pointer remains comparable; no pointer of another signature is cast.
+template <auto Source, typename Result, typename... Parameters>
+[[nodiscard]] bool callable_identity_equal_named(const std::function<Result(Parameters...)>& callable) {
+  if (const auto* named = callable.template target<NamedFunction<Result(Parameters...)>>()) {
+    return named->origin() == NamedFunctionOrigin::of<Source>();
+  }
+  if (const auto* pointer = callable.template target<decltype(Source)>()) return *pointer == Source;
+  if (callable.template target<Function<Result(Parameters...)>>() != nullptr) return false;
+  throw std::logic_error("callable identity is unavailable after std::function erasure");
 }
 
 // Whether one argument satisfies one callback parameter.

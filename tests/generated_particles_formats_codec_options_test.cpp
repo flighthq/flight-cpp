@@ -111,5 +111,28 @@ int main() {
         "original public native Ref entrypoints remain callable");
   check(result->document->start_particle_size == 32 && result->config != config,
         "original result retains extra document owner and authored fresh config");
+  // This projection starts with the exact public result Ref, so it does not depend on the withdrawn
+  // allocated-type recovery change. The row keeps that same NativeRowOwner through the wider schema.
+  using DocumentSlot = decltype(flight::types::ParticleFormatCodec::parse_to_document);
+  using BaseResult = typename std::invoke_result_t<DocumentSlot, flight::String,
+      std::optional<ActualRead>>::element_type;
+  using Result = flight::types::StarlingPexParseResult;
+  using FullRow = flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<Result>>>>;
+  using BaseRow = flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<BaseResult>>>>;
+  std::weak_ptr<Result> lifetime;
+  {
+    auto original = flight::particles_formats::parse_starling_pex_document("<particleEmitterConfig/>", options);
+    lifetime = original;
+    const FullRow full(original);
+    const BaseRow base(full);
+    check(base.identity() == full.identity(), "base result row keeps original result identity");
+    flight::row_set<flight::RowKey<"config">>(base, config);
+    check(original->config == config && original->document->start_particle_size == 32,
+          "base result writes reach original result and retain extra document");
+    original.reset();
+    check(!lifetime.expired() && base.shared_exact_object<Result>() == lifetime.lock(),
+          "base result view retains and recovers the original exact owner");
+  }
+  check(lifetime.expired(), "result view releases original owner after last reference");
   return failures == 0 ? 0 : 1;
 }
