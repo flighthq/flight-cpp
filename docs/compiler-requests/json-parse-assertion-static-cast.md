@@ -555,3 +555,27 @@ Classification, decided by what the header actually reaches, not by whether it c
 
 Neither class is closed by a blanket refusal: a refusal of a structured read is a report of remaining work,
 not a qualification.
+
+## Coverage check: the data-read hook does not reach the Lottie cluster
+
+Measured on the current emission: `flight/scene2d_formats/lottie_document.hpp` contains **42 typed
+`row_get<flight::RowKey<"...">>(document)` reads and zero `read_json_data_property` calls**. The asserted
+document is carried as a structural row (`RowReadonly<RowOf<Ref<LottieDocument>>>`), and every member read is a
+typed row read -- `fr`, `ip`, `op`, `w`, `h` as `double`, `layers` as `Array<Ref<LottieLayer>>`.
+
+So substituting the private-JSON data read (`read_json_data_property` -> `read_json_scalar_property`) cannot
+make these 17 rows compile: the call site the emitter would change appears zero times in the file. The read that
+fails is `row_get<double>`, which requires the owner to answer a `TypedRowCell<double>`; a JSON-backed
+`JsonRowOwner` supplies erased cells only.
+
+The minimum path that can compile them: give `JsonRowOwner` a typed materialization for the scalar members a
+row declares -- for `double`, an actual number only; null, a string, a boolean, an object or an absent member
+raise the same `flight::NativeScalarEscapeError` at that read, which is the approved native escape boundary and
+keeps the escape-only rule intact. Structured members (`layers`) have no such projection and remain explicit
+remaining work; a header that reaches one stays PARTIAL by name. This is the shape-1 option recorded earlier,
+now placed at the exact reads the cluster actually performs.
+
+Without this, the emitter lane can be implemented exactly as planned and the 21-header result stays at 0/21,
+with no diagnostic change to show for it. Either the typed projection lands with the lane, or the lane is
+scoped to clusters that genuinely use the data read and the Lottie cluster is reported as dependent on the
+typed projection instead.
