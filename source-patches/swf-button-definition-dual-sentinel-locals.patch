@@ -1,5 +1,5 @@
 diff --git a/packages/swf/src/swfControlHandler.ts b/packages/swf/src/swfControlHandler.ts
-index c6faa4f8..19e2ed80 100644
+index c6faa4f8..a52de90d 100644
 --- a/packages/swf/src/swfControlHandler.ts
 +++ b/packages/swf/src/swfControlHandler.ts
 @@ -143,7 +143,10 @@ function readSwfButtonDefinition(body: SwfTagReader, state: SwfTagParseState, ve
@@ -14,23 +14,19 @@ index c6faa4f8..19e2ed80 100644
      if (!reader.valid) return;
      if ((flags & BUTTON_STATE_UP) === 0 && characterId !== 0) {
        // A document is a still scene, so only the up state is held. The other states are a real capability
-@@ -160,14 +163,16 @@ function readSwfButtonDefinition(body: SwfTagReader, state: SwfTagParseState, ve
-       );
-     }
+@@ -162,12 +165,12 @@ function readSwfButtonDefinition(body: SwfTagReader, state: SwfTagParseState, ve
      if ((flags & BUTTON_STATE_UP) !== 0 && characterId !== 0) {
-+      const colorAlpha = colorTransform.alpha;
-+      const colorAdjustments = colorTransform.colorAdjustments;
        placements.set(depth, {
          advancedBlendMode: null,
 -        alpha: colorTransform?.alpha ?? 1,
-+        alpha: colorAlpha,
++        alpha: colorTransform.alpha,
          blendMode: BlendMode.Normal,
          characterId,
          clipDepth: 0,
 -        colorAdjustments: colorTransform?.colorAdjustments ?? null,
 -        colorTransformAdjustments: colorTransform?.colorAdjustments ?? null,
-+        colorAdjustments,
-+        colorTransformAdjustments: colorAdjustments,
++        colorAdjustments: colorTransform.colorAdjustments,
++        colorTransformAdjustments: colorTransform.colorAdjustments,
          depth,
          directLinkage: null,
          effects: EMPTY_EFFECTS,
