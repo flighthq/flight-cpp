@@ -1,7 +1,13 @@
 {
   "schema": "flight-original-json-exact21-closure-plan/1",
-  "assignment": "foreman-fcba3f4b",
-  "status": "Planning and native boundary evidence complete so far; texture source/2D dependency qualified; actual image fresh nested allocation-owner closure being investigated",
+  "assignment": [
+    "foreman-fcba3f4b",
+    "foreman-4d38e36e",
+    "foreman-02615c01",
+    "foreman-59356c7a",
+    "foreman-1d695b70"
+  ],
+  "status": "Coherent compiler136/texture/source-getter preparation complete; actual original image header remains FAIL at the separately assigned source-faithful Sprite options factory; full image consumer NOT RUN. Vocabulary/Bezier remain working scope, no normal SDK promotion.",
   "authority": {
     "scope": "existing selected original Lottie/resource public header closure only, with ordinary same-cause compiler fixes",
     "excluded": [
@@ -20,11 +26,11 @@
     "historicalExact21": "0PASS21FAIL; unchanged",
     "initialDiagnosticComposition": "128 compiler +203 Flight =331; original freeze retained",
     "currentCorrectedComposition": {
-      "compilerPatchCount": 133,
-      "flightPatchCount": 203,
-      "total": 336,
+      "compilerPatchCount": 136,
+      "flightPatchCount": 208,
+      "total": 344,
       "rawClean": true,
-      "compilerBackendSha256": "f0ff9f8e528406ea8761fd9ba9fdefcbbc422d03917b604120400dee1bd5e191",
+      "compilerBackendSha256": "0552823a3af11a5a21bedda4a8192d9633736aa475ef5439f134aed2b6565571",
       "patches": [
         {
           "id": "compiler-dependent-indexed-access-reference-carrier",
@@ -552,25 +558,37 @@
         },
         {
           "id": "compiler-optional-chain-dual-sentinel-result",
-          "digest": "d958a14270689493d95df620e30893d0ea3d135c8ef1ad184ea0866cf3770c9a"
+          "digest": "6926cd5307168e9011fc280fec61352ddedb7409657b1f7ac71e647841671184"
+        },
+        {
+          "id": "compiler-native-literal-own-presence",
+          "digest": "cd45bebe5e2bd9817ac518c0fe97f0aaed08c92fc92a0ff0e8771e2061064297"
+        },
+        {
+          "id": "compiler-json-optional-member-argument",
+          "digest": "131619502d6135284aea8d7102a94fb7c9aed9cde8615f01113cb103c8b28209"
         },
         {
           "id": "compiler-original-lottie-carrier-boundaries",
           "digest": "780f06570b20770d7da2b86766b8732f3ebd984d11ab241711e3613c730470c5"
+        },
+        {
+          "id": "compiler-fresh-mapped-indexed-object-allocation",
+          "digest": "b592912bb91f1a63e0db49eb024fd7ea1eccff6c7ec7913bab9a22559c13c353"
         }
       ]
     },
-    "currentBase": "b6966648",
+    "currentBase": "41f31e43",
     "sourceGraph": {
       "path": "/tmp/builder5-lottie-body/node-candidate-graph.json.gz",
       "sha256": "444b596533712492fa6d4ccf27d44d24d5d4d2f5605f94f4919605667b3f2d9c",
       "modules": 1467,
-      "provenance": "existing lossless original graph including approved type-only Node construction parameter; no new semantic source edits"
+      "provenance": "Saved lossless1467-module graph emitted against Flight203, including approved type-only Node construction parameter. Not a refreshed208graph. Later source patches do not alter the selected original image/helper/diagnostic/Node bodies; texture source correction is separately qualified."
     },
     "correctedNativeComposition132": {
       "compilerPatchCount": 132,
-      "flightPatchCount": 203,
-      "total": 335,
+      "flightPatchCount": 205,
+      "total": 337,
       "rawClean": true,
       "compilerBackendSha256": "e139266713ab62096ccd63bfacc0232a5692d79fc1a08293c74cf9a1f64a6c29",
       "patches": [
@@ -1102,7 +1120,8 @@
           "id": "compiler-original-lottie-carrier-boundaries",
           "digest": "809c64b36ffa4893a03462dd49be684cf6c71d4909a4c6689365137381add78b"
         }
-      ]
+      ],
+      "graphFlightPatchCount": 203
     },
     "rebaseNativeInputContentCheck": "include/, overrides/include/, generated/include/ byte-unchanged by b6966648; own patch bytes unchanged",
     "countAudit": {
@@ -1111,7 +1130,8 @@
       "rootB696Base": "132compiler205Flight337",
       "ownCompilerQualification": "133compiler205Flight338; source graph remains saved203 and no later SWF module emitted",
       "correctiveTextureSource": "133compiler206Flight339; two additional Flight entries are unrelated SWF patches",
-      "note": "early scratch orchestration scripts hardcoded Flight203 after base advance; compiler counts/hashes and selected headers were actual, cumulative totals corrected here"
+      "note": "early scratch orchestration scripts hardcoded Flight203 after base advance; compiler counts/hashes and selected headers were actual, cumulative totals corrected here",
+      "currentQualification": "136compiler208Flight344, dynamically counted; compiler marker136, Flight marker208, both reverse/raw-clean/reapply PASS"
     }
   },
   "focusedReproduction": {
@@ -1251,7 +1271,8 @@
       "checks": 30,
       "failures": 0,
       "skips": 0,
-      "composition": "133 compiler, runtime before B; Flight declaration graph203 retained; root manifest at this point205 incltwo unrelated SWF patches"
+      "composition": "133 compiler, runtime before B; Flight declaration graph203 retained; root manifest at this point205 incltwo unrelated SWF patches",
+      "current136": "All3 prior files unchanged: final native4-file batch has11tests40checks0FAIL0SKIP including fresh mapped allocation fixture"
     },
     "initialNativeAttempt": {
       "passed": 6,
@@ -1267,7 +1288,7 @@
     }
   },
   "freshWholeModules": {
-    "orderedInputs": "132compiler/203Flight335",
+    "orderedInputs": "Frozen132compiler205Flight337; saved declaration graph203; historical native helper evidence only",
     "headers": [
       {
         "header": "flight/importdiagnostics/import_diagnostic_collector.hpp",
@@ -1340,15 +1361,15 @@
     {
       "module": "packages/scene2d-formats/src/lottieImageLayer.ts",
       "sourceLine": 38,
-      "finding": "row overload clears the actual original image create_texture failure; next native failure is nested fresh sprite-data allocation owner mismatch",
-      "callee": "flight/texture/texture.hpp create_texture",
-      "owner": "Builder5; bounded row forwarding + raw source getter semantics qualified",
-      "sourceDerivedAction": "accept the source Readonly options row and forward the same original row into existing create_texture_2d helper; preserve image-resource union alternative; do not fabricate or retype existing owners",
+      "finding": "Actual whole original image header clears create_texture and fresh mapped/indexed nested owner errors; still FAIL at create_sprite on the default-only partial override",
+      "callee": "flight/scene2d/sprite.hpp create_sprite",
+      "owner": "Builder4 factory/options perForeman1d695b70; Builder2 Types/Sprite; Builder5 image/compiler/texture proof",
+      "sourceDerivedAction": "Preserve original Sprite/default factory/PartialNode options pipeline, original data.texture value and runtime/owner/error behavior. No duplicate Types or replacement body/native Sprite fabrication.",
       "scopeEvidence": "builder2-cd157f8c: B does not regenerate texture or move its derivedFrom"
     },
     {
       "module": "packages/scene2d-formats/src/lottieTextLayer.ts",
-      "finding": "fresh whole body emitted, but original optional chain first exposes anonymous d.k native declaration owner mismatch (types k_4676b95d8bf2f899 vs scene2d_formats k_dbbad269ab148d65); corrected header compile pending",
+      "finding": "Whole original body emits. Focused corrected132 native header first fails at missing source-derived structural row vocabulary f/fc/j/lh/tr; downstream owner ABI remains unqualified until the vocabulary is emitted. Earlier anonymous d.k failure is historical, not the current first failure.",
       "constraint": "do not alias different anonymous names or copy fields merely because their visible bodies match; require source-derived member storage ownership"
     },
     {
@@ -1358,7 +1379,7 @@
     }
   ],
   "coordinatedRegenerationPlan": {
-    "hold": "Builder2 B must become coherent and Foreman must authorize one grouped output pass; this plan does not start a worker",
+    "hold": "First normal output is Builder2 sole grouped Types+importdiagnostics snapshot after agreed B/floor, perForeman59356c7a. Builder3 waits for actual matching normal carriers. This artifact authorizes no generation.",
     "soleTypesWriter": "Builder2",
     "semanticMinimum": [
       {
@@ -1403,7 +1424,7 @@
         "need": "public facades currently inherit scene2d-formats failures; select slice only if source-derived normal facade bytes or dependency routing change; _internal_index.hpp is a generated facade, not a source module"
       }
     ],
-    "atomicPackageGroup": "npm run pkg:generate -- @flighthq/types @flighthq/importdiagnostics @flighthq/scene2d-formats @flighthq/node; append @flighthq/scene2d-resources only when its slice needs replacement",
+    "atomicPackageGroup": "Possible later closure proposal only: npm run pkg:generate -- @flighthq/types @flighthq/importdiagnostics @flighthq/scene2d-formats @flighthq/node; append resources only if needed. Does not supersede the authorized first paired Types+importdiagnostics pass or start an output worker.",
     "granularity": "CLI commits named package slices atomically; dependency closure may be read/emitted for semantic coherence but only named output slices land",
     "requiredBeforePromotion": [
       "original whole Lottie32 source oracle220checks remains green on coordinated composition",
@@ -1575,12 +1596,31 @@
     },
     "normalDiagnosticSnapshot": {
       "available": false,
-      "asOf": "delivered base dc4ba1c0",
+      "asOf": "Delivered base41f31e43; normal pair still unchanged from dc4ba1c0",
       "normalTypesSha256": "3eed0241998872b997acf46f202e2f22b9105539fbd0910a9673254c2602a1f8",
       "normalCollectorSha256": "b65779e7bbf718844a30f067cbad7e419b97b8461049fd45367e41685e8bdba8",
       "actualDifference": "normal pair still uses Record detail, qualified original scratch pair ReadonlyRecordView",
-      "owner": "Foreman coordinates sole Types writer with normal collector dependency; Builder3 informed to hold conditional normal particle pass"
-    }
+      "owner": "Builder2 sole grouped Types+importdiagnostics writer perForeman59356c7a; Builder3 awaits actual normal carriers"
+    },
+    "sequencing": [
+      {
+        "owner": "Builder2",
+        "packages": [
+          "@flighthq/types",
+          "@flighthq/importdiagnostics"
+        ],
+        "condition": "Agreed qualified B/floor and normal output authority; exactly one writer"
+      },
+      {
+        "owner": "Foreman coordinates later formats/Node/resources writers",
+        "packages": [
+          "@flighthq/scene2d-formats",
+          "@flighthq/node"
+        ],
+        "conditionalPackage": "@flighthq/scene2d-resources",
+        "condition": "Actual matching normal diagnostic pair plus vocabulary/Bezier/image factory boundaries qualified, then explicit later output authority"
+      }
+    ]
   },
   "overrideRetirement": [
     {
@@ -1593,7 +1633,7 @@
     {
       "id": "texture-variant-member-access",
       "path": "flight/texture/texture.hpp",
-      "status": "bounded row entry rederived and native33 qualified; legacy obligations retained; complete original image remains blocked at fresh nested SpriteData allocation",
+      "status": "Bounded readonly2D row entry rederived/native33 and JS50 qualified; retain override. Full original image blocked at independently assigned Sprite options factory.",
       "owner": "Builder5 perForeman4d38e36e/02615c01",
       "retireOnlyAfter": "complete original texture source and retained host/native call chain are independently qualified"
     },
@@ -1618,6 +1658,13 @@
     {
       "package": "@flighthq/spritesheet-formats",
       "status": "Builder4 owns Aseprite/TexturePacker overrides and four-header qualification; no duplicate implementation here"
+    },
+    {
+      "id": "native-scene2d-gl-scene2d-sprite",
+      "path": "flight/scene2d/sprite.hpp",
+      "status": "Retain existing partial override pending Builder4 source-faithful options/default-factory closure",
+      "owner": "Builder4 factory only; Builder2 Types/Sprite",
+      "retireOnlyAfter": "Complete original declared factory behavior and original image/header/consumer run; no retirement inferred from compiler/texture preparation"
     }
   ],
   "limits": [
@@ -1626,7 +1673,7 @@
     "Fresh module emission and optional header passes do not claim arbitrary nonempty source-domain execution."
   ],
   "freshWholeModules133": {
-    "orderedComposition": "133compiler/203Flight336",
+    "orderedComposition": "Frozen133compiler205Flight338; saved declaration graph203; historical native helper evidence only",
     "headers": [
       {
         "header": "flight/importdiagnostics/import_diagnostic_collector.hpp",
@@ -1682,7 +1729,23 @@
     "ownedFixtureStrict": "PASS",
     "sourcePatchAutomation": "2PASS0FAIL0SKIP",
     "existingReadonlyPresenceControls": "9PASS0FAIL0SKIP on132 before disjoint b696 optional chain result peer addition",
-    "nativeFixtureRetry": "8PASS0FAIL0SKIP; 30nativechecks"
+    "nativeFixtureRetry": "8PASS0FAIL0SKIP; 30nativechecks",
+    "current136": {
+      "managedReverseRawCleanReapply": "PASS",
+      "backendSha256": "0552823a3af11a5a21bedda4a8192d9633736aa475ef5439f134aed2b6565571",
+      "productionStrict": "PASS",
+      "ownedStrict": "PASS",
+      "sourcePatchAutomation": "2PASS0FAIL0SKIP",
+      "finalNativeFiles": 4,
+      "finalNativeTests": 11,
+      "finalNativeChecks": 40,
+      "finalNativeSkips": 0,
+      "finalNativeFailures": 0,
+      "proof": "compiler136-final-owned-native.log",
+      "textureNativeChecks": 33,
+      "textureNativeFailures": 0,
+      "textureCTest": "1PASS0FAIL --no-tests=error"
+    }
   },
   "correctedWholeHelperHeaderGate": {
     "schema": "flight-sdk-header-compilation/2",
@@ -1761,6 +1824,41 @@
       },
       "run": {
         "complete": true,
+        "elapsedSeconds": 132.8,
+        "headerSelection": "explicit",
+        "jobs": 1
+      },
+      "summary": {
+        "attemptedHeaders": 1,
+        "failedHeaders": 1,
+        "passedHeaders": 0,
+        "totalHeaders": 1,
+        "unattemptedHeaders": 0
+      },
+      "failures": [
+        {
+          "diagnostic": "no matching function for call to 'create_sprite'",
+          "header": "flight/scene2d_formats/lottie_image_layer.hpp",
+          "location": "/tmp/builder5-json-exact21-128/candidate136/include/flight/scene2d_formats/lottie_image_layer.hpp:95"
+        }
+      ],
+      "passed": [],
+      "unattempted": []
+    },
+    "imagePriorBoundary": {
+      "schema": "flight-sdk-header-compilation/2",
+      "compiler": {
+        "command": "/tmp/builder5-json-exact21-128/cxx-hostcache",
+        "version": "clang version 22.1.8"
+      },
+      "generated": {
+        "compilerRevision": "806d257d2f4100de745cc97340e61c2f301b0f24",
+        "sourceRevisions": [
+          "a62784923f3be814463286c9fb28edfe6ab15789"
+        ]
+      },
+      "run": {
+        "complete": true,
         "elapsedSeconds": 84.7,
         "headerSelection": "explicit",
         "jobs": 1
@@ -1781,6 +1879,89 @@
       ],
       "passed": [],
       "unattempted": []
+    },
+    "imageBoundaryOwner": "Builder4 perForeman1d695b70; source-faithful scene2d Sprite options factory. Builder2 owns Types/Sprite. Immutable inputs delivered; Builder4 camera priority precedes Sprite.",
+    "nativeLimits": [
+      "Readonly2D accessor row path qualified; existing cube native value controls retained. Other dimension arms have whole-original JS parity, not complete native getter/host-ABI qualification.",
+      "Full original image native consumer NOT RUN: its complete header still fails at create_sprite options overload.",
+      "Original Lottie32/220 proof remains on its previously qualified frozen composition; it was not rerun on136 and is not implied by these focused checks."
+    ],
+    "finalSourceComposition": "Complete current Flight208 reverse/rawclean/reapply and rawpin/corrected whole original JS50PASS0FAIL"
+  },
+  "freshWholeModules136": {
+    "orderedComposition": "136compiler208Flight344; saved1467-module declaration graph203",
+    "headers": [
+      {
+        "header": "flight/importdiagnostics/import_diagnostic_collector.hpp",
+        "sha256": "df9b6331d733d50fb3aff610fe1b401fec11e321ebda71a1204c617fd957f4a6",
+        "byteEqualToNativePrototype": true
+      },
+      {
+        "header": "flight/node/node.hpp",
+        "sha256": "cb4a43905fc77c74187cbcd475b3053b22761feec209b9b921b6fb779f28984b",
+        "byteEqualToNativePrototype": true
+      },
+      {
+        "header": "flight/node/revision.hpp",
+        "sha256": "7e71dc2880fb4c1be4f86b84642dba1380570c5188295c19639f7179ed5ede45",
+        "byteEqualToNativePrototype": true
+      },
+      {
+        "header": "flight/scene2d_formats/lottie_document.hpp",
+        "sha256": "0dacdd19e3b666791db899d3589f21499f4fa04e3cdc11b99e6beaf5a6e8f42e",
+        "byteEqualToNativePrototype": true
+      },
+      {
+        "header": "flight/scene2d_formats/lottie_gradient_shape_items.hpp",
+        "sha256": "2457c324588deeb3f5f978cd673538b22b0640556a377fa09a8003365ceff8ff",
+        "byteEqualToNativePrototype": true
+      },
+      {
+        "header": "flight/scene2d_formats/lottie_image_layer.hpp",
+        "sha256": "f5805ac47ce943239dda050a5eb32dae9e05cb25ff897481f6e63755e101fffb",
+        "byteEqualToNativePrototype": true
+      },
+      {
+        "header": "flight/scene2d_formats/lottie_polystar_shape_item.hpp",
+        "sha256": "b412e5f0fce67d04f592fbc315544a97303d0962529a8461650543c5d16bc6df",
+        "byteEqualToNativePrototype": true
+      },
+      {
+        "header": "flight/scene2d_formats/lottie_text_layer.hpp",
+        "sha256": "5b85057c90ac089ebe12dc15b23e09b2f7b581acff821410dc33930373ceb9fd",
+        "byteEqualToNativePrototype": true
+      },
+      {
+        "header": "flight/types/import_diagnostic.hpp",
+        "sha256": "fa74b665ef0f4be08f599e0ded55cf5640c0ff7aebc1e7aa5254ff98ee20e56c",
+        "byteEqualToNativePrototype": true
+      }
+    ],
+    "allNineByteIdenticalToNativePrototype": true,
+    "repairs": "Declared normal emission repairs and exact byte-identical duplicate structural alias proof only; no copied bodies"
+  },
+  "freshMappedAllocationFix": {
+    "id": "compiler-fresh-mapped-indexed-object-allocation",
+    "patchSha256": "b592912bb91f1a63e0db49eb024fd7ea1eccff6c7ec7913bab9a22559c13c353",
+    "scope": "Fresh allocation only: unique closed contextual shape, every authored member representable, resolved object and mapped target emit exactly the same carrier; normal source-order allocation and own-key metadata retained",
+    "newRuntimeFamily": false,
+    "existingOwnerRetyping": false,
+    "sourceBodyEdits": false,
+    "counterfactual": "Final computed-symbol/imported-indexed fixture fails without the allocation correction: raw aggregate braces instead of the expected Ref owner",
+    "negativeControl": "Existing anonymous lookalike cannot acquire a nominal union arm",
+    "nativeChecks": 10,
+    "initialFixtureAttempt": {
+      "result": "FAIL",
+      "cause": "Minimal overload implementation emitted a union result while its source overload selected a concrete result; independent existing overload-emission ABI, outside this allocation rule",
+      "correction": "Use complete source overloads sharing the same concrete return ABI; retain imported computed-symbol indexed target and destination A|B|null domain. No backend change required.",
+      "retainedLog": "compiler136-owned-native.log"
     }
+  },
+  "qualificationArchive": {
+    "file": "builder5-exact21-texture136-preparation.tgz",
+    "sha256": "7473540319c396cf8a3a80143758122daa1a649b1db283740ce239d0523192cc",
+    "bytes": 5284111,
+    "files": 96,
+    "scope": "96 immutable source/input/header/report/command/log entries; all stored bytes individually hash-verified; no SDK output in repo"
   }
 }

@@ -14,16 +14,39 @@
     "pass": 50,
     "fail": 0
   },
-  "caseEvidence": "texture-source-equivalence.json in the frozen qualification bundle",
+  "caseEvidence": "texture-final-source-equivalence.json in immutable qualification bundle",
   "native": {
     "command": "CMake target flight_cpp_generated_texture_options_row_tests and focused CTest",
     "checks": 33,
     "failures": 0,
     "ctest": "PASS",
     "coverage": "readonly 2D row forwarding, original getter order/TypeError, defaults, same ImageResource arm, live source mutation, options/source lifetime, nullable source, incompatible-row/static and wrong-cell runtime negatives; existing cube value controls",
-    "originalImageHeader": "create_texture call now accepted; next compile failure is optional<Ref<expected sprite-data owner>> initialized with fresh anonymous texture-only owner",
-    "fullOriginalImageConsumer": "NOT RUN while original header has this independent allocation owner error"
+    "originalImageHeader": "Texture row call and fresh nested mapped allocation errors clear; actual whole original image header stillFAIL1/1 at create_sprite options call,132.8s with actual SDL/Clang22.",
+    "fullOriginalImageConsumer": "NOT RUN pending Builder4 source-faithful Sprite options factory; no native original image gain claimed",
+    "currentCTest": "1PASS0FAIL with --no-tests=error; native33checks0FAIL on landed runtime",
+    "limits": [
+      "Readonly2D accessor row path qualified; existing cube native value controls retained. Other dimension arms have whole-original JS parity, not complete native getter/host-ABI qualification.",
+      "Full original image native consumer NOT RUN: its complete header still fails at create_sprite options overload.",
+      "Original Lottie32/220 proof remains on its previously qualified frozen composition; it was not rerun on136 and is not implied by these focused checks."
+    ]
   },
   "overrideDerivedFrom": "5fe235ba67bbec56ee8c312c036a85506c0da0ef063b49a9a93ede77aa765d5a",
-  "sourcePatchSha256": "84fa98add27f676ff62fa134a4010f54c2dc8cb83f3256d7e2ba1f7017dbeac6"
+  "sourcePatchSha256": "84fa98add27f676ff62fa134a4010f54c2dc8cb83f3256d7e2ba1f7017dbeac6",
+  "currentComposition": {
+    "compilerPatches": 136,
+    "flightPatches": 208,
+    "total": 344,
+    "backendSha256": "0552823a3af11a5a21bedda4a8192d9633736aa475ef5439f134aed2b6565571"
+  },
+  "imageFactoryInputArchive": {
+    "file": "builder5-image-factory-boundary136.tgz",
+    "sha256": "6c7f2419458cace669f6f848aa0247916528f167f6d09436586b65e1547fdf64"
+  },
+  "qualificationArchive": {
+    "file": "builder5-exact21-texture136-preparation.tgz",
+    "sha256": "7473540319c396cf8a3a80143758122daa1a649b1db283740ce239d0523192cc",
+    "bytes": 5284111,
+    "files": 96,
+    "scope": "96 immutable source/input/header/report/command/log entries; all stored bytes individually hash-verified; no SDK output in repo"
+  }
 }
