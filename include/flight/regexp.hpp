@@ -13,9 +13,62 @@
 #include <vector>
 
 #include <flight/array.hpp>
+#include <flight/error.hpp>
 #include <flight/string.hpp>
 
 namespace flight {
+
+namespace detail {
+
+// ECMAScript patterns without the Unicode flag operate on UTF-16 code units. A wchar_t stores
+// one unit even on platforms where it is wider; no UTF-8 round trip or surrogate repair occurs.
+inline std::wstring regexp_units(const String& value) {
+  return std::wstring(value.begin(), value.end());
+}
+
+inline String regexp_string(std::wstring_view value) {
+  return String(std::u16string(value.begin(), value.end()));
+}
+
+inline std::wstring regexp_pattern(const String& value) {
+  const auto units = regexp_units(value);
+  // ECMAScript WhiteSpace and LineTerminator, independent of the process locale. Expanding both
+  // classes to ranges also works inside character classes, including [\s\S].
+  const std::wstring spaces = L"\x0009-\x000d\x0020\x00a0\x1680\x2000-\x200a\x2028\x2029\x202f\x205f\x3000\xfeff";
+  const std::wstring nonspaces = L"\\x00-\\x08\x000e-\x001f\x0021-\x009f\x00a1-\x167f\x1681-\x1fff\x200b-\x2027\x202a-\x202e\x2030-\x205e\x2060-\x2fff\x3001-\xfefe\xff00-\xffff";
+  std::wstring result;
+  bool in_class = false;
+  for (std::size_t index = 0; index < units.size(); ++index) {
+    const auto unit = units[index];
+    if (unit == L'\\' && index + 1 < units.size()) {
+      const auto escaped = units[++index];
+      if (escaped == L's' || escaped == L'S') {
+        if (!in_class) result.push_back(L'[');
+        result.append(escaped == L's' ? spaces : nonspaces);
+        if (!in_class) result.push_back(L']');
+      } else {
+        result.push_back(L'\\');
+        result.push_back(escaped);
+      }
+    } else if (unit == L'.' && !in_class) {
+      result.append(L"[^\n\r\x2028\x2029]");
+    } else {
+      if (unit == L'[') in_class = true;
+      if (unit == L']') in_class = false;
+      result.push_back(unit);
+    }
+  }
+  return result;
+}
+
+} // namespace detail
+
+// A capture read itself remains undefined when unmatched. Reaching a String member is the point
+// at which JavaScript throws TypeError; an empty, participating capture is a present String.
+inline String regexp_capture_value(std::optional<String> capture) {
+  if (!capture) throw TypeError(String("Cannot read properties of undefined"));
+  return std::move(*capture);
+}
 
 class RegExpExecArray : public Array<String> {
  public:
@@ -26,16 +79,18 @@ class RegExpExecArray : public Array<String> {
     return capture_index < capture_presence_.size() && capture_presence_[capture_index];
   }
 
-  [[nodiscard]] std::optional<String> capture(std::size_t capture_index) const {
-    return has_capture(capture_index) ? std::optional<String>((*this)[capture_index]) : std::nullopt;
+  [[nodiscard]] std::optional<String> capture(double capture_index) const {
+    const auto value = get(capture_index);
+    return value && has_capture(static_cast<std::size_t>(capture_index)) ? value : std::nullopt;
   }
 
  private:
   friend class RegExp;
+  friend class String;
 
-  void push_capture(const std::ssub_match& capture) {
+  void push_capture(const std::wssub_match& capture) {
     capture_presence_.push_back(capture.matched);
-    push(capture.matched ? String::from_utf8(capture.str()) : String());
+    push(capture.matched ? detail::regexp_string(capture.str()) : String());
   }
 
   std::vector<bool> capture_presence_;
@@ -43,10 +98,10 @@ class RegExpExecArray : public Array<String> {
 
 class RegExp {
   struct State {
-    State(const std::string& pattern, std::regex_constants::syntax_option_type options, bool global)
+    State(const std::wstring& pattern, std::regex_constants::syntax_option_type options, bool global)
         : expression(pattern, options), global(global) {}
 
-    std::regex expression;
+    std::wregex expression;
     std::size_t last_index = 0;
     bool global = false;
   };
@@ -72,21 +127,19 @@ class RegExp {
         throw std::invalid_argument("flight::RegExp flag is unsupported or duplicated");
       }
     }
-    state_ = std::make_shared<State>(pattern.to_utf8(), options, global);
+    state_ = std::make_shared<State>(detail::regexp_pattern(pattern), options, global);
   }
 
   [[nodiscard]] std::optional<RegExpExecArray> exec(const String& input) const {
-    const std::string encoded = input.to_utf8();
+    const auto encoded = detail::regexp_units(input);
     const auto start = state_->global ? state_->last_index : 0;
     if (start > input.length()) {
       state_->last_index = 0;
       return std::nullopt;
     }
 
-    const auto byte_start = input.slice(0, static_cast<std::ptrdiff_t>(start)).to_utf8().size();
-
-    std::match_results<std::string::const_iterator> match;
-    const auto begin = encoded.cbegin() + static_cast<std::ptrdiff_t>(byte_start);
+    std::match_results<std::wstring::const_iterator> match;
+    const auto begin = encoded.cbegin() + static_cast<std::ptrdiff_t>(start);
     auto match_flags = std::regex_constants::match_default;
     if (start != 0) match_flags |= std::regex_constants::match_not_bol;
     if (!std::regex_search(begin, encoded.cend(), match, state_->expression, match_flags)) {
@@ -94,10 +147,9 @@ class RegExp {
       return std::nullopt;
     }
 
-    const auto byte_index = byte_start + static_cast<std::size_t>(match.position());
-    const auto string_index = String::from_utf8(encoded.substr(0, byte_index)).length();
+    const auto string_index = start + static_cast<std::size_t>(match.position());
     if (state_->global) {
-      state_->last_index = string_index + String::from_utf8(match.str()).length();
+      state_->last_index = string_index + static_cast<std::size_t>(match.length());
     }
     RegExpExecArray result;
     result.index = static_cast<double>(string_index);
@@ -108,7 +160,7 @@ class RegExp {
 
   [[nodiscard]] bool test(const String& input) const { return exec(input).has_value(); }
 
-  [[nodiscard]] const std::regex& native_expression() const noexcept { return state_->expression; }
+  [[nodiscard]] const std::wregex& native_expression() const noexcept { return state_->expression; }
   [[nodiscard]] bool global() const noexcept { return state_->global; }
   void reset() const noexcept { state_->last_index = 0; }
 
@@ -143,25 +195,24 @@ consteval std::size_t regexp_invocable_prefix_score() {
 
 template <std::size_t... CaptureIndices, typename Function>
 String regexp_replacement_with_captures(
-    const std::smatch& match,
+    const std::wsmatch& match,
     const String& input,
     Function& replacement,
     std::index_sequence<CaptureIndices...>) {
   [[maybe_unused]] const auto capture = [&](std::size_t capture_index) {
     return match[capture_index].matched
-               ? std::optional<String>(String::from_utf8(match[capture_index].str()))
+               ? std::optional<String>(regexp_string(match[capture_index].str()))
                : std::nullopt;
   };
-  const auto offset = static_cast<double>(String::from_utf8(input.to_utf8().substr(
-      0, static_cast<std::size_t>(match.position()))).length());
+  const auto offset = static_cast<double>(match.position());
   auto optional_arguments = std::tuple{
-      String::from_utf8(match.str()),
+      regexp_string(match.str()),
       capture(CaptureIndices + 1)...,
       offset,
       input,
   };
   auto string_arguments = std::tuple{
-      String::from_utf8(match.str()),
+      regexp_string(match.str()),
       capture(CaptureIndices + 1).value_or(String())...,
       offset,
       input,
@@ -184,7 +235,7 @@ String regexp_replacement_with_captures(
 
 template <std::size_t CaptureCount = 0, typename Function>
 String regexp_replacement(
-    const std::smatch& match,
+    const std::wsmatch& match,
     const String& input,
     Function& replacement) {
   if (match.size() == CaptureCount + 1) {
@@ -199,11 +250,11 @@ String regexp_replacement(
 }
 
 inline String regexp_string_replacement(
-    const std::smatch& match,
-    std::string_view input,
+    const std::wsmatch& match,
+    std::wstring_view input,
     const String& replacement) {
-  const auto replacement_bytes = replacement.to_utf8();
-  std::string output;
+  const auto replacement_bytes = regexp_units(replacement);
+  std::wstring output;
   output.reserve(replacement_bytes.size());
   for (std::size_t index = 0; index < replacement_bytes.size(); ++index) {
     if (replacement_bytes[index] != '$' || index + 1 >= replacement_bytes.size()) {
@@ -211,7 +262,7 @@ inline String regexp_string_replacement(
       continue;
     }
 
-    const char token = replacement_bytes[index + 1];
+    const wchar_t token = replacement_bytes[index + 1];
     if (token == '$') {
       output.push_back('$');
       ++index;
@@ -246,26 +297,26 @@ inline String regexp_string_replacement(
       output.push_back('$');
     }
   }
-  return String::from_utf8(output);
+  return regexp_string(output);
 }
 
 template <typename Replacement>
 String regexp_replace(const String& input, const RegExp& expression, Replacement replacement) {
-  const auto encoded = input.to_utf8();
-  std::string result;
+  const auto encoded = regexp_units(input);
+  std::wstring result;
   std::size_t cursor = 0;
   if (expression.global()) expression.reset();
-  for (auto iterator = std::sregex_iterator(encoded.cbegin(), encoded.cend(), expression.native_expression());
-       iterator != std::sregex_iterator(); ++iterator) {
+  for (auto iterator = std::wsregex_iterator(encoded.cbegin(), encoded.cend(), expression.native_expression());
+       iterator != std::wsregex_iterator(); ++iterator) {
     const auto& match = *iterator;
     const auto position = static_cast<std::size_t>(match.position());
     result.append(encoded, cursor, position - cursor);
-    result.append(replacement(match).to_utf8());
+    result.append(regexp_units(replacement(match)));
     cursor = position + static_cast<std::size_t>(match.length());
     if (!expression.global()) break;
   }
   result.append(encoded, cursor, encoded.size() - cursor);
-  return String::from_utf8(result);
+  return regexp_string(result);
 }
 
 } // namespace detail
@@ -278,18 +329,14 @@ String regexp_replace(const String& input, const RegExp& expression, Replacement
 // to it. Going through `std::regex_search` directly satisfies both without having to save and restore
 // state that has no public accessor.
 //
-// The index is in UTF-16 code units, not bytes -- `match.position()` is a byte offset into the UTF-8
-// encoding, so it is converted the same way `exec` converts its own, by measuring the length of the
-// prefix. A pattern matching after any non-ASCII character would otherwise report a position no
-// JavaScript caller would recognise.
+// Matching uses one wchar_t per UTF-16 code unit, so position() already has the source index.
 inline double String::search(const RegExp& expression) const {
-  const std::string encoded = to_utf8();
-  std::match_results<std::string::const_iterator> match;
+  const auto encoded = detail::regexp_units(*this);
+  std::match_results<std::wstring::const_iterator> match;
   if (!std::regex_search(encoded.cbegin(), encoded.cend(), match, expression.native_expression())) {
     return -1.0;
   }
-  const auto byte_index = static_cast<std::size_t>(match.position());
-  return static_cast<double>(String::from_utf8(encoded.substr(0, byte_index)).length());
+  return static_cast<double>(match.position());
 }
 
 inline std::optional<RegExpExecArray> String::match(const RegExp& expression) const {
@@ -297,10 +344,10 @@ inline std::optional<RegExpExecArray> String::match(const RegExp& expression) co
 
   expression.reset();
   RegExpExecArray result;
-  const auto encoded = to_utf8();
-  for (auto iterator = std::sregex_iterator(encoded.cbegin(), encoded.cend(), expression.native_expression());
-       iterator != std::sregex_iterator(); ++iterator) {
-    result.push(String::from_utf8(iterator->str()));
+  const auto encoded = detail::regexp_units(*this);
+  for (auto iterator = std::wsregex_iterator(encoded.cbegin(), encoded.cend(), expression.native_expression());
+       iterator != std::wsregex_iterator(); ++iterator) {
+    result.push_capture((*iterator)[0]);
   }
   return result.empty() ? std::nullopt : std::optional<RegExpExecArray>(std::move(result));
 }
@@ -309,33 +356,33 @@ inline Array<String> String::split(const RegExp& separator, size_type limit) con
   Array<String> result;
   if (limit == 0) return result;
 
-  const auto encoded = to_utf8();
+  const auto encoded = detail::regexp_units(*this);
   std::size_t cursor = 0;
-  for (auto iterator = std::sregex_iterator(encoded.cbegin(), encoded.cend(), separator.native_expression());
-       iterator != std::sregex_iterator() && result.size() < limit; ++iterator) {
+  for (auto iterator = std::wsregex_iterator(encoded.cbegin(), encoded.cend(), separator.native_expression());
+       iterator != std::wsregex_iterator() && result.size() < limit; ++iterator) {
     const auto& match = *iterator;
     const auto position = static_cast<std::size_t>(match.position());
-    result.push(String::from_utf8(encoded.substr(cursor, position - cursor)));
+    result.push(detail::regexp_string(encoded.substr(cursor, position - cursor)));
     if (result.size() == limit) return result;
     for (std::size_t capture = 1; capture < match.size() && result.size() < limit; ++capture) {
-      result.push(match[capture].matched ? String::from_utf8(match[capture].str()) : String());
+      result.push(match[capture].matched ? detail::regexp_string(match[capture].str()) : String());
     }
     cursor = position + static_cast<std::size_t>(match.length());
   }
-  if (result.size() < limit) result.push(String::from_utf8(encoded.substr(cursor)));
+  if (result.size() < limit) result.push(detail::regexp_string(encoded.substr(cursor)));
   return result;
 }
 
 inline String String::replace(const RegExp& expression, const String& replacement) const {
-  return detail::regexp_replace(*this, expression, [&](const std::smatch& match) {
-    return detail::regexp_string_replacement(match, to_utf8(), replacement);
+  return detail::regexp_replace(*this, expression, [&](const std::wsmatch& match) {
+    return detail::regexp_string_replacement(match, detail::regexp_units(*this), replacement);
   });
 }
 
 template <typename Function>
   requires(!std::convertible_to<Function, String>)
 String String::replace(const RegExp& expression, Function&& replacement) const {
-  return detail::regexp_replace(*this, expression, [&](const std::smatch& match) {
+  return detail::regexp_replace(*this, expression, [&](const std::wsmatch& match) {
     return detail::regexp_replacement(match, *this, replacement);
   });
 }

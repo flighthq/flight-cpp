@@ -1,0 +1,11 @@
+# RegExp capture String-member presence
+
+The pinned `collectCssRules` in `scene2d-formats/src/svgStyle.ts` reads the two original captures from `/([^{}]+)\{([^{}]*)\}/g`. The second group participates even when its declaration text is empty. The compiler refused `match[1].split(',')` with `cpp-member-projection-without-present-storage` because capture lookup retains optional storage while the ambient index signature says `string`.
+
+The shared correction retains capture storage for direct reads and captured locals. Ambient String member evaluation uses `flight::regexp_capture_value`: undefined throws `TypeError` at that operation, before evaluating method arguments; a participating empty group supplies an empty String. Guards, optional chains and nullish coalesces continue to query the original optional capture. Array and Record presence restrictions remain separate. There is no source assertion, regex rewrite, copied collector or narrowed public input domain in this correction.
+
+The runtime now matches one UTF-16 code unit per native wide character, including isolated surrogates. Exec, global match, search, split and replacement use that same representation; capture text and replacement callbacks no longer round-trip through lossy UTF-8. Shared global match position, failure reset and empty exec behavior remain. ECMAScript whitespace and dot line terminators are explicit rather than dependent on native locale.
+
+The applicable source audit also finds capture use in XML, bitmapfont formats, SVG transform/color/XML, text markup, spritesheet/particle formats and compressed texture parsers. This is one capture carrier mechanism. It does not claim complete RegExp syntax, named groups, arbitrary mutable match-array operations, full XML or full SVG import support. Existing required-value argument lowering is not broadened into a general undefined-to-String conversion.
+
+Preparation: preceding 82 compiler patches build; new compiler fixture 3/3 passes, including actual generated native execution and unrelated Array/Record negative controls. The runtime fixture passes 31 checks. The cached original source diagnostic now emits the actual collector. Normal generation and actual public consumer qualification remain pending.

@@ -1,0 +1,254 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -4594,7 +4594,7 @@
+         );
+         if (binding && binding.kind === 'sizeMethod') {
+           assertCppPresentOptionalStorageMemberReceiverCpp(expression.callee, context);
+-          const receiver = emitExpression(expression.callee.object, context);
++          const receiver = emitCppRegExpCaptureMemberReceiverCpp(expression.callee, context) ?? emitExpression(expression.callee.object, context);
+           return `static_cast<double>(${receiver}${memberOp(expression.callee.object, context)}${binding.targetName}())`;
+         }
+         if (binding && binding.kind === 'method') {
+@@ -4607,7 +4607,7 @@
+             cppArraySelfReturningMethods.has(expression.callee.member.name)
+               ? expectedType
+               : undefined;
+-          const receiver = emitExpression(
++          const receiver = emitCppRegExpCaptureMemberReceiverCpp(expression.callee, context) ?? emitExpression(
+             expression.callee.object,
+             context,
+             receiverExpectedType,
+@@ -6678,7 +6678,7 @@
+       if (memberEvidence && !isCppExpressionVariantUnionCpp(expression.object, context)) {
+         const binding = getCompilerCppAmbientMemberBinding(memberEvidence, getCppRuntimeProfile(context.options));
+         if (binding && binding.kind === 'sizeMethod') {
+-          const receiver = emitExpression(expression.object, context);
++          const receiver = emitCppRegExpCaptureMemberReceiverCpp(expression, context) ?? emitExpression(expression.object, context);
+           return `static_cast<double>(${receiver}${memberOp(expression.object, context)}${binding.targetName}())`;
+         }
+         if (binding && binding.kind === 'sizeProperty') {
+@@ -14837,11 +14837,53 @@
+ // storage even when their TypeScript annotation names only the payload. Require control-flow evidence
+ // before crossing that boundary, and require one present runtime domain so a resolved member cannot be
+ // applied to a heterogeneous carrier merely because one alternative happens to provide it.
++// RegExp captures are string | undefined even though the standard index signature says string.
++// A String member access on undefined throws at the member read, before evaluating call arguments.
++// Keep the optional capture carrier for guards/coalesces and check only this operation; do not invent
++// a presence proof or coerce an absent capture to an empty string at a typed function boundary.
++function getCppRegExpCaptureMemberStorageCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'property' }>>,
++  context: EmitContext,
++): string | undefined {
++  if (
++    expression.optional ||
++    expression.member?.receiver !== 'string' ||
++    getCppRuntimeProfile(context.options) !== 'flight-cpp'
++  )
++    return undefined;
++  const receiver = expression.object;
++  if (receiver.kind === 'element' && hasCppRegExpExecArrayIndexedReceiverCpp(receiver, context)) {
++    return emitOptionalExpressionCpp({ ...receiver, presence: undefined }, context, undefined);
++  }
++  if (
++    receiver.kind === 'identifier' &&
++    receiver.reference.kind === 'binding' &&
++    context.arrayElementBindingIds.has(receiver.reference.binding.id)
++  ) {
++    const initializer = context.bindingInitializers.get(receiver.reference.binding.id);
++    if (initializer?.kind === 'element' && hasCppRegExpExecArrayIndexedReceiverCpp(initializer, context)) {
++      return emitIdentifierReference(receiver.reference, context);
++    }
++  }
++  return undefined;
++}
++
++function emitCppRegExpCaptureMemberReceiverCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'property' }>>,
++  context: EmitContext,
++): string | undefined {
++  const storage = getCppRegExpCaptureMemberStorageCpp(expression, context);
++  if (!storage) return undefined;
++  context.includes.add('flight/regexp.hpp');
++  return `flight::regexp_capture_value(${storage})`;
++}
++
+ function assertCppPresentOptionalStorageMemberReceiverCpp(
+   expression: Readonly<Extract<IrExpression, { kind: 'property' }>>,
+   context: EmitContext,
+ ): void {
+   const receiver = expression.object;
++  if (getCppRegExpCaptureMemberStorageCpp(expression, context)) return;
+   if (!hasCppAbsenceStorageCpp(receiver, context)) return;
+   if (!hasCppPresentExpressionStorageProofCpp(receiver, context)) {
+     emissionError(
+@@ -28882,6 +28924,7 @@
+       // the source is, not how it is stored.
+       const carriesAbsence =
+         initializer.semantics.receivers.includes('array') ||
++        hasCppRegExpExecArrayIndexedReceiverCpp(initializer, context) ||
+         Boolean(
+           getCppRecordTypeArgumentsCpp(getIrExpressionTypeEvidenceCpp(initializer.object, context), context, new Set()),
+         );
+@@ -28891,7 +28934,9 @@
+   });
+   const result = new Set<string>();
+   for (const id of candidates) {
+-    if (absenceObserved.has(id)) result.add(id);
++    const initializer = context.bindingInitializers.get(id);
++    if (absenceObserved.has(id) || (initializer?.kind === 'element' &&
++        hasCppRegExpExecArrayIndexedReceiverCpp(initializer, context))) result.add(id);
+   }
+   return result;
+ }
+diff --git a/packages/compiler-backend-cpp/src/cppRegExpCaptureMemberPresence.test.ts b/packages/compiler-backend-cpp/src/cppRegExpCaptureMemberPresence.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppRegExpCaptureMemberPresence.test.ts
+@@ -0,0 +1,146 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const toolchain = findCppCompilerToolchain();
++const includes = collectCppRuntimeIncludeDirectories(resolveDependency(root, 'flight-cpp').directory);
++const source = String.raw`
++export function direct(value: string): string[] {
++  const match = /([^{}]+)\{([^{}]*)\}/.exec(value);
++  if (match === null) return [];
++  return match[1].split(',');
++}
++export function empty(value: string): number {
++  const match = /(a)?(b*)/.exec(value);
++  if (match === null) return -1;
++  return match[2].length;
++}
++export function guarded(value: string): string {
++  const match = /(a)?(b*)/.exec(value);
++  if (match === null) return 'none';
++  const capture = match[1];
++  if (capture === undefined) return 'missing';
++  return capture.trim();
++}
++export function coalesced(value: string): string {
++  const match = /(a)?(b*)/.exec(value);
++  if (match === null) return 'none';
++  const capture = match[1];
++  return capture ?? 'missing';
++}
++export function optional(value: string): string {
++  const match = /(a)?(b*)/.exec(value);
++  return match?.[1]?.trim() ?? 'missing';
++}
++let calls = 0;
++function receiver(match: RegExpExecArray): RegExpExecArray { calls = calls * 10 + 1; return match; }
++function key(): number { calls = calls * 10 + 2; return 1; }
++function separator(): string { calls = calls * 10 + 3; return ','; }
++export function reset(): void { calls = 0; }
++export function count(): number { return calls; }
++export function ordered(value: string): string[] {
++  const match = /(a)?(b*)/.exec(value);
++  if (match === null) return [];
++  return receiver(match)[key()].split(separator());
++}
++export function local(value: string): number {
++  const match = /(a)?(b*)/.exec(value);
++  if (match === null) return -1;
++  const capture = match[1];
++  return capture.length;
++}
++export function returned(value: string): string | undefined {
++  const match = /(a)?(b*)/.exec(value);
++  return match?.[1];
++}
++`;
++
++function emit(text = source): string {
++  const [result] = lowerTypeScriptSources([
++    {
++      packageName: '@flighthq/math',
++      upstreamDirectory: '/flight',
++      sourceFile: ts.createSourceFile('/flight/packages/math/src/regexpCapture.ts', text, ts.ScriptTarget.Latest, true),
++    },
++  ]);
++  expect(result!.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result!.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++describe('RegExp capture member presence', () => {
++  it('checks String member access at its operation and retains optional capture locals', () => {
++    const output = emit();
++    expect(output).toContain('flight::regexp_capture_value(match.value().capture(1.0)).split');
++    expect(output).toContain('const std::optional<flight::String> capture = match.value().capture(1.0)');
++    expect(output).toContain('flight::regexp_capture_value(capture).length()');
++    expect(output).toContain('receiver(match.value()).capture(key())');
++    expect(output).not.toContain('.element(1.0).split');
++  });
++  it('keeps unrelated array and Record presence restrictions', () => {
++    for (const text of [
++      "export function array(v: string[], i: number): string[] { return v[i].split(','); }",
++      "export function record(v: Record<string, string>, key: string): string[] { return v[key].split(','); }",
++    ])
++      expect(() => emit(text)).toThrow(/proven present payload/);
++  });
++  it.skipIf(!toolchain || !includes.length)(
++    'runs actual emitted direct, local, optional and ordered captures',
++    () => {
++      if (!toolchain) throw new Error('toolchain missing');
++      const directory = mkdtempSync(path.join(tmpdir(), 'flight-regexp-capture-'));
++      try {
++        const input = path.join(directory, 'capture.cpp');
++        const binary = path.join(directory, getCppExecutableName(toolchain, 'capture'));
++        writeFileSync(
++          input,
++          emit() +
++            `
++int main() {
++  namespace fixture = flighthq_math;
++  using flight::String;
++  if (fixture::direct("a,b{fill:red}").size() != 2 || fixture::empty("") != 0) return 1;
++  if (fixture::guarded("") != String("missing") || fixture::guarded("a") != String("a")) return 2;
++  if (fixture::coalesced("") != String("missing") || fixture::optional("") != String("missing") ||
++      fixture::optional("a") != String("a")) return 3;
++  fixture::reset(); bool missing = false;
++  try { static_cast<void>(fixture::ordered("")); }
++  catch (const flight::TypeError&) { missing = true; }
++  if (!missing || fixture::count() != 12) return 4;
++  fixture::reset();
++  if (fixture::ordered("a").size() != 1 || fixture::count() != 123) return 5;
++  bool localMissing = false;
++  try { static_cast<void>(fixture::local("")); }
++  catch (const flight::TypeError&) { localMissing = true; }
++  if (!localMissing || fixture::local("a") != 1) return 6;
++  if (fixture::returned("").has_value() || fixture::returned("a") != String("a")) return 7;
++}
++`,
++        );
++        execFileSync(toolchain.command, createCppExecutableArguments(toolchain, input, binary, includes), {
++          encoding: 'utf8',
++          stdio: 'pipe',
++        });
++        execFileSync(binary, [], { encoding: 'utf8', stdio: 'pipe' });
++      } finally {
++        rmSync(directory, { recursive: true, force: true });
++      }
++    },
++    120000,
++  );
++});
