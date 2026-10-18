@@ -391,3 +391,50 @@ remain separate. Global sweep totals are unchanged. The
 [full Pixi qualification](parsed-json-object-shape-reads.md#g2-current-pin-pixi-inventory-qualification)
 records carrier proofs, source coverage and limits. No parser/tree/Record copy, schema gate, nominal
 owner fabrication, public ABI change, domain narrowing, override/hash bump or Canvas work is carried.
+
+## Capability analysis at the current floor (G2)
+
+The emitted shape has moved since the reproduction above, and the remaining gap is now specific. At
+`3a3c5b1`-era generation the function is:
+
+```cpp
+inline std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieDocument>>>>>
+parse_lottie_document(std::variant<flight::StructuralRef<..LottieDocument..>, flight::String> source) {
+  if (!(source.index() == 1)) return std::optional<...>{std::get<0>(source)};
+  try {
+    return std::optional<...>{flight::structural_ref_cast<...>(
+        flight::StructuralRef<...>(static_cast<flight::Ref<flight::types::LottieDocument>>(flight::Json::parse(std::get<1>(source)))))};
+  } catch (...) { return std::nullopt; }
+}
+```
+
+The outer carrier is already the declared structural row -- only the innermost `static_cast<Ref<T>>(JsonValue)` is
+unrepresentable.
+
+**What the runtime already has.** `include/flight/structural_ref.hpp` defines `JsonRowOwner<JsonObject>` and
+`JsonRowOwner<JsonArray>`: a `RowOwner` over the parsed JSON object whose `named_cell` reads a member live and
+whose `enumerable_string_keys` reproduces own-key order. `owner_for<JsonObject>` constructs one, and
+`named_properties(const JsonValue&)` exposes it. So a JSON object can back a structural row.
+
+**Why a JSON-backed row is not sufficient here.** The asserted type's members are *typed*, and the row reads
+them as such: `is_valid_lottie_document` emits `std::isfinite(flight::row_get<flight::RowKey<"fr">>(document))`
+and `flight::is_array(flight::row_get<flight::RowKey<"layers">>(document))`. `LottieDocument` declares
+`double fr; ... flight::Array<flight::Ref<LottieLayer>> layers;`. A JSON cell is a `ReadonlyNamedCell` with
+`value_type() == typeid(Any)`, while `RowOwner::named_value_if<T>` returns a value only from a `TypedRowCell<T>`.
+A scalar member could be projected on demand (`Any` -> `double`), but `layers` needs a `flight::Array` of
+`Ref<LottieLayer>` owners, and every layer's own members are typed the same way: that is recursive
+materialization of the declared owner graph, not a cell projection.
+
+**What materialization has to decide.** `JSON.parse` can yield `null` (a successful parse), and JavaScript then
+throws `TypeError` when a member is read on it -- outside the `try`, so it propagates. A null-valued *required*
+member (`fr: null`) is not representable in `double fr` at all; the current `isValid` happens to answer false for
+both `null` and `0`, but that is a coincidence of this predicate, not a rule. A faithful materializer therefore
+needs a stated policy: which JSON values map to an absent optional, which throw, and which are unrepresentable
+and refused by name.
+
+**Recommendation.** This is a capability, not a lowering: either a compiler-generated JSON -> declared-owner
+materializer for an asserted type (recursive over its schema, with the null/absence policy above), or a
+JSON-backed row whose typed reads project a scalar and refuse a structured member unless a nested row is
+requested. It covers the 15 Lottie rows, the 2 `scene2d-resources` importers, and the 4 Aseprite rows in
+`other-4e22e4de`. A per-site source patch cannot express it, and a cast or a hand-written mapper would carry a
+copy of a schema the compiler already knows.
