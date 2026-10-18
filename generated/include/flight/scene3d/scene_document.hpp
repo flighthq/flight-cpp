@@ -142,7 +142,7 @@ inline void attach_document_animations(flight::StructuralRef<flight::RowReadonly
 }
 
 inline bool is_material_entity(flight::types::MaterialLike source) {
-  return (flight::types::entity_runtime_key in source);
+  return flight::has_own_property(source, flight::types::entity_runtime_key);
 }
 
 

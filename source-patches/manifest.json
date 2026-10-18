@@ -5250,6 +5250,23 @@
       "expires": "When the pinned compiler preserves JSON assertions as root-retaining lazy rows and coherent source scalar operations/native escape boundaries.",
       "appliedOn": "2026-10-18",
       "verification": "Qualified focused PREPARATION: all109 declared compiler patches ordered-apply from rawclean pin806d257; strict build PASS. Portable3test owned fixture plus4 privateJSON/preset/sharedcell/callable controls8files125/125PASS0skipped. Actual COMPLETE original raw LottieDocument.ts schema plus emitted controlled operation probes compile/link/run586/586PASS,24field cases9roots and all4native sinks, against shared runtime6270a343. First30 composite failures retained; consumed builder6 already-owned ToPrimitive correction without changing inputs. SAME108/109 relevant existing backend28selected:27PASS1FAIL each,1548unselected,all1576 occurrence names/statuses identical,zero new failures; same retained optional-property/structural-assertion failure.7 unrelated emission controls byte-identical; unrelated schema row/nominal/structured/unknown paths unchanged. Original public parser consumers/exact21headers remain PENDING scoped normal output; NO SDK/header promotion/global/package success from this preparation."
+    },
+    {
+      "id": "compiler-symbol-own-presence",
+      "dependency": "flight-compiler",
+      "patch": "compiler-symbol-own-presence.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts, packages/compiler-types/src/compilerOperatorSemanticIntermediateRepresentation.ts and packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "diagnostic",
+      "refusal": "(1) `uniqueSymbol in receiver` on a non-variant receiver (scene3d sceneDocument isMaterialEntity) has no membership evidence and is emitted verbatim. (2) A native object-literal construction drops every computed-symbol member: `{ [EntityRuntimeKey]: runtime, kind }` emits `T{.kind = ...}`, so the runtime value never reaches the object and a key written with undefined is indistinguishable from one never written.",
+      "rewrite": "Semantic membership evidence accepts unique-symbol keys (receiver declaration by the symbol's property name; assignable declarers are computed property declarations resolving to the same symbol). The backend lowers a symbol `in` on a structural row to flight::row_has_own_property and on a nominal reference whose own storage struct carries the computed cell to flight::has_own_property; it refuses asserted receivers, optional declarers and receivers whose struct lacks the cell. Native literal constructions write each computed-symbol member after construction through the runtime's symbol row_set (which records written presence), and refuse a computed value whose evaluation could be observed.",
+      "equivalence": "`key in object` asks whether the property exists: the runtime's written presence answers a recorded write (including undefined), an engaged cell, or an attached value, which is exactly the source's own presence for objects whose computed-key writes go through row_set or a marked construction. The construction writes are the members the literal wrote, with their own values, evaluated in source order because only side-effect-free values are taken.",
+      "whyNotUpstreamFirst": "Carried through the established compiler patch stack against the exact pin; the construction fix removes a silent value drop.",
+      "unblocks": "scene3d isMaterialEntity, whose `in` no longer emits as raw text (two errors leave flight/scene3d/scene_document.hpp, none added; the header stays blocked on the refused materializeDocumentMaterial and buildDocumentNode). log createFileLogSink emits its computed member through row_set, though the log override shadows that header and supplies the same presence through initialize_log_entity. The gizmo, gui, interaction, scene-document and selection literals are blocked by earlier causes (asserted EntityRuntime rows, open-row construction, an erased facet assertion, Object.assign) and gain nothing yet.",
+      "expires": "when upstream lowers unique-symbol presence to written presence and writes computed literal members at native construction.",
+      "appliedOn": "2026-10-18",
+      "verification": "cppSymbolOwnPresence.test.ts 3/3; full backend+semantic failure set identical with and without (0 new); scoped generation of the seven packages kept only the scene_document.hpp isMaterialEntity hunk; tests/generated_symbol_own_presence_test.cpp checks the sink and material presence, and a mutant reverting the override write is killed."
     }
   ]
 }
