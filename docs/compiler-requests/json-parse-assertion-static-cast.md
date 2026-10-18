@@ -803,3 +803,29 @@ recorded guarded-path controls still fail. Every body of the untouched original 
 now emits from a freshly lowered 1,467-module dependency graph. The whole public native consumer
 still fails compilation at remaining readonly-record, array and carrier boundaries; zero of its
 32 cases ran. No SDK output or exact 21-header result is promoted by this preparation.
+
+## Aseprite additional raw document view preparation
+
+The carried `compiler-lazy-json-union-document-view` patch keeps native document
+variant aliases and parameter overloads, and adds a shared structural row path for
+raw JSON documents and their public `Parsed` result. Parsing elects no union arm
+and reads no discriminator. Null/primitive roots, extra fields and nested owners
+survive until the original source uses them. Native overloads retain their original
+owners; raw nested reads and writes use the existing scalar-cell/runtime family.
+Declared member vocabulary uses compile-time `RowKey` references for the normal
+metadata collector, without running getters or validating a parsed schema.
+
+On the preceding 118-patch compiler floor, the strict production build and five
+focused suites pass **41/41 without skips**. The complete original public Aseprite
+consumer and real dependency bodies also compile, link and run: all **25 original
+tests** supply **28 public calls**, with **1,568 returned-data/diagnostic checks**
+and **nine native array/hash document, Record, tag and owner compatibility checks**
+passing. The separate original TypeScript oracle passes 154 checks. Three parser
+headers and production shared metadata were emitted in an isolated overlay;
+current compiler emission is byte-identical to those executed inputs.
+
+This is compiler and public-consumer preparation. The four normal installed
+headers and coherent SDK qualification remain pending; no previous header failure
+is promoted. Undefined/hole writes and unsupported native scalar boundaries retain
+explicit errors/refusals and PARTIAL status. Exact hashes, measured scopes and
+commands are recorded in [the qualification artifact](../../artifacts/aseprite-json-document-view-qualification.json).

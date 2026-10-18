@@ -5454,6 +5454,23 @@
       "unblocks": "Original Lottie filtered-track callback and optional position-property union body emission; public native32 remains pending.",
       "expires": "When upstream retains equivalent guarded filter result and optional-union subset proofs with original owner semantics.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-lazy-json-union-document-view",
+      "dependency": "flight-compiler",
+      "patch": "compiler-lazy-json-union-document-view.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/spritesheet-formats",
+      "answers": "diagnostic",
+      "refusal": "An erased JSON.parse assertion into the native Aseprite array/hash document variant emits an unrelated static_cast, and original document/result consumers cannot retain that raw parsed owner through nominal schema boundaries.",
+      "rewrite": "Adds an additional StructuralRef<RowWritable<RowOf<Native>>> document/result path seeded by original named JSON union assertions. Native document aliases and native parameter overloads remain. Original bodies read live scalar cells/nested owners, preserve the original parsed root in authored result objects, and defer Array.isArray discrimination to the source use. Native overloads delegate through their same native owners; declared RowKey vocabulary contributes compile-time metadata without reading fields.",
+      "equivalence": "The assertion neither reads a property nor elects or materializes a native union arm. Null and primitive roots, extra fields, nested owners and mutations remain raw until the authored use. Optional reads, loops, map, Object.entries, slice bounds and scalar escapes perform the source operations with once-only evaluation. Native aliases retain their original representation. Unsupported holes, undefined writes and native scalar escapes explicitly refuse or throw instead of narrowing accepted JSON or silently dropping writes.",
+      "verification": "Strict production build and five focused suites pass 41/41 without skips on all118 preceding declared compiler patches. Portable native controls cover nine root kinds, identity, mutation before discrimination and native compatibility. The complete original public Aseprite bodies and real callees compile/link/run against all25 upstream tests captured as28 calls, passing1568 data/diagnostic checks plus9 native array/hash/Record/owner controls. This is isolated three-header preparation; four normal installed headers and coherent SDK qualification remain pending. See artifacts/aseprite-json-document-view-qualification.json.",
+      "whyNotUpstreamFirst": "The pinned compiler emits a C++ cast for an erased TypeScript assertion although no native document owner was constructed. This patch uses the already represented shared row/scalar-cell runtime family and carries its portable semantic fixture with the compiler request.",
+      "unblocks": "Preparation for the original Aseprite public parser and its shared atlas/page-meta callees without copied schemas or a replacement parser. No installed-header, package or SDK promotion is inferred.",
+      "expires": "When upstream preserves raw JSON document union assertions, original public result ownership and compatible native overloads through an explicit additional shared row view.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }

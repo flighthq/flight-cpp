@@ -1,0 +1,1182 @@
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -332,6 +332,10 @@
+   jsonReadRecordBindingIds: Set<string>;
+   jsonReadValueBindingIds: Set<string>;
+   jsonReadShapeAssertions: Set<Readonly<IrExpression>>;
++  jsonDocumentViewMode?: boolean;
++  jsonDocumentNativeMode?: boolean;
++  jsonDocumentForwardMode?: boolean;
++  jsonDocumentViewBindingTypes?: Map<string, Readonly<IrType>>;
+   jsonScalarCellBindingIds: Set<string>;
+   jsonAssertionBindingRows: Map<string, Readonly<CompilerCppStructuralRowPlan>>;
+   jsonStringProvenPaths: ReadonlySet<string>;
+@@ -2513,6 +2517,40 @@
+ }
+ 
+ function emitFunction(declaration: Readonly<IrFunctionDeclaration>, outer: EmitContext, readonlyVariant = false): string[] {
++  if (
++    !outer.jsonDocumentViewMode &&
++    !outer.jsonDocumentNativeMode &&
++    getCppRuntimeProfile(outer.options) === 'flight-cpp'
++  ) {
++    const parameters = declaration.parameters.filter(
++      (parameter) =>
++        isCppJsonDocumentResultTypeCpp(parameter.type, outer) ||
++        isCppJsonDocumentProjectionTypeCpp(parameter.type, outer),
++    );
++    if (parameters.length > 0) {
++      const bindings = new Map(parameters.map((parameter) => [parameter.binding.id, parameter.type]));
++      const delegates =
++        !declaration.async &&
++        declaration.typeParameters.length === 0 &&
++        !isCppJsonDocumentResultTypeCpp(declaration.returns, outer) &&
++        !isCppJsonDocumentProjectionTypeCpp(declaration.returns, outer) &&
++        parameters.every((parameter) => !parameter.optional && !parameter.rest);
++      const view = emitFunction(
++        declaration,
++        { ...outer, jsonDocumentViewMode: true, jsonDocumentViewBindingTypes: bindings },
++        readonlyVariant,
++      );
++      const native = emitFunction(
++        declaration,
++        { ...outer, jsonDocumentNativeMode: true, jsonDocumentForwardMode: delegates },
++        readonlyVariant,
++      );
++      return delegates ? [...view, '', ...native] : [...native, '', ...view];
++    }
++    if (getCppJsonDocumentPrimaryFunctionsCpp(outer).has(declaration.binding.id)) {
++      outer = { ...outer, jsonDocumentViewMode: true, jsonDocumentViewBindingTypes: new Map() };
++    }
++  }
+   const readonlyPlan = readonlyVariant ? undefined : getCppReadonlyCallableOptionsPlanCpp(declaration, outer);
+   if (readonlyPlan) {
+     const parameters = declaration.parameters.map(p => p.binding.id === readonlyPlan.parameter.binding.id ? { ...p, type: readonlyPlan.type } : p);
+@@ -2563,6 +2601,26 @@
+   if (template.parameters) lines.push(`template ${template.parameters}`);
+   if (template.requirement) lines.push(`  requires ${template.requirement}`);
+   lines.push(`inline ${returnType} ${name}(${params}) {`);
++  if (context.jsonDocumentForwardMode) {
++    context.includes.add('flight/json_scalar.hpp');
++    const args = declaration.parameters.map((parameter) => {
++      const value = getBindingTargetName(parameter.binding, context);
++      if (
++        !isCppJsonDocumentResultTypeCpp(parameter.type, context) &&
++        !isCppJsonDocumentProjectionTypeCpp(parameter.type, context)
++      )
++        return value;
++      const schema = emitCppJsonDocumentSchemaCpp(parameter.type, context);
++      const union = getIrUnionTypeCpp(parameter.type, context, new Set());
++      return union && union.types.every((member) => isCppJsonDocumentStructuredTypeCpp(member, context))
++        ? `std::visit([](const auto& native) { return flight::StructuralRef<${schema}>::from_owner(flight::named_properties(native).shared_owner()); }, ${value})`
++        : getIrArrayTypeCpp(parameter.type, context, new Set())
++          ? `flight::json_assertion_row<${schema}>(flight::Any(${value}))`
++          : `flight::StructuralRef<${schema}>::from_owner(flight::named_properties(${value}).shared_owner())`;
++    });
++    lines.push(`  return ${name}(${args.join(', ')});`, '}');
++    return lines;
++  }
+   lines.push(
+     ...indentSourceLines([
+       ...emitParameterInitializersCpp(declaration.parameters, context),
+@@ -3421,6 +3479,13 @@
+       `uninitialized variable ${variable.binding.name} requires inferred type evidence`,
+       'cpp-uninitialized-variable-missing-type-evidence',
+     );
++  }
++  const jsonDocumentType = variable.initializer
++    ? getCppJsonDocumentExpressionTypeCpp(variable.initializer, context)
++    : undefined;
++  if (jsonDocumentType) {
++    context.jsonDocumentViewBindingTypes?.set(variable.binding.id, jsonDocumentType);
++    return `${variable.mutable ? '' : 'const '}auto ${getBindingTargetName(variable.binding, context)} = ${emitExpression(variable.initializer!, context)};`;
+   }
+   if (
+     variable.initializer &&
+@@ -4303,6 +4368,729 @@
+   return `([&]() -> ${slot.targetType} { const auto& ${valueName} = ${left}; if (${absent}) return ${fallback}; return std::get<${String(plan.valueSlots.indexOf(slot))}>(${valueName}); }())`;
+ }
+ 
++// An additional document-result view uses the existing row family. The native union alias and
++// native owners remain declarations of their original representation. An erased assertion itself
++// reads no member and elects no arm: primitive/null roots survive until the source uses them.
++function getCppJsonDocumentMemberTypeCpp(
++  type: Readonly<IrType>,
++  name: string,
++  context: EmitContext,
++): Readonly<IrType> | undefined {
++  return getIrObjectPropertyTypeCpp(getCppNonNullableType(type, context, new Set()) ?? type, name, context);
++}
++const cppJsonDocumentRoots = new WeakMap<CompilerCppReferenceRepresentationPlanner, ReadonlySet<string>>();
++function getCppJsonDocumentRootIdentitiesCpp(context: EmitContext): ReadonlySet<string> {
++  const cached = cppJsonDocumentRoots.get(context.referenceRepresentationPlanner);
++  if (cached) return cached;
++  const roots = new Set<string>();
++  cppJsonDocumentRoots.set(context.referenceRepresentationPlanner, roots);
++  for (const module of context.sourceModules) {
++    const local = { ...context, module, jsonDocumentViewMode: false };
++    analyzeIrModuleTraversal(module, {
++      expression(expression) {
++        if (expression.kind !== 'cast' || !isCppJsonParseCallCpp(expression.expression)) return;
++        const union = getIrUnionTypeCpp(expression.type, local, new Set());
++        if (
++          !union ||
++          union.types.length < 2 ||
++          !union.types.every((type) => Boolean(local.referenceRepresentationPlanner.resolveObjectShape(type, module)))
++        )
++          return;
++        const identity = getCppJsonDocumentTypeIdentityCpp(expression.type, local);
++        if (identity) roots.add(identity);
++      },
++    });
++  }
++  return roots;
++}
++
++function getCppJsonDocumentTypeIdentityCpp(type: Readonly<IrType>, context: EmitContext): string | undefined {
++  if (type.kind !== 'named' || type.reference.kind !== 'binding') return undefined;
++  const owner = getCppNamedTypeDeclarationOwnerCpp(type, getCppNamedTypeBindingModuleCpp(type, context), context);
++  return owner && 'binding' in owner.declaration
++    ? `${getCppModuleIdentityKey(owner.module)}\0${owner.declaration.binding.id}`
++    : undefined;
++}
++
++function isCppJsonDocumentRootTypeCpp(type: Readonly<IrType>, context: EmitContext): boolean {
++  const identity = getCppJsonDocumentTypeIdentityCpp(type, context);
++  return Boolean(identity && getCppJsonDocumentRootIdentitiesCpp(context).has(identity));
++}
++
++const cppJsonDocumentPrimaryFunctions = new WeakMap<CompilerCppReferenceRepresentationPlanner, ReadonlySet<string>>();
++function getCppJsonDocumentPrimaryFunctionsCpp(context: EmitContext): ReadonlySet<string> {
++  const cached = cppJsonDocumentPrimaryFunctions.get(context.referenceRepresentationPlanner);
++  if (cached) return cached;
++  const functions = context.sourceModules.flatMap((module) =>
++    module.declarations.flatMap((declaration) =>
++      declaration.kind === 'function' ? [{ declaration, context: { ...context, module } }] : [],
++    ),
++  );
++  const primary = new Set(
++    functions
++      .filter((item) => hasCppJsonDocumentParseCpp(item.declaration, item.context))
++      .map((item) => item.declaration.binding.id),
++  );
++  cppJsonDocumentPrimaryFunctions.set(context.referenceRepresentationPlanner, primary);
++  for (let changed = true; changed; ) {
++    changed = false;
++    for (const item of functions) {
++      if (primary.has(item.declaration.binding.id)) continue;
++      let callsPrimary = false;
++      analyzeIrModuleTraversal(
++        { ...item.context.module, declarations: [item.declaration] },
++        {
++          expression(expression) {
++            if (
++              expression.kind !== 'call' ||
++              expression.callee.kind !== 'identifier' ||
++              expression.callee.reference.kind !== 'binding'
++            )
++              return;
++            const target = getCppFunctionDeclarationForBindingCpp(expression.callee.reference.binding.id, item.context);
++            if (target && primary.has(target.binding.id)) callsPrimary = true;
++          },
++        },
++      );
++      if (callsPrimary) {
++        primary.add(item.declaration.binding.id);
++        changed = true;
++      }
++    }
++  }
++  return primary;
++}
++
++function hasCppJsonDocumentParseCpp(declaration: Readonly<IrFunctionDeclaration>, context: EmitContext): boolean {
++  let found = false;
++  analyzeIrModuleTraversal(
++    { ...context.module, declarations: [declaration] },
++    {
++      expression(expression) {
++        if (
++          expression.kind === 'cast' &&
++          isCppJsonParseCallCpp(expression.expression) &&
++          isCppJsonDocumentRootTypeCpp(expression.type, context)
++        )
++          found = true;
++      },
++    },
++  );
++  return found;
++}
++
++function isCppJsonDocumentResultTypeCpp(type: Readonly<IrType>, context: EmitContext): boolean {
++  if (isCppJsonDocumentRootTypeCpp(type, context)) return true;
++  const shape = context.referenceRepresentationPlanner.resolveObjectShape(type, context.module);
++  return Boolean(shape?.some((property) => isCppJsonDocumentRootTypeCpp(property.type, context)));
++}
++
++function emitCppJsonDocumentSchemaCpp(type: Readonly<IrType>, context: EmitContext): string {
++  return `flight::RowWritable<flight::RowOf<${emitType(type, { ...context, jsonDocumentViewMode: false })}>>`;
++}
++
++function emitCppJsonDocumentRowTypeCpp(type: Readonly<IrType>, context: EmitContext): string {
++  return `flight::StructuralRef<${emitCppJsonDocumentSchemaCpp(type, context)}>`;
++}
++
++const cppJsonDocumentMetadataNames = new WeakMap<CompilerCppReferenceRepresentationPlanner, Set<string>>();
++const cppJsonDocumentProjectionIdentities = new WeakMap<
++  CompilerCppReferenceRepresentationPlanner,
++  ReadonlySet<string>
++>();
++function getCppJsonDocumentProjectionIdentitiesCpp(context: EmitContext): ReadonlySet<string> {
++  const cached = cppJsonDocumentProjectionIdentities.get(context.referenceRepresentationPlanner);
++  if (cached) return cached;
++  const identities = new Set<string>();
++  cppJsonDocumentProjectionIdentities.set(context.referenceRepresentationPlanner, identities);
++  const names = new Set<string>();
++  cppJsonDocumentMetadataNames.set(context.referenceRepresentationPlanner, names);
++  const collect = (type: Readonly<IrType>, local: EmitContext): void => {
++    const identity = getCppJsonDocumentTypeIdentityCpp(type, local);
++    if (identity) {
++      if (identities.has(identity)) return;
++      identities.add(identity);
++    }
++    const owner =
++      type.kind === 'named' && type.reference.kind === 'binding'
++        ? getCppNamedTypeDeclarationOwnerCpp(type, getCppNamedTypeBindingModuleCpp(type, local), local)
++        : undefined;
++    const resolved = owner ? { ...local, module: owner.module } : local;
++    const alias =
++      type.kind === 'named' && type.reference.kind === 'binding' ? resolveCppTypeAliasTarget(type, local) : undefined;
++    if (alias) {
++      collect(alias, resolved);
++      return;
++    }
++    const union = getIrUnionTypeCpp(type, local, new Set());
++    if (union) {
++      for (const member of union.types) collect(member, resolved);
++      return;
++    }
++    if (type.kind === 'array') {
++      collect(type.element, local);
++      return;
++    }
++    const record = getCppRecordTypeArgumentsCpp(type, local, new Set());
++    if (record) {
++      collect(record.value, local);
++      return;
++    }
++    const shape = local.referenceRepresentationPlanner.resolveObjectShape(type, local.module);
++    if (shape)
++      for (const property of shape) {
++        names.add(property.name);
++        if (isCppJsonDocumentStructuredTypeCpp(property.type, resolved)) collect(property.type, resolved);
++      }
++  };
++  for (const module of context.sourceModules) {
++    const local = { ...context, module, jsonDocumentViewMode: false };
++    analyzeIrModuleTraversal(module, {
++      expression(expression) {
++        if (
++          expression.kind === 'cast' &&
++          isCppJsonParseCallCpp(expression.expression) &&
++          isCppJsonDocumentRootTypeCpp(expression.type, local)
++        )
++          collect(expression.type, local);
++      },
++    });
++  }
++  return identities;
++}
++function isCppJsonDocumentProjectionTypeCpp(type: Readonly<IrType>, context: EmitContext): boolean {
++  if (getCppJsonDocumentRootIdentitiesCpp(context).size === 0) return false;
++  const identity = getCppJsonDocumentTypeIdentityCpp(type, context);
++  if (identity && getCppJsonDocumentProjectionIdentitiesCpp(context).has(identity)) return true;
++  if (type.kind === 'array') return isCppJsonDocumentProjectionTypeCpp(type.element, context);
++  const record = getCppRecordTypeArgumentsCpp(type, context, new Set());
++  if (record) return isCppJsonDocumentProjectionTypeCpp(record.value, context);
++  const union = getIrUnionTypeCpp(type, context, new Set());
++  if (!union) return false;
++  const values = union.types.filter((member) => member.kind !== 'null' && member.kind !== 'undefined');
++  return values.length > 0 && values.every((member) => isCppJsonDocumentProjectionTypeCpp(member, context));
++}
++
++function isCppJsonDocumentStructuredTypeCpp(type: Readonly<IrType>, context: EmitContext): boolean {
++  const union = getIrUnionTypeCpp(type, context, new Set());
++  if (union) {
++    const members = union.types.filter((member) => member.kind !== 'null' && member.kind !== 'undefined');
++    return members.length > 0 && members.every((member) => isCppJsonDocumentStructuredTypeCpp(member, context));
++  }
++  return (
++    type.kind === 'array' ||
++    Boolean(getCppRecordTypeArgumentsCpp(type, context, new Set())) ||
++    Boolean(context.referenceRepresentationPlanner.resolveObjectShape(type, context.module))
++  );
++}
++
++function isCppJsonDocumentNativeResultMemberCpp(
++  receiver: Readonly<IrType>,
++  member: Readonly<IrType>,
++  context: EmitContext,
++): boolean {
++  return (
++    !isCppJsonDocumentRootTypeCpp(receiver, context) &&
++    isCppJsonDocumentResultTypeCpp(receiver, context) &&
++    !isCppJsonDocumentResultTypeCpp(member, context) &&
++    !isCppJsonDocumentProjectionTypeCpp(member, context)
++  );
++}
++
++function getCppJsonDocumentExpressionTypeCpp(
++  expression: Readonly<IrExpression>,
++  context: EmitContext,
++): Readonly<IrType> | undefined {
++  if (!context.jsonDocumentViewMode) return undefined;
++  if (expression.kind === 'identifier' && expression.reference.kind === 'binding') {
++    const stored = context.jsonDocumentViewBindingTypes?.get(expression.reference.binding.id);
++    if (stored) return stored;
++    const type = getIrExpressionTypeEvidenceCpp(expression, context);
++    return type && (isCppJsonDocumentResultTypeCpp(type, context) || isCppJsonDocumentProjectionTypeCpp(type, context))
++      ? type
++      : undefined;
++  }
++  if (expression.kind === 'cast') {
++    if (isCppJsonParseCallCpp(expression.expression) && isCppJsonDocumentRootTypeCpp(expression.type, context))
++      return expression.type;
++    return getCppJsonDocumentExpressionTypeCpp(expression.expression, context) &&
++      isCppJsonDocumentStructuredTypeCpp(expression.type, context)
++      ? expression.type
++      : undefined;
++  }
++  if (expression.kind === 'property') {
++    const receiver = getCppJsonDocumentExpressionTypeCpp(expression.object, context);
++    const member = receiver ? getCppJsonDocumentMemberTypeCpp(receiver, expression.name, context) : undefined;
++    return receiver &&
++      member &&
++      !isCppJsonDocumentNativeResultMemberCpp(receiver, member, context) &&
++      isCppJsonDocumentStructuredTypeCpp(member, context)
++      ? member
++      : undefined;
++  }
++  if (expression.kind === 'element') {
++    const receiver = getCppJsonDocumentExpressionTypeCpp(expression.object, context);
++    const member = receiver
++      ? (getCppJsonDocumentArrayElementCpp(receiver, context) ??
++        getCppRecordTypeArgumentsCpp(receiver, context, new Set())?.value)
++      : undefined;
++    return member && isCppJsonDocumentStructuredTypeCpp(member, context) ? member : undefined;
++  }
++  if (
++    expression.kind === 'call' &&
++    expression.callee.kind === 'identifier' &&
++    expression.callee.reference.kind === 'binding'
++  ) {
++    const declaration = getCppFunctionDeclarationForBindingCpp(expression.callee.reference.binding.id, context);
++    const selectedView =
++      declaration &&
++      (getCppJsonDocumentPrimaryFunctionsCpp(context).has(declaration.binding.id) ||
++        declaration.parameters.some(
++          (parameter, index) =>
++            isCppJsonDocumentResultTypeCpp(parameter.type, context) &&
++            expression.arguments[index] &&
++            getCppJsonDocumentExpressionTypeCpp(expression.arguments[index]!, context),
++        ));
++    return selectedView && isCppJsonDocumentResultTypeCpp(declaration!.returns, context)
++      ? declaration!.returns
++      : undefined;
++  }
++  return undefined;
++}
++
++function getCppJsonDocumentArrayElementCpp(type: Readonly<IrType>, context: EmitContext): Readonly<IrType> | undefined {
++  const array = getIrArrayTypeCpp(type, context, new Set());
++  if (array) return array.element;
++  const union = getIrUnionTypeCpp(type, context, new Set());
++  return union?.types
++    .map((member) => getIrArrayTypeCpp(member, context, new Set())?.element)
++    .find((member) => member !== undefined);
++}
++function getCppJsonDocumentMapCpp(
++  expression: Readonly<IrExpression>,
++  context: EmitContext,
++):
++  | Readonly<{
++      receiver: Readonly<IrExpression>;
++      element: Readonly<IrType>;
++      callback: Readonly<Extract<IrExpression, { kind: 'function' }>>;
++    }>
++  | undefined {
++  if (
++    expression.kind !== 'call' ||
++    expression.callee.kind !== 'property' ||
++    expression.callee.name !== 'map' ||
++    expression.arguments.length !== 1
++  )
++    return undefined;
++  const type = getCppJsonDocumentExpressionTypeCpp(expression.callee.object, context);
++  const element = type ? getCppJsonDocumentArrayElementCpp(type, context) : undefined;
++  const callback = expression.arguments[0];
++  return element && callback?.kind === 'function'
++    ? { receiver: expression.callee.object, element, callback }
++    : undefined;
++}
++function emitCppJsonDocumentForOfCpp(
++  statement: Readonly<Extract<IrStatement, { kind: 'forOf' }>>,
++  context: EmitContext,
++): string[] | undefined {
++  const sourceType = getCppJsonDocumentExpressionTypeCpp(statement.iterable, context);
++  if (!sourceType) return undefined;
++  if (statement.await || 'pattern' in statement.variable || statement.label) {
++    emissionError(
++      context,
++      'this JSON document iterator requires a represented synchronous binding',
++      'cpp-json-document-iterator-shape-unrepresented',
++    );
++  }
++  const element = statement.variable.type ?? getCppJsonDocumentArrayElementCpp(sourceType, context);
++  if (!element || !isCppJsonDocumentStructuredTypeCpp(element, context)) {
++    emissionError(
++      context,
++      'this JSON document iterator needs its declared structured element',
++      'cpp-json-document-iterator-element-unrepresented',
++    );
++  }
++  const source = getGeneratedTargetName('jsonIteratorSource', context),
++    index = getGeneratedTargetName('jsonIteratorIndex', context);
++  const binding = getBindingTargetName(statement.variable.binding, context);
++  context.jsonDocumentViewBindingTypes?.set(statement.variable.binding.id, element);
++  return [
++    '{',
++    ...indentSourceLines([
++      `const auto ${source} = ${emitExpression(statement.iterable, context)};`,
++      `if (!flight::json_row_is_array(${source})) throw flight::OutOfProfileError("JSON document for-of needs a represented array iterator");`,
++      `for (double ${index} = 0.0; ${index} < flight::json_row_length(${source}); ${index} += 1.0) {`,
++      ...indentSourceLines([
++        `${statement.variable.mutable ? '' : 'const '}auto ${binding} = flight::json_assertion_row<${emitCppJsonDocumentSchemaCpp(element, context)}>(flight::json_row_index(${source}, ${index}));`,
++        ...emitStatementBody(statement.body, context),
++      ]),
++      '}',
++    ]),
++    '}',
++  ];
++}
++
++function emitCppJsonDocumentViewExpressionCpp(
++  expression: Readonly<IrExpression>,
++  context: EmitContext,
++  expectedType?: Readonly<IrType>,
++): string | undefined {
++  if (
++    expression.kind === 'object' &&
++    expectedType &&
++    !context.jsonDocumentViewMode &&
++    isCppJsonDocumentRootTypeCpp(expectedType, context)
++  ) {
++    const union = getIrUnionTypeCpp(expectedType, context, new Set())!;
++    const arrays = expression.members.filter((member) => member.kind === 'property' && member.value.kind === 'array');
++    const candidates = union.types.filter(
++      (type) =>
++        arrays.length > 0 &&
++        arrays.every((member) => {
++          if (member.kind !== 'property') return false;
++          const property = getCppJsonDocumentMemberTypeCpp(type, member.name, context);
++          return property && Boolean(getIrArrayTypeCpp(property, context, new Set()));
++        }),
++    );
++    if (candidates.length === 1) {
++      const selected = candidates[0]!;
++      return `${emitType(expectedType, context)}{std::in_place_type<${emitType(selected, context)}>, ${emitExpression(expression, context, selected)}}`;
++    }
++  }
++  if (
++    expression.kind === 'call' &&
++    expression.callee.kind === 'identifier' &&
++    expression.callee.reference.kind === 'binding'
++  ) {
++    const declaration = getCppFunctionDeclarationForBindingCpp(expression.callee.reference.binding.id, context);
++    const cross = declaration?.parameters.some((parameter, index) => {
++      const argument = expression.arguments[index];
++      const source = argument ? getIrExpressionTypeEvidenceCpp(argument, context) : undefined;
++      return (
++        source &&
++        isCppJsonDocumentRootTypeCpp(source, context) &&
++        isCppJsonDocumentRootTypeCpp(parameter.type, context) &&
++        getCppJsonDocumentTypeIdentityCpp(source, context) !==
++          getCppJsonDocumentTypeIdentityCpp(parameter.type, context)
++      );
++    });
++    if (declaration && cross) {
++      const args = expression.arguments.map((argument, index) => {
++        const parameter = declaration.parameters[index];
++        const source = getIrExpressionTypeEvidenceCpp(argument, context);
++        if (!parameter || !source || !isCppJsonDocumentRootTypeCpp(parameter.type, context))
++          return emitExpression(argument, context, parameter?.type);
++        const target = emitCppJsonDocumentRowTypeCpp(parameter.type, context);
++        const value = emitExpression(argument, context);
++        if (getCppJsonDocumentExpressionTypeCpp(argument, context))
++          return `${target}::from_owner((${value}).shared_owner())`;
++        return `std::visit([](const auto& owner) { return ${target}::from_owner(flight::named_properties(owner).shared_owner()); }, ${value})`;
++      });
++      return `${emitExpression(expression.callee, context)}(${args.join(', ')})`;
++    }
++  }
++  if (!context.jsonDocumentViewMode) return undefined;
++  if (
++    expression.kind === 'call' &&
++    expression.callee.kind === 'identifier' &&
++    expression.callee.reference.kind === 'ambient' &&
++    expression.callee.reference.name === 'parseFloat' &&
++    expression.arguments.length === 1 &&
++    isCppJsonScalarCellExpressionCpp(expression.arguments[0]!, context)
++  ) {
++    context.includes.add('flight/number.hpp');
++    return `flight::parse_float((${emitExpression(expression.arguments[0]!, context)}).to_string())`;
++  }
++  if (
++    expression.kind === 'call' &&
++    expression.callee.kind === 'property' &&
++    expression.callee.name === 'slice' &&
++    expression.arguments.length > 0 &&
++    expression.arguments.length <= 2 &&
++    expression.arguments.some((argument) => isCppJsonScalarCellExpressionCpp(argument, context))
++  ) {
++    const type = getIrExpressionTypeEvidenceCpp(expression.callee.object, context);
++    if (
++      type &&
++      getIrArrayTypeCpp(type, context, new Set()) &&
++      !getCppJsonDocumentExpressionTypeCpp(expression.callee.object, context)
++    ) {
++      context.includes.add('algorithm');
++      context.includes.add('cmath');
++      const source = getGeneratedTargetName('jsonSliceSource', context),
++        length = getGeneratedTargetName('jsonSliceLength', context);
++      const bounds = expression.arguments.map(() => getGeneratedTargetName('jsonSliceBound', context));
++      const normalize = getGeneratedTargetName('jsonSliceNormalize', context),
++        first = getGeneratedTargetName('jsonSliceFirst', context),
++        last = getGeneratedTargetName('jsonSliceLast', context);
++      const args = expression.arguments
++        .map((argument, index) => `const auto ${bounds[index]} = ${emitCppJsonScalarOperandCpp(argument, context)};`)
++        .join(' ');
++      return `([&]() { const auto ${source} = ${emitExpression(expression.callee.object, context)}; ${args} const double ${length} = static_cast<double>(${source}.size()); const auto ${normalize} = [=](double value) { if (std::isnan(value) || value == 0.0) return 0.0; return value < 0.0 ? std::max(${length} + std::trunc(value), 0.0) : std::min(std::trunc(value), ${length}); }; const double ${first} = ${normalize}(${bounds[0]}.to_number()); const double ${last} = ${bounds[1] ? `${bounds[1]}.evaluates_to_undefined() ? ${length} : ${normalize}(${bounds[1]}.to_number())` : length}; return ${source}.slice(static_cast<std::ptrdiff_t>(${first}), static_cast<std::ptrdiff_t>(${last})); }())`;
++    }
++  }
++  if (
++    expression.kind === 'assignment' &&
++    expression.operator === '=' &&
++    (expression.left.kind === 'property' || expression.left.kind === 'element')
++  ) {
++    const left = expression.left,
++      receiver = getCppJsonDocumentExpressionTypeCpp(left.object, context);
++    if (receiver) {
++      const owner = getGeneratedTargetName('jsonWriteOwner', context),
++        key = getGeneratedTargetName('jsonWriteKey', context);
++      const raw = getGeneratedTargetName('jsonWriteValue', context);
++      const right = getCppJsonDocumentExpressionTypeCpp(expression.right, context)
++        ? `flight::json_row_raw(${emitExpression(expression.right, context)})`
++        : isCppJsonScalarCellExpressionCpp(expression.right, context)
++          ? `(${emitExpression(expression.right, context)}).raw()`
++          : `flight::detail::any_from(${emitExpression(expression.right, context)}).value_or(flight::Any(flight::undefined))`;
++      // any_from must not turn an unsupported native value into a successful undefined write.
++      const value =
++        getCppJsonDocumentExpressionTypeCpp(expression.right, context) ||
++        isCppJsonScalarCellExpressionCpp(expression.right, context)
++          ? `const auto ${raw} = ${right};`
++          : `const auto ${raw}Box = flight::detail::any_from(${emitExpression(expression.right, context)}); if (!${raw}Box) throw flight::NativeScalarEscapeError("unrepresented assignment value"); const auto ${raw} = *${raw}Box;`;
++      const property = left.kind === 'property';
++      const keyValue = property ? emitLiteral(left.name, context) : emitExpression(left.index, context);
++      const setter =
++        property || getCppRecordTypeArgumentsCpp(receiver, context, new Set())
++          ? `flight::json_row_set(${owner}, ${key}, ${raw})`
++          : `flight::json_row_set_index(${owner}, ${key}, ${raw})`;
++      const result = `([&]() { const auto ${owner} = ${emitExpression(left.object, context)}; const auto ${key} = ${keyValue}; ${value} if (!${setter}) throw flight::NativeScalarEscapeError(${raw}.type_of().to_utf8()); return flight::JsonScalarCell{${raw}}; }())`;
++      const member = property
++        ? getCppJsonDocumentMemberTypeCpp(receiver, left.name, context)
++        : (getCppJsonDocumentArrayElementCpp(receiver, context) ??
++          getCppRecordTypeArgumentsCpp(receiver, context, new Set())?.value);
++      return member && isCppJsonDocumentStructuredTypeCpp(member, context)
++        ? `flight::json_assertion_row<${emitCppJsonDocumentSchemaCpp(member, context)}>((${result}).raw())`
++        : emitCppJsonScalarEscapeCpp(result, expectedType, context);
++    }
++  }
++  if (expression.kind === 'element') {
++    const receiver = getCppJsonDocumentExpressionTypeCpp(expression.object, context);
++    if (receiver) {
++      const key = emitExpression(expression.index, context);
++      const value = `flight::read_json_scalar_row_member(${emitExpression(expression.object, context)}, flight::Any(${key}).to_string())`;
++      const member =
++        getCppJsonDocumentArrayElementCpp(receiver, context) ??
++        getCppRecordTypeArgumentsCpp(receiver, context, new Set())?.value;
++      return member && isCppJsonDocumentStructuredTypeCpp(member, context)
++        ? `flight::json_assertion_row<${emitCppJsonDocumentSchemaCpp(member, context)}>((${value}).raw())`
++        : emitCppJsonScalarEscapeCpp(value, expectedType, context);
++    }
++  }
++  if (
++    expression.kind === 'assignment' &&
++    expression.operator === '=' &&
++    expression.left.kind === 'property' &&
++    expression.left.name === 'length'
++  ) {
++    const sourceType = getIrExpressionTypeEvidenceCpp(expression.left.object, context);
++    if (
++      sourceType &&
++      getIrArrayTypeCpp(sourceType, context, new Set()) &&
++      !getCppJsonDocumentExpressionTypeCpp(expression.left.object, context)
++    ) {
++      context.includes.add('cmath');
++      const source = getGeneratedTargetName('jsonNativeArray', context),
++        length = getGeneratedTargetName('jsonNativeLength', context);
++      return `([&]() { const auto ${source} = ${emitExpression(expression.left.object, context)}; const double ${length} = ${emitExpression(expression.right, context, { kind: 'primitive', name: 'number' })}; if (!std::isfinite(${length}) || ${length} < 0.0 || std::floor(${length}) != ${length} || ${length} > 4294967295.0) throw flight::RangeError("Invalid array length"); if (${length} > static_cast<double>(${source}.size())) throw flight::OutOfProfileError("Native array length growth requires hole storage"); ${source}.resize(${length}); return ${length}; }())`;
++    }
++  }
++  if (expression.kind === 'conditional') {
++    const yes = getCppJsonDocumentMapCpp(expression.whenTrue, context),
++      no = getCppJsonDocumentMapCpp(expression.whenFalse, context);
++    const array = yes ?? no;
++    const empty = yes ? expression.whenFalse : expression.whenTrue;
++    if (array && empty.kind === 'array' && empty.elements.length === 0) {
++      const emptyArray = `flight::Array<${emitType(array.callback.returns, context)}>{}`;
++      return `(${emitCppTruthinessExpression(expression.condition, context)} ? ${yes ? emitExpression(expression.whenTrue, context) : emptyArray} : ${no ? emitExpression(expression.whenFalse, context) : emptyArray})`;
++    }
++  }
++  const map = getCppJsonDocumentMapCpp(expression, context);
++  if (map) {
++    const source = getGeneratedTargetName('jsonMapSource', context),
++      callback = getGeneratedTargetName('jsonMapCallback', context);
++    const result = getGeneratedTargetName('jsonMapResult', context),
++      index = getGeneratedTargetName('jsonMapIndex', context),
++      length = getGeneratedTargetName('jsonMapLength', context);
++    const value = getGeneratedTargetName('jsonMapValue', context);
++    return `([&]() { const auto ${source} = ${emitExpression(map.receiver, context)}; auto ${callback} = ${emitExpression(map.callback, context)}; if (!flight::json_row_is_array(${source})) throw flight::TypeError("map is not a function"); const double ${length} = flight::json_row_length(${source}); flight::Array<${emitType(map.callback.returns, context)}> ${result}; for (double ${index} = 0.0; ${index} < ${length}; ${index} += 1.0) { if (!flight::json_row_raw(${source}).array_get(${index}).has_value()) throw flight::OutOfProfileError("JSON document map result cannot represent a hole"); auto ${value} = flight::json_assertion_row<${emitCppJsonDocumentSchemaCpp(map.element, context)}>(flight::json_row_index(${source}, ${index})); ${result}.push(flight::detail::invoke_array_method_callback(${callback}, ${value}, static_cast<std::size_t>(${index}), ${source})); } return ${result}; }())`;
++  }
++  if (
++    expression.kind === 'call' &&
++    expression.callee.kind === 'property' &&
++    expression.callee.name === 'entries' &&
++    expression.callee.object.kind === 'identifier' &&
++    expression.callee.object.reference.kind === 'ambient' &&
++    expression.callee.object.reference.name === 'Object' &&
++    expression.arguments.length === 1
++  ) {
++    const argument = expression.arguments[0]!,
++      type = getCppJsonDocumentExpressionTypeCpp(argument, context);
++    if (type) {
++      const union = getIrUnionTypeCpp(type, context, new Set());
++      const record = [type, ...(union?.types ?? [])]
++        .map((member) => getCppRecordTypeArgumentsCpp(member, context, new Set()))
++        .find((member) => member !== undefined);
++      if (!record)
++        emissionError(
++          context,
++          'JSON Object.entries needs declared entry type evidence',
++          'cpp-json-document-entry-type-unrepresented',
++        );
++      const source = getGeneratedTargetName('jsonEntriesSource', context),
++        properties = getGeneratedTargetName('jsonEntriesProperties', context),
++        key = getGeneratedTargetName('jsonEntryKey', context),
++        result = getGeneratedTargetName('jsonEntries', context);
++      const row = emitCppJsonDocumentRowTypeCpp(record.value, context);
++      return `([&]() { const auto ${source} = ${emitExpression(argument, context)}; const auto ${properties} = flight::named_properties(${source}); flight::Array<std::tuple<flight::String, ${row}>> ${result}; for (const auto& ${key} : ${properties}.keys()) { ${result}.push(std::tuple<flight::String, ${row}>(${key}, flight::json_assertion_row<${emitCppJsonDocumentSchemaCpp(record.value, context)}>(${properties}.get(${key})))); } return ${result}; }())`;
++    }
++  }
++  if (expression.kind === 'identifier' && expression.reference.kind === 'binding') {
++    const type = getCppJsonDocumentExpressionTypeCpp(expression, context);
++    if (type) {
++      const value = emitIdentifierReference(expression.reference, context);
++      if (
++        expectedType &&
++        (isCppJsonDocumentProjectionTypeCpp(expectedType, context) ||
++          isCppJsonDocumentResultTypeCpp(expectedType, context))
++      ) {
++        return `${emitCppJsonDocumentRowTypeCpp(expectedType, context)}::from_owner((${value}).shared_owner())`;
++      }
++      return value;
++    }
++  }
++  if (
++    expression.kind === 'unary' &&
++    expression.operator === '!' &&
++    getCppJsonDocumentExpressionTypeCpp(expression.operand, context)
++  ) {
++    return `!flight::json_row_to_boolean(${emitExpression(expression.operand, context)})`;
++  }
++  if (
++    expression.kind === 'unary' &&
++    expression.operator === 'typeof' &&
++    getCppJsonDocumentExpressionTypeCpp(expression.operand, context)
++  ) {
++    return `flight::String::from_utf8(flight::json_row_type_of(${emitExpression(expression.operand, context)}))`;
++  }
++  if (expression.kind === 'binary' && ['===', '!=='].includes(expression.operator)) {
++    const left = getCppJsonDocumentExpressionTypeCpp(expression.left, context);
++    const right = getCppJsonDocumentExpressionTypeCpp(expression.right, context);
++    const sentinel = (value: Readonly<IrExpression>): 'null' | 'undefined' | undefined =>
++      value.kind === 'literal' && value.value === null
++        ? 'null'
++        : value.kind === 'undefinedValue' ||
++            (value.kind === 'identifier' && value.reference.kind === 'ambient' && value.reference.name === 'undefined')
++          ? 'undefined'
++          : undefined;
++    const kind = left ? sentinel(expression.right) : right ? sentinel(expression.left) : undefined;
++    const root = left ? expression.left : right ? expression.right : undefined;
++    if (root && kind)
++      return `${expression.operator === '!==' ? '!' : ''}flight::json_row_raw(${emitExpression(root, context)}).is_${kind}()`;
++  }
++  if (expression.kind === 'property') {
++    const receiver = getCppJsonDocumentExpressionTypeCpp(expression.object, context);
++    if (receiver) {
++      const object = emitExpression(expression.object, context),
++        key = `flight::String(flight::RowKey<${JSON.stringify(expression.name)}>::name.view())`;
++      const member = getCppJsonDocumentMemberTypeCpp(receiver, expression.name, context);
++      if (member && isCppJsonDocumentNativeResultMemberCpp(receiver, member, context))
++        return `flight::row_get<flight::RowKey<${JSON.stringify(expression.name)}>>(${object})`;
++      const structured = member && isCppJsonDocumentStructuredTypeCpp(member, context);
++      const read = (owner: string) =>
++        structured
++          ? `flight::json_assertion_row<${emitCppJsonDocumentSchemaCpp(member!, context)}>(flight::read_json_scalar_row_member(${owner}, ${key}).raw())`
++          : `flight::read_json_scalar_row_member(${owner}, ${key})`;
++      let value = read(object);
++      if (expression.optional) {
++        const owner = getGeneratedTargetName('jsonOptionalReceiver', context);
++        const missing = structured
++          ? `flight::json_assertion_row<${emitCppJsonDocumentSchemaCpp(member!, context)}>(flight::Any(flight::undefined))`
++          : 'flight::JsonScalarCell{}';
++        value = `([&]() { const auto ${owner} = ${object}; if (flight::json_row_is_nullish(${owner})) return ${missing}; return ${read(owner)}; }())`;
++      }
++      return structured ? value : emitCppJsonScalarEscapeCpp(value, expectedType, context);
++    }
++  }
++  if (expression.kind === 'cast' && !isCppJsonParseCallCpp(expression.expression)) {
++    const source = getCppJsonDocumentExpressionTypeCpp(expression.expression, context);
++    if (source && isCppJsonDocumentStructuredTypeCpp(expression.type, context)) {
++      return `${emitCppJsonDocumentRowTypeCpp(expression.type, context)}::from_owner((${emitExpression(expression.expression, context)}).shared_owner())`;
++    }
++  }
++  if (
++    expression.kind === 'call' &&
++    expression.callee.kind === 'property' &&
++    expression.callee.name === 'isArray' &&
++    expression.callee.object.kind === 'identifier' &&
++    expression.callee.object.reference.kind === 'ambient' &&
++    expression.callee.object.reference.name === 'Array' &&
++    expression.arguments.length === 1 &&
++    getCppJsonDocumentExpressionTypeCpp(expression.arguments[0]!, context)
++  ) {
++    return `flight::json_row_is_array(${emitExpression(expression.arguments[0]!, context)})`;
++  }
++  if (
++    expression.kind === 'cast' &&
++    isCppJsonParseCallCpp(expression.expression) &&
++    isCppJsonDocumentRootTypeCpp(expression.type, context)
++  ) {
++    getCppJsonDocumentProjectionIdentitiesCpp(context);
++    const keys = [...(cppJsonDocumentMetadataNames.get(context.referenceRepresentationPlanner) ?? [])].sort();
++    const vocabulary = keys.map((name) => `sizeof(flight::RowKey<${JSON.stringify(name)}>)`).join(' + ') || '0';
++    // Register declared native-member vocabulary with the existing SDK metadata collector. sizeof
++    // never reads a member, runs a getter, validates JSON, or selects an arm of the native union.
++    return `([&]() { (void)(${vocabulary}); return flight::json_assertion_row<${emitCppJsonDocumentSchemaCpp(expression.type, context)}>(${emitExpression(expression.expression, context)}); }())`;
++  }
++  if (expression.kind === 'assignment' && expression.operator === '=') {
++    const leftType = getIrExpressionTypeEvidenceCpp(expression.left, context);
++    if (leftType && isCppJsonDocumentResultTypeCpp(leftType, context)) {
++      return `(${emitExpression(expression.left, context)} = ${emitExpression(expression.right, context, leftType)})`;
++    }
++  }
++  if (
++    expression.kind === 'object' &&
++    expectedType &&
++    isCppJsonDocumentResultTypeCpp(expectedType, context) &&
++    !isCppJsonDocumentRootTypeCpp(expectedType, context)
++  ) {
++    const owner = getGeneratedTargetName('jsonResultOwner', context);
++    const shape = context.referenceRepresentationPlanner.resolveObjectShape(expectedType, context.module)!;
++    const values: string[] = [];
++    for (const property of expression.members) {
++      if (property.kind !== 'property' || typeof property.name !== 'string') {
++        emissionError(
++          context,
++          'a JSON document result literal requires represented named authored fields',
++          'cpp-json-document-result-field-unrepresented',
++        );
++      }
++      const type = shape.find((field) => field.name === property.name)?.type;
++      if (!type)
++        emissionError(
++          context,
++          'JSON document result field lacks declared type',
++          'cpp-json-document-result-field-unrepresented',
++        );
++      const value = emitExpression(property.value, context, type);
++      const document = isCppJsonDocumentRootTypeCpp(type, context);
++      const row =
++        document && !getCppJsonDocumentExpressionTypeCpp(property.value, context)
++          ? `std::visit([](const auto& native) { return ${emitCppJsonDocumentRowTypeCpp(type, context)}::from_owner(flight::named_properties(native).shared_owner()); }, ${value})`
++          : value;
++      values.push(
++        `${owner}->set_named_value(${emitLiteral(property.name, context)}.to_utf8(), ${document ? `flight::json_row_raw(${row})` : value});`,
++      );
++    }
++    return `([&]() { auto ${owner} = std::make_shared<flight::RowOwner>(); ${values.join(' ')} return ${emitCppJsonDocumentRowTypeCpp(expectedType, context)}::from_owner(std::move(${owner})); }())`;
++  }
++  return undefined;
++}
++
+ // JSON assertions elect only their original named schema. Native callers of that same row ABI
+ // keep their native owners; scalar reads ask the shared live row rather than materializing a schema.
+ const cppJsonProjectionSchemas = new WeakMap<CompilerCppReferenceRepresentationPlanner, ReadonlySet<string>>();
+@@ -4382,6 +5170,11 @@
+ }
+ 
+ function isCppJsonScalarMemberCpp(expression: Readonly<IrExpression>, context: EmitContext): boolean {
++  if (expression.kind === 'property') {
++    const receiver = getCppJsonDocumentExpressionTypeCpp(expression.object, context);
++    const member = receiver ? getCppJsonDocumentMemberTypeCpp(receiver, expression.name, context) : undefined;
++    if (member && !isCppJsonDocumentStructuredTypeCpp(member, context)) return true;
++  }
+   if (expression.kind !== 'property' || isCppJsonReadValueCpp(expression.object, context)) return false;
+   const plan = getCppJsonProjectionRowCpp(expression.object, context);
+   const object = plan ? getCppStructuralRowObjectTypeCpp(plan.row) : undefined;
+@@ -4445,6 +5238,34 @@
+     const kind = native === 'bool' ? 'boolean' : 'string';
+     return `([&]() -> ${native} { const auto ${cell} = ${value}; if (${cell}.is_present() && ${cell}.raw().kind() == flight::AnyKind::${kind}) return ${cell}.raw().as_${kind}(); throw flight::NativeScalarEscapeError(${cell}.type_of()); }())`;
+   }
++  const union = getIrUnionTypeCpp(expectedType, context, new Set());
++  const plan = union ? getCppUnionRepresentationPlan(union, context) : undefined;
++  if (
++    plan &&
++    plan.valueSlots.length > 0 &&
++    plan.valueSlots.every((slot) => ['double', 'bool', 'flight::String'].includes(slot.targetType))
++  ) {
++    const cell = getGeneratedTargetName('jsonNativeUnion', context);
++    const steps = [`const auto ${cell} = ${value};`];
++    if (plan.sentinels.null !== 'absent')
++      steps.push(`if (${cell}.raw().is_null()) return ${emitLiteralWithExpectedTypeCpp(null, expectedType, context)};`);
++    if (plan.sentinels.undefined !== 'absent')
++      steps.push(
++        `if (${cell}.evaluates_to_undefined()) return ${emitUndefinedWithExpectedTypeCpp(expectedType, context)};`,
++      );
++    const present = getCppNonNullableType(expectedType, context, new Set());
++    for (const slot of plan.valueSlots) {
++      const kind = slot.targetType === 'double' ? 'number' : slot.targetType === 'bool' ? 'boolean' : 'string';
++      const scalar = slot.targetType === 'double' ? `${cell}.as_native_number()` : `${cell}.raw().as_${kind}()`;
++      const target = plan.kind === 'optionalVariant' ? emitType(present!, context) : native;
++      const result = ['multiVariant', 'dualSentinelVariant', 'optionalVariant'].includes(plan.kind)
++        ? `${target}{std::in_place_type<${slot.targetType}>, ${scalar}}`
++        : scalar;
++      steps.push(`if (${cell}.is_present() && ${cell}.raw().kind() == flight::AnyKind::${kind}) return ${result};`);
++    }
++    steps.push(`throw flight::NativeScalarEscapeError(${cell}.type_of());`);
++    return `([&]() -> ${native} { ${steps.join(' ')} }())`;
++  }
+   emissionError(
+     context,
+     `JSON scalar escape to ${native} requires an explicit represented native scalar boundary`,
+@@ -4458,6 +5279,8 @@
+   expectedType?: Readonly<IrType>,
+ ): string | undefined {
+   if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return undefined;
++  const documentView = emitCppJsonDocumentViewExpressionCpp(expression, context, expectedType);
++  if (documentView !== undefined) return documentView;
+   const include = () => context.includes.add('flight/json_scalar.hpp');
+   const finishCell = (value: string) => {
+     include();
+@@ -11862,6 +12685,8 @@
+       ];
+     }
+     case 'forOf': {
++      const jsonIteration = emitCppJsonDocumentForOfCpp(statement, context);
++      if (jsonIteration) return jsonIteration;
+       if (statement.await) emissionError(context, 'async iteration requires C++ coroutine lowering');
+       if ('pattern' in statement.variable) {
+         emissionError(context, 'binding patterns require destructuring lowering before C++ emission');
+@@ -13034,6 +13859,10 @@
+ }
+ 
+ function emitType(type: Readonly<IrType>, context: EmitContext, representation: 'storage' | 'value' = 'value'): string {
++  if (context.jsonDocumentViewMode && (isCppJsonDocumentResultTypeCpp(type, context) || isCppJsonDocumentProjectionTypeCpp(type, context))) {
++    context.includes.add('flight/json_scalar.hpp');
++    return emitCppJsonDocumentRowTypeCpp(type, context);
++  }
+   if (
+     context.expandAliasesForEarlyPublication &&
+     type.kind === 'named' &&
+@@ -34070,6 +34899,7 @@
+ }
+ 
+ function emitCppTruthinessExpression(expression: Readonly<IrExpression>, context: EmitContext): string {
++  if (getCppJsonDocumentExpressionTypeCpp(expression, context)) return `flight::json_row_to_boolean(${emitExpression(expression, context)})`;
+   if (isCppJsonScalarCellExpressionCpp(expression, context)) return `(${emitExpression(expression, context)}).to_boolean()`;
+   const jsonRow = getCppJsonProjectionRowCpp(expression, context);
+   if (jsonRow) {
+@@ -34084,7 +34914,8 @@
+     getCppRuntimeProfile(context.options) === 'flight-cpp' &&
+     expression.kind === 'binary' &&
+     (expression.operator === '&&' || expression.operator === '||') &&
+-    (expression.semantics.left.flow === 'string' || expression.semantics.right.flow === 'string' ||
++    (getCppJsonDocumentExpressionTypeCpp(expression.left, context) || getCppJsonDocumentExpressionTypeCpp(expression.right, context) ||
++      expression.semantics.left.flow === 'string' || expression.semantics.right.flow === 'string' ||
+       isCppJsonReadValueCpp(expression.left, context) || isCppJsonReadValueCpp(expression.right, context))
+   ) {
+     // Logical expressions preserve operand values in JavaScript, but this caller needs only the
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppJsonUnionDocumentView.test.ts
+@@ -0,0 +1,260 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { createCppCompilerBackend, emitIrModuleCpp } from './cppCompilerBackend.js';
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const toolchain = findCppCompilerToolchain();
++const includes = collectCppRuntimeIncludeDirectories(resolveDependency(root, 'flight-cpp').directory);
++const prefix = `interface ArrayDocument{frames:{filename:string}[]}interface HashDocument{frames:Record<string,{duration:number}>}type Document=ArrayDocument|HashDocument;interface Parsed{document:Document}`;
++const source =
++  prefix +
++  `
++export function parse(source:string):Document{return JSON.parse(source) as Document}
++export function identity(document:Document):Document{return document}
++export function nativeNever():Document{throw 'unchanged'}
++export function framesArray(document:Document):boolean{return Array.isArray(document.frames)}
++export function publicResult(source:string):Parsed{return {document:parse(source)}}
++export function rootType(source:string):string{const document=JSON.parse(source) as Document;return typeof document}
++export function rootTruth(source:string):boolean{const document=JSON.parse(source) as Document;return !!document}
++export function rootNull(source:string):boolean{const document=JSON.parse(source) as Document;return document===null}
++export function outside(source:string):boolean{let document:Document;try{document=JSON.parse(source) as Document}catch{return false}return Array.isArray(document.frames)}
++`;
++function emit(text = source): string {
++  const [lowered] = lowerTypeScriptSources([
++    {
++      packageName: '@flighthq/probe',
++      upstreamDirectory: '/flight',
++      sourceFile: ts.createSourceFile('/flight/packages/probe/src/probe.ts', text, ts.ScriptTarget.Latest, true),
++    },
++  ]);
++  expect(lowered!.diagnostics).toEqual([]);
++  return emitIrModuleCpp(lowered!.module, {
++    runtimeProfile: 'flight-cpp',
++    externalBindings: {
++      schema: 'flight-cpp-external-bindings/1',
++      bindings: [
++        {
++          headers: ['flight/number.hpp'],
++          nullability: 'non-null',
++          ownership: 'borrowed',
++          sourceName: 'parseFloat',
++          space: 'value',
++          targetName: 'flight::parse_float',
++        },
++      ],
++    },
++    packageTargets: { '@flighthq/probe': { namespace: 'probe', includePrefix: 'fixture' } },
++  }).contents;
++}
++it('erases union assertions without selecting an arm or reading a discriminator', () => {
++  const output = emit();
++  expect(output).toContain('json_assertion_row<flight::RowWritable<flight::RowOf<Document>>>');
++  expect(output).not.toMatch(/static_cast<[^;]*Json::parse/u);
++  const body = output.split(' parse(flight::String source) {')[1]!.split('\n}')[0]!;
++  expect(body).not.toContain('json_row_is_array');
++  expect(body).toContain('sizeof(flight::RowKey<"frames">)');
++  expect(body).not.toContain('row_member');
++  expect(output).toContain('json_result_owner->set_named_value');
++  expect(output).toContain('flight::json_row_raw(parse(source))');
++});
++it('keeps the native variant and native parameter overload beside the additional row path', () => {
++  const output = emit();
++  expect(output).toMatch(
++    /using Document = std::variant<flight::Ref<(?:HashDocument|ArrayDocument)>, flight::Ref<(?:HashDocument|ArrayDocument)>>/u,
++  );
++  expect(output).toContain('inline Document identity(Document document)');
++  expect(output).toContain('inline Document native_never()');
++  expect(output).toContain('identity(flight::StructuralRef<flight::RowWritable<flight::RowOf<Document>>> document)');
++});
++it.skipIf(!toolchain || includes.length === 0)(
++  'runs emitted root/identity/public-result and live-discriminator controls',
++  () => {
++    const directory = mkdtempSync(path.join(tmpdir(), 'flight-json-union-view-'));
++    try {
++      writeFileSync(path.join(directory, 'probe.hpp'), emit());
++      const js: Record<string, (source: string) => unknown> = {};
++      new Function(
++        'exports',
++        ts.transpileModule(source, {
++          compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
++        }).outputText,
++      )(js);
++      const cases = ['null', '0', '30', 'false', 'true', '""', '"ab"', '[]', '{}']
++        .map(
++          (text) =>
++            `{${JSON.stringify(text)},${JSON.stringify(js.rootType!(text))},${String(js.rootTruth!(text))},${String(js.rootNull!(text))}}`,
++        )
++        .join(',');
++      const native = `#include "probe.hpp"
++#include <stdexcept>
++#include <type_traits>
++#include <iostream>
++int checks=0;void check(bool value){++checks;if(!value)throw std::runtime_error("union control "+std::to_string(checks));}
++int main(){try{
++using Native=probe::Document;using View=decltype(probe::parse(flight::String("{}")));
++static_assert(!std::is_convertible_v<View,Native>);
++static_assert(std::is_same_v<decltype(probe::identity(std::declval<Native>())),Native>);
++Native native=flight::make_ref<probe::ArrayDocument>();check(probe::identity(native)==native);
++struct Expected{const char* source;const char* type;bool truth;bool null;};
++for(const auto& expected:std::initializer_list<Expected>{${cases}}){const char* source=expected.source;
++ const auto view=probe::parse(flight::String(source));
++ const auto raw=flight::json_row_raw(view);
++ const auto alias=probe::identity(view);check(alias.identity()==view.identity());
++ check(flight::json_row_raw(alias).strict_equals(raw));
++ check(probe::root_type(flight::String(source))==flight::String(expected.type));
++ check(probe::root_truth(flight::String(source))==expected.truth);
++ check(probe::root_null(flight::String(source))==expected.null);
++ const auto result=probe::public_result(flight::String(source));
++ const auto document=flight::read_json_scalar_row_member(result,flight::String("document")).raw();
++ check(document.type_of()==raw.type_of());
++}
++for(const char* source:{"{\\"frames\\":[],\\"extra\\":{\\"kept\\":true}}","{\\"frames\\":{},\\"extra\\":{\\"kept\\":true}}"}){
++ auto view=probe::parse(flight::String(source));
++ const bool before=probe::frames_array(view);
++ const auto root=flight::json_row_raw(view).object_reference_if<flight::JsonObject>();check(root!=nullptr);
++ const auto extra=root->get(flight::String("extra"))->object_owner();
++ check(flight::json_row_set(view,flight::String("frames"),flight::Any(before?flight::JsonValue(flight::JsonObject{}):flight::JsonValue(flight::JsonArray{}))));
++ check(probe::frames_array(view)!=before);
++ check(root==flight::json_row_raw(view).object_reference_if<flight::JsonObject>());
++ check(extra==root->get(flight::String("extra"))->object_owner());
++ check(!flight::json_row_set(view,flight::String("frames"),flight::Any(flight::undefined)));
++ check(probe::frames_array(view)!=before);
++}
++check(probe::outside(flight::String("{\\"frames\\":[]}")));
++check(!probe::outside(flight::String("bad")));
++bool threw=false;try{(void)probe::outside(flight::String("null"));}catch(const flight::TypeError&){threw=true;}check(threw);
++std::cout<<checks<<" checks\\n";
++return 0;}catch(const std::exception& error){std::cerr<<error.what()<<"\\n";return 1;}}`;
++      const input = path.join(directory, 'native.cpp'),
++        output = path.join(directory, getCppExecutableName(toolchain!, 'native'));
++      writeFileSync(input, native);
++      execFileSync(
++        toolchain!.command,
++        createCppExecutableArguments(toolchain!, input, output, [directory, ...includes]),
++        { stdio: 'pipe' },
++      );
++      expect(execFileSync(output, [], { encoding: 'utf8', stdio: 'pipe' })).toContain('72 checks');
++    } finally {
++      rmSync(directory, { recursive: true, force: true });
++    }
++  },
++  120000,
++);
++it('does not elect a document view without a JSON union assertion seed', () => {
++  const output = emit(prefix + 'export function identity(document:Document):Document{return document}');
++  expect(output).not.toContain('json_assertion_row');
++  expect(output).not.toContain('jsonResultOwner');
++  expect(output).toContain('inline Document identity(Document document)');
++});
++
++it('routes distinct imported document schemas through an owner-preserving additional overload', () => {
++  const sources = {
++    a: `import {readB} from './b.ts';interface ArrayA{frames:{filename:string}[]}interface HashA{frames:Record<string,{duration:number}>}export type DocA=ArrayA|HashA;export function parseA(s:string):DocA{return JSON.parse(s) as DocA}export function cross(doc:DocA):boolean{return readB(doc)}`,
++    b: `interface ArrayB{frames:{filename:string}[]}interface HashB{frames:Record<string,{duration:number}>}export type DocB=ArrayB|HashB;export function parseB(s:string):DocB{return JSON.parse(s) as DocB}export function readB(doc:DocB):boolean{return Array.isArray(doc.frames)}`,
++  };
++  const moduleResolution = {
++    schema: 'flight-compiler-module-resolution/1' as const,
++    edges: [{ specifier: './b.ts', target: { packageName: '@flighthq/probe', source: 'packages/probe/src/b.ts' } }],
++  };
++  const lowered = lowerTypeScriptSources(
++    Object.entries(sources).map(([name, text]) => ({
++      packageName: '@flighthq/probe',
++      upstreamDirectory: '/flight',
++      sourceFile: ts.createSourceFile('/flight/packages/probe/src/' + name + '.ts', text, ts.ScriptTarget.Latest, true),
++    })),
++    moduleResolution,
++  );
++  expect(lowered.flatMap((result) => result.diagnostics)).toEqual([]);
++  const modules = lowered.map((result) => result.module);
++  const session = createCppCompilerBackend().createEmissionSession!({
++    modules,
++    moduleResolution,
++    options: {
++      runtimeProfile: 'flight-cpp',
++      packageTargets: { '@flighthq/probe': { namespace: 'probe', includePrefix: 'fixture' } },
++    },
++  });
++  const output = session.emitModule(modules[0]!)[0]!.contents;
++  expect(output).toContain('std::visit([](const auto& native)');
++  expect(output).toContain('flight::named_properties(native).shared_owner()');
++  expect(output).toContain('RowOf<probe::DocB>');
++  expect(output).not.toContain('static_cast<');
++});
++
++it.skipIf(!toolchain || includes.length === 0)(
++  'runs optional members, original-owner loops/maps and authored writes',
++  () => {
++    const text = `interface Size{w:number}interface Tag{name:string}interface Meta{size?:Size;tags?:Tag[]}
++ interface ArrayDocument{frames:{filename:string}[];meta:Meta}interface HashDocument{frames:Record<string,{duration:number}>;meta:Meta}type Document=ArrayDocument|HashDocument;
++ export function parse(source:string):Document{return JSON.parse(source) as Document}
++ export function width(source:string):number{const doc=parse(source);return doc.meta?.size?.w??17}
++ export function missing(source:string):boolean{const doc=parse(source);return doc.meta===undefined}
++ export function names(source:string):string[]{const doc=parse(source);return doc.meta.tags.map(tag=>tag.name)}
++ export function frames(source:string):number{const doc=parse(source);let count=0;for(const entry of doc.frames as {filename:string}[]){if(entry.filename)count=count+1}return count}
++ export function keys(source:string):string[]{const doc=parse(source);const keys:string[]=[];for(const [key,entry] of Object.entries(doc.frames)){keys.push(key)}return keys}
++ export function write(doc:Document):number{doc.meta.size.w=9;return doc.meta.size.w}
++ export function shrink(doc:Document,values:number[]):number{return values.length=0}
++ interface Parsed{data:{value:number};document:Document}
++ export function result(source:string):Parsed{return {data:{value:8},document:parse(source)}}
++ export function dataValue(source:string):number{return result(source).data.value}
++ export function numericText(source:string):number{const doc=parse(source);return parseFloat(doc.meta.size.w)}
++ export function sliceValues(source:string,values:string[]):string[]{const doc=parse(source);return values.slice(doc.meta.size.w,doc.meta.size.w+1)}
++ `;
++    const directory = mkdtempSync(path.join(tmpdir(), 'flight-json-union-members-'));
++    try {
++      const emitted = emit(text);
++      writeFileSync(path.join(directory, 'probe.hpp'), emitted);
++      expect(emitted).not.toContain('NOT GENERATED');
++      const cpp = `#include "probe.hpp"
++#include <stdexcept>
++int main(){try{
++ int count=0;auto check=[&](bool v){++count;if(!v)throw std::runtime_error("document member control "+std::to_string(count));};
++ check(probe::width(flight::String("{}"))==17);
++ check(probe::width(flight::String("{\\"meta\\":null}"))==17);
++ check(probe::width(flight::String("{\\"meta\\":{}}"))==17);
++ check(probe::width(flight::String("{\\"meta\\":{\\"size\\":{\\"w\\":4}}}"))==4);
++ check(probe::missing(flight::String("{}")));
++ check(!probe::missing(flight::String("{\\"meta\\":null}")));
++ const auto names=probe::names(flight::String("{\\"meta\\":{\\"tags\\":[{\\"name\\":\\"first\\"},{\\"name\\":\\"second\\"}]}}"));
++ check(names.size()==2&&names[0]==flight::String("first")&&names[1]==flight::String("second"));
++ check(probe::frames(flight::String("{\\"frames\\":[{\\"filename\\":\\"a\\"},{\\"filename\\":\\"b\\"}]}"))==2);
++ const auto keys=probe::keys(flight::String("{\\"frames\\":{\\"b\\":{},\\"10\\":{},\\"2\\":{},\\"a\\":{}}}"));
++ check(keys.size()==4&&keys[0]==flight::String("2")&&keys[1]==flight::String("10")&&keys[2]==flight::String("b")&&keys[3]==flight::String("a"));
++ const auto doc=probe::parse(flight::String("{\\"meta\\":{\\"size\\":{\\"w\\":4,\\"extra\\":true}}}"));
++ const auto raw=flight::json_row_raw(doc);const auto meta=flight::named_properties(doc).get(flight::String("meta"));
++ check(probe::write(doc)==9);check(flight::json_row_raw(doc).strict_equals(raw));
++ check(flight::named_properties(doc).get(flight::String("meta")).strict_equals(meta));
++ flight::Array<double> values{1,2};const auto alias=values;check(probe::shrink(doc,values)==0&&alias.size()==0);
++ check(probe::numeric_text(flight::String(${JSON.stringify('{"meta":{"size":{"w":"1.5tail"}}}')}))==1.5);
++ const auto slice=probe::slice_values(flight::String(${JSON.stringify('{"meta":{"size":{"w":1}}}')}),flight::Array<flight::String>{flight::String("a"),flight::String("b"),flight::String("c")});
++ check(slice.size()==1&&slice[0]==flight::String("b"));
++ check(probe::data_value(flight::String("{}"))==8);
++ return 0;}catch(const std::exception&){return 1;}
++}`;
++      const input = path.join(directory, 'native.cpp'),
++        output = path.join(directory, getCppExecutableName(toolchain!, 'native'));
++      writeFileSync(input, cpp);
++      execFileSync(
++        toolchain!.command,
++        createCppExecutableArguments(toolchain!, input, output, [directory, ...includes]),
++        { stdio: 'pipe' },
++      );
++      execFileSync(output, [], { stdio: 'pipe' });
++    } finally {
++      rmSync(directory, { recursive: true, force: true });
++    }
++  },
++  120000,
++);
