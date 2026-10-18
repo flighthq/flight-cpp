@@ -93,5 +93,58 @@ int main() {
   check(record_view.get("later").as_number() == 5 && !record_view.has("null") &&
         record_view.keys() == std::vector<String>{"1", "2", "undefined", "later"},
         "readonly Record bridge observes insert, erase, and integer ordering");
+
+  // These are valid JSON inputs to the original counter, even when a number is not finite
+  // or a key cannot be represented as a Unicode scalar value in UTF-8.
+  const auto high = String::from_char_code(0xD800);
+  const auto other_high = String::from_char_code(0xD801);
+  const auto low = String::from_char_code(0xDC00);
+  const auto replacement = String::from_char_code(0xFFFD);
+  auto unicode = flight::Json::parse(
+      R"({"\ud800":1,"\ud801":2,"\udc00":3,"\ufffd":4,"\ud83d\ude00":5,"\u0000":6})");
+  const auto unicode_view = flight::named_properties(unicode);
+  check(unicode_view.keys() == std::vector<String>{high, other_high, low, replacement,
+        String::from_char_code(0xD83D, 0xDE00), String::from_char_code(0)},
+        "JSON enumeration retains distinct surrogate and embedded-NUL keys in insertion order");
+  check(unicode_view.get(high).as_number() == 1 && unicode_view.get(other_high).as_number() == 2 &&
+        unicode_view.get(low).as_number() == 3 && unicode_view.get(replacement).as_number() == 4,
+        "exact UTF16 property reads never alias lone surrogates to the replacement character");
+  unicode.as_object().set(high, 7);
+  check(unicode_view.get(high).as_number() == 7 && !unicode_view.set(high, 8),
+        "exact UTF16 reads remain live and readonly");
+  const String literal_surrogate(std::u16string{u'"', char16_t(0xD800), u'"'});
+  check(flight::Json::parse(literal_surrogate).as_string() == high &&
+        flight::Json::parse(R"("\ud800x\udc00")").as_string() ==
+            String(std::u16string{char16_t(0xD800), u'x', char16_t(0xDC00)}),
+        "escaped and literal UTF16 units retain the full JavaScript string domain");
+  flight::Record<String, Any> unicode_record;
+  unicode_record.set(high, 1).set(replacement, 2);
+  flight::NamedProperties unicode_record_view = unicode_record;
+  check(unicode_record_view.keys() == std::vector<String>{high, replacement} &&
+        unicode_record_view.get(high).as_number() == 1 && unicode_record_view.get(replacement).as_number() == 2,
+        "native Record bridging retains exact dynamic UTF16 keys");
+  auto declared = std::make_shared<flight::RowOwner>();
+  declared->set_named_value(replacement.to_utf8(), Any(3));
+  const flight::NamedProperties declared_view(declared);
+  check(!declared_view.has(high) && declared_view.get(high).is_undefined() && !declared_view.set(high, 4) &&
+        declared_view.get(replacement).as_number() == 3,
+        "unrepresentable native names cannot read or write a different declared property");
+
+  const auto infinity = std::numeric_limits<double>::infinity();
+  for (const auto& [text, expected] : std::vector<std::pair<const char*, double>>{
+      {"1e400", infinity}, {"1.8e308", infinity}, {"-1e400", -infinity},
+      {"1e-400", 0.0}, {"-1e-400", -0.0}, {"-0e9999999999999999999999", -0.0},
+      {"1e9999999999999999999999", infinity}, {"1e-9999999999999999999999", 0.0},
+      {"5e-324", std::numeric_limits<double>::denorm_min()}}) {
+    const auto actual = flight::Json::parse(text).as_number();
+    check(actual == expected && std::signbit(actual) == std::signbit(expected),
+          "valid JSON decimals retain overflow, underflow, rounding and signed-zero semantics");
+  }
+  for (const auto* text : {"01", "1.", "1e", "-", "+1", "NaN", "Infinity", R"("\uD80")", R"("\x00")"}) {
+    bool syntax_error = false;
+    try { static_cast<void>(flight::Json::parse(text)); }
+    catch (const flight::JsonSyntaxError&) { syntax_error = true; }
+    check(syntax_error, "malformed JSON still throws the syntax-only error");
+  }
   return failures == 0 ? 0 : 1;
 }

@@ -7,6 +7,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <iomanip>
+#include <limits>
 #include <memory>
 #include <optional>
 #include <sstream>
@@ -501,7 +502,7 @@ void append_json_record(std::string& output, const Record& record, std::size_t i
 
 class JsonParser {
  public:
-  explicit JsonParser(const String& source) : source_(source.to_utf8()) {}
+  explicit JsonParser(const String& source) : source_(source.native()) {}
 
   [[nodiscard]] JsonValue parse() {
     skip_whitespace();
@@ -515,9 +516,9 @@ class JsonParser {
   [[nodiscard]] JsonValue parse_value() {
     if (position_ == source_.size()) throw JsonSyntaxError();
     switch (source_[position_]) {
-      case 'n': consume("null"); return nullptr;
-      case 't': consume("true"); return true;
-      case 'f': consume("false"); return false;
+      case 'n': consume(u"null"); return nullptr;
+      case 't': consume(u"true"); return true;
+      case 'f': consume(u"false"); return false;
       case '"': return parse_string();
       case '[': return parse_array();
       case '{': return parse_object();
@@ -527,13 +528,13 @@ class JsonParser {
 
   [[nodiscard]] String parse_string() {
     expect('"');
-    std::string result;
+    std::u16string result;
     while (position_ < source_.size()) {
-      const unsigned char unit = static_cast<unsigned char>(source_[position_++]);
-      if (unit == '"') return String::from_utf8(result);
+      const char16_t unit = source_[position_++];
+      if (unit == '"') return String(std::move(result));
       if (unit < 0x20U) throw JsonSyntaxError();
       if (unit != '\\') {
-        result.push_back(static_cast<char>(unit));
+        result.push_back(unit);
         continue;
       }
       if (position_ == source_.size()) throw JsonSyntaxError();
@@ -547,19 +548,9 @@ class JsonParser {
         case 'r': result.push_back('\r'); break;
         case 't': result.push_back('\t'); break;
         case 'u': {
-          auto code_point = parse_hex_quad();
-          if (code_point >= 0xD800U && code_point <= 0xDBFFU) {
-            if (position_ + 2 > source_.size() || source_[position_] != '\\' || source_[position_ + 1] != 'u') {
-              throw JsonSyntaxError();
-            }
-            position_ += 2;
-            const auto low = parse_hex_quad();
-            if (low < 0xDC00U || low > 0xDFFFU) throw JsonSyntaxError();
-            code_point = 0x10000U + ((code_point - 0xD800U) << 10U) + (low - 0xDC00U);
-          } else if (code_point >= 0xDC00U && code_point <= 0xDFFFU) {
-            throw JsonSyntaxError();
-          }
-          append_utf8(result, code_point);
+          // JSON strings, like JavaScript strings, contain UTF-16 code units. An escaped
+          // surrogate is valid on its own and must not be rejected or replaced with U+FFFD.
+          result.push_back(static_cast<char16_t>(parse_hex_quad()));
           break;
         }
         default: throw JsonSyntaxError();
@@ -618,8 +609,42 @@ class JsonParser {
     }
     if (position_ == begin) throw JsonSyntaxError();
     double value = 0.0;
-    const auto converted = std::from_chars(source_.data() + begin, source_.data() + position_, value);
-    if (converted.ec != std::errc{} || converted.ptr != source_.data() + position_ || !std::isfinite(value)) {
+    // The grammar above admits only ASCII here. from_chars supplies correctly rounded finite
+    // values, but reports range loss where JSON.parse produces infinity or signed zero.
+    const std::string text(source_.begin() + begin, source_.begin() + position_);
+    const auto converted = std::from_chars(text.data(), text.data() + text.size(), value);
+    if (converted.ptr != text.data() + text.size()) throw JsonSyntaxError();
+    if (converted.ec == std::errc::result_out_of_range) {
+      const auto exponent = text.find_first_of("eE");
+      const auto end = exponent == std::string::npos ? text.size() : exponent;
+      std::size_t digits_before_decimal = 0;
+      std::optional<std::size_t> first_nonzero;
+      std::size_t digit = 0;
+      bool before_decimal = true;
+      for (std::size_t index = text.front() == '-' ? 1 : 0; index < end; ++index) {
+        if (text[index] == '.') { before_decimal = false; continue; }
+        if (before_decimal) ++digits_before_decimal;
+        if (!first_nonzero && text[index] != '0') first_nonzero = digit;
+        ++digit;
+      }
+      // Saturating beyond the entire significand length suffices to decide which end of
+      // the double range was exceeded, even for a very long authored decimal/exponent.
+      const long double limit = static_cast<long double>(text.size()) + 400.0L;
+      long double explicit_exponent = 0;
+      if (exponent != std::string::npos) {
+        auto index = exponent + 1;
+        const bool negative = text[index] == '-';
+        if (text[index] == '-' || text[index] == '+') ++index;
+        for (; index < text.size(); ++index) {
+          explicit_exponent = std::min(limit, explicit_exponent * 10 + (text[index] - '0'));
+        }
+        if (negative) explicit_exponent = -explicit_exponent;
+      }
+      const auto magnitude = static_cast<long double>(digits_before_decimal) -
+                             static_cast<long double>(first_nonzero.value_or(digit)) - 1 + explicit_exponent;
+      value = first_nonzero && magnitude >= 0 ? std::numeric_limits<double>::infinity() : 0.0;
+      if (text.front() == '-') value = -value;
+    } else if (converted.ec != std::errc{}) {
       throw JsonSyntaxError();
     }
     return value;
@@ -635,7 +660,7 @@ class JsonParser {
     if (position_ + 4 > source_.size()) throw JsonSyntaxError();
     std::uint32_t result = 0;
     for (int index = 0; index < 4; ++index) {
-      const char unit = source_[position_++];
+      const char16_t unit = source_[position_++];
       result <<= 4U;
       if (unit >= '0' && unit <= '9') result |= static_cast<std::uint32_t>(unit - '0');
       else if (unit >= 'a' && unit <= 'f') result |= static_cast<std::uint32_t>(unit - 'a' + 10);
@@ -643,23 +668,6 @@ class JsonParser {
       else throw JsonSyntaxError();
     }
     return result;
-  }
-
-  static void append_utf8(std::string& output, std::uint32_t code_point) {
-    if (code_point <= 0x7FU) output.push_back(static_cast<char>(code_point));
-    else if (code_point <= 0x7FFU) {
-      output.push_back(static_cast<char>(0xC0U | (code_point >> 6U)));
-      output.push_back(static_cast<char>(0x80U | (code_point & 0x3FU)));
-    } else if (code_point <= 0xFFFFU) {
-      output.push_back(static_cast<char>(0xE0U | (code_point >> 12U)));
-      output.push_back(static_cast<char>(0x80U | ((code_point >> 6U) & 0x3FU)));
-      output.push_back(static_cast<char>(0x80U | (code_point & 0x3FU)));
-    } else {
-      output.push_back(static_cast<char>(0xF0U | (code_point >> 18U)));
-      output.push_back(static_cast<char>(0x80U | ((code_point >> 12U) & 0x3FU)));
-      output.push_back(static_cast<char>(0x80U | ((code_point >> 6U) & 0x3FU)));
-      output.push_back(static_cast<char>(0x80U | (code_point & 0x3FU)));
-    }
   }
 
   void skip_whitespace() {
@@ -670,7 +678,7 @@ class JsonParser {
     }
   }
 
-  void consume(std::string_view expected) {
+  void consume(std::u16string_view expected) {
     if (source_.substr(position_, expected.size()) != expected) throw JsonSyntaxError();
     position_ += expected.size();
   }
@@ -679,13 +687,13 @@ class JsonParser {
     if (!take(expected)) throw JsonSyntaxError();
   }
 
-  [[nodiscard]] bool take(char expected) {
+  [[nodiscard]] bool take(char16_t expected) {
     if (position_ == source_.size() || source_[position_] != expected) return false;
     ++position_;
     return true;
   }
 
-  std::string source_;
+  std::u16string source_;
   std::size_t position_ = 0;
 };
 

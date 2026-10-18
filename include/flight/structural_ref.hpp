@@ -258,6 +258,19 @@ class RowOwner {
     return found == named_cells_.end() ? nullptr : found->second;
   }
 
+  // Dynamic JavaScript keys contain UTF-16 code units, including lone surrogates. Native
+  // declaration names use UTF-8; reject a lossy spelling rather than aliasing it to U+FFFD.
+  [[nodiscard]] virtual std::shared_ptr<RowCell> string_key_cell(const String& key) const {
+    const auto name = key.to_utf8();
+    return String::from_utf8(name) == key ? named_cell(name) : nullptr;
+  }
+
+  // Dynamic containers can enumerate their exact String keys without a UTF-8 round trip.
+  // Native rows retain the declaration-address ordering applied by NamedProperties below.
+  [[nodiscard]] virtual std::optional<std::vector<String>> enumerable_string_keys() const {
+    return std::nullopt;
+  }
+
   virtual void set_named_cell(std::string_view key, std::shared_ptr<RowCell> cell) {
     auto name = std::string(key);
     if (named_cells_.insert_or_assign(name, std::move(cell)).second) {
@@ -610,9 +623,11 @@ class JsonRowOwner final : public RowOwner {
   [[nodiscard]] std::shared_ptr<void> native_object() const noexcept override { return object_.lock(); }
   [[nodiscard]] std::type_index native_type() const noexcept override { return typeid(Object); }
   [[nodiscard]] std::shared_ptr<RowCell> named_cell(std::string_view name) const override {
+    return string_key_cell(String::from_utf8(name));
+  }
+  [[nodiscard]] std::shared_ptr<RowCell> string_key_cell(const String& key) const override {
     const auto object = object_.lock();
     if (!object) return {};
-    const auto key = String::from_utf8(name);
     if constexpr (std::same_as<Object, JsonObject>) {
       if (!object->has(key)) return {};
       return std::make_shared<ReadonlyNamedCell>([weak = object_, key] {
@@ -621,7 +636,7 @@ class JsonRowOwner final : public RowOwner {
         return value ? Any(*value) : Any(undefined);
       });
     } else {
-      if (name == "length") {
+      if (key == String("length")) {
         return std::make_shared<ReadonlyNamedCell>([weak = object_] {
           const auto owner = weak.lock();
           return owner ? Any(static_cast<double>(owner->size())) : Any(undefined);
@@ -640,24 +655,30 @@ class JsonRowOwner final : public RowOwner {
   }
   [[nodiscard]] const std::vector<std::string>& named_keys() const override {
     keys_.clear();
+    const auto keys = enumerable_string_keys();
+    for (const auto& key : *keys) keys_.push_back(key.to_utf8());
+    return keys_;
+  }
+  [[nodiscard]] std::optional<std::vector<String>> enumerable_string_keys() const override {
+    std::vector<String> keys;
     const auto object = object_.lock();
-    if (!object) return keys_;
+    if (!object) return keys;
     if constexpr (std::same_as<Object, JsonObject>) {
       // Own integer-index keys precede other string keys in numeric order. Stable sorting keeps
       // insertion order for ordinary names, including "01" and the non-index "4294967295".
-      for (const auto& [key, value] : *object) keys_.push_back(key.to_utf8());
-      std::stable_sort(keys_.begin(), keys_.end(), [](const auto& left, const auto& right) {
-        const auto a = record_array_index(String::from_utf8(left));
-        const auto b = record_array_index(String::from_utf8(right));
+      for (const auto& [key, value] : *object) keys.push_back(key);
+      std::stable_sort(keys.begin(), keys.end(), [](const auto& left, const auto& right) {
+        const auto a = record_array_index(left);
+        const auto b = record_array_index(right);
         if (a && b) return *a < *b;
         return a.has_value() && !b.has_value();
       });
     } else {
       for (std::size_t index = 0; index < object->size(); ++index) {
-        keys_.push_back(String::from_number(static_cast<double>(index)).to_utf8());
+        keys.push_back(String::from_number(static_cast<double>(index)));
       }
     }
-    return keys_;
+    return keys;
   }
  private:
   std::weak_ptr<Object> object_;
@@ -734,6 +755,14 @@ class ProxyRowOwner final : public RowOwner {
 
   [[nodiscard]] std::shared_ptr<RowCell> named_cell(std::string_view key) const override {
     return target_->named_cell(key);
+  }
+
+  [[nodiscard]] std::shared_ptr<RowCell> string_key_cell(const String& key) const override {
+    return target_->string_key_cell(key);
+  }
+
+  [[nodiscard]] std::optional<std::vector<String>> enumerable_string_keys() const override {
+    return target_->enumerable_string_keys();
   }
 
   void set_named_cell(std::string_view key, std::shared_ptr<RowCell> cell) override {
@@ -1846,6 +1875,7 @@ class NamedProperties final {
   // Own enumerable string keys, in source declaration order.
   [[nodiscard]] std::vector<String> keys() const {
     if (!owner_) return {};
+    if (auto keys = owner_->enumerable_string_keys()) return *std::move(keys);
     std::vector<std::pair<const void*, const std::string*>> declared;
     std::vector<const std::string*> written;
     for (const auto& key : owner_->named_keys()) {
@@ -1866,8 +1896,7 @@ class NamedProperties final {
   // `name in value` for own string keys, and nothing else: a symbol attachment of the same
   // spelling is a different property and is not reported here.
   [[nodiscard]] bool has(const String& key) const {
-    const auto name = key.to_utf8();
-    return owner_ != nullptr && owner_->named_cell(name) != nullptr;
+    return owner_ != nullptr && owner_->string_key_cell(key) != nullptr;
   }
 
   [[nodiscard]] bool has(double key) const { return has(String::from_number(key)); }
@@ -1883,12 +1912,11 @@ class NamedProperties final {
   // A present property whose type has no erased reading throws `UnrepresentedProperty` rather than
   // inventing one; `is_represented` asks that in advance.
   [[nodiscard]] Any get(const String& key) const {
-    const auto name = key.to_utf8();
     if (!owner_) return Any(undefined);
-    const auto cell = owner_->named_cell(name);
+    const auto cell = owner_->string_key_cell(key);
     if (!cell) return Any(undefined);
     auto value = cell->as_any();
-    if (!value) throw UnrepresentedProperty(name, cell->value_type());
+    if (!value) throw UnrepresentedProperty(key.to_utf8(), cell->value_type());
     return *std::move(value);
   }
 
@@ -1925,7 +1953,7 @@ class NamedProperties final {
   bool set(const String& key, const Any& value) const {
     if (!owner_) return false;
     const auto name = key.to_utf8();
-    const auto cell = owner_->named_cell(name);
+    const auto cell = owner_->string_key_cell(key);
     if (!cell) return false;
     owner_->before_named_write(name);
     return cell->assign_any(value);
@@ -1934,9 +1962,8 @@ class NamedProperties final {
   // Whether `get` will answer this key without raising. An absent key is representable: it reads
   // as `undefined`.
   [[nodiscard]] bool is_represented(const String& key) const {
-    const auto name = key.to_utf8();
     if (!owner_) return true;
-    const auto cell = owner_->named_cell(name);
+    const auto cell = owner_->string_key_cell(key);
     return !cell || cell->as_any().has_value();
   }
 
@@ -1999,7 +2026,9 @@ class RecordReadRowOwner final : public RowOwner {
     return typeid(Record<String, Any>);
   }
   [[nodiscard]] std::shared_ptr<RowCell> named_cell(std::string_view name) const override {
-    const auto key = String::from_utf8(name);
+    return string_key_cell(String::from_utf8(name));
+  }
+  [[nodiscard]] std::shared_ptr<RowCell> string_key_cell(const String& key) const override {
     if (!record_.has(key)) return {};
     return std::make_shared<ReadonlyNamedCell>([record = record_, key] {
       return record.get(key).value_or(Any(undefined));
@@ -2009,6 +2038,9 @@ class RecordReadRowOwner final : public RowOwner {
     keys_.clear();
     for (const auto& key : record_.enumerable_keys()) keys_.push_back(key.to_utf8());
     return keys_;
+  }
+  [[nodiscard]] std::optional<std::vector<String>> enumerable_string_keys() const override {
+    return record_.enumerable_keys();
   }
  private:
   Record<String, Any> record_;
