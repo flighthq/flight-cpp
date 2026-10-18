@@ -327,6 +327,35 @@ void test_json_conversion_edges() {
 
 } // namespace
 
+
+namespace {
+
+// A same-owner JSON array reaching a member write. Any(JsonArray) is kind object, so the conversion
+// must try the array owner before answering "not representable": object -> array replacement is a
+// faithful mutation, not an out-of-profile write.
+void test_json_member_array_replacement() {
+  using RowSchema = flight::RowReadonly<flight::RowOf<flight::Any>>;
+  const auto parsed = flight::Json::parse(flight::String("{\"frames\":{}}"));
+  const auto row = flight::json_assertion_row<RowSchema>(parsed);
+
+  const auto empty_array = flight::Any(flight::JsonValue(flight::JsonArray{}));
+  assert(flight::json_row_set(row, flight::String("frames"), empty_array));
+  const auto member = flight::json_row_member(row, flight::String("frames"));
+  assert(member.is_array() && member.array_size() == 0);
+
+  const auto object = flight::Any(flight::JsonValue(flight::JsonObject{}));
+  assert(flight::json_row_set(row, flight::String("meta"), object));
+  assert(flight::json_row_is_object(row) && flight::json_row_has(row, flight::String("meta")));
+
+  // A represented nested array used again keeps the exact owner it was recovered from.
+  const auto nested = flight::json_row_member(row, flight::String("frames"));
+  assert(flight::json_row_set(row, flight::String("other"), nested));
+  const auto other = flight::json_row_member(row, flight::String("other"));
+  assert(other.is_array() && other.array_size() == 0);
+}
+
+} // namespace
+
 int main() {
   using flight::Any;
   using flight::JsonScalarCell;
@@ -338,6 +367,7 @@ int main() {
   test_json_composite_operations();
   test_json_row_writes();
   test_json_conversion_edges();
+  test_json_member_array_replacement();
   test_json_scalar_utf16_relational();
   test_json_any_bridge();
 

@@ -913,11 +913,13 @@ inline std::optional<Any> Error::cause() const {
     case AnyKind::number: return JsonValue(value.as_number());
     case AnyKind::string: return JsonValue(value.as_string());
     case AnyKind::object:
+      // A boxed JSON array is ALSO kind object, so the array owner has to be tried here, before the
+      // object case returns. Recovering it keeps the exact parsed owner; nothing is copied.
       if (const auto object = value.object_reference_if<JsonObject>()) return JsonValue(object);
+      if (const auto array = value.array_owner_if<std::shared_ptr<JsonArray>>()) return JsonValue(array);
       return std::nullopt;
     default: break;
   }
-  if (const auto array = value.array_owner_if<std::shared_ptr<JsonArray>>()) return JsonValue(array);
   return std::nullopt;
 }
 
