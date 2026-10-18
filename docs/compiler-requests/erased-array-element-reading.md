@@ -750,6 +750,6 @@ which is the source's own operation on a possibly non-array object.
 Measured: new `cppErasedArrayLengthIndex.test.ts` 3 pass; package typecheck exit 0; focused
 `cppErasedArrayIteration`/`cppArrayLengthAssignment`/`cppLengthProvenNullableArrayRead` 7 pass
 together; the emitted scratch header compiles, links and runs (live length 2, present element,
-absent index → undefined). The patch is written at its own stack position: all 68 compiler patches
+absent index → undefined). The patch is written at its own stack position: all 69 compiler patches
 apply in order with this one last and the stacked compiler builds and passes its focused tests. No
 committed regeneration yet: the generation slot is queued after builder2's descriptor run.
