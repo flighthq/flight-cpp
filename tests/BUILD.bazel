@@ -1494,6 +1494,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_collada_xml_test",
+    srcs = ["generated_collada_xml_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_xml_test",
     srcs = ["generated_xml_test.cpp"],
     size = "small",

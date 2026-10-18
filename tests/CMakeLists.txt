@@ -1573,6 +1573,13 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_abc_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_abc COMMAND flight_cpp_generated_abc_tests)
 
+add_executable(flight_cpp_generated_collada_xml_tests generated_collada_xml_test.cpp)
+target_include_directories(flight_cpp_generated_collada_xml_tests BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include")
+target_link_libraries(flight_cpp_generated_collada_xml_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+flight_cpp_set_project_warnings(flight_cpp_generated_collada_xml_tests)
+add_test(NAME flight_cpp.generated_collada_xml COMMAND flight_cpp_generated_collada_xml_tests)
+flight_cpp_package_test_labels(flight_cpp.generated_collada_xml scene3d-formats xml)
+
 add_executable(flight_cpp_generated_xml_tests generated_xml_test.cpp)
 target_include_directories(
   flight_cpp_generated_xml_tests

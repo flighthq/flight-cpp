@@ -4,6 +4,21 @@
   "note": "Hand-written headers that SHADOW the generated tree. An override is placed earlier on the include path than the generated include directory, so the generated file stays untouched and the override is the whole of the modification: the set of files under overrides/include is the diff, and no computation is needed to find it. Reserved for what the declared mechanisms cannot reach -- source-patches/ rewrites the pinned TypeScript, repairs/ adds text with no behavior to emitted output, and either is preferable because neither carries a copy. An override does carry a copy, so each entry records `derivedFrom`, the sha256 of the generated file it was produced from. When a pin move changes that file the digest stops matching and `npm run overrides:check` says so, which is the signal to re-derive the override or drop it. Each entry also carries a `status`: `complete` means the override compiles, `incomplete` means it is partway and says what remains, so nobody mistakes a half-finished override for a finished one.",
   "overrides": [
     {
+      "id": "scene3d-formats-collada-xml-consumability",
+      "path": "flight/scene3d_formats/collada_xml.hpp",
+      "package": "@flighthq/scene3d-formats",
+      "status": "complete",
+      "derivedFrom": "2684c5c318569de89375439f1a3a2ab992d76d95f4864b1a55eb72851f95d814",
+      "reason": "The fully emitted public module fails to compile because colladaNumbers passes the overloaded std::isfinite name to filter. Its colladaIdOf also unwraps an absent Record key instead of retaining the source null fallback; that path compiles but throws for the pinned missing-id test.",
+      "change": "Retains every emitted function and body except two expressions: materializes a typed finite-number callback and returns the original attribute lookup optional directly.",
+      "equivalence": "The numeric callback receives values only after the unchanged Boolean filter and Number map, ignores index/array arguments like Number.isFinite, and preserves order, nonfinite rejection and signed zero without coercing nonnumbers. The id read performs the same one lookup on the original attributes, retaining a present empty string and returning null on absence. All namespace matching, first-colon local names, child/descendant reference identity and order, callback traversal and parseColladaFloats whitespace-to-zero behavior remain unchanged.",
+      "whyNotAPatchOrRepair": "A source callback wrapper can solve the overload but leaves the missing-key behavior broken. Existing measured typed-local and Partial Record spellings in record-missing-key-nullish-coalesce.md do not express that erased absence reliably. Declaration repairs cannot change either executable expression; an own-key-only source guard would narrow inherited-property semantics. The override corrects the two exact native lowerings without changing source algorithms or owners.",
+      "unblocks": "The original collada_xml.hpp public header and all nine emitted helpers; dependent modules and package parity need their own checks.",
+      "remaining": "None within these nine helpers. Full COLLADA document parser and package availability require separate qualification.",
+      "expires": "when numeric builtins used as callbacks materialize a callable and Record missing-key nullish fallback lowers without an eager unwrap.",
+      "authoredOn": "2026-10-17"
+    },
+    {
       "id": "render-scene2d-coverage-variant-arms",
       "path": "flight/render/explain_scene_2d_coverage.hpp",
       "package": "@flighthq/render",
