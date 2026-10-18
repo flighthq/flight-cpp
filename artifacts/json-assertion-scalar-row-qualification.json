@@ -67,10 +67,9 @@
     "unknown members keep current path",
     "seven unrelated controls byte-identical"
   ],
-  "currentReadiness": "Nullable raw-parser readiness counterexample corrected and qualified. One approved scoped Lottie SDK run and original public consumers/exact21 header qualification follow confirmed slot; no installed/header result yet.",
-  "sdkGeneration": "not run",
-  "originalPublicConsumer": "pending",
-  "headerRowsChanged": 0,
+  "currentReadiness": "Focused JSON capability qualified and installed by normal scoped generation; original public consumer and all21 selected headers remain PARTIAL. No faithful parser/header promotion. Follow-on refused helpers/callback/structured-row and Aseprite nominal union boundaries remain.",
+  "sdkGeneration": "Normal scoped @flighthq/scene2d-formats completed EXIT0; one run only.",
+  "originalPublicConsumer": "Native compile blocked; link/run not reached;0 native cases run.",
   "headerPromotions": 0,
   "remainingPartialBoundaries": [
     "structured JSON member operations",
@@ -119,5 +118,229 @@
     "current110OrderedApply": "pass",
     "current110StrictBuild": "pass",
     "current110Focused": "103/103 pass,0 skipped"
+  },
+  "headerLedgerRowsChanged": 0,
+  "installedQualification": {
+    "generation": {
+      "command": "npm run pkg:generate -- @flighthq/scene2d-formats --progress",
+      "exit": 0,
+      "frozenCommit": "286d0d80f8b596d74ee6fb238d7093a14f51d762",
+      "compilerPatches": 110,
+      "totalSourcePatches": 311,
+      "emittedPackageModules": 50,
+      "refusedPackageModules": 30,
+      "generatedCommit": "410d6eae",
+      "inputHashesUnchanged": true,
+      "rawPinsRestoredClean": true,
+      "bindingProfileTransition": "Scoped package updated; dependency inventory retains its existing mixed binding profiles.",
+      "changedHeaders": [
+        "flight/scene2d_formats/lottie_document.hpp",
+        "flight/scene2d_formats/rive_requirements.hpp",
+        "flight/scene2d_formats/svg_text_element.hpp"
+      ]
+    },
+    "publicConsumer": {
+      "originalFunction": "createScene2DFromLottieDocumentWithRegistry",
+      "wholeInstalledHeaderAndCallees": true,
+      "sourceExtractionOrNativeStubs": false,
+      "wholeOriginalTypeScriptModule": true,
+      "originalTypeScriptDependencyModules": 1225,
+      "sourceCases": 32,
+      "sourceAccepted": 2,
+      "sourceRejected": 30,
+      "sourceExceptions": 0,
+      "sourceModuleSha256": "fb768b9622f2ade7301341f674db8cd64e00d3e39f09cd9aaf7aac1f1780a55b",
+      "sourceOracleSha256": "783584eb6e8b3ad154f6ea968ae571537cb3a79b181aa98f6ce2f51b4922681d",
+      "nativeDriverSha256": "ec69b5f595ba0c93c47037c4eb3b51c6365936bb4ac90ab2e5941fe6a45f3ee7",
+      "compileExit": 1,
+      "link": "not reached",
+      "run": "not reached",
+      "nativeCasesRun": 0,
+      "nativeCasesUnattempted": 32,
+      "firstFailure": "flight/scene2d_formats/lottie_document.hpp:356: undeclared lottie_numeric_value",
+      "firstCallUnchangedAndDefinitionAbsentInDeliveredBase": true,
+      "omittedHelperRefusal": "cpp-erased-array-predicate-runtime-required",
+      "otherBoundedFailures": [
+        "zero-argument callback emitted for Array.map",
+        "row_get on nominal shared_ptr",
+        "undeclared handle_varies",
+        "subscript on erased Any"
+      ]
+    },
+    "exactHeaders": {
+      "measuredRuntimeCommit": "410d6eae",
+      "processExit": 1,
+      "selected": 21,
+      "scene2dFormats": 14,
+      "scene2dResources": 3,
+      "aseprite": 4,
+      "attempted": 21,
+      "passed": 0,
+      "failed": 21,
+      "unattempted": 0,
+      "jobs": 2,
+      "compiler": {
+        "command": "/tmp/builder5-generic/bin/c++",
+        "version": "clang version 22.1.8"
+      },
+      "localSdlHeaders": "Existing project .tooling/SDL3-3.4.10/include; no dependency installation.",
+      "faithfullyQualified": 0,
+      "partial": 21,
+      "ledgerPromotions": 0,
+      "rows": [
+        {
+          "header": "flight/scene2d_formats/_internal_index.hpp",
+          "compile": "fail",
+          "qualification": "partial",
+          "firstFailure": "flight/scene2d_formats/lottie_document.hpp:356",
+          "diagnostic": "use of undeclared identifier 'lottie_numeric_value'"
+        },
+        {
+          "header": "flight/scene2d_formats/contract.hpp",
+          "compile": "fail",
+          "qualification": "partial",
+          "firstFailure": "flight/scene2d_formats/lottie_document.hpp:356",
+          "diagnostic": "use of undeclared identifier 'lottie_numeric_value'"
+        },
+        {
+          "header": "flight/scene2d_formats/lottie_document.hpp",
+          "compile": "fail",
+          "qualification": "partial",
+          "firstFailure": "flight/scene2d_formats/lottie_document.hpp:356",
+          "diagnostic": "use of undeclared identifier 'lottie_numeric_value'"
+        },
+        {
+          "header": "flight/scene2d_formats/lottie_gradient_paint.hpp",
+          "compile": "fail",
+          "qualification": "partial",
+          "firstFailure": "flight/scene2d_formats/lottie_document.hpp:356",
+          "diagnostic": "use of undeclared identifier 'lottie_numeric_value'"
+        },
+        {
+          "header": "flight/scene2d_formats/lottie_gradient_shape_items.hpp",
+          "compile": "fail",
+          "qualification": "partial",
+          "firstFailure": "flight/scene2d_formats/lottie_document.hpp:356",
+          "diagnostic": "use of undeclared identifier 'lottie_numeric_value'"
+        },
+        {
+          "header": "flight/scene2d_formats/lottie_handlers.hpp",
+          "compile": "fail",
+          "qualification": "partial",
+          "firstFailure": "flight/scene2d_formats/lottie_document.hpp:356",
+          "diagnostic": "use of undeclared identifier 'lottie_numeric_value'"
+        },
+        {
+          "header": "flight/scene2d_formats/lottie_image_layer.hpp",
+          "compile": "fail",
+          "qualification": "partial",
+          "firstFailure": "flight/scene2d_formats/lottie_document.hpp:356",
+          "diagnostic": "use of undeclared identifier 'lottie_numeric_value'"
+        },
+        {
+          "header": "flight/scene2d_formats/lottie_import.hpp",
+          "compile": "fail",
+          "qualification": "partial",
+          "firstFailure": "flight/scene2d_formats/lottie_document.hpp:356",
+          "diagnostic": "use of undeclared identifier 'lottie_numeric_value'"
+        },
+        {
+          "header": "flight/scene2d_formats/lottie_layer_handlers.hpp",
+          "compile": "fail",
+          "qualification": "partial",
+          "firstFailure": "flight/scene2d_formats/lottie_document.hpp:356",
+          "diagnostic": "use of undeclared identifier 'lottie_numeric_value'"
+        },
+        {
+          "header": "flight/scene2d_formats/lottie_polystar_shape_item.hpp",
+          "compile": "fail",
+          "qualification": "partial",
+          "firstFailure": "flight/scene2d_formats/lottie_document.hpp:356",
+          "diagnostic": "use of undeclared identifier 'lottie_numeric_value'"
+        },
+        {
+          "header": "flight/scene2d_formats/lottie_precomposition_layer.hpp",
+          "compile": "fail",
+          "qualification": "partial",
+          "firstFailure": "flight/scene2d_formats/lottie_document.hpp:356",
+          "diagnostic": "use of undeclared identifier 'lottie_numeric_value'"
+        },
+        {
+          "header": "flight/scene2d_formats/lottie_shape_item_handlers.hpp",
+          "compile": "fail",
+          "qualification": "partial",
+          "firstFailure": "flight/scene2d_formats/lottie_document.hpp:356",
+          "diagnostic": "use of undeclared identifier 'lottie_numeric_value'"
+        },
+        {
+          "header": "flight/scene2d_formats/lottie_shape_path_channels.hpp",
+          "compile": "fail",
+          "qualification": "partial",
+          "firstFailure": "flight/scene2d_formats/lottie_document.hpp:356",
+          "diagnostic": "use of undeclared identifier 'lottie_numeric_value'"
+        },
+        {
+          "header": "flight/scene2d_formats/lottie_text_layer.hpp",
+          "compile": "fail",
+          "qualification": "partial",
+          "firstFailure": "flight/scene2d_formats/lottie_document.hpp:356",
+          "diagnostic": "use of undeclared identifier 'lottie_numeric_value'"
+        },
+        {
+          "header": "flight/scene2d_resources/_internal_index.hpp",
+          "compile": "fail",
+          "qualification": "partial",
+          "firstFailure": "flight/scene2d_formats/lottie_document.hpp:356",
+          "diagnostic": "use of undeclared identifier 'lottie_numeric_value'"
+        },
+        {
+          "header": "flight/scene2d_resources/built_in_scene_2d_document_importers.hpp",
+          "compile": "fail",
+          "qualification": "partial",
+          "firstFailure": "flight/scene2d_formats/lottie_document.hpp:356",
+          "diagnostic": "use of undeclared identifier 'lottie_numeric_value'"
+        },
+        {
+          "header": "flight/scene2d_resources/contract.hpp",
+          "compile": "fail",
+          "qualification": "partial",
+          "firstFailure": "flight/scene2d_formats/lottie_document.hpp:356",
+          "diagnostic": "use of undeclared identifier 'lottie_numeric_value'"
+        },
+        {
+          "header": "flight/spritesheet_formats/_internal_index.hpp",
+          "compile": "fail",
+          "qualification": "partial",
+          "firstFailure": "flight/spritesheet_formats/aseprite_parse.hpp:144",
+          "diagnostic": "no matching conversion for static_cast from 'JsonValue' to 'flight::types::AsepriteDocument' (aka 'std::variant<std::shared_ptr<flight::types::AsepriteArrayDocument>, std::shared_ptr<flight::types::AsepriteHashDocument>>')"
+        },
+        {
+          "header": "flight/spritesheet_formats/aseprite_parse.hpp",
+          "compile": "fail",
+          "qualification": "partial",
+          "firstFailure": "flight/spritesheet_formats/aseprite_parse.hpp:144",
+          "diagnostic": "no matching conversion for static_cast from 'JsonValue' to 'flight::types::AsepriteDocument' (aka 'std::variant<std::shared_ptr<flight::types::AsepriteArrayDocument>, std::shared_ptr<flight::types::AsepriteHashDocument>>')"
+        },
+        {
+          "header": "flight/spritesheet_formats/contract.hpp",
+          "compile": "fail",
+          "qualification": "partial",
+          "firstFailure": "flight/spritesheet_formats/aseprite_parse.hpp:144",
+          "diagnostic": "no matching conversion for static_cast from 'JsonValue' to 'flight::types::AsepriteDocument' (aka 'std::variant<std::shared_ptr<flight::types::AsepriteArrayDocument>, std::shared_ptr<flight::types::AsepriteHashDocument>>')"
+        },
+        {
+          "header": "flight/spritesheet_formats/spritesheet_detect.hpp",
+          "compile": "fail",
+          "qualification": "partial",
+          "firstFailure": "flight/spritesheet_formats/aseprite_parse.hpp:144",
+          "diagnostic": "no matching conversion for static_cast from 'JsonValue' to 'flight::types::AsepriteDocument' (aka 'std::variant<std::shared_ptr<flight::types::AsepriteArrayDocument>, std::shared_ptr<flight::types::AsepriteHashDocument>>')"
+        }
+      ]
+    },
+    "setupAttempt": {
+      "native": "Initial missing SDL include corrected using existing CMake include path.",
+      "headerCheck": "Obsolete no-SDL setup check gracefully stopped; partial report excluded from product outcomes."
+    },
+    "globalOrPackagePassClaim": false
   }
 }

@@ -695,9 +695,8 @@ on each, with 1548 unselected. All 1576 assertion occurrence names and statuses
 match; no new failure or timeout occurs. The retained failure unwraps a
 proven-present optional property before receiver and structural assertion use.
 
-This is qualified compiler preparation. One coordinated scoped Lottie run still
-requires a confirmed free slot; the original public consumers and exact 21
-headers must then be measured. Structured JSON reads and Aseprite's two-owner
+This qualified compiler preparation authorized the scoped installed qualification
+recorded below. Structured JSON reads and Aseprite's two-owner
 nominal union remain separate partial boundaries. No installed header promotion,
 fully faithful parser/package result or global sweep follows from these fixture
 results. Compact evidence is in
@@ -722,10 +721,43 @@ build pass; the relevant existing backend comparison remains **27 pass / 1 same
 failure** against the retained 108-patch baseline, all 1576 names/statuses equal.
 The preceding 125/125 and raw-schema 586/586 results are historical focused proof;
 they do not establish original public parser behavior. The approved single scoped
-Lottie run can now proceed in the confirmed slot, followed by original public
-consumer and exact-header measurement. No generated header changed in this fix.
+Lottie qualification is recorded below. No generated header changed in the guard
+correction itself.
 
 The incoming symbol-presence compiler patch advances the declared floor to 110.
 It clean-applies with this correction, passes the strict build and passes the
 103/103 focused tests without skips. These results are separate from the historical
 108/109 baseline comparison in the qualification record.
+
+### Installed scoped qualification
+
+The single normal scene2d-formats generation **exited 0** on frozen
+`286d0d80`, with 110 compiler patches / 311 total source patches. All frozen
+inputs stayed unchanged and both raw pinned dependencies were restored clean.
+Only the named package moved: three headers plus its manifest (`410d6eae`).
+The Lottie JSON assertion now retains the parsed root, its document scalar reads
+use cells, its null guard retains raw null, and its final native frame-rate
+boundary escapes explicitly. Rive/SVG differences are normal output from the
+same frozen stack; they confer no additional capability claim.
+
+The **whole original public TypeScript module**, with 1,225 original dependency
+modules and no stubs, executes 32 calls: two accepted, 30 rejected, no exceptions.
+The corresponding native consumer includes the whole installed original header
+and callees. Its compile **exits 1** at `lottie_document.hpp:356`: undeclared
+`lottie_numeric_value`. That call and the absent definition are unchanged from
+the delivered base; the generated refusal is
+`cpp-erased-array-predicate-runtime-required`. Other bounded diagnostics include
+callback arity, nominal `row_get`, `handle_varies` and erased subscripting.
+Native link/run is **not reached**: zero of the 32 native cases ran.
+
+All **21 exact approved headers** are attempted with Clang 22, the existing local
+SDL headers and two jobs: **0 pass / 21 fail / 0 unattempted**. The selected
+membership is 14 scene2d-formats, three scene2d-resources and four Aseprite headers;
+the qualification record lists every observed first cause. The earlier missing
+SDL include was a corrected setup omission; its partial check is excluded.
+
+The resulting accounting is **0 faithfully qualified / 21 PARTIAL**, with zero
+header-ledger promotions and no package/global pass. The focused compiler proof
+remains valid; omitted helpers, callbacks/structured JSON operations and
+Aseprite's nominal union require their own work. No original function was
+extracted or stubbed to manufacture a public-consumer pass.
