@@ -17,6 +17,10 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 
 | Carried patch | Compiler request |
 | --- | --- |
+| [`compiler-checked-derived-member-read.patch`](../../source-patches/compiler-checked-derived-member-read.patch) | [A member read through a predicate-narrowed base value](checked-derived-member-read.md) |
+| [`compiler-erased-external-member-presence.patch`](../../source-patches/compiler-erased-external-member-presence.patch) | [A null guard on a member of an erased external type](erased-external-member-presence.md) |
+| [`compiler-interface-absence-refinement-heritage.patch`](../../source-patches/compiler-interface-absence-refinement-heritage.patch) | [Absence-only interface refinements keep native heritage](interface-absence-refinement-heritage.md) |
+| [`compiler-structural-value-carrier.patch`](../../source-patches/compiler-structural-value-carrier.patch) | [A predicate-narrowed value escapes as the derived nominal owner](narrowed-value-escape.md) |
 | [`compiler-canvas-context-overload-result.patch`](../../source-patches/compiler-canvas-context-overload-result.patch) | [Literal-selected Canvas context result](compiler-canvas-context-overload-result.md) |
 | [`compiler-closed-key-external-member-call.patch`](../../source-patches/compiler-closed-key-external-member-call.patch) | [Finite-key calls on a bound host object](closed-key-bound-member-call.md) |
 | [`compiler-catch-recorded-slot-carrier.patch`](../../source-patches/compiler-catch-recorded-slot-carrier.patch) | [A slot a catch records into needs the exception carrier, whatever its initializer](catch-recorded-slot-carrier.md) |

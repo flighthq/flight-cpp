@@ -28,6 +28,11 @@ import { canonicalizeGeneratedIncludes } from './generatedIncludes.mjs';
 import { generatedReadmeProblems, isMixedManifest, verifyMixedInventory } from './packageScope.mjs';
 import { overrideHeaderFiles, reportComputedCells, structuralMemberTable } from './structuralMembers.mjs';
 import {
+  loadStructuralValueCarriers,
+  structuralValueCarrierOptions,
+  unmatchedStructuralValueCarrierSites,
+} from './structuralValueCarriers.mjs';
+import {
   applySourcePatches,
   ineffectivePatches,
   loadPendingSourcePatches,
@@ -165,6 +170,7 @@ const bindingProfiles = loadBindingProfiles(
 const declaredRepairs = loadEmissionRepairs(root);
 const deferredPackages = loadDeferredPackages(root);
 const sourcePatches = loadSourcePatches(root);
+const structuralValueCarriers = loadStructuralValueCarriers(root);
 reportPendingSourcePatches(loadPendingSourcePatches(root));
 for (const dependency of [compiler, flight]) {
   const recovery = recoverStalePatches(sourcePatches, dependency);
@@ -369,6 +375,15 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
     })),
   );
   process.stderr.write(`DEBUG profiles=${profiles.length} names=${profileTypeNames(profiles).length} sample=${profileTypeNames(profiles).slice(0,3).join('|')}\n`);
+  const unmatchedCarrierSites = unmatchedStructuralValueCarrierSites(
+    structuralValueCarriers,
+    new Map(packageDescriptors.map((package_) => [package_.name, package_.sources.map((source) => source.contents)])),
+  );
+  if (unmatchedCarrierSites.length > 0) {
+    throw new Error(
+      `structural-value-carriers.json declares sites the pinned source no longer has:\n  ${unmatchedCarrierSites.join('\n  ')}`,
+    );
+  }
   const compilation = compileTypeScriptPackageGraph({
     backend: createCppCompilerBackend(),
     ...(bestEffort ? { bestEffort: true } : {}),
@@ -380,6 +395,9 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
         : {}),
       packageTargets: Object.fromEntries(packageDescriptors.map((package_) => [package_.name, package_.target])),
       runtimeProfile: 'flight-cpp',
+      ...(structuralValueCarriers.length > 0
+        ? { structuralValueCarriers: structuralValueCarrierOptions(structuralValueCarriers) }
+        : {}),
       upstreamCommit: flightDependency.commit,
     },
     graph: {

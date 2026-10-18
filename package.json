@@ -42,7 +42,7 @@
     "parity:generate": "node ./scripts/upstreamTestParityPrototype.mjs",
     "pkg:compile": "node ./scripts/pkgCompile.mjs",
     "pkg:generate": "node ./scripts/pkgGenerate.mjs",
-    "pkg:test": "node --test ./scripts/packageScope.test.mjs ./scripts/sourcePatches.test.mjs ./scripts/emissionRepairs.test.mjs ./scripts/aliasGuard.test.mjs ./scripts/renameIdentifiers.test.mjs",
+    "pkg:test": "node --test ./scripts/packageScope.test.mjs ./scripts/sourcePatches.test.mjs ./scripts/emissionRepairs.test.mjs ./scripts/structuralValueCarriers.test.mjs ./scripts/aliasGuard.test.mjs ./scripts/renameIdentifiers.test.mjs",
     "pkg:tier": "node ./scripts/pkgTier.mjs",
     "promise-like:oracle": "node ./scripts/promiseLikeOracle.mjs",
     "regexp:oracle": "node ./scripts/regexpOracle.mjs",

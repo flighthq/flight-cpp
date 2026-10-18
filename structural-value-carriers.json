@@ -1,0 +1,33 @@
+{
+  "schema": "flight-cpp-structural-value-carriers/1",
+  "carriers": [
+    {
+      "id": "wgpu-screen-render-target",
+      "nominal": "WgpuScreenRenderTarget",
+      "base": "WgpuRenderTarget",
+      "target": "flight::NominalOrStructuralView<flight::types::WgpuScreenRenderTarget, flight::types::WgpuRenderTarget>",
+      "reason": "bindWgpuRenderPassTarget narrows a WgpuRenderTarget with the user predicate isWgpuScreenRenderTarget, so a screen target may be any object declaring its members, not only one createWgpuScreenRenderTarget allocated. These are the sites that narrowed value reaches; every other use keeps Ref<WgpuScreenRenderTarget>.",
+      "request": "docs/compiler-requests/narrowed-value-escape.md",
+      "parameters": [
+        { "package": "@flighthq/render-wgpu", "function": "bindWgpuScreenRenderTarget", "parameter": "target" },
+        { "package": "@flighthq/render-wgpu", "function": "syncWgpuScreenRenderTargetExtent", "parameter": "target" },
+        { "package": "@flighthq/render-wgpu", "function": "ensureWgpuScreenRenderTargetDepthStencil", "parameter": "target" },
+        { "package": "@flighthq/render-wgpu", "function": "endWgpuScreenRenderTargetFrame", "parameter": "target" },
+        { "package": "@flighthq/render-wgpu", "function": "acquireWgpuScreenRenderTargetCaptureTexture", "parameter": "target" },
+        { "package": "@flighthq/render-wgpu", "function": "encodeWgpuScreenRenderTargetCapture", "parameter": "target" },
+        { "package": "@flighthq/render-wgpu", "function": "acquireWgpuScreenRenderTargetAntialiasView", "parameter": "target" },
+        { "package": "@flighthq/render-wgpu", "function": "encodeWgpuScreenRenderTargetResolve", "parameter": "target" }
+      ],
+      "fields": [
+        { "package": "@flighthq/types", "owner": "WgpuRenderStateRuntime", "field": "frameScreenTarget" },
+        { "package": "@flighthq/render-wgpu", "owner": "BorrowerFrameState", "field": "frameScreenTarget" }
+      ],
+      "callbackParameters": [
+        { "package": "@flighthq/types", "owner": "WgpuScreenRenderTarget", "field": "acquireAntialiasView", "position": 1 },
+        { "package": "@flighthq/types", "owner": "WgpuScreenRenderTarget", "field": "encodeAntialiasResolve", "position": 1 },
+        { "package": "@flighthq/types", "owner": "WgpuScreenRenderTarget", "field": "acquireCaptureTexture", "position": 0 },
+        { "package": "@flighthq/types", "owner": "WgpuScreenRenderTarget", "field": "encodeCapture", "position": 0 }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,697 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 234b54c..ac2d0d6 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -1,3 +1,4 @@
++import { applyCppStructuralValueCarriersCpp, getCppStructuralValueCarrierPlanCpp } from './cppStructuralValueCarrier.js';
+ import path from 'node:path';
+ import { isDeepStrictEqual } from 'node:util';
+ 
+@@ -470,7 +471,12 @@ interface AnonymousStructNaming {
+ 
+ export function createCppCompilerBackend(): CompilerBackend<CppCompilerBackendOptions> {
+   return {
+-    createEmissionSession({ moduleResolution, modules, options }) {
++    createEmissionSession({ moduleResolution, modules: sourceModules, options: sourceOptions }) {
++      // Declared structural-value carrier sites retype their declarations before anything is planned, so
++      // every module of the emission sees one consistent set of types.
++      const carriers = applyCppStructuralValueCarriersCpp(sourceModules, sourceOptions);
++      const modules = carriers.modules;
++      const options = carriers.options;
+       const referenceRepresentationPlanner = createIrTypeReferenceRepresentationPlannerCpp(
+         modules,
+         moduleResolution,
+@@ -500,7 +506,8 @@ export function createCppCompilerBackend(): CompilerBackend<CppCompilerBackendOp
+         unionArmIdentities,
+       };
+       return Object.freeze({
+-        emitModule(module: Readonly<IrModule>) {
++        emitModule(sourceModule: Readonly<IrModule>) {
++          const module = carriers.original.get(sourceModule) ?? sourceModule;
+           return [
+             emitIrModuleCppWithContext(
+               module,
+@@ -547,8 +554,10 @@ export function createCppCompilerBackend(): CompilerBackend<CppCompilerBackendOp
+         },
+       });
+     },
+-    emitModule(module, { moduleResolution, modules, options }) {
+-      return [emitIrModuleCppWithContext(module, options, modules, moduleResolution)];
++    emitModule(sourceModule, { moduleResolution, modules: sourceModules, options: sourceOptions }) {
++      const carriers = applyCppStructuralValueCarriersCpp(sourceModules, sourceOptions);
++      const module = carriers.original.get(sourceModule) ?? applyCppStructuralValueCarriersCpp([sourceModule], sourceOptions).modules[0]!;
++      return [emitIrModuleCppWithContext(module, carriers.options, carriers.modules, moduleResolution)];
+     },
+     emitRefusalPlaceholder(module, refusal, options) {
+       return emitCppRefusalPlaceholder(module, refusal, options);
+@@ -561,7 +570,9 @@ export function emitIrModuleCpp(
+   sourceModule: Readonly<IrModule>,
+   options: Readonly<CppCompilerBackendOptions> = {},
+ ): EmittedFile {
+-  return emitIrModuleCppWithContext(sourceModule, options, [sourceModule]);
++  const carriers = applyCppStructuralValueCarriersCpp([sourceModule], options);
++  const module = carriers.modules[0]!;
++  return emitIrModuleCppWithContext(module, carriers.options, [module]);
+ }
+ 
+ function emitIrModuleCppWithContext(
+@@ -3257,9 +3268,27 @@ function emitVariable(variable: Readonly<IrVariable>, context: EmitContext): str
+     !arrayElement && !variable.mutable && variable.initializer?.kind === 'call'
+       ? getCppImportedAliasCarrierCallResultTypeCpp(variable.initializer, context)
+       : undefined;
++  // A local initialized from a carried value (a declared carrier field or another carrier binding) is that
++  // same carried value: it keeps the carrier's storage rather than the nominal type the checker names.
++  const carrierInitializerStorage =
++    !arrayElement && variable.initializer
++      ? variable.initializer.kind === 'property'
++        ? getCppDeclaredPropertyReadTypeCpp(variable.initializer, context)
++        : variable.initializer.kind === 'identifier' && variable.initializer.reference.kind === 'binding'
++          ? getCppBindingTypeCpp(variable.initializer.reference.binding.id, context)
++          : undefined
++      : undefined;
++  const carrierInitializerType =
++    carrierInitializerStorage &&
++    (carrierInitializerStorage.kind === 'union' ? carrierInitializerStorage.types : [carrierInitializerStorage]).some(
++      (member) => getCppStructuralValueCarrierPlanCpp(context.options, member) !== undefined,
++    )
++      ? carrierInitializerStorage
++      : undefined;
+   const preservedInitializerType = arrayElement
+     ? undefined
+     : (context.preservedInitializerTypes.get(variable.binding.id) ??
++      carrierInitializerType ??
+       importedAliasCarrierInitializerType ??
+       invariantCollectionInitializerType ??
+       guardedVariantInitializerType ??
+@@ -4012,6 +4041,8 @@ function emitExpression(
+       hasCppRegExpExecArrayIndexedReceiverCpp(expression, context)
+     )
+       return emitOptionalExpressionCpp(expression, context, expectedType);
++    const carrierValue = emitCppStructuralValueCarrierWrapCpp(expression, expectedType, context);
++    if (carrierValue) return carrierValue;
+     const voidValueConversion = emitCppContextualVoidValueCpp(expression, expectedType, context);
+     if (voidValueConversion) return voidValueConversion;
+     const erasedDynamicConversion = emitCppContextualErasedDynamicValueCpp(expression, expectedType, context);
+@@ -4044,6 +4075,8 @@ function emitExpression(
+     case 'array':
+       return emitArrayExpressionCpp(expression, context, expectedType);
+     case 'assignment': {
++      const carrierWrite = emitCppStructuralValueCarrierMemberWriteCpp(expression, context);
++      if (carrierWrite) return carrierWrite;
+       if (
+         (expression.left.kind === 'property' || expression.left.kind === 'element') &&
+         getCppExternalNumericPropertyViewAccessPlanCpp(expression.left, context)
+@@ -6697,6 +6730,8 @@ function emitExpression(
+     case 'property': {
+       const checkedDerivedMember = emitCppCheckedDerivedMemberReadCpp(expression, context);
+       if (checkedDerivedMember) return checkedDerivedMember;
++      const carrierMember = emitCppStructuralValueCarrierMemberReadCpp(expression, context);
++      if (carrierMember) return carrierMember;
+       if (isCppJsonReadValueCpp(expression.object, context) && isCppJsonDataPropertyNameCpp(expression.name)) {
+         context.includes.add('flight/structural_ref.hpp');
+         const key = emitLiteral(expression.name, context);
+@@ -14725,6 +14760,92 @@ function isCppExternalHostHandleTypeCpp(type: Readonly<IrType>, context: EmitCon
+   return evidence?.ownership === 'shared' && evidence.nullability === 'non-null';
+ }
+ 
++// A member of a nominal-or-structural carrier (cppStructuralValueCarrier.ts) is read by its source name
++// through the carrier, which reaches the nominal owner's own cell or the same object's by-name cell. A
++// member whose type admits absence reads its absent state when the object lacks it, as the source does; any
++// other member is the carrier's MemberValue, whose absence fails only where it is used.
++function emitCppStructuralValueCarrierMemberReadCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'property' }>>,
++  context: EmitContext,
++): string | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return undefined;
++  const plan = getCppStructuralValueCarrierPlanCpp(context.options, getIrExpressionTypeEvidenceCpp(expression.object, context));
++  if (!plan) return undefined;
++  const memberType = getIrObjectPropertyTypeCpp(plan.nominal, expression.name, context);
++  if (!memberType) {
++    emissionError(context, `the carried ${plan.carrier.nominal} declares no member ${expression.name}`, 'cpp-structural-value-carrier-member-unknown');
++  }
++  // The receiver keeps its own presence proof: a narrowed optional carrier projects its present value.
++  const receiver = emitExpression(expression.object, context);
++  const access = getCppStructuralValueCarrierAccessCpp(plan, expression.name, memberType, context);
++  const optionalMember = hasIrTypeAbsentMember(memberType);
++  context.includes.add('flight/structural_ref.hpp');
++  const read = `${receiver}.template ${optionalMember ? 'read_optional' : 'read'}<flight::RowKey<${JSON.stringify(expression.name)}>, ${access}>()`;
++  // A read the source proved present after a guard on the member projects that present value.
++  return optionalMember && expression.presence === 'narrowedPresent' ? `${read}.value()` : read;
++}
++
++function getCppStructuralValueCarrierAccessCpp(
++  plan: Readonly<{ nominal: Readonly<IrType> }>,
++  name: string,
++  memberType: Readonly<IrType>,
++  context: EmitContext,
++): string {
++  const owner = emitType(plan.nominal, context, 'storage');
++  return `${emitType(memberType, context)}, &${owner}::${safeCppName(name)}`;
++}
++
++// `carried.member = value`: written through the carrier on the SAME object, its nominal cell or its
++// by-name cell. Only plain assignment is lowered; a compound write keeps its refusal.
++function emitCppStructuralValueCarrierMemberWriteCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'assignment' }>>,
++  context: EmitContext,
++): string | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || expression.left.kind !== 'property') return undefined;
++  const plan = getCppStructuralValueCarrierPlanCpp(context.options, getIrExpressionTypeEvidenceCpp(expression.left.object, context));
++  if (!plan) return undefined;
++  if (expression.operator !== '=') {
++    emissionError(context, 'a carried member supports plain assignment only', 'cpp-structural-value-carrier-compound-write');
++  }
++  const memberType = getIrObjectPropertyTypeCpp(plan.nominal, expression.left.name, context);
++  if (!memberType) {
++    emissionError(context, `the carried ${plan.carrier.nominal} declares no member ${expression.left.name}`, 'cpp-structural-value-carrier-member-unknown');
++  }
++  const receiver = emitExpression(expression.left.object, context);
++  const value = emitExpression(expression.right, context, memberType);
++  context.includes.add('flight/structural_ref.hpp');
++  return `${receiver}.template write<flight::RowKey<${JSON.stringify(expression.left.name)}>, ${getCppStructuralValueCarrierAccessCpp(plan, expression.left.name, memberType, context)}>(${value})`;
++}
++
++// A value flowing into a declared carrier site: the narrowed base reference (or the nominal owner) is the
++// same object, carried with its exact owner recovered when it has one. Absence and values already carried
++// pass through unchanged.
++function emitCppStructuralValueCarrierWrapCpp(
++  expression: Readonly<IrExpression>,
++  expectedType: Readonly<IrType>,
++  context: EmitContext,
++): string | undefined {
++  const members = expectedType.kind === 'union' ? expectedType.types : [expectedType];
++  const plan = members.map((member) => getCppStructuralValueCarrierPlanCpp(context.options, member)).find(Boolean);
++  if (!plan) return undefined;
++  const inner = expression.kind === 'cast' ? expression.expression : expression;
++  const evidence = getIrExpressionTypeEvidenceCpp(inner, context);
++  if (!evidence || getCppStructuralValueCarrierPlanCpp(context.options, evidence)) return undefined;
++  const named = (type: Readonly<IrType>, name: string) =>
++    type.kind === 'named' && type.reference.kind === 'binding' && type.reference.binding.name === name;
++  const declared =
++    inner.kind === 'identifier' && inner.reference.kind === 'binding'
++      ? getCppBindingTypeCpp(inner.reference.binding.id, context)
++      : undefined;
++  const source = declared ?? evidence;
++  if (!named(source, plan.carrier.base) && !named(source, plan.carrier.nominal) && !named(evidence, plan.carrier.nominal)) {
++    return undefined;
++  }
++  context.includes.add('flight/nominal_or_structural_view.hpp');
++  const value = emitExpression({ ...inner, narrowedType: undefined } as Readonly<IrExpression>, context);
++  return `${plan.carrier.target}::of(${value})`;
++}
++
+ // Marks a read already lifted to its refinement's presence proof. Object spread copies symbol-keyed
+ // properties, so the carrier spelling emitted beneath the proof keeps the mark and is not lifted again.
+ const cppRefinedPresentReadMarker = Symbol('cppRefinedPresentRead');
+@@ -14768,6 +14889,8 @@ function getCppDeclaredPropertyReadTypeCpp(
+   const objectType = row ? getCppStructuralRowObjectTypeCpp(row) : receiverType;
+   const refinedStorage = !row && objectType ? getCppRefinedMemberStorageTypeCpp(objectType, expression.name, context) : undefined;
+   if (refinedStorage) return refinedStorage;
++  const carrier = getCppStructuralValueCarrierPlanCpp(context.options, receiverType);
++  if (carrier) return getIrObjectPropertyTypeCpp(carrier.nominal, expression.name, context);
+   const propertyType = objectType ? getIrObjectPropertyTypeCpp(objectType, expression.name, context) : undefined;
+   if (!propertyType || !row || !isCppStructuralRowPropertyOptionalCpp(row)) return propertyType;
+   // A property that ALREADY admits absence keeps the representation it has. Unioning a second undefined
+@@ -23082,6 +23205,13 @@ function getIrExpressionTypeForUnionConstructionCpp(
+     case 'element':
+       return getIrExpressionTypeEvidenceCpp(expression, context);
+     case 'property': {
++      // A carried member read answers the nominal owner's declared member type, and its present payload
++      // when the read was proved present (the lowering projects it with `.value()`).
++      const carrier = getCppStructuralValueCarrierPlanCpp(context.options, getIrExpressionTypeEvidenceCpp(expression.object, context));
++      const carriedType = carrier ? getIrObjectPropertyTypeCpp(carrier.nominal, expression.name, context) : undefined;
++      if (carriedType) {
++        return expression.presence === 'narrowedPresent' ? (getCppNonNullableType(carriedType, context, new Set()) ?? carriedType) : carriedType;
++      }
+       const evidence = getIrExpressionTypeEvidenceCpp(expression, context);
+       if (evidence) return evidence;
+       // A PROPERTY read through an erased receiver answers a dynamic value: the emitter reaches it
+diff --git a/packages/compiler-backend-cpp/src/cppStructuralValueCarrier.test.ts b/packages/compiler-backend-cpp/src/cppStructuralValueCarrier.test.ts
+new file mode 100644
+index 0000000..a003100
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppStructuralValueCarrier.test.ts
+@@ -0,0 +1,134 @@
++import { describe, expect, it } from 'vitest';
++
++import ts from 'typescript';
++
++import { isBackendEmissionFailure } from '../../compiler-emission/src/index.js';
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++// A narrowed derived-interface value may be any object declaring that type's members, not only one
++// allocated as it (render-wgpu's screen target binder: `if (isWgpuScreenRenderTarget(target))`). At the
++// declared sites of a `structuralValueCarriers` entry the value is carried as the same object through
++// flight::NominalOrStructuralView. The sites are parameters, fields (including a Pick alias of a declared
++// field), and callback parameters. Member reads, writes and optional calls on a carried value go through
++// the carrier by RowKey; a narrowed base reference entering a site is wrapped with `of`; a local initialized
++// from a carried value is carried. Every undeclared site keeps the nominal owner.
++const source = `export interface Ctx { id: number }
++export interface Target { context: Ctx | null; width: number }
++export interface Screen extends Target { readonly context: Ctx; presentationView: number | null; encodeCapture: ((target: Screen, n: number) => void) | null }
++export interface Runtime { frame: Screen | null }
++export function isScreen(t: Readonly<Target>): t is Screen { return t.context !== null; }
++export function bindScreen(t: Screen): number { if (t.presentationView === null) t.presentationView = 7; return t.presentationView; }
++export function endFrame(t: Screen): void { t.presentationView = null; }
++export function destroyScreen(t: Screen): void { t.presentationView = null; }
++export function bind(r: Runtime, t: Target): number { if (isScreen(t)) { const v = bindScreen(t); r.frame = t as Screen; return v; } return 0; }
++export function submit(r: Runtime): void { const screen = r.frame; if (screen !== null) { screen.encodeCapture?.(screen, 1); } if (screen !== null) endFrame(screen); r.frame = null; }
++export type Saved = Pick<Runtime, 'frame'>;
++export function saved(r: Runtime): Saved { return { frame: r.frame }; }
++`;
++
++const carrier = 'flight::NominalOrStructuralView<Screen, Target>';
++const carriers = [
++  {
++    base: 'Target',
++    callbackParameters: [{ field: 'encodeCapture', owner: 'Screen', position: 0 }],
++    fields: [
++      { field: 'frame', owner: 'Runtime' },
++      { field: 'frame', owner: 'Saved' },
++    ],
++    nominal: 'Screen',
++    parameters: [
++      { function: 'bindScreen', parameter: 't' },
++      { function: 'endFrame', parameter: 't' },
++    ],
++    target: carrier,
++  },
++];
++
++function emit(body: string, structuralValueCarriers: typeof carriers = carriers) {
++  const sourceFile = ts.createSourceFile('/flight/packages/math/src/carrier.ts', body, ts.ScriptTarget.Latest, true);
++  const lowered = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/math', upstreamDirectory: '/flight' });
++  expect(lowered.diagnostics).toEqual([]);
++  return emitIrModuleCpp(lowered.module, {
++    runtimeProfile: 'flight-cpp',
++    ...(structuralValueCarriers.length > 0 ? { structuralValueCarriers } : {}),
++  }).contents;
++}
++
++describe('declared structural-value carrier sites', () => {
++  const contents = emit(source);
++
++  it('carries the declared parameters and reads and writes their members by RowKey', () => {
++    expect(contents).toContain(`inline double bind_screen(${carrier} t) {`);
++    expect(contents).toContain(
++      'if (!t.template read_optional<flight::RowKey<"presentationView">, std::optional<double>, &Screen::presentation_view>().has_value()) {',
++    );
++    expect(contents).toContain(
++      't.template write<flight::RowKey<"presentationView">, std::optional<double>, &Screen::presentation_view>(std::optional<double>{7.0});',
++    );
++    expect(contents).toContain(
++      'return t.template read_optional<flight::RowKey<"presentationView">, std::optional<double>, &Screen::presentation_view>().value();',
++    );
++    expect(contents).toContain(`inline void end_frame(${carrier} t) {`);
++  });
++
++  it('wraps the narrowed base reference as the same object where it enters a site', () => {
++    expect(contents).toContain(`const double v = bind_screen(${carrier}::of(t));`);
++    expect(contents).toContain(`(r->frame = ${carrier}::of(t));`);
++  });
++
++  it('carries a declared field, its Pick alias, and the callback parameter', () => {
++    expect(contents).toContain(`struct Runtime : public flight::ReferenceEnabled {\n  std::optional<${carrier}> frame;`);
++    expect(contents).toContain(`struct Saved : public flight::ReferenceEnabled {\n  std::optional<${carrier}> frame;`);
++    expect(contents).toContain(`std::optional<std::function<void(${carrier}, double)>> encode_capture;`);
++  });
++
++  it('carries a local initialized from a carried field, through presence narrowing and an optional call', () => {
++    expect(contents).toContain('auto screen = r->frame;');
++    expect(contents).toContain(
++      `auto optional_chain_receiver = screen.value().template read_optional<flight::RowKey<"encodeCapture">, std::optional<std::function<void(${carrier}, double)>>, &Screen::encode_capture>(); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(screen.value(), 1.0);`,
++    );
++    expect(contents).toContain('end_frame(screen.value());');
++  });
++
++  it('keeps every undeclared site on the nominal owner', () => {
++    expect(contents).toContain('inline void destroy_screen(flight::Ref<Screen> t) {');
++    expect(contents).toContain('(t->presentation_view = std::nullopt);');
++    // Without a declared carrier nothing changes: the nominal owner is emitted, and the narrowed escape keeps
++    // the reference-assertion refusal it had.
++    const withoutBinder = source.split('\n').filter((line) => !/function (bind|submit|saved)\(|type Saved/u.test(line)).join('\n');
++    const nominal = emit(withoutBinder, []);
++    expect(nominal).not.toContain('NominalOrStructuralView');
++    expect(nominal).toContain('inline double bind_screen(flight::Ref<Screen> t) {');
++    let rule: string | undefined;
++    try {
++      emit(source, []);
++    } catch (error) {
++      if (isBackendEmissionFailure(error)) rule = error.rule;
++      else throw error;
++    }
++    expect(rule).toBe('cpp-reference-assertion-without-heritage');
++  });
++
++  it('carries a Readonly spelling of the nominal at a declared parameter and callback parameter', () => {
++    const readonlySource = source
++      .replace('encodeCapture: ((target: Screen, n: number) => void) | null', 'encodeCapture: ((target: Readonly<Screen>, n: number) => void) | null')
++      .replace('export function endFrame(t: Screen): void { t.presentationView = null; }', 'export function endFrame(t: Readonly<Screen>): number | null { return t.presentationView; }')
++      .replace('if (screen !== null) endFrame(screen);', 'if (screen !== null) { endFrame(screen); screen.presentationView = null; }');
++    const readonlyContents = emit(readonlySource);
++    expect(readonlyContents).toContain(`std::optional<std::function<void(${carrier}, double)>> encode_capture;`);
++    expect(readonlyContents).toContain(`inline std::optional<double> end_frame(${carrier} t) {`);
++    expect(readonlyContents).toContain('end_frame(screen.value());');
++  });
++
++  it('refuses a compound write to a carried member', () => {
++    let rule: string | undefined;
++    try {
++      emit(`${source}export function bump(t: Screen): void {}\nexport function grow(r: Runtime): void { const s = r.frame; if (s !== null) s.presentationView ??= 1; }`);
++    } catch (error) {
++      if (isBackendEmissionFailure(error)) rule = error.rule;
++      else throw error;
++    }
++    expect(rule).toBe('cpp-structural-value-carrier-compound-write');
++  });
++});
+diff --git a/packages/compiler-backend-cpp/src/cppStructuralValueCarrier.ts b/packages/compiler-backend-cpp/src/cppStructuralValueCarrier.ts
+new file mode 100644
+index 0000000..2a5a1ff
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppStructuralValueCarrier.ts
+@@ -0,0 +1,286 @@
++import type {
++  CppCompilerBackendOptions,
++  CppCompilerExternalBindingManifest,
++  CppCompilerStructuralValueCarrier,
++  IrDeclaration,
++  IrModule,
++  IrObjectTypeProperty,
++  IrType,
++  IrTypeReference,
++} from '../../compiler-types/src/index.js';
++
++// A value of a derived interface type that may be ANY object declaring that type's members, not only one
++// allocated as it -- the source admits it wherever a user predicate narrows the base (render-wgpu's screen
++// target). Such a value has no faithful `Ref<Nominal>`, so at an explicitly declared set of sites the
++// emitter carries it in a runtime view instead (flight::NominalOrStructuralView). The sites are declared,
++// never inferred: each one is a parameter, a field, or a callback parameter that the narrowed value flows
++// into, and every other use of the type keeps its nominal owner.
++//
++// The mechanism is a type substitution before emission. Each declared site's occurrence of the nominal type
++// becomes a synthetic ambient type bound to the carrier as an external value type, so every existing type
++// path -- parameters, fields, unions with null, callback signatures, and Pick or indexed reads of a declared
++// field -- spells the carrier with no special case. Member access on a carrier receiver is lowered to the
++// carrier's checked read and write (see the C++ backend).
++
++const cppStructuralValueCarrierPrefix = '__flight_structural_value_carrier__';
++
++export interface CppStructuralValueCarrierPlan {
++  readonly carrier: Readonly<CppCompilerStructuralValueCarrier>;
++  // The nominal type as the source names it, used to resolve member types on a carrier receiver.
++  readonly nominal: Readonly<IrTypeReference>;
++  readonly sourceName: string;
++}
++
++export interface CppStructuralValueCarrierRewrite {
++  readonly modules: readonly Readonly<IrModule>[];
++  readonly options: Readonly<CppCompilerBackendOptions>;
++  readonly original: ReadonlyMap<Readonly<IrModule>, Readonly<IrModule>>;
++  readonly plans: ReadonlyMap<string, Readonly<CppStructuralValueCarrierPlan>>;
++}
++
++// The plans of one rewrite, keyed by the options object the rewrite returned, which is the object every
++// module of that emission receives as its options.
++const cppStructuralValueCarrierPlans = new WeakMap<object, ReadonlyMap<string, Readonly<CppStructuralValueCarrierPlan>>>();
++
++export function getCppStructuralValueCarrierPlanCpp(
++  options: Readonly<CppCompilerBackendOptions>,
++  type: Readonly<IrType> | undefined,
++): Readonly<CppStructuralValueCarrierPlan> | undefined {
++  if (type?.kind !== 'named' || type.reference.kind !== 'ambient') return undefined;
++  return cppStructuralValueCarrierPlans.get(options)?.get(type.reference.name);
++}
++
++export function getCppStructuralValueCarrierSourceNameCpp(nominal: string): string {
++  return `${cppStructuralValueCarrierPrefix}${nominal}`;
++}
++
++export function isCppStructuralValueCarrierSourceNameCpp(name: string): boolean {
++  return name.startsWith(cppStructuralValueCarrierPrefix);
++}
++
++function isNominalReference(type: Readonly<IrType>, nominal: string): type is Readonly<IrTypeReference> {
++  return (
++    type.kind === 'named' &&
++    type.reference.kind === 'binding' &&
++    type.reference.path.length === 0 &&
++    type.reference.binding.name === nominal &&
++    type.typeArguments.length === 0
++  );
++}
++
++// `Readonly<Nominal>` at a declared site is the same carried value: the source cannot write through it, so
++// carrying it as the writable view admits nothing the checker did not already reject.
++function carriedNominalReference(type: Readonly<IrType>, nominal: string): Readonly<IrTypeReference> | undefined {
++  if (
++    type.kind === 'named' &&
++    type.reference.kind === 'ambient' &&
++    type.reference.name === 'Readonly' &&
++    type.typeArguments.length === 1 &&
++    isNominalReference(type.typeArguments[0]!, nominal)
++  ) {
++    return type.typeArguments[0] as Readonly<IrTypeReference>;
++  }
++  return isNominalReference(type, nominal) ? type : undefined;
++}
++
++// Replaces the nominal type at ONE declared site: the type itself, or its member of a union with absence.
++function substitute(
++  type: Readonly<IrType>,
++  nominal: string,
++  found: (reference: Readonly<IrTypeReference>) => void,
++): Readonly<IrType> {
++  const synthetic: Readonly<IrType> = {
++    kind: 'named',
++    reference: { kind: 'ambient', name: getCppStructuralValueCarrierSourceNameCpp(nominal) },
++    typeArguments: [],
++  };
++  const carried = carriedNominalReference(type, nominal);
++  if (carried) {
++    found(carried);
++    return synthetic;
++  }
++  if (type.kind === 'union') {
++    let changed = false;
++    const types = type.types.map((member) => {
++      const reference = carriedNominalReference(member, nominal);
++      if (!reference) return member;
++      found(reference);
++      changed = true;
++      return synthetic;
++    });
++    return changed ? ({ ...type, types } as unknown as Readonly<IrType>) : type;
++  }
++  return type;
++}
++
++// A declared FIELD site's present payload is, by declaration, the carried value, however the field's type
++// was spelled once a mapped type such as Pick expanded it. Exactly one present member is required; anything
++// else is not a single carried value and is left alone.
++function substituteFieldPayload(
++  type: Readonly<IrType>,
++  nominal: string,
++  found: (reference: Readonly<IrTypeReference>) => void,
++): Readonly<IrType> {
++  const named = substitute(type, nominal, found);
++  if (named !== type) return named;
++  const synthetic: Readonly<IrType> = {
++    kind: 'named',
++    reference: { kind: 'ambient', name: getCppStructuralValueCarrierSourceNameCpp(nominal) },
++    typeArguments: [],
++  };
++  const isAbsent = (member: Readonly<IrType>) => member.kind === 'null' || member.kind === 'undefined';
++  if (type.kind === 'object') return synthetic;
++  if (type.kind !== 'union') return type;
++  const present = type.types.filter((member) => !isAbsent(member));
++  if (present.length !== 1 || present[0]!.kind !== 'object') return type;
++  return { ...type, types: type.types.map((member) => (isAbsent(member) ? member : synthetic)) } as unknown as Readonly<IrType>;
++}
++
++function substituteCallbackParameter(
++  type: Readonly<IrType>,
++  position: number,
++  nominal: string,
++  found: (reference: Readonly<IrTypeReference>) => void,
++): Readonly<IrType> {
++  if (type.kind === 'function') {
++    const parameter = type.parameters[position];
++    if (!parameter) return type;
++    const parameters = type.parameters.map((candidate, index) =>
++      index === position ? { ...candidate, type: substitute(candidate.type, nominal, found) } : candidate,
++    );
++    return { ...type, parameters } as Readonly<IrType>;
++  }
++  if (type.kind === 'union') {
++    return {
++      ...type,
++      types: type.types.map((member) => substituteCallbackParameter(member, position, nominal, found)),
++    } as unknown as Readonly<IrType>;
++  }
++  return type;
++}
++
++function matchesPackage(site: Readonly<{ package?: string | undefined }>, module: Readonly<IrModule>): boolean {
++  return site.package === undefined || site.package === module.packageName;
++}
++
++export function applyCppStructuralValueCarriersCpp(
++  modules: readonly Readonly<IrModule>[],
++  options: Readonly<CppCompilerBackendOptions>,
++): CppStructuralValueCarrierRewrite {
++  const carriers = options.structuralValueCarriers ?? [];
++  if (carriers.length === 0) {
++    return { modules, options, original: new Map(modules.map((module) => [module, module])), plans: new Map() };
++  }
++  const nominals = new Map<string, Readonly<IrTypeReference>>();
++  const original = new Map<Readonly<IrModule>, Readonly<IrModule>>();
++  const rewritten = modules.map((module) => {
++    const declarations = module.declarations.map((declaration): IrDeclaration => {
++      let next: IrDeclaration = declaration;
++      for (const carrier of carriers) {
++        const found = (reference: Readonly<IrTypeReference>) => {
++          if (!nominals.has(carrier.nominal)) nominals.set(carrier.nominal, reference);
++        };
++        if (next.kind === 'function') {
++          const functionName = next.binding.name;
++          const site = (carrier.parameters ?? []).filter(
++            (candidate) => candidate.function === functionName && matchesPackage(candidate, module),
++          );
++          if (site.length > 0) {
++            const names = new Set(site.map((candidate) => candidate.parameter));
++            const fn = next;
++            next = {
++              ...fn,
++              parameters: fn.parameters.map((parameter) =>
++                names.has(parameter.binding.name)
++                  ? { ...parameter, type: substitute(parameter.type, carrier.nominal, found) }
++                  : parameter,
++              ),
++            };
++          }
++        }
++        if (next.kind === 'interface') {
++          const owner = next.binding.name;
++          const fields = new Set(
++            (carrier.fields ?? [])
++              .filter((candidate) => candidate.owner === owner && matchesPackage(candidate, module))
++              .map((candidate) => candidate.field),
++          );
++          const callbacks = (carrier.callbackParameters ?? []).filter(
++            (candidate) => candidate.owner === owner && matchesPackage(candidate, module),
++          );
++          if (fields.size > 0 || callbacks.length > 0) {
++            const iface = next;
++            next = {
++              ...iface,
++              properties: iface.properties.map((property): IrObjectTypeProperty => {
++                let type = property.type;
++                if (fields.has(property.name)) type = substitute(type, carrier.nominal, found);
++                for (const callback of callbacks) {
++                  if (callback.field === property.name) {
++                    type = substituteCallbackParameter(type, callback.position, carrier.nominal, found);
++                  }
++                }
++                return type === property.type ? property : { ...property, type };
++              }),
++            };
++          }
++        }
++        // A field site on a type alias names a member of the object type the alias resolves to, as
++        // `type Saved = Pick<Runtime, 'frame'>` does: the saved copy of a declared field is the same carried
++        // value, so the picked member carries it too.
++        if (next.kind === 'typeAlias' && next.type.kind === 'object') {
++          const owner = next.binding.name;
++          const fields = new Set(
++            (carrier.fields ?? [])
++              .filter((candidate) => candidate.owner === owner && matchesPackage(candidate, module))
++              .map((candidate) => candidate.field),
++          );
++          if (fields.size > 0) {
++            const alias = next;
++            const object = alias.type as Extract<IrType, { kind: 'object' }>;
++            next = {
++              ...alias,
++              type: {
++                ...object,
++                properties: object.properties.map((property) =>
++                  fields.has(property.name)
++                    ? { ...property, type: substituteFieldPayload(property.type, carrier.nominal, found) }
++                    : property,
++                ),
++              },
++            };
++          }
++        }
++      }
++      return next;
++    });
++    const result = declarations.some((declaration, index) => declaration !== module.declarations[index])
++      ? { ...module, declarations }
++      : module;
++    original.set(module, result);
++    return result;
++  });
++  const plans = new Map<string, Readonly<CppStructuralValueCarrierPlan>>();
++  const synthetic: CppCompilerExternalBindingManifest['bindings'][number][] = [];
++  for (const carrier of carriers) {
++    const nominal = nominals.get(carrier.nominal);
++    if (!nominal) continue;
++    const sourceName = getCppStructuralValueCarrierSourceNameCpp(carrier.nominal);
++    plans.set(sourceName, { carrier, nominal, sourceName });
++    synthetic.push({
++      headers: ['flight/nominal_or_structural_view.hpp'],
++      nullability: 'non-null',
++      ownership: 'value',
++      sourceName,
++      space: 'type',
++      targetName: carrier.target,
++    });
++  }
++  const externalBindings: CppCompilerExternalBindingManifest = {
++    bindings: [...(options.externalBindings?.bindings ?? []), ...synthetic],
++    schema: options.externalBindings?.schema ?? 'flight-cpp-external-bindings/1',
++  };
++  const rewrittenOptions = { ...options, externalBindings };
++  cppStructuralValueCarrierPlans.set(rewrittenOptions, plans);
++  return { modules: rewritten, options: rewrittenOptions, original, plans };
++}
+diff --git a/packages/compiler-types/src/compilerBackendContract.ts b/packages/compiler-types/src/compilerBackendContract.ts
+index 94750f6..aa43503 100644
+--- a/packages/compiler-types/src/compilerBackendContract.ts
++++ b/packages/compiler-types/src/compilerBackendContract.ts
+@@ -269,6 +269,23 @@ export interface CppCompilerCAbiOutput {
+   readonly packageName: string;
+ }
+ 
++/**
++ * A derived interface value carried as the same object, nominal or structural, at explicitly declared
++ * sites only (see cppStructuralValueCarrier.ts). `target` spells the C++ carrier type.
++ */
++export interface CppCompilerStructuralValueCarrier {
++  readonly base: string;
++  readonly callbackParameters?:
++    | readonly Readonly<{ field: string; owner: string; package?: string | undefined; position: number }>[]
++    | undefined;
++  readonly fields?: readonly Readonly<{ field: string; owner: string; package?: string | undefined }>[] | undefined;
++  readonly nominal: string;
++  readonly parameters?:
++    | readonly Readonly<{ function: string; package?: string | undefined; parameter: string }>[]
++    | undefined;
++  readonly target: string;
++}
++
+ export interface CppCompilerBackendOptions {
+   /** Explicitly elects one package-owned C ABI header and adapter translation unit. */
+   readonly cAbi?: Readonly<CppCompilerCAbiOutput> | undefined;
+@@ -282,6 +299,8 @@ export interface CppCompilerBackendOptions {
+    */
+   readonly runtimeProfile?: CppCompilerRuntimeProfile | undefined;
+   readonly runtimeHeader?: string | undefined;
++  /** Declared sites that carry a narrowed derived-interface value as a nominal-or-structural view. */
++  readonly structuralValueCarriers?: readonly Readonly<CppCompilerStructuralValueCarrier>[] | undefined;
+   readonly upstreamCommit?: string | undefined;
+ }
+ 
