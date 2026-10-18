@@ -842,3 +842,11 @@ Ordered apply/reverse/reapply and the strict build pass; the document, new filte
 and generic-owner suites pass **17/17 without skips**. The original three headers
 and metadata again remain byte-identical. Incoming work and both appended request
 sections are preserved; no inactive forwarding proposal is activated.
+
+[Original optional-slot qualification](../../artifacts/original-optional-slot-qualification.json)
+records the next preparation: present source narrowing forwards the unique stored native reference
+into its contextual union, and literal membership on an erased value calls original-owner presence.
+On the ordered 121-patch compiler floor, strict checks and 31 focused tests pass without skips,
+including 38 native checks; the same three guarded-path controls still fail. The whole original
+consumer still fails compilation, now past the flat, native-cast and raw-membership sites and at
+later readonly record, mask-result, event-data and sequence operations. No native public case has run.

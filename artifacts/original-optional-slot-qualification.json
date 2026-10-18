@@ -1,0 +1,73 @@
+{
+  "schema": "flight-cpp-original-optional-slot-qualification/1",
+  "status": "compiler-preparation-qualified; original-public-native-pending",
+  "checkedCodeCommit": "94201453",
+  "sameCodeRebasedCommit": "a70e6606",
+  "compiler": {
+    "rawPin": "806d257d2f4100de745cc97340e61c2f301b0f24",
+    "compilerPatches": 121,
+    "totalPatches": 323,
+    "patch": "source-patches/compiler-original-optional-slot-and-erased-membership.patch",
+    "patchSha256": "7d33d6372b467a651a6e5e4a662f924dfeaf480a1ee5adcad8ecc6486cb4e841",
+    "backendSha256": "14d9bb37f53240ab7d91cb3838a2f910986b54c7faf5a4b8007992322e6a88b5",
+    "fixtureSha256": "bbed008708e7da192cace336cac779d18fa43f3cad233a33b4af12fdd584a3e4",
+    "orderedApplyAndRawClean": true
+  },
+  "verification": {
+    "productionStrictExit": 0,
+    "ownedFixtureStrictExit": 0,
+    "focused": {
+      "files": 6,
+      "pass": 31,
+      "fail": 0,
+      "skipped": 0,
+      "newNativeChecks": 10,
+      "retainedNativeChecks": 28,
+      "exit": 0
+    },
+    "sourcePatchAutomation": {
+      "pass": 2,
+      "fail": 0,
+      "exit": 0
+    },
+    "guardedPathControl": {
+      "pass": 8,
+      "fail": 3,
+      "exit": 1,
+      "samePreviouslyRecordedFailures": true,
+      "limitation": "Not a pass. Three previously recorded guarded-path control failures persist."
+    }
+  },
+  "originalModule": {
+    "module": "packages/scene2d-formats/src/lottieDocument.ts",
+    "moduleSha256": "fb768b9622f2ade7301341f674db8cd64e00d3e39f09cd9aaf7aac1f1780a55b",
+    "bodyChanged": false,
+    "freshLoweredDependencyGraphModules": 1467,
+    "missingBodies": []
+  },
+  "publicNative": {
+    "compileExit": 1,
+    "linked": false,
+    "nativeCasesRun": 0,
+    "caseDenominator": 32,
+    "normalPostprocessing": true,
+    "previousBoundariesAbsent": [
+      "default flat runtime method",
+      "same native reference structural_ref_cast",
+      "raw erased literal in text"
+    ],
+    "remainingObservedBoundaries": [
+      "readonly Record narrow-to-wide forwarding",
+      "readonly mask result array carrier",
+      "marker event optional Any object construction",
+      "SequenceView.some missing",
+      "hasSpatialTangents sequence call"
+    ],
+    "log": "/tmp/builder5-lottie-body/optional-slot-public-native-build.log"
+  },
+  "limitations": [
+    "No normal SDK regenerated; whole original native consumer still fails.",
+    "The subsequent SequenceView.some and readonly Record view runtime inputs are separate commits/proofs.",
+    "Exact21previous0PASS21FAIL is frozen historical evidence with no promotions."
+  ]
+}
