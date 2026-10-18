@@ -4,6 +4,7 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function refreshWgpuRenderCache -- source line 101
+#include <flight/callable.hpp>
 #include <flight/structural_ref.hpp>
 #include <flight/weak_map.hpp>
 #include <functional>
@@ -59,10 +60,10 @@ inline flight::Ref<flight::types::WgpuRenderState> create_wgpu_cache_state(fligh
   (cache_state_capture.read_binding()->apply_blend_mode = std::nullopt);
   auto cache_runtime = flight::render_wgpu::get_wgpu_render_state_runtime(cache_state_capture.read_binding());
   (cache_runtime->apply_blend_mode_parent = std::optional<flight::Ref<flight::types::WgpuRenderState>>{owner_state});
-  flight::render_wgpu::register_wgpu_render_state_teardown(owner_state, [=](flight::Ref<flight::types::WgpuRenderState> ignored_callback_argument) {
+  flight::render_wgpu::register_wgpu_render_state_teardown(owner_state, flight::Function<void(flight::Ref<flight::types::WgpuRenderState>)>{[=](flight::Ref<flight::types::WgpuRenderState> ignored_callback_argument) {
   (void)ignored_callback_argument;
   return flight::render_wgpu::destroy_wgpu_render_state(cache_state_capture.read_binding());
-});
+}});
   return cache_state_capture.read_binding();
 }
 

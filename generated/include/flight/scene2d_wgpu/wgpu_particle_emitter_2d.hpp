@@ -4,18 +4,20 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function ensureParticleInstanceBuffer -- source line 182
-//   missing: function drawWgpuParticleEmitter2D -- source line 201
-#include <flight/any.hpp>
+#include <cmath>
+#include <cstdint>
+#include <flight/callable.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/string.hpp>
+#include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
+#include <random>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
-
-#include <flight/types/capacitor_api.hpp>
 
 #include <flight/types/wgpu_render_state.hpp>
 
@@ -44,6 +46,7 @@ namespace flight::types { template <typename Traits> struct Node; }
 #include <flight/render_wgpu/wgpu_texture_resolver.hpp>
 #include <flight/render/renderer.hpp>
 #include <flight/render/scene2d_working_color_space.hpp>
+#include <flight/texture/texture.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/scene2d_wgpu/wgpu_quad_batch_writer.hpp>
 
@@ -58,20 +61,6 @@ inline const double instance_stride = (instance_floats * 4.0);
 
 inline const flight::String particle_shader_src = flight::String("\nstruct Uniforms {\n  matrix : mat3x3f,\n  alpha : f32,\n  hasColorScaleBias : u32,\n  straightTextureAlpha : u32,\n  _pad1 : f32,\n  colorScale : vec4f,\n  colorBias : vec4f,\n  x0 : f32, y0 : f32, x1 : f32, y1 : f32,\n  u0 : f32, v0 : f32, u1 : f32, v1 : f32,\n}\n\nstruct InstanceData {\n  px : f32, py : f32,\n  cosScale : f32, sinScale : f32,\n  r : f32, g : f32, b : f32, alpha : f32,\n  u0 : f32, v0 : f32, u1 : f32, v1 : f32,\n  width : f32, height : f32,\n}\n\n@group(0) @binding(0) var<uniform> uni : Uniforms;\n@group(1) @binding(0) var tex : texture_2d<f32>;\n@group(1) @binding(1) var smp : sampler;\n@group(2) @binding(0) var<storage, read> instances : array<InstanceData>;\n\nstruct VertexOut {\n  @builtin(position) position : vec4f,\n  @location(0) uv : vec2f,\n  @location(1) color : vec4f,\n}\n\n@vertex\nfn vs_main(\n  @builtin(vertex_index) vi : u32,\n  @builtin(instance_index) ii : u32,\n) -> VertexOut {\n  let inst = instances[ii];\n  let xi = (vi == 1u || vi == 2u || vi == 4u);\n  let yi = (vi == 2u || vi == 4u || vi == 5u);\n  let clockwise = inst.width < 0.0;\n  let counterclockwise = inst.height < 0.0;\n  let lx = select(0.0, abs(inst.width), xi);\n  let ly = select(0.0, abs(inst.height), yi);\n  // Rotate and translate in world space\n  let rx = inst.cosScale * lx - inst.sinScale * ly + inst.px;\n  let ry = inst.sinScale * lx + inst.cosScale * ly + inst.py;\n  let p = uni.matrix * vec3f(rx, ry, 1.0);\n  var u = select(inst.u0, inst.u1, xi);\n  var v = select(inst.v0, inst.v1, yi);\n  if (clockwise) {\n    u = select(inst.u1, inst.u0, yi);\n    v = select(inst.v0, inst.v1, xi);\n  } else if (counterclockwise) {\n    u = select(inst.u0, inst.u1, yi);\n    v = select(inst.v1, inst.v0, xi);\n  }\n  var out : VertexOut;\n  out.position = vec4f(p.x, p.y, 0.0, 1.0);\n  out.uv = vec2f(u, v);\n  out.color = vec4f(inst.r, inst.g, inst.b, inst.alpha);\n  return out;\n}\n\n@fragment\nfn fs_main(in : VertexOut) -> @location(0) vec4f {\n  var tex_color = textureSample(tex, smp, in.uv);\n  if (uni.straightTextureAlpha != 0u) {\n    tex_color = vec4f(tex_color.rgb * tex_color.a, tex_color.a);\n  }\n  let out_color = vec4f(tex_color.rgb * in.color.rgb, tex_color.a) * in.color.a;\n  if (out_color.a <= 0.0) { discard; }\n  return out_color;\n}\n");
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_TYPE_DA5EB69D1C0EE021
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_TYPE_DA5EB69D1C0EE021
-using type_da5eb69d1c0ee021 = flight::types::type_da5eb69d1c0ee021;
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_TYPE_DA5EB69D1C0EE021
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_BINDING_VISIBILITY_BUFFER_3B108916B1662422
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_BINDING_VISIBILITY_BUFFER_3B108916B1662422
-struct binding_visibility_buffer_3b108916b1662422 : public flight::ReferenceEnabled {
-  double binding;
-  flight::Any visibility;
-  flight::Ref<type_da5eb69d1c0ee021> buffer;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_BINDING_VISIBILITY_BUFFER_3B108916B1662422
-
 inline flight::Ref<flight::types::WgpuParticleResources> ensure_particle_resources(flight::Ref<flight::types::WgpuRenderState> state) {
   auto runtime = flight::render_wgpu::get_wgpu_render_state_runtime(state);
   auto ctx = runtime->context;
@@ -84,85 +73,13 @@ inline flight::Ref<flight::types::WgpuParticleResources> ensure_particle_resourc
   auto object_pattern_value_2 = flight::render_wgpu::get_wgpu_render_state_device_resources(state);
   flight::host_sdl::WgpuBindGroupLayout uniform_bind_group_layout = object_pattern_value_2->uniform_bind_group_layout;
   flight::host_sdl::WgpuBindGroupLayout texture_bind_group_layout = object_pattern_value_2->texture_bind_group_layout;
-  auto instance_bind_group_layout = device.create_bind_group_layout({.entries = flight::Array{flight::make_ref<binding_visibility_buffer_3b108916b1662422>(binding_visibility_buffer_3b108916b1662422{.binding = 0.0, .visibility = flight::host_sdl::wgpu_shader_stage_vertex, .buffer = flight::make_ref<type_da5eb69d1c0ee021>(type_da5eb69d1c0ee021{.type = flight::String("read-only-storage")})})}});
-  auto pipeline_layout = device.create_pipeline_layout({.bind_group_layouts = flight::Array{uniform_bind_group_layout, texture_bind_group_layout, instance_bind_group_layout}});
-  auto module = device.create_shader_module({.code = particle_shader_src});
+  auto instance_bind_group_layout = device.create_bind_group_layout(([&]() { flight::host_sdl::WgpuBindGroupLayoutDescriptor external_gpubind_group_layout_descriptor{}; external_gpubind_group_layout_descriptor.entries = flight::Array<flight::host_sdl::WgpuBindGroupLayoutEntry>{([&]() { flight::host_sdl::WgpuBindGroupLayoutEntry external_gpubind_group_layout_entry{}; external_gpubind_group_layout_entry.binding = 0.0; external_gpubind_group_layout_entry.visibility = flight::host_sdl::wgpu_shader_stage_vertex; external_gpubind_group_layout_entry.buffer = ([&]() { flight::host_sdl::WgpuBufferBindingLayout external_gpubuffer_binding_layout{}; external_gpubuffer_binding_layout.type = flight::String("read-only-storage"); return external_gpubuffer_binding_layout; }()); return external_gpubind_group_layout_entry; }())}; return external_gpubind_group_layout_descriptor; }()));
+  auto pipeline_layout = device.create_pipeline_layout(([&]() { flight::host_sdl::WgpuPipelineLayoutDescriptor external_gpupipeline_layout_descriptor{}; external_gpupipeline_layout_descriptor.bind_group_layouts = flight::Array{uniform_bind_group_layout, texture_bind_group_layout, instance_bind_group_layout}; return external_gpupipeline_layout_descriptor; }()));
+  auto module = device.create_shader_module(([&]() { flight::host_sdl::WgpuShaderModuleDescriptor external_gpushader_module_descriptor{}; external_gpushader_module_descriptor.code = particle_shader_src; return external_gpushader_module_descriptor; }()));
   auto resources = ([&]() { auto object_member_pipelines = flight::Map<flight::String, flight::host_sdl::WgpuRenderPipeline>(); auto object_member_pipeline_layout = pipeline_layout; auto object_member_module = module; auto object_member_instance_bind_group_layout = instance_bind_group_layout; return flight::make_ref<flight::types::WgpuParticleResources>(flight::types::WgpuParticleResources{.instance_bind_group_layout = object_member_instance_bind_group_layout, .module = object_member_module, .pipeline_layout = object_member_pipeline_layout, .pipelines = object_member_pipelines}); }());
   (ctx->particle_resources = std::optional<flight::Ref<flight::types::WgpuParticleResources>>{resources});
   return resources;
 }
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_MODULE_ENTRY_POINT_B8327571AFB357C5
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_MODULE_ENTRY_POINT_B8327571AFB357C5
-struct module_entry_point_b8327571afb357c5 : public flight::ReferenceEnabled {
-  flight::host_sdl::WgpuShaderModule module;
-  flight::String entry_point;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_MODULE_ENTRY_POINT_B8327571AFB357C5
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_SRC_FACTOR_DST_FACTOR_OPERATION_734D8E3FCC3C03FB
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_SRC_FACTOR_DST_FACTOR_OPERATION_734D8E3FCC3C03FB
-struct src_factor_dst_factor_operation_734d8e3fcc3c03fb : public flight::ReferenceEnabled {
-  flight::String src_factor;
-  flight::String dst_factor;
-  flight::String operation;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_SRC_FACTOR_DST_FACTOR_OPERATION_734D8E3FCC3C03FB
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_COLOR_ALPHA_EDEEE231356B556D
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_COLOR_ALPHA_EDEEE231356B556D
-struct color_alpha_edeee231356b556d : public flight::ReferenceEnabled {
-  flight::Ref<src_factor_dst_factor_operation_734d8e3fcc3c03fb> color;
-  flight::Ref<src_factor_dst_factor_operation_734d8e3fcc3c03fb> alpha;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_COLOR_ALPHA_EDEEE231356B556D
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_FORMAT_BLEND_7DE2FE10319C855C
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_FORMAT_BLEND_7DE2FE10319C855C
-struct format_blend_7de2fe10319c855c : public flight::ReferenceEnabled {
-  flight::Any format;
-  flight::Ref<color_alpha_edeee231356b556d> blend;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_FORMAT_BLEND_7DE2FE10319C855C
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_MODULE_ENTRY_POINT_TARGETS_6F55A7DE4B808CCA
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_MODULE_ENTRY_POINT_TARGETS_6F55A7DE4B808CCA
-struct module_entry_point_targets_6f55a7de4b808cca : public flight::ReferenceEnabled {
-  flight::host_sdl::WgpuShaderModule module;
-  flight::String entry_point;
-  flight::Array<flight::Ref<format_blend_7de2fe10319c855c>> targets;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_MODULE_ENTRY_POINT_TARGETS_6F55A7DE4B808CCA
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_COMPARE_PASS_OP_FAIL_OP_DEPTH_FAIL_OP_810E9AACF853DB80
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_COMPARE_PASS_OP_FAIL_OP_DEPTH_FAIL_OP_810E9AACF853DB80
-struct compare_pass_op_fail_op_depth_fail_op_810e9aacf853db80 : public flight::ReferenceEnabled {
-  flight::String compare;
-  flight::String pass_op;
-  flight::String fail_op;
-  flight::String depth_fail_op;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_COMPARE_PASS_OP_FAIL_OP_DEPTH_FAIL_OP_810E9AACF853DB80
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_FORMAT_DEPTH_WRITE_ENABLED_DEPTH_COMPARE_STENCIL_FRONT_STENCIL_BACK_STENCIL_READ_MASK_STENCIL_WRITE_MASK_3688C6F3AD53051F
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_FORMAT_DEPTH_WRITE_ENABLED_DEPTH_COMPARE_STENCIL_FRONT_STENCIL_BACK_STENCIL_READ_MASK_STENCIL_WRITE_MASK_3688C6F3AD53051F
-struct format_depth_write_enabled_depth_compare_stencil_front_stencil_back_stencil_read_mask_stencil_write_mask_3688c6f3ad53051f : public flight::ReferenceEnabled {
-  flight::String format;
-  bool depth_write_enabled;
-  flight::String depth_compare;
-  flight::Ref<compare_pass_op_fail_op_depth_fail_op_810e9aacf853db80> stencil_front;
-  flight::Ref<compare_pass_op_fail_op_depth_fail_op_810e9aacf853db80> stencil_back;
-  double stencil_read_mask;
-  double stencil_write_mask;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_FORMAT_DEPTH_WRITE_ENABLED_DEPTH_COMPARE_STENCIL_FRONT_STENCIL_BACK_STENCIL_READ_MASK_STENCIL_WRITE_MASK_3688C6F3AD53051F
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_TOPOLOGY_7C8278728B18051E
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_TOPOLOGY_7C8278728B18051E
-struct topology_7c8278728b18051e : public flight::ReferenceEnabled {
-  flight::String topology;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_TOPOLOGY_7C8278728B18051E
 
 inline flight::host_sdl::WgpuRenderPipeline get_particle_pipeline(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::WgpuParticleResources> resources) {
   flight::String format = ([&]() -> flight::String { auto nullish_coalesce_left = flight::render_wgpu::get_wgpu_render_state_runtime(state)->current_color_format; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return state->format; }());
@@ -170,7 +87,7 @@ inline flight::host_sdl::WgpuRenderPipeline get_particle_pipeline(flight::Ref<fl
   if (existing.has_value()) {
     return existing.value();
   }
-  auto pipeline = state->device.create_render_pipeline({.layout = resources->pipeline_layout, .vertex = flight::make_ref<module_entry_point_b8327571afb357c5>(module_entry_point_b8327571afb357c5{.module = resources->module, .entry_point = flight::String("vs_main")}), .fragment = flight::make_ref<module_entry_point_targets_6f55a7de4b808cca>(module_entry_point_targets_6f55a7de4b808cca{.module = resources->module, .entry_point = flight::String("fs_main"), .targets = flight::Array<flight::Ref<format_blend_7de2fe10319c855c>>{flight::make_ref<format_blend_7de2fe10319c855c>(format_blend_7de2fe10319c855c{.format = format, .blend = flight::make_ref<color_alpha_edeee231356b556d>(color_alpha_edeee231356b556d{.color = flight::make_ref<src_factor_dst_factor_operation_734d8e3fcc3c03fb>(src_factor_dst_factor_operation_734d8e3fcc3c03fb{.src_factor = flight::String("one"), .dst_factor = flight::String("one-minus-src-alpha"), .operation = flight::String("add")}), .alpha = flight::make_ref<src_factor_dst_factor_operation_734d8e3fcc3c03fb>(src_factor_dst_factor_operation_734d8e3fcc3c03fb{.src_factor = flight::String("one"), .dst_factor = flight::String("one-minus-src-alpha"), .operation = flight::String("add")})})})}}), .depth_stencil = flight::make_ref<format_depth_write_enabled_depth_compare_stencil_front_stencil_back_stencil_read_mask_stencil_write_mask_3688c6f3ad53051f>(format_depth_write_enabled_depth_compare_stencil_front_stencil_back_stencil_read_mask_stencil_write_mask_3688c6f3ad53051f{.format = flight::String("depth24plus-stencil8"), .depth_write_enabled = false, .depth_compare = flight::String("always"), .stencil_front = flight::make_ref<compare_pass_op_fail_op_depth_fail_op_810e9aacf853db80>(compare_pass_op_fail_op_depth_fail_op_810e9aacf853db80{.compare = flight::String("always"), .pass_op = flight::String("keep"), .fail_op = flight::String("keep"), .depth_fail_op = flight::String("keep")}), .stencil_back = flight::make_ref<compare_pass_op_fail_op_depth_fail_op_810e9aacf853db80>(compare_pass_op_fail_op_depth_fail_op_810e9aacf853db80{.compare = flight::String("always"), .pass_op = flight::String("keep"), .fail_op = flight::String("keep"), .depth_fail_op = flight::String("keep")}), .stencil_read_mask = 255.0, .stencil_write_mask = 0.0}), .primitive = flight::make_ref<topology_7c8278728b18051e>(topology_7c8278728b18051e{.topology = flight::String("triangle-list")})});
+  auto pipeline = state->device.create_render_pipeline(([&]() { flight::host_sdl::WgpuRenderPipelineDescriptor external_gpurender_pipeline_descriptor{}; external_gpurender_pipeline_descriptor.layout = resources->pipeline_layout; external_gpurender_pipeline_descriptor.vertex = ([&]() { flight::host_sdl::WgpuVertexState external_gpuvertex_state{}; external_gpuvertex_state.module = resources->module; external_gpuvertex_state.entry_point = flight::String("vs_main"); return external_gpuvertex_state; }()); external_gpurender_pipeline_descriptor.fragment = ([&]() { flight::host_sdl::WgpuFragmentState external_gpufragment_state{}; external_gpufragment_state.module = resources->module; external_gpufragment_state.entry_point = flight::String("fs_main"); external_gpufragment_state.targets = flight::Array<flight::host_sdl::WgpuColorTargetState>{([&]() { flight::host_sdl::WgpuColorTargetState external_gpucolor_target_state{}; external_gpucolor_target_state.format = format; external_gpucolor_target_state.blend = ([&]() { flight::host_sdl::WgpuBlendState external_gpublend_state{}; external_gpublend_state.color = ([&]() { flight::host_sdl::WgpuBlendComponent external_gpublend_component{}; external_gpublend_component.src_factor = flight::String("one"); external_gpublend_component.dst_factor = flight::String("one-minus-src-alpha"); external_gpublend_component.operation = flight::String("add"); return external_gpublend_component; }()); external_gpublend_state.alpha = ([&]() { flight::host_sdl::WgpuBlendComponent external_gpublend_component_2{}; external_gpublend_component_2.src_factor = flight::String("one"); external_gpublend_component_2.dst_factor = flight::String("one-minus-src-alpha"); external_gpublend_component_2.operation = flight::String("add"); return external_gpublend_component_2; }()); return external_gpublend_state; }()); return external_gpucolor_target_state; }())}; return external_gpufragment_state; }()); external_gpurender_pipeline_descriptor.depth_stencil = ([&]() { flight::host_sdl::WgpuDepthStencilState external_gpudepth_stencil_state{}; external_gpudepth_stencil_state.format = flight::String("depth24plus-stencil8"); external_gpudepth_stencil_state.depth_write_enabled = false; external_gpudepth_stencil_state.depth_compare = flight::String("always"); external_gpudepth_stencil_state.stencil_front = ([&]() { flight::host_sdl::WgpuStencilFaceState external_gpustencil_face_state{}; external_gpustencil_face_state.compare = flight::String("always"); external_gpustencil_face_state.pass_op = flight::String("keep"); external_gpustencil_face_state.fail_op = flight::String("keep"); external_gpustencil_face_state.depth_fail_op = flight::String("keep"); return external_gpustencil_face_state; }()); external_gpudepth_stencil_state.stencil_back = ([&]() { flight::host_sdl::WgpuStencilFaceState external_gpustencil_face_state_2{}; external_gpustencil_face_state_2.compare = flight::String("always"); external_gpustencil_face_state_2.pass_op = flight::String("keep"); external_gpustencil_face_state_2.fail_op = flight::String("keep"); external_gpustencil_face_state_2.depth_fail_op = flight::String("keep"); return external_gpustencil_face_state_2; }()); external_gpudepth_stencil_state.stencil_read_mask = 255.0; external_gpudepth_stencil_state.stencil_write_mask = 0.0; return external_gpudepth_stencil_state; }()); external_gpurender_pipeline_descriptor.primitive = ([&]() { flight::host_sdl::WgpuPrimitiveState external_gpuprimitive_state{}; external_gpuprimitive_state.topology = flight::String("triangle-list"); return external_gpuprimitive_state; }()); return external_gpurender_pipeline_descriptor; }()));
   resources->pipelines.set(format, pipeline);
   return pipeline;
 }
@@ -202,173 +119,160 @@ inline flight::host_sdl::WgpuRenderPipeline get_particle_pipeline(flight::Ref<fl
 // cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuParticleEmitter2D.ts: contextual
 // optionalSingle construction requires expression type evidence
 
+inline void draw_wgpu_particle_emitter_2d(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::RenderProxy2D> render_proxy) {
+  auto runtime = flight::render_wgpu::get_wgpu_render_state_runtime(state);
+  if (!runtime->render_pass.has_value()) {
+    return;
+  }
+  flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>> source = flight::structural_ref_cast<flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>>>(render_proxy->source);
+  auto object_pattern_value_3 = flight::row_get<flight::RowKey<"data">>(source);
+  auto atlas = object_pattern_value_3->atlas;
+  flight::Float32Array alphas = object_pattern_value_3->alphas;
+  flight::Float32Array colors = object_pattern_value_3->colors;
+  flight::Uint16Array ids = object_pattern_value_3->ids;
+  const double particle_count = object_pattern_value_3->particle_count;
+  flight::Float32Array transforms = object_pattern_value_3->transforms;
+  if ((((!atlas.has_value() || !atlas.value()->texture.has_value()) || !flight::texture::has_texture_source(std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, atlas.value()->texture.value()})) || (particle_count == 0.0))) {
+    return;
+  }
+  auto resources = ensure_particle_resources(state);
+  ensure_particle_instance_buffer(state, particle_count);
+  ([&]() { auto optional_chain_receiver = flight::render_wgpu::resolve_wgpu_apply_blend_mode(state); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(state, render_proxy->blend_mode); }());
+  auto texture_entry = flight::render_wgpu::resolve_wgpu_texture(state, std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, atlas.value()->texture.value()}, true, flight::render::scene_2d_working_color_space);
+  if (!texture_entry.has_value()) {
+    return;
+  }
+  auto texture_bind_group = state->device.create_bind_group(([&]() { flight::host_sdl::WgpuBindGroupDescriptor external_gpubind_group_descriptor{}; external_gpubind_group_descriptor.layout = flight::render_wgpu::get_wgpu_render_state_device_resources(state)->texture_bind_group_layout; external_gpubind_group_descriptor.entries = flight::Array<flight::host_sdl::WgpuBindGroupEntry>{([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry{}; external_gpubind_group_entry.binding = 0.0; external_gpubind_group_entry.resource = texture_entry.value()->view; return external_gpubind_group_entry; }()), ([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_2{}; external_gpubind_group_entry_2.binding = 1.0; external_gpubind_group_entry_2.resource = flight::render_wgpu::get_wgpu_sampler(state, (atlas.value()->texture.value()->sampler->min_filter.starts_with(flight::String("nearest")) ? flight::String("nearest") : flight::String("linear")), (atlas.value()->texture.value()->sampler->mag_filter.starts_with(flight::String("nearest")) ? flight::String("nearest") : flight::String("linear")), atlas.value()->texture.value()->sampler->wrap_u, atlas.value()->texture.value()->sampler->wrap_v, ((atlas.value()->texture.value()->sampler->mipmaps && atlas.value()->texture.value()->sampler->min_filter.includes(flight::String("mipmap"))) ? std::optional{(atlas.value()->texture.value()->sampler->min_filter.ends_with(flight::String("nearest")) ? std::optional<flight::String>{flight::String("nearest")} : std::optional<flight::String>{flight::String("linear")})} : std::nullopt), atlas.value()->texture.value()->sampler->anisotropy); return external_gpubind_group_entry_2; }())}; return external_gpubind_group_descriptor; }()));
+  flight::Array<flight::Ref<flight::types::TextureAtlasRegion>> regions = atlas.value()->regions;
+  const double num_regions = static_cast<double>(regions.size());
+  const double node_alpha = render_proxy->alpha;
+  const double iw = (1.0 / flight::maximum(1.0, flight::texture::get_texture_width(std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, atlas.value()->texture.value()})));
+  const double ih = (1.0 / flight::maximum(1.0, flight::texture::get_texture_height(std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, atlas.value()->texture.value()})));
+  flight::Float32Array instance_data = runtime->particle_instance_data.value();
+  double draw_count = 0.0;
+  double base = 0.0;
+  {
+    double i = 0.0;
+    while ((i < particle_count)) {
+      {
+        const double id = ids.get_index(i);
+        if (((id < 0.0) || (id >= num_regions))) {
+          (i += 1.0);
+          continue;
+        }
+        auto region = regions.element(id);
+        if (((region->width <= 0.0) || (region->height <= 0.0))) {
+          (i += 1.0);
+          continue;
+        }
+        const double tt = (i * 4.0);
+        const double px = transforms.get_index(tt);
+        const double py = transforms.get_index((tt + 1.0));
+        const double rotation = transforms.get_index((tt + 2.0));
+        const double scale = transforms.get_index((tt + 3.0));
+        const double cos_r = (std::cos(rotation) * scale);
+        const double sin_r = (std::sin(rotation) * scale);
+        const double ct = (i * 3.0);
+        const bool has_colors = (true && (static_cast<double>(colors.size()) > (ct + 2.0)));
+        ([&]() { auto&& typed_array = instance_data; const auto typed_index = (base + 0.0); const auto typed_value = px; return typed_array.set_index(typed_index, typed_value); }());
+        ([&]() { auto&& typed_array_2 = instance_data; const auto typed_index_2 = (base + 1.0); const auto typed_value_2 = py; return typed_array_2.set_index(typed_index_2, typed_value_2); }());
+        ([&]() { auto&& typed_array_3 = instance_data; const auto typed_index_3 = (base + 2.0); const auto typed_value_3 = cos_r; return typed_array_3.set_index(typed_index_3, typed_value_3); }());
+        ([&]() { auto&& typed_array_4 = instance_data; const auto typed_index_4 = (base + 3.0); const auto typed_value_4 = sin_r; return typed_array_4.set_index(typed_index_4, typed_value_4); }());
+        ([&]() { auto&& typed_array_5 = instance_data; const auto typed_index_5 = (base + 4.0); const auto typed_value_5 = (has_colors ? colors.get_index(ct) : 1.0); return typed_array_5.set_index(typed_index_5, typed_value_5); }());
+        ([&]() { auto&& typed_array_6 = instance_data; const auto typed_index_6 = (base + 5.0); const auto typed_value_6 = (has_colors ? colors.get_index((ct + 1.0)) : 1.0); return typed_array_6.set_index(typed_index_6, typed_value_6); }());
+        ([&]() { auto&& typed_array_7 = instance_data; const auto typed_index_7 = (base + 6.0); const auto typed_value_7 = (has_colors ? colors.get_index((ct + 2.0)) : 1.0); return typed_array_7.set_index(typed_index_7, typed_value_7); }());
+        ([&]() { auto&& typed_array_8 = instance_data; const auto typed_index_8 = (base + 7.0); const auto typed_value_8 = (node_alpha * alphas.get_index(i)); return typed_array_8.set_index(typed_index_8, typed_value_8); }());
+        ([&]() { auto&& typed_array_9 = instance_data; const auto typed_index_9 = (base + 8.0); const auto typed_value_9 = (region->x * iw); return typed_array_9.set_index(typed_index_9, typed_value_9); }());
+        ([&]() { auto&& typed_array_10 = instance_data; const auto typed_index_10 = (base + 9.0); const auto typed_value_10 = (region->y * ih); return typed_array_10.set_index(typed_index_10, typed_value_10); }());
+        ([&]() { auto&& typed_array_11 = instance_data; const auto typed_index_11 = (base + 10.0); const auto typed_value_11 = ((region->x + region->width) * iw); return typed_array_11.set_index(typed_index_11, typed_value_11); }());
+        ([&]() { auto&& typed_array_12 = instance_data; const auto typed_index_12 = (base + 11.0); const auto typed_value_12 = ((region->y + region->height) * ih); return typed_array_12.set_index(typed_index_12, typed_value_12); }());
+        const bool rotated = (region->rotation != flight::types::TextureAtlasRotation::None);
+        const bool counterclockwise = (region->rotation == flight::types::TextureAtlasRotation::Counterclockwise90);
+        ([&]() { auto&& typed_array_13 = instance_data; const auto typed_index_13 = (base + 12.0); const auto typed_value_13 = ((rotated && !counterclockwise) ? -region->height : (rotated ? region->height : region->width)); return typed_array_13.set_index(typed_index_13, typed_value_13); }());
+        ([&]() { auto&& typed_array_14 = instance_data; const auto typed_index_14 = (base + 13.0); const auto typed_value_14 = ((rotated && counterclockwise) ? -region->width : (rotated ? region->width : region->height)); return typed_array_14.set_index(typed_index_14, typed_value_14); }());
+        (base += instance_floats);
+        draw_count++;
+      }
+      (i += 1.0);
+    }
+  }
+  if ((draw_count == 0.0)) {
+    return;
+  }
+  auto object_pattern_value = state;
+  flight::host_sdl::WgpuDevice device = object_pattern_value->device;
+  device.queue.write_buffer(runtime->particle_instance_buffer.value(), 0.0, instance_data.buffer, 0.0, (draw_count * instance_stride));
+  const double uniform_offset = runtime->uniform_offset;
+  const double float_base = flight::signed_right_shift(uniform_offset, 2.0);
+  auto object_pattern_value_2 = runtime;
+  flight::Float32Array uniform_data = object_pattern_value_2->uniform_data;
+  flight::Uint32Array uniform_data_u32 = object_pattern_value_2->uniform_data_u32;
+  flight::Float32Array matrix_array = object_pattern_value_2->matrix_array;
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuRenderPassViewport>>>> viewport = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuRenderPassViewport>>>>>(flight::render_wgpu::get_wgpu_render_pass_viewport(state));
+  auto t = render_proxy->transform_2d;
+  double iw2;
+  double ih2;
+  if (flight::row_get<flight::RowKey<"data">>(source)->world_space) {
+    (iw2 = (2.0 / flight::row_get<flight::RowKey<"width">>(viewport)));
+    (ih2 = (2.0 / flight::row_get<flight::RowKey<"height">>(viewport)));
+    ([&]() { auto&& typed_array_15 = matrix_array; const auto typed_index_15 = 0.0; const auto typed_value_15 = iw2; return typed_array_15.set_index(typed_index_15, typed_value_15); }());
+    ([&]() { auto&& typed_array_16 = matrix_array; const auto typed_index_16 = 1.0; const auto typed_value_16 = 0.0; return typed_array_16.set_index(typed_index_16, typed_value_16); }());
+    ([&]() { auto&& typed_array_17 = matrix_array; const auto typed_index_17 = 2.0; const auto typed_value_17 = 0.0; return typed_array_17.set_index(typed_index_17, typed_value_17); }());
+    ([&]() { auto&& typed_array_18 = matrix_array; const auto typed_index_18 = 3.0; const auto typed_value_18 = 0.0; return typed_array_18.set_index(typed_index_18, typed_value_18); }());
+    ([&]() { auto&& typed_array_19 = matrix_array; const auto typed_index_19 = 4.0; const auto typed_value_19 = -ih2; return typed_array_19.set_index(typed_index_19, typed_value_19); }());
+    ([&]() { auto&& typed_array_20 = matrix_array; const auto typed_index_20 = 5.0; const auto typed_value_20 = 0.0; return typed_array_20.set_index(typed_index_20, typed_value_20); }());
+    ([&]() { auto&& typed_array_21 = matrix_array; const auto typed_index_21 = 6.0; const auto typed_value_21 = -1.0; return typed_array_21.set_index(typed_index_21, typed_value_21); }());
+    ([&]() { auto&& typed_array_22 = matrix_array; const auto typed_index_22 = 7.0; const auto typed_value_22 = 1.0; return typed_array_22.set_index(typed_index_22, typed_value_22); }());
+    ([&]() { auto&& typed_array_23 = matrix_array; const auto typed_index_23 = 8.0; const auto typed_value_23 = 1.0; return typed_array_23.set_index(typed_index_23, typed_value_23); }());
+  }
+  else {
+    (iw2 = (2.0 / flight::row_get<flight::RowKey<"width">>(viewport)));
+    (ih2 = (2.0 / flight::row_get<flight::RowKey<"height">>(viewport)));
+    ([&]() { auto&& typed_array_24 = matrix_array; const auto typed_index_24 = 0.0; const auto typed_value_24 = (t->a * iw2); return typed_array_24.set_index(typed_index_24, typed_value_24); }());
+    ([&]() { auto&& typed_array_25 = matrix_array; const auto typed_index_25 = 1.0; const auto typed_value_25 = (-t->b * ih2); return typed_array_25.set_index(typed_index_25, typed_value_25); }());
+    ([&]() { auto&& typed_array_26 = matrix_array; const auto typed_index_26 = 2.0; const auto typed_value_26 = 0.0; return typed_array_26.set_index(typed_index_26, typed_value_26); }());
+    ([&]() { auto&& typed_array_27 = matrix_array; const auto typed_index_27 = 3.0; const auto typed_value_27 = (t->c * iw2); return typed_array_27.set_index(typed_index_27, typed_value_27); }());
+    ([&]() { auto&& typed_array_28 = matrix_array; const auto typed_index_28 = 4.0; const auto typed_value_28 = (-t->d * ih2); return typed_array_28.set_index(typed_index_28, typed_value_28); }());
+    ([&]() { auto&& typed_array_29 = matrix_array; const auto typed_index_29 = 5.0; const auto typed_value_29 = 0.0; return typed_array_29.set_index(typed_index_29, typed_value_29); }());
+    ([&]() { auto&& typed_array_30 = matrix_array; const auto typed_index_30 = 6.0; const auto typed_value_30 = ((t->tx * iw2) - 1.0); return typed_array_30.set_index(typed_index_30, typed_value_30); }());
+    ([&]() { auto&& typed_array_31 = matrix_array; const auto typed_index_31 = 7.0; const auto typed_value_31 = ((-t->ty * ih2) + 1.0); return typed_array_31.set_index(typed_index_31, typed_value_31); }());
+    ([&]() { auto&& typed_array_32 = matrix_array; const auto typed_index_32 = 8.0; const auto typed_value_32 = 1.0; return typed_array_32.set_index(typed_index_32, typed_value_32); }());
+  }
+  ([&]() { auto&& typed_array_33 = uniform_data; const auto typed_index_33 = (float_base + 0.0); const auto typed_value_33 = matrix_array.get_index(0.0); return typed_array_33.set_index(typed_index_33, typed_value_33); }());
+  ([&]() { auto&& typed_array_34 = uniform_data; const auto typed_index_34 = (float_base + 1.0); const auto typed_value_34 = matrix_array.get_index(1.0); return typed_array_34.set_index(typed_index_34, typed_value_34); }());
+  ([&]() { auto&& typed_array_35 = uniform_data; const auto typed_index_35 = (float_base + 2.0); const auto typed_value_35 = matrix_array.get_index(2.0); return typed_array_35.set_index(typed_index_35, typed_value_35); }());
+  ([&]() { auto&& typed_array_36 = uniform_data; const auto typed_index_36 = (float_base + 3.0); const auto typed_value_36 = 0.0; return typed_array_36.set_index(typed_index_36, typed_value_36); }());
+  ([&]() { auto&& typed_array_37 = uniform_data; const auto typed_index_37 = (float_base + 4.0); const auto typed_value_37 = matrix_array.get_index(3.0); return typed_array_37.set_index(typed_index_37, typed_value_37); }());
+  ([&]() { auto&& typed_array_38 = uniform_data; const auto typed_index_38 = (float_base + 5.0); const auto typed_value_38 = matrix_array.get_index(4.0); return typed_array_38.set_index(typed_index_38, typed_value_38); }());
+  ([&]() { auto&& typed_array_39 = uniform_data; const auto typed_index_39 = (float_base + 6.0); const auto typed_value_39 = matrix_array.get_index(5.0); return typed_array_39.set_index(typed_index_39, typed_value_39); }());
+  ([&]() { auto&& typed_array_40 = uniform_data; const auto typed_index_40 = (float_base + 7.0); const auto typed_value_40 = 0.0; return typed_array_40.set_index(typed_index_40, typed_value_40); }());
+  ([&]() { auto&& typed_array_41 = uniform_data; const auto typed_index_41 = (float_base + 8.0); const auto typed_value_41 = matrix_array.get_index(6.0); return typed_array_41.set_index(typed_index_41, typed_value_41); }());
+  ([&]() { auto&& typed_array_42 = uniform_data; const auto typed_index_42 = (float_base + 9.0); const auto typed_value_42 = matrix_array.get_index(7.0); return typed_array_42.set_index(typed_index_42, typed_value_42); }());
+  ([&]() { auto&& typed_array_43 = uniform_data; const auto typed_index_43 = (float_base + 10.0); const auto typed_value_43 = matrix_array.get_index(8.0); return typed_array_43.set_index(typed_index_43, typed_value_43); }());
+  ([&]() { auto&& typed_array_44 = uniform_data; const auto typed_index_44 = (float_base + 11.0); const auto typed_value_44 = 0.0; return typed_array_44.set_index(typed_index_44, typed_value_44); }());
+  ([&]() { auto&& typed_array_45 = uniform_data; const auto typed_index_45 = (float_base + 12.0); const auto typed_value_45 = 1.0; return typed_array_45.set_index(typed_index_45, typed_value_45); }());
+  ([&]() { auto&& typed_array_46 = uniform_data_u32; const auto typed_index_46 = (float_base + 13.0); const auto typed_value_46 = 0.0; return typed_array_46.set_index(typed_index_46, typed_value_46); }());
+  ([&]() { auto&& typed_array_47 = uniform_data_u32; const auto typed_index_47 = (float_base + 14.0); const auto typed_value_47 = ((texture_entry.value()->straight_alpha == true) ? 1.0 : 0.0); return typed_array_47.set_index(typed_index_47, typed_value_47); }());
+  {
+    double k = 15.0;
+    while ((k < 32.0)) {
+      ([&]() { auto&& typed_array_48 = uniform_data; const auto typed_index_48 = (float_base + k); const auto typed_value_48 = 0.0; return typed_array_48.set_index(typed_index_48, typed_value_48); }());
+      (k += 1.0);
+    }
+  }
+  (runtime->uniform_offset += runtime->uniform_stride);
+  auto instance_bind_group = device.create_bind_group(([&]() { flight::host_sdl::WgpuBindGroupDescriptor external_gpubind_group_descriptor_2{}; external_gpubind_group_descriptor_2.layout = resources->instance_bind_group_layout; external_gpubind_group_descriptor_2.entries = flight::Array<flight::host_sdl::WgpuBindGroupEntry>{([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_3{}; external_gpubind_group_entry_3.binding = 0.0; external_gpubind_group_entry_3.resource = ([&]() { flight::host_sdl::WgpuBufferBinding external_gpubuffer_binding{}; external_gpubuffer_binding.buffer = runtime->particle_instance_buffer.value(); return external_gpubuffer_binding; }()); return external_gpubind_group_entry_3; }())}; return external_gpubind_group_descriptor_2; }()));
+  flight::host_sdl::WgpuRenderPassEncoder pass = runtime->render_pass.value();
+  pass.set_pipeline(get_particle_pipeline(state, resources));
+  pass.set_bind_group(0.0, runtime->uniform_bind_group, flight::Array{uniform_offset});
+  pass.set_bind_group(1.0, texture_bind_group);
+  pass.set_bind_group(2.0, instance_bind_group);
+  pass.draw(6.0, draw_count, 0.0, 0.0);
+}
 
-// NOT GENERATED: function drawWgpuParticleEmitter2D -- source line 201
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
-//
-// The source it stood for:
-//   export function drawWgpuParticleEmitter2D(state: WgpuRenderState, renderProxy: RenderProxy2D): void {
-//     const runtime = getWgpuRenderStateRuntime(state);
-//     if (runtime.renderPass === null) return;
-//   
-//     const source = renderProxy.source as ParticleEmitter2D;
-//     const { atlas, alphas, colors, ids, particleCount, transforms } = source.data;
-//     if (atlas === null || atlas.texture === null || !hasTextureSource(atlas.texture) || particleCount === 0) return;
-//   
-//     const resources = ensureParticleResources(state);
-//     ensureParticleInstanceBuffer(state, particleCount);
-//   
-//     resolveWgpuApplyBlendMode(state)?.(state, renderProxy.blendMode);
-//     const textureEntry = resolveWgpuTexture(state, atlas.texture, true, SCENE2D_WORKING_COLOR_SPACE);
-//     if (textureEntry === null) return;
-//     const textureBindGroup = state.device.createBindGroup({
-//       layout: getWgpuRenderStateDeviceResources(state).textureBindGroupLayout,
-//       entries: [
-//         { binding: 0, resource: textureEntry.view },
-//         {
-//           binding: 1,
-//           resource: getWgpuSampler(
-//             state,
-//             atlas.texture.sampler.minFilter.startsWith('nearest') ? 'nearest' : 'linear',
-//             atlas.texture.sampler.magFilter.startsWith('nearest') ? 'nearest' : 'linear',
-//             atlas.texture.sampler.wrapU,
-//             atlas.texture.sampler.wrapV,
-//             atlas.texture.sampler.mipmaps && atlas.texture.sampler.minFilter.includes('mipmap')
-//               ? atlas.texture.sampler.minFilter.endsWith('nearest')
-//                 ? 'nearest'
-//                 : 'linear'
-//               : undefined,
-//             atlas.texture.sampler.anisotropy,
-//           ),
-//         },
-//       ],
-//     });
-//   
-//     const regions = atlas.regions;
-//     const numRegions = regions.length;
-//     const nodeAlpha = renderProxy.alpha;
-//     const iw = 1 / Math.max(1, getTextureWidth(atlas.texture));
-//     const ih = 1 / Math.max(1, getTextureHeight(atlas.texture));
-//     const instanceData = runtime.particleInstanceData!;
-//   
-//     let drawCount = 0;
-//     let base = 0;
-//     for (let i = 0; i < particleCount; i++) {
-//       const id = ids[i];
-//       if (id < 0 || id >= numRegions) continue;
-//       const region = regions[id];
-//       if (region.width <= 0 || region.height <= 0) continue;
-//   
-//       const tt = i * 4;
-//       const px = transforms[tt];
-//       const py = transforms[tt + 1];
-//       const rotation = transforms[tt + 2];
-//       const scale = transforms[tt + 3];
-//       const cosR = Math.cos(rotation) * scale;
-//       const sinR = Math.sin(rotation) * scale;
-//   
-//       const ct = i * 3;
-//       const hasColors = colors != null && colors.length > ct + 2;
-//       instanceData[base + 0] = px;
-//       instanceData[base + 1] = py;
-//       instanceData[base + 2] = cosR;
-//       instanceData[base + 3] = sinR;
-//       instanceData[base + 4] = hasColors ? colors![ct] : 1;
-//       instanceData[base + 5] = hasColors ? colors![ct + 1] : 1;
-//       instanceData[base + 6] = hasColors ? colors![ct + 2] : 1;
-//       instanceData[base + 7] = nodeAlpha * alphas[i];
-//       instanceData[base + 8] = region.x * iw;
-//       instanceData[base + 9] = region.y * ih;
-//       instanceData[base + 10] = (region.x + region.width) * iw;
-//       instanceData[base + 11] = (region.y + region.height) * ih;
-//       const rotated = region.rotation !== TextureAtlasRotation.None;
-//       const counterclockwise = region.rotation === TextureAtlasRotation.Counterclockwise90;
-//       instanceData[base + 12] = rotated && !counterclockwise ? -region.height : rotated ? region.height : region.width;
-//       instanceData[base + 13] = rotated && counterclockwise ? -region.width : rotated ? region.width : region.height;
-//       base += INSTANCE_FLOATS;
-//       drawCount++;
-//     }
-//   
-//     if (drawCount === 0) return;
-//   
-//     const { device } = state;
-//   
-//     // Upload instance data
-//     device.queue.writeBuffer(runtime.particleInstanceBuffer!, 0, instanceData.buffer, 0, drawCount * INSTANCE_STRIDE);
-//   
-//     // Write uniform slot for this emitter (world transform → clip space; quad coords are unused)
-//     const uniformOffset = runtime.uniformOffset;
-//     const floatBase = uniformOffset >> 2;
-//     const { uniformData, uniformDataU32, matrixArray } = runtime;
-//     const viewport = getWgpuRenderPassViewport(state);
-//     const t = renderProxy.transform2D;
-//   
-//     let iw2: number, ih2: number;
-//     if (source.data.worldSpace) {
-//       // Particles are already in world (pixel) space — map directly through viewport
-//       iw2 = 2 / viewport.width;
-//       ih2 = 2 / viewport.height;
-//       matrixArray[0] = iw2;
-//       matrixArray[1] = 0;
-//       matrixArray[2] = 0;
-//       matrixArray[3] = 0;
-//       matrixArray[4] = -ih2;
-//       matrixArray[5] = 0;
-//       matrixArray[6] = -1;
-//       matrixArray[7] = 1;
-//       matrixArray[8] = 1;
-//     } else {
-//       iw2 = 2 / viewport.width;
-//       ih2 = 2 / viewport.height;
-//       matrixArray[0] = t.a * iw2;
-//       matrixArray[1] = -t.b * ih2;
-//       matrixArray[2] = 0;
-//       matrixArray[3] = t.c * iw2;
-//       matrixArray[4] = -t.d * ih2;
-//       matrixArray[5] = 0;
-//       matrixArray[6] = t.tx * iw2 - 1;
-//       matrixArray[7] = -t.ty * ih2 + 1;
-//       matrixArray[8] = 1;
-//     }
-//   
-//     uniformData[floatBase + 0] = matrixArray[0];
-//     uniformData[floatBase + 1] = matrixArray[1];
-//     uniformData[floatBase + 2] = matrixArray[2];
-//     uniformData[floatBase + 3] = 0;
-//     uniformData[floatBase + 4] = matrixArray[3];
-//     uniformData[floatBase + 5] = matrixArray[4];
-//     uniformData[floatBase + 6] = matrixArray[5];
-//     uniformData[floatBase + 7] = 0;
-//     uniformData[floatBase + 8] = matrixArray[6];
-//     uniformData[floatBase + 9] = matrixArray[7];
-//     uniformData[floatBase + 10] = matrixArray[8];
-//     uniformData[floatBase + 11] = 0;
-//     uniformData[floatBase + 12] = 1; // alpha = 1 (per-instance handles alpha)
-//     uniformDataU32[floatBase + 13] = 0;
-//     uniformDataU32[floatBase + 14] = textureEntry.straightAlpha === true ? 1 : 0;
-//     for (let k = 15; k < 32; k++) uniformData[floatBase + k] = 0;
-//     runtime.uniformOffset += runtime.uniformStride;
-//   
-//     // Create per-frame instance bind group
-//     const instanceBindGroup = device.createBindGroup({
-//       layout: resources.instanceBindGroupLayout,
-//       entries: [{ binding: 0, resource: { buffer: runtime.particleInstanceBuffer! } }],
-//     });
-//   
-//     const pass = runtime.renderPass!;
-//     pass.setPipeline(getParticlePipeline(state, resources));
-//     pass.setBindGroup(0, runtime.uniformBindGroup, [uniformOffset]);
-//     pass.setBindGroup(1, textureBindGroup);
-//     pass.setBindGroup(2, instanceBindGroup);
-//     pass.draw(6, drawCount, 0, 0);
-//   }
-//   
-// cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuParticleEmitter2D.ts: contextual
-// union value type flight::host_sdl::WgpuSampler is not a represented runtime domain
-
-inline flight::Ref<flight::types::SpriteRenderer> wgpu_particle_emitter_2d_renderer = flight::make_ref<flight::types::SpriteRenderer>(flight::types::SpriteRenderer{.create_data = flight::render::noop_renderer_data, .submit = [](flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::RenderProxy2D> node) {
+inline flight::Ref<flight::types::SpriteRenderer> wgpu_particle_emitter_2d_renderer = flight::make_ref<flight::types::SpriteRenderer>(flight::types::SpriteRenderer{.create_data = flight::render::noop_renderer_data, .submit = flight::Function<void(flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::RenderProxy2D>)>{[](flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::RenderProxy2D> node) {
   flight::scene2d_wgpu::flush_wgpu_quad_batch_writer(state);
   draw_wgpu_particle_emitter_2d(state, node);
-}});
+}}});
 
 } // namespace flight::scene2d_wgpu

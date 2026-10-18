@@ -13,7 +13,6 @@
 //   missing: function getWgpuSampler -- source line 342
 //   missing: function initializeWgpuDeviceRenderState -- source line 153
 //   missing: function createWgpuOffscreenRenderState -- source line 101
-//   missing: function createWgpuDeviceState -- source line 81
 //   missing: function destroyWgpuRenderState -- source line 281
 #include <coroutine>
 #include <flight/any.hpp>
@@ -74,6 +73,7 @@ namespace flight::types { struct Texture2D; }
 namespace flight::types { struct Texture2DArray; }
 namespace flight::types { struct Texture3D; }
 namespace flight::types { struct TextureCube; }
+namespace flight::types { struct TextureSource; }
 namespace flight::types { struct TintMaterialData; }
 namespace flight::types { struct WgpuBindGroupLayouts; }
 namespace flight::types { struct WgpuBitmapShader; }
@@ -104,6 +104,7 @@ namespace flight::types { struct WgpuScreenRenderTarget; }
 namespace flight::types { struct WgpuShapeMeshPipeline; }
 namespace flight::types { struct WgpuSkinningAdapter; }
 namespace flight::types { struct WgpuTextureEntry; }
+namespace flight::types { struct WgpuTextureSourceTextureEntry; }
 namespace flight::types { struct WgpuVelocityContext; }
 namespace flight::types { template <typename K> struct CanvasShapeCommand; }
 namespace flight::types { template <typename Traits> struct Node; }
@@ -438,7 +439,7 @@ inline void register_wgpu_device_teardown(flight::Ref<flight::types::WgpuRenderS
 // cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts: Record literal key
 // nearest requires a single string or number runtime domain
 
-inline flight::Record<flight::types::TextureWrap, double> sampler_wrap_bits = {{flight::String("clamp-to-edge"), 0.0}, {flight::String("mirror-repeat"), 1.0}, {flight::String("repeat"), 2.0}};
+inline flight::Record<flight::types::TextureWrap, double> sampler_wrap_bits = flight::Record<flight::types::TextureWrap, double>{{flight::String("clamp-to-edge"), 0.0}, {flight::String("mirror-repeat"), 1.0}, {flight::String("repeat"), 2.0}};
 
 
 // NOT GENERATED: variable (binding) -- source line 427
@@ -507,8 +508,8 @@ inline flight::Ref<flight::types::WgpuDeviceRuntimeResources> ensure_wgpu_device
   auto object_pattern_value = flight::render_wgpu::create_wgpu_bind_group_layouts(device);
   flight::host_sdl::WgpuBindGroupLayout uniform_bind_group_layout = object_pattern_value->uniform_bind_group_layout;
   flight::host_sdl::WgpuBindGroupLayout texture_bind_group_layout = object_pattern_value->texture_bind_group_layout;
-  auto linear_sampler = device.create_sampler({.min_filter = flight::String("linear"), .mag_filter = flight::String("linear"), .address_mode_u = flight::String("clamp-to-edge"), .address_mode_v = flight::String("clamp-to-edge")});
-  auto nearest_sampler = device.create_sampler({.min_filter = flight::String("nearest"), .mag_filter = flight::String("nearest"), .address_mode_u = flight::String("clamp-to-edge"), .address_mode_v = flight::String("clamp-to-edge")});
+  auto linear_sampler = device.create_sampler(([&]() { flight::host_sdl::WgpuSamplerDescriptor external_gpusampler_descriptor_2{}; external_gpusampler_descriptor_2.min_filter = flight::String("linear"); external_gpusampler_descriptor_2.mag_filter = flight::String("linear"); external_gpusampler_descriptor_2.address_mode_u = flight::String("clamp-to-edge"); external_gpusampler_descriptor_2.address_mode_v = flight::String("clamp-to-edge"); return external_gpusampler_descriptor_2; }()));
+  auto nearest_sampler = device.create_sampler(([&]() { flight::host_sdl::WgpuSamplerDescriptor external_gpusampler_descriptor_3{}; external_gpusampler_descriptor_3.min_filter = flight::String("nearest"); external_gpusampler_descriptor_3.mag_filter = flight::String("nearest"); external_gpusampler_descriptor_3.address_mode_u = flight::String("clamp-to-edge"); external_gpusampler_descriptor_3.address_mode_v = flight::String("clamp-to-edge"); return external_gpusampler_descriptor_3; }()));
   return (runtime->resources = flight::make_ref<flight::types::WgpuDeviceRuntimeResources>(flight::types::WgpuDeviceRuntimeResources{.linear_sampler = linear_sampler, .nearest_sampler = nearest_sampler, .texture_bind_group_layout = texture_bind_group_layout, .uniform_bind_group_layout = uniform_bind_group_layout}));
 }
 
@@ -684,48 +685,18 @@ using bind_group_layout_pipeline_833b0848238ca1cc = flight::types::bind_group_la
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_BIND_GROUP_LAYOUT_PIPELINE_833B0848238CA1CC
 
 inline flight::Ref<flight::types::WgpuDeviceRuntime> create_minimal_device_runtime(flight::host_sdl::WgpuDevice device) {
-  auto runtime = ([&]() { auto object_member_binding = std::nullopt; auto object_member_device = device; auto object_member_lost = std::nullopt; auto object_member_signals = std::nullopt; auto object_member_references = 0.0; auto object_member_teardowns = flight::Array<std::function<void(flight::host_sdl::WgpuDevice)>>{}; auto object_member_resources = std::nullopt; auto object_member_pipeline_cache = flight::Map<flight::String, flight::host_sdl::WgpuRenderPipeline>(); auto object_member_sampler_cache = flight::Map<double, flight::host_sdl::WgpuSampler>(); auto object_member_mipmap_pipeline_cache = flight::Map<flight::String, flight::Ref<bind_group_layout_pipeline_833b0848238ca1cc>>(); auto object_member_texture_cache = flight::WeakMap<flight::host_sdl::ImageSource, flight::Ref<flight::types::WgpuTextureEntry>, flight::host_sdl::ImageSourceWeakPolicy>(); auto object_member_texture_source_premultiplied_texture_cache = flight::WeakMap<flight::Ref<flight::types::TextureSource>, flight::Ref<flight::types::WgpuTextureSourceTextureEntry>>(); auto object_member_texture_source_premultiplied_srgb_texture_cache = flight::WeakMap<flight::Ref<flight::types::TextureSource>, flight::Ref<flight::types::WgpuTextureSourceTextureEntry>>(); auto object_member_texture_source_straight_texture_cache = flight::WeakMap<flight::Ref<flight::types::TextureSource>, flight::Ref<flight::types::WgpuTextureSourceTextureEntry>>(); auto object_member_texture_source_straight_srgb_texture_cache = flight::WeakMap<flight::Ref<flight::types::TextureSource>, flight::Ref<flight::types::WgpuTextureSourceTextureEntry>>(); return flight::make_ref<flight::types::WgpuDeviceRuntime>(flight::types::WgpuDeviceRuntime{.binding = object_member_binding, .device = object_member_device, .references = object_member_references, .teardowns = object_member_teardowns, .lost = object_member_lost, .signals = object_member_signals, .resources = object_member_resources, .pipeline_cache = object_member_pipeline_cache, .sampler_cache = object_member_sampler_cache, .mipmap_pipeline_cache = object_member_mipmap_pipeline_cache, .texture_cache = object_member_texture_cache, .texture_source_premultiplied_texture_cache = object_member_texture_source_premultiplied_texture_cache, .texture_source_premultiplied_srgb_texture_cache = object_member_texture_source_premultiplied_srgb_texture_cache, .texture_source_straight_texture_cache = object_member_texture_source_straight_texture_cache, .texture_source_straight_srgb_texture_cache = object_member_texture_source_straight_srgb_texture_cache}); }());
+  auto runtime = ([&]() { auto object_member_binding = std::nullopt; auto object_member_device = device; auto object_member_lost = std::nullopt; auto object_member_signals = std::nullopt; auto object_member_references = 0.0; auto object_member_teardowns = flight::Array<std::function<void(flight::host_sdl::WgpuDevice)>>{}; auto object_member_resources = std::nullopt; auto object_member_pipeline_cache = flight::Map<flight::String, flight::host_sdl::WgpuRenderPipeline>(); auto object_member_sampler_cache = flight::Map<double, flight::host_sdl::WgpuSampler>(); auto object_member_mipmap_pipeline_cache = flight::Map<flight::String, flight::Ref<bind_group_layout_pipeline_833b0848238ca1cc>>(); auto object_member_texture_cache = flight::WeakMap<flight::host_sdl::ImageSource, flight::Ref<flight::types::WgpuTextureEntry>, flight::host_sdl::ImageSourceWeakPolicy>(); auto object_member_texture_source_premultiplied_texture_cache = flight::WeakMap<flight::Ref<flight::types::TextureSource>, flight::Ref<flight::types::WgpuTextureSourceTextureEntry>>(); auto object_member_texture_source_premultiplied_srgb_texture_cache = flight::WeakMap<flight::Ref<flight::types::TextureSource>, flight::Ref<flight::types::WgpuTextureSourceTextureEntry>>(); auto object_member_texture_source_straight_texture_cache = flight::WeakMap<flight::Ref<flight::types::TextureSource>, flight::Ref<flight::types::WgpuTextureSourceTextureEntry>>(); auto object_member_texture_source_straight_srgb_texture_cache = flight::WeakMap<flight::Ref<flight::types::TextureSource>, flight::Ref<flight::types::WgpuTextureSourceTextureEntry>>(); auto intersection_value = flight::make_ref<flight::types::WgpuDeviceRuntime>(flight::types::WgpuDeviceRuntime{.device = object_member_device, .references = object_member_references, .teardowns = object_member_teardowns, .lost = object_member_lost, .signals = object_member_signals, .resources = object_member_resources, .pipeline_cache = object_member_pipeline_cache, .sampler_cache = object_member_sampler_cache, .mipmap_pipeline_cache = object_member_mipmap_pipeline_cache, .texture_cache = object_member_texture_cache, .texture_source_premultiplied_texture_cache = object_member_texture_source_premultiplied_texture_cache, .texture_source_premultiplied_srgb_texture_cache = object_member_texture_source_premultiplied_srgb_texture_cache, .texture_source_straight_texture_cache = object_member_texture_source_straight_texture_cache, .texture_source_straight_srgb_texture_cache = object_member_texture_source_straight_srgb_texture_cache}); intersection_value->binding = object_member_binding; return intersection_value; }());
   flight::render_wgpu::observe_wgpu_device_loss(runtime);
   return runtime;
 }
 
-
-// NOT GENERATED: function createWgpuDeviceState -- source line 81
-// refusal: cpp-contextual-union-interface-heritage-carrier-unrepresented [target-runtime]
-//
-// The source it stood for:
-//   export function createWgpuDeviceState(device: GPUDevice): WgpuDeviceState {
-//     const deviceRuntime = createMinimalDeviceRuntime(device);
-//     const state = allocateEntity<WgpuDeviceState>();
-//     initializeWgpuDeviceState(state, device);
-//     state[EntityRuntimeKey] = deviceRuntime;
-//     return finishEntity(state);
-//   }
-//   
-//   /**
-//    * Creates a device-only render state with its own frame-local resources.
-//    *
-//    * The state receives a fresh command encoder, uniform ring, traversal/proxy tree, batch writer, clip
-//    * stack, and render transform. Immutable pipelines/layouts/samplers plus uploaded textures and render
-//    * texture realizations share a device tier. Registrations are a creation-time snapshot.
-//    */
-//   export function createWgpuOffscreenRenderState(source: WgpuRenderState): WgpuOffscreenRenderStateResult;
-//   export function createWgpuOffscreenRenderState(
-//     deviceState: Readonly<WgpuDeviceState>,
-//     options?: Readonly<WgpuRenderStateOptions>,
-//   ): WgpuRenderState;
-// cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts: contextual nullable
-// interface conversion from WgpuDeviceRuntime to EntityRuntime follows TypeScript interface heritage, but
-// flight-cpp stores those declarations in independent flight::Ref<flight::types::WgpuDeviceRuntime> and
-// flight::Ref<flight::types::EntityRuntime> owner types: each interface struct is emitted flattened, so the
-// heritage is not a C++ base relation and no pointer cast exists to follow. A native pointer cast would claim
-// C++ inheritance the emitted interface structs do not have, materializing the target would replace object
-// identity, and a structural row would change the declared result carrier. Preserve the exact source owner in
-// the declared result, or add an owner-preserving interface-heritage carrier to the runtime contract. Declaring
-// the destination as the derived interface where the concrete type is known -- or converting where the type is
-// still concrete rather than widening it through a nullable union -- avoids the boundary altogether; closing it
-// at the carrier needs either that runtime carrier or interface structs emitted with the heritage as a C++ base
-// relation.
+inline flight::Ref<flight::types::WgpuDeviceState> create_wgpu_device_state(flight::host_sdl::WgpuDevice device) {
+  auto device_runtime = create_minimal_device_runtime(device);
+  flight::types::EntityConstruction<flight::Ref<flight::types::WgpuDeviceState>> state = flight::entity::allocate_entity<flight::Ref<flight::types::WgpuDeviceState>>();
+  initialize_wgpu_device_state(state, device);
+  flight::row_set(state, flight::types::entity_runtime_key, std::optional<flight::Ref<flight::types::EntityRuntime>>{device_runtime});
+  return flight::entity::finish_entity<flight::Ref<flight::types::WgpuDeviceState>>(state);
+}
 
 inline flight::Ref<flight::types::WgpuRenderState> create_wgpu_render_state(flight::host_sdl::WgpuDevice device, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuRenderStateOptions>>>>> options = std::nullopt) {
   options = options.value_or(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuRenderStateOptions>>>>());

@@ -4,7 +4,6 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function drawWgpuFullscreenPass -- source line 35
-#include <flight/any.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/string.hpp>
 #include <flight/structural_ref.hpp>
@@ -13,8 +12,6 @@
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
-
-#include <flight/types/capacitor_api.hpp>
 
 #include <flight/types/wgpu_render_target.hpp>
 
@@ -88,78 +85,26 @@ inline void destroy_wgpu_fullscreen_pipeline(flight::Ref<flight::types::WgpuRend
 
 inline const flight::String fullscreen_vertex_wgsl = flight::String("\n@vertex\nfn vs_main(@builtin(vertex_index) vi : u32) -> @builtin(position) vec4f {\n  // Full-screen triangle: three vertices covering the clip rect.\n  let x = f32((vi & 1u) << 2u) - 1.0;\n  let y = f32((vi & 2u) << 1u) - 1.0;\n  return vec4f(x, y, 0.0, 1.0);\n}\n");
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_TYPE_DA5EB69D1C0EE021
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_TYPE_DA5EB69D1C0EE021
-using type_da5eb69d1c0ee021 = flight::types::type_da5eb69d1c0ee021;
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_TYPE_DA5EB69D1C0EE021
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_BINDING_VISIBILITY_BUFFER_3B108916B1662422
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_BINDING_VISIBILITY_BUFFER_3B108916B1662422
-struct binding_visibility_buffer_3b108916b1662422 : public flight::ReferenceEnabled {
-  double binding;
-  flight::Any visibility;
-  flight::Ref<type_da5eb69d1c0ee021> buffer;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_BINDING_VISIBILITY_BUFFER_3B108916B1662422
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_SAMPLE_TYPE_056EE483A28C4F4F
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_SAMPLE_TYPE_056EE483A28C4F4F
-struct sample_type_056ee483a28c4f4f : public flight::ReferenceEnabled {
-  flight::String sample_type;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_SAMPLE_TYPE_056EE483A28C4F4F
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_MODULE_ENTRY_POINT_4D3C337401507620
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_MODULE_ENTRY_POINT_4D3C337401507620
-struct module_entry_point_4d3c337401507620 : public flight::ReferenceEnabled {
-  flight::Any module;
-  flight::String entry_point;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_MODULE_ENTRY_POINT_4D3C337401507620
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_FORMAT_4D24CAD4DE001668
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_FORMAT_4D24CAD4DE001668
-struct format_4d24cad4de001668 : public flight::ReferenceEnabled {
-  flight::Any format;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_FORMAT_4D24CAD4DE001668
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_MODULE_ENTRY_POINT_TARGETS_43B8D98FA37889AB
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_MODULE_ENTRY_POINT_TARGETS_43B8D98FA37889AB
-struct module_entry_point_targets_43b8d98fa37889ab : public flight::ReferenceEnabled {
-  flight::Any module;
-  flight::String entry_point;
-  flight::Array<flight::Ref<format_4d24cad4de001668>> targets;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_MODULE_ENTRY_POINT_TARGETS_43B8D98FA37889AB
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_TOPOLOGY_7C8278728B18051E
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_TOPOLOGY_7C8278728B18051E
-struct topology_7c8278728b18051e : public flight::ReferenceEnabled {
-  flight::String topology;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_TOPOLOGY_7C8278728B18051E
-
 inline void initialize_wgpu_fullscreen_pipeline(flight::types::EntityConstruction<flight::Ref<flight::types::WgpuFullscreenPipeline>> out, flight::Ref<flight::types::WgpuRenderState> state, flight::String fragment_wgsl, std::optional<double> texture_input_count = std::nullopt, std::optional<flight::String> format = std::nullopt) {
   texture_input_count = texture_input_count.value_or(1.0);
   format = format.value_or(state->format);
   auto object_pattern_value = state;
   flight::host_sdl::WgpuDevice device = object_pattern_value->device;
-  auto uniform_bind_group_layout = device.create_bind_group_layout({.entries = flight::Array{flight::make_ref<binding_visibility_buffer_3b108916b1662422>(binding_visibility_buffer_3b108916b1662422{.binding = 0.0, .visibility = flight::host_sdl::wgpu_shader_stage_fragment, .buffer = flight::make_ref<type_da5eb69d1c0ee021>(type_da5eb69d1c0ee021{.type = flight::String("uniform")})})}});
+  auto uniform_bind_group_layout = device.create_bind_group_layout(([&]() { flight::host_sdl::WgpuBindGroupLayoutDescriptor external_gpubind_group_layout_descriptor{}; external_gpubind_group_layout_descriptor.entries = flight::Array<flight::host_sdl::WgpuBindGroupLayoutEntry>{([&]() { flight::host_sdl::WgpuBindGroupLayoutEntry external_gpubind_group_layout_entry{}; external_gpubind_group_layout_entry.binding = 0.0; external_gpubind_group_layout_entry.visibility = flight::host_sdl::wgpu_shader_stage_fragment; external_gpubind_group_layout_entry.buffer = ([&]() { flight::host_sdl::WgpuBufferBindingLayout external_gpubuffer_binding_layout{}; external_gpubuffer_binding_layout.type = flight::String("uniform"); return external_gpubuffer_binding_layout; }()); return external_gpubind_group_layout_entry; }())}; return external_gpubind_group_layout_descriptor; }()));
   flight::Array<flight::host_sdl::WgpuBindGroupLayout> texture_bind_group_layouts = flight::Array<flight::host_sdl::WgpuBindGroupLayout>{};
   {
     double i = 0.0;
     while ((i < texture_input_count.value())) {
       {
-        texture_bind_group_layouts.push(device.create_bind_group_layout({.entries = flight::Array{{.binding = 0.0, .visibility = flight::host_sdl::wgpu_shader_stage_fragment, .texture = flight::make_ref<sample_type_056ee483a28c4f4f>(sample_type_056ee483a28c4f4f{.sample_type = flight::String("float")})}, {.binding = 1.0, .visibility = flight::host_sdl::wgpu_shader_stage_fragment, .sampler = flight::make_ref<type_da5eb69d1c0ee021>(type_da5eb69d1c0ee021{.type = flight::String("filtering")})}}}));
+        texture_bind_group_layouts.push(device.create_bind_group_layout(([&]() { flight::host_sdl::WgpuBindGroupLayoutDescriptor external_gpubind_group_layout_descriptor_2{}; external_gpubind_group_layout_descriptor_2.entries = flight::Array<flight::host_sdl::WgpuBindGroupLayoutEntry>{([&]() { flight::host_sdl::WgpuBindGroupLayoutEntry external_gpubind_group_layout_entry_2{}; external_gpubind_group_layout_entry_2.binding = 0.0; external_gpubind_group_layout_entry_2.visibility = flight::host_sdl::wgpu_shader_stage_fragment; external_gpubind_group_layout_entry_2.texture = ([&]() { flight::host_sdl::WgpuTextureBindingLayout external_gputexture_binding_layout{}; external_gputexture_binding_layout.sample_type = flight::String("float"); return external_gputexture_binding_layout; }()); return external_gpubind_group_layout_entry_2; }()), ([&]() { flight::host_sdl::WgpuBindGroupLayoutEntry external_gpubind_group_layout_entry_3{}; external_gpubind_group_layout_entry_3.binding = 1.0; external_gpubind_group_layout_entry_3.visibility = flight::host_sdl::wgpu_shader_stage_fragment; external_gpubind_group_layout_entry_3.sampler = ([&]() { flight::host_sdl::WgpuSamplerBindingLayout external_gpusampler_binding_layout{}; external_gpusampler_binding_layout.type = flight::String("filtering"); return external_gpusampler_binding_layout; }()); return external_gpubind_group_layout_entry_3; }())}; return external_gpubind_group_layout_descriptor_2; }())));
       }
       (i += 1.0);
     }
   }
-  auto pipeline_layout = device.create_pipeline_layout({.bind_group_layouts = ([&]() { flight::Array<flight::host_sdl::WgpuBindGroupLayout> array_spread_result; array_spread_result.push(uniform_bind_group_layout); for (const auto& array_spread_item : texture_bind_group_layouts) { array_spread_result.push(array_spread_item); } return array_spread_result; }())});
-  auto vs_module = device.create_shader_module({.code = fullscreen_vertex_wgsl});
-  auto fs_module = device.create_shader_module({.code = fragment_wgsl});
-  auto pipeline = device.create_render_pipeline({.layout = pipeline_layout, .vertex = flight::make_ref<module_entry_point_4d3c337401507620>(module_entry_point_4d3c337401507620{.module = vs_module, .entry_point = flight::String("vs_main")}), .fragment = flight::make_ref<module_entry_point_targets_43b8d98fa37889ab>(module_entry_point_targets_43b8d98fa37889ab{.module = fs_module, .entry_point = flight::String("fs_main"), .targets = flight::Array<flight::Ref<format_4d24cad4de001668>>{flight::make_ref<format_4d24cad4de001668>(format_4d24cad4de001668{.format = format.value()})}}), .primitive = flight::make_ref<topology_7c8278728b18051e>(topology_7c8278728b18051e{.topology = flight::String("triangle-list")})});
+  auto pipeline_layout = device.create_pipeline_layout(([&]() { flight::host_sdl::WgpuPipelineLayoutDescriptor external_gpupipeline_layout_descriptor{}; external_gpupipeline_layout_descriptor.bind_group_layouts = ([&]() { flight::Array<flight::host_sdl::WgpuBindGroupLayout> array_spread_result; array_spread_result.push(uniform_bind_group_layout); for (const auto& array_spread_item : texture_bind_group_layouts) { array_spread_result.push(array_spread_item); } return array_spread_result; }()); return external_gpupipeline_layout_descriptor; }()));
+  auto vs_module = device.create_shader_module(([&]() { flight::host_sdl::WgpuShaderModuleDescriptor external_gpushader_module_descriptor{}; external_gpushader_module_descriptor.code = fullscreen_vertex_wgsl; return external_gpushader_module_descriptor; }()));
+  auto fs_module = device.create_shader_module(([&]() { flight::host_sdl::WgpuShaderModuleDescriptor external_gpushader_module_descriptor_2{}; external_gpushader_module_descriptor_2.code = fragment_wgsl; return external_gpushader_module_descriptor_2; }()));
+  auto pipeline = device.create_render_pipeline(([&]() { flight::host_sdl::WgpuRenderPipelineDescriptor external_gpurender_pipeline_descriptor{}; external_gpurender_pipeline_descriptor.layout = pipeline_layout; external_gpurender_pipeline_descriptor.vertex = ([&]() { flight::host_sdl::WgpuVertexState external_gpuvertex_state{}; external_gpuvertex_state.module = vs_module; external_gpuvertex_state.entry_point = flight::String("vs_main"); return external_gpuvertex_state; }()); external_gpurender_pipeline_descriptor.fragment = ([&]() { flight::host_sdl::WgpuFragmentState external_gpufragment_state{}; external_gpufragment_state.module = fs_module; external_gpufragment_state.entry_point = flight::String("fs_main"); external_gpufragment_state.targets = flight::Array<flight::host_sdl::WgpuColorTargetState>{([&]() { flight::host_sdl::WgpuColorTargetState external_gpucolor_target_state{}; external_gpucolor_target_state.format = format.value(); return external_gpucolor_target_state; }())}; return external_gpufragment_state; }()); external_gpurender_pipeline_descriptor.primitive = ([&]() { flight::host_sdl::WgpuPrimitiveState external_gpuprimitive_state{}; external_gpuprimitive_state.topology = flight::String("triangle-list"); return external_gpuprimitive_state; }()); return external_gpurender_pipeline_descriptor; }()));
   flight::row_set<flight::RowKey<"pipeline">>(out, pipeline);
   flight::row_set<flight::RowKey<"pipelineLayout">>(out, pipeline_layout);
   flight::row_set<flight::RowKey<"uniformBindGroupLayout">>(out, uniform_bind_group_layout);

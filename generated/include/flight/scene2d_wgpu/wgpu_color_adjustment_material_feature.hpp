@@ -12,7 +12,6 @@
 //   missing: function resolveWgpuColorAdjustmentFlush -- source line 157
 #include <cmath>
 #include <cstdint>
-#include <flight/any.hpp>
 #include <flight/array.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/string.hpp>
@@ -27,8 +26,6 @@
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
-
-#include <flight/types/capacitor_api.hpp>
 
 #include <flight/types/wgpu_render_state.hpp>
 
@@ -547,94 +544,6 @@ inline void promote_wgpu_packed_tint_to_color_scale_bias(flight::Ref<flight::typ
 
 inline const flight::String shape_mesh_color_scale_bias_wgsl = flight::String("\n") + flight::to_string(wgpu_color_adjustment_fragment_chunk) + flight::String("\nstruct ShapeMeshUniforms {\n  matrix : mat3x3f,\n  color : vec4f,\n  colorScale : vec4f,\n  colorBias : vec4f,\n}\n@group(0) @binding(0) var<uniform> u : ShapeMeshUniforms;\n@vertex fn vs_main(@location(0) position : vec2f) -> @builtin(position) vec4f {\n  let p = u.matrix * vec3f(position, 1.0);\n  return vec4f(p.x, p.y, 0.0, 1.0);\n}\n@fragment fn fs_main() -> @location(0) vec4f {\n  if (u.color.a <= 0.0) { discard; }\n  var color = vec4f(u.color.rgb / u.color.a, u.color.a);\n  color = applyFlightColorAdjustment(color, u.colorScale, u.colorBias);\n  return vec4f(color.rgb * color.a, color.a);\n}\n");
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_TYPE_DA5EB69D1C0EE021
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_TYPE_DA5EB69D1C0EE021
-using type_da5eb69d1c0ee021 = flight::types::type_da5eb69d1c0ee021;
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_TYPE_DA5EB69D1C0EE021
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_BINDING_VISIBILITY_BUFFER_B7F47FE8B817FBD4
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_BINDING_VISIBILITY_BUFFER_B7F47FE8B817FBD4
-struct binding_visibility_buffer_b7f47fe8b817fbd4 : public flight::ReferenceEnabled {
-  double binding;
-  double visibility;
-  flight::Ref<type_da5eb69d1c0ee021> buffer;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_BINDING_VISIBILITY_BUFFER_B7F47FE8B817FBD4
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_SHADER_LOCATION_OFFSET_FORMAT_4777B23B31BB316F
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_SHADER_LOCATION_OFFSET_FORMAT_4777B23B31BB316F
-struct shader_location_offset_format_4777b23b31bb316f : public flight::ReferenceEnabled {
-  double shader_location;
-  double offset;
-  flight::String format;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_SHADER_LOCATION_OFFSET_FORMAT_4777B23B31BB316F
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_ARRAY_STRIDE_ATTRIBUTES_C1979404C5B042C8
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_ARRAY_STRIDE_ATTRIBUTES_C1979404C5B042C8
-struct array_stride_attributes_c1979404c5b042c8 : public flight::ReferenceEnabled {
-  double array_stride;
-  flight::Array<flight::Ref<shader_location_offset_format_4777b23b31bb316f>> attributes;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_ARRAY_STRIDE_ATTRIBUTES_C1979404C5B042C8
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_MODULE_ENTRY_POINT_BUFFERS_CE260E606F1A8DE4
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_MODULE_ENTRY_POINT_BUFFERS_CE260E606F1A8DE4
-struct module_entry_point_buffers_ce260e606f1a8de4 : public flight::ReferenceEnabled {
-  flight::Any module;
-  flight::String entry_point;
-  flight::Array<flight::Ref<array_stride_attributes_c1979404c5b042c8>> buffers;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_MODULE_ENTRY_POINT_BUFFERS_CE260E606F1A8DE4
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_FORMAT_BLEND_CBBDA2C8A8FAC764
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_FORMAT_BLEND_CBBDA2C8A8FAC764
-struct format_blend_cbbda2c8a8fac764 : public flight::ReferenceEnabled {
-  flight::Any format;
-  flight::Any blend;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_FORMAT_BLEND_CBBDA2C8A8FAC764
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_MODULE_ENTRY_POINT_TARGETS_13A92E13F8DD9817
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_MODULE_ENTRY_POINT_TARGETS_13A92E13F8DD9817
-struct module_entry_point_targets_13a92e13f8dd9817 : public flight::ReferenceEnabled {
-  flight::Any module;
-  flight::String entry_point;
-  flight::Array<flight::Ref<format_blend_cbbda2c8a8fac764>> targets;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_MODULE_ENTRY_POINT_TARGETS_13A92E13F8DD9817
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_TOPOLOGY_CULL_MODE_1C58EF98B8A1B4AC
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_TOPOLOGY_CULL_MODE_1C58EF98B8A1B4AC
-struct topology_cull_mode_1c58ef98b8a1b4ac : public flight::ReferenceEnabled {
-  flight::String topology;
-  flight::String cull_mode;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_TOPOLOGY_CULL_MODE_1C58EF98B8A1B4AC
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_COMPARE_PASS_OP_FAIL_OP_DEPTH_FAIL_OP_810E9AACF853DB80
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_COMPARE_PASS_OP_FAIL_OP_DEPTH_FAIL_OP_810E9AACF853DB80
-struct compare_pass_op_fail_op_depth_fail_op_810e9aacf853db80 : public flight::ReferenceEnabled {
-  flight::String compare;
-  flight::String pass_op;
-  flight::String fail_op;
-  flight::String depth_fail_op;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_COMPARE_PASS_OP_FAIL_OP_DEPTH_FAIL_OP_810E9AACF853DB80
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_FORMAT_DEPTH_WRITE_ENABLED_DEPTH_COMPARE_STENCIL_FRONT_STENCIL_BACK_STENCIL_READ_MASK_STENCIL_WRITE_MASK_3688C6F3AD53051F
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_FORMAT_DEPTH_WRITE_ENABLED_DEPTH_COMPARE_STENCIL_FRONT_STENCIL_BACK_STENCIL_READ_MASK_STENCIL_WRITE_MASK_3688C6F3AD53051F
-struct format_depth_write_enabled_depth_compare_stencil_front_stencil_back_stencil_read_mask_stencil_write_mask_3688c6f3ad53051f : public flight::ReferenceEnabled {
-  flight::String format;
-  bool depth_write_enabled;
-  flight::String depth_compare;
-  flight::Ref<compare_pass_op_fail_op_depth_fail_op_810e9aacf853db80> stencil_front;
-  flight::Ref<compare_pass_op_fail_op_depth_fail_op_810e9aacf853db80> stencil_back;
-  double stencil_read_mask;
-  double stencil_write_mask;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_FORMAT_DEPTH_WRITE_ENABLED_DEPTH_COMPARE_STENCIL_FRONT_STENCIL_BACK_STENCIL_READ_MASK_STENCIL_WRITE_MASK_3688C6F3AD53051F
-
 inline flight::Ref<flight::types::WgpuShapeMeshPipeline> ensure_wgpu_shape_mesh_color_scale_bias_pipeline(flight::Ref<flight::types::WgpuRenderState> state, std::optional<flight::String> blend_mode) {
   auto runtime = flight::render_wgpu::get_wgpu_render_state_runtime(state);
   std::optional<flight::Map<flight::String, flight::Ref<flight::types::WgpuShapeMeshPipeline>>> cache = runtime->context->shape_mesh_color_scale_bias_pipelines;
@@ -649,10 +558,10 @@ inline flight::Ref<flight::types::WgpuShapeMeshPipeline> ensure_wgpu_shape_mesh_
     return existing.value();
   }
   flight::host_sdl::WgpuDevice device = state->device;
-  auto module = device.create_shader_module({.code = shape_mesh_color_scale_bias_wgsl});
-  auto bind_group_layout = device.create_bind_group_layout({.entries = flight::Array{flight::make_ref<binding_visibility_buffer_b7f47fe8b817fbd4>(binding_visibility_buffer_b7f47fe8b817fbd4{.binding = 0.0, .visibility = flight::bitwise_or(flight::host_sdl::wgpu_shader_stage_vertex, flight::host_sdl::wgpu_shader_stage_fragment), .buffer = flight::make_ref<type_da5eb69d1c0ee021>(type_da5eb69d1c0ee021{.type = flight::String("uniform")})})}});
-  auto layout = device.create_pipeline_layout({.bind_group_layouts = flight::Array{bind_group_layout}});
-  auto pipeline = device.create_render_pipeline({.layout = layout, .vertex = flight::make_ref<module_entry_point_buffers_ce260e606f1a8de4>(module_entry_point_buffers_ce260e606f1a8de4{.module = module, .entry_point = flight::String("vs_main"), .buffers = flight::Array<flight::Ref<array_stride_attributes_c1979404c5b042c8>>{flight::make_ref<array_stride_attributes_c1979404c5b042c8>(array_stride_attributes_c1979404c5b042c8{.array_stride = 8.0, .attributes = flight::Array<flight::Ref<shader_location_offset_format_4777b23b31bb316f>>{flight::make_ref<shader_location_offset_format_4777b23b31bb316f>(shader_location_offset_format_4777b23b31bb316f{.shader_location = 0.0, .offset = 0.0, .format = flight::String("float32x2")})}})}}), .fragment = flight::make_ref<module_entry_point_targets_13a92e13f8dd9817>(module_entry_point_targets_13a92e13f8dd9817{.module = module, .entry_point = flight::String("fs_main"), .targets = flight::Array<flight::Ref<format_blend_cbbda2c8a8fac764>>{flight::make_ref<format_blend_cbbda2c8a8fac764>(format_blend_cbbda2c8a8fac764{.format = format, .blend = flight::render_wgpu::get_wgpu_blend_state(blend_mode)})}}), .primitive = flight::make_ref<topology_cull_mode_1c58ef98b8a1b4ac>(topology_cull_mode_1c58ef98b8a1b4ac{.topology = flight::String("triangle-list"), .cull_mode = flight::String("none")}), .depth_stencil = flight::make_ref<format_depth_write_enabled_depth_compare_stencil_front_stencil_back_stencil_read_mask_stencil_write_mask_3688c6f3ad53051f>(format_depth_write_enabled_depth_compare_stencil_front_stencil_back_stencil_read_mask_stencil_write_mask_3688c6f3ad53051f{.format = flight::String("depth24plus-stencil8"), .depth_write_enabled = false, .depth_compare = flight::String("always"), .stencil_front = flight::make_ref<compare_pass_op_fail_op_depth_fail_op_810e9aacf853db80>(compare_pass_op_fail_op_depth_fail_op_810e9aacf853db80{.compare = flight::String("equal"), .pass_op = flight::String("keep"), .fail_op = flight::String("keep"), .depth_fail_op = flight::String("keep")}), .stencil_back = flight::make_ref<compare_pass_op_fail_op_depth_fail_op_810e9aacf853db80>(compare_pass_op_fail_op_depth_fail_op_810e9aacf853db80{.compare = flight::String("equal"), .pass_op = flight::String("keep"), .fail_op = flight::String("keep"), .depth_fail_op = flight::String("keep")}), .stencil_read_mask = 255.0, .stencil_write_mask = 0.0})});
+  auto module = device.create_shader_module(([&]() { flight::host_sdl::WgpuShaderModuleDescriptor external_gpushader_module_descriptor{}; external_gpushader_module_descriptor.code = shape_mesh_color_scale_bias_wgsl; return external_gpushader_module_descriptor; }()));
+  auto bind_group_layout = device.create_bind_group_layout(([&]() { flight::host_sdl::WgpuBindGroupLayoutDescriptor external_gpubind_group_layout_descriptor{}; external_gpubind_group_layout_descriptor.entries = flight::Array<flight::host_sdl::WgpuBindGroupLayoutEntry>{([&]() { flight::host_sdl::WgpuBindGroupLayoutEntry external_gpubind_group_layout_entry{}; external_gpubind_group_layout_entry.binding = 0.0; external_gpubind_group_layout_entry.visibility = flight::bitwise_or(flight::host_sdl::wgpu_shader_stage_vertex, flight::host_sdl::wgpu_shader_stage_fragment); external_gpubind_group_layout_entry.buffer = ([&]() { flight::host_sdl::WgpuBufferBindingLayout external_gpubuffer_binding_layout{}; external_gpubuffer_binding_layout.type = flight::String("uniform"); return external_gpubuffer_binding_layout; }()); return external_gpubind_group_layout_entry; }())}; return external_gpubind_group_layout_descriptor; }()));
+  auto layout = device.create_pipeline_layout(([&]() { flight::host_sdl::WgpuPipelineLayoutDescriptor external_gpupipeline_layout_descriptor{}; external_gpupipeline_layout_descriptor.bind_group_layouts = flight::Array{bind_group_layout}; return external_gpupipeline_layout_descriptor; }()));
+  auto pipeline = device.create_render_pipeline(([&]() { flight::host_sdl::WgpuRenderPipelineDescriptor external_gpurender_pipeline_descriptor{}; external_gpurender_pipeline_descriptor.layout = layout; external_gpurender_pipeline_descriptor.vertex = ([&]() { flight::host_sdl::WgpuVertexState external_gpuvertex_state{}; external_gpuvertex_state.module = module; external_gpuvertex_state.entry_point = flight::String("vs_main"); external_gpuvertex_state.buffers = flight::Array<flight::host_sdl::WgpuVertexBufferLayout>{([&]() { flight::host_sdl::WgpuVertexBufferLayout external_gpuvertex_buffer_layout{}; external_gpuvertex_buffer_layout.array_stride = 8.0; external_gpuvertex_buffer_layout.attributes = flight::Array<flight::host_sdl::WgpuVertexAttribute>{([&]() { flight::host_sdl::WgpuVertexAttribute external_gpuvertex_attribute{}; external_gpuvertex_attribute.shader_location = 0.0; external_gpuvertex_attribute.offset = 0.0; external_gpuvertex_attribute.format = flight::String("float32x2"); return external_gpuvertex_attribute; }())}; return external_gpuvertex_buffer_layout; }())}; return external_gpuvertex_state; }()); external_gpurender_pipeline_descriptor.fragment = ([&]() { flight::host_sdl::WgpuFragmentState external_gpufragment_state{}; external_gpufragment_state.module = module; external_gpufragment_state.entry_point = flight::String("fs_main"); external_gpufragment_state.targets = flight::Array<flight::host_sdl::WgpuColorTargetState>{([&]() { flight::host_sdl::WgpuColorTargetState external_gpucolor_target_state{}; external_gpucolor_target_state.format = format; external_gpucolor_target_state.blend = flight::render_wgpu::get_wgpu_blend_state(blend_mode); return external_gpucolor_target_state; }())}; return external_gpufragment_state; }()); external_gpurender_pipeline_descriptor.primitive = ([&]() { flight::host_sdl::WgpuPrimitiveState external_gpuprimitive_state{}; external_gpuprimitive_state.topology = flight::String("triangle-list"); external_gpuprimitive_state.cull_mode = flight::String("none"); return external_gpuprimitive_state; }()); external_gpurender_pipeline_descriptor.depth_stencil = ([&]() { flight::host_sdl::WgpuDepthStencilState external_gpudepth_stencil_state{}; external_gpudepth_stencil_state.format = flight::String("depth24plus-stencil8"); external_gpudepth_stencil_state.depth_write_enabled = false; external_gpudepth_stencil_state.depth_compare = flight::String("always"); external_gpudepth_stencil_state.stencil_front = ([&]() { flight::host_sdl::WgpuStencilFaceState external_gpustencil_face_state{}; external_gpustencil_face_state.compare = flight::String("equal"); external_gpustencil_face_state.pass_op = flight::String("keep"); external_gpustencil_face_state.fail_op = flight::String("keep"); external_gpustencil_face_state.depth_fail_op = flight::String("keep"); return external_gpustencil_face_state; }()); external_gpudepth_stencil_state.stencil_back = ([&]() { flight::host_sdl::WgpuStencilFaceState external_gpustencil_face_state_2{}; external_gpustencil_face_state_2.compare = flight::String("equal"); external_gpustencil_face_state_2.pass_op = flight::String("keep"); external_gpustencil_face_state_2.fail_op = flight::String("keep"); external_gpustencil_face_state_2.depth_fail_op = flight::String("keep"); return external_gpustencil_face_state_2; }()); external_gpudepth_stencil_state.stencil_read_mask = 255.0; external_gpudepth_stencil_state.stencil_write_mask = 0.0; return external_gpudepth_stencil_state; }()); return external_gpurender_pipeline_descriptor; }()));
   flight::Ref<flight::types::WgpuShapeMeshPipeline> created = flight::make_ref<flight::types::WgpuShapeMeshPipeline>(flight::types::WgpuShapeMeshPipeline{.pipeline = pipeline, .bind_group_layout = bind_group_layout});
   cache.value().set(key, created);
   return created;

@@ -55,7 +55,7 @@ inline flight::host_sdl::WgpuBuffer create_clip_contour_uniform_buffer(flight::R
   ([&]() { auto&& typed_array_7 = m; const auto typed_index_7 = 8.0; const auto typed_value_7 = ((flight::row_get<flight::RowKey<"tx">>(t) * iw) - 1.0); return typed_array_7.set_index(typed_index_7, typed_value_7); }());
   ([&]() { auto&& typed_array_8 = m; const auto typed_index_8 = 9.0; const auto typed_value_8 = ((-flight::row_get<flight::RowKey<"ty">>(t) * ih) + 1.0); return typed_array_8.set_index(typed_index_8, typed_value_8); }());
   ([&]() { auto&& typed_array_9 = m; const auto typed_index_9 = 10.0; const auto typed_value_9 = 1.0; return typed_array_9.set_index(typed_index_9, typed_value_9); }());
-  auto buffer = state->device.create_buffer({.size = clip_uniform_bytes, .usage = flight::bitwise_or(flight::host_sdl::wgpu_buffer_usage_uniform, flight::host_sdl::wgpu_buffer_usage_copy_dst)});
+  auto buffer = state->device.create_buffer(([&]() { flight::host_sdl::WgpuBufferDescriptor external_gpubuffer_descriptor{}; external_gpubuffer_descriptor.size = clip_uniform_bytes; external_gpubuffer_descriptor.usage = flight::bitwise_or(flight::host_sdl::wgpu_buffer_usage_uniform, flight::host_sdl::wgpu_buffer_usage_copy_dst); return external_gpubuffer_descriptor; }()));
   state->device.queue.write_buffer(buffer, 0.0, m);
   return buffer;
 }
@@ -95,7 +95,7 @@ inline flight::Ref<vertex_buffer_vertex_count_aa84fbf7a4cdeac3> create_clip_cont
   }
   flight::Float32Array data = flight::Float32Array(tris);
   const double vertex_count = flight::signed_right_shift(static_cast<double>(data.size()), 1.0);
-  auto vertex_buffer = state->device.create_buffer({.size = flight::maximum(4.0, static_cast<double>(data.byte_length)), .usage = flight::bitwise_or(flight::host_sdl::wgpu_buffer_usage_vertex, flight::host_sdl::wgpu_buffer_usage_copy_dst)});
+  auto vertex_buffer = state->device.create_buffer(([&]() { flight::host_sdl::WgpuBufferDescriptor external_gpubuffer_descriptor_2{}; external_gpubuffer_descriptor_2.size = flight::maximum(4.0, static_cast<double>(data.byte_length)); external_gpubuffer_descriptor_2.usage = flight::bitwise_or(flight::host_sdl::wgpu_buffer_usage_vertex, flight::host_sdl::wgpu_buffer_usage_copy_dst); return external_gpubuffer_descriptor_2; }()));
   if ((static_cast<double>(data.byte_length) > 0.0)) {
     state->device.queue.write_buffer(vertex_buffer, 0.0, data);
   }
@@ -197,21 +197,6 @@ inline flight::Ref<vertex_buffer_vertex_count_aa84fbf7a4cdeac3> create_clip_cont
 // produce a different value), then read the member only in the present branch. The compiler will not discard the
 // absence state or call value() without that proof
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_BUFFER_7103C47B1877240F
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_BUFFER_7103C47B1877240F
-struct buffer_7103c47b1877240f : public flight::ReferenceEnabled {
-  flight::host_sdl::WgpuBuffer buffer;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_BUFFER_7103C47B1877240F
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_BINDING_RESOURCE_B565FFCBB55F5EA7
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_BINDING_RESOURCE_B565FFCBB55F5EA7
-struct binding_resource_b565ffcbb55f5ea7 : public flight::ReferenceEnabled {
-  double binding;
-  flight::Ref<buffer_7103c47b1877240f> resource;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_BINDING_RESOURCE_B565FFCBB55F5EA7
-
 inline void push_wgpu_clip_contours(flight::Ref<flight::types::WgpuRenderState> state, flight::Array<flight::Array<double>> contours, flight::types::PathWinding winding, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>> world_transform) {
   auto runtime = flight::render_wgpu::get_wgpu_render_state_runtime(state);
   flight::scene2d_wgpu::flush_wgpu_quad_batch_writer(state);
@@ -223,7 +208,7 @@ inline void push_wgpu_clip_contours(flight::Ref<flight::types::WgpuRenderState> 
   flight::host_sdl::WgpuBuffer vertex_buffer = object_pattern_value->vertex_buffer;
   const double vertex_count = object_pattern_value->vertex_count;
   flight::host_sdl::WgpuBuffer uniform_buffer = create_clip_contour_uniform_buffer(state, world_transform);
-  auto bind_group = device.create_bind_group({.layout = pipelines->bind_group_layout, .entries = flight::Array{flight::make_ref<binding_resource_b565ffcbb55f5ea7>(binding_resource_b565ffcbb55f5ea7{.binding = 0.0, .resource = flight::make_ref<buffer_7103c47b1877240f>(buffer_7103c47b1877240f{.buffer = uniform_buffer})})}});
+  auto bind_group = device.create_bind_group(([&]() { flight::host_sdl::WgpuBindGroupDescriptor external_gpubind_group_descriptor{}; external_gpubind_group_descriptor.layout = pipelines->bind_group_layout; external_gpubind_group_descriptor.entries = flight::Array<flight::host_sdl::WgpuBindGroupEntry>{([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry{}; external_gpubind_group_entry.binding = 0.0; external_gpubind_group_entry.resource = ([&]() { flight::host_sdl::WgpuBufferBinding external_gpubuffer_binding{}; external_gpubuffer_binding.buffer = uniform_buffer; return external_gpubuffer_binding; }()); return external_gpubind_group_entry; }())}; return external_gpubind_group_descriptor; }()));
   std::optional<flight::host_sdl::WgpuRenderPassEncoder> pass = runtime->render_pass;
   if (pass.has_value()) {
     pass.value().set_pipeline(pipelines->write);

@@ -1,60 +1,119 @@
 {
-  "schema": "flight-generated-sdk/1",
+  "schema": "flight-generated-sdk/2",
   "compiler": {
     "repository": "https://github.com/flighthq/flight-compiler",
     "revision": "806d257d2f4100de745cc97340e61c2f301b0f24",
     "runtimeProfile": "flight-cpp",
     "target": "cpp"
   },
-  "bindingProfiles": [
+  "bindingProfileSets": [
     {
-      "digest": "sha256:23d8b54c0e33ad10d6cfb7004620f66ff4d0f68062dcc132fcca8fb7d4eabbf8",
-      "identity": "flighthq/flight-cpp/runtime-carriers/1",
-      "path": "bindings/runtime.json",
-      "profile": "runtime-carriers",
-      "schema": "flight-cpp-external-bindings/1"
+      "id": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
+      "profiles": [
+        {
+          "digest": "sha256:23d8b54c0e33ad10d6cfb7004620f66ff4d0f68062dcc132fcca8fb7d4eabbf8",
+          "identity": "flighthq/flight-cpp/runtime-carriers/1",
+          "path": "bindings/runtime.json",
+          "profile": "runtime-carriers",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:96db37ebc3c2412cbc64451ea6344e463539b1dea548a30e1c06ce315836fb24",
+          "identity": "flighthq/flight-cpp/headless/1",
+          "path": "bindings/headless.json",
+          "profile": "headless",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:5bbaaf9c6dcacda0d2c9fe89eb9453af9726d417c15193e2e5016cce9930db71",
+          "identity": "flighthq/flight-cpp/web-types/1",
+          "path": "bindings/web-types.json",
+          "profile": "web-types",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:b0b4e3ac41bba815dd5e27b8e677d4edc505bf56ca0ab519914f8525751773ed",
+          "identity": "flighthq/flight-cpp/sdl-image/1",
+          "path": "bindings/sdl-image.json",
+          "profile": "sdl-image",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:4daf23f904f3868115322ed091fea1c4b6e287e3ce06732789e5c6eb543d53dd",
+          "identity": "flighthq/flight-cpp/sdl-gl/1",
+          "path": "bindings/sdl-gl.json",
+          "profile": "sdl-gl",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:651d841d6f5a5c0feb80be12d79e45cb1fba6fd973176f96e580efb98aec3f59",
+          "identity": "flighthq/flight-cpp/sdl-wgpu/1",
+          "path": "bindings/sdl-wgpu.json",
+          "profile": "sdl-wgpu",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:3f73f00279d486c9dd4b7c6158d95bce4afa0b3e0704c87462829d73d8049f86",
+          "identity": "flighthq/flight-cpp/sdl-app/1",
+          "path": "bindings/sdl-app.json",
+          "profile": "sdl-app",
+          "schema": "flight-cpp-external-bindings/1"
+        }
+      ]
     },
     {
-      "digest": "sha256:96db37ebc3c2412cbc64451ea6344e463539b1dea548a30e1c06ce315836fb24",
-      "identity": "flighthq/flight-cpp/headless/1",
-      "path": "bindings/headless.json",
-      "profile": "headless",
-      "schema": "flight-cpp-external-bindings/1"
-    },
-    {
-      "digest": "sha256:5bbaaf9c6dcacda0d2c9fe89eb9453af9726d417c15193e2e5016cce9930db71",
-      "identity": "flighthq/flight-cpp/web-types/1",
-      "path": "bindings/web-types.json",
-      "profile": "web-types",
-      "schema": "flight-cpp-external-bindings/1"
-    },
-    {
-      "digest": "sha256:b0b4e3ac41bba815dd5e27b8e677d4edc505bf56ca0ab519914f8525751773ed",
-      "identity": "flighthq/flight-cpp/sdl-image/1",
-      "path": "bindings/sdl-image.json",
-      "profile": "sdl-image",
-      "schema": "flight-cpp-external-bindings/1"
-    },
-    {
-      "digest": "sha256:4daf23f904f3868115322ed091fea1c4b6e287e3ce06732789e5c6eb543d53dd",
-      "identity": "flighthq/flight-cpp/sdl-gl/1",
-      "path": "bindings/sdl-gl.json",
-      "profile": "sdl-gl",
-      "schema": "flight-cpp-external-bindings/1"
-    },
-    {
-      "digest": "sha256:651d841d6f5a5c0feb80be12d79e45cb1fba6fd973176f96e580efb98aec3f59",
-      "identity": "flighthq/flight-cpp/sdl-wgpu/1",
-      "path": "bindings/sdl-wgpu.json",
-      "profile": "sdl-wgpu",
-      "schema": "flight-cpp-external-bindings/1"
-    },
-    {
-      "digest": "sha256:3f73f00279d486c9dd4b7c6158d95bce4afa0b3e0704c87462829d73d8049f86",
-      "identity": "flighthq/flight-cpp/sdl-app/1",
-      "path": "bindings/sdl-app.json",
-      "profile": "sdl-app",
-      "schema": "flight-cpp-external-bindings/1"
+      "id": "sha256:2602f15df98afbc4055416765f444e85bee83a6c5fad13b420301f8fa344ca71",
+      "profiles": [
+        {
+          "digest": "sha256:23d8b54c0e33ad10d6cfb7004620f66ff4d0f68062dcc132fcca8fb7d4eabbf8",
+          "identity": "flighthq/flight-cpp/runtime-carriers/1",
+          "path": "bindings/runtime.json",
+          "profile": "runtime-carriers",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:96db37ebc3c2412cbc64451ea6344e463539b1dea548a30e1c06ce315836fb24",
+          "identity": "flighthq/flight-cpp/headless/1",
+          "path": "bindings/headless.json",
+          "profile": "headless",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:5bbaaf9c6dcacda0d2c9fe89eb9453af9726d417c15193e2e5016cce9930db71",
+          "identity": "flighthq/flight-cpp/web-types/1",
+          "path": "bindings/web-types.json",
+          "profile": "web-types",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:b0b4e3ac41bba815dd5e27b8e677d4edc505bf56ca0ab519914f8525751773ed",
+          "identity": "flighthq/flight-cpp/sdl-image/1",
+          "path": "bindings/sdl-image.json",
+          "profile": "sdl-image",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:4daf23f904f3868115322ed091fea1c4b6e287e3ce06732789e5c6eb543d53dd",
+          "identity": "flighthq/flight-cpp/sdl-gl/1",
+          "path": "bindings/sdl-gl.json",
+          "profile": "sdl-gl",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:7b6ddd02feef7f55abbb8693baae5d378a550a8ffe2f98bf88ccf818f05052a6",
+          "identity": "flighthq/flight-cpp/sdl-wgpu/1",
+          "path": "bindings/sdl-wgpu.json",
+          "profile": "sdl-wgpu",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:3f73f00279d486c9dd4b7c6158d95bce4afa0b3e0704c87462829d73d8049f86",
+          "identity": "flighthq/flight-cpp/sdl-app/1",
+          "path": "bindings/sdl-app.json",
+          "profile": "sdl-app",
+          "schema": "flight-cpp-external-bindings/1"
+        }
+      ]
     }
   ],
   "profileTypeNames": [
@@ -763,7 +822,6 @@
         "flight/clip/enable_clip_guards.hpp",
         "flight/easing/enable_easing_guards.hpp",
         "flight/effects_gl/enable_gl_effect_guards.hpp",
-        "flight/effects_wgpu/enable_wgpu_effect_guards.hpp",
         "flight/geometry/enable_geometry_pool_guards.hpp",
         "flight/glyphatlas/enable_glyph_atlas_guards.hpp",
         "flight/interaction/enable_interaction_guards.hpp",
@@ -773,12 +831,8 @@
         "flight/render/enable_color_adjustment_guards.hpp",
         "flight/render/enable_scene_render_guards.hpp",
         "flight/render_gl/enable_gl_render_state_guards.hpp",
-        "flight/render_wgpu/enable_wgpu_texture_resolver_guards.hpp",
         "flight/scene2d_gl/enable_gl_color_adjustment_guards.hpp",
-        "flight/scene2d_wgpu/enable_wgpu_color_adjustment_guards.hpp",
         "flight/scene3d/enable_scene_3d_guards.hpp",
-        "flight/scene3d_wgpu/enable_wgpu_scene_3d_custom_shader_guards.hpp",
-        "flight/scene3d_wgpu/enable_wgpu_scene_3d_forward_light_selection_guards.hpp",
         "flight/skeleton2d/enable_skeleton_2d_guards.hpp",
         "flight/skeleton3d/enable_skeleton_3d_guards.hpp",
         "flight/snapshot/enable_snapshot_guards.hpp",
@@ -959,6 +1013,8 @@
         "flight/scene2d_formats/svg_container_element.hpp",
         "flight/scene2d_gl/gl_clip_rectangle.hpp",
         "flight/scene2d_wgpu/wgpu_clip_rectangle.hpp",
+        "flight/scene2d_wgpu/wgpu_particle_emitter_2d.hpp",
+        "flight/scene2d_wgpu/wgpu_quad_batch_writer.hpp",
         "flight/scene3d_formats/awd2_parse.hpp",
         "flight/scene3d_formats/gltf_parse.hpp",
         "flight/scene3d_gl/gl_blinn_phong_mesh_material_renderer.hpp",
@@ -3022,9 +3078,7 @@
       "id": "render-wgpu-render-texture-ensure-forward-declaration"
     },
     {
-      "files": [
-        "flight/effects_wgpu/wgpu_render_texture_effect.hpp"
-      ],
+      "files": [],
       "id": "effects-wgpu-current-target-preserves-readonly"
     },
     {
@@ -5496,6 +5550,13 @@
       "id": "compiler-optional-record-literal-materialization",
       "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppOptionalRecordLiteralMaterialization.test.ts",
       "package": "@flighthq/compiler-backend-cpp"
+    },
+    {
+      "dependency": "flight-compiler",
+      "digest": "fe7118e48b29b2183fd4293bb23b2da2212f5211b30f13af39dd918b7038df63",
+      "id": "compiler-external-object-field-literal-type",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/render-wgpu"
     }
   ],
   "duplicateStructuralStructAliases": {
@@ -5561,10 +5622,8 @@
       "flight/render_gl/gl_draw.hpp",
       "flight/render_gl/gl_render_state.hpp",
       "flight/render_wgpu/wgpu_frame.hpp",
-      "flight/render_wgpu/wgpu_fullscreen_pass.hpp",
       "flight/render_wgpu/wgpu_mipmap.hpp",
       "flight/render_wgpu/wgpu_render_state.hpp",
-      "flight/render_wgpu/wgpu_shader.hpp",
       "flight/scene2d_canvas/canvas_rich_text.hpp",
       "flight/scene2d_canvas/canvas_texture_resolver.hpp",
       "flight/scene2d_formats/lottie_document.hpp",
@@ -5575,9 +5634,6 @@
       "flight/scene2d_gl/gl_shape_data.hpp",
       "flight/scene2d_gl/gl_text_label.hpp",
       "flight/scene2d_wgpu/scene_2d_wgpu_pipeline.hpp",
-      "flight/scene2d_wgpu/wgpu_color_adjustment_material_feature.hpp",
-      "flight/scene2d_wgpu/wgpu_particle_emitter_2d.hpp",
-      "flight/scene2d_wgpu/wgpu_quad_batch_writer.hpp",
       "flight/scene3d_formats/awd2_skeleton_handler.hpp",
       "flight/scene3d_formats/collada_animation_decoder.hpp",
       "flight/scene3d_formats/gltf_anisotropy.hpp",
@@ -5590,14 +5646,6 @@
       "flight/scene3d_formats/gltf_specular.hpp",
       "flight/scene3d_formats/gltf_transmission_volume.hpp",
       "flight/scene3d_formats/md2_animation_handler.hpp",
-      "flight/scene3d_wgpu/wgpu_classic_prelude.hpp",
-      "flight/scene3d_wgpu/wgpu_debug_prelude.hpp",
-      "flight/scene3d_wgpu/wgpu_matcap_prelude.hpp",
-      "flight/scene3d_wgpu/wgpu_pbr_pipeline_cache.hpp",
-      "flight/scene3d_wgpu/wgpu_shaded_prelude.hpp",
-      "flight/scene3d_wgpu/wgpu_toon_prelude.hpp",
-      "flight/scene3d_wgpu/wgpu_unlit_prelude.hpp",
-      "flight/scene3d_wgpu/wgpu_wireframe_prelude.hpp",
       "flight/screen/screen.hpp",
       "flight/shape/shape_command_geometry.hpp",
       "flight/shape/shape_stroke.hpp",
@@ -5692,7 +5740,6 @@
       "strength_blur_x_blur_y_quality_source_mode_alphas_colors_ratios_247d12b54a1b51b1",
       "texture_version_2f2f82ef5fff624b",
       "times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042",
-      "type_da5eb69d1c0ee021",
       "version_fe118d6bc798d137",
       "x0_y0_x1_y1_kind_d4f616534491406f",
       "x0_y0_x1_y1_radius_kind_768ba062d07f3ff6",
@@ -5717,1243 +5764,2009 @@
   },
   "packages": [
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/abc",
       "cppNamespace": "flight::abc",
       "emittedModules": 4,
       "package": "@flighthq/abc",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/accessibility",
       "cppNamespace": "flight::accessibility",
       "emittedModules": 3,
       "package": "@flighthq/accessibility",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/adjustments",
       "cppNamespace": "flight::adjustments",
       "emittedModules": 22,
       "package": "@flighthq/adjustments",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 22
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/animation",
       "cppNamespace": "flight::animation",
       "emittedModules": 12,
       "package": "@flighthq/animation",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 13
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/app",
       "cppNamespace": "flight::app",
       "emittedModules": 4,
       "package": "@flighthq/app",
       "refusedModules": 2,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 6
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/assets",
       "cppNamespace": "flight::assets",
       "emittedModules": 3,
       "package": "@flighthq/assets",
       "refusedModules": 2,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 5
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/audio",
       "cppNamespace": "flight::audio",
       "emittedModules": 8,
       "package": "@flighthq/audio",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 8
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/binpack",
       "cppNamespace": "flight::binpack",
       "emittedModules": 4,
       "package": "@flighthq/binpack",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/bitmap",
       "cppNamespace": "flight::bitmap",
       "emittedModules": 44,
       "package": "@flighthq/bitmap",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 44
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/bitmapfont",
       "cppNamespace": "flight::bitmapfont",
       "emittedModules": 7,
       "package": "@flighthq/bitmapfont",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 8
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/bitmapfont_formats",
       "cppNamespace": "flight::bitmapfont_formats",
       "emittedModules": 8,
       "package": "@flighthq/bitmapfont-formats",
       "refusedModules": 3,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 11
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/bitmaptext",
       "cppNamespace": "flight::bitmaptext",
       "emittedModules": 3,
       "package": "@flighthq/bitmaptext",
       "refusedModules": 3,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 6
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/camera",
       "cppNamespace": "flight::camera",
       "emittedModules": 21,
       "package": "@flighthq/camera",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 21
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/camera_controls",
       "cppNamespace": "flight::camera_controls",
       "emittedModules": 7,
       "package": "@flighthq/camera-controls",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 7
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/capture",
       "cppNamespace": "flight::capture",
       "emittedModules": 3,
       "package": "@flighthq/capture",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/clip",
       "cppNamespace": "flight::clip",
       "emittedModules": 4,
       "package": "@flighthq/clip",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/clipboard",
       "cppNamespace": "flight::clipboard",
       "emittedModules": 3,
       "package": "@flighthq/clipboard",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/clock",
       "cppNamespace": "flight::clock",
       "emittedModules": 4,
       "package": "@flighthq/clock",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/collision",
       "cppNamespace": "flight::collision",
       "emittedModules": 32,
       "package": "@flighthq/collision",
       "refusedModules": 6,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 38
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/color",
       "cppNamespace": "flight::color",
       "emittedModules": 11,
       "package": "@flighthq/color",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 11
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/command",
       "cppNamespace": "flight::command",
       "emittedModules": 6,
       "package": "@flighthq/command",
       "refusedModules": 2,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 8
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/compression",
       "cppNamespace": "flight::compression",
       "emittedModules": 7,
       "package": "@flighthq/compression",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 7
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/connectivity",
       "cppNamespace": "flight::connectivity",
       "emittedModules": 2,
       "package": "@flighthq/connectivity",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/debug",
       "cppNamespace": "flight::debug",
       "emittedModules": 3,
       "package": "@flighthq/debug",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/device",
       "cppNamespace": "flight::device",
       "emittedModules": 3,
       "package": "@flighthq/device",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/dialog",
       "cppNamespace": "flight::dialog",
       "emittedModules": 4,
       "package": "@flighthq/dialog",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 5
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/easing",
       "cppNamespace": "flight::easing",
       "emittedModules": 22,
       "package": "@flighthq/easing",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 23
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/effects",
       "cppNamespace": "flight::effects",
       "emittedModules": 57,
       "package": "@flighthq/effects",
       "refusedModules": 20,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 77
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/effects_canvas",
       "cppNamespace": "flight::effects_canvas",
       "emittedModules": 11,
       "environment": "web",
       "package": "@flighthq/effects-canvas",
       "refusedModules": 19,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 30
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/effects_gl",
       "cppNamespace": "flight::effects_gl",
       "emittedModules": 7,
       "package": "@flighthq/effects-gl",
       "refusedModules": 54,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 61
     },
     {
+      "bindingProfileSet": "sha256:2602f15df98afbc4055416765f444e85bee83a6c5fad13b420301f8fa344ca71",
       "cppIncludePrefix": "flight/effects_wgpu",
       "cppNamespace": "flight::effects_wgpu",
       "emittedModules": 12,
       "package": "@flighthq/effects-wgpu",
       "refusedModules": 48,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 60
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/encoding",
       "cppNamespace": "flight::encoding",
       "emittedModules": 3,
       "package": "@flighthq/encoding",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/entity",
       "cppNamespace": "flight::entity",
       "emittedModules": 10,
       "package": "@flighthq/entity",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 10
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/filesystem",
       "cppNamespace": "flight::filesystem",
       "emittedModules": 2,
       "package": "@flighthq/filesystem",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/flow",
       "cppNamespace": "flight::flow",
       "emittedModules": 4,
       "package": "@flighthq/flow",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/font",
       "cppNamespace": "flight::font",
       "emittedModules": 8,
       "package": "@flighthq/font",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 9
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/font_formats",
       "cppNamespace": "flight::font_formats",
       "emittedModules": 15,
       "package": "@flighthq/font-formats",
       "refusedModules": 2,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 17
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/geolocation",
       "cppNamespace": "flight::geolocation",
       "emittedModules": 4,
       "package": "@flighthq/geolocation",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/geometry",
       "cppNamespace": "flight::geometry",
       "emittedModules": 30,
       "package": "@flighthq/geometry",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 30
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/gizmo",
       "cppNamespace": "flight::gizmo",
       "emittedModules": 4,
       "package": "@flighthq/gizmo",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 5
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/glyphatlas",
       "cppNamespace": "flight::glyphatlas",
       "emittedModules": 8,
       "package": "@flighthq/glyphatlas",
       "refusedModules": 2,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 10
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/gui",
       "cppNamespace": "flight::gui",
       "emittedModules": 18,
       "package": "@flighthq/gui",
       "refusedModules": 2,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 20
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/haptics",
       "cppNamespace": "flight::haptics",
       "emittedModules": 3,
       "package": "@flighthq/haptics",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/host",
       "cppNamespace": "flight::host",
       "emittedModules": 6,
       "package": "@flighthq/host",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 6
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/image",
       "cppNamespace": "flight::image",
       "emittedModules": 4,
       "package": "@flighthq/image",
       "refusedModules": 3,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 7
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/image_codec",
       "cppNamespace": "flight::image_codec",
       "emittedModules": 5,
       "package": "@flighthq/image-codec",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 5
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/importdiagnostics",
       "cppNamespace": "flight::importdiagnostics",
       "emittedModules": 4,
       "package": "@flighthq/importdiagnostics",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/input",
       "cppNamespace": "flight::input",
       "emittedModules": 3,
       "package": "@flighthq/input",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/interaction",
       "cppNamespace": "flight::interaction",
       "emittedModules": 8,
       "package": "@flighthq/interaction",
       "refusedModules": 11,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 19
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/intl",
       "cppNamespace": "flight::intl",
       "emittedModules": 2,
       "package": "@flighthq/intl",
       "refusedModules": 7,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 9
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/ipc",
       "cppNamespace": "flight::ipc",
       "emittedModules": 3,
       "package": "@flighthq/ipc",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/keyboard",
       "cppNamespace": "flight::keyboard",
       "emittedModules": 3,
       "package": "@flighthq/keyboard",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/layout",
       "cppNamespace": "flight::layout",
       "emittedModules": 5,
       "package": "@flighthq/layout",
       "refusedModules": 3,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 8
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/lifecycle",
       "cppNamespace": "flight::lifecycle",
       "emittedModules": 2,
       "package": "@flighthq/lifecycle",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/lighting",
       "cppNamespace": "flight::lighting",
       "emittedModules": 13,
       "package": "@flighthq/lighting",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 14
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/loader",
       "cppNamespace": "flight::loader",
       "emittedModules": 3,
       "package": "@flighthq/loader",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/log",
       "cppNamespace": "flight::log",
       "emittedModules": 2,
       "package": "@flighthq/log",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/materials",
       "cppNamespace": "flight::materials",
       "emittedModules": 23,
       "package": "@flighthq/materials",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 24
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/math",
       "cppNamespace": "flight::math",
       "emittedModules": 17,
       "package": "@flighthq/math",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 17
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/media",
       "cppNamespace": "flight::media",
       "emittedModules": 5,
       "package": "@flighthq/media",
       "refusedModules": 2,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 7
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/mediasession",
       "cppNamespace": "flight::mediasession",
       "emittedModules": 3,
       "package": "@flighthq/mediasession",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/menu",
       "cppNamespace": "flight::menu",
       "emittedModules": 3,
       "package": "@flighthq/menu",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/mesh",
       "cppNamespace": "flight::mesh",
       "emittedModules": 15,
       "package": "@flighthq/mesh",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 16
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/midi",
       "cppNamespace": "flight::midi",
       "emittedModules": 5,
       "package": "@flighthq/midi",
       "refusedModules": 2,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 7
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/motionpath",
       "cppNamespace": "flight::motionpath",
       "emittedModules": 3,
       "package": "@flighthq/motionpath",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/movieclip",
       "cppNamespace": "flight::movieclip",
       "emittedModules": 4,
       "package": "@flighthq/movieclip",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 5
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/net",
       "cppNamespace": "flight::net",
       "emittedModules": 5,
       "package": "@flighthq/net",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 5
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/node",
       "cppNamespace": "flight::node",
       "emittedModules": 21,
       "package": "@flighthq/node",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 21
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/notification",
       "cppNamespace": "flight::notification",
       "emittedModules": 2,
       "package": "@flighthq/notification",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/particleemitter",
       "cppNamespace": "flight::particleemitter",
       "emittedModules": 9,
       "package": "@flighthq/particleemitter",
       "refusedModules": 3,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 12
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/particles",
       "cppNamespace": "flight::particles",
       "emittedModules": 12,
       "package": "@flighthq/particles",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 13
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/particles_formats",
       "cppNamespace": "flight::particles_formats",
       "emittedModules": 15,
       "package": "@flighthq/particles-formats",
       "refusedModules": 3,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 18
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/path",
       "cppNamespace": "flight::path",
       "emittedModules": 31,
       "package": "@flighthq/path",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 31
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/path_boolean",
       "cppNamespace": "flight::path_boolean",
       "emittedModules": 9,
       "package": "@flighthq/path-boolean",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 10
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/path_formats",
       "cppNamespace": "flight::path_formats",
       "emittedModules": 3,
       "package": "@flighthq/path-formats",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/permissions",
       "cppNamespace": "flight::permissions",
       "emittedModules": 3,
       "package": "@flighthq/permissions",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/physics2d",
       "cppNamespace": "flight::physics2d",
       "emittedModules": 22,
       "package": "@flighthq/physics2d",
       "refusedModules": 4,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 26
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/physics2d_abi",
       "cppNamespace": "flight::physics2d_abi",
       "emittedModules": 6,
       "package": "@flighthq/physics2d-abi",
       "refusedModules": 2,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 8
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/physics3d",
       "cppNamespace": "flight::physics3d",
       "emittedModules": 32,
       "package": "@flighthq/physics3d",
       "refusedModules": 4,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 36
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/physics3d_abi",
       "cppNamespace": "flight::physics3d_abi",
       "emittedModules": 6,
       "package": "@flighthq/physics3d-abi",
       "refusedModules": 2,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 8
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/picking",
       "cppNamespace": "flight::picking",
       "emittedModules": 2,
       "package": "@flighthq/picking",
       "refusedModules": 2,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/platform",
       "cppNamespace": "flight::platform",
       "emittedModules": 3,
       "package": "@flighthq/platform",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/power",
       "cppNamespace": "flight::power",
       "emittedModules": 3,
       "package": "@flighthq/power",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/preferences",
       "cppNamespace": "flight::preferences",
       "emittedModules": 3,
       "package": "@flighthq/preferences",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/protocol",
       "cppNamespace": "flight::protocol",
       "emittedModules": 3,
       "package": "@flighthq/protocol",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/quadbatch",
       "cppNamespace": "flight::quadbatch",
       "emittedModules": 2,
       "package": "@flighthq/quadbatch",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/registry",
       "cppNamespace": "flight::registry",
       "emittedModules": 3,
       "package": "@flighthq/registry",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/render",
       "cppNamespace": "flight::render",
       "emittedModules": 16,
       "package": "@flighthq/render",
       "refusedModules": 10,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 26
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/render_gl",
       "cppNamespace": "flight::render_gl",
       "emittedModules": 18,
       "package": "@flighthq/render-gl",
       "refusedModules": 14,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 32
     },
     {
+      "bindingProfileSet": "sha256:2602f15df98afbc4055416765f444e85bee83a6c5fad13b420301f8fa344ca71",
       "cppIncludePrefix": "flight/render_wgpu",
       "cppNamespace": "flight::render_wgpu",
       "emittedModules": 14,
       "package": "@flighthq/render-wgpu",
       "refusedModules": 19,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 33
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/requirement",
       "cppNamespace": "flight::requirement",
       "emittedModules": 4,
       "package": "@flighthq/requirement",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/requirement_catalog",
       "cppNamespace": "flight::requirement_catalog",
       "emittedModules": 4,
       "package": "@flighthq/requirement-catalog",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/requirement_codegen",
       "cppNamespace": "flight::requirement_codegen",
       "emittedModules": 3,
       "package": "@flighthq/requirement-codegen",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/scene_document",
       "cppNamespace": "flight::scene_document",
       "emittedModules": 3,
       "package": "@flighthq/scene-document",
       "refusedModules": 8,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 11
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/scene2d",
       "cppNamespace": "flight::scene2d",
       "emittedModules": 4,
       "package": "@flighthq/scene2d",
       "refusedModules": 5,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 9
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/scene2d_canvas",
       "cppNamespace": "flight::scene2d_canvas",
       "emittedModules": 33,
       "environment": "web",
       "package": "@flighthq/scene2d-canvas",
       "refusedModules": 18,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 51
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/scene2d_dom",
       "cppNamespace": "flight::scene2d_dom",
       "emittedModules": 18,
       "environment": "web",
       "package": "@flighthq/scene2d-dom",
       "refusedModules": 17,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 35
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/scene2d_formats",
       "cppNamespace": "flight::scene2d_formats",
       "emittedModules": 48,
       "package": "@flighthq/scene2d-formats",
       "refusedModules": 32,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 80
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/scene2d_gl",
       "cppNamespace": "flight::scene2d_gl",
       "emittedModules": 13,
       "package": "@flighthq/scene2d-gl",
       "refusedModules": 20,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 33
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/scene2d_resources",
       "cppNamespace": "flight::scene2d_resources",
       "emittedModules": 12,
       "package": "@flighthq/scene2d-resources",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 12
     },
     {
+      "bindingProfileSet": "sha256:2602f15df98afbc4055416765f444e85bee83a6c5fad13b420301f8fa344ca71",
       "cppIncludePrefix": "flight/scene2d_wgpu",
       "cppNamespace": "flight::scene2d_wgpu",
       "emittedModules": 12,
       "package": "@flighthq/scene2d-wgpu",
       "refusedModules": 21,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 33
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/scene3d",
       "cppNamespace": "flight::scene3d",
       "emittedModules": 19,
       "package": "@flighthq/scene3d",
       "refusedModules": 2,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 21
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/scene3d_formats",
       "cppNamespace": "flight::scene3d_formats",
       "emittedModules": 75,
       "package": "@flighthq/scene3d-formats",
       "refusedModules": 36,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 111
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/scene3d_gl",
       "cppNamespace": "flight::scene3d_gl",
       "emittedModules": 64,
       "package": "@flighthq/scene3d-gl",
       "refusedModules": 5,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 69
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/scene3d_resources",
       "cppNamespace": "flight::scene3d_resources",
       "emittedModules": 12,
       "package": "@flighthq/scene3d-resources",
       "refusedModules": 17,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 29
     },
     {
+      "bindingProfileSet": "sha256:2602f15df98afbc4055416765f444e85bee83a6c5fad13b420301f8fa344ca71",
       "cppIncludePrefix": "flight/scene3d_wgpu",
       "cppNamespace": "flight::scene3d_wgpu",
-      "emittedModules": 17,
+      "emittedModules": 20,
       "package": "@flighthq/scene3d-wgpu",
-      "refusedModules": 33,
+      "refusedModules": 30,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 50
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/screen",
       "cppNamespace": "flight::screen",
       "emittedModules": 3,
       "package": "@flighthq/screen",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/selection",
       "cppNamespace": "flight::selection",
       "emittedModules": 3,
       "package": "@flighthq/selection",
       "refusedModules": 3,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 6
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/sensors",
       "cppNamespace": "flight::sensors",
       "emittedModules": 3,
       "package": "@flighthq/sensors",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/shading",
       "cppNamespace": "flight::shading",
       "emittedModules": 18,
       "package": "@flighthq/shading",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 19
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/shape",
       "cppNamespace": "flight::shape",
       "emittedModules": 16,
       "package": "@flighthq/shape",
       "refusedModules": 4,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 20
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/shape_formats",
       "cppNamespace": "flight::shape_formats",
       "emittedModules": 3,
       "package": "@flighthq/shape-formats",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/share",
       "cppNamespace": "flight::share",
       "emittedModules": 2,
       "package": "@flighthq/share",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/shell",
       "cppNamespace": "flight::shell",
       "emittedModules": 3,
       "package": "@flighthq/shell",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/shortcut",
       "cppNamespace": "flight::shortcut",
       "emittedModules": 3,
       "package": "@flighthq/shortcut",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/signals",
       "cppNamespace": "flight::signals",
       "emittedModules": 8,
       "package": "@flighthq/signals",
       "refusedModules": 2,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 10
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/skeleton2d",
       "cppNamespace": "flight::skeleton2d",
       "emittedModules": 19,
       "package": "@flighthq/skeleton2d",
       "refusedModules": 6,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 25
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/skeleton2d_formats",
       "cppNamespace": "flight::skeleton2d_formats",
       "emittedModules": 50,
       "package": "@flighthq/skeleton2d-formats",
       "refusedModules": 9,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 59
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/skeleton3d",
       "cppNamespace": "flight::skeleton3d",
       "emittedModules": 9,
       "package": "@flighthq/skeleton3d",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 10
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/snapshot",
       "cppNamespace": "flight::snapshot",
       "emittedModules": 2,
       "package": "@flighthq/snapshot",
       "refusedModules": 5,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 7
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/socket",
       "cppNamespace": "flight::socket",
       "emittedModules": 5,
       "package": "@flighthq/socket",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 5
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/spatial",
       "cppNamespace": "flight::spatial",
       "emittedModules": 10,
       "package": "@flighthq/spatial",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 11
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/spring",
       "cppNamespace": "flight::spring",
       "emittedModules": 6,
       "package": "@flighthq/spring",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 6
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/spritesheet",
       "cppNamespace": "flight::spritesheet",
       "emittedModules": 7,
       "package": "@flighthq/spritesheet",
       "refusedModules": 2,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 9
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/spritesheet_formats",
       "cppNamespace": "flight::spritesheet_formats",
       "emittedModules": 11,
       "package": "@flighthq/spritesheet-formats",
       "refusedModules": 2,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 13
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/statechart",
       "cppNamespace": "flight::statechart",
       "emittedModules": 5,
       "package": "@flighthq/statechart",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 5
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/statusbar",
       "cppNamespace": "flight::statusbar",
       "emittedModules": 2,
       "package": "@flighthq/statusbar",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/surface",
       "cppNamespace": "flight::surface",
       "emittedModules": 6,
       "package": "@flighthq/surface",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 7
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/swf",
       "cppNamespace": "flight::swf",
       "emittedModules": 46,
       "package": "@flighthq/swf",
       "refusedModules": 12,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 58
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/text",
       "cppNamespace": "flight::text",
       "emittedModules": 4,
       "package": "@flighthq/text",
       "refusedModules": 5,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 9
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/text_markup",
       "cppNamespace": "flight::text_markup",
       "emittedModules": 7,
       "package": "@flighthq/text-markup",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 8
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/textbidi",
       "cppNamespace": "flight::textbidi",
       "emittedModules": 7,
       "package": "@flighthq/textbidi",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 8
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/textinput",
       "cppNamespace": "flight::textinput",
       "emittedModules": 5,
       "package": "@flighthq/textinput",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 6
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/textlayout",
       "cppNamespace": "flight::textlayout",
       "emittedModules": 12,
       "package": "@flighthq/textlayout",
       "refusedModules": 2,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 14
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/textsegment",
       "cppNamespace": "flight::textsegment",
       "emittedModules": 5,
       "package": "@flighthq/textsegment",
       "refusedModules": 2,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 7
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/textshaper",
       "cppNamespace": "flight::textshaper",
       "emittedModules": 9,
       "package": "@flighthq/textshaper",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 10
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/texture",
       "cppNamespace": "flight::texture",
       "emittedModules": 6,
       "package": "@flighthq/texture",
       "refusedModules": 3,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 9
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/texture_formats",
       "cppNamespace": "flight::texture_formats",
       "emittedModules": 10,
       "package": "@flighthq/texture-formats",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 11
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/textureatlas",
       "cppNamespace": "flight::textureatlas",
       "emittedModules": 5,
       "package": "@flighthq/textureatlas",
       "refusedModules": 2,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 7
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/textureatlas_formats",
       "cppNamespace": "flight::textureatlas_formats",
       "emittedModules": 8,
       "package": "@flighthq/textureatlas-formats",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 8
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/tilemap",
       "cppNamespace": "flight::tilemap",
       "emittedModules": 2,
       "package": "@flighthq/tilemap",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/tilemap_formats",
       "cppNamespace": "flight::tilemap_formats",
       "emittedModules": 11,
       "package": "@flighthq/tilemap-formats",
       "refusedModules": 2,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 13
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/timeline",
       "cppNamespace": "flight::timeline",
       "emittedModules": 3,
       "package": "@flighthq/timeline",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/tokens",
       "cppNamespace": "flight::tokens",
       "emittedModules": 2,
       "package": "@flighthq/tokens",
       "refusedModules": 3,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 5
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/tray",
       "cppNamespace": "flight::tray",
       "emittedModules": 3,
       "package": "@flighthq/tray",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/tween",
       "cppNamespace": "flight::tween",
       "emittedModules": 8,
       "package": "@flighthq/tween",
       "refusedModules": 2,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 10
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/types",
       "cppNamespace": "flight::types",
       "emittedModules": 1032,
       "package": "@flighthq/types",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 1032
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/updater",
       "cppNamespace": "flight::updater",
       "emittedModules": 2,
       "package": "@flighthq/updater",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/useragent",
       "cppNamespace": "flight::useragent",
       "emittedModules": 3,
       "package": "@flighthq/useragent",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/velocity",
       "cppNamespace": "flight::velocity",
       "emittedModules": 5,
       "package": "@flighthq/velocity",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 5
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/video",
       "cppNamespace": "flight::video",
       "emittedModules": 4,
       "package": "@flighthq/video",
       "refusedModules": 1,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 5
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/webcam",
       "cppNamespace": "flight::webcam",
       "emittedModules": 2,
       "package": "@flighthq/webcam",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 2
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/xml",
       "cppNamespace": "flight::xml",
       "emittedModules": 4,
       "package": "@flighthq/xml",
       "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     }
   ],
   "source": {
     "package": "@flighthq/sdk",
     "repository": "https://github.com/flighthq/flight",
-    "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
-    "version": "0.5.0"
+    "revisions": [
+      "a62784923f3be814463286c9fb28edfe6ab15789"
+    ]
   },
   "summary": {
     "packages": 153,
-    "emittedModules": 2574,
-    "refusedModules": 577,
+    "emittedModules": 2577,
+    "refusedModules": 574,
     "sourceModules": 3151
   }
 }

@@ -126,9 +126,9 @@ inline void initialize_wgpu_texture_render_target(flight::types::EntityConstruct
   if (((w > max_dimension) || (h > max_dimension))) {
     throw flight::Error(flight::String("Wgpu render target sampleCount ") + flight::to_string(samples) + flight::String(" requires a ") + flight::to_string(w) + flight::String("x") + flight::to_string(h) + flight::String(" texture, exceeding maxTextureDimension2D ") + flight::to_string(max_dimension) + flight::String("."));
   }
-  auto texture = device.create_texture({.size = flight::Array{w, h, 1.0}, .format = format.value(), .usage = flight::bitwise_or(flight::bitwise_or(flight::host_sdl::wgpu_texture_usage_render_attachment, flight::host_sdl::wgpu_texture_usage_texture_binding), flight::host_sdl::wgpu_texture_usage_copy_src)});
+  auto texture = device.create_texture(([&]() { flight::host_sdl::WgpuTextureDescriptor external_gputexture_descriptor{}; external_gputexture_descriptor.size = flight::Array{w, h, 1.0}; external_gputexture_descriptor.format = format.value(); external_gputexture_descriptor.usage = flight::bitwise_or(flight::bitwise_or(flight::host_sdl::wgpu_texture_usage_render_attachment, flight::host_sdl::wgpu_texture_usage_texture_binding), flight::host_sdl::wgpu_texture_usage_copy_src); return external_gputexture_descriptor; }()));
   auto view = texture.create_view();
-  auto depth_stencil_texture = device.create_texture({.size = flight::Array{w, h, 1.0}, .format = flight::String("depth24plus-stencil8"), .usage = flight::host_sdl::wgpu_texture_usage_render_attachment});
+  auto depth_stencil_texture = device.create_texture(([&]() { flight::host_sdl::WgpuTextureDescriptor external_gputexture_descriptor_2{}; external_gputexture_descriptor_2.size = flight::Array{w, h, 1.0}; external_gputexture_descriptor_2.format = flight::String("depth24plus-stencil8"); external_gputexture_descriptor_2.usage = flight::host_sdl::wgpu_texture_usage_render_attachment; return external_gputexture_descriptor_2; }()));
   auto depth_stencil_view = depth_stencil_texture.create_view();
   flight::row_set<flight::RowKey<"bindings">>(out, flight::Map<flight::host_sdl::WgpuSampler, flight::host_sdl::WgpuBindGroup>());
   flight::row_set<flight::RowKey<"colorAttachments">>(out, 1.0);
@@ -175,11 +175,11 @@ inline void resize_wgpu_texture_render_target(flight::Ref<flight::types::WgpuRen
   (target->sample_count = samples);
   target->texture.destroy();
   target->depth_stencil_texture.destroy();
-  auto new_texture = device.create_texture({.size = flight::Array{w, h, 1.0}, .format = format, .usage = flight::bitwise_or(flight::bitwise_or(flight::host_sdl::wgpu_texture_usage_render_attachment, flight::host_sdl::wgpu_texture_usage_texture_binding), flight::host_sdl::wgpu_texture_usage_copy_src)});
+  auto new_texture = device.create_texture(([&]() { flight::host_sdl::WgpuTextureDescriptor external_gputexture_descriptor_3{}; external_gputexture_descriptor_3.size = flight::Array{w, h, 1.0}; external_gputexture_descriptor_3.format = format; external_gputexture_descriptor_3.usage = flight::bitwise_or(flight::bitwise_or(flight::host_sdl::wgpu_texture_usage_render_attachment, flight::host_sdl::wgpu_texture_usage_texture_binding), flight::host_sdl::wgpu_texture_usage_copy_src); return external_gputexture_descriptor_3; }()));
   (target->texture = new_texture);
   (target->view = new_texture.create_view());
   target->bindings.clear();
-  auto new_depth = device.create_texture({.size = flight::Array{w, h, 1.0}, .format = flight::String("depth24plus-stencil8"), .usage = flight::host_sdl::wgpu_texture_usage_render_attachment});
+  auto new_depth = device.create_texture(([&]() { flight::host_sdl::WgpuTextureDescriptor external_gputexture_descriptor_4{}; external_gputexture_descriptor_4.size = flight::Array{w, h, 1.0}; external_gputexture_descriptor_4.format = flight::String("depth24plus-stencil8"); external_gputexture_descriptor_4.usage = flight::host_sdl::wgpu_texture_usage_render_attachment; return external_gputexture_descriptor_4; }()));
   (target->depth_stencil_texture = new_depth);
   (target->depth_stencil_view = new_depth.create_view());
 }

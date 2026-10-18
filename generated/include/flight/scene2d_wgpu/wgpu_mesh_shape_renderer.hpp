@@ -6,6 +6,7 @@
 //   missing: function resolveWgpuShapeMeshRegions -- source line 92
 //   missing: function drawWgpuMeshShape -- source line 24
 #include <flight/any.hpp>
+#include <flight/callable.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -157,11 +158,11 @@ struct callable_clear_signals_fa73ca8ec3c528fa : public flight::ReferenceEnabled
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_CALLABLE_CLEAR_SIGNALS_FA73CA8EC3C528FA
 
-inline flight::Ref<flight::types::Scene2DRenderer> wgpu_mesh_shape_renderer = flight::make_ref<flight::types::Scene2DRenderer>(flight::types::Scene2DRenderer{.format = flight::types::BatchFormat::Quad, .create_data = flight::scene2d_wgpu::create_wgpu_shape_data, .destroy_data = flight::scene2d_wgpu::destroy_wgpu_shape_data, .submit = [](flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::RenderProxy2D> render_proxy) {
+inline flight::Ref<flight::types::Scene2DRenderer> wgpu_mesh_shape_renderer = flight::make_ref<flight::types::Scene2DRenderer>(flight::types::Scene2DRenderer{.format = flight::types::BatchFormat::Quad, .create_data = flight::scene2d_wgpu::create_wgpu_shape_data, .destroy_data = flight::scene2d_wgpu::destroy_wgpu_shape_data, .submit = flight::Function<void(flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::RenderProxy2D>)>{[](flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::RenderProxy2D> render_proxy) {
   if (draw_wgpu_mesh_shape(state, render_proxy)) {
     return;
   }
   ([&]() { auto optional_chain_receiver = flight::render_wgpu::get_wgpu_render_state_runtime(state)->registry_miss; if (!optional_chain_receiver.has_value()) return; (*optional_chain_receiver.value())(flight::types::RenderRegistryTable::ShapeRasterizer, flight::types::shape_kind); }());
-}});
+}}});
 
 } // namespace flight::scene2d_wgpu

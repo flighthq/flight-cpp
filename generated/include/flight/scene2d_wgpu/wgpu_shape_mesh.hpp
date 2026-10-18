@@ -7,7 +7,6 @@
 //   missing: function drawWgpuShapeMeshes -- source line 99
 #include <cmath>
 #include <cstdint>
-#include <flight/any.hpp>
 #include <flight/boolean.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/structural_ref.hpp>
@@ -56,33 +55,18 @@ inline flight::host_sdl::WgpuBuffer ensure_shape_mesh_index_buffer(flight::Ref<f
     if (([&]() { const auto& presence_operand = buffer; return presence_operand.has_value(); }())) {
       flight::render_wgpu::retire_wgpu_buffer(state, buffer.value());
     }
-    (buffer = state->device.create_buffer({.size = size, .usage = flight::bitwise_or(flight::host_sdl::wgpu_buffer_usage_index, flight::host_sdl::wgpu_buffer_usage_copy_dst)}));
+    (buffer = state->device.create_buffer(([&]() { flight::host_sdl::WgpuBufferDescriptor external_gpubuffer_descriptor{}; external_gpubuffer_descriptor.size = size; external_gpubuffer_descriptor.usage = flight::bitwise_or(flight::host_sdl::wgpu_buffer_usage_index, flight::host_sdl::wgpu_buffer_usage_copy_dst); return external_gpubuffer_descriptor; }())));
     (buffers->index_buffers.element(mesh_index) = buffer.value());
     (buffers->index_capacities.element(mesh_index) = size);
   }
   return buffer.value();
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_BUFFER_F593A54DB11CACA9
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_BUFFER_F593A54DB11CACA9
-struct buffer_f593a54db11caca9 : public flight::ReferenceEnabled {
-  flight::Any buffer;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_BUFFER_F593A54DB11CACA9
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_BINDING_RESOURCE_A5B79D316BF17DB5
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_BINDING_RESOURCE_A5B79D316BF17DB5
-struct binding_resource_a5b79d316bf17db5 : public flight::ReferenceEnabled {
-  double binding;
-  flight::Ref<buffer_f593a54db11caca9> resource;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_BINDING_RESOURCE_A5B79D316BF17DB5
-
 inline void ensure_shape_mesh_uniform(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::WgpuShapeMeshPipeline> pipeline_entry, flight::Array<flight::host_sdl::WgpuBuffer> uniform_buffers, flight::Array<flight::host_sdl::WgpuBindGroup> bind_groups, double mesh_index, double byte_length) {
   if (([&]() { const auto& presence_operand = uniform_buffers.get(mesh_index); return !presence_operand.has_value(); }())) {
-    auto uniform_buffer = state->device.create_buffer({.size = byte_length, .usage = flight::bitwise_or(flight::host_sdl::wgpu_buffer_usage_uniform, flight::host_sdl::wgpu_buffer_usage_copy_dst)});
+    auto uniform_buffer = state->device.create_buffer(([&]() { flight::host_sdl::WgpuBufferDescriptor external_gpubuffer_descriptor_2{}; external_gpubuffer_descriptor_2.size = byte_length; external_gpubuffer_descriptor_2.usage = flight::bitwise_or(flight::host_sdl::wgpu_buffer_usage_uniform, flight::host_sdl::wgpu_buffer_usage_copy_dst); return external_gpubuffer_descriptor_2; }()));
     (uniform_buffers.element(mesh_index) = uniform_buffer);
-    (bind_groups.element(mesh_index) = state->device.create_bind_group({.layout = pipeline_entry->bind_group_layout, .entries = flight::Array{flight::make_ref<binding_resource_a5b79d316bf17db5>(binding_resource_a5b79d316bf17db5{.binding = 0.0, .resource = flight::make_ref<buffer_f593a54db11caca9>(buffer_f593a54db11caca9{.buffer = uniform_buffer})})}}));
+    (bind_groups.element(mesh_index) = state->device.create_bind_group(([&]() { flight::host_sdl::WgpuBindGroupDescriptor external_gpubind_group_descriptor{}; external_gpubind_group_descriptor.layout = pipeline_entry->bind_group_layout; external_gpubind_group_descriptor.entries = flight::Array<flight::host_sdl::WgpuBindGroupEntry>{([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry{}; external_gpubind_group_entry.binding = 0.0; external_gpubind_group_entry.resource = ([&]() { flight::host_sdl::WgpuBufferBinding external_gpubuffer_binding{}; external_gpubuffer_binding.buffer = uniform_buffer; return external_gpubuffer_binding; }()); return external_gpubind_group_entry; }())}; return external_gpubind_group_descriptor; }())));
   }
 }
 
@@ -157,7 +141,7 @@ inline flight::host_sdl::WgpuBuffer ensure_shape_mesh_vertex_buffer(flight::Ref<
     if (([&]() { const auto& presence_operand = buffer; return presence_operand.has_value(); }())) {
       flight::render_wgpu::retire_wgpu_buffer(state, buffer.value());
     }
-    (buffer = state->device.create_buffer({.size = size, .usage = flight::bitwise_or(flight::host_sdl::wgpu_buffer_usage_vertex, flight::host_sdl::wgpu_buffer_usage_copy_dst)}));
+    (buffer = state->device.create_buffer(([&]() { flight::host_sdl::WgpuBufferDescriptor external_gpubuffer_descriptor_3{}; external_gpubuffer_descriptor_3.size = size; external_gpubuffer_descriptor_3.usage = flight::bitwise_or(flight::host_sdl::wgpu_buffer_usage_vertex, flight::host_sdl::wgpu_buffer_usage_copy_dst); return external_gpubuffer_descriptor_3; }())));
     (buffers->vertex_buffers.element(mesh_index) = buffer.value());
     (buffers->vertex_capacities.element(mesh_index) = size);
   }

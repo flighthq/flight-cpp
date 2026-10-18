@@ -5,14 +5,16 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function isWgpuBitmapDisplacementEffectResolvable -- source line 90
 //   missing: function getBitmapDisplacementPipeline -- source line 132
-//   missing: function applyBitmapDisplacementEffectToWgpu -- source line 20
 //   missing: variable (binding) -- source line 106
+#include <flight/any.hpp>
+#include <flight/callable.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/string.hpp>
 #include <flight/structural_ref.hpp>
 #include <flight/weak_map.hpp>
 #include <functional>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -33,6 +35,8 @@ namespace flight::types { struct WgpuTextureRenderTarget; }
 #include <flight/render_wgpu/wgpu_render_state.hpp>
 #include <flight/render_wgpu/wgpu_texture_resolver.hpp>
 #include <flight/types/contract.hpp>
+#include <flight/effects_wgpu/wgpu_effect_pass.hpp>
+#include <flight/effects_wgpu/wgpu_effect_program_cache.hpp>
 #include <flight/effects_wgpu/wgpu_effect_registry.hpp>
 
 namespace flight::effects_wgpu {
@@ -95,20 +99,11 @@ inline const flight::String bitmap_displacement_fragment_wgsl = flight::String("
 
 inline const flight::String bitmap_displacement_passthrough_fragment_wgsl = flight::String("\nstruct Uniforms { _pad0 : f32, _pad1 : f32, _pad2 : f32, _pad3 : f32, }\n@group(0) @binding(0) var<uniform> uni : Uniforms;\n@group(1) @binding(0) var sourceTexture : texture_2d<f32>;\n@group(1) @binding(1) var sourceSampler : sampler;\n\n@fragment\nfn fs_main(@location(0) uv : vec2f) -> @location(0) vec4f {\n  return textureSampleLevel(sourceTexture, sourceSampler, uv, 0.0);\n}");
 
-inline std::function<void()> no_uniforms = []() {
+inline std::function<void()> no_uniforms = flight::Function<void()>{[]() {
 
-};
+}};
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_SRC_FACTOR_DST_FACTOR_OPERATION_734D8E3FCC3C03FB
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_SRC_FACTOR_DST_FACTOR_OPERATION_734D8E3FCC3C03FB
-struct src_factor_dst_factor_operation_734d8e3fcc3c03fb : public flight::ReferenceEnabled {
-  flight::String src_factor;
-  flight::String dst_factor;
-  flight::String operation;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_SRC_FACTOR_DST_FACTOR_OPERATION_734D8E3FCC3C03FB
-
-inline flight::host_sdl::WgpuBlendState replace_blend_flight_value_variable__u000052__u000045__u000050__u00004c__u000041__u000043__u000045__u00005f__u000042__u00004c__u000045__u00004e__u000044__flight_private_bdc782f0cd8cb13c = ([]() { flight::host_sdl::WgpuBlendState external_gpublend_state{}; external_gpublend_state.color = flight::make_ref<src_factor_dst_factor_operation_734d8e3fcc3c03fb>(src_factor_dst_factor_operation_734d8e3fcc3c03fb{.src_factor = flight::String("one"), .dst_factor = flight::String("zero"), .operation = flight::String("add")}); external_gpublend_state.alpha = flight::make_ref<src_factor_dst_factor_operation_734d8e3fcc3c03fb>(src_factor_dst_factor_operation_734d8e3fcc3c03fb{.src_factor = flight::String("one"), .dst_factor = flight::String("zero"), .operation = flight::String("add")}); return external_gpublend_state; }());
+inline flight::host_sdl::WgpuBlendState replace_blend_flight_value_variable__u000052__u000045__u000050__u00004c__u000041__u000043__u000045__u00005f__u000042__u00004c__u000045__u00004e__u000044__flight_private_bdc782f0cd8cb13c = ([]() { flight::host_sdl::WgpuBlendState external_gpublend_state{}; external_gpublend_state.color = ([]() { flight::host_sdl::WgpuBlendComponent external_gpublend_component{}; external_gpublend_component.src_factor = flight::String("one"); external_gpublend_component.dst_factor = flight::String("zero"); external_gpublend_component.operation = flight::String("add"); return external_gpublend_component; }()); external_gpublend_state.alpha = ([]() { flight::host_sdl::WgpuBlendComponent external_gpublend_component_2{}; external_gpublend_component_2.src_factor = flight::String("one"); external_gpublend_component_2.dst_factor = flight::String("zero"); external_gpublend_component_2.operation = flight::String("add"); return external_gpublend_component_2; }()); return external_gpublend_state; }());
 
 inline flight::WeakMap<flight::Ref<flight::types::WgpuRenderState>, flight::Map<flight::String, flight::Ref<flight::types::WgpuEffectPipeline>>> pipelines_flight_value_variable__u00005f_pipelines_flight_private_bdc782f0cd8cb13c = flight::WeakMap<flight::Ref<flight::types::WgpuRenderState>, flight::Map<flight::String, flight::Ref<flight::types::WgpuEffectPipeline>>>();
 
@@ -163,74 +158,48 @@ inline flight::WeakMap<flight::Ref<flight::types::WgpuRenderState>, flight::Map<
 // called API to return the exact declared arm. The compiler will not cast, copy, or materialize the call result
 // into another owner.
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_UNIFORM_BG_TEXTURE_BGLAYOUT_UNIFORM_BGLAYOUT_SAMPLER_ACQUIRE_SLOT_WRITE_SLOT_BEGIN_PASS_76439C8A061ABA96
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_UNIFORM_BG_TEXTURE_BGLAYOUT_UNIFORM_BGLAYOUT_SAMPLER_ACQUIRE_SLOT_WRITE_SLOT_BEGIN_PASS_76439C8A061ABA96
+struct uniform_bg_texture_bglayout_uniform_bglayout_sampler_acquire_slot_write_slot_begin_pass_76439c8a061aba96 : public flight::ReferenceEnabled {
+  flight::Any uniform_bg;
+  flight::Any texture_bglayout;
+  flight::Any uniform_bglayout;
+  flight::Any sampler;
+  std::function<double()> acquire_slot;
+  std::function<void(double, std::function<void(flight::Float32Array, flight::Int32Array)>)> write_slot;
+  std::function<flight::Any(std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>, flight::Any)> begin_pass;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_UNIFORM_BG_TEXTURE_BGLAYOUT_UNIFORM_BGLAYOUT_SAMPLER_ACQUIRE_SLOT_WRITE_SLOT_BEGIN_PASS_76439C8A061ABA96
 
-// NOT GENERATED: function applyBitmapDisplacementEffectToWgpu -- source line 20
-// refusal: cpp-contextual-union-value-type-unrepresented [target-runtime]
-//
-// The source it stood for:
-//   export function applyBitmapDisplacementEffectToWgpu(
-//     state: WgpuRenderState,
-//     source: Readonly<WgpuTextureRenderTarget>,
-//     dest: Readonly<WgpuTextureRenderTarget>,
-//     effect: Readonly<BitmapDisplacementEffect>,
-//   ): void {
-//     const map = effect.map;
-//     const mapEntry = map === null ? null : resolveWgpuTexture(state, map, false, source.colorSpace);
-//     if (mapEntry === null) {
-//       drawWgpuEffectPass(
-//         state,
-//         source as WgpuTextureRenderTarget,
-//         dest as WgpuTextureRenderTarget,
-//         getWgpuEffectPipeline(
-//           state,
-//           'spatial.bitmapDisplacement.passthrough',
-//           BITMAP_DISPLACEMENT_PASSTHROUGH_FRAGMENT_WGSL,
-//           'replace',
-//         ),
-//         NO_UNIFORMS,
-//       );
-//       return;
-//     }
-//     const resolvedMap = map!;
-//   
-//     const fs = getWgpuEffectPassState(state);
-//     const sourceBindGroup = state.device.createBindGroup({
-//       layout: fs.textureBGLayout,
-//       entries: [
-//         { binding: 0, resource: source.view },
-//         { binding: 1, resource: fs.sampler },
-//       ],
-//     });
-//     const mapBindGroup = state.device.createBindGroup({
-//       layout: fs.textureBGLayout,
-//       entries: [
-//         { binding: 0, resource: mapEntry.view },
-//         { binding: 1, resource: mapEntry.sampler ?? getBitmapDisplacementMapSampler(state, resolvedMap.sampler) },
-//       ],
-//     });
-//   
-//     const slotOffset = fs.acquireSlot();
-//     fs.writeSlot(slotOffset, (f32, i32) => {
-//       f32[0] = effect.scaleX ?? 0;
-//       f32[1] = effect.scaleY ?? 0;
-//       f32[2] = source.width;
-//       f32[3] = source.height;
-//       i32[4] = effect.componentX ?? ImageChannel.Red;
-//       i32[5] = effect.componentY ?? ImageChannel.Green;
-//       i32[6] = effect.edgeMode === 'clamp' ? 0 : 1;
-//     });
-//   
-//     const pass = fs.beginPass(dest as WgpuTextureRenderTarget, 'load');
-//     pass.setPipeline(getBitmapDisplacementPipeline(state, dest.format).pipeline);
-//     pass.setBindGroup(0, fs.uniformBG, [slotOffset]);
-//     pass.setBindGroup(1, sourceBindGroup);
-//     pass.setBindGroup(2, mapBindGroup);
-//     pass.draw(6);
-//     pass.end();
-//   }
-//   
-// cpp emission failed for @flighthq/effects-wgpu/packages/effects-wgpu/src/wgpuBitmapDisplacementEffect.ts:
-// contextual union value type flight::Any is not a represented runtime domain
+inline void apply_bitmap_displacement_effect_to_wgpu(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>> dest, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapDisplacementEffect>>>> effect) {
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Texture2D>>>>> map = flight::row_get<flight::RowKey<"map">>(effect);
+  auto map_entry = (!map.has_value() ? std::nullopt : flight::render_wgpu::resolve_wgpu_texture(state, std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, flight::structural_ref_cast<flight::Ref<flight::types::Texture2D>>(map.value())}, false, flight::row_get<flight::RowKey<"colorSpace">>(source)));
+  if (!map_entry.has_value()) {
+    flight::effects_wgpu::draw_wgpu_effect_pass(state, flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(dest)}, flight::effects_wgpu::get_wgpu_effect_pipeline(state, flight::String("spatial.bitmapDisplacement.passthrough"), bitmap_displacement_passthrough_fragment_wgsl, flight::String("replace")), [contextual_callable = no_uniforms](flight::Float32Array contextual_callable_argument0, flight::Int32Array contextual_callable_argument1) -> void { contextual_callable(); });
+    return;
+  }
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Texture2D>>>> resolved_map = map.value();
+  flight::Ref<uniform_bg_texture_bglayout_uniform_bglayout_sampler_acquire_slot_write_slot_begin_pass_76439c8a061aba96> fs = flight::effects_wgpu::get_wgpu_effect_pass_state(state);
+  auto source_bind_group = state->device.create_bind_group(([&]() { flight::host_sdl::WgpuBindGroupDescriptor external_gpubind_group_descriptor{}; external_gpubind_group_descriptor.layout = fs->texture_bglayout; external_gpubind_group_descriptor.entries = flight::Array<flight::host_sdl::WgpuBindGroupEntry>{([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry{}; external_gpubind_group_entry.binding = 0.0; external_gpubind_group_entry.resource = flight::row_get<flight::RowKey<"view">>(source); return external_gpubind_group_entry; }()), ([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_2{}; external_gpubind_group_entry_2.binding = 1.0; external_gpubind_group_entry_2.resource = fs->sampler; return external_gpubind_group_entry_2; }())}; return external_gpubind_group_descriptor; }()));
+  auto map_bind_group = state->device.create_bind_group(([&]() { flight::host_sdl::WgpuBindGroupDescriptor external_gpubind_group_descriptor_2{}; external_gpubind_group_descriptor_2.layout = fs->texture_bglayout; external_gpubind_group_descriptor_2.entries = flight::Array<flight::host_sdl::WgpuBindGroupEntry>{([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_3{}; external_gpubind_group_entry_3.binding = 0.0; external_gpubind_group_entry_3.resource = map_entry.value()->view; return external_gpubind_group_entry_3; }()), ([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_4{}; external_gpubind_group_entry_4.binding = 1.0; external_gpubind_group_entry_4.resource = ([&]() -> flight::host_sdl::WgpuSampler { auto nullish_coalesce_left = map_entry.value()->sampler; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return get_bitmap_displacement_map_sampler(state, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Sampler>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Sampler>>>>(flight::row_get<flight::RowKey<"sampler">>(resolved_map)))); }()); return external_gpubind_group_entry_4; }())}; return external_gpubind_group_descriptor_2; }()));
+  const double slot_offset = fs->acquire_slot();
+  fs->write_slot(slot_offset, [=](flight::Float32Array f32, flight::Int32Array i32) {
+  ([&]() { auto&& typed_array = f32; const auto typed_index = 0.0; const auto typed_value = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"scaleX">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()); return typed_array.set_index(typed_index, typed_value); }());
+  ([&]() { auto&& typed_array_2 = f32; const auto typed_index_2 = 1.0; const auto typed_value_2 = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"scaleY">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()); return typed_array_2.set_index(typed_index_2, typed_value_2); }());
+  ([&]() { auto&& typed_array_3 = f32; const auto typed_index_3 = 2.0; const auto typed_value_3 = flight::row_get<flight::RowKey<"width">>(source); return typed_array_3.set_index(typed_index_3, typed_value_3); }());
+  ([&]() { auto&& typed_array_4 = f32; const auto typed_index_4 = 3.0; const auto typed_value_4 = flight::row_get<flight::RowKey<"height">>(source); return typed_array_4.set_index(typed_index_4, typed_value_4); }());
+  ([&]() { auto&& typed_array_5 = i32; const auto typed_index_5 = 4.0; const auto typed_value_5 = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"componentX">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::types::image_channel->red; }()); return typed_array_5.set_index(typed_index_5, typed_value_5); }());
+  ([&]() { auto&& typed_array_6 = i32; const auto typed_index_6 = 5.0; const auto typed_value_6 = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"componentY">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::types::image_channel->green; }()); return typed_array_6.set_index(typed_index_6, typed_value_6); }());
+  ([&]() { auto&& typed_array_7 = i32; const auto typed_index_7 = 6.0; const auto typed_value_7 = ((flight::row_get<flight::RowKey<"edgeMode">>(effect) == flight::String("clamp")) ? 0.0 : 1.0); return typed_array_7.set_index(typed_index_7, typed_value_7); }());
+});
+  auto pass = fs->begin_pass(std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(dest)}, flight::String("load"));
+  flight::named_properties(pass).get(flight::String("setPipeline"))(get_bitmap_displacement_pipeline(state, flight::row_get<flight::RowKey<"format">>(dest))->pipeline);
+  flight::named_properties(pass).get(flight::String("setBindGroup"))(0.0, fs->uniform_bg, flight::Array{slot_offset});
+  flight::named_properties(pass).get(flight::String("setBindGroup"))(1.0, source_bind_group);
+  flight::named_properties(pass).get(flight::String("setBindGroup"))(2.0, map_bind_group);
+  flight::named_properties(pass).get(flight::String("draw"))(6.0);
+  flight::named_properties(pass).get(flight::String("end"))();
+}
 
 
 // NOT GENERATED: variable (binding) -- source line 106

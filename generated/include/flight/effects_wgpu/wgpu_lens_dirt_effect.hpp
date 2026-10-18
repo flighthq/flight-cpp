@@ -5,6 +5,7 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: variable (binding) -- source line 74
 #include <flight/any.hpp>
+#include <flight/callable.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/string.hpp>
 #include <flight/structural_ref.hpp>
@@ -117,16 +118,16 @@ inline void apply_lens_dirt_effect_to_wgpu(flight::Ref<flight::types::WgpuRender
   auto blurred = flight::render_wgpu::acquire_wgpu_texture_render_target(state, pool, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<width_height_format_color_space_sample_count_d7147b6683ba8eda>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<width_height_format_3e01490122355edd>>>>(descriptor)));
   auto temp = flight::render_wgpu::acquire_wgpu_texture_render_target(state, pool, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<width_height_format_color_space_sample_count_d7147b6683ba8eda>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<width_height_format_3e01490122355edd>>>>(descriptor)));
   flight::Ref<entity_runtime_key_pipeline_blend_mode_compile_for_format_variants_381d82dcdcacf7b8> bright_pipeline = flight::effects_wgpu::get_wgpu_effect_pipeline(state, flight::String("lens.lensDirt.bright"), lens_dirt_bright_fragment_wgsl, flight::String("replace"));
-  flight::effects_wgpu::draw_wgpu_effect_pass(state, flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{bright}, bright_pipeline, [=](flight::Float32Array f32, flight::Int32Array ignored_callback_argument) {
+  flight::effects_wgpu::draw_wgpu_effect_pass(state, flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{bright}, bright_pipeline, flight::Function<void(flight::Float32Array, flight::Int32Array)>{[=](flight::Float32Array f32, flight::Int32Array ignored_callback_argument) {
   (void)ignored_callback_argument;
   ([&]() { auto&& typed_array = f32; const auto typed_index = 0.0; const auto typed_value = threshold; return typed_array.set_index(typed_index, typed_value); }());
-});
+}});
   flight::effects_wgpu::apply_gaussian_blur_to_wgpu(state, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>>(bright)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>>(blurred)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>>(temp)), flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<blur_x_blur_y_cb675b2356fd5887>>>>(flight::row_field<flight::RowKey<"blurX">>(std::optional<double>{lens_dirt_blur_sigma}), flight::row_field<flight::RowKey<"blurY">>(std::optional<double>{lens_dirt_blur_sigma})));
-  flight::effects_wgpu::draw_wgpu_dual_source_effect_pass(state, flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), blurred, std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(dest)}, get_lens_dirt_composite_pipeline(state), [=](flight::Float32Array f32, flight::Int32Array ignored_callback_argument_2) {
+  flight::effects_wgpu::draw_wgpu_dual_source_effect_pass(state, flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), blurred, std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(dest)}, get_lens_dirt_composite_pipeline(state), flight::Function<void(flight::Float32Array, flight::Int32Array)>{[=](flight::Float32Array f32, flight::Int32Array ignored_callback_argument_2) {
   (void)ignored_callback_argument_2;
   ([&]() { auto&& typed_array_2 = f32; const auto typed_index_2 = 0.0; const auto typed_value_2 = intensity; return typed_array_2.set_index(typed_index_2, typed_value_2); }());
   ([&]() { auto&& typed_array_3 = f32; const auto typed_index_3 = 1.0; const auto typed_value_3 = seed; return typed_array_3.set_index(typed_index_3, typed_value_3); }());
-});
+}});
   flight::render_wgpu::release_wgpu_texture_render_target(pool, bright);
   flight::render_wgpu::release_wgpu_texture_render_target(pool, blurred);
   flight::render_wgpu::release_wgpu_texture_render_target(pool, temp);

@@ -53,7 +53,7 @@ inline flight::Ref<flight::types::Vector2> sprite_view_size = flight::make_ref<f
 
 
 // NOT GENERATED: function drawWgpuSprite -- source line 25
-// refusal: cpp-contextual-union-interface-heritage-carrier-unrepresented [target-runtime]
+// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
 //   export function drawWgpuSprite(state: WgpuRenderState, renderProxy: RenderProxy2D): void {
@@ -118,18 +118,8 @@ inline flight::Ref<flight::types::Vector2> sprite_view_size = flight::make_ref<f
 //     runtime.quadBatchWriterCount++;
 //   }
 //   
-// cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuSprite.ts: contextual nullable
-// interface conversion from Material2D to Material follows TypeScript interface heritage, but flight-cpp stores
-// those declarations in independent flight::Ref<flight::types::Material2D> and
-// flight::Ref<flight::types::Material> owner types: each interface struct is emitted flattened, so the heritage
-// is not a C++ base relation and no pointer cast exists to follow. A native pointer cast would claim C++
-// inheritance the emitted interface structs do not have, materializing the target would replace object identity,
-// and a structural row would change the declared result carrier. Preserve the exact source owner in the declared
-// result and explicitly represent both owners where the branches merge, or add an owner-preserving
-// interface-heritage carrier to the runtime contract. Declaring the destination as the derived interface where
-// the concrete type is known -- or converting where the type is still concrete rather than widening it through a
-// nullable union -- avoids the boundary altogether; closing it at the carrier needs either that runtime carrier
-// or interface structs emitted with the heritage as a C++ base relation.
+// cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuSprite.ts: contextual
+// optionalSingle construction requires expression type evidence
 
 inline flight::Ref<flight::types::Scene2DRenderer> wgpu_sprite_renderer = flight::make_ref<flight::types::Scene2DRenderer>(flight::types::Scene2DRenderer{.format = flight::types::BatchFormat::Quad, .create_data = flight::scene2d::create_sprite_renderer_data, .is_dirty = flight::scene2d::is_sprite_renderer_dirty, .submit = draw_wgpu_sprite});
 

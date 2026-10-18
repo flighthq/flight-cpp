@@ -5,16 +5,22 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function getEncodePipeline -- source line 202
 //   missing: function getApplyPipeline -- source line 179
-//   missing: function applyGradientBevelEffectToWgpu -- source line 23
 //   missing: variable (binding) -- source line 131
+#include <cmath>
+#include <cstdint>
+#include <flight/any.hpp>
+#include <flight/callable.hpp>
+#include <flight/host_sdl/wgpu.hpp>
+#include <flight/string.hpp>
+#include <flight/structural_ref.hpp>
 #include <flight/weak_map.hpp>
+#include <functional>
 #include <optional>
+#include <random>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
-
-#include <flight/types/wgpu_render_target.hpp>
 
 #include <flight/types/wgpu_render_state.hpp>
 
@@ -25,12 +31,17 @@ namespace flight::types { struct WgpuEffectContext; }
 namespace flight::types { struct WgpuRenderState; }
 namespace flight::types { struct WgpuTextureRenderTarget; }
 
+#include <flight/render_wgpu/wgpu_render_target_pool.hpp>
 #include <flight/types/contract.hpp>
+#include <flight/effects_wgpu/wgpu_effect_blit_shader.hpp>
+#include <flight/effects_wgpu/wgpu_effect_box_blur.hpp>
+#include <flight/effects_wgpu/wgpu_effect_gradient_ramp.hpp>
+#include <flight/effects_wgpu/wgpu_effect_pass.hpp>
 #include <flight/effects_wgpu/wgpu_effect_registry.hpp>
+#include <flight/effects_wgpu/wgpu_effect_tint_shader.hpp>
 
 namespace flight::effects_wgpu {
 
-using flight::types::WgpuRenderTargetPool;
 using flight::types::WgpuRenderState;
 
 inline const flight::String bevel_encode_fragment_wgsl = flight::String("\nstruct Uniforms {\n  offset : vec2f,\n  _pad : vec2f,\n}\n@group(0) @binding(0) var<uniform> uni : Uniforms;\n@group(1) @binding(0) var tex : texture_2d<f32>;\n@group(1) @binding(1) var smp : sampler;\n\n@fragment\nfn fs_main(@location(0) uv : vec2f) -> @location(0) vec4f {\n  let high = textureSampleLevel(tex, smp, uv - uni.offset, 0.0).a;\n  let low  = textureSampleLevel(tex, smp, uv + uni.offset, 0.0).a;\n  let bevelVal = clamp((high - low) * 0.5 + 0.5, 0.0, 1.0);\n  return vec4f(bevelVal, 0.0, 0.0, 1.0);\n}");
@@ -117,117 +128,112 @@ inline flight::WeakMap<flight::Ref<flight::types::WgpuRenderState>, flight::Ref<
 // called API to return the exact declared arm. The compiler will not cast, copy, or materialize the call result
 // into another owner.
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_WIDTH_HEIGHT_FORMAT_3E01490122355EDD
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_WIDTH_HEIGHT_FORMAT_3E01490122355EDD
+struct width_height_format_3e01490122355edd : public flight::ReferenceEnabled {
+  double width;
+  double height;
+  flight::String format;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_WIDTH_HEIGHT_FORMAT_3E01490122355EDD
 
-// NOT GENERATED: function applyGradientBevelEffectToWgpu -- source line 23
-// refusal: cpp-contextual-union-value-type-unrepresented [target-runtime]
-//
-// The source it stood for:
-//   export function applyGradientBevelEffectToWgpu(
-//     state: WgpuRenderState,
-//     source: Readonly<WgpuTextureRenderTarget>,
-//     dest: Readonly<WgpuTextureRenderTarget>,
-//     pool: WgpuRenderTargetPool,
-//     effect: Readonly<GradientBevelEffect>,
-//   ): void {
-//     const src = source as WgpuTextureRenderTarget;
-//     const dst = dest as WgpuTextureRenderTarget;
-//     const descriptor = { width: source.width, height: source.height, format: source.format };
-//     const s0 = acquireWgpuTextureRenderTarget(state, pool, descriptor);
-//     const s1 = acquireWgpuTextureRenderTarget(state, pool, descriptor);
-//     const s2 = acquireWgpuTextureRenderTarget(state, pool, descriptor);
-//   
-//     const angle = ((effect.angle ?? 45) * Math.PI) / 180;
-//     const distance = effect.distance ?? 4;
-//     const quality = Math.max(1, Math.round(effect.quality ?? 1));
-//     const strength = effect.strength ?? 1;
-//     const sourceMode = effect.sourceMode ?? 'draw';
-//   
-//     const { device } = state;
-//     const fs = getWgpuEffectPassState(state);
-//   
-//     // Build blur basis → s1
-//     applyWgpuEffectTintPass(state, src, s0, 0xffffffff, 1, Math.min(1, strength));
-//     applyWgpuEffectBoxBlur(state, s0, s1, s2, {
-//       blurX: effect.blurX ?? 4,
-//       blurY: effect.blurY ?? 4,
-//       passes: quality,
-//     });
-//   
-//     // Encode bevel value from blurred alpha offset samples → s0
-//     const dx = (Math.cos(angle) * distance) / s1.width;
-//     const dy = (Math.sin(angle) * distance) / s1.height;
-//   
-//     const encodePipeline = getEncodePipeline(state);
-//     const encodeSlot = fs.acquireSlot();
-//     fs.writeSlot(encodeSlot, (f32) => {
-//       f32[0] = dx;
-//       f32[1] = dy;
-//     });
-//   
-//     const blurredBG = device.createBindGroup({
-//       layout: fs.textureBGLayout,
-//       entries: [
-//         { binding: 0, resource: s1.view },
-//         { binding: 1, resource: fs.sampler },
-//       ],
-//     });
-//   
-//     const encodePass = fs.beginPass(s0, 'load');
-//     encodePass.setPipeline(encodePipeline.pipeline);
-//     encodePass.setBindGroup(0, fs.uniformBG, [encodeSlot]);
-//     encodePass.setBindGroup(1, blurredBG);
-//     encodePass.draw(6);
-//     encodePass.end();
-//   
-//     // Apply: look up gradient ramp from encoded bevel, clip to source alpha → s1
-//     const rampTexture = getWgpuEffectGradientRampTexture(state, effect.colors, effect.alphas, effect.ratios);
-//     const rampBG = device.createBindGroup({
-//       layout: fs.textureBGLayout,
-//       entries: [
-//         { binding: 0, resource: rampTexture.createView() },
-//         { binding: 1, resource: fs.sampler },
-//       ],
-//     });
-//     const encodedBG = device.createBindGroup({
-//       layout: fs.textureBGLayout,
-//       entries: [
-//         { binding: 0, resource: s0.view },
-//         { binding: 1, resource: fs.sampler },
-//       ],
-//     });
-//     const sourceBG = device.createBindGroup({
-//       layout: fs.textureBGLayout,
-//       entries: [
-//         { binding: 0, resource: src.view },
-//         { binding: 1, resource: fs.sampler },
-//       ],
-//     });
-//   
-//     const applyPipeline = getApplyPipeline(state);
-//     const applySlot = fs.acquireSlot();
-//     fs.writeSlot(applySlot, () => {});
-//   
-//     const applyPass = fs.beginPass(s1, 'load');
-//     applyPass.setPipeline(applyPipeline.pipeline);
-//     applyPass.setBindGroup(0, fs.uniformBG, [applySlot]);
-//     applyPass.setBindGroup(1, encodedBG);
-//     applyPass.setBindGroup(2, rampBG);
-//     applyPass.setBindGroup(3, sourceBG);
-//     applyPass.draw(6);
-//     applyPass.end();
-//   
-//     clearWgpuEffectTarget(state, dst);
-//     if (sourceMode === 'draw') applyWgpuEffectBlitPass(state, src, dst);
-//     applyWgpuEffectBlitPass(state, s1, dst);
-//     if (sourceMode === 'knockout') applyWgpuEffectErasePass(state, src, dst);
-//   
-//     releaseWgpuTextureRenderTarget(pool, s0);
-//     releaseWgpuTextureRenderTarget(pool, s1);
-//     releaseWgpuTextureRenderTarget(pool, s2);
-//   }
-//   
-// cpp emission failed for @flighthq/effects-wgpu/packages/effects-wgpu/src/wgpuGradientBevelEffect.ts:
-// contextual union value type flight::Any is not a represented runtime domain
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_WIDTH_HEIGHT_FORMAT_COLOR_SPACE_SAMPLE_COUNT_D7147B6683BA8EDA
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_WIDTH_HEIGHT_FORMAT_COLOR_SPACE_SAMPLE_COUNT_D7147B6683BA8EDA
+struct width_height_format_color_space_sample_count_d7147b6683ba8eda : public flight::ReferenceEnabled {
+  double width;
+  double height;
+  std::optional<flight::String> format;
+  std::optional<flight::types::RenderTargetColorSpace> color_space;
+  std::optional<double> sample_count;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_WIDTH_HEIGHT_FORMAT_COLOR_SPACE_SAMPLE_COUNT_D7147B6683BA8EDA
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_UNIFORM_BG_TEXTURE_BGLAYOUT_UNIFORM_BGLAYOUT_SAMPLER_ACQUIRE_SLOT_WRITE_SLOT_BEGIN_PASS_A57CC5CC930C3728
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_UNIFORM_BG_TEXTURE_BGLAYOUT_UNIFORM_BGLAYOUT_SAMPLER_ACQUIRE_SLOT_WRITE_SLOT_BEGIN_PASS_A57CC5CC930C3728
+struct uniform_bg_texture_bglayout_uniform_bglayout_sampler_acquire_slot_write_slot_begin_pass_a57cc5cc930c3728 : public flight::ReferenceEnabled {
+  flight::Any uniform_bg;
+  flight::Any texture_bglayout;
+  flight::Any uniform_bglayout;
+  flight::Any sampler;
+  std::function<double()> acquire_slot;
+  std::function<void(double, std::function<void(flight::Float32Array, flight::Int32Array)>)> write_slot;
+  std::function<flight::Any(std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>, flight::Any)> begin_pass;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_UNIFORM_BG_TEXTURE_BGLAYOUT_UNIFORM_BGLAYOUT_SAMPLER_ACQUIRE_SLOT_WRITE_SLOT_BEGIN_PASS_A57CC5CC930C3728
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_BLUR_X_BLUR_Y_PASSES_EDGE_COLOR_4494165180BBAC95
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_BLUR_X_BLUR_Y_PASSES_EDGE_COLOR_4494165180BBAC95
+struct blur_x_blur_y_passes_edge_color_4494165180bbac95 : public flight::ReferenceEnabled {
+  std::optional<double> blur_x;
+  std::optional<double> blur_y;
+  std::optional<double> passes;
+  std::optional<flight::Array<double>> edge_color;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_BLUR_X_BLUR_Y_PASSES_EDGE_COLOR_4494165180BBAC95
+
+inline void apply_gradient_bevel_effect_to_wgpu(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>> dest, flight::Ref<flight::types::WgpuRenderTargetPool> pool, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GradientBevelEffect>>>> effect) {
+  flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>> src = flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source);
+  flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>> dst = flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(dest);
+  auto descriptor = flight::make_ref<width_height_format_3e01490122355edd>(width_height_format_3e01490122355edd{.width = flight::row_get<flight::RowKey<"width">>(source), .height = flight::row_get<flight::RowKey<"height">>(source), .format = flight::row_get<flight::RowKey<"format">>(source)});
+  auto s0 = flight::render_wgpu::acquire_wgpu_texture_render_target(state, pool, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<width_height_format_color_space_sample_count_d7147b6683ba8eda>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<width_height_format_3e01490122355edd>>>>(descriptor)));
+  auto s1 = flight::render_wgpu::acquire_wgpu_texture_render_target(state, pool, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<width_height_format_color_space_sample_count_d7147b6683ba8eda>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<width_height_format_3e01490122355edd>>>>(descriptor)));
+  auto s2 = flight::render_wgpu::acquire_wgpu_texture_render_target(state, pool, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<width_height_format_color_space_sample_count_d7147b6683ba8eda>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<width_height_format_3e01490122355edd>>>>(descriptor)));
+  const double angle = ((([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"angle">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 45.0; }()) * flight::pi) / 180.0);
+  const double distance = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"distance">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 4.0; }());
+  const double quality = flight::maximum(1.0, flight::round(([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"quality">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }())));
+  const double strength = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"strength">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }());
+  flight::String source_mode = ([&]() -> flight::String { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"sourceMode">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("draw"); }());
+  auto object_pattern_value = state;
+  flight::host_sdl::WgpuDevice device = object_pattern_value->device;
+  flight::Ref<uniform_bg_texture_bglayout_uniform_bglayout_sampler_acquire_slot_write_slot_begin_pass_a57cc5cc930c3728> fs = flight::effects_wgpu::get_wgpu_effect_pass_state(state);
+  flight::effects_wgpu::apply_wgpu_effect_tint_pass(state, src, s0, 4294967295.0, 1.0, flight::minimum(1.0, strength));
+  flight::effects_wgpu::apply_wgpu_effect_box_blur(state, s0, s1, s2, flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<blur_x_blur_y_passes_edge_color_4494165180bbac95>>>>(flight::row_field<flight::RowKey<"blurX">>(([&]() -> std::optional<double> { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"blurX">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return std::optional<double>{4.0}; }())), flight::row_field<flight::RowKey<"blurY">>(([&]() -> std::optional<double> { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"blurY">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return std::optional<double>{4.0}; }())), flight::row_field<flight::RowKey<"passes">>(std::optional<double>{quality})));
+  const double dx = ((std::cos(angle) * distance) / s1->width);
+  const double dy = ((std::sin(angle) * distance) / s1->height);
+  auto encode_pipeline = get_encode_pipeline(state);
+  const double encode_slot = fs->acquire_slot();
+  fs->write_slot(encode_slot, flight::Function<void(flight::Float32Array, flight::Int32Array)>{[=](flight::Float32Array f32, flight::Int32Array ignored_callback_argument) {
+  (void)ignored_callback_argument;
+  ([&]() { auto&& typed_array = f32; const auto typed_index = 0.0; const auto typed_value = dx; return typed_array.set_index(typed_index, typed_value); }());
+  ([&]() { auto&& typed_array_2 = f32; const auto typed_index_2 = 1.0; const auto typed_value_2 = dy; return typed_array_2.set_index(typed_index_2, typed_value_2); }());
+}});
+  auto blurred_bg = device.create_bind_group(([&]() { flight::host_sdl::WgpuBindGroupDescriptor external_gpubind_group_descriptor{}; external_gpubind_group_descriptor.layout = fs->texture_bglayout; external_gpubind_group_descriptor.entries = flight::Array<flight::host_sdl::WgpuBindGroupEntry>{([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry{}; external_gpubind_group_entry.binding = 0.0; external_gpubind_group_entry.resource = s1->view; return external_gpubind_group_entry; }()), ([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_2{}; external_gpubind_group_entry_2.binding = 1.0; external_gpubind_group_entry_2.resource = fs->sampler; return external_gpubind_group_entry_2; }())}; return external_gpubind_group_descriptor; }()));
+  auto encode_pass = fs->begin_pass(std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{s0}, flight::String("load"));
+  flight::named_properties(encode_pass).get(flight::String("setPipeline"))(encode_pipeline->pipeline);
+  flight::named_properties(encode_pass).get(flight::String("setBindGroup"))(0.0, fs->uniform_bg, flight::Array{encode_slot});
+  flight::named_properties(encode_pass).get(flight::String("setBindGroup"))(1.0, blurred_bg);
+  flight::named_properties(encode_pass).get(flight::String("draw"))(6.0);
+  flight::named_properties(encode_pass).get(flight::String("end"))();
+  auto ramp_texture = flight::effects_wgpu::get_wgpu_effect_gradient_ramp_texture(state, flight::row_get<flight::RowKey<"colors">>(effect), flight::row_get<flight::RowKey<"alphas">>(effect), flight::row_get<flight::RowKey<"ratios">>(effect));
+  auto ramp_bg = device.create_bind_group(([&]() { flight::host_sdl::WgpuBindGroupDescriptor external_gpubind_group_descriptor_2{}; external_gpubind_group_descriptor_2.layout = fs->texture_bglayout; external_gpubind_group_descriptor_2.entries = flight::Array<flight::host_sdl::WgpuBindGroupEntry>{([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_3{}; external_gpubind_group_entry_3.binding = 0.0; external_gpubind_group_entry_3.resource = ramp_texture.create_view(); return external_gpubind_group_entry_3; }()), ([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_4{}; external_gpubind_group_entry_4.binding = 1.0; external_gpubind_group_entry_4.resource = fs->sampler; return external_gpubind_group_entry_4; }())}; return external_gpubind_group_descriptor_2; }()));
+  auto encoded_bg = device.create_bind_group(([&]() { flight::host_sdl::WgpuBindGroupDescriptor external_gpubind_group_descriptor_3{}; external_gpubind_group_descriptor_3.layout = fs->texture_bglayout; external_gpubind_group_descriptor_3.entries = flight::Array<flight::host_sdl::WgpuBindGroupEntry>{([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_5{}; external_gpubind_group_entry_5.binding = 0.0; external_gpubind_group_entry_5.resource = s0->view; return external_gpubind_group_entry_5; }()), ([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_6{}; external_gpubind_group_entry_6.binding = 1.0; external_gpubind_group_entry_6.resource = fs->sampler; return external_gpubind_group_entry_6; }())}; return external_gpubind_group_descriptor_3; }()));
+  auto source_bg = device.create_bind_group(([&]() { flight::host_sdl::WgpuBindGroupDescriptor external_gpubind_group_descriptor_4{}; external_gpubind_group_descriptor_4.layout = fs->texture_bglayout; external_gpubind_group_descriptor_4.entries = flight::Array<flight::host_sdl::WgpuBindGroupEntry>{([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_7{}; external_gpubind_group_entry_7.binding = 0.0; external_gpubind_group_entry_7.resource = flight::row_get<flight::RowKey<"view">>(src); return external_gpubind_group_entry_7; }()), ([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_8{}; external_gpubind_group_entry_8.binding = 1.0; external_gpubind_group_entry_8.resource = fs->sampler; return external_gpubind_group_entry_8; }())}; return external_gpubind_group_descriptor_4; }()));
+  auto apply_pipeline = get_apply_pipeline(state);
+  const double apply_slot = fs->acquire_slot();
+  fs->write_slot(apply_slot, flight::Function<void(flight::Float32Array, flight::Int32Array)>{[=](flight::Float32Array ignored_callback_argument_2, flight::Int32Array ignored_callback_argument_3) {
+  (void)ignored_callback_argument_2;
+  (void)ignored_callback_argument_3;
+}});
+  auto apply_pass = fs->begin_pass(std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{s1}, flight::String("load"));
+  flight::named_properties(apply_pass).get(flight::String("setPipeline"))(apply_pipeline->pipeline);
+  flight::named_properties(apply_pass).get(flight::String("setBindGroup"))(0.0, fs->uniform_bg, flight::Array{apply_slot});
+  flight::named_properties(apply_pass).get(flight::String("setBindGroup"))(1.0, encoded_bg);
+  flight::named_properties(apply_pass).get(flight::String("setBindGroup"))(2.0, ramp_bg);
+  flight::named_properties(apply_pass).get(flight::String("setBindGroup"))(3.0, source_bg);
+  flight::named_properties(apply_pass).get(flight::String("draw"))(6.0);
+  flight::named_properties(apply_pass).get(flight::String("end"))();
+  flight::effects_wgpu::clear_wgpu_effect_target(state, dst);
+  if ((source_mode == flight::String("draw"))) {
+    flight::effects_wgpu::apply_wgpu_effect_blit_pass(state, src, dst);
+  }
+  flight::effects_wgpu::apply_wgpu_effect_blit_pass(state, s1, dst);
+  if ((source_mode == flight::String("knockout"))) {
+    flight::effects_wgpu::apply_wgpu_effect_erase_pass(state, src, dst);
+  }
+  flight::render_wgpu::release_wgpu_texture_render_target(pool, s0);
+  flight::render_wgpu::release_wgpu_texture_render_target(pool, s1);
+  flight::render_wgpu::release_wgpu_texture_render_target(pool, s2);
+}
 
 
 // NOT GENERATED: variable (binding) -- source line 131

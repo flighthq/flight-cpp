@@ -7,6 +7,7 @@
 //   missing: function ensureWgpuRenderTextureEntry -- source line 130
 //   missing: function bindWgpuRenderTexture -- source line 24
 #include <exception>
+#include <flight/callable.hpp>
 #include <flight/structural_ref.hpp>
 #include <flight/weak_map.hpp>
 #include <functional>
@@ -205,7 +206,7 @@ inline T write_wgpu_render_texture_target(flight::Ref<flight::types::WgpuRenderS
 }
 
 inline void render_into_wgpu_render_texture(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::RenderTexture> render_texture, std::function<void(flight::Ref<flight::types::WgpuRenderPass>)> callback, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderTargetClear>>>> clear) {
-  write_wgpu_render_texture_target<void>(state, render_texture, [=](flight::Ref<flight::types::WgpuTextureRenderTarget> target) {
+  write_wgpu_render_texture_target<void>(state, render_texture, flight::Function<void(flight::Ref<flight::types::WgpuTextureRenderTarget>)>{[=](flight::Ref<flight::types::WgpuTextureRenderTarget> target) {
   auto pass = flight::render_wgpu::begin_wgpu_render_pass(state, target, clear);
   std::exception_ptr finally_exception_2;
   try {
@@ -216,7 +217,7 @@ inline void render_into_wgpu_render_texture(flight::Ref<flight::types::WgpuRende
   }
   flight::render_wgpu::end_wgpu_render_pass(pass);
   if (finally_exception_2) std::rethrow_exception(finally_exception_2);
-});
+}});
 }
 
 inline void notify_guard(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderTexture>>>> render_texture) {

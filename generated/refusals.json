@@ -1,7 +1,9 @@
 {
-  "schema": "flight-generated-sdk-refusals/2",
+  "schema": "flight-generated-sdk-refusals/3",
   "compilerRevision": "806d257d2f4100de745cc97340e61c2f301b0f24",
-  "sourceRevision": "a62784923f3be814463286c9fb28edfe6ab15789",
+  "sourceRevisions": [
+    "a62784923f3be814463286c9fb28edfe6ab15789"
+  ],
   "refusals": [
     {
       "code": "dependency-refused",
@@ -5977,16 +5979,16 @@
       "line": 32,
       "module": "packages/scene2d-wgpu/src/wgpuQuadBatch.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuQuadBatch.ts: contextual nullable interface conversion from Material2D to Material follows TypeScript interface heritage, but flight-cpp stores those declarations in independent flight::Ref<flight::types::Material2D> and flight::Ref<flight::types::Material> owner types: each interface struct is emitted flattened, so the heritage is not a C++ base relation and no pointer cast exists to follow. A native pointer cast would claim C++ inheritance the emitted interface structs do not have, materializing the target would replace object identity, and a structural row would change the declared result carrier. Preserve the exact source owner in the declared result and explicitly represent both owners where the branches merge, or add an owner-preserving interface-heritage carrier to the runtime contract. Declaring the destination as the derived interface where the concrete type is known -- or converting where the type is still concrete rather than widening it through a nullable union -- avoids the boundary altogether; closing it at the carrier needs either that runtime carrier or interface structs emitted with the heritage as a C++ base relation.",
+      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuQuadBatch.ts: contextual optionalSingle construction requires expression type evidence",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 461,
+      "line": 135,
       "module": "packages/scene2d-wgpu/src/wgpuQuadBatchWriter.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuQuadBatchWriter.ts: contextual union value type flight::host_sdl::WgpuSampler is not a represented runtime domain",
+      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuQuadBatchWriter.ts: property buffer on a C++ variant requires proven union member access",
       "stage": "emission"
     },
     {
@@ -6031,7 +6033,7 @@
       "line": 24,
       "module": "packages/scene2d-wgpu/src/wgpuScale9Sprite.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuScale9Sprite.ts: contextual nullable interface conversion from Material2D to Material follows TypeScript interface heritage, but flight-cpp stores those declarations in independent flight::Ref<flight::types::Material2D> and flight::Ref<flight::types::Material> owner types: each interface struct is emitted flattened, so the heritage is not a C++ base relation and no pointer cast exists to follow. A native pointer cast would claim C++ inheritance the emitted interface structs do not have, materializing the target would replace object identity, and a structural row would change the declared result carrier. Preserve the exact source owner in the declared result and explicitly represent both owners where the branches merge, or add an owner-preserving interface-heritage carrier to the runtime contract. Declaring the destination as the derived interface where the concrete type is known -- or converting where the type is still concrete rather than widening it through a nullable union -- avoids the boundary altogether; closing it at the carrier needs either that runtime carrier or interface structs emitted with the heritage as a C++ base relation.",
+      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuScale9Sprite.ts: contextual optionalSingle construction requires expression type evidence",
       "stage": "emission"
     },
     {
@@ -6072,7 +6074,7 @@
       "line": 25,
       "module": "packages/scene2d-wgpu/src/wgpuSprite.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuSprite.ts: contextual nullable interface conversion from Material2D to Material follows TypeScript interface heritage, but flight-cpp stores those declarations in independent flight::Ref<flight::types::Material2D> and flight::Ref<flight::types::Material> owner types: each interface struct is emitted flattened, so the heritage is not a C++ base relation and no pointer cast exists to follow. A native pointer cast would claim C++ inheritance the emitted interface structs do not have, materializing the target would replace object identity, and a structural row would change the declared result carrier. Preserve the exact source owner in the declared result and explicitly represent both owners where the branches merge, or add an owner-preserving interface-heritage carrier to the runtime contract. Declaring the destination as the derived interface where the concrete type is known -- or converting where the type is still concrete rather than widening it through a nullable union -- avoids the boundary altogether; closing it at the carrier needs either that runtime carrier or interface structs emitted with the heritage as a C++ base relation.",
+      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuSprite.ts: contextual optionalSingle construction requires expression type evidence",
       "stage": "emission"
     },
     {
@@ -6106,7 +6108,7 @@
       "line": 27,
       "module": "packages/scene2d-wgpu/src/wgpuTilemap.ts",
       "package": "@flighthq/scene2d-wgpu",
-      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuTilemap.ts: contextual nullable interface conversion from Material2D to Material follows TypeScript interface heritage, but flight-cpp stores those declarations in independent flight::Ref<flight::types::Material2D> and flight::Ref<flight::types::Material> owner types: each interface struct is emitted flattened, so the heritage is not a C++ base relation and no pointer cast exists to follow. A native pointer cast would claim C++ inheritance the emitted interface structs do not have, materializing the target would replace object identity, and a structural row would change the declared result carrier. Preserve the exact source owner in the declared result and explicitly represent both owners where the branches merge, or add an owner-preserving interface-heritage carrier to the runtime contract. Declaring the destination as the derived interface where the concrete type is known -- or converting where the type is still concrete rather than widening it through a nullable union -- avoids the boundary altogether; closing it at the carrier needs either that runtime carrier or interface structs emitted with the heritage as a C++ base relation.",
+      "reason": "cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuTilemap.ts: contextual optionalSingle construction requires expression type evidence",
       "stage": "emission"
     },
     {
@@ -7647,13 +7649,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 25,
+      "code": "dependency-refused",
       "module": "packages/scene3d-wgpu/src/wgpuDebugPrelude.ts",
       "package": "@flighthq/scene3d-wgpu",
-      "reason": "cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuDebugPrelude.ts: contextual union value type flight::host_sdl::WgpuTextureView is not a represented runtime domain",
-      "stage": "emission"
+      "reason": "dependency ./wgpuMeshPipeline.ts was refused for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuMeshPipeline.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -7719,13 +7719,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 45,
+      "code": "dependency-refused",
       "module": "packages/scene3d-wgpu/src/wgpuMatcapPrelude.ts",
       "package": "@flighthq/scene3d-wgpu",
-      "reason": "cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuMatcapPrelude.ts: contextual union value type flight::host_sdl::WgpuTextureView is not a represented runtime domain",
-      "stage": "emission"
+      "reason": "dependency ./wgpuMeshPipeline.ts was refused for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuMeshPipeline.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -7882,13 +7880,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 27,
+      "code": "dependency-refused",
       "module": "packages/scene3d-wgpu/src/wgpuToonPrelude.ts",
       "package": "@flighthq/scene3d-wgpu",
-      "reason": "cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuToonPrelude.ts: contextual union value type flight::host_sdl::WgpuTextureView is not a represented runtime domain",
-      "stage": "emission"
+      "reason": "dependency ./wgpuMeshPipeline.ts was refused for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuMeshPipeline.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",

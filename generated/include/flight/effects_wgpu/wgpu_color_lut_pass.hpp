@@ -6,10 +6,14 @@
 //   missing: function uploadLutTexture -- source line 115
 //   missing: function getLutBindGroupLayout -- source line 63
 //   missing: function getLutPipeline -- source line 79
-//   missing: function applyColorLutPassToWgpu -- source line 22
+#include <flight/any.hpp>
+#include <flight/callable.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/string.hpp>
+#include <flight/structural_ref.hpp>
 #include <flight/weak_map.hpp>
+#include <functional>
+#include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -24,6 +28,7 @@ namespace flight::types { struct WgpuRenderState; }
 namespace flight::types { struct WgpuTextureRenderTarget; }
 
 #include <flight/types/contract.hpp>
+#include <flight/effects_wgpu/wgpu_effect_pass.hpp>
 
 namespace flight::effects_wgpu {
 
@@ -72,16 +77,7 @@ inline double clamp01(double v) {
 // cpp emission failed for @flighthq/effects-wgpu/packages/effects-wgpu/src/wgpuColorLutPass.ts: optional
 // property call destroy requires callable result evidence
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_SRC_FACTOR_DST_FACTOR_OPERATION_734D8E3FCC3C03FB
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_SRC_FACTOR_DST_FACTOR_OPERATION_734D8E3FCC3C03FB
-struct src_factor_dst_factor_operation_734d8e3fcc3c03fb : public flight::ReferenceEnabled {
-  flight::String src_factor;
-  flight::String dst_factor;
-  flight::String operation;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_SRC_FACTOR_DST_FACTOR_OPERATION_734D8E3FCC3C03FB
-
-inline flight::host_sdl::WgpuBlendState replace_blend_flight_value_variable__u000052__u000045__u000050__u00004c__u000041__u000043__u000045__u00005f__u000042__u00004c__u000045__u00004e__u000044__flight_private_0fc0f0c85c8bce8c = ([]() { flight::host_sdl::WgpuBlendState external_gpublend_state{}; external_gpublend_state.color = flight::make_ref<src_factor_dst_factor_operation_734d8e3fcc3c03fb>(src_factor_dst_factor_operation_734d8e3fcc3c03fb{.src_factor = flight::String("one"), .dst_factor = flight::String("zero"), .operation = flight::String("add")}); external_gpublend_state.alpha = flight::make_ref<src_factor_dst_factor_operation_734d8e3fcc3c03fb>(src_factor_dst_factor_operation_734d8e3fcc3c03fb{.src_factor = flight::String("one"), .dst_factor = flight::String("zero"), .operation = flight::String("add")}); return external_gpublend_state; }());
+inline flight::host_sdl::WgpuBlendState replace_blend_flight_value_variable__u000052__u000045__u000050__u00004c__u000041__u000043__u000045__u00005f__u000042__u00004c__u000045__u00004e__u000044__flight_private_0fc0f0c85c8bce8c = ([]() { flight::host_sdl::WgpuBlendState external_gpublend_state{}; external_gpublend_state.color = ([]() { flight::host_sdl::WgpuBlendComponent external_gpublend_component{}; external_gpublend_component.src_factor = flight::String("one"); external_gpublend_component.dst_factor = flight::String("zero"); external_gpublend_component.operation = flight::String("add"); return external_gpublend_component; }()); external_gpublend_state.alpha = ([]() { flight::host_sdl::WgpuBlendComponent external_gpublend_component_2{}; external_gpublend_component_2.src_factor = flight::String("one"); external_gpublend_component_2.dst_factor = flight::String("zero"); external_gpublend_component_2.operation = flight::String("add"); return external_gpublend_component_2; }()); return external_gpublend_state; }());
 
 inline const flight::String color_lut_fragment_wgsl = flight::String("\nstruct Uniforms { u_size : f32, _p0 : f32, _p1 : f32, _p2 : f32, }\n@group(0) @binding(0) var<uniform> uni : Uniforms;\n@group(1) @binding(0) var tex : texture_2d<f32>;\n@group(1) @binding(1) var smp : sampler;\n@group(2) @binding(0) var lut : texture_3d<f32>;\n@group(2) @binding(1) var lutSmp : sampler;\n\n@fragment\nfn fs_main(@location(0) uv : vec2f) -> @location(0) vec4f {\n  let c = textureSampleLevel(tex, smp, uv, 0.0);\n  let scale = (uni.u_size - 1.0) / uni.u_size;\n  let offset = 0.5 / uni.u_size;\n  let lc = clamp(c.rgb, vec3f(0.0), vec3f(1.0)) * scale + offset;\n  let graded = textureSampleLevel(lut, lutSmp, lc, 0.0).rgb;\n  return vec4f(graded, c.a);\n}");
 
@@ -163,53 +159,39 @@ inline flight::WeakMap<flight::Ref<flight::types::WgpuRenderState>, flight::Map<
 // called API to return the exact declared arm. The compiler will not cast, copy, or materialize the call result
 // into another owner.
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_UNIFORM_BG_TEXTURE_BGLAYOUT_UNIFORM_BGLAYOUT_SAMPLER_ACQUIRE_SLOT_WRITE_SLOT_BEGIN_PASS_9B3F1C7CD42B6C60
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_UNIFORM_BG_TEXTURE_BGLAYOUT_UNIFORM_BGLAYOUT_SAMPLER_ACQUIRE_SLOT_WRITE_SLOT_BEGIN_PASS_9B3F1C7CD42B6C60
+struct uniform_bg_texture_bglayout_uniform_bglayout_sampler_acquire_slot_write_slot_begin_pass_9b3f1c7cd42b6c60 : public flight::ReferenceEnabled {
+  flight::Any uniform_bg;
+  flight::Any texture_bglayout;
+  flight::Any uniform_bglayout;
+  flight::Any sampler;
+  std::function<double()> acquire_slot;
+  std::function<void(double, std::function<void(flight::Float32Array, flight::Int32Array)>)> write_slot;
+  std::function<flight::Any(std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>, flight::Any)> begin_pass;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_UNIFORM_BG_TEXTURE_BGLAYOUT_UNIFORM_BGLAYOUT_SAMPLER_ACQUIRE_SLOT_WRITE_SLOT_BEGIN_PASS_9B3F1C7CD42B6C60
 
-// NOT GENERATED: function applyColorLutPassToWgpu -- source line 22
-// refusal: cpp-contextual-union-value-type-unrepresented [target-runtime]
-//
-// The source it stood for:
-//   export function applyColorLutPassToWgpu(
-//     state: WgpuRenderState,
-//     source: Readonly<WgpuTextureRenderTarget>,
-//     dest: Readonly<WgpuTextureRenderTarget>,
-//     lut: Readonly<ColorLut>,
-//     cache: WgpuColorLutTextureCache,
-//   ): void {
-//     const { device } = state;
-//     const fs = getWgpuEffectPassState(state);
-//     const texture = uploadLutTexture(state, lut, cache);
-//   
-//     const sourceBG = device.createBindGroup({
-//       layout: fs.textureBGLayout,
-//       entries: [
-//         { binding: 0, resource: (source as WgpuTextureRenderTarget).view },
-//         { binding: 1, resource: fs.sampler },
-//       ],
-//     });
-//     const lutBG = device.createBindGroup({
-//       layout: getLutBindGroupLayout(state),
-//       entries: [
-//         { binding: 0, resource: texture.createView({ dimension: '3d' }) },
-//         { binding: 1, resource: fs.sampler },
-//       ],
-//     });
-//   
-//     const pipeline = getLutPipeline(state, (dest as WgpuTextureRenderTarget).format);
-//     const slotOffset = fs.acquireSlot();
-//     fs.writeSlot(slotOffset, (f32) => {
-//       f32[0] = lut.size;
-//     });
-//   
-//     const pass = fs.beginPass(dest as WgpuTextureRenderTarget, 'load');
-//     pass.setPipeline(pipeline.pipeline);
-//     pass.setBindGroup(0, fs.uniformBG, [slotOffset]);
-//     pass.setBindGroup(1, sourceBG);
-//     pass.setBindGroup(2, lutBG);
-//     pass.draw(6);
-//     pass.end();
-//   }
-//   
-// cpp emission failed for @flighthq/effects-wgpu/packages/effects-wgpu/src/wgpuColorLutPass.ts: contextual union
-// value type flight::Any is not a represented runtime domain
+inline void apply_color_lut_pass_to_wgpu(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>> dest, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorLut>>>> lut, flight::Ref<flight::types::WgpuColorLutTextureCache> cache) {
+  auto object_pattern_value = state;
+  flight::host_sdl::WgpuDevice device = object_pattern_value->device;
+  flight::Ref<uniform_bg_texture_bglayout_uniform_bglayout_sampler_acquire_slot_write_slot_begin_pass_9b3f1c7cd42b6c60> fs = flight::effects_wgpu::get_wgpu_effect_pass_state(state);
+  flight::host_sdl::WgpuTexture texture = upload_lut_texture(state, lut, cache);
+  auto source_bg = device.create_bind_group(([&]() { flight::host_sdl::WgpuBindGroupDescriptor external_gpubind_group_descriptor{}; external_gpubind_group_descriptor.layout = fs->texture_bglayout; external_gpubind_group_descriptor.entries = flight::Array<flight::host_sdl::WgpuBindGroupEntry>{([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry{}; external_gpubind_group_entry.binding = 0.0; external_gpubind_group_entry.resource = flight::row_get<flight::RowKey<"view">>(flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source)); return external_gpubind_group_entry; }()), ([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_2{}; external_gpubind_group_entry_2.binding = 1.0; external_gpubind_group_entry_2.resource = fs->sampler; return external_gpubind_group_entry_2; }())}; return external_gpubind_group_descriptor; }()));
+  auto lut_bg = device.create_bind_group(([&]() { flight::host_sdl::WgpuBindGroupDescriptor external_gpubind_group_descriptor_2{}; external_gpubind_group_descriptor_2.layout = get_lut_bind_group_layout(state); external_gpubind_group_descriptor_2.entries = flight::Array<flight::host_sdl::WgpuBindGroupEntry>{([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_3{}; external_gpubind_group_entry_3.binding = 0.0; external_gpubind_group_entry_3.resource = texture.create_view(([&]() { flight::host_sdl::WgpuTextureViewDescriptor external_gputexture_view_descriptor{}; external_gputexture_view_descriptor.dimension = flight::String("3d"); return external_gputexture_view_descriptor; }())); return external_gpubind_group_entry_3; }()), ([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_4{}; external_gpubind_group_entry_4.binding = 1.0; external_gpubind_group_entry_4.resource = fs->sampler; return external_gpubind_group_entry_4; }())}; return external_gpubind_group_descriptor_2; }()));
+  auto pipeline = get_lut_pipeline(state, flight::row_get<flight::RowKey<"format">>(flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(dest)));
+  const double slot_offset = fs->acquire_slot();
+  fs->write_slot(slot_offset, flight::Function<void(flight::Float32Array, flight::Int32Array)>{[=](flight::Float32Array f32, flight::Int32Array ignored_callback_argument) {
+  (void)ignored_callback_argument;
+  ([&]() { auto&& typed_array = f32; const auto typed_index = 0.0; const auto typed_value = flight::row_get<flight::RowKey<"size">>(lut); return typed_array.set_index(typed_index, typed_value); }());
+}});
+  auto pass = fs->begin_pass(std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(dest)}, flight::String("load"));
+  flight::named_properties(pass).get(flight::String("setPipeline"))(pipeline->pipeline);
+  flight::named_properties(pass).get(flight::String("setBindGroup"))(0.0, fs->uniform_bg, flight::Array{slot_offset});
+  flight::named_properties(pass).get(flight::String("setBindGroup"))(1.0, source_bg);
+  flight::named_properties(pass).get(flight::String("setBindGroup"))(2.0, lut_bg);
+  flight::named_properties(pass).get(flight::String("draw"))(6.0);
+  flight::named_properties(pass).get(flight::String("end"))();
+}
 
 } // namespace flight::effects_wgpu

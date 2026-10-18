@@ -40,6 +40,7 @@ namespace flight::types { struct MeshGeometry; }
 namespace flight::types { struct MeshSubset; }
 namespace flight::types { struct Node3D; }
 namespace flight::types { struct Node3DRuntime; }
+namespace flight::types { struct Node3DTraits; }
 namespace flight::types { struct NormalMaterial; }
 namespace flight::types { struct PhongMaterial; }
 namespace flight::types { struct PointLight; }

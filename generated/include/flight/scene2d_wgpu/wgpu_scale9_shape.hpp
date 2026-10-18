@@ -59,8 +59,7 @@ struct WgpuScale9ShapeData;
 
 namespace flight::scene2d_wgpu {
 
-struct WgpuScale9ShapeData : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct WgpuScale9ShapeData : public flight::types::RendererData {
   std::optional<flight::Ref<flight::types::ImageResource>> image;
   double last_h;
   double last_scale_x;

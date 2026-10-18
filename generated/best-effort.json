@@ -28870,7 +28870,7 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "target-runtime",
+      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/contract.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/index.ts",
@@ -28889,7 +28889,7 @@
         "source": "packages/scene2d-wgpu/src/wgpuQuadBatch.ts"
       },
       "path": "flight/scene2d_wgpu/wgpu_quad_batch.hpp",
-      "rule": "cpp-contextual-union-interface-heritage-carrier-unrepresented",
+      "rule": "cpp-contextual-union-missing-expression-type:optionalSingle",
       "status": "refused-placeholder"
     },
     {
@@ -28940,7 +28940,7 @@
         "source": "packages/scene2d-wgpu/src/wgpuQuadBatchWriter.ts"
       },
       "path": "flight/scene2d_wgpu/wgpu_quad_batch_writer.hpp",
-      "rule": "cpp-contextual-union-value-type-unrepresented",
+      "rule": "cpp-union-member-access-unguarded",
       "status": "refused-placeholder"
     },
     {
@@ -29072,7 +29072,7 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "target-runtime",
+      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/contract.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/index.ts",
@@ -29092,7 +29092,7 @@
         "source": "packages/scene2d-wgpu/src/wgpuScale9Sprite.ts"
       },
       "path": "flight/scene2d_wgpu/wgpu_scale9_sprite.hpp",
-      "rule": "cpp-contextual-union-interface-heritage-carrier-unrepresented",
+      "rule": "cpp-contextual-union-missing-expression-type:optionalSingle",
       "status": "refused-placeholder"
     },
     {
@@ -29188,7 +29188,7 @@
       "status": "dependency-incomplete"
     },
     {
-      "classification": "target-runtime",
+      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/contract.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/index.ts",
@@ -29206,7 +29206,7 @@
         "source": "packages/scene2d-wgpu/src/wgpuSprite.ts"
       },
       "path": "flight/scene2d_wgpu/wgpu_sprite.hpp",
-      "rule": "cpp-contextual-union-interface-heritage-carrier-unrepresented",
+      "rule": "cpp-contextual-union-missing-expression-type:optionalSingle",
       "status": "refused-placeholder"
     },
     {
@@ -29274,7 +29274,7 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "target-runtime",
+      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/contract.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/index.ts",
@@ -29292,7 +29292,7 @@
         "source": "packages/scene2d-wgpu/src/wgpuTilemap.ts"
       },
       "path": "flight/scene2d_wgpu/wgpu_tilemap.hpp",
-      "rule": "cpp-contextual-union-interface-heritage-carrier-unrepresented",
+      "rule": "cpp-contextual-union-missing-expression-type:optionalSingle",
       "status": "refused-placeholder"
     },
     {
@@ -34611,22 +34611,10 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/contract.ts",
         "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuDepthMeshMaterialRenderer.ts",
         "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuNormalMeshMaterialRenderer.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:0d4ec6c635d497df8287942017146656a36cccd5707beee5b6dfa93fd7271286",
-        "sha256:5f784fe1b72f426c95f9910e7263dafb9bee5cb6fe1e45a93e5fa391cea95157",
-        "sha256:66c0e91c65c1186286c2d322d6fa82b1e84977d09384d745d3b223189aeb2670",
-        "sha256:72016a9e6944deee05690d1a1c4426d6861ce01791ed75109449af8bed9f21c4",
-        "sha256:7aa7feeb7b9b28e08a0103676823713c76f8df0ac213b3801c24ed6fe16c32fe",
-        "sha256:8d17e0adeb9ea01932210582f133ffb422940f8d64b7b71258ebf8667fb07d14",
-        "sha256:941a786b47aebb2e1ee384e1d8c08affe3693b67762f12ea9c0f5a940be9c4c9",
-        "sha256:d94d19a40f11bb089e8245e3a3b228a13134d60ce6b2cdbf7a97e70b760ba4d4",
-        "sha256:e0ffb340c3451b95c3f0f36f693d6d52d920735c5b57b04c9842fa039720906b"
       ],
       "module": {
         "name": "WgpuDebugPrelude",
@@ -34634,8 +34622,12 @@
         "source": "packages/scene3d-wgpu/src/wgpuDebugPrelude.ts"
       },
       "path": "flight/scene3d_wgpu/wgpu_debug_prelude.hpp",
-      "rule": "cpp-contextual-union-value-type-unrepresented",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts",
+        "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuMeshPipeline.ts",
+        "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuScene3DRuntime.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "classification": "compiler-restriction",
@@ -34822,20 +34814,9 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/contract.ts",
         "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuMatcapMeshMaterialRenderer.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:009d1119f7b5abd97025a2587d154d1234c4614d7a86802d965216dfd956da67",
-        "sha256:1040a89fc2b017e0f15f78f9f4c96982400808af54f8be1cdb4080ba3a1b3842",
-        "sha256:33564c635b1903d624a9f481a93e1116a53e4a3f55b569a38c1fc4e67bcc690b",
-        "sha256:37f8d645351ac5b3752b8773a3d1d83e0c6fa8160600aec55b2c38730d1e75dd",
-        "sha256:4620f78b34f9c6106c320ecc4b70fa85d8364dc770c63d918b4da9b018cc9080",
-        "sha256:743c3f0f9b2580a768d9954e621ebdac5f30cd40f04dd937028e936748ade832",
-        "sha256:8e92e892b7757b256109d4ccff4a305280541074205498c4dd372cef29bae8ba",
-        "sha256:9996e796e7b25559127aaf216979a504d7eb37f56e5997bc2fcf4c1538f101db"
       ],
       "module": {
         "name": "WgpuMatcapPrelude",
@@ -34843,8 +34824,12 @@
         "source": "packages/scene3d-wgpu/src/wgpuMatcapPrelude.ts"
       },
       "path": "flight/scene3d_wgpu/wgpu_matcap_prelude.hpp",
-      "rule": "cpp-contextual-union-value-type-unrepresented",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts",
+        "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuMeshPipeline.ts",
+        "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuScene3DRuntime.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [
@@ -35481,20 +35466,9 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/contract.ts",
         "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuToonMeshMaterialRenderer.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:04d3c07401da0a044c8e90436ffa88f9139e1c7db1995816bbf6d57cda9d3c5c",
-        "sha256:0fcd225143b170b97d6953377e88b84b7352cd44623732bb89f97c258d69c225",
-        "sha256:38ba795242bba9e3a25fe6ade5703f1066afc614f897b608eda0a388c1fa3122",
-        "sha256:40a9c65389cf98282e06f5eff3379c4d77ec52fd588b12e1505e0727e0d3719c",
-        "sha256:5ae23ab7aee25c2d62b57087001689b0165fdaae50c15177b00820850544ee80",
-        "sha256:8b97ec6f5cb1a8dbc7f49cbd6da6806e33232745e2b150d420bc94b58d23b4f1",
-        "sha256:a1cb63163b443b7a88d6ced53890294f7a52d1ece08eeaaee91d7477f5011bd3",
-        "sha256:fd6a408aa0b62120623d349ee4d9bb1a945afbcd49ad52fcf1fab78180500d2b"
       ],
       "module": {
         "name": "WgpuToonPrelude",
@@ -35502,8 +35476,12 @@
         "source": "packages/scene3d-wgpu/src/wgpuToonPrelude.ts"
       },
       "path": "flight/scene3d_wgpu/wgpu_toon_prelude.hpp",
-      "rule": "cpp-contextual-union-value-type-unrepresented",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts",
+        "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuMeshPipeline.ts",
+        "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuScene3DRuntime.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "classification": "compiler-restriction",

@@ -6,6 +6,7 @@
 //   missing: variable (binding) -- source line 92
 #include <cmath>
 #include <cstdint>
+#include <flight/callable.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/string.hpp>
 #include <flight/structural_ref.hpp>
@@ -92,7 +93,7 @@ inline flight::types::WgpuDualSourceEffectPipeline get_wgpu_bevel_composite_shad
 
 inline void apply_wgpu_bevel_composite_pass(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::WgpuTextureRenderTarget> field, flight::Ref<flight::types::WgpuTextureRenderTarget> source, flight::Ref<flight::types::WgpuTextureRenderTarget> dest, BevelCompositeParams params) {
   auto pipeline = get_wgpu_bevel_composite_shader(state);
-  flight::effects_wgpu::draw_wgpu_dual_source_effect_pass(state, field, source, std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{dest}, pipeline, [=](flight::Float32Array f32, flight::Int32Array ignored_callback_argument) {
+  flight::effects_wgpu::draw_wgpu_dual_source_effect_pass(state, field, source, std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{dest}, pipeline, flight::Function<void(flight::Float32Array, flight::Int32Array)>{[=](flight::Float32Array f32, flight::Int32Array ignored_callback_argument) {
   (void)ignored_callback_argument;
   ([&]() { auto&& typed_array = f32; const auto typed_index = 0.0; const auto typed_value = (flight::bitwise_and(flight::signed_right_shift(flight::row_get<flight::RowKey<"highlightColor">>(params), 16.0), 255.0) / 255.0); return typed_array.set_index(typed_index, typed_value); }());
   ([&]() { auto&& typed_array_2 = f32; const auto typed_index_2 = 1.0; const auto typed_value_2 = (flight::bitwise_and(flight::signed_right_shift(flight::row_get<flight::RowKey<"highlightColor">>(params), 8.0), 255.0) / 255.0); return typed_array_2.set_index(typed_index_2, typed_value_2); }());
@@ -106,7 +107,7 @@ inline void apply_wgpu_bevel_composite_pass(flight::Ref<flight::types::WgpuRende
   ([&]() { auto&& typed_array_10 = f32; const auto typed_index_10 = 9.0; const auto typed_value_10 = flight::row_get<flight::RowKey<"offsetY">>(params); return typed_array_10.set_index(typed_index_10, typed_value_10); }());
   ([&]() { auto&& typed_array_11 = f32; const auto typed_index_11 = 10.0; const auto typed_value_11 = flight::row_get<flight::RowKey<"intensity">>(params); return typed_array_11.set_index(typed_index_11, typed_value_11); }());
   ([&]() { auto&& typed_array_12 = f32; const auto typed_index_12 = 11.0; const auto typed_value_12 = flight::row_get<flight::RowKey<"clipMode">>(params); return typed_array_12.set_index(typed_index_12, typed_value_12); }());
-});
+}});
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_WIDTH_HEIGHT_FORMAT_3E01490122355EDD

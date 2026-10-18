@@ -6,6 +6,7 @@
 //   missing: variable (binding) -- source line 56
 #include <cmath>
 #include <cstdint>
+#include <flight/callable.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -51,11 +52,11 @@ inline double lerp(double a, double b, double t) {
 }
 
 inline double pack_linear_rgba(double r, double g, double b, double a) {
-  std::function<double(double)> to_byte = [=](double linear) {
+  std::function<double(double)> to_byte = flight::Function<double(double)>{[=](double linear) {
   const double clamped = flight::minimum(flight::maximum(linear, 0.0), 1.0);
   const double srgb = ((clamped <= 0.0031308) ? (clamped * 12.92) : ((1.055 * flight::number_power(clamped, (1.0 / 2.4))) - 0.055));
   return flight::bitwise_and(flight::round((srgb * 255.0)), 255.0);
-};
+}};
   const double alpha = flight::bitwise_and(flight::round((flight::minimum(flight::maximum(a, 0.0), 1.0) * 255.0)), 255.0);
   return flight::unsigned_right_shift(flight::bitwise_or(flight::bitwise_or(flight::bitwise_or(flight::left_shift(to_byte(r), 24.0), flight::left_shift(to_byte(g), 16.0)), flight::left_shift(to_byte(b), 8.0)), alpha), 0.0);
 }

@@ -5,6 +5,7 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: variable (binding) -- source line 39
 #include <flight/any.hpp>
+#include <flight/callable.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -52,11 +53,11 @@ inline void apply_chromatic_aberration_effect_to_wgpu(flight::Ref<flight::types:
   const double intensity = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"intensity">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.005; }());
   const bool radial = ([&]() -> bool { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"radial">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return true; }());
   flight::Ref<entity_runtime_key_pipeline_blend_mode_compile_for_format_variants_a5370998f2b1d744> pipeline = flight::effects_wgpu::get_wgpu_effect_pipeline(state, flight::String("lens.chromaticAberration"), chromatic_aberration_fragment_wgsl, flight::String("replace"));
-  flight::effects_wgpu::draw_wgpu_effect_pass(state, flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(dest)}, pipeline, [=](flight::Float32Array f32, flight::Int32Array ignored_callback_argument) {
+  flight::effects_wgpu::draw_wgpu_effect_pass(state, flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(dest)}, pipeline, flight::Function<void(flight::Float32Array, flight::Int32Array)>{[=](flight::Float32Array f32, flight::Int32Array ignored_callback_argument) {
   (void)ignored_callback_argument;
   ([&]() { auto&& typed_array = f32; const auto typed_index = 0.0; const auto typed_value = intensity; return typed_array.set_index(typed_index, typed_value); }());
   ([&]() { auto&& typed_array_2 = f32; const auto typed_index_2 = 1.0; const auto typed_value_2 = (radial ? 1.0 : 0.0); return typed_array_2.set_index(typed_index_2, typed_value_2); }());
-});
+}});
 }
 
 

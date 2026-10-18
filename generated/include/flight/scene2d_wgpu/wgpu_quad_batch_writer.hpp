@@ -3,11 +3,9 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function createWgpuTextureSamplerBindGroup -- source line 461
 //   missing: function flushWgpuQuadBatchWriter -- source line 135
 #include <cmath>
 #include <cstdint>
-#include <flight/any.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/string.hpp>
 #include <flight/structural_ref.hpp>
@@ -21,8 +19,6 @@
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
-
-#include <flight/types/capacitor_api.hpp>
 
 #include <flight/types/wgpu_render_state.hpp>
 
@@ -64,20 +60,6 @@ inline const double quad_batch_instance_stride = (quad_batch_instance_floats * 4
 
 inline const flight::String quad_batch_prelude_wgsl = flight::String("\nstruct Uniforms {\n  matrix : mat3x3f,\n  straightTextureAlpha : u32,\n}\n\nstruct InstanceData {\n  axisUX : f32, axisUY : f32, axisVX : f32, axisVY : f32,\n  tx : f32, ty : f32,\n  uvOriginX : f32, uvOriginY : f32,\n  uvAxisUX : f32, uvAxisUY : f32, uvAxisVX : f32, uvAxisVY : f32,\n  alpha : f32,\n}\n\n@group(0) @binding(0) var<uniform> uni : Uniforms;\n@group(1) @binding(0) var tex : texture_2d<f32>;\n@group(1) @binding(1) var smp : sampler;\n@group(2) @binding(0) var<storage, read> instances : array<InstanceData>;\n\nstruct BaseVertex {\n  position : vec4f,\n  uv : vec2f,\n  alpha : f32,\n}\n\nfn quadBaseVertex(vi : u32, ii : u32) -> BaseVertex {\n  let inst = instances[ii];\n  let xi = (vi == 1u || vi == 2u || vi == 4u);\n  let yi = (vi == 2u || vi == 4u || vi == 5u);\n  let cx = select(0.0, 1.0, xi);\n  let cy = select(0.0, 1.0, yi);\n  let wx = inst.axisUX * cx + inst.axisVX * cy + inst.tx;\n  let wy = inst.axisUY * cx + inst.axisVY * cy + inst.ty;\n  let p = uni.matrix * vec3f(wx, wy, 1.0);\n  var bv : BaseVertex;\n  bv.position = vec4f(p.x, p.y, 0.0, 1.0);\n  bv.uv = vec2f(inst.uvOriginX, inst.uvOriginY) +\n    vec2f(inst.uvAxisUX, inst.uvAxisUY) * cx + vec2f(inst.uvAxisVX, inst.uvAxisVY) * cy;\n  bv.alpha = inst.alpha;\n  return bv;\n}\n");
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_TYPE_DA5EB69D1C0EE021
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_TYPE_DA5EB69D1C0EE021
-using type_da5eb69d1c0ee021 = flight::types::type_da5eb69d1c0ee021;
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_TYPE_DA5EB69D1C0EE021
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_BINDING_VISIBILITY_BUFFER_3B108916B1662422
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_BINDING_VISIBILITY_BUFFER_3B108916B1662422
-struct binding_visibility_buffer_3b108916b1662422 : public flight::ReferenceEnabled {
-  double binding;
-  flight::Any visibility;
-  flight::Ref<type_da5eb69d1c0ee021> buffer;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_BINDING_VISIBILITY_BUFFER_3B108916B1662422
-
 inline flight::Ref<flight::types::WgpuQuadBatchResources> ensure_wgpu_quad_batch_resources(flight::Ref<flight::types::WgpuRenderState> state) {
   auto runtime = flight::render_wgpu::get_wgpu_render_state_runtime(state);
   auto ctx = runtime->context;
@@ -90,60 +72,14 @@ inline flight::Ref<flight::types::WgpuQuadBatchResources> ensure_wgpu_quad_batch
   auto object_pattern_value_2 = flight::render_wgpu::get_wgpu_render_state_device_resources(state);
   flight::host_sdl::WgpuBindGroupLayout uniform_bind_group_layout = object_pattern_value_2->uniform_bind_group_layout;
   flight::host_sdl::WgpuBindGroupLayout texture_bind_group_layout = object_pattern_value_2->texture_bind_group_layout;
-  auto instance_bind_group_layout = device.create_bind_group_layout({.entries = flight::Array{flight::make_ref<binding_visibility_buffer_3b108916b1662422>(binding_visibility_buffer_3b108916b1662422{.binding = 0.0, .visibility = flight::host_sdl::wgpu_shader_stage_vertex, .buffer = flight::make_ref<type_da5eb69d1c0ee021>(type_da5eb69d1c0ee021{.type = flight::String("read-only-storage")})})}});
-  auto material_bind_group_layout = device.create_bind_group_layout({.entries = flight::Array{flight::make_ref<binding_visibility_buffer_3b108916b1662422>(binding_visibility_buffer_3b108916b1662422{.binding = 0.0, .visibility = flight::host_sdl::wgpu_shader_stage_vertex, .buffer = flight::make_ref<type_da5eb69d1c0ee021>(type_da5eb69d1c0ee021{.type = flight::String("read-only-storage")})})}});
-  auto base_pipeline_layout = device.create_pipeline_layout({.bind_group_layouts = flight::Array{uniform_bind_group_layout, texture_bind_group_layout, instance_bind_group_layout}});
-  auto material_pipeline_layout = device.create_pipeline_layout({.bind_group_layouts = flight::Array{uniform_bind_group_layout, texture_bind_group_layout, instance_bind_group_layout, material_bind_group_layout}});
+  auto instance_bind_group_layout = device.create_bind_group_layout(([&]() { flight::host_sdl::WgpuBindGroupLayoutDescriptor external_gpubind_group_layout_descriptor{}; external_gpubind_group_layout_descriptor.entries = flight::Array<flight::host_sdl::WgpuBindGroupLayoutEntry>{([&]() { flight::host_sdl::WgpuBindGroupLayoutEntry external_gpubind_group_layout_entry{}; external_gpubind_group_layout_entry.binding = 0.0; external_gpubind_group_layout_entry.visibility = flight::host_sdl::wgpu_shader_stage_vertex; external_gpubind_group_layout_entry.buffer = ([&]() { flight::host_sdl::WgpuBufferBindingLayout external_gpubuffer_binding_layout{}; external_gpubuffer_binding_layout.type = flight::String("read-only-storage"); return external_gpubuffer_binding_layout; }()); return external_gpubind_group_layout_entry; }())}; return external_gpubind_group_layout_descriptor; }()));
+  auto material_bind_group_layout = device.create_bind_group_layout(([&]() { flight::host_sdl::WgpuBindGroupLayoutDescriptor external_gpubind_group_layout_descriptor_2{}; external_gpubind_group_layout_descriptor_2.entries = flight::Array<flight::host_sdl::WgpuBindGroupLayoutEntry>{([&]() { flight::host_sdl::WgpuBindGroupLayoutEntry external_gpubind_group_layout_entry_2{}; external_gpubind_group_layout_entry_2.binding = 0.0; external_gpubind_group_layout_entry_2.visibility = flight::host_sdl::wgpu_shader_stage_vertex; external_gpubind_group_layout_entry_2.buffer = ([&]() { flight::host_sdl::WgpuBufferBindingLayout external_gpubuffer_binding_layout_2{}; external_gpubuffer_binding_layout_2.type = flight::String("read-only-storage"); return external_gpubuffer_binding_layout_2; }()); return external_gpubind_group_layout_entry_2; }())}; return external_gpubind_group_layout_descriptor_2; }()));
+  auto base_pipeline_layout = device.create_pipeline_layout(([&]() { flight::host_sdl::WgpuPipelineLayoutDescriptor external_gpupipeline_layout_descriptor{}; external_gpupipeline_layout_descriptor.bind_group_layouts = flight::Array{uniform_bind_group_layout, texture_bind_group_layout, instance_bind_group_layout}; return external_gpupipeline_layout_descriptor; }()));
+  auto material_pipeline_layout = device.create_pipeline_layout(([&]() { flight::host_sdl::WgpuPipelineLayoutDescriptor external_gpupipeline_layout_descriptor_2{}; external_gpupipeline_layout_descriptor_2.bind_group_layouts = flight::Array{uniform_bind_group_layout, texture_bind_group_layout, instance_bind_group_layout, material_bind_group_layout}; return external_gpupipeline_layout_descriptor_2; }()));
   auto resources = flight::make_ref<flight::types::WgpuQuadBatchResources>(flight::types::WgpuQuadBatchResources{.instance_bind_group_layout = instance_bind_group_layout, .material_bind_group_layout = material_bind_group_layout, .base_pipeline_layout = base_pipeline_layout, .material_pipeline_layout = material_pipeline_layout, .pipelines = flight::WeakMap<flight::host_sdl::WgpuShaderModule, flight::Map<flight::String, flight::host_sdl::WgpuRenderPipeline>, flight::host_sdl::WgpuShaderModuleWeakPolicy>()});
   (ctx->quad_batch_resources = std::optional<flight::Ref<flight::types::WgpuQuadBatchResources>>{resources});
   return resources;
 }
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_MODULE_ENTRY_POINT_4D3C337401507620
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_MODULE_ENTRY_POINT_4D3C337401507620
-struct module_entry_point_4d3c337401507620 : public flight::ReferenceEnabled {
-  flight::Any module;
-  flight::String entry_point;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_MODULE_ENTRY_POINT_4D3C337401507620
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_FORMAT_BLEND_WRITE_MASK_72CC2AB0FB1E2804
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_FORMAT_BLEND_WRITE_MASK_72CC2AB0FB1E2804
-struct format_blend_write_mask_72cc2ab0fb1e2804 : public flight::ReferenceEnabled {
-  flight::Any format;
-  flight::Any blend;
-  flight::Any write_mask;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_FORMAT_BLEND_WRITE_MASK_72CC2AB0FB1E2804
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_MODULE_ENTRY_POINT_TARGETS_DE50F6F3C9E838DF
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_MODULE_ENTRY_POINT_TARGETS_DE50F6F3C9E838DF
-struct module_entry_point_targets_de50f6f3c9e838df : public flight::ReferenceEnabled {
-  flight::Any module;
-  flight::String entry_point;
-  flight::Array<flight::Ref<format_blend_write_mask_72cc2ab0fb1e2804>> targets;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_MODULE_ENTRY_POINT_TARGETS_DE50F6F3C9E838DF
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_FORMAT_DEPTH_WRITE_ENABLED_DEPTH_COMPARE_STENCIL_FRONT_STENCIL_BACK_STENCIL_READ_MASK_STENCIL_WRITE_MASK_C100C5F55BD7EEA9
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_FORMAT_DEPTH_WRITE_ENABLED_DEPTH_COMPARE_STENCIL_FRONT_STENCIL_BACK_STENCIL_READ_MASK_STENCIL_WRITE_MASK_C100C5F55BD7EEA9
-struct format_depth_write_enabled_depth_compare_stencil_front_stencil_back_stencil_read_mask_stencil_write_mask_c100c5f55bd7eea9 : public flight::ReferenceEnabled {
-  flight::String format;
-  bool depth_write_enabled;
-  flight::String depth_compare;
-  flight::host_sdl::WgpuStencilFaceState stencil_front;
-  flight::host_sdl::WgpuStencilFaceState stencil_back;
-  double stencil_read_mask;
-  double stencil_write_mask;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_FORMAT_DEPTH_WRITE_ENABLED_DEPTH_COMPARE_STENCIL_FRONT_STENCIL_BACK_STENCIL_READ_MASK_STENCIL_WRITE_MASK_C100C5F55BD7EEA9
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_TOPOLOGY_7C8278728B18051E
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_TOPOLOGY_7C8278728B18051E
-struct topology_7c8278728b18051e : public flight::ReferenceEnabled {
-  flight::String topology;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_WGPU_TOPOLOGY_7C8278728B18051E
 
 inline flight::host_sdl::WgpuRenderPipeline get_wgpu_quad_batch_pipeline(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::WgpuQuadBatchResources> resources, flight::host_sdl::WgpuShaderModule module, bool has_material_data, std::optional<flight::String> blend_mode) {
   auto runtime = flight::render_wgpu::get_wgpu_render_state_runtime(state);
@@ -175,7 +111,7 @@ inline flight::host_sdl::WgpuRenderPipeline get_wgpu_quad_batch_pipeline(flight:
       (stencil_face = ([&]() { flight::host_sdl::WgpuStencilFaceState external_gpustencil_face_state_3{}; external_gpustencil_face_state_3.compare = flight::String("always"); external_gpustencil_face_state_3.pass_op = flight::String("keep"); external_gpustencil_face_state_3.fail_op = flight::String("keep"); external_gpustencil_face_state_3.depth_fail_op = flight::String("keep"); return external_gpustencil_face_state_3; }()));
     }
   }
-  auto pipeline = device.create_render_pipeline({.layout = (has_material_data ? resources->material_pipeline_layout : resources->base_pipeline_layout), .vertex = flight::make_ref<module_entry_point_4d3c337401507620>(module_entry_point_4d3c337401507620{.module = module, .entry_point = flight::String("vs_main")}), .fragment = flight::make_ref<module_entry_point_targets_de50f6f3c9e838df>(module_entry_point_targets_de50f6f3c9e838df{.module = module, .entry_point = flight::String("fs_main"), .targets = flight::Array<flight::Ref<format_blend_write_mask_72cc2ab0fb1e2804>>{flight::make_ref<format_blend_write_mask_72cc2ab0fb1e2804>(format_blend_write_mask_72cc2ab0fb1e2804{.format = format, .blend = (is_mask_write ? flight::undefined : blend), .write_mask = (is_mask_write ? 0.0 : flight::host_sdl::wgpu_color_write_all)})}}), .depth_stencil = flight::make_ref<format_depth_write_enabled_depth_compare_stencil_front_stencil_back_stencil_read_mask_stencil_write_mask_c100c5f55bd7eea9>(format_depth_write_enabled_depth_compare_stencil_front_stencil_back_stencil_read_mask_stencil_write_mask_c100c5f55bd7eea9{.format = flight::String("depth24plus-stencil8"), .depth_write_enabled = false, .depth_compare = flight::String("always"), .stencil_front = stencil_face, .stencil_back = stencil_face, .stencil_read_mask = 255.0, .stencil_write_mask = (is_mask_write ? 255.0 : 0.0)}), .primitive = flight::make_ref<topology_7c8278728b18051e>(topology_7c8278728b18051e{.topology = flight::String("triangle-list")})});
+  auto pipeline = device.create_render_pipeline(([&]() { flight::host_sdl::WgpuRenderPipelineDescriptor external_gpurender_pipeline_descriptor{}; external_gpurender_pipeline_descriptor.layout = (has_material_data ? resources->material_pipeline_layout : resources->base_pipeline_layout); external_gpurender_pipeline_descriptor.vertex = ([&]() { flight::host_sdl::WgpuVertexState external_gpuvertex_state{}; external_gpuvertex_state.module = module; external_gpuvertex_state.entry_point = flight::String("vs_main"); return external_gpuvertex_state; }()); external_gpurender_pipeline_descriptor.fragment = ([&]() { flight::host_sdl::WgpuFragmentState external_gpufragment_state{}; external_gpufragment_state.module = module; external_gpufragment_state.entry_point = flight::String("fs_main"); external_gpufragment_state.targets = flight::Array<flight::host_sdl::WgpuColorTargetState>{([&]() { flight::host_sdl::WgpuColorTargetState external_gpucolor_target_state{}; external_gpucolor_target_state.format = format; if (!(is_mask_write)) { external_gpucolor_target_state.blend = blend; } external_gpucolor_target_state.write_mask = (is_mask_write ? 0.0 : flight::host_sdl::wgpu_color_write_all); return external_gpucolor_target_state; }())}; return external_gpufragment_state; }()); external_gpurender_pipeline_descriptor.depth_stencil = ([&]() { flight::host_sdl::WgpuDepthStencilState external_gpudepth_stencil_state{}; external_gpudepth_stencil_state.format = flight::String("depth24plus-stencil8"); external_gpudepth_stencil_state.depth_write_enabled = false; external_gpudepth_stencil_state.depth_compare = flight::String("always"); external_gpudepth_stencil_state.stencil_front = stencil_face; external_gpudepth_stencil_state.stencil_back = stencil_face; external_gpudepth_stencil_state.stencil_read_mask = 255.0; external_gpudepth_stencil_state.stencil_write_mask = (is_mask_write ? 255.0 : 0.0); return external_gpudepth_stencil_state; }()); external_gpurender_pipeline_descriptor.primitive = ([&]() { flight::host_sdl::WgpuPrimitiveState external_gpuprimitive_state{}; external_gpuprimitive_state.topology = flight::String("triangle-list"); return external_gpuprimitive_state; }()); return external_gpurender_pipeline_descriptor; }()));
   per_module.value().set(key, pipeline);
   return pipeline;
 }
@@ -246,7 +182,7 @@ inline flight::Ref<flight::types::WgpuQuadBatchWriterBufferSlot> acquire_wgpu_qu
 }
 
 inline flight::host_sdl::WgpuBuffer create_wgpu_quad_batch_writer_buffer(flight::Ref<flight::types::WgpuRenderState> state, double size) {
-  return state->device.create_buffer({.size = size, .usage = flight::bitwise_or(flight::host_sdl::wgpu_buffer_usage_storage, flight::host_sdl::wgpu_buffer_usage_copy_dst)});
+  return state->device.create_buffer(([&]() { flight::host_sdl::WgpuBufferDescriptor external_gpubuffer_descriptor{}; external_gpubuffer_descriptor.size = size; external_gpubuffer_descriptor.usage = flight::bitwise_or(flight::host_sdl::wgpu_buffer_usage_storage, flight::host_sdl::wgpu_buffer_usage_copy_dst); return external_gpubuffer_descriptor; }()));
 }
 
 inline void reset_wgpu_quad_batch_writer(flight::Ref<flight::types::WgpuRenderState> state) {
@@ -261,48 +197,12 @@ inline void reset_wgpu_quad_batch_writer(flight::Ref<flight::types::WgpuRenderSt
   (runtime->quad_batch_writer_material_floats = 0.0);
 }
 
-
-// NOT GENERATED: function createWgpuTextureSamplerBindGroup -- source line 461
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
-//
-// The source it stood for:
-//   function createWgpuTextureSamplerBindGroup(
-//     state: WgpuRenderState,
-//     view: GPUTextureView,
-//     sampler: Readonly<SamplerLike>,
-//   ): GPUBindGroup {
-//     const minFilter: GPUFilterMode = sampler.minFilter.startsWith('nearest') ? 'nearest' : 'linear';
-//     const magFilter: GPUFilterMode = sampler.magFilter.startsWith('nearest') ? 'nearest' : 'linear';
-//     const mipmapFilter: GPUFilterMode | undefined =
-//       sampler.mipmaps && sampler.minFilter.includes('mipmap')
-//         ? sampler.minFilter.endsWith('nearest')
-//           ? 'nearest'
-//           : 'linear'
-//         : undefined;
-//     return state.device.createBindGroup({
-//       layout: getWgpuRenderStateDeviceResources(state).textureBindGroupLayout,
-//       entries: [
-//         { binding: 0, resource: view },
-//         {
-//           binding: 1,
-//           resource: getWgpuSampler(
-//             state,
-//             minFilter,
-//             magFilter,
-//             sampler.wrapU,
-//             sampler.wrapV,
-//             mipmapFilter,
-//             sampler.anisotropy,
-//           ),
-//         },
-//       ],
-//     });
-//   }
-//   
-//   // Writes the NDC viewport matrix and the shared texture's alpha representation into the uniform ring,
-//   // then advances the ring offset. Returns the byte offset for the dynamic bind-group binding.
-// cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuQuadBatchWriter.ts: contextual
-// union value type flight::host_sdl::WgpuSampler is not a represented runtime domain
+inline flight::host_sdl::WgpuBindGroup create_wgpu_texture_sampler_bind_group(flight::Ref<flight::types::WgpuRenderState> state, flight::host_sdl::WgpuTextureView view, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::SamplerLike>>> sampler) {
+  flight::String min_filter = (flight::row_get<flight::RowKey<"minFilter">>(sampler).starts_with(flight::String("nearest")) ? flight::String("nearest") : flight::String("linear"));
+  flight::String mag_filter = (flight::row_get<flight::RowKey<"magFilter">>(sampler).starts_with(flight::String("nearest")) ? flight::String("nearest") : flight::String("linear"));
+  std::optional<flight::String> mipmap_filter = ((flight::row_get<flight::RowKey<"mipmaps">>(sampler) && flight::row_get<flight::RowKey<"minFilter">>(sampler).includes(flight::String("mipmap"))) ? std::optional{(flight::row_get<flight::RowKey<"minFilter">>(sampler).ends_with(flight::String("nearest")) ? std::optional<flight::String>{flight::String("nearest")} : std::optional<flight::String>{flight::String("linear")})} : std::nullopt);
+  return state->device.create_bind_group(([&]() { flight::host_sdl::WgpuBindGroupDescriptor external_gpubind_group_descriptor{}; external_gpubind_group_descriptor.layout = flight::render_wgpu::get_wgpu_render_state_device_resources(state)->texture_bind_group_layout; external_gpubind_group_descriptor.entries = flight::Array<flight::host_sdl::WgpuBindGroupEntry>{([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry{}; external_gpubind_group_entry.binding = 0.0; external_gpubind_group_entry.resource = view; return external_gpubind_group_entry; }()), ([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_2{}; external_gpubind_group_entry_2.binding = 1.0; external_gpubind_group_entry_2.resource = flight::render_wgpu::get_wgpu_sampler(state, min_filter, mag_filter, flight::row_get<flight::RowKey<"wrapU">>(sampler), flight::row_get<flight::RowKey<"wrapV">>(sampler), mipmap_filter, flight::row_get<flight::RowKey<"anisotropy">>(sampler)); return external_gpubind_group_entry_2; }())}; return external_gpubind_group_descriptor; }()));
+}
 
 inline double write_wgpu_quad_batch_writer_uniforms(flight::Ref<flight::types::WgpuRenderState> state, bool straight_texture_alpha) {
   auto runtime = flight::render_wgpu::get_wgpu_render_state_runtime(state);

@@ -5,6 +5,7 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function uploadWgpuCompressedTextureContainer -- source line 87
 #include <cmath>
+#include <flight/callable.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/number.hpp>
 #include <flight/regexp.hpp>
@@ -88,11 +89,11 @@ inline flight::Uint8ClampedArray premultiply_rgba8(flight::Uint8ClampedArray dat
   return out;
 }
 
-inline std::function<flight::Ref<WgpuCompressedFormatInfo>(flight::String, double, std::optional<double>, std::optional<double>)> fixed = [](flight::String format, double bytes_per_block, std::optional<double> block_width = std::nullopt, std::optional<double> block_height = std::nullopt) {
+inline std::function<flight::Ref<WgpuCompressedFormatInfo>(flight::String, double, std::optional<double>, std::optional<double>)> fixed = flight::Function<flight::Ref<WgpuCompressedFormatInfo>(flight::String, double, std::optional<double>, std::optional<double>)>{[](flight::String format, double bytes_per_block, std::optional<double> block_width = std::nullopt, std::optional<double> block_height = std::nullopt) {
   block_width = block_width.value_or(4.0);
   block_height = block_height.value_or(4.0);
   return flight::make_ref<WgpuCompressedFormatInfo>(WgpuCompressedFormatInfo{.block_height = block_height.value(), .block_width = block_width.value(), .bytes_per_block = bytes_per_block, .format = format});
-};
+}};
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_BGRA8UNORM_RGBA8UNORM_RGBA16F_RGBA32F_RGBA8_SRGB_BGRA8_SRGB_R8UNORM_RG8UNORM_BC1_BC1_SRGB_BC2_BC2_SRGB_BC3_BC3_SRGB_BC4_BC4_SNORM_BC5_BC5_SNORM_BC6H_UFLOAT_BC6H_SFLOAT_BC7_BC7_SRGB_ETC1_ETC2_RGB_ETC2_RGB_SRGB_ETC2_RGBA_ETC2_RGBA_SRGB_ETC2_RGB_A1_ETC2_RGB_A1_SRGB_EAC_R11_EAC_R11_SNORM_EAC_RG11_EAC_RG11_SNORM_PVRTC2BPP_RGB_PVRTC2BPP_RGBA_PVRTC4BPP_RGB_PVRTC4BPP_RGBA_ASTC4X4_ASTC5X4_ASTC5X5_ASTC6X5_ASTC6X6_ASTC8X5_ASTC8X6_ASTC8X8_ASTC10X5_ASTC10X6_ASTC10X8_ASTC10X10_ASTC12X10_ASTC12X12_ETC1S_UASTC_D8135782ED55E0F6
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_BGRA8UNORM_RGBA8UNORM_RGBA16F_RGBA32F_RGBA8_SRGB_BGRA8_SRGB_R8UNORM_RG8UNORM_BC1_BC1_SRGB_BC2_BC2_SRGB_BC3_BC3_SRGB_BC4_BC4_SNORM_BC5_BC5_SNORM_BC6H_UFLOAT_BC6H_SFLOAT_BC7_BC7_SRGB_ETC1_ETC2_RGB_ETC2_RGB_SRGB_ETC2_RGBA_ETC2_RGBA_SRGB_ETC2_RGB_A1_ETC2_RGB_A1_SRGB_EAC_R11_EAC_R11_SNORM_EAC_RG11_EAC_RG11_SNORM_PVRTC2BPP_RGB_PVRTC2BPP_RGBA_PVRTC4BPP_RGB_PVRTC4BPP_RGBA_ASTC4X4_ASTC5X4_ASTC5X5_ASTC6X5_ASTC6X6_ASTC8X5_ASTC8X6_ASTC8X8_ASTC10X5_ASTC10X6_ASTC10X8_ASTC10X10_ASTC12X10_ASTC12X12_ETC1S_UASTC_D8135782ED55E0F6
@@ -368,10 +369,10 @@ inline std::optional<flight::Ref<flight::types::WgpuTextureEntry>> upload_wgpu_c
     return std::nullopt;
   }
   const bool native = get_wgpu_compressed_texture_format_for_color_space(state->device, container->format, std::optional<flight::String>{color_space.value()}).has_value();
-  std::optional<std::function<std::optional<flight::Uint8ClampedArray>(flight::types::TextureContainerFormat, double, double, flight::Uint8Array)>> fallback = (!decode.has_value() ? std::nullopt : std::optional<std::function<std::optional<flight::Uint8ClampedArray>(flight::types::TextureContainerFormat, double, double, flight::Uint8Array)>>{[=](flight::types::TextureContainerFormat format, double width, double height, flight::Uint8Array data) -> std::optional<flight::Uint8ClampedArray> {
+  std::optional<std::function<std::optional<flight::Uint8ClampedArray>(flight::types::TextureContainerFormat, double, double, flight::Uint8Array)>> fallback = (!decode.has_value() ? std::nullopt : std::optional<std::function<std::optional<flight::Uint8ClampedArray>(flight::types::TextureContainerFormat, double, double, flight::Uint8Array)>>{flight::Function<std::optional<flight::Uint8ClampedArray>(flight::types::TextureContainerFormat, double, double, flight::Uint8Array)>{[=](flight::types::TextureContainerFormat format, double width, double height, flight::Uint8Array data) -> std::optional<flight::Uint8ClampedArray> {
   std::optional<flight::Uint8ClampedArray> rgba = decode.value()(format, width, height, data);
   return (rgba.has_value() ? std::optional<flight::Uint8ClampedArray>{premultiply_rgba8(rgba.value())} : std::nullopt);
-}});
+}}});
   std::optional<flight::host_sdl::WgpuTexture> texture = upload_wgpu_compressed_texture_container(state, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextureContainer>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextureContainer>>>>(container)), compressed->payload, fallback, color_space.value());
   if (!texture.has_value()) {
     return std::nullopt;

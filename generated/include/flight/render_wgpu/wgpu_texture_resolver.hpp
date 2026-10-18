@@ -86,7 +86,7 @@ inline std::optional<flight::Ref<flight::types::WgpuTextureEntry>> resolve_wgpu_
 
 inline std::optional<flight::Ref<flight::types::WgpuTextureEntry>> resolve_wgpu_bitmap_texture(flight::Ref<flight::types::WgpuRenderState> state, flight::types::TextureLike texture, bool premultiply, flight::types::TextureColorSpace color_space) {
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Bitmap>>>>> bitmap = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Bitmap>>>>> { const auto& exact_structural_source = flight::texture::get_texture_source(texture); if (!exact_structural_source.has_value()) return std::nullopt; return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Bitmap>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Bitmap>>>>(std::get<flight::Ref<flight::types::Bitmap>>(exact_structural_source.value()))); }());
-  return (!bitmap.has_value() ? std::nullopt : std::optional<flight::Ref<flight::types::WgpuTextureEntry>>{flight::render_wgpu::bind_wgpu_bitmap_texture(state, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Bitmap>>>>>(bitmap.value()), std::visit([](const auto& value) { return value->sampler; }, texture)->mipmaps, premultiply, color_space)});
+  return (!bitmap.has_value() ? std::nullopt : std::optional<flight::Ref<flight::types::WgpuTextureEntry>>{flight::render_wgpu::bind_wgpu_bitmap_texture(state, bitmap.value(), std::visit([](const auto& value) { return value->sampler; }, texture)->mipmaps, premultiply, color_space)});
 }
 
 inline void register_wgpu_bitmap_texture_resolver(flight::Ref<flight::types::WgpuRenderState> state) {
@@ -95,7 +95,7 @@ inline void register_wgpu_bitmap_texture_resolver(flight::Ref<flight::types::Wgp
 
 inline std::optional<flight::Ref<flight::types::WgpuTextureEntry>> resolve_wgpu_compressed_image_texture(flight::Ref<flight::types::WgpuRenderState> state, flight::types::TextureLike texture, bool premultiply, flight::types::TextureColorSpace color_space) {
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CompressedImageResource>>>>> image = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CompressedImageResource>>>>> { const auto& exact_structural_source_2 = flight::texture::get_texture_source(texture); if (!exact_structural_source_2.has_value()) return std::nullopt; return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CompressedImageResource>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::CompressedImageResource>>>>(std::get<flight::Ref<flight::types::CompressedImageResource>>(exact_structural_source_2.value()))); }());
-  return (!image.has_value() ? std::nullopt : flight::render_wgpu::bind_wgpu_compressed_image_texture(state, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CompressedImageResource>>>>>(image.value()), color_space));
+  return (!image.has_value() ? std::nullopt : flight::render_wgpu::bind_wgpu_compressed_image_texture(state, image.value(), color_space));
 }
 
 inline void register_wgpu_compressed_image_texture_resolver(flight::Ref<flight::types::WgpuRenderState> state) {
@@ -104,7 +104,7 @@ inline void register_wgpu_compressed_image_texture_resolver(flight::Ref<flight::
 
 inline std::optional<flight::Ref<flight::types::WgpuTextureEntry>> resolve_wgpu_image_texture(flight::Ref<flight::types::WgpuRenderState> state, flight::types::TextureLike texture, bool premultiply, flight::types::TextureColorSpace color_space) {
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ImageResource>>>>> image = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ImageResource>>>>> { const auto& exact_structural_source_3 = flight::texture::get_texture_source(texture); if (!exact_structural_source_3.has_value()) return std::nullopt; return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ImageResource>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ImageResource>>>>(std::get<flight::Ref<flight::types::ImageResource>>(exact_structural_source_3.value()))); }());
-  return (!image.has_value() ? std::nullopt : flight::render_wgpu::bind_wgpu_image_resource_texture(state, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ImageResource>>>>>(image.value()), std::visit([](const auto& value) { return value->sampler; }, texture)->mipmaps, premultiply, color_space));
+  return (!image.has_value() ? std::nullopt : flight::render_wgpu::bind_wgpu_image_resource_texture(state, image.value(), std::visit([](const auto& value) { return value->sampler; }, texture)->mipmaps, premultiply, color_space));
 }
 
 inline void register_wgpu_image_texture_resolver(flight::Ref<flight::types::WgpuRenderState> state) {

@@ -893,6 +893,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("html") && requires { object.html; }) return (object.html);
   else if constexpr (Key::name.view() == std::string_view("hue") && requires { object.hue; }) return (object.hue);
   else if constexpr (Key::name.view() == std::string_view("i") && requires { object.i; }) return (object.i);
+  else if constexpr (Key::name.view() == std::string_view("iblBindGroupLayout") && requires { object.ibl_bind_group_layout; }) return (object.ibl_bind_group_layout);
   else if constexpr (Key::name.view() == std::string_view("icon") && requires { object.icon; }) return (object.icon);
   else if constexpr (Key::name.view() == std::string_view("id") && requires { object.id; }) return (object.id);
   else if constexpr (Key::name.view() == std::string_view("ids") && requires { object.ids; }) return (object.ids);
@@ -3419,6 +3420,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("html") && requires(Object& object) { object.html; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().html)>>{};
   else if constexpr (Key::name.view() == std::string_view("hue") && requires(Object& object) { object.hue; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().hue)>>{};
   else if constexpr (Key::name.view() == std::string_view("i") && requires(Object& object) { object.i; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().i)>>{};
+  else if constexpr (Key::name.view() == std::string_view("iblBindGroupLayout") && requires(Object& object) { object.ibl_bind_group_layout; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ibl_bind_group_layout)>>{};
   else if constexpr (Key::name.view() == std::string_view("icon") && requires(Object& object) { object.icon; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().icon)>>{};
   else if constexpr (Key::name.view() == std::string_view("id") && requires(Object& object) { object.id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().id)>>{};
   else if constexpr (Key::name.view() == std::string_view("ids") && requires(Object& object) { object.ids; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ids)>>{};
@@ -5948,6 +5950,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->html; }) owner.bind_named("html", [object]() -> decltype(auto) { return (object->html); });
   if constexpr (requires { object->hue; }) owner.bind_named("hue", [object]() -> decltype(auto) { return (object->hue); });
   if constexpr (requires { object->i; }) owner.bind_named("i", [object]() -> decltype(auto) { return (object->i); });
+  if constexpr (requires { object->ibl_bind_group_layout; }) owner.bind_named("iblBindGroupLayout", [object]() -> decltype(auto) { return (object->ibl_bind_group_layout); });
   if constexpr (requires { object->icon; }) owner.bind_named("icon", [object]() -> decltype(auto) { return (object->icon); });
   if constexpr (requires { object->id; }) owner.bind_named("id", [object]() -> decltype(auto) { return (object->id); });
   if constexpr (requires { object->ids; }) owner.bind_named("ids", [object]() -> decltype(auto) { return (object->ids); });
@@ -8511,6 +8514,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(html)
   FLIGHT_SDK_ROW_WIDENS(hue)
   FLIGHT_SDK_ROW_WIDENS(i)
+  FLIGHT_SDK_ROW_WIDENS(ibl_bind_group_layout)
   FLIGHT_SDK_ROW_WIDENS(icon)
   FLIGHT_SDK_ROW_WIDENS(id)
   FLIGHT_SDK_ROW_WIDENS(ids)

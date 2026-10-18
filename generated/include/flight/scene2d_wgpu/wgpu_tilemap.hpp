@@ -48,7 +48,7 @@ inline flight::Ref<flight::types::Matrix> tile_transform = flight::make_ref<flig
 
 
 // NOT GENERATED: function submitWgpuTilemap -- source line 27
-// refusal: cpp-contextual-union-interface-heritage-carrier-unrepresented [target-runtime]
+// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
 //   function submitWgpuTilemap(state: WgpuRenderState, tilemapNode: RenderProxy2D): void {
@@ -153,18 +153,8 @@ inline flight::Ref<flight::types::Matrix> tile_transform = flight::make_ref<flig
 //     runtime.quadBatchWriterCount += drawCount;
 //   }
 //   
-// cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuTilemap.ts: contextual nullable
-// interface conversion from Material2D to Material follows TypeScript interface heritage, but flight-cpp stores
-// those declarations in independent flight::Ref<flight::types::Material2D> and
-// flight::Ref<flight::types::Material> owner types: each interface struct is emitted flattened, so the heritage
-// is not a C++ base relation and no pointer cast exists to follow. A native pointer cast would claim C++
-// inheritance the emitted interface structs do not have, materializing the target would replace object identity,
-// and a structural row would change the declared result carrier. Preserve the exact source owner in the declared
-// result and explicitly represent both owners where the branches merge, or add an owner-preserving
-// interface-heritage carrier to the runtime contract. Declaring the destination as the derived interface where
-// the concrete type is known -- or converting where the type is still concrete rather than widening it through a
-// nullable union -- avoids the boundary altogether; closing it at the carrier needs either that runtime carrier
-// or interface structs emitted with the heritage as a C++ base relation.
+// cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuTilemap.ts: contextual
+// optionalSingle construction requires expression type evidence
 
 inline flight::Ref<flight::types::SpriteRenderer> wgpu_tilemap_renderer = flight::make_ref<flight::types::SpriteRenderer>(flight::types::SpriteRenderer{.format = flight::types::BatchFormat::Quad, .create_data = flight::render::noop_renderer_data, .submit = submit_wgpu_tilemap});
 

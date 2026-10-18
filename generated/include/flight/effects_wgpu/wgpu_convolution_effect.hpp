@@ -5,6 +5,7 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: variable (binding) -- source line 72
 #include <flight/any.hpp>
+#include <flight/callable.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -86,7 +87,7 @@ inline void apply_convolution_effect_to_wgpu(flight::Ref<flight::types::WgpuRend
   const double edge_color = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"color">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
   const double divisor = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"divisor">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return get_auto_divisor(matrix, (matrix_x * matrix_y)); }());
   flight::Ref<entity_runtime_key_pipeline_blend_mode_compile_for_format_variants_424bf58cf592de38> pipeline = flight::effects_wgpu::get_wgpu_effect_pipeline(state, flight::String("stylization.convolution"), convolution_wgsl, flight::String("replace"));
-  flight::effects_wgpu::draw_wgpu_effect_pass(state, flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(dest)}, pipeline, [=](flight::Float32Array f32, flight::Int32Array i32) {
+  flight::effects_wgpu::draw_wgpu_effect_pass(state, flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(dest)}, pipeline, flight::Function<void(flight::Float32Array, flight::Int32Array)>{[=](flight::Float32Array f32, flight::Int32Array i32) {
   ([&]() { auto&& typed_array = f32; const auto typed_index = 0.0; const auto typed_value = (1.0 / flight::row_get<flight::RowKey<"width">>(source)); return typed_array.set_index(typed_index, typed_value); }());
   ([&]() { auto&& typed_array_2 = f32; const auto typed_index_2 = 1.0; const auto typed_value_2 = (1.0 / flight::row_get<flight::RowKey<"height">>(source)); return typed_array_2.set_index(typed_index_2, typed_value_2); }());
   ([&]() { auto&& typed_array_3 = i32; const auto typed_index_3 = 2.0; const auto typed_value_3 = matrix_x; return typed_array_3.set_index(typed_index_3, typed_value_3); }());
@@ -107,7 +108,7 @@ inline void apply_convolution_effect_to_wgpu(flight::Ref<flight::types::WgpuRend
       (i += 1.0);
     }
   }
-});
+}});
 }
 
 

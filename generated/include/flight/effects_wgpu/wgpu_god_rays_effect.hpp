@@ -7,6 +7,7 @@
 #include <cmath>
 #include <cstdint>
 #include <flight/any.hpp>
+#include <flight/callable.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -66,7 +67,7 @@ inline void apply_god_rays_effect_to_wgpu(flight::Ref<flight::types::WgpuRenderS
   const double exposure = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"exposure">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.6; }());
   const double samples = flight::maximum(1.0, flight::round(([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"samples">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 64.0; }())));
   flight::Ref<entity_runtime_key_pipeline_blend_mode_compile_for_format_variants_e32c98c0477e972c> pipeline = flight::effects_wgpu::get_wgpu_effect_pipeline(state, flight::String("atmospheric.godRays.") + flight::to_string(samples) + flight::String(""), build_god_rays_fragment(samples), flight::String("replace"));
-  flight::effects_wgpu::draw_wgpu_effect_pass(state, flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(dest)}, pipeline, [=](flight::Float32Array f32, flight::Int32Array ignored_callback_argument) {
+  flight::effects_wgpu::draw_wgpu_effect_pass(state, flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(dest)}, pipeline, flight::Function<void(flight::Float32Array, flight::Int32Array)>{[=](flight::Float32Array f32, flight::Int32Array ignored_callback_argument) {
   (void)ignored_callback_argument;
   ([&]() { auto&& typed_array = f32; const auto typed_index = 0.0; const auto typed_value = center_x; return typed_array.set_index(typed_index, typed_value); }());
   ([&]() { auto&& typed_array_2 = f32; const auto typed_index_2 = 1.0; const auto typed_value_2 = center_y; return typed_array_2.set_index(typed_index_2, typed_value_2); }());
@@ -74,7 +75,7 @@ inline void apply_god_rays_effect_to_wgpu(flight::Ref<flight::types::WgpuRenderS
   ([&]() { auto&& typed_array_4 = f32; const auto typed_index_4 = 3.0; const auto typed_value_4 = decay; return typed_array_4.set_index(typed_index_4, typed_value_4); }());
   ([&]() { auto&& typed_array_5 = f32; const auto typed_index_5 = 4.0; const auto typed_value_5 = weight; return typed_array_5.set_index(typed_index_5, typed_value_5); }());
   ([&]() { auto&& typed_array_6 = f32; const auto typed_index_6 = 5.0; const auto typed_value_6 = exposure; return typed_array_6.set_index(typed_index_6, typed_value_6); }());
-});
+}});
 }
 
 

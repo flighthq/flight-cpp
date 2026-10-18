@@ -5,6 +5,7 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: variable (binding) -- source line 75
 #include <flight/any.hpp>
+#include <flight/callable.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/string.hpp>
 #include <flight/structural_ref.hpp>
@@ -79,25 +80,25 @@ inline void apply_motion_blur_effect_to_wgpu(flight::Ref<flight::types::WgpuRend
   auto resolution = flight::effects_wgpu::get_wgpu_effect_logical_resolution(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuRenderState>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::WgpuRenderState>>>>(state)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>>>(source));
   auto pipeline = get_motion_blur_pipeline(state);
   if (!velocity_texture.has_value()) {
-    flight::effects_wgpu::draw_wgpu_dual_source_effect_pass(state, flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(dest)}, pipeline, [=](flight::Float32Array f32, flight::Int32Array ignored_callback_argument) {
+    flight::effects_wgpu::draw_wgpu_dual_source_effect_pass(state, flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(dest)}, pipeline, flight::Function<void(flight::Float32Array, flight::Int32Array)>{[=](flight::Float32Array f32, flight::Int32Array ignored_callback_argument) {
   (void)ignored_callback_argument;
   ([&]() { auto&& typed_array = f32; const auto typed_index = 0.0; const auto typed_value = intensity; return typed_array.set_index(typed_index, typed_value); }());
   ([&]() { auto&& typed_array_2 = f32; const auto typed_index_2 = 1.0; const auto typed_value_2 = samples; return typed_array_2.set_index(typed_index_2, typed_value_2); }());
   ([&]() { auto&& typed_array_3 = f32; const auto typed_index_3 = 2.0; const auto typed_value_3 = resolution->width; return typed_array_3.set_index(typed_index_3, typed_value_3); }());
   ([&]() { auto&& typed_array_4 = f32; const auto typed_index_4 = 3.0; const auto typed_value_4 = resolution->height; return typed_array_4.set_index(typed_index_4, typed_value_4); }());
   ([&]() { auto&& typed_array_5 = f32; const auto typed_index_5 = 4.0; const auto typed_value_5 = 0.0; return typed_array_5.set_index(typed_index_5, typed_value_5); }());
-});
+}});
     return;
   }
   auto velocity_source = flight::make_ref<flight::types::WgpuTextureRenderTarget>(flight::types::WgpuTextureRenderTarget{.view = velocity_texture.value().create_view()});
-  flight::effects_wgpu::draw_wgpu_dual_source_effect_pass(state, flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), velocity_source, std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(dest)}, pipeline, [=](flight::Float32Array f32, flight::Int32Array ignored_callback_argument_2) {
+  flight::effects_wgpu::draw_wgpu_dual_source_effect_pass(state, flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), velocity_source, std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(dest)}, pipeline, flight::Function<void(flight::Float32Array, flight::Int32Array)>{[=](flight::Float32Array f32, flight::Int32Array ignored_callback_argument_2) {
   (void)ignored_callback_argument_2;
   ([&]() { auto&& typed_array_6 = f32; const auto typed_index_6 = 0.0; const auto typed_value_6 = intensity; return typed_array_6.set_index(typed_index_6, typed_value_6); }());
   ([&]() { auto&& typed_array_7 = f32; const auto typed_index_7 = 1.0; const auto typed_value_7 = samples; return typed_array_7.set_index(typed_index_7, typed_value_7); }());
   ([&]() { auto&& typed_array_8 = f32; const auto typed_index_8 = 2.0; const auto typed_value_8 = resolution->width; return typed_array_8.set_index(typed_index_8, typed_value_8); }());
   ([&]() { auto&& typed_array_9 = f32; const auto typed_index_9 = 3.0; const auto typed_value_9 = resolution->height; return typed_array_9.set_index(typed_index_9, typed_value_9); }());
   ([&]() { auto&& typed_array_10 = f32; const auto typed_index_10 = 4.0; const auto typed_value_10 = 1.0; return typed_array_10.set_index(typed_index_10, typed_value_10); }());
-});
+}});
 }
 
 

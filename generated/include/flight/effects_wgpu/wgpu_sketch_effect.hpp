@@ -5,6 +5,7 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: variable (binding) -- source line 34
 #include <flight/any.hpp>
+#include <flight/callable.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -52,12 +53,12 @@ struct entity_runtime_key_pipeline_blend_mode_compile_for_format_variants_1b8a60
 inline void apply_sketch_effect_to_wgpu(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>> dest, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SketchEffect>>>> effect) {
   const double strength = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"strength">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }());
   flight::Ref<entity_runtime_key_pipeline_blend_mode_compile_for_format_variants_1b8a606cc1b1acc8> pipeline = flight::effects_wgpu::get_wgpu_effect_pipeline(state, flight::String("stylization.sketch"), sketch_fragment_wgsl, flight::String("replace"));
-  flight::effects_wgpu::draw_wgpu_effect_pass(state, flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(dest)}, pipeline, [=](flight::Float32Array f32, flight::Int32Array ignored_callback_argument) {
+  flight::effects_wgpu::draw_wgpu_effect_pass(state, flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(dest)}, pipeline, flight::Function<void(flight::Float32Array, flight::Int32Array)>{[=](flight::Float32Array f32, flight::Int32Array ignored_callback_argument) {
   (void)ignored_callback_argument;
   ([&]() { auto&& typed_array = f32; const auto typed_index = 0.0; const auto typed_value = strength; return typed_array.set_index(typed_index, typed_value); }());
   ([&]() { auto&& typed_array_2 = f32; const auto typed_index_2 = 2.0; const auto typed_value_2 = flight::row_get<flight::RowKey<"width">>(source); return typed_array_2.set_index(typed_index_2, typed_value_2); }());
   ([&]() { auto&& typed_array_3 = f32; const auto typed_index_3 = 3.0; const auto typed_value_3 = flight::row_get<flight::RowKey<"height">>(source); return typed_array_3.set_index(typed_index_3, typed_value_3); }());
-});
+}});
 }
 
 

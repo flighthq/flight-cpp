@@ -89,7 +89,7 @@ inline flight::host_sdl::WgpuTexture create_wgpu_effect_gradient_ramp_texture(fl
   flight::Uint8ClampedArray data = build_ramp_data(colors, alphas, ratios);
   auto object_pattern_value = state;
   flight::host_sdl::WgpuDevice device = object_pattern_value->device;
-  auto texture = device.create_texture({.size = flight::Array{256.0, 1.0, 1.0}, .format = flight::String("rgba8unorm"), .usage = flight::bitwise_or(flight::host_sdl::wgpu_texture_usage_texture_binding, flight::host_sdl::wgpu_texture_usage_copy_dst)});
+  auto texture = device.create_texture(([&]() { flight::host_sdl::WgpuTextureDescriptor external_gputexture_descriptor{}; external_gputexture_descriptor.size = flight::Array{256.0, 1.0, 1.0}; external_gputexture_descriptor.format = flight::String("rgba8unorm"); external_gputexture_descriptor.usage = flight::bitwise_or(flight::host_sdl::wgpu_texture_usage_texture_binding, flight::host_sdl::wgpu_texture_usage_copy_dst); return external_gputexture_descriptor; }()));
   device.queue.write_texture({.texture = texture, .origin = flight::Array{0.0, 0.0, 0.0}}, static_cast<flight::ArrayBuffer>(data.buffer), {.offset = 0.0, .bytes_per_row = (256.0 * 4.0)}, flight::Array{256.0, 1.0, 1.0});
   return texture;
 }

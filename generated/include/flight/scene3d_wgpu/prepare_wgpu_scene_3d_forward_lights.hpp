@@ -161,7 +161,7 @@ inline void set_mesh_world_bounding_sphere(flight::StructuralRef<flight::RowRead
   if ((scratch_world_sphere->radius >= 0.0)) {
     return;
   }
-  flight::Float32Array world = flight::row_get<flight::RowKey<"m">>(flight::node::get_node_world_matrix4(mesh));
+  flight::Float32Array world = flight::row_get<flight::RowKey<"m">>(flight::node::get_node_world_matrix4<flight::Ref<flight::types::Node3DTraits>>(mesh));
   (scratch_world_sphere->center->x = world.get_index(12.0));
   (scratch_world_sphere->center->y = world.get_index(13.0));
   (scratch_world_sphere->center->z = world.get_index(14.0));

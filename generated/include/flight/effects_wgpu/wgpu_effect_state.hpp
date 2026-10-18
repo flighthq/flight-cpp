@@ -5,6 +5,7 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function destroyWgpuEffectState -- source line 95
 #include <flight/any.hpp>
+#include <flight/callable.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/string.hpp>
 #include <flight/structural_ref.hpp>
@@ -106,10 +107,10 @@ inline void present_wgpu_effect_result(flight::Ref<flight::types::WgpuRenderStat
   }
   const bool linear = (flight::row_get<flight::RowKey<"colorSpace">>(source) == flight::String("linear"));
   flight::Ref<entity_runtime_key_pipeline_blend_mode_compile_for_format_variants_f7d9c20a01c2520e> pipeline = flight::effects_wgpu::get_wgpu_effect_pipeline(state, (linear ? flight::String("effect.present.linear") : flight::String("effect.present")), (linear ? linear_present_fragment_wgsl : present_fragment_wgsl), flight::String("replace"));
-  flight::effects_wgpu::draw_wgpu_effect_pass(state, flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), std::nullopt, pipeline, [=](flight::Float32Array ignored_callback_argument, flight::Int32Array ignored_callback_argument_2) {
+  flight::effects_wgpu::draw_wgpu_effect_pass(state, flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), std::nullopt, pipeline, flight::Function<void(flight::Float32Array, flight::Int32Array)>{[=](flight::Float32Array ignored_callback_argument, flight::Int32Array ignored_callback_argument_2) {
   (void)ignored_callback_argument;
   (void)ignored_callback_argument_2;
-});
+}});
 }
 
 inline flight::Ref<flight::types::RenderTargetClear> linearize_clear(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderTargetClear>>>> clear) {
@@ -123,7 +124,7 @@ inline flight::Ref<flight::types::RenderTargetClear> linearize_clear(flight::Str
     (out->color = std::optional<flight::Array<double>>{flight::Array<double>{flight::color::srgb_channel_to_linear(r), flight::color::srgb_channel_to_linear(g), flight::color::srgb_channel_to_linear(b), a}});
   }
   if (flight::row_get<flight::RowKey<"colors">>(clear).has_value()) {
-    (out->colors = std::optional<flight::Array<std::optional<flight::Array<double>>>>{flight::row_get<flight::RowKey<"colors">>(clear).value().map([=](std::optional<flight::Array<double>> c) -> std::optional<flight::Array<double>> { return (!c.has_value() ? std::nullopt : std::optional<flight::Array<double>>{flight::Array<double>{flight::color::srgb_channel_to_linear(c.value().element(0.0)), flight::color::srgb_channel_to_linear(c.value().element(1.0)), flight::color::srgb_channel_to_linear(c.value().element(2.0)), c.value().element(3.0)}}); })});
+    (out->colors = std::optional<flight::Array<std::optional<flight::Array<double>>>>{flight::row_get<flight::RowKey<"colors">>(clear).value().map(flight::Function<std::optional<flight::Array<double>>(std::optional<flight::Array<double>>)>{[=](std::optional<flight::Array<double>> c) -> std::optional<flight::Array<double>> { return (!c.has_value() ? std::nullopt : std::optional<flight::Array<double>>{flight::Array<double>{flight::color::srgb_channel_to_linear(c.value().element(0.0)), flight::color::srgb_channel_to_linear(c.value().element(1.0)), flight::color::srgb_channel_to_linear(c.value().element(2.0)), c.value().element(3.0)}}); }})});
   }
   if (flight::row_get<flight::RowKey<"depth">>(clear).has_value()) {
     (out->depth = std::optional<double>{flight::row_get<flight::RowKey<"depth">>(clear).value()});
@@ -206,15 +207,15 @@ inline void end_wgpu_effect_pass(flight::Ref<flight::types::WgpuRenderPass> scen
   const auto scratch_a_capture = flight::make_binding_cell(std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{std::nullopt});
   const auto scratch_b_capture = flight::make_binding_cell(std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{std::nullopt});
   const auto pending_capture = flight::make_binding_cell(flight::Array<flight::Ref<flight::types::Adjustment>>{});
-  std::function<void()> ensure_scratch = [=]() {
+  std::function<void()> ensure_scratch = flight::Function<void()>{[=]() {
   if (!scratch_a_capture.read_binding().has_value()) {
     scratch_a_capture.rebind(std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{flight::render_wgpu::acquire_wgpu_texture_render_target(state, pipeline->pool, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<width_height_format_color_space_sample_count_d7147b6683ba8eda>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<width_height_format_color_space_4f40539cf5ea6440>>>>(descriptor)))});
   }
   if (!scratch_b_capture.read_binding().has_value()) {
     scratch_b_capture.rebind(std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{flight::render_wgpu::acquire_wgpu_texture_render_target(state, pipeline->pool, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<width_height_format_color_space_sample_count_d7147b6683ba8eda>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<width_height_format_color_space_4f40539cf5ea6440>>>>(descriptor)))});
   }
-};
-  std::function<void()> flush_adjustments = [=]() {
+}};
+  std::function<void()> flush_adjustments = flight::Function<void()>{[=]() {
   if ((static_cast<double>(pending_capture.read_binding().size()) == 0.0)) {
     return;
   }
@@ -235,7 +236,7 @@ inline void end_wgpu_effect_pass(flight::Ref<flight::types::WgpuRenderPass> scen
   }
   source_capture.rebind(dest);
   pending_capture.rebind(flight::Array<flight::Ref<flight::types::Adjustment>>{});
-};
+}};
   for (auto operation : operations) {
     if ((flight::adjustments::get_adjustment_color_matrix(operation).has_value() || flight::adjustments::is_color_lut_adjustment(operation))) {
       pending_capture.read_binding().push(std::get<flight::Ref<flight::types::Adjustment>>(operation));

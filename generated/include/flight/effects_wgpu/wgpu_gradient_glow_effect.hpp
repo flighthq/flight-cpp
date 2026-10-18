@@ -4,16 +4,22 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function getLookupPipeline -- source line 115
-//   missing: function applyGradientGlowEffectToWgpu -- source line 23
 //   missing: variable (binding) -- source line 96
+#include <cmath>
+#include <cstdint>
+#include <flight/any.hpp>
+#include <flight/callable.hpp>
+#include <flight/host_sdl/wgpu.hpp>
+#include <flight/string.hpp>
+#include <flight/structural_ref.hpp>
 #include <flight/weak_map.hpp>
+#include <functional>
 #include <optional>
+#include <random>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
-
-#include <flight/types/wgpu_render_target.hpp>
 
 #include <flight/types/wgpu_render_state.hpp>
 
@@ -24,12 +30,17 @@ namespace flight::types { struct WgpuEffectContext; }
 namespace flight::types { struct WgpuRenderState; }
 namespace flight::types { struct WgpuTextureRenderTarget; }
 
+#include <flight/render_wgpu/wgpu_render_target_pool.hpp>
 #include <flight/types/contract.hpp>
+#include <flight/effects_wgpu/wgpu_effect_blit_shader.hpp>
+#include <flight/effects_wgpu/wgpu_effect_box_blur.hpp>
+#include <flight/effects_wgpu/wgpu_effect_gradient_ramp.hpp>
+#include <flight/effects_wgpu/wgpu_effect_pass.hpp>
 #include <flight/effects_wgpu/wgpu_effect_registry.hpp>
+#include <flight/effects_wgpu/wgpu_effect_tint_shader.hpp>
 
 namespace flight::effects_wgpu {
 
-using flight::types::WgpuRenderTargetPool;
 using flight::types::WgpuRenderState;
 
 inline const flight::String gradient_lookup_fragment_wgsl = flight::String("\nstruct Uniforms { _u : f32, _pad0 : f32, _pad1 : f32, _pad2 : f32, }\n@group(0) @binding(0) var<uniform> uni : Uniforms;\n@group(1) @binding(0) var texBlurred : texture_2d<f32>;\n@group(1) @binding(1) var smp : sampler;\n@group(2) @binding(0) var texRamp : texture_2d<f32>;\n@group(2) @binding(1) var smp2 : sampler;\n\n@fragment\nfn fs_main(@location(0) uv : vec2f) -> @location(0) vec4f {\n  let alpha = textureSampleLevel(texBlurred, smp, uv, 0.0).a;\n  return textureSampleLevel(texRamp, smp2, vec2f(alpha, 0.5), 0.0);\n}");
@@ -74,82 +85,94 @@ inline flight::WeakMap<flight::Ref<flight::types::WgpuRenderState>, flight::Ref<
 // called API to return the exact declared arm. The compiler will not cast, copy, or materialize the call result
 // into another owner.
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_WIDTH_HEIGHT_FORMAT_3E01490122355EDD
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_WIDTH_HEIGHT_FORMAT_3E01490122355EDD
+struct width_height_format_3e01490122355edd : public flight::ReferenceEnabled {
+  double width;
+  double height;
+  flight::String format;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_WIDTH_HEIGHT_FORMAT_3E01490122355EDD
 
-// NOT GENERATED: function applyGradientGlowEffectToWgpu -- source line 23
-// refusal: cpp-contextual-union-missing-expression-type:multiVariant [compiler-restriction]
-//
-// The source it stood for:
-//   export function applyGradientGlowEffectToWgpu(
-//     state: WgpuRenderState,
-//     source: Readonly<WgpuTextureRenderTarget>,
-//     dest: Readonly<WgpuTextureRenderTarget>,
-//     pool: WgpuRenderTargetPool,
-//     effect: Readonly<GradientGlowEffect>,
-//   ): void {
-//     const src = source as WgpuTextureRenderTarget;
-//     const dst = dest as WgpuTextureRenderTarget;
-//     const descriptor = { width: source.width, height: source.height, format: source.format };
-//     const s0 = acquireWgpuTextureRenderTarget(state, pool, descriptor);
-//     const s1 = acquireWgpuTextureRenderTarget(state, pool, descriptor);
-//     const s2 = acquireWgpuTextureRenderTarget(state, pool, descriptor);
-//   
-//     const quality = Math.max(1, Math.round(effect.quality ?? 1));
-//     const strength = effect.strength ?? 1;
-//     const sourceMode = effect.sourceMode ?? 'draw';
-//   
-//     const { device } = state;
-//     const fs = getWgpuEffectPassState(state);
-//   
-//     applyWgpuEffectTintPass(state, src, s0, 0xffffffff, 1, Math.min(1, strength));
-//     applyWgpuEffectBoxBlur(state, s0, s1, s2, {
-//       blurX: effect.blurX ?? 6,
-//       blurY: effect.blurY ?? 6,
-//       passes: quality,
-//     });
-//   
-//     const rampTexture = getWgpuEffectGradientRampTexture(state, effect.colors, effect.alphas, effect.ratios);
-//     const rampBG = device.createBindGroup({
-//       layout: fs.textureBGLayout,
-//       entries: [
-//         { binding: 0, resource: rampTexture.createView() },
-//         { binding: 1, resource: fs.sampler },
-//       ],
-//     });
-//     const blurredBG = device.createBindGroup({
-//       layout: fs.textureBGLayout,
-//       entries: [
-//         { binding: 0, resource: s1.view },
-//         { binding: 1, resource: fs.sampler },
-//       ],
-//     });
-//   
-//     const pipeline = getLookupPipeline(state);
-//     const slotOffset = fs.acquireSlot();
-//     fs.writeSlot(slotOffset, () => {});
-//   
-//     const pass = fs.beginPass(s0, 'load');
-//     pass.setPipeline(pipeline.pipeline);
-//     pass.setBindGroup(0, fs.uniformBG, [slotOffset]);
-//     pass.setBindGroup(1, blurredBG);
-//     pass.setBindGroup(2, rampBG);
-//     pass.draw(6);
-//     pass.end();
-//   
-//     clearWgpuEffectTarget(state, dst);
-//     applyWgpuEffectBlitPass(state, s0, dst);
-//     if (sourceMode === 'knockout') {
-//       applyWgpuEffectErasePass(state, src, dst);
-//     } else if (sourceMode === 'draw') {
-//       applyWgpuEffectBlitPass(state, src, dst);
-//     }
-//   
-//     releaseWgpuTextureRenderTarget(pool, s0);
-//     releaseWgpuTextureRenderTarget(pool, s1);
-//     releaseWgpuTextureRenderTarget(pool, s2);
-//   }
-//   
-// cpp emission failed for @flighthq/effects-wgpu/packages/effects-wgpu/src/wgpuGradientGlowEffect.ts: contextual
-// multiVariant construction requires expression type evidence
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_WIDTH_HEIGHT_FORMAT_COLOR_SPACE_SAMPLE_COUNT_D7147B6683BA8EDA
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_WIDTH_HEIGHT_FORMAT_COLOR_SPACE_SAMPLE_COUNT_D7147B6683BA8EDA
+struct width_height_format_color_space_sample_count_d7147b6683ba8eda : public flight::ReferenceEnabled {
+  double width;
+  double height;
+  std::optional<flight::String> format;
+  std::optional<flight::types::RenderTargetColorSpace> color_space;
+  std::optional<double> sample_count;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_WIDTH_HEIGHT_FORMAT_COLOR_SPACE_SAMPLE_COUNT_D7147B6683BA8EDA
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_UNIFORM_BG_TEXTURE_BGLAYOUT_UNIFORM_BGLAYOUT_SAMPLER_ACQUIRE_SLOT_WRITE_SLOT_BEGIN_PASS_0D3FA83D13F4B339
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_UNIFORM_BG_TEXTURE_BGLAYOUT_UNIFORM_BGLAYOUT_SAMPLER_ACQUIRE_SLOT_WRITE_SLOT_BEGIN_PASS_0D3FA83D13F4B339
+struct uniform_bg_texture_bglayout_uniform_bglayout_sampler_acquire_slot_write_slot_begin_pass_0d3fa83d13f4b339 : public flight::ReferenceEnabled {
+  flight::Any uniform_bg;
+  flight::Any texture_bglayout;
+  flight::Any uniform_bglayout;
+  flight::Any sampler;
+  std::function<double()> acquire_slot;
+  std::function<void(double, std::function<void(flight::Float32Array, flight::Int32Array)>)> write_slot;
+  std::function<flight::Any(std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>, flight::Any)> begin_pass;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_UNIFORM_BG_TEXTURE_BGLAYOUT_UNIFORM_BGLAYOUT_SAMPLER_ACQUIRE_SLOT_WRITE_SLOT_BEGIN_PASS_0D3FA83D13F4B339
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_BLUR_X_BLUR_Y_PASSES_EDGE_COLOR_4494165180BBAC95
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_BLUR_X_BLUR_Y_PASSES_EDGE_COLOR_4494165180BBAC95
+struct blur_x_blur_y_passes_edge_color_4494165180bbac95 : public flight::ReferenceEnabled {
+  std::optional<double> blur_x;
+  std::optional<double> blur_y;
+  std::optional<double> passes;
+  std::optional<flight::Array<double>> edge_color;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_BLUR_X_BLUR_Y_PASSES_EDGE_COLOR_4494165180BBAC95
+
+inline void apply_gradient_glow_effect_to_wgpu(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>> dest, flight::Ref<flight::types::WgpuRenderTargetPool> pool, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GradientGlowEffect>>>> effect) {
+  flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>> src = flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source);
+  flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>> dst = flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(dest);
+  auto descriptor = flight::make_ref<width_height_format_3e01490122355edd>(width_height_format_3e01490122355edd{.width = flight::row_get<flight::RowKey<"width">>(source), .height = flight::row_get<flight::RowKey<"height">>(source), .format = flight::row_get<flight::RowKey<"format">>(source)});
+  auto s0 = flight::render_wgpu::acquire_wgpu_texture_render_target(state, pool, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<width_height_format_color_space_sample_count_d7147b6683ba8eda>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<width_height_format_3e01490122355edd>>>>(descriptor)));
+  auto s1 = flight::render_wgpu::acquire_wgpu_texture_render_target(state, pool, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<width_height_format_color_space_sample_count_d7147b6683ba8eda>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<width_height_format_3e01490122355edd>>>>(descriptor)));
+  auto s2 = flight::render_wgpu::acquire_wgpu_texture_render_target(state, pool, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<width_height_format_color_space_sample_count_d7147b6683ba8eda>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<width_height_format_3e01490122355edd>>>>(descriptor)));
+  const double quality = flight::maximum(1.0, flight::round(([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"quality">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }())));
+  const double strength = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"strength">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }());
+  flight::String source_mode = ([&]() -> flight::String { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"sourceMode">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("draw"); }());
+  auto object_pattern_value = state;
+  flight::host_sdl::WgpuDevice device = object_pattern_value->device;
+  flight::Ref<uniform_bg_texture_bglayout_uniform_bglayout_sampler_acquire_slot_write_slot_begin_pass_0d3fa83d13f4b339> fs = flight::effects_wgpu::get_wgpu_effect_pass_state(state);
+  flight::effects_wgpu::apply_wgpu_effect_tint_pass(state, src, s0, 4294967295.0, 1.0, flight::minimum(1.0, strength));
+  flight::effects_wgpu::apply_wgpu_effect_box_blur(state, s0, s1, s2, flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<blur_x_blur_y_passes_edge_color_4494165180bbac95>>>>(flight::row_field<flight::RowKey<"blurX">>(([&]() -> std::optional<double> { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"blurX">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return std::optional<double>{6.0}; }())), flight::row_field<flight::RowKey<"blurY">>(([&]() -> std::optional<double> { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"blurY">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return std::optional<double>{6.0}; }())), flight::row_field<flight::RowKey<"passes">>(std::optional<double>{quality})));
+  auto ramp_texture = flight::effects_wgpu::get_wgpu_effect_gradient_ramp_texture(state, flight::row_get<flight::RowKey<"colors">>(effect), flight::row_get<flight::RowKey<"alphas">>(effect), flight::row_get<flight::RowKey<"ratios">>(effect));
+  auto ramp_bg = device.create_bind_group(([&]() { flight::host_sdl::WgpuBindGroupDescriptor external_gpubind_group_descriptor{}; external_gpubind_group_descriptor.layout = fs->texture_bglayout; external_gpubind_group_descriptor.entries = flight::Array<flight::host_sdl::WgpuBindGroupEntry>{([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry{}; external_gpubind_group_entry.binding = 0.0; external_gpubind_group_entry.resource = ramp_texture.create_view(); return external_gpubind_group_entry; }()), ([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_2{}; external_gpubind_group_entry_2.binding = 1.0; external_gpubind_group_entry_2.resource = fs->sampler; return external_gpubind_group_entry_2; }())}; return external_gpubind_group_descriptor; }()));
+  auto blurred_bg = device.create_bind_group(([&]() { flight::host_sdl::WgpuBindGroupDescriptor external_gpubind_group_descriptor_2{}; external_gpubind_group_descriptor_2.layout = fs->texture_bglayout; external_gpubind_group_descriptor_2.entries = flight::Array<flight::host_sdl::WgpuBindGroupEntry>{([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_3{}; external_gpubind_group_entry_3.binding = 0.0; external_gpubind_group_entry_3.resource = s1->view; return external_gpubind_group_entry_3; }()), ([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_4{}; external_gpubind_group_entry_4.binding = 1.0; external_gpubind_group_entry_4.resource = fs->sampler; return external_gpubind_group_entry_4; }())}; return external_gpubind_group_descriptor_2; }()));
+  auto pipeline = get_lookup_pipeline(state);
+  const double slot_offset = fs->acquire_slot();
+  fs->write_slot(slot_offset, flight::Function<void(flight::Float32Array, flight::Int32Array)>{[=](flight::Float32Array ignored_callback_argument, flight::Int32Array ignored_callback_argument_2) {
+  (void)ignored_callback_argument;
+  (void)ignored_callback_argument_2;
+}});
+  auto pass = fs->begin_pass(std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{s0}, flight::String("load"));
+  flight::named_properties(pass).get(flight::String("setPipeline"))(pipeline->pipeline);
+  flight::named_properties(pass).get(flight::String("setBindGroup"))(0.0, fs->uniform_bg, flight::Array{slot_offset});
+  flight::named_properties(pass).get(flight::String("setBindGroup"))(1.0, blurred_bg);
+  flight::named_properties(pass).get(flight::String("setBindGroup"))(2.0, ramp_bg);
+  flight::named_properties(pass).get(flight::String("draw"))(6.0);
+  flight::named_properties(pass).get(flight::String("end"))();
+  flight::effects_wgpu::clear_wgpu_effect_target(state, dst);
+  flight::effects_wgpu::apply_wgpu_effect_blit_pass(state, s0, dst);
+  if ((source_mode == flight::String("knockout"))) {
+    flight::effects_wgpu::apply_wgpu_effect_erase_pass(state, src, dst);
+  }
+  else {
+    if ((source_mode == flight::String("draw"))) {
+      flight::effects_wgpu::apply_wgpu_effect_blit_pass(state, src, dst);
+    }
+  }
+  flight::render_wgpu::release_wgpu_texture_render_target(pool, s0);
+  flight::render_wgpu::release_wgpu_texture_render_target(pool, s1);
+  flight::render_wgpu::release_wgpu_texture_render_target(pool, s2);
+}
 
 
 // NOT GENERATED: variable (binding) -- source line 96

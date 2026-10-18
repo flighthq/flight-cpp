@@ -4,10 +4,16 @@ This directory is generated from `@flighthq/sdk` 0.5.0 at
 `a62784923f3be814463286c9fb28edfe6ab15789` by `flight-compiler` at `806d257d2f4100de745cc97340e61c2f301b0f24`.
 Do not edit it by hand.
 
-Applied binding profiles: `flighthq/flight-cpp/runtime-carriers/1`, `flighthq/flight-cpp/headless/1`, `flighthq/flight-cpp/web-types/1`, `flighthq/flight-cpp/sdl-image/1`, `flighthq/flight-cpp/sdl-gl/1`, `flighthq/flight-cpp/sdl-wgpu/1`, `flighthq/flight-cpp/sdl-app/1`. Exact profile paths and SHA-256 digests are recorded in `manifest.json`.
+Binding profiles differ between packages during a profile transition, so each package row names the profile
+set it was generated under:
 
-The current compiler emitted 2574 of 3151 source modules from
-153 SDK packages and refused 577. Emitted headers live under
+- `sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb` (149 packages)
+- `sha256:2602f15df98afbc4055416765f444e85bee83a6c5fad13b420301f8fa344ca71` (4 packages)
+
+Exact profile paths and SHA-256 digests are recorded per set in `manifest.json`.
+
+The current compiler emitted 2577 of 3151 source modules from
+153 SDK packages and refused 574. Emitted headers live under
 `include/flight/<package>/`; every refusal and its owning module is recorded in `refusals.json`.
 
 This is a bring-up inventory. It is intentionally committed before it forms a completely compilable SDK closure.

@@ -18,11 +18,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/wgpu_render_state.hpp>
 
 namespace flight::types { struct WgpuDeviceRuntime; }
+namespace flight::types { struct WgpuMaterialBinding; }
+namespace flight::types { struct WgpuMeshPipeline; }
 namespace flight::types { struct WgpuMeshUpload; }
 namespace flight::types { struct WgpuRenderRegistries; }
 namespace flight::types { struct WgpuRenderState; }
 namespace flight::types { struct WgpuRenderStateRuntime; }
 namespace flight::types { struct WgpuScene3DDrawEntry; }
+namespace flight::types { struct WgpuScene3DFrameBinding; }
 namespace flight::types { struct WgpuScene3DRuntime; }
 namespace flight::types { struct WgpuSkinningAdapter; }
 

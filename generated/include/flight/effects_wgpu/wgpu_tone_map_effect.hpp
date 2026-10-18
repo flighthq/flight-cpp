@@ -5,6 +5,7 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: variable (binding) -- source line 35
 #include <flight/any.hpp>
+#include <flight/callable.hpp>
 #include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -41,7 +42,7 @@ inline const flight::String tonemap_fragment_head = flight::String("\nstruct Uni
 
 inline const flight::String tonemap_fragment_tail = flight::String("}\n\n@fragment\nfn fs_main(@location(0) uv : vec2f) -> @location(0) vec4f {\n  let c = textureSampleLevel(tex, smp, uv, 0.0);\n  let mapped = tonemap(c.rgb * uni.u_exposure);\n  return vec4f(clamp(mapped, vec3f(0.0), vec3f(1.0)), c.a);\n}");
 
-inline flight::Record<flight::String, flight::String> tonemap_operators = {{flight::String("aces"), flight::String("\n  let a = x * (2.51 * x + 0.03);\n  let b = x * (2.43 * x + 0.59) + 0.14;\n  return a / b;")}, {flight::String("reinhard"), flight::String("\n  return x / (1.0 + x / (uni.u_white * uni.u_white));")}, {flight::String("filmic"), flight::String("\n  let X = max(vec3f(0.0), x - 0.004);\n  return (X * (6.2 * X + 0.5)) / (X * (6.2 * X + 1.7) + 0.06);")}, {flight::String("uncharted2"), flight::String("\n  let A = 0.15; let B = 0.50; let C = 0.10; let D = 0.20; let E = 0.02; let F = 0.30;\n  let v = ((x * (A * x + C * B) + D * E) / (x * (A * x + B) + D * F)) - E / F;\n  return v;")}, {flight::String("agx"), flight::String("\n  let v = clamp((x - 0.004) / (1.0 + x), vec3f(0.0), vec3f(1.0));\n  return pow(v, vec3f(0.8));")}};
+inline flight::Record<flight::String, flight::String> tonemap_operators = flight::Record<flight::String, flight::String>{{flight::String("aces"), flight::String("\n  let a = x * (2.51 * x + 0.03);\n  let b = x * (2.43 * x + 0.59) + 0.14;\n  return a / b;")}, {flight::String("reinhard"), flight::String("\n  return x / (1.0 + x / (uni.u_white * uni.u_white));")}, {flight::String("filmic"), flight::String("\n  let X = max(vec3f(0.0), x - 0.004);\n  return (X * (6.2 * X + 0.5)) / (X * (6.2 * X + 1.7) + 0.06);")}, {flight::String("uncharted2"), flight::String("\n  let A = 0.15; let B = 0.50; let C = 0.10; let D = 0.20; let E = 0.02; let F = 0.30;\n  let v = ((x * (A * x + C * B) + D * E) / (x * (A * x + B) + D * F)) - E / F;\n  return v;")}, {flight::String("agx"), flight::String("\n  let v = clamp((x - 0.004) / (1.0 + x), vec3f(0.0), vec3f(1.0));\n  return pow(v, vec3f(0.8));")}};
 
 inline flight::String build_tone_map_fragment(flight::String operator_) {
   return tonemap_fragment_head + ([&]() -> flight::String { auto nullish_coalesce_left = tonemap_operators.get(operator_); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return tonemap_operators.get(flight::String("aces")).value(); }()) + tonemap_fragment_tail;
@@ -62,11 +63,11 @@ inline void apply_tone_map_effect_to_wgpu(flight::Ref<flight::types::WgpuRenderS
   const double exposure = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"exposure">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }());
   const double white = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"white">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }());
   flight::Ref<entity_runtime_key_pipeline_blend_mode_compile_for_format_variants_98a4e0fc0650e698> pipeline = flight::effects_wgpu::get_wgpu_effect_pipeline(state, flight::String("toneMap.") + flight::to_string(operator_) + flight::String(""), build_tone_map_fragment(operator_), flight::String("replace"));
-  flight::effects_wgpu::draw_wgpu_effect_pass(state, flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(dest)}, pipeline, [=](flight::Float32Array f32, flight::Int32Array ignored_callback_argument) {
+  flight::effects_wgpu::draw_wgpu_effect_pass(state, flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(dest)}, pipeline, flight::Function<void(flight::Float32Array, flight::Int32Array)>{[=](flight::Float32Array f32, flight::Int32Array ignored_callback_argument) {
   (void)ignored_callback_argument;
   ([&]() { auto&& typed_array = f32; const auto typed_index = 0.0; const auto typed_value = exposure; return typed_array.set_index(typed_index, typed_value); }());
   ([&]() { auto&& typed_array_2 = f32; const auto typed_index_2 = 1.0; const auto typed_value_2 = white; return typed_array_2.set_index(typed_index_2, typed_value_2); }());
-});
+}});
 }
 
 

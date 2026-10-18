@@ -32,26 +32,6 @@ namespace flight::render_wgpu {
 using flight::types::WgpuRenderState;
 using flight::types::WgpuScreenRenderTarget;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_R_G_B_A_AC2F3070A687C88C
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_R_G_B_A_AC2F3070A687C88C
-struct r_g_b_a_ac2f3070a687c88c : public flight::ReferenceEnabled {
-  double r;
-  double g;
-  double b;
-  double a;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_R_G_B_A_AC2F3070A687C88C
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_VIEW_LOAD_OP_STORE_OP_CLEAR_VALUE_5F69E0CAE64406D6
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_VIEW_LOAD_OP_STORE_OP_CLEAR_VALUE_5F69E0CAE64406D6
-struct view_load_op_store_op_clear_value_5f69e0cae64406d6 : public flight::ReferenceEnabled {
-  std::optional<flight::host_sdl::WgpuTextureView> view;
-  flight::String load_op;
-  flight::String store_op;
-  flight::Ref<r_g_b_a_ac2f3070a687c88c> clear_value;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_VIEW_LOAD_OP_STORE_OP_CLEAR_VALUE_5F69E0CAE64406D6
-
 inline void encode_wgpu_screen_render_target_resolve(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuScreenRenderTarget>>>> target, flight::host_sdl::WgpuCommandEncoder encoder) {
   std::optional<flight::host_sdl::WgpuTextureView> presentation_view = flight::row_get<flight::RowKey<"presentationView">>(target);
   std::optional<flight::host_sdl::WgpuBindGroup> bind_group = flight::row_get<flight::RowKey<"antialiasResolveBindGroup">>(target);
@@ -59,7 +39,7 @@ inline void encode_wgpu_screen_render_target_resolve(flight::Ref<flight::types::
   if (((!presentation_view.has_value() || !pipeline.has_value()) || !bind_group.has_value())) {
     return;
   }
-  auto pass = encoder.begin_render_pass({.color_attachments = flight::Array{flight::make_ref<view_load_op_store_op_clear_value_5f69e0cae64406d6>(view_load_op_store_op_clear_value_5f69e0cae64406d6{.view = presentation_view, .load_op = flight::String("clear"), .store_op = flight::String("store"), .clear_value = flight::make_ref<r_g_b_a_ac2f3070a687c88c>(r_g_b_a_ac2f3070a687c88c{.r = 0.0, .g = 0.0, .b = 0.0, .a = 0.0})})}});
+  auto pass = encoder.begin_render_pass(([&]() { flight::host_sdl::WgpuRenderPassDescriptor external_gpurender_pass_descriptor{}; external_gpurender_pass_descriptor.color_attachments = flight::Array<flight::host_sdl::WgpuRenderPassColorAttachment>{([&]() { flight::host_sdl::WgpuRenderPassColorAttachment external_gpurender_pass_color_attachment{}; external_gpurender_pass_color_attachment.view = presentation_view; external_gpurender_pass_color_attachment.load_op = flight::String("clear"); external_gpurender_pass_color_attachment.store_op = flight::String("store"); external_gpurender_pass_color_attachment.clear_value = ([&]() { flight::host_sdl::WgpuColor external_gpucolor{}; external_gpucolor.r = 0.0; external_gpucolor.g = 0.0; external_gpucolor.b = 0.0; external_gpucolor.a = 0.0; return external_gpucolor; }()); return external_gpurender_pass_color_attachment; }())}; return external_gpurender_pass_descriptor; }()));
   pass.set_pipeline(pipeline);
   pass.set_bind_group(0.0, bind_group);
   pass.draw(3.0);

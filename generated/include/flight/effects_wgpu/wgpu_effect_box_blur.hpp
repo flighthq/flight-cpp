@@ -2,6 +2,7 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <flight/callable.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/string.hpp>
 #include <flight/structural_ref.hpp>
@@ -58,7 +59,7 @@ inline flight::Ref<flight::types::WgpuEffectPipeline> get_box_blur_pipeline(flig
 
 inline void apply_box_blur_pass(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::WgpuTextureRenderTarget> source, flight::Ref<flight::types::WgpuTextureRenderTarget> dest, double radius, double dir_x, double dir_y, std::optional<flight::Array<double>> edge_color) {
   auto pipeline = get_box_blur_pipeline(state);
-  flight::effects_wgpu::draw_wgpu_effect_pass(state, source, std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{dest}, pipeline, [=](flight::Float32Array f32, flight::Int32Array ignored_callback_argument) {
+  flight::effects_wgpu::draw_wgpu_effect_pass(state, source, std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{dest}, pipeline, flight::Function<void(flight::Float32Array, flight::Int32Array)>{[=](flight::Float32Array f32, flight::Int32Array ignored_callback_argument) {
   (void)ignored_callback_argument;
   ([&]() { auto&& typed_array = f32; const auto typed_index = 0.0; const auto typed_value = (1.0 / source->width); return typed_array.set_index(typed_index, typed_value); }());
   ([&]() { auto&& typed_array_2 = f32; const auto typed_index_2 = 1.0; const auto typed_value_2 = (1.0 / source->height); return typed_array_2.set_index(typed_index_2, typed_value_2); }());
@@ -79,7 +80,7 @@ inline void apply_box_blur_pass(flight::Ref<flight::types::WgpuRenderState> stat
     ([&]() { auto&& typed_array_14 = f32; const auto typed_index_14 = 9.0; const auto typed_value_14 = 1.0; return typed_array_14.set_index(typed_index_14, typed_value_14); }());
   }
   ([&]() { auto&& typed_array_15 = f32; const auto typed_index_15 = 8.0; const auto typed_value_15 = radius; return typed_array_15.set_index(typed_index_15, typed_value_15); }());
-});
+}});
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_BLUR_X_BLUR_Y_PASSES_EDGE_COLOR_4494165180BBAC95

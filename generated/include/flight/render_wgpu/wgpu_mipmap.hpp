@@ -8,13 +8,10 @@
 #include <functional>
 #include <optional>
 #include <random>
-#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
-
-#include <flight/types/capacitor_api.hpp>
 
 #include <flight/types/wgpu_render_state.hpp>
 
@@ -41,49 +38,6 @@ inline const flight::String mipmap_wgsl = flight::String("\nstruct VsOut {\n  @b
 using bind_group_layout_pipeline_833b0848238ca1cc = flight::types::bind_group_layout_pipeline_833b0848238ca1cc;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_BIND_GROUP_LAYOUT_PIPELINE_833B0848238CA1CC
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_SAMPLE_TYPE_056EE483A28C4F4F
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_SAMPLE_TYPE_056EE483A28C4F4F
-struct sample_type_056ee483a28c4f4f : public flight::ReferenceEnabled {
-  flight::String sample_type;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_SAMPLE_TYPE_056EE483A28C4F4F
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_TYPE_DA5EB69D1C0EE021
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_TYPE_DA5EB69D1C0EE021
-using type_da5eb69d1c0ee021 = flight::types::type_da5eb69d1c0ee021;
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_TYPE_DA5EB69D1C0EE021
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_MODULE_ENTRY_POINT_4D3C337401507620
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_MODULE_ENTRY_POINT_4D3C337401507620
-struct module_entry_point_4d3c337401507620 : public flight::ReferenceEnabled {
-  flight::Any module;
-  flight::String entry_point;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_MODULE_ENTRY_POINT_4D3C337401507620
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_FORMAT_4D24CAD4DE001668
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_FORMAT_4D24CAD4DE001668
-struct format_4d24cad4de001668 : public flight::ReferenceEnabled {
-  flight::Any format;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_FORMAT_4D24CAD4DE001668
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_MODULE_ENTRY_POINT_TARGETS_43B8D98FA37889AB
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_MODULE_ENTRY_POINT_TARGETS_43B8D98FA37889AB
-struct module_entry_point_targets_43b8d98fa37889ab : public flight::ReferenceEnabled {
-  flight::Any module;
-  flight::String entry_point;
-  flight::Array<flight::Ref<format_4d24cad4de001668>> targets;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_MODULE_ENTRY_POINT_TARGETS_43B8D98FA37889AB
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_TOPOLOGY_7C8278728B18051E
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_TOPOLOGY_7C8278728B18051E
-struct topology_7c8278728b18051e : public flight::ReferenceEnabled {
-  flight::String topology;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_TOPOLOGY_7C8278728B18051E
-
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_BIND_GROUP_LAYOUT_PIPELINE_19299E4E17C065FA
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_BIND_GROUP_LAYOUT_PIPELINE_19299E4E17C065FA
 struct bind_group_layout_pipeline_19299e4e17c065fa : public flight::ReferenceEnabled {
@@ -100,9 +54,9 @@ inline flight::Ref<bind_group_layout_pipeline_833b0848238ca1cc> ensure_wgpu_mipm
   }
   auto object_pattern_value = state;
   flight::host_sdl::WgpuDevice device = object_pattern_value->device;
-  auto bind_group_layout = device.create_bind_group_layout({.entries = flight::Array{{.binding = 0.0, .visibility = flight::host_sdl::wgpu_shader_stage_fragment, .texture = flight::make_ref<sample_type_056ee483a28c4f4f>(sample_type_056ee483a28c4f4f{.sample_type = flight::String("float")})}, {.binding = 1.0, .visibility = flight::host_sdl::wgpu_shader_stage_fragment, .sampler = flight::make_ref<type_da5eb69d1c0ee021>(type_da5eb69d1c0ee021{.type = flight::String("filtering")})}}});
-  auto module = device.create_shader_module({.code = mipmap_wgsl});
-  auto pipeline = device.create_render_pipeline({.layout = device.create_pipeline_layout({.bind_group_layouts = flight::Array{bind_group_layout}}), .vertex = flight::make_ref<module_entry_point_4d3c337401507620>(module_entry_point_4d3c337401507620{.module = module, .entry_point = flight::String("vs_main")}), .fragment = flight::make_ref<module_entry_point_targets_43b8d98fa37889ab>(module_entry_point_targets_43b8d98fa37889ab{.module = module, .entry_point = flight::String("fs_main"), .targets = flight::Array<flight::Ref<format_4d24cad4de001668>>{flight::make_ref<format_4d24cad4de001668>(format_4d24cad4de001668{.format = format})}}), .primitive = flight::make_ref<topology_7c8278728b18051e>(topology_7c8278728b18051e{.topology = flight::String("triangle-list")})});
+  auto bind_group_layout = device.create_bind_group_layout(([&]() { flight::host_sdl::WgpuBindGroupLayoutDescriptor external_gpubind_group_layout_descriptor{}; external_gpubind_group_layout_descriptor.entries = flight::Array<flight::host_sdl::WgpuBindGroupLayoutEntry>{([&]() { flight::host_sdl::WgpuBindGroupLayoutEntry external_gpubind_group_layout_entry{}; external_gpubind_group_layout_entry.binding = 0.0; external_gpubind_group_layout_entry.visibility = flight::host_sdl::wgpu_shader_stage_fragment; external_gpubind_group_layout_entry.texture = ([&]() { flight::host_sdl::WgpuTextureBindingLayout external_gputexture_binding_layout{}; external_gputexture_binding_layout.sample_type = flight::String("float"); return external_gputexture_binding_layout; }()); return external_gpubind_group_layout_entry; }()), ([&]() { flight::host_sdl::WgpuBindGroupLayoutEntry external_gpubind_group_layout_entry_2{}; external_gpubind_group_layout_entry_2.binding = 1.0; external_gpubind_group_layout_entry_2.visibility = flight::host_sdl::wgpu_shader_stage_fragment; external_gpubind_group_layout_entry_2.sampler = ([&]() { flight::host_sdl::WgpuSamplerBindingLayout external_gpusampler_binding_layout{}; external_gpusampler_binding_layout.type = flight::String("filtering"); return external_gpusampler_binding_layout; }()); return external_gpubind_group_layout_entry_2; }())}; return external_gpubind_group_layout_descriptor; }()));
+  auto module = device.create_shader_module(([&]() { flight::host_sdl::WgpuShaderModuleDescriptor external_gpushader_module_descriptor{}; external_gpushader_module_descriptor.code = mipmap_wgsl; return external_gpushader_module_descriptor; }()));
+  auto pipeline = device.create_render_pipeline(([&]() { flight::host_sdl::WgpuRenderPipelineDescriptor external_gpurender_pipeline_descriptor{}; external_gpurender_pipeline_descriptor.layout = device.create_pipeline_layout(([&]() { flight::host_sdl::WgpuPipelineLayoutDescriptor external_gpupipeline_layout_descriptor{}; external_gpupipeline_layout_descriptor.bind_group_layouts = flight::Array{bind_group_layout}; return external_gpupipeline_layout_descriptor; }())); external_gpurender_pipeline_descriptor.vertex = ([&]() { flight::host_sdl::WgpuVertexState external_gpuvertex_state{}; external_gpuvertex_state.module = module; external_gpuvertex_state.entry_point = flight::String("vs_main"); return external_gpuvertex_state; }()); external_gpurender_pipeline_descriptor.fragment = ([&]() { flight::host_sdl::WgpuFragmentState external_gpufragment_state{}; external_gpufragment_state.module = module; external_gpufragment_state.entry_point = flight::String("fs_main"); external_gpufragment_state.targets = flight::Array<flight::host_sdl::WgpuColorTargetState>{([&]() { flight::host_sdl::WgpuColorTargetState external_gpucolor_target_state{}; external_gpucolor_target_state.format = format; return external_gpucolor_target_state; }())}; return external_gpufragment_state; }()); external_gpurender_pipeline_descriptor.primitive = ([&]() { flight::host_sdl::WgpuPrimitiveState external_gpuprimitive_state{}; external_gpuprimitive_state.topology = flight::String("triangle-list"); return external_gpuprimitive_state; }()); return external_gpurender_pipeline_descriptor; }()));
   auto result = flight::make_ref<bind_group_layout_pipeline_19299e4e17c065fa>(bind_group_layout_pipeline_19299e4e17c065fa{.bind_group_layout = bind_group_layout, .pipeline = pipeline});
   runtime->context->mipmap_pipeline_cache.set(format, result);
   return result;
@@ -144,9 +98,9 @@ inline void generate_wgpu_mipmaps(flight::Ref<flight::types::WgpuRenderState> st
     double level = 1.0;
     while ((level < level_count)) {
       {
-        auto src_view = texture.create_view({.base_mip_level = (level - 1.0), .mip_level_count = 1.0});
-        auto dst_view = texture.create_view({.base_mip_level = level, .mip_level_count = 1.0});
-        auto bind_group = device.create_bind_group({.layout = layout, .entries = flight::Array{{.binding = 0.0, .resource = std::variant<flight::host_sdl::WgpuSampler, flight::Any>{std::in_place_type<flight::Any>, src_view}}, {.binding = 1.0, .resource = std::variant<flight::host_sdl::WgpuSampler, flight::Any>{std::in_place_type<flight::host_sdl::WgpuSampler>, resources->linear_sampler}}}});
+        auto src_view = texture.create_view(([&]() { flight::host_sdl::WgpuTextureViewDescriptor external_gputexture_view_descriptor{}; external_gputexture_view_descriptor.base_mip_level = (level - 1.0); external_gputexture_view_descriptor.mip_level_count = 1.0; return external_gputexture_view_descriptor; }()));
+        auto dst_view = texture.create_view(([&]() { flight::host_sdl::WgpuTextureViewDescriptor external_gputexture_view_descriptor_2{}; external_gputexture_view_descriptor_2.base_mip_level = level; external_gputexture_view_descriptor_2.mip_level_count = 1.0; return external_gputexture_view_descriptor_2; }()));
+        auto bind_group = device.create_bind_group(([&]() { flight::host_sdl::WgpuBindGroupDescriptor external_gpubind_group_descriptor{}; external_gpubind_group_descriptor.layout = layout; external_gpubind_group_descriptor.entries = flight::Array<flight::host_sdl::WgpuBindGroupEntry>{([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry{}; external_gpubind_group_entry.binding = 0.0; external_gpubind_group_entry.resource = src_view; return external_gpubind_group_entry; }()), ([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_2{}; external_gpubind_group_entry_2.binding = 1.0; external_gpubind_group_entry_2.resource = resources->linear_sampler; return external_gpubind_group_entry_2; }())}; return external_gpubind_group_descriptor; }()));
         auto pass = encoder.begin_render_pass({.color_attachments = flight::Array{flight::make_ref<view_load_op_store_op_clear_value_2e8edb5b8cf10327>(view_load_op_store_op_clear_value_2e8edb5b8cf10327{.view = dst_view, .load_op = flight::String("clear"), .store_op = flight::String("store"), .clear_value = flight::make_ref<r_g_b_a_ac2f3070a687c88c>(r_g_b_a_ac2f3070a687c88c{.r = 0.0, .g = 0.0, .b = 0.0, .a = 0.0})})}});
         pass.set_pipeline(pipeline);
         pass.set_bind_group(0.0, bind_group);

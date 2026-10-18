@@ -66,8 +66,7 @@ struct WgpuTextLabelData;
 
 namespace flight::scene2d_wgpu {
 
-struct WgpuTextLabelData : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct WgpuTextLabelData : public flight::types::RendererData {
   double alloc_h;
   double alloc_w;
   std::optional<flight::Ref<flight::types::ImageResource>> image;
@@ -155,7 +154,7 @@ inline std::optional<flight::Ref<flight::types::CanvasSurface>> ensure_wgpu_text
     (data->alloc_h = 0.0);
     return std::nullopt;
   }
-  auto surface = flight::render::create_canvas_host_surface(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostCanvasCapability>>>>>(canvas_host.value()), pw, ph);
+  auto surface = flight::render::create_canvas_host_surface(canvas_host.value(), pw, ph);
   if (!surface.has_value()) {
     (data->surface = std::nullopt);
     (data->image = std::nullopt);

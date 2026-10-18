@@ -80,7 +80,7 @@ inline bool is_wgpu_screen_render_target(flight::StructuralRef<flight::RowReadon
 }
 
 inline flight::host_sdl::WgpuTexture create_wgpu_screen_depth_stencil_texture(flight::host_sdl::WgpuDevice device, double width, double height) {
-  return device.create_texture({.size = flight::Array{flight::maximum(1.0, width), flight::maximum(1.0, height), 1.0}, .format = flight::String("depth24plus-stencil8"), .usage = flight::host_sdl::wgpu_texture_usage_render_attachment});
+  return device.create_texture(([&]() { flight::host_sdl::WgpuTextureDescriptor external_gputexture_descriptor{}; external_gputexture_descriptor.size = flight::Array{flight::maximum(1.0, width), flight::maximum(1.0, height), 1.0}; external_gputexture_descriptor.format = flight::String("depth24plus-stencil8"); external_gputexture_descriptor.usage = flight::host_sdl::wgpu_texture_usage_render_attachment; return external_gputexture_descriptor; }()));
 }
 
 

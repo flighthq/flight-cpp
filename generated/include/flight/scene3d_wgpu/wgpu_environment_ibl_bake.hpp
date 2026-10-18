@@ -63,7 +63,7 @@ inline const double brdf_lut_size = 128.0;
 inline flight::String ibl_bake_format = flight::String("rgba16float");
 
 inline flight::host_sdl::WgpuTexture create_wgpu_bake_cube(flight::Ref<flight::types::WgpuRenderState> state, double size, double mips) {
-  return state->device.create_texture({.size = flight::Array{size, size, 6.0}, .format = ibl_bake_format, .mip_level_count = mips, .usage = flight::bitwise_or(flight::host_sdl::wgpu_texture_usage_render_attachment, flight::host_sdl::wgpu_texture_usage_texture_binding)});
+  return state->device.create_texture(([&]() { flight::host_sdl::WgpuTextureDescriptor external_gputexture_descriptor{}; external_gputexture_descriptor.size = flight::Array{size, size, 6.0}; external_gputexture_descriptor.format = ibl_bake_format; external_gputexture_descriptor.mip_level_count = mips; external_gputexture_descriptor.usage = flight::bitwise_or(flight::host_sdl::wgpu_texture_usage_render_attachment, flight::host_sdl::wgpu_texture_usage_texture_binding); return external_gputexture_descriptor; }()));
 }
 
 inline const double bake_uniform_bytes = 64.0;
@@ -82,7 +82,7 @@ struct view_clear_value_load_op_store_op_fe08c769f78d372d : public flight::Refer
 
 inline flight::host_sdl::WgpuTexture bake_wgpu_brdf_lut(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<WgpuBakePrograms>>>> programs) {
   flight::host_sdl::WgpuDevice device = state->device;
-  auto texture = device.create_texture({.size = flight::Array{brdf_lut_size, brdf_lut_size, 1.0}, .format = ibl_bake_format, .usage = flight::bitwise_or(flight::host_sdl::wgpu_texture_usage_render_attachment, flight::host_sdl::wgpu_texture_usage_texture_binding)});
+  auto texture = device.create_texture(([&]() { flight::host_sdl::WgpuTextureDescriptor external_gputexture_descriptor_2{}; external_gputexture_descriptor_2.size = flight::Array{brdf_lut_size, brdf_lut_size, 1.0}; external_gputexture_descriptor_2.format = ibl_bake_format; external_gputexture_descriptor_2.usage = flight::bitwise_or(flight::host_sdl::wgpu_texture_usage_render_attachment, flight::host_sdl::wgpu_texture_usage_texture_binding); return external_gputexture_descriptor_2; }()));
   auto encoder = device.create_command_encoder();
   auto pass = encoder.begin_render_pass({.color_attachments = flight::Array{flight::make_ref<view_clear_value_load_op_store_op_fe08c769f78d372d>(view_clear_value_load_op_store_op_fe08c769f78d372d{.view = texture.create_view(), .clear_value = bake_clear, .load_op = flight::String("clear"), .store_op = flight::String("store")})}});
   pass.set_pipeline(flight::row_get<flight::RowKey<"brdfPipeline">>(programs));
@@ -121,7 +121,7 @@ inline void render_wgpu_bake_cube_faces(flight::Ref<flight::types::WgpuRenderSta
         ([&]() { auto&& typed_array_15 = u; const auto typed_index_15 = 14.0; const auto typed_value_15 = 0.0; return typed_array_15.set_index(typed_index_15, typed_value_15); }());
         ([&]() { auto&& typed_array_16 = u; const auto typed_index_16 = 15.0; const auto typed_value_16 = 0.0; return typed_array_16.set_index(typed_index_16, typed_value_16); }());
         device.queue.write_buffer(flight::row_get<flight::RowKey<"uniformBuffer">>(programs), 0.0, u.buffer, 0.0, bake_uniform_bytes);
-        auto view = cube.create_view({.dimension = flight::String("2d"), .base_array_layer = face, .array_layer_count = 1.0, .base_mip_level = mip_level, .mip_level_count = 1.0});
+        auto view = cube.create_view(([&]() { flight::host_sdl::WgpuTextureViewDescriptor external_gputexture_view_descriptor{}; external_gputexture_view_descriptor.dimension = flight::String("2d"); external_gputexture_view_descriptor.base_array_layer = face; external_gputexture_view_descriptor.array_layer_count = 1.0; external_gputexture_view_descriptor.base_mip_level = mip_level; external_gputexture_view_descriptor.mip_level_count = 1.0; return external_gputexture_view_descriptor; }()));
         auto encoder = device.create_command_encoder();
         auto pass = encoder.begin_render_pass({.color_attachments = flight::Array{flight::make_ref<view_clear_value_load_op_store_op_fe08c769f78d372d>(view_clear_value_load_op_store_op_fe08c769f78d372d{.view = view, .clear_value = bake_clear, .load_op = flight::String("clear"), .store_op = flight::String("store")})}});
         pass.set_viewport(0.0, 0.0, size, size, 0.0, 1.0);
@@ -140,7 +140,7 @@ inline void render_wgpu_bake_cube_faces(flight::Ref<flight::types::WgpuRenderSta
 inline flight::Ref<WgpuBakedCube> bake_wgpu_irradiance(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<WgpuBakePrograms>>>> programs, flight::host_sdl::WgpuBindGroup source_bind_group) {
   flight::host_sdl::WgpuTexture texture = create_wgpu_bake_cube(state, irradiance_size, 1.0);
   render_wgpu_bake_cube_faces(state, flight::row_get<flight::RowKey<"irradiancePipeline">>(programs), programs, texture, irradiance_size, 0.0, 0.0, source_bind_group);
-  return flight::make_ref<WgpuBakedCube>(WgpuBakedCube{.texture = texture, .view = texture.create_view({.dimension = flight::String("cube")})});
+  return flight::make_ref<WgpuBakedCube>(WgpuBakedCube{.texture = texture, .view = texture.create_view(([&]() { flight::host_sdl::WgpuTextureViewDescriptor external_gputexture_view_descriptor_2{}; external_gputexture_view_descriptor_2.dimension = flight::String("cube"); return external_gputexture_view_descriptor_2; }()))});
 }
 
 inline flight::Ref<WgpuBakedCube> bake_wgpu_prefiltered(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<WgpuBakePrograms>>>> programs, flight::host_sdl::WgpuBindGroup source_bind_group) {
@@ -156,7 +156,7 @@ inline flight::Ref<WgpuBakedCube> bake_wgpu_prefiltered(flight::Ref<flight::type
       (mip += 1.0);
     }
   }
-  return flight::make_ref<WgpuBakedCube>(WgpuBakedCube{.texture = texture, .view = texture.create_view({.dimension = flight::String("cube")})});
+  return flight::make_ref<WgpuBakedCube>(WgpuBakedCube{.texture = texture, .view = texture.create_view(([&]() { flight::host_sdl::WgpuTextureViewDescriptor external_gputexture_view_descriptor_3{}; external_gputexture_view_descriptor_3.dimension = flight::String("cube"); return external_gputexture_view_descriptor_3; }()))});
 }
 
 inline flight::WeakMap<flight::Ref<flight::types::WgpuRenderState>, flight::Ref<WgpuBakePrograms>> bake_programs = flight::WeakMap<flight::Ref<flight::types::WgpuRenderState>, flight::Ref<WgpuBakePrograms>>();
@@ -295,7 +295,7 @@ inline const flight::String brdf_lut_fragment_wgsl = flight::String("\nconst PI 
 
 
 // NOT GENERATED: function bakeWgpuEnvironmentIbl -- source line 19
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+// refusal: cpp-contextual-union-missing-expression-type:multiVariant [compiler-restriction]
 //
 // The source it stood for:
 //   export function bakeWgpuEnvironmentIbl(state: WgpuRenderState, environment: Readonly<Environment>): void {
@@ -338,6 +338,6 @@ inline const flight::String brdf_lut_fragment_wgsl = flight::String("\nconst PI 
 //   // WGSL mirror of the IBL branch of scene-gl's destroyGlScene3DRuntime + destroyGlEnvironmentIblBakePrograms. Safe to call
 //   // more than once and when no bake ever ran — every slot is nullable and destroy is idempotent.
 // cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuEnvironmentIblBake.ts: contextual
-// union value type flight::host_sdl::WgpuTextureView is not a represented runtime domain
+// multiVariant construction requires expression type evidence
 
 } // namespace flight::scene3d_wgpu

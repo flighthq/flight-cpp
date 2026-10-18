@@ -16,16 +16,17 @@
 //   missing: function writeWgpuDrawUniform -- source line 965
 //   missing: function stashWgpuUvTransform -- source line 913
 //   missing: function ensureWgpuPlaceholderTextureView -- source line 556
-//   missing: function initializeWgpuMeshPipeline -- source line 763
 //   missing: function drawWgpuMeshSubset -- source line 131
 //   missing: function ensureWgpuShadowSampleBindGroup -- source line 632
 //   missing: function ensureWgpuIblSampleBindGroup -- source line 228
 //   missing: function ensureWgpuPbrSampleBindGroup -- source line 410
 #include <flight/any.hpp>
+#include <flight/boolean.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/string.hpp>
 #include <flight/structural_ref.hpp>
 #include <optional>
+#include <stdexcept>
 #include <variant>
 #include <flight/runtime.hpp>
 
@@ -87,15 +88,8 @@ namespace flight::scene3d_wgpu {
 using flight::types::WgpuRenderState;
 using flight::types::WgpuSkinningAdapter;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_BUFFER_F593A54DB11CACA9
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_BUFFER_F593A54DB11CACA9
-struct buffer_f593a54db11caca9 : public flight::ReferenceEnabled {
-  flight::Any buffer;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_BUFFER_F593A54DB11CACA9
-
 inline flight::host_sdl::WgpuBindGroup build_wgpu_material_bind_group(flight::Ref<flight::types::WgpuRenderState> state, flight::host_sdl::WgpuBindGroupLayout layout, flight::host_sdl::WgpuBuffer buffer, flight::host_sdl::WgpuSampler sampler, flight::Array<flight::host_sdl::WgpuTextureView> views) {
-  flight::Array<flight::host_sdl::WgpuBindGroupEntry> entries = flight::Array<flight::host_sdl::WgpuBindGroupEntry>{([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry{}; external_gpubind_group_entry.binding = 0.0; external_gpubind_group_entry.resource = flight::make_ref<buffer_f593a54db11caca9>(buffer_f593a54db11caca9{.buffer = buffer}); return external_gpubind_group_entry; }()), ([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_2{}; external_gpubind_group_entry_2.binding = 1.0; external_gpubind_group_entry_2.resource = sampler; return external_gpubind_group_entry_2; }())};
+  flight::Array<flight::host_sdl::WgpuBindGroupEntry> entries = flight::Array<flight::host_sdl::WgpuBindGroupEntry>{([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry{}; external_gpubind_group_entry.binding = 0.0; external_gpubind_group_entry.resource = ([&]() { flight::host_sdl::WgpuBufferBinding external_gpubuffer_binding{}; external_gpubuffer_binding.buffer = buffer; return external_gpubuffer_binding; }()); return external_gpubind_group_entry; }()), ([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_2{}; external_gpubind_group_entry_2.binding = 1.0; external_gpubind_group_entry_2.resource = sampler; return external_gpubind_group_entry_2; }())};
   {
     double i = 0.0;
     while ((i < static_cast<double>(views.size()))) {
@@ -103,12 +97,12 @@ inline flight::host_sdl::WgpuBindGroup build_wgpu_material_bind_group(flight::Re
       (i += 1.0);
     }
   }
-  return state->device.create_bind_group({.layout = layout, .entries = entries});
+  return state->device.create_bind_group(([&]() { flight::host_sdl::WgpuBindGroupDescriptor external_gpubind_group_descriptor{}; external_gpubind_group_descriptor.layout = layout; external_gpubind_group_descriptor.entries = entries; return external_gpubind_group_descriptor; }()));
 }
 
 inline flight::host_sdl::WgpuBindGroup build_wgpu_per_map_material_bind_group(flight::Ref<flight::types::WgpuRenderState> state, flight::host_sdl::WgpuBindGroupLayout layout, flight::host_sdl::WgpuBuffer buffer, flight::Array<flight::host_sdl::WgpuSampler> samplers, flight::Array<flight::host_sdl::WgpuTextureView> views) {
   const double count = static_cast<double>(views.size());
-  flight::Array<flight::host_sdl::WgpuBindGroupEntry> entries = flight::Array<flight::host_sdl::WgpuBindGroupEntry>{([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_4{}; external_gpubind_group_entry_4.binding = 0.0; external_gpubind_group_entry_4.resource = flight::make_ref<buffer_f593a54db11caca9>(buffer_f593a54db11caca9{.buffer = buffer}); return external_gpubind_group_entry_4; }())};
+  flight::Array<flight::host_sdl::WgpuBindGroupEntry> entries = flight::Array<flight::host_sdl::WgpuBindGroupEntry>{([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_4{}; external_gpubind_group_entry_4.binding = 0.0; external_gpubind_group_entry_4.resource = ([&]() { flight::host_sdl::WgpuBufferBinding external_gpubuffer_binding_2{}; external_gpubuffer_binding_2.buffer = buffer; return external_gpubuffer_binding_2; }()); return external_gpubind_group_entry_4; }())};
   {
     double i = 0.0;
     while ((i < count)) {
@@ -123,7 +117,7 @@ inline flight::host_sdl::WgpuBindGroup build_wgpu_per_map_material_bind_group(fl
       (i_2 += 1.0);
     }
   }
-  return state->device.create_bind_group({.layout = layout, .entries = entries});
+  return state->device.create_bind_group(([&]() { flight::host_sdl::WgpuBindGroupDescriptor external_gpubind_group_descriptor_2{}; external_gpubind_group_descriptor_2.layout = layout; external_gpubind_group_descriptor_2.entries = entries; return external_gpubind_group_descriptor_2; }()));
 }
 
 
@@ -394,7 +388,7 @@ inline flight::Ref<flight::types::WgpuMaterialBinding> ensure_wgpu_material_bind
   auto scene = flight::scene3d_wgpu::get_wgpu_scene_3d_runtime(state);
   std::optional<flight::Ref<flight::types::WgpuMaterialBinding>> binding = scene->material_bind_groups.get(key);
   if (!binding.has_value()) {
-    auto buffer = state->device.create_buffer({.size = uniform_byte_size, .usage = flight::bitwise_or(flight::host_sdl::wgpu_buffer_usage_uniform, flight::host_sdl::wgpu_buffer_usage_copy_dst)});
+    auto buffer = state->device.create_buffer(([&]() { flight::host_sdl::WgpuBufferDescriptor external_gpubuffer_descriptor{}; external_gpubuffer_descriptor.size = uniform_byte_size; external_gpubuffer_descriptor.usage = flight::bitwise_or(flight::host_sdl::wgpu_buffer_usage_uniform, flight::host_sdl::wgpu_buffer_usage_copy_dst); return external_gpubuffer_descriptor; }()));
     (binding = flight::make_ref<flight::types::WgpuMaterialBinding>(flight::types::WgpuMaterialBinding{.bind_group = build_wgpu_material_bind_group(state, layout, buffer, sampler, views), .buffer = buffer, .sampler = std::optional<flight::host_sdl::WgpuSampler>{sampler}, .views = std::optional<flight::Array<flight::host_sdl::WgpuTextureView>>{views.slice()}}));
     scene->material_bind_groups.set(key, binding.value());
   }
@@ -759,114 +753,9 @@ inline flight::host_sdl::WgpuTextureView resolve_wgpu_material_texture_view(flig
   return ([&]() -> flight::host_sdl::WgpuTextureView { auto nullish_coalesce_left = (texture.has_value() ? ([&]() -> std::optional<flight::host_sdl::WgpuTextureView> { auto optional_chain_receiver = flight::render_wgpu::resolve_wgpu_texture(state, texture.value(), std::nullopt, std::nullopt); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->view; }()) : nullptr); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return ensure_wgpu_placeholder_texture_view(state); }());
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_SHADER_LOCATION_OFFSET_FORMAT_4777B23B31BB316F
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_SHADER_LOCATION_OFFSET_FORMAT_4777B23B31BB316F
-struct shader_location_offset_format_4777b23b31bb316f : public flight::ReferenceEnabled {
-  double shader_location;
-  double offset;
-  flight::String format;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_SHADER_LOCATION_OFFSET_FORMAT_4777B23B31BB316F
+inline flight::Array<flight::host_sdl::WgpuVertexBufferLayout> vertex_buffer_layouts_flight_value_variable__u000056__u000045__u000052__u000054__u000045__u000058__u00005f__u000042__u000055__u000046__u000046__u000045__u000052__u00005f__u00004c__u000041__u000059__u00004f__u000055__u000054__u000053__flight_private_801570fd1941d2b9 = flight::Array<flight::host_sdl::WgpuVertexBufferLayout>{([]() { flight::host_sdl::WgpuVertexBufferLayout external_gpuvertex_buffer_layout{}; external_gpuvertex_buffer_layout.array_stride = 48.0; external_gpuvertex_buffer_layout.attributes = flight::Array<flight::host_sdl::WgpuVertexAttribute>{([]() { flight::host_sdl::WgpuVertexAttribute external_gpuvertex_attribute{}; external_gpuvertex_attribute.shader_location = 0.0; external_gpuvertex_attribute.offset = 0.0; external_gpuvertex_attribute.format = flight::String("float32x3"); return external_gpuvertex_attribute; }()), ([]() { flight::host_sdl::WgpuVertexAttribute external_gpuvertex_attribute_2{}; external_gpuvertex_attribute_2.shader_location = 1.0; external_gpuvertex_attribute_2.offset = 12.0; external_gpuvertex_attribute_2.format = flight::String("float32x3"); return external_gpuvertex_attribute_2; }()), ([]() { flight::host_sdl::WgpuVertexAttribute external_gpuvertex_attribute_3{}; external_gpuvertex_attribute_3.shader_location = 2.0; external_gpuvertex_attribute_3.offset = 24.0; external_gpuvertex_attribute_3.format = flight::String("float32x4"); return external_gpuvertex_attribute_3; }()), ([]() { flight::host_sdl::WgpuVertexAttribute external_gpuvertex_attribute_4{}; external_gpuvertex_attribute_4.shader_location = 3.0; external_gpuvertex_attribute_4.offset = 40.0; external_gpuvertex_attribute_4.format = flight::String("float32x2"); return external_gpuvertex_attribute_4; }())}; return external_gpuvertex_buffer_layout; }())};
 
-inline flight::Array<flight::host_sdl::WgpuVertexBufferLayout> vertex_buffer_layouts_flight_value_variable__u000056__u000045__u000052__u000054__u000045__u000058__u00005f__u000042__u000055__u000046__u000046__u000045__u000052__u00005f__u00004c__u000041__u000059__u00004f__u000055__u000054__u000053__flight_private_801570fd1941d2b9 = flight::Array<flight::host_sdl::WgpuVertexBufferLayout>{([]() { flight::host_sdl::WgpuVertexBufferLayout external_gpuvertex_buffer_layout{}; external_gpuvertex_buffer_layout.array_stride = 48.0; external_gpuvertex_buffer_layout.attributes = flight::Array{flight::make_ref<shader_location_offset_format_4777b23b31bb316f>(shader_location_offset_format_4777b23b31bb316f{.shader_location = 0.0, .offset = 0.0, .format = flight::String("float32x3")}), flight::make_ref<shader_location_offset_format_4777b23b31bb316f>(shader_location_offset_format_4777b23b31bb316f{.shader_location = 1.0, .offset = 12.0, .format = flight::String("float32x3")}), flight::make_ref<shader_location_offset_format_4777b23b31bb316f>(shader_location_offset_format_4777b23b31bb316f{.shader_location = 2.0, .offset = 24.0, .format = flight::String("float32x4")}), flight::make_ref<shader_location_offset_format_4777b23b31bb316f>(shader_location_offset_format_4777b23b31bb316f{.shader_location = 3.0, .offset = 40.0, .format = flight::String("float32x2")})}; return external_gpuvertex_buffer_layout; }())};
-
-inline flight::host_sdl::WgpuVertexBufferLayout instance_buffer_layout = ([]() { flight::host_sdl::WgpuVertexBufferLayout external_gpuvertex_buffer_layout_2{}; external_gpuvertex_buffer_layout_2.array_stride = instance_record_bytes; external_gpuvertex_buffer_layout_2.step_mode = flight::String("instance"); external_gpuvertex_buffer_layout_2.attributes = flight::Array{flight::make_ref<shader_location_offset_format_4777b23b31bb316f>(shader_location_offset_format_4777b23b31bb316f{.shader_location = 6.0, .offset = 0.0, .format = flight::String("float32x4")}), flight::make_ref<shader_location_offset_format_4777b23b31bb316f>(shader_location_offset_format_4777b23b31bb316f{.shader_location = 7.0, .offset = 16.0, .format = flight::String("float32x4")}), flight::make_ref<shader_location_offset_format_4777b23b31bb316f>(shader_location_offset_format_4777b23b31bb316f{.shader_location = 8.0, .offset = 32.0, .format = flight::String("float32x4")}), flight::make_ref<shader_location_offset_format_4777b23b31bb316f>(shader_location_offset_format_4777b23b31bb316f{.shader_location = 9.0, .offset = 48.0, .format = flight::String("float32x4")}), flight::make_ref<shader_location_offset_format_4777b23b31bb316f>(shader_location_offset_format_4777b23b31bb316f{.shader_location = 10.0, .offset = 64.0, .format = flight::String("float32x4")})}; return external_gpuvertex_buffer_layout_2; }());
-
-
-// NOT GENERATED: function initializeWgpuMeshPipeline -- source line 763
-// refusal: cpp-union-runtime-domains-erased [target-runtime]
-//
-// The source it stood for:
-//   export function initializeWgpuMeshPipeline(
-//     out: EntityConstruction<WgpuMeshPipeline>,
-//     state: WgpuRenderState,
-//     options: Readonly<{
-//       blended?: boolean;
-//       doubleSided: boolean;
-//       extraBindGroupLayout?: GPUBindGroupLayout;
-//       format: GPUTextureFormat;
-//       iblBindGroupLayout?: GPUBindGroupLayout;
-//       materialBindGroupLayout: GPUBindGroupLayout;
-//       module: GPUShaderModule;
-//       pbrSampleBindGroupLayout?: GPUBindGroupLayout;
-//       shadowBindGroupLayout?: GPUBindGroupLayout;
-//       skinned?: boolean;
-//       topology?: GPUPrimitiveTopology;
-//     }>,
-//   ): void {
-//     const device = state.device;
-//     const layouts = ensureWgpuScene3DLayouts(state);
-//     const sceneRuntime = getWgpuScene3DRuntime(state);
-//     const skinning = sceneRuntime.skinningAdapter as WgpuSkinningAdapter | null;
-//     const blendMode = options.blended ? (sceneRuntime.activeBlendMode ?? BlendMode.Normal) : null;
-//     const bindGroupLayouts: GPUBindGroupLayout[] = [
-//       layouts.frameBindGroupLayout,
-//       options.skinned && skinning !== null ? skinning.getMeshDrawLayout(state) : layouts.drawBindGroupLayout,
-//       options.materialBindGroupLayout,
-//     ];
-//     if (options.extraBindGroupLayout !== undefined) {
-//       bindGroupLayouts.push(options.extraBindGroupLayout);
-//     }
-//     if (options.extraBindGroupLayout === undefined && options.pbrSampleBindGroupLayout !== undefined) {
-//       bindGroupLayouts.push(options.pbrSampleBindGroupLayout);
-//     } else if (options.extraBindGroupLayout === undefined) {
-//       // Group order is positional: shadow (group 3) then IBL (group 4). Prefer pbrSampleBindGroupLayout
-//       // for new PBR pipelines so they fit WebGPU's minimum maxBindGroups=4.
-//       if (options.shadowBindGroupLayout !== undefined) bindGroupLayouts.push(options.shadowBindGroupLayout);
-//       if (options.iblBindGroupLayout !== undefined) bindGroupLayouts.push(options.iblBindGroupLayout);
-//     }
-//     const layout = device.createPipelineLayout({ bindGroupLayouts });
-//     const pipeline = device.createRenderPipeline({
-//       layout,
-//       vertex: {
-//         module: options.module,
-//         entryPoint: 'vs_main',
-//         buffers:
-//           options.skinned && skinning !== null
-//             ? [...skinning.vertexBufferLayouts, INSTANCE_BUFFER_LAYOUT]
-//             : [...VERTEX_BUFFER_LAYOUTS, INSTANCE_BUFFER_LAYOUT],
-//       },
-//       fragment: {
-//         module: options.module,
-//         entryPoint: 'fs_main',
-//         targets: [
-//           {
-//             format: options.format,
-//             blend: blendMode === null ? undefined : getWgpuBlendState(blendMode),
-//           },
-//         ],
-//       },
-//       primitive: {
-//         topology: options.topology ?? 'triangle-list',
-//         // A mirrored world matrix reverses triangle winding, so the same geometry presents its other face.
-//         // WebGL flips frontFace per draw; here the flip is pipeline state, keyed into the cache above.
-//         frontFace: getWgpuScene3DRuntime(state).activeMirroredRun ? 'cw' : 'ccw',
-//         cullMode: options.doubleSided ? 'none' : 'back',
-//       },
-//       depthStencil: { format: DEPTH_STENCIL_FORMAT, depthWriteEnabled: !options.blended, depthCompare: 'less' },
-//     });
-//     out.hasIblGroup = options.iblBindGroupLayout !== undefined;
-//     out.hasPbrSampleGroup = options.pbrSampleBindGroupLayout !== undefined;
-//     out.hasShadowGroup = options.shadowBindGroupLayout !== undefined;
-//     out.materialBindGroupLayout = options.materialBindGroupLayout;
-//     out.pipeline = pipeline;
-//     out.skinned = options.skinned === true;
-//   }
-//   
-//   // Whether a cached material binding must rebuild its GPUBindGroup because a freshly-resolved view or the
-//   // primary sampler no longer matches what it was built from. `resolveWgpuMaterialTextureView` is the
-//   // invalidation seam: a map swap, an unready→ready transition, a ready→ready image replacement, or an
-//   // Image version bump each yield a different view identity, so identity comparison alone catches
-//   // every live material-map mutation with no parallel epoch bookkeeping. `sampler` is the shared primary
-//   // sampler (getWgpuMaterialSampler of the diffuse/base-color map), so a change to the primary map's
-//   // sampler trips a rebuild; a non-primary map's per-Texture sampler is not bound and does not (the
-//   // shared-primary-sampler contract). A binding with no cached views always rebuilds. Allocation-free —
-//   // callers pass a reused scratch as `views`.
-// cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuMeshPipeline.ts: C++ runtime
-// contract maps distinct union domains to one carrier without a discriminator or checked projection
-// (GPUPrimitiveTopology | primitive -> flight::String); give the domains distinguishable key, element, or member
-// types so each reaches a carrier of its own -- a union of two declarations that differ only in name is one
-// carrier whatever the emitter does -- or provide that runtime contract
+inline flight::host_sdl::WgpuVertexBufferLayout instance_buffer_layout = ([]() { flight::host_sdl::WgpuVertexBufferLayout external_gpuvertex_buffer_layout_2{}; external_gpuvertex_buffer_layout_2.array_stride = instance_record_bytes; external_gpuvertex_buffer_layout_2.step_mode = flight::String("instance"); external_gpuvertex_buffer_layout_2.attributes = flight::Array<flight::host_sdl::WgpuVertexAttribute>{([]() { flight::host_sdl::WgpuVertexAttribute external_gpuvertex_attribute_5{}; external_gpuvertex_attribute_5.shader_location = 6.0; external_gpuvertex_attribute_5.offset = 0.0; external_gpuvertex_attribute_5.format = flight::String("float32x4"); return external_gpuvertex_attribute_5; }()), ([]() { flight::host_sdl::WgpuVertexAttribute external_gpuvertex_attribute_6{}; external_gpuvertex_attribute_6.shader_location = 7.0; external_gpuvertex_attribute_6.offset = 16.0; external_gpuvertex_attribute_6.format = flight::String("float32x4"); return external_gpuvertex_attribute_6; }()), ([]() { flight::host_sdl::WgpuVertexAttribute external_gpuvertex_attribute_7{}; external_gpuvertex_attribute_7.shader_location = 8.0; external_gpuvertex_attribute_7.offset = 32.0; external_gpuvertex_attribute_7.format = flight::String("float32x4"); return external_gpuvertex_attribute_7; }()), ([]() { flight::host_sdl::WgpuVertexAttribute external_gpuvertex_attribute_8{}; external_gpuvertex_attribute_8.shader_location = 9.0; external_gpuvertex_attribute_8.offset = 48.0; external_gpuvertex_attribute_8.format = flight::String("float32x4"); return external_gpuvertex_attribute_8; }()), ([]() { flight::host_sdl::WgpuVertexAttribute external_gpuvertex_attribute_9{}; external_gpuvertex_attribute_9.shader_location = 10.0; external_gpuvertex_attribute_9.offset = 64.0; external_gpuvertex_attribute_9.format = flight::String("float32x4"); return external_gpuvertex_attribute_9; }())}; return external_gpuvertex_buffer_layout_2; }());
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_BLENDED_DOUBLE_SIDED_EXTRA_BIND_GROUP_LAYOUT_FORMAT_IBL_BIND_GROUP_LAYOUT_MATERIAL_BIND_GROUP_LAYOUT_MODULE_PBR_SAMPLE_BIND_GROUP_LAYOUT_SHADOW_BIND_GROUP_LAYOUT_SKINNED_TOPOLOGY_7D2A6CDCFFFA81C0
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_BLENDED_DOUBLE_SIDED_EXTRA_BIND_GROUP_LAYOUT_FORMAT_IBL_BIND_GROUP_LAYOUT_MATERIAL_BIND_GROUP_LAYOUT_MODULE_PBR_SAMPLE_BIND_GROUP_LAYOUT_SHADOW_BIND_GROUP_LAYOUT_SKINNED_TOPOLOGY_7D2A6CDCFFFA81C0
@@ -885,6 +774,39 @@ struct blended_double_sided_extra_bind_group_layout_format_ibl_bind_group_layout
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_BLENDED_DOUBLE_SIDED_EXTRA_BIND_GROUP_LAYOUT_FORMAT_IBL_BIND_GROUP_LAYOUT_MATERIAL_BIND_GROUP_LAYOUT_MODULE_PBR_SAMPLE_BIND_GROUP_LAYOUT_SHADOW_BIND_GROUP_LAYOUT_SKINNED_TOPOLOGY_7D2A6CDCFFFA81C0
 
+inline void initialize_wgpu_mesh_pipeline(flight::types::EntityConstruction<flight::Ref<flight::types::WgpuMeshPipeline>> out, flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<blended_double_sided_extra_bind_group_layout_format_ibl_bind_group_layout_material_bind_group_layout_module_pbr_sample_bind_group_layout_shadow_bind_group_layout_skinned_topology_7d2a6cdcfffa81c0>>>> options) {
+  flight::host_sdl::WgpuDevice device = state->device;
+  auto layouts = ensure_wgpu_scene_3d_layouts(state);
+  auto scene_runtime = flight::scene3d_wgpu::get_wgpu_scene_3d_runtime(state);
+  auto skinning = ([&]() -> std::optional<flight::Ref<flight::types::WgpuSkinningAdapter>> { const auto& erased_value_slot = scene_runtime->skinning_adapter; if (!erased_value_slot.has_value()) throw std::logic_error("an absent erased value is not represented by the asserted union"); const auto& erased_value = erased_value_slot.value(); if (static_cast<bool>(erased_value.object_if<flight::types::WgpuSkinningAdapter>())) return std::optional<flight::Ref<flight::types::WgpuSkinningAdapter>>{erased_value.object_if<flight::types::WgpuSkinningAdapter>()}; if (erased_value.is_nullish()) return std::nullopt; throw std::logic_error("erased value holds no alternative this union represents"); }());
+  const std::optional<flight::String> blend_mode_2 = (flight::to_boolean(flight::row_get<flight::RowKey<"blended">>(options)) ? std::optional{([&]() -> std::optional<flight::String> { auto nullish_coalesce_left = scene_runtime->active_blend_mode; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return std::optional<flight::String>{flight::types::blend_mode->normal}; }())} : std::nullopt);
+  flight::Array<flight::host_sdl::WgpuBindGroupLayout> bind_group_layouts = flight::Array<flight::host_sdl::WgpuBindGroupLayout>{layouts->frame_bind_group_layout, (flight::to_boolean((flight::row_get<flight::RowKey<"skinned">>(options) && skinning.has_value())) ? skinning.value()->get_mesh_draw_layout(state) : layouts->draw_bind_group_layout), flight::row_get<flight::RowKey<"materialBindGroupLayout">>(options)};
+  if (flight::row_get<flight::RowKey<"extraBindGroupLayout">>(options).has_value()) {
+    bind_group_layouts.push(flight::row_get<flight::RowKey<"extraBindGroupLayout">>(options));
+  }
+  if ((!flight::row_get<flight::RowKey<"extraBindGroupLayout">>(options).has_value() && flight::row_get<flight::RowKey<"pbrSampleBindGroupLayout">>(options).has_value())) {
+    bind_group_layouts.push(flight::row_get<flight::RowKey<"pbrSampleBindGroupLayout">>(options));
+  }
+  else {
+    if (!flight::row_get<flight::RowKey<"extraBindGroupLayout">>(options).has_value()) {
+      if (flight::row_get<flight::RowKey<"shadowBindGroupLayout">>(options).has_value()) {
+        bind_group_layouts.push(flight::row_get<flight::RowKey<"shadowBindGroupLayout">>(options));
+      }
+      if (flight::row_get<flight::RowKey<"iblBindGroupLayout">>(options).has_value()) {
+        bind_group_layouts.push(flight::row_get<flight::RowKey<"iblBindGroupLayout">>(options));
+      }
+    }
+  }
+  auto layout = device.create_pipeline_layout(([&]() { flight::host_sdl::WgpuPipelineLayoutDescriptor external_gpupipeline_layout_descriptor{}; external_gpupipeline_layout_descriptor.bind_group_layouts = bind_group_layouts; return external_gpupipeline_layout_descriptor; }()));
+  auto pipeline = device.create_render_pipeline(([&]() { flight::host_sdl::WgpuRenderPipelineDescriptor external_gpurender_pipeline_descriptor{}; external_gpurender_pipeline_descriptor.layout = layout; external_gpurender_pipeline_descriptor.vertex = ([&]() { flight::host_sdl::WgpuVertexState external_gpuvertex_state{}; external_gpuvertex_state.module = flight::row_get<flight::RowKey<"module">>(options); external_gpuvertex_state.entry_point = flight::String("vs_main"); external_gpuvertex_state.buffers = (flight::to_boolean((flight::row_get<flight::RowKey<"skinned">>(options) && skinning.has_value())) ? ([&]() { flight::Array<flight::host_sdl::WgpuVertexBufferLayout> array_spread_result; for (const auto& array_spread_item : skinning.value()->vertex_buffer_layouts) { array_spread_result.push(array_spread_item); } array_spread_result.push(instance_buffer_layout); return array_spread_result; }()) : ([&]() { flight::Array<flight::host_sdl::WgpuVertexBufferLayout> array_spread_result_2; for (const auto& array_spread_item_2 : vertex_buffer_layouts_flight_value_variable__u000056__u000045__u000052__u000054__u000045__u000058__u00005f__u000042__u000055__u000046__u000046__u000045__u000052__u00005f__u00004c__u000041__u000059__u00004f__u000055__u000054__u000053__flight_private_801570fd1941d2b9) { array_spread_result_2.push(array_spread_item_2); } array_spread_result_2.push(instance_buffer_layout); return array_spread_result_2; }())); return external_gpuvertex_state; }()); external_gpurender_pipeline_descriptor.fragment = ([&]() { flight::host_sdl::WgpuFragmentState external_gpufragment_state{}; external_gpufragment_state.module = flight::row_get<flight::RowKey<"module">>(options); external_gpufragment_state.entry_point = flight::String("fs_main"); external_gpufragment_state.targets = flight::Array<flight::host_sdl::WgpuColorTargetState>{([&]() { flight::host_sdl::WgpuColorTargetState external_gpucolor_target_state{}; external_gpucolor_target_state.format = flight::row_get<flight::RowKey<"format">>(options); if (!(!blend_mode_2.has_value())) { external_gpucolor_target_state.blend = flight::render_wgpu::get_wgpu_blend_state(std::optional<flight::String>{blend_mode_2.value()}); } return external_gpucolor_target_state; }())}; return external_gpufragment_state; }()); external_gpurender_pipeline_descriptor.primitive = ([&]() { flight::host_sdl::WgpuPrimitiveState external_gpuprimitive_state{}; external_gpuprimitive_state.topology = ([&]() -> flight::String { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"topology">>(options); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("triangle-list"); }()); external_gpuprimitive_state.front_face = (flight::scene3d_wgpu::get_wgpu_scene_3d_runtime(state)->active_mirrored_run ? flight::String("cw") : flight::String("ccw")); external_gpuprimitive_state.cull_mode = (flight::row_get<flight::RowKey<"doubleSided">>(options) ? flight::String("none") : flight::String("back")); return external_gpuprimitive_state; }()); external_gpurender_pipeline_descriptor.depth_stencil = ([&]() { flight::host_sdl::WgpuDepthStencilState external_gpudepth_stencil_state{}; external_gpudepth_stencil_state.format = depth_stencil_format_flight_value_variable__u000044__u000045__u000050__u000054__u000048__u00005f__u000053__u000054__u000045__u00004e__u000043__u000049__u00004c__u00005f__u000046__u00004f__u000052__u00004d__u000041__u000054__flight_private_801570fd1941d2b9; external_gpudepth_stencil_state.depth_write_enabled = !flight::to_boolean(flight::row_get<flight::RowKey<"blended">>(options)); external_gpudepth_stencil_state.depth_compare = flight::String("less"); return external_gpudepth_stencil_state; }()); return external_gpurender_pipeline_descriptor; }()));
+  flight::row_set<flight::RowKey<"hasIblGroup">>(out, flight::row_get<flight::RowKey<"iblBindGroupLayout">>(options).has_value());
+  flight::row_set<flight::RowKey<"hasPbrSampleGroup">>(out, flight::row_get<flight::RowKey<"pbrSampleBindGroupLayout">>(options).has_value());
+  flight::row_set<flight::RowKey<"hasShadowGroup">>(out, flight::row_get<flight::RowKey<"shadowBindGroupLayout">>(options).has_value());
+  flight::row_set<flight::RowKey<"materialBindGroupLayout">>(out, flight::row_get<flight::RowKey<"materialBindGroupLayout">>(options));
+  flight::row_set<flight::RowKey<"pipeline">>(out, pipeline);
+  flight::row_set<flight::RowKey<"skinned">>(out, (flight::row_get<flight::RowKey<"skinned">>(options) == true));
+}
+
 inline flight::Ref<flight::types::WgpuMeshPipeline> create_wgpu_mesh_pipeline(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<blended_double_sided_extra_bind_group_layout_format_ibl_bind_group_layout_material_bind_group_layout_module_pbr_sample_bind_group_layout_shadow_bind_group_layout_skinned_topology_7d2a6cdcfffa81c0>>>> options) {
   flight::types::EntityConstruction<flight::Ref<flight::types::WgpuMeshPipeline>> out = flight::entity::allocate_entity<flight::Ref<flight::types::WgpuMeshPipeline>>();
   initialize_wgpu_mesh_pipeline(out, state, options);
@@ -899,20 +821,12 @@ inline flight::Ref<flight::types::Vector3> scratch_camera_position = flight::mak
 
 inline flight::Float32Array frame_scratch_flight_value_variable__u00005f_frame_u000053_cratch_flight_private_801570fd1941d2b9 = flight::Float32Array((frame_uniform_bytes_flight_value_variable__u000046__u000052__u000041__u00004d__u000045__u00005f__u000055__u00004e__u000049__u000046__u00004f__u000052__u00004d__u00005f__u000042__u000059__u000054__u000045__u000053__flight_private_801570fd1941d2b9 / 4.0));
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_BINDING_RESOURCE_A5B79D316BF17DB5
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_BINDING_RESOURCE_A5B79D316BF17DB5
-struct binding_resource_a5b79d316bf17db5 : public flight::ReferenceEnabled {
-  double binding;
-  flight::Ref<buffer_f593a54db11caca9> resource;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_BINDING_RESOURCE_A5B79D316BF17DB5
-
 inline void write_wgpu_frame_uniform(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>> camera, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DLightBlock>>>> lights) {
   auto scene = flight::scene3d_wgpu::get_wgpu_scene_3d_runtime(state);
   std::optional<flight::Ref<flight::types::WgpuScene3DFrameBinding>> binding = scene->frame_bindings.get(lights.shared_object());
   if (!binding.has_value()) {
-    auto buffer = state->device.create_buffer({.size = frame_uniform_bytes_flight_value_variable__u000046__u000052__u000041__u00004d__u000045__u00005f__u000055__u00004e__u000049__u000046__u00004f__u000052__u00004d__u00005f__u000042__u000059__u000054__u000045__u000053__flight_private_801570fd1941d2b9, .usage = flight::bitwise_or(flight::host_sdl::wgpu_buffer_usage_uniform, flight::host_sdl::wgpu_buffer_usage_copy_dst)});
-    auto bind_group = state->device.create_bind_group({.layout = ensure_wgpu_scene_3d_layouts(state)->frame_bind_group_layout, .entries = flight::Array{flight::make_ref<binding_resource_a5b79d316bf17db5>(binding_resource_a5b79d316bf17db5{.binding = 0.0, .resource = flight::make_ref<buffer_f593a54db11caca9>(buffer_f593a54db11caca9{.buffer = buffer})})}});
+    auto buffer = state->device.create_buffer(([&]() { flight::host_sdl::WgpuBufferDescriptor external_gpubuffer_descriptor_3{}; external_gpubuffer_descriptor_3.size = frame_uniform_bytes_flight_value_variable__u000046__u000052__u000041__u00004d__u000045__u00005f__u000055__u00004e__u000049__u000046__u00004f__u000052__u00004d__u00005f__u000042__u000059__u000054__u000045__u000053__flight_private_801570fd1941d2b9; external_gpubuffer_descriptor_3.usage = flight::bitwise_or(flight::host_sdl::wgpu_buffer_usage_uniform, flight::host_sdl::wgpu_buffer_usage_copy_dst); return external_gpubuffer_descriptor_3; }()));
+    auto bind_group = state->device.create_bind_group(([&]() { flight::host_sdl::WgpuBindGroupDescriptor external_gpubind_group_descriptor_3{}; external_gpubind_group_descriptor_3.layout = ensure_wgpu_scene_3d_layouts(state)->frame_bind_group_layout; external_gpubind_group_descriptor_3.entries = flight::Array<flight::host_sdl::WgpuBindGroupEntry>{([&]() { flight::host_sdl::WgpuBindGroupEntry external_gpubind_group_entry_7{}; external_gpubind_group_entry_7.binding = 0.0; external_gpubind_group_entry_7.resource = ([&]() { flight::host_sdl::WgpuBufferBinding external_gpubuffer_binding_3{}; external_gpubuffer_binding_3.buffer = buffer; return external_gpubuffer_binding_3; }()); return external_gpubind_group_entry_7; }())}; return external_gpubind_group_descriptor_3; }()));
     (binding = flight::make_ref<flight::types::WgpuScene3DFrameBinding>(flight::types::WgpuScene3DFrameBinding{.bind_group = bind_group, .buffer = buffer}));
     scene->frame_bindings.set(lights.shared_object(), binding.value());
   }

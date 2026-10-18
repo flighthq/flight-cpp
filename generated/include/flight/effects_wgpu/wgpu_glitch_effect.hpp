@@ -5,6 +5,7 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: variable (binding) -- source line 42
 #include <flight/any.hpp>
+#include <flight/callable.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -56,7 +57,7 @@ inline void apply_glitch_effect_to_wgpu(flight::Ref<flight::types::WgpuRenderSta
   const double seed = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"seed">>(effect); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
   auto resolution = flight::effects_wgpu::get_wgpu_effect_logical_resolution(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuRenderState>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::WgpuRenderState>>>>(state)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>>>(source));
   flight::Ref<entity_runtime_key_pipeline_blend_mode_compile_for_format_variants_91cff304488b2af0> pipeline = flight::effects_wgpu::get_wgpu_effect_pipeline(state, flight::String("stylization.glitch"), glitch_fragment_wgsl, flight::String("replace"));
-  flight::effects_wgpu::draw_wgpu_effect_pass(state, flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(dest)}, pipeline, [=](flight::Float32Array f32, flight::Int32Array ignored_callback_argument) {
+  flight::effects_wgpu::draw_wgpu_effect_pass(state, flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(source), std::optional<flight::Ref<flight::types::WgpuTextureRenderTarget>>{flight::structural_ref_cast<flight::Ref<flight::types::WgpuTextureRenderTarget>>(dest)}, pipeline, flight::Function<void(flight::Float32Array, flight::Int32Array)>{[=](flight::Float32Array f32, flight::Int32Array ignored_callback_argument) {
   (void)ignored_callback_argument;
   ([&]() { auto&& typed_array = f32; const auto typed_index = 0.0; const auto typed_value = intensity; return typed_array.set_index(typed_index, typed_value); }());
   ([&]() { auto&& typed_array_2 = f32; const auto typed_index_2 = 1.0; const auto typed_value_2 = block_size; return typed_array_2.set_index(typed_index_2, typed_value_2); }());
@@ -64,7 +65,7 @@ inline void apply_glitch_effect_to_wgpu(flight::Ref<flight::types::WgpuRenderSta
   ([&]() { auto&& typed_array_4 = f32; const auto typed_index_4 = 3.0; const auto typed_value_4 = seed; return typed_array_4.set_index(typed_index_4, typed_value_4); }());
   ([&]() { auto&& typed_array_5 = f32; const auto typed_index_5 = 4.0; const auto typed_value_5 = resolution->width; return typed_array_5.set_index(typed_index_5, typed_value_5); }());
   ([&]() { auto&& typed_array_6 = f32; const auto typed_index_6 = 5.0; const auto typed_value_6 = resolution->height; return typed_array_6.set_index(typed_index_6, typed_value_6); }());
-});
+}});
 }
 
 

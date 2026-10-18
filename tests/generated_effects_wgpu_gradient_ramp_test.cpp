@@ -1,12 +1,10 @@
 // Focused parity for @flighthq/effects-wgpu's wgpuEffectGradientRamp.ts at Flight a627849.
-// CPU ramp construction remains emitted code. The SDL host profile cannot upload a WebGPU texture,
-// so the narrow override evaluates that CPU work and then fails without fabricating or caching a
-// texture. WebGPU texture creation and queue upload remain explicit host-profile debt.
-//
-// MUTATION SENSITIVITY, measured 2026-10-14 against isolated one-at-a-time override changes:
-// returning a fabricated default texture instead of throwing produced six failures, and skipping
-// CPU ramp construction before the profile boundary produced one. Each mutant was restored after
-// the measurement.
+// The whole module is emitted code: no override shadows it. Its texture descriptor and both writeTexture
+// dictionaries are constructed as the SDL WebGPU profile's typed descriptors
+// (source-patches/compiler-external-object-field-literal-type.patch), so the header compiles, and the
+// call reaches the runtime's own host operation. The SDL host binds no WebGPU provider, so that operation
+// reports itself unavailable: CPU ramp construction runs first, then createTexture throws, and nothing is
+// fabricated or cached. This proves boundary availability, not a GPU texture upload.
 #include <flight/effects_wgpu/wgpu_effect_gradient_ramp.hpp>
 
 #include <iostream>
@@ -39,9 +37,9 @@ template <typename Function>
 bool throws_profile_error(Function&& function) {
   try {
     function();
-  } catch (const flight::Error& error) {
+  } catch (const std::logic_error& error) {
     return std::string(error.what()) ==
-           "effects-wgpu: gradient texture upload is unavailable in this profile";
+           "flight::host_sdl WebGPU profile does not implement createTexture";
   } catch (...) {
   }
   return false;
