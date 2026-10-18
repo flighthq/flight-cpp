@@ -4622,8 +4622,7 @@
       "unblocks": "The 18-header nullable-array-element cluster (other-52e846a6): the skeleton2d animation target binder and the timeline/slot handlers that reach it (DragonBones and Spine), once regenerated.",
       "expires": "when upstream lifts a single-sentinel optional into a dual-sentinel carrier using the source union's own sentinel (docs/compiler-requests/nullable-array-element-into-dual-sentinel-slot.md).",
       "appliedOn": "2026-10-18",
-<<<<<<< HEAD
-      "verification": "New cppNullableElementDualSentinel.test.ts: 3 pass (nullable element via conditional and assignment lifts with the Null arm; an undefined-only element lifts to the Undefined arm; a required nullable optional destination keeps the direct write). The patch applies at its stack position: all compiler patches in order, stacked build exit 0, union-plan regressions pass. Scratch emission is exact and a runtime consumer proves the behavior: present element keeps the same owner, null element and out-of-range select Null, and the if/else path matches. Scoped regeneration and the public timeline/slot consumer are pending a generation slot."
+      "verification": "New cppNullableElementDualSentinel.test.ts: 4 pass (the source-guarded conditional lifts with the Null arm; an undefined-only guarded element maps to the Undefined arm while the explicit null fallback stays Null; a required nullable optional destination keeps the direct write; an unguarded conditional and a bare assignment are NOT lifted). The patch applies at its stack position: all compiler patches in order, stacked build exit 0, union-plan regressions pass. Scratch emission is exact and a runtime consumer on the guarded form proves the behavior: present element keeps the same owner, a null element and the guarded out-of-range fallback select Null. The statement-guard (if/else) form is not lifted and remains a follow-on, recorded in the request. Scoped regeneration and the public timeline/slot consumer are pending a generation slot."
     },
     {
       "id": "loader-finish-entity-factory-return",
@@ -4641,9 +4640,7 @@
       "unblocks": "createResourceLoader returning the public type from the same allocation, and the public factory consumer.",
       "expires": "when the C++ emitter emits exact-owner finishing for a construction-row return without the explicit source call.",
       "appliedOn": "2026-10-18"
-=======
-      "verification": "New cppNullableElementDualSentinel.test.ts: 4 pass (the source-guarded conditional lifts with the Null arm; an undefined-only guarded element maps to the Undefined arm while the explicit null fallback stays Null; a required nullable optional destination keeps the direct write; an unguarded conditional and a bare assignment are NOT lifted). The patch applies at its stack position: all compiler patches in order, stacked build exit 0, union-plan regressions pass. Scratch emission is exact and a runtime consumer on the guarded form proves the behavior: present element keeps the same owner, a null element and the guarded out-of-range fallback select Null. The statement-guard (if/else) form is not lifted and remains a follow-on, recorded in the request. Scoped regeneration and the public timeline/slot consumer are pending a generation slot."
->>>>>>> 2f557ed1 (compiler: bound the nullable-element lift to the source bounds guard)
+
     }
   ]
 }
