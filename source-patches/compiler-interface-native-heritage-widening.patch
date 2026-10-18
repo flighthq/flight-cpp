@@ -413,8 +413,7 @@ index 145a6da..0d8267d 100644
    const recursiveTypeAliasBindingIds = collectCppRecursiveTypeAliasBindingIds(module, declarationDependencies);
    const mutuallyRecursiveFunctionGroups = collectCppMutuallyRecursiveFunctionGroups(module, declarationDependencies);
    const forwardDeclaredFunctionBindingIds = new Set(
-@@ -646,6 +652,9 @@ function emitIrModuleCppWithContext(
-   );
+@@ -647,5 +653,8 @@ function emitIrModuleCppWithContext(
    const context: EmitContext = {
      activeDependentCallablePackIds: new Set(),
 +    interfaceInheritanceModules: new Map(),
