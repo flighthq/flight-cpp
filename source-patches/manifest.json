@@ -4946,6 +4946,22 @@
       "expires": "when upstream infers finishEntity's type argument from its argument in every target, or the backend stops using the contextual return type for this call",
       "appliedOn": "2026-10-18",
       "verification": "New cppCompilerBackend test 'finishes a derived construction owner and widens the public return instead of specializing to it': the unstated call emits finish_entity<Ref<Internal>>(out), never the public return type; no replacement owner; one construction evaluation per factory; an explicit <Public> argument still specializes as stated. The existing same-return identity test still passes. Patch applies and reverts at its stack position."
+    },
+    {
+      "id": "compiler-record-missing-key-falsiness-guard",
+      "dependency": "flight-compiler",
+      "patch": "compiler-record-missing-key-falsiness-guard.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppRecordMissingKeyGuard.test.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "diagnostic",
+      "refusal": "not a refusal: a run-time absence bug. `const entry = DEFAULTS[kind]; if (!entry) return ...;` over a typed Record whose value type is NOT erased and has no absence emits `defaults.get(kind).value()`, which throws bad_optional_access for a key the dictionary does not hold, where the source reads undefined and takes the guard (effects normalizeEffect/getEffectDefaults for an unknown kind). compiler-typed-record-missing-key covers erased value types only; a `| undefined` annotation does not change the emission.",
+      "rewrite": "For exactly the immediate pair `const x = rec[k];` followed by `if (!x) <abrupt>` with no else, over a flight::Record whose value type is neither erased nor absence-capable, and whose abrupt branch does not read x: evaluate the lookup once into `auto x_record_lookup = rec.get(k);`, run the guard's branch when it is disengaged, then bind `x = (*x_record_lookup)` and emit the original guard unchanged. Comparisons with undefined/null keep their existing optional-storage lowering; every other shape is unchanged.",
+      "equivalence": "JavaScript evaluates `rec[k]` once; a missing key yields undefined, which is falsy, so `!x` takes the abrupt branch. The emitted lookup is evaluated once, a disengaged result takes the same branch, and the local is never observed absent because no statement runs between the read and the guard and the branch does not read it. A present value is bound and tested by the source's own condition, so a present falsy value (0, \"\", false) still takes the branch. No identity, ordering, exception or settlement behaviour changes; the only removed behaviour is the throw the source never had.",
+      "whyNotUpstreamFirst": "This is a shared compiler absence correction carried through the established compiler patch stack against the exact pin.",
+      "unblocks": "The unknown-kind contract of effects normalizeEffect/getEffectDefaults (returns false / {}), qualifying the effect_defaults membership consumer.",
+      "expires": "when upstream reads a missing key of a non-erased typed Record as absent before a falsiness guard.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }

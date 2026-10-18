@@ -1,0 +1,236 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 7280a71..7942f09 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -364,6 +364,10 @@ interface EmitContext {
+   // statement is present. The set is scoped to that statement so the proof cannot cross a call,
+   // mutation, alias, or later access.
+   immediateDenseArrayElementPresence: ReadonlySet<Readonly<Extract<IrExpression, { kind: 'element' }>>>;
++  // A typed Record read whose missing key the immediately following guard tests. Each element maps to the
++  // spelling its read takes in that one statement pair: the lookup itself (the runtime's optional), or the
++  // engaged value once the guard has left on absence.
++  recordLookupElements: ReadonlyMap<Readonly<Extract<IrExpression, { kind: 'element' }>>, string>;
+   denseArraySequentialAppendPlans: ReadonlyMap<string, Readonly<CppDenseArraySequentialAppendPlan>>;
+   dependentCallablePacks: ReadonlyMap<string, Readonly<IrParameter>>;
+   // Dependent callable packs spread more than once, or inside a loop, in their declaring function.
+@@ -716,6 +720,7 @@ function emitIrModuleCppWithContext(
+     defaultedParameterIds: new Set(),
+     denseArrayLengthBindingIds: new Set([...denseArrayLengthBindingIds, ...denseArraySequentialAppendPlans.keys()]),
+     immediateDenseArrayElementPresence: new Set(),
++    recordLookupElements: new Map(),
+     denseArraySequentialAppendPlans,
+     dependentCallablePacks: collectIrModuleDependentCallablePacksCpp(module),
+     reusedDependentCallablePackIds: collectIrModuleReusedDependentCallablePackIdsCpp(module),
+@@ -5692,6 +5697,11 @@ function emitExpression(
+       }
+       const record = getCppRecordTypeArgumentsCpp(objectType, context, new Set());
+       if (record && getCppRuntimeProfile(context.options) === 'flight-cpp') {
++        const recordLookup = context.recordLookupElements.get(expression);
++        if (recordLookup === '') {
++          return `${object}.get(${emitCppRequiredRecordKeyCpp(expression.index, record.key, context)})`;
++        }
++        if (recordLookup !== undefined) return recordLookup;
+         const lookup = `${object}.get(${emitCppRequiredRecordKeyCpp(expression.index, record.key, context)})`;
+         // A typed Record read of a key the dictionary does not hold is `undefined` in the source, not
+         // an absent carrier: the runtime lookup answers nullopt, and an erased value read keeps the
+@@ -10586,6 +10596,19 @@ function emitStatements(statements: readonly IrStatement[], context: EmitContext
+   const emitted: string[] = [];
+   let statementContext = context;
+   for (const [index, statement] of statements.entries()) {
++    const recordMissingKeyGuard = getCppImmediateRecordMissingKeyGuardCpp(statement, statements[index + 1], statementContext);
++    if (recordMissingKeyGuard) {
++      emitted.push(...emitCppRecordMissingKeyGuardPrologueCpp(recordMissingKeyGuard, statementContext));
++      const presentContext: EmitContext = {
++        ...statementContext,
++        recordLookupElements: new Map(statementContext.recordLookupElements).set(
++          recordMissingKeyGuard.element,
++          `(*${recordMissingKeyGuard.lookupName})`,
++        ),
++      };
++      emitted.push(...emitStatement(statement, withdrawCppAssignedGuardedPathsBeforeEmissionCpp(statement, presentContext)));
++      continue;
++    }
+     // The nullable source local changes representation across its guard: before the guard it denotes
+     // absence or erased backing storage, and afterwards it denotes a typed view. Recognize that whole
+     // prologue before emitting its first declaration so the view can never bind to the fresh typed map.
+@@ -10639,6 +10662,97 @@ function emitStatements(statements: readonly IrStatement[], context: EmitContext
+   return emitted;
+ }
+ 
++// `const entry = DEFAULTS[kind]; if (!entry) return ...;` reads a typed Record whose value type has no
++// absence, so the read is typed present -- but a key the dictionary does not hold is `undefined` in the
++// source, and the guard right after it is the source saying so. The pair is lowered exactly: the lookup is
++// evaluated once into the runtime's own optional, the guard's abrupt branch runs when it is disengaged, and
++// only then is the local bound to the engaged value. The original guard still follows, so a present value
++// is tested by the condition the source wrote, so a present falsy value still takes the branch. Kept to
++// this immediate pair: no statement may run between
++// the read and the guard, the guard must leave, and its branch must not read the local, so the local is
++// never observed absent.
++interface CppRecordMissingKeyGuard {
++  readonly element: Readonly<Extract<IrExpression, { kind: 'element' }>>;
++  readonly guard: Readonly<Extract<IrStatement, { kind: 'if' }>>;
++  readonly lookupName: string;
++}
++
++function getCppImmediateRecordMissingKeyGuardCpp(
++  statement: Readonly<IrStatement>,
++  next: Readonly<IrStatement> | undefined,
++  context: EmitContext,
++): CppRecordMissingKeyGuard | undefined {
++  if (
++    getCppRuntimeProfile(context.options) !== 'flight-cpp' ||
++    statement.kind !== 'variable' ||
++    statement.declarations.length !== 1 ||
++    next?.kind !== 'if' ||
++    next.otherwise ||
++    !isCppAbruptCompletionStatement(next.consequent)
++  ) {
++    return undefined;
++  }
++  const declaration = statement.declarations[0]!;
++  if (!('binding' in declaration) || declaration.mutable || !declaration.initializer) return undefined;
++  const element = declaration.initializer;
++  if (element.kind !== 'element' || element.optional) return undefined;
++  const objectType = getIrExpressionTypeEvidenceCpp(element.object, context);
++  const record = getCppRecordTypeArgumentsCpp(objectType, context, new Set());
++  if (
++    !record ||
++    getCppNamedPropertiesViewExpressionCpp(element.object, context) ||
++    isCppAliasResolvedErasedDynamicValueTypeCpp(record.value, context) ||
++    isCppRecordValueAbsenceCapableCpp(record.value)
++  ) {
++    return undefined;
++  }
++  const bindingId = declaration.binding.id;
++  if (!isCppBindingAbsenceTestCpp(next.condition, bindingId)) return undefined;
++  if (JSON.stringify(next.consequent).includes(JSON.stringify(bindingId))) return undefined;
++  return {
++    element,
++    guard: next,
++    lookupName: `${getBindingTargetName(declaration.binding, context)}_record_lookup`,
++  };
++}
++
++function emitCppRecordMissingKeyGuardPrologueCpp(
++  plan: CppRecordMissingKeyGuard,
++  context: EmitContext,
++): string[] {
++  const lookupContext: EmitContext = {
++    ...context,
++    recordLookupElements: new Map(context.recordLookupElements).set(plan.element, ''),
++  };
++  const lookup = emitExpression(plan.element, lookupContext);
++  return [
++    `auto ${plan.lookupName} = ${lookup};`,
++    `if (!${plan.lookupName}.has_value()) {`,
++    ...indentSourceLines(emitStatementBody(plan.guard.consequent, context)),
++    '}',
++  ];
++}
++
++function isCppRecordValueAbsenceCapableCpp(value: Readonly<IrType>): boolean {
++  if (value.kind === 'undefined' || value.kind === 'null' || value.kind === 'unknown') return true;
++  if (value.kind === 'union') return value.types.some((member) => isCppRecordValueAbsenceCapableCpp(member));
++  return false;
++}
++
++// `!x`: the source tests the local's truthiness, which is where a missing key surfaces for a value type
++// with no absence of its own. A comparison with `undefined` or `null` already elects optional storage for
++// the local and reads the lookup once, so it is not taken here.
++function isCppBindingAbsenceTestCpp(condition: Readonly<IrExpression>, bindingId: string): boolean {
++  return (
++    condition.kind === 'unary' &&
++    !condition.postfix &&
++    condition.operator === '!' &&
++    condition.operand.kind === 'identifier' &&
++    condition.operand.reference.kind === 'binding' &&
++    condition.operand.reference.binding.id === bindingId
++  );
++}
++
+ // The Flight array carrier is dense: after an empty-array guard terminates, literal index zero exists.
+ // Keep that target-specific fact deliberately smaller than general control-flow narrowing. It reaches
+ // only the exact element receiver in the immediately following single initializer, and only for a
+diff --git a/packages/compiler-backend-cpp/src/cppRecordMissingKeyGuard.test.ts b/packages/compiler-backend-cpp/src/cppRecordMissingKeyGuard.test.ts
+new file mode 100644
+index 0000000..3feb8a6
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppRecordMissingKeyGuard.test.ts
+@@ -0,0 +1,77 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile(
++    '/flight/packages/example/src/recordMissingKeyGuard.ts',
++    source,
++    ts.ScriptTarget.Latest,
++    true,
++  );
++  const result = lowerTypeScriptSource(sourceFile, {
++    packageName: '@flighthq/example',
++    upstreamDirectory: '/flight',
++  });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++const table = `const DEFAULTS: Record<string, Record<string, unknown>> = { a: { x: 1 } };
++const SCALE: Record<string, number> = { a: 2, z: 0 };`;
++
++it('tests a missing typed Record key before binding the local when a falsiness guard leaves', () => {
++  const output = emit(`${table}
++    export function getDefaults(kind: string): Record<string, unknown> {
++      const entry = DEFAULTS[kind];
++      if (!entry) return {};
++      return { ...entry };
++    }
++    export function truthyScale(kind: string): number {
++      const s = SCALE[kind];
++      if (!s) return -1;
++      return s;
++    }
++  `);
++
++  expect(output).toContain('auto entry_record_lookup = defaults.get(kind);');
++  expect(output).toContain('if (!entry_record_lookup.has_value()) {');
++  expect(output).toContain('flight::Record<flight::String, flight::Any> entry = (*entry_record_lookup);');
++  expect(output).not.toContain('defaults.get(kind).value()');
++  // The source guard still tests the present value, so a present falsy number takes the branch.
++  expect(output).toContain('const double s = (*s_record_lookup);');
++  expect(output).toMatch(/if \(!flight::to_boolean\(s\)\)|if \(!\(s != 0/);
++});
++
++it('keeps the existing lowering where the pair is not exactly a leaving falsiness guard', () => {
++  const output = emit(`${table}
++    export function readsInBranch(kind: string): unknown {
++      const entry = DEFAULTS[kind];
++      if (!entry) return entry;
++      return entry;
++    }
++    export function interveningStatement(kind: string, log: string[]): boolean {
++      const entry = DEFAULTS[kind];
++      log.push(kind);
++      if (!entry) return false;
++      return true;
++    }
++    export function noLeave(kind: string): number {
++      const s = SCALE[kind];
++      if (!s) {
++        void 0;
++      }
++      return 0;
++    }
++    export function comparedToUndefined(kind: string): number {
++      const s = SCALE[kind];
++      if (s === undefined) return 1;
++      return s;
++    }
++  `);
++
++  expect(output).not.toContain('record_lookup');
++  expect(output).toContain('const std::optional<double> s = scale.get(kind);');
++});
