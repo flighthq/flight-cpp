@@ -5608,3 +5608,13 @@ See [the JSON assertion request](compiler-requests/json-parse-assertion-static-c
 for exact floor, consumer and ABI evidence. This is **zero new promotions among
 the historical25 JSON assertion rows**, which do not include this Spine counter;
 no whole package, nominal document, global sweep or Canvas completion is claimed.
+
+## Scoped SVG optional-map qualification
+
+The shared contextual fresh-map owner correction removes the `svg_gradient.hpp:174` array owner error.
+The exact five assigned SVG callers plus the direct gradient root were all attempted with Clang22.1.8
+at two jobs: the root passes; all five callers fail at the later `svg_document.hpp:70` nested default/nullable
+readonly Matrix payload. Their historical failure rows remain failed. Only the measured gradient root
+is promoted, without changing the original sweep totals. The real public gradient lookup passes CTest1/1.
+The real parser compiles but cannot link the declaration-only style and color parsers; its approved
+cascade follow-on remains active. See the [allocation request](compiler-requests/fresh-null-array-into-nullable-element-union.md).

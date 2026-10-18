@@ -85,6 +85,24 @@ and the five refusal controls remain unchanged. Production compiler build and to
 The normal declared 73-patch stack applies, builds and reverses to a clean pinned checkout; all seven
 focused groups and 17 selected existing map/optional-chain/nullish groups pass. The full compiler check
 retains its four known failing gates (format, lint, import order and five foreign fixture type errors).
-Original public SVG consumer/header qualification remains pending; these focused checks do not promote
-any header or resolve the broader nullable-element request above.
-The registry callback annotation remains carried pending its own expiry audit.
+A joint 75-patch stack subsequently applies, builds, passes the seven focused groups and reverses cleanly.
+The one normal `scene2d-formats` generation exits zero on that recorded stack: 48 of 80 target modules
+emit completely and 32 retain refusals. It changes 27 headers and four metadata files. Every existing
+function definition and refusal marker survives; two additional original Lottie property definitions
+replace their old refusal markers. Those additional bodies have no new native qualification claim.
+
+The final standalone survey attempts all six selected headers with Clang 22.1.8 at two jobs. The direct
+`svg_gradient.hpp` support root passes. All five assigned callers fail at the later
+`svg_document.hpp:70` nested default/nullable readonly Matrix payload; none is promoted. The registered
+original public `resolve_svg_gradient` consumer builds, links and passes CTest (1/1), checking 14 URL
+syntax cases, original cached owner identity, live color mutation, map replacement and deletion.
+An independent execution of the original pinned TypeScript import graph (1,128 modules) also passes
+those cases plus inherited stable sorting and fresh stop/color identities, live inherited mutations,
+actual authored parent style/currentColor/opacity/offset, defaults and reference diagnostics.
+
+The whole original `parse_svg_gradient` native consumer compiles but fails to link: both
+`resolve_svg_style` and `parse_svg_color` remain declaration-only refused helpers. No replacement
+helper, body stub or narrower parse domain is used. The approved style cascade follow-on continues;
+this array unit claims the shared allocation correction and measured support-root/getter result,
+with no five-caller, package or end-to-end parser completion. The original broader nullable-element
+request and registry callback annotation remain open pending their own expiry audit.
