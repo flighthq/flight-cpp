@@ -116,6 +116,56 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
  }
  
  // Whether a `new Set(argument)` argument is itself a Set: a ReadonlySet or Set value, whose values the new set
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -10282,7 +10282,10 @@
+       'std::variant<flight::Ref<Signal<std::function<void()>>>, flight::Null, flight::Undefined> on_looped = std::variant<flight::Ref<Signal<std::function<void()>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};',
+     );
+     expect(both).not.toContain('std::optional<std::optional');
+-    expect(both).toContain('std::holds_alternative<flight::Null>(player->on_finished)');
++    // A loose test reads the member once, then inspects both sentinels on that captured value.
++    expect(both).toMatch(
++      /const auto& (presence_operand(?:_\d+)?) = player->on_finished; return [^;]*std::holds_alternative<flight::Null>\(\1\)[^;]*std::holds_alternative<flight::Undefined>\(\1\)/u,
++    );
+     expect(both).toMatch(
+       /const auto& coalesce_left = player->on_finished; if \(\(std::holds_alternative<flight::Null>\(coalesce_left\) \|\| std::holds_alternative<flight::Undefined>\(coalesce_left\)\)\) return fallback; return std::get<0>\(coalesce_left\);/u,
+     );
+@@ -13217,8 +13220,9 @@
+       ).module,
+       { runtimeProfile: 'flight-cpp' },
+     ).contents;
+-    expect(loose).toContain('std::holds_alternative<flight::Null>(s->top)');
+-    expect(loose).toContain('std::holds_alternative<flight::Undefined>(s->top)');
++    expect(loose).toMatch(
++      /const auto& (presence_operand(?:_\d+)?) = s->top; return [^;]*std::holds_alternative<flight::Null>\(\1\)[^;]*std::holds_alternative<flight::Undefined>\(\1\)/u,
++    );
+     expect(loose).toContain('std::get<double>(s->top)');
+ 
+     // FIXED at the reached site (emitCppNarrowedUnionValueCpp): the projection now requires a narrowing
+@@ -13317,8 +13321,9 @@
+       ).module,
+       { runtimeProfile: 'flight-cpp' },
+     ).contents;
+-    expect(loose).toContain('std::holds_alternative<flight::Null>(s->top)');
+-    expect(loose).toContain('std::holds_alternative<flight::Undefined>(s->top)');
++    expect(loose).toMatch(
++      /const auto& (presence_operand(?:_\d+)?) = s->top; return [^;]*std::holds_alternative<flight::Null>\(\1\)[^;]*std::holds_alternative<flight::Undefined>\(\1\)/u,
++    );
+     expect(loose).toContain('return std::get<double>(s->top);');
+ 
+     // FIXED, as this assertion was written to require: the strict test excludes only one sentinel, so the
+@@ -52986,8 +52991,8 @@
+     );
+     expect(read).toMatch(/std::variant<bool, flight::Null, flight::Undefined> depth_test/u);
+     expect(read).toContain('std::holds_alternative<flight::Undefined>(optional_property)');
+-    expect(read).toContain(
+-      'std::holds_alternative<flight::Null>(state->depth_test) || std::holds_alternative<flight::Undefined>(state->depth_test)',
++    expect(read).toMatch(
++      /const auto& (presence_operand(?:_\d+)?) = state->depth_test; return [^;]*std::holds_alternative<flight::Null>\(\1\)[^;]*std::holds_alternative<flight::Undefined>\(\1\)/u,
+     );
+ 
+     // The chained comparison and the third-level nest both lower now; each refusal this test used to draw is
 diff --git a/packages/compiler-backend-cpp/src/cppRegistryConstruction.test.ts b/packages/compiler-backend-cpp/src/cppRegistryConstruction.test.ts
 new file mode 100644
 --- /dev/null

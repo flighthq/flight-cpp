@@ -37,7 +37,31 @@ getter counts, guarded second reads, changed getter values, same getter exceptio
 predicate directions, and iterator failure before later option reads. Iterator controls use a
 fixture external binding with the original iterable contract, rather than editing emitted code.
 
-Final build, baseline parity and actual-source re-emission results will be recorded here before handoff.
+All 111 declared compiler patches apply from the raw pin. Reversing this patch restores the exact
+110-patch backend and existing tests and removes its new fixture; reapplying reproduces all three
+qualified files. The final patch has SHA-256
+`a12042c5fadf164d0b25101c3f004cd46d99ba7051dbb345ef078ee0e979d3db`.
+The production build passes, and the five focused files pass 15/15 with zero skipped. Baseline110
+passes the thirteen existing focused cases and fails both new cases. A compiler mutant restoring only
+the old presence rule still compiles with the Map fix, then fails the native getter-count assertion.
+
+Four existing emitted-spelling assertions now require one captured member read and both sentinel
+checks on that value. They fail on baseline110 and pass on the candidate. The broader backend
+comparison selects 426 cases, including that fourth related assertion: the other 422 have identical
+outcomes, 377 passes and 45 existing failures, including 18 timeouts. Another 1,150 cases are
+unselected. Eight timing differences and one disk-affected case were rerun on both variants with
+120-second limits; all nine pass on both. The candidate passes all thirteen selected rerun cases.
+There are no new observed failures; the shared failures are not reported as successes.
+
+An isolated source-only re-emission of the original GL module over the frozen 1,032 type IR modules
+retains all 22 registry writes in source order and exactly the original option-read counts, twelve
+fresh Map clone paths, and two reads of a present passes option. It is not normal SDK output. The
+module still refuses teardown, and its isolated spread projection is not qualified against the shared
+normal types, so this check removes no override and establishes no installed-header result.
+
+The two source-patch automation tests pass. The additional package-scope automation aborted when its
+fixture copies exhausted the 20 GB overlay. Its own failed 745 MB temporary tree was removed; no
+package-scope pass is claimed.
 Normal shared B generation and installed original GL/public registry qualification remain separate.
 The allocation runtime is still withdrawn pending its independent full-suite gate and actual reland;
 these independent compiler fixtures do not qualify that runtime change or the dependent GL API.
