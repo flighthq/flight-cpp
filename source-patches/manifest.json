@@ -5115,6 +5115,23 @@
       "unblocks": "bindWgpuRenderPassTarget's screen-target arm and the render-pass lifecycle functions behind it.",
       "expires": "when upstream derives the carried sites of a predicate-narrowed value itself; generation also refuses any declared site the pinned source no longer has.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-single-carrier-union-member",
+      "dependency": "flight-compiler",
+      "patch": "compiler-single-carrier-union-member.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/skeleton2d-formats",
+      "answers": "diagnostic",
+      "refusal": "An as-const TABLE indexed type query yields literal object union arms sharing one selected Flight reference carrier, but member emission consults the uncollapsed union and emits kind.values/path on Ref in eight Spine binary headers.",
+      "rewrite": "At the existing member operator decision, consult the same union representation plan used by type emission. Only a singleValue plan whose sole runtime slot is a proven Flight reference or facet reference selects reference member access. Existing optional, variant, external binding and structural member-view lanes retain their order and representation.",
+      "equivalence": "The stored carrier and underlying object never change. Selecting its actual reference member operator reads the same live field on the original owner; no allocation, copy, cast, unwrap or null coercion is introduced. Distinct variant arms still require their existing visitor/narrowing proof and an unproved nullable receiver still refuses. Inline/named/Readonly aliases resolve through the existing union and declaration-owner plans.",
+      "whyNotUpstreamFirst": "This pin-bound compiler correction follows the repository source-patch mechanism and needs no runtime ABI or original Flight source rewrite.",
+      "unblocks": "The three existing kind.values/path member errors in the full original bone timeline header, necessary to qualify the registered easings consumer and exactly eight assigned headers. Actual normal output and execution remain required.",
+      "expires": "when member emission follows the same selected single reference carrier as type emission for collapsed literal object union arms.",
+      "appliedOn": "2026-10-18",
+      "verification": "Current98 baseline strict build PASS. New fixture baseline2FAIL/2PASS, with full emitted native compile failing6Ref dot-member operations. Candidate strict build PASS; combined10focused testsPASS including4new,2nullable and4inheritedalias with full emitted native owner/live-cell/delayed-lifetime/exact callback error controls. Whole unchanged TypeScript source19checksPASS. Existing backend234selected224PASS/same10FAIL/1342unselected; all1576expanded assertion occurrences have identical titles/statuses baseline/candidate. Seven cold array/String/optional/defaulted/optional-chain/variant/row emissions byte-identical. Fixture format/lint PASS. Final declared99 orderedapply/rawclean-between PASS, wholebackend+fullfixture byte-identical to qualified candidate, strictbuild and4/4newfocused/native PASS. Sourcepatch automation2/package-label1 PASS. Broader63automation31PASS/32FAIL solely scratch ENOSPC while copying package fixtures; automatic cleanup completed, not a code regression pass. One necessary normal skeleton reconciliation/public consumer/eight headers pending; no promotion."
     }
   ]
 }

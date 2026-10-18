@@ -254,3 +254,40 @@ limits. The first header invocation lacked the already-installed SDL include pat
 it was a setup failure, corrected with the same SDL include path as CMake before
 recording these eight code failures. The command also reports unrelated override
 derivation drift; those foreign overrides are not modified or counted as this cause.
+
+
+### Single reference carrier for literal object union members
+
+The `as const` table is the essential reduction: its indexed type query lowers to
+a union of literal object arms, rather than an unresolved indexed-access node.
+The existing union storage plan merges these arms into the same structural
+`flight::Ref` carrier. The independent reference planner sees the original union,
+so the old member operator selects dot even though the parameter declaration
+selected that reference. This reproduces with inline, named and `Readonly` aliases.
+
+[`compiler-single-carrier-union-member.patch`](../../source-patches/compiler-single-carrier-union-member.patch)
+consults the existing union plan at the member operator decision. Only its
+`singleValue` runtime slot, proven to have a Flight reference/facet representation,
+selects arrow. It adds no storage, cast, unwrap, default or null coercion. The
+existing structural-view, declared external storage, optional and variant lanes
+keep their decisions. Source field reads and callback evaluation keep their
+order and exact original owner; no anonymous object or field is copied.
+
+The new fixture fails two tests on the saved98 baseline, including full emitted
+native compilation at six reference-member operations; its two negative
+variant/unproved-nullable controls already pass. Candidate native/source
+qualification also passes the earlier nullable and inherited-alias fixtures:
+10/10 focused tests, 19 unchanged whole-source TypeScript checks, exact reference
+and control-block identity, live field reads across callbacks, delayed capture
+lifetime and the original callback exception owner. Seven ordinary collection,
+String, optional, defaulted, optional-chain, variant and row emissions remain
+byte-identical. The 234 selected existing backend tests retain224 PASS and the
+same10 FAIL; all1576 expanded assertion occurrences, including repeated titles,
+have identical names and statuses. The declared99 stack applies from rawclean,
+reproduces the whole qualified backend and fixture byte for byte, builds strictly
+and passes the four new tests again. Source-patch and package-label checks pass.
+The broader package-fixture automation records31 PASS/32 FAIL after scratch copies
+exhausted disk space; automatic cleanup completed, so that run is not a code
+regression pass. The one necessary normal scoped reconciliation remains pending;
+this preparation does not promote a header or claim that the public easings
+consumer has executed.

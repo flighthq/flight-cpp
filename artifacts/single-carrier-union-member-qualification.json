@@ -1,0 +1,86 @@
+{
+  "schema": "flight-cpp-single-carrier-union-member-qualification/1",
+  "compilerRevision": "806d257d2f4100de745cc97340e61c2f301b0f24",
+  "flightRevision": "a62784923f3be814463286c9fb28edfe6ab15789",
+  "qualifiedBaselineCompilerPatches": 98,
+  "correction": "memberOp follows the existing singleValue union runtime slot only when it has a semantic reference representation",
+  "patchSha256": "63b092e04423d5df5692b68ec65a4a6b464ef26f3840d4386c18995b58b134b5",
+  "oldFocused": {
+    "pass": 2,
+    "fail": 2,
+    "nativeErrors": "six Ref dot-member operations"
+  },
+  "candidateFocused": {
+    "pass": 10,
+    "fail": 0,
+    "skipped": 0,
+    "newTests": 4,
+    "nullableTests": 2,
+    "inheritedAliasTests": 4
+  },
+  "unchangedWholeSourceTypeScriptChecks": 19,
+  "coldEmissionControls": {
+    "byteIdentical": 7,
+    "controls": [
+      "array",
+      "String",
+      "optional",
+      "defaulted",
+      "optional-chain",
+      "variant",
+      "row"
+    ]
+  },
+  "backendParity": {
+    "selected": 234,
+    "pass": 224,
+    "sameBaselineFail": 10,
+    "unselected": 1342,
+    "changedTitles": {},
+    "baselineFailedTitles": [
+      "createCppCompilerBackend passes glTF resolved and carried texture unions through their exact imported alias",
+      "createCppCompilerBackend resolves shaded material indexed map options into their exact texture union",
+      "createCppCompilerBackend preserves the imported texture union representation through a readonly assertion",
+      "createCppCompilerBackend keeps an imported host-image alias intact for a contextual callable result",
+      "createCppCompilerBackend refuses a for-of source alias that names multiple runtime alternatives",
+      "createCppCompilerBackend recovers indexed utility and RegExp call result evidence",
+      "emitIrModuleCpp uses downstream member and constructor result evidence for unresolved mutable storage",
+      "emitIrModuleCpp attributes typeof after an erased array predicate to the missing runtime extraction",
+      "emitIrModuleCpp keeps an optional imported registry lookup in its exact entry union",
+      "emitIrModuleCpp conditional capability facets keeps a direct imported collection element on its declared union alias"
+    ],
+    "comparison": "Every expanded assertion occurrence has identical fullName and status in source order, including repeated titles.",
+    "expandedAssertions": 1576
+  },
+  "normalScopedReconciliation": "pending",
+  "originalEasingsConsumer": "not yet executable: frozen96 result has the same three baseline kind member errors",
+  "historicalHeaderPromotions": 0,
+  "declared99": {
+    "orderedApply": "pass",
+    "rawCleanBetweenStacks": true,
+    "entireBackendAndFixtureByteIdenticalToQualifiedCandidate": true,
+    "strictBuild": "pass",
+    "finalNewFocusedTests": {
+      "pass": 4,
+      "fail": 0,
+      "skipped": 0
+    }
+  },
+  "rootAutomation": {
+    "sourcePatchTests": {
+      "pass": 2
+    },
+    "ctestPackageLabelTests": {
+      "pass": 1
+    },
+    "broaderCombinedTests": {
+      "total": 63,
+      "pass": 31,
+      "fail": 32,
+      "reason": "ENOSPC copying package fixture trees",
+      "automaticScratchCleanupCompleted": true
+    }
+  },
+  "candidateBackendSha256": "b80f62b13e66548c4529c7ea736e0256b770814aec22bb5b16000cb097219613",
+  "fixtureSha256": "5685e305cfe904169a5d23810f10b396f0863592a5b80e595fb838892f384bdc"
+}

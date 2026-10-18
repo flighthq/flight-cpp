@@ -1,0 +1,161 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -35659,6 +35659,21 @@
+       return '.value()->';
+     }
+   }
++  // Literal object arms can share one native carrier, as in `(typeof TABLE)[number]` for an
++  // `as const` table. The type emitter selects that single Ref, while the uncollapsed IR union
++  // has no reference plan of its own. Read through the already-selected value slot; optional
++  // and variant storage keep their existing presence/visitor lanes above this point.
++  if (type && getCppRuntimeProfile(context.options) === 'flight-cpp') {
++    const union = getIrUnionTypeCpp(type, context, new Set());
++    const plan = union ? getCppUnionRepresentationPlan(union, context) : undefined;
++    const value = plan?.kind === 'singleValue' ? plan.valueSlots[0]?.runtimeType : undefined;
++    if (
++      value &&
++      (hasFlightReferenceRepresentationCpp(value, context) || hasFlightFacetReferenceRepresentationCpp(value, context))
++    ) {
++      return '->';
++    }
++  }
+   return type &&
+     (hasFlightReferenceRepresentationCpp(type, context) || hasFlightFacetReferenceRepresentationCpp(type, context))
+     ? '->'
+diff --git a/packages/compiler-backend-cpp/src/cppCollapsedObjectUnionMember.test.ts b/packages/compiler-backend-cpp/src/cppCollapsedObjectUnionMember.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppCollapsedObjectUnionMember.test.ts
+@@ -0,0 +1,131 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import {
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const toolchain = findCppCompilerToolchain();
++const includes = [path.join(resolveDependency(root, 'flight-cpp').directory, 'include')];
++const source = String.raw`
++type Kind = (typeof TABLE)[number];
++export function direct(kind: (typeof TABLE)[number]): number { return kind.values; }
++export function named(kind: Kind): string { return kind.path; }
++export function identity(kind: Kind): Kind { return kind; }
++export function delayed(kind: Kind): () => number { return () => kind.values; }
++export function withEffect(kind: Kind, action: () => number): number {
++  const before = kind.values; return before + action() + kind.values;
++}
++export function readOnly(kind: Readonly<Kind>): number { return kind.values; }
++export function plain(kind: { path: string; values: number }): number { return kind.values; }
++export function text(value: string): number { return value.length; }
++const TABLE = [{ path: 'rotation', values: 1 }, { path: 'translation', values: 2 }] as const;
++`;
++
++function emit(text = source): string {
++  const [lowered] = lowerTypeScriptSources([
++    {
++      packageName: '@flighthq/math',
++      upstreamDirectory: '/flight',
++      sourceFile: ts.createSourceFile(
++        '/flight/packages/math/src/typeQueryMember.ts',
++        text,
++        ts.ScriptTarget.Latest,
++        true,
++      ),
++    },
++  ]);
++  expect(lowered!.diagnostics).toEqual([]);
++  return emitIrModuleCpp(lowered!.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++describe('member access on a literal object union with one reference carrier', () => {
++  it('uses the selected reference carrier for inline, named and readonly type-query parameters', () => {
++    const output = emit();
++    expect(output).toContain('return kind->values;');
++    expect(output).toContain('return kind->path;');
++    expect(output).not.toContain('kind.values');
++    expect(output).not.toContain('kind.path');
++    expect(output).toContain('value.length()');
++  });
++
++  it.skipIf(!toolchain || !includes.length)(
++    'runs full emitted parameter reads with original owner, live cells and errors',
++    () => {
++      if (!toolchain) throw new Error('toolchain missing');
++      const directory = mkdtempSync(path.join(tmpdir(), 'flight-collapsed-object-member-'));
++      try {
++        const input = path.join(directory, 'member.cpp');
++        const binary = path.join(directory, getCppExecutableName(toolchain, 'member'));
++        writeFileSync(
++          input,
++          emit() +
++            String.raw`
++#include <iostream>
++int main() {
++  namespace f = flighthq_math;
++  const auto fail = [](int n) { std::cerr << "object union fixture " << n << std::endl; return n; };
++  auto row = f::table.element(0);
++  auto same = f::identity(row);
++  if (same.get() != row.get() || same.owner_before(row) || row.owner_before(same)) return fail(1);
++  if (f::direct(row) != 1 || f::named(row) != flight::String("rotation") ||
++      f::read_only(row) != 1 || f::plain(row) != 1 || f::text(flight::String("ab")) != 2) return fail(2);
++  int calls = 0;
++  if (f::with_effect(row,[&]() { ++calls; row->values = 7; return 2.0; }) != 10 || calls != 1 ||
++      f::direct(same) != 7 || f::table.element(0)->values != 7) return fail(3);
++  const auto thrown = std::make_shared<int>(42); bool exact = false;
++  try { static_cast<void>(f::with_effect(row,[&]() -> double { ++calls; throw thrown; })); }
++  catch (const std::shared_ptr<int>& value) { exact = value == thrown && !value.owner_before(thrown) && !thrown.owner_before(value); }
++  if (!exact || calls != 2 || row->values != 7) return fail(4);
++  auto kept = f::delayed(row);
++  if (kept() != 7) return fail(5);
++  row->values = 11;
++  if (kept() != 11 || f::direct(same) != 11) return fail(6);
++  std::weak_ptr<typename decltype(row)::element_type> weak = row;
++  f::table.clear(); row.reset();
++  if (weak.expired() || kept() != 11) return fail(7);
++  kept = {};
++  if (weak.expired()) return fail(8); // same still owns the original row
++  same.reset();
++  if (!weak.expired()) return fail(9);
++}
++`,
++        );
++        execFileSync(toolchain.command, createCppExecutableArguments(toolchain, input, binary, includes), {
++          encoding: 'utf8',
++          stdio: 'pipe',
++        });
++        execFileSync(binary, [], { encoding: 'utf8', stdio: 'pipe' });
++      } finally {
++        rmSync(directory, { recursive: true, force: true });
++      }
++    },
++    120000,
++  );
++
++  it('retains a variant visitor for different object storage types', () => {
++    const output = emit(
++      `export function distinct(value: { value: number } | { value: string }): number | string { return value.value; }`,
++    );
++    expect(output).toContain('std::visit');
++    expect(output).not.toContain('return value->value;');
++  });
++
++  it('still refuses an unproved nullable parameter member', () => {
++    expect(() => emit(source + `export function absent(kind: Kind | null): number { return kind.values; }`)).toThrow(
++      /absence-carrying storage requires narrowed access/,
++    );
++  });
++});
