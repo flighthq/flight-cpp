@@ -494,6 +494,20 @@ native parser/viewport/import/gradient/painting execution is claimed. This Matri
 is distinct from SVG style's numeric optional-chain result. The preceding Number 2/16 result,
 table counts and all foreign rows/records remain historical and unchanged.
 
+
+**Later native Collada defining-header follow-up:** the declared original-path override supplies a
+typed finite callback and corrects colladaIdOf's independent missing-key unwrap. Only those two
+executable expressions differ from the generated header; source/generated SDK/pins are unchanged.
+Actual original-header consumer build/link and **1/1 CTest PASS,0.02s** (total0.03s) exercise all14
+pinned cases plus2 numeric/owner groups, all9helpers, using the real XML parser. The literal pinned
+source tests also pass14/14 via an explicit Node-assert matcher adapter, plus4 numeric assertions.
+Original1 standalone compile: **1 attempted/1 pass/0 fail/0 unattempted,8.5s,Clang22.1.8jobs1**;
+override consistency229/229 initially and230/230 after the independent Spine base (native inputs unchanged). The defining row is PASS; cluster4f8413e4 now contains8 retained
+historical includer failures, not freshly rechecked. No other includer, full parser/package or fresh
+sweep gain is claimed. The earlier nine-header follow-on table above remains historical evidence.
+The [predicate request](compiler-requests/builtin-numeric-predicate-callback.md#native-collada-public-header-carry-2026-10-17)
+records the exact source semantics, missing-id debt, override rationale/expiry and proof limits.
+
 ### 8. `other-40da43f7` — 16 header(s)
 
 - cause: an optional<Record<...>> is initialised from a shape that is not its declared storage

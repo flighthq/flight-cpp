@@ -56,3 +56,45 @@ The numeric predicate still names an overloaded function in `std`, which a runti
 cannot replace. This request remains open. No generated behavior, source rewrite, or override
 is carried for it; independent parser refusals and other diagnostics exposed by the scoped
 recheck remain failures in the header-status product.
+
+## Native Collada public-header carry (2026-10-17)
+
+The emitted-header consumability follow-up carries a declared override of the original public
+`flight/scene3d_formats/collada_xml.hpp` path. Its generated counterpart remains byte-identical.
+Only two executable expressions differ: the finite callback above becomes a typed double lambda,
+and colladaIdOf returns the original attribute lookup optional instead of eagerly calling value().
+The latter independently matters: the pinned missing-id case requires null, while the emitted
+unwrap throws. A present empty id remains present. See the
+[Record missing-key request](record-missing-key-nullish-coalesce.md#native-collada-id-read).
+
+A callback-only source wrapper would leave that runtime failure. The existing Record request records
+failed typed-local and Partial Record alternatives; an own-key-only source guard would narrow
+inherited-property reads. Declaration repairs cannot change these executable operations. This
+bounded override therefore retains the entire emitted module and changes only those two lowerings;
+no replacement parser/helper, owner allocation, source patch, pin, generated SDK file or generic
+Array/numeric policy is added. Its derivation digest and expiry cover both lowering defects. The
+record is complete for compilation and adds no supplies/tier claim or package promotion.
+
+The consumer includes the original public module path and real generated XML parser. It compiles,
+links and runs **16 cases: all 14 pinned colladaXml.test.ts cases plus two edge-case groups, all nine
+helpers**, in **1/1 CTest pass, 0.02 s** (0.03 s total). Native fixtures cover plain/prefixed names,
+exact suffix boundaries, first-colon local names, missing/empty ids and live attribute ownership,
+ordered child/descendant reference identity, trimmed/missing/empty text, parent-first traversal and
+callback exception propagation. Numeric cases retain Boolean filtering before Number conversion,
+finite rejection, fractions/exponents/hex, signed zero, and the source distinction between blank
+colladaNumbers (empty) and blank parseColladaFloats ([0]). No duplicate helper implementation is
+used by the test.
+
+The literal original TypeScript test file also ran **14/14** through TypeScript5.9.3 erasure and a
+Node-assert adapter for its Vitest matchers, loading the full unmodified Collada and XML modules.
+Four additional original-source numeric assertions match the native edge cases. This is an explicit
+source test adapter, not a claim that the upstream Vitest runner or the full package suite ran.
+
+Changed original1 standalone header gate: **1 attempted / 1 pass / 0 fail / 0 unattempted, 8.5 s,
+Clang22.1.8 jobs1**. Override consistency initially passed **229/229**; after the independent Spine carry landed,
+the updated manifest passed **230/230** with the Collada native inputs unchanged. The defining header row becomes
+PASS and the active predicate cluster retains **eight historical failed includers**, not recompiled
+here; no current follow-on or gain is invented for them. Earlier 16-header/9-Collada measurements
+above remain history, and both upstream lowering debts remain open. No complete COLLADA document
+parser/package or fresh sweep is claimed. Evidence: `/tmp/builder4-collada/` (native build/CTest,
+header report, literal source runner/report and override consistency).

@@ -86,3 +86,14 @@ A typed local, `const v: string | number | boolean | undefined = d[key]`, still 
 This affects `@flighthq/particles-formats` `particleDesignerParse.ts` `num` and `str`, which every document
 parse and every incomplete plist reaches. It is carried by the `particles-formats-pd-dict-own-key-reads`
 source patch.
+
+## Native Collada id read
+
+The same missing-key unwrap occurs in colladaXml.ts colladaIdOf: the source
+`element.attributes.id ?? null` emits `attributes.get("id").value()`. The bounded native Collada
+override returns that original get optional directly: a missing key is null, a present empty string
+remains present, and the original attributes are read once without an own-key-only guard. The
+[public-header carry and qualification](builtin-numeric-predicate-callback.md#native-collada-public-header-carry-2026-10-17)
+records the paired finite-callback correction, actual original-header compile/link/run of all14
+pinned cases plus numeric/owner edges, and the unchanged generated source/debt. This resolves this
+native site only; the general Record lowering request remains open.
