@@ -4929,6 +4929,23 @@
       "unblocks": "The 13 other-e9936ce6 headers -- the COLLADA, AWD2, glTF, MD2, MD5, OBJ and 3DS requirement tables -- whose entries arrays are written as pair literals.",
       "expires": "when upstream emits an array literal written at a tuple-valued position through the tuple's own representation.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-finish-entity-construction-owner",
+      "dependency": "flight-compiler",
+      "patch": "compiler-finish-entity-construction-owner.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "diagnostic",
+      "refusal": "emitted factory aborts at runtime: flight::entity::finish_entity instantiated with the declared public return type over an EntityConstruction of the derived owner -> structural_ref_cast exact-owner recovery throws std::bad_cast (createResourceLoader)",
+      "rewrite": "A call to finishEntity written without a type argument specializes from the ARGUMENT's construction owner, never from the expected return type: the emitter resolves the argument's structural row and passes its RowOf object type as the finish type argument (finish_entity<Ref<Internal>>(out)). The returned reference then widens implicitly along the emitted C++ heritage to the declared public return. An explicitly written type argument still wins, so the compiler never overrides an author's stated assertion.",
+      "equivalence": "The same construction row and the same allocation are finished; nothing is copied, materialized, or reinterpreted. The returned shared pointer is the identical object, widened derived-to-base along the heritage the emitter already spells, so reference identity, lifetime, and single evaluation are unchanged.",
+      "whyNotUpstreamFirst": "The pinned entity contract already finishes the exact owner; only the C++ specialization chose the contextual return type. docs/compiler-requests/finish-entity-construction-owner.md records the request.",
+      "unblocks": "the loader factory return (createResourceLoader -> ResourceLoader) without the runtime std::bad_cast; the public factory/progress consumer",
+      "expires": "when upstream infers finishEntity's type argument from its argument in every target, or the backend stops using the contextual return type for this call",
+      "appliedOn": "2026-10-18",
+      "verification": "New cppCompilerBackend test 'finishes a derived construction owner and widens the public return instead of specializing to it': the unstated call emits finish_entity<Ref<Internal>>(out), never the public return type; no replacement owner; one construction evaluation per factory; an explicit <Public> argument still specializes as stated. The existing same-return identity test still passes. Patch applies and reverts at its stack position."
     }
   ]
 }

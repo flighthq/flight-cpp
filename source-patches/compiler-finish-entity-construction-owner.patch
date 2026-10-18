@@ -1,0 +1,160 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -4821,7 +4821,9 @@
+       const sourceTypeArguments =
+         expression.typeArguments.length > 0
+           ? expression.typeArguments
+-          : (getCppContextualCallTypeArgumentsCpp(expression, expectedType, context) ?? []);
++          : (getCppEntityConstructionCallTypeArgumentsCpp(expression, context) ??
++            getCppContextualCallTypeArgumentsCpp(expression, expectedType, context) ??
++            []);
+       const typeArguments = getCppValueRepresentedCallTypeArgumentsCpp(expression, sourceTypeArguments, context);
+       const resolveDomain = getCppPromiseResolveDomainTypeArgumentCpp(expression, expectedType, context);
+       const invocationTypeArguments = resolveDomain ? [...typeArguments, resolveDomain] : typeArguments;
+@@ -35428,6 +35430,32 @@
+   return 'std::string';
+ }
+ 
++// `finishEntity<Type>(out: EntityConstruction<Type>): Type` finishes the construction's OWN owner.
++// A call written without a type argument must specialize from the ARGUMENT, never from the expected
++// return type: a factory that declares a public base as its return would otherwise instantiate the
++// finish with that base, ask the row to be a schema whose object differs from the recorded owner, and
++// the exact-owner recovery rejects it. Specializing from the argument keeps the same allocation and
++// lets the returned reference widen along the emitted C++ heritage.
++function getCppEntityConstructionCallTypeArgumentsCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'call' }>>,
++  context: EmitContext,
++): readonly Readonly<IrType>[] | undefined {
++  if (expression.typeArguments.length > 0) return undefined;
++  const callee = expression.callee;
++  if (callee.kind !== 'identifier') return undefined;
++  const name = callee.reference.kind === 'ambient' ? callee.reference.name : callee.reference.binding.name;
++  if (name !== 'finishEntity') return undefined;
++  const argument = expression.arguments[0];
++  if (argument === undefined || argument.kind === 'spread') return undefined;
++  const argumentType = getIrExpressionTypeEvidenceCpp(argument, context);
++  if (argumentType === undefined) return undefined;
++  const row = context.referenceRepresentationPlanner.resolveStructuralRow(argumentType, context.module);
++  const subject = row ? getCppStructuralRowObjectTypeCpp(row) : undefined;
++  if (subject === undefined) return undefined;
++  const present = getCppNonNullableType(subject, context, new Set()) ?? subject;
++  return hasFlightReferenceRepresentationCpp(present, context) ? [subject] : undefined;
++}
++
+ function emitCppTypeArguments(types: readonly Readonly<IrType>[], context: EmitContext): string {
+   return types.length === 0 ? '' : `<${types.map((type) => emitCppTypeArgumentCpp(type, context)).join(', ')}>`;
+ }
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -29938,6 +29938,109 @@
+     expect(emitted.match(/struct [^\s{]+ : public flighthq_types::GlyphSource/gu)).toHaveLength(3);
+   });
+ 
++  it('finishes a derived construction owner and widens the public return instead of specializing to it', () => {
++    const entityTypes = ts.createSourceFile(
++      '/flight/packages/types/src/Entity.ts',
++      `export interface Entity { runtime: object | undefined }
++       export type EntityConstruction<Type extends Entity> = { -readonly [Key in keyof Type]: Type[Key] };`,
++      ts.ScriptTarget.Latest,
++      true,
++    );
++    const pairTypes = ts.createSourceFile(
++      '/flight/packages/types/src/LoaderPair.ts',
++      `import type { Entity } from './Entity.js';
++       export interface PublicLoader extends Entity { started: boolean }
++       export interface InternalLoader extends PublicLoader { total: number }`,
++      ts.ScriptTarget.Latest,
++      true,
++    );
++    const entity = ts.createSourceFile(
++      '/flight/packages/entity/src/entity.ts',
++      `import type { Entity, EntityConstruction } from '@flighthq/types/contract';
++       export function allocateEntity<Type extends Entity>(): EntityConstruction<Type> {
++         return {} as EntityConstruction<Type>;
++       }
++       export function finishEntity<Type extends Entity>(out: EntityConstruction<Type>): Type {
++         return out as Type;
++       }`,
++      ts.ScriptTarget.Latest,
++      true,
++    );
++    const consumer = ts.createSourceFile(
++      '/flight/packages/loader/src/createLoader.ts',
++      `import { allocateEntity, finishEntity } from '@flighthq/entity/contract';
++       import type { InternalLoader, PublicLoader } from '@flighthq/types/contract';
++       export function createLoader(): PublicLoader {
++         const out = allocateEntity<InternalLoader>();
++         out.total = 0;
++         return finishEntity(out);
++       }
++       export function createLoaderStated(): PublicLoader {
++         const out = allocateEntity<InternalLoader>();
++         out.total = 0;
++         return finishEntity<PublicLoader>(out);
++       }`,
++      ts.ScriptTarget.Latest,
++      true,
++    );
++    const moduleResolution: CompilerModuleResolutionPlan = {
++      edges: [
++        {
++          specifier: './Entity.js',
++          target: { packageName: '@flighthq/types', source: 'packages/types/src/Entity.ts' },
++        },
++        {
++          importedNames: ['Entity', 'EntityConstruction'],
++          specifier: '@flighthq/types/contract',
++          target: { packageName: '@flighthq/types', source: 'packages/types/src/Entity.ts' },
++        },
++        {
++          importedNames: ['InternalLoader', 'PublicLoader'],
++          specifier: '@flighthq/types/contract',
++          target: { packageName: '@flighthq/types', source: 'packages/types/src/LoaderPair.ts' },
++        },
++        {
++          specifier: '@flighthq/entity/contract',
++          target: { packageName: '@flighthq/entity', source: 'packages/entity/src/entity.ts' },
++        },
++      ],
++      schema: 'flight-compiler-module-resolution/1',
++    };
++    const results = lowerTypeScriptSources(
++      [
++        { packageName: '@flighthq/types', sourceFile: entityTypes, upstreamDirectory: '/flight' },
++        { packageName: '@flighthq/types', sourceFile: pairTypes, upstreamDirectory: '/flight' },
++        { packageName: '@flighthq/entity', sourceFile: entity, upstreamDirectory: '/flight' },
++        { packageName: '@flighthq/loader', sourceFile: consumer, upstreamDirectory: '/flight' },
++      ],
++      moduleResolution,
++    );
++    const modules = results.map((result) => result.module);
++    const emitted = createCppCompilerBackend().createEmissionSession!({
++      moduleResolution,
++      modules,
++      options: { runtimeProfile: 'flight-cpp' },
++    }).emitModule(modules[3]!)[0]!.contents;
++
++    expect(results.flatMap((result) => result.diagnostics)).toEqual([]);
++    expect(emitted).toContain('inline flight::Ref<flighthq_types::PublicLoader> create_loader()');
++    // The unstated call finishes the CONSTRUCTION owner the argument names, and the returned
++    // reference widens along the emitted heritage; the public return type is not the specialization.
++    expect(emitted).toContain(
++      'flighthq_entity::finish_entity<flight::Ref<flighthq_types::InternalLoader>>(out)',
++    );
++    expect(emitted).not.toContain(
++      'finish_entity<flight::Ref<flighthq_types::PublicLoader>>(out)',
++    );
++    // No replacement owner is manufactured for the public type.
++    expect(emitted).not.toContain('make_ref<flighthq_types::PublicLoader>');
++    // The construction is evaluated once per factory and the finished value is the same local.
++    expect(emitted.match(/allocate_entity<flight::Ref<flighthq_types::InternalLoader>>\(\)/gu)).toHaveLength(2);
++    // An explicitly stated type argument still wins over argument inference; the compiler does not
++    // silently override the author's assertion.
++    expect(emitted).toContain('finish_entity<flight::Ref<flighthq_types::PublicLoader>>(');
++  });
++
+   it('preserves entity construction through a generic node initializer', () => {
+     const entityTypes = ts.createSourceFile(
+       '/flight/packages/types/src/Entity.ts',
