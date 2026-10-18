@@ -162,7 +162,7 @@
 +for(const char* text:{"{\\"layers\\":[]}","{\\"layers\\":null}","{\\"layers\\":{}}","{\\"layers\\":2}","{}"}){const auto doc=probe::parse(flight::String(text));check(probe::array(doc)==(flight::String(text)==flight::String("{\\"layers\\":[]}")));check(probe::ignored(doc)==5);}
 +auto doc=probe::parse(flight::String("{\\"layers\\":[{\\"value\\":1},null,2]}"));check(probe::forward(doc)==3);
 +const auto raw=flight::read_json_scalar_row_member(doc,flight::String("layers")).raw();auto owner=raw.array_owner_if<std::shared_ptr<flight::JsonArray>>();
-+auto first=probe::forward_first(doc);check(first.identity()==(*owner)[0].object_owner().get());
++auto first=probe::forward_first(doc);check(first.shared_native_object().get()==(*owner)[0].object_owner().get());
 +owner->push(flight::JsonValue(7));check(probe::forward(doc)==4);
 +(*owner)[0]=flight::Json::parse(flight::String("{\\"value\\":9}"));auto replacement=probe::forward_first(doc);check(replacement.identity()!=first.identity());
 +check(flight::read_json_scalar_row_member(first,flight::String("value")).as_native_number()==1);

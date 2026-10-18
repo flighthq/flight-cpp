@@ -17,7 +17,10 @@ struct NativeLayer : flight::ReferenceEnabled { double value{}; };
 
 int main() {
   int checks = 0, failures = 0;
-  const auto check = [&](bool condition) { ++checks; if (!condition) ++failures; };
+  const auto check = [&](bool condition) {
+    ++checks;
+    if (!condition) { ++failures; std::cerr << "check " << checks << " failed\n"; }
+  };
   const auto read = [](const Row& row) {
     return flight::read_json_scalar_row_member(row, flight::String("value"));
   };
@@ -33,7 +36,7 @@ int main() {
     escaped = flight::json_readonly_sequence<Row>(flight::Any(parsed));
     check(escaped->identity() == identity && escaped->size() == 4);
     old_element = (*escaped)[0];
-    check(old_element->identity() == owner->operator[](0).object_owner().get());
+    check(old_element->shared_native_object().get() == owner->operator[](0).object_owner().get());
     bool native_escape = false;
     try { (void)flight::structural_ref_cast<flight::Ref<NativeLayer>>(*old_element); }
     catch (const std::bad_cast&) { native_escape = true; }
