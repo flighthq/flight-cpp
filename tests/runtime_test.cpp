@@ -4421,6 +4421,19 @@ static void test_structural_member_view_absence() {
         "an object that never entered structural storage has no metadata; started is undefined");
   check(!empty_view.read<bool>("started").has_value(),
         "absence is falsy: !internal.started would return the source 0 path");
+
+  // Absence and a stored falsy value are distinct carriers even though both are falsy.
+  check(!flight::to_boolean(view.read<bool>("teardowns")) &&
+            !view.read<bool>("teardowns").has_value(),
+        "a missing member is absent and falsy");
+  const std::optional<bool> stored_false{false};
+  const std::optional<bool> absent_bool{};
+  check(stored_false.has_value() && !flight::to_boolean(stored_false) &&
+            !absent_bool.has_value() && !flight::to_boolean(absent_bool),
+        "a stored false and an absent member are both falsy but only one is present");
+  const std::optional<double> stored_zero{0.0};
+  check(stored_zero.has_value() && !flight::to_boolean(stored_zero),
+        "a stored zero is present while truthiness is false, as the source Number 0");
 }
 
 int main() {
