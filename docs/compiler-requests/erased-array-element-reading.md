@@ -744,7 +744,11 @@ Source patch `compiler-erased-array-length-index` records the guard proof for th
 dominates (both `if (!Array.isArray(x)) <exit>` and `if (Array.isArray(x)) { ... } else <exit>`, with
 return/throw/continue/break treated as exits), withdraws it when the binding is assigned, and under
 it lowers `length` to `static_cast<double>(x.array_size())` and `x[i]` to
-`x.array_get(i).value_or(Any(undefined))`. Reads without the proof keep the dynamic named lookup,
+`x.array_get(i).value_or(Any(undefined))`. The proof is an implication over the condition: a
+surviving disjunction is false on every operand and a surviving conjunction true on every operand, so
+the DragonBones shape `if (!Array.isArray(x) || x.length === 0) return` proves the array, and the
+short-circuited right operand of `||` is emitted under the same proof -- its own `length` test is the
+runtime size, so an empty array takes the source's early return rather than setting a zero. Reads without the proof keep the dynamic named lookup,
 which is the source's own operation on a possibly non-array object.
 
 Measured: new `cppErasedArrayLengthIndex.test.ts` 3 pass; package typecheck exit 0; focused

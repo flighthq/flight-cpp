@@ -1,5 +1,5 @@
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-index 67857d0..ba27f9d 100644
+index fea33d2..3919cfc 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 @@ -374,6 +374,11 @@ interface EmitContext {
@@ -62,7 +62,7 @@ index 67857d0..ba27f9d 100644
      statementContext = withdrawCppAssignedNarrowingsCpp(statement, statementContext);
      statementContext = withdrawCppAssignedGuardedPathsCpp(statement, statementContext, true);
      // Recorded AFTER the withdrawal, because a terminating guard's own body may call or construct -- the
-@@ -9940,14 +9972,62 @@ function getCppImmediateDenseArrayElementPresenceCpp(
+@@ -9940,14 +9972,92 @@ function getCppImmediateDenseArrayElementPresenceCpp(
  // longer true, and the read after the write has to resolve without one -- which either finds its own
  // proof or refuses.
  function withdrawCppAssignedNarrowingsCpp(statement: Readonly<IrStatement>, context: EmitContext): EmitContext {
@@ -95,12 +95,37 @@ index 67857d0..ba27f9d 100644
 +  return next;
 +}
 +
-+// `if (!Array.isArray(x)) <abrupt>` and `if (Array.isArray(x)) { ... } else <abrupt>` both leave the
-+// rest of the block with x proved to hold an array. Record that only for a binding whose emitted
-+// storage is the erased dynamic value: a concretely represented array already lowers from its type,
-+// while the erased reads (length, index) need the proof to choose the runtime array accessors
-+// instead of a dynamic named-property read. The fact is statement-local and assignment-withdrawn, so
-+// it cannot cross a call, alias or mutation.
++// `Array.isArray(x)` (and its negation) as a branch predicate over an erased binding. The guarded
++// branch proves the receiver is an array, which is exactly where the runtime's erased array reads are
++// valid; a concretely represented array is already lowered from its type, so this evidence exists for
++// the erased dynamic value only.
++function getCppErasedArrayPredicateEvidenceCpp(
++  condition: Readonly<IrExpression>,
++  result: boolean,
++  context: EmitContext,
++): string | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return undefined;
++  const negated = condition.kind === 'unary' && condition.operator === '!';
++  const call = negated ? condition.operand : condition;
++  if (call.kind !== 'call' || call.optional || call.arguments.length !== 1) return undefined;
++  if (call.callee.kind !== 'property' || call.callee.optional || call.callee.name !== 'isArray') return undefined;
++  if (call.callee.object.kind !== 'identifier' || call.callee.object.reference.kind !== 'ambient') return undefined;
++  if (call.callee.object.reference.name !== 'Array') return undefined;
++  // `!Array.isArray(x)` proves the array on its false branch; the bare call proves it on its true one.
++  if (negated ? result : !result) return undefined;
++  const candidate = call.arguments[0]!;
++  if (candidate.kind !== 'identifier' || candidate.reference.kind !== 'binding') return undefined;
++  if (!hasCppErasedDynamicTestOperandCpp(candidate, getIrExpressionTypeEvidenceCpp(candidate, context), context)) {
++    return undefined;
++  }
++  return candidate.reference.binding.id;
++}
++
++// A guard whose surviving branch excludes the non-array case leaves the rest of the block with the
++// binding proved to hold an array. `if (!Array.isArray(x)) <exit>` survives the false branch and
++// `if (Array.isArray(x)) { ... } else <exit>` the true one; a surviving disjunction is false on every
++// operand and a surviving conjunction is true on every operand, so each operand's proof applies. The
++// fact is statement-local and assignment-withdrawn, so it cannot cross a call, alias or mutation.
 +function getCppErasedArrayGuardProvenBindingIdsCpp(
 +  statement: Readonly<IrStatement>,
 +  context: EmitContext,
@@ -109,31 +134,36 @@ index 67857d0..ba27f9d 100644
 +  const exits = (branch: Readonly<IrStatement> | undefined): boolean =>
 +    branch !== undefined &&
 +    (isCppAbruptCompletionStatement(branch) || branch.kind === 'continue' || branch.kind === 'break');
-+  let tested: Readonly<IrExpression> | undefined;
++  let surviving: boolean | undefined;
++  if (!statement.otherwise && exits(statement.consequent)) surviving = false;
++  else if (statement.otherwise && exits(statement.otherwise)) surviving = true;
++  if (surviving === undefined) return [];
++  return getCppErasedArrayConditionProvenBindingIdsCpp(statement.condition, surviving, context);
++}
++
++// The erased-array facts a condition proves when it evaluates to `expected`: a disjunction expected
++// false is false on every operand, and a conjunction expected true is true on every operand, so each
++// operand contributes its own proof. Anything else is a single predicate.
++function getCppErasedArrayConditionProvenBindingIdsCpp(
++  condition: Readonly<IrExpression>,
++  expected: boolean,
++  context: EmitContext,
++): readonly string[] {
 +  if (
-+    statement.condition.kind === 'unary' &&
-+    statement.condition.operator === '!' &&
-+    !statement.otherwise &&
-+    exits(statement.consequent)
++    condition.kind === 'binary' &&
++    ((condition.operator === '||' && !expected) || (condition.operator === '&&' && expected))
 +  ) {
-+    tested = statement.condition.operand;
-+  } else if (statement.otherwise && exits(statement.otherwise)) {
-+    tested = statement.condition;
++    return [
++      ...getCppErasedArrayConditionProvenBindingIdsCpp(condition.left, expected, context),
++      ...getCppErasedArrayConditionProvenBindingIdsCpp(condition.right, expected, context),
++    ];
 +  }
-+  if (!tested || tested.kind !== 'call' || tested.optional || tested.arguments.length !== 1) return [];
-+  if (tested.callee.kind !== 'property' || tested.callee.optional || tested.callee.name !== 'isArray') return [];
-+  if (tested.callee.object.kind !== 'identifier' || tested.callee.object.reference.kind !== 'ambient') return [];
-+  if (tested.callee.object.reference.name !== 'Array') return [];
-+  const candidate = tested.arguments[0]!;
-+  if (candidate.kind !== 'identifier' || candidate.reference.kind !== 'binding') return [];
-+  if (!hasCppErasedDynamicTestOperandCpp(candidate, getIrExpressionTypeEvidenceCpp(candidate, context), context)) {
-+    return [];
-+  }
-+  return [candidate.reference.binding.id];
++  const bindingId = getCppErasedArrayPredicateEvidenceCpp(condition, expected, context);
++  return bindingId ? [bindingId] : [];
  }
  
  function collectCppAssignedBindingIdsCpp(statement: Readonly<IrStatement>): readonly string[] {
-@@ -14412,6 +14492,19 @@ function emitCppErasedDynamicPropertyReadCpp(
+@@ -14412,6 +14522,19 @@ function emitCppErasedDynamicPropertyReadCpp(
    if (!isCppErasedDynamicPropertyReadCpp(expression, context)) return undefined;
    context.includes.add('flight/any.hpp');
    context.includes.add('flight/structural_ref.hpp');
@@ -153,12 +183,66 @@ index 67857d0..ba27f9d 100644
    return `flight::named_properties(${emitExpression(expression.object, context)}).get(${emitLiteral(expression.name, context)})`;
  }
  
+@@ -16937,33 +17060,38 @@ function getCppConditionBranchContextCpp(
+   condition: Readonly<IrExpression>,
+   result: boolean,
+   context: EmitContext,
++): EmitContext {
++  const branch = getCppUnionOrArrayBranchContextCpp(condition, result, context);
++  const proven = getCppErasedArrayConditionProvenBindingIdsCpp(condition, result, context);
++  if (proven.length === 0) return branch;
++  return {
++    ...branch,
++    erasedArrayProvenBindingIds: new Set([...branch.erasedArrayProvenBindingIds, ...proven]),
++  };
++}
++
++function getCppUnionOrArrayBranchContextCpp(
++  condition: Readonly<IrExpression>,
++  result: boolean,
++  context: EmitContext,
+ ): EmitContext {
+   const unionMemberTest = condition.kind === 'binary' ? condition.semantics.unionMemberTest : undefined;
+   const unionContext = getCppUnionMemberTestBranchContextCpp(unionMemberTest, result, context);
+-  const guardedPathEntries = result ? collectCppGuardedPathKindsCpp(condition, unionContext) : new Map<string, string>();
+-  const guardedContext =
+-    guardedPathEntries.size === 0
+-      ? unionContext
+-      : (() => {
+-          const guardedPathKinds = new Map(unionContext.guardedPathKinds);
+-          for (const [key, kind] of guardedPathEntries) guardedPathKinds.set(key, kind);
+-          return { ...unionContext, guardedPathKinds };
+-        })();
+-  const arrayValue = getCppVariantArrayPredicateEvidenceCpp(condition, guardedContext);
++  const arrayValue = getCppVariantArrayPredicateEvidenceCpp(condition, unionContext);
+   if (arrayValue) {
+     return {
+-      ...guardedContext,
+-      narrowedBindingTypes: new Map(guardedContext.narrowedBindingTypes).set(
++      ...unionContext,
++      narrowedBindingTypes: new Map(unionContext.narrowedBindingTypes).set(
+         arrayValue.binding.id,
+         result ? arrayValue.arrayType : arrayValue.nonArrayType,
+       ),
+     };
+   }
+   const arrayProperty = getCppVariantPropertyArrayPredicateEvidenceCpp(condition, context);
+-  if (!arrayProperty) return guardedContext;
++  if (!arrayProperty) return unionContext;
+   return {
+-    ...guardedContext,
+-    narrowedBindingTypes: new Map(guardedContext.narrowedBindingTypes).set(
++    ...unionContext,
++    narrowedBindingTypes: new Map(unionContext.narrowedBindingTypes).set(
+       arrayProperty.binding.id,
+       result ? arrayProperty.arrayReceiverType : arrayProperty.nonArrayReceiverType,
+     ),
 diff --git a/packages/compiler-backend-cpp/src/cppErasedArrayLengthIndex.test.ts b/packages/compiler-backend-cpp/src/cppErasedArrayLengthIndex.test.ts
 new file mode 100644
-index 0000000..721f1cb
+index 0000000..8e6bd03
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppErasedArrayLengthIndex.test.ts
-@@ -0,0 +1,73 @@
+@@ -0,0 +1,87 @@
 +import ts from 'typescript';
 +import { expect, it } from 'vitest';
 +
@@ -194,6 +278,20 @@ index 0000000..721f1cb
 +
 +  expect(output).toContain('static_cast<double>(raw.array_size())');
 +  expect(output).toContain('array_get(erased_array_index).value_or(flight::Any(flight::undefined))');
++  expect(output).not.toContain('get(flight::String("length"))');
++});
++
++it('proves the array through a compound disjunction guard, including its short-circuited length test', () => {
++  const output = emit(`
++    export function countSections(raw: unknown): number {
++      if (!Array.isArray(raw) || raw.length === 0) return 0;
++      return raw.length;
++    }
++  `);
++
++  // The right operand of `||` runs only when `!Array.isArray(raw)` was false, so its own length test
++  // is under the proof too; the post-guard read is the second one.
++  expect(output.match(/static_cast<double>\(raw\.array_size\(\)\)/g)).toHaveLength(2);
 +  expect(output).not.toContain('get(flight::String("length"))');
 +});
 +
