@@ -21,20 +21,12 @@
 
 #include <flight/any.hpp>
 #include <flight/boolean.hpp>
+#include <flight/out_of_profile.hpp>
 #include <flight/json.hpp>
 #include <flight/string.hpp>
 #include <flight/structural_ref.hpp>
 
 namespace flight {
-
-// Out-of-profile only: a JSON value that is not a number reached a native double boundary. This is
-// deliberately NOT flight::Error/DOMException, so it cannot be observed as a JS-shaped error.
-class NativeScalarEscapeError final : public std::runtime_error {
- public:
-  explicit NativeScalarEscapeError(std::string_view held)
-      : std::runtime_error("a JSON value of type '" + std::string(held) +
-                           "' cannot be used where a native number is required") {}
-};
 
 class JsonScalarCell final {
  public:
