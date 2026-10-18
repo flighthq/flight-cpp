@@ -42,10 +42,10 @@ void check(bool ok, const char* what) {
 // The behavior of the source binder, written once against the carrier: lazily set the presentation view,
 // then return it. Both owners must produce the same observable results through it.
 double bind_presentation(const ScreenView& target, double fresh) {
-  if (!target.read<std::optional<double>, &Screen::presentation_view>("presentationView").value()) {
-    target.write<std::optional<double>, &Screen::presentation_view>("presentationView", fresh);
+  if (!target.template read<flight::RowKey<"presentationView">, std::optional<double>, &Screen::presentation_view>().value()) {
+    target.template write<flight::RowKey<"presentationView">, std::optional<double>, &Screen::presentation_view>(fresh);
   }
-  return target.read<std::optional<double>, &Screen::presentation_view>("presentationView").value().value();
+  return target.template read<flight::RowKey<"presentationView">, std::optional<double>, &Screen::presentation_view>().value().value();
 }
 
 }  // namespace
@@ -70,7 +70,7 @@ int main(int argc, char**) {
   const auto narrowed_caller = ScreenView::of(flight::Ref<Target>(caller));
   check(!narrowed_caller.nominal() && narrowed_caller.object() == caller,
         "a look-alike is carried as itself, with no nominal owner and no cast");
-  check(narrowed_caller.read<double, &Screen::capture_width>("captureWidth").value() == 4.0,
+  check(narrowed_caller.template read<flight::RowKey<"captureWidth">, double, &Screen::capture_width>().value() == 4.0,
         "a by-name read sees the look-alike's real field");
   check(!flight::detail::find_row_owner(static_cast<const void*>(caller.get())) &&
             !flight::StructuralMemberView<Target>(flight::Ref<Target>(caller)).has_binding_metadata(),
@@ -83,9 +83,9 @@ int main(int argc, char**) {
 
   // An undeclared member written by name lives in the same object's named cells, readable by another view,
   // and fabricates no native member.
-  check(narrowed_caller.write<double, &Screen::capture_width>("lateMember", 3.0), "an undeclared member write succeeds by name");
+  check(narrowed_caller.template write<flight::RowKey<"lateMember">, double, &Screen::capture_width>(3.0), "an undeclared member write succeeds by name");
   const auto other_view = ScreenView::of(flight::Ref<Target>(caller));
-  check(other_view.read<double, &Screen::capture_width>("lateMember").value() == 3.0 && caller->capture_width == 4.0,
+  check(other_view.template read<flight::RowKey<"lateMember">, double, &Screen::capture_width>().value() == 3.0 && caller->capture_width == 4.0,
         "another view reads the by-name cell; the native captureWidth field is untouched");
 
   // Stored and returned identity: the frame keeps the carrier and later reads the same object.
@@ -98,13 +98,35 @@ int main(int argc, char**) {
   // absent; a look-alike is never recovered as the nominal owner; absence stays distinct from a stored 0.
   const auto plain = flight::make_ref<Target>(Target{});
   const auto plain_view = ScreenView::of(plain);
-  check(!plain_view.nominal() && !plain_view.read<double, &Screen::capture_width>("captureWidth").has_value(),
+  check(!plain_view.nominal() && !plain_view.template read<flight::RowKey<"captureWidth">, double, &Screen::capture_width>().has_value(),
         "an unregistered object reads its members as absent");
   check(!flight::recover_owner<Screen>(flight::Ref<Target>(caller)), "a look-alike of another dynamic type is not recovered");
   caller->capture_width = 0.0;
-  const auto zero = narrowed_caller.read<double, &Screen::capture_width>("captureWidth");
+  const auto zero = narrowed_caller.template read<flight::RowKey<"captureWidth">, double, &Screen::capture_width>();
   check(zero.has_value() && !flight::to_boolean(zero), "a stored 0 is present yet falsy");
-  check(!narrowed_caller.read<double, &Screen::capture_width>("missingMember").has_value(), "an undeclared member reads as absence");
+  check(!narrowed_caller.template read<flight::RowKey<"missingMember">, double, &Screen::capture_width>().has_value(), "an undeclared member reads as absence");
+
+  // A by-name read of a present value through the transient exact-type owner retains nothing: no owner is
+  // registered, the object's reference count is unchanged, no cell is created, and the object expires as
+  // soon as its external references drop.
+  {
+    auto reader = flight::make_ref<CallerScreen>(CallerScreen{});
+    reader->capture_width = 6.0;
+    std::weak_ptr<CallerScreen> watch = reader;
+    const auto uses_before = reader.use_count();
+    {
+      const auto transient_view = ScreenView::of(flight::Ref<Target>(reader));
+      check(transient_view.template read<flight::RowKey<"captureWidth">, double, &Screen::capture_width>().value() == 6.0,
+            "a transient read returns the present native value");
+    }
+    check(!flight::detail::find_row_owner(static_cast<const void*>(reader.get())),
+          "a present-value read registered no owner");
+    check(reader.use_count() == uses_before, "a present-value read leaves the object's reference count unchanged");
+    check(!flight::StructuralMemberView<Target>(flight::Ref<Target>(reader)).has_binding_metadata(),
+          "the transient owner is not observable through any other view");
+    reader.reset();
+    check(watch.expired(), "the object expires once its external references drop");
+  }
 
   if (argc > 1) check(caller->presentation_view == 9.0, "mutant: demand that the second bind overwrote");
   std::printf("%s (%d failures)\n", failures ? "FAIL" : "nominal-or-structural view ok", failures);

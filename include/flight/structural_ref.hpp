@@ -769,7 +769,13 @@ struct RecoverableRowOwnerFactory<Object> {
   }
   [[nodiscard]] static std::shared_ptr<void> own(const std::shared_ptr<void>& erased) {
     if (!erased) return nullptr;
-    return std::static_pointer_cast<void>(owner_for(std::static_pointer_cast<Object>(erased)));
+    auto object = std::static_pointer_cast<Object>(erased);
+    auto owner = owner_for(object);
+    // The object may already have an owner recorded at a narrower static type (a predicate that viewed it
+    // as its base). Bind the members its exact type declares as well; bind_named keeps every existing cell,
+    // so this only adds the object's own real fields and never replaces or fabricates one.
+    bind_generated_row_members(*owner, object);
+    return std::static_pointer_cast<void>(std::move(owner));
   }
 };
 
