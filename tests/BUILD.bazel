@@ -1662,6 +1662,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_rich_text_runtime_test",
+    srcs = ["generated_rich_text_runtime_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_video_test",
     srcs = ["generated_video_test.cpp"],
     size = "small",
@@ -1900,6 +1907,7 @@ test_suite(
         ":generated_textbidi_parity_test",
         ":generated_textsegment_parity_test",
         ":generated_textlayout_parity_test",
+        ":generated_rich_text_runtime_test",
         ":generated_texture_test",
         ":generated_texture_options_row_test",
         ":generated_cube_texture_test",

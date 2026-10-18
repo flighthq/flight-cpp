@@ -1596,11 +1596,11 @@
       "supplies": "packages/text/src/richText.ts",
       "derivedFrom": "4f2b3f6739fd0474b0c7130721027f3f0e7dbdd0d5a397fd64edf776ac82f856",
       "reason": "The generated module refuses RichText data, node, runtime, signal, and helper declarations and its retained body repeatedly accesses Ref-owned data as a value, so merely inserting the omitted declarations still leaves the header uncompilable. The pinned compiler moved to 806d257 and emits this module differently; the override keeps its prior emission rather than a text merge of the two, because the merged form was measured against the whole override corpus and compiled worse than the prior emission left alone.",
-      "change": "Constructs exact RichText data and node owners, retains the independent exact RichTextRuntime in an identity-keyed weak registry, exposes it through readonly structural views, and restores core content, string, append, and scroll operations.",
-      "equivalence": "RichText defaults match the source, each node has one lifetime-bound exact runtime, content updates preserve text and range owners, string replacement clears stale ranges, append retains existing ranges, and invalidation follows auto-size bounds semantics.",
-      "whyNotAPatchOrRepair": "Ref member access can be repaired textually, but exact runtime recovery still has no emitted heritage and many required behavioral declarations remain absent. The identity registry preserves the source owner without unsafe casts.",
+      "change": "Keeps one newly allocated RichTextData with its own aggregate fields and seven inherited TextLabelData cell writes instead of illegal inherited designators. Corrects backgroundColor/borderColor to the original defaults and allocates separate default textFormat/defaultTextFormat owners. Default/nullish construction stays supported; supplied options explicitly raise OutOfProfileError. The construction now allocates one RichTextRuntime, copies only fresh base initialization into its Node2D runtime base, and stores that same object on the node's EntityRuntimeKey; getRichTextRuntime reads the slot back and the weak side registry is removed. No data/base owner is copied or replaced.",
+      "equivalence": "Default field values, separate format owners, exact returned data owner and live inherited cells follow the measured original default factory. The one runtime the factory allocates is the object retained by the node: repeated public reads recover that same owner, its selection indices start at zero, and dropping the node releases it (no side table, no second runtime, no manufactured replacement). Content updates preserve text and range owners, string replacement clears stale ranges, append retains existing ranges, and invalidation follows the retained auto-size behavior. Supplied-option equivalence remains unclaimed and is recorded below.",
+      "whyNotAPatchOrRepair": "Ref member access and the flattened runtime heritage cannot be repaired by a declaration alone: the emitted RichTextRuntime is unrelated to the Node2D runtime the node slot stores, so the one source owner needs the native heritage view supplied here. The runtime object itself is still allocated by the source factory; only its C++ base representation is made coherent.",
       "unblocks": "RichText construction plus core content and text-input runtime access for upstream examples.",
-      "remaining": "Eleven declarations the emitter omitted are absent from the compiled surface: buildRichTextLayoutParams, computeRichTextLocalBoundsRectangle, createRichTextRuntime, dispatchRichTextLinkAtPoint, emitTextFieldChange, emitTextFieldScroll, enableTextFieldSignals, equalsRichTextFormat, getRichTextFormatRangeAt, getRichTextPasswordCharacter, getTextFieldSignals. The package compiles with 0 failing headers only because nothing in its compiled closure calls them.",
+      "remaining": "Supplied data/node options explicitly raise OutOfProfileError; original option getter order/errors and source-authored range mapping remain unimplemented. The ten remaining omitted declarations are absent from the compiled surface: buildRichTextLayoutParams, computeRichTextLocalBoundsRectangle, dispatchRichTextLinkAtPoint, emitTextFieldChange, emitTextFieldScroll, enableTextFieldSignals, equalsRichTextFormat, getRichTextFormatRangeAt, getRichTextPasswordCharacter, getTextFieldSignals. buildTextLayoutParams is therefore still unset on the retained runtime, so layout paths that require it remain a recorded gap; whole SVG rich-text behavior remains unqualified. These limitations keep the override partial.",
       "expires": "when flattened RichText runtime heritage, Partial construction, and Ref member access emit directly.",
       "authoredOn": "2026-10-08"
     },
@@ -3550,6 +3550,22 @@
       "unblocks": "flight/skeleton2d_formats/spine_parse_helpers.hpp compiles, so clampUnit and the other Spine parse helpers are consumable through the original public header.",
       "remaining": "None in this module's emitted declarations or behavior. The `Array.isArray(unknown)` guard relies on the runtime's free `flight::is_array(const Any&)`, which is now supplied.",
       "expires": "when the pinned compiler lowers erased array length/index reads through the checked Any array API for these curve reads and names the optional diagnostic Record for spineParseHelpers.ts.",
+      "authoredOn": "2026-10-18"
+    },
+    {
+      "id": "rich-text-native-runtime-heritage",
+      "path": "flight/types/rich_text.hpp",
+      "package": "@flighthq/types",
+      "status": "complete",
+      "supplies": "packages/types/src/RichText.ts",
+      "remaining": "None in the supplied type at this pin.",
+      "derivedFrom": "7871810d4c80622648a1d08d0e66180f99818ef3bc645ff208abde23ef4e2c68",
+      "reason": "The emitter flattens the declared RichTextRuntime heritage (TextLabelRuntime -> Node2DRuntime -> NodeRuntime<Node2DTraits>) into an unrelated struct and types the node slot as a generic NodeRuntime, so the one runtime createRichTextRuntime allocates cannot be retained on the node.",
+      "change": "Declares RichTextRuntime with its actual NodeRuntime<Node2DTraits> base and removes the duplicated base cells, following the TextLabel native runtime heritage repair. Types the RichText node entityRuntimeKey as the exact RichTextRuntime so the source factory stores and the source getter recovers that same owner.",
+      "equivalence": "The source type relationship is expressed as C++ inheritance instead of duplicated storage: every runtime cell exists once, on the one allocation the factory returns. No field default, reference identity, layout result, selection index or absence value changes.",
+      "whyNotAPatchOrRepair": "A declaration repair cannot add a C++ base, and an emission repair cannot retype the owner slot. The type must carry the heritage the source declares.",
+      "unblocks": "One-owner construction and recovery for RichTextRuntime, so a fresh node retains the runtime its factory allocated and repeated public reads return that same object.",
+      "expires": "when the emitter preserves runtime interface heritage and the exact runtime slot type directly.",
       "authoredOn": "2026-10-18"
     }
   ]
