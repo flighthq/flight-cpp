@@ -1,0 +1,107 @@
+{
+  "schema": "flight-cpp-particle-registration-boundaries/1",
+  "scope": "Libgdx exact-shape source/native preparation and two separate registration counterexamples/scope proposal only; no production compiler/runtime/source-patch changes, SDK or installed callback/header promotion.",
+  "authority": {
+    "conditional": "Foreman675731df",
+    "libgdxAccepted": "Foreman71091a29"
+  },
+  "acceptedPriorPreparation": "9d4852cb",
+  "compilerInput": {
+    "activeCompilerPatches": 111,
+    "inputIdentities": "artifacts/particle-codec-readonly-callback-preparation.json composition.compilerRecords; exact identities sent builder2",
+    "newPatchCount": 0
+  },
+  "libgdx": {
+    "assignmentSites": [
+      "registerBuiltInParticleFormats.ts:51",
+      "registerBuiltInParticleFormats.ts:52"
+    ],
+    "originalPublicFunctions": [
+      "libgdxParse.ts:19",
+      "libgdxParse.ts:31"
+    ],
+    "options": "LibgdxParticleSchema.ts:70 sole optional numeric textureSize",
+    "result": "LibgdxParticleSchema.ts:76 original writable required config/diagnostics plus document",
+    "source": {
+      "strictTypeFixture": "pass",
+      "checks": 67,
+      "originalBodies": true,
+      "sourceHashes": {
+        "particles-formats/src/starlingPexParse.ts": "83b73cce886b40ea0cf5f5ac9b249ded35232fb387090ec1daa2ec47d2e66af0",
+        "particles/src/particleEmitterConfig.ts": "77a2f7a28c06a03a73d0e7b52d93f3e739448351b985bc6f697c78e5459e30ac",
+        "particles/src/curve.ts": "a0af9f5497161fde7072a877fb8d1cb5b89e7ce5fb4e0eefb83717ef5688ecc5",
+        "particles-formats/src/unityParse.ts": "105d29c1d9abbf99f3968fc0404c289cf6b1ec82c0694d06c81f66a944b182db",
+        "particles-formats/src/particleDesignerParse.ts": "45b23388fc116f2b0d73da2fb60dc25ea06f186f8ee325621f9affabe38e9fc4",
+        "particles-formats/src/libgdxParse.ts": "d14d5f6a3750a39886ee8cb64a3841c5433d38b5a02aa05bab3e415a7c8cae1d",
+        "importdiagnostics/src/importDiagnosticCollector.ts": "5aab6518a367bf77e95168a553875de04ea9fa91d2ac7e561d76c76e12efa215",
+        "math/src/constants.ts": "81b1771fa6df3dbaf350ce79a7d43ec8981ee60e7349eebcdd2af92e4412aedf",
+        "types/src/ImportDiagnostic.ts": "b56593c1baf28ae733c9fdce62e96fee96bfa9ea3628a7c271a8464f45bdf8ae"
+      },
+      "scope": "Original-source counterexamples and protocol controls only; no compiler adapter or built-in registry qualification."
+    },
+    "assignmentOnlyEmission": {
+      "inputContextSha256": "d9c9d27183c2aec6d473b5f6a5243a607d2d8688b496f14739e2d12ae96a1d3e",
+      "modules": [
+        {
+          "source": "packages/particles-formats/src/libgdxParse.ts",
+          "file": "flight/particles_formats/libgdx_parse.hpp",
+          "bytes": 47165,
+          "sha256": "ca11766a4e967f68cc35ca7ad1ed6905f864aac526e51a3cab3874984b30a7e5"
+        },
+        {
+          "source": "packages/particles-formats/src/particleCodecLibgdxCallbacks.ts",
+          "file": "flight/particles_formats/particle_codec_libgdx_callbacks.hpp",
+          "bytes": 4365,
+          "sha256": "08b777dc9e95e98d6b6145d8c466312d6204c304dfce5a18489e834c0a98754c"
+        }
+      ],
+      "scope": "Assignment-only source emission over original libGDX functions and saved normal IR. No detector, full descriptor, registry, normal SDK or installed callback qualification."
+    },
+    "nativeControls": {
+      "registeredTests": 3,
+      "result": "same original native result owner, writable config cell and extra document",
+      "publicConfigAndDocumentAbi": "exact optionalRef signatures",
+      "options": "native same-owner live alias; original-source getter/evaluation/default/error timing; existing-family emitted synthetic controls remain historical separate proof",
+      "functionOrigin": "config/document native named origins distinct and original live-options body invoked"
+    }
+  },
+  "registrationJson": {
+    "sourceChecks": 9,
+    "detectorSourceChecks": 7,
+    "detectorRefusal": {
+      "rule": "cpp-optional-property-call-missing-callable-result",
+      "message": "cpp emission failed for @flighthq/example/packages/example/src/detector.ts: optional property call trim requires callable result evidence"
+    },
+    "exactOriginalPrivateHelper": true,
+    "helperSha256": "7367ed83f9dc2367a22e5a7b8ae6bcd17b9f2a650240149aafdcbb8c24c12c69",
+    "compilerEmittedCounterexample": {
+      "nativeBuild": "fail",
+      "retainedBoundaryReproduced": true,
+      "diagnostic": "zig: warning: argument unused during compilation: '-c' [-Wunused-command-line-argument]\n/tmp/particle-registration-boundary-ttDAiw/counterexample.cpp:2:9: warning: #pragma once in main file [-Wpragma-once-outside-header]\n    2 | #pragma once\n      |         ^\n/tmp/particle-registration-boundary-ttDAiw/counterexample.cpp:19:384: error: no matching constructor for initialization of 'std::optional<flight::Record<flight::String, flight::Any>>'\n   19 |     return (((([&]() { const auto& presence_operand = value; return !presence_operand.is_null(); }()) && ([&]() { const auto& typeof_json_value = value; return (typeof_json_value.kind() == flight::JsonValue::Kind::null || typeof_json_value.kind() == flight::JsonValue::Kind::array || typeof_json_value.kind() == flight::JsonValue::Kind::object); }())) && !flight::is_array(value)) ? std::optional<flight::Record<flight::String, flight::Any>>{flight::named_properties(value)} : std::nullopt);\n      |                                                                                                                                                                                                                                                                                                                                                                                                ^                                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nout/tooling/python/ziglang/lib/libcxx/include/optional:904:35: note: candidate constructor not viable: no known conversion from 'NamedProperties' to 'const optional<flight::Record<flight::String, flight::Any>>' for 1st argument\n  904 |   _LIBCPP_HIDE_FROM_ABI constexpr optional(const optional&) = default;\n      |                                   ^        ~~~~~~~~~~~~~~~\nout/tooling/python/ziglang/lib/libcxx/include/optional:905:35: note: candidate constructor not viable: no known conversion from 'NamedProperties' to 'optional<flight::Record<flight::String, flight::Any>>' for 1st argument\n  905 |   _LIBCPP_HIDE_FROM_ABI constexpr optional(optional&&)      = default;\n      |                                   ^        ~~~~~~~~~~\nout/tooling/python/ziglang/lib/libcxx/include/optional:906:35: note: candidate constructor not viable: no known conversion from 'NamedProperties' to 'nullopt_t' for 1st argument\n  906 |   _LIBCPP_HIDE_FROM_ABI constexpr optional(nullopt_t) noexcept {}\n      |                                   ^        ~~~~~~~~~\nout/tooling/python/ziglang/lib/libcxx/include/optional:912:44: note: candidate template ignored: requirement 'std::integral_constant<bool, false>::value' was not satisfied [with _InPlaceT = NamedProperties, _Args = <>]\n  912 |   _LIBCPP_HIDE_FROM_ABI constexpr explicit optional(_InPlaceT, _Args&&... __args)\n      |                                            ^\nout/tooling/python/ziglang/lib/libcxx/include/optional:922:35: note: candidate template ignored: requirement 'std::optional<flight::Record<flight::String, flight::Any>>::_CheckOptionalArgsConstructor::__enable_implicit()' was not satisfied [with _Up = NamedProperties]\n  922 |   _LIBCPP_HIDE_FROM_ABI constexpr optional(_Up&& __v)\n      |                                   ^\nout/tooling/python/ziglang/lib/libcxx/include/optional:931:44: note: candidate template ignored: requirement 'std::optional<flight::Record<flight::String, flight::Any>>::_CheckOptionalArgsConstructor::__enable_explicit()' was not satisfied [with _Up = NamedProperties]\n  931 |   _LIBCPP_HIDE_FROM_ABI constexpr explicit optional(_Up&& __v)\n      |                                            ^\nout/tooling/python/ziglang/lib/libcxx/include/optional:940:55: note: candidate template ignored: could not match 'optional<_Up>' against 'NamedProperties'\n  940 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 optional(const optional<_Up>& __v)\n      |                                                       ^\nout/tooling/python/ziglang/lib/libcxx/include/optional:948:64: note: candidate template ignored: could not match 'optional<_Up>' against 'NamedProperties'\n  948 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 explicit optional(const optional<_Up>& __v)\n      |                                                                ^\nout/tooling/python/ziglang/lib/libcxx/include/optional:958:55: note: candidate template ignored: could not match 'optional<_Up>' against 'NamedProperties'\n  958 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 optional(optional<_Up>&& __v)\n      |                                                       ^\nout/tooling/python/ziglang/lib/libcxx/include/optional:966:64: note: candidate template ignored: could not match 'optional<_Up>' against 'NamedProperties'\n  966 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 explicit optional(optional<_Up>&& __v)\n      |                                                                ^\nout/tooling/python/ziglang/lib/libcxx/include/optional:903:35: note: candidate constructor not viable: requires 0 arguments, but 1 was provided\n  903 |   _LIBCPP_HIDE_FROM_ABI constexpr optional() noexcept {}\n      |                                   ^\nout/tooling/python/ziglang/lib/libcxx/include/optional:918:44: note: candidate constructor template not viable: requires at least 2 arguments, but 1 was provided\n  918 |   _LIBCPP_HIDE_FROM_ABI constexpr explicit optional(in_place_t, initializer_list<_Up> __il, _Args&&... __args)\n      |                                            ^        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n1 warning and 1 error generated.\n"
+    },
+    "existingRuntimeViewControl": "pass",
+    "productionChange": false,
+    "scope": "Minimal private-helper counterexample and existing runtime storage control only. No original registration/public parser execution, ABI change, new adapter, SDK or header promotion."
+  },
+  "proposal": {
+    "productionImplementation": "not authorized or supplied",
+    "boundedInvestigation": "nullable extension of existing private JSON producer/read-view analysis, success original parsed owner, null sentinel, original parse/catch timing, only proven private readonly consumers and no public Record ABI change",
+    "separateLaterBoundaries": [
+      "optional presence/member reads",
+      "nested JSON member projection"
+    ],
+    "detectorOwnership": "builder2 already owns optional-call declared-return evidence; exact fresh minimal rule/counterexample to be sent to avoid duplicate fix"
+  },
+  "unchangedClaims": {
+    "normalTypes": "sole builder2 shared B pending",
+    "particlesSdk": "one eventual run pending actual Types/current composition/parity/capacity",
+    "approvedCallbackAssignments": 8,
+    "exactHeaders": {
+      "attempted": 4,
+      "pass": 1,
+      "fail": 3
+    },
+    "particlesModules": "17/18 partial",
+    "newHistorical25Promotions": 0
+  }
+}

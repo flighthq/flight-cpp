@@ -159,3 +159,25 @@ installed result remains one passing Unity header, three failing barrels and 17/
 The coordinated builder2 Types generation must supply the normal equivalent result declaration;
 only then can the one bounded particles run qualify actual installed callbacks and report the next
 concrete boundary. A-prime was not applied or needed for these current-owner controls.
+
+## Accepted libGDX pair
+
+Foreman71091a29 accepted the two original libGDX assignments after their exact sites were reported.
+`libgdxParse.ts:19` and `:31` read only `options?.textureSize ?? 1`; the options schema has one
+optional numeric property. Both reads occur after original validation and document parsing.
+The writable result has the same config/diagnostics member declarations plus its original document.
+No additional compiler/runtime/source patch is needed for this pair.
+
+The raw four-family source oracle now passes 67 checks, including 19 libGDX checks. The registered
+native boundary consumer covers both exact public native libGDX function types, live native options,
+original named origins, and same-owner writable result/document projection. An assignment-only
+`Pick<ParticleFormatCodec, 'parseToConfig' | 'parseToDocument'>` witness imports both original
+functions: the composed compiler emits two original-body helpers, two contextual assignments and
+two original-declaration identity comparisons. It uses a saved normal IR graph and the exact
+already-required result type wrapper; it is not normal SDK output or a replacement descriptor.
+
+The original descriptor refuses earlier in its optional trim detector. That expression and the
+separate nullable JSON Record constructor counterexample are recorded in
+[the registration request](particle-registration-nullable-json-record.md). They are outside the
+approved options-callable implementation. Normal Types/particles and actual installed eight-callback
+qualification remain queued, with the existing four-header/17-of-18 baseline unchanged.
