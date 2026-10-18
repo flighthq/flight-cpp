@@ -67,3 +67,17 @@ The original owned census row stays on missing create_rive_relative_transforms20
 candidate is rejected. Preserve both detail keys/numeric values, Drop severity, optional sink and
 continue behavior; dropping the diagnostic is not a clipping fix. See the
 [retained-callee audit](retained-declaration-calls-omitted-callee.md#g2-rive-clipping-declaration-does-not-pass-the-unused-header).
+
+## G2 SWF filter: a local two-site materialization, not a family fix
+
+The `swf-filter-effect-owner-pushes` patch also names the two filter diagnostic detail objects in
+`swfFilter.ts` as typed `Readonly<Record<string, boolean | number | string>>` locals before passing
+them to `reportImportDiagnostic`. The emitter then emits the declared
+`flight::Record<...> detail = {{...}, {...}};` storage and passes it to the `optional<Record<...>>`
+parameter, which compiles. The same three fields and values are built before the same call, so nothing
+about the diagnostic changes.
+
+This is deliberately local: two sites in one module, carried as part of a bounded repair whose original
+root was effect-owner heritage. It does not claim the 16-site family is fixed, and the remaining sites
+across the other packages still fail exactly as recorded above; the emitter must still name the storage
+for an object literal written directly in an optional Record slot.

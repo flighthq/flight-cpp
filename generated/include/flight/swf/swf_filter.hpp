@@ -2,6 +2,7 @@
 #pragma once
 #include <flight/array_buffer.hpp>
 #include <flight/boolean.hpp>
+#include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -124,42 +125,39 @@ inline double read_swf_filter_float(flight::Ref<flight::swf::SwfReader> reader) 
 
 inline std::optional<std::function<void(double, double)>> swf_filter_list_guard = std::nullopt;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_ANGLE_DISTANCE_COLOR_ALPHA_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_193733C4E56678C0
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_ANGLE_DISTANCE_COLOR_ALPHA_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_193733C4E56678C0
-struct strength_angle_distance_color_alpha_blur_x_blur_y_quality_source_mode_193733c4e56678c0 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_ANGLE_DISTANCE_COLOR_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_ALPHA_5BA3C0C4905C2660
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_ANGLE_DISTANCE_COLOR_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_ALPHA_5BA3C0C4905C2660
+struct strength_angle_distance_color_blur_x_blur_y_quality_source_mode_alpha_5ba3c0c4905c2660 : public flight::ReferenceEnabled {
   std::optional<double> strength;
   std::optional<double> angle;
   std::optional<double> distance;
   std::optional<double> color;
-  std::optional<double> alpha;
   std::optional<double> blur_x;
   std::optional<double> blur_y;
   std::optional<double> quality;
   std::optional<flight::types::InnerEffectSourceMode> source_mode;
+  std::optional<double> alpha;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_ANGLE_DISTANCE_COLOR_ALPHA_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_193733C4E56678C0
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_ANGLE_DISTANCE_COLOR_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_ALPHA_5BA3C0C4905C2660
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_ANGLE_DISTANCE_COLOR_ALPHA_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_3020739EC66F6292
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_ANGLE_DISTANCE_COLOR_ALPHA_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_3020739EC66F6292
-struct strength_angle_distance_color_alpha_blur_x_blur_y_quality_source_mode_3020739ec66f6292 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_ANGLE_DISTANCE_COLOR_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_ALPHA_7AAC78D6C2AD649A
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_ANGLE_DISTANCE_COLOR_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_ALPHA_7AAC78D6C2AD649A
+struct strength_angle_distance_color_blur_x_blur_y_quality_source_mode_alpha_7aac78d6c2ad649a : public flight::ReferenceEnabled {
   std::optional<double> strength;
   std::optional<double> angle;
   std::optional<double> distance;
   std::optional<double> color;
-  std::optional<double> alpha;
   std::optional<double> blur_x;
   std::optional<double> blur_y;
   std::optional<double> quality;
   std::optional<flight::types::EffectSourceMode> source_mode;
+  std::optional<double> alpha;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_ANGLE_DISTANCE_COLOR_ALPHA_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_3020739EC66F6292
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_ANGLE_DISTANCE_COLOR_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_ALPHA_7AAC78D6C2AD649A
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BLUR_X_BLUR_Y_CB675B2356FD5887
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BLUR_X_BLUR_Y_CB675B2356FD5887
-struct blur_x_blur_y_cb675b2356fd5887 : public flight::ReferenceEnabled {
-  std::optional<double> blur_x;
-  std::optional<double> blur_y;
-};
+using blur_x_blur_y_cb675b2356fd5887 = flight::effects::blur_x_blur_y_cb675b2356fd5887;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BLUR_X_BLUR_Y_CB675B2356FD5887
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_ALPHA_BLUR_X_BLUR_Y_COLOR_QUALITY_STRENGTH_15F5C1A09B0347C4
@@ -174,31 +172,31 @@ struct alpha_blur_x_blur_y_color_quality_strength_15f5c1a09b0347c4 : public flig
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_ALPHA_BLUR_X_BLUR_Y_COLOR_QUALITY_STRENGTH_15F5C1A09B0347C4
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_COLOR_ALPHA_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_0E5A4BF835EA1824
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_COLOR_ALPHA_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_0E5A4BF835EA1824
-struct strength_color_alpha_blur_x_blur_y_quality_source_mode_0e5a4bf835ea1824 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_COLOR_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_ALPHA_D86576B8A102A3E4
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_COLOR_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_ALPHA_D86576B8A102A3E4
+struct strength_color_blur_x_blur_y_quality_source_mode_alpha_d86576b8a102a3e4 : public flight::ReferenceEnabled {
   std::optional<double> strength;
   std::optional<double> color;
-  std::optional<double> alpha;
   std::optional<double> blur_x;
   std::optional<double> blur_y;
   std::optional<double> quality;
   std::optional<flight::types::InnerEffectSourceMode> source_mode;
+  std::optional<double> alpha;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_COLOR_ALPHA_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_0E5A4BF835EA1824
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_COLOR_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_ALPHA_D86576B8A102A3E4
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_COLOR_ALPHA_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_38B60C22687A9106
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_COLOR_ALPHA_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_38B60C22687A9106
-struct strength_color_alpha_blur_x_blur_y_quality_source_mode_38b60c22687a9106 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_COLOR_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_ALPHA_68FD46CA68625E1E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_COLOR_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_ALPHA_68FD46CA68625E1E
+struct strength_color_blur_x_blur_y_quality_source_mode_alpha_68fd46ca68625e1e : public flight::ReferenceEnabled {
   std::optional<double> strength;
   std::optional<double> color;
-  std::optional<double> alpha;
   std::optional<double> blur_x;
   std::optional<double> blur_y;
   std::optional<double> quality;
   std::optional<flight::types::EffectSourceMode> source_mode;
+  std::optional<double> alpha;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_COLOR_ALPHA_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_38B60C22687A9106
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_COLOR_BLUR_X_BLUR_Y_QUALITY_SOURCE_MODE_ALPHA_68FD46CA68625E1E
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_ANGLE_DISTANCE_HIGHLIGHT_COLOR_SHADOW_COLOR_BEVEL_TYPE_BLUR_X_BLUR_Y_HIGHLIGHT_ALPHA_QUALITY_SHADOW_ALPHA_SOURCE_MODE_7541C2CB9BEE560F
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_STRENGTH_ANGLE_DISTANCE_HIGHLIGHT_COLOR_SHADOW_COLOR_BEVEL_TYPE_BLUR_X_BLUR_Y_HIGHLIGHT_ALPHA_QUALITY_SHADOW_ALPHA_SOURCE_MODE_7541C2CB9BEE560F
@@ -254,7 +252,12 @@ inline bool read_swf_filter_list(flight::Ref<flight::swf::SwfReader> reader, fli
           if (!flight::to_boolean(reader->valid)) {
             return false;
           }
-          out_effects.push(((flight::bitwise_and(flags, filter_inner) != 0.0) ? flight::effects::create_inner_shadow_effect(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<strength_angle_distance_color_alpha_blur_x_blur_y_quality_source_mode_193733c4e56678c0>>>>(flight::row_field<flight::RowKey<"alpha">>(std::optional<double>{color->alpha}), flight::row_field<flight::RowKey<"angle">>(std::optional<double>{angle}), flight::row_field<flight::RowKey<"blurX">>(std::optional<double>{blur_x}), flight::row_field<flight::RowKey<"blurY">>(std::optional<double>{blur_y}), flight::row_field<flight::RowKey<"color">>(std::optional<double>{color->rgb}), flight::row_field<flight::RowKey<"distance">>(std::optional<double>{distance}), flight::row_field<flight::RowKey<"quality">>(std::optional<double>{flight::bitwise_and(flags, filter_passes)}), flight::row_field<flight::RowKey<"strength">>(std::optional<double>{strength}))) : flight::effects::create_drop_shadow_effect(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<strength_angle_distance_color_alpha_blur_x_blur_y_quality_source_mode_3020739ec66f6292>>>>(flight::row_field<flight::RowKey<"alpha">>(std::optional<double>{color->alpha}), flight::row_field<flight::RowKey<"angle">>(std::optional<double>{angle}), flight::row_field<flight::RowKey<"blurX">>(std::optional<double>{blur_x}), flight::row_field<flight::RowKey<"blurY">>(std::optional<double>{blur_y}), flight::row_field<flight::RowKey<"color">>(std::optional<double>{color->rgb}), flight::row_field<flight::RowKey<"distance">>(std::optional<double>{distance}), flight::row_field<flight::RowKey<"quality">>(std::optional<double>{flight::bitwise_and(flags, filter_passes)}), flight::row_field<flight::RowKey<"strength">>(std::optional<double>{strength})))));
+          if ((flight::bitwise_and(flags, filter_inner) != 0.0)) {
+            out_effects.push(flight::effects::create_inner_shadow_effect(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<strength_angle_distance_color_blur_x_blur_y_quality_source_mode_alpha_5ba3c0c4905c2660>>>>(flight::row_field<flight::RowKey<"alpha">>(std::optional<double>{color->alpha}), flight::row_field<flight::RowKey<"angle">>(std::optional<double>{angle}), flight::row_field<flight::RowKey<"blurX">>(std::optional<double>{blur_x}), flight::row_field<flight::RowKey<"blurY">>(std::optional<double>{blur_y}), flight::row_field<flight::RowKey<"color">>(std::optional<double>{color->rgb}), flight::row_field<flight::RowKey<"distance">>(std::optional<double>{distance}), flight::row_field<flight::RowKey<"quality">>(std::optional<double>{flight::bitwise_and(flags, filter_passes)}), flight::row_field<flight::RowKey<"strength">>(std::optional<double>{strength}))));
+          }
+          else {
+            out_effects.push(flight::effects::create_drop_shadow_effect(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<strength_angle_distance_color_blur_x_blur_y_quality_source_mode_alpha_7aac78d6c2ad649a>>>>(flight::row_field<flight::RowKey<"alpha">>(std::optional<double>{color->alpha}), flight::row_field<flight::RowKey<"angle">>(std::optional<double>{angle}), flight::row_field<flight::RowKey<"blurX">>(std::optional<double>{blur_x}), flight::row_field<flight::RowKey<"blurY">>(std::optional<double>{blur_y}), flight::row_field<flight::RowKey<"color">>(std::optional<double>{color->rgb}), flight::row_field<flight::RowKey<"distance">>(std::optional<double>{distance}), flight::row_field<flight::RowKey<"quality">>(std::optional<double>{flight::bitwise_and(flags, filter_passes)}), flight::row_field<flight::RowKey<"strength">>(std::optional<double>{strength}))));
+          }
           {
             (index += 1.0);
             continue;
@@ -268,7 +271,8 @@ inline bool read_swf_filter_list(flight::Ref<flight::swf::SwfReader> reader, fli
             return false;
           }
           if ((flight::bitwise_and(blur_flags, filter_passes) > 1.0)) {
-            flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("swf.filter-field-unrepresentable"), flight::String("readSwfFilterList"), {{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.placement.filter-list")}}, {flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("passes")}}, {flight::String("filterId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, id}}});
+            flight::Record<flight::String, std::variant<bool, double, flight::String>> detail = {{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.placement.filter-list")}}, {flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("passes")}}, {flight::String("filterId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, id}}};
+            flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("swf.filter-field-unrepresentable"), flight::String("readSwfFilterList"), detail);
           }
           out_effects.push(flight::effects::create_blur_effect(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<blur_x_blur_y_cb675b2356fd5887>>>>(flight::row_field<flight::RowKey<"blurX">>(std::optional<double>{blur_x_2}), flight::row_field<flight::RowKey<"blurY">>(std::optional<double>{blur_y_2}))));
           {
@@ -286,7 +290,12 @@ inline bool read_swf_filter_list(flight::Ref<flight::swf::SwfReader> reader, fli
             return false;
           }
           auto options = flight::make_ref<alpha_blur_x_blur_y_color_quality_strength_15f5c1a09b0347c4>(alpha_blur_x_blur_y_color_quality_strength_15f5c1a09b0347c4{.alpha = color_2->alpha, .blur_x = blur_x_3, .blur_y = blur_y_3, .color = color_2->rgb, .quality = flight::bitwise_and(flags_2, filter_passes), .strength = strength_2});
-          out_effects.push(((flight::bitwise_and(flags_2, filter_inner) != 0.0) ? flight::effects::create_inner_glow_effect(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_color_alpha_blur_x_blur_y_quality_source_mode_0e5a4bf835ea1824>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<alpha_blur_x_blur_y_color_quality_strength_15f5c1a09b0347c4>>>>(options))) : flight::effects::create_outer_glow_effect(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_color_alpha_blur_x_blur_y_quality_source_mode_38b60c22687a9106>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<alpha_blur_x_blur_y_color_quality_strength_15f5c1a09b0347c4>>>>(options)))));
+          if ((flight::bitwise_and(flags_2, filter_inner) != 0.0)) {
+            out_effects.push(flight::effects::create_inner_glow_effect(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_color_blur_x_blur_y_quality_source_mode_alpha_d86576b8a102a3e4>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<alpha_blur_x_blur_y_color_quality_strength_15f5c1a09b0347c4>>>>(options))));
+          }
+          else {
+            out_effects.push(flight::effects::create_outer_glow_effect(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_color_blur_x_blur_y_quality_source_mode_alpha_68fd46ca68625e1e>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<alpha_blur_x_blur_y_color_quality_strength_15f5c1a09b0347c4>>>>(options))));
+          }
           {
             (index += 1.0);
             continue;
@@ -343,9 +352,15 @@ inline bool read_swf_filter_list(flight::Ref<flight::swf::SwfReader> reader, fli
             return false;
           }
           if (((id == filter_gradient_glow) && (((angle_3 != 0.0) || (distance_3 != 0.0)) || (flight::bitwise_and(flags_4, flight::bitwise_or(filter_inner, filter_bevel_on_top)) != 0.0)))) {
-            flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("swf.filter-field-unrepresentable"), flight::String("readSwfFilterList"), {{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.placement.filter-list")}}, {flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("placement")}}, {flight::String("filterId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, id}}});
+            flight::Record<flight::String, std::variant<bool, double, flight::String>> detail_2 = {{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.placement.filter-list")}}, {flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("placement")}}, {flight::String("filterId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, id}}};
+            flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("swf.filter-field-unrepresentable"), flight::String("readSwfFilterList"), detail_2);
           }
-          out_effects.push(((id == filter_gradient_glow) ? flight::effects::create_gradient_glow_effect(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<strength_blur_x_blur_y_quality_source_mode_alphas_colors_ratios_247d12b54a1b51b1>>>>(flight::row_field<flight::RowKey<"alphas">>(alphas), flight::row_field<flight::RowKey<"blurX">>(std::optional<double>{blur_x_5}), flight::row_field<flight::RowKey<"blurY">>(std::optional<double>{blur_y_5}), flight::row_field<flight::RowKey<"colors">>(colors), flight::row_field<flight::RowKey<"quality">>(std::optional<double>{flight::bitwise_and(flags_4, filter_bevel_passes)}), flight::row_field<flight::RowKey<"ratios">>(ratios), flight::row_field<flight::RowKey<"strength">>(std::optional<double>{strength_4}))) : flight::effects::create_gradient_bevel_effect(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<strength_angle_distance_bevel_type_blur_x_blur_y_quality_source_mode_alphas_colors_ratios_bf9034238ba34907>>>>(flight::row_field<flight::RowKey<"alphas">>(alphas), flight::row_field<flight::RowKey<"angle">>(std::optional<double>{angle_3}), flight::row_field<flight::RowKey<"bevelType">>(std::optional<flight::String>{resolve_swf_bevel_type(flags_4)}), flight::row_field<flight::RowKey<"blurX">>(std::optional<double>{blur_x_5}), flight::row_field<flight::RowKey<"blurY">>(std::optional<double>{blur_y_5}), flight::row_field<flight::RowKey<"colors">>(colors), flight::row_field<flight::RowKey<"distance">>(std::optional<double>{distance_3}), flight::row_field<flight::RowKey<"quality">>(std::optional<double>{flight::bitwise_and(flags_4, filter_bevel_passes)}), flight::row_field<flight::RowKey<"ratios">>(ratios), flight::row_field<flight::RowKey<"strength">>(std::optional<double>{strength_4})))));
+          if ((id == filter_gradient_glow)) {
+            out_effects.push(flight::effects::create_gradient_glow_effect(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<strength_blur_x_blur_y_quality_source_mode_alphas_colors_ratios_247d12b54a1b51b1>>>>(flight::row_field<flight::RowKey<"alphas">>(alphas), flight::row_field<flight::RowKey<"blurX">>(std::optional<double>{blur_x_5}), flight::row_field<flight::RowKey<"blurY">>(std::optional<double>{blur_y_5}), flight::row_field<flight::RowKey<"colors">>(colors), flight::row_field<flight::RowKey<"quality">>(std::optional<double>{flight::bitwise_and(flags_4, filter_bevel_passes)}), flight::row_field<flight::RowKey<"ratios">>(ratios), flight::row_field<flight::RowKey<"strength">>(std::optional<double>{strength_4}))));
+          }
+          else {
+            out_effects.push(flight::effects::create_gradient_bevel_effect(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<strength_angle_distance_bevel_type_blur_x_blur_y_quality_source_mode_alphas_colors_ratios_bf9034238ba34907>>>>(flight::row_field<flight::RowKey<"alphas">>(alphas), flight::row_field<flight::RowKey<"angle">>(std::optional<double>{angle_3}), flight::row_field<flight::RowKey<"bevelType">>(std::optional<flight::String>{resolve_swf_bevel_type(flags_4)}), flight::row_field<flight::RowKey<"blurX">>(std::optional<double>{blur_x_5}), flight::row_field<flight::RowKey<"blurY">>(std::optional<double>{blur_y_5}), flight::row_field<flight::RowKey<"colors">>(colors), flight::row_field<flight::RowKey<"distance">>(std::optional<double>{distance_3}), flight::row_field<flight::RowKey<"quality">>(std::optional<double>{flight::bitwise_and(flags_4, filter_bevel_passes)}), flight::row_field<flight::RowKey<"ratios">>(ratios), flight::row_field<flight::RowKey<"strength">>(std::optional<double>{strength_4}))));
+          }
           {
             (index += 1.0);
             continue;

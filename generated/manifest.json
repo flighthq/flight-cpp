@@ -3611,6 +3611,60 @@
         "flight/scene2d_formats/svg_style.hpp"
       ],
       "id": "scene2d-formats-svg-declare-refused-style"
+    },
+    {
+      "files": [
+        "flight/types/drop_shadow_effect.hpp"
+      ],
+      "id": "effects-drop-shadow-effect-interface-heritage"
+    },
+    {
+      "files": [
+        "flight/types/inner_shadow_effect.hpp"
+      ],
+      "id": "effects-inner-shadow-effect-interface-heritage"
+    },
+    {
+      "files": [
+        "flight/types/bevel_effect.hpp"
+      ],
+      "id": "effects-bevel-effect-interface-heritage"
+    },
+    {
+      "files": [
+        "flight/types/blur_effect.hpp"
+      ],
+      "id": "effects-blur-effect-interface-heritage"
+    },
+    {
+      "files": [
+        "flight/types/convolution_effect.hpp"
+      ],
+      "id": "effects-convolution-effect-interface-heritage"
+    },
+    {
+      "files": [
+        "flight/types/gradient_bevel_effect.hpp"
+      ],
+      "id": "effects-gradient-bevel-effect-interface-heritage"
+    },
+    {
+      "files": [
+        "flight/types/gradient_glow_effect.hpp"
+      ],
+      "id": "effects-gradient-glow-effect-interface-heritage"
+    },
+    {
+      "files": [
+        "flight/types/inner_glow_effect.hpp"
+      ],
+      "id": "effects-inner-glow-effect-interface-heritage"
+    },
+    {
+      "files": [
+        "flight/types/outer_glow_effect.hpp"
+      ],
+      "id": "effects-outer-glow-effect-interface-heritage"
     }
   ],
   "sourcePatches": [
@@ -5433,6 +5487,13 @@
       "id": "scene2d-svg-declarations-string-prototype-key",
       "module": "packages/scene2d-formats/src/svgStyle.ts",
       "package": "@flighthq/scene2d-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "fdc03913754c0032e641e5662524723f3543b75be17ad76f690d4374499382b0",
+      "id": "swf-filter-effect-owner-pushes",
+      "module": "packages/swf/src/swfFilter.ts",
+      "package": "@flighthq/swf"
     }
   ],
   "duplicateStructuralStructAliases": {

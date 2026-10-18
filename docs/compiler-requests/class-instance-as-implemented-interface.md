@@ -34,3 +34,11 @@ must be reads through the other.
 `SwfTagHandler.parse(body: SwfTagReader, ...)`. Handlers advance `pos`, `bitPosition` and `valid` on that
 reader. `swf_timeline_parse.hpp` and the 8 headers that include it fail with "no known conversion from
 `Ref<swf::SwfReader>` to `Ref<types::SwfTagReader>`". No workaround is carried.
+
+## G2 SWF placement handlers join the cause after effect ownership clears
+
+With the effect-owner heritage repaired, `swf_place_object3_handler.hpp` and
+`swf_placement_tag_family.hpp` reach this cause: their first failure is
+`no viable conversion from 'Ref<flight::types::SwfTagReader>' to 'Ref<flight::swf::SwfReader>'`
+at `swf_place_object3_handler.hpp:54`. Two rows joined, taking the current cluster to 12; the
+mutable reader owner, parse-callback arguments and placement behavior are unchanged.

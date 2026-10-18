@@ -4437,6 +4437,23 @@
       "unblocks": "Compatible primary interface owner widening and nullable/callback seams across the shared heritage cause; storage-changing inherited members and secondary base-owner paths remain explicit follow-on debt.",
       "expires": "when the upstream C++ backend preserves compatible declared interface bases and directionally widens their original owners with matching nullable/callback semantics.",
       "appliedOn": "2026-10-17"
+    },
+    {
+      "dependency": "flight",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "package": "@flighthq/swf",
+      "answers": "diagnostic",
+      "appliedOn": "2026-10-18",
+      "id": "swf-filter-effect-owner-pushes",
+      "patch": "swf-filter-effect-owner-pushes.patch",
+      "module": "packages/swf/src/swfFilter.ts",
+      "refusal": "incompatible operand types ('Ref<InnerShadowEffect>' and 'Ref<DropShadowEffect>') and the equivalent glow/gradient conditionals, plus the optional<Record> diagnostic detail at swf_filter.hpp:257/289/273",
+      "rewrite": "Splits the shadow, glow and gradient-glow/bevel effect pushes from inline conditionals into if/else statements so each factory result is converted to the declared Effect owner at its own push, and names the two filter diagnostic detail objects in typed Readonly<Record<string, boolean | number | string>> locals before passing them to reportImportDiagnostic.",
+      "equivalence": "The same single condition is tested once in each split, exactly one factory is called with the identical option values, and exactly one element is pushed, in the same order. Each diagnostic detail object is built with the same three fields and values before the same call; naming its declared type only gives the storage the emitter already needs to wrap, and its absence/presence and values are unchanged. No option, side effect, call count or evaluation order changes; only expression form does.",
+      "verification": "Guarded pkg:generate of @flighthq/swf at a627849 emits swfFilter; the resulting swf_filter.hpp compiles and a real consumer parses filter lists through it, exercising drop/inner shadow, inner/outer glow, blur and the other owners.",
+      "whyNotUpstreamFirst": "The C++ conditional operator cannot form a common base owner from two distinct shared_ptr<Derived> branches, so the emitter must select the contextual Effect destination for each branch. The split is a faithful source form of the same program; the declared heritage the emitter flattens is carried by the effect-type heritage repairs.",
+      "unblocks": "Compiles swf_filter.hpp and the six SWF headers that include it, with real effect owners.",
+      "expires": "when the emitter selects the contextual declared owner for a conditional whose branches are distinct Effect factories."
     }
   ]
 }

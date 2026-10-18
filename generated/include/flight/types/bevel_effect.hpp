@@ -19,9 +19,7 @@ struct BevelEffect;
 
 namespace flight::types {
 
-struct BevelEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct BevelEffect : public Effect {
   std::optional<double> angle;
   std::optional<flight::String> bevel_type;
   std::optional<double> blur_x;

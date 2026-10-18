@@ -18,9 +18,7 @@ struct ConvolutionEffect;
 
 namespace flight::types {
 
-struct ConvolutionEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct ConvolutionEffect : public Effect {
   flight::Array<double> matrix;
   double matrix_x;
   double matrix_y;

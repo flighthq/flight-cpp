@@ -19,9 +19,7 @@ struct GradientBevelEffect;
 
 namespace flight::types {
 
-struct GradientBevelEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct GradientBevelEffect : public Effect {
   flight::Array<double> alphas;
   std::optional<double> angle;
   std::optional<flight::String> bevel_type;

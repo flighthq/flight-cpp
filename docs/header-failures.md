@@ -34,7 +34,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 5 | `call-has-no-matching-3882b3e9` | 28 | 2D, 3D, TEXT | compiler | bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier *(request filed; builder4/G2; +1 from `obj_standard_pbr_material_handler.hpp` after its module emitted; +1 from `md5_skeleton_handler.hpp` after the mesh override bridges)* |
 | 6 | `other-52e846a6` | 18 | ANIM | compiler *(existing request)* | a nullable attachment array element is not lifted into the reference/null/undefined slot carrier |
 | 7 | `call-has-no-matching-47410fe2` | 16 | 2D, 3D | runtime (fixed) | Number is now a callable conversion object; G2 recheck: 2 pass, 14 fail at later compiler diagnostics |
-| 8 | `other-40da43f7` | 16 | 2D, 3D, ANIM | compiler | an optional<Record<...>> is initialised from a shape that is not its declared storage |
+| 8 | `other-40da43f7` | 19 | 2D, 3D, ANIM | compiler | an optional<Record<...>> is initialised from a shape that is not its declared storage |
 | 9 | `static-cast-assertion-9674a66c` | 15 | 2D | compiler | a TypeScript `as` on `JSON.parse` is emitted as a `static_cast` from `JsonValue` to an unrelated `Ref<T>` *(request filed)* |
 | 10 | `call-has-no-matching-076d207f` | 14 | WGPU | runtime (fixed) | typed `create_pipeline_layout` descriptor overload; G2 recheck: 0 pass, 14 fail at `create_bind_group_layout` |
 | 11 | `other-e9936ce6` | 13 | 3D | compiler | a pair literal the declared element type spells as `std::tuple<A, B>` is emitted as `flight::Array{...}`, so class-template ded... *(request filed)* |
@@ -59,7 +59,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 30 | `undeclared-identifier-f5e3440f` | 6 | 3D, CORE | [compiler request](compiler-requests/retained-declaration-calls-omitted-callee.md) | createResourceLoader calls initializeResourceLoader after the compiler refuses the initializer |
 | 31 | `call-has-no-matching-5a045ef4` | 5 | ANIM | compiler *(existing request)* | `SwfShapeState` passed to the anonymous writable `pen: { x; y }` parameter without an identity-preserving view |
 | 32 | `call-has-no-matching-b897f03f` | 5 | 3D | [compiler request](compiler-requests/heritage-argument-generic-deduction.md) | the `getNodeSignals` traits argument falls back to the default `Ref<NodeTraits>` instead of the inferred `Node3DTraits` |
-| 33 | `call-has-no-matching-dd66c064` | 10 | ANIM | compiler | an emitted SwfReader class instance cannot be passed as its structural SwfTagReader interface to the parse callback *(existing request)* |
+| 33 | `call-has-no-matching-dd66c064` | 12 | ANIM | compiler | an emitted SwfReader class instance cannot be passed as its structural SwfTagReader interface to the parse callback *(existing request)* |
 | 34 | `compiler-crash-aba5e9ec` | 5 | 3D | none (no crash serially) | G2 serial `-j1`: status 134 does not reproduce; 1 pass, 3 moved to `variant-cast-ccfedad4`, 1 to `emitter-conversion-2b9a0802` |
 | 35 | `invalid-operands-6d9a155d` | 5 | 2D | [compiler request](compiler-requests/token-discriminant-comparison.md#g2-current-pin-qualification-all-three-paint-guards-use-this-carrier) | three morph-paint guards compare the whole optional token variant with a String |
 | 36 | `missing-member-5e9e8a2c` | 5 | PLAT | compiler | retained cross-module calls name the refused generic graph-bounds helper *(existing requests extended)* |
@@ -72,7 +72,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 43 | `call-has-no-matching-c3aea71c` | 4 | 2D, GL | [compiler request](compiler-requests/optional-assertion-cast-must-unwrap.md) | an assertion on an optional is emitted as `structural_ref_cast` of the optional, which no overload accepts |
 | 44 | `no-viable-conversion-5903ce63` | 4 | 3D, GL | override re-derivation (fixed) | shading modifier callbacks and registrations now match the patched `ReadonlyModifierValue` / `ModifierDefinitionValue` domains; G2: 4/4 pass |
 | 45 | `no-viable-conversion-e1a24bd1` | 4 | 2D | compiler | G2: recorded 0/4 retained; Rive numeric diagnostic Record needs existing readonly value projection; docs-only, no rerun |
-| 46 | `other-2aef05a3` | 6 | ANIM | [compiler request](compiler-requests/interface-heritage-widening.md) | shadow-effect conditional branches cannot widen their independent concrete owners into the declared Effect array element |
+| 46 | `other-2aef05a3` | 6 | ANIM | heritage repair (partial: 2 pass) | shadow-effect conditional branches cannot widen their independent concrete owners into the declared Effect array element; 2 to `other-40da43f7`, 2 to `call-has-no-matching-dd66c064`; real parse consumer 5/5 |
 | 47 | `other-43523429` | 4 | ANIM | [compiler request](compiler-requests/heritage-argument-generic-deduction.md) | heritage-based Node2D type arguments are not substituted at addNodeChild, leaving a free Traits identifier |
 | 48 | `other-4e22e4de` | 4 | 2D | compiler | JSON.parse assertion casts JsonValue to the Aseprite document-owner variant *(existing request extended)* |
 | 49 | `other-5611a858` | 4 | ANIM | declaration repair (applied) | ColorScaleBiasAdjustment heritage restored; G2: 1 pass, 3 compiler failures |
@@ -539,7 +539,7 @@ sweep gain is claimed. The earlier nine-header follow-on table above remains his
 The [predicate request](compiler-requests/builtin-numeric-predicate-callback.md#native-collada-public-header-carry-2026-10-17)
 records the exact source semantics, missing-id debt, override rationale/expiry and proof limits.
 
-### 8. `other-40da43f7` — 16 header(s)
+### 8. `other-40da43f7` — 19 header(s)
 
 - cause: an optional<Record<...>> is initialised from a shape that is not its declared storage
 - lanes: 2D, 3D, ANIM
@@ -1043,7 +1043,7 @@ and a copied owner would change identity. The request's heritage walk substitute
 
 This row now links the existing request; no source or generated change was made, so no rerun is claimed.
 
-### 33. `call-has-no-matching-dd66c064` — 10 current header(s), 5 in G1
+### 33. `call-has-no-matching-dd66c064` — 12 current header(s), 5 in G1
 
 - cause: an emitted SwfReader class instance cannot be passed as its structural SwfTagReader interface to the parse callback
 - lanes: ANIM
@@ -1285,7 +1285,7 @@ No fake parser/document/empty success, copied Record/context/owner or narrowed i
 Only this entry, owned root/four compact rows and one existing request appendix change; foreign raw/
 semantic products/prose, repairs/manifests, source/runtime/C++ and historical/G1 totals are preserved.
 
-### 46. `other-2aef05a3` — 6 current header(s), 4 in G1
+### 46. `other-2aef05a3` — 6 current header(s), 4 in G1; 2 now compile
 
 - cause: shadow-effect conditional branches cannot widen their independent concrete owners into the declared Effect array element
 - lanes: ANIM
@@ -1298,6 +1298,26 @@ semantic products/prose, repairs/manifests, source/runtime/C++ and historical/G1
 - Delivered numbers: **0/4 pass, 4 fail**, retained from G1, with the stock conditional diagnostics unchanged and every owned row linked to the existing request. No unchanged-stock or global rerun is claimed.
 - Changed candidate result: **0/4 pass, 4 fail, 0 unattempted**, Clang 22.1.8 at one worker. All four first errors are `no matching member function for call to 'push'` at the direct inner-shadow push, candidate `swf_filter.hpp:288`. The source branch patch was rejected; this changed diagnostic remains a failure and is not written over the shipped tree's stock diagnostics.
 - The separate adjustment-heritage repair in work item 49 exposes this same stock conditional diagnostic in `swf_place_object3_handler.hpp` and `swf_placement_tag_family.hpp`. These two newly measured failures join this cause, making six current rows. The original four rows and their G1 qualification remain unchanged; they were not recompiled in the four-header adjustment check.
+
+**G2 resolution (2026-10-18).** The earlier rejected candidate changed only the first shadow branch and
+still required a concrete-to-base conversion at the push. The measured root needs two parts, and both are
+now carried. Nine `respell-reference-member-access` heritage repairs name the declared `Effect` base on
+every effect subtype the filter parser constructs (Bevel, Blur, Convolution, DropShadow, GradientBevel,
+GradientGlow, InnerGlow, InnerShadow, OuterGlow), removing only the duplicated `entity_runtime_key` and
+`kind` cells; no construction site uses a braced literal and `initialize_effect<T>` already writes the
+inherited cells through `row_set`, so the same allocation and cells are preserved. The source patch
+`swf-filter-effect-owner-pushes` splits the shadow, glow and gradient conditionals into if/else pushes
+(same condition, one factory call, one push) and names the two diagnostic detail Records in typed locals
+so the emitter materializes the `optional<Record>` storage; the C++ conditional cannot form a common base
+owner from two distinct shared pointers even with heritage, which is why the split is required.
+
+Measured result: `swf_filter.hpp` compiles 1/1, and a real consumer calling the exported
+`read_swf_filter_list` through the original header built, linked and ran **5/5** lists - drop shadow,
+inner shadow, outer glow, inner glow and blur - each producing exactly one Effect with the expected kind,
+adjustments empty and the inherited kind cell read through the base reference. Of the six rows,
+`swf_filter.hpp` and `enable_swf_guards.hpp` now pass; `_internal_index.hpp` and `contract.hpp` move to
+the optional-record cluster (their first site is an unpatched diagnostic in another SWF module), and the
+two placement handlers move to the reader-interface cluster.
 
 ### 47. `other-43523429` — 4 header(s)
 

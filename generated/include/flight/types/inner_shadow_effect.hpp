@@ -19,9 +19,7 @@ struct InnerShadowEffect;
 
 namespace flight::types {
 
-struct InnerShadowEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct InnerShadowEffect : public Effect {
   std::optional<double> alpha;
   std::optional<double> angle;
   std::optional<double> blur_x;

@@ -828,3 +828,24 @@ The full-stack backend package typecheck is **not a pass**: it reports five erro
 produces the exact same five diagnostics, with none in the heritage source or tests. Those
 foreign test-fixture failures are retained as a separate limitation. Native SDK/header/public
 consumer qualification remains pending the reserved SWF generation-slot transfer.
+
+## G2 SWF effect owners: the declared Effect base carried for nine subtypes
+
+At Flight `a627849` / compiler `806d257`, the SWF filter parser fails at `swf_filter.hpp:257` because
+`outEffects` is `Array<Ref<Effect>>` and its conditional branches are two distinct concrete effect
+factories. C++ cannot form a common base owner from two different `shared_ptr<Derived>` types even
+when both derive the base (checked directly), so the declared heritage is necessary but not
+sufficient.
+
+Nine bounded `respell-reference-member-access` repairs now name `Effect` on the effect subtypes the
+parser constructs (Bevel, Blur, Convolution, DropShadow, GradientBevel, GradientGlow, InnerGlow,
+InnerShadow, OuterGlow), removing only the duplicated `entity_runtime_key` and `kind`. No effect type
+is constructed with a braced literal, and every initializer already writes the inherited cells through
+`initialize_effect<T>'s` `row_set`, so each object keeps one allocation and one set of cells. The
+companion `swf-filter-effect-owner-pushes` source patch splits the three conditionals into if/else
+pushes, preserving the condition, the single factory call, the option values and the append order.
+
+A real consumer that calls the exported `read_swf_filter_list` through the original header parses
+drop-shadow, inner-shadow, outer-glow, inner-glow and blur lists (5/5), each yielding one `Effect` with
+the expected `kind` and the inherited cell read through the base reference. The repairs are superseded
+when normal emission supplies the declared heritage with the same base and the same removed cells.

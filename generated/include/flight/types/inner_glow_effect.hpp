@@ -19,9 +19,7 @@ struct InnerGlowEffect;
 
 namespace flight::types {
 
-struct InnerGlowEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct InnerGlowEffect : public Effect {
   std::optional<double> alpha;
   std::optional<double> blur_x;
   std::optional<double> blur_y;

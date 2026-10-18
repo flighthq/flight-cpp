@@ -9495,6 +9495,114 @@
       "defect": "The compiler refuses the cascade body on a record-index present-payload projection but retains its caller. Declare only the exact three readonly row parameter carriers and original Ref<SvgStyle> result already required by that retained call. No body, cache, copied owner, default style replacement or cascade success; direct/definition-style calls stay unavailable at link. Existing winding/declaration bodies are exercised through the original whole header.",
       "expectedWhen": "always",
       "expires": "when resolveSvgStyle emits and its exact NOT GENERATED marker disappears; sdk:check rejects an obsolete repair."
+    },
+    {
+      "id": "effects-drop-shadow-effect-interface-heritage",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/types/drop_shadow_effect.hpp",
+      "sourceDeclaration": "packages/types/src/DropShadowEffect.ts -- export interface DropShadowEffect extends Effect, re-declaring kind as the literal 'DropShadowEffect'",
+      "from": "struct DropShadowEffect : public flight::ReferenceEnabled {\n  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;\n  flight::String kind;\n  std::optional<double> alpha;\n  std::optional<double> angle;\n  std::optional<double> blur_x;\n  std::optional<double> blur_y;\n  std::optional<double> color;\n  std::optional<double> distance;\n  std::optional<double> quality;\n  std::optional<flight::types::EffectSourceMode> source_mode;\n  std::optional<double> strength;\n};",
+      "to": "struct DropShadowEffect : public Effect {\n  std::optional<double> alpha;\n  std::optional<double> angle;\n  std::optional<double> blur_x;\n  std::optional<double> blur_y;\n  std::optional<double> color;\n  std::optional<double> distance;\n  std::optional<double> quality;\n  std::optional<flight::types::EffectSourceMode> source_mode;\n  std::optional<double> strength;\n};",
+      "diagnostic": "incompatible operand types ('Ref<InnerShadowEffect>' and 'Ref<DropShadowEffect>')",
+      "defect": "The type emitter flattens inherited interface fields into independent C++ owners: DropShadowEffect repeats Effect's entity_runtime_key and kind with no heritage, so a Ref<DropShadowEffect> cannot enter the Array<Ref<Effect>> the SWF filter parser pushes into and the conditional between the two shadow-effect factories has no common owner. This removes only the duplicated inherited members and names the declared Effect base, the same bounded heritage repair already carried for the SWF TimelineCue structs and the adjustment interfaces. No effect field, value, filter behaviour or allocation is added: the inherited cells are the same cells on the original concrete allocation, the literal kind is written by initialize_effect through row_set, and ordinary shared-pointer widening keeps the control block and lifetime. The conditional then selects the declared Effect owner, and both pushed elements keep their exact concrete identity.",
+      "expectedWhen": "always",
+      "expires": "when the emitter supplies the declared interface heritage for DropShadowEffect; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-inner-shadow-effect-interface-heritage",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/types/inner_shadow_effect.hpp",
+      "sourceDeclaration": "packages/types/src/InnerShadowEffect.ts -- export interface InnerShadowEffect extends Effect, re-declaring kind as the literal 'InnerShadowEffect'",
+      "from": "struct InnerShadowEffect : public flight::ReferenceEnabled {\n  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;\n  flight::String kind;\n  std::optional<double> alpha;\n  std::optional<double> angle;\n  std::optional<double> blur_x;\n  std::optional<double> blur_y;\n  std::optional<double> color;\n  std::optional<double> distance;\n  std::optional<double> quality;\n  std::optional<flight::types::InnerEffectSourceMode> source_mode;\n  std::optional<double> strength;\n};",
+      "to": "struct InnerShadowEffect : public Effect {\n  std::optional<double> alpha;\n  std::optional<double> angle;\n  std::optional<double> blur_x;\n  std::optional<double> blur_y;\n  std::optional<double> color;\n  std::optional<double> distance;\n  std::optional<double> quality;\n  std::optional<flight::types::InnerEffectSourceMode> source_mode;\n  std::optional<double> strength;\n};",
+      "diagnostic": "incompatible operand types ('Ref<InnerShadowEffect>' and 'Ref<DropShadowEffect>')",
+      "defect": "The type emitter flattens inherited interface fields into independent C++ owners: InnerShadowEffect repeats Effect's entity_runtime_key and kind with no heritage, so a Ref<InnerShadowEffect> cannot enter the Array<Ref<Effect>> the SWF filter parser pushes into and the conditional between the two shadow-effect factories has no common owner. This removes only the duplicated inherited members and names the declared Effect base, the same bounded heritage repair already carried for the SWF TimelineCue structs and the adjustment interfaces. No effect field, value, filter behaviour or allocation is added: the inherited cells are the same cells on the original concrete allocation, the literal kind is written by initialize_effect through row_set, and ordinary shared-pointer widening keeps the control block and lifetime. The conditional then selects the declared Effect owner, and both pushed elements keep their exact concrete identity.",
+      "expectedWhen": "always",
+      "expires": "when the emitter supplies the declared interface heritage for InnerShadowEffect; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-bevel-effect-interface-heritage",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/types/bevel_effect.hpp",
+      "sourceDeclaration": "packages/types/src/BevelEffect.ts -- export interface BevelEffect extends Effect, re-declaring kind as the literal 'BevelEffect'",
+      "from": "struct BevelEffect : public flight::ReferenceEnabled {\n  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;\n  flight::String kind;\n  std::optional<double> angle;\n  std::optional<flight::String> bevel_type;\n  std::optional<double> blur_x;\n  std::optional<double> blur_y;\n  std::optional<double> distance;\n  std::optional<double> highlight_alpha;\n  std::optional<double> highlight_color;\n  std::optional<double> quality;\n  std::optional<double> shadow_alpha;\n  std::optional<double> shadow_color;\n  std::optional<flight::types::EffectSourceMode> source_mode;\n  std::optional<double> strength;\n};",
+      "to": "struct BevelEffect : public Effect {\n  std::optional<double> angle;\n  std::optional<flight::String> bevel_type;\n  std::optional<double> blur_x;\n  std::optional<double> blur_y;\n  std::optional<double> distance;\n  std::optional<double> highlight_alpha;\n  std::optional<double> highlight_color;\n  std::optional<double> quality;\n  std::optional<double> shadow_alpha;\n  std::optional<double> shadow_color;\n  std::optional<flight::types::EffectSourceMode> source_mode;\n  std::optional<double> strength;\n};",
+      "diagnostic": "no viable conversion from 'Ref<BevelEffect>' to 'Ref<Effect>'",
+      "defect": "The type emitter flattens inherited interface fields into independent C++ owners: BevelEffect repeats Effect's entity_runtime_key and kind with no heritage, so a Ref<BevelEffect> cannot enter the Array<Ref<Effect>> the SWF filter parser pushes into. This removes only the duplicated inherited members and names the declared Effect base, the same bounded heritage repair already carried for the SWF TimelineCue structs and the adjustment interfaces. No effect field, value, filter behaviour or allocation is added: the inherited cells are the same cells on the original concrete allocation, the literal kind is written by initialize_effect through row_set, and ordinary shared-pointer widening keeps the control block and lifetime.",
+      "expectedWhen": "always",
+      "expires": "when the emitter supplies the declared interface heritage for BevelEffect; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-blur-effect-interface-heritage",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/types/blur_effect.hpp",
+      "sourceDeclaration": "packages/types/src/BlurEffect.ts -- export interface BlurEffect extends Effect, re-declaring kind as the literal 'BlurEffect'",
+      "from": "struct BlurEffect : public flight::ReferenceEnabled {\n  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;\n  flight::String kind;\n  std::optional<double> blur_x;\n  std::optional<double> blur_y;\n};",
+      "to": "struct BlurEffect : public Effect {\n  std::optional<double> blur_x;\n  std::optional<double> blur_y;\n};",
+      "diagnostic": "no viable conversion from 'Ref<BlurEffect>' to 'Ref<Effect>'",
+      "defect": "The type emitter flattens inherited interface fields into independent C++ owners: BlurEffect repeats Effect's entity_runtime_key and kind with no heritage, so a Ref<BlurEffect> cannot enter the Array<Ref<Effect>> the SWF filter parser pushes into. This removes only the duplicated inherited members and names the declared Effect base, the same bounded heritage repair already carried for the SWF TimelineCue structs and the adjustment interfaces. No effect field, value, filter behaviour or allocation is added: the inherited cells are the same cells on the original concrete allocation, the literal kind is written by initialize_effect through row_set, and ordinary shared-pointer widening keeps the control block and lifetime.",
+      "expectedWhen": "always",
+      "expires": "when the emitter supplies the declared interface heritage for BlurEffect; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-convolution-effect-interface-heritage",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/types/convolution_effect.hpp",
+      "sourceDeclaration": "packages/types/src/ConvolutionEffect.ts -- export interface ConvolutionEffect extends Effect, re-declaring kind as the literal 'ConvolutionEffect'",
+      "from": "struct ConvolutionEffect : public flight::ReferenceEnabled {\n  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;\n  flight::String kind;\n  flight::Array<double> matrix;\n  double matrix_x;\n  double matrix_y;\n  std::optional<double> bias;\n  std::optional<bool> clamp;\n  std::optional<double> color;\n  std::optional<double> divisor;\n  std::optional<bool> preserve_alpha;\n};",
+      "to": "struct ConvolutionEffect : public Effect {\n  flight::Array<double> matrix;\n  double matrix_x;\n  double matrix_y;\n  std::optional<double> bias;\n  std::optional<bool> clamp;\n  std::optional<double> color;\n  std::optional<double> divisor;\n  std::optional<bool> preserve_alpha;\n};",
+      "diagnostic": "no viable conversion from 'Ref<ConvolutionEffect>' to 'Ref<Effect>'",
+      "defect": "The type emitter flattens inherited interface fields into independent C++ owners: ConvolutionEffect repeats Effect's entity_runtime_key and kind with no heritage, so a Ref<ConvolutionEffect> cannot enter the Array<Ref<Effect>> the SWF filter parser pushes into. This removes only the duplicated inherited members and names the declared Effect base, the same bounded heritage repair already carried for the SWF TimelineCue structs and the adjustment interfaces. No effect field, value, filter behaviour or allocation is added: the inherited cells are the same cells on the original concrete allocation, the literal kind is written by initialize_effect through row_set, and ordinary shared-pointer widening keeps the control block and lifetime.",
+      "expectedWhen": "always",
+      "expires": "when the emitter supplies the declared interface heritage for ConvolutionEffect; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-gradient-bevel-effect-interface-heritage",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/types/gradient_bevel_effect.hpp",
+      "sourceDeclaration": "packages/types/src/GradientBevelEffect.ts -- export interface GradientBevelEffect extends Effect, re-declaring kind as the literal 'GradientBevelEffect'",
+      "from": "struct GradientBevelEffect : public flight::ReferenceEnabled {\n  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;\n  flight::String kind;\n  flight::Array<double> alphas;\n  std::optional<double> angle;\n  std::optional<flight::String> bevel_type;\n  std::optional<double> blur_x;\n  std::optional<double> blur_y;\n  flight::Array<double> colors;\n  std::optional<double> distance;\n  std::optional<double> quality;\n  flight::Array<double> ratios;\n  std::optional<flight::types::EffectSourceMode> source_mode;\n  std::optional<double> strength;\n};",
+      "to": "struct GradientBevelEffect : public Effect {\n  flight::Array<double> alphas;\n  std::optional<double> angle;\n  std::optional<flight::String> bevel_type;\n  std::optional<double> blur_x;\n  std::optional<double> blur_y;\n  flight::Array<double> colors;\n  std::optional<double> distance;\n  std::optional<double> quality;\n  flight::Array<double> ratios;\n  std::optional<flight::types::EffectSourceMode> source_mode;\n  std::optional<double> strength;\n};",
+      "diagnostic": "no viable conversion from 'Ref<GradientBevelEffect>' to 'Ref<Effect>'",
+      "defect": "The type emitter flattens inherited interface fields into independent C++ owners: GradientBevelEffect repeats Effect's entity_runtime_key and kind with no heritage, so a Ref<GradientBevelEffect> cannot enter the Array<Ref<Effect>> the SWF filter parser pushes into. This removes only the duplicated inherited members and names the declared Effect base, the same bounded heritage repair already carried for the SWF TimelineCue structs and the adjustment interfaces. No effect field, value, filter behaviour or allocation is added: the inherited cells are the same cells on the original concrete allocation, the literal kind is written by initialize_effect through row_set, and ordinary shared-pointer widening keeps the control block and lifetime.",
+      "expectedWhen": "always",
+      "expires": "when the emitter supplies the declared interface heritage for GradientBevelEffect; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-gradient-glow-effect-interface-heritage",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/types/gradient_glow_effect.hpp",
+      "sourceDeclaration": "packages/types/src/GradientGlowEffect.ts -- export interface GradientGlowEffect extends Effect, re-declaring kind as the literal 'GradientGlowEffect'",
+      "from": "struct GradientGlowEffect : public flight::ReferenceEnabled {\n  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;\n  flight::String kind;\n  flight::Array<double> alphas;\n  std::optional<double> blur_x;\n  std::optional<double> blur_y;\n  flight::Array<double> colors;\n  std::optional<double> quality;\n  flight::Array<double> ratios;\n  std::optional<flight::types::EffectSourceMode> source_mode;\n  std::optional<double> strength;\n};",
+      "to": "struct GradientGlowEffect : public Effect {\n  flight::Array<double> alphas;\n  std::optional<double> blur_x;\n  std::optional<double> blur_y;\n  flight::Array<double> colors;\n  std::optional<double> quality;\n  flight::Array<double> ratios;\n  std::optional<flight::types::EffectSourceMode> source_mode;\n  std::optional<double> strength;\n};",
+      "diagnostic": "no viable conversion from 'Ref<GradientGlowEffect>' to 'Ref<Effect>'",
+      "defect": "The type emitter flattens inherited interface fields into independent C++ owners: GradientGlowEffect repeats Effect's entity_runtime_key and kind with no heritage, so a Ref<GradientGlowEffect> cannot enter the Array<Ref<Effect>> the SWF filter parser pushes into. This removes only the duplicated inherited members and names the declared Effect base, the same bounded heritage repair already carried for the SWF TimelineCue structs and the adjustment interfaces. No effect field, value, filter behaviour or allocation is added: the inherited cells are the same cells on the original concrete allocation, the literal kind is written by initialize_effect through row_set, and ordinary shared-pointer widening keeps the control block and lifetime.",
+      "expectedWhen": "always",
+      "expires": "when the emitter supplies the declared interface heritage for GradientGlowEffect; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-inner-glow-effect-interface-heritage",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/types/inner_glow_effect.hpp",
+      "sourceDeclaration": "packages/types/src/InnerGlowEffect.ts -- export interface InnerGlowEffect extends Effect, re-declaring kind as the literal 'InnerGlowEffect'",
+      "from": "struct InnerGlowEffect : public flight::ReferenceEnabled {\n  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;\n  flight::String kind;\n  std::optional<double> alpha;\n  std::optional<double> blur_x;\n  std::optional<double> blur_y;\n  std::optional<double> color;\n  std::optional<double> quality;\n  std::optional<flight::types::InnerEffectSourceMode> source_mode;\n  std::optional<double> strength;\n};",
+      "to": "struct InnerGlowEffect : public Effect {\n  std::optional<double> alpha;\n  std::optional<double> blur_x;\n  std::optional<double> blur_y;\n  std::optional<double> color;\n  std::optional<double> quality;\n  std::optional<flight::types::InnerEffectSourceMode> source_mode;\n  std::optional<double> strength;\n};",
+      "diagnostic": "no viable conversion from 'Ref<InnerGlowEffect>' to 'Ref<Effect>'",
+      "defect": "The type emitter flattens inherited interface fields into independent C++ owners: InnerGlowEffect repeats Effect's entity_runtime_key and kind with no heritage, so a Ref<InnerGlowEffect> cannot enter the Array<Ref<Effect>> the SWF filter parser pushes into. This removes only the duplicated inherited members and names the declared Effect base, the same bounded heritage repair already carried for the SWF TimelineCue structs and the adjustment interfaces. No effect field, value, filter behaviour or allocation is added: the inherited cells are the same cells on the original concrete allocation, the literal kind is written by initialize_effect through row_set, and ordinary shared-pointer widening keeps the control block and lifetime.",
+      "expectedWhen": "always",
+      "expires": "when the emitter supplies the declared interface heritage for InnerGlowEffect; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "effects-outer-glow-effect-interface-heritage",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/types/outer_glow_effect.hpp",
+      "sourceDeclaration": "packages/types/src/OuterGlowEffect.ts -- export interface OuterGlowEffect extends Effect, re-declaring kind as the literal 'OuterGlowEffect'",
+      "from": "struct OuterGlowEffect : public flight::ReferenceEnabled {\n  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;\n  flight::String kind;\n  std::optional<double> alpha;\n  std::optional<double> blur_x;\n  std::optional<double> blur_y;\n  std::optional<double> color;\n  std::optional<double> quality;\n  std::optional<flight::types::EffectSourceMode> source_mode;\n  std::optional<double> strength;\n};",
+      "to": "struct OuterGlowEffect : public Effect {\n  std::optional<double> alpha;\n  std::optional<double> blur_x;\n  std::optional<double> blur_y;\n  std::optional<double> color;\n  std::optional<double> quality;\n  std::optional<flight::types::EffectSourceMode> source_mode;\n  std::optional<double> strength;\n};",
+      "diagnostic": "no viable conversion from 'Ref<OuterGlowEffect>' to 'Ref<Effect>'",
+      "defect": "The type emitter flattens inherited interface fields into independent C++ owners: OuterGlowEffect repeats Effect's entity_runtime_key and kind with no heritage, so a Ref<OuterGlowEffect> cannot enter the Array<Ref<Effect>> the SWF filter parser pushes into. This removes only the duplicated inherited members and names the declared Effect base, the same bounded heritage repair already carried for the SWF TimelineCue structs and the adjustment interfaces. No effect field, value, filter behaviour or allocation is added: the inherited cells are the same cells on the original concrete allocation, the literal kind is written by initialize_effect through row_set, and ordinary shared-pointer widening keeps the control block and lifetime.",
+      "expectedWhen": "always",
+      "expires": "when the emitter supplies the declared interface heritage for OuterGlowEffect; sdk:check fails if this repair matches no header."
     }
   ]
 }

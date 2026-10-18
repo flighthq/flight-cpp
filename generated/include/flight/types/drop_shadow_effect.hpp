@@ -19,9 +19,7 @@ struct DropShadowEffect;
 
 namespace flight::types {
 
-struct DropShadowEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct DropShadowEffect : public Effect {
   std::optional<double> alpha;
   std::optional<double> angle;
   std::optional<double> blur_x;

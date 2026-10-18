@@ -19,9 +19,7 @@ struct GradientGlowEffect;
 
 namespace flight::types {
 
-struct GradientGlowEffect : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct GradientGlowEffect : public Effect {
   flight::Array<double> alphas;
   std::optional<double> blur_x;
   std::optional<double> blur_y;

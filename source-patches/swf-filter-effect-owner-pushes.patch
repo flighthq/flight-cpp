@@ -1,0 +1,173 @@
+diff --git a/packages/swf/src/swfFilter.ts b/packages/swf/src/swfFilter.ts
+--- a/packages/swf/src/swfFilter.ts
++++ b/packages/swf/src/swfFilter.ts
+@@ -46,29 +46,33 @@
+       const strength = reader.readFixed8();
+       const flags = reader.readUint8();
+       if (!reader.valid) return false;
+-      outEffects.push(
+-        (flags & FILTER_INNER) !== 0
+-          ? createInnerShadowEffect({
+-              alpha: color.alpha,
+-              angle,
+-              blurX,
+-              blurY,
+-              color: color.rgb,
+-              distance,
+-              quality: flags & FILTER_PASSES,
+-              strength,
+-            })
+-          : createDropShadowEffect({
+-              alpha: color.alpha,
+-              angle,
+-              blurX,
+-              blurY,
+-              color: color.rgb,
+-              distance,
+-              quality: flags & FILTER_PASSES,
+-              strength,
+-            }),
+-      );
++      if ((flags & FILTER_INNER) !== 0) {
++        outEffects.push(
++          createInnerShadowEffect({
++            alpha: color.alpha,
++            angle,
++            blurX,
++            blurY,
++            color: color.rgb,
++            distance,
++            quality: flags & FILTER_PASSES,
++            strength,
++          }),
++        );
++      } else {
++        outEffects.push(
++          createDropShadowEffect({
++            alpha: color.alpha,
++            angle,
++            blurX,
++            blurY,
++            color: color.rgb,
++            distance,
++            quality: flags & FILTER_PASSES,
++            strength,
++          }),
++        );
++      }
+       continue;
+     }
+     if (id === FILTER_BLUR) {
+@@ -79,16 +83,17 @@
+       // BlurEffect has no pass-count member, so an authored pass count is read and discarded. One pass
+       // is the default and loses nothing; anything else is a real difference the target cannot state.
+       if ((blurFlags & FILTER_PASSES) > 1) {
++        const detail: Readonly<Record<string, boolean | number | string>> = {
++          capability: 'swf.placement.filter-list',
++          field: 'passes',
++          filterId: id,
++        };
+         reportImportDiagnostic(
+           diagnostics,
+           ImportDiagnosticSeverity.Skip,
+           'swf.filter-field-unrepresentable',
+           'readSwfFilterList',
+-          {
+-            capability: 'swf.placement.filter-list',
+-            field: 'passes',
+-            filterId: id,
+-          },
++          detail,
+         );
+       }
+       outEffects.push(createBlurEffect({ blurX, blurY }));
+@@ -109,7 +114,11 @@
+         quality: flags & FILTER_PASSES,
+         strength,
+       };
+-      outEffects.push((flags & FILTER_INNER) !== 0 ? createInnerGlowEffect(options) : createOuterGlowEffect(options));
++      if ((flags & FILTER_INNER) !== 0) {
++        outEffects.push(createInnerGlowEffect(options));
++      } else {
++        outEffects.push(createOuterGlowEffect(options));
++      }
+       continue;
+     }
+     if (id === FILTER_BEVEL) {
+@@ -166,42 +175,47 @@
+         id === FILTER_GRADIENT_GLOW &&
+         (angle !== 0 || distance !== 0 || (flags & (FILTER_INNER | FILTER_BEVEL_ON_TOP)) !== 0)
+       ) {
++        const detail: Readonly<Record<string, boolean | number | string>> = {
++          capability: 'swf.placement.filter-list',
++          field: 'placement',
++          filterId: id,
++        };
+         reportImportDiagnostic(
+           diagnostics,
+           ImportDiagnosticSeverity.Skip,
+           'swf.filter-field-unrepresentable',
+           'readSwfFilterList',
+-          {
+-            capability: 'swf.placement.filter-list',
+-            field: 'placement',
+-            filterId: id,
+-          },
++          detail,
++        );
++      }
++      if (id === FILTER_GRADIENT_GLOW) {
++        outEffects.push(
++          createGradientGlowEffect({
++            alphas,
++            blurX,
++            blurY,
++            colors,
++            quality: flags & FILTER_BEVEL_PASSES,
++            ratios,
++            strength,
++          }),
++        );
++      } else {
++        outEffects.push(
++          createGradientBevelEffect({
++            alphas,
++            angle,
++            bevelType: resolveSwfBevelType(flags),
++            blurX,
++            blurY,
++            colors,
++            distance,
++            quality: flags & FILTER_BEVEL_PASSES,
++            ratios,
++            strength,
++          }),
+         );
+       }
+-      outEffects.push(
+-        id === FILTER_GRADIENT_GLOW
+-          ? createGradientGlowEffect({
+-              alphas,
+-              blurX,
+-              blurY,
+-              colors,
+-              quality: flags & FILTER_BEVEL_PASSES,
+-              ratios,
+-              strength,
+-            })
+-          : createGradientBevelEffect({
+-              alphas,
+-              angle,
+-              bevelType: resolveSwfBevelType(flags),
+-              blurX,
+-              blurY,
+-              colors,
+-              distance,
+-              quality: flags & FILTER_BEVEL_PASSES,
+-              ratios,
+-              strength,
+-            }),
+-      );
+       continue;
+     }
+     if (id === FILTER_CONVOLUTION) {
