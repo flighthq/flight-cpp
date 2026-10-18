@@ -266,12 +266,16 @@ support the erased array reads without rebuilding an `Array<Any>`. A native
 `Record<String, Any>` can supply the same live readonly read contract over its
 existing shared storage.
 
-`compiler-readonly-json-record-view` carries that view through exact
-`Readonly<Record<string, unknown>>` helpers and aliases. Its reads return bare
-`Any`, whose own tags answer null/undefined tests. Nullish coalescing evaluates its
+`compiler-readonly-json-record-view` selects that implementation carrier only for
+private helpers referenced exclusively by direct calls, with nonoptional readonly
+unknown Record parameters used exclusively as property/index receivers. Public
+functions, aliases, returned or compared owners, forwarded parameters, and helpers
+exposed as callbacks keep their existing Record contracts. This avoids a global
+readonly Record ABI change. Selected reads return bare `Any`, whose own tags
+answer null/undefined tests. Nullish coalescing evaluates its
 left side once and preserves the lazy source fallback, including
-`anim.drawOrder ?? anim.draworder`. Readonly literal arguments still construct the
-original ordinary Record once and then retain its storage through a view.
+`anim.drawOrder ?? anim.draworder`. Literal arguments still construct the original ordinary Record once; the private
+reader retains that existing storage through a view.
 Ordinary mutable and concrete-valued Record carriers remain unchanged; the
 separate typed Record missing-key patch composes with this route.
 

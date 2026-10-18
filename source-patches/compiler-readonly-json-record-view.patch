@@ -1,7 +1,33 @@
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-@@ -4213,6 +4213,11 @@
+@@ -324,6 +324,7 @@
+   bindingClasses: ReadonlyMap<string, Readonly<IrClassDeclaration>>;
+   bindingInitializers: ReadonlyMap<string, Readonly<IrExpression>>;
+   immutableInitializerBindingIds: ReadonlySet<string>;
++  readonlyRecordReadViewBindingIds: Set<string>;
+   externalCallResultPresenceBindings: Map<string, Readonly<CppExternalCallResultPresencePlan>>;
+   contextualBindingStorageTargetTypes: Map<string, Readonly<IrType>>;
+   bindingTypes: ReadonlyMap<string, Readonly<IrType>>;
+@@ -698,6 +699,7 @@
+     bindingClasses: collectIrModuleBindingClassesCpp(module, bindingTypes),
+     bindingInitializers: collectIrModuleBindingInitializersCpp(module),
+     immutableInitializerBindingIds: collectIrModuleImmutableInitializerBindingIdsCpp(module),
++    readonlyRecordReadViewBindingIds: new Set(),
+     bindingTypes,
+     capturedReferentOnlyBindingIds,
+     contextualBindingStorageTargetTypes,
+@@ -751,6 +753,9 @@
+     anonymousStructNaming: anonymousStructNaming ?? createCppAnonymousStructNaming(resolvedTargetNameMaps),
+     unionArmIdentities: unionArmIdentities ?? new Map(),
+   };
++  for (const bindingId of collectCppPrivateReadonlyRecordReadViewsCpp(module, context)) {
++    context.readonlyRecordReadViewBindingIds.add(bindingId);
++  }
+   for (const [bindingId, targetType] of collectCppExternalBindingStorageTargetTypesCpp(module, context)) {
+     externalBindingStorageTargetTypes.set(bindingId, targetType);
+   }
+@@ -4213,6 +4218,11 @@
        const runtimeInstanceOf = emitCppRuntimeInstanceOfTestCpp(expression, context);
        if (runtimeInstanceOf) return runtimeInstanceOf;
        if (expression.operator === '??') {
@@ -13,7 +39,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
          const leftType =
            getIrExpressionBindingTypeCpp(expression.left, context) ??
            getIrExpressionTypeEvidenceCpp(expression.left, context);
-@@ -5540,6 +5545,10 @@
+@@ -5540,6 +5550,10 @@
        // an absent key as `undefined`. This is checked before the `Record` path because the view's
        // declared type IS `Record<string, unknown>`, and only the storage tells the two apart.
        if (getCppNamedPropertiesViewExpressionCpp(expression.object, context)) {
@@ -24,17 +50,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
          if (!isCppStringKeyIndexCpp(expression.index, context)) {
            emissionError(
              context,
-@@ -6103,6 +6112,9 @@
-       }
-       const record = getCppRecordTypeArgumentsCpp(constructionType, context, new Set());
-       if (record) {
-+        if (isCppReadonlyUnknownRecordViewTypeCpp(constructionType, context)) {
-+          return emitCppOrderedRecordConstructionCpp(expression, constructionType, record, context);
-+        }
-         if (expression.members.length === 0) return `${emitType(constructionType, context)}{}`;
-         if (expression.members.some((member) => member.kind !== 'property')) {
-           return emitCppOrderedRecordConstructionCpp(expression, constructionType, record, context);
-@@ -6542,6 +6554,10 @@
+@@ -6542,6 +6556,10 @@
        return construction(initializer);
      }
      case 'property': {
@@ -45,10 +61,68 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
        const errorRead = emitCppErrorPropertyReadCpp(expression, context);
        if (errorRead) return errorRead;
        refuseCppUnsupportedErrorMemberReadCpp(expression, context);
-@@ -8647,6 +8663,23 @@
+@@ -8647,6 +8665,81 @@
    return sourceType && isCppNamedPropertiesSourceCpp(sourceType, context) ? source : undefined;
  }
  
++// Select a private implementation carrier only when every reference to the helper is a direct call,
++// and every use of this exact parameter is a non-optional property/index receiver. A returned, aliased,
++// compared, forwarded, mutated, exported, or callback-visible Record keeps its existing Record ABI.
++function collectCppPrivateReadonlyRecordReadViewsCpp(
++  module: Readonly<IrModule>, context: EmitContext,
++): ReadonlySet<string> {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return new Set();
++  const exported = new Set(module.exports.flatMap((item) => item.kind === 'local' ? [item.binding.id] : []));
++  const candidates = new Map<string, string>();
++  for (const declaration of module.declarations) {
++    if (declaration.kind !== 'function' || declaration.exported || exported.has(declaration.binding.id) ||
++        declaration.async || declaration.overloads.length > 0 || declaration.typeParameters.length > 0) continue;
++    for (const parameter of declaration.parameters) {
++      if (!parameter.optional && !parameter.rest && !parameter.initializer &&
++          isCppReadonlyUnknownRecordViewTypeCpp(parameter.type, context)) {
++        candidates.set(parameter.binding.id, declaration.binding.id);
++      }
++    }
++  }
++  if (candidates.size === 0) return new Set<string>();
++  for (const capture of createIrModuleClosureCapturePlanCpp(module).bindings) {
++    candidates.delete(capture.binding.id);
++  }
++  const receivers = new Set<Readonly<IrExpression>>();
++  const callees = new Set<Readonly<IrExpression>>();
++  const references: Readonly<IrExpression>[] = [];
++  const writes = new Set<Readonly<IrExpression>>();
++  analyzeIrModuleTraversal(module, {
++    expression(expression) {
++      if ((expression.kind === 'property' || expression.kind === 'element') && !expression.optional) {
++        receivers.add(expression.object);
++      }
++      if (expression.kind === 'call' && !expression.optional) callees.add(expression.callee);
++      if (expression.kind === 'assignment') writes.add(expression.left);
++      if (expression.kind === 'unary' && ['++', '--', 'delete'].includes(expression.operator)) writes.add(expression.operand);
++      if (expression.kind === 'identifier') references.push(expression);
++    },
++  });
++  const invalidHelpers = new Set<string>();
++  const invalidParameters = new Set<string>();
++  const used = new Set<string>();
++  for (const expression of references) {
++    if (expression.kind !== 'identifier' || expression.reference.kind !== 'binding') continue;
++    const id = expression.reference.binding.id;
++    if (!callees.has(expression)) invalidHelpers.add(id);
++    if (candidates.has(id)) {
++      used.add(id);
++      if (!receivers.has(expression)) invalidParameters.add(id);
++    }
++  }
++  for (const target of writes) {
++    if ((target.kind === 'property' || target.kind === 'element') && target.object.kind === 'identifier' &&
++        target.object.reference.kind === 'binding') invalidParameters.add(target.object.reference.binding.id);
++  }
++  return new Set([...candidates].flatMap(([id, helper]) =>
++    used.has(id) && !invalidParameters.has(id) && !invalidHelpers.has(helper) ? [id] : []));
++}
++
 +function isCppReadonlyUnknownRecordViewTypeCpp(
 +  type: Readonly<IrType> | undefined,
 +  context: EmitContext,
@@ -69,15 +143,16 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
  function isCppUnknownStringKeyedRecordTypeCpp(type: Readonly<IrType>, context: EmitContext): boolean {
    if (
      type.kind !== 'named' ||
-@@ -8789,6 +8822,7 @@
+@@ -8789,6 +8882,8 @@
  }
  
  function getCppNamedPropertiesViewExpressionCpp(expression: Readonly<IrExpression>, context: EmitContext): boolean {
-+  if (isCppReadonlyUnknownRecordViewTypeCpp(getIrExpressionTypeEvidenceCpp(expression, context), context)) return true;
++  if (expression.kind === 'identifier' && expression.reference.kind === 'binding' &&
++      context.readonlyRecordReadViewBindingIds.has(expression.reference.binding.id)) return true;
    if (getCppNamedPropertiesViewSourceCpp(expression, context)) return true;
    if (expression.kind !== 'identifier' || expression.reference.kind !== 'binding') return false;
    // A clone projection is a structural row reference, not a view. It is reached through the same
-@@ -8797,6 +8831,23 @@
+@@ -8797,6 +8892,23 @@
    if (context.structuralCloneRecordBindingIds.has(expression.reference.binding.id)) return false;
    const initializer = context.bindingInitializers.get(expression.reference.binding.id);
    return initializer !== undefined && getCppNamedPropertiesViewSourceCpp(initializer, context) !== undefined;
@@ -101,7 +176,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
  }
  
  // Whether an index names a string key. The view reports own enumerable STRING keys, so a symbol key is a
-@@ -9780,7 +9831,12 @@
+@@ -9780,7 +9892,12 @@
        }
        const lines = ['try {', ...indentSourceLines(emitStatementBody(statement.tryBody, context)), '}'];
        if (statement.catchClause) {
@@ -115,7 +190,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
        }
        return lines;
      }
-@@ -9868,6 +9924,29 @@
+@@ -9868,6 +9985,29 @@
    lines.push('catch (...) {', ...indentSourceLines([`${caughtVar} = true;`]), '}');
    lines.push(`if (${caughtVar}) {`, ...indentSourceLines(emitStatementBody(catchClause.body, context)), '}');
    return lines;
@@ -145,40 +220,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
  }
  
  function emitSwitchCaseStatementsCpp(
-@@ -10527,6 +10606,10 @@
-     }
-   }
-   if (getCppRuntimeProfile(context.options) === 'flight-cpp') {
-+    if (isCppReadonlyUnknownRecordViewTypeCpp(type, context)) {
-+      context.includes.add('flight/structural_ref.hpp');
-+      return 'flight::NamedProperties';
-+    }
-     const externalProjection = context.referenceRepresentationPlanner.resolveExternalProjection(type, context.module);
-     if (externalProjection) return emitType(externalProjection, context, representation);
-     // A carrier whose declaration states an index signature is the runtime's keyed record: it has an open
-@@ -12918,7 +13001,11 @@
-   // key-before-value ordering. Record::set replaces an existing value without reinserting its key,
-   // so replaying those writes also preserves last-write-wins and stable property position.
-   const result = getGeneratedTargetName('recordConstruction', context);
--  const lines = [`${emitType(constructionType, context)} ${result} = {};`];
-+  const readonlyView = isCppReadonlyUnknownRecordViewTypeCpp(constructionType, context);
-+  const storageType: Readonly<IrType> = readonlyView
-+    ? { kind: 'named', reference: { kind: 'ambient', name: 'Record' }, typeArguments: [record.key, record.value] }
-+    : constructionType;
-+  const lines = [`${emitType(storageType, context)} ${result} = {};`];
-   for (const member of expression.members) {
-     if (member.kind === 'getAccessor') {
-       emissionError(context, 'Record construction does not support accessors');
-@@ -12957,7 +13044,7 @@
-       `${result}.set(${key}, ${value});`,
-     );
-   }
--  lines.push(`return ${result};`);
-+  lines.push(`return ${readonlyView ? `flight::NamedProperties(${result})` : result};`);
-   return `(${context.namespaceScope ? '[]' : '[&]'}() { ${lines.join(' ')} }())`;
- }
- 
-@@ -13768,6 +13855,9 @@
+@@ -13768,6 +13908,9 @@
  // initializer refinement can instead keep a concrete present carrier, so it wins over a stale nullable
  // source mark. This is the shared storage question used by guards, assertions, arguments, and receivers.
  function hasCppBindingAbsenceStorageCpp(bindingId: string, context: EmitContext): boolean {
@@ -188,7 +230,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    if (context.arrayElementBindingIds.has(bindingId)) return true;
    if (context.externalCallResultPresenceBindings.has(bindingId)) {
      const targetType = context.externalBindingStorageTargetTypes.get(bindingId);
-@@ -13915,6 +14005,7 @@
+@@ -13915,6 +14058,7 @@
  // while the lowering elected `std::optional` storage for it, so neither axis can be read off the
  // other.
  function hasCppAbsenceStorageCpp(expression: Readonly<IrExpression>, context: EmitContext): boolean {
@@ -196,7 +238,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    if (expression.kind === 'identifier' && expression.reference.kind === 'binding') {
      return hasCppBindingAbsenceStorageCpp(expression.reference.binding.id, context);
    }
-@@ -14287,6 +14378,10 @@
+@@ -14287,6 +14431,10 @@
    strict: boolean,
    context: EmitContext,
  ): string {
@@ -207,11 +249,22 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    const errorMemberTest = emitCppErrorPresenceMemberTestCpp(operand, sentinel, present, strict, context);
    if (errorMemberTest) return errorMemberTest;
    // A slot carried as `std::exception_ptr` answers "was a failure recorded" as pointer emptiness, and
+@@ -32250,6 +32398,10 @@
+ 
+ function emitParameter(parameter: Readonly<IrParameter>, context: EmitContext, includeDefault = true): string {
+   const name = getBindingTargetName(parameter.binding, context);
++  if (context.readonlyRecordReadViewBindingIds.has(parameter.binding.id)) {
++    context.includes.add('flight/structural_ref.hpp');
++    return `flight::NamedProperties ${name}`;
++  }
+   if (
+     context.indexedObjectParameterBindingIds.has(parameter.binding.id) ||
+     isCppGenericStructuralSequenceParameterCpp(parameter, context)
 diff --git a/packages/compiler-backend-cpp/src/cppReadonlyJsonRecordView.test.ts b/packages/compiler-backend-cpp/src/cppReadonlyJsonRecordView.test.ts
 new file mode 100644
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppReadonlyJsonRecordView.test.ts
-@@ -0,0 +1,63 @@
+@@ -0,0 +1,67 @@
 +import ts from 'typescript';
 +import { expect, it } from 'vitest';
 +
@@ -225,49 +278,53 @@ new file mode 100644
 +  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
 +}
 +
-+it('keeps readonly erased Record reads in the owner-preserving named view and bare Any carrier', () => {
-+  const output = emit(`export function read(record: Readonly<Record<string, unknown>>, key: string): unknown {
++it('selects a private direct-call reader without changing the public Record ABI', () => {
++  const output = emit(`function read(record: Readonly<Record<string, unknown>>, key: string): unknown {
 +    const value = record[key]; if (value === undefined || value === null) return 'missing'; return value;
-+  } export function named(record: Readonly<Record<string, unknown>>): unknown { return record.missing; }
-+    export function numericKey(record: Readonly<Record<string, unknown>>, key: number): unknown { return record[key]; }`);
++  } export function run(record: Readonly<Record<string, unknown>>, key: string): unknown { return read(record, key); }`);
 +  expect(output).toContain('flight::NamedProperties record');
-+  expect(output).toContain('record.get(flight::String("missing"))');
++  expect(output).toContain('run(flight::Record<flight::String, flight::Any> record');
 +  expect(output).toContain('presence_operand.is_null()');
 +  expect(output).toContain('presence_operand.is_undefined()');
-+  expect(output).toContain('record.get(key)');
-+  expect(output).not.toContain('.value_or(');
 +});
 +
-+it('constructs original Record literal storage once before taking a readonly view', () => {
-+  const output = emit(`export function take(record: Readonly<Record<string, unknown>>): unknown { return record.n; }
++it('keeps readonly literal allocation in the original Record storage before a private read view', () => {
++  const output = emit(`function take(record: Readonly<Record<string, unknown>>): unknown { return record.n; }
 +    export function direct(): unknown { return take({n: 3}); }
 +    export function computed(key: string): unknown { return take({[key]: 4}); }
 +    export function empty(): unknown { return take({}); }`);
-+  expect(output).toContain('flight::Record<flight::String, flight::Any> record_construction');
-+  expect(output).toContain('flight::NamedProperties(record_construction');
++  expect(output).toContain('flight::NamedProperties record');
++  expect(output).toContain('flight::Record<flight::String, flight::Any>');
 +  expect(output).not.toContain('flight::NamedProperties record_construction');
 +});
 +
-+it('retains lazy nullish fallback and does not substitute truthiness', () => {
-+  const output = emit(`export function fallback(record: Readonly<Record<string, unknown>>, next: () => unknown): unknown {
++it('retains a private reader lazy nullish fallback without testing truthiness', () => {
++  const output = emit(`function fallback(record: Readonly<Record<string, unknown>>, next: () => unknown): unknown {
 +    return record.drawOrder ?? next();
-+  }`);
++  } export function run(record: Readonly<Record<string, unknown>>, next: () => unknown): unknown { return fallback(record, next); }`);
 +  expect(output).toContain('.is_nullish()');
 +  expect(output).toContain('return next();');
 +  expect(output).not.toContain('.to_boolean()');
 +});
 +
-+it('resolves readonly Record aliases without changing mutable or concrete Record carriers', () => {
++it('keeps aliases, returned owners, exported functions and callback-visible helper signatures unchanged', () => {
 +  const output = emit(`type R = Readonly<Record<string, unknown>>;
-+    export function alias(record: R): unknown { return record.n; }
-+    export function ordinary(record: Record<string, unknown>): unknown { return record.n; }
-+    export function numeric(record: Readonly<Record<string, number>>): number { return record.n; }`);
-+  expect(output).toContain('using R = flight::NamedProperties');
-+  expect(output).toContain('flight::Record<flight::String, flight::Any> record');
-+  expect(output).toContain('flight::Record<flight::String, double> record');
++    function identity(record: R): R { return record; }
++    export function escape(record: R): R { return identity(record); }
++    function callback(record: R): unknown { return record.n; }
++    export function handler(): (record: R) => unknown { return callback; }`);
++  expect(output).toContain('using R = flight::Record<flight::String, flight::Any>');
++  expect(output).not.toContain('flight::NamedProperties');
 +});
 +
-+it('limits a string-only built-in parse catch to syntax failure and leaves other catches alone', () => {
++it('retains numeric indexing for a private string-keyed readonly Record reader', () => {
++  const output = emit(`function numeric(record: Readonly<Record<string, unknown>>, key: number): unknown { return record[key]; }
++    export function run(record: Readonly<Record<string, unknown>>, key: number): unknown { return numeric(record, key); }`);
++  expect(output).toContain('flight::NamedProperties record');
++  expect(output).toContain('record.get(key)');
++});
++
++it('limits an already-string built-in parse-only catch to syntax failure', () => {
 +  const output = emit(`export function parse(text: string): unknown {
 +    let doc: unknown; try { doc = JSON.parse(text); } catch { return null; } return doc;
 +  } export function other(next: () => unknown): unknown { try { return next(); } catch { return null; } }`);
