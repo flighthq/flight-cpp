@@ -1,4 +1,4 @@
-// Pending installed-output consumer. Build only after the real shared Types and particles run.
+// Original public consumer: usable against a qualified scratch closure or normal installed output.
 // Includes the actual public package; supplies no parser, codec adapter, detector or generated body.
 #include <flight/particles_formats/contract.hpp>
 #include "particle-public-consumer.hpp"
@@ -6,10 +6,12 @@
 #include <flight/structural_ref.hpp>
 
 #include <functional>
+#include <initializer_list>
 #include <iostream>
 #include <memory>
 #include <optional>
 #include <type_traits>
+#include <utility>
 #include <variant>
 
 namespace api = flight::particles_formats;
@@ -20,6 +22,7 @@ using Read = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref
 using Bag = flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<types::ParseParticleConfigOptions>>>>;
 int failures = 0;
 int checks = 0;
+int detector_checks = 0;
 void check(bool value, const char* label) { ++checks; if (!value) { ++failures; std::cerr << label << '\n'; } }
 void clear() { for (const auto& kind : api::get_registered_particle_formats()) api::unregister_particle_format(kind); }
 struct Sentinel {};
@@ -36,6 +39,15 @@ struct Cell final : flight::TypedRowCell<std::optional<double>> {
   }
   void set(std::optional<double> next) override { value = next; }
 };
+
+template<typename Descriptor>
+void detectors(const Descriptor& descriptor, std::initializer_list<std::pair<const char*, bool>> cases) {
+  const auto codec = flight::row_get<flight::RowKey<"codec">>(descriptor);
+  for (const auto& [input, expected] : cases) {
+    ++detector_checks;
+    check(codec->detect(flight::String(input)) == expected, "original detector matches source oracle");
+  }
+}
 
 template<auto ConfigFunction, auto DocumentFunction, typename Options, typename Result,
          auto NativeMember, typename Key, typename Descriptor, typename Measure, typename Expected>
@@ -167,11 +179,32 @@ int main() {
   check(api::get_registered_particle_formats().empty(), "importing actual public package installs nothing");
   api::install(std::nullopt);
   check(api::get_registered_particle_formats().empty(), "source consumer absent formats installs nothing");
+  api::install(decltype(api::particle_all_formats){});
+  check(api::get_registered_particle_formats().empty(), "source consumer empty formats installs nothing");
+  const auto unity = flight::row_get<flight::RowKey<"codec">>(api::unity_particle_format);
+  const auto spine = flight::row_get<flight::RowKey<"codec">>(api::spine_particle_format);
+  const flight::String overlap("{\"continuous\":true,\"startLifetime\":{\"mode\":\"constant\"}}");
+  api::install(decltype(api::particle_all_formats){api::unity_particle_format, api::spine_particle_format});
+  check(api::detect_particle_format(overlap) == flight::String("Unity"), "original overlapping detectors retain forward registration order");
+  api::register_particle_format("Unity", spine);
+  check(api::get_particle_format_codec("Unity").value() == spine && api::get_registered_particle_formats().join(",") == "Unity,Spine", "replacing original registry codec retains key position and owner");
+  clear();
+  api::install(decltype(api::particle_all_formats){api::spine_particle_format, api::unity_particle_format});
+  check(api::detect_particle_format(overlap) == flight::String("Spine"), "original overlapping detectors retain reversed registration order");
+  clear();
   api::install(api::particle_all_formats);
   api::register_built_in_particle_formats();
   api::register_built_in_particle_formats();
   check(api::get_registered_particle_formats().size() == 6, "public installation is idempotent");
+  check(api::get_registered_particle_formats().join(",") == "Libgdx,StarlingPex,ParticleDesigner,Unity,Pixi,Spine", "all original registry keys retain built-in order");
+  for (const auto& descriptor : api::particle_all_formats) check(api::get_particle_format_codec(flight::row_get<flight::RowKey<"kind">>(descriptor)).value() == flight::row_get<flight::RowKey<"codec">>(descriptor), "every original descriptor codec retains its owner");
+  check(!flight::row_get<flight::RowKey<"codec">>(api::pixi_particle_format)->serialize.has_value(), "original Pixi descriptor remains parse-only");
   check(api::named_callbacks_retained(), "actual compiler-emitted public consumer recognizes all eight original named callbacks");
+  detectors(api::unity_particle_format, {{"bad",false},{"null",false},{"[]",false},{"{}",false},{"{\"startLifetime\":{\"mode\":\"constant\"}}",true},{"{\"startLifetime\":{\"mode\":3}}",false},{"{\"gravityModifier\":0}",true},{"{\"looping\":true,\"startLifetime\":null}",true}});
+  detectors(api::pixi_particle_format, {{"bad",false},{"null",false},{"[]",false},{"{}",false},{"{\"pos\":{},\"alpha\":null}",false},{"{\"pos\":{},\"alpha\":{\"start\":1}}",true},{"{\"pos\":{},\"alpha\":{\"end\":0}}",true},{"{\"alpha\":{\"start\":1}}",false}});
+  detectors(api::spine_particle_format, {{"bad",false},{"null",false},{"[]",false},{"{}",false},{"{\"continuous\":false}",true},{"{\"emission\":{\"low\":1,\"high\":2}}",true},{"{\"life\":{\"low\":null,\"high\":2}}",false},{"{\"life\":{\"low\":0,\"high\":0}}",true}});
+  detectors(api::libgdx_particle_format, {{"",false},{"Particle Effect",true},{" \tParticle Effect \r\nmore",true},{"x\nParticle Effect",false},{"Particle EffectX",false}});
+  detectors(api::particle_designer_particle_format, {{"<plist><dict/></plist>",false},{"<plist><key>particleLifespanVariance</key></plist>",false},{"<plist><key>particleLifespan</key></plist>",true}});
   auto scale = [](const Config& value) { return value->scale_min; };
   auto speed = [](const Config& value) { return value->speed_min; };
   auto size = [](double value) { return 32 / value; };
@@ -180,14 +213,15 @@ int main() {
   family<&api::parse_unity_particle, &api::parse_unity_particle_document, types::UnityParseOptions, types::UnityParseResult, &types::UnityParseOptions::pixels_per_unit, flight::RowKey<"pixelsPerUnit">>(api::unity_particle_format, "{\"gravityModifier\":0}", speed, units, 100);
   family<&api::parse_particle_designer_plist, &api::parse_particle_designer_plist_document, types::ParticleDesignerParseOptions, types::ParticleDesignerParseResult, &types::ParticleDesignerParseOptions::texture_size, flight::RowKey<"textureSize">>(api::particle_designer_particle_format, "<plist><dict><key>maxParticles</key><integer>100</integer></dict></plist>", scale, size, 1);
   family<&api::parse_libgdx_particle, &api::parse_libgdx_particle_document, types::LibgdxParseOptions, types::LibgdxParseResult, &types::LibgdxParseOptions::texture_size, flight::RowKey<"textureSize">>(api::libgdx_particle_format, "Particle Effect\nScale\nlowMin: 32\nlowMax: 32\nhighMin: 32\nhighMax: 32\n", scale, size, 1);
-  const auto unity = flight::row_get<flight::RowKey<"codec">>(api::unity_particle_format);
-  const auto spine = flight::row_get<flight::RowKey<"codec">>(api::spine_particle_format);
   check(unity->detect("{\"startLifetime\":{\"mode\":\"constant\"}}"), "original Unity nested JSON mode detector");
   check(spine->detect("{\"emission\":{\"low\":1,\"high\":2}}"), "original Spine nested JSON range detector");
   check(!unity->detect("null") && !spine->detect("[]"), "original nullable JSON helper rejects roots");
   const auto libgdx = flight::row_get<flight::RowKey<"codec">>(api::libgdx_particle_format);
   check(libgdx->detect(" \tParticle Effect \r\nmore") && !libgdx->detect("x\nParticle Effect"), "original indexed optional trim detector");
   clear();
-  std::cout << "{\"checks\":" << checks << ",\"failures\":" << failures << ",\"families\":4,\"storedCallbacks\":8}\n";
+  const auto unknown = api::registered_document("anything", "missing.Custom", std::nullopt);
+  check(unknown->format == flight::String("missing.Custom") && !unknown->diagnostics.empty() && unknown->diagnostics[0]->kind == "particles.unknown-format" && unknown->diagnostics[0]->origin == "parseRegisteredParticleFormat", "missing original registry kind retains requested kind and diagnostic origin");
+  check(api::get_registered_particle_formats().empty(), "full consumer leaves original registry empty");
+  std::cout << "{\"checks\":" << checks << ",\"failures\":" << failures << ",\"families\":4,\"storedCallbacks\":8,\"detectorCases\":" << detector_checks << "}\n";
   return failures ? 1 : 0;
 }

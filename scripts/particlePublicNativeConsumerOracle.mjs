@@ -11,6 +11,8 @@ const args = Object.fromEntries(process.argv.slice(2).filter(arg=>arg!=='--emit-
 for(const key of ['--compiler','--typescript','--context','--inventory','--output']) assert.ok(args[key],key+' required');
 if(!emitOnly) assert.ok(args['--cxx'],'--cxx required');
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),inventory=path.resolve(args['--inventory']);
+const overlay=args['--overlay']?path.resolve(args['--overlay']):undefined;
+const selected=file=>overlay&&fs.existsSync(path.join(overlay,'include',file))?path.join(overlay,'include',file):path.join(inventory,'include',file);
 const url=pathToFileURL(path.resolve(args['--compiler']));
 const {createCppCompilerBackend}=await import(url);
 const {lowerTypeScriptSource}=await import(new URL('../../compiler-semantic/src/index.js',url));
@@ -36,19 +38,20 @@ try {
  fs.writeFileSync(path.join(scratch,'particle-public-consumer.hpp'),emitted);
  const headers=['flight/particles_formats/unity_parse.hpp','flight/particles_formats/_internal_index.hpp','flight/particles_formats/contract.hpp','flight/particles_formats/register_built_in_particle_formats.hpp'];
  const inventoryFiles=[...headers,'flight/particles_formats/parse_particle_config.hpp','flight/types/particle_format_codec.hpp','flight/sdk/structural_members.hpp'];
- const before=inventoryFiles.map(file=>({file,sha256:hash(fs.readFileSync(path.join(inventory,'include',file)))}));
- const parserHeader=fs.readFileSync(path.join(inventory,'include/flight/particles_formats/parse_particle_config.hpp'),'utf8');
+ inventoryFiles.push('flight/types/import_diagnostic.hpp','flight/importdiagnostics/import_diagnostic_collector.hpp');
+ const before=inventoryFiles.map(file=>({file,path:selected(file),sha256:hash(fs.readFileSync(selected(file)))}));
+ const parserHeader=fs.readFileSync(selected('flight/particles_formats/parse_particle_config.hpp'),'utf8');
  const helpersInInstalledHeader=helperCalls.every(name=>parserHeader.includes(' '+name+'('));
- const report={normalSdk:false,scope:'Actual selected generated inventory. Original public TypeScript consumer emitted with the exact declared type-only codec result patch. No local parser/detector/codec implementation or invented public declaration.',inputContextSha256:hash(input),declaredTypeOnlyPatch:{file:patch,sha256:hash(fs.readFileSync(path.join(root,patch)))},sourceConsumer:{file:fixture,sha256:hash(fs.readFileSync(path.join(root,fixture))),emittedSha256:hash(emitted),helperCalls,helpersInInstalledHeader},nativeFixture:{file:'scripts/fixtures/particlePublicConsumer.cpp',sha256:hash(fs.readFileSync(path.join(root,'scripts/fixtures/particlePublicConsumer.cpp')))},inventory:before,emitOnly,compiled:false,headers:[]};
+ const report={normalSdk:false,scope:overlay?'Scratch original-module overlay on the selected frozen inventory; no normal output or header promotion.':'Actual selected generated inventory. Original public TypeScript consumer emitted with the exact declared type-only codec result patch. No local parser/detector/codec implementation or invented public declaration.',overlay,inputContextSha256:hash(input),declaredTypeOnlyPatch:{file:patch,sha256:hash(fs.readFileSync(path.join(root,patch)))},sourceConsumer:{file:fixture,sha256:hash(fs.readFileSync(path.join(root,fixture))),emittedSha256:hash(emitted),helperCalls,helpersInInstalledHeader},nativeFixture:{file:'scripts/fixtures/particlePublicConsumer.cpp',sha256:hash(fs.readFileSync(path.join(root,'scripts/fixtures/particlePublicConsumer.cpp')))},inventory:before,emitOnly,compiled:false,headers:[]};
  if(!emitOnly){
-  const includes=['-I'+scratch,'-I'+path.join(root,'overrides/include'),'-I'+path.join(root,'include'),'-I'+path.join(inventory,'include'),'-I'+path.join(root,'generated/include'),'-I'+path.join(root,'out/tooling/sdl/include'),'-I'+path.join(root,'out/tooling/gles/include')];
+  const includes=['-I'+scratch,'-I'+path.join(root,'overrides/include'),'-I'+path.join(root,'include'),...(overlay?['-I'+path.join(overlay,'include')]:[]),'-I'+path.join(inventory,'include'),'-I'+path.join(root,'generated/include'),'-I'+path.join(root,'out/tooling/sdl/include'),'-I'+path.join(root,'out/tooling/gles/include')];
   const base=['-std=c++20','-ffp-contract=off',...includes];
   // At most two native compiler processes; all four requested headers are judged independently.
   for(let start=0;start<headers.length;start+=2){const rows=await Promise.all(headers.slice(start,start+2).map(async(file,index)=>{const number=start+index,source=path.join(scratch,'header-'+number+'.cpp');fs.writeFileSync(source,'#include <'+file+'>\n');const result=await command([...base,'-c',source,'-o',path.join(scratch,'header-'+number+'.o')]);const log=output+'.header-'+number+'.log';fs.writeFileSync(log,result.stderr+result.stdout);return{file,pass:result.exit===0,exit:result.exit,log,error:result.error};}));report.headers.push(...rows);}
   const binary=path.join(scratch,'consumer');const built=await command([...base,path.join(root,'scripts/fixtures/particlePublicConsumer.cpp'),'-o',binary]);fs.writeFileSync(output+'.native-build.log',built.stderr+built.stdout);report.compiled=built.exit===0;report.compileExit=built.exit;report.compileError=built.error;
   if(report.compiled){const run=spawnSync(binary,[],{encoding:'utf8'});fs.writeFileSync(output+'.native-run.log',run.stdout+run.stderr);report.runExit=run.status;try{report.native=JSON.parse(run.stdout);}catch{report.native={output:run.stdout,error:run.stderr};}report.publicNativeQualified=run.status===0&&helpersInInstalledHeader;}else report.publicNativeQualified=false;
  }
- for(const file of before)assert.equal(hash(fs.readFileSync(path.join(inventory,'include',file.file))),file.sha256,'inventory changed during native control');
+ for(const file of before)assert.equal(hash(fs.readFileSync(file.path)),file.sha256,'selected header changed during native control');
  report.inventoryUnchanged=true;fs.writeFileSync(output,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));
  if(!emitOnly)process.exitCode=report.publicNativeQualified&&report.headers.every(header=>header.pass)?0:1;
 }finally{fs.rmSync(scratch,{recursive:true,force:true});}
