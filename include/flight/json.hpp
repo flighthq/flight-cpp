@@ -59,6 +59,11 @@ class JsonValue {
   JsonValue(JsonArray value);
   JsonValue(JsonObject value);
 
+  // Retaining constructors: the parsed container is moved into the value, never copied. A nested
+  // object or array handed back to storage keeps the owner every alias already reads.
+  explicit JsonValue(std::shared_ptr<JsonArray> owner) : value_(std::move(owner)) {}
+  explicit JsonValue(std::shared_ptr<JsonObject> owner) : value_(std::move(owner)) {}
+
   [[nodiscard]] Kind kind() const noexcept { return static_cast<Kind>(value_.index()); }
   [[nodiscard]] bool is_null() const noexcept { return std::holds_alternative<Null>(value_); }
   [[nodiscard]] bool as_boolean() const { return require<bool>(); }

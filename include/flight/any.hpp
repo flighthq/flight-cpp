@@ -377,6 +377,20 @@ class Any final {
   // As with Array<T>::get, an invalid/missing index is absent; a present undefined or null element
   // remains an engaged Any. A present element with no represented erased reading throws instead
   // of being mistaken for an absent index. Non-array receivers also throw, without coercion.
+  // Recovers the typed array owner a JSON array was boxed from, at its exact type. A different type
+  // is empty; the answer is the SAME storage the parsed value and its aliases read, never a copy.
+  template <typename Owner>
+  [[nodiscard]] std::shared_ptr<typename Owner::element_type> array_owner_if() const noexcept {
+    const auto* array = std::get_if<detail::AnyArray>(&value_);
+    if (!array || array->type != std::type_index(typeid(Owner))) return {};
+    try {
+      const auto& owner = std::any_cast<const Owner&>(*array->value);
+      return owner;
+    } catch (...) {
+      return {};
+    }
+  }
+
   [[nodiscard]] std::optional<Any> array_get(double index) const {
     const auto* array = std::get_if<detail::AnyArray>(&value_);
     if (!array || !array->value || !array->get) throw BadAnyAccess();
@@ -886,6 +900,25 @@ inline Error::Error(String message, const ErrorOptions& options) : Error(std::mo
 inline std::optional<Any> Error::cause() const {
   if (!cause_) return std::nullopt;
   return *cause_;
+}
+
+
+// A JSON-compatible erased value as the parsed tree's own value. Primitives become values; an object
+// or array keeps the EXACT owner it was boxed from, so storing it never copies the tree. `undefined`,
+// symbols, callables and opaque host values have no JSON representation and answer nothing.
+[[nodiscard]] inline std::optional<JsonValue> any_to_json_value(const Any& value) {
+  switch (value.kind()) {
+    case AnyKind::null: return JsonValue();
+    case AnyKind::boolean: return JsonValue(value.as_boolean());
+    case AnyKind::number: return JsonValue(value.as_number());
+    case AnyKind::string: return JsonValue(value.as_string());
+    case AnyKind::object:
+      if (const auto object = value.object_reference_if<JsonObject>()) return JsonValue(object);
+      return std::nullopt;
+    default: break;
+  }
+  if (const auto array = value.array_owner_if<std::shared_ptr<JsonArray>>()) return JsonValue(array);
+  return std::nullopt;
 }
 
 } // namespace flight
