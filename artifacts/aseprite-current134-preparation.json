@@ -1,0 +1,186 @@
+{
+  "schema": "flight-cpp-aseprite-current134-preparation/1",
+  "status": "PASS composition/strict/focused/unchanged-whole-module-bytes; conditional normal generation not started",
+  "input": {
+    "acceptedBase": "ccecd2d00eafa7a902732f304e5f31081f619276",
+    "compilerPin": "806d257d2f4100de745cc97340e61c2f301b0f24",
+    "compilerPatches": 134,
+    "flightPatchesIn17PackageGraph": 204,
+    "sourceCount": 1175,
+    "runtime": {
+      "runtimeRef": "ccecd2d00eafa7a902732f304e5f31081f619276",
+      "root": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-current134-runtime",
+      "generated": "immutable exact provisional B plus prior normal121 formats output; only focused compiler controls here, no corrected-B/coherence claim"
+    },
+    "orderedCompilerPayloads": {
+      "count": 134,
+      "idSha256LinesDigest": "5f3aa8d81e84461f888c631c606bb94be901899cb25d6391da0bad50744bdbc9",
+      "digestFormat": "each ordered id + space + payload sha256 + newline",
+      "changedOrAddedSince133": [
+        {
+          "id": "compiler-optional-chain-dual-sentinel-result",
+          "sha256": "6926cd5307168e9011fc280fec61352ddedb7409657b1f7ac71e647841671184"
+        }
+      ],
+      "removedSince133": [],
+      "fullOrderedProof": "current134-compiler-roundtrip.json in author proof archive; exact files pinned by acceptedBase source-patches/manifest.json"
+    }
+  },
+  "orderedRoundtrip": {
+    "rawRestoredClean": true,
+    "reappliedPaths": 118,
+    "allPatchedBytesEqual": true
+  },
+  "strictBuildExit": 0,
+  "focused": {
+    "files": 9,
+    "tests": 35,
+    "passed": 35,
+    "failed": 0,
+    "skipped": 0,
+    "filesAndCounts": {
+      "cppConstructorParameterProperties.test.ts": 6,
+      "cppGenericArrayPropertyPredicate.test.ts": 7,
+      "cppJsonOptionalMemberArgument.test.ts": 1,
+      "cppJsonUnionDocumentView.test.ts": 6,
+      "cppNarrowedFilterResult.test.ts": 4,
+      "cppNativeLiteralPresence.test.ts": 1,
+      "cppNullableOptionalParameter.test.ts": 4,
+      "cppOptionalChainResultVariant.test.ts": 3,
+      "cppOriginalOptionalUnionSlot.test.ts": 3
+    },
+    "reportSha256": "33e0c55bbb32be3f4f2ca7a354df868aa51e50ef1d1d6417e40fff5c1a5f895f"
+  },
+  "wholeOriginalEmission": {
+    "modules": [
+      {
+        "path": "flight/spritesheet_formats/aseprite_parse.hpp",
+        "refused": []
+      },
+      {
+        "path": "flight/spritesheet_formats/libgdx_atlas_parse.hpp",
+        "refused": []
+      },
+      {
+        "path": "flight/spritesheet_formats/spritesheet_detect.hpp",
+        "refused": []
+      },
+      {
+        "path": "flight/spritesheet_formats/starling_parse.hpp",
+        "refused": []
+      },
+      {
+        "path": "flight/spritesheet_formats/texture_packer_parse.hpp",
+        "refused": []
+      },
+      {
+        "path": "flight/textureatlas_formats/texture_atlas_aseprite_parse.hpp",
+        "refused": []
+      },
+      {
+        "path": "flight/textureatlas_formats/texture_packer_atlas_parse.hpp",
+        "refused": []
+      }
+    ],
+    "sourceCount": 1175,
+    "packages": [
+      "entity",
+      "geometry",
+      "image",
+      "image-codec",
+      "importdiagnostics",
+      "log",
+      "math",
+      "registry",
+      "requirement",
+      "signals",
+      "spritesheet",
+      "spritesheet-formats",
+      "texture",
+      "textureatlas",
+      "textureatlas-formats",
+      "types",
+      "xml"
+    ],
+    "refusals": 0,
+    "sdkGeneration": false
+  },
+  "comparisonToQualified133Overlay": [
+    {
+      "path": "flight/spritesheet_formats/aseprite_parse.hpp",
+      "byteIdentical": true,
+      "sha256": "bc6ae5d90d91bd86109fa13493ac0f5ed6cbd9d9d7dac677a24a540e533fac5e"
+    },
+    {
+      "path": "flight/spritesheet_formats/libgdx_atlas_parse.hpp",
+      "byteIdentical": true,
+      "sha256": "ff1145fd1238766b7b386c257e35521adbf7a3fdfe5ab9651f3f15ac59fae1f7"
+    },
+    {
+      "path": "flight/spritesheet_formats/spritesheet_detect.hpp",
+      "byteIdentical": true,
+      "sha256": "0cbe9ca2c6b048014980c132c52d6debf193ba0f5ccc857da47a0c7f3a1018de"
+    },
+    {
+      "path": "flight/spritesheet_formats/starling_parse.hpp",
+      "byteIdentical": true,
+      "sha256": "e50591dd67c65e2c6695dda4dacaabb5296dd3b77dc5a1c876e9353f8e2927c2"
+    },
+    {
+      "path": "flight/spritesheet_formats/texture_packer_parse.hpp",
+      "byteIdentical": true,
+      "sha256": "e0e890cdb6cddcf8b4fefc0ba0aa86d9c625735fa8f6cdbc72745fb66159fe6b"
+    },
+    {
+      "path": "flight/textureatlas_formats/texture_atlas_aseprite_parse.hpp",
+      "byteIdentical": true,
+      "sha256": "a805649a8944f28f03b2350550ee5bc1b3a261549f288bbf5feed5e3a7488413"
+    },
+    {
+      "path": "flight/textureatlas_formats/texture_packer_atlas_parse.hpp",
+      "byteIdentical": true,
+      "sha256": "faa69725b22d11d366a2e43f79019c65669271b0d525faf0d686aa2ced3e858b"
+    }
+  ],
+  "priorNativeProof": "The identical seven emitted headers retain the prior explicit133/5ac-runtime originalFour4PASS/public2443/registry54 proof by content. This is not a new four-header run on the newer runtime and not normal output or sdk:check reproduction. Current runtime cce is exercised by the35focused cases only.",
+  "conditionalAuthority": "Foreman78c12caa permits two sequential groupedformats normalregen then exactscopedsdk:check without furtherpermission only after2current118WGPUactualEXIT and correctedB/eightoverride snapshot agreed, this134conditionPASS, fleetmax3/-j2 and inputs/sharedaggregateownership frozen2/Integration. No runs started.",
+  "currentExternalPrerequisites": [
+    "Builder2 current corrected118WGPU actual exit plus regression results, corrected B dependency/eight-override snapshot and shared aggregate ownership explicitly agreed with2/Integration remain pending. The immutable eight-only75a37e81 snapshot is available for scratch; it does not qualify the still-running WGPU output.",
+    "Registry runtime is now integrated (local fbe091e8 plus facad9c7 inactive compiler payload; Foreman reports host5837c60a). Builder2 owns compiler activation, actual original get_render_registries_miss_message emission and shared-B RenderState heritage after active WGPU. PublicGL native remains blocked on those actual outputs; no additional registry delivery or Types/renderGL SDK is requested."
+  ],
+  "glFixturePreparation": {
+    "source": "/tmp/builder4-gl-cell-views/normal-gl-prep/public-gl-registry-consumer.cpp",
+    "sourceSha256": "85ec0b85dd278f8637439e95050c404fd10f2474a036437c8f898010cc2ac498",
+    "candidate": ".scratch-archive/builder4-current-gl-public-registry-consumer.cpp",
+    "candidateSha256": "c458e06b70f99a584a7863c0a3284cb9068dcbc748af9f7c2e393c46e42c22c3",
+    "change": "Only two intended absent-member fixture assertions now use MemberValue.has_value, replacing invalid implicit bool/not on Map and incorrect NaN truthiness on double. Every original public call/identity/storage/owner/callback/diagnostic assertion remains. Product bodies unchanged.",
+    "nativeState": "NOT RUN; prepared original consumer retained. Pending actual builder2 registry helper/body plus B heritage and coherent dependency snapshot."
+  },
+  "noPromotion": [
+    "No normal header,117/globalSDK/publicGL claim.",
+    "Provisional B and mixed-profile global checks remain explicit.",
+    "Held normal121output/atlasretirements/GLpair were excluded from Integrationsource13 landing."
+  ],
+  "heldOutputIsolation": {
+    "paths": 27,
+    "state": "Preserved losslessly outside outgoing branch; excluded from this one-path134 proof delivery.",
+    "patchSha256": "b70714132968d7c7b1fe77940394368bc69eb9b9d733192fb7245a1ff6f511a0",
+    "archiveRecord": ".scratch-archive/builder4-held-before-proof-only-handoff.json",
+    "qualifiedProofOnly": true,
+    "normal121AtlasAndGlNotPromoted": true
+  },
+  "current134ProofArchive": {
+    "sha256": "8ab2b27746beb1dc5ca44f1e206b2ec46b0f396c1c9ebf7e316500553d995f73",
+    "contents": [
+      "current134-compiler-roundtrip.json",
+      "current134-compiler-strict-build.log",
+      "current134-targeted-tests.json",
+      "current134-targeted-tests.log",
+      "current134-public-emission.json",
+      "current134-public-emission.log",
+      "current134-seven-header-comparison.json",
+      "emit-current134-public.mjs"
+    ],
+    "scope": "134 composition/strict/focused/emission proof records only; no held27 output, dependencies or GL overrides."
+  }
+}
