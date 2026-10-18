@@ -1148,7 +1148,7 @@ int main() {
 
   // ERASED typeof OF EACH VALUE KIND, AND THE ERRORS `in` AND A MEMBER READ RAISE. typeof answers from the
   // own cell's present value; a cell holding undefined answers "undefined". `in` on any primitive, and a member read of undefined, throw
-  // TypeError as JavaScript does; arrays and functions are refused rather than answered from a guess.
+  // TypeError as JavaScript does; typeof of an array member is refused rather than answered from a guess.
   {
     auto cells = flight::make_ref<TestTypeofCells>();
     cells->child = flight::make_ref<TestTypeofCells>();
@@ -1187,9 +1187,9 @@ int main() {
       return false;
     };
     const auto array = flight::Any(flight::Array<flight::Any>{flight::Any(1.0)});
-    check(refused([&] { static_cast<void>(flight::has_property(array, flight::String("length"))); }) &&
+    check(flight::has_property(array, flight::String("length")) &&
               refused([&] { static_cast<void>(flight::member_typeof(array, flight::String("length"))); }),
-          "an erased array's members are refused, not answered");
+          "an erased array reports its length key, while typeof of an array member is still refused");
   }
 
   // THE EMITTED ERASED-MEMBER SITES, ON THE JSON VALUES THEIR PARSERS PASS THEM. Each expression is the one
