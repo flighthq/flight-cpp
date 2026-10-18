@@ -357,4 +357,16 @@ template <typename Schema>
   return JsonScalarCell{properties.get(key)};
 }
 
+// (a) Lazy JSON-backed structural row. An object parsed by JSON.parse becomes a structural row over
+// the SAME parsed owner (no recursive validation, no copy, no tree materialization). A null or
+// primitive root is NOT a row: this answers nullopt so the assertion call site can keep the parsed
+// value unchanged for the source's own null/primitive check instead of throwing at the assertion.
+template <typename Schema>
+[[nodiscard]] inline std::optional<StructuralRef<Schema>> json_structural_row(const JsonValue& value) {
+  if (value.kind() != JsonValue::Kind::object) return std::nullopt;
+  const auto properties = named_properties(value);
+  if (!properties.shared_owner()) return std::nullopt;
+  return StructuralRef<Schema>::from_owner(properties.shared_owner());
+}
+
 } // namespace flight

@@ -34,11 +34,34 @@ void test_row_receiver_projection() {
 
 } // namespace
 
+namespace {
+
+// (a) REAL JSON.parse-as-structural-row: object root -> lazy row over the same parsed owner; null
+// and primitive roots are preserved (nullopt) so the source's own check runs, not an assertion throw.
+void test_json_structural_row() {
+  using RowSchema = flight::RowReadonly<flight::RowOf<flight::Any>>;
+  const auto object = flight::Json::parse(flight::String("{\"fr\":30,\"text\":\"30\"}"));
+  const auto row = flight::json_structural_row<RowSchema>(object);
+  assert(row.has_value());
+  const auto fr = flight::read_json_scalar_row_member(*row, flight::String("fr"));
+  const auto text = flight::read_json_scalar_row_member(*row, flight::String("text"));
+  assert(fr.is_present() && fr.as_native_number() == 30.0);
+  assert(text.type_of() == "string" && text.to_number() == 30.0);
+
+  const auto null_root = flight::Json::parse(flight::String("null"));
+  const auto primitive_root = flight::Json::parse(flight::String("30"));
+  assert(!flight::json_structural_row<RowSchema>(null_root).has_value());
+  assert(!flight::json_structural_row<RowSchema>(primitive_root).has_value());
+}
+
+} // namespace
+
 int main() {
   using flight::Any;
   using flight::JsonScalarCell;
 
   test_row_receiver_projection();
+  test_json_structural_row();
 
   const auto document = flight::Json::parse(flight::String("{\"fr\":30,\"bad\":\"x\"}"));
   const Any receiver(document);
