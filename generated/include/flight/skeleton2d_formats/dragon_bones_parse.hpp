@@ -32,6 +32,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/attachment_skin_2d.hpp>
 
+#include <flight/types/attachment_2d.hpp>
+
+namespace flight::types { struct Attachment2D; }
 namespace flight::types { struct AttachmentSkin2D; }
 namespace flight::types { struct Bone2D; }
 namespace flight::types { struct DragonBonesRegistry; }
@@ -50,6 +53,7 @@ namespace flight::skeleton2d_formats {
 
 using flight::shortcut::parse;
 
+using flight::types::Attachment2D;
 using flight::types::AttachmentSkin2D;
 using flight::types::Bone2D;
 using flight::types::ImportDiagnostic;

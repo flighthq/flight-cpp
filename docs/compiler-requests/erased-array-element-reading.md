@@ -754,9 +754,15 @@ index read binds `std::optional<flight::Any>`; since the guard is also false for
 the receiver is unwrapped before the accessor and the read names the engaged erased array. Reads without the proof keep the dynamic named lookup,
 which is the source's own operation on a possibly non-array object.
 
-Measured: new `cppErasedArrayLengthIndex.test.ts` 3 pass; package typecheck exit 0; focused
-`cppErasedArrayIteration`/`cppArrayLengthAssignment`/`cppLengthProvenNullableArrayRead` 7 pass
-together; the emitted scratch header compiles, links and runs (live length 2, present element,
-absent index → undefined). The patch is written at its own stack position: all 69 compiler patches
-apply in order with this one last and the stacked compiler builds and passes its focused tests. No
-committed regeneration yet: the generation slot is queued after builder2's descriptor run.
+Measured and carried: new `cppErasedArrayLengthIndex.test.ts` 5 pass; package typecheck clean
+except a pre-existing peer test file; focused regressions 7 pass; the patch is stack-positioned and
+all 69 compiler patches apply in order and build. Scoped generation of `skeleton2d-formats` with the
+composed floor emitted 50/59 modules and changed 12 headers; the scoped `-j2` compile then passed
+`dragon_bones_section_counts.hpp` (and the existing `spine_parse_helpers` override), with the real
+counter consumer `tests/generated_skeleton2d_formats_dragon_bones_section_counts_test.cpp`
+compiling, linking and running (non-empty, empty, non-array, tally, animation walk). Two headers
+that v1 broke on an `optional<Any>` receiver are fixed by v2 and advance to their next roots; the
+remaining changed headers keep distinct roots (`NamedProperties`/`Record`, `optional<Record>`, the
+next omitted callees, and the value_type/variant timeline roots). The emitted Record read still
+calls `.value()` for an absent key and throws where the source returns early — a separate typed-read
+root, recorded rather than hidden. No 96-load claim.

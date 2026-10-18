@@ -204,7 +204,7 @@ inline flight::Ref<flight::types::RegionAttachment2D> read_spine_binary_region_a
 
 
 // NOT GENERATED: function readSpineBinaryAttachment -- source line 116
-// refusal: cpp-contextual-union-interface-heritage-carrier-unrepresented [target-runtime]
+// refusal: cpp-member-projection-without-present-storage [compiler-restriction]
 //
 // The source it stood for:
 //   function readSpineBinaryAttachment(
@@ -252,18 +252,10 @@ inline flight::Ref<flight::types::RegionAttachment2D> read_spine_binary_region_a
 //   }
 //   
 // cpp emission failed for
-// @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySkinsHandler.ts: contextual nullable
-// interface conversion from RegionAttachment2D to Attachment2D follows TypeScript interface heritage, but
-// flight-cpp stores those declarations in independent flight::Ref<flight::types::RegionAttachment2D> and
-// flight::Ref<flight::types::Attachment2D> owner types: each interface struct is emitted flattened, so the
-// heritage is not a C++ base relation and no pointer cast exists to follow. A native pointer cast would claim
-// C++ inheritance the emitted interface structs do not have, materializing the target would replace object
-// identity, and a structural row would change the declared result carrier. Preserve the exact source owner in
-// the declared result, or add an owner-preserving interface-heritage carrier to the runtime contract. Declaring
-// the destination as the derived interface where the concrete type is known -- or converting where the type is
-// still concrete rather than widening it through a nullable union -- avoids the boundary altogether; closing it
-// at the carrier needs either that runtime carrier or interface structs emitted with the heritage as a C++ base
-// relation.
+// @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySkinsHandler.ts: narrowed C++ union
+// projection requires proven present payload: the narrowing still admits absence, so nothing proved the payload
+// present and reading the value alternative here would unpack storage that may still be holding the sentinel the
+// test left reachable. Test both at once with `x != null`, or narrow the value into a present local the same way
 
 inline flight::Array<flight::Ref<flight::types::SkinAttachment2D>> read_spine_binary_skin_body(flight::Ref<flight::types::ByteReader> reader, flight::Array<std::optional<flight::String>> strings, double slot_count, bool nonessential, flight::Map<flight::String, double> unmodeled, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
   flight::Array<flight::Ref<flight::types::SkinAttachment2D>> attachments = flight::Array<flight::Ref<flight::types::SkinAttachment2D>>{};

@@ -9,10 +9,10 @@
 //   missing: function toUint16Array -- source line 319
 //   missing: function parseDragonBonesWeightedMesh -- source line 222
 //   missing: function parseDragonBonesMeshDisplay -- source line 128
-//   missing: function parseDragonBonesDisplay -- source line 97
 //   missing: function parseDragonBonesSkins -- source line 187
 #include <flight/any.hpp>
 #include <flight/array.hpp>
+#include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -44,6 +44,7 @@ namespace flight::types { struct RegionAttachment2D; }
 namespace flight::types { struct Skin2D; }
 namespace flight::types { struct SkinAttachment2D; }
 
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
 #include <flight/types/contract.hpp>
 
 namespace flight::skeleton2d_formats {
@@ -326,44 +327,21 @@ inline const double max_influences_per_vertex = 65535.0;
 // @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSkinsHandler.ts: contextual union
 // value type flight::Any is not a represented runtime domain
 
-
-// NOT GENERATED: function parseDragonBonesDisplay -- source line 97
-// refusal: cpp-contextual-union-interface-heritage-carrier-unrepresented [target-runtime]
-//
-// The source it stood for:
-//   function parseDragonBonesDisplay(
-//     raw: unknown,
-//     remapBoneIndex: DragonBonesBoneRemap,
-//     diagnostics?: ImportDiagnostic[],
-//   ): Attachment2D | null {
-//     if (raw === null || typeof raw !== 'object') return null;
-//     const display = raw as Record<string, unknown>;
-//     const type = typeof display.type === 'string' ? display.type : 'image';
-//     if (type === 'image') return parseDragonBonesRegionDisplay(display);
-//     if (type === 'mesh') return parseDragonBonesMeshDisplay(display, remapBoneIndex, diagnostics);
-//     reportImportDiagnostic(
-//       diagnostics,
-//       ImportDiagnosticSeverity.Skip,
-//       `dragonbones.${type}-display-unsupported`,
-//       'parseDragonBonesDisplay',
-//       { displays: 1 },
-//     );
-//     return null;
-//   }
-//   
-// cpp emission failed for
-// @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSkinsHandler.ts: contextual nullable
-// interface conversion from RegionAttachment2D to Attachment2D follows TypeScript interface heritage, but
-// flight-cpp stores those declarations in independent flight::Ref<flight::types::RegionAttachment2D> and
-// flight::Ref<flight::types::Attachment2D> owner types: each interface struct is emitted flattened, so the
-// heritage is not a C++ base relation and no pointer cast exists to follow. A native pointer cast would claim
-// C++ inheritance the emitted interface structs do not have, materializing the target would replace object
-// identity, and a structural row would change the declared result carrier. Preserve the exact source owner in
-// the declared result, or add an owner-preserving interface-heritage carrier to the runtime contract. Declaring
-// the destination as the derived interface where the concrete type is known -- or converting where the type is
-// still concrete rather than widening it through a nullable union -- avoids the boundary altogether; closing it
-// at the carrier needs either that runtime carrier or interface structs emitted with the heritage as a C++ base
-// relation.
+inline std::optional<flight::Ref<flight::types::Attachment2D>> parse_dragon_bones_display(flight::Any raw, DragonBonesBoneRemap remap_bone_index, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
+  if ((([&]() { const auto& presence_operand = raw; return presence_operand.is_null(); }()) || (raw.type_of() != flight::String("object")))) {
+    return std::nullopt;
+  }
+  flight::NamedProperties display = flight::named_properties(raw);
+  const flight::String type = ([&]() -> flight::String { const auto& erased_typeof_carrier = display.get(flight::String("type")).value(); if (erased_typeof_carrier.type_of() == flight::String("string")) return erased_typeof_carrier.as_string(); return flight::String("image"); }());
+  if ((type == flight::String("image"))) {
+    return std::optional<flight::Ref<flight::types::Attachment2D>>{parse_dragon_bones_region_display(display)};
+  }
+  if ((type == flight::String("mesh"))) {
+    return ([&]() -> std::optional<flight::Ref<flight::types::Attachment2D>> { auto contextual_union_source_2 = parse_dragon_bones_mesh_display(display, remap_bone_index, diagnostics); if (!contextual_union_source_2.has_value()) return std::nullopt; return std::optional<flight::Ref<flight::types::Attachment2D>>{flight::Ref<flight::types::Attachment2D>{contextual_union_source_2.value()}}; }());
+  }
+  flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("dragonbones.") + flight::to_string(type) + flight::String("-display-unsupported"), flight::String("parseDragonBonesDisplay"), {{flight::String("displays"), std::variant<bool, double, flight::String>{std::in_place_type<double>, 1.0}}});
+  return std::nullopt;
+}
 
 inline flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>> parse_dragon_bones_display_list(flight::Any raw, DragonBonesBoneRemap remap_bone_index, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
   flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>> displays = flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>{};

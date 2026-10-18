@@ -38259,7 +38259,7 @@
       "status": "dependency-incomplete"
     },
     {
-      "classification": "target-runtime",
+      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
@@ -38289,7 +38289,7 @@
         "source": "packages/skeleton2d-formats/src/spineBinarySkinsHandler.ts"
       },
       "path": "flight/skeleton2d_formats/spine_binary_skins_handler.hpp",
-      "rule": "cpp-contextual-union-interface-heritage-carrier-unrepresented",
+      "rule": "cpp-member-projection-without-present-storage",
       "status": "refused-placeholder"
     },
     {

@@ -28,24 +28,24 @@ inline bool is_dragon_bones_flight_value_function_is_u000044_ragon_u000042_ones_
 
 inline void count_section_flight_value_function_count_u000053_ection_flight_private_fee4bf3fb73047fb(flight::Map<flight::String, double> counts, flight::Record<flight::String, flight::Any> record, flight::String json_key, flight::String kind) {
   auto value = record.get(json_key).value();
-  if ((!flight::is_array(value) || (flight::named_properties(value).get(flight::String("length")) == 0.0))) {
+  if ((!flight::is_array(value) || (static_cast<double>(value.array_size()) == 0.0))) {
     return;
   }
-  counts.set(kind, flight::named_properties(value).get(flight::String("length")));
+  counts.set(kind, static_cast<double>(value.array_size()));
 }
 
 inline void tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_fee4bf3fb73047fb(flight::Map<flight::String, double> counts, flight::Any raw, flight::String kind) {
-  if ((!flight::is_array(raw) || (flight::named_properties(raw).get(flight::String("length")) == 0.0))) {
+  if ((!flight::is_array(raw) || (static_cast<double>(raw.array_size()) == 0.0))) {
     return;
   }
-  counts.set(kind, (([&]() -> double { auto nullish_coalesce_left = counts.get(kind); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()) + flight::named_properties(raw).get(flight::String("length"))));
+  counts.set(kind, (([&]() -> double { auto nullish_coalesce_left = counts.get(kind); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()) + static_cast<double>(raw.array_size())));
 }
 
 inline void count_animation_timelines_flight_value_function_count_u000041_nimation_u000054_imelines_flight_private_fee4bf3fb73047fb(flight::Map<flight::String, double> counts, flight::Any raw) {
-  if ((!flight::is_array(raw) || (flight::named_properties(raw).get(flight::String("length")) == 0.0))) {
+  if ((!flight::is_array(raw) || (static_cast<double>(raw.array_size()) == 0.0))) {
     return;
   }
-  counts.set(flight::types::dragon_bones_section_kind->animations, flight::named_properties(raw).get(flight::String("length")));
+  counts.set(flight::types::dragon_bones_section_kind->animations, static_cast<double>(raw.array_size()));
   {
     const auto for_of_source = raw;
     for (double for_of_index = 0.0; for_of_index < static_cast<double>(for_of_source.array_size()); for_of_index += 1.0) {

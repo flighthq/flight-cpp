@@ -30,8 +30,8 @@ inline void count_section_flight_value_function_count_u000053_ection_flight_priv
     return;
   }
   if (flight::is_array(value)) {
-    if ((flight::named_properties(value).get(flight::String("length")) > 0.0)) {
-      counts.set(kind, flight::named_properties(value).get(flight::String("length")));
+    if ((static_cast<double>(value.value().array_size()) > 0.0)) {
+      counts.set(kind, static_cast<double>(value.value().array_size()));
     }
   }
   else {
@@ -50,7 +50,7 @@ inline void tally_timeline_flight_value_function_tally_u000054_imeline_flight_pr
   }
   double count = 0.0;
   if (flight::is_array(raw)) {
-    (count = flight::named_properties(raw).get(flight::String("length")));
+    (count = static_cast<double>(raw.array_size()));
   }
   else {
     if ((raw.type_of() == flight::String("object"))) {

@@ -98,7 +98,7 @@ inline std::optional<flight::Array<double>> resolve_spine_draw_order(flight::Any
 }
 
 inline std::optional<flight::Ref<flight::types::Skeleton2DDrawOrderTimeline>> parse_spine_draw_order_timeline(flight::Any raw, flight::Array<flight::Ref<flight::types::Slot2D>> slots, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
-  if ((!flight::is_array(raw) || (flight::named_properties(raw).get(flight::String("length")) == 0.0))) {
+  if ((!flight::is_array(raw) || (static_cast<double>(raw.array_size()) == 0.0))) {
     return std::nullopt;
   }
   flight::Array<double> times = flight::Array<double>{};

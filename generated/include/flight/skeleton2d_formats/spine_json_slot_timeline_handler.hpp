@@ -137,7 +137,7 @@ inline void parse_spine_slot_timelines(flight::Array<flight::Ref<flight::types::
         unmodeled.set(kind, (([&]() -> double { auto nullish_coalesce_left = unmodeled.get(kind); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()) + 1.0));
         continue;
       }
-      if ((((slot_index < 0.0) || !flight::is_array(keys)) || (flight::named_properties(keys).get(flight::String("length")) == 0.0))) {
+      if ((((slot_index < 0.0) || !flight::is_array(keys)) || (static_cast<double>(keys.array_size()) == 0.0))) {
         continue;
       }
       if ((kind == flight::String("attachment"))) {

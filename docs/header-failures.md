@@ -108,7 +108,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 79 | `call-has-no-matching-d42144f0` | 2 | ANIM | override heritage repair (fixed) | the emitted call to `push` matches no declared overload; G2: 2 pass, request linked |
 | 80 | `missing-member-da12a523` | 2 | 3D | runtime + repair (fixed) | the emitted code reads a member the target does not declare (`parse_obj_material_library`); G2: 0 pass; both follow-ons are retired (`static-assertion-ecc68c2b` by an alias repair, `undeclared-identifier-d663f62e` by the explicit-options source patch), and the sibling header now fails on the `create_texture` carrier family |
 | 81 | `missing-member-dd9b4baa` | 2 | 3D, GL | runtime | the emitted code reads a member the target does not declare (`renderbuffer_binding`) *(G2: binding added; follow-on `no-matching-conversion-bc278253` fixed: 1 pass, 1 to `missing-member-95ead583`)* |
-| 82 | `no-viable-conversion-303c42f1` | 2 | ANIM | compiler | G2: recorded 0/2 retained; DragonBones erased array length cannot enter numeric counts Map; existing request, docs-only/no rerun |
+| 82 | `no-viable-conversion-303c42f1` | 1 | ANIM | [compiler patch applied](compiler-requests/erased-array-element-reading.md#g2-erased-array-length-and-index-reads-after-an-arrayisarray-guard) | erased length under an is_array guard now uses `array_size()`; `dragon_bones_section_counts` PASSES with the real counter consumer, `dragon_bones_requirements` retains its own root |
 | 83 | `other-67dc02c6` | 2 | 2D | compiler | `getSurfaceHandle(...) as HTMLCanvasElement` lowered to an unchecked `static_cast` from the erased handle *(existing request extended)* |
 | 84 | `other-6f513db2` | 2 | 2D, 3D | binding (fixed) | attribute locations now use the source number carrier; G2: 0 pass, 2 later compiler failures |
 | 85 | `other-86d0b50b` | 5 | 2D, 3D | [compiler request](compiler-requests/object-literal-into-outcome-variant.md) | SceneCoverageEntry literals initialize the outer variant instead of a selected concrete reference arm |
@@ -257,6 +257,9 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 228 | `undeclared-identifier-bfb6be85` | 1 | ANIM | compiler | the erased-array display loop now emits; the header advances to the retained call of the refused `parseDragonBonesDisplay` |
 | 229 | `undeclared-identifier-c4552256` | 1 | ANIM | compiler | the erased-array skins loop now emits; the header advances to the retained call of the refused `parseSpineAttachment` |
 | 230 | `invalid-operands-8af7d18a` | 1 | ANIM | compiler | a narrowed string erased-object read is compared as the full three-state variant against `Any` |
+| 231 | `undeclared-identifier-b9b0cd9f` | 1 | ANIM | compiler | after the erased length/index lowering, the analyzer advances to the retained call of the refused `censusDragonBones` |
+| 232 | `undeclared-identifier-e93a570c` | 1 | ANIM | compiler | the erased-array display loop advances to the retained call of the refused `parseDragonBonesRegionDisplay` |
+| 233 | `undeclared-identifier-be04e46c` | 1 | ANIM | compiler | the erased length/index lowering advances the skins module to the retained call of the refused `parseSpineMeshAttachment` |
 
 ## Carry clusters
 
@@ -2300,6 +2303,21 @@ two retained collector calls are inspected only; no newly measured next error or
 No fake counts/parser, copied owner, tighter schema or canned empty result is supplied. Only the existing
 request appendix, this slice and three compact owned product lines change; foreign/historical products
 and C++/runtime/source patches/repairs/manifest/pins remain unchanged.
+
+### 82. `no-viable-conversion-303c42f1` — 1 header(s)
+
+**G2 outcome: 1 pass, 1 fail.** `flight/skeleton2d_formats/dragon_bones_section_counts.hpp` now
+passes the scoped Clang 22.1.8 `-j2` compile after source patch
+`compiler-erased-array-length-index`: under the `Array.isArray` proof the section length lowers to
+`static_cast<double>(x.array_size())`, including the compound guard
+`!Array.isArray(x) || x.length === 0` whose own right operand is short-circuited under the proof.
+The committed consumer `tests/generated_skeleton2d_formats_dragon_bones_section_counts_test.cpp`
+compiles, links and runs: a non-empty section counts its live length, an empty section and a
+non-array receiver take the source early return and set no key, the timeline tally accumulates the
+live length, and the animation walk counts its erased entries. `dragon_bones_requirements.hpp`
+remains on its own root. Measured follow-up: the emitted typed Record read calls `.value()` and
+throws for an absent section key, where the source returns early — a separate typed-read root the
+consumer documents rather than asserts. No 96-load claim.
 
 ### 83. `other-67dc02c6` — 2 header(s), still failing
 
@@ -5492,6 +5510,37 @@ The skins module still refuses four attachment/vertex helpers; `parse_spine_skin
 - example: `invalid operands to binary expression ('std::variant<flight::String, flight::Null, flight::Undefined>' and 'const Any')`
 
 After `parse_spine_slots` emits, the `typeof slot.bone === 'string'` guard narrows the source value, but the comparison re-reads the erased storage as the declared variant. The faithful lowering compares the narrowed string value; no cast or relaxed operator is wanted.
+
+
+### 231. `undeclared-identifier-b9b0cd9f` — 1 header(s)
+
+- cause: the erased length/index lowering clears `skeleton2d_json_analyzer.hpp`'s first failure, exposing a retained call to the refused `censusDragonBones`
+- lanes: ANIM
+- fix route: compiler — [retained calls](compiler-requests/retained-declaration-calls-omitted-callee.md)
+- first failure at: `flight/skeleton2d_formats/skeleton2d_json_analyzer.hpp:148`
+- example: `use of undeclared identifier 'census_dragon_bones'`
+
+Measured progression after the `optional<Any>` receiver fix: the header no longer stops at the array accessor and now reaches the next omitted callee. No declaration-only body, stub or cast is carried.
+
+### 232. `undeclared-identifier-e93a570c` — 1 header(s)
+
+- cause: the erased-array display loop now emits further, exposing the retained call to the refused `parseDragonBonesRegionDisplay`
+- lanes: ANIM
+- fix route: compiler — [retained calls](compiler-requests/retained-declaration-calls-omitted-callee.md)
+- first failure at: `flight/skeleton2d_formats/dragon_bones_skins_handler.hpp:337`
+- example: `use of undeclared identifier 'parse_dragon_bones_region_display'`
+
+`dragon_bones_skins_handler` advanced from the invalid range-for over `Any` (the erased-array root) through `parseDragonBonesDisplay` to this next omitted callee. No declaration-only body is carried.
+
+### 233. `undeclared-identifier-be04e46c` — 1 header(s)
+
+- cause: the erased length/index lowering advances `spine_json_skins_handler.hpp` to the retained call of the refused `parseSpineMeshAttachment`
+- lanes: ANIM
+- fix route: compiler — [retained calls](compiler-requests/retained-declaration-calls-omitted-callee.md)
+- first failure at: `flight/skeleton2d_formats/spine_json_skins_handler.hpp:210`
+- example: `use of undeclared identifier 'parse_spine_mesh_attachment'`
+
+The skins module still refuses several attachment helpers; the erased-read first error is gone and the header now names the next omitted callee. No declaration-only body is carried.
 
 
 ## Scoped G2 PBR registry follow-up

@@ -52,8 +52,8 @@ inline void count_array_or_object(flight::Map<flight::String, double> counts, fl
     return;
   }
   if (flight::is_array(value)) {
-    if ((flight::named_properties(value).get(flight::String("length")) > 0.0)) {
-      counts.set(kind, flight::named_properties(value).get(flight::String("length")));
+    if ((static_cast<double>(value.value().array_size()) > 0.0)) {
+      counts.set(kind, static_cast<double>(value.value().array_size()));
     }
   }
   else {
@@ -86,10 +86,10 @@ inline flight::Map<flight::String, double> census_spine_json(flight::Record<flig
 
 inline void count_array(flight::Map<flight::String, double> counts, flight::Record<flight::String, flight::Any> record, flight::String json_key, flight::String kind) {
   auto value = record.get(json_key).value();
-  if ((!flight::is_array(value) || (flight::named_properties(value).get(flight::String("length")) == 0.0))) {
+  if ((!flight::is_array(value) || (static_cast<double>(value.array_size()) == 0.0))) {
     return;
   }
-  counts.set(kind, flight::named_properties(value).get(flight::String("length")));
+  counts.set(kind, static_cast<double>(value.array_size()));
 }
 
 

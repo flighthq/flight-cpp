@@ -49,7 +49,7 @@ using times_values_components_interpolation_quaternion_easing_segment_easings_9b
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON2D_FORMATS_TIMES_VALUES_COMPONENTS_INTERPOLATION_QUATERNION_EASING_SEGMENT_EASINGS_9B0EADFED5E06042
 
 inline void add_spine_bone_channel(flight::Array<flight::Ref<flight::types::AnimationChannel>> channels, flight::Any raw_keys, double bone_index, flight::String path, double components, std::function<flight::Array<double>(flight::Record<flight::String, flight::Any>)> extract, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
-  if ((!flight::is_array(raw_keys) || (flight::named_properties(raw_keys).get(flight::String("length")) == 0.0))) {
+  if ((!flight::is_array(raw_keys) || (static_cast<double>(raw_keys.array_size()) == 0.0))) {
     return;
   }
   flight::Array<flight::Record<flight::String, flight::Any>> keys = flight::Array<flight::Record<flight::String, flight::Any>>{};

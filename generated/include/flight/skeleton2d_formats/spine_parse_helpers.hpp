@@ -87,7 +87,7 @@ inline double parse_spine_color(flight::Any value) {
 inline void skip_crumb_spine_timeline_group(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics, flight::Any raw, flight::String kind) {
   double count = 0.0;
   if (flight::is_array(raw)) {
-    (count = flight::named_properties(raw).get(flight::String("length")));
+    (count = static_cast<double>(raw.array_size()));
   }
   else {
     if ((([&]() { const auto& presence_operand = raw; return !presence_operand.is_null(); }()) && (raw.type_of() == flight::String("object")))) {

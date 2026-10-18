@@ -7,7 +7,6 @@
 //   missing: function toFloat32Array -- source line 230
 //   missing: function toUint16Array -- source line 234
 //   missing: function parseSpineMeshAttachment -- source line 94
-//   missing: function parseSpineAttachment -- source line 73
 #include <flight/any.hpp>
 #include <flight/array.hpp>
 #include <flight/record.hpp>
@@ -46,6 +45,7 @@ namespace flight::types { struct Slot2D; }
 namespace flight::types { struct SpineJsonSectionContext; }
 
 #include <flight/entity/entity.hpp>
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/skeleton2d_formats/spine_parse_helpers.hpp>
 
@@ -201,44 +201,17 @@ inline flight::Ref<flight::types::RegionAttachment2D> parse_spine_region_attachm
 // boundary, or add that carrier and extraction to the runtime; the compiler will not reinterpret the erased
 // value, cast it, or materialize a replacement array
 
-
-// NOT GENERATED: function parseSpineAttachment -- source line 73
-// refusal: cpp-contextual-union-interface-heritage-carrier-unrepresented [target-runtime]
-//
-// The source it stood for:
-//   function parseSpineAttachment(
-//     name: string,
-//     raw: Record<string, unknown>,
-//     diagnostics?: ImportDiagnostic[],
-//   ): Attachment2D | null {
-//     const type = typeof raw.type === 'string' ? raw.type : 'region';
-//     if (type === 'region') return parseSpineRegionAttachment(name, raw);
-//     if (type === 'mesh') return parseSpineMeshAttachment(name, raw, diagnostics);
-//     reportImportDiagnostic(
-//       diagnostics,
-//       ImportDiagnosticSeverity.Skip,
-//       `spine.${type}-attachment-unsupported`,
-//       'parseSpineAttachment',
-//       { name: 1 },
-//     );
-//     return null;
-//   }
-//   
-//   // A Spine mesh attachment. Unweighted when the `vertices` stream is exactly 2 per vertex (positions local
-//   // to the slot's bone); weighted (Spine format `[boneCount, (boneIndex, x, y, weight)×boneCount]` per
-//   // vertex) otherwise, producing a Skin2D whose bone indices are global skeleton bone indices.
-// cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonSkinsHandler.ts:
-// contextual nullable interface conversion from RegionAttachment2D to Attachment2D follows TypeScript interface
-// heritage, but flight-cpp stores those declarations in independent
-// flight::Ref<flight::types::RegionAttachment2D> and flight::Ref<flight::types::Attachment2D> owner types: each
-// interface struct is emitted flattened, so the heritage is not a C++ base relation and no pointer cast exists
-// to follow. A native pointer cast would claim C++ inheritance the emitted interface structs do not have,
-// materializing the target would replace object identity, and a structural row would change the declared result
-// carrier. Preserve the exact source owner in the declared result, or add an owner-preserving interface-heritage
-// carrier to the runtime contract. Declaring the destination as the derived interface where the concrete type is
-// known -- or converting where the type is still concrete rather than widening it through a nullable union --
-// avoids the boundary altogether; closing it at the carrier needs either that runtime carrier or interface
-// structs emitted with the heritage as a C++ base relation.
+inline std::optional<flight::Ref<flight::types::Attachment2D>> parse_spine_attachment(flight::String name, flight::Record<flight::String, flight::Any> raw, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
+  const flight::String type = ([&]() -> flight::String { const auto& erased_typeof_carrier = raw.get(flight::String("type")).value(); if (erased_typeof_carrier.type_of() == flight::String("string")) return erased_typeof_carrier.as_string(); return flight::String("region"); }());
+  if ((type == flight::String("region"))) {
+    return std::optional<flight::Ref<flight::types::Attachment2D>>{parse_spine_region_attachment(name, raw)};
+  }
+  if ((type == flight::String("mesh"))) {
+    return std::optional<flight::Ref<flight::types::Attachment2D>>{parse_spine_mesh_attachment(name, raw, diagnostics)};
+  }
+  flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("spine.") + flight::to_string(type) + flight::String("-attachment-unsupported"), flight::String("parseSpineAttachment"), {{flight::String("name"), std::variant<bool, double, flight::String>{std::in_place_type<double>, 1.0}}});
+  return std::nullopt;
+}
 
 inline flight::Array<flight::Ref<flight::types::AttachmentSkin2D>> parse_spine_skins(flight::Any raw, flight::Array<flight::Ref<flight::types::Slot2D>> slots, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
   flight::Array<flight::Ref<flight::types::AttachmentSkin2D>> skins = flight::Array<flight::Ref<flight::types::AttachmentSkin2D>>{};

@@ -71,7 +71,7 @@ inline flight::Ref<rotation_scale_x_scale_y_shear_y_x_y_57c8569645defe0a> parse_
 inline void skip_crumb_dragon_bones_group(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics, flight::Any raw, flight::String kind) {
   double count = 0.0;
   if (flight::is_array(raw)) {
-    (count = flight::named_properties(raw).get(flight::String("length")));
+    (count = static_cast<double>(raw.array_size()));
   }
   else {
     if ((([&]() { const auto& presence_operand = raw; return !presence_operand.is_null(); }()) && (raw.type_of() == flight::String("object")))) {
@@ -99,7 +99,7 @@ inline std::optional<flight::Array<std::optional<std::function<double(double)>>>
     while ((i < segments)) {
       {
         auto curve = frames.element(i).get(flight::String("curve")).value();
-        if ((!flight::is_array(curve) || (flight::named_properties(curve).get(flight::String("length")) < 4.0))) {
+        if ((!flight::is_array(curve) || (static_cast<double>(curve.array_size()) < 4.0))) {
           easings.push(std::nullopt);
           {
             (i += 1.0);
