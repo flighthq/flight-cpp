@@ -1,0 +1,380 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -324,7 +324,6 @@
+   bindingClasses: ReadonlyMap<string, Readonly<IrClassDeclaration>>;
+   bindingInitializers: ReadonlyMap<string, Readonly<IrExpression>>;
+   immutableInitializerBindingIds: ReadonlySet<string>;
+-  indexedNullableReadExpressions?: ReadonlyMap<Readonly<IrExpression>, string>;
+   readonlyRecordReadViewBindingIds: Set<string>;
+   jsonReadRecordBindingIds: Set<string>;
+   jsonReadValueBindingIds: Set<string>;
+@@ -437,6 +436,8 @@
+   // `flight::StructuralMemberView<CppBase>` and read through `read<Member>`; the set is what tells the
+   // declaration, property, and escape sites apart.
+   structuralMemberViewBindingIds: ReadonlySet<string>;
++  // Indexed element reads whose index is proven in bounds by their enclosing loop's condition.
++  loopBoundElementExpressions: ReadonlySet<Readonly<IrExpression>>;
+   // `Object.entries` physically returns std::tuple rows even when both slots have the same type.
+   // Keep that runtime representation attached to immutable array storage, callback parameters, and
+   // destructuring bindings, since the ordinary homogeneous TypeScript tuple is a flight::Array.
+@@ -692,6 +693,7 @@
+   const preservedInitializerTypes = collectCppExplicitCollectionConstructionBindingTypesCpp(module);
+   const structuralCastBindingRows = new Map<string, Readonly<CompilerCppStructuralRowPlan>>();
+   const structuralMemberViewBindingIds = new Set<string>();
++  let loopBoundElementExpressions: Set<Readonly<IrExpression>> = new Set();
+   const structuralCloneRecordBindingIds = new Set<string>();
+   const erasedDynamicStorageBindingIds = new Set<string>();
+   const erasedObjectParameterBindingIds = new Set<string>();
+@@ -765,6 +767,7 @@
+     sourceModules,
+     structuralCastBindingRows,
+     structuralMemberViewBindingIds,
++    loopBoundElementExpressions,
+     objectEntriesTupleArrayBindingIds: new Set(),
+     objectEntriesTupleBindingIds: new Set(),
+     optionalParameterBindingIds: collectCppOptionalParameterBindingIds(module),
+@@ -797,6 +800,9 @@
+   for (const bindingId of collectCppStructuralMemberViewBindingIdsCpp(module, context)) {
+     structuralMemberViewBindingIds.add(bindingId);
+   }
++  for (const expression of collectCppLoopBoundElementExpressionsCpp(module, context)) {
++    loopBoundElementExpressions.add(expression);
++  }
+   for (const [bindingId, targetType] of collectCppContextualBindingStorageTargetTypesCpp(module, context)) {
+     contextualBindingStorageTargetTypes.set(bindingId, targetType);
+   }
+@@ -4039,12 +4045,6 @@
+   constructExpectedUnion = true,
+   denseArrayLengthInitialized = false,
+ ): string {
+-  const indexedRead = context.indexedNullableReadExpressions?.get(expression);
+-  if (indexedRead !== undefined) return indexedRead;
+-  const indexedMember = emitCppGuardedIndexedNullableMemberCpp(expression, context, (next) =>
+-    emitExpression(expression, next, expectedType, constructExpectedUnion, denseArrayLengthInitialized),
+-  );
+-  if (indexedMember) return indexedMember;
+   const syntaxMessage = getCppSyntaxMessageFallbackBindingCpp(expression);
+   if (syntaxMessage && context.jsonSyntaxCatchBindingIds.has(syntaxMessage)) {
+     context.includes.add('flight/string.hpp');
+@@ -8966,16 +8966,14 @@
+ }
+ 
+ // Select a private implementation carrier only when every reference to the helper is a direct call,
+-// and every use of this exact parameter is a non-optional property/index receiver or an argument to
+-// an already-proven private reader. Returned, aliased, compared, mutated, exported, callback-visible
+-// or unproven forwarded Records retain their existing Record ABI.
++// and every use of this exact parameter is a non-optional property/index receiver. A returned, aliased,
++// compared, forwarded, mutated, exported, or callback-visible Record keeps its existing Record ABI.
+ function collectCppPrivateReadonlyRecordReadViewsCpp(
+   module: Readonly<IrModule>, context: EmitContext,
+ ): ReadonlySet<string> {
+   if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return new Set();
+   const exported = new Set(module.exports.flatMap((item) => item.kind === 'local' ? [item.binding.id] : []));
+   const candidates = new Map<string, string>();
+-  const functions = new Map(module.declarations.flatMap((declaration) => declaration.kind === 'function' ? [[declaration.binding.id, declaration] as const] : []));
+   for (const declaration of module.declarations) {
+     if (declaration.kind !== 'function' || declaration.exported || exported.has(declaration.binding.id) ||
+         declaration.async || declaration.overloads.length > 0 || declaration.typeParameters.length > 0) continue;
+@@ -8993,7 +8991,6 @@
+   }
+   const receivers = new Set<Readonly<IrExpression>>();
+   const callees = new Set<Readonly<IrExpression>>();
+-  const forwarded = new Map<Readonly<IrExpression>, string>();
+   const references: Readonly<IrExpression>[] = [];
+   const writes = new Set<Readonly<IrExpression>>();
+   analyzeIrModuleTraversal(module, {
+@@ -9001,14 +8998,7 @@
+       if ((expression.kind === 'property' || expression.kind === 'element') && !expression.optional) {
+         receivers.add(expression.object);
+       }
+-      if (expression.kind === 'call' && !expression.optional) {
+-        callees.add(expression.callee);
+-        const target = expression.callee.kind === 'identifier' && expression.callee.reference.kind === 'binding'
+-          ? functions.get(expression.callee.reference.binding.id) : undefined;
+-        target?.parameters.forEach((parameter, index) => {
+-          if (candidates.has(parameter.binding.id) && expression.arguments[index]) forwarded.set(expression.arguments[index]!, parameter.binding.id);
+-        });
+-      }
++      if (expression.kind === 'call' && !expression.optional) callees.add(expression.callee);
+       if (expression.kind === 'assignment') writes.add(expression.left);
+       if (expression.kind === 'unary' && ['++', '--', 'delete'].includes(expression.operator)) writes.add(expression.operand);
+       if (expression.kind === 'identifier') references.push(expression);
+@@ -9016,7 +9006,6 @@
+   });
+   const invalidHelpers = new Set<string>();
+   const invalidParameters = new Set<string>();
+-  const uses = new Map<string, Readonly<IrExpression>[]>();
+   const used = new Set<string>();
+   for (const expression of references) {
+     if (expression.kind !== 'identifier' || expression.reference.kind !== 'binding') continue;
+@@ -9024,28 +9013,15 @@
+     if (!callees.has(expression)) invalidHelpers.add(id);
+     if (candidates.has(id)) {
+       used.add(id);
+-      uses.set(id, [...uses.get(id) ?? [], expression]);
++      if (!receivers.has(expression)) invalidParameters.add(id);
+     }
+   }
+   for (const target of writes) {
+     if ((target.kind === 'property' || target.kind === 'element') && target.object.kind === 'identifier' &&
+         target.object.reference.kind === 'binding') invalidParameters.add(target.object.reference.binding.id);
+   }
+-  // Prove forwarding from already-selected private readers upward. A pure recursive cycle
+-  // with no established reader does not select itself, and every reference must stay a read.
+-  const selected = new Set<string>();
+-  let changed = true;
+-  while (changed) {
+-    changed = false;
+-    for (const [id, helper] of candidates) {
+-      if (selected.has(id) || !used.has(id) || invalidParameters.has(id) || invalidHelpers.has(helper)) continue;
+-      if ((uses.get(id) ?? []).every((reference) => receivers.has(reference) || selected.has(forwarded.get(reference) ?? ''))) {
+-        selected.add(id);
+-        changed = true;
+-      }
+-    }
+-  }
+-  return selected;
++  return new Set([...candidates].flatMap(([id, helper]) =>
++    used.has(id) && !invalidParameters.has(id) && !invalidHelpers.has(helper) ? [id] : []));
+ }
+ 
+ 
+@@ -15474,65 +15450,6 @@
+   );
+ }
+ 
+-// Keep the indexed local's undefined/null carrier intact until a member is actually evaluated.
+-// A source null guard narrows its payload, but does not prove an unchecked Array index exists.
+-function emitCppGuardedIndexedNullableMemberCpp(
+-  expression: Readonly<IrExpression>,
+-  context: EmitContext,
+-  render: (next: EmitContext) => string,
+-): string | undefined {
+-  const access =
+-    expression.kind === 'call' && expression.callee.kind === 'property'
+-      ? expression.callee
+-      : expression.kind === 'property' || expression.kind === 'element'
+-        ? expression
+-        : undefined;
+-  if (
+-    !access ||
+-    access.optional ||
+-    (access.kind === 'property' ? access.optionalChain !== undefined : access.semantics.optionalChain !== undefined) ||
+-    context.indexedNullableReadExpressions?.has(access.object)
+-  )
+-    return undefined;
+-  const receiver = access.object;
+-  if (receiver.kind !== 'identifier' || receiver.reference.kind !== 'binding') return undefined;
+-  const id = receiver.reference.binding.id;
+-  if (
+-    !context.immutableInitializerBindingIds.has(id) ||
+-    context.lengthProvenNullableArrayElementBindingIds.has(id) ||
+-    !hasCppPresentBindingStorageProofCpp(receiver, context)
+-  )
+-    return undefined;
+-  const type = getIrExpressionTypeEvidenceCpp(receiver, context);
+-  if (!type || hasIrTypeAbsentMember(type)) return undefined;
+-  const plan = getCppIndexedNullableElementPresencePlanCpp(receiver, context);
+-  if (!plan?.binding || plan.elementSentinel === 'none') return undefined;
+-  const initializer = context.bindingInitializers.get(id);
+-  if (initializer?.kind !== 'element') return undefined;
+-  const array = getIrArrayTypeCpp(getIrExpressionTypeEvidenceCpp(initializer.object, context), context, new Set());
+-  const union = array ? getIrUnionTypeCpp(array.element, context, new Set()) : undefined;
+-  if (!union || getCppUnionRepresentationPlan(union, context).kind !== 'optionalSingle') return undefined;
+-  context.includes.add('flight/error.hpp');
+-  context.includes.add('flight/structural_ref.hpp');
+-  context.includes.add('type_traits');
+-  const project = (value: string): string =>
+-    `([&](const auto& indexed_member) -> decltype(auto) { if (!indexed_member.has_value()) throw flight::TypeError("Cannot read properties of undefined"); if constexpr (flight::detail::optional_traits<std::remove_cvref_t<decltype(indexed_member.value())>>::optional) { if (!indexed_member.value().has_value()) throw flight::TypeError("Cannot read properties of ${plan.elementSentinel}"); return (indexed_member.value().value()); } else { return (indexed_member.value()); } }(${value}))`;
+-  const substitutions = new Map(context.indexedNullableReadExpressions);
+-  if (access.kind !== 'element') {
+-    substitutions.set(receiver, project(plan.value));
+-    return render({ ...context, indexedNullableReadExpressions: substitutions });
+-  }
+-  // JavaScript evaluates a computed key before requiring a non-nullish object. Cache both reads
+-  // before the checked projection; a key's effects or exact exception must precede that TypeError.
+-  const object = getGeneratedTargetName('indexedMemberObject', context);
+-  const index = getGeneratedTargetName('indexedMemberKey', context);
+-  const key = emitExpression(access.index, context);
+-  substitutions.set(receiver, project(object));
+-  substitutions.set(access.index, index);
+-  const body = render({ ...context, indexedNullableReadExpressions: substitutions });
+-  return `([&]() -> decltype(auto) { const auto& ${object} = ${plan.value}; const auto ${index} = ${key}; return ${body}; }())`;
+-}
+-
+ interface CppIndexedNullableElementPresencePlan {
+   // The sentinel the element type stores as optional absence, i.e. what the inner layer means.
+   // `none` when the element type stores no absence: then only the outer layer exists.
+@@ -15850,6 +15767,13 @@
+   const receiver = expression.object;
+   if (getCppRegExpCaptureMemberStorageCpp(expression, context)) return;
+   if (!hasCppAbsenceStorageCpp(receiver, context)) return;
++  // An indexed read inside a `for (let i = 0; i < x.length; i++)` loop is proven in bounds by that
++  // loop's own condition, so the member applies to the present element; the emitter spells the read
++  // with the array's required accessor, which keeps the bounds check where the source's undefined
++  // member use would throw. No other indexed read acquires this proof.
++  if (receiver.kind === 'element' && !receiver.optional && context.loopBoundElementExpressions.has(receiver)) {
++    return;
++  }
+   if (!hasCppPresentExpressionStorageProofCpp(receiver, context)) {
+     emissionError(
+       context,
+@@ -18074,6 +17998,83 @@
+   return `flight::StructuralMemberView<${emitType(source, context)}>(${emitExpression(initializer.expression, context)})`;
+ }
+ 
++// Element reads whose index an enclosing `for (let i = 0; i < x.length; i++)` proves in bounds. The
++// proof is the loop's own condition, matched structurally, and it is recorded on the exact read
++// expressions inside that body so no other read acquires it.
++function collectCppLoopBoundElementExpressionsCpp(
++  module: Readonly<IrModule>,
++  context: EmitContext,
++): ReadonlySet<Readonly<IrExpression>> {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return new Set();
++  const result = new Set<Readonly<IrExpression>>();
++  const markLoopBody = (body: Readonly<IrStatement>, indexBindingId: string, array: Readonly<IrExpression>): void => {
++    if (doesCppLoopLoseNonnegativeIntegerIndexCpp(body, indexBindingId)) return;
++    analyzeIrStatementSubtreeTraversal(body, {
++      expression(expression) {
++        if (
++          expression.kind === 'element' &&
++          !expression.optional &&
++          isIrBindingIdentifierCpp(expression.index, indexBindingId) &&
++          areCppStableArrayReceiverExpressionsEqualCpp(expression.object, array, context)
++        ) {
++          result.add(expression);
++        }
++      },
++    });
++  };
++  const inspectStatements = (statements: readonly Readonly<IrStatement>[]): void => {
++    for (const [index, statement] of statements.entries()) {
++      // A `for (let i = 0; i < x.length; i++)` loop proves its own index in bounds.
++      if (statement.kind === 'for' && statement.initializer.length === 1) {
++        const declaration = statement.initializer[0]!;
++        const condition = statement.condition;
++        if (
++          'binding' in declaration &&
++          declaration.mutable &&
++          declaration.initializer?.kind === 'literal' &&
++          declaration.initializer.value === 0 &&
++          condition.kind === 'binary' &&
++          condition.operator === '<' &&
++          isIrBindingIdentifierCpp(condition.left, declaration.binding.id) &&
++          condition.right.kind === 'property' &&
++          !condition.right.optional &&
++          condition.right.name === 'length' &&
++          condition.right.member?.receiver === 'array' &&
++          statement.increment.kind === 'unary' &&
++          isIrBindingIdentifierCpp(statement.increment.operand, declaration.binding.id)
++        ) {
++          markLoopBody(statement.body, declaration.binding.id, condition.right.object);
++        }
++      }
++      // The same proof where a lowering already split the loop into `let i = 0; while (i < x.length)`.
++      const loop = statements[index + 1];
++      const indexBindingId = getCppZeroInitializedLoopIndexBindingIdCpp(statement);
++      if (indexBindingId && loop?.kind === 'while') {
++        const condition = loop.condition;
++        if (
++          condition.kind === 'binary' &&
++          condition.operator === '<' &&
++          isIrBindingIdentifierCpp(condition.left, indexBindingId) &&
++          condition.right.kind === 'property' &&
++          !condition.right.optional &&
++          condition.right.name === 'length' &&
++          condition.right.member?.receiver === 'array'
++        ) {
++          markLoopBody(loop.body, indexBindingId, condition.right.object);
++        }
++      }
++      collectCppNestedStatementListsCpp(statement, inspectStatements);
++    }
++  };
++  for (const declaration of module.declarations) {
++    if (declaration.kind === 'function') inspectStatements(declaration.body);
++    if (declaration.kind !== 'class') continue;
++    if (declaration.classConstructor) inspectStatements(declaration.classConstructor.body);
++    for (const method of declaration.methods) inspectStatements(method.body);
++  }
++  return result;
++}
++
+ function collectCppStructuralMemberViewBindingIdsCpp(
+   module: Readonly<IrModule>,
+   context: EmitContext,
+diff --git a/packages/compiler-backend-cpp/src/cppRequiredIndexedElementMember.test.ts b/packages/compiler-backend-cpp/src/cppRequiredIndexedElementMember.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppRequiredIndexedElementMember.test.ts
+@@ -0,0 +1,50 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile(
++    '/flight/packages/example/src/requiredIndexedElementMember.ts',
++    source,
++    ts.ScriptTarget.Latest,
++    true,
++  );
++  const result = lowerTypeScriptSource(sourceFile, {
++    packageName: '@flighthq/example',
++    upstreamDirectory: '/flight',
++  });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++it('applies a member to a required indexed element whose type has no absence', () => {
++  const output = emit(`
++    export function collect(source: string): Set<string> {
++      const found = new Set<string>();
++      const lines = source.split('\\n');
++      for (let i = 0; i < lines.length; i++) {
++        const line = lines[i].trim();
++        if (line.length === 0) continue;
++        found.add(line);
++      }
++      return found;
++    }
++  `);
++
++  // The element type is a plain string, so the only absence is the bounds check: the required
++  // accessor throws there exactly where the source's own undefined member use would throw.
++  expect(output).toContain('lines.element(i).trim()');
++  expect(output).not.toContain('lines.get(i)');
++});
++
++it('keeps a nullable element member refused without a presence proof', () => {
++  expect(() =>
++    emit(`
++      export function first(lines: readonly (string | null)[]): number {
++        return lines[0].length;
++      }
++    `),
++  ).toThrow(/proven present payload|member .* on optional C\+\+ storage/);
++});
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -18025,7 +18025,13 @@
+   const inspectStatements = (statements: readonly Readonly<IrStatement>[]): void => {
+     for (const [index, statement] of statements.entries()) {
+       // A `for (let i = 0; i < x.length; i++)` loop proves its own index in bounds.
+-      if (statement.kind === 'for' && statement.initializer.length === 1) {
++      if (
++        statement.kind === 'for' &&
++        Array.isArray(statement.initializer) &&
++        statement.initializer.length === 1 &&
++        statement.condition !== undefined &&
++        statement.increment !== undefined
++      ) {
+         const declaration = statement.initializer[0]!;
+         const condition = statement.condition;
+         if (
