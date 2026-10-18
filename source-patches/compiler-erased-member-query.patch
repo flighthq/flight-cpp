@@ -1,8 +1,8 @@
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-index 710bbf6..a5adec2 100644
+index 225d6b8..77bfc3d 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-@@ -2220,6 +2220,23 @@ function emitClass(declaration: Readonly<IrClassDeclaration>, outer: EmitContext
+@@ -2383,6 +2383,23 @@ function emitClass(declaration: Readonly<IrClassDeclaration>, outer: EmitContext
      lines.push('  }');
    }
    lines.push('};');
@@ -26,7 +26,7 @@ index 710bbf6..a5adec2 100644
    return lines;
  }
  
-@@ -7094,6 +7111,21 @@ function emitExpression(
+@@ -8697,6 +8714,21 @@ function emitExpression(
          }
          const closedKeyTypeof = emitCppClosedKeyElementTypeofCpp(expression.operand, context);
          if (closedKeyTypeof) return closedKeyTypeof;
@@ -48,10 +48,10 @@ index 710bbf6..a5adec2 100644
          const value = getCppStaticTypeofValueCpp(expression.operand, context);
          if (value) {
            return getCppRuntimeProfile(context.options) === 'flight-cpp'
-@@ -24356,6 +24388,14 @@ function emitCppMembershipTestCpp(
-   expression: Readonly<Extract<IrExpression, { kind: 'binary' }>>,
-   context: EmitContext,
- ): string | undefined {
+@@ -27067,6 +27099,14 @@ function emitCppMembershipTestCpp(
+     context.includes.add('flight/structural_ref.hpp');
+     return `flight::has_property(${emitExpression(expression.right.expression, context)}, flight::String::from_utf8(flight::RowKey<${JSON.stringify(expression.left.value)}>::name.view()))`;
+   }
 +  const erasedReceiver = getCppErasedMemberReceiverCpp(expression.right, context);
 +  if (erasedReceiver && expression.semantics.membershipTest?.key.kind !== 'symbol') {
 +    const evidence = expression.semantics.membershipTest;
@@ -63,7 +63,7 @@ index 710bbf6..a5adec2 100644
    if (getCppNamedPropertiesViewExpressionCpp(expression.right, context)) {
      emissionError(
        context,
-@@ -24588,6 +24628,23 @@ function getCppReferenceStorageSubjectTypeCpp(type: Readonly<IrType>, context: E
+@@ -27299,6 +27339,23 @@ function getCppReferenceStorageSubjectTypeCpp(type: Readonly<IrType>, context: E
    }
  }
  
