@@ -4,6 +4,8 @@
 #include <flight/render_gl/gl_present_render_target.hpp>
 #include <flight/render_gl/gl_render_target.hpp>
 #include <flight/scene3d_gl/present_gl_scene_3d.hpp>
+#include <flight/scene3d_gl/gl_custom_shader_mesh_material_renderer.hpp>
+#include <flight/types/gl_custom_material_shader_source.hpp>
 #include <flight/types/gl_render_state.hpp>
 #include <flight/types/gl_render_target.hpp>
 
@@ -29,10 +31,65 @@ void check(bool condition, const char* message) {
   if (!condition) { std::cerr << "FAIL: " << message << '\n'; ++failures; }
 }
 
+void check_custom_source_handoff(const State& state) {
+  namespace scene = flight::scene3d_gl;
+  using CustomRead = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<types::GlCustomMaterialShaderSource>>>>;
+  using CustomWrite = flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<types::GlCustomMaterialShaderSource>>>>;
+  static_assert(!std::is_constructible_v<CustomWrite, CustomRead>);
+  const auto registries = render_gl::get_gl_render_state_runtime(state)->registries;
+  const auto original_registry = registries->custom_material_shaders;
+  const flight::String key("readonly-helper-source");
+  check(!scene::get_gl_custom_material_shader_source(state, key).has_value(),
+        "an absent registered custom source did not retain its null result");
+  const flight::String vertex(R"GLSL(#version 300 es
+precision highp float;
+layout(location=0) in vec3 a_position;
+uniform mat4 u_viewProjection;
+uniform mat4 u_model;
+uniform mat3 u_normalMatrix;
+uniform vec3 u_cameraPosition;
+void main() { gl_Position = u_viewProjection * u_model * vec4(a_position, 1.0); }
+)GLSL");
+  const flight::String fragment(R"GLSL(#version 300 es
+precision highp float;
+out vec4 fragColor;
+void main() { fragColor = vec4(1.0); }
+)GLSL");
+  const auto first = flight::make_ref<types::GlCustomMaterialShaderSource>(
+      types::GlCustomMaterialShaderSource{.fragment = fragment, .vertex = vertex});
+  const auto second = flight::make_ref<types::GlCustomMaterialShaderSource>(
+      types::GlCustomMaterialShaderSource{.fragment = fragment, .vertex = vertex});
+  const CustomRead first_view(first), second_view(second);
+  scene::register_gl_custom_material_shader(state, key, first_view);
+  const auto first_registry = registries->custom_material_shaders;
+  auto retained = scene::get_gl_custom_material_shader_source(state, key);
+  check(retained.has_value(), "the public custom source lookup lost its registered value");
+  if (!retained) { registries->custom_material_shaders = original_registry; return; }
+  const auto retained_owner = retained->shared_object();
+  check(retained->shared_owner() == first_view.shared_owner() &&
+            retained_owner.get() == first.get() && !retained_owner.owner_before(first) &&
+            !first.owner_before(retained_owner),
+        "the public custom source getter replaced the readonly row or native owner");
+  first->vertex = vertex + flight::String("\n// live original source\n");
+  check(flight::row_get<flight::RowKey<"vertex">>(retained.value()) == first->vertex,
+        "a retained readonly source did not see its original live vertex cell");
+  scene::register_gl_custom_material_shader(state, key, second_view);
+  const auto current = scene::get_gl_custom_material_shader_source(state, key);
+  check(current.has_value() && current->shared_owner() == second_view.shared_owner() &&
+            current->shared_object().get() == second.get(),
+        "source re-registration did not preserve last-write lookup and the second owner");
+  check(retained->shared_object().get() == first.get() &&
+            flight::row_get<flight::RowKey<"vertex">>(retained.value()) == first->vertex &&
+            first_registry.get(key).value() == first && !original_registry.get(key).has_value(),
+        "source re-registration changed an earlier view or persistent registry snapshot");
+  registries->custom_material_shaders = original_registry;
+}
+
 void run() {
   flight::host_sdl::GlApplication app({.title="Flight readonly present", .width=16, .height=12, .hidden=true});
   const auto gl = app.context();
   const auto state = render_gl::create_gl_render_state(gl);
+  check_custom_source_handoff(state);
   const auto runtime = render_gl::get_gl_render_state_runtime(state);
   const auto context = runtime->context;
   flight::Ref<types::EntityRuntime> context_base = context;
