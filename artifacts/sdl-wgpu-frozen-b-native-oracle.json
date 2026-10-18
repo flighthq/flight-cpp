@@ -1,0 +1,763 @@
+{
+  "kind": "Actual SDL/WGPU frozen B profile oracle native compilation; proof only",
+  "status": "PASS original oracle and actual SDL3 Zig/Clang object compile",
+  "frozenBHead": "5f79108f34c17751c82d758fc4717d2215dc1d51",
+  "sourceSeed": "5f0c98eec377a4ecd88a0109437aeba97c8f3d5c",
+  "allNineCarriedPatchesApplied": true,
+  "changedBlobsVerified": 499,
+  "inputHashes": {
+    "scripts/sdlWgpuProfileOracle.mjs": "1bf66e844034e99225fb6bf38032c0094fee45351d7c0b472bf692754180cf2a",
+    "bindings/sdl-wgpu.json": "ec5da9424b211eadddcb6ee71c96398ee29676330a30b6effd0d4eea3d015ac7",
+    "source-patches/manifest.json": "c0aa36f0d64970af3b941ff3ef12b7bcfbe7af34ed909fd7a24c9addece3d710",
+    "include/flight/host_sdl/wgpu.hpp": "f59680861554a25072a864a319b85f37289e3aa66436e93534774560b5450e50",
+    "generated/include/flight/render_wgpu/wgpu_adapter_capabilities.hpp": "a2a802631295de93c046edc19baf605030b25b78ce9f3edce725cf34c022c937"
+  },
+  "compiler": {
+    "pin": "806d257d2f4100de745cc97340e61c2f301b0f24",
+    "activeOrderedPatches": 118,
+    "orderedPatchDigests": [
+      {
+        "id": "compiler-dependent-indexed-access-reference-carrier",
+        "patch": "compiler-dependent-indexed-access-reference-carrier.patch",
+        "sha256": "a80a6ff738cbb866da5e886d103f755635be24ce9abe5e7555f315e5ab09f164"
+      },
+      {
+        "id": "compiler-dependent-erased-object-recovery-template",
+        "patch": "compiler-dependent-erased-object-recovery-template.patch",
+        "sha256": "b39dfc0234da13d16399e66bac612b4be38a26753e29d40007146ffb0024d08f"
+      },
+      {
+        "id": "compiler-error-name-and-erased-error-reads",
+        "patch": "compiler-error-name-and-erased-error-reads.patch",
+        "sha256": "fbb9b7878a4f8b405da3646a2237a7e5de7602f2ec6e747b4a18f595c381180e"
+      },
+      {
+        "id": "compiler-unrepresented-error-member",
+        "patch": "compiler-unrepresented-error-member.patch",
+        "sha256": "7ffd75d00899c8265ea55677494e01a75a156302d4a416c2eb6586cf98cd71f7"
+      },
+      {
+        "id": "compiler-structural-row-weak-keys",
+        "patch": "compiler-structural-row-weak-keys.patch",
+        "sha256": "b02689718a4b47624f10ae30b3f8745b84e72659d7f517fbad834ad5467026ff"
+      },
+      {
+        "id": "compiler-concrete-owner-union-row-assertions",
+        "patch": "compiler-concrete-owner-union-row-assertions.patch",
+        "sha256": "17f47ccc904d65fb495d38f45d2c59a5bff9989a59db17a6cc01c6d047698510"
+      },
+      {
+        "id": "compiler-union-import-runtime-identity",
+        "patch": "compiler-union-import-runtime-identity.patch",
+        "sha256": "5aed3efd29ec4939052bceb5504930b7cb8a7e62fcdd06ba38a50b8e6912f255"
+      },
+      {
+        "id": "compiler-erased-ref-weak-map-view",
+        "patch": "compiler-erased-ref-weak-map-view.patch",
+        "sha256": "3436926b4125a60232033d4dbc4526c165781fc90223e2ff29a0255b19326f46"
+      },
+      {
+        "id": "compiler-generic-erased-map-reference-recovery",
+        "patch": "compiler-generic-erased-map-reference-recovery.patch",
+        "sha256": "8e2fdcadd6b9cf7bfb1b6b7fc65d1461e7cbacec2edf4747fc391d815f238644"
+      },
+      {
+        "id": "compiler-nullable-structural-row-widening",
+        "patch": "compiler-nullable-structural-row-widening.patch",
+        "sha256": "83614af822c7e842e6d75d94c3d8d95d5ef85edd18b655fea6728f3e8a7162fa"
+      },
+      {
+        "id": "compiler-external-optional-result-widening",
+        "patch": "compiler-external-optional-result-widening.patch",
+        "sha256": "0072f315ef85d72f36a1edbbc886f83d414ba8ac8375f9e530e3dbc83eec577e"
+      },
+      {
+        "id": "compiler-readonly-union-view-conversion",
+        "patch": "compiler-readonly-union-view-conversion.patch",
+        "sha256": "288b524ea0a3389f7bc2bd2decbf18954ad8eb33de04c180e4fa568e8d8775bc"
+      },
+      {
+        "id": "compiler-contextual-imported-union-owner",
+        "patch": "compiler-contextual-imported-union-owner.patch",
+        "sha256": "052bf7fe5b4753a4dc343fe642bc78d3cfb175bb2cc295c9c0b1a27c75983bdf"
+      },
+      {
+        "id": "compiler-present-dual-sentinel-multivariant",
+        "patch": "compiler-present-dual-sentinel-multivariant.patch",
+        "sha256": "06f969236c93eb9a12726deaabf20794e7e8d7d24df6949907b2a24b13d22a8b"
+      },
+      {
+        "id": "compiler-exact-variant-owner-priority",
+        "patch": "compiler-exact-variant-owner-priority.patch",
+        "sha256": "14655ce90d5c9a22f5e1c435e8b9a024fcfa591e168d1e867e9946db5ef3451d"
+      },
+      {
+        "id": "compiler-imported-alias-outer-union-abi",
+        "patch": "compiler-imported-alias-outer-union-abi.patch",
+        "sha256": "a5370242528a7b45b42d12555e84de83702e6a213a184ee60d6a529bec88babb"
+      },
+      {
+        "id": "compiler-canvas-context-overload-result",
+        "patch": "compiler-canvas-context-overload-result.patch",
+        "sha256": "351729a88df1ad6eba3fe0924ff5893edd155828caa42894fb0d949fe31b1325"
+      },
+      {
+        "id": "compiler-owner-preserving-named-write",
+        "patch": "compiler-owner-preserving-named-write.patch",
+        "sha256": "53371cbd4743e855da063a9f475e6b13f8d642aae895a6f8dfeb57df0f0b3e53"
+      },
+      {
+        "id": "compiler-flattened-optional-chain-union-storage",
+        "patch": "compiler-flattened-optional-chain-union-storage.patch",
+        "sha256": "5176cacf29fcc11f8007b1097930b8856507cb018b044e7a4e04920173a282e4"
+      },
+      {
+        "id": "compiler-imported-readonly-view-owner-recovery",
+        "patch": "compiler-imported-readonly-view-owner-recovery.patch",
+        "sha256": "652a856aaecd27035ecf47db110486bb249d5d16b8de8041c810e0b956752d95"
+      },
+      {
+        "id": "compiler-imported-variant-owner-qualification",
+        "patch": "compiler-imported-variant-owner-qualification.patch",
+        "sha256": "e6b567cd7244cac90f437fcd978f1c14fc610e0cd489532aaac13c0c08ecc78d"
+      },
+      {
+        "id": "compiler-concrete-structural-union-view-selection",
+        "patch": "compiler-concrete-structural-union-view-selection.patch",
+        "sha256": "36a2a678fcee9bbd854e056ce8ef03270790c996d494e5450fdab8cd492aae06"
+      },
+      {
+        "id": "compiler-structural-union-exact-native-owner",
+        "patch": "compiler-structural-union-exact-native-owner.patch",
+        "sha256": "622b0503864d02b2134889cd21b4a5368d091577587abba4df92052042276a4a"
+      },
+      {
+        "id": "compiler-imported-alias-parameter-abi",
+        "patch": "compiler-imported-alias-parameter-abi.patch",
+        "sha256": "18d87f3574366f6592917d4d54c778d21150e62b203bb7964b621e5cf79071e7"
+      },
+      {
+        "id": "compiler-imported-alias-local-flow-abi",
+        "patch": "compiler-imported-alias-local-flow-abi.patch",
+        "sha256": "809adc849b8c486b932c99ee8b1af2f3a45f52b2c82ebb2fd7283f76bb35926f"
+      },
+      {
+        "id": "compiler-imported-alias-call-declaration-recovery",
+        "patch": "compiler-imported-alias-call-declaration-recovery.patch",
+        "sha256": "3010ebb868a6dbdf12ca200a2a87bae7fd38a2e55d227231c3af2c6aa33f2462"
+      },
+      {
+        "id": "compiler-error-stack-cause-presence",
+        "patch": "compiler-error-stack-cause-presence.patch",
+        "sha256": "b6609b8eea331d2067a24aa4799ca507295e4261cf8b5f13dc202b7432a91766"
+      },
+      {
+        "id": "compiler-host-timer-return-type-handle",
+        "patch": "compiler-host-timer-return-type-handle.patch",
+        "sha256": "a6faab48365c93a0daf4bd57691fd600f1899d7b2378ab5aa195c7039971ceb8"
+      },
+      {
+        "id": "compiler-nullable-optional-parameter-narrowing",
+        "patch": "compiler-nullable-optional-parameter-narrowing.patch",
+        "sha256": "1638ff18e9efecf738b72c7df1afec3189c1c0d43b828d47a6db1dd10758e0a0"
+      },
+      {
+        "id": "compiler-closed-key-external-member-call",
+        "patch": "compiler-closed-key-external-member-call.patch",
+        "sha256": "7f7ae843354297c55eba1d93337162c687494a6a564277bfe56d55d20b613f07"
+      },
+      {
+        "id": "compiler-host-object-dynamic-index-refusal",
+        "patch": "compiler-host-object-dynamic-index-refusal.patch",
+        "sha256": "c1d3393d6f91cbb89404155d2cfd774f71847aa50501571dfddbb673de0e58f5"
+      },
+      {
+        "id": "compiler-nullish-assignment-statement-in-catch",
+        "patch": "compiler-nullish-assignment-statement-in-catch.patch",
+        "sha256": "ad4b95bf90a84830a1c3c2d91796009b68cd4c7a9ff73b4ab83ef86d3dd4cb18"
+      },
+      {
+        "id": "compiler-catch-recorded-slot-carrier",
+        "patch": "compiler-catch-recorded-slot-carrier.patch",
+        "sha256": "46d8947034986c7143c66cd63b91f4bd7e31ce779b357fdf39fb77af61bb35b0"
+      },
+      {
+        "id": "compiler-catch-handler-breadth",
+        "patch": "compiler-catch-handler-breadth.patch",
+        "sha256": "7d7b38db348726bae56840f5bb5a1a88792218b9d3f42ef3861420eac1102042"
+      },
+      {
+        "id": "compiler-readonly-view-argument-substitution",
+        "patch": "compiler-readonly-view-argument-substitution.patch",
+        "sha256": "2792c3e9ac27c86e7f8c508794d61b86f6a28e85f68373a2d2877cd50288ed10"
+      },
+      {
+        "id": "compiler-host-timer-local-storage-carrier",
+        "patch": "compiler-host-timer-local-storage-carrier.patch",
+        "sha256": "4193c5b5211770c8b3ee97f2e15a17a8e694662335e1979185795bb1f04a3e64"
+      },
+      {
+        "id": "compiler-nested-nullable-property-narrowed-null-test",
+        "patch": "compiler-nested-nullable-property-narrowed-null-test.patch",
+        "sha256": "523f94df836e5f7562357768b1fdbade55890276d67ad4c5a9a387038578bc9e"
+      },
+      {
+        "id": "compiler-placeholder-graph-qualification",
+        "patch": "compiler-placeholder-graph-qualification.patch",
+        "sha256": "8ec9d24d1e269c2ed8d9fe6589ca57d933b0f208811a161fe338d597620997d6"
+      },
+      {
+        "id": "compiler-constructor-parameter-property-assignment",
+        "patch": "compiler-constructor-parameter-property-assignment.patch",
+        "sha256": "f2a6f053e15631b4b08e8bc18235cd2d04cdbdf80ec4c4af9466de0e4a08473d"
+      },
+      {
+        "id": "compiler-indexed-element-presence-test",
+        "patch": "compiler-indexed-element-presence-test.patch",
+        "sha256": "8eba5041a0db63560cde1d6b2fec88d15db7886d4851fed5739e8058126fa67d"
+      },
+      {
+        "id": "compiler-constrained-type-parameter-union-slot",
+        "patch": "compiler-constrained-type-parameter-union-slot.patch",
+        "sha256": "f281424105f66dd2a847b79e4051e82854d03d10e2f6e51174f4219f89e111ee"
+      },
+      {
+        "id": "compiler-dependent-callable-pack-reuse",
+        "patch": "compiler-dependent-callable-pack-reuse.patch",
+        "sha256": "ed37cd746bee997f5f3e615a16c4dd4f2ec06d4c5888d28c4135cf32d6d25ebc"
+      },
+      {
+        "id": "compiler-runtime-instanceof-lowering",
+        "patch": "compiler-runtime-instanceof-lowering.patch",
+        "sha256": "5105e7a3a57c86cbf2b4beb8ef2b26fce2d7066234ee08ab9f687da2ce140b14"
+      },
+      {
+        "id": "compiler-profile-type-name-evidence",
+        "patch": "compiler-profile-type-name-evidence.patch",
+        "sha256": "b82d88ab8157b69233e22292e58922e5e7fab9c1120f8282ebb83b7e0dd41849"
+      },
+      {
+        "id": "compiler-guarded-path-narrowing",
+        "patch": "compiler-guarded-path-narrowing.patch",
+        "sha256": "2d10c022c42dc8006ad924ef3c040bb4845ed8d02e2f46b902c4d62de7f772e0"
+      },
+      {
+        "id": "compiler-catch-await-owned-carrier",
+        "patch": "compiler-catch-await-owned-carrier.patch",
+        "sha256": "e48d51c610294a6eb138036d3db11734914dc5462f47abe51901d5e62ec3433e"
+      },
+      {
+        "id": "compiler-promise-resolve-domain",
+        "patch": "compiler-promise-resolve-domain.patch",
+        "sha256": "e575a351676fde146b22003c49379629c6aa5d459c8fea41529930486c0caa4e"
+      },
+      {
+        "id": "compiler-callable-arity-adaptation",
+        "patch": "compiler-callable-arity-adaptation.patch",
+        "sha256": "6493ede41b94d493501690ef7094be544feaa14d36e8c498e32c5c07c982582a"
+      },
+      {
+        "id": "compiler-nul-string-literal",
+        "patch": "compiler-nul-string-literal.patch",
+        "sha256": "8faa111a17b55f48adb6c83173c5e22e145a19accf1e1a4aa125a439fce63c89"
+      },
+      {
+        "id": "compiler-generic-receiver-null-write",
+        "patch": "compiler-generic-receiver-null-write.patch",
+        "sha256": "d609d18915598b6a5b363d54a7d1886985ffbc66a02742442a0cea75890706a8"
+      },
+      {
+        "id": "compiler-new-map-copy",
+        "patch": "compiler-new-map-copy.patch",
+        "sha256": "e2b35fd34c7ae5cb0fb2c65ea762d49573cb8948be5720479878d81668f4ac95"
+      },
+      {
+        "id": "compiler-new-set-copy",
+        "patch": "compiler-new-set-copy.patch",
+        "sha256": "597593e1b256d84f62e056df3d120da9c8dfac2b130a84db2a8510989cb2b61b"
+      },
+      {
+        "id": "compiler-new-set-from-iterator",
+        "patch": "compiler-new-set-from-iterator.patch",
+        "sha256": "334ca08252477612fb3a869c28ba4d4a43ac534f321c1a5b7fbf0e4ac1600509"
+      },
+      {
+        "id": "compiler-nullish-conditional-absent-fallback",
+        "patch": "compiler-nullish-conditional-absent-fallback.patch",
+        "sha256": "faed6e00141e3e976e5ab08a7067b44f15bd8b98b212676cd59ab91fcba10652"
+      },
+      {
+        "id": "compiler-declared-present-reference-chain",
+        "patch": "compiler-declared-present-reference-chain.patch",
+        "sha256": "d74c93685375817aefca246260b6972a9ec383b528f291d094fbedc1c19bce34"
+      },
+      {
+        "id": "compiler-asserted-empty-object-fallback",
+        "patch": "compiler-asserted-empty-object-fallback.patch",
+        "sha256": "5ae844a099b0bbbac6be9552e9c7b89d73e811e93ea453eac4275ee31786d52d"
+      },
+      {
+        "id": "compiler-coalesced-union-member-narrowing",
+        "patch": "compiler-coalesced-union-member-narrowing.patch",
+        "sha256": "9c008abdd99d3dcb22652f4ee15a3680e4a2b89d3bc7fd41036a50322b06bf7c"
+      },
+      {
+        "id": "compiler-narrowed-coalesced-arm-slot",
+        "patch": "compiler-narrowed-coalesced-arm-slot.patch",
+        "sha256": "5072d8f9f0b8493929f273b31c113daa0ccbdb3f5c08e5f40b5c0c9b58146c35"
+      },
+      {
+        "id": "compiler-dependent-indexed-access-carrier",
+        "patch": "compiler-dependent-indexed-access-carrier.patch",
+        "sha256": "f4d618509cc70d0ebc6e82a221cb50edc21531426c4944f2fec254ee5f63bfc9"
+      },
+      {
+        "id": "compiler-async-closure-coroutine",
+        "patch": "compiler-async-closure-coroutine.patch",
+        "sha256": "05c0f2a60d83a99fc4dc39e41c5178846388a67113db0f59538eb78fad53cd89"
+      },
+      {
+        "id": "compiler-exported-type-owner-cache",
+        "patch": "compiler-exported-type-owner-cache.patch",
+        "sha256": "c89b56761105c07c388b1676c1ef38122b8737c560aba5e289cc25f14ec066d2"
+      },
+      {
+        "id": "compiler-derived-render-state-owner-fixture",
+        "patch": "compiler-derived-render-state-owner-fixture.patch",
+        "sha256": "5fc1b04a682a8ce4c4b2595617d8cc60d8c04bbb6bc015249f9a6b6b36c209a8"
+      },
+      {
+        "id": "compiler-shadow-checked-capability-flow",
+        "patch": "compiler-shadow-checked-capability-flow.patch",
+        "sha256": "b8f09f5a35986a3afbf96e694f0d0f792849b9c1d81eb5c14d280fa6f8877f7c"
+      },
+      {
+        "id": "compiler-named-reexport-provenance",
+        "patch": "compiler-named-reexport-provenance.patch",
+        "sha256": "353b1108df83022607052dee0d64fdae2d8206eca8fdd28eb93dc4229dbb9f78"
+      },
+      {
+        "id": "compiler-erased-array-iteration",
+        "patch": "compiler-erased-array-iteration.patch",
+        "sha256": "0044f4f924c67ad11c04d3d8cd1f685e1205e5af0eebd4cc468ca4db0bbff352"
+      },
+      {
+        "id": "compiler-nullable-map-get-nullish-projection",
+        "patch": "compiler-nullable-map-get-nullish-projection.patch",
+        "sha256": "20d4b5c1b4148c444993dd19fe3d6cb2503b463d020fb71016006077f4f4e8fe"
+      },
+      {
+        "id": "compiler-interface-native-heritage-widening",
+        "patch": "compiler-interface-native-heritage-widening.patch",
+        "sha256": "8ae3e02fb34baaba6cfa8bb200b31bd57a647bb011e1e3343bde2bc3c6532346"
+      },
+      {
+        "id": "compiler-inferred-invocation-type-arguments",
+        "patch": "compiler-inferred-invocation-type-arguments.patch",
+        "sha256": "b9beb845391e546decdb6ea11754f77821ddf5d374fa56ad689363f9559adc1c"
+      },
+      {
+        "id": "compiler-erased-array-length-index",
+        "patch": "compiler-erased-array-length-index.patch",
+        "sha256": "953aeb3686a0f53b0ad009e039e3b2589704d27186b11519bd120d95da9e188f"
+      },
+      {
+        "id": "compiler-present-readonly-row-context",
+        "patch": "compiler-present-readonly-row-context.patch",
+        "sha256": "8a1e679fa8ce48194555fff6b889a2b8e7b8a7523e3f5c45395d047f4406f25a"
+      },
+      {
+        "id": "compiler-callable-value-identity",
+        "patch": "compiler-callable-value-identity.patch",
+        "sha256": "248f9ea3cafa23026b2cbca59fc9fca90b2b3b4b5e434743daf68e48aadfeaab"
+      },
+      {
+        "id": "compiler-optional-record-literal-materialization",
+        "patch": "compiler-optional-record-literal-materialization.patch",
+        "sha256": "25ba04b3549c4d93e001e3e0721f9e64299ee889947c353ea7b4893b10fdfc35"
+      },
+      {
+        "id": "compiler-readonly-json-record-view",
+        "patch": "compiler-readonly-json-record-view.patch",
+        "sha256": "f78224dedf15bea1a840b6b140ad743fe41635c270fdb2ddb9caab76e71d05e6"
+      },
+      {
+        "id": "compiler-typed-record-missing-key",
+        "patch": "compiler-typed-record-missing-key.patch",
+        "sha256": "ad62c0d079d119e37e03ad454a63cdb459e2def8bb9f225a380ef4bcdc43b618"
+      },
+      {
+        "id": "compiler-nullable-element-dual-sentinel",
+        "patch": "compiler-nullable-element-dual-sentinel.patch",
+        "sha256": "4c95512067d677d96e64cc51bbbf82308fd59b8b1b4833ae0d47b0bd9a0c0bf4"
+      },
+      {
+        "id": "compiler-readonly-contextual-source-projection",
+        "patch": "compiler-readonly-contextual-source-projection.patch",
+        "sha256": "0101824e039123fd94452c55daaaded18167267f9836389d605086d1e74a429f"
+      },
+      {
+        "id": "compiler-contextual-optional-map-owner",
+        "patch": "compiler-contextual-optional-map-owner.patch",
+        "sha256": "388236ff6db12cf2ea02ed52df80e0957fa4ae1710b0a740dd5db74cbd1ae9d1"
+      },
+      {
+        "id": "compiler-contextual-new-value-object-any",
+        "patch": "compiler-contextual-new-value-object-any.patch",
+        "sha256": "9946c3d99b06abca614fbcaa90a9ac6d882b093c6546f80d993f8be9fc436709"
+      },
+      {
+        "id": "compiler-external-object-field-literal-type",
+        "patch": "compiler-external-object-field-literal-type.patch",
+        "sha256": "fe7118e48b29b2183fd4293bb23b2da2212f5211b30f13af39dd918b7038df63"
+      },
+      {
+        "id": "compiler-private-json-read-flow",
+        "patch": "compiler-private-json-read-flow.patch",
+        "sha256": "f7450cb1857a5051ac4895c27f11d9ca5b8614163868ee1764fec67ae0821635"
+      },
+      {
+        "id": "compiler-record-computed-delete",
+        "patch": "compiler-record-computed-delete.patch",
+        "sha256": "ab01011310ba280544716fbb854bcc55fee7665387bfd799d813291a67294cce"
+      },
+      {
+        "id": "compiler-primitive-record-nullish-storage",
+        "patch": "compiler-primitive-record-nullish-storage.patch",
+        "sha256": "3bf3c7b22d726c4b6f38eb881ca7aea83dbb11b7f186eba285321bb5b8deec42"
+      },
+      {
+        "id": "compiler-erased-external-member-presence",
+        "patch": "compiler-erased-external-member-presence.patch",
+        "sha256": "41f0bc10a57c1ab32d932a13c81b93d2f735c9edaaac53c561ebc51e4d5a53bc"
+      },
+      {
+        "id": "compiler-interface-absence-refinement-heritage",
+        "patch": "compiler-interface-absence-refinement-heritage.patch",
+        "sha256": "66424d0fafd05a309bb73a2f4385128e265527a5e539c78af02f8cb599d661eb"
+      },
+      {
+        "id": "compiler-membership-test-presence",
+        "patch": "compiler-membership-test-presence.patch",
+        "sha256": "fd765af8a838ff382afe73debf4e2e1d39549ca7b54a40fdb226d1e67257b787"
+      },
+      {
+        "id": "compiler-regexp-capture-member-presence",
+        "patch": "compiler-regexp-capture-member-presence.patch",
+        "sha256": "378a57cf7bb87bf1658d129e412744c48c01791865672bcbafbd65bf0407229c"
+      },
+      {
+        "id": "compiler-defaulted-nullable-present-storage",
+        "patch": "compiler-defaulted-nullable-present-storage.patch",
+        "sha256": "2fae3e8559b82049666a8cd900e4a29f554482382f88bf47522ebcd84486f61c"
+      },
+      {
+        "id": "compiler-structural-member-view-assertion",
+        "patch": "compiler-structural-member-view-assertion.patch",
+        "sha256": "e3f3e239ad2c4889e564df21456fa5ec0d300991e9c5196c0a1b391d95e86c2c"
+      },
+      {
+        "id": "compiler-private-guarded-json-read-flow",
+        "patch": "compiler-private-guarded-json-read-flow.patch",
+        "sha256": "69fa8e0df693a62904323d858a98fe51dd8af6aaa6153d6ca5f2ef7f98235899"
+      },
+      {
+        "id": "compiler-contextual-tuple-element-array-literal",
+        "patch": "compiler-contextual-tuple-element-array-literal.patch",
+        "sha256": "7671f5b020b0ed09e358c5aa8ebf64a4523aa007c76916a78b02b6cc39849022"
+      },
+      {
+        "id": "compiler-finish-entity-construction-owner",
+        "patch": "compiler-finish-entity-construction-owner.patch",
+        "sha256": "2276aca307eed2259bdb1ea3137f621aeb565ec170c03c4806be92ff8f613490"
+      },
+      {
+        "id": "compiler-record-missing-key-falsiness-guard",
+        "patch": "compiler-record-missing-key-falsiness-guard.patch",
+        "sha256": "591ac0c8444ec8973095cbd1b12564604036a9226d3ccc4786b76ddcf6fd1543"
+      },
+      {
+        "id": "compiler-inferred-member-written-union",
+        "patch": "compiler-inferred-member-written-union.patch",
+        "sha256": "4e0557549d81e925ab43e163cd061564224c5ea57d87a2464291d2f886e5af91"
+      },
+      {
+        "id": "compiler-symbol-membership-variant-arm",
+        "patch": "compiler-symbol-membership-variant-arm.patch",
+        "sha256": "03ab2079a4035fef44a6bbafdb662db109f7b1f47886c22f609d6922cfd2f046"
+      },
+      {
+        "id": "compiler-numeric-enum-string-conversion",
+        "patch": "compiler-numeric-enum-string-conversion.patch",
+        "sha256": "ae8ba1319364e05b5f229d3dda15a15a8110c632ad3657c5de5a1b59f224ec4f"
+      },
+      {
+        "id": "compiler-inherited-alias-reference-representation",
+        "patch": "compiler-inherited-alias-reference-representation.patch",
+        "sha256": "f4a6d558dff6861711348dd6c8a0553d0fdd15ec40031f8a56362f3db10a90cd"
+      },
+      {
+        "id": "compiler-private-record-forwarded-reads",
+        "patch": "compiler-private-record-forwarded-reads.patch",
+        "sha256": "a627d6138a16a8964a09ff984ef439636f83d111973550fa317cb98dbfa95410"
+      },
+      {
+        "id": "compiler-guarded-indexed-nullable-member",
+        "patch": "compiler-guarded-indexed-nullable-member.patch",
+        "sha256": "39af02d1a83f3cdca42ab0c843b9660faa08d2223162c9ea8166a3115980b509"
+      },
+      {
+        "id": "compiler-loop-bound-indexed-element-member",
+        "patch": "compiler-loop-bound-indexed-element-member.patch",
+        "sha256": "145c9f1cd24d89af939b992c70dbe621f4bbd181cba18486c4d151b639a92cda"
+      },
+      {
+        "id": "compiler-checked-derived-member-read",
+        "patch": "compiler-checked-derived-member-read.patch",
+        "sha256": "e931613ede280463c98560c37b3f3819871e949f491dc83eeecb1e21e5b71830"
+      },
+      {
+        "id": "compiler-structural-value-carrier",
+        "patch": "compiler-structural-value-carrier.patch",
+        "sha256": "25a6e4beb1df63018a1dd7d1a2446fbf834e3e736ea0acad6e6459b13167b281"
+      },
+      {
+        "id": "compiler-single-carrier-union-member",
+        "patch": "compiler-single-carrier-union-member.patch",
+        "sha256": "63b092e04423d5df5692b68ec65a4a6b464ef26f3840d4386c18995b58b134b5"
+      },
+      {
+        "id": "compiler-inherited-callable-initializer-qualification",
+        "patch": "compiler-inherited-callable-initializer-qualification.patch",
+        "sha256": "c2eea4d061e189620cfb71335e15ef85fce24fe71d1c8b6725a9fb245c1f7eb7"
+      },
+      {
+        "id": "compiler-self-returning-array-iterable-lifetime",
+        "patch": "compiler-self-returning-array-iterable-lifetime.patch",
+        "sha256": "b4ca431185b332354a76a73a34582e02240dcc9286d3828583d7615c645f5f0a"
+      },
+      {
+        "id": "compiler-shared-reference-cells",
+        "patch": "compiler-shared-reference-cells.patch",
+        "sha256": "09962470833600196748e2955962ec8a19673d1fb9005b6f47c82bed9bb5cb32"
+      },
+      {
+        "id": "compiler-inherited-callable-declaration-owner",
+        "patch": "compiler-inherited-callable-declaration-owner.patch",
+        "sha256": "fc98f4858d4cc1f7329bbd906bab057847cb3f7c283df2e2f3ccad2606db2bc8"
+      },
+      {
+        "id": "compiler-checked-record-member-owner",
+        "patch": "compiler-checked-record-member-owner.patch",
+        "sha256": "34e82ebcffb91dbd995054ef6548f4e88d3f44b1f04f37bbabbc8467e3303b1d"
+      },
+      {
+        "id": "compiler-private-json-record-graph-reads",
+        "patch": "compiler-private-json-record-graph-reads.patch",
+        "sha256": "8546de0b8204501adefb7c7d01adae6b6c56242bf38146774394dd9e741017b7"
+      },
+      {
+        "id": "compiler-json-assertion-scalar-row",
+        "patch": "compiler-json-assertion-scalar-row.patch",
+        "sha256": "552a72253c68a66b043fa604af7135545012d8ee0b40e789597c6518fe793100"
+      },
+      {
+        "id": "compiler-symbol-own-presence",
+        "patch": "compiler-symbol-own-presence.patch",
+        "sha256": "695dd5568912c3d87080e836dc2738f17aedc9def76b42ef5857a4a5707b920d"
+      },
+      {
+        "id": "compiler-readonly-named-callable-views",
+        "patch": "compiler-readonly-named-callable-views.patch",
+        "sha256": "5fb75e2fc9b47274854cfda989f9fd6996edb158ace6a30f52bcc350aee482b4"
+      },
+      {
+        "id": "compiler-nullish-map-construction-and-presence",
+        "patch": "compiler-nullish-map-construction-and-presence.patch",
+        "sha256": "a12042c5fadf164d0b25101c3f004cd46d99ba7051dbb345ef078ee0e979d3db"
+      },
+      {
+        "id": "compiler-nullable-json-and-indexed-string-trim",
+        "patch": "compiler-nullable-json-and-indexed-string-trim.patch",
+        "sha256": "19dfb5e6a5c4ef6201cc23fe0dbdee53a2fbe2a9bb134fe0065bec4be20d2a12"
+      },
+      {
+        "id": "compiler-erased-array-selection-and-fill",
+        "patch": "compiler-erased-array-selection-and-fill.patch",
+        "sha256": "726eeaa6c62e2957869f8e8af77e10c6e061c2be4fb0a5764bfdea03352d3507"
+      },
+      {
+        "id": "compiler-erased-host-result-evidence",
+        "patch": "compiler-erased-host-result-evidence.patch",
+        "sha256": "48f15aa9758b5083566f989b3aaa8950392798c21a85570284af3449c64d5176"
+      },
+      {
+        "id": "compiler-lazy-nullish-fallback",
+        "patch": "compiler-lazy-nullish-fallback.patch",
+        "sha256": "064a676225f453911cfc53b7e419f46808b1262b5c9d9322a3060ccc2d731329"
+      },
+      {
+        "id": "compiler-structural-value-carrier-host-handle-read",
+        "patch": "compiler-structural-value-carrier-host-handle-read.patch",
+        "sha256": "793944e955f27c8c630e1181f9c94dc7340970feb77a0f73c33a2ed037cf1641"
+      },
+      {
+        "id": "compiler-refined-member-structural-row",
+        "patch": "compiler-refined-member-structural-row.patch",
+        "sha256": "f2304c73e78bef738ce8613f1651388cde98fd7089d43c616e9892fb0af9d48f"
+      }
+    ],
+    "buildCommand": "npm run build --silent",
+    "buildExitCode": 0,
+    "entrySha256": "20f07524c9dea54e5701b0ee030c164a46727a4954366aa10eeefbe6825be1f2"
+  },
+  "command": "CXX=/tmp/builder4-sdl-wgpu-oracle/record-cxx.py npm run sdl-wgpu:oracle",
+  "commandDirectory": "Frozen full 5f79108f tree reconstructed from exact seed and nine carried patches",
+  "results": {
+    "oracleExitCode": 0,
+    "nativeCxxExitCode": 0,
+    "compilerBuildExitCode": 0,
+    "initialZigSyntaxOracleExitCode": 1,
+    "explicitExpectations": 67,
+    "handleExpansionExpectations": 19,
+    "passed": 86,
+    "failed": 0,
+    "objectBytes": 49544,
+    "objectSha256": "4e3bcf5d9cae0602ab374aca832908ded26f8de208e2b3c5b23b5df6a7a6fc92",
+    "emittedHeaderSha256": "a592fcae77121b22bf4c5422e2f57668b72275975deb2e84c8dd1175f057bd4a"
+  },
+  "originalOracleChanged": false,
+  "actualNativeCompile": {
+    "command": [
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/build/tooling/zig-c++",
+      "-std=c++20",
+      "-fsyntax-only",
+      "-I",
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sdl-wgpu-5f79108f-tree/include",
+      "-D_REENTRANT",
+      "-I/usr/include/fribidi",
+      "-I/usr/include/libdrm",
+      "-I/usr/include/libdecor-0",
+      "-x",
+      "c++",
+      "/tmp/flight-cpp-sdl-wgpu-profile-StRh0X/sdl_wgpu.hpp"
+    ],
+    "cwd": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sdl-wgpu-5f79108f-tree",
+    "emittedHeaderSha256": "a592fcae77121b22bf4c5422e2f57668b72275975deb2e84c8dd1175f057bd4a",
+    "observationalWrapperOnly": true,
+    "argumentsUnchanged": false,
+    "verificationMode": "replace -fsyntax-only with explicit -c/-o to avoid Zig syntax-only cache rename failure; source/includes/language unchanged",
+    "effectiveCommand": [
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/build/tooling/zig-c++",
+      "-std=c++20",
+      "-c",
+      "-I",
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sdl-wgpu-5f79108f-tree/include",
+      "-D_REENTRANT",
+      "-I/usr/include/fribidi",
+      "-I/usr/include/libdrm",
+      "-I/usr/include/libdecor-0",
+      "-x",
+      "c++",
+      "/tmp/flight-cpp-sdl-wgpu-profile-StRh0X/sdl_wgpu.hpp",
+      "-o",
+      "/tmp/builder4-sdl-wgpu-oracle/actual-emitted-sdl-wgpu.o"
+    ],
+    "exitCode": 0
+  },
+  "sdl": {
+    "args": [
+      "pkg-config",
+      "--modversion",
+      "sdl3"
+    ],
+    "exitCode": 0,
+    "stdout": "3.4.2"
+  },
+  "expectationCountConvention": "67 original literal expectations plus19 handle-map expansions =86 checks, all retained and individually reported in per-expectation-results.json",
+  "newLimitsContract": {
+    "actualMaxTextureFunction": "inline double max_texture_size(flight::host_sdl::WgpuAdapter value) {\n  return value.limits.max_texture_dimension_2d;\n}",
+    "usesInvalidOptionalValueOr": false
+  },
+  "limitsProfileBindings": [
+    {
+      "headers": [
+        "flight/host_sdl/wgpu.hpp"
+      ],
+      "members": [
+        {
+          "parameters": [],
+          "propertyNullability": "non-null",
+          "propertyOwnership": "value",
+          "propertyResultType": "flight::host_sdl::WgpuSupportedLimits",
+          "sourceMember": "limits",
+          "targetName": "limits"
+        }
+      ],
+      "nullability": "non-null",
+      "ownership": "shared",
+      "sourceName": "GPUAdapter",
+      "space": "type",
+      "targetName": "flight::host_sdl::WgpuAdapter"
+    },
+    {
+      "headers": [
+        "flight/host_sdl/wgpu.hpp"
+      ],
+      "members": [
+        {
+          "parameters": [],
+          "propertyNullability": "non-null",
+          "propertyOwnership": "value",
+          "propertyResultType": "double",
+          "sourceMember": "maxTextureDimension2D",
+          "targetName": "max_texture_dimension_2d"
+        }
+      ],
+      "nullability": "non-null",
+      "ownership": "value",
+      "sourceName": "GPUSupportedLimits",
+      "space": "type",
+      "targetName": "flight::host_sdl::WgpuSupportedLimits"
+    }
+  ],
+  "initialFailure": {
+    "exitCode": 1,
+    "phase": "Real native compiler driver after syntax parsing",
+    "reason": "Zig -fsyntax-only attempted to rename an object that syntax-only mode did not create; FileNotFound cache rename. No C++ source diagnostic.",
+    "resolution": "Verification wrapper replaces only -fsyntax-only with -c and an explicit output object; same script/source/includes/standard. Actual compiler EXIT0 and ELF object retained.",
+    "sameEmittedHeaderAcrossAttempts": true,
+    "fullLogsRetained": true
+  },
+  "limits": [
+    "Native compilation only; no WGPU backend/device execution or package/SDK qualification.",
+    "Frozen B 5f79108f plus its exact118compiler patch stack; no later stack substitution or full B acceptance.",
+    "No binding, runtime, compiler, oracle, generated header, Types or pin edits in the carried product.",
+    "Initial failed syntax-only driver attempt is excluded from success; no setup skip counted as PASS."
+  ],
+  "proofArchive": {
+    "sha256": "34876f2a8a656ba8cac62f0c29639279bca683131ff16428a7350e6434cafedb",
+    "bytes": 631199,
+    "members": 147,
+    "scope": "Actual logs/argv/emitted header/ELF object, individual86checks, exact declared input/manifest/compiler patch digests and payloads; no B product carry"
+  },
+  "proofFiles": [
+    "freeze-receipt.txt",
+    "frozen-tree.json",
+    "compiler-input.json",
+    "compiler-build.log",
+    "preflight.json",
+    "prepare-compiler.mjs",
+    "record-cxx.py",
+    "report-expectations.mjs",
+    "initial-zig-syntax-oracle.log",
+    "initial-zig-syntax-actual-cxx-invocation.json",
+    "initial-zig-syntax-actual-emitted-sdl-wgpu.hpp",
+    "oracle-object-compile.log",
+    "actual-cxx-invocation.json",
+    "actual-emitted-sdl-wgpu.hpp",
+    "actual-emitted-sdl-wgpu.o",
+    "per-expectation-results.json",
+    "observed-results.json"
+  ]
+}
