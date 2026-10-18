@@ -326,7 +326,8 @@ class RowOwner {
     (void)present;
     symbol_cells_.insert_or_assign(
         key.identity(),
-        SymbolCell{cell,
+        SymbolCell{key,
+                   cell,
                    [cell]() -> bool {
                      auto& value = cell->get();
                      if constexpr (requires { value.has_value(); }) {
@@ -357,7 +358,7 @@ class RowOwner {
   // cell for every declared member whether or not the source wrote it. So the owner records the writes
   // the source performed, beside the cell rather than in it, and leaves the optional representation
   // alone: own presence is a recorded write, an engaged cell, or an attached dynamic value.
-  virtual void mark_symbol_written(const Symbol& key) { symbol_written_.insert(key.identity()); }
+  virtual void mark_symbol_written(const Symbol& key) { symbol_written_.insert_or_assign(key.identity(), key); }
 
   [[nodiscard]] virtual bool symbol_written(const Symbol& key) const {
     return symbol_written_.contains(key.identity());
@@ -404,7 +405,12 @@ class RowOwner {
   }
 
  private:
+  // Each entry RETAINS its symbol, as an object's own symbol-keyed property keeps its key alive. The maps are
+  // keyed on the symbol's identity address, and an address is an identity only while its symbol is alive: a
+  // retained key cannot die, so its address cannot be reused by another symbol that would then read this
+  // entry.
   struct SymbolCell final {
+    Symbol key;
     std::shared_ptr<RowCell> cell;
     std::function<bool()> present;
   };
@@ -414,7 +420,7 @@ class RowOwner {
   std::vector<std::string> named_order_;
   // Keyed on symbol identity, not on the description: two `Symbol(String("X"))` are two symbols.
   std::unordered_map<const void*, SymbolCell> symbol_cells_;
-  std::unordered_set<const void*> symbol_written_;
+  std::unordered_map<const void*, Symbol> symbol_written_;
 };
 
 template <typename Schema>

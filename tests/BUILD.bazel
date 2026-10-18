@@ -168,6 +168,13 @@ cc_test(
 )
 
 cc_test(
+    name = "runtime_hierarchy_reuse_test",
+    srcs = ["runtime_hierarchy_reuse_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "allocation_descriptor_static_init_test",
     srcs = ["allocation_descriptor_static_init_test.cpp"],
     size = "small",

@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <any>
+#include <memory>
 #include <mutex>
 #include <optional>
 #include <type_traits>
@@ -22,10 +23,40 @@ template <typename Schema>
   return value.shared_owner().get();
 }
 
+// The allocation a node identity stands for, held weakly. An address names a node only while that node is
+// alive: once it dies its storage may be reused by a new node, and an entry keyed by the bare address would
+// then answer for an object it never described. Every entry keeps this witness, and a lookup accepts it only
+// when the witness is the SAME allocation as the node asking (same control block), never by address alone.
+template <typename Value>
+[[nodiscard]] std::weak_ptr<void> node_liveness(const std::shared_ptr<Value>& value) noexcept {
+  return std::static_pointer_cast<void>(std::const_pointer_cast<std::remove_const_t<Value>>(value));
+}
+
+template <typename Schema>
+[[nodiscard]] std::weak_ptr<void> node_liveness(const flight::StructuralRef<Schema>& value) noexcept {
+  return std::static_pointer_cast<void>(value.shared_owner());
+}
+
+template <typename Source>
+[[nodiscard]] bool same_node_allocation(const std::weak_ptr<void>& witness, const Source& source) noexcept {
+  const auto current = node_liveness(source);
+  return !witness.expired() && !witness.owner_before(current) && !current.owner_before(witness);
+}
+
+struct RuntimeParentEntry final {
+  std::weak_ptr<void> child;
+  std::any parent;
+};
+
+struct RuntimeChildrenEntry final {
+  std::weak_ptr<void> parent;
+  std::vector<const void*> children;
+};
+
 struct RuntimeHierarchy final {
   std::mutex mutex;
-  std::unordered_map<const void*, std::any> parents;
-  std::unordered_map<const void*, std::vector<const void*>> children;
+  std::unordered_map<const void*, RuntimeParentEntry> parents;
+  std::unordered_map<const void*, RuntimeChildrenEntry> children;
 };
 
 inline RuntimeHierarchy& runtime_hierarchy() {
@@ -136,8 +167,11 @@ inline Child add_node_child(const Target& target, const Child& child) {
   const auto target_id = detail::node_identity(target);
   const auto child_id = detail::node_identity(child);
   const std::lock_guard lock(hierarchy.mutex);
-  hierarchy.parents.insert_or_assign(child_id, target);
-  hierarchy.children[target_id].push_back(child_id);
+  hierarchy.parents.insert_or_assign(child_id, detail::RuntimeParentEntry{detail::node_liveness(child), target});
+  auto& children = hierarchy.children[target_id];
+  // A list left by a dead node at this address describes that node, not this one.
+  if (!detail::same_node_allocation(children.parent, target)) children = {detail::node_liveness(target), {}};
+  children.children.push_back(child_id);
   return child;
 }
 
@@ -148,7 +182,12 @@ inline std::optional<Source> get_node_parent(const Source& source) {
   const std::lock_guard lock(hierarchy.mutex);
   const auto found = hierarchy.parents.find(detail::node_identity(source));
   if (found == hierarchy.parents.end()) return std::nullopt;
-  if (const auto* parent = std::any_cast<Source>(&found->second)) return *parent;
+  if (!detail::same_node_allocation(found->second.child, source)) {
+    // The entry belonged to a node that died at this address; it is not this node's parent.
+    hierarchy.parents.erase(found);
+    return std::nullopt;
+  }
+  if (const auto* parent = std::any_cast<Source>(&found->second.parent)) return *parent;
   return std::nullopt;
 }
 
