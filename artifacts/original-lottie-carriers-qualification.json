@@ -1,0 +1,90 @@
+{
+  "schema": "flight-cpp-original-lottie-carriers-qualification/1",
+  "status": "preparation-qualified; original-public-Lottie-native-still-incomplete",
+  "compiler": {
+    "rawPin": "806d257d2f4100de745cc97340e61c2f301b0f24",
+    "patch": "source-patches/compiler-original-lottie-array-and-object-carriers.patch",
+    "patchSha256": "7f3817751956daf842777ad49c83cfe4d3c7bf789fb83f61e1607e4aabe4671d",
+    "compilerPatches": 125,
+    "totalPatches": 327,
+    "orderedApplyReverseRawClean": true,
+    "candidateMatchesSavedPrototype": true,
+    "productionStrictExit": 0,
+    "ownedStrictExit": 0
+  },
+  "verification": {
+    "newFocused": {
+      "tests": 5,
+      "pass": 5,
+      "nativeChecks": 24,
+      "skips": 0
+    },
+    "coherentSerializedSuite": {
+      "distinctFiles": 9,
+      "distinctTests": 50,
+      "pass": 50,
+      "skipped": 0,
+      "initialSerializedAttempt": "49PASS1nativeSIGABRT; no diagnostic; not treated as pass",
+      "sameInputIsolatedRetry": {
+        "file": "cppGenericArrayPropertyPredicate.test.ts",
+        "tests": 7,
+        "pass": 7,
+        "exit": 0,
+        "includesPreviouslyAbortedNative": true
+      },
+      "logs": [
+        "/tmp/builder5-lottie-body/array-fresh-final-serialized-focused.log",
+        "/tmp/builder5-lottie-body/array-fresh-generic-isolated-retry.log"
+      ],
+      "note": "50 distinct tests covered by successful runs at unchanged compiler/runtime source; initial aborted attempt retained and not inferred as successful"
+    },
+    "historicalGuardControl": {
+      "baseline124": "3PASS1FAIL: nullable narrowed binding expected refusal is not raised",
+      "candidate125": "same3PASS1FAIL",
+      "newFailures": 0,
+      "countedAsPass": false
+    },
+    "sourcePatchAutomation": {
+      "pass": 2,
+      "fail": 0
+    }
+  },
+  "semantics": [
+    "lazy actual readonly row-array payload uses original handle; absent authored [] allocates once freshly",
+    "fresh plain object boxes exact inferred source owner once; no existing-owner erasure rewrite",
+    "anonymous owner captures only generic parameters referenced in actual emitted field storage, nested dependent owners retained",
+    "explicit nullable Partial cell initializer value ?? null excludes supplied undefined while original cell omission remains separate"
+  ],
+  "wholeOriginal": {
+    "bodyChanges": false,
+    "omittedBodies": 0,
+    "modules": [
+      "packages/scene2d-formats/src/lottieDocument.ts",
+      "packages/types/src/ImportDiagnostic.ts",
+      "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+    ],
+    "sourceSha256": "fb768b9622f2ade7301341f674db8cd64e00d3e39f09cd9aaf7aac1f1780a55b",
+    "freshGraphModules": 1467,
+    "latestActualCompile": "FAIL exit1 with2remainingerrors; fourexpressionerrors absent",
+    "log": "/tmp/builder5-lottie-body/array-fresh-final-public-native-build.log",
+    "nativeCasesRun": 0,
+    "denominator": 32,
+    "remaining": [
+      "Node merged-row to nativeNode recovery in original revision callee",
+      "Any(optional<Ref<LottieTransform>>) in original expression reporting"
+    ]
+  },
+  "setupFailuresExcluded": [
+    "parallel native suite ENOSPC/NoSpaceLeft, SIGABRT and timeout; never counted pass",
+    "scratch normal repair script initially restored stale readonly124Lottie header; wrong-input compile excluded, script corrected and freshactualcompile ran"
+  ],
+  "limits": [
+    "No SDK or duplicate Types worker",
+    "No original public/header/package/Exact21promotion",
+    "Next optional nativeRef runtime fix separately15checks/CtestPASS",
+    "Approved Node type-only mapped accessor candidate has exact tscProgram JS identity/call target evidence; native capability proof pending"
+  ],
+  "checkedCodeCommit": "9021f9ea",
+  "sameCodeBeforeRebase": "f4f8b3fd",
+  "runtimeCodeCommit": "8d730093"
+}
