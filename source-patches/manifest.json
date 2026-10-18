@@ -4606,6 +4606,23 @@
       "expires": "when upstream lowers a typed Record read of an erased value at a missing key to undefined (docs/compiler-requests/typed-record-missing-key-read.md).",
       "appliedOn": "2026-10-18",
       "verification": "New cppTypedRecordMissingKey.test.ts: 2 pass (indexed and named erased forms use value_or(Any(undefined)); a concrete Record value type keeps .value()). The patch applies at its stack position: all 72 compiler patches in order, stacked build exit 0, focused cppErasedArrayLengthIndex still 5 pass. Scratch emission is exact and a runtime consumer proves the behavior: missing, present-undefined, present-null and empty-array keys set no counter and do not throw, a present array counts its size, and a missing named read (and a present undefined named read) is undefined. Committed counter consumer asserts the missing-key and present-undefined/null cases. A flight::NamedProperties view read (a cast binding to Record lowers to one) keeps its keyed `.get(...)`, because the view already returns Any, while only a flight::Record dictionary read takes value_or. The first generation exposed both a value_or-on-Any and a member-access fallback in the view branch; the corrected branch is covered by a dedicated test. Corrective generation and the -j2 survey follow."
+    },
+    {
+      "id": "compiler-nullable-element-dual-sentinel",
+      "dependency": "flight-compiler",
+      "patch": "compiler-nullable-element-dual-sentinel.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "diagnostic",
+      "refusal": "emitted header diagnostic: incompatible operand types ('value_type' (aka 'std::optional<std::shared_ptr<flight::types::Attachment2D>>') and 'std::variant<flight::Ref<flight::types::Attachment2D>, flight::Null, flight::Undefined>') at skeleton2d_animation_target.hpp:217 -- a nullable array element (reference or null) written into a slot that also admits undefined",
+      "rewrite": "A single-sentinel union (stored as one std::optional) assigned to, or selected in a conditional branch for, a dual-sentinel destination is lifted into the destination's own arms using the SOURCE union's sentinel: an empty optional of `T | null` selects the Null arm, an empty optional of `T | undefined` selects the Undefined arm, and an engaged optional selects the value arm with the same reference. The lift is emitted at the assignment RHS (except when the RHS is a conditional, whose branches are adapted individually) and in conditional branches.",
+      "equivalence": "JavaScript's table[i] is the element itself: an empty optional stands for exactly the sentinel the element's own union declares (null or undefined), never the other, and a present element is the same reference, not a copy. The destination's other sentinel stays reachable only from source-level undefined code, which this lift never fabricates. Array identity and the live storage are untouched.",
+      "whyNotUpstreamFirst": "The runtime represents both carriers already; the missing piece is the contextual lift between them. Upstream receives docs/compiler-requests/nullable-array-element-into-dual-sentinel-slot.md.",
+      "unblocks": "The 18-header nullable-array-element cluster (other-52e846a6): the skeleton2d animation target binder and the timeline/slot handlers that reach it (DragonBones and Spine), once regenerated.",
+      "expires": "when upstream lifts a single-sentinel optional into a dual-sentinel carrier using the source union's own sentinel (docs/compiler-requests/nullable-array-element-into-dual-sentinel-slot.md).",
+      "appliedOn": "2026-10-18",
+      "verification": "New cppNullableElementDualSentinel.test.ts: 3 pass (nullable element via conditional and assignment lifts with the Null arm; an undefined-only element lifts to the Undefined arm; a required nullable optional destination keeps the direct write). The patch applies at its stack position: all compiler patches in order, stacked build exit 0, union-plan regressions pass. Scratch emission is exact and a runtime consumer proves the behavior: present element keeps the same owner, null element and out-of-range select Null, and the if/else path matches. Scoped regeneration and the public timeline/slot consumer are pending a generation slot."
     }
   ]
 }

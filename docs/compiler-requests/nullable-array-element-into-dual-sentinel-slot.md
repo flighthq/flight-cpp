@@ -73,3 +73,17 @@ This request covers `other-52e846a6` and its exact 18 rows in
 animation target; the remaining rows reach it through skeleton2d helpers and DragonBones/Spine
 timeline handlers. It is distinct from array-owner or sampling-easing issues in
 [`animation-readonly-row-array-carriers.md`](animation-readonly-row-array-carriers.md).
+
+## Carried semantic patch
+
+Source patch `compiler-nullable-element-dual-sentinel` lifts a single-sentinel union (one
+`std::optional`) into a dual-sentinel destination using the SOURCE union's own sentinel: `T | null`
+maps an empty optional to the Null arm, `T | undefined` to the Undefined arm, and an engaged optional
+to the value arm with the same reference. It hooks the assignment RHS (a conditional adapts its own
+branches) and each conditional branch; the destination's other sentinel is never fabricated.
+
+Measured: new `cppNullableElementDualSentinel.test.ts` 3 pass; the patch applies at its stack
+position (all compiler patches in order, stacked build green); a runtime consumer proves a present
+element keeps the same owner, a null element and an out-of-range index select Null, and the if/else
+form matches. Scoped regeneration and the public timeline/slot consumer are pending a generation
+slot.

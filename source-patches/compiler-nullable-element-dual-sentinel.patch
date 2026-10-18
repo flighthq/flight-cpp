@@ -1,0 +1,159 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 0e920ac..06c57e7 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -4023,7 +4023,25 @@ function emitExpression(
+         expression.operator === '='
+           ? emitCppForeignAnonymousPropertyObjectCpp(expression.left, expression.right, context)
+           : undefined;
++      // The destination carrier may represent both sentinels while the assigned value is a single
++      // optional; lift it into the destination's own arms rather than writing the optional into a variant.
++      const assignmentDestUnion =
++        expression.operator === '=' && assignmentType && !erasedIndexNamedProperty && !exactCallableFieldAssignment
++          ? getIrUnionTypeCpp(assignmentType, context, new Set())
++          : undefined;
++      const assignmentDestPlan = assignmentDestUnion
++        ? getCppUnionRepresentationPlan(assignmentDestUnion, context)
++        : undefined;
++      const liftedAssignmentRight =
++        assignmentDestUnion &&
++        assignmentDestPlan?.kind === 'dualSentinelVariant' &&
++        // A conditional adapts its own branches to the destination; lifting the whole conditional
++        // would wrap a value whose branches were already reconciled.
++        expression.right.kind !== 'conditional'
++          ? emitCppSingleSentinelIntoDualSentinelCpp(expression.right, assignmentDestUnion, context)
++          : undefined;
+       const right =
++        liftedAssignmentRight ??
+         foreignAnonymousObject ??
+         emitExpression(
+           expression.right,
+@@ -30652,6 +30670,45 @@ function emitCppRequiredRecordKeyCpp(
+   return emitExpression(expression, context, targetType);
+ }
+ 
++// A source union with ONE sentinel is stored as a single std::optional: its empty state means that
++// sentinel and nothing else. A destination carrier that represents BOTH sentinels cannot take the
++// optional, because lifting it must name which arm the absence becomes -- null for a `T | null`
++// element, undefined for a `T | undefined` one -- and guessing or collapsing the two would change the
++// source's domain. Lift it without copying the owner: an engaged optional selects the value arm with
++// the same reference, an empty one selects exactly the source's own sentinel arm. The other sentinel
++// stays reachable only from source-level undefined code, which this conversion never produces.
++function emitCppSingleSentinelIntoDualSentinelCpp(
++  expression: Readonly<IrExpression>,
++  expectedUnion: Readonly<Extract<IrType, { kind: 'union' }>>,
++  context: EmitContext,
++): string | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return undefined;
++  const sourceType = getIrExpressionTypeEvidenceCpp(expression, context);
++  const sourceUnion = sourceType ? getIrUnionTypeCpp(sourceType, context, new Set()) : undefined;
++  const sourcePlan = sourceUnion ? getCppUnionRepresentationPlan(sourceUnion, context) : undefined;
++  if (!sourceUnion || sourcePlan?.kind !== 'optionalSingle' || sourcePlan.valueSlots.length !== 1) return undefined;
++  const nullAbsence = sourcePlan.sentinels.null !== 'absent';
++  const undefinedAbsence = sourcePlan.sentinels.undefined !== 'absent';
++  if (nullAbsence === undefinedAbsence) return undefined;
++  const expectedPlan = getCppUnionRepresentationPlan(expectedUnion, context);
++  if (expectedPlan.kind !== 'dualSentinelVariant') return undefined;
++  const sentinel = nullAbsence ? 'null' : 'undefined';
++  const valueName = getGeneratedTargetName('liftedOptional', context);
++  const valueSlot = sourcePlan.valueSlots[0]!;
++  const present = emitCppUnionValueConstruction(
++    `${valueName}.value()`,
++    valueSlot.targetType,
++    expectedUnion,
++    expectedPlan.kind,
++    context,
++  );
++  const absence = emitCppUnionSentinelConstruction(sentinel, expectedUnion, expectedPlan.kind, context);
++  const resultType = emitUnionTypeCpp(expectedUnion, context);
++  context.includes.add('optional');
++  context.includes.add('variant');
++  return `([&]() -> ${resultType} { auto ${valueName} = ${emitExpression(expression, context)}; if (!${valueName}.has_value()) return ${absence}; return ${present}; }())`;
++}
++
+ function emitCppConditionalBranchCpp(
+   expression: Readonly<IrExpression>,
+   context: EmitContext,
+@@ -30659,6 +30716,10 @@ function emitCppConditionalBranchCpp(
+ ): string {
+   const union = expectedType ? getIrUnionTypeCpp(expectedType, context, new Set()) : undefined;
+   const plan = union ? getCppUnionRepresentationPlan(union, context) : undefined;
++  if (union && plan?.kind === 'dualSentinelVariant') {
++    const lifted = emitCppSingleSentinelIntoDualSentinelCpp(expression, union, context);
++    if (lifted) return lifted;
++  }
+   if (plan?.kind !== 'optionalSingle') return emitExpression(expression, context, expectedType);
+   const slot = plan.valueSlots[0];
+   const freshMappedArray =
+diff --git a/packages/compiler-backend-cpp/src/cppNullableElementDualSentinel.test.ts b/packages/compiler-backend-cpp/src/cppNullableElementDualSentinel.test.ts
+new file mode 100644
+index 0000000..6ae0ab7
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppNullableElementDualSentinel.test.ts
+@@ -0,0 +1,66 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile(
++    '/flight/packages/example/src/nullableElementDualSentinel.ts',
++    source,
++    ts.ScriptTarget.Latest,
++    true,
++  );
++  const result = lowerTypeScriptSource(sourceFile, {
++    packageName: '@flighthq/example',
++    upstreamDirectory: '/flight',
++  });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++it('lifts a nullable array element into a dual-sentinel destination', () => {
++  const output = emit(`
++    interface Attachment { name: string }
++    interface Slot { attachment?: Attachment | null }
++    export function bind(slot: Slot, table: readonly (Attachment | null)[], index: number): void {
++      slot.attachment = index >= 0 && index < table.length ? table[index] : null;
++    }
++    export function bindIf(slot: Slot, table: readonly (Attachment | null)[], index: number): void {
++      if (index >= 0 && index < table.length) slot.attachment = table[index];
++      else slot.attachment = null;
++    }
++  `);
++
++  // The element's empty optional means NULL (the element union carries null), so it lifts into the
++  // Null arm; a present element keeps the same reference in the value arm.
++  expect(output).toContain('has_value()');
++  expect(output).toContain('std::in_place_type<flight::Null>');
++  expect(output).toContain('std::in_place_type<flight::Ref<Attachment>>');
++  expect(output).not.toContain('attachment = table.element(index)');
++});
++
++it('maps an undefined-only element to the undefined arm, never to null', () => {
++  const output = emit(`
++    interface Attachment { name: string }
++    interface Slot { attachment?: Attachment | null }
++    export function bindMaybe(slot: Slot, table: readonly (Attachment | undefined)[], index: number): void {
++      if (index >= 0 && index < table.length) slot.attachment = table[index];
++    }
++  `);
++
++  expect(output).toContain('std::in_place_type<flight::Undefined>');
++  expect(output).not.toContain('std::in_place_type<flight::Null>');
++});
++
++it('leaves an optional destination as an optional', () => {
++  const output = emit(`
++    interface Attachment { name: string }
++    export function bind(slot: { attachment: Attachment | null }, table: readonly (Attachment | null)[], index: number): void {
++      if (index >= 0 && index < table.length) slot.attachment = table[index];
++    }
++  `);
++
++  expect(output).toContain('table.element(index)');
++  expect(output).not.toContain('lifted_optional');
++});
