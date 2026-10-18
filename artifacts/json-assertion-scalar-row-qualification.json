@@ -2,7 +2,7 @@
   "schema": "flight-cpp-json-assertion-scalar-row-qualification/1",
   "flightRevision": "a62784923f3be814463286c9fb28edfe6ab15789",
   "compilerRevision": "806d257d2f4100de745cc97340e61c2f301b0f24",
-  "compilerPatches": 110,
+  "compilerPatches": 111,
   "orderedApplyFromRawClean": "pass",
   "strictBuild": "pass",
   "focused": {
@@ -137,7 +137,13 @@
         "flight/scene2d_formats/lottie_document.hpp",
         "flight/scene2d_formats/rive_requirements.hpp",
         "flight/scene2d_formats/svg_text_element.hpp"
-      ]
+      ],
+      "rebasedGeneratedCommit": "01410777",
+      "changedHeaderSha256": {
+        "flight/scene2d_formats/lottie_document.hpp": "ce48969502e174c78e0c9cc4a697b39e402d377274069a663a35a571b00f788d",
+        "flight/scene2d_formats/rive_requirements.hpp": "9787c305aed870b92e70c538debef99b722a7e7684c90aef3f51979d3ab8feab",
+        "flight/scene2d_formats/svg_text_element.hpp": "c5631689e3ebe7589d13de874d754f63b31ae8f84af7778ea42e34b02a42c19a"
+      }
     },
     "publicConsumer": {
       "originalFunction": "createScene2DFromLottieDocumentWithRegistry",
@@ -342,5 +348,19 @@
       "headerCheck": "Obsolete no-SDL setup check gracefully stopped; partial report excluded from product outcomes."
     },
     "globalOrPackagePassClaim": false
+  },
+  "postRebaseCompatibility": {
+    "compilerPatches": 111,
+    "totalSourcePatches": 313,
+    "orderedApplyFromRawClean": "pass",
+    "strictBuild": "pass",
+    "strictExit": 0,
+    "focusedFiles": 5,
+    "focusedPass": 103,
+    "focusedFail": 0,
+    "focusedSkipped": 0,
+    "qualifiedCompilerRuntimeAndGeneratedContentHashesUnchanged": true,
+    "additionalSdkGeneration": false,
+    "installedMeasurementRemainsFrozenCompilerPatches": 110
   }
 }

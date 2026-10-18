@@ -761,3 +761,10 @@ header-ledger promotions and no package/global pass. The focused compiler proof
 remains valid; omitted helpers, callbacks/structured JSON operations and
 Aseprite's nominal union require their own work. No original function was
 extracted or stubbed to manufacture a public-consumer pass.
+
+After the clean rebase onto the codec preparation, all **111 compiler patches**
+apply from the clean raw pin, the strict build passes and **103/103 focused tests**
+pass without skips. The qualified JSON patch, runtime helper and three generated
+headers are byte-identical across that rebase. This is current compiler/runtime
+compatibility proof; the installed 21-header/public-consumer measurements remain
+those of the frozen 110-patch generation. No additional SDK run was performed.
