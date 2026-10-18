@@ -119,6 +119,19 @@ class JsonArray {
     return *this;
   }
 
+  // Insert/replace/erase keep the SAME array owner and its order; identity never changes.
+  JsonArray& insert(size_type index, JsonValue value) {
+    if (index > values_.size()) index = values_.size();
+    values_.insert(values_.begin() + static_cast<std::ptrdiff_t>(index), std::move(value));
+    return *this;
+  }
+
+  bool erase(size_type index) {
+    if (index >= values_.size()) return false;
+    values_.erase(values_.begin() + static_cast<std::ptrdiff_t>(index));
+    return true;
+  }
+
  private:
   std::vector<JsonValue> values_;
 };
@@ -139,6 +152,15 @@ class JsonObject {
     if (found == entries_.end()) entries_.emplace_back(std::move(key), std::move(value));
     else found->second = std::move(value);
     return *this;
+  }
+
+  // Removes one own key, preserving the order of the remaining entries; the object identity is
+  // unchanged.
+  bool erase(const String& key) {
+    const auto found = find(key);
+    if (found == entries_.end()) return false;
+    entries_.erase(found);
+    return true;
   }
 
   [[nodiscard]] std::optional<JsonValue> get(const String& key) const {

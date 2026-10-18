@@ -4692,6 +4692,32 @@ static void test_json_scalar_any_receiver_projection() {
         "a number or boolean receiver boxes to no own properties: absent, not a throw");
 }
 
+// Same-owner JSON storage mutation: insert/replace/erase preserve the owner identity and order.
+static void test_json_mutable_storage() {
+  const auto object = flight::Json::parse(flight::String("{\"a\":1,\"b\":2}"));
+  const auto owner = object.object_owner();
+  check(static_cast<bool>(owner), "the parsed object keeps one owner");
+  owner->set(flight::String("c"), flight::Json::parse(flight::String("3")));
+  owner->set(flight::String("a"), flight::Json::parse(flight::String("9")));
+  check(owner->get(flight::String("a"))->as_number() == 9.0,
+        "an own key can be added and a value replaced on the same parsed object");
+  const auto before = flight::Json::stringify(object);
+  check(before == flight::String("{\"a\":9,\"b\":2,\"c\":3}"),
+        "insertion order is preserved after add/replace");
+  check(owner->erase(flight::String("b")) &&
+            flight::Json::stringify(object) == flight::String("{\"a\":9,\"c\":3}"),
+        "erase preserves the order of the remaining entries on the same owner");
+  check(!owner->erase(flight::String("missing")), "erasing a missing key reports false");
+
+  const auto array_value = flight::Json::parse(flight::String("[1,2]"));
+  const auto array = array_value.array_owner();
+  array->insert(1, flight::Json::parse(flight::String("5")));
+  check(array->size() == 3 && (*array)[1].as_number() == 5.0,
+        "insert keeps the same array identity with the new element in order");
+  check(array->erase(0) && array->size() == 2 && (*array)[0].as_number() == 5.0,
+        "erase keeps the same array identity and the remaining order");
+}
+
 int main() {
   test_array();
   test_array_get_optional_index();
@@ -4713,6 +4739,7 @@ int main() {
   test_binary_data();
   test_base64();
   test_json_record();
+  test_json_mutable_storage();
   test_json_owner_shared_view();
   test_json_scalar_cell();
   test_json_scalar_member_projection();
