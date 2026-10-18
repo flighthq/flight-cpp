@@ -20,22 +20,22 @@ namespace flight::skeleton2d_formats {
 
 using flight::shortcut::parse;
 
-inline bool is_spine_json_flight_value_function_is_u000053_pine_u00004a_son_flight_private_b16acba8c43d94d4(flight::Record<flight::String, flight::Any> record) {
-  return ((flight::is_array(record.get(flight::String("bones")).value_or(flight::Any(flight::undefined))) || (([&]() { const auto& presence_operand = record.get(flight::String("skeleton")).value_or(flight::Any(flight::undefined)); return !presence_operand.is_null(); }()) && (record.get(flight::String("skeleton")).value_or(flight::Any(flight::undefined)).type_of() == flight::String("object")))) && !flight::is_array(record.get(flight::String("armature")).value_or(flight::Any(flight::undefined))));
+inline bool is_spine_json_flight_value_function_is_u000053_pine_u00004a_son_flight_private_b16acba8c43d94d4(flight::NamedProperties record) {
+  return ((flight::is_array(record.get(flight::String("bones"))) || (([&]() { const auto& presence_operand = record.get(flight::String("skeleton")); return !presence_operand.is_null(); }()) && (record.get(flight::String("skeleton")).type_of() == flight::String("object")))) && !flight::is_array(record.get(flight::String("armature"))));
 }
 
-inline void count_section_flight_value_function_count_u000053_ection_flight_private_b16acba8c43d94d4(flight::Map<flight::String, double> counts, flight::Record<flight::String, flight::Any> record, flight::String json_key, flight::String kind) {
+inline void count_section_flight_value_function_count_u000053_ection_flight_private_b16acba8c43d94d4(flight::Map<flight::String, double> counts, flight::NamedProperties record, flight::String json_key, flight::String kind) {
   auto value = record.get(json_key);
-  if ((!value.has_value() || !value.value().has_value())) {
+  if ((([&]() { const auto& presence_operand = value; return presence_operand.is_undefined(); }()) || ([&]() { const auto& presence_operand = value; return presence_operand.is_null(); }()))) {
     return;
   }
   if (flight::is_array(value)) {
-    if ((static_cast<double>(value.value().array_size()) > 0.0)) {
-      counts.set(kind, static_cast<double>(value.value().array_size()));
+    if ((static_cast<double>(value.array_size()) > 0.0)) {
+      counts.set(kind, static_cast<double>(value.array_size()));
     }
   }
   else {
-    if ((([&]() -> flight::String { const auto& typeof_value = value; if (!typeof_value.has_value()) return flight::String("undefined"); return typeof_value.value().type_of(); }()) == flight::String("object"))) {
+    if ((value.type_of() == flight::String("object"))) {
       flight::Array<flight::String> keys = ([&]() { const auto named_view = flight::named_properties(value); const auto named_keys = named_view.keys(); return flight::Array<flight::String>(named_keys.begin(), named_keys.end()); }());
       if ((static_cast<double>(keys.size()) > 0.0)) {
         counts.set(kind, static_cast<double>(keys.size()));
@@ -79,7 +79,7 @@ inline void count_animation_timelines_flight_value_function_count_u000041_nimati
     tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_b16acba8c43d94d4(counts, anim.get(flight::String("bones")), flight::types::spine_json_timeline_kind->bone);
     tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_b16acba8c43d94d4(counts, anim.get(flight::String("slots")), flight::types::spine_json_timeline_kind->slot);
     tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_b16acba8c43d94d4(counts, anim.get(flight::String("deform")), flight::types::spine_json_timeline_kind->deform);
-    tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_b16acba8c43d94d4(counts, anim.get(flight::String("drawOrder")), flight::types::spine_json_timeline_kind->draw_order);
+    tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_b16acba8c43d94d4(counts, ([&]() -> flight::Any { const auto named_coalesce_value = anim.get(flight::String("drawOrder")); if (!named_coalesce_value.is_nullish()) return named_coalesce_value; return anim.get(flight::String("draworder")); }()), flight::types::spine_json_timeline_kind->draw_order);
     tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_b16acba8c43d94d4(counts, anim.get(flight::String("events")), flight::types::spine_json_timeline_kind->event);
     tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_b16acba8c43d94d4(counts, anim.get(flight::String("ik")), flight::types::spine_json_timeline_kind->ik);
     tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_b16acba8c43d94d4(counts, anim.get(flight::String("path")), flight::types::spine_json_timeline_kind->path);
@@ -92,7 +92,7 @@ inline std::optional<flight::Map<flight::String, double>> collect_spine_json_sec
   try {
     (doc = flight::Json::parse(json));
   }
-  catch (...) {
+  catch (const flight::JsonSyntaxError&) {
     return std::nullopt;
   }
   if ((([&]() { const auto& presence_operand = doc; return presence_operand.is_null(); }()) || ([&]() { const auto& typeof_json_value = doc; return !((typeof_json_value.kind() == flight::JsonValue::Kind::null || typeof_json_value.kind() == flight::JsonValue::Kind::array || typeof_json_value.kind() == flight::JsonValue::Kind::object)); }()))) {

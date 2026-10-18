@@ -47,18 +47,18 @@ inline bool is_dragon_bones_flight_value_function_is_u000044_ragon_u000042_ones_
   return flight::is_array(record.get(flight::String("armature")).value_or(flight::Any(flight::undefined)));
 }
 
-inline void count_array_or_object(flight::Map<flight::String, double> counts, flight::Record<flight::String, flight::Any> record, flight::String json_key, flight::String kind) {
+inline void count_array_or_object(flight::Map<flight::String, double> counts, flight::NamedProperties record, flight::String json_key, flight::String kind) {
   auto value = record.get(json_key);
-  if ((!value.has_value() || !value.value().has_value())) {
+  if ((([&]() { const auto& presence_operand = value; return presence_operand.is_undefined(); }()) || ([&]() { const auto& presence_operand = value; return presence_operand.is_null(); }()))) {
     return;
   }
   if (flight::is_array(value)) {
-    if ((static_cast<double>(value.value().array_size()) > 0.0)) {
-      counts.set(kind, static_cast<double>(value.value().array_size()));
+    if ((static_cast<double>(value.array_size()) > 0.0)) {
+      counts.set(kind, static_cast<double>(value.array_size()));
     }
   }
   else {
-    if ((([&]() -> flight::String { const auto& typeof_value = value; if (!typeof_value.has_value()) return flight::String("undefined"); return typeof_value.value().type_of(); }()) == flight::String("object"))) {
+    if ((value.type_of() == flight::String("object"))) {
       flight::Array<flight::String> keys = ([&]() { const auto named_view = flight::named_properties(value); const auto named_keys = named_view.keys(); return flight::Array<flight::String>(named_keys.begin(), named_keys.end()); }());
       if ((static_cast<double>(keys.size()) > 0.0)) {
         counts.set(kind, static_cast<double>(keys.size()));
@@ -85,8 +85,8 @@ inline flight::Map<flight::String, double> census_spine_json(flight::Record<flig
   return counts;
 }
 
-inline void count_array(flight::Map<flight::String, double> counts, flight::Record<flight::String, flight::Any> record, flight::String json_key, flight::String kind) {
-  auto value = record.get(json_key).value_or(flight::Any(flight::undefined));
+inline void count_array(flight::Map<flight::String, double> counts, flight::NamedProperties record, flight::String json_key, flight::String kind) {
+  auto value = record.get(json_key);
   if ((!flight::is_array(value) || (static_cast<double>(value.array_size()) == 0.0))) {
     return;
   }
@@ -161,7 +161,7 @@ inline std::optional<flight::Ref<flight::types::Skeleton2DJsonAnalysis>> analyze
   try {
     (doc = flight::Json::parse(json));
   }
-  catch (...) {
+  catch (const flight::JsonSyntaxError&) {
     return std::nullopt;
   }
   if ((([&]() { const auto& presence_operand = doc; return presence_operand.is_null(); }()) || ([&]() { const auto& typeof_json_value = doc; return !((typeof_json_value.kind() == flight::JsonValue::Kind::null || typeof_json_value.kind() == flight::JsonValue::Kind::array || typeof_json_value.kind() == flight::JsonValue::Kind::object)); }()))) {

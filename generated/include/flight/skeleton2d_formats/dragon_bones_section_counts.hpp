@@ -22,12 +22,12 @@ namespace flight::skeleton2d_formats {
 
 using flight::shortcut::parse;
 
-inline bool is_dragon_bones_flight_value_function_is_u000044_ragon_u000042_ones_flight_private_fee4bf3fb73047fb(flight::Record<flight::String, flight::Any> record) {
-  return flight::is_array(record.get(flight::String("armature")).value_or(flight::Any(flight::undefined)));
+inline bool is_dragon_bones_flight_value_function_is_u000044_ragon_u000042_ones_flight_private_fee4bf3fb73047fb(flight::NamedProperties record) {
+  return flight::is_array(record.get(flight::String("armature")));
 }
 
-inline void count_section_flight_value_function_count_u000053_ection_flight_private_fee4bf3fb73047fb(flight::Map<flight::String, double> counts, flight::Record<flight::String, flight::Any> record, flight::String json_key, flight::String kind) {
-  auto value = record.get(json_key).value_or(flight::Any(flight::undefined));
+inline void count_section_flight_value_function_count_u000053_ection_flight_private_fee4bf3fb73047fb(flight::Map<flight::String, double> counts, flight::NamedProperties record, flight::String json_key, flight::String kind) {
+  auto value = record.get(json_key);
   if ((!flight::is_array(value) || (static_cast<double>(value.array_size()) == 0.0))) {
     return;
   }

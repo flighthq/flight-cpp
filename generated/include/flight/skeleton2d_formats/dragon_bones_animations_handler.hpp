@@ -71,7 +71,7 @@ inline void dragon_bones_animations_section_handler(flight::Ref<flight::types::D
       for (auto array_pattern_value : dragonbones_timeline_key_map) {
         const flight::String json_key = array_pattern_value.element(0.0);
         const flight::String timeline_kind = array_pattern_value.element(1.0);
-        if (!animation.get(json_key).has_value()) {
+        if (([&]() { const auto& presence_operand = animation.get(json_key); return presence_operand.is_undefined(); }())) {
           continue;
         }
         std::optional<std::function<void(flight::Ref<flight::types::DragonBonesTimelineContext>, flight::String, flight::Record<flight::String, flight::Any>)>> handler = flight::skeleton2d_formats::get_dragon_bones_timeline_handler(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::DragonBonesRegistry>>>>>(context->registry), timeline_kind);

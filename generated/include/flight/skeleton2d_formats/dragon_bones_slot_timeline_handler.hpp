@@ -120,11 +120,11 @@ inline void parse_dragon_bones_slot_timelines(flight::Array<flight::Ref<flight::
         unmodeled.set(flight::String("slot"), (([&]() -> double { auto nullish_coalesce_left = unmodeled.get(flight::String("slot")); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()) + 1.0));
         continue;
       }
-      flight::Array<flight::Record<flight::String, flight::Any>> display_frames = flight::skeleton2d_formats::dragon_bones_frames(timeline.get(flight::String("displayFrame")), std::nullopt);
+      flight::Array<flight::Record<flight::String, flight::Any>> display_frames = flight::skeleton2d_formats::dragon_bones_frames(([&]() -> flight::Any { const auto named_coalesce_value = timeline.get(flight::String("displayFrame")); if (!named_coalesce_value.is_nullish()) return named_coalesce_value; return timeline.get(flight::String("display")); }()), std::nullopt);
       if ((static_cast<double>(display_frames.size()) > 0.0)) {
         add_dragon_bones_display_channel(channels, display_frames, slot_index, ([&]() -> flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>> { auto nullish_coalesce_left = display_table.get((name.has_value() ? name.value() : flight::String(""))); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>{}; }()), frame_rate);
       }
-      flight::Array<flight::Record<flight::String, flight::Any>> color_frames = flight::skeleton2d_formats::dragon_bones_frames(timeline.get(flight::String("colorFrame")), std::nullopt);
+      flight::Array<flight::Record<flight::String, flight::Any>> color_frames = flight::skeleton2d_formats::dragon_bones_frames(([&]() -> flight::Any { const auto named_coalesce_value_2 = timeline.get(flight::String("colorFrame")); if (!named_coalesce_value_2.is_nullish()) return named_coalesce_value_2; return timeline.get(flight::String("color")); }()), std::nullopt);
       if ((static_cast<double>(color_frames.size()) > 0.0)) {
         add_dragon_bones_slot_color_channel(channels, color_frames, slot_index, frame_rate);
       }

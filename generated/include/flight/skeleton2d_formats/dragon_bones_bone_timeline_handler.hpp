@@ -8,6 +8,7 @@
 #include <flight/any.hpp>
 #include <flight/record.hpp>
 #include <flight/sequence_view.hpp>
+#include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
 #include <variant>
@@ -120,11 +121,11 @@ inline void add_dragon_bones_rotate_channels(flight::Array<flight::Ref<flight::t
   }
 }
 
-inline void parse_dragon_bones_bone_timeline(flight::Array<flight::Ref<flight::types::AnimationChannel>> channels, flight::Record<flight::String, flight::Any> timeline, double bone_index, double frame_rate, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
-  add_dragon_bones_vector_channel(channels, timeline.get(flight::String("translateFrame")).value_or(flight::Any(flight::undefined)), bone_index, flight::types::skeleton_2d_animation_path->translation, frame_rate, diagnostics);
-  add_dragon_bones_rotate_channels(channels, timeline.get(flight::String("rotateFrame")).value_or(flight::Any(flight::undefined)), bone_index, frame_rate, diagnostics);
-  add_dragon_bones_vector_channel(channels, timeline.get(flight::String("scaleFrame")).value_or(flight::Any(flight::undefined)), bone_index, flight::types::skeleton_2d_animation_path->scale, frame_rate, diagnostics);
-  flight::skeleton2d_formats::skip_crumb_dragon_bones_group(diagnostics, timeline.get(flight::String("frame")).value_or(flight::Any(flight::undefined)), flight::String("dragonbones.legacy-bone-frame-unsupported"));
+inline void parse_dragon_bones_bone_timeline(flight::Array<flight::Ref<flight::types::AnimationChannel>> channels, flight::NamedProperties timeline, double bone_index, double frame_rate, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
+  add_dragon_bones_vector_channel(channels, timeline.get(flight::String("translateFrame")), bone_index, flight::types::skeleton_2d_animation_path->translation, frame_rate, diagnostics);
+  add_dragon_bones_rotate_channels(channels, timeline.get(flight::String("rotateFrame")), bone_index, frame_rate, diagnostics);
+  add_dragon_bones_vector_channel(channels, timeline.get(flight::String("scaleFrame")), bone_index, flight::types::skeleton_2d_animation_path->scale, frame_rate, diagnostics);
+  flight::skeleton2d_formats::skip_crumb_dragon_bones_group(diagnostics, timeline.get(flight::String("frame")), flight::String("dragonbones.legacy-bone-frame-unsupported"));
 }
 
 

@@ -58,7 +58,7 @@ inline void spine_json_animations_section_handler(flight::Ref<flight::types::Spi
     for (auto array_pattern_value : spine_json_timeline_key_map) {
       const flight::String json_key = array_pattern_value.element(0.0);
       const flight::String timeline_kind = array_pattern_value.element(1.0);
-      if (!anim.get(json_key).has_value()) {
+      if (([&]() { const auto& presence_operand = anim.get(json_key); return presence_operand.is_undefined(); }())) {
         continue;
       }
       std::optional<std::function<void(flight::Ref<flight::types::SpineJsonTimelineContext>, flight::String, flight::Record<flight::String, flight::Any>)>> handler = flight::skeleton2d_formats::get_spine_json_timeline_handler(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpineJsonRegistry>>>>>(context->registry), timeline_kind);

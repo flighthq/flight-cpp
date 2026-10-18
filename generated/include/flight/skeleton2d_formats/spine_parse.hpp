@@ -141,7 +141,7 @@ inline std::optional<flight::Ref<flight::types::Skeleton2DImport>> parse_spine_s
   try {
     (doc = flight::Json::parse(json));
   }
-  catch (...) {
+  catch (const flight::JsonSyntaxError&) {
     return std::nullopt;
   }
   if ((([&]() { const auto& presence_operand = doc; return presence_operand.is_null(); }()) || ([&]() { const auto& typeof_json_value = doc; return !((typeof_json_value.kind() == flight::JsonValue::Kind::null || typeof_json_value.kind() == flight::JsonValue::Kind::array || typeof_json_value.kind() == flight::JsonValue::Kind::object)); }()))) {

@@ -10,6 +10,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/transform_mode_2d.hpp>
+
 #include <flight/types/spine_binary_registry.hpp>
 
 #include <flight/types/import_diagnostic.hpp>
@@ -37,12 +39,7 @@ using flight::types::SpineBinarySectionContext;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON2D_FORMATS_REFLECTION_ROTATION_SCALE_TRANSLATION_9DFF6858EECB0EB4
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON2D_FORMATS_REFLECTION_ROTATION_SCALE_TRANSLATION_9DFF6858EECB0EB4
-struct reflection_rotation_scale_translation_9dff6858eecb0eb4 : public flight::ReferenceEnabled {
-  bool reflection;
-  bool rotation;
-  bool scale;
-  bool translation;
-};
+using reflection_rotation_scale_translation_9dff6858eecb0eb4 = flight::types::reflection_rotation_scale_translation_9dff6858eecb0eb4;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON2D_FORMATS_REFLECTION_ROTATION_SCALE_TRANSLATION_9DFF6858EECB0EB4
 
 inline flight::Array<flight::Ref<reflection_rotation_scale_translation_9dff6858eecb0eb4>> spine_binary_transform_modes = flight::Array<flight::Ref<reflection_rotation_scale_translation_9dff6858eecb0eb4>>{flight::types::transform_mode_2d->normal, flight::types::transform_mode_2d->only_translation, flight::types::transform_mode_2d->no_rotation_or_reflection, flight::types::transform_mode_2d->no_scale, flight::types::transform_mode_2d->no_scale_or_reflection};

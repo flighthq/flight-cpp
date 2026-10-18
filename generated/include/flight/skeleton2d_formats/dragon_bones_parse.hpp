@@ -91,9 +91,9 @@ inline double number_or_flight_value_function_number_u00004f_r_flight_private_07
 
 inline const flight::String dragonbones_compatible_version = flight::String("5.5");
 
-inline bool check_dragon_bones_version(flight::Record<flight::String, flight::Any> doc, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
-  const std::optional<flight::String> compatible = ([&]() -> std::optional<flight::String> { const auto& erased_typeof_carrier_2 = doc.get(flight::String("compatibleVersion")).value_or(flight::Any(flight::undefined)); if (erased_typeof_carrier_2.type_of() == flight::String("string")) return std::optional<flight::String>{erased_typeof_carrier_2.as_string()}; return std::nullopt; }());
-  const std::optional<flight::String> declared = ([&]() -> std::optional<flight::String> { const auto& erased_typeof_carrier_3 = doc.get(flight::String("version")).value_or(flight::Any(flight::undefined)); if (erased_typeof_carrier_3.type_of() == flight::String("string")) return std::optional<flight::String>{erased_typeof_carrier_3.as_string()}; return std::nullopt; }());
+inline bool check_dragon_bones_version(flight::NamedProperties doc, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
+  const std::optional<flight::String> compatible = ([&]() -> std::optional<flight::String> { const auto& erased_typeof_carrier_2 = doc.get(flight::String("compatibleVersion")); if (erased_typeof_carrier_2.type_of() == flight::String("string")) return std::optional<flight::String>{erased_typeof_carrier_2.as_string()}; return std::nullopt; }());
+  const std::optional<flight::String> declared = ([&]() -> std::optional<flight::String> { const auto& erased_typeof_carrier_3 = doc.get(flight::String("version")); if (erased_typeof_carrier_3.type_of() == flight::String("string")) return std::optional<flight::String>{erased_typeof_carrier_3.as_string()}; return std::nullopt; }());
   const std::optional<flight::String> resolved = ([&]() -> std::optional<flight::String> { auto nullish_coalesce_left = compatible; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return declared; }());
   if (!resolved.has_value()) {
     flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("dragonbones.version-missing"), flight::String("parseDragonBonesSkeleton"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{});
@@ -108,12 +108,12 @@ inline bool check_dragon_bones_version(flight::Record<flight::String, flight::An
 
 inline const double default_dragonbones_frame_rate = 24.0;
 
-inline double dragon_bones_frame_rate(flight::Record<flight::String, flight::Any> armature, flight::Record<flight::String, flight::Any> doc) {
-  const double armature_rate = number_or_flight_value_function_number_u00004f_r_flight_private_0748b55b98d2a76f(armature.get(flight::String("frameRate")).value_or(flight::Any(flight::undefined)), 0.0);
+inline double dragon_bones_frame_rate(flight::NamedProperties armature, flight::NamedProperties doc) {
+  const double armature_rate = number_or_flight_value_function_number_u00004f_r_flight_private_0748b55b98d2a76f(armature.get(flight::String("frameRate")), 0.0);
   if ((std::isfinite(armature_rate) && (armature_rate > 0.0))) {
     return armature_rate;
   }
-  const double document_rate = number_or_flight_value_function_number_u00004f_r_flight_private_0748b55b98d2a76f(doc.get(flight::String("frameRate")).value_or(flight::Any(flight::undefined)), 0.0);
+  const double document_rate = number_or_flight_value_function_number_u00004f_r_flight_private_0748b55b98d2a76f(doc.get(flight::String("frameRate")), 0.0);
   if ((std::isfinite(document_rate) && (document_rate > 0.0))) {
     return document_rate;
   }
