@@ -2,7 +2,9 @@
 #pragma once
 #include <flight/array.hpp>
 #include <flight/boolean.hpp>
+#include <flight/callable.hpp>
 #include <flight/map.hpp>
+#include <flight/record.hpp>
 #include <flight/sequence_view.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -349,7 +351,7 @@ inline flight::Array<flight::Ref<SwfShapeSegment>> stitch_swf_shape_segments(fli
               if (!candidates.has_value()) {
                 break;
               }
-              const std::optional<double> next = candidates.value().find([=](double index) { return !used_capture.read_binding().element(index); });
+              const std::optional<double> next = candidates.value().find(flight::Function<bool(double)>{[=](double index) { return !used_capture.read_binding().element(index); }});
               if (!next.has_value()) {
                 break;
               }
@@ -619,7 +621,7 @@ inline std::optional<flight::Ref<flight::types::SwfMorphShapePaths>> read_swf_mo
           end_index++;
           continue;
         }
-        append_swf_morph_edge(state, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SwfShapeEdgeRecord>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<SwfShapeEdgeRecord>>>>(std::get<1>(start_record))), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SwfShapeEdgeRecord>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<SwfShapeEdgeRecord>>>>(std::get<1>(end_record))), end_x, end_y);
+        append_swf_morph_edge(state, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SwfShapeEdgeRecord>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SwfShapeEdgeRecord>>>>(std::get<1>(start_record))), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SwfShapeEdgeRecord>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SwfShapeEdgeRecord>>>>(std::get<1>(end_record))), end_x, end_y);
         (end_x = std::get<1>(end_record).value()->to_x);
         (end_y = std::get<1>(end_record).value()->to_y);
         start_index++;
@@ -646,34 +648,40 @@ inline void append_swf_shape_contours(flight::Ref<flight::types::Shape> shape, f
 }
 
 inline void append_swf_shape_style_layer(flight::Ref<flight::types::Shape> shape, flight::Ref<SwfShapeState> state) {
-  for (auto index : ([&]() { flight::Array<double> array_spread_result; { auto&& array_spread_collection = state->fill_segments; for (const auto& [array_spread_key, array_spread_mapped_value] : array_spread_collection) { static_cast<void>(array_spread_mapped_value); array_spread_result.push(array_spread_key); } } return array_spread_result; }()).sort(compare_swf_shape_style_index)) {
-    std::optional<flight::Ref<SwfShapeFill>> fill = state->styles->fills.get((index - 1.0));
-    std::optional<flight::Array<flight::Ref<SwfShapeSegment>>> segments = state->fill_segments.get(index);
-    if ((([&]() { const auto& presence_operand = fill; return !presence_operand.has_value(); }()) || !segments.has_value())) {
-      continue;
-    }
-    if (fill.value()->texture.has_value()) {
-      flight::shape::append_shape_begin_texture_fill(shape, std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, fill.value()->texture.value()}, fill.value()->texture_matrix);
-    }
-    else {
-      if (!fill.value()->gradient_type.has_value()) {
-        flight::shape::append_shape_begin_fill(shape, fill.value()->color, fill.value()->opacity);
+  {
+    const auto for_of_iterable = ([&]() { flight::Array<double> array_spread_result; { auto&& array_spread_collection = state->fill_segments; for (const auto& [array_spread_key, array_spread_mapped_value] : array_spread_collection) { static_cast<void>(array_spread_mapped_value); array_spread_result.push(array_spread_key); } } return array_spread_result; }()).sort(compare_swf_shape_style_index);
+    for (auto index : for_of_iterable) {
+      std::optional<flight::Ref<SwfShapeFill>> fill = state->styles->fills.get((index - 1.0));
+      std::optional<flight::Array<flight::Ref<SwfShapeSegment>>> segments = state->fill_segments.get(index);
+      if ((([&]() { const auto& presence_operand = fill; return !presence_operand.has_value(); }()) || !segments.has_value())) {
+        continue;
+      }
+      if (fill.value()->texture.has_value()) {
+        flight::shape::append_shape_begin_texture_fill(shape, std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, fill.value()->texture.value()}, fill.value()->texture_matrix);
       }
       else {
-        flight::shape::append_shape_begin_gradient_fill(shape, fill.value()->gradient_type.value(), fill.value()->colors, fill.value()->alphas, fill.value()->ratios, fill.value()->matrix, fill.value()->spread_method, flight::String("rgb"), fill.value()->focal_point);
+        if (!fill.value()->gradient_type.has_value()) {
+          flight::shape::append_shape_begin_fill(shape, fill.value()->color, fill.value()->opacity);
+        }
+        else {
+          flight::shape::append_shape_begin_gradient_fill(shape, fill.value()->gradient_type.value(), fill.value()->colors, fill.value()->alphas, fill.value()->ratios, fill.value()->matrix, fill.value()->spread_method, flight::String("rgb"), fill.value()->focal_point);
+        }
       }
+      append_swf_shape_contours(shape, segments.value());
+      flight::shape::append_shape_end_fill(shape);
     }
-    append_swf_shape_contours(shape, segments.value());
-    flight::shape::append_shape_end_fill(shape);
   }
-  for (auto index_2 : ([&]() { flight::Array<double> array_spread_result_2; { auto&& array_spread_collection_2 = state->line_segments; for (const auto& [array_spread_key_2, array_spread_mapped_value_2] : array_spread_collection_2) { static_cast<void>(array_spread_mapped_value_2); array_spread_result_2.push(array_spread_key_2); } } return array_spread_result_2; }()).sort(compare_swf_shape_style_index)) {
-    std::optional<flight::Ref<SwfShapeLine>> line = state->styles->lines.get((index_2 - 1.0));
-    std::optional<flight::Array<flight::Ref<SwfShapeSegment>>> segments_2 = state->line_segments.get(index_2);
-    if ((([&]() { const auto& presence_operand = line; return !presence_operand.has_value(); }()) || !segments_2.has_value())) {
-      continue;
+  {
+    const auto for_of_iterable_2 = ([&]() { flight::Array<double> array_spread_result_2; { auto&& array_spread_collection_2 = state->line_segments; for (const auto& [array_spread_key_2, array_spread_mapped_value_2] : array_spread_collection_2) { static_cast<void>(array_spread_mapped_value_2); array_spread_result_2.push(array_spread_key_2); } } return array_spread_result_2; }()).sort(compare_swf_shape_style_index);
+    for (auto index_2 : for_of_iterable_2) {
+      std::optional<flight::Ref<SwfShapeLine>> line = state->styles->lines.get((index_2 - 1.0));
+      std::optional<flight::Array<flight::Ref<SwfShapeSegment>>> segments_2 = state->line_segments.get(index_2);
+      if ((([&]() { const auto& presence_operand = line; return !presence_operand.has_value(); }()) || !segments_2.has_value())) {
+        continue;
+      }
+      flight::shape::append_shape_line_style(shape, (line.value()->width / twips_per_pixel_flight_value_variable__u000054__u000057__u000049__u000050__u000053__u00005f__u000050__u000045__u000052__u00005f__u000050__u000049__u000058__u000045__u00004c__flight_private_d29d655d8b2ca6b9), line.value()->color, line.value()->alpha, line.value()->pixel_hinting, flight::String("normal"), line.value()->caps, line.value()->joints, line.value()->miter_limit);
+      append_swf_shape_contours(shape, segments_2.value());
     }
-    flight::shape::append_shape_line_style(shape, (line.value()->width / twips_per_pixel_flight_value_variable__u000054__u000057__u000049__u000050__u000053__u00005f__u000050__u000045__u000052__u00005f__u000050__u000049__u000058__u000045__u00004c__flight_private_d29d655d8b2ca6b9), line.value()->color, line.value()->alpha, line.value()->pixel_hinting, flight::String("normal"), line.value()->caps, line.value()->joints, line.value()->miter_limit);
-    append_swf_shape_contours(shape, segments_2.value());
   }
   state->fill_segments.clear();
   state->line_segments.clear();
@@ -756,11 +764,11 @@ inline std::optional<flight::Ref<SwfShapeFill>> read_swf_shape_fill_style(flight
     auto fill = create_swf_shape_fill(255.0, 1.0);
     (fill->texture = ([&]() -> std::optional<flight::Ref<flight::types::Texture2D>> { auto optional_chain_receiver = resolve_bitmap_fill; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()(character_id, repeat, smoothed); }()));
     auto texture_matrix = flight::geometry::create_matrix((matrix_2->a / twips_per_pixel_flight_value_variable__u000054__u000057__u000049__u000050__u000053__u00005f__u000050__u000045__u000052__u00005f__u000050__u000049__u000058__u000045__u00004c__flight_private_d29d655d8b2ca6b9), (matrix_2->b / twips_per_pixel_flight_value_variable__u000054__u000057__u000049__u000050__u000053__u00005f__u000050__u000045__u000052__u00005f__u000050__u000049__u000058__u000045__u00004c__flight_private_d29d655d8b2ca6b9), (matrix_2->c / twips_per_pixel_flight_value_variable__u000054__u000057__u000049__u000050__u000053__u00005f__u000050__u000045__u000052__u00005f__u000050__u000049__u000058__u000045__u00004c__flight_private_d29d655d8b2ca6b9), (matrix_2->d / twips_per_pixel_flight_value_variable__u000054__u000057__u000049__u000050__u000053__u00005f__u000050__u000045__u000052__u00005f__u000050__u000049__u000058__u000045__u00004c__flight_private_d29d655d8b2ca6b9), matrix_2->tx, matrix_2->ty);
-    if (flight::geometry::inverse_matrix(texture_matrix_scratch, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(texture_matrix)))) {
+    if (flight::geometry::inverse_matrix(texture_matrix_scratch, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(texture_matrix)))) {
       (fill->texture_matrix = std::optional<flight::Ref<flight::types::Matrix>>{texture_matrix});
     }
     else {
-      flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->recover, flight::String("swf.fill-matrix-singular"), flight::String("readSwfShapeFillStyle"), {{flight::String("character"), std::variant<bool, double, flight::String>{std::in_place_type<double>, character_id}}});
+      flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->recover, flight::String("swf.fill-matrix-singular"), flight::String("readSwfShapeFillStyle"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("character"), std::variant<bool, double, flight::String>{std::in_place_type<double>, character_id}}});
     }
     return std::optional<flight::Ref<SwfShapeFill>>{fill};
   }

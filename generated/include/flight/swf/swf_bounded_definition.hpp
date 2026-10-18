@@ -31,7 +31,7 @@ inline double read_swf_bounded_definition_header(flight::Ref<flight::types::SwfT
     return 0.0;
   }
   state->defined_characters.add(character_id);
-  state->character_bounds.set(character_id, (!end_bounds.has_value() ? start_bounds.value() : flight::swf::merge_swf_rectangles(start_bounds.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>(end_bounds.value())))));
+  state->character_bounds.set(character_id, (!end_bounds.has_value() ? start_bounds.value() : flight::swf::merge_swf_rectangles(start_bounds.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>(end_bounds.value())))));
   if (end_bounds.has_value()) {
     state->morph_bounds.set(character_id, flight::make_ref<end_start_b3d703e568b779f1>(end_start_b3d703e568b779f1{.end = end_bounds.value(), .start = start_bounds.value()}));
   }

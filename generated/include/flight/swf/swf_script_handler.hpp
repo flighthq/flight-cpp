@@ -2,6 +2,8 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <flight/callable.hpp>
+#include <flight/record.hpp>
 #include <functional>
 #include <optional>
 #include <random>
@@ -64,7 +66,7 @@ inline void append_swf_abc_frame_scripts(flight::Ref<flight::types::SwfTagParseS
   for (auto blob : state->abc_blobs) {
     std::optional<flight::Map<flight::String, flight::Map<double, flight::types::FrameScript>>> by_class = flight::swf::read_swf_abc_frame_scripts(blob->bytes, state->diagnostics);
     if (!by_class.has_value()) {
-      flight::importdiagnostics::report_import_diagnostic(state->diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("swf.abc-frame-scripts-unreadable"), flight::String("appendSwfAbcFrameScripts"), {{flight::String("capability"), (blob->named ? std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.script.do-abc")} : std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.script.do-abc-anonymous")})}});
+      flight::importdiagnostics::report_import_diagnostic(state->diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("swf.abc-frame-scripts-unreadable"), flight::String("appendSwfAbcFrameScripts"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("capability"), (blob->named ? std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.script.do-abc")} : std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.script.do-abc-anonymous")})}});
       continue;
     }
     for (auto array_pattern_value_3 : by_class.value()) {
@@ -93,7 +95,7 @@ inline bool read_swf_do_action(flight::Ref<flight::types::SwfTagReader> body, fl
     timeline->actions.set((static_cast<double>(timeline->frames.size()) + 1.0), script.value());
   }
   else {
-    flight::importdiagnostics::report_import_diagnostic(state->diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("swf.frame-script-declined"), flight::String("readSwfTimeline"), {{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.script.do-action")}}, {flight::String("frame"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (static_cast<double>(timeline->frames.size()) + 1.0)}}});
+    flight::importdiagnostics::report_import_diagnostic(state->diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("swf.frame-script-declined"), flight::String("readSwfTimeline"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.script.do-action")}}, {flight::String("frame"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (static_cast<double>(timeline->frames.size()) + 1.0)}}});
   }
   return true;
 }
@@ -107,7 +109,7 @@ inline bool read_swf_init_action(flight::Ref<flight::types::SwfTagReader> body, 
   const double sprite_id = body->read_uint16();
   std::optional<std::function<void(flight::types::Node2D, double)>> script = flight::swf::read_swf_frame_actions(flight::make_ref<flight::swf::SwfReader>(body->source, body->pos, body->end));
   if (!script.has_value()) {
-    flight::importdiagnostics::report_import_diagnostic(state->diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("swf.frame-script-declined"), flight::String("readSwfTimeline"), {{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.script.do-init-action")}}, {flight::String("characterId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, sprite_id}}});
+    flight::importdiagnostics::report_import_diagnostic(state->diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("swf.frame-script-declined"), flight::String("readSwfTimeline"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.script.do-init-action")}}, {flight::String("characterId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, sprite_id}}});
   }
   else {
     state->pending_init_actions.push(flight::make_ref<character_id_script_7fe7df2e7341fc1a>(character_id_script_7fe7df2e7341fc1a{.character_id = sprite_id, .script = script.value()}));
@@ -120,7 +122,7 @@ inline bool read_swf_init_action(flight::Ref<flight::types::SwfTagReader> body, 
 using bytes_named_a0691cdc21805510 = flight::types::bytes_named_a0691cdc21805510;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_NAMED_A0691CDC21805510
 
-inline flight::Ref<flight::types::SwfTagHandler> swf_script_handler = flight::make_ref<flight::types::SwfTagHandler>(flight::types::SwfTagHandler{.tags = flight::Array<double>{tag_do_abc, tag_do_abc_anonymous, tag_do_action, tag_do_init_action}, .parse = [](flight::Ref<flight::types::SwfTagReader> body, double tag, flight::Ref<flight::types::SwfTagParseState> state, flight::Ref<flight::types::SwfTagTimelineState> timeline, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> ignored_callback_argument) {
+inline flight::Ref<flight::types::SwfTagHandler> swf_script_handler = flight::make_ref<flight::types::SwfTagHandler>(flight::types::SwfTagHandler{.tags = flight::Array<double>{tag_do_abc, tag_do_abc_anonymous, tag_do_action, tag_do_init_action}, .parse = flight::Function<bool(flight::Ref<flight::types::SwfTagReader>, double, flight::Ref<flight::types::SwfTagParseState>, flight::Ref<flight::types::SwfTagTimelineState>, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>)>{[](flight::Ref<flight::types::SwfTagReader> body, double tag, flight::Ref<flight::types::SwfTagParseState> state, flight::Ref<flight::types::SwfTagTimelineState> timeline, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> ignored_callback_argument) {
   (void)ignored_callback_argument;
   if (((tag == tag_do_abc) || (tag == tag_do_abc_anonymous))) {
     state->abc_blobs.push(flight::make_ref<bytes_named_a0691cdc21805510>(bytes_named_a0691cdc21805510{.bytes = read_swf_abc_payload(body, (tag == tag_do_abc)), .named = (tag == tag_do_abc)}));
@@ -130,7 +132,7 @@ inline flight::Ref<flight::types::SwfTagHandler> swf_script_handler = flight::ma
     return read_swf_init_action(body, state);
   }
   return read_swf_do_action(body, state, timeline);
-}, .resolve = std::optional<std::function<void(flight::Ref<flight::types::SwfTagParseState>, flight::Ref<flight::types::SwfTimeline>)>>{[](flight::Ref<flight::types::SwfTagParseState> state, flight::Ref<flight::types::SwfTimeline> timeline) {
+}}, .resolve = std::optional<std::function<void(flight::Ref<flight::types::SwfTagParseState>, flight::Ref<flight::types::SwfTimeline>)>>{flight::Function<void(flight::Ref<flight::types::SwfTagParseState>, flight::Ref<flight::types::SwfTimeline>)>{[](flight::Ref<flight::types::SwfTagParseState> state, flight::Ref<flight::types::SwfTimeline> timeline) {
   append_swf_abc_frame_scripts(state, timeline);
   for (auto pending : state->pending_init_actions) {
     auto sprite = state->sprites.get(pending->character_id);
@@ -138,6 +140,6 @@ inline flight::Ref<flight::types::SwfTagHandler> swf_script_handler = flight::ma
       sprite.value()->actions.set(1.0, pending->script);
     }
   }
-}}});
+}}}});
 
 } // namespace flight::swf

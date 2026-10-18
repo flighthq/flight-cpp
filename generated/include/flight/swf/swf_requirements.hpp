@@ -52,7 +52,7 @@ inline flight::Ref<flight::types::RequirementSet> parse_swf_requirements(flight:
       if ((flight::swf::swf_non_content_tags.has(code) || swf_structural_tags.has(code))) {
         continue;
       }
-      requirements.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Requirement>>>>(flight::make_ref<flight::types::Requirement>(flight::types::Requirement{.facet = flight::types::requirement_facet->document_format, .key = flight::String("") + flight::to_string(swf_requirement_key_namespace) + flight::String(".") + flight::to_string(flight::swf::get_swf_tag_name(code)) + flight::String("")}))));
+      requirements.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>(flight::make_ref<flight::types::Requirement>(flight::types::Requirement{.facet = flight::types::requirement_facet->document_format, .key = flight::String("") + flight::to_string(swf_requirement_key_namespace) + flight::String(".") + flight::to_string(flight::swf::get_swf_tag_name(code)) + flight::String("")}))));
     }
     const bool has_shape_tags = has_any_tag(capabilities.value()->tag_counts, swf_shape_tags);
     if (((has_shape_tags || capabilities.value()->uses_blend_mode) || capabilities.value()->uses_bitmap_fills)) {
@@ -60,17 +60,17 @@ inline flight::Ref<flight::types::RequirementSet> parse_swf_requirements(flight:
     }
     if (has_shape_tags) {
       for (auto key : swf_core_shape_commands) {
-        requirements.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Requirement>>>>(flight::make_ref<flight::types::Requirement>(flight::types::Requirement{.facet = flight::types::requirement_facet->scene_shape_command, .key = key}))));
+        requirements.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>(flight::make_ref<flight::types::Requirement>(flight::types::Requirement{.facet = flight::types::requirement_facet->scene_shape_command, .key = key}))));
       }
     }
     if (capabilities.value()->uses_bitmap_fills) {
       for (auto key_2 : swf_texture_shape_commands) {
-        requirements.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Requirement>>>>(flight::make_ref<flight::types::Requirement>(flight::types::Requirement{.facet = flight::types::requirement_facet->scene_shape_command, .key = key_2}))));
+        requirements.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>(flight::make_ref<flight::types::Requirement>(flight::types::Requirement{.facet = flight::types::requirement_facet->scene_shape_command, .key = key_2}))));
       }
     }
     if (capabilities.value()->uses_blend_mode) {
       facets.push(flight::types::requirement_facet->scene_blend_mode);
-      requirements.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Requirement>>>>(flight::make_ref<flight::types::Requirement>(flight::types::Requirement{.facet = flight::types::requirement_facet->scene_blend_mode, .key = flight::String("standard")}))));
+      requirements.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>(flight::make_ref<flight::types::Requirement>(flight::types::Requirement{.facet = flight::types::requirement_facet->scene_blend_mode, .key = flight::String("standard")}))));
     }
   }
   return flight::requirement::create_requirement_set(facets, requirements);

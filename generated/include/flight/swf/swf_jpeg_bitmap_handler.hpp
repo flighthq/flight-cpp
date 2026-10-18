@@ -14,6 +14,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/swf_tag_parse_state.hpp>
+
 namespace flight::types { struct EmbeddedImageResourceReference; }
 namespace flight::types { struct ExternalImageResourceReference; }
 namespace flight::types { struct ImportDiagnostic; }
@@ -55,10 +57,7 @@ inline const double tag_jpeg_tables = 8.0;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_0F132CE875CDB3FC
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_0F132CE875CDB3FC
-struct bytes_mime_type_0f132ce875cdb3fc : public flight::ReferenceEnabled {
-  flight::Uint8Array bytes;
-  flight::String mime_type;
-};
+using bytes_mime_type_0f132ce875cdb3fc = flight::types::bytes_mime_type_0f132ce875cdb3fc;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_0F132CE875CDB3FC
 
 inline flight::Array<flight::Ref<flight::types::SwfJpegAlphaPayload>> create_swf_jpeg_alpha_payloads(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>> parsed, flight::Map<double, flight::Ref<flight::types::EmbeddedImageResourceReference>> references) {
@@ -235,13 +234,7 @@ inline void read_swf_legacy_image_definition(flight::Ref<flight::types::SwfTagRe
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_COMPRESSED_ALPHA_BYTES_DEBLOCKING_PARAMETER_RAW_HEIGHT_WIDTH_54BB0D6B87E110D7
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_COMPRESSED_ALPHA_BYTES_DEBLOCKING_PARAMETER_RAW_HEIGHT_WIDTH_54BB0D6B87E110D7
-struct character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_54bb0d6b87e110d7 : public flight::ReferenceEnabled {
-  double character_id;
-  flight::Uint8Array compressed_alpha_bytes;
-  std::optional<double> deblocking_parameter_raw;
-  double height;
-  double width;
-};
+using character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_54bb0d6b87e110d7 = flight::types::character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_54bb0d6b87e110d7;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_COMPRESSED_ALPHA_BYTES_DEBLOCKING_PARAMETER_RAW_HEIGHT_WIDTH_54BB0D6B87E110D7
 
 inline void read_swf_embedded_image_definition(flight::Ref<flight::types::SwfTagReader> body, flight::Ref<flight::types::SwfTagParseState> state, double code) {

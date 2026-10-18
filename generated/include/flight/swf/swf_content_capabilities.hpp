@@ -32,6 +32,14 @@ inline const double swf_tag_long_form_length_flight_value_variable__u000053__u00
 
 inline flight::Set<double> swf_bitmap_tags = flight::Set<double>(flight::Array<double>{6.0, 8.0, 20.0, 21.0, 35.0, 36.0, 90.0});
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_NEXT_POS_RECT_0D93B78518932E29
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_NEXT_POS_RECT_0D93B78518932E29
+struct next_pos_rect_0d93b78518932e29 : public flight::ReferenceEnabled {
+  double next_pos;
+  flight::Ref<flight::types::SwfTagRectangle> rect;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_NEXT_POS_RECT_0D93B78518932E29
+
 inline std::optional<flight::Ref<flight::types::SwfContentCapabilities>> collect_swf_content_capabilities(flight::Uint8Array source, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostDecompressDeflateCapability>>>>> deflate, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostDecompressLzmaCapability>>>>> lzma) {
   auto header = flight::swf::parse_swf_header(source, deflate, lzma);
   if (!header.has_value()) {

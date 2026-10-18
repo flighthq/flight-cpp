@@ -2,6 +2,7 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <flight/callable.hpp>
 #include <functional>
 #include <optional>
 #include <random>
@@ -40,7 +41,7 @@ inline std::optional<flight::Ref<SwfHeaderRectangleResult>> read_swf_header_rect
     return std::nullopt;
   }
   const auto bit_pos_capture = flight::make_binding_cell(double{((offset * 8.0) + 5.0)});
-  std::function<double(double)> read_bits = [=](double count) {
+  std::function<double(double)> read_bits = flight::Function<double(double)>{[=](double count) {
   double value = 0.0;
   {
     double i = 0.0;
@@ -58,7 +59,7 @@ inline std::optional<flight::Ref<SwfHeaderRectangleResult>> read_swf_header_rect
     ([&]() { auto&& assignment_target = value; assignment_target = flight::bitwise_or(assignment_target, flight::left_shift(-1.0, count)); return assignment_target; }());
   }
   return value;
-};
+}};
   const double x_min = read_bits(nbits);
   const double x_max = read_bits(nbits);
   const double y_min = read_bits(nbits);

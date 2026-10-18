@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <exception>
 #include <flight/boolean.hpp>
+#include <flight/callable.hpp>
 #include <flight/map.hpp>
 #include <flight/record.hpp>
 #include <flight/sequence_view.hpp>
@@ -74,7 +75,7 @@ inline const double max_goto_depth = 8.0;
 inline double goto_depth = 0.0;
 
 inline flight::types::FrameScript create_swf_frame_script(flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SwfFrameCommand>>>>> commands) {
-  return [=](flight::types::Node2D target, double ignored_callback_argument) {
+  return flight::Function<void(flight::types::Node2D, double)>{[=](flight::types::Node2D target, double ignored_callback_argument) {
   (void)ignored_callback_argument;
   flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MovieClip>>>> clip = flight::structural_ref_cast<flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MovieClip>>>>>(target);
   if ((goto_depth > max_goto_depth)) {
@@ -117,7 +118,7 @@ inline flight::types::FrameScript create_swf_frame_script(flight::SequenceView<f
   }
   goto_depth--;
   if (finally_exception) std::rethrow_exception(finally_exception);
-};
+}};
 }
 
 inline std::optional<std::function<void(flight::types::Node2D, double)>> read_swf_frame_actions(flight::Ref<flight::swf::SwfReader> reader) {
@@ -310,7 +311,7 @@ inline flight::Map<double, flight::types::FrameScript> read_swf_abc_frame_script
             std::optional<flight::Array<flight::Ref<flight::types::AbcInstruction>>> body = bodies.get(handler->value);
             std::optional<flight::Array<flight::Ref<SwfFrameCommand>>> commands = (!body.has_value() ? std::nullopt : read_swf_abc_commands(file, body.value()));
             if (!commands.has_value()) {
-              flight::Record<flight::String, std::variant<bool, double, flight::String>> detail = {{flight::String("frame"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (frame->value + 1.0)}}, {flight::String("reason"), (!body.has_value() ? std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("method-body-unreadable")} : std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("commands-declined")})}};
+              flight::Record<flight::String, std::variant<bool, double, flight::String>> detail = flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("frame"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (frame->value + 1.0)}}, {flight::String("reason"), (!body.has_value() ? std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("method-body-unreadable")} : std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("commands-declined")})}};
               flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("swf.abc-frame-script-declined"), flight::String("readSwfAbcFrameScriptCalls"), detail);
               {
                 (i += 2.0);
@@ -356,12 +357,12 @@ inline std::optional<flight::Map<flight::String, flight::Map<double, flight::typ
     flight::Map<flight::String, double> methods_by_name = flight::Map<flight::String, double>();
     for (auto trait : instance->traits) {
       if ((trait->kind == flight::types::abc_trait_kind->method)) {
-        methods_by_name.set(resolve_abc_name(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AbcFile>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AbcFile>>>>(file.value())), trait->name), trait->method_index);
+        methods_by_name.set(resolve_abc_name(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AbcFile>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AbcFile>>>>(file.value())), trait->name), trait->method_index);
       }
     }
-    flight::Map<double, flight::types::FrameScript> frames = read_swf_abc_frame_script_calls(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AbcFile>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AbcFile>>>>(file.value())), constructor.value(), bodies, methods_by_name, diagnostics);
+    flight::Map<double, flight::types::FrameScript> frames = read_swf_abc_frame_script_calls(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AbcFile>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AbcFile>>>>(file.value())), constructor.value(), bodies, methods_by_name, diagnostics);
     if ((static_cast<double>(frames.size()) > 0.0)) {
-      by_class.set(resolve_abc_qualified_name(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AbcFile>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AbcFile>>>>(file.value())), instance->name), frames);
+      by_class.set(resolve_abc_qualified_name(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AbcFile>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AbcFile>>>>(file.value())), instance->name), frames);
     }
   }
   return std::optional<flight::Map<flight::String, flight::Map<double, flight::types::FrameScript>>>{by_class};

@@ -2,6 +2,7 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <flight/callable.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -28,7 +29,7 @@ inline double signed_bit_count(flight::Array<double> values) {
       {
         const double minimum = -flight::number_power(2.0, (bits - 1.0));
         const double maximum = (flight::number_power(2.0, (bits - 1.0)) - 1.0);
-        if (values.every([=](double value) { return ((value >= minimum) && (value <= maximum)); })) {
+        if (values.every(flight::Function<bool(double)>{[=](double value) { return ((value >= minimum) && (value <= maximum)); }})) {
           return bits;
         }
       }

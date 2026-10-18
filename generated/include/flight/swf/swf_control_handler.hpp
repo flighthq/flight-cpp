@@ -5,6 +5,8 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function readSwfButtonDefinition -- source line 128
 #include <flight/boolean.hpp>
+#include <flight/callable.hpp>
+#include <flight/record.hpp>
 #include <functional>
 #include <optional>
 #include <variant>
@@ -84,7 +86,7 @@ inline void read_swf_scene_and_frame_label_data(flight::Ref<flight::types::SwfTa
     }
   }
   if ((scene_count > 0.0)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("swf.scene-names"), flight::String("readSwfSceneAndFrameLabelData"), {{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.timeline.define-scene-and-frame-label-data")}}, {flight::String("sceneCount"), std::variant<bool, double, flight::String>{std::in_place_type<double>, scene_count}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("swf.scene-names"), flight::String("readSwfSceneAndFrameLabelData"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.timeline.define-scene-and-frame-label-data")}}, {flight::String("sceneCount"), std::variant<bool, double, flight::String>{std::in_place_type<double>, scene_count}}});
   }
   const double label_count = body->read_encoded_uint32();
   {
@@ -197,7 +199,7 @@ inline const double max_button_records = 10000.0;
 // cpp emission failed for @flighthq/swf/packages/swf/src/swfControlHandler.ts: dual-sentinel optional property
 // result requires one represented member value domain
 
-inline flight::Ref<flight::types::SwfTagHandler> swf_control_handler = flight::make_ref<flight::types::SwfTagHandler>(flight::types::SwfTagHandler{.tags = flight::Array<double>{tag_set_background_color, tag_frame_label, tag_define_scene_and_frame_label_data, tag_define_scaling_grid, tag_export_assets, tag_symbol_class, tag_define_button, tag_define_button_2}, .parse = [](flight::Ref<flight::types::SwfTagReader> body, double tag, flight::Ref<flight::types::SwfTagParseState> state, flight::Ref<flight::types::SwfTagTimelineState> timeline, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> ignored_callback_argument) {
+inline flight::Ref<flight::types::SwfTagHandler> swf_control_handler = flight::make_ref<flight::types::SwfTagHandler>(flight::types::SwfTagHandler{.tags = flight::Array<double>{tag_set_background_color, tag_frame_label, tag_define_scene_and_frame_label_data, tag_define_scaling_grid, tag_export_assets, tag_symbol_class, tag_define_button, tag_define_button_2}, .parse = flight::Function<bool(flight::Ref<flight::types::SwfTagReader>, double, flight::Ref<flight::types::SwfTagParseState>, flight::Ref<flight::types::SwfTagTimelineState>, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>)>{[](flight::Ref<flight::types::SwfTagReader> body, double tag, flight::Ref<flight::types::SwfTagParseState> state, flight::Ref<flight::types::SwfTagTimelineState> timeline, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> ignored_callback_argument) {
   (void)ignored_callback_argument;
   if ((tag == tag_set_background_color)) {
     read_swf_background_color(body, state);
@@ -226,6 +228,6 @@ inline flight::Ref<flight::types::SwfTagHandler> swf_control_handler = flight::m
     }
   }
   return true;
-}});
+}}});
 
 } // namespace flight::swf

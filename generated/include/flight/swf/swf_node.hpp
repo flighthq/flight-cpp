@@ -48,6 +48,7 @@ struct SwfMovieClipData;
 namespace flight::swf {
 
 struct SwfAuthoredBoundsData : public flight::types::NodeData {
+  using flight_native_base = flight::types::NodeData;
   flight::Ref<flight::types::SwfTagRectangle> authored_bounds;
 };
 
@@ -110,7 +111,7 @@ void apply_swf_authored_bounds(flight::types::Node2D node, std::optional<flight:
 
 inline flight::types::DisplayObject create_swf_display_object(std::optional<flight::Ref<flight::types::SwfTagRectangle>> bounds) {
   flight::types::DisplayObject target = flight::scene2d::create_display_object(std::nullopt);
-  apply_swf_authored_bounds(target, ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>> { auto contextual_union_source = bounds; if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>(contextual_union_source.value()))}; }()));
+  apply_swf_authored_bounds(target, ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>> { auto contextual_union_source = bounds; if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>(contextual_union_source.value()))}; }()));
   return target;
 }
 
@@ -150,6 +151,7 @@ inline flight::types::DisplayObject create_swf_display_object(std::optional<flig
 // materialize a replacement, or add side storage.
 
 struct SwfMorphBoundsData : public SwfAuthoredBoundsData {
+  using flight_native_base = SwfAuthoredBoundsData;
   flight::Ref<flight::types::SwfTagRectangle> morph_end_bounds;
   flight::Ref<flight::types::SwfTagRectangle> morph_start_bounds;
 };
@@ -235,12 +237,13 @@ struct SwfMorphBoundsData : public SwfAuthoredBoundsData {
 // cast it, copy or materialize a replacement, or add side storage.
 
 struct SwfMovieClipData : public flight::types::MovieClipData {
+  using flight_native_base = flight::types::MovieClipData;
   flight::Ref<flight::types::SwfTagRectangle> authored_bounds;
 };
 
 
 // NOT GENERATED: function createSwfMovieClip -- source line 92
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-checked-derived-member-absence-unrepresented [compiler-restriction]
 //
 // The source it stood for:
 //   export function createSwfMovieClip(bounds: SwfTagRectangle | null): MovieClip {
@@ -252,12 +255,9 @@ struct SwfMovieClipData : public flight::types::MovieClipData {
 //     return clip;
 //   }
 //   
-// cpp emission failed for @flighthq/swf/packages/swf/src/swfNode.ts: a reference assertion from
-// flight::Ref<flight::types::MovieClipData> to flight::Ref<SwfMovieClipData> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// cpp emission failed for @flighthq/swf/packages/swf/src/swfNode.ts: the asserted member authoredBounds read
+// from flight::Ref<flight::types::MovieClipData> as flight::Ref<SwfMovieClipData> can be absent at runtime, and
+// its type flight::Ref<flight::types::SwfTagRectangle> has no absent state: declare the member optional, or make
+// its type a declared opaque host-handle absence carrier
 
 } // namespace flight::swf

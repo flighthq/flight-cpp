@@ -32,7 +32,7 @@ inline flight::types::SwfTagHandlerDispatch expand_swf_tag_handler_dispatch(flig
   flight::Map<double, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagHandler>>>>> dispatch = flight::Map<double, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagHandler>>>>>();
   for (auto handler : tags) {
     for (auto tag : handler->tags) {
-      dispatch.set(tag, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagHandler>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SwfTagHandler>>>>(handler)));
+      dispatch.set(tag, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagHandler>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagHandler>>>>(handler)));
     }
   }
   return dispatch;

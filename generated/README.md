@@ -7,8 +7,9 @@ Do not edit it by hand.
 Binding profiles differ between packages during a profile transition, so each package row names the profile
 set it was generated under:
 
-- `sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb` (143 packages)
+- `sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb` (142 packages)
 - `sha256:2602f15df98afbc4055416765f444e85bee83a6c5fad13b420301f8fa344ca71` (10 packages)
+- `sha256:5bca1631b0d52c19588fbc7daca5b993b71ecc13cc6acbc6cf883488356016a8` (1 package)
 
 Exact profile paths and SHA-256 digests are recorded per set in `manifest.json`.
 

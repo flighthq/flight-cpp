@@ -2,6 +2,7 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <flight/callable.hpp>
 #include <flight/text_encoder.hpp>
 #include <functional>
 #include <optional>
@@ -16,28 +17,28 @@ namespace flight::swf {
 inline flight::Uint8Array build_frame_script_abc(std::optional<double> handler_name_index = std::nullopt) {
   handler_name_index = handler_name_index.value_or(3.0);
   flight::Array<double> bytes = flight::Array<double>{};
-  std::function<void(double)> u8 = [=](double v) {
+  std::function<void(double)> u8 = flight::Function<void(double)>{[=](double v) {
   return (void)bytes.push(flight::bitwise_and(v, 255.0));
-};
-  std::function<void(double)> u16 = [=](double v) {
+}};
+  std::function<void(double)> u16 = flight::Function<void(double)>{[=](double v) {
   u8(v);
   u8(flight::signed_right_shift(v, 8.0));
-};
-  std::function<void(double)> u30 = [=](double v) {
+}};
+  std::function<void(double)> u30 = flight::Function<void(double)>{[=](double v) {
   double r = v;
   do {
     const double b = std::fmod(r, 128.0);
     (r = std::floor((r / 128.0)));
     u8(((r > 0.0) ? flight::bitwise_or(b, 128.0) : b));
   } while ((r > 0.0));
-};
-  std::function<void(flight::String)> str = [=](flight::String v) {
+}};
+  std::function<void(flight::String)> str = flight::Function<void(flight::String)>{[=](flight::String v) {
   flight::Uint8Array e = flight::TextEncoder().encode(v);
   u30(static_cast<double>(e.size()));
   for (auto b : e) {
     u8(b);
   }
-};
+}};
   u16(16.0);
   u16(46.0);
   u30(1.0);

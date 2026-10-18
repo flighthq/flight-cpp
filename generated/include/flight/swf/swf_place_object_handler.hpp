@@ -4,6 +4,7 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function readLegacyPlaceObject -- source line 60
+#include <flight/callable.hpp>
 #include <functional>
 #include <optional>
 #include <variant>
@@ -100,7 +101,7 @@ inline void read_place_object2(flight::Ref<flight::types::SwfTagReader> body, fl
   placements.set(depth, flight::make_ref<flight::types::SwfTagPlacement>(flight::types::SwfTagPlacement{.advanced_blend_mode = ([&]() -> std::optional<flight::String> { auto nullish_coalesce_left_5 = ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto optional_chain_receiver = inherited; if (!optional_chain_receiver.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto optional_chain_projected_4 = optional_chain_receiver.value()->advanced_blend_mode; if (!optional_chain_projected_4.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, optional_chain_projected_4.value()}; }()); }()); if (const auto* alternative = std::get_if<flight::String>(&nullish_coalesce_left_5)) return std::optional<flight::String>{*alternative}; return std::nullopt; }()), .alpha = color_transform->alpha, .blend_mode = ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = inherited; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->blend_mode; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::types::blend_mode->normal; }()), .character_id = character_id, .clip_depth = clip_depth, .color_adjustments = color_transform->color_adjustments, .color_transform_adjustments = color_transform->color_adjustments, .depth = depth, .direct_linkage = direct_linkage, .effects = ([&]() -> flight::Array<flight::Ref<flight::types::Effect>> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::Ref<flight::types::Effect>>> { auto optional_chain_receiver = inherited; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->effects; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::swf::empty_effects; }()), .filter_adjustments = ([&]() -> flight::Array<flight::Ref<flight::types::Adjustment>> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::Ref<flight::types::Adjustment>>> { auto optional_chain_receiver = inherited; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->filter_adjustments; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::swf::empty_adjustments; }()), .matrix = matrix, .name = name, .ratio = ratio}));
 }
 
-inline flight::Ref<flight::types::SwfTagHandler> swf_place_object_handler = flight::make_ref<flight::types::SwfTagHandler>(flight::types::SwfTagHandler{.tags = flight::Array<double>{tag_place_object, tag_remove_object, tag_place_object_2, tag_remove_object_2}, .parse = [](flight::Ref<flight::types::SwfTagReader> body, double tag, flight::Ref<flight::types::SwfTagParseState> state, flight::Ref<flight::types::SwfTagTimelineState> timeline, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> ignored_callback_argument) {
+inline flight::Ref<flight::types::SwfTagHandler> swf_place_object_handler = flight::make_ref<flight::types::SwfTagHandler>(flight::types::SwfTagHandler{.tags = flight::Array<double>{tag_place_object, tag_remove_object, tag_place_object_2, tag_remove_object_2}, .parse = flight::Function<bool(flight::Ref<flight::types::SwfTagReader>, double, flight::Ref<flight::types::SwfTagParseState>, flight::Ref<flight::types::SwfTagTimelineState>, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>)>{[](flight::Ref<flight::types::SwfTagReader> body, double tag, flight::Ref<flight::types::SwfTagParseState> state, flight::Ref<flight::types::SwfTagTimelineState> timeline, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> ignored_callback_argument) {
   (void)ignored_callback_argument;
   if ((tag == tag_place_object)) {
     read_legacy_place_object(body, timeline->placements);
@@ -119,6 +120,6 @@ inline flight::Ref<flight::types::SwfTagHandler> swf_place_object_handler = flig
     }
   }
   return true;
-}});
+}}});
 
 } // namespace flight::swf

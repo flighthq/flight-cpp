@@ -114,6 +114,60 @@
           "schema": "flight-cpp-external-bindings/1"
         }
       ]
+    },
+    {
+      "id": "sha256:5bca1631b0d52c19588fbc7daca5b993b71ecc13cc6acbc6cf883488356016a8",
+      "profiles": [
+        {
+          "digest": "sha256:23d8b54c0e33ad10d6cfb7004620f66ff4d0f68062dcc132fcca8fb7d4eabbf8",
+          "identity": "flighthq/flight-cpp/runtime-carriers/1",
+          "path": "bindings/runtime.json",
+          "profile": "runtime-carriers",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:96db37ebc3c2412cbc64451ea6344e463539b1dea548a30e1c06ce315836fb24",
+          "identity": "flighthq/flight-cpp/headless/1",
+          "path": "bindings/headless.json",
+          "profile": "headless",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:5bbaaf9c6dcacda0d2c9fe89eb9453af9726d417c15193e2e5016cce9930db71",
+          "identity": "flighthq/flight-cpp/web-types/1",
+          "path": "bindings/web-types.json",
+          "profile": "web-types",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:b0b4e3ac41bba815dd5e27b8e677d4edc505bf56ca0ab519914f8525751773ed",
+          "identity": "flighthq/flight-cpp/sdl-image/1",
+          "path": "bindings/sdl-image.json",
+          "profile": "sdl-image",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:4daf23f904f3868115322ed091fea1c4b6e287e3ce06732789e5c6eb543d53dd",
+          "identity": "flighthq/flight-cpp/sdl-gl/1",
+          "path": "bindings/sdl-gl.json",
+          "profile": "sdl-gl",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:c278e533ea8bfa8e8baa2126b7c5550dd37f9bc84d37658ad7f30cb7b22bf4e9",
+          "identity": "flighthq/flight-cpp/sdl-wgpu/1",
+          "path": "bindings/sdl-wgpu.json",
+          "profile": "sdl-wgpu",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:3f73f00279d486c9dd4b7c6158d95bce4afa0b3e0704c87462829d73d8049f86",
+          "identity": "flighthq/flight-cpp/sdl-app/1",
+          "path": "bindings/sdl-app.json",
+          "profile": "sdl-app",
+          "schema": "flight-cpp-external-bindings/1"
+        }
+      ]
     }
   ],
   "profileTypeNames": [
@@ -835,7 +889,6 @@
         "flight/scene3d/enable_scene_3d_guards.hpp",
         "flight/skeleton3d/enable_skeleton_3d_guards.hpp",
         "flight/snapshot/enable_snapshot_guards.hpp",
-        "flight/swf/enable_swf_guards.hpp",
         "flight/text/enable_text_label_guards.hpp",
         "flight/text_markup/enable_text_markup_guards.hpp",
         "flight/textbidi/enable_text_bidi_guards.hpp",
@@ -5136,6 +5189,13 @@
       "package": "@flighthq/audio"
     },
     {
+      "dependency": "flight-compiler",
+      "digest": "bca2b847cf6f9fa49a20a306870fc85f72de9a893b3cd158e325e8d16314c319",
+      "id": "compiler-class-interface-heritage",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/swf"
+    },
+    {
       "dependency": "flight",
       "digest": "46451ef2c8e13e3a3dc700ebeb63b2a2c08b0298519585d9588c4e54d03414d4",
       "id": "swf-diagnostic-detail-records",
@@ -5147,13 +5207,6 @@
       "digest": "00953bb916eb2b5aeaee901351d94fbd20543dd52984b04cb1ea98dabc9bf676",
       "id": "swf-image-texture-2d-constructor",
       "module": "packages/swf/src/swfImageTexture.ts",
-      "package": "@flighthq/swf"
-    },
-    {
-      "dependency": "flight",
-      "digest": "7304378eb02e7ff146fd613305d0528545a41c7da4c3f41d567b09c61ee94be9",
-      "id": "swf-video-texture-2d-constructor",
-      "module": "packages/swf/src/swfVideoHandler.ts",
       "package": "@flighthq/swf"
     },
     {
@@ -5610,6 +5663,13 @@
       "id": "scene2d-svg-color-local-component-presence",
       "module": "packages/scene2d-formats/src/svgColor.ts",
       "package": "@flighthq/scene2d-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "7304378eb02e7ff146fd613305d0528545a41c7da4c3f41d567b09c61ee94be9",
+      "id": "swf-video-texture-2d-constructor",
+      "module": "packages/swf/src/swfVideoHandler.ts",
+      "package": "@flighthq/swf"
     },
     {
       "dependency": "flight",
@@ -7521,7 +7581,7 @@
       "sourceModules": 7
     },
     {
-      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
+      "bindingProfileSet": "sha256:5bca1631b0d52c19588fbc7daca5b993b71ecc13cc6acbc6cf883488356016a8",
       "cppIncludePrefix": "flight/swf",
       "cppNamespace": "flight::swf",
       "emittedModules": 46,

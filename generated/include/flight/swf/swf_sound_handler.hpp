@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstdint>
 #include <flight/boolean.hpp>
+#include <flight/callable.hpp>
 #include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -269,7 +270,7 @@ inline void read_swf_start_sound(flight::Ref<flight::types::SwfTagReader> body, 
   if (((character_id == 0.0) || !info.has_value())) {
     return;
   }
-  auto cue = create_swf_audio_cue(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SwfSoundInfo>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<SwfSoundInfo>>>>(info.value())), frame, acquire_swf_sound_resource(state, character_id));
+  auto cue = create_swf_audio_cue(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SwfSoundInfo>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SwfSoundInfo>>>>(info.value())), frame, acquire_swf_sound_resource(state, character_id));
   cues.push(cue);
   state->sound_cues_awaiting_rate.push(flight::make_ref<character_id_cue_1789e18ad131005e>(character_id_cue_1789e18ad131005e{.character_id = character_id, .cue = cue}));
 }
@@ -285,7 +286,7 @@ inline void read_swf_start_sound2(flight::Ref<flight::types::SwfTagReader> body,
   if (((class_name == flight::String("")) || !info.has_value())) {
     return;
   }
-  auto cue = create_swf_audio_cue(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SwfSoundInfo>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<SwfSoundInfo>>>>(info.value())), frame, flight::audio::create_audio_resource(std::nullopt));
+  auto cue = create_swf_audio_cue(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SwfSoundInfo>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SwfSoundInfo>>>>(info.value())), frame, flight::audio::create_audio_resource(std::nullopt));
   cues.push(cue);
   state->sound_cues_awaiting_class.push(flight::make_ref<class_name_cue_ca53ee8b35497d37>(class_name_cue_ca53ee8b35497d37{.class_name = class_name, .cue = cue}));
 }
@@ -296,7 +297,7 @@ inline const double sound_format_nellymoser_16_k = 4.0;
 
 inline const double sound_format_nellymoser_8_k = 5.0;
 
-inline flight::Record<double, flight::String> swf_sound_mime_essences = {{0.0, flight::String("audio/vnd.adobe.swf-pcm")}, {1.0, flight::String("audio/vnd.adobe.swf-adpcm")}, {3.0, flight::String("audio/vnd.adobe.swf-pcm")}, {4.0, flight::String("audio/vnd.adobe.swf-nellymoser")}, {5.0, flight::String("audio/vnd.adobe.swf-nellymoser")}, {6.0, flight::String("audio/vnd.adobe.swf-nellymoser")}, {11.0, flight::String("audio/vnd.adobe.swf-speex")}};
+inline flight::Record<double, flight::String> swf_sound_mime_essences = flight::Record<double, flight::String>{{0.0, flight::String("audio/vnd.adobe.swf-pcm")}, {1.0, flight::String("audio/vnd.adobe.swf-adpcm")}, {3.0, flight::String("audio/vnd.adobe.swf-pcm")}, {4.0, flight::String("audio/vnd.adobe.swf-nellymoser")}, {5.0, flight::String("audio/vnd.adobe.swf-nellymoser")}, {6.0, flight::String("audio/vnd.adobe.swf-nellymoser")}, {11.0, flight::String("audio/vnd.adobe.swf-speex")}};
 
 inline flight::Array<double> swf_sound_rates = flight::Array<double>{5512.0, 11025.0, 22050.0, 44100.0};
 
@@ -352,13 +353,13 @@ inline void append_swf_stream_sound_chunk(flight::Ref<flight::types::SwfTagReade
   if ((timeline->stream_format < 0.0)) {
     return;
   }
-  flight::Record<flight::String, std::variant<bool, double, flight::String>> detail = {{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.axis.sound-format-non-mp3")}}, {flight::String("format"), std::variant<bool, double, flight::String>{std::in_place_type<double>, timeline->stream_format}}};
+  flight::Record<flight::String, std::variant<bool, double, flight::String>> detail = flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.axis.sound-format-non-mp3")}}, {flight::String("format"), std::variant<bool, double, flight::String>{std::in_place_type<double>, timeline->stream_format}}};
   flight::importdiagnostics::report_import_diagnostic(state->diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("swf.stream-sound-format"), flight::String("readSwfTimeline"), detail);
 }
 
-inline flight::Ref<flight::types::SwfTagHandler> swf_sound_handler = flight::make_ref<flight::types::SwfTagHandler>(flight::types::SwfTagHandler{.instantiate = std::optional<flight::Ref<flight::types::SwfTagHandlerInstantiation>>{flight::make_ref<flight::types::SwfTagHandlerInstantiation>(flight::types::SwfTagHandlerInstantiation{.create_resources = std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>>, flight::Ref<flight::types::SwfTagHandlerResources>)>>{[](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>> parsed, flight::Ref<flight::types::SwfTagHandlerResources> out) {
+inline flight::Ref<flight::types::SwfTagHandler> swf_sound_handler = flight::make_ref<flight::types::SwfTagHandler>(flight::types::SwfTagHandler{.instantiate = std::optional<flight::Ref<flight::types::SwfTagHandlerInstantiation>>{flight::make_ref<flight::types::SwfTagHandlerInstantiation>(flight::types::SwfTagHandlerInstantiation{.create_resources = std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>>, flight::Ref<flight::types::SwfTagHandlerResources>)>>{flight::Function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>>, flight::Ref<flight::types::SwfTagHandlerResources>)>{[](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>> parsed, flight::Ref<flight::types::SwfTagHandlerResources> out) {
   ([&]() { auto&& array_push_receiver = out->audio; const auto array_push_arguments = ([&]() { flight::Array<flight::types::AudioResourceReference> array_spread_result; for (const auto& array_spread_item : create_swf_audio_resources(parsed)) { array_spread_result.push(array_spread_item); } return array_spread_result; }()); for (const auto& array_push_item : array_push_arguments) { array_push_receiver.push(array_push_item); } return static_cast<double>(array_push_receiver.size()); }());
-}}})}, .tags = flight::Array<double>{tag_define_sound, tag_start_sound, tag_start_sound_2, tag_sound_stream_head, tag_sound_stream_head_2, tag_sound_stream_block}, .parse = [](flight::Ref<flight::types::SwfTagReader> body, double tag, flight::Ref<flight::types::SwfTagParseState> state, flight::Ref<flight::types::SwfTagTimelineState> timeline, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> ignored_callback_argument) {
+}}}})}, .tags = flight::Array<double>{tag_define_sound, tag_start_sound, tag_start_sound_2, tag_sound_stream_head, tag_sound_stream_head_2, tag_sound_stream_block}, .parse = flight::Function<bool(flight::Ref<flight::types::SwfTagReader>, double, flight::Ref<flight::types::SwfTagParseState>, flight::Ref<flight::types::SwfTagTimelineState>, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>)>{[](flight::Ref<flight::types::SwfTagReader> body, double tag, flight::Ref<flight::types::SwfTagParseState> state, flight::Ref<flight::types::SwfTagTimelineState> timeline, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> ignored_callback_argument) {
   (void)ignored_callback_argument;
   if ((tag == tag_define_sound)) {
     read_swf_sound_definition(body, state);
@@ -386,11 +387,11 @@ inline flight::Ref<flight::types::SwfTagHandler> swf_sound_handler = flight::mak
     }
   }
   return true;
-}, .finish_timeline = std::optional<std::function<void(flight::Ref<flight::types::SwfTagParseState>, flight::Ref<flight::types::SwfTagTimelineState>)>>{[](flight::Ref<flight::types::SwfTagParseState> state, flight::Ref<flight::types::SwfTagTimelineState> timeline) {
+}}, .finish_timeline = std::optional<std::function<void(flight::Ref<flight::types::SwfTagParseState>, flight::Ref<flight::types::SwfTagTimelineState>)>>{flight::Function<void(flight::Ref<flight::types::SwfTagParseState>, flight::Ref<flight::types::SwfTagTimelineState>)>{[](flight::Ref<flight::types::SwfTagParseState> state, flight::Ref<flight::types::SwfTagTimelineState> timeline) {
   append_swf_stream_sound_cue(state, timeline->cues, timeline->stream_chunks, timeline->stream_start_frame);
-}}, .resolve = std::optional<std::function<void(flight::Ref<flight::types::SwfTagParseState>, flight::Ref<flight::types::SwfTimeline>)>>{[contextual_callable = [](flight::Ref<flight::types::SwfTagParseState> state) {
+}}}, .resolve = std::optional<std::function<void(flight::Ref<flight::types::SwfTagParseState>, flight::Ref<flight::types::SwfTimeline>)>>{[contextual_callable = flight::Function<void(flight::Ref<flight::types::SwfTagParseState>)>{[](flight::Ref<flight::types::SwfTagParseState> state) {
   resolve_swf_sound_class_cues(state);
   convert_swf_sound_cue_times(state);
-}](flight::Ref<flight::types::SwfTagParseState> contextual_callable_argument0, flight::Ref<flight::types::SwfTimeline> contextual_callable_argument1) -> void { contextual_callable(contextual_callable_argument0); }}});
+}}](flight::Ref<flight::types::SwfTagParseState> contextual_callable_argument0, flight::Ref<flight::types::SwfTimeline> contextual_callable_argument1) -> void { contextual_callable(contextual_callable_argument0); }}});
 
 } // namespace flight::swf

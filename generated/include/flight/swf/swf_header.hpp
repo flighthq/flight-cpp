@@ -24,6 +24,14 @@ inline const double swf_header_min_length = 12.0;
 
 inline const double swf_fixed_8_8_one = 256.0;
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_NEXT_POS_RECT_9CCF19B77F078453
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_NEXT_POS_RECT_9CCF19B77F078453
+struct next_pos_rect_9ccf19b77f078453 : public flight::ReferenceEnabled {
+  double next_pos;
+  flight::Ref<flight::types::SwfTagRectangle> rect;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_NEXT_POS_RECT_9CCF19B77F078453
+
 inline std::optional<flight::Ref<flight::types::SwfHeader>> parse_swf_header(flight::Uint8Array source, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostDecompressDeflateCapability>>>>> deflate, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostDecompressLzmaCapability>>>>> lzma) {
   std::optional<flight::Uint8Array> uncompressed = flight::swf::uncompress_swf_source(source, deflate, lzma, std::nullopt);
   if (!uncompressed.has_value()) {

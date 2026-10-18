@@ -129,7 +129,7 @@ inline flight::Ref<advances_metrics_1c5170fa659cd526> derive_swf_glyph_outline_d
   double max_y = -std::numeric_limits<double>::infinity();
   for (auto outline : outlines) {
     flight::Ref<flight::types::Rectangle> bounds = flight::make_ref<flight::types::Rectangle>(flight::types::Rectangle{.height = 0.0, .width = 0.0, .x = 0.0, .y = 0.0});
-    if ((!outline.has_value() || !flight::path::get_path_bounds(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(outline.value()), bounds))) {
+    if ((!outline.has_value() || !flight::path::get_path_bounds(outline.value(), bounds))) {
       advances.push(0.0);
       continue;
     }
@@ -160,7 +160,7 @@ inline std::optional<flight::Ref<flight::types::Path>> create_swf_glyph_outline_
   auto outline = flight::path::create_path(flight::String("nonZero"));
   for (auto region : regions.value()) {
     auto restored = flight::path::create_path(region->path->winding);
-    flight::path::transform_path(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Path>>>>(region->path)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(font_shape_to_design_units)), restored);
+    flight::path::transform_path(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>(region->path)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(font_shape_to_design_units)), restored);
     for (auto command : restored->commands) {
       outline->commands.push(command);
     }
@@ -318,7 +318,7 @@ inline std::optional<flight::Ref<flight::types::Shape>> create_swf_text_shape(fl
               }
               if ((font.has_value() && (scale > 0.0))) {
                 if (font.value()->get_glyph_outline(glyph_outline, index)) {
-                  append_swf_glyph_outline(shape, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Path>>>>(glyph_outline)), color, scale, (x / twips_per_pixel_flight_value_variable__u000054__u000057__u000049__u000050__u000053__u00005f__u000050__u000045__u000052__u00005f__u000050__u000049__u000058__u000045__u00004c__flight_private_9101c7a55315c791), (y / twips_per_pixel_flight_value_variable__u000054__u000057__u000049__u000050__u000053__u00005f__u000050__u000045__u000052__u00005f__u000050__u000049__u000058__u000045__u00004c__flight_private_9101c7a55315c791));
+                  append_swf_glyph_outline(shape, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>(glyph_outline)), color, scale, (x / twips_per_pixel_flight_value_variable__u000054__u000057__u000049__u000050__u000053__u00005f__u000050__u000045__u000052__u00005f__u000050__u000049__u000058__u000045__u00004c__flight_private_9101c7a55315c791), (y / twips_per_pixel_flight_value_variable__u000054__u000057__u000049__u000050__u000053__u00005f__u000050__u000045__u000052__u00005f__u000050__u000049__u000058__u000045__u00004c__flight_private_9101c7a55315c791));
                 }
               }
               (x += advance);

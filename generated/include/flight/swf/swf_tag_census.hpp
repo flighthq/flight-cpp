@@ -29,6 +29,14 @@ inline flight::String get_swf_tag_name(double code) {
 
 inline const double swf_tag_long_form_length_flight_value_variable__u000053__u000057__u000046__u00005f__u000054__u000041__u000047__u00005f__u00004c__u00004f__u00004e__u000047__u00005f__u000046__u00004f__u000052__u00004d__u00005f__u00004c__u000045__u00004e__u000047__u000054__u000048__flight_private_854255cf5065d563 = 63.0;
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_NEXT_POS_RECT_422DBA13A33D8C57
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_NEXT_POS_RECT_422DBA13A33D8C57
+struct next_pos_rect_422dba13a33d8c57 : public flight::ReferenceEnabled {
+  double next_pos;
+  flight::Ref<flight::types::SwfTagRectangle> rect;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_NEXT_POS_RECT_422DBA13A33D8C57
+
 inline std::optional<flight::Map<double, double>> collect_swf_tag_counts(flight::Uint8Array source, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostDecompressDeflateCapability>>>>> deflate, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostDecompressLzmaCapability>>>>> lzma) {
   auto header = flight::swf::parse_swf_header(source, deflate, lzma);
   if (!header.has_value()) {

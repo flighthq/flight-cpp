@@ -271,7 +271,7 @@ inline bool read_swf_filter_list(flight::Ref<flight::swf::SwfReader> reader, fli
             return false;
           }
           if ((flight::bitwise_and(blur_flags, filter_passes) > 1.0)) {
-            flight::Record<flight::String, std::variant<bool, double, flight::String>> detail = {{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.placement.filter-list")}}, {flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("passes")}}, {flight::String("filterId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, id}}};
+            flight::Record<flight::String, std::variant<bool, double, flight::String>> detail = flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.placement.filter-list")}}, {flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("passes")}}, {flight::String("filterId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, id}}};
             flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("swf.filter-field-unrepresentable"), flight::String("readSwfFilterList"), detail);
           }
           out_effects.push(flight::effects::create_blur_effect(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<blur_x_blur_y_cb675b2356fd5887>>>>(flight::row_field<flight::RowKey<"blurX">>(std::optional<double>{blur_x_2}), flight::row_field<flight::RowKey<"blurY">>(std::optional<double>{blur_y_2}))));
@@ -291,10 +291,10 @@ inline bool read_swf_filter_list(flight::Ref<flight::swf::SwfReader> reader, fli
           }
           auto options = flight::make_ref<alpha_blur_x_blur_y_color_quality_strength_15f5c1a09b0347c4>(alpha_blur_x_blur_y_color_quality_strength_15f5c1a09b0347c4{.alpha = color_2->alpha, .blur_x = blur_x_3, .blur_y = blur_y_3, .color = color_2->rgb, .quality = flight::bitwise_and(flags_2, filter_passes), .strength = strength_2});
           if ((flight::bitwise_and(flags_2, filter_inner) != 0.0)) {
-            out_effects.push(flight::effects::create_inner_glow_effect(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_color_blur_x_blur_y_quality_source_mode_alpha_d86576b8a102a3e4>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<alpha_blur_x_blur_y_color_quality_strength_15f5c1a09b0347c4>>>>(options))));
+            out_effects.push(flight::effects::create_inner_glow_effect(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_color_blur_x_blur_y_quality_source_mode_alpha_d86576b8a102a3e4>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<alpha_blur_x_blur_y_color_quality_strength_15f5c1a09b0347c4>>>>(options))));
           }
           else {
-            out_effects.push(flight::effects::create_outer_glow_effect(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_color_blur_x_blur_y_quality_source_mode_alpha_68fd46ca68625e1e>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<alpha_blur_x_blur_y_color_quality_strength_15f5c1a09b0347c4>>>>(options))));
+            out_effects.push(flight::effects::create_outer_glow_effect(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<strength_color_blur_x_blur_y_quality_source_mode_alpha_68fd46ca68625e1e>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<alpha_blur_x_blur_y_color_quality_strength_15f5c1a09b0347c4>>>>(options))));
           }
           {
             (index += 1.0);
@@ -352,7 +352,7 @@ inline bool read_swf_filter_list(flight::Ref<flight::swf::SwfReader> reader, fli
             return false;
           }
           if (((id == filter_gradient_glow) && (((angle_3 != 0.0) || (distance_3 != 0.0)) || (flight::bitwise_and(flags_4, flight::bitwise_or(filter_inner, filter_bevel_on_top)) != 0.0)))) {
-            flight::Record<flight::String, std::variant<bool, double, flight::String>> detail_2 = {{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.placement.filter-list")}}, {flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("placement")}}, {flight::String("filterId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, id}}};
+            flight::Record<flight::String, std::variant<bool, double, flight::String>> detail_2 = flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.placement.filter-list")}}, {flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("placement")}}, {flight::String("filterId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, id}}};
             flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("swf.filter-field-unrepresentable"), flight::String("readSwfFilterList"), detail_2);
           }
           if ((id == filter_gradient_glow)) {
