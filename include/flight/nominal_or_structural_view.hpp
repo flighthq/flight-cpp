@@ -43,7 +43,17 @@ class NominalOrStructuralView final {
   template <typename Member, auto Field>
   [[nodiscard]] MemberValue<Member> read(std::string_view name) const {
     if (nominal_) return MemberValue<Member>{std::optional<Member>{(*nominal_).*Field}};
-    return StructuralMemberView<Base>(object_).template read<Member>(name);
+    const StructuralMemberView<Base> recorded(object_);
+    if (recorded.has_binding_metadata()) return recorded.template read<Member>(name);
+    // No recorded owner yet: read the object's own members through its EXACT allocated type, with an
+    // owner that is built for this read and registered nowhere. An object with no exact-type evidence
+    // reads every member as absent, as before.
+    const auto identity = detail::recoverable_owner_identity(object_);
+    if (!identity || !identity->view_row_owner) return MemberValue<Member>{};
+    const auto owner = std::static_pointer_cast<RowOwner>(identity->view_row_owner(identity->object));
+    if (!owner) return MemberValue<Member>{};
+    if (auto* value = owner->template named_value_if<Member>(name)) return MemberValue<Member>{*value};
+    return MemberValue<Member>{};
   }
 
   // Writes `name` on the same object. False only when the object has neither a nominal owner nor
@@ -53,6 +63,12 @@ class NominalOrStructuralView final {
     if (nominal_) {
       (*nominal_).*Field = std::move(value);
       return true;
+    }
+    // A write needs the object's registered owner so a by-name cell outlives this access; create it from
+    // the exact allocated type if the object has none yet. A declared native member is its real field.
+    if (!StructuralMemberView<Base>(object_).has_binding_metadata()) {
+      const auto identity = detail::recoverable_owner_identity(object_);
+      if (identity && identity->own_row_owner) (void)identity->own_row_owner(identity->object);
     }
     return StructuralMemberView<Base>(object_).template write<Member>(name, std::move(value));
   }

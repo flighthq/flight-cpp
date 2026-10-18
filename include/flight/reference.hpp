@@ -5,6 +5,7 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <type_traits>
 #include <typeindex>
 #include <typeinfo>
@@ -153,9 +154,22 @@ void* native_owner_cast(Value* object, std::type_index target) noexcept {
 // Keyed by SHARED OWNERSHIP, not by address: a reference converted to a base, or aliased to a member,
 // still shares the allocation's control block, so `owner_less` finds the allocation whatever pointer the
 // caller holds. Weak, like the self-reference registry: remembering an owner never keeps it alive.
+// Row metadata for a recoverable owner's EXACT type, without naming RowOwner here. The primary reports
+// none; flight/structural_ref.hpp supplies the real answer by a constrained partial specialization, the
+// same shape AnyRowOwnerFactory uses. `view` builds an UNREGISTERED owner for one read (no registry write),
+// and `own` returns the registered owner a write must go through. Both are erased to void.
+template <typename Object>
+struct RecoverableRowOwnerFactory {
+  [[nodiscard]] static std::shared_ptr<void> view(const std::shared_ptr<void>&) { return nullptr; }
+  [[nodiscard]] static std::shared_ptr<void> own(const std::shared_ptr<void>&) { return nullptr; }
+};
+
 struct RecoverableOwnerEntry final {
   void* object{nullptr};
   void* (*cast)(void*, std::type_index) noexcept {nullptr};
+  std::type_index type{typeid(void)};
+  std::shared_ptr<void> (*view_row_owner)(const std::shared_ptr<void>&){nullptr};
+  std::shared_ptr<void> (*own_row_owner)(const std::shared_ptr<void>&){nullptr};
 };
 
 struct RecoverableOwnerRegistry final {
@@ -184,7 +198,35 @@ void remember_recoverable_owner(const std::shared_ptr<Value>& reference) {
       RecoverableOwnerEntry{static_cast<void*>(reference.get()),
                             [](void* object, std::type_index target) noexcept -> void* {
                               return native_owner_cast<Value>(static_cast<Value*>(object), target);
-                            }});
+                            },
+                            std::type_index(typeid(Value)),
+                            &RecoverableRowOwnerFactory<Value>::view,
+                            &RecoverableRowOwnerFactory<Value>::own});
+}
+
+// The exact allocated type and the complete object behind a recoverable reference, as the SAME
+// allocation (an aliasing reference to the most-derived object). Empty for anything not registered.
+struct RecoverableOwnerIdentity final {
+  std::shared_ptr<void> object;
+  std::type_index type{typeid(void)};
+  std::shared_ptr<void> (*view_row_owner)(const std::shared_ptr<void>&){nullptr};
+  std::shared_ptr<void> (*own_row_owner)(const std::shared_ptr<void>&){nullptr};
+};
+
+template <typename Source>
+[[nodiscard]] std::optional<RecoverableOwnerIdentity> recoverable_owner_identity(const std::shared_ptr<Source>& source) {
+  if (!source) return std::nullopt;
+  auto& registry = recoverable_owner_registry();
+  const std::lock_guard lock(registry.mutex);
+  const auto found = registry.entries.find(std::weak_ptr<void>(std::static_pointer_cast<void>(source)));
+  if (found == registry.entries.end()) return std::nullopt;
+  auto owner = found->first.lock();
+  if (!owner) {
+    registry.entries.erase(found);
+    return std::nullopt;
+  }
+  return RecoverableOwnerIdentity{std::shared_ptr<void>(std::move(owner), found->second.object), found->second.type,
+                                  found->second.view_row_owner, found->second.own_row_owner};
 }
 
 } // namespace detail

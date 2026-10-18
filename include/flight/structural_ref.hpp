@@ -753,6 +753,26 @@ struct AnyRowOwnerFactory<Object> {
   }
 };
 
+// The exact-type row metadata `flight::make_ref` records for a recoverable owner (flight/reference.hpp).
+// `view` builds a NativeRowOwner bound to the object's generated members and registers nothing, so a read
+// through it never mutates the owner registry. `own` is owner_for, which a write needs, because a by-name
+// cell must outlive the access.
+template <typename Object>
+  requires(!std::is_void_v<Object>)
+struct RecoverableRowOwnerFactory<Object> {
+  [[nodiscard]] static std::shared_ptr<void> view(const std::shared_ptr<void>& erased) {
+    if (!erased) return nullptr;
+    auto object = std::static_pointer_cast<Object>(erased);
+    auto owner = std::make_shared<NativeRowOwner<Object>>(object);
+    bind_generated_row_members(*owner, object);
+    return std::static_pointer_cast<void>(std::move(owner));
+  }
+  [[nodiscard]] static std::shared_ptr<void> own(const std::shared_ptr<void>& erased) {
+    if (!erased) return nullptr;
+    return std::static_pointer_cast<void>(owner_for(std::static_pointer_cast<Object>(erased)));
+  }
+};
+
 // A JavaScript `set` trap over one row. It intercepts exactly one property -- a computed symbol
 // key or a plain named key, never both -- and forwards everything else to the proxied owner
 // untouched. Both key spaces are represented because TypeScript writes both: the Entity runtime

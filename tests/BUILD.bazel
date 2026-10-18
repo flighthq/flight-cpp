@@ -140,7 +140,10 @@ cc_test(
     name = "nominal_or_structural_view_test",
     srcs = ["nominal_or_structural_view_test.cpp"],
     size = "small",
-    deps = ["//:cpp"],
+    deps = [
+        "//:cpp",
+        "//:sdk_preview",
+    ],
 )
 
 cc_test(
