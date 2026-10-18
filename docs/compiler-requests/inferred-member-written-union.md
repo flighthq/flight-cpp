@@ -29,3 +29,12 @@ title-level regression comparison across the semantic and backend suites (82 fai
 without the patch on the same stack, identical titles). It expires when inferred receiver shapes
 retain the member's written union, or upstream lowers the member type node without re-collapsing
 `T | unknown`.
+
+## Measured
+
+Scoped `pkg:generate -- @flighthq/loader -j2` (exit 0, one header changed) re-emitted
+`loader/load.hpp`: `loadBytes` now emits
+`flight::Uint8Array(flight::union_kind_or_throw<flight::ArrayBuffer>(response->body))`. With that
+slice, all four loader headers (`_internal_index`, `contract`, `load`, `resource_loader`) compile
+standalone at `-j2`, and the registered factory/progress consumer builds and runs. The three rows
+that carried `no-viable-conversion-e509cc4b` are recorded as pass rows and the cluster is retired.
