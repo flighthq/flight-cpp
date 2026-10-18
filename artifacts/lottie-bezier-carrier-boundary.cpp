@@ -9,7 +9,7 @@ using Schema=flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Lottie
 using Row=flight::StructuralRef<Schema>;
 static_assert(!std::is_convertible_v<Row,flight::Ref<flight::types::LottieShapePath>>);
 int main(){
- int checks=0,failures=0;auto check=[&](bool ok){++checks;if(!ok)++failures;};
+ int checks=0,failures=0;auto check=[&](bool ok){++checks;if(!ok){++failures;std::cerr<<"check "<<checks<<" failed\n";}};
  std::optional<Row> retained;std::weak_ptr<flight::JsonObject> lifetime;
  {
   auto parsed=flight::Json::parse(R"({"v":7})");auto object=parsed.object_owner();lifetime=object;
