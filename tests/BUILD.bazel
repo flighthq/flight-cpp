@@ -1829,3 +1829,10 @@ cc_test(
     size = "small",
     deps = ["//:cpp", "//:sdk_preview"],
 )
+
+cc_test(
+    name = "generated_scene2d_formats_svg_cascade_test",
+    srcs = ["generated_scene2d_formats_svg_cascade_test.cpp"],
+    deps = ["//:runtime", "//:sdk_preview"],
+    tags = ["pkg:scene2d-formats"],
+)
