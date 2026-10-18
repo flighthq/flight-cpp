@@ -51,5 +51,6 @@ behind other blockers).
 
 The compiler source patch `compiler-optional-record-literal-materialization` now names the contextual
 Record at the literal allocation boundary. See the [shared cause and qualification](optional-record-literal-not-materialized.md#shared-compiler-correction).
-It preserves the full caller domain and existing owners. Local workarounds remain carried pending
-normal generation and separate expiry qualification; no header gain follows from compiler tests alone.
+It preserves the full caller domain and existing owners. The original 3DS public consumer now passes CMake/CTest, and the measured historical subset has
+nine passing headers and eight later failures. Local workarounds remain carried for separate expiry qualification; no whole-package
+completion follows from these header results.

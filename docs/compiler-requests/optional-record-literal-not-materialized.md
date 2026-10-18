@@ -61,8 +61,9 @@ field order and abrupt completion remain observable.
 
 The focused original emitted fixture fails at six calls under both the raw pinned backend and the
 preceding compiler stack. The corrected fixture compiles, links and runs its ownership, absence and
-ordering controls. Normal SDK regeneration and actual original public consumer qualification are pending;
-this compiler proof alone does not promote historical header rows.
+ordering controls. Normal SDK regeneration and actual original public consumer qualification now pass for the shared
+correction. The completed scoped check promotes only the nine measured passing historical rows;
+remaining first failures are recorded below.
 
 The current historical cluster has three later follow-ons (`spine_parse`, SWF `_internal_index` and
 `contract`) in addition to the assigned17. The newly exposed five `svg_gradient.hpp:106` callers are a
@@ -99,3 +100,64 @@ This is deliberately local: two sites in one module, carried as part of a bounde
 root was effect-owner heritage. It does not claim the 16-site family is fixed, and the remaining sites
 across the other packages still fail exactly as recorded above; the emitter must still name the storage
 for an object literal written directly in an optional Record slot.
+
+## Scoped native qualification
+
+At Flight `a627849` / compiler `806d257`, the normal compiler stack of 72 patches applies, builds and
+reverts to the exact clean pin. The four root packages lower 2005 modules and process the requested
+28 source modules through normal best-effort generation: 19 emitted, nine existing partial refusals.
+All original function definitions and every existing `NOT GENERATED` marker line survive in the 19
+changed normal headers. The applied patch digest is retained exactly; unrelated generated provenance
+and source-patch records are unchanged. No refused function gains a body or a narrower source domain.
+
+Applicability comes from each package's generated environment declaration and
+`deferred-packages.json.applicableEnvironments`: all 27 assigned headers are applicable.
+
+| Assigned membership | Applicable | Header pass | Header fail |
+| --- | ---: | ---: | ---: |
+| Historical optional Record sites | 17 | 9 | 8 |
+| Previously exposed gradient106 callers | 5 | 0 | 5 |
+| Previously exposed bounds114 callers | 5 | 0 | 5 |
+| Total distinct assigned headers | 27 | 9 | 18 |
+
+All 27 were attempted with Clang 22.1.8 at jobs 2; none is unattempted. A separate direct
+`svg_gradient.hpp` support-header check fails at its later callback result and is outside that 27.
+The three later cluster follow-ons are not requalified. No failing assigned header retains the old
+optional Record constructor as its first diagnostic.
+
+The nine passing historical headers are `rive_skin`, `md2_parse`, `three_ds_keyframe_handler`,
+`three_ds_material_handler`, `three_ds_parse`, `dragon_bones_parse`,
+`spine_binary_draw_order_timeline_handler`, `spine_binary_slots_handler` and `spine_binary_versioned`.
+Passing a partial header does not complete its refused public surface; existing omission markers remain.
+Only those nine rows are promoted. Failing assignment labels remain historical; current observations
+are in the delivered qualification report. Global historical sweep totals are unchanged.
+
+| Current first failure | Assigned headers |
+| --- | ---: |
+| `obj_parse.hpp:204`: readonly `SequenceView` lacks `find` | 1 |
+| `three_ds_mesh_handler.hpp:391`: retained call to refused material conversion | 1 |
+| `spine_binary_bones_handler.hpp:48`: anonymous preset array storage | 1 |
+| `spine_binary_skins_handler.hpp:274`: retained call to refused attachment reader | 1 |
+| `swf_jpeg_bitmap_handler.hpp:233`: different package owners for the same anonymous bitmap shape | 4 |
+| `svg_bounds.hpp:114`: unavailable Shape bounds function | 5 |
+| `svg_gradient.hpp:174`: anonymous stop-map result array disagrees with the retained stop array | 5 |
+
+The bounds case has a real raw TypeScript body at `shape.ts:63`. Generation refuses its writable
+ShapeRuntime refinement (`cpp-structural-assertion-writable-capability-unproven`), and the existing
+partial Shape override explicitly leaves runtime recovery, bounds and revision behavior unsupported.
+It is separate from Record construction. The gradient map explicitly creates fresh stop/color literals;
+converting existing owners into another nominal array would not repair its missing contextual owner.
+
+The original exported `parseThreeDsDocumentWithDispatch` and `tallyThreeDsDrop` now compile, link and run
+in the existing `flight_cpp.generated_scene3d_formats` CMake target (CTest 1/1 PASS). Before regeneration,
+that actual consumer failed exactly at `three_ds_parse.hpp:208` optional Record construction. The same
+cases pass against the original pinned TypeScript import closure: wrong file ID and exact numeric detail,
+absent detail/sink, malformed child recovery, ordered aggregated fields, first-offender count and retained
+Record identity/live mutation. No copied parser, fake helper, replacement owner or declaration-only
+link workaround supplies the behavior. Existing scene3d-formats controls also pass.
+
+The required full compiler static check retains four known baseline gate failures (format, lint, import
+order and five peer fixture type errors). Own scoped formatting/lint and production TypeScript pass;
+source-patch contracts pass 2/2. These results establish this shared correction and the measured subset,
+not full SDK or package completion. Local diagnostic-detail workarounds remain for separate expiry
+qualification.

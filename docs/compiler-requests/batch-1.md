@@ -10,7 +10,7 @@ emitted C++, the expected C++ and the affected modules.
 | 116 | [external-descriptor-literal-construction](external-descriptor-literal-construction.md) | object literal passed to a bound WebGPU method is emitted as a bare braced list; it should construct the bound descriptor type |
 | 34 | [local-reexport-using-before-declaration](local-reexport-using-before-declaration.md) | `using` of a local re-export is emitted before the declaration it names (scene2d-canvas) |
 | 31 | [membership-test-lowered-literally](membership-test-lowered-literally.md), [record-in-operator-lowered-verbatim](record-in-operator-lowered-verbatim.md) | TypeScript `in` is emitted verbatim as C++ `in` |
-| 16 | [optional-record-literal-not-materialized](optional-record-literal-not-materialized.md) | object literal in an `optional<Record<…>>` parameter is emitted as a bare braced pair list |
+| 16 | [optional-record-literal-not-materialized](optional-record-literal-not-materialized.md) | shared compiler correction and original 3DS consumer qualified; 9 of 17 historical headers pass, eight have later failures; SVG results counted separately |
 | 15 | [json-parse-assertion-static-cast](json-parse-assertion-static-cast.md) | `JSON.parse(...) as T` is emitted as `static_cast` from `JsonValue` to an unrelated `Ref<T>` |
 | 13 | [array-pair-literal-deduction](array-pair-literal-deduction.md) | a tuple-typed pair literal is emitted as `flight::Array{...}` |
 | 9 | [builtin-numeric-predicate-callback](builtin-numeric-predicate-callback.md) | `isFinite` used as a callback is emitted as the overloaded `std::isfinite` name |

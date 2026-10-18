@@ -34,7 +34,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 5 | `call-has-no-matching-3882b3e9` | 28 | 2D, 3D, TEXT | compiler | bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier *(request filed; builder4/G2; +1 from `obj_standard_pbr_material_handler.hpp` after its module emitted; +1 from `md5_skeleton_handler.hpp` after the mesh override bridges)* |
 | 6 | `other-52e846a6` | 18 | ANIM | compiler *(existing request)* | a nullable attachment array element is not lifted into the reference/null/undefined slot carrier |
 | 7 | `call-has-no-matching-47410fe2` | 16 | 2D, 3D | runtime (fixed) | Number is now a callable conversion object; G2 recheck: 2 pass, 14 fail at later compiler diagnostics |
-| 8 | `other-40da43f7` | 19 | 2D, 3D, ANIM | compiler | an optional<Record<...>> is initialised from a shape that is not its declared storage |
+| 8 | `other-40da43f7` | 11 | 2D, 3D, ANIM | compiler (shared fix qualified) | historical assignment labels after nine measured passes; remaining assigned headers have later blockers; three follow-ons unmeasured |
 | 9 | `static-cast-assertion-9674a66c` | 17 | 2D | compiler | a TypeScript `as` on `JSON.parse` is emitted as a `static_cast` from `JsonValue` to an unrelated `Ref<T>` *(request filed)* |
 | 10 | `call-has-no-matching-076d207f` | 14 | WGPU | runtime (fixed) | typed `create_pipeline_layout` descriptor overload; G2 recheck: 0 pass, 14 fail at `create_bind_group_layout` |
 | 11 | `other-e9936ce6` | 13 | 3D | compiler | a pair literal the declared element type spells as `std::tuple<A, B>` is emitted as `flight::Array{...}`, so class-template ded... *(request filed)* |
@@ -559,15 +559,29 @@ sweep gain is claimed. The earlier nine-header follow-on table above remains his
 The [predicate request](compiler-requests/builtin-numeric-predicate-callback.md#native-collada-public-header-carry-2026-10-17)
 records the exact source semantics, missing-id debt, override rationale/expiry and proof limits.
 
-### 8. `other-40da43f7` — 19 header(s)
+### 8. `other-40da43f7` — 11 historical assignment label(s)
 
-- cause: an optional<Record<...>> is initialised from a shape that is not its declared storage
+- historical cause: an optional<Record<...>> is initialised from a shape that is not its declared storage
 - lanes: 2D, 3D, ANIM
 - fix route: compiler
-- why this route: an optional<Record<...>> is initialised from a shape that is not its declared storage
-- first failure at: `flight/scene3d_formats/three_ds_parse.hpp:208`
-- example: `no matching constructor for initialization of 'optional<Record<String, variant<bool, double, String>>>'`
-- compiler request: [optional-record-literal-not-materialized.md](compiler-requests/optional-record-literal-not-materialized.md) (filed; sites still failing, status unchanged)
+- historical route: an optional<Record<...>> is initialised from a shape that is not its declared storage
+- historical first failure at: `flight/scene3d_formats/three_ds_parse.hpp:208`
+- historical example: `no matching constructor for initialization of 'optional<Record<String, variant<bool, double, String>>>'`
+- compiler request: [optional-record-literal-not-materialized.md](compiler-requests/optional-record-literal-not-materialized.md) (shared correction qualified; see scoped result below)
+
+The shared compiler now materializes nonempty contextual Records before optional/union storage.
+The original 3DS public parser/tally passes source parity and CMake/CTest (1/1). Scoped qualification
+with Clang 22.1.8 at jobs 2 measures 27 distinct applicable assigned headers: nine of the 17 historical
+headers pass, eight have later failures; both five-header SVG groups still fail at separate causes.
+The direct gradient support root is separate. Every retained definition and existing refusal marker
+survives; partial-header passes do not complete refused public functions. Only nine measured passing
+rows are promoted. The machine cluster had 20 labels (17 assigned plus three later follow-ons), so 11
+labels remain. The three later follow-ons were not requalified. Failing labels are historical assignment
+membership, not current first causes. Current errors concern readonly `SequenceView.find`, refused
+material/attachment callees, preset array storage, cross-package bitmap literal owners, unavailable
+Shape bounds/runtime refinement and the anonymous gradient map-result array. No assigned first error
+is the original optional Record constructor. See the [scoped qualification](compiler-requests/optional-record-literal-not-materialized.md#scoped-native-qualification).
+Global historical sweep totals are unchanged; the previous 51-header generic survey was not repeated.
 
 ### 9. `static-cast-assertion-9674a66c` — 17 header(s)
 
