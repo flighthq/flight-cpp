@@ -4403,6 +4403,23 @@
       "unblocks": "Source-faithful own-data result for parseStyleDeclarations __proto__ input in the original SVG style module; no general inherited-prototype lookup capability is supplied.",
       "expires": "when emitted ordinary-object string writes preserve the inherited __proto__ setter no-op, or Flight explicitly guards this assignment.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-nullable-map-get-nullish-projection",
+      "dependency": "flight-compiler",
+      "patch": "compiler-nullable-map-get-nullish-projection.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/scene2d-formats",
+      "answers": "diagnostic",
+      "refusal": "A direct Map<K,V|null>.get(key) ?? null is projected as a dual-sentinel variant although flight-cpp stores V|null in optional<V> and Map.get adds an outer optional; SVG definition-style parent selection applies std::get_if to this nested optional.",
+      "rewrite": "At the existing exact-carrier dual-sentinel-to-nullable projection, recognize only a non-optional standard Map/ReadonlyMap get with one argument, nullable optionalSingle value storage and an exactly matching optionalSingle null destination. Collapse its outer lookup with value_or(std::nullopt); retain all other projection branches and a focused backend regression.",
+      "equivalence": "The authored null fallback intentionally maps both missing lookup and stored null to null while retaining a present payload. Only this coalesce collapses those states. The original receiver/key are emitted once in the original order, the lookup is not repeated, and the exact optional value handle is retained without casting, copying its owner/storage, constructing a replacement graph node or granting writes. Literal null has no fallback effects. Non-Map lookalikes and variant-backed values keep their existing projection; general Map.get result conversion is not claimed.",
+      "verification": "Compiler TypeScript build passes. Ten direct public-compiler controls cover Map/ReadonlyMap object, number, string and boolean values plus non-Map counterexamples. Five actually emitted probe functions compile/link/run: missing/null/present owner identity, false/empty/-0/NaN, single ordered receiver/key evaluation and same thrown identity. Unit fixture carried; local Vitest/Oxlint/check launcher unavailable, reported separately. Final normal SVG emission and original public-header consumer/header gate required before handoff.",
+      "whyNotUpstreamFirst": "This is a locally supported compiler representation patch through the established compiler source-patch mechanism. The runtime already provides the nested optional carrier; the backend must project it at the authored null coalesce instead of inspecting it as a variant.",
+      "unblocks": "SVG definition-style parent null coalesce and the identical exact nullable Map-get projection shape; supplies no refused CSS cascade/collector body or generic lookup conversion.",
+      "expires": "when flight-cpp nullable Map-get null coalescing uses the selected nested optional runtime representation through the same exact value carrier.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }
