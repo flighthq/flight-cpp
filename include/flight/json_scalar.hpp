@@ -420,4 +420,114 @@ class JsonAssertionRow final {
   JsonValue value_;
 };
 
+// The assertion answer at the ABI the generated code already uses: a plain StructuralRef<Schema>.
+// An object or array root is a row over the parsed owner exactly as json_structural_row builds it.
+// A primitive or null root is a row over this bounded owner, which keeps the raw value so the
+// declared row type crosses parameters, returns and context fields unchanged:
+//   - typeof: null -> "object", number/string/boolean -> their own name;
+//   - truthiness and ToNumber come from the raw value;
+//   - a member read on null throws TypeError, exactly where JavaScript does;
+//   - a member read on a number or boolean is absent (JavaScript yields undefined);
+//   - a string root owns `length` and its UTF-16 indices and nothing else.
+// Nothing is copied, no schema is generated, and the row type itself is unchanged.
+class JsonRootRowOwner final : public RowOwner {
+ public:
+  explicit JsonRootRowOwner(Any root) : root_(std::move(root)) {}
+
+  [[nodiscard]] std::shared_ptr<void> native_object() const noexcept override { return {}; }
+  [[nodiscard]] std::type_index native_type() const noexcept override { return typeid(void); }
+
+  [[nodiscard]] std::shared_ptr<RowCell> named_cell(std::string_view name) const override {
+    require_member_access();
+    const auto key = String::from_utf8(name);
+    if (root_.kind() != AnyKind::string || !string_member_present(key)) return {};
+    const Any root = root_;
+    return std::make_shared<detail::ReadonlyNamedCell>([root, key] { return read_json_data_property(root, key); });
+  }
+
+  [[nodiscard]] bool has_named_cell(std::string_view name) const override {
+    require_member_access();
+    if (root_.kind() != AnyKind::string) return false;
+    return string_member_present(String::from_utf8(name));
+  }
+
+  [[nodiscard]] std::optional<std::vector<String>> enumerable_string_keys() const override {
+    require_member_access();
+    std::vector<String> keys;
+    if (root_.kind() != AnyKind::string) return keys;
+    const auto& units = root_.as_string().native();
+    for (std::size_t index = 0; index < units.size(); ++index) {
+      keys.push_back(String::from_number(static_cast<double>(index)));
+    }
+    keys.push_back(String("length"));
+    return keys;
+  }
+
+  [[nodiscard]] bool is_nullish() const noexcept { return root_.is_null(); }
+
+  [[nodiscard]] bool to_boolean() const noexcept { return root_.to_boolean(); }
+
+  [[nodiscard]] double to_number() const { return JsonScalarCell{root_}.to_number(); }
+
+  [[nodiscard]] std::string_view type_of() const noexcept {
+    switch (root_.kind()) {
+      case AnyKind::null: return "object";
+      case AnyKind::boolean: return "boolean";
+      case AnyKind::number: return "number";
+      case AnyKind::string: return "string";
+      case AnyKind::undefined: return "undefined";
+      default: return "object";
+    }
+  }
+
+ private:
+  void require_member_access() const {
+    if (root_.is_null()) throw TypeError("Cannot read properties of null or undefined");
+  }
+
+  [[nodiscard]] bool string_member_present(const String& key) const {
+    const auto& units = root_.as_string().native();
+    if (key == String("length")) return true;
+    const auto& digits = key.native();
+    if (digits.empty() || (digits.size() > 1 && digits.front() == u'0')) return false;
+    std::size_t index = 0;
+    for (const auto digit_char : digits) {
+      if (digit_char < u'0' || digit_char > u'9') return false;
+      const auto digit = static_cast<std::size_t>(digit_char - u'0');
+      if (digit >= units.size() || index > (units.size() - 1 - digit) / 10) return false;
+      index = index * 10 + digit;
+    }
+    return true;
+  }
+
+  Any root_;
+};
+
+template <typename Schema>
+[[nodiscard]] inline StructuralRef<Schema> json_assertion_row(const JsonValue& value) {
+  if (value.kind() == JsonValue::Kind::object || value.kind() == JsonValue::Kind::array) {
+    const auto properties = named_properties(value);
+    if (properties.shared_owner()) return StructuralRef<Schema>::from_owner(properties.shared_owner());
+  }
+  return StructuralRef<Schema>::from_owner(std::make_shared<JsonRootRowOwner>(Any(value)));
+}
+
+template <typename Schema>
+[[nodiscard]] inline std::string_view json_row_type_of(const StructuralRef<Schema>& row) {
+  if (const auto* root = dynamic_cast<const JsonRootRowOwner*>(row.shared_owner().get())) return root->type_of();
+  return "object";
+}
+
+template <typename Schema>
+[[nodiscard]] inline bool json_row_is_nullish(const StructuralRef<Schema>& row) {
+  if (const auto* root = dynamic_cast<const JsonRootRowOwner*>(row.shared_owner().get())) return root->is_nullish();
+  return false;
+}
+
+template <typename Schema>
+[[nodiscard]] inline bool json_row_to_boolean(const StructuralRef<Schema>& row) {
+  if (const auto* root = dynamic_cast<const JsonRootRowOwner*>(row.shared_owner().get())) return root->to_boolean();
+  return true;
+}
+
 } // namespace flight

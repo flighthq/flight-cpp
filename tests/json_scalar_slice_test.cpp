@@ -98,6 +98,48 @@ void test_json_scalar_utf16_relational() {
 
 } // namespace
 
+
+namespace {
+
+// The assertion answer AT THE EXISTING ABI: a plain StructuralRef<Schema> for every root kind, with
+// root metadata helpers. Object -> parsed-owner row; primitive -> bounded root row; null -> row whose
+// member read throws TypeError. No wrapper type crosses params/returns/context fields.
+void test_json_assertion_row_adapter() {
+  using RowSchema = flight::RowReadonly<flight::RowOf<flight::Any>>;
+
+  const auto object = flight::json_assertion_row<RowSchema>(flight::Json::parse(flight::String("{\"fr\":30}")));
+  assert(flight::json_row_type_of(object) == "object" && !flight::json_row_is_nullish(object) &&
+         flight::json_row_to_boolean(object));
+  assert(flight::read_json_scalar_row_member(object, flight::String("fr")).as_native_number() == 30.0);
+
+  const auto number = flight::json_assertion_row<RowSchema>(flight::Json::parse(flight::String("30")));
+  assert(flight::json_row_type_of(number) == "number" && !flight::json_row_is_nullish(number) &&
+         flight::json_row_to_boolean(number) &&
+         flight::read_json_scalar_row_member(number, flight::String("anything")).is_absent());
+
+  const auto null_root = flight::json_assertion_row<RowSchema>(flight::Json::parse(flight::String("null")));
+  assert(flight::json_row_type_of(null_root) == "object" && flight::json_row_is_nullish(null_root) &&
+         !flight::json_row_to_boolean(null_root));
+  bool threw = false;
+  try {
+    (void)flight::read_json_scalar_row_member(null_root, flight::String("fr"));
+  } catch (const flight::TypeError&) {
+    threw = true;
+  }
+  assert(threw);
+
+  const auto text = flight::json_assertion_row<RowSchema>(flight::Json::parse(flight::String("\"ab\"")));
+  assert(flight::json_row_type_of(text) == "string");
+  const auto length = flight::read_json_scalar_row_member(text, flight::String("length"));
+  const auto first = flight::read_json_scalar_row_member(text, flight::String("0"));
+  const auto named = flight::read_json_scalar_row_member(text, flight::String("byteLength"));
+  assert(length.is_present() && length.as_native_number() == 2.0);
+  assert(first.is_present() && first.to_string() == flight::String("a"));
+  assert(named.is_absent());
+}
+
+} // namespace
+
 int main() {
   using flight::Any;
   using flight::JsonScalarCell;
@@ -105,6 +147,7 @@ int main() {
   test_row_receiver_projection();
   test_json_structural_row();
   test_json_assertion_row();
+  test_json_assertion_row_adapter();
   test_json_scalar_utf16_relational();
 
   const auto document = flight::Json::parse(flight::String("{\"fr\":30,\"bad\":\"x\"}"));
