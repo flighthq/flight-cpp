@@ -19,12 +19,10 @@ diff --git a/packages/scene3d-formats/src/shared.ts b/packages/scene3d-formats/s
 diff --git a/packages/scene3d-formats/src/objMaterialHelpers.ts b/packages/scene3d-formats/src/objMaterialHelpers.ts
 --- a/packages/scene3d-formats/src/objMaterialHelpers.ts
 +++ b/packages/scene3d-formats/src/objMaterialHelpers.ts
-@@ -1,2 +1,2 @@
--import type { Scene3DDocument, Texture, TextureColorSpace } from '@flighthq/types/contract';
-+import type { Scene3DDocument, Texture, Texture2D, TextureColorSpace } from '@flighthq/types/contract';
- 
-@@ -14,3 +14,3 @@
-   if (uri === null) return null;
--  const texture = createExternalTextureRef(uri, null, document.resources);
-+  const texture = createExternalTextureRef(uri, null, document.resources) as Texture2D;
-   texture.colorSpace = colorSpace;
+@@ -15,3 +15,5 @@
+   const texture = createExternalTextureRef(uri, null, document.resources);
+-  texture.colorSpace = colorSpace;
++  if (texture.dimension === '2d') {
++    texture.colorSpace = colorSpace;
++  }
+   return texture;
