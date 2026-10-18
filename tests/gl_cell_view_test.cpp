@@ -18,6 +18,17 @@ struct GlRuntime : Runtime {
 };
 struct State : flight::ReferenceEnabled { std::optional<flight::Ref<Runtime>> entity_runtime_key; };
 struct GlState : State { using flight_native_base = State; };
+// The actual GL source declares its runtime owner helpers before the complete runtime interface.
+struct ForwardRuntime;
+using ForwardView = flight::NominalOrStructuralView<ForwardRuntime, Runtime>;
+flight::Ref<ForwardRuntime> read_forward_owner(const flight::Ref<State>& state) {
+  return ForwardView::read_cell(state->entity_runtime_key).value().native();
+}
+void write_forward_owner(const flight::Ref<State>& state, flight::Ref<ForwardRuntime> runtime) {
+  ForwardView::write_cell(state->entity_runtime_key, ForwardView(std::move(runtime)));
+}
+struct ForwardRuntime : Runtime { using flight_native_base = Runtime; };
+
 using RuntimeView = flight::NominalOrStructuralView<GlRuntime, Runtime>;
 using RegistryView = flight::NominalOrStructuralView<GlRegistries, Registries>;
 int failures = 0;
@@ -40,6 +51,12 @@ bool refuses_native(const View& view) {
 int main() {
   static_assert(!std::is_convertible_v<RuntimeView, flight::Ref<GlRuntime>>);
   static_assert(!std::is_convertible_v<RegistryView, flight::Ref<GlRegistries>>);
+  {
+    auto forward_state = flight::make_ref<State>();
+    auto forward_runtime = flight::make_ref<ForwardRuntime>();
+    write_forward_owner(forward_state, forward_runtime);
+    check(read_forward_owner(forward_state) == forward_runtime, "forward-declared runtime owner helpers preserve the same object");
+  }
   auto first = flight::make_ref<GlRuntime>();
   auto second = flight::make_ref<GlRuntime>();
   first->gl_frame = 5;
