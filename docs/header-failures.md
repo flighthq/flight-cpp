@@ -131,7 +131,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 102 | `call-has-no-matching-8a1f3a33` | 1 | GL | compiler | a narrowed `Texture2D` reference read through structural `row_get` *(existing request extended)* |
 | 103 | `call-has-no-matching-8d9de718` | 1 | PLAT | compiler | default node runtime supplies a merged child row to nominal NodeAny recursion; [existing request](compiler-requests/node-any-generic-traits-leak.md#g2-interaction-spatial-collection-selects-the-default-runtime-owner) |
 | 104 | `call-has-no-matching-b3c6bcee` | 1 | GL | repair key + compiler | `log_once` designated initializer *(G2: key map extended; 0 pass, 1 to `no-matching-constructor-34a8ea9f`)* |
-| 105 | `call-has-no-matching-c287f892` | 4 | ANIM | compiler | existing Unity return NamedProperties→Record at line 77 plus three Spine-dependent barrels; all remain failed |
+| 105 | `call-has-no-matching-c287f892` | 4 original | ANIM | compiler (qualified) | retired: original Unity passes; three barrels advance to readonly-options callback cause `bfc2f413` |
 | 106 | `call-has-no-matching-c8046ec6` | 1 | 3D | binding (fixed) | numeric-array optional uniform ranges supplied; G2: 0/1, now existing readonly-view compiler family |
 | 107 | `call-has-no-matching-e7b28969` | 1 | WGPU | runtime (fixed) | the emitted call to `write_texture` matches no declared overload; G2: 0 pass, 1 to `missing-member-47a93368` |
 | 108 | `call-has-no-matching-fbd6de0d` | 1 | 3D | [compiler request](compiler-requests/interface-heritage-widening.md) | `Mesh.materials` carries `Material3DValue` arms that cannot widen to the callback's declared `Material3D` base |
@@ -261,6 +261,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 232 | `undeclared-identifier-e93a570c` | 1 | ANIM | compiler | the erased-array display loop advances to the retained call of the refused `parseDragonBonesRegionDisplay` |
 | 233 | `undeclared-identifier-be04e46c` | 1 | ANIM | compiler | the erased length/index lowering advances the skins module to the retained call of the refused `parseSpineMeshAttachment` |
 | 234 | `undeclared-identifier-d8c9373d` | 1 | ANIM | compiler | the binary skins module advances to the retained call of the refused `readSpineBinaryAttachment` |
+| 235 | `no-viable-conversion-bfc2f413` | 3 | ANIM | [compiler request](compiler-requests/particle-codec-readonly-options-callback.md) | codec readonly structural options callback cannot receive the public Starling nominal-options function |
 
 ## Carry clusters
 
@@ -2935,18 +2936,24 @@ it. No member copy, field drop or cast is made.
 **G2: 0/1 compile, 1 fail** (`-j1`, Clang 22.1.8). `flight/render_gl/enable_gl_render_texture_guards.hpp`
 moves to `no-matching-constructor-34a8ea9f`.
 
-### 105. `call-has-no-matching-c287f892` — 4 failed headers
+### 105. `call-has-no-matching-c287f892` — retired: 1 pass / 3 follow-ons
 
-After the final normal 92 compiler / 293 patch particle reconciliation, the three original Spine-dependent
-barrels first reach the existing `unity_parse.hpp:77` NamedProperties→Record return. Together with
-the previously measured Unity row this cause holds four failures. The assigned four-header check is
-1 pass / 3 failures / 0 unattempted; the Spine source passes. The required original Spine,
-ParticleDesigner and Starling consumers pass 3/3, clearing the intermediate shared capture regressions.
+One normal106 compiler /307 total patch particles generation supplies the full original Unity
+parser. The installed original config/document functions match 900 inputs /1800 calls with an
+explicit finite test Unicode provider, all52 config/17 actual document fields; without a provider
+1796/1800 is PARTIAL with four explicit nonASCII capability limits. Another37 inputs/74 calls pass.
+The registered Unity, affected Spine and Pixi consumers pass3/3 CTest; changed Spine still matches
+704 inputs/1408 calls. The external Unicode provider remains the platform contract; the test
+fixture is neither complete Unicode support nor production wiring.
 
-The [Unity source/carrier audit](compiler-requests/parsed-json-object-shape-reads.md#g2-unity-particle-json-returns-a-named-view-of-the-wrong-carrier)
-still requires its full original graph, PPU/ranges/curves/config/document/diagnostic owners and order.
-A live named view does not satisfy this owning return contract. No Unity consumer, serializer, owner
-copy, nominal cast or public ABI replacement is supplied or claimed.
+Exactly four Clang22.1.8 standalone headers at two jobs produce1PASS/3FAIL/0unattempted. Unity
+passes; the barrels next fail at `register_built_in_particle_formats.hpp:171`, the public Starling
+function to readonly structural codec-options callback conversion. They join
+`no-viable-conversion-bfc2f413`. No Record/tree or options-owner copy, unchecked cast, parser
+rewrite, input narrowing or public ABI replacement is used. Only these four rows change; the
+historical sweep remains fixed. Unity adds zero historical25 promotions; prior Pixi1 remains.
+The package is still partial17/18. See the
+[final source and installed qualification](compiler-requests/parsed-json-object-shape-reads.md#final-original-unity-particle-qualification-2026-10-18).
 
 ### 106. `call-has-no-matching-c8046ec6` — 1 original header, 0 pass / 1 follow-on
 
@@ -5703,3 +5710,17 @@ all226 override derivations match. See the
 [final request evidence](compiler-requests/nullable-array-element-null-test.md#final-normal-output-and-original-consumer-qualification)
 and [bounded report](../artifacts/single-carrier-union-member-qualification.json).
 No full parser, whole-package or global sweep pass is claimed.
+
+## Particle codec readonly options follow-on
+
+`no-viable-conversion-bfc2f413` contains exactly `_internal_index.hpp`, `contract.hpp` and
+`register_built_in_particle_formats.hpp` in particles-formats. After the original Unity parser
+qualifies, all three first reach the retained Starling function-value assignment at line171.
+`ParticleFormatCodec` accepts optional readonly structural `ParseParticleConfigOptions`, whereas
+`parseStarlingPex` and its document function retain optional native `StarlingPexParseOptions`.
+The source permits other structural owners; recovering only native Starling allocations or
+copying an options object would narrow the domain or alter identity/live reads. Existing callable
+canonicalization handles the same declaration, not this variance boundary. The
+[bounded request](compiler-requests/particle-codec-readonly-options-callback.md) requires an
+owner-preserving, absence-preserving proof and public native Ref compatibility before another
+normal generation. No callback, registry, registration, serialization or whole-package pass is claimed.

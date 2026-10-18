@@ -1,0 +1,237 @@
+{
+  "schema": "flight-cpp-unity-particle-qualification/1",
+  "pins": {
+    "flight": "a62784923f3be814463286c9fb28edfe6ab15789",
+    "compiler": "806d257d2f4100de745cc97340e61c2f301b0f24"
+  },
+  "normalGeneration": {
+    "command": "npm run pkg:generate -- @flighthq/particles-formats -j2",
+    "exitCode": 0,
+    "frozenHead": "0716d44e98f0ce52464e132e5ffd5df6e597f04a",
+    "compilerPatches": 106,
+    "totalActivePatches": 307,
+    "allInputsUnchangedThroughActualExit": true,
+    "rawPinsCleanBeforeAndAfter": true,
+    "sourceClosure": {
+      "emitted": 1136,
+      "total": 1141,
+      "packages": 10
+    },
+    "particlePackage": {
+      "emitted": 17,
+      "total": 18,
+      "refusedModules": 1,
+      "status": "partial"
+    },
+    "freezeSha256": "4bb22bc0a5d37b45f2733d1aa42d33fbe3ab65fb09e2b5136b2ac5a2fd32eda5"
+  },
+  "qualifiedCodeHead": "0453660dde3393054e69d307829e260b95f48dca",
+  "runtimeBase": "55ccab63",
+  "finalHeaderCheck": {
+    "schema": "flight-sdk-header-compilation/2",
+    "compiler": {
+      "command": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/zig-cxx",
+      "version": "clang version 22.1.8"
+    },
+    "generated": {
+      "compilerRevision": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "sourceRevisions": [
+        "a62784923f3be814463286c9fb28edfe6ab15789"
+      ]
+    },
+    "run": {
+      "complete": true,
+      "elapsedSeconds": 182.9,
+      "headerSelection": "explicit",
+      "jobs": 2
+    },
+    "summary": {
+      "attemptedHeaders": 4,
+      "failedHeaders": 3,
+      "passedHeaders": 1,
+      "totalHeaders": 4,
+      "unattemptedHeaders": 0
+    },
+    "failures": [
+      {
+        "diagnostic": "no viable conversion from 'flight::Ref<flight::types::ParticleEmitterConfig> (flight::String, std::optional<flight::Ref<flight::types::StarlingPexParseOptions>>)' (aka 'std::shared_ptr<flight::types::ParticleEmitterConfig> (flight::String, std::optional<std::shared_ptr<flight::types::StarlingPexParseOptions>>)') to 'std::function<flight::Ref<flight::types::ParticleEmitterConfig> (flight::String, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParseParticleConfigOptions>>>>>)>' (aka 'std::function<std::shared_ptr<flight::types::ParticleEmitterConfig> (flight::String, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::ParseParticleConfigOptions>>>>>)>')",
+        "header": "flight/particles_formats/_internal_index.hpp",
+        "location": "flight/particles_formats/register_built_in_particle_formats.hpp:171"
+      },
+      {
+        "diagnostic": "no viable conversion from 'flight::Ref<flight::types::ParticleEmitterConfig> (flight::String, std::optional<flight::Ref<flight::types::StarlingPexParseOptions>>)' (aka 'std::shared_ptr<flight::types::ParticleEmitterConfig> (flight::String, std::optional<std::shared_ptr<flight::types::StarlingPexParseOptions>>)') to 'std::function<flight::Ref<flight::types::ParticleEmitterConfig> (flight::String, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParseParticleConfigOptions>>>>>)>' (aka 'std::function<std::shared_ptr<flight::types::ParticleEmitterConfig> (flight::String, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::ParseParticleConfigOptions>>>>>)>')",
+        "header": "flight/particles_formats/contract.hpp",
+        "location": "flight/particles_formats/register_built_in_particle_formats.hpp:171"
+      },
+      {
+        "diagnostic": "no viable conversion from 'flight::Ref<flight::types::ParticleEmitterConfig> (flight::String, std::optional<flight::Ref<flight::types::StarlingPexParseOptions>>)' (aka 'std::shared_ptr<flight::types::ParticleEmitterConfig> (flight::String, std::optional<std::shared_ptr<flight::types::StarlingPexParseOptions>>)') to 'std::function<flight::Ref<flight::types::ParticleEmitterConfig> (flight::String, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParseParticleConfigOptions>>>>>)>' (aka 'std::function<std::shared_ptr<flight::types::ParticleEmitterConfig> (flight::String, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::ParseParticleConfigOptions>>>>>)>')",
+        "header": "flight/particles_formats/register_built_in_particle_formats.hpp",
+        "location": "flight/particles_formats/register_built_in_particle_formats.hpp:171"
+      }
+    ],
+    "passed": [
+      "flight/particles_formats/unity_parse.hpp"
+    ],
+    "unattempted": []
+  },
+  "installedNative": {
+    "buildAndLink": "pass",
+    "ctest": "pass",
+    "passed": 3,
+    "total": 3,
+    "targets": [
+      "unity_parse",
+      "spine_parse",
+      "pixi_parse"
+    ],
+    "elapsedSeconds": 0.04
+  },
+  "sourceComparisons": {
+    "provider": {
+      "binary": "/tmp/builder3-unity/graph/final-unity-driver",
+      "cases": 900,
+      "publicInvocations": 1800,
+      "configFields": 52,
+      "documentFields": 17,
+      "numericReads": 126480,
+      "utf16Strings": 11914,
+      "curveArrays": 360,
+      "passed": true,
+      "parseCallsPerSourceInvocation": 1,
+      "numericTolerance": "exact signed-zero/NaN/Infinity kinds; finite exact except directionX/Y relative/absolute1e-12 libm tolerance",
+      "exceptions": "exact error classes and application/root messages; built-in JSON syntax and nullish TypeError wording implementation dependent",
+      "unicode": "all string fields compared by exact UTF16 units, including lone surrogates",
+      "capability": "Finite test UnicodeService provider for the tested strings; not complete Unicode implementation."
+    },
+    "extra": {
+      "binary": "/tmp/builder3-unity/graph/final-unity-driver",
+      "cases": 37,
+      "publicInvocations": 74,
+      "configFields": 52,
+      "documentFields": 17,
+      "numericReads": 9191,
+      "utf16Strings": 481,
+      "curveArrays": 72,
+      "passed": true,
+      "parseCallsPerSourceInvocation": 1,
+      "numericTolerance": "exact signed-zero/NaN/Infinity kinds; finite exact except directionX/Y relative/absolute1e-12 libm tolerance",
+      "exceptions": "exact error classes and application/root messages; built-in JSON syntax and nullish TypeError wording implementation dependent",
+      "unicode": "all string fields compared by exact UTF16 units, including lone surrogates"
+    },
+    "spine": {
+      "binary": "/tmp/builder3-unity/graph/final-spine-driver",
+      "cases": 704,
+      "publicInvocations": 1408,
+      "configFields": 52,
+      "documentFields": 24,
+      "numericReads": 99505,
+      "utf16Strings": 6408,
+      "curveArrays": 268,
+      "passed": true,
+      "parseCallsPerSourceInvocation": 1,
+      "numericTolerance": "exact signed-zero/NaN/Infinity kinds; finite exact except directionX/Y relative/absolute1e-12 libm tolerance",
+      "exceptions": "exact error classes and application/root/nested-validation messages; built-in JSON syntax wording implementation dependent",
+      "unicode": "all string fields compared by exact UTF16 units, including lone surrogates"
+    },
+    "withoutProvider": {
+      "cases": 900,
+      "publicInvocations": 1800,
+      "matched": 1796,
+      "status": "PARTIAL",
+      "capabilityExceptions": [
+        {
+          "case": 468,
+          "entrypoint": "config",
+          "input": "{\"blendMode\":\"\u0130\"}",
+          "name": "NativeException",
+          "message": "non-ASCII case conversion requires a flight::UnicodeService"
+        },
+        {
+          "case": 468,
+          "entrypoint": "document",
+          "input": "{\"blendMode\":\"\u0130\"}",
+          "name": "NativeException",
+          "message": "non-ASCII case conversion requires a flight::UnicodeService"
+        },
+        {
+          "case": 469,
+          "entrypoint": "config",
+          "input": "{\"blendMode\":\"\\ud800\"}",
+          "name": "NativeException",
+          "message": "non-ASCII case conversion requires a flight::UnicodeService"
+        },
+        {
+          "case": 469,
+          "entrypoint": "document",
+          "input": "{\"blendMode\":\"\\ud800\"}",
+          "name": "NativeException",
+          "message": "non-ASCII case conversion requires a flight::UnicodeService"
+        }
+      ],
+      "platformContract": "Real external UnicodeService required for non-ASCII case conversion."
+    }
+  },
+  "compilerProof": {
+    "declaredPatches": 108,
+    "cleanPlainApply": true,
+    "strictProductionBuild": "pass",
+    "fixtureAdapter": "node:assert (not Vitest)",
+    "cases": 28,
+    "passed": 28
+  },
+  "scope": {
+    "changedOwnedHeaderRows": 4,
+    "historical25AdditionalPromotions": 0,
+    "earlierPixiPromotion": 1,
+    "globalSweepUnchanged": true,
+    "noWholePackageClaim": true,
+    "followOnCluster": "no-viable-conversion-bfc2f413",
+    "followOnRequest": "docs/compiler-requests/particle-codec-readonly-options-callback.md"
+  },
+  "excludedAttempts": [
+    "Missing SDL includes setup check",
+    "Stopped superseded A-prime-floor rechecks",
+    "ENOSPC compiler output and aborted driver builds",
+    "Missing Vitest globals package-typecheck configuration; actual production build uses tsconfig.build.json"
+  ],
+  "sourceFaithfulness": {
+    "pinnedParserBodiesUnchanged": true,
+    "generatedBodiesWrittenOnlyByNormalSdk": true,
+    "noTreeOrRecordCopy": true,
+    "noUncheckedCastOrDomainNarrowing": true,
+    "testProviderNotWiredIntoProduction": true
+  },
+  "normalHeaderHashes": [
+    {
+      "file": "generated/include/flight/particles_formats/unity_parse.hpp",
+      "unchangedFromNormal": true,
+      "sha256": "2fd467fbdfc126542078abc87324fa9f5afb94efcb97b18e957a97ee19c18aef"
+    },
+    {
+      "file": "generated/include/flight/particles_formats/spine_parse.hpp",
+      "unchangedFromNormal": true,
+      "sha256": "52d5d835d7a54abcfedf828ba6e4057a14714b0454b13336e26d5a890183a662"
+    },
+    {
+      "file": "generated/include/flight/particles_formats/pixi_parse.hpp",
+      "unchangedFromNormal": true,
+      "sha256": "f49eb7dca53f60d5606cb25f52a6c3066a19cf65fc60978cfa2b3d1cc9948c56"
+    }
+  ],
+  "evidenceSha256": {
+    "normal-sdk.log": "cf5efe140932d7ef95e38f594f7f09880bd967725ce9239af354c2d542ec08b4",
+    "sdk-input-freeze.json": "4bb22bc0a5d37b45f2733d1aa42d33fbe3ab65fb09e2b5136b2ac5a2fd32eda5",
+    "final-four-header-results.json": "8ab9c0f9e5e9ce40f1c4cfbc12684c81bb6fecdd0bd56b86ffc40db3e8c83017",
+    "final-native-build.log": "98d2740fbe059339e55180b429632533c27bdb107664dfa9628f995c1c398eb1",
+    "final-native-test.log": "bdce996848d49880ee67a08e96dcc7f88c8f131106383f1886f228a1372d1c94",
+    "final-unity-driver-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "final-spine-driver-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "final-provider-comparison-results.json": "9bf6cba6b8f637b7d5694260e65a8e6acffead67e598e1eaa19dd3f7f91166ba",
+    "final-default-failures.json": "4e1e1c6d1bade9f1347d7754df1eff6c1be92133ad7f47751fd26414f5b1e2aa",
+    "final-extra-comparison-results.json": "e52a486524dd1fa47df3a5ddba7253a3aadffd282cfcc2bbf06d3e9208c8bb93",
+    "final-spine-comparison-results.json": "ef3eb3ddc353aa00c5269f3f296d24dd386378012d3a8d4a91be630bbbdb3249",
+    "final-production-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reconciled-fixture-assert-results.json": "63e7597c0dc6d2ced80fc3cbd01a9b6b8c657cc336bb1295c3c5a3bb0354cf47",
+    "reconciled-composition.json": "542e92a208ae76561a10720234add7fc277fb46a10f6d858a6a35e1d73452a45"
+  }
+}

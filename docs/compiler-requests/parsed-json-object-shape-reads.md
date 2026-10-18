@@ -562,3 +562,49 @@ Guarded string extraction keeps the original `typeof x === 'string'` branch and 
 Corrected105 baseline/candidate strict production builds and production API controls pass: five positive flows, sixteen exclusions and five unsafe mapper refusals, plus the prior private-reader/guard/capture/syntax/index/factory/map controls. A carried focused compiler fixture records these boundaries. Native evidence uses the complete original diagnostic module and the repository's normal declaration-only owner alias repair, with no parser-body edits. Normal scoped SDK generation, actual installed consumer and the four header results remain pending; this preparation claims no product/header or historical-corpus gain.
 
 The carried fixture's 28 cases also execute through a dependency-free `node:assert` adapter against the production compiler API; the Vitest runner is unavailable here, so this is not a Vitest execution claim. The final declaration patch applies as the 106th compiler patch to a clean pinned extraction and reproduces the tested backend and fixture bytes exactly. Retained diagnostic modules are checked separately: ParticleDesigner and Starling are byte-identical; Spine's two guarded member projections and Pixi's unused anonymous declarations change. Their actual consumers therefore need checking with the one combined particles generation; no separate unchanged-parser SDK is requested.
+
+## Final original Unity particle qualification (2026-10-18)
+
+The one authorized normal particles generation exited zero on frozen `0716d44e` with
+**106 compiler / 307 total source patches**. Both pinned checkouts were clean before and after;
+HEAD, all configuration hashes and every patch digest stayed fixed through the actual exit.
+The closure emitted 1136/1141 modules across ten packages. The particle slice is **17/18 emitted,
+one refused**, and remains partial. Normal generation changed Unity, two guarded Spine projections
+and Pixi's unused anonymous declarations; it supplied the original Unity `rawToConfig`,
+`collectUnityDiagnostics` and `readEmission` bodies. No generated body was edited.
+
+The actual installed original Unity config/document functions match the untouched pinned source,
+factory, curves and diagnostics on **900 inputs / 1800 calls with an explicitly finite test
+Unicode provider**. All 52 config and 17 actual document fields are compared: 126,480 numeric
+reads, 11,914 exact UTF16 strings and 360 curve arrays. Another 37 edge inputs / 74 calls pass,
+including nonfinite/duplicate/reversed curves, wrong-kind bursts, nullish colors and rejected keys.
+Signed zero, NaN/Infinity kinds, field presence, authored errors and diagnostic order are exact;
+finite values are exact except directionX/Y's relative/absolute 1e-12 libm tolerance. Built-in JSON
+syntax and nullish TypeError wording are implementation dependent. Each source invocation parses once.
+
+**Without a Unicode provider the result is PARTIAL: 1796/1800**, with exactly four nonASCII
+case-conversion capability exceptions, config and document for dotted capital I and a lone surrogate.
+The Manager's platform decision requires a real external Unicode provider. The finite test fixture
+proves delegation for its tested strings; it neither implements complete Unicode nor installs a
+production provider. No ASCII approximation, parser input restriction or whole default-domain pass
+is claimed.
+
+The registered installed Unity, affected Spine and Pixi consumers build, link and pass **3/3 CTest**.
+The rebuilt installed Spine driver still matches **704 inputs / 1408 calls**, all 52 config and
+24 document fields. Reconciliation preserves all foreign package rows, existing profile provenance
+and the three normal parser headers byte for byte. On the reconciled 108-patch compiler floor,
+every patch applies cleanly, the strict production build passes and the carried 28 proof cases pass
+through the `node:assert` adapter, explicitly not Vitest. The withdrawn allocation experiment is not
+carried as builder3 work. Setup failures and a stopped superseded-floor check are excluded.
+
+Exactly four standalone headers are measured with Clang22.1.8, native SDL includes and two jobs:
+**Unity passes; three barrels fail; none is unattempted**. The original complete check took 196.5s; the restored-base recheck took 182.9s with identical diagnostics.
+The retired Unity owning-Record cause `c287f892` has no remaining rows. All three barrels now reach
+`register_built_in_particle_formats.hpp:171`: the codec's readonly structural options callback cannot
+receive the public Starling function taking nominal options. The
+[exact source/carrier request](particle-codec-readonly-options-callback.md) records this next bounded
+unit without copying an options owner, casting or narrowing the structural argument domain.
+Only these four inventory rows change; the global sweep remains its historical snapshot. Unity
+is outside the original historical 25, so this unit adds **zero** promotions there; Pixi's earlier
+single promotion remains distinct. No whole-package, registration, serialization or all-25 pass
+is claimed.
