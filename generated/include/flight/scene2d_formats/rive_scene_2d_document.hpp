@@ -162,7 +162,7 @@ inline std::optional<flight::Ref<flight::types::RiveScene2DDocumentResult>> crea
     flight::node::add_node_child<flight::Ref<flight::types::Node2DTraits>>(root, artboard->root);
   }
   flight::types::EntityConstruction<flight::Ref<flight::types::RiveScene2DDocumentResult>> out = flight::entity::allocate_entity<flight::Ref<flight::types::RiveScene2DDocumentResult>>();
-  initialize_rive_scene_2d_document_result(out, root, imported, create_rive_image_resources(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveDocumentImportResult>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveDocumentImportResult>>>>(imported)), diagnostics), create_rive_slots(imported->artboards));
+  initialize_rive_scene_2d_document_result(out, root, imported, create_rive_image_resources(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveDocumentImportResult>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveDocumentImportResult>>>>(imported)), diagnostics), create_rive_slots(imported->artboards));
   return std::optional<flight::Ref<flight::types::RiveScene2DDocumentResult>>{flight::entity::finish_entity<flight::Ref<flight::types::RiveScene2DDocumentResult>>(out)};
 }
 

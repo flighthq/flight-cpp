@@ -52,7 +52,7 @@ inline flight::types::DisplayObject create_scene_2d_from_svg_document(flight::St
   for (auto entry_2 : ([&]() -> flight::Array<flight::Ref<flight::types::SvgElementHandlerEntry>> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::Ref<flight::types::SvgElementHandlerEntry>>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"elementHandlers">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return default_svg_element_handlers(); }())) {
     flight::scene2d_formats::register_svg_element_handler(registry, entry_2->kind, entry_2->handle);
   }
-  return flight::scene2d_formats::create_scene_2d_from_svg_document_with_registry(source, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgRegistry>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SvgRegistry>>>>(registry)), diagnostics, options);
+  return flight::scene2d_formats::create_scene_2d_from_svg_document_with_registry(source, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgRegistry>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgRegistry>>>>(registry)), diagnostics, options);
 }
 
 } // namespace flight::scene2d_formats

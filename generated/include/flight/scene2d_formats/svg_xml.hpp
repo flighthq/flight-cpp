@@ -61,7 +61,7 @@ inline std::optional<flight::String> parse_url_reference(std::optional<flight::S
 }
 
 inline std::optional<flight::String> svg_attribute(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>> element, flight::String name) {
-  return ([&]() -> flight::String { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"attributes">>(element).get(name); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::row_get<flight::RowKey<"attributes">>(element).get(flight::String("xlink:") + flight::to_string(name) + flight::String("")).value(); }());
+  return ([&]() -> std::optional<flight::String> { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"attributes">>(element).get(name); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return flight::row_get<flight::RowKey<"attributes">>(element).get(flight::String("xlink:") + flight::to_string(name) + flight::String("")); }());
 }
 
 inline double svg_first_number(std::optional<flight::String> value, double fallback) {
@@ -89,7 +89,7 @@ inline std::optional<double> svg_optional_number_attribute(flight::StructuralRef
 inline void visit_svg_elements(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>> element, std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>)> visitor) {
   visitor(element);
   for (auto child : flight::row_get<flight::RowKey<"children">>(element)) {
-    visit_svg_elements(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>(child)), visitor);
+    visit_svg_elements(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>(child)), visitor);
   }
 }
 

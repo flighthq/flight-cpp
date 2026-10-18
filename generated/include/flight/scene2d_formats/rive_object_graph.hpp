@@ -93,7 +93,7 @@ inline void resolve_rive_parent_indices(flight::Ref<flight::types::RiveArtboardG
     double index = 0.0;
     while ((index < count)) {
       {
-        parents.push(((index == 0.0) ? rive_no_parent_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u00004e__u00004f__u00005f__u000050__u000041__u000052__u000045__u00004e__u000054__flight_private_2f56cc2a15d4312e : read_rive_parent_index(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(artboard->objects.element(index))), count, index, diagnostics)));
+        parents.push(((index == 0.0) ? rive_no_parent_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u00004e__u00004f__u00005f__u000050__u000041__u000052__u000045__u00004e__u000054__flight_private_2f56cc2a15d4312e : read_rive_parent_index(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(artboard->objects.element(index))), count, index, diagnostics)));
       }
       (index += 1.0);
     }

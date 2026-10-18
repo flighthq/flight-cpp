@@ -49,8 +49,8 @@ inline void apply_svg_transform(flight::types::Node2D target, std::optional<flig
     return;
   }
   auto transform = flight::geometry::create_transform_2d(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
-  flight::geometry::decompose_matrix_to_transform_2d(transform, matrix.value());
-  assign_svg_transform(target, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Transform2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Transform2D>>>>(transform)));
+  flight::geometry::decompose_matrix_to_transform_2d(transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(matrix.value())));
+  assign_svg_transform(target, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Transform2D>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Transform2D>>>>(transform)));
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_HEIGHT_WIDTH_X_Y_06099478698611DC
@@ -148,7 +148,7 @@ inline std::optional<flight::Ref<flight::types::Matrix>> parse_svg_transform(std
             const double sine = std::sin(radians);
             auto rotation = flight::geometry::create_matrix(cosine, sine, -sine, cosine, std::nullopt, std::nullopt);
             if ((static_cast<double>(values.size()) >= 3.0)) {
-              (operation = multiply_svg_matrices(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(flight::geometry::create_matrix(1.0, 0.0, 0.0, 1.0, values.element(1.0), values.element(2.0)))), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(multiply_svg_matrices(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(rotation)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(flight::geometry::create_matrix(1.0, 0.0, 0.0, 1.0, -values.element(1.0), -values.element(2.0)))))))));
+              (operation = multiply_svg_matrices(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(flight::geometry::create_matrix(1.0, 0.0, 0.0, 1.0, values.element(1.0), values.element(2.0)))), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(multiply_svg_matrices(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(rotation)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(flight::geometry::create_matrix(1.0, 0.0, 0.0, 1.0, -values.element(1.0), -values.element(2.0)))))))));
             }
             else {
               (operation = rotation);
@@ -170,7 +170,7 @@ inline std::optional<flight::Ref<flight::types::Matrix>> parse_svg_transform(std
         }
       }
     }
-    (result = multiply_svg_matrices(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(result)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(operation))));
+    (result = multiply_svg_matrices(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(result)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(operation))));
   }
   return (matched ? std::optional<flight::Ref<flight::types::Matrix>>{result} : std::nullopt);
 }

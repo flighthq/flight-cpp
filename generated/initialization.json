@@ -3031,6 +3031,11 @@
       "source": "packages/scene2d-formats/src/riveSkin.ts"
     },
     {
+      "name": "SvgColor",
+      "packageName": "@flighthq/scene2d-formats",
+      "source": "packages/scene2d-formats/src/svgColor.ts"
+    },
+    {
       "name": "SvgCounts",
       "packageName": "@flighthq/scene2d-formats",
       "source": "packages/scene2d-formats/src/svgCounts.ts"
@@ -25981,9 +25986,9 @@
       "cyclic": false,
       "modules": [
         {
-          "name": "SvgCounts",
+          "name": "SvgXml",
           "packageName": "@flighthq/scene2d-formats",
-          "source": "packages/scene2d-formats/src/svgCounts.ts"
+          "source": "packages/scene2d-formats/src/svgXml.ts"
         }
       ]
     },
@@ -25991,9 +25996,19 @@
       "cyclic": false,
       "modules": [
         {
-          "name": "SvgXml",
+          "name": "SvgColor",
           "packageName": "@flighthq/scene2d-formats",
-          "source": "packages/scene2d-formats/src/svgXml.ts"
+          "source": "packages/scene2d-formats/src/svgColor.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "SvgCounts",
+          "packageName": "@flighthq/scene2d-formats",
+          "source": "packages/scene2d-formats/src/svgCounts.ts"
         }
       ]
     },
@@ -323181,6 +323196,257 @@
         "source": "packages/surface/src/surfaceDisplay.ts"
       },
       "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:2224136691404d2c40adadc23f554790ac203e41a991e20dc9fbf670f80e628a",
+            "line": 1,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgColor.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgColor.ts\",9]",
+            "kind": "import",
+            "name": "clamp",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "clamp",
+            "kind": "dependency",
+            "module": {
+              "name": "Clamp",
+              "packageName": "@flighthq/math",
+              "source": "packages/math/src/clamp.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:b758bc848433dd2921498ce2525e14aed6c5ddcd118518255c248d280776eeba",
+            "line": 16,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgColor.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgColor.ts\",730]",
+            "kind": "function",
+            "name": "parseSvgColor",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:17bc4cc06a1fdab0976c2ee125156a3f04b8bb62011af9a07ac0f82cac662379",
+            "line": 62,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgColor.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgColor.ts\",3099]",
+            "kind": "function",
+            "name": "parseCssAlpha",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:cc64ba7d915266333dd15c30b8ccd01ac1c50bccb695b4915a3a52ef18b69c49",
+            "line": 68,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgColor.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgColor.ts\",3311]",
+            "kind": "function",
+            "name": "parseCssFraction",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:dafaedaee905b7748b881ef57d9e2fe4039fc9ba5f48e01774d504a3ad2e45a9",
+            "line": 74,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgColor.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgColor.ts\",3526]",
+            "kind": "function",
+            "name": "parseCssHue",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e4c45631315044ea1a81b430ae500e6ee3411a7ce169e91923134868d96f2fb1",
+            "line": 83,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgColor.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgColor.ts\",3850]",
+            "kind": "function",
+            "name": "hslToRgb",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:1737b2f651c26339a72ec1503ec2bfab316d6f6d3b0005460d5b1e95156bf1ff",
+            "line": 107,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgColor.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgColor.ts\",4705]",
+            "kind": "function",
+            "name": "resolveSvgColor",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:74349a9bb1857c3c3e8ae510ea39af306f1847d35c862489875ae22fdd075eba",
+            "line": 111,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgColor.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgColor.ts\",4880]",
+            "kind": "variable",
+            "name": "svgNamedColors",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgColor",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgColor.ts"
+          },
+          "specifier": "./svgXml.ts",
+          "target": {
+            "name": "SvgXml",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgXml.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgColor",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgColor.ts"
+          },
+          "specifier": "@flighthq/math/contract",
+          "target": {
+            "name": "Clamp",
+            "packageName": "@flighthq/math",
+            "source": "packages/math/src/clamp.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SvgColor",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgColor.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "SvgRegistry",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/SvgRegistry.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "SvgColor",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgColor.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:74349a9bb1857c3c3e8ae510ea39af306f1847d35c862489875ae22fdd075eba",
+              "line": 111,
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgColor.ts",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgColor.ts\",4880]",
+              "kind": "variable",
+              "name": "svgNamedColors",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            6
+          ]
+        }
+      ]
     },
     {
       "bindings": [

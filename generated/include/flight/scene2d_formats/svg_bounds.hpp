@@ -111,10 +111,10 @@ inline std::optional<flight::Ref<flight::types::Rectangle>> create_svg_node_2d_b
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>> own_bounds;
   if ((flight::row_get<flight::RowKey<"kind">>(target) == flight::types::shape_kind)) {
     auto shape_bounds = flight::geometry::create_rectangle(std::nullopt, std::nullopt, std::nullopt, std::nullopt);
-    if (!flight::shape::get_shape_bounds(shape_bounds, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Shape>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Shape>>>>(flight::structural_ref_cast<flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Shape>>>>>(target))), flight::String("fill"))) {
+    if (!flight::shape::get_shape_bounds(shape_bounds, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Shape>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Shape>>>>(flight::structural_ref_cast<flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Shape>>>>>(target))), flight::String("fill"))) {
       return std::nullopt;
     }
-    (own_bounds = (recorded.has_value() ? recorded.value() : flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(shape_bounds))));
+    (own_bounds = (recorded.has_value() ? recorded.value() : flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(shape_bounds))));
   }
   else {
     (own_bounds = (recorded.has_value() ? recorded.value() : flight::node::get_node_local_bounds_rectangle<flight::Ref<flight::types::Node2DTraits>>(target)));
@@ -140,8 +140,8 @@ inline std::optional<flight::Ref<flight::types::Rectangle>> create_svg_node_2d_b
           }
         }
         auto bounds = flight::geometry::create_rectangle(std::nullopt, std::nullopt, std::nullopt, std::nullopt);
-        flight::geometry::matrix_transform_rectangle(bounds, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::node::get_node_local_matrix<flight::Ref<flight::types::Node2DTraits>>(child.value())), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(child_bounds.value())));
-        (has_bounds = copy_non_empty_svg_bounds(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(bounds)), has_bounds));
+        flight::geometry::matrix_transform_rectangle(bounds, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::node::get_node_local_matrix<flight::Ref<flight::types::Node2DTraits>>(child.value())), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(child_bounds.value())));
+        (has_bounds = copy_non_empty_svg_bounds(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(bounds)), has_bounds));
       }
       (index += 1.0);
     }

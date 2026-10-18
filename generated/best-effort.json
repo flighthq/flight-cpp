@@ -25312,7 +25312,6 @@
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgBounds.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgClip.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgClipHandlers.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgColor.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgContainerElement.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgElementHandlers.ts",
@@ -27072,21 +27071,11 @@
       "status": "dependency-incomplete"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgGeometryElement.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgGradient.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgTextElement.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:062a23e1a909495f943c668dc39f08146211f54f0fd99f17284d35e27cc177df",
-        "sha256:09cbaf5eb044b7cb756a0ad421d8feedb6d89b6b9149d0cab09552888c1102cb",
-        "sha256:2d9a8cffc4dfefacf97ef6700bf450f93fa2836b7dc393026dabcca86c527360",
-        "sha256:5f4ab525a0ca1172553a522ba2c4dc583c5e39b8761816ca12f784ee0b683551",
-        "sha256:6714caaac47681e6fc22baea93ca05c07f46f9cd424384b2fc16b2f86ac32c74",
-        "sha256:9bc09e8499cb5d76118b0d620f98cdf7f2d4f9da4c99eb8862bf02a3b3b992d6",
-        "sha256:9c3f1cdb0b8d30a2e561658e00109b45112b8571532c403974b7386ee81f6f2c"
       ],
       "module": {
         "name": "SvgColor",
@@ -27094,8 +27083,7 @@
         "source": "packages/scene2d-formats/src/svgColor.ts"
       },
       "path": "flight/scene2d_formats/svg_color.hpp",
-      "rule": "cpp-member-projection-without-present-storage",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "consumers": [
@@ -27226,7 +27214,6 @@
       },
       "path": "flight/scene2d_formats/svg_gradient.hpp",
       "refusedDependencies": [
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgColor.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgStyle.ts"
       ],
       "status": "dependency-incomplete"
@@ -27333,9 +27320,9 @@
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgTextElement.ts"
       ],
       "declarationFingerprints": [
-        "sha256:45f485605cb2f4d005aa0e5ee4db94cd7d50c3a52172cb8365724832f62fdc3f",
         "sha256:47012e177207be215ea393489bd1afa630251e7e091f3cde71ff365fc206ba07",
         "sha256:48dea0cc3f903b9bee031498b27d0d3d032ec30d4647b916c2ece865f1fe5b50",
+        "sha256:4bf3e4345e91aca40f8361449f9dfe1a47d1db3f896337bc003944ddc6e6d523",
         "sha256:7c243d3c3979462a3ea1111ad39ac903b78071c04a903f1e6c1a55e11cd20ffe",
         "sha256:aad67f5feb7aefda2969cd218f25a450d49414635dbc38e10c10ad80e66c05b2",
         "sha256:b6a11ddaa6b428c78c7ea210507fe8ae0f2368c56e5485aab51714ad93baa5d1",

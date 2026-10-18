@@ -170,8 +170,8 @@ inline flight::Array<flight::Ref<RiveTendonBone>> collect_rive_tendon_bones(flig
           (index += 1.0);
           continue;
         }
-        const double bone = read_rive_number_flight_value_function_read_u000052_ive_u00004e_umber_flight_private_532af62e52bfc11a(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(object)), rive_tendon_bone_id, -1.0);
-        tendons.push(flight::make_ref<RiveTendonBone>(RiveTendonBone{.bone_index = (((bone >= 0.0) && (bone < static_cast<double>(bone_indices.size()))) ? bone_indices.element(bone) : -1.0), .bind = read_rive_matrix(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(object)), rive_tendon_xx, rive_tendon_yx, rive_tendon_xy, rive_tendon_yy)}));
+        const double bone = read_rive_number_flight_value_function_read_u000052_ive_u00004e_umber_flight_private_532af62e52bfc11a(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(object)), rive_tendon_bone_id, -1.0);
+        tendons.push(flight::make_ref<RiveTendonBone>(RiveTendonBone{.bone_index = (((bone >= 0.0) && (bone < static_cast<double>(bone_indices.size()))) ? bone_indices.element(bone) : -1.0), .bind = read_rive_matrix(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(object)), rive_tendon_xx, rive_tendon_yx, rive_tendon_xy, rive_tendon_yy)}));
       }
       (index += 1.0);
     }
@@ -194,7 +194,7 @@ inline std::optional<flight::Ref<flight::types::Skin2D>> create_rive_skin_2d(fli
   if ((skin_index < 0.0)) {
     return std::nullopt;
   }
-  auto skin_world = read_rive_matrix(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(flight::row_get<flight::RowKey<"objects">>(artboard).element(skin_index))), rive_skin_xx, rive_skin_yx, rive_skin_xy, rive_skin_yy);
+  auto skin_world = read_rive_matrix(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(flight::row_get<flight::RowKey<"objects">>(artboard).element(skin_index))), rive_skin_xx, rive_skin_yx, rive_skin_xy, rive_skin_yy);
   flight::Array<flight::Ref<RiveTendonBone>> tendons = collect_rive_tendon_bones(artboard, skin_index, bone_indices);
   flight::Uint16Array influence_counts = flight::Uint16Array(static_cast<double>(points.size()));
   flight::Array<double> influences = flight::Array<double>{};
@@ -209,12 +209,12 @@ inline std::optional<flight::Ref<flight::types::Skin2D>> create_rive_skin_2d(fli
           continue;
         }
         auto weight = flight::row_get<flight::RowKey<"objects">>(artboard).element(weight_index);
-        auto packed = read_rive_weight_slots(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(weight)), flight::row_get<flight::RowKey<"kind">>(point));
+        auto packed = read_rive_weight_slots(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(weight)), flight::row_get<flight::RowKey<"kind">>(point));
         if (!packed.has_value()) {
           (position += 1.0);
           continue;
         }
-        flight::geometry::matrix_transform_point_xy(bind_space, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(skin_world)), flight::row_get<flight::RowKey<"x">>(point), flight::row_get<flight::RowKey<"y">>(point));
+        flight::geometry::matrix_transform_point_xy(bind_space, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(skin_world)), flight::row_get<flight::RowKey<"x">>(point), flight::row_get<flight::RowKey<"y">>(point));
         double written = 0.0;
         {
           double slot = 0.0;
@@ -234,7 +234,7 @@ inline std::optional<flight::Ref<flight::types::Skin2D>> create_rive_skin_2d(fli
                 }
               }
               auto resolved = tendons.element((tendon - 1.0));
-              flight::geometry::inverse_matrix_transform_point_xy(bone_space, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(resolved->bind)), bind_space->x, bind_space->y);
+              flight::geometry::inverse_matrix_transform_point_xy(bone_space, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(resolved->bind)), bind_space->x, bind_space->y);
               influences.push(resolved->bone_index, bone_space->x, bone_space->y, (amount / rive_weight_scale));
               written++;
             }

@@ -424,6 +424,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("createSurface") && requires { object.create_surface; }) return (object.create_surface);
   else if constexpr (Key::name.view() == std::string_view("createWorld") && requires { object.create_world; }) return (object.create_world);
   else if constexpr (Key::name.view() == std::string_view("crop") && requires { object.crop; }) return (object.crop);
+  else if constexpr (Key::name.view() == std::string_view("cssRules") && requires { object.css_rules; }) return (object.css_rules);
   else if constexpr (Key::name.view() == std::string_view("ctrlKey") && requires { object.ctrl_key; }) return (object.ctrl_key);
   else if constexpr (Key::name.view() == std::string_view("cueRegistry") && requires { object.cue_registry; }) return (object.cue_registry);
   else if constexpr (Key::name.view() == std::string_view("cues") && requires { object.cues; }) return (object.cues);
@@ -2951,6 +2952,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("createSurface") && requires(Object& object) { object.create_surface; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().create_surface)>>{};
   else if constexpr (Key::name.view() == std::string_view("createWorld") && requires(Object& object) { object.create_world; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().create_world)>>{};
   else if constexpr (Key::name.view() == std::string_view("crop") && requires(Object& object) { object.crop; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().crop)>>{};
+  else if constexpr (Key::name.view() == std::string_view("cssRules") && requires(Object& object) { object.css_rules; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().css_rules)>>{};
   else if constexpr (Key::name.view() == std::string_view("ctrlKey") && requires(Object& object) { object.ctrl_key; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ctrl_key)>>{};
   else if constexpr (Key::name.view() == std::string_view("cueRegistry") && requires(Object& object) { object.cue_registry; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cue_registry)>>{};
   else if constexpr (Key::name.view() == std::string_view("cues") && requires(Object& object) { object.cues; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cues)>>{};
@@ -5481,6 +5483,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->create_surface; }) owner.bind_named("createSurface", [object]() -> decltype(auto) { return (object->create_surface); });
   if constexpr (requires { object->create_world; }) owner.bind_named("createWorld", [object]() -> decltype(auto) { return (object->create_world); });
   if constexpr (requires { object->crop; }) owner.bind_named("crop", [object]() -> decltype(auto) { return (object->crop); });
+  if constexpr (requires { object->css_rules; }) owner.bind_named("cssRules", [object]() -> decltype(auto) { return (object->css_rules); });
   if constexpr (requires { object->ctrl_key; }) owner.bind_named("ctrlKey", [object]() -> decltype(auto) { return (object->ctrl_key); });
   if constexpr (requires { object->cue_registry; }) owner.bind_named("cueRegistry", [object]() -> decltype(auto) { return (object->cue_registry); });
   if constexpr (requires { object->cues; }) owner.bind_named("cues", [object]() -> decltype(auto) { return (object->cues); });
@@ -8045,6 +8048,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(create_surface)
   FLIGHT_SDK_ROW_WIDENS(create_world)
   FLIGHT_SDK_ROW_WIDENS(crop)
+  FLIGHT_SDK_ROW_WIDENS(css_rules)
   FLIGHT_SDK_ROW_WIDENS(ctrl_key)
   FLIGHT_SDK_ROW_WIDENS(cue_registry)
   FLIGHT_SDK_ROW_WIDENS(cues)

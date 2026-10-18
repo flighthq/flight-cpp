@@ -49,7 +49,7 @@ struct anonymous_3e6b344a3b6bd77e : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ANONYMOUS_3E6B344A3B6BD77E
 
-inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathBooleanKernel>>>> rive_kernel_stub = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathBooleanKernel>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<anonymous_3e6b344a3b6bd77e>>>>(flight::make_ref<anonymous_3e6b344a3b6bd77e>(anonymous_3e6b344a3b6bd77e{})));
+inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathBooleanKernel>>>> rive_kernel_stub = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathBooleanKernel>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<anonymous_3e6b344a3b6bd77e>>>>(flight::make_ref<anonymous_3e6b344a3b6bd77e>(anonymous_3e6b344a3b6bd77e{})));
 
 inline flight::Set<double> rive_family_root_keys() {
   auto registry = flight::scene2d_formats::create_rive_import_registry();
@@ -80,7 +80,7 @@ inline flight::Ref<flight::types::RequirementSet> parse_rive_requirements(flight
       families.add(resolve_rive_family_name(type_key));
     }
     for (auto family : ([&]() { flight::Array<flight::String> array_spread_result; for (const auto& array_spread_item : families) { array_spread_result.push(array_spread_item); } return array_spread_result; }()).sort()) {
-      requirements.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Requirement>>>>(flight::make_ref<flight::types::Requirement>(flight::types::Requirement{.facet = flight::types::requirement_facet->document_format, .key = flight::String("") + flight::to_string(rive_requirement_key_namespace) + flight::String(".") + flight::to_string(family) + flight::String("")}))));
+      requirements.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>(flight::make_ref<flight::types::Requirement>(flight::types::Requirement{.facet = flight::types::requirement_facet->document_format, .key = flight::String("") + flight::to_string(rive_requirement_key_namespace) + flight::String(".") + flight::to_string(family) + flight::String("")}))));
     }
   }
   return flight::requirement::create_requirement_set(flight::Array<flight::types::RequirementFacet>{flight::types::requirement_facet->document_format}, requirements);

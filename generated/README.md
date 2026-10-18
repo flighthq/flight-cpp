@@ -7,13 +7,13 @@ Do not edit it by hand.
 Binding profiles differ between packages during a profile transition, so each package row names the profile
 set it was generated under:
 
-- `sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb` (149 packages)
-- `sha256:2602f15df98afbc4055416765f444e85bee83a6c5fad13b420301f8fa344ca71` (4 packages)
+- `sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb` (148 packages)
+- `sha256:2602f15df98afbc4055416765f444e85bee83a6c5fad13b420301f8fa344ca71` (5 packages)
 
 Exact profile paths and SHA-256 digests are recorded per set in `manifest.json`.
 
-The current compiler emitted 2577 of 3151 source modules from
-153 SDK packages and refused 574. Emitted headers live under
+The current compiler emitted 2578 of 3151 source modules from
+153 SDK packages and refused 573. Emitted headers live under
 `include/flight/<package>/`; every refusal and its owning module is recorded in `refusals.json`.
 
 This is a bring-up inventory. It is intentionally committed before it forms a completely compilable SDK closure.

@@ -120,10 +120,10 @@ inline flight::Ref<flight::types::Path> create_rive_clip_path(flight::Structural
   auto into = flight::geometry::create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
   auto combined = flight::geometry::create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
   if (flight::geometry::inverse_matrix(into, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(clipped))) {
-    flight::geometry::multiply_matrix(combined, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(into)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(source));
+    flight::geometry::multiply_matrix(combined, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(into)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(source));
   }
   else {
-    flight::geometry::multiply_matrix(combined, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(flight::geometry::create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt))), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(source));
+    flight::geometry::multiply_matrix(combined, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(flight::geometry::create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt))), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(source));
   }
   auto path = flight::path::create_path(((read_rive_number_flight_value_function_read_u000052_ive_u00004e_umber_flight_private_6321ae4334e1497f(clipping, rive_clip_fill_rule, 0.0) == 1.0) ? flight::String("evenOdd") : flight::String("nonZero")));
   for (auto record : paths) {
@@ -142,7 +142,7 @@ inline flight::Ref<flight::types::Path> create_rive_clip_path(flight::Structural
       }
     }
   }
-  return flight::path_boolean::simplify_path(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathBooleanKernel>>>>>(path_boolean_kernel), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Path>>>>(path)), flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathBooleanOptions>>>>(flight::row_field<flight::RowKey<"fillRule">>(std::optional<flight::String>{path->winding})), std::nullopt);
+  return flight::path_boolean::simplify_path(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathBooleanKernel>>>>>(path_boolean_kernel), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>(path)), flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathBooleanOptions>>>>(flight::row_field<flight::RowKey<"fillRule">>(std::optional<flight::String>{path->winding})), std::nullopt);
 }
 
 inline const double rive_clip_is_visible = 94.0;
@@ -217,7 +217,7 @@ inline void apply_rive_clipping(flight::StructuralRef<flight::RowReadonly<flight
           (index += 1.0);
           continue;
         }
-        if (!read_rive_flag_flight_value_function_read_u000052_ive_u000046_lag_flight_private_6321ae4334e1497f(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(object)), rive_clip_is_visible, true)) {
+        if (!read_rive_flag_flight_value_function_read_u000052_ive_u000046_lag_flight_private_6321ae4334e1497f(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(object)), rive_clip_is_visible, true)) {
           (index += 1.0);
           continue;
         }
@@ -227,7 +227,7 @@ inline void apply_rive_clipping(flight::StructuralRef<flight::RowReadonly<flight
           (index += 1.0);
           continue;
         }
-        const double source = read_rive_number_flight_value_function_read_u000052_ive_u00004e_umber_flight_private_6321ae4334e1497f(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(object)), rive_clip_source_id, -1.0);
+        const double source = read_rive_number_flight_value_function_read_u000052_ive_u00004e_umber_flight_private_6321ae4334e1497f(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(object)), rive_clip_source_id, -1.0);
         std::optional<flight::Array<flight::Ref<flight::types::RivePathRecord>>> paths = shape_paths.get(source);
         if ((!paths.has_value() || (static_cast<double>(paths.value().size()) == 0.0))) {
           flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("rive.unresolved-clipping-source"), flight::String("applyRiveClipping"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("index"), std::variant<bool, double, flight::String>{std::in_place_type<double>, index}}, {flight::String("source"), std::variant<bool, double, flight::String>{std::in_place_type<double>, source}}});
@@ -236,9 +236,9 @@ inline void apply_rive_clipping(flight::StructuralRef<flight::RowReadonly<flight
             continue;
           }
         }
-        auto next = create_rive_clip_path(path_boolean_kernel, paths.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(relative.element(owner))), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(relative.element(source))), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(object)));
+        auto next = create_rive_clip_path(path_boolean_kernel, paths.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(relative.element(owner))), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(relative.element(source))), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(object)));
         auto current = clips.get(target.value());
-        clips.set(target.value(), (!current.has_value() ? next : flight::path_boolean::intersect_paths(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathBooleanKernel>>>>>(path_boolean_kernel), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Path>>>>(current.value())), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Path>>>>(next)), std::nullopt, std::nullopt)));
+        clips.set(target.value(), (!current.has_value() ? next : flight::path_boolean::intersect_paths(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathBooleanKernel>>>>>(path_boolean_kernel), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>(current.value())), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>(next)), std::nullopt, std::nullopt)));
       }
       (index += 1.0);
     }
@@ -246,7 +246,7 @@ inline void apply_rive_clipping(flight::StructuralRef<flight::RowReadonly<flight
   for (auto array_pattern_value : clips) {
     flight::types::DisplayObject target_2 = std::get<0>(array_pattern_value);
     auto path = std::get<1>(array_pattern_value);
-    flight::row_set<flight::RowKey<"clip">>(target_2, std::optional<flight::Ref<flight::types::ClipRegion>>{flight::clip::create_clip_region_from_path(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Path>>>>(path)), std::nullopt)});
+    flight::row_set<flight::RowKey<"clip">>(target_2, std::optional<flight::Ref<flight::types::ClipRegion>>{flight::clip::create_clip_region_from_path(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>(path)), std::nullopt)});
   }
 }
 

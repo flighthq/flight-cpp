@@ -80,11 +80,11 @@ inline void tally_elements(flight::Map<flight::String, double> counts, flight::S
   if (kind.has_value()) {
     counts.set(kind.value(), (([&]() -> double { auto nullish_coalesce_left = counts.get(kind.value()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()) + 1.0));
   }
-  if ((flight::row_get<flight::RowKey<"attributes">>(element).get(flight::String("clip-path")).has_value() || true)) {
+  if ((flight::row_get<flight::RowKey<"attributes">>(element).get(flight::String("clip-path")).has_value() || flight::row_get<flight::RowKey<"attributes">>(element).get(flight::String("mask")).has_value())) {
     counts.set(flight::types::svg_clip_kind->path, (([&]() -> double { auto nullish_coalesce_left = counts.get(flight::types::svg_clip_kind->path); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()) + 1.0));
   }
   for (auto child : flight::row_get<flight::RowKey<"children">>(element)) {
-    tally_elements(counts, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>(child)));
+    tally_elements(counts, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>(child)));
   }
 }
 
@@ -94,7 +94,7 @@ inline std::optional<flight::Map<flight::String, double>> collect_svg_counts(fli
     return std::nullopt;
   }
   auto counts = flight::Map<flight::String, double>();
-  tally_elements(counts, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>(document.value())));
+  tally_elements(counts, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>(document.value())));
   return std::optional<flight::Map<flight::String, double>>{counts};
 }
 

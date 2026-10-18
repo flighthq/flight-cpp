@@ -4,11 +4,18 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function collectCssRules -- source line 41
-//   missing: function resolveSvgStyle -- source line 114
+#include <cmath>
+#include <cstdint>
+#include <flight/boolean.hpp>
+#include <flight/callable.hpp>
+#include <flight/object.hpp>
 #include <flight/record.hpp>
 #include <flight/regexp.hpp>
 #include <flight/structural_ref.hpp>
+#include <functional>
 #include <optional>
+#include <random>
+#include <type_traits>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -27,6 +34,7 @@ namespace flight::types { struct SvgRegistry; }
 namespace flight::types { struct SvgStyle; }
 namespace flight::types { struct XmlElement; }
 
+#include <flight/math/clamp.hpp>
 #include <flight/types/import_diagnostic.hpp>
 #include <flight/types/matrix.hpp>
 #include <flight/types/node_2d.hpp>
@@ -142,78 +150,52 @@ inline flight::types::PathWinding resolve_svg_winding(std::optional<flight::Stri
 
 inline flight::Array<flight::String> svg_presentation_attributes = flight::Array<flight::String>{flight::String("clip-rule"), flight::String("color"), flight::String("display"), flight::String("fill"), flight::String("fill-opacity"), flight::String("fill-rule"), flight::String("filter"), flight::String("font-family"), flight::String("font-size"), flight::String("font-style"), flight::String("font-weight"), flight::String("opacity"), flight::String("stroke"), flight::String("stroke-dasharray"), flight::String("stroke-dashoffset"), flight::String("stroke-linecap"), flight::String("stroke-linejoin"), flight::String("stroke-miterlimit"), flight::String("stroke-opacity"), flight::String("stroke-width"), flight::String("text-anchor"), flight::String("visibility")};
 
-
-// NOT GENERATED: function resolveSvgStyle -- source line 114
-// refusal: cpp-member-projection-without-present-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function resolveSvgStyle(
-//     element: Readonly<XmlElement>,
-//     parentStyle: Readonly<SvgStyle>,
-//     context: Readonly<SvgImportContext>,
-//   ): SvgStyle {
-//     const declarations: Record<string, string> = {};
-//     for (const name of svgPresentationAttributes) {
-//       const value = svgAttribute(element, name);
-//       if (value !== null) declarations[name] = value;
-//     }
-//     const matchingRules = context.cssRules
-//       .filter((rule) => matchesCssSelector(element, rule.selector))
-//       .sort((a, b) => a.specificity - b.specificity || a.order - b.order);
-//     for (const rule of matchingRules) Object.assign(declarations, rule.declarations);
-//     Object.assign(declarations, parseStyleDeclarations(svgAttribute(element, 'style') ?? ''));
-//   
-//     // `inherit` is the CSS-wide keyword for "the parent's computed value", legal on every property
-//     // here. For an inherited property that is exactly what an absent declaration already resolves to,
-//     // so the declaration is dropped; the three non-inherited properties below reset to an initial
-//     // value instead, and so name the parent explicitly. Left in the map, the literal string reaches
-//     // the paint parser as if it were a color, yields no paint, and the geometry silently disappears.
-//     const inheritedProperties = new Set<string>();
-//     for (const name of Object.keys(declarations)) {
-//       if (declarations[name].trim() !== 'inherit') continue;
-//       inheritedProperties.add(name);
-//       delete declarations[name];
-//     }
-//   
-//     const style: SvgStyle = { ...parentStyle };
-//     style.clipRule = resolveSvgWinding(declarations['clip-rule'], style.clipRule);
-//     style.color = declarations.color ?? style.color;
-//     // `display` is not inherited. An ancestor with display:none still suppresses its subtree via
-//     // the display-object hierarchy (and the clip collector's early return).
-//     style.display = inheritedProperties.has('display') ? parentStyle.display : (declarations.display ?? 'inline');
-//     style.fill = declarations.fill ?? style.fill;
-//     style.fillOpacity = clamp(parseSvgCssNumber(declarations['fill-opacity'], style.fillOpacity), 0, 1);
-//     style.fillRule = resolveSvgWinding(declarations['fill-rule'], style.fillRule);
-//     style.filter = inheritedProperties.has('filter') ? parentStyle.filter : (declarations.filter ?? 'none');
-//     style.fontFamily = declarations['font-family'] ?? style.fontFamily;
-//     style.fontSize = parseSvgLength(declarations['font-size'] ?? null, style.fontSize);
-//     style.fontStyle = declarations['font-style'] ?? style.fontStyle;
-//     style.fontWeight = declarations['font-weight'] ?? style.fontWeight;
-//     style.opacity = inheritedProperties.has('opacity')
-//       ? parentStyle.opacity
-//       : clamp(parseSvgCssNumber(declarations.opacity, 1), 0, 1);
-//     style.stroke = declarations.stroke ?? style.stroke;
-//     style.strokeDasharray = declarations['stroke-dasharray'] ?? style.strokeDasharray;
-//     style.strokeDashoffset = parseSvgLength(declarations['stroke-dashoffset'] ?? null, style.strokeDashoffset);
-//     style.strokeLinecap = declarations['stroke-linecap'] ?? style.strokeLinecap;
-//     style.strokeLinejoin = declarations['stroke-linejoin'] ?? style.strokeLinejoin;
-//     style.strokeMiterlimit = parseSvgCssNumber(declarations['stroke-miterlimit'], style.strokeMiterlimit);
-//     style.strokeOpacity = clamp(parseSvgCssNumber(declarations['stroke-opacity'], style.strokeOpacity), 0, 1);
-//     style.strokeWidth = Math.max(0, parseSvgLength(declarations['stroke-width'] ?? null, style.strokeWidth));
-//     style.textAnchor = declarations['text-anchor'] ?? style.textAnchor;
-//     style.visibility = declarations.visibility ?? style.visibility;
-//     return style;
-//   }
-//   
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgStyle.ts: member trim on
-// optional C++ storage requires proven present payload: nothing proved the payload present, so the read would
-// unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow
-// it into a present local first; the compiler will not call value() without that proof. Where the storage
-// carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and
-// `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound
-// from the storage and tested the same way
-
-flight::Ref<flight::types::SvgStyle> resolve_svg_style(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>> element, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>> parent_style, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgImportContext>>>> context);
+inline flight::Ref<flight::types::SvgStyle> resolve_svg_style(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>> element, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>> parent_style, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgImportContext>>>> context) {
+  flight::Record<flight::String, flight::String> declarations = flight::Record<flight::String, flight::String>{};
+  for (auto name : svg_presentation_attributes) {
+    const std::optional<flight::String> value = flight::scene2d_formats::svg_attribute(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(element), name);
+    if (value.has_value()) {
+      ([&]() { auto assignment_value = value.value(); declarations.set(name, assignment_value); return assignment_value; }());
+    }
+  }
+  flight::Array<flight::Ref<flight::types::SvgCssRule>> matching_rules = flight::row_get<flight::RowKey<"cssRules">>(context).filter(flight::Function<bool(flight::Ref<flight::types::SvgCssRule>)>{[=](flight::Ref<flight::types::SvgCssRule> rule) { return matches_css_selector(element, rule->selector); }}).sort(flight::Function<double(flight::Ref<flight::types::SvgCssRule>, flight::Ref<flight::types::SvgCssRule>)>{[=](flight::Ref<flight::types::SvgCssRule> a, flight::Ref<flight::types::SvgCssRule> b) { return ([&]() -> double { auto logical_or_value = (a->specificity - b->specificity); if (flight::to_boolean(logical_or_value)) return logical_or_value; return (a->order - b->order); }()); }});
+  for (auto rule : matching_rules) {
+    flight::object_assign(declarations, rule->declarations);
+  }
+  flight::object_assign(declarations, parse_style_declarations(([&]() -> flight::String { auto nullish_coalesce_left = flight::scene2d_formats::svg_attribute(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(element), flight::String("style")); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }())));
+  auto inherited_properties = flight::Set<flight::String>();
+  for (auto name_2 : flight::object_keys(declarations)) {
+    if ((declarations.get(name_2).value().trim() != flight::String("inherit"))) {
+      continue;
+    }
+    inherited_properties.add(name_2);
+    (declarations.erase(name_2), true);
+  }
+  flight::Ref<flight::types::SvgStyle> style = flight::make_ref<flight::types::SvgStyle>(*flight::structural_ref_cast<flight::Ref<flight::types::SvgStyle>>(parent_style));
+  (style->clip_rule = resolve_svg_winding(declarations.get(flight::String("clip-rule")), style->clip_rule));
+  (style->color = ([&]() -> flight::String { auto nullish_coalesce_left = declarations.get(flight::String("color")); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return style->color; }()));
+  (style->display = (inherited_properties.has(flight::String("display")) ? flight::row_get<flight::RowKey<"display">>(parent_style) : ([&]() -> flight::String { auto nullish_coalesce_left = declarations.get(flight::String("display")); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("inline"); }())));
+  (style->fill = ([&]() -> flight::String { auto nullish_coalesce_left = declarations.get(flight::String("fill")); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return style->fill; }()));
+  (style->fill_opacity = flight::math::clamp(flight::scene2d_formats::parse_svg_css_number(declarations.get(flight::String("fill-opacity")), style->fill_opacity), 0.0, 1.0));
+  (style->fill_rule = resolve_svg_winding(declarations.get(flight::String("fill-rule")), style->fill_rule));
+  (style->filter = (inherited_properties.has(flight::String("filter")) ? flight::row_get<flight::RowKey<"filter">>(parent_style) : ([&]() -> flight::String { auto nullish_coalesce_left = declarations.get(flight::String("filter")); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("none"); }())));
+  (style->font_family = ([&]() -> flight::String { auto nullish_coalesce_left = declarations.get(flight::String("font-family")); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return style->font_family; }()));
+  (style->font_size = flight::scene2d_formats::parse_svg_length(declarations.get(flight::String("font-size")), style->font_size));
+  (style->font_style = ([&]() -> flight::String { auto nullish_coalesce_left = declarations.get(flight::String("font-style")); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return style->font_style; }()));
+  (style->font_weight = ([&]() -> flight::String { auto nullish_coalesce_left = declarations.get(flight::String("font-weight")); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return style->font_weight; }()));
+  (style->opacity = (inherited_properties.has(flight::String("opacity")) ? flight::row_get<flight::RowKey<"opacity">>(parent_style) : flight::math::clamp(flight::scene2d_formats::parse_svg_css_number(declarations.get(flight::String("opacity")), 1.0), 0.0, 1.0)));
+  (style->stroke = ([&]() -> flight::String { auto nullish_coalesce_left = declarations.get(flight::String("stroke")); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return style->stroke; }()));
+  (style->stroke_dasharray = ([&]() -> flight::String { auto nullish_coalesce_left = declarations.get(flight::String("stroke-dasharray")); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return style->stroke_dasharray; }()));
+  (style->stroke_dashoffset = flight::scene2d_formats::parse_svg_length(declarations.get(flight::String("stroke-dashoffset")), style->stroke_dashoffset));
+  (style->stroke_linecap = ([&]() -> flight::String { auto nullish_coalesce_left = declarations.get(flight::String("stroke-linecap")); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return style->stroke_linecap; }()));
+  (style->stroke_linejoin = ([&]() -> flight::String { auto nullish_coalesce_left = declarations.get(flight::String("stroke-linejoin")); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return style->stroke_linejoin; }()));
+  (style->stroke_miterlimit = flight::scene2d_formats::parse_svg_css_number(declarations.get(flight::String("stroke-miterlimit")), style->stroke_miterlimit));
+  (style->stroke_opacity = flight::math::clamp(flight::scene2d_formats::parse_svg_css_number(declarations.get(flight::String("stroke-opacity")), style->stroke_opacity), 0.0, 1.0));
+  (style->stroke_width = flight::maximum(0.0, flight::scene2d_formats::parse_svg_length(declarations.get(flight::String("stroke-width")), style->stroke_width)));
+  (style->text_anchor = ([&]() -> flight::String { auto nullish_coalesce_left = declarations.get(flight::String("text-anchor")); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return style->text_anchor; }()));
+  (style->visibility = ([&]() -> flight::String { auto nullish_coalesce_left = declarations.get(flight::String("visibility")); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return style->visibility; }()));
+  return style;
+}
 
 inline flight::Ref<flight::types::SvgStyle> resolve_svg_definition_style(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>> element, flight::Ref<flight::types::SvgImportContext> context) {
   auto cached = context->resolved_definition_styles.get(flight::structural_ref_cast<flight::Ref<flight::types::XmlElement>>(element));
@@ -221,8 +203,8 @@ inline flight::Ref<flight::types::SvgStyle> resolve_svg_definition_style(flight:
     return cached.value();
   }
   std::optional<flight::Ref<flight::types::XmlElement>> parent = context->parent_by_element.get(flight::structural_ref_cast<flight::Ref<flight::types::XmlElement>>(element)).value_or(std::nullopt);
-  auto parent_style = (!parent.has_value() ? default_svg_style : resolve_svg_definition_style(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>(parent.value())), context));
-  auto style = resolve_svg_style(element, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>(parent_style)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgImportContext>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SvgImportContext>>>>(context)));
+  auto parent_style = (!parent.has_value() ? default_svg_style : resolve_svg_definition_style(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>>(parent.value())), context));
+  auto style = resolve_svg_style(element, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>>(parent_style)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgImportContext>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgImportContext>>>>(context)));
   context->resolved_definition_styles.set(flight::structural_ref_cast<flight::Ref<flight::types::XmlElement>>(element), style);
   return style;
 }

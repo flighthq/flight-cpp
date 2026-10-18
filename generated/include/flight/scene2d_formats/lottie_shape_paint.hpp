@@ -36,7 +36,7 @@ inline void append_lottie_dashed_shape_paths(flight::Array<flight::Ref<flight::t
   }
   for (auto path : paths) {
     auto output = flight::path::create_path(path->winding);
-    flight::path::dash_path(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Path>>>>(path)), ((std::fmod(static_cast<double>(dash.size()), 2.0) == 0.0) ? dash : ([&]() { flight::Array<double> array_spread_result; for (const auto& array_spread_item : dash) { array_spread_result.push(array_spread_item); } for (const auto& array_spread_item : dash) { array_spread_result.push(array_spread_item); } return array_spread_result; }())), dash_offset, output, std::nullopt);
+    flight::path::dash_path(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>(path)), ((std::fmod(static_cast<double>(dash.size()), 2.0) == 0.0) ? dash : ([&]() { flight::Array<double> array_spread_result; for (const auto& array_spread_item : dash) { array_spread_result.push(array_spread_item); } for (const auto& array_spread_item : dash) { array_spread_result.push(array_spread_item); } return array_spread_result; }())), dash_offset, output, std::nullopt);
     flight::shape::append_shape_path(shape, output->commands.slice(), output->data.slice(), ([&]() -> flight::String { auto nullish_coalesce_left_2 = winding; if (nullish_coalesce_left_2.has_value()) return nullish_coalesce_left_2.value(); return output->winding; }()));
   }
 }

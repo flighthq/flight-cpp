@@ -23,7 +23,7 @@ inline flight::Ref<flight::types::Path> apply_lottie_shape_direction(flight::Ref
     return path;
   }
   auto reversed = flight::path::create_path(path->winding);
-  flight::path::reverse_path(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Path>>>>(path)), reversed);
+  flight::path::reverse_path(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>(path)), reversed);
   return reversed;
 }
 

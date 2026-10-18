@@ -88,6 +88,34 @@ int run() {
         parsed->stops[0]->color->alpha == 0.25 && parsed->stops[0]->offset == 0.75,
         "authored stop executes the original parent style cascade and opacity/offset parsing");
   check(context->resolved_definition_styles.has(child), "definition style is cached on the original element owner");
+  auto defaults_context = flight::make_ref<types::SvgImportContext>();
+  auto defaults_source = element("linearGradient");
+  defaults_source->children.push(element("stop"));
+  auto defaults = parse(defaults_source, defaults_context);
+  check(defaults.has_value() && defaults.value()->stops.size() == 1 &&
+        defaults.value()->stops[0]->color->rgb == 0 &&
+        defaults.value()->stops[0]->color->alpha == 1 && defaults.value()->stops[0]->offset == 0,
+        "missing authored stop declarations take original black/opacity/offset defaults");
+  for (bool recursive : {false, true}) {
+    auto diagnostics_context = flight::make_ref<types::SvgImportContext>();
+    diagnostics_context->diagnostics = flight::Array<flight::Ref<types::ImportDiagnostic>>{};
+    const auto id = String(recursive ? "cycle" : "missing");
+    if (recursive) diagnostics_context->resolving_gradients.add(id);
+    auto source = element("linearGradient");
+    source->attributes.set(String("href"), String(recursive ? "#cycle" : "#missing"));
+    check(!parse(source, diagnostics_context).has_value(), "unresolved/recursive reference remains absent");
+    auto diagnostics = diagnostics_context->diagnostics.value();
+    check(diagnostics.size() == 1, "one original reference diagnostic");
+    if (diagnostics.size() == 1) {
+      const auto diagnostic = diagnostics[0];
+      check(diagnostic->kind == String(recursive ? "svg.recursive-gradient" : "svg.unresolved-gradient-reference") &&
+            diagnostic->severity == String(recursive ? "Reject" : "Drop") &&
+            diagnostic->origin == String("parseSvgGradient") && diagnostic->detail.has_value() &&
+            std::get<String>(diagnostic->detail.value().get(String("id")).value()) == id,
+            "exact original reference diagnostic kind/severity/origin/detail");
+    }
+    check(!recursive || diagnostics_context->resolving_gradients.has(id), "caller recursion owner remains held");
+  }
   if (!failures) std::cout << "Original parseSvgGradient ownership and actual cascade cases passed\n";
   return failures ? 1 : 0;
 }

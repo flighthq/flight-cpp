@@ -64,18 +64,18 @@ inline const double rive_shape_paint_flight_value_variable__u000052__u000049__u0
 inline void rebuild_rive_shape(flight::Ref<flight::types::RiveArtboardImportContext> context, double shape_index, flight::Ref<flight::types::Shape> shape, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics) {
   flight::Array<flight::Ref<flight::types::RivePathRecord>> records = flight::Array<flight::Ref<flight::types::RivePathRecord>>{};
   for (auto path_index : ([&]() -> flight::Array<double> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<double>> { auto optional_chain_receiver = context->shape_paths.get(shape_index); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().map([=](flight::Ref<flight::types::RivePathRecord> record) { return record->path_index; }); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<double>{}; }())) {
-    auto record = flight::scene2d_formats::create_rive_path_record(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveArtboardGraph>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveArtboardGraph>>>>(context->artboard)), path_index, std::nullopt);
+    auto record = flight::scene2d_formats::create_rive_path_record(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveArtboardGraph>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveArtboardGraph>>>>(context->artboard)), path_index, std::nullopt);
     if (record.has_value()) {
       records.push(record.value());
     }
   }
   context->shape_paths.set(shape_index, records);
   flight::shape::clear_shape_commands(shape);
-  if (!flight::scene2d_formats::get_rive_core_object_handler(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveImportRegistry>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveImportRegistry>>>>(context->registry)), rive_shape_paint_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u000053__u000048__u000041__u000050__u000045__u00005f__u000050__u000041__u000049__u00004e__u000054__flight_private_62e72f9eacdc5a12).has_value()) {
+  if (!flight::scene2d_formats::get_rive_core_object_handler(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveImportRegistry>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveImportRegistry>>>>(context->registry)), rive_shape_paint_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u000053__u000048__u000041__u000050__u000045__u00005f__u000050__u000041__u000049__u00004e__u000054__flight_private_62e72f9eacdc5a12).has_value()) {
     flight::scene2d_formats::append_rive_shape_geometry(shape, records);
     return;
   }
-  flight::scene2d_formats::append_rive_shape_paint(shape, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveArtboardGraph>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveArtboardGraph>>>>(context->artboard)), shape_index, records, diagnostics);
+  flight::scene2d_formats::append_rive_shape_paint(shape, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveArtboardGraph>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveArtboardGraph>>>>(context->artboard)), shape_index, records, diagnostics);
 }
 
 
@@ -124,7 +124,7 @@ inline flight::String read_rive_shape_name(flight::StructuralRef<flight::RowRead
 inline std::optional<flight::types::DisplayObject> import_rive_nsliced_node_component(flight::Ref<flight::types::RiveArtboardImportContext> context, double index) {
   auto object = context->artboard->objects.element(index);
   flight::importdiagnostics::report_import_diagnostic(context->diagnostics, flight::types::import_diagnostic_severity->recover, flight::String("rive.nine-slice-substituted"), flight::String("importRiveNSlicedNodeComponent"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("substitutedAs"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("container")}}, {flight::String("typeKey"), std::variant<bool, double, flight::String>{std::in_place_type<double>, object->type_key}}});
-  return std::optional<flight::types::DisplayObject>{flight::scene2d::create_display_object(flight::make_structural_ref<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::types::DisplayObject>>>>(flight::row_field<flight::RowKey<"name">>(std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, read_rive_shape_name(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(object)))})))};
+  return std::optional<flight::types::DisplayObject>{flight::scene2d::create_display_object(flight::make_structural_ref<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::types::DisplayObject>>>>(flight::row_field<flight::RowKey<"name">>(std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, read_rive_shape_name(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(object)))})))};
 }
 
 

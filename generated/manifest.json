@@ -3610,15 +3610,11 @@
       "id": "scene2d-html-view-partial-row-absence"
     },
     {
-      "files": [
-        "flight/scene2d_formats/svg_color.hpp"
-      ],
+      "files": [],
       "id": "scene2d-formats-declare-refused-svg-color"
     },
     {
-      "files": [
-        "flight/scene2d_formats/svg_transform.hpp"
-      ],
+      "files": [],
       "id": "scene2d-formats-svg-transform-readonly-matrix"
     },
     {
@@ -3640,9 +3636,7 @@
       "id": "scene2d-gl-rich-text-texture-cache-effective-carrier"
     },
     {
-      "files": [
-        "flight/scene2d_formats/svg_style.hpp"
-      ],
+      "files": [],
       "id": "scene2d-formats-svg-declare-refused-style"
     }
   ],
@@ -5496,6 +5490,20 @@
       "package": "@flighthq/scene3d-formats"
     },
     {
+      "dependency": "flight-compiler",
+      "digest": "ab01011310ba280544716fbb854bcc55fee7665387bfd799d813291a67294cce",
+      "id": "compiler-record-computed-delete",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppRecordDeleteProperty.test.ts",
+      "package": "@flighthq/scene2d-formats"
+    },
+    {
+      "dependency": "flight-compiler",
+      "digest": "3bf3c7b22d726c4b6f38eb881ca7aea83dbb11b7f186eba285321bb5b8deec42",
+      "id": "compiler-primitive-record-nullish-storage",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppPrimitiveRecordNullishStorage.test.ts",
+      "package": "@flighthq/scene2d-formats"
+    },
+    {
       "dependency": "flight",
       "digest": "123a1e9ecded618e022c2d436d7d65fedff5b2d1ddae2360683c7f93389bbfc1",
       "id": "rive-object-graph-fresh-diagnostic-record",
@@ -5521,6 +5529,20 @@
       "digest": "98f7aae5b4f798dde31c50fd1d5ada718a274b7a7b3ce20ee3693be79dbce64b",
       "id": "scene2d-formats-lottie-frame-rate-narrowed-local",
       "module": "packages/scene2d-formats/src/lottieCounts.ts",
+      "package": "@flighthq/scene2d-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "9c00002f5a395b1af2fa807c03794558b558773591c5b52c61fcafa253b0e735",
+      "id": "scene2d-svg-cascade-own-key-presence",
+      "module": "packages/scene2d-formats/src/svgStyle.ts",
+      "package": "@flighthq/scene2d-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "f2fa29aec68d6ec58cb16c16280e76974bfbd6f8790bead0fe78848d7055924e",
+      "id": "scene2d-svg-color-local-component-presence",
+      "module": "packages/scene2d-formats/src/svgColor.ts",
       "package": "@flighthq/scene2d-formats"
     },
     {
@@ -7028,12 +7050,12 @@
       "sourceModules": 35
     },
     {
-      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
+      "bindingProfileSet": "sha256:2602f15df98afbc4055416765f444e85bee83a6c5fad13b420301f8fa344ca71",
       "cppIncludePrefix": "flight/scene2d_formats",
       "cppNamespace": "flight::scene2d_formats",
-      "emittedModules": 48,
+      "emittedModules": 49,
       "package": "@flighthq/scene2d-formats",
-      "refusedModules": 32,
+      "refusedModules": 31,
       "source": {
         "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
@@ -7765,8 +7787,8 @@
   },
   "summary": {
     "packages": 153,
-    "emittedModules": 2577,
-    "refusedModules": 574,
+    "emittedModules": 2578,
+    "refusedModules": 573,
     "sourceModules": 3151
   }
 }
