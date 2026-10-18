@@ -5794,6 +5794,23 @@
       "unblocks": "Whole original Lottie helper emission needed for the selected still-blocked public header closure; remaining native callee declarations and override ABI are tracked separately.",
       "expires": "When upstream preserves qualified exact union owners, unchanged optional literal carriers and concrete fresh selected-overload contextual owners at these boundaries.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "texture-authored-common-evaluations",
+      "dependency": "flight",
+      "patch": "texture-authored-common-evaluations.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/texture/src/texture.ts",
+      "package": "@flighthq/texture",
+      "answers": "diagnostic",
+      "refusal": "Declared texture-common-options-view moved the raw original common-field prelude into branches, removing one authored 2D evaluation and placing other arms after the dimension getter. Later options-view/source-presence patches also made null options throw instead of following the raw optional-chain default.",
+      "rewrite": "Restore the original common-field prelude before the optional dimension switch, remove the replacement branch-local evaluations, keep the separate authored 2D leaf evaluation, and preserve nullish option absence in the resource/source helpers. Restore the original one-read cube optional sources slice and ordinary slice-based cube clone helper, retaining holes and actual list length rather than six indexed reads.",
+      "equivalence": "Restores rawpin observable getter counts, order, mutations, errors and defaults. No cached getter results, deduplicated common evaluations, removed unused reads, parameter-domain narrowing, new API, owner conversion or schema checks. Existing named option views and native source declarations remain unchanged. Cube source getters run once and slicing preserves original array length, holes and source identities; no fixed-length source-domain narrowing.",
+      "verification": "Managed full Flight206 reverse/raw-clean/reapply PASS. Complete rawpin vs corrected original JavaScript modules:50/50case equivalence, no replacement bodies, across every existing dimension arm, changing getter order/counts/mutations/errors, nullish defaults and cube holes/length. Native readonly2D boundary + existing cube controls33checks0fail and focused CTestPASS with actual SDL include; original image caller clears create_texture then exposes separate fresh nested data allocation owner mismatch. No SDK/normal header promotion. See artifacts/texture-authored-getter-qualification.json.",
+      "whyNotUpstreamFirst": "This corrects observable behavior lost by the downstream declared source-patch stack, while retaining its explicit option views required by the pinned compiler.",
+      "unblocks": "Source-faithful getter semantics through the original texture factory and the bounded readonly 2D native entry point; no SDK header gain claim.",
+      "expires": "When the downstream texture option-view/source-presence transformations retain the original common-field evaluation order and nullish domains directly.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }

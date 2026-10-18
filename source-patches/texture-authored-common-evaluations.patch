@@ -1,0 +1,64 @@
+diff --git a/packages/texture/src/texture.ts b/packages/texture/src/texture.ts
+--- a/packages/texture/src/texture.ts
++++ b/packages/texture/src/texture.ts
+@@ -50,7 +50,7 @@
+ }
+ 
+ function cloneTextureSourceCubeFaces(sources: TextureSourceCubeFaces): TextureSourceCubeFaces {
+-  return [sources[0], sources[1], sources[2], sources[3], sources[4], sources[5]];
++  return sources.slice() as unknown as TextureSourceCubeFaces;
+ }
+ 
+ function getFirstTextureSource(texture: Readonly<TextureLike>): TextureSourceValue | null {
+@@ -245,7 +245,7 @@
+   | CreateTextureCubeOptionsView;
+ 
+ function getTextureResource(opts?: Readonly<TextureResourceOptions>): ImageResourceReference | null | undefined {
+-  if (opts === undefined) return undefined;
++  if (opts == null) return undefined;
+   return opts.resource;
+ }
+ 
+@@ -256,10 +256,9 @@
+ // Builds a flat Texture union. Two-dimensional content is the default and retains a null source
+ // sentinel during the loader migration; non-2D variants are selected by their required dimension.
+ export function createTexture(opts?: Readonly<CreateTextureOptionsView>): Texture {
+-  if (opts === undefined) return createTexture2D();
+-  switch (opts.dimension) {
++  const common = createCommonTextureFields(opts);
++  switch (opts?.dimension) {
+     case '2d-array': {
+-      const common = createCommonTextureFields(opts);
+       const out = allocateEntity<Texture2DArray>();
+       applyCommonTextureFields(out, common);
+       out.dimension = '2d-array';
+@@ -270,7 +269,6 @@
+       return texture;
+     }
+     case '3d': {
+-      const common = createCommonTextureFields(opts);
+       const out = allocateEntity<Texture3D>();
+       applyCommonTextureFields(out, common);
+       out.dimension = '3d';
+@@ -281,11 +279,10 @@
+       return texture;
+     }
+     case 'cube': {
+-      const common = createCommonTextureFields(opts);
+       const out = allocateEntity<TextureCube>();
+       applyCommonTextureFields(out, common);
+       out.dimension = 'cube';
+-      out.sources = opts.sources ? cloneTextureSourceCubeFaces(opts.sources) : [null, null, null, null, null, null];
++      out.sources = (opts.sources?.slice() ?? [null, null, null, null, null, null]) as unknown as TextureSourceCubeFaces;
+       const texture: TextureCube = finishEntity(out) as TextureCube;
+       attachTextureToResource(texture, getTextureResource(opts));
+       return texture;
+@@ -482,7 +479,7 @@
+ export function initializeTexture2D(out: EntityConstruction<Texture2D>, opts?: Readonly<CreateTexture2DOptions>): void {
+   applyCommonTextureFields(out, createCommonTextureFields(opts));
+   out.dimension = '2d';
+-  if (opts === undefined) {
++  if (opts == null) {
+     out.source = null;
+     return;
+   }

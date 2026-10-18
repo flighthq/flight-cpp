@@ -1,0 +1,29 @@
+{
+  "schema": "flight-texture-original-getter-order/1",
+  "rawPin": "a62784923f3be814463286c9fb28edfe6ab15789",
+  "rawSourceSha256": "eafc209e786cf3059c7568bd13282a3a1808303eaa1cfb2f6d805998080712da",
+  "patchedSourceSha256": "326771b15bd5ae5a670937456361eba943481cba66869c37eb8fd5fb675ff463",
+  "wholeOriginalModules": true,
+  "replacementBodies": false,
+  "loadedModuleCounts": [
+    1092,
+    1098
+  ],
+  "summary": {
+    "cases": 50,
+    "pass": 50,
+    "fail": 0
+  },
+  "caseEvidence": "texture-source-equivalence.json in the frozen qualification bundle",
+  "native": {
+    "command": "CMake target flight_cpp_generated_texture_options_row_tests and focused CTest",
+    "checks": 33,
+    "failures": 0,
+    "ctest": "PASS",
+    "coverage": "readonly 2D row forwarding, original getter order/TypeError, defaults, same ImageResource arm, live source mutation, options/source lifetime, nullable source, incompatible-row/static and wrong-cell runtime negatives; existing cube value controls",
+    "originalImageHeader": "create_texture call now accepted; next compile failure is optional<Ref<expected sprite-data owner>> initialized with fresh anonymous texture-only owner",
+    "fullOriginalImageConsumer": "NOT RUN while original header has this independent allocation owner error"
+  },
+  "overrideDerivedFrom": "5fe235ba67bbec56ee8c312c036a85506c0da0ef063b49a9a93ede77aa765d5a",
+  "sourcePatchSha256": "84fa98add27f676ff62fa134a4010f54c2dc8cb83f3256d7e2ba1f7017dbeac6"
+}
