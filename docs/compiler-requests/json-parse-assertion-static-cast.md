@@ -312,3 +312,57 @@ one source parse per invocation. That artifact is not the final public gain:
 the final normal generation must include the atomically landed corrected typed
 Record patch and preserve the JSON counter, DragonBones missing-key counter and
 Spine clamp consumers together. No broad readonly ABI prototype output is carried.
+
+### Final original Spine counter qualification (2026-10-18)
+
+One final normal `npm run pkg:generate -- skeleton2d-formats --progress` ran
+on the delivered `ff634a55` floor with 74 ordered compiler patches, including
+this bounded private-reader patch, corrected `compiler-typed-record-missing-key`,
+and `compiler-optional-record-literal-materialization`. It exited zero: 1,321
+of 1,342 closure modules emitted across 18 packages; the requested slice remains
+50/59 emitted with nine honest refusals. Ten normal headers plus its manifest
+changed. Both pinned sibling checkouts were restored clean. Subsequent unrelated
+nullable-element compiler commits were reconciled without changing this emitted
+artifact; this is a measured 74-patch run, not a claim of regenerating later inputs.
+
+The actual original public counter now compiles, links and runs through
+`flight/skeleton2d_formats/spine_json_section_counts.hpp`. The new registered
+CMake/Bazel test covers 28 fixed boundaries, a fresh Map per valid invocation,
+and distinct literal UTF-16 surrogate/U+FFFD keys. A fresh driver using the final
+product include tree matches the untouched pinned TypeScript body and actual
+registry constants in all 188 fixed/seeded cases with exact Map order; the source
+oracle verifies exactly one parse per invocation. Numeric overflow/underflow,
+missing/null/wrong-typed fields, array/object sections, DragonBones rejection and
+the lower-case `draworder` fallback are included. The native literal UTF-16 case
+is checked directly, avoiding a lossy UTF-8 test transport. This is bounded
+coverage rather than an exhaustive source-domain claim.
+
+All three required original consumers pass together: Spine JSON counter,
+DragonBones missing-key counter, and Spine clamp/parse helpers. The runtime/core/
+structural-row controls also pass (6/6 CTest total). All 227 override derivations
+match; the Spine generated hash remains `67479d32dce9cd72f1d07788ba1797b224c7121dc22a752b07dbc88afbd68cc2`,
+so its re-derived override required no edit or hash bump. Direct package labels
+and source-patch automation pass. Nine same-stack public/alias/escape/callback/
+comparison/capture/export/optional ABI controls pass on the final backend, whose
+source was byte-checked against the actual running normal compiler. The first
+consumer build needed the existing local SDL/GLES include paths added to its
+runtime-only build directory; no dependency install or source workaround was used.
+
+The complete -j2 standalone check of these ten changed headers is **3 pass /
+7 fail**, with none unattempted. DragonBones parse and section-count headers keep
+their prior passes; the Spine JSON counter is the one new pass. Other failures
+remain public named-view/Record carriers, the existing nullable-array slot,
+omitted `censusDragonBones`, the transform preset owner, and callback carriers.
+In particular `spine_parse.hpp` now reaches its public
+`SpineJsonSectionContext.doc` initializer at line 151, where the original named
+JSON owner cannot become an owning Record. It remains failed as `no-viable-conversion-c35940ab`.
+The old two-row `no-matching-function-b37ddf91` owner-read failure is retired
+by one pass and this explicit follow-on. Global historical sweep totals were
+not rerun or recast as current measurements.
+
+This counter is outside the original historical-25 assertion inventory: **zero
+historical-25 rows are promoted by this unit**. Their 25/25 applicability and
+the current 27 related rows remain distinct; nominal document owners still need
+their faithful represented contract. No parser body replacement, parsed tree/
+Record copy, schema gate, nominal cast, global readonly ABI change, source-domain
+narrowing, refusal suppression or Canvas work is carried.

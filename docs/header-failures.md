@@ -5582,3 +5582,29 @@ The carried PBR extension registry override was repaired against 806d257. Of its
 See [readonly view request](compiler-requests/readonly-view-to-writable.md) and
 [array owner request](compiler-requests/array-of-union-into-array-of-owner.md).
 This is a scoped update; the original G1 sweep totals above remain historical.
+
+## G3 bounded JSON owner reads: original Spine counter
+
+The final normal skeleton2d-formats generation on the delivered 74-compiler-patch
+floor composes the bounded private JSON read carrier, corrected typed-Record
+missing-key reads and optional-Record literal materialization. It exits zero,
+keeps 50/59 emitted modules and nine refusals, and changes ten normal headers.
+A complete Clang 22.1.8 -j2 compile of exactly those ten is **3 PASS / 7 FAIL**;
+none are unattempted. DragonBones parse and section counts retain their passes.
+`spine_json_section_counts.hpp` is the one new pass and its actual original public
+consumer matches untouched pinned TypeScript in **188/188** cases with exact Map
+order, including valid numeric range and surrogate-key cases. The new registered
+consumer, DragonBones missing-key consumer and Spine clamp consumer pass together;
+including core/JSON/structural-row controls gives 6/6 CTest. All227 override
+derivations match, including the unchanged paired Spine helper hash.
+
+The two-row `no-matching-function-b37ddf91` is retired: the counter passes, while
+`spine_parse.hpp` advances to `no-viable-conversion-c35940ab` at its public
+`SpineJsonSectionContext.doc` Record initializer. The original parsed owner is
+readable; storing it in that public Record carrier remains unsupported. The seven
+changed-header failures are retained explicitly, including public/callback Record
+carriers, nullable-array slot, omitted census and transform preset owner.
+See [the JSON assertion request](compiler-requests/json-parse-assertion-static-cast.md#final-original-spine-counter-qualification-2026-10-18)
+for exact floor, consumer and ABI evidence. This is **zero new promotions among
+the historical25 JSON assertion rows**, which do not include this Spine counter;
+no whole package, nominal document, global sweep or Canvas completion is claimed.
