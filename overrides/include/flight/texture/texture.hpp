@@ -797,18 +797,45 @@ create_common_texture_fields_from(const std::optional<OptionsRow>& opts) {
   const auto flip_y = opts
       ? flight::row_get<flight::RowKey<"flipY">>(*opts)
       : std::optional<bool>{};
-  const auto sampler = opts
+  const auto sampler_option = opts
       ? flight::row_get<flight::RowKey<"sampler">>(*opts)
       : std::optional<flight::Ref<Sampler>>{};
-  const auto uv_offset = opts
+  flight::Ref<Sampler> sampler;
+  if (sampler_option && *sampler_option) {
+    const auto repeated = flight::row_get<flight::RowKey<"sampler">>(*opts);
+    if (!repeated) throw flight::TypeError("Cannot read properties of undefined (reading 'anisotropy')");
+    if (!*repeated) throw flight::TypeError("Cannot read properties of null (reading 'anisotropy')");
+    sampler = clone_sampler(*repeated);
+  } else {
+    sampler = create_sampler(std::nullopt);
+  }
+  const auto offset_option = opts
       ? flight::row_get<flight::RowKey<"uvOffset">>(*opts)
       : std::optional<flight::Ref<Vector2>>{};
+  flight::Ref<Vector2> uv_offset;
+  if (offset_option && *offset_option) {
+    const auto repeated = flight::row_get<flight::RowKey<"uvOffset">>(*opts);
+    if (!repeated) throw flight::TypeError("Cannot read properties of undefined (reading 'x')");
+    if (!*repeated) throw flight::TypeError("Cannot read properties of null (reading 'x')");
+    uv_offset = clone_vector2(*repeated);
+  } else {
+    uv_offset = create_vector2(0.0, 0.0);
+  }
   const auto uv_rotation = opts
       ? flight::row_get<flight::RowKey<"uvRotation">>(*opts)
       : std::optional<double>{};
-  const auto uv_scale = opts
+  const auto scale_option = opts
       ? flight::row_get<flight::RowKey<"uvScale">>(*opts)
       : std::optional<flight::Ref<Vector2>>{};
+  flight::Ref<Vector2> uv_scale;
+  if (scale_option && *scale_option) {
+    const auto repeated = flight::row_get<flight::RowKey<"uvScale">>(*opts);
+    if (!repeated) throw flight::TypeError("Cannot read properties of undefined (reading 'x')");
+    if (!*repeated) throw flight::TypeError("Cannot read properties of null (reading 'x')");
+    uv_scale = clone_vector2(*repeated);
+  } else {
+    uv_scale = create_vector2(1.0, 1.0);
+  }
   const auto version = opts
       ? flight::row_get<flight::RowKey<"version">>(*opts)
       : std::optional<double>{};
@@ -817,10 +844,10 @@ create_common_texture_fields_from(const std::optional<OptionsRow>& opts) {
           .color_space = color_space.value_or(flight::String("srgb")),
           .flip_x = flip_x.value_or(false),
           .flip_y = flip_y.value_or(false),
-          .sampler = sampler ? clone_sampler(*sampler) : create_sampler(std::nullopt),
-          .uv_offset = uv_offset ? clone_vector2(*uv_offset) : create_vector2(0.0, 0.0),
+          .sampler = sampler,
+          .uv_offset = uv_offset,
           .uv_rotation = uv_rotation.value_or(0.0),
-          .uv_scale = uv_scale ? clone_vector2(*uv_scale) : create_vector2(1.0, 1.0),
+          .uv_scale = uv_scale,
           .version = flight::unsigned_right_shift(version.value_or(0.0), 0.0)});
 }
 
@@ -951,6 +978,14 @@ inline flight::Ref<Texture2D> create_texture_2d(
         wrapped, flight::row_get<flight::RowKey<"resource">>(*opts));
   }
   return texture;
+}
+
+// The source overload receives a readonly options view and selects its 2D leaf. Reading the
+// original common-field prelude and discriminant retain their reads before the 2D leaf.
+inline flight::Ref<Texture2D> create_texture(std::optional<CreateTexture2DOptionsRow> opts) {
+  [[maybe_unused]] const auto common = create_common_texture_fields_from(opts);
+  if (opts) (void)flight::row_get<flight::RowKey<"dimension">>(*opts);
+  return create_texture_2d(std::move(opts));
 }
 
 inline flight::Ref<Texture2D> create_texture(
