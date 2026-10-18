@@ -1,17 +1,36 @@
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-index 0e920ac..e6d703b 100644
+index 0e920ac..dbfdcf1 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-@@ -5494,6 +5494,8 @@ function emitExpression(
-       if (primitiveErasedTypeof) return primitiveErasedTypeof;
-       const erasedTypeof = emitCppErasedTypeofConditionalCpp(expression, context, expectedType);
-       if (erasedTypeof) return erasedTypeof;
-+      const guardedNullableElement = emitCppGuardedNullableElementConditionalCpp(expression, context, expectedType);
-+      if (guardedNullableElement) return guardedNullableElement;
-       return `(${emitCppTruthinessExpression(expression.condition, context)} ? ${emitCppConditionalBranchCpp(expression.whenTrue, getCppConditionBranchContextCpp(expression.condition, true, context), expectedType)} : ${emitCppConditionalBranchCpp(expression.whenFalse, getCppConditionBranchContextCpp(expression.condition, false, context), expectedType)})`;
-     }
-     case 'element': {
-@@ -30652,6 +30654,120 @@ function emitCppRequiredRecordKeyCpp(
+@@ -4023,7 +4023,27 @@ function emitExpression(
+         expression.operator === '='
+           ? emitCppForeignAnonymousPropertyObjectCpp(expression.left, expression.right, context)
+           : undefined;
++      // The destination may represent both sentinels while the assigned value is a single optional.
++      // An indexed read lifts through Array::get's outer/inner distinction; any other single-sentinel
++      // source lifts with the source union's own sentinel.
++      const assignmentDestUnion =
++        expression.operator === '=' && assignmentType && !erasedIndexNamedProperty && !exactCallableFieldAssignment
++          ? getIrUnionTypeCpp(assignmentType, context, new Set())
++          : undefined;
++      const assignmentDestPlan = assignmentDestUnion
++        ? getCppUnionRepresentationPlan(assignmentDestUnion, context)
++        : undefined;
++      const liftedAssignmentRight =
++        assignmentDestUnion &&
++        assignmentDestPlan?.kind === 'dualSentinelVariant' &&
++        // A conditional adapts its own branches to the destination.
++        expression.right.kind !== 'conditional'
++          ? expression.right.kind === 'element'
++            ? emitCppNullableElementIntoDualSentinelCpp(expression.right, assignmentDestUnion, context)
++            : emitCppSingleSentinelIntoDualSentinelCpp(expression.right, assignmentDestUnion, context)
++          : undefined;
+       const right =
++        liftedAssignmentRight ??
+         foreignAnonymousObject ??
+         emitExpression(
+           expression.right,
+@@ -30652,6 +30672,86 @@ function emitCppRequiredRecordKeyCpp(
    return emitExpression(expression, context, targetType);
  }
  
@@ -54,90 +73,70 @@ index 0e920ac..e6d703b 100644
 +  return `([&]() -> ${resultType} { auto ${valueName} = ${emitExpression(expression, context)}; if (!${valueName}.has_value()) return ${absence}; return ${present}; }())`;
 +}
 +
-+// A nullable array element can be lifted into a dual-sentinel destination only where the source has
-+// already proved the index is in range. Without that proof an absent element is JavaScript's
-+// `undefined` (a hole or a past-end index), not the element union's declared null: lifting an empty
-+// optional to the Null arm from the declared `T | null` alone would assert a sentinel the read does
-+// not carry. This bounded proof accepts exactly the guarded conditional the SDK writes -- a
-+// conjunction that bounds the same index below that same array's length and at or above zero -- and
-+// lifts the in-range branch; every other shape keeps its existing emission (and its diagnostic).
-+function getCppGuardedConditionalBoundsCpp(
-+  condition: Readonly<IrExpression>,
-+  receiverBindingId: string,
-+  indexBindingId: string,
-+): boolean {
-+  let upper = false;
-+  let lower = false;
-+  const visit = (branch: Readonly<IrExpression>): void => {
-+    if (branch.kind === 'binary' && branch.operator === '&&') {
-+      visit(branch.left);
-+      visit(branch.right);
-+      return;
-+    }
-+    if (branch.kind !== 'binary') return;
-+    const isIndex = (candidate: Readonly<IrExpression>): boolean =>
-+      candidate.kind === 'identifier' &&
-+      candidate.reference.kind === 'binding' &&
-+      candidate.reference.binding.id === indexBindingId;
-+    const isReceiverLength = (candidate: Readonly<IrExpression>): boolean =>
-+      candidate.kind === 'property' &&
-+      candidate.name === 'length' &&
-+      candidate.object.kind === 'identifier' &&
-+      candidate.object.reference.kind === 'binding' &&
-+      candidate.object.reference.binding.id === receiverBindingId;
-+    if ((branch.operator === '<' || branch.operator === '<=') && isIndex(branch.left) && isReceiverLength(branch.right)) {
-+      upper = true;
-+    }
-+    if (
-+      (branch.operator === '>=' || branch.operator === '>') &&
-+      isIndex(branch.left) &&
-+      branch.right.kind === 'literal' &&
-+      branch.right.value === 0
-+    ) {
-+      lower = true;
-+    }
-+  };
-+  visit(condition);
-+  return upper && lower;
-+}
-+
-+function emitCppGuardedNullableElementConditionalCpp(
-+  expression: Readonly<Extract<IrExpression, { kind: 'conditional' }>>,
++// A nullable array element has TWO distinct absences in the runtime: `Array::get(double)` answers an
++// empty OUTER optional for an index JavaScript reads as undefined (fractional, NaN, negative, or past
++// the end) and an engaged outer optional holding an empty INNER optional for a stored null element.
++// That is exactly the distinction the dual-sentinel destination needs, so lift the indexed read
++// directly instead of guessing from the declared `T | null`: evaluate the array then the index once
++// (JavaScript order), map an absent index to the Undefined arm, an empty stored element to the
++// element union's own sentinel arm, and a present element to the value arm with the same reference.
++function emitCppNullableElementIntoDualSentinelCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'element' }>>,
++  expectedUnion: Readonly<Extract<IrType, { kind: 'union' }>>,
 +  context: EmitContext,
-+  expectedType: Readonly<IrType> | undefined,
 +): string | undefined {
-+  if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || !expectedType) return undefined;
-+  const union = getIrUnionTypeCpp(expectedType, context, new Set());
-+  const plan = union ? getCppUnionRepresentationPlan(union, context) : undefined;
-+  if (!union || plan?.kind !== 'dualSentinelVariant') return undefined;
-+  const element = expression.whenTrue;
-+  if (element.kind !== 'element' || element.optional) return undefined;
-+  if (element.object.kind !== 'identifier' || element.object.reference.kind !== 'binding') return undefined;
-+  if (element.index.kind !== 'identifier' || element.index.reference.kind !== 'binding') return undefined;
-+  if (
-+    !getCppGuardedConditionalBoundsCpp(
-+      expression.condition,
-+      element.object.reference.binding.id,
-+      element.index.reference.binding.id,
-+    )
-+  ) {
-+    return undefined;
-+  }
-+  const lifted = emitCppSingleSentinelIntoDualSentinelCpp(element, union, context);
-+  if (!lifted) return undefined;
-+  const absent = emitExpression(expression.whenFalse, getCppConditionBranchContextCpp(expression.condition, false, context), expectedType);
-+  return `(${emitCppTruthinessExpression(expression.condition, context)} ? ${lifted} : ${absent})`;
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || expression.optional) return undefined;
++  const sourceType = getIrExpressionTypeEvidenceCpp(expression, context);
++  const sourceUnion = sourceType ? getIrUnionTypeCpp(sourceType, context, new Set()) : undefined;
++  const sourcePlan = sourceUnion ? getCppUnionRepresentationPlan(sourceUnion, context) : undefined;
++  if (!sourceUnion || sourcePlan?.kind !== 'optionalSingle' || sourcePlan.valueSlots.length !== 1) return undefined;
++  const expectedPlan = getCppUnionRepresentationPlan(expectedUnion, context);
++  if (expectedPlan.kind !== 'dualSentinelVariant') return undefined;
++  const nullAbsence = sourcePlan.sentinels.null !== 'absent';
++  const undefinedAbsence = sourcePlan.sentinels.undefined !== 'absent';
++  if (nullAbsence === undefinedAbsence) return undefined;
++  const sentinel = nullAbsence ? 'null' : 'undefined';
++  const arrayName = getGeneratedTargetName('liftedElementArray', context);
++  const indexName = getGeneratedTargetName('liftedElementIndex', context);
++  const elementName = getGeneratedTargetName('liftedElement', context);
++  const resultType = emitUnionTypeCpp(expectedUnion, context);
++  const missingArm = emitCppUnionSentinelConstruction('undefined', expectedUnion, expectedPlan.kind, context);
++  const storedAbsenceArm = emitCppUnionSentinelConstruction(sentinel, expectedUnion, expectedPlan.kind, context);
++  const presentArm = emitCppUnionValueConstruction(
++    `${elementName}.value().value()`,
++    sourcePlan.valueSlots[0]!.targetType,
++    expectedUnion,
++    expectedPlan.kind,
++    context,
++  );
++  context.includes.add('optional');
++  context.includes.add('variant');
++  return `([&]() -> ${resultType} { const auto& ${arrayName} = ${emitExpression(expression.object, context)}; const double ${indexName} = ${emitExpression(expression.index, context)}; auto ${elementName} = ${arrayName}.get(${indexName}); if (!${elementName}.has_value()) return ${missingArm}; if (!${elementName}.value().has_value()) return ${storedAbsenceArm}; return ${presentArm}; }())`;
 +}
 +
  function emitCppConditionalBranchCpp(
    expression: Readonly<IrExpression>,
    context: EmitContext,
+@@ -30659,6 +30759,13 @@ function emitCppConditionalBranchCpp(
+ ): string {
+   const union = expectedType ? getIrUnionTypeCpp(expectedType, context, new Set()) : undefined;
+   const plan = union ? getCppUnionRepresentationPlan(union, context) : undefined;
++  if (union && plan?.kind === 'dualSentinelVariant') {
++    const lifted =
++      expression.kind === 'element'
++        ? emitCppNullableElementIntoDualSentinelCpp(expression, union, context)
++        : emitCppSingleSentinelIntoDualSentinelCpp(expression, union, context);
++    if (lifted) return lifted;
++  }
+   if (plan?.kind !== 'optionalSingle') return emitExpression(expression, context, expectedType);
+   const slot = plan.valueSlots[0];
+   const freshMappedArray =
 diff --git a/packages/compiler-backend-cpp/src/cppNullableElementDualSentinel.test.ts b/packages/compiler-backend-cpp/src/cppNullableElementDualSentinel.test.ts
 new file mode 100644
-index 0000000..ccbe341
+index 0000000..8e86c4f
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppNullableElementDualSentinel.test.ts
-@@ -0,0 +1,81 @@
+@@ -0,0 +1,75 @@
 +import ts from 'typescript';
 +import { expect, it } from 'vitest';
 +
@@ -159,23 +158,34 @@ index 0000000..ccbe341
 +  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
 +}
 +
-+it('lifts a guarded nullable array element into a dual-sentinel destination', () => {
++it('lifts a nullable array element through the outer/inner indexed read', () => {
 +  const output = emit(`
 +    interface Attachment { name: string }
 +    interface Slot { attachment?: Attachment | null }
 +    export function bind(slot: Slot, table: readonly (Attachment | null)[], index: number): void {
 +      slot.attachment = index >= 0 && index < table.length ? table[index] : null;
 +    }
++    export function unguarded(slot: Slot, table: readonly (Attachment | null)[], index: number, flag: boolean): void {
++      slot.attachment = flag ? table[index] : null;
++    }
++    export function assign(slot: Slot, table: readonly (Attachment | null)[], index: number): void {
++      slot.attachment = table[index];
++    }
 +  `);
 +
-+  // The source's own bounds guard proves the read in range, so an empty optional is the element's
-+  // declared null; it lifts into the Null arm and a present element keeps the same reference.
-+  expect(output).toContain('has_value()');
++  // Array::get distinguishes an index JavaScript reads as undefined (outer absent) from a stored null
++  // element (engaged outer, empty inner). The lift evaluates the array then the index, once each.
++  expect(output).toContain('.get(lifted_element_index)');
++  expect(output).toContain('std::in_place_type<flight::Undefined>');
 +  expect(output).toContain('std::in_place_type<flight::Null>');
 +  expect(output).toContain('std::in_place_type<flight::Ref<Attachment>>');
++  expect(output).toContain('lifted_element.value().value()');
++  expect(output.indexOf('lifted_element_array')).toBeLessThan(output.indexOf('lifted_element_index'));
++  // Guarded, unguarded and bare-assignment forms all lift; none writes the raw optional.
++  expect(output).not.toContain('attachment = table.element(index)');
 +});
 +
-+it('maps an undefined-only element to the undefined arm, never to null', () => {
++it('maps an undefined-only stored element to the undefined arm, keeping the null fallback distinct', () => {
 +  const output = emit(`
 +    interface Attachment { name: string }
 +    interface Slot { attachment?: Attachment | null }
@@ -184,11 +194,11 @@ index 0000000..ccbe341
 +    }
 +  `);
 +
-+  // The element's absence maps to the undefined arm; the source's own `: null` fallback still
-+  // selects the null arm, and the two sentinels stay distinct.
++  // The element's own absence is undefined here, so the stored-empty arm and the out-of-range arm are
++  // both undefined; the source's explicit `: null` fallback still selects the null arm.
 +  expect(output).toContain('std::in_place_type<flight::Undefined>');
 +  expect(output).toContain('std::in_place_type<flight::Null>');
-+  expect(output).toContain('lifted_optional');
++  expect(output).toContain('lifted_element');
 +});
 +
 +it('leaves an optional destination as an optional', () => {
@@ -200,22 +210,5 @@ index 0000000..ccbe341
 +  `);
 +
 +  expect(output).toContain('table.element(index)');
-+  expect(output).not.toContain('lifted_optional');
-+});
-+
-+it('does not lift an unguarded element read, whose absence is undefined', () => {
-+  const output = emit(`
-+    interface Attachment { name: string }
-+    interface Slot { attachment?: Attachment | null }
-+    export function unguarded(slot: Slot, table: readonly (Attachment | null)[], index: number, flag: boolean): void {
-+      slot.attachment = flag ? table[index] : null;
-+    }
-+    export function assign(slot: Slot, table: readonly (Attachment | null)[], index: number): void {
-+      slot.attachment = table[index];
-+    }
-+  `);
-+
-+  // Without a bounds guard the indexed read's empty state is JavaScript's undefined (a hole or a
-+  // past-end index), not the declared null; the lift must not assert the Null arm from the type alone.
-+  expect(output).not.toContain('lifted_optional');
++  expect(output).not.toContain('lifted_element');
 +});
