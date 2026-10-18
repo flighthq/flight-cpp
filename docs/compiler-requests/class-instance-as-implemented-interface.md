@@ -69,3 +69,24 @@ A SWF control consumer will drive `readSwfTimeline`-shaped parsing over a small 
 placement helper through the reverse direction, and assert the cursor and validity outcomes above.
 The view family, its names, and its adoption call are taken from the shared primitive; this request
 carries no competing primitive, copy closure owner, or downcast-empty fallback.
+
+## Prepared call-site mapping (compiler side, pending the shared primitive's contract)
+
+Two call positions need the view, and the emitter knows both from the argument/parameter types it
+already threads (`getIrInvocationArgumentExpectedTypeCpp` / `getIrCallArgumentExpectedTypeCpp`):
+
+- **forward** — the argument's evidence is a class declaration and the parameter's expected type is
+  an interface the class structurally satisfies (every declared interface member exists on the
+  class with a representation-compatible type: data cell or method member). Emitted at that
+  argument position, the view adopts the argument's exact owner as the interface.
+- **reverse** — the argument's evidence is the interface and the parameter's expected type is the
+  class whose members the interface was written from. Same adoption, opposite direction.
+
+Both positions occur in the SWF module (`read_swf_matrix`/`read_swf_color_transform` take the
+interface; `read_swf_filter_list` takes the class, and the placement handler passes its
+interface-typed `body` to it). The structural satisfaction check is emitted from declarations
+already resolved for the argument and parameter; no name-based or shape-guessing rule is involved.
+The exact call text is the primitive's adoption entry point, taken from builder2's contract — this
+request fixes only WHERE the adoption is emitted and WHEN it is legal, not the family's own API.
+No copy, downcast or empty fallback is emitted where the satisfaction check fails; that stays the
+existing refusal.
