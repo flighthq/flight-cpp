@@ -5,6 +5,9 @@
 // immediately on either side stay unchanged, infinities go to the matching bound, and NaN fails both
 // comparisons and passes through as NaN rather than being coerced to a bound. The Spine importer
 // depends on this when it clamps only the x components of an ease cubic bezier before inverting them.
+// The second case consumes the same header's buildSpineSegmentEasings: a keyframe with no `curve`
+// is read as absent (a non-array curve is uncurved) rather than throwing on the missing member, and
+// a wholly uncurved timeline returns no easing list at all.
 #include <flight/skeleton2d_formats/spine_parse_helpers.hpp>
 
 #include <cmath>
@@ -54,12 +57,25 @@ void clamp_unit_nan() {
   check(!(result == 0.0) && !(result == 1.0), "NaN is not coerced to either bound");
 }
 
+// A keyframe with no `curve` member must be read as absent and contribute a null easing, not throw
+// on a missing key: spineParseHelpers.ts:36 treats a non-array curve as uncurved. With no curved
+// interval at all the whole result is null, so an uncurved timeline allocates nothing.
+void segment_easings_without_curves() {
+  namespace formats = flight::skeleton2d_formats;
+  using Keyframe = flight::Record<flight::String, flight::Any>;
+  const flight::Array<Keyframe> keys{Keyframe{}, Keyframe{}};
+  const auto easings = formats::build_spine_segment_easings(
+      keys, flight::Array<double>{0.0, 1.0}, flight::Array<double>{0.0, 1.0}, 1.0);
+  check(!easings.has_value(), "keyframes without a curve produce no easing list");
+}
+
 }  // namespace
 
 int main() {
   clamp_unit_bounds();
   clamp_unit_identity();
   clamp_unit_nan();
+  segment_easings_without_curves();
   if (failures == 0) std::cout << "clampUnit matches the pinned source at its boundaries\n";
   return failures == 0 ? 0 : 1;
 }
