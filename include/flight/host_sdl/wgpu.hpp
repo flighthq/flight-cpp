@@ -14,6 +14,7 @@
 
 #include <flight/array_buffer.hpp>
 #include <flight/array_buffer_view.hpp>
+#include <flight/host_handle_absence.hpp>
 #include <flight/host_sdl/export.hpp>
 #include <flight/host_sdl/image.hpp>
 #include <flight/host_sdl/window.hpp>
@@ -760,6 +761,18 @@ struct WgpuRenderPipelineDescriptor final {
   std::optional<WgpuMultisampleState> multisample;
   std::optional<String> label;
 };
+
+// A texture view is the one WebGPU handle a checked member read may report as absent: a
+// default-constructed WgpuObject holds no state, allocates nothing, calls no provider and converts to false,
+// so a missing `view` fails exactly where the source would, at its use.
+} // namespace flight::host_sdl
+
+template <>
+struct flight::host_handle_absence<flight::host_sdl::WgpuTextureView> final {
+  static constexpr bool enabled = true;
+};
+
+namespace flight::host_sdl {
 
 // The render-pass, shader-module and texture-view dictionaries. Field names and optionality follow the
 // WebGPU IDL; a member the source omits stays absent. Like every descriptor here these are plain values

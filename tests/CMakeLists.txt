@@ -108,6 +108,11 @@ target_link_libraries(flight_cpp_caught_exception_tests PRIVATE Flight::Cpp)
 flight_cpp_set_project_warnings(flight_cpp_caught_exception_tests)
 add_test(NAME flight_cpp.caught_exception COMMAND flight_cpp_caught_exception_tests)
 
+add_executable(flight_cpp_recover_owner_tests recover_owner_test.cpp)
+target_link_libraries(flight_cpp_recover_owner_tests PRIVATE Flight::Cpp)
+flight_cpp_set_project_warnings(flight_cpp_recover_owner_tests)
+add_test(NAME flight_cpp.recover_owner COMMAND flight_cpp_recover_owner_tests)
+
 add_executable(flight_cpp_union_kind_tests union_kind_test.cpp)
 target_link_libraries(flight_cpp_union_kind_tests PRIVATE Flight::Cpp)
 flight_cpp_set_project_warnings(flight_cpp_union_kind_tests)

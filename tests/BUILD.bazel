@@ -137,6 +137,13 @@ cc_test(
 )
 
 cc_test(
+    name = "recover_owner_test",
+    srcs = ["recover_owner_test.cpp"],
+    size = "small",
+    deps = ["//:cpp"],
+)
+
+cc_test(
     name = "union_kind_test",
     srcs = ["union_kind_test.cpp"],
     size = "small",

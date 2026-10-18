@@ -123,9 +123,33 @@ void destroy_surface(
   if (instance == state && surface == state) ++state->destroys;
 }
 
+// A texture view is the declared opaque host-handle absence carrier (flight/host_handle_absence.hpp):
+// a checked member read that finds no `view` reports it as this empty handle. The carrier must be inert --
+// no allocation, no provider, no object, a false conversion, and no throw -- so the only failure is the
+// host operation that later uses it, exactly where the source's `undefined` would fail.
+void check_wgpu_texture_view_absence_carrier() {
+  static_assert(flight::host_handle_absence<flight::host_sdl::WgpuTextureView>::enabled);
+  static_assert(!flight::host_handle_absence<flight::host_sdl::WgpuTexture>::enabled,
+                "only the texture view is a declared absence carrier");
+  static_assert(noexcept(flight::absent_host_handle<flight::host_sdl::WgpuTextureView>()));
+  const auto absent = flight::absent_host_handle<flight::host_sdl::WgpuTextureView>();
+  expect(!static_cast<bool>(absent), "the absent texture view converts to false");
+  expect(absent.native_handle() == nullptr, "the absent texture view holds no native object");
+  expect(absent.identity() == nullptr, "the absent texture view owns no state");
+  expect(absent == flight::host_sdl::WgpuTextureView{}, "every absent texture view is the same empty handle");
+  bool unavailable = false;
+  try {
+    (void)flight::host_sdl::WgpuCommandEncoder{}.begin_render_pass(flight::host_sdl::WgpuRenderPassDescriptor{});
+  } catch (const std::logic_error&) {
+    unavailable = true;
+  }
+  expect(unavailable, "using the descriptor that carries it still reaches the host's own unavailable operation");
+}
+
 } // namespace
 
 int main() {
+  check_wgpu_texture_view_absence_carrier();
   flight::host_sdl::SdlAudioDeviceBackend audio;
   const auto audio_device = audio.create_device(48'000);
   expect(static_cast<bool>(audio_device), "SDL audio device was not created");

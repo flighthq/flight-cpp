@@ -2,10 +2,13 @@
 
 #include <concepts>
 #include <iterator>
-#include <mutex>
-#include <unordered_map>
+#include <map>
 #include <memory>
+#include <mutex>
 #include <type_traits>
+#include <typeindex>
+#include <typeinfo>
+#include <unordered_map>
 #include <utility>
 
 namespace flight {
@@ -127,6 +130,65 @@ void remember_self_reference(const std::shared_ptr<Value>& reference) {
 template <typename Value>
 using Ref =
     typename detail::reference_shape<Value, decltype(detail::complete_probe<Value>(0))::value>::type;
+namespace detail {
+
+// A record emitted with native interface heritage names its one primary base as `flight_native_base`.
+// Only such records are recoverable owners: a base-only allocation has no derived owner to recover, so it
+// is never registered and its lookups answer empty, which is the exact answer for it.
+template <typename Value>
+concept has_native_base = requires { typename Value::flight_native_base; };
+
+// Walks the allocated type's declared native base chain, returning the subobject whose type is `target`.
+template <typename Value>
+void* native_owner_cast(Value* object, std::type_index target) noexcept {
+  if (std::type_index(typeid(Value)) == target) return object;
+  if constexpr (has_native_base<Value>) {
+    return native_owner_cast<typename Value::flight_native_base>(
+        static_cast<typename Value::flight_native_base*>(object), target);
+  } else {
+    return nullptr;
+  }
+}
+
+// Keyed by SHARED OWNERSHIP, not by address: a reference converted to a base, or aliased to a member,
+// still shares the allocation's control block, so `owner_less` finds the allocation whatever pointer the
+// caller holds. Weak, like the self-reference registry: remembering an owner never keeps it alive.
+struct RecoverableOwnerEntry final {
+  void* object{nullptr};
+  void* (*cast)(void*, std::type_index) noexcept {nullptr};
+};
+
+struct RecoverableOwnerRegistry final {
+  std::mutex mutex;
+  std::map<std::weak_ptr<void>, RecoverableOwnerEntry, std::owner_less<std::weak_ptr<void>>> entries;
+  std::size_t sweep_threshold{64};
+};
+
+[[nodiscard]] inline RecoverableOwnerRegistry& recoverable_owner_registry() {
+  static RecoverableOwnerRegistry registry;
+  return registry;
+}
+
+template <typename Value>
+void remember_recoverable_owner(const std::shared_ptr<Value>& reference) {
+  auto& registry = recoverable_owner_registry();
+  const std::lock_guard lock(registry.mutex);
+  if (registry.entries.size() >= registry.sweep_threshold) {
+    for (auto entry = registry.entries.begin(); entry != registry.entries.end();) {
+      entry = entry->first.expired() ? registry.entries.erase(entry) : std::next(entry);
+    }
+    registry.sweep_threshold = registry.entries.size() * 2 + 64;
+  }
+  registry.entries.insert_or_assign(
+      std::weak_ptr<void>(std::static_pointer_cast<void>(reference)),
+      RecoverableOwnerEntry{static_cast<void*>(reference.get()),
+                            [](void* object, std::type_index target) noexcept -> void* {
+                              return native_owner_cast<Value>(static_cast<Value*>(object), target);
+                            }});
+}
+
+} // namespace detail
+
 
 template <typename Value, typename... Arguments>
 [[nodiscard]] Ref<Value> make_ref(Arguments&&... arguments) {
@@ -150,6 +212,9 @@ template <typename Value, typename... Arguments>
     if constexpr (std::derived_from<Value, SelfReferencing>) {
       detail::remember_self_reference(reference);
     }
+    if constexpr (detail::has_native_base<Value>) {
+      detail::remember_recoverable_owner(reference);
+    }
     return reference;
   }
 }
@@ -170,6 +235,32 @@ template <typename Value>
   auto erased = detail::recall_self_reference(static_cast<const void*>(self));
   if (!erased) return {};
   return std::static_pointer_cast<Value>(std::move(erased));
+}
+
+// The exact owner behind a reference, as `Target`, when the object was allocated as `Target` or as a
+// type whose native base chain reaches it. It is the SAME allocation -- an aliasing reference sharing the
+// original control block -- so identity, lifetime and every live cell are the source's own. Empty when
+// the allocation is not a `Target` (or was not created through `make_ref`): this is a checked recovery,
+// never a cast, and an empty answer is the caller's to act on.
+template <typename Target, typename Source>
+[[nodiscard]] Ref<Target> recover_owner(const std::shared_ptr<Source>& source) {
+  if (!source) return {};
+  auto& registry = detail::recoverable_owner_registry();
+  std::shared_ptr<void> owner;
+  void* object = nullptr;
+  {
+    const std::lock_guard lock(registry.mutex);
+    const auto found = registry.entries.find(std::weak_ptr<void>(std::static_pointer_cast<void>(source)));
+    if (found == registry.entries.end()) return {};
+    owner = found->first.lock();
+    if (!owner) {
+      registry.entries.erase(found);
+      return {};
+    }
+    object = found->second.cast(found->second.object, std::type_index(typeid(Target)));
+  }
+  if (object == nullptr) return {};
+  return Ref<Target>(std::move(owner), static_cast<Target*>(object));
 }
 
 template <typename Value>
