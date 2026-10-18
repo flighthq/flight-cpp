@@ -10,7 +10,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    externalCallResultPresenceBindings: Map<string, Readonly<CppExternalCallResultPresencePlan>>;
    contextualBindingStorageTargetTypes: Map<string, Readonly<IrType>>;
    bindingTypes: ReadonlyMap<string, Readonly<IrType>>;
-@@ -710,6 +712,8 @@
+@@ -715,6 +717,8 @@
      jsonReadShapeAssertions: new Set(),
      privateJsonRecordProducerIds: new Set(),
      privateJsonRecordReturns: new Map(),
@@ -19,7 +19,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
      bindingTypes,
      capturedReferentOnlyBindingIds,
      contextualBindingStorageTargetTypes,
-@@ -766,6 +770,7 @@
+@@ -772,6 +776,7 @@
    for (const bindingId of collectCppPrivateReadonlyRecordReadViewsCpp(module, context)) {
      context.readonlyRecordReadViewBindingIds.add(bindingId);
    }
@@ -27,8 +27,8 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    collectCppPrivateJsonRecordReadFlowCpp(module, context);
    collectCppPrivateJsonShapeReadsCpp(module, context);
    for (const [bindingId, targetType] of collectCppExternalBindingStorageTargetTypesCpp(module, context)) {
-@@ -778,6 +783,9 @@
-     lengthProvenNullableArrayElementBindingIds.add(bindingId);
+@@ -787,6 +792,9 @@
+     structuralMemberViewBindingIds.add(bindingId);
    }
    for (const [bindingId, targetType] of collectCppContextualBindingStorageTargetTypesCpp(module, context)) {
 +    contextualBindingStorageTargetTypes.set(bindingId, targetType);
@@ -37,7 +37,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
      contextualBindingStorageTargetTypes.set(bindingId, targetType);
    }
    for (const [bindingId, row] of collectCppStructuralCastBindingRowsCpp(
-@@ -2290,7 +2298,7 @@
+@@ -2299,7 +2307,7 @@
      returnsAbsent: hasIrTypeAbsentMember(declaration.returns),
    };
    if (declaration.async) context.includes.add('coroutine');
@@ -46,7 +46,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
      ? 'flight::NamedProperties' : emitType(declaration.returns, context);
    const template = emitCppFunctionTemplate(declaration.typeParameters, declaration.parameters, context);
    const params = declaration.parameters.map((parameter) => emitParameter(parameter, context)).join(', ');
-@@ -2349,7 +2357,7 @@
+@@ -2358,7 +2366,7 @@
    // A mutually recursive group publishes its defaults on the prototypes that make the cycle
    // callable. Repeating either parameter or template defaults on the definitions is ill-formed C++.
    const includeDefaults = !context.forwardDeclaredFunctionBindingIds.has(declaration.binding.id);
@@ -55,7 +55,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
      ? 'flight::NamedProperties' : emitType(declaration.returns, context);
    const template = emitCppFunctionTemplate(
      declaration.typeParameters,
-@@ -4002,6 +4010,13 @@
+@@ -4024,6 +4032,13 @@
    constructExpectedUnion = true,
    denseArrayLengthInitialized = false,
  ): string {
@@ -69,7 +69,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    if (expectedType && getCppRuntimeProfile(context.options) === 'flight-cpp') {
      if (
        expression.kind === 'element' &&
-@@ -4522,6 +4537,8 @@
+@@ -4544,6 +4559,8 @@
        return `(${left} ${op} ${right})`;
      }
      case 'call': {
@@ -78,7 +78,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
        const objectCreated = emitCppObjectCreateCpp(expression, expectedType, context);
        if (objectCreated) return objectCreated;
        const closedKeyMemberCall = emitCppClosedKeyExternalMemberCallCpp(expression, context);
-@@ -4804,6 +4821,8 @@
+@@ -4826,6 +4843,8 @@
              ) {
                return emitExpression(argument.expression, context);
              }
@@ -87,7 +87,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
              const argumentExpectedType = getIrCallArgumentExpectedTypeCpp(
                expression,
                index,
-@@ -8842,8 +8861,9 @@
+@@ -8876,8 +8895,9 @@
      }
    }
    if (candidates.size === 0) return new Set<string>();
@@ -98,7 +98,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    }
    const receivers = new Set<Readonly<IrExpression>>();
    const callees = new Set<Readonly<IrExpression>>();
-@@ -8881,6 +8901,400 @@
+@@ -8915,6 +8935,400 @@
  }
  
  
@@ -499,7 +499,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
  function isCppJsonSyntaxMessageOnlyCatchCpp(catchClause: Readonly<IrCatchClause>, context: EmitContext): boolean {
    if (!catchClause.binding) return true;
    const binding = catchClause.binding.id;
-@@ -8890,6 +9304,13 @@
+@@ -8924,6 +9338,13 @@
    analyzeIrStatementSubtreeTraversal(catchClause.body, {
      expression(expression) {
        if (expression.kind === 'function') closure = true;
@@ -513,7 +513,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
        if (expression.kind === 'property' && !expression.optional && expression.name === 'message' && expression.object.kind === 'cast') {
          const type = expression.object.type;
          const source = expression.object.expression;
-@@ -10414,8 +10835,12 @@
+@@ -10448,8 +10869,12 @@
        }
        const lines = ['try {', ...indentSourceLines(emitStatementBody(statement.tryBody, context)), '}'];
        if (statement.catchClause) {
@@ -528,7 +528,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
            context.includes.add('flight/json.hpp');
            handler[0] = statement.catchClause.binding ? `catch (const flight::JsonSyntaxError& ${safeCppName(statement.catchClause.binding.name)}) {` : 'catch (const flight::JsonSyntaxError&) {';
          }
-@@ -14137,6 +14562,8 @@
+@@ -14179,6 +14604,8 @@
    context: EmitContext,
    expectedType: Readonly<IrType> | undefined,
  ): string | undefined {
@@ -537,7 +537,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || !expectedType) return undefined;
    const guard =
      expression.condition.kind === 'binary' && expression.condition.operator === '&&'
-@@ -15380,6 +15807,9 @@
+@@ -15422,6 +15849,9 @@
      return (
        initializer !== undefined &&
        (isCppErasedDynamicPropertyReadCpp(initializer, context) ||
@@ -547,7 +547,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
          (initializer.kind === 'cast' && isCppErasedDynamicObjectViewAssertionCpp(initializer, context)))
      );
    }
-@@ -31767,6 +32197,9 @@
+@@ -32019,6 +32449,9 @@
          ? context.bindingInitializers.get(operand.reference.binding.id)
          : undefined;
    if (element?.kind !== 'element') return;
