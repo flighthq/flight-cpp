@@ -1,0 +1,385 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -14084,6 +14084,92 @@
+   );
+ }
+ 
++// A callable object's type identity uses the declarations its named types denote, after generic alias
++// substitution. Inheritance introduces fresh import bindings for those SAME declarations; those importer
++// identities cannot make a second native owner for the inherited callable. Distinct native owner declarations and
++// distinct type arguments remain distinct. This changes only the semantic key, never the source IR.
++function hasCppAnonymousObjectInCallableAliasCpp(value: unknown): boolean {
++  if (Array.isArray(value)) return value.some(hasCppAnonymousObjectInCallableAliasCpp);
++  if (!value || typeof value !== 'object') return false;
++  const record = value as Record<string, unknown>;
++  return record['kind'] === 'object' || Object.values(record).some(hasCppAnonymousObjectInCallableAliasCpp);
++}
++
++function getCppCallableObjectDeclarationIdentityCpp(
++  value: unknown,
++  context: EmitContext,
++  aliases: ReadonlySet<string> = new Set(),
++  directObjects?: ReadonlySet<object>,
++): unknown {
++  // Only this callable's direct object part is emitted by this callable emitter. Other anonymous
++  // records have their own native-owner election; retain their raw key and package scope until that identity is proven.
++  const root = value as { kind?: string; types?: readonly unknown[] } | null;
++  const objects =
++    directObjects ??
++    new Set<object>(
++      root?.kind === 'intersection'
++        ? (root.types ?? []).flatMap((entry) =>
++            entry && typeof entry === 'object' && (entry as { kind?: string }).kind === 'object' ? [entry] : [],
++          )
++        : [],
++    );
++  if (Array.isArray(value))
++    return value.map((entry) => getCppCallableObjectDeclarationIdentityCpp(entry, context, aliases, objects));
++  if (!value || typeof value !== 'object') return value;
++  const record = value as Record<string, unknown>;
++  if (record['kind'] === 'object' && !objects.has(value)) {
++    return { nativeAnonymousPackage: context.module.packageName, anonymousType: value };
++  }
++  if (record['kind'] === 'named') {
++    const type = value as Readonly<IrTypeReference>;
++    if (type.reference.kind === 'binding' && type.reference.binding.kind !== 'typeParameter') {
++      const module = getCppNamedTypeBindingModuleCpp(type, context);
++      const owner = getCppNamedTypeDeclarationOwnerCpp(type, module, context);
++      if (owner?.declaration.kind === 'typeAlias') {
++        const key = `${getCppModuleIdentityKey(owner.module)}\0${owner.declaration.binding.id}\0${normalizeCompilerStructuralValueCanonical(type.typeArguments)}`;
++        if (!aliases.has(key)) {
++          const target = resolveIrTypeStructuralSubstitution(
++            owner.declaration.type,
++            createIrTypeParameterSubstitutionPlan(owner.declaration.typeParameters, type.typeArguments),
++          );
++          // A named object alias owns a native record. Equal fields do not make two such
++          // declarations the same native argument type; retain its declaration and instantiation.
++          if (hasCppAnonymousObjectInCallableAliasCpp(target)) {
++            return {
++              ...type,
++              reference: { ...type.reference, binding: owner.declaration.binding },
++              typeArguments: type.typeArguments.map((argument) =>
++                getCppCallableObjectDeclarationIdentityCpp(argument, context, aliases, objects),
++              ),
++            };
++          }
++          // Substituted arguments may name imports in the active inheritance-lowered module.
++          // Keep that context; every named reference still resolves through its own declaring module.
++          return getCppCallableObjectDeclarationIdentityCpp(target, context, new Set(aliases).add(key), objects);
++        }
++      } else if (
++        owner?.declaration.kind === 'interface' ||
++        owner?.declaration.kind === 'class' ||
++        owner?.declaration.kind === 'enum'
++      ) {
++        return {
++          ...type,
++          reference: { ...type.reference, binding: owner.declaration.binding },
++          typeArguments: type.typeArguments.map((argument) =>
++            getCppCallableObjectDeclarationIdentityCpp(argument, context, aliases, objects),
++          ),
++        };
++      }
++    }
++  }
++  return Object.fromEntries(
++    Object.entries(record).map(([key, entry]) => [
++      key,
++      getCppCallableObjectDeclarationIdentityCpp(entry, context, aliases, objects),
++    ]),
++  );
++}
++
+ function emitCppCallableObjectStorageTypeCpp(
+   type: Readonly<Extract<IrType, { kind: 'intersection' }>>,
+   representation: Readonly<CppCallableObject>,
+@@ -14093,7 +14179,7 @@
+     (parameter) => context.targetNames.get(parameter.binding.id) ?? pascalCase(parameter.binding.name),
+   );
+   const typeParameterKey = context.anonymousStructTypeParameters.map((parameter) => parameter.binding.id).join(',');
+-  const key = `${typeParameterKey}\0callable\0${normalizeCompilerStructuralValueCanonical(type)}`;
++  const key = `${typeParameterKey}\0callable\0${normalizeCompilerStructuralValueCanonical(getCppCallableObjectDeclarationIdentityCpp(type, context))}`;
+   const existing = context.anonymousStructs.get(key);
+   if (existing) return `${existing.name}${typeParameters.length > 0 ? `<${typeParameters.join(', ')}>` : ''}`;
+   const structuralHash = getCppStableIdentifierHash(key);
+@@ -15612,6 +15698,10 @@
+   }
+   context.includes.add('flight/nominal_or_structural_view.hpp');
+   const value = emitExpression({ ...inner, narrowedType: undefined } as Readonly<IrExpression>, context);
++  // An already nominal GL value keeps its known native owner. Besides avoiding a needless recovery,
++  // the constructor defers widening until the complete runtime declaration, which may follow this
++  // owner helper in source. A narrowed BASE value still takes the lazy checked-recovery path below.
++  if (plan.carrier.cells?.length && named(source, plan.carrier.nominal)) return `${plan.carrier.target}(${value})`;
+   return `${plan.carrier.target}::of(${value})`;
+ }
+ 
+@@ -34785,15 +34875,15 @@
+   const identityPreserving = getCppIdentityPreservingUtilityArgument(type);
+   if (identityPreserving) return hasFlightReferenceRepresentationCpp(identityPreserving, context);
+   // Inheritance lowering synthesizes imports after the reference planner indexes the source modules.
+-  // Resolve an alias to its declaration before planning it: the synthesized importer is not an
+-  // indexed module, and planning that unresolved binding would turn a value alias into a Ref.
++  // Resolve an alias or enum to its declaration before planning it: the synthesized importer is not an
++  // indexed module, and planning that unresolved binding would turn a value alias or enum into a Ref.
+   if (type.kind === 'named' && type.reference.kind === 'binding') {
+     const aliasOwner = getCppNamedTypeDeclarationOwnerCpp(
+       type,
+       getCppNamedTypeBindingModuleCpp(type, context),
+       context,
+     );
+-    if (aliasOwner?.declaration.kind === 'typeAlias') {
++    if (aliasOwner?.declaration.kind === 'typeAlias' || aliasOwner?.declaration.kind === 'enum') {
+       const declaredType: IrType = {
+         ...type,
+         reference: { ...type.reference, binding: aliasOwner.declaration.binding },
+diff --git a/packages/compiler-backend-cpp/src/cppSharedReferenceCells.test.ts b/packages/compiler-backend-cpp/src/cppSharedReferenceCells.test.ts
+--- a/packages/compiler-backend-cpp/src/cppSharedReferenceCells.test.ts
++++ b/packages/compiler-backend-cpp/src/cppSharedReferenceCells.test.ts
+@@ -51,8 +51,26 @@
+     cells: [{ baseOwner: 'RenderState', owner: 'GlRenderState', field: 'EntityRuntimeKey' }],
+   },
+ ];
+-function emit(options = carriers) {
+-  const sf = ts.createSourceFile('/flight/packages/math/src/cells.ts', source, ts.ScriptTarget.Latest, true);
++function emit(options = carriers, forward = false) {
++  let text = source;
++  if (forward) {
++    const lines = source.split('\n');
++    const moved = lines.filter((line) =>
++      /^export (?:interface (?:GlRenderStateRuntime|RenderState |GlRenderState )|function (?:replaceRuntime|nativeRuntime|readonlyRuntime))/u.test(
++        line,
++      ),
++    );
++    const states = moved.filter((line) => /^export interface (?:RenderState |GlRenderState )/u.test(line));
++    const helpers = moved.filter((line) => line.startsWith('export function'));
++    const runtime = moved.find((line) => line.startsWith('export interface GlRenderStateRuntime'))!;
++    text = lines
++      .filter((line) => !moved.includes(line))
++      .flatMap((line) =>
++        line.startsWith('export interface RenderStateRuntime') ? [line, ...states, ...helpers, runtime] : [line],
++      )
++      .join('\n');
++  }
++  const sf = ts.createSourceFile('/flight/packages/math/src/cells.ts', text, ts.ScriptTarget.Latest, true);
+   const lowered = lowerTypeScriptSource(sf, { packageName: '@flighthq/math', upstreamDirectory: '/flight' });
+   expect(lowered.diagnostics).toEqual([]);
+   return emitIrModuleCpp(lowered.module, { runtimeProfile: 'flight-cpp', structuralValueCarriers: options }).contents;
+@@ -89,27 +107,28 @@
+ const includes = collectCppRuntimeIncludeDirectories(runtime.directory);
+ const toolchain = findCppCompilerToolchain();
+ 
+-it.skipIf(!toolchain || includes.length === 0)(
+-  'runs complete emitted cell reads, writes, absence and partial native escapes',
+-  () => {
+-    const directory = mkdtempSync(path.join(tmpdir(), 'flight-shared-cells-'));
+-    try {
+-      writeFileSync(path.join(directory, 'cells-emitted.hpp'), emit());
+-      const native = path.join(directory, 'native.cpp');
+-      writeFileSync(native, NATIVE);
+-      const executable = path.join(directory, getCppExecutableName(toolchain!, 'shared-cells'));
+-      execFileSync(
+-        toolchain!.command,
+-        createCppExecutableArguments(toolchain!, native, executable, [directory, ...includes]),
+-        { encoding: 'utf8', stdio: 'pipe' },
+-      );
+-      execFileSync(executable, [], { encoding: 'utf8' });
+-    } finally {
+-      rmSync(directory, { recursive: true, force: true });
+-    }
+-  },
+-  120_000,
+-);
++for (const forward of [false, true])
++  it.skipIf(!toolchain || includes.length === 0)(
++    `runs complete emitted cell reads, writes, absence and partial native escapes (${forward ? 'forward owner helpers' : 'complete runtime'})`,
++    () => {
++      const directory = mkdtempSync(path.join(tmpdir(), 'flight-shared-cells-'));
++      try {
++        writeFileSync(path.join(directory, 'cells-emitted.hpp'), emit(carriers, forward));
++        const native = path.join(directory, 'native.cpp');
++        writeFileSync(native, NATIVE);
++        const executable = path.join(directory, getCppExecutableName(toolchain!, 'shared-cells'));
++        execFileSync(
++          toolchain!.command,
++          createCppExecutableArguments(toolchain!, native, executable, [directory, ...includes]),
++          { encoding: 'utf8', stdio: 'pipe' },
++        );
++        execFileSync(executable, [], { encoding: 'utf8' });
++      } finally {
++        rmSync(directory, { recursive: true, force: true });
++      }
++    },
++    120_000,
++  );
+ 
+ const NATIVE = `#include "cells-emitted.hpp"
+ #include <cassert>
+diff --git a/packages/compiler-backend-cpp/src/cppInheritedCallableOwner.test.ts b/packages/compiler-backend-cpp/src/cppInheritedCallableOwner.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppInheritedCallableOwner.test.ts
+@@ -0,0 +1,163 @@
++import { execFileSync } from 'node:child_process';
++import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import type { CompilerModuleResolutionPlan } from '../../compiler-types/src/index.js';
++import { createCppCompilerBackend } from './cppCompilerBackend.js';
++
++// Source declarations, not emitted shape/name equivalence, decide which callable cell this is.
++function emit(
++  mode: 'direct' | 'barrel' | 'alias' | 'rebound' | 'alias-distinct' | 'distinct' | 'generic' | 'flattened' = 'direct',
++) {
++  const parameter =
++    mode === 'alias-distinct'
++      ? 'AliasA'
++      : mode === 'distinct'
++        ? 'A'
++        : mode === 'generic'
++          ? 'Box<A>'
++          : mode === 'alias'
++            ? 'Identity<RegistryAlias>'
++            : 'Registry';
++  const refined =
++    mode === 'alias-distinct' ? 'AliasB' : mode === 'distinct' ? 'B' : mode === 'generic' ? 'Box<B>' : undefined;
++  const sources = {
++    domain: `export enum Registry { First, Second }
++export interface Signals { count: number }
++export type AliasA = { marker: number };
++export type AliasB = { marker: number };
++export interface A { marker: number }
++export interface B { marker: number }
++export interface Box<T> { value: T }
++export type RegistryAlias = Registry;
++export type Identity<T> = T;`,
++    domainBarrel: `export * from './domain.ts';`,
++    base: `import type { ${mode === 'rebound' ? 'Registry as ReboundRegistry,' : 'Registry,'} Signals, A, B, AliasA, AliasB, Box, RegistryAlias, Identity } from './${mode === 'barrel' ? 'domainBarrel' : 'domain'}.ts';
++export interface Runtime { ${mode === 'flattened' ? 'mode: number | string;' : ''} callback: (((registry: ${mode === 'rebound' ? 'ReboundRegistry' : parameter}) => void) & { clear(): void; readonly signals: Signals }) | null }`,
++    baseBarrel: `export { type Runtime as RuntimeAlias } from './base.ts';`,
++    derived: `import type { ${mode === 'barrel' ? 'RuntimeAlias as Runtime' : 'Runtime'} } from './${mode === 'barrel' ? 'baseBarrel' : 'base'}.ts';
++import type { B, AliasB, Box, Signals } from './domain.ts';
++export interface GlRuntime extends Runtime { ${mode === 'flattened' ? 'mode: number;' : ''} ${refined ? `callback: (((registry: ${refined}) => void) & { clear(): void; readonly signals: Signals }) | null;` : ''} tag: number }`,
++  };
++  const moduleResolution: CompilerModuleResolutionPlan = {
++    schema: 'flight-compiler-module-resolution/1',
++    edges: Object.keys(sources).map((name) => ({
++      specifier: './' + name + '.ts',
++      target: { packageName: '@flighthq/callable-owner', source: 'packages/callable-owner/src/' + name + '.ts' },
++    })),
++  };
++  const lowered = lowerTypeScriptSources(
++    Object.entries(sources).map(([name, text]) => ({
++      packageName: '@flighthq/callable-owner',
++      sourceFile: ts.createSourceFile(
++        '/flight/packages/callable-owner/src/' + name + '.ts',
++        text,
++        ts.ScriptTarget.Latest,
++        true,
++      ),
++      upstreamDirectory: '/flight',
++    })),
++    moduleResolution,
++  );
++  expect(lowered.flatMap((r) => r.diagnostics)).toEqual([]);
++  const modules = lowered.map((r) => r.module);
++  const session = createCppCompilerBackend().createEmissionSession!({
++    modules,
++    moduleResolution,
++    options: {
++      runtimeProfile: 'flight-cpp',
++      packageTargets: { '@flighthq/callable-owner': { namespace: 'callable_owner', includePrefix: 'fixture' } },
++    },
++  });
++  const emitted = modules.flatMap((m) => session.emitModule(m));
++  return emitted;
++}
++for (const mode of ['direct', 'barrel', 'alias', 'rebound'] as const)
++  it(`retains the original callable declaration through ${mode} imports`, () => {
++    const derived = emit(mode).find((f) => f.path.endsWith('/derived.hpp'))!.contents;
++    expect(derived).toContain('struct GlRuntime : public callable_owner::Runtime {');
++    expect(derived.match(/struct GlRuntime : public callable_owner::Runtime \{([\s\S]*?)\n\};/u)![1]).not.toMatch(
++      /callback\s*[;=]/u,
++    );
++  });
++for (const mode of ['distinct', 'alias-distinct', 'generic'] as const)
++  it(`preserves ${mode} nominal argument identities despite equal field shapes`, () => {
++    const derived = emit(mode).find((f) => f.path.endsWith('/derived.hpp'))!.contents;
++    expect(derived).toContain('struct GlRuntime : public flight::ReferenceEnabled {');
++  });
++const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const runtime = resolveDependency(repositoryRoot, 'flight-cpp');
++const includes = collectCppRuntimeIncludeDirectories(runtime.directory);
++const toolchain = findCppCompilerToolchain();
++for (const mode of ['direct', 'barrel', 'alias', 'rebound'] as const)
++  it.skipIf(!toolchain || includes.length === 0)(
++    `keeps emitted callback owner, enum value, live cell and lifetime through ${mode}`,
++    () => {
++      const directory = mkdtempSync(path.join(tmpdir(), 'flight-callable-owner-'));
++      try {
++        for (const file of emit(mode)) {
++          const output = path.join(directory, file.path);
++          mkdirSync(path.dirname(output), { recursive: true });
++          writeFileSync(output, file.contents);
++        }
++        const native = path.join(directory, 'native.cpp');
++        writeFileSync(
++          native,
++          `#include "fixture/derived.hpp"
++#include <cassert>
++#include <memory>
++#include <type_traits>
++namespace n=callable_owner;
++int main(){
++ static_assert(std::is_base_of_v<n::Runtime,n::GlRuntime>);
++ auto gl=flight::make_ref<n::GlRuntime>(); flight::Ref<n::Runtime> base=gl;
++ assert(&base->callback==&gl->callback);
++ assert(!base.owner_before(gl)&&!gl.owner_before(base));
++ using Pointer=typename decltype(gl->callback)::value_type;
++ using Callback=typename Pointer::element_type;
++ auto first=flight::make_ref<Callback>();auto second=flight::make_ref<Callback>();
++ auto signals=flight::make_ref<n::Signals>(); signals->count=0;
++ first->signals=signals;second->signals=signals;
++ int calls=0;
++ first->callable=[&](n::Registry value){assert(static_cast<int>(value)==1);++calls;signals->count+=3;};
++ second->callable=[&](n::Registry value){assert(static_cast<int>(value)==0);++calls;signals->count+=5;};
++ first->clear=[&](){signals->count=0;};second->clear=first->clear;
++ base->callback=first;assert(*gl->callback==first);(**gl->callback)(static_cast<n::Registry>(1));
++ gl->callback=second;assert(*base->callback==second);(**base->callback)(static_cast<n::Registry>(0));
++ assert(calls==2&&signals->count==8);assert((*base->callback)->signals==signals);
++ std::weak_ptr<Callback> weak=second;second.reset();assert(!weak.expired());
++ base->callback=std::nullopt;assert(!gl->callback&&weak.expired());
++ std::weak_ptr<n::GlRuntime> owner=gl;gl.reset();assert(!owner.expired());base.reset();assert(owner.expired());
++}`,
++        );
++        const executable = path.join(directory, getCppExecutableName(toolchain!, 'callable-owner'));
++        execFileSync(
++          toolchain!.command,
++          createCppExecutableArguments(toolchain!, native, executable, [directory, ...includes]),
++          { encoding: 'utf8', stdio: 'pipe' },
++        );
++        execFileSync(executable, [], { encoding: 'utf8' });
++      } finally {
++        rmSync(directory, { recursive: true, force: true });
++      }
++    },
++    120_000,
++  );
++
++it('emits an inherited enum callback parameter as its declared value even when another field keeps the owner flattened', () => {
++  const derived = emit('flattened').find((f) => f.path.endsWith('/derived.hpp'))!.contents;
++  expect(derived).toContain('struct GlRuntime : public flight::ReferenceEnabled {');
++  expect(derived).toContain('std::function<void(callable_owner::Registry)> callable;');
++  expect(derived).not.toContain('flight::Ref<callable_owner::Registry>');
++});

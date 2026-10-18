@@ -5182,6 +5182,23 @@
       "unblocks": "Qualified bounded compiler/runtime capability for exactly EntityRuntimeKey RenderStateRuntime/GlRenderStateRuntime and runtime.registries RenderRegistries/GlRenderRegistries. Does not yet activate normal GL generation or claim package qualification.",
       "expires": "When the pinned compiler supports explicitly declared common physical reference cells and lazy derived views with checked native escapes; activate GL profile sites only after the actual inherited callable owner prerequisite is qualified.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-inherited-callable-declaration-owner",
+      "dependency": "flight-compiler",
+      "patch": "compiler-inherited-callable-declaration-owner.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/types",
+      "answers": "diagnostic",
+      "refusal": "Inheritance synthesizes fresh imports for the same callback argument and field declarations. Raw importer IDs create different anonymous callable native owners; a synthesized enum reference is also incorrectly planned as a Ref, so GlRenderStateRuntime cannot retain its actual RenderStateRuntime base.",
+      "rewrite": "Canonicalize only callable-object identity keys through original named declarations and exact transparent-alias generic substitution. Preserve distinct object-bearing alias declarations, nominal type arguments and nested anonymous-owner scope. Resolve inherited enums at their declaration owner before representation planning. For explicitly declared cells, wrap a statically nominal value with the existing view constructor so owner helpers may precede the complete runtime declaration; narrowed base values retain ::of.",
+      "equivalence": "Only references to the same original declaration and instantiation coalesce. Different native declarations and generic arguments remain different even when their fields match. No source IR, callable operation, initializer, storage gate or equality rule changes. One inherited callback field and the original allocation/control block/lifetime survive. Enum arguments retain their declared value carrier. The known-nominal view constructor retains the supplied owner without widening before the target declaration is complete; lazy base reads still recover only at the existing checked escape.",
+      "verification": "Exact105 baseline plus this patch: strict build PASS; focused26/26 PASS zeroSkipped, including12 callable-owner cases and5 GL cell cases with complete and forward runtime declarations. Direct/barrel/transparent generic alias/import rebinding retain live callback cells, enum values, effects and lifetime. Same-shaped distinct interfaces/object aliases and differing generic instantiations stay separate. Old105 suite8FAIL/2PASS; independent enum-removal mutant fails. Existing53 callable/planner controls pass, and selected backend cases preserve baseline71PASS/same13FAIL. Ordered106 apply and three-file reverse/exact-content proof pass. Actual201-patched Flight1032-module program (same2 pre-existing diagnostics) emits RenderState, GlRenderState and WgpuRenderState; GL state/registries/runtime retain native bases and no duplicate cell. Normal GL installed/public qualification remains pending.",
+      "whyNotUpstreamFirst": "The defect is the pinned backend importing an inherited declaration under another neutral binding ID. A targeted declaration-resolution correction preserves the approved heritage proof; matching emitted hash names or bypassing storage checks would not.",
+      "unblocks": "The inherited callable and enum prerequisite for exactly the two approved GL shared reference cells. This is not another payload view, normal profile activation, GL target-copy work, allocation provenance, public registry consumer or package qualification.",
+      "expires": "When callable identity follows original declaration/generic substitution, inherited enum representation uses that declaration owner, and explicit shared-cell owner wrapping supports source-order forward runtime declarations.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }

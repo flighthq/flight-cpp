@@ -36,13 +36,17 @@ same-owner returns, readonly reads, nested writes, clear/presence and lifetime c
 
 ## Activation and qualification
 
-The two actual declarations are recorded in `tests/fixtures/gl_cell_views/carriers.json`. They are **held**
-from the normal `structural-value-carriers.json` profile. The actual pinned GL type module still encounters
-an independent inherited `registryMiss` anonymous callable owner mismatch: the same source callback has
-another generated C++ helper identity in the derived module. The payload heritage proof correctly
-refuses that module. This capability does not bypass that gate or add another relation; normal GL
-activation requires a separately qualified resolution of that prerequisite.
+The two actual declarations are recorded in `tests/fixtures/gl_cell_views/carriers.json`. They remain
+**held** from the normal `structural-value-carriers.json` profile pending compatible normal generation
+and override rederivation. The inherited `registryMiss` callable prerequisite is now qualified by
+[original declaration identity](inherited-callable-declaration-owner.md): the actual pinned three-module
+compiler check retains GL state/registries/runtime native bases and the two inherited physical cells.
+No heritage gate is bypassed. Callable helper ABI spelling changes require generated modules and their
+overrides to be rederived and tested together before an installed GL claim.
 
+The emitted owner-helper fixture also places reads/writes before the complete GL runtime declaration,
+as the actual source does. Known nominal values use the existing view constructor; narrowed base values
+retain lazy `::of` recovery. Native escapes remain partial and tested.
 The direct C++ test and complete compiler-emitted native fixture cover the two physical cells. The
 original source fixture supplies 26 source observables. These are preparation controls, not normal GL SDK,
 backend execution, public registry consumer, or package qualification. Existing GL target-copy work
