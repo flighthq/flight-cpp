@@ -69,6 +69,18 @@ void run() {
   const auto source = render_gl::create_gl_texture_render_target(state, descriptor);
   const auto alternate = render_gl::create_gl_texture_render_target(state, descriptor);
   const auto output = render_gl::create_gl_texture_render_target(state, descriptor);
+  const auto pass = render_gl::acquire_gl_render_pass_handle(gl, state, output);
+  flight::Ref<types::Entity> pass_base = pass;
+  check(!pass->entity_runtime_key && pass->state == state &&
+            &pass_base->entity_runtime_key == &pass->entity_runtime_key &&
+            pass->target->framebuffer == std::optional{output->framebuffer},
+        "fresh pass handle preserves inherited runtime absence and its native payload");
+  render_gl::release_gl_render_pass_handle(gl, pass);
+  const auto reused_pass = render_gl::acquire_gl_render_pass_handle(gl, state, output);
+  check(reused_pass == pass && !reused_pass.owner_before(pass_base) &&
+            !pass_base.owner_before(reused_pass),
+        "pooled pass handle replaced its original allocation or control block");
+  (void)render_gl::pass_handle_pool.erase(gl);
   const SourceView source_view(source);
   const DestView output_view{SourceView(output)};
   const PresentDest destination{std::optional<DestView>{output_view}};

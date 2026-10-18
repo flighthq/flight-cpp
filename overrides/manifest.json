@@ -2615,7 +2615,7 @@
       "status": "partial",
       "derivedFrom": "0336deebbd454c1653a42ac238ac628debc602a07a84c39bd1b8476ba6309d69",
       "reason": "Previously accepted native pass/target/scene code was dropped on renderer regeneration while its source behavior remained the same.",
-      "change": "Rederives the prior actual native implementation against the current source, including removal of the obsolete pass-owned 2D root transform. Retain the existing native pass-target view construction and member evaluation order, initializing its inherited Entity runtime cell on that same view after construction.",
+      "change": "Rederives the prior actual native implementation against the current source, including removal of the obsolete pass-owned 2D root transform. Retain the existing native pass-target view construction and member evaluation order, initializing its inherited Entity runtime cell on that same view after construction. Fresh pooled pass handles also initialize inherited Entity runtime absence on the same handle, preserving existing handle reuse.",
       "equivalence": "Preserves the pinned TypeScript evaluation order, reference owners, cache identity, GL operations, absence and teardown ordering. No alternate rendering or smoke behavior is introduced.",
       "whyNotAPatchOrRepair": "The portable source is already precise. These native owner and expression-lowering corrections and refused function bodies cannot be supplied by declaration insertion.",
       "unblocks": "The actual native upstream Scene3D rendering path.",

@@ -251,9 +251,10 @@ inline flight::Ref<GlRenderPass> acquire_gl_render_pass_handle(
     handle->target = target_view;
     return handle;
   }
-  return flight::make_ref<GlRenderPass>(GlRenderPass{
-      .entity_runtime_key = std::nullopt,
+  auto handle = flight::make_ref<GlRenderPass>(GlRenderPass{
       .gl = gl, .state = state, .target = target_view});
+  handle->entity_runtime_key = std::nullopt;
+  return handle;
 }
 
 inline void release_gl_render_pass_handle(
