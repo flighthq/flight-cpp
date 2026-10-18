@@ -6522,27 +6522,11 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 33,
-      "module": "packages/scene3d-formats/src/md5AnimFeatures.ts",
-      "package": "@flighthq/scene3d-formats",
-      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/md5AnimFeatures.ts: member trim on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound from the storage and tested the same way",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
       "line": 528,
       "module": "packages/scene3d-formats/src/md5AnimParse.ts",
       "package": "@flighthq/scene3d-formats",
       "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/md5AnimParse.ts: member trim on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound from the storage and tested the same way",
       "stage": "emission"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/scene3d-formats/src/md5AnimRequirements.ts",
-      "package": "@flighthq/scene3d-formats",
-      "reason": "dependency ./md5AnimFeatures.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/md5AnimFeatures.ts",
-      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -6559,22 +6543,6 @@
       "package": "@flighthq/scene3d-formats",
       "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/md5MaterialHandler.ts: a reference assertion from flight::Ref<flight::types::BlinnPhongMaterial> to flight::Ref<flight::types::Material> has no heritage to cast along: the declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage",
       "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 37,
-      "module": "packages/scene3d-formats/src/md5MeshFeatures.ts",
-      "package": "@flighthq/scene3d-formats",
-      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/md5MeshFeatures.ts: member trim on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound from the storage and tested the same way",
-      "stage": "emission"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/scene3d-formats/src/md5MeshRequirements.ts",
-      "package": "@flighthq/scene3d-formats",
-      "reason": "dependency ./md5MeshFeatures.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/md5MeshFeatures.ts",
-      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -6609,19 +6577,10 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 14,
-      "module": "packages/scene3d-formats/src/mtlParse.ts",
-      "package": "@flighthq/scene3d-formats",
-      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/mtlParse.ts: member trim on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound from the storage and tested the same way",
-      "stage": "emission"
-    },
-    {
       "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/objBlinnPhongMaterialHandler.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "dependency ./objMaterialModel.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialModel.ts",
+      "reason": "dependency ./objMaterialHelpers.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialHelpers.ts",
       "stage": "dependency"
     },
     {
@@ -6632,26 +6591,10 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 41,
-      "module": "packages/scene3d-formats/src/objFeatures.ts",
-      "package": "@flighthq/scene3d-formats",
-      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/objFeatures.ts: member trimStart on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound from the storage and tested the same way",
-      "stage": "emission"
-    },
-    {
       "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/objMaterialHelpers.ts",
       "package": "@flighthq/scene3d-formats",
       "reason": "dependency ./shared.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/shared.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/scene3d-formats/src/objMaterialModel.ts",
-      "package": "@flighthq/scene3d-formats",
-      "reason": "dependency ./mtlParse.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/mtlParse.ts",
       "stage": "dependency"
     },
     {
@@ -6672,16 +6615,9 @@
     },
     {
       "code": "dependency-refused",
-      "module": "packages/scene3d-formats/src/objRequirements.ts",
-      "package": "@flighthq/scene3d-formats",
-      "reason": "dependency ./objFeatures.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/objFeatures.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/objStandardPbrMaterialHandler.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "dependency ./objMaterialModel.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialModel.ts",
+      "reason": "dependency ./objMaterialHelpers.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialHelpers.ts",
       "stage": "dependency"
     },
     {

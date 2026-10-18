@@ -3433,9 +3433,7 @@
       "id": "layout-declare-refused-flex-resolver"
     },
     {
-      "files": [
-        "flight/scene3d_formats/mtl_parse.hpp"
-      ],
+      "files": [],
       "id": "scene3d-formats-declare-refused-parse-obj-material-library"
     },
     {
@@ -3451,9 +3449,7 @@
       "id": "layout-declare-refused-grid-resolver"
     },
     {
-      "files": [
-        "flight/scene3d_formats/md5_anim_features.hpp"
-      ],
+      "files": [],
       "id": "scene3d-formats-declare-refused-collect-md5-anim-features"
     },
     {
@@ -7167,9 +7163,9 @@
       "bindingProfileSet": "sha256:2602f15df98afbc4055416765f444e85bee83a6c5fad13b420301f8fa344ca71",
       "cppIncludePrefix": "flight/scene3d_formats",
       "cppNamespace": "flight::scene3d_formats",
-      "emittedModules": 76,
+      "emittedModules": 80,
       "package": "@flighthq/scene3d-formats",
-      "refusedModules": 35,
+      "refusedModules": 31,
       "source": {
         "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
@@ -7836,8 +7832,8 @@
   },
   "summary": {
     "packages": 153,
-    "emittedModules": 2581,
-    "refusedModules": 570,
+    "emittedModules": 2585,
+    "refusedModules": 566,
     "sourceModules": 3151
   }
 }

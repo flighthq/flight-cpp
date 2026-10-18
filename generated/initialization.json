@@ -3271,14 +3271,54 @@
       "source": "packages/scene3d-formats/src/md2Schema.ts"
     },
     {
+      "name": "Md5AnimFeatures",
+      "packageName": "@flighthq/scene3d-formats",
+      "source": "packages/scene3d-formats/src/md5AnimFeatures.ts"
+    },
+    {
+      "name": "Md5AnimRequirements",
+      "packageName": "@flighthq/scene3d-formats",
+      "source": "packages/scene3d-formats/src/md5AnimRequirements.ts"
+    },
+    {
       "name": "Md5MeshFeatureRequirements",
       "packageName": "@flighthq/scene3d-formats",
       "source": "packages/scene3d-formats/src/md5MeshFeatureRequirements.ts"
     },
     {
+      "name": "Md5MeshFeatures",
+      "packageName": "@flighthq/scene3d-formats",
+      "source": "packages/scene3d-formats/src/md5MeshFeatures.ts"
+    },
+    {
+      "name": "Md5MeshRequirements",
+      "packageName": "@flighthq/scene3d-formats",
+      "source": "packages/scene3d-formats/src/md5MeshRequirements.ts"
+    },
+    {
+      "name": "MtlParse",
+      "packageName": "@flighthq/scene3d-formats",
+      "source": "packages/scene3d-formats/src/mtlParse.ts"
+    },
+    {
       "name": "ObjFeatureRequirements",
       "packageName": "@flighthq/scene3d-formats",
       "source": "packages/scene3d-formats/src/objFeatureRequirements.ts"
+    },
+    {
+      "name": "ObjFeatures",
+      "packageName": "@flighthq/scene3d-formats",
+      "source": "packages/scene3d-formats/src/objFeatures.ts"
+    },
+    {
+      "name": "ObjMaterialModel",
+      "packageName": "@flighthq/scene3d-formats",
+      "source": "packages/scene3d-formats/src/objMaterialModel.ts"
+    },
+    {
+      "name": "ObjRequirements",
+      "packageName": "@flighthq/scene3d-formats",
+      "source": "packages/scene3d-formats/src/objRequirements.ts"
     },
     {
       "name": "RegisterGltfCameraHandlers",
@@ -26506,6 +26546,26 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "Md5AnimFeatures",
+          "packageName": "@flighthq/scene3d-formats",
+          "source": "packages/scene3d-formats/src/md5AnimFeatures.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Md5AnimRequirements",
+          "packageName": "@flighthq/scene3d-formats",
+          "source": "packages/scene3d-formats/src/md5AnimRequirements.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "Md5MeshFeatureRequirements",
           "packageName": "@flighthq/scene3d-formats",
           "source": "packages/scene3d-formats/src/md5MeshFeatureRequirements.ts"
@@ -26516,9 +26576,69 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "Md5MeshFeatures",
+          "packageName": "@flighthq/scene3d-formats",
+          "source": "packages/scene3d-formats/src/md5MeshFeatures.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Md5MeshRequirements",
+          "packageName": "@flighthq/scene3d-formats",
+          "source": "packages/scene3d-formats/src/md5MeshRequirements.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "MtlParse",
+          "packageName": "@flighthq/scene3d-formats",
+          "source": "packages/scene3d-formats/src/mtlParse.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "ObjFeatureRequirements",
           "packageName": "@flighthq/scene3d-formats",
           "source": "packages/scene3d-formats/src/objFeatureRequirements.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "ObjFeatures",
+          "packageName": "@flighthq/scene3d-formats",
+          "source": "packages/scene3d-formats/src/objFeatures.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "ObjMaterialModel",
+          "packageName": "@flighthq/scene3d-formats",
+          "source": "packages/scene3d-formats/src/objMaterialModel.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "ObjRequirements",
+          "packageName": "@flighthq/scene3d-formats",
+          "source": "packages/scene3d-formats/src/objRequirements.ts"
         }
       ]
     },
@@ -215997,6 +216117,364 @@
     {
       "bindings": [
         {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:49ea0cbdce42027ba3ac12ab5409348edb32b41c5385a21ed14f84f62592b7dc",
+            "line": 21,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5AnimFeatures.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5AnimFeatures.ts\",1012]",
+            "kind": "variable",
+            "name": "MD5_ANIM_FEATURE_HIERARCHY",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:8c3fe661a59b23e32ed3e9bf7bbe7d1ead8b1f9246828edc9731a4c192f78bca",
+            "line": 22,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5AnimFeatures.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5AnimFeatures.ts\",1060]",
+            "kind": "variable",
+            "name": "MD5_ANIM_FEATURE_ANIMATION",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 1
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:7bae6c2285c1aeef5ce2eeeebccbd3a1dfd855a204267d5791eef1ff1eec0ed7",
+            "line": 31,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5AnimFeatures.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5AnimFeatures.ts\",1475]",
+            "kind": "variable",
+            "name": "MD5_ANIM_FEATURE_NAMES",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 2
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:f80ce307a86e405a8effac866e83870348740a113f4ecbbf7e4e9c552adf37d2",
+            "line": 33,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5AnimFeatures.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5AnimFeatures.ts\",1594]",
+            "kind": "function",
+            "name": "collectMd5AnimFeatures",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [],
+      "module": {
+        "name": "Md5AnimFeatures",
+        "packageName": "@flighthq/scene3d-formats",
+        "source": "packages/scene3d-formats/src/md5AnimFeatures.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:49ea0cbdce42027ba3ac12ab5409348edb32b41c5385a21ed14f84f62592b7dc",
+              "line": 21,
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/md5AnimFeatures.ts",
+              "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5AnimFeatures.ts\",1012]",
+              "kind": "variable",
+              "name": "MD5_ANIM_FEATURE_HIERARCHY",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            0
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:8c3fe661a59b23e32ed3e9bf7bbe7d1ead8b1f9246828edc9731a4c192f78bca",
+              "line": 22,
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/md5AnimFeatures.ts",
+              "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5AnimFeatures.ts\",1060]",
+              "kind": "variable",
+              "name": "MD5_ANIM_FEATURE_ANIMATION",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            1
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:7bae6c2285c1aeef5ce2eeeebccbd3a1dfd855a204267d5791eef1ff1eec0ed7",
+              "line": 31,
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/md5AnimFeatures.ts",
+              "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5AnimFeatures.ts\",1475]",
+              "kind": "variable",
+              "name": "MD5_ANIM_FEATURE_NAMES",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:8ec50ce83fd8ba1548319e46de7a30b03920a87685a1c42cb4a2c033e651228f",
+            "line": 1,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5AnimRequirements.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5AnimRequirements.ts\",9]",
+            "kind": "import",
+            "name": "createRequirementSet",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createRequirementSet",
+            "kind": "dependency",
+            "module": {
+              "name": "RequirementSet",
+              "packageName": "@flighthq/requirement",
+              "source": "packages/requirement/src/requirementSet.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:2a6d9dbaa9c22d2a0558ad2e68bb88d805dbd39f42e85142b44ba609a1938c07",
+            "line": 3,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5AnimRequirements.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5AnimRequirements.ts\",157]",
+            "kind": "import",
+            "name": "RequirementFacet",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "RequirementFacet",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:f80ce307a86e405a8effac866e83870348740a113f4ecbbf7e4e9c552adf37d2",
+            "line": 5,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5AnimRequirements.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5AnimRequirements.ts\",219]",
+            "kind": "import",
+            "name": "collectMd5AnimFeatures",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "collectMd5AnimFeatures",
+            "kind": "dependency",
+            "module": {
+              "name": "Md5AnimFeatures",
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/md5AnimFeatures.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:03c6549d7915f2343d0db708583fe41de052d98b10dc48237dd747d9b5c9b24b",
+            "line": 6,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5AnimRequirements.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5AnimRequirements.ts\",282]",
+            "kind": "import",
+            "name": "MD5_REQUIREMENT_KEY_NAMESPACE",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "MD5_REQUIREMENT_KEY_NAMESPACE",
+            "kind": "dependency",
+            "module": {
+              "name": "Scene3dFormatRequirements",
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/scene3dFormatRequirements.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:06e711bfe0e0d615029dcb2335c1904c568521039a3884f4fb0a92d21511d8f9",
+            "line": 21,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5AnimRequirements.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5AnimRequirements.ts\",1118]",
+            "kind": "function",
+            "name": "parseMd5AnimRequirements",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Md5AnimRequirements",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5AnimRequirements.ts"
+          },
+          "specifier": "./md5AnimFeatures.ts",
+          "target": {
+            "name": "Md5AnimFeatures",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5AnimFeatures.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Md5AnimRequirements",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5AnimRequirements.ts"
+          },
+          "specifier": "./scene3dFormatRequirements.ts",
+          "target": {
+            "name": "Scene3dFormatRequirements",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/scene3dFormatRequirements.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Md5AnimRequirements",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5AnimRequirements.ts"
+          },
+          "specifier": "@flighthq/requirement/contract",
+          "target": {
+            "name": "RequirementSet",
+            "packageName": "@flighthq/requirement",
+            "source": "packages/requirement/src/requirementSet.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Md5AnimRequirements",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5AnimRequirements.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Md5AnimRequirements",
+        "packageName": "@flighthq/scene3d-formats",
+        "source": "packages/scene3d-formats/src/md5AnimRequirements.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
           "access": "dependency-live",
           "binding": {
             "column": 10,
@@ -216116,6 +216594,448 @@
           ]
         }
       ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:c356053c6647701b9ed831daeee41f38448cc9b9131216ca05536dd48a844117",
+            "line": 20,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5MeshFeatures.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5MeshFeatures.ts\",1099]",
+            "kind": "variable",
+            "name": "MD5_MESH_FEATURE_SKELETON",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:9f4a5eb02d7f90a259e87331c50f210c7db1b5d07faf9b9465cb84c66f60c60d",
+            "line": 21,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5MeshFeatures.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5MeshFeatures.ts\",1145]",
+            "kind": "variable",
+            "name": "MD5_MESH_FEATURE_MESH",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 1
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:98caaeb3d1975f4a4da2de0fd86334255d23b095b21a61ff20b95eeec7cd3abc",
+            "line": 22,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5MeshFeatures.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5MeshFeatures.ts\",1183]",
+            "kind": "variable",
+            "name": "MD5_MESH_FEATURE_MATERIAL",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 2
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:1782b0018d4923e12c541b1138e79ec5ecee8541a33124ee60c7ba76cb9e254a",
+            "line": 31,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5MeshFeatures.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5MeshFeatures.ts\",1596]",
+            "kind": "variable",
+            "name": "MD5_MESH_FEATURE_NAMES",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 3
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:3977034adf39ed55e09698aa5a4e8b7eff1778b85c2cba74201cf2c1ca397f7c",
+            "line": 37,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5MeshFeatures.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5MeshFeatures.ts\",1745]",
+            "kind": "function",
+            "name": "collectMd5MeshFeatures",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [],
+      "module": {
+        "name": "Md5MeshFeatures",
+        "packageName": "@flighthq/scene3d-formats",
+        "source": "packages/scene3d-formats/src/md5MeshFeatures.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:c356053c6647701b9ed831daeee41f38448cc9b9131216ca05536dd48a844117",
+              "line": 20,
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/md5MeshFeatures.ts",
+              "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5MeshFeatures.ts\",1099]",
+              "kind": "variable",
+              "name": "MD5_MESH_FEATURE_SKELETON",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            0
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:9f4a5eb02d7f90a259e87331c50f210c7db1b5d07faf9b9465cb84c66f60c60d",
+              "line": 21,
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/md5MeshFeatures.ts",
+              "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5MeshFeatures.ts\",1145]",
+              "kind": "variable",
+              "name": "MD5_MESH_FEATURE_MESH",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            1
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:98caaeb3d1975f4a4da2de0fd86334255d23b095b21a61ff20b95eeec7cd3abc",
+              "line": 22,
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/md5MeshFeatures.ts",
+              "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5MeshFeatures.ts\",1183]",
+              "kind": "variable",
+              "name": "MD5_MESH_FEATURE_MATERIAL",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            2
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:1782b0018d4923e12c541b1138e79ec5ecee8541a33124ee60c7ba76cb9e254a",
+              "line": 31,
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/md5MeshFeatures.ts",
+              "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5MeshFeatures.ts\",1596]",
+              "kind": "variable",
+              "name": "MD5_MESH_FEATURE_NAMES",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:8ec50ce83fd8ba1548319e46de7a30b03920a87685a1c42cb4a2c033e651228f",
+            "line": 1,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5MeshRequirements.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5MeshRequirements.ts\",9]",
+            "kind": "import",
+            "name": "createRequirementSet",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createRequirementSet",
+            "kind": "dependency",
+            "module": {
+              "name": "RequirementSet",
+              "packageName": "@flighthq/requirement",
+              "source": "packages/requirement/src/requirementSet.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:2a6d9dbaa9c22d2a0558ad2e68bb88d805dbd39f42e85142b44ba609a1938c07",
+            "line": 3,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5MeshRequirements.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5MeshRequirements.ts\",157]",
+            "kind": "import",
+            "name": "RequirementFacet",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "RequirementFacet",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:cfde9d993da98bd90fe0bc11c145be8f609576885fba983b6327c437b0535c14",
+            "line": 5,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5MeshRequirements.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5MeshRequirements.ts\",219]",
+            "kind": "import",
+            "name": "MD5_MESH_FEATURE_SCENE_REQUIREMENTS",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "MD5_MESH_FEATURE_SCENE_REQUIREMENTS",
+            "kind": "dependency",
+            "module": {
+              "name": "Md5MeshFeatureRequirements",
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/md5MeshFeatureRequirements.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:3977034adf39ed55e09698aa5a4e8b7eff1778b85c2cba74201cf2c1ca397f7c",
+            "line": 6,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5MeshRequirements.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5MeshRequirements.ts\",306]",
+            "kind": "import",
+            "name": "collectMd5MeshFeatures",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "collectMd5MeshFeatures",
+            "kind": "dependency",
+            "module": {
+              "name": "Md5MeshFeatures",
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/md5MeshFeatures.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:03c6549d7915f2343d0db708583fe41de052d98b10dc48237dd747d9b5c9b24b",
+            "line": 7,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5MeshRequirements.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5MeshRequirements.ts\",369]",
+            "kind": "import",
+            "name": "MD5_REQUIREMENT_KEY_NAMESPACE",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "MD5_REQUIREMENT_KEY_NAMESPACE",
+            "kind": "dependency",
+            "module": {
+              "name": "Scene3dFormatRequirements",
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/scene3dFormatRequirements.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:5e9d970e090fb57c3393c35b8dd91e9898da7673e403ddaec788a694f3a6fa62",
+            "line": 25,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5MeshRequirements.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/md5MeshRequirements.ts\",1356]",
+            "kind": "function",
+            "name": "parseMd5MeshRequirements",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Md5MeshRequirements",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5MeshRequirements.ts"
+          },
+          "specifier": "./md5MeshFeatureRequirements.ts",
+          "target": {
+            "name": "Md5MeshFeatureRequirements",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5MeshFeatureRequirements.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Md5MeshRequirements",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5MeshRequirements.ts"
+          },
+          "specifier": "./md5MeshFeatures.ts",
+          "target": {
+            "name": "Md5MeshFeatures",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5MeshFeatures.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Md5MeshRequirements",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5MeshRequirements.ts"
+          },
+          "specifier": "./scene3dFormatRequirements.ts",
+          "target": {
+            "name": "Scene3dFormatRequirements",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/scene3dFormatRequirements.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Md5MeshRequirements",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5MeshRequirements.ts"
+          },
+          "specifier": "@flighthq/requirement/contract",
+          "target": {
+            "name": "RequirementSet",
+            "packageName": "@flighthq/requirement",
+            "source": "packages/requirement/src/requirementSet.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Md5MeshRequirements",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/md5MeshRequirements.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Md5MeshRequirements",
+        "packageName": "@flighthq/scene3d-formats",
+        "source": "packages/scene3d-formats/src/md5MeshRequirements.ts"
+      },
+      "steps": []
     },
     {
       "bindings": [],
@@ -222910,6 +223830,224 @@
         "name": "MovieClipSignals",
         "packageName": "@flighthq/types",
         "source": "packages/types/src/MovieClipSignals.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:ccdcca3573966df731afc28dd8f60c480f924d7d3672e3719cfe7834c97af20f",
+            "line": 1,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/mtlParse.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/mtlParse.ts\",9]",
+            "kind": "import",
+            "name": "reportImportDiagnostic",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "reportImportDiagnostic",
+            "kind": "dependency",
+            "module": {
+              "name": "ImportDiagnosticCollector",
+              "packageName": "@flighthq/importdiagnostics",
+              "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:4ed29d9b9c788211ee983240067a7fabe2c29c3555a536a2250a5c90c9f8e21b",
+            "line": 3,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/mtlParse.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/mtlParse.ts\",187]",
+            "kind": "import",
+            "name": "ImportDiagnosticSeverity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "ImportDiagnosticSeverity",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:24c60f89720518331f5170190cb35fe679689dcd767be9488393233c4abf6bd9",
+            "line": 14,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/mtlParse.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/mtlParse.ts\",1175]",
+            "kind": "function",
+            "name": "parseObjMaterialLibrary",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:594b46507e56f1fd0c2ad70ada979442efbb1c64ee4d8a78b7e492aee575596b",
+            "line": 323,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/mtlParse.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/mtlParse.ts\",10801]",
+            "kind": "function",
+            "name": "createDefaultObjMaterial",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:71498af1702e829ae6b4c36b99b4b810c77ba5b4a6a636365e6389f004362c79",
+            "line": 357,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/mtlParse.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/mtlParse.ts\",11823]",
+            "kind": "function",
+            "name": "parseColor",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:7c00a7620c811e6f25641ed7e1fb3eb12583b5266ae25acf03630d8dd9896098",
+            "line": 388,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/mtlParse.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/mtlParse.ts\",12900]",
+            "kind": "function",
+            "name": "tallyDirectiveBeforeMaterial",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e01fba91604e91fd90e57f52f88d74e900781f62d75613824c5b479947228c78",
+            "line": 401,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/mtlParse.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/mtlParse.ts\",13385]",
+            "kind": "function",
+            "name": "tallyInvalidValue",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:4b5aabebbbd9abf90d01c54e749122a305d0ecbc5e7cb2ea0dcd8c21b7090b6e",
+            "line": 421,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/mtlParse.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/mtlParse.ts\",14408]",
+            "kind": "function",
+            "name": "tallyMtlDrop",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "MtlParse",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/mtlParse.ts"
+          },
+          "specifier": "@flighthq/importdiagnostics/contract",
+          "target": {
+            "name": "ImportDiagnosticCollector",
+            "packageName": "@flighthq/importdiagnostics",
+            "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "MtlParse",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/mtlParse.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "MtlParse",
+        "packageName": "@flighthq/scene3d-formats",
+        "source": "packages/scene3d-formats/src/mtlParse.ts"
       },
       "steps": []
     },
@@ -230109,6 +231247,148 @@
           "access": "temporal-until-evaluation",
           "binding": {
             "column": 14,
+            "fingerprint": "sha256:29db6bd3645119f11240e284eeb9366a90af9cfc88bf3a3ff01c37d43a3a16aa",
+            "line": 8,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objFeatures.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/objFeatures.ts\",369]",
+            "kind": "variable",
+            "name": "OBJ_MATERIAL_FEATURE",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:fcbb743b61f0fa92472dedd5de754bc1ce5a8552ff5a4cf0c8603cf130a202bb",
+            "line": 21,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objFeatures.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/objFeatures.ts\",1098]",
+            "kind": "variable",
+            "name": "OBJ_FEATURE_DIRECTIVES",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 1
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:fbb3bf15313b71d68ab101cb4ade7c57572ee2d906a85e77a96fad8902224a90",
+            "line": 41,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objFeatures.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/objFeatures.ts\",2029]",
+            "kind": "function",
+            "name": "collectObjFeatures",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:4328d8227a7b66430b0930dc4014958f86418fe6e087515ae4fb8965d6770c41",
+            "line": 77,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objFeatures.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/objFeatures.ts\",3610]",
+            "kind": "function",
+            "name": "collectObjMaterialLibraryReferences",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [],
+      "module": {
+        "name": "ObjFeatures",
+        "packageName": "@flighthq/scene3d-formats",
+        "source": "packages/scene3d-formats/src/objFeatures.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:29db6bd3645119f11240e284eeb9366a90af9cfc88bf3a3ff01c37d43a3a16aa",
+              "line": 8,
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/objFeatures.ts",
+              "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/objFeatures.ts\",369]",
+              "kind": "variable",
+              "name": "OBJ_MATERIAL_FEATURE",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            0
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:fcbb743b61f0fa92472dedd5de754bc1ce5a8552ff5a4cf0c8603cf130a202bb",
+              "line": 21,
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/objFeatures.ts",
+              "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/objFeatures.ts\",1098]",
+              "kind": "variable",
+              "name": "OBJ_FEATURE_DIRECTIVES",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
             "fingerprint": "sha256:8727666340d8471c2050a2b41b5cbd9b3918dc93ae65d48cde1f3e32f1a911f0",
             "line": 53,
             "packageName": "@flighthq/types",
@@ -230259,6 +231539,539 @@
           ]
         }
       ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:8727666340d8471c2050a2b41b5cbd9b3918dc93ae65d48cde1f3e32f1a911f0",
+            "line": 2,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objMaterialModel.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/objMaterialModel.ts\",70]",
+            "kind": "import",
+            "name": "OBJ_MATERIAL_BLINN_PHONG_FEATURE",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "OBJ_MATERIAL_BLINN_PHONG_FEATURE",
+            "kind": "dependency",
+            "module": {
+              "name": "ObjMaterialHandler",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/ObjMaterialHandler.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 44,
+            "fingerprint": "sha256:ba3e8d569db92ecace16f85c7cb7db40e9871f362eda8b09d0e660105d8f10c3",
+            "line": 2,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objMaterialModel.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/objMaterialModel.ts\",104]",
+            "kind": "import",
+            "name": "OBJ_MATERIAL_STANDARD_PBR_FEATURE",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "OBJ_MATERIAL_STANDARD_PBR_FEATURE",
+            "kind": "dependency",
+            "module": {
+              "name": "ObjMaterialHandler",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/ObjMaterialHandler.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:24c60f89720518331f5170190cb35fe679689dcd767be9488393233c4abf6bd9",
+            "line": 4,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objMaterialModel.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/objMaterialModel.ts\",183]",
+            "kind": "import",
+            "name": "parseObjMaterialLibrary",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "parseObjMaterialLibrary",
+            "kind": "dependency",
+            "module": {
+              "name": "MtlParse",
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/mtlParse.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:7bac2684b92120d9d8e3f0fb7d70ce446db2f839022e93548f288f9c201aa319",
+            "line": 21,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objMaterialModel.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/objMaterialModel.ts\",1220]",
+            "kind": "function",
+            "name": "collectObjMaterialModels",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:6794571e33fb5023a35e0e035047011de96dca41860fc55603d3797799309eb0",
+            "line": 35,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objMaterialModel.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/objMaterialModel.ts\",1991]",
+            "kind": "function",
+            "name": "hasObjPbrDirectives",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ObjMaterialModel",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objMaterialModel.ts"
+          },
+          "specifier": "./mtlParse.ts",
+          "target": {
+            "name": "MtlParse",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/mtlParse.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ObjMaterialModel",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objMaterialModel.ts"
+          },
+          "importedNames": [
+            "OBJ_MATERIAL_BLINN_PHONG_FEATURE",
+            "OBJ_MATERIAL_STANDARD_PBR_FEATURE"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ObjMaterialHandler",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ObjMaterialHandler.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ObjMaterialModel",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objMaterialModel.ts"
+          },
+          "importedNames": [
+            "ObjMaterial",
+            "ObjMaterialLibrary"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ObjSchema",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ObjSchema.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "ObjMaterialModel",
+        "packageName": "@flighthq/scene3d-formats",
+        "source": "packages/scene3d-formats/src/objMaterialModel.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:8ec50ce83fd8ba1548319e46de7a30b03920a87685a1c42cb4a2c033e651228f",
+            "line": 1,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objRequirements.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/objRequirements.ts\",9]",
+            "kind": "import",
+            "name": "createRequirementSet",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createRequirementSet",
+            "kind": "dependency",
+            "module": {
+              "name": "RequirementSet",
+              "packageName": "@flighthq/requirement",
+              "source": "packages/requirement/src/requirementSet.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:8727666340d8471c2050a2b41b5cbd9b3918dc93ae65d48cde1f3e32f1a911f0",
+            "line": 4,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objRequirements.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/objRequirements.ts\",159]",
+            "kind": "import",
+            "name": "OBJ_MATERIAL_BLINN_PHONG_FEATURE",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "OBJ_MATERIAL_BLINN_PHONG_FEATURE",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:ba3e8d569db92ecace16f85c7cb7db40e9871f362eda8b09d0e660105d8f10c3",
+            "line": 5,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objRequirements.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/objRequirements.ts\",195]",
+            "kind": "import",
+            "name": "OBJ_MATERIAL_STANDARD_PBR_FEATURE",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "OBJ_MATERIAL_STANDARD_PBR_FEATURE",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:2a6d9dbaa9c22d2a0558ad2e68bb88d805dbd39f42e85142b44ba609a1938c07",
+            "line": 6,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objRequirements.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/objRequirements.ts\",232]",
+            "kind": "import",
+            "name": "RequirementFacet",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "RequirementFacet",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:0639fb1810194cb029d7d07bc78ce915d12bbd798d110d8322205873c6d6c66a",
+            "line": 9,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objRequirements.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/objRequirements.ts\",295]",
+            "kind": "import",
+            "name": "OBJ_FEATURE_SCENE_REQUIREMENTS",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "OBJ_FEATURE_SCENE_REQUIREMENTS",
+            "kind": "dependency",
+            "module": {
+              "name": "ObjFeatureRequirements",
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/objFeatureRequirements.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:fbb3bf15313b71d68ab101cb4ade7c57572ee2d906a85e77a96fad8902224a90",
+            "line": 10,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objRequirements.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/objRequirements.ts\",373]",
+            "kind": "import",
+            "name": "collectObjFeatures",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "collectObjFeatures",
+            "kind": "dependency",
+            "module": {
+              "name": "ObjFeatures",
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/objFeatures.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 30,
+            "fingerprint": "sha256:29db6bd3645119f11240e284eeb9366a90af9cfc88bf3a3ff01c37d43a3a16aa",
+            "line": 10,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objRequirements.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/objRequirements.ts\",393]",
+            "kind": "import",
+            "name": "OBJ_MATERIAL_FEATURE",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "OBJ_MATERIAL_FEATURE",
+            "kind": "dependency",
+            "module": {
+              "name": "ObjFeatures",
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/objFeatures.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:7bac2684b92120d9d8e3f0fb7d70ce446db2f839022e93548f288f9c201aa319",
+            "line": 11,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objRequirements.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/objRequirements.ts\",450]",
+            "kind": "import",
+            "name": "collectObjMaterialModels",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "collectObjMaterialModels",
+            "kind": "dependency",
+            "module": {
+              "name": "ObjMaterialModel",
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/objMaterialModel.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:0edc55ee2c9b6534e0948f0ea222926108efdc834ccb367bc07d1ea8470f4382",
+            "line": 12,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objRequirements.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/objRequirements.ts\",516]",
+            "kind": "import",
+            "name": "OBJ_REQUIREMENT_KEY_NAMESPACE",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "OBJ_REQUIREMENT_KEY_NAMESPACE",
+            "kind": "dependency",
+            "module": {
+              "name": "Scene3dFormatRequirements",
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/scene3dFormatRequirements.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:9924726cb5de347dec9e50f35e420cbb76bed0ca124d97d658e00b50831475b9",
+            "line": 34,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objRequirements.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/objRequirements.ts\",1730]",
+            "kind": "function",
+            "name": "parseObjRequirements",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ObjRequirements",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objRequirements.ts"
+          },
+          "specifier": "./objFeatureRequirements.ts",
+          "target": {
+            "name": "ObjFeatureRequirements",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objFeatureRequirements.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ObjRequirements",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objRequirements.ts"
+          },
+          "specifier": "./objFeatures.ts",
+          "target": {
+            "name": "ObjFeatures",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objFeatures.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ObjRequirements",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objRequirements.ts"
+          },
+          "specifier": "./objMaterialModel.ts",
+          "target": {
+            "name": "ObjMaterialModel",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objMaterialModel.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ObjRequirements",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objRequirements.ts"
+          },
+          "specifier": "./scene3dFormatRequirements.ts",
+          "target": {
+            "name": "Scene3dFormatRequirements",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/scene3dFormatRequirements.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ObjRequirements",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objRequirements.ts"
+          },
+          "specifier": "@flighthq/requirement/contract",
+          "target": {
+            "name": "RequirementSet",
+            "packageName": "@flighthq/requirement",
+            "source": "packages/requirement/src/requirementSet.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ObjRequirements",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/objRequirements.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "ObjRequirements",
+        "packageName": "@flighthq/scene3d-formats",
+        "source": "packages/scene3d-formats/src/objRequirements.ts"
+      },
+      "steps": []
     },
     {
       "bindings": [],

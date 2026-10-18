@@ -94,6 +94,7 @@ struct Md5WeightInfluence;
 namespace flight::scene3d_formats {
 
 struct Md5WeightInfluence : public flight::types::SkinInfluence {
+  using flight_native_base = flight::types::SkinInfluence;
   double mx;
   double my;
   double mz;

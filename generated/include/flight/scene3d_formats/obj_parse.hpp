@@ -6,7 +6,6 @@
 //   missing: function appendObjTopologyMesh -- source line 261
 //   missing: function flushGroup -- source line 151
 //   missing: function parseFaceVertex -- source line 47
-//   missing: function resolveObjElementIndices -- source line 226
 //   missing: function parseObjWithMaterialHandlers -- source line 323
 #include <cmath>
 #include <flight/any.hpp>
@@ -14,6 +13,7 @@
 #include <flight/map.hpp>
 #include <flight/number.hpp>
 #include <flight/record.hpp>
+#include <flight/regexp.hpp>
 #include <flight/sequence_view.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -444,47 +444,36 @@ inline void tally_obj_drop(std::optional<flight::Map<flight::String, flight::Ref
 // `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound
 // from the storage and tested the same way
 
-
-// NOT GENERATED: function resolveObjElementIndices -- source line 226
-// refusal: cpp-member-projection-without-present-storage [compiler-restriction]
-//
-// The source it stood for:
-//   function resolveObjElementIndices(
-//     args: string,
-//     positionCount: number,
-//     objDrops: Map<string, ObjDropTally> | null,
-//     lineIndex: number,
-//   ): number[] {
-//     const resolved: number[] = [];
-//     const tokens = args.split(/\s+/);
-//     for (let i = 0; i < tokens.length; i++) {
-//       if (tokens[i].length === 0) continue;
-//       const index = resolveFaceAttrIndex(tokens[i].split('/')[0], positionCount);
-//       if (index < 0) {
-//         tallyObjDrop(objDrops, ImportDiagnosticSeverity.Drop, 'obj.element-index-out-of-range', '', {
-//           firstLine: lineIndex + 1,
-//           firstToken: tokens[i],
-//         });
-//         continue;
-//       }
-//       resolved.push(index);
-//     }
-//     return resolved;
-//   }
-//   
-//   // Expands one polyline's vertex chain into the vertex PAIRS a line-list wants: N references describe
-//   // N-1 connected segments, not N independent ones.
-// cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/objParse.ts: member length on
-// optional C++ storage requires proven present payload: nothing proved the payload present, so the read would
-// unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow
-// it into a present local first; the compiler will not call value() without that proof. Where the storage
-// carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and
-// `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound
-// from the storage and tested the same way
+inline flight::Array<double> resolve_obj_element_indices(flight::String args, double position_count, std::optional<flight::Map<flight::String, flight::Ref<ObjDropTally>>> obj_drops, double line_index) {
+  flight::Array<double> resolved = flight::Array<double>{};
+  flight::Array<flight::String> tokens = args.split(flight::RegExp(flight::String("\\s+"), flight::String("")));
+  {
+    double i = 0.0;
+    while ((i < static_cast<double>(tokens.size()))) {
+      {
+        if ((static_cast<double>(tokens.element(i).length()) == 0.0)) {
+          (i += 1.0);
+          continue;
+        }
+        const double index = resolve_face_attr_index(tokens.element(i).split(flight::String("/")).element(0.0), position_count);
+        if ((index < 0.0)) {
+          tally_obj_drop(obj_drops, flight::types::import_diagnostic_severity->drop, flight::String("obj.element-index-out-of-range"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("firstToken"), tokens.element(i)}});
+          {
+            (i += 1.0);
+            continue;
+          }
+        }
+        resolved.push(index);
+      }
+      (i += 1.0);
+    }
+  }
+  return resolved;
+}
 
 
 // NOT GENERATED: function parseObjWithMaterialHandlers -- source line 323
-// refusal: cpp-member-projection-without-present-storage [compiler-restriction]
+// refusal: cpp-logical-or-present-domain-unproven [source-portability]
 //
 // The source it stood for:
 //   export function parseObjWithMaterialHandlers(
@@ -813,12 +802,8 @@ inline void tally_obj_drop(std::optional<flight::Map<flight::String, flight::Ref
 //   // data-dropping branch, so it records `obj.material-missing` (deduped by the same name cache, one crumb per
 //   // distinct missing name). When no library was supplied at all the drop is the documented intentional path
 //   // (materials resolved downstream), so it stays quiet.
-// cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/objParse.ts: member trim on
-// optional C++ storage requires proven present payload: nothing proved the payload present, so the read would
-// unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow
-// it into a present local first; the compiler will not call value() without that proof. Where the storage
-// carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and
-// `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound
-// from the storage and tested the same way
+// cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/objParse.ts: an optional
+// logical-OR result requires concrete type evidence for every value-bearing operand; narrow or assert an erased
+// operand before applying ||
 
 } // namespace flight::scene3d_formats

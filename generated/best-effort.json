@@ -30316,26 +30316,18 @@
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2Parse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2SectionRegistry.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2SkinHandler.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5AnimFeatures.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5AnimParse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5AnimRequirements.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5Document.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5MaterialHandler.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5MeshFeatures.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5MeshRequirements.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5Parse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5SectionRegistry.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5SkeletonHandler.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/mergeAwd2ParseOptions.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/mtlParse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/objBlinnPhongMaterialHandler.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/objDocument.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objFeatures.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialHelpers.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialModel.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialRegistry.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/objParse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objRequirements.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/objStandardPbrMaterialHandler.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerAllGltfHandlers.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerGltfAnimationHandlers.ts",
@@ -30818,26 +30810,18 @@
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2Parse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2SectionRegistry.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2SkinHandler.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5AnimFeatures.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5AnimParse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5AnimRequirements.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5Document.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5MaterialHandler.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5MeshFeatures.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5MeshRequirements.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5Parse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5SectionRegistry.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5SkeletonHandler.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/mergeAwd2ParseOptions.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/mtlParse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/objBlinnPhongMaterialHandler.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/objDocument.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objFeatures.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialHelpers.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialModel.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialRegistry.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/objParse.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objRequirements.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/objStandardPbrMaterialHandler.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerAllGltfHandlers.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerGltfAnimationHandlers.ts",
@@ -31014,17 +30998,10 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/contract.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/index.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5AnimRequirements.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:51d5a3353dd19d29932392853d1fe2a3e94e8fa0efde5a3348ab0202b2b0f98c",
-        "sha256:7bbd66a71e3f3a68e1eaa7588a252795d017757e7d382344aa51970d3cc0cf04",
-        "sha256:80cbde181d14bfe981550f31aec29152933898215df0af7bb42e23ee6a2f32c8",
-        "sha256:881c1cfe038b8a3010235cb0d332d0d3eba312e76bc668fee4516ce101b7c020"
       ],
       "module": {
         "name": "Md5AnimFeatures",
@@ -31032,8 +31009,7 @@
         "source": "packages/scene3d-formats/src/md5AnimFeatures.ts"
       },
       "path": "flight/scene3d_formats/md5_anim_features.hpp",
-      "rule": "cpp-member-projection-without-present-storage",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "classification": "compiler-restriction",
@@ -31085,10 +31061,7 @@
         "source": "packages/scene3d-formats/src/md5AnimRequirements.ts"
       },
       "path": "flight/scene3d_formats/md5_anim_requirements.hpp",
-      "refusedDependencies": [
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5AnimFeatures.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
       "consumers": [
@@ -31146,18 +31119,10 @@
       "status": "emitted"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/contract.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/index.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5MeshRequirements.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:3731bcf7cdd26e5e6eae317d806c2bf31a25f159fe743df2415b905e48f58de9",
-        "sha256:a2f0c9d8a1754671322abb4a8ce6b675b8a3f49d7423fa3e42a6a8e13f5c8cce",
-        "sha256:cc630c6def79e7b5a64aaa9ee9e2d911e030da23ffd371a9c76024577e46d23b",
-        "sha256:ccd0fbed25751f2cc3e0331d1b4a0bca662f362fb300b18fc7911bef64a715c6",
-        "sha256:dd10ae508be5fd4216b7bc6a645097ea6fd184bb74726ab09cdf47882a4c4e60"
       ],
       "module": {
         "name": "Md5MeshFeatures",
@@ -31165,8 +31130,7 @@
         "source": "packages/scene3d-formats/src/md5MeshFeatures.ts"
       },
       "path": "flight/scene3d_formats/md5_mesh_features.hpp",
-      "rule": "cpp-member-projection-without-present-storage",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "consumers": [
@@ -31179,10 +31143,7 @@
         "source": "packages/scene3d-formats/src/md5MeshRequirements.ts"
       },
       "path": "flight/scene3d_formats/md5_mesh_requirements.hpp",
-      "refusedDependencies": [
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5MeshFeatures.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
       "classification": "compiler-restriction",
@@ -31277,20 +31238,10 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/contract.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/index.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialModel.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:06634ffcb0c106090f223086cb42390e6ed3cff6bcd17f4f37c05a5fadc958d7",
-        "sha256:1d4d7884eb0eb668f40d46b27cd4a4faa2d47ea956cb75861997ed65a8c1843d",
-        "sha256:1d5d9b1dcf06c3ba3ce37066e445cbc3250902238f5c11a0c290e1c70855b391",
-        "sha256:a0caa103ce7b9603b41dea825fcbae9bd63d3ec114d3c3a288c2789136b22b90",
-        "sha256:a9df1cedebfc9fa694a9987c7b9dc0ebc8a9f9969f7e75fd70de3a6efbd392ed",
-        "sha256:b5d45a80674fd947db9087c1d8811c71933d9e42cd0dee49766d1011751c5a4d",
-        "sha256:fe16f25804c350769f99f8812fe677e2b5fbbe0a848779531225dded238e0ff5"
       ],
       "module": {
         "name": "MtlParse",
@@ -31298,8 +31249,7 @@
         "source": "packages/scene3d-formats/src/mtlParse.ts"
       },
       "path": "flight/scene3d_formats/mtl_parse.hpp",
-      "rule": "cpp-member-projection-without-present-storage",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "consumers": [
@@ -31314,8 +31264,7 @@
       },
       "path": "flight/scene3d_formats/obj_blinn_phong_material_handler.hpp",
       "refusedDependencies": [
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialHelpers.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialModel.ts"
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialHelpers.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -31353,17 +31302,10 @@
       "status": "emitted"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/contract.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/index.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/objRequirements.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:5dff65e1c13efebd754b4677160c477c1c5cf3c8661bac88066daad23e26c021",
-        "sha256:63692c5f9fb2e369e9c644f9496fb1db671f272498c7794599ef8985be96ffdf",
-        "sha256:735d40d19afb8cf51909c21bf15a173401abad503ee531cb54f7dee987864b9f",
-        "sha256:ca49c3dba7744fd3b068e33a333ce434c526802cb8f059487990bb324504d662"
       ],
       "module": {
         "name": "ObjFeatures",
@@ -31371,8 +31313,7 @@
         "source": "packages/scene3d-formats/src/objFeatures.ts"
       },
       "path": "flight/scene3d_formats/obj_features.hpp",
-      "rule": "cpp-member-projection-without-present-storage",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "consumers": [
@@ -31406,10 +31347,7 @@
         "source": "packages/scene3d-formats/src/objMaterialModel.ts"
       },
       "path": "flight/scene3d_formats/obj_material_model.hpp",
-      "refusedDependencies": [
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/mtlParse.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
       "consumers": [
@@ -31472,11 +31410,7 @@
         "source": "packages/scene3d-formats/src/objRequirements.ts"
       },
       "path": "flight/scene3d_formats/obj_requirements.hpp",
-      "refusedDependencies": [
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objFeatures.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialModel.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
       "consumers": [
@@ -31491,8 +31425,7 @@
       },
       "path": "flight/scene3d_formats/obj_standard_pbr_material_handler.hpp",
       "refusedDependencies": [
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialHelpers.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialModel.ts"
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialHelpers.ts"
       ],
       "status": "dependency-incomplete"
     },

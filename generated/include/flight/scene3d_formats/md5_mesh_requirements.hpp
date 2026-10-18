@@ -21,12 +21,15 @@ namespace flight::scene3d_formats {
 inline flight::Ref<flight::types::RequirementSet> parse_md5_mesh_requirements(flight::String source) {
   flight::Set<flight::String> features = flight::scene3d_formats::collect_md5_mesh_features(source);
   flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>> requirements = flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>{};
-  for (auto feature : ([&]() { flight::Array<flight::String> array_spread_result; for (const auto& array_spread_item : features) { array_spread_result.push(array_spread_item); } return array_spread_result; }()).sort()) {
-    requirements.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>(flight::make_ref<flight::types::Requirement>(flight::types::Requirement{.facet = flight::types::requirement_facet->document_format, .key = flight::String("") + flight::to_string(flight::scene3d_formats::md5_requirement_key_namespace) + flight::String(".") + flight::to_string(feature) + flight::String("")}))));
-    std::optional<flight::Array<flight::Ref<flight::types::Requirement>>> scene_requirements = flight::scene3d_formats::md5_mesh_feature_scene_requirements.get(feature);
-    if (scene_requirements.has_value()) {
-      for (auto req : scene_requirements.value()) {
-        requirements.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>(req)));
+  {
+    const auto for_of_iterable = ([&]() { flight::Array<flight::String> array_spread_result; for (const auto& array_spread_item : features) { array_spread_result.push(array_spread_item); } return array_spread_result; }()).sort();
+    for (auto feature : for_of_iterable) {
+      requirements.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>(flight::make_ref<flight::types::Requirement>(flight::types::Requirement{.facet = flight::types::requirement_facet->document_format, .key = flight::String("") + flight::to_string(flight::scene3d_formats::md5_requirement_key_namespace) + flight::String(".") + flight::to_string(feature) + flight::String("")}))));
+      std::optional<flight::Array<flight::Ref<flight::types::Requirement>>> scene_requirements = flight::scene3d_formats::md5_mesh_feature_scene_requirements.get(feature);
+      if (scene_requirements.has_value()) {
+        for (auto req : scene_requirements.value()) {
+          requirements.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>(req)));
+        }
       }
     }
   }
