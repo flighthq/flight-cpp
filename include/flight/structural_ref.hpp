@@ -851,6 +851,57 @@ template <typename Object>
   return owner;
 }
 
+// A Flight Record seen as an object: the record's own storage is the object, so every alias reads one
+// set of entries. Each entry is exposed as an erased value; a value with no erased reading stays
+// present-but-unreadable rather than being dropped, and the key order is the record's own.
+template <typename Value>
+class TypedRecordRowOwner final : public RowOwner {
+ public:
+  explicit TypedRecordRowOwner(std::shared_ptr<Record<String, Value>> record) : record_(std::move(record)) {}
+
+  [[nodiscard]] std::shared_ptr<void> native_object() const noexcept override {
+    return std::static_pointer_cast<void>(record_);
+  }
+  [[nodiscard]] std::type_index native_type() const noexcept override { return typeid(Record<String, Value>); }
+
+  [[nodiscard]] std::shared_ptr<RowCell> named_cell(std::string_view name) const override {
+    return string_key_cell(String::from_utf8(name));
+  }
+
+  [[nodiscard]] std::shared_ptr<RowCell> string_key_cell(const String& key) const override {
+    if (!record_ || !record_->has(key)) return {};
+    const auto record = record_;
+    return std::make_shared<ReadonlyNamedCell>([record, key]() -> Any {
+      const auto value = record->get(key);
+      if (!value) return Any(undefined);
+      const auto boxed = any_from(*value);
+      return boxed ? *boxed : Any(undefined);
+    });
+  }
+
+  [[nodiscard]] bool has_named_cell(std::string_view name) const override {
+    return record_ && record_->has(String::from_utf8(name));
+  }
+
+  [[nodiscard]] std::optional<std::vector<String>> enumerable_string_keys() const override {
+    std::vector<String> keys;
+    if (!record_) return keys;
+    const auto enumerable = record_->enumerable_keys();
+    for (std::size_t index = 0; index < enumerable.size(); ++index) {
+      keys.push_back(enumerable.element(static_cast<double>(index)));
+    }
+    return keys;
+  }
+
+  [[nodiscard]] std::optional<Any> raw_value() const override {
+    if (!record_) return std::nullopt;
+    return Any::object(record_);
+  }
+
+ private:
+  std::shared_ptr<Record<String, Value>> record_;
+};
+
 // Supplies the real answer to `AnyRowOwnerFactory`, whose primary in `flight/any.hpp` reports no
 // owner because that header must not know what one is. A constrained partial specialization with
 // the primary's own argument list is more specialized than the primary, so this wins wherever this
@@ -862,6 +913,16 @@ struct AnyRowOwnerFactory<Object> {
   [[nodiscard]] static std::shared_ptr<void> make(const std::shared_ptr<void>& object) {
     if (!object) return nullptr;
     return std::static_pointer_cast<void>(owner_for(std::static_pointer_cast<Object>(object)));
+  }
+};
+
+// A Record boxes through its own keyed owner, not the generated-member owner of the record handle.
+template <typename Value>
+struct AnyRowOwnerFactory<Record<String, Value>> {
+  [[nodiscard]] static std::shared_ptr<void> make(const std::shared_ptr<void>& object) {
+    if (!object) return nullptr;
+    return std::static_pointer_cast<void>(std::make_shared<TypedRecordRowOwner<Value>>(
+        std::static_pointer_cast<Record<String, Value>>(object)));
   }
 };
 

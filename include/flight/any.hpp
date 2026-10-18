@@ -72,6 +72,9 @@ enum class AnyKind : std::uint8_t {
 
 class Any;
 
+template <typename Key, typename Value>
+class Record;
+
 namespace detail {
 
 // Defined after Any is complete; erased array readers use the same checked element boxing as
@@ -763,6 +766,12 @@ struct is_flight_array : std::false_type {};
 template <typename Value>
 struct is_flight_array<Array<Value>> : std::true_type {};
 
+template <typename Type>
+struct is_flight_record : std::false_type {};
+
+template <typename Key, typename Value>
+struct is_flight_record<Record<Key, Value>> : std::true_type {};
+
 // The erased reading of one stored value, or nothing when this runtime has no honest erased
 // reading of it.
 //
@@ -789,6 +798,11 @@ template <typename Value>
     return Any::object(value);
   } else if constexpr (is_flight_array<Stored>::value) {
     return Any(value);
+  } else if constexpr (is_flight_record<Stored>::value) {
+    // A Flight Record is an ordinary keyed object with reference identity: box the handle itself, so
+    // every alias of it reads the same storage. The row owner supplied for Record types
+    // (structural_ref.hpp) exposes its entries as erased values.
+    return Any::object(std::make_shared<Stored>(value));
   } else if constexpr (is_std_function<Stored>::value) {
     // An unset callable member is `null` rather than a function nobody can call.
     return value ? std::optional<Any>(Any::function(value)) : std::optional<Any>(Any(null));

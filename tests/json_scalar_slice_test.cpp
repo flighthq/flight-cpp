@@ -468,6 +468,45 @@ void test_json_native_array_root_members() {
 
 } // namespace
 
+
+namespace {
+
+// A native Record member is an ordinary keyed object with reference identity. Reading it through a
+// native document row must expose its entries as erased values (the Aseprite HashDoc -> Object.entries
+// path), keeping the same storage rather than copying or refusing the value.
+void test_json_native_record_member() {
+  struct Frame : flight::ReferenceEnabled {
+    double x{0};
+  };
+  struct HashDoc : flight::ReferenceEnabled {
+    flight::Record<flight::String, flight::Ref<Frame>> frames;
+  };
+  const auto doc = flight::make_ref<HashDoc>();
+  const auto first = flight::make_ref<Frame>();
+  first->x = 1.0;
+  const auto second = flight::make_ref<Frame>();
+  second->x = 2.0;
+  doc->frames.set(flight::String("a"), first);
+  doc->frames.set(flight::String("b"), second);
+  {
+    auto owner = flight::detail::owner_for(doc);
+    owner->bind_named("frames", [doc]() -> decltype(auto) { return (doc->frames); });
+  }
+  using DocRow = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<HashDoc>>>>;
+  const auto row = DocRow(doc);
+
+  const auto cell = flight::read_json_scalar_row_member(row, flight::String("frames"));
+  assert(cell.is_present() && cell.type_of() == "object");
+  const auto member = flight::json_row_member(row, flight::String("frames"));
+  const auto view = flight::named_properties(member);
+  assert(view.shared_owner() && view.has(flight::String("a")) && view.has(flight::String("b")));
+  assert(view.get(flight::String("a")).kind() == flight::AnyKind::object);
+  const auto keys = view.keys();
+  assert(keys.size() == 2 && keys[0] == flight::String("a") && keys[1] == flight::String("b"));
+}
+
+} // namespace
+
 int main() {
   using flight::Any;
   using flight::JsonScalarCell;
@@ -482,6 +521,7 @@ int main() {
   test_json_member_array_replacement();
   test_json_native_owner_raw();
   test_json_native_array_root_members();
+  test_json_native_record_member();
   test_json_scalar_utf16_relational();
   test_json_any_bridge();
   test_json_scalar_symbol();
