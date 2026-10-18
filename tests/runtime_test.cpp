@@ -32,6 +32,7 @@ struct MemberViewBase : public flight::ReferenceEnabled {
 struct MemberViewDerived : public MemberViewBase {
   flight::Array<int> reports;
   double total{0};
+  bool paused{false};
 };
 
 namespace {
@@ -4400,6 +4401,7 @@ static void test_structural_member_view_absence() {
     owner->bind_named("started", [derived]() -> decltype(auto) { return (derived->started); });
     owner->bind_named("reports", [derived]() -> decltype(auto) { return (derived->reports); });
     owner->bind_named("total", [derived]() -> decltype(auto) { return (derived->total); });
+    owner->bind_named("paused", [derived]() -> decltype(auto) { return (derived->paused); });
     flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<MemberViewDerived>>>> row(derived);
     (void)row;
   } // construction row local is gone; the object is alive through the public reference
@@ -4434,6 +4436,24 @@ static void test_structural_member_view_absence() {
   const std::optional<double> stored_zero{0.0};
   check(stored_zero.has_value() && !flight::to_boolean(stored_zero),
         "a stored zero is present while truthiness is false, as the source Number 0");
+
+  // MemberValue: absence stays distinguishable from a stored false/0, while uses see the value.
+  const auto absent_member = empty_view.read<int>("started");
+  const auto stored_false_member = view.read<bool>("paused");
+  check(!absent_member.has_value() && !flight::to_boolean(absent_member) &&
+            stored_false_member.has_value() && !flight::to_boolean(stored_false_member),
+        "MemberValue keeps absent and stored-false distinct while both are falsy");
+  const auto live_reports = view.read<flight::Array<int>>("reports");
+  check(live_reports.has_value() &&
+            live_reports.value().identity() == derived->reports.identity(),
+        "an array member keeps the live shared identity and order");
+  bool use_failed = false;
+  try {
+    (void)absent_member.value();
+  } catch (const std::bad_optional_access&) {
+    use_failed = true;
+  }
+  check(use_failed, "using an absent member fails at the use, not at the read");
 }
 
 int main() {

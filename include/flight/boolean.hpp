@@ -37,6 +37,11 @@ inline constexpr bool boolean_is_shared_pointer<std::shared_ptr<Value>> = true;
 template <typename>
 inline constexpr bool boolean_is_unique_pointer = false;
 
+// A carrier that answers JavaScript truthiness itself (for example a member read that keeps
+// absence distinct from a stored false/0).
+template <typename>
+inline constexpr bool boolean_custom = false;
+
 template <typename Value, typename Deleter>
 inline constexpr bool boolean_is_unique_pointer<std::unique_ptr<Value, Deleter>> = true;
 
@@ -74,6 +79,8 @@ struct ToBoolean final {
     } else if constexpr (
         detail::boolean_is_shared_pointer<Type> || detail::boolean_is_unique_pointer<Type>) {
       return static_cast<bool>(value);
+    } else if constexpr (detail::boolean_custom<Type>) {
+      return value.to_boolean();
     } else {
       // Every remaining compiler representation is a non-null JavaScript object or callable value.
       return true;

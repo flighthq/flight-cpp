@@ -19,6 +19,7 @@
 #include <vector>
 
 #include <flight/any.hpp>
+#include <flight/boolean.hpp>
 #include <flight/attachment.hpp>
 #include <flight/reference.hpp>
 #include <flight/record.hpp>
@@ -965,6 +966,37 @@ concept variant_alternative_rows_as =
 
 } // namespace detail
 
+// The value a same-owner member read yields. It keeps ABSENCE distinct from a stored false/0 while
+// behaving like the member's value at its uses: truthiness is JavaScript truthiness of the present
+// value (absence is falsy), conversion/`operator->`/iteration read the present value and fail at the
+// operation when it is absent (the source's use of undefined fails there), and an Array/Set member
+// keeps its live shared identity and order because only the handle is copied.
+template <typename Value>
+class MemberValue final {
+ public:
+  MemberValue() = default;
+  explicit MemberValue(std::optional<Value> value) : value_(std::move(value)) {}
+
+  [[nodiscard]] bool has_value() const noexcept { return value_.has_value(); }
+  [[nodiscard]] const Value& value() const { return value_.value(); }
+  [[nodiscard]] const Value* operator->() const { return &value_.value(); }
+  [[nodiscard]] operator const Value&() const { return value_.value(); }
+  [[nodiscard]] bool to_boolean() const noexcept {
+    return value_.has_value() && ToBoolean{}(*value_);
+  }
+
+  [[nodiscard]] auto begin() const { return value_.value().begin(); }
+  [[nodiscard]] auto end() const { return value_.value().end(); }
+
+ private:
+  std::optional<Value> value_;
+};
+
+namespace detail {
+template <typename Value>
+inline constexpr bool boolean_custom<MemberValue<Value>> = true;
+} // namespace detail
+
 // A same-owner member view over a native object. It never creates a row owner and never casts the
 // object to a derived type: it reads the named cells the object's RowOwner recorded, and reports a
 // member the object does not declare as ABSENCE. Truthiness of that absence is the source's falsy
@@ -982,10 +1014,10 @@ class StructuralMemberView final {
   [[nodiscard]] bool has_binding_metadata() const noexcept { return owner_ != nullptr; }
 
   template <typename Member>
-  [[nodiscard]] std::optional<Member> read(std::string_view name) const {
-    if (!owner_) return std::nullopt;
-    if (auto* value = owner_->template named_value_if<Member>(name)) return *value;
-    return std::nullopt;
+  [[nodiscard]] MemberValue<Member> read(std::string_view name) const {
+    if (!owner_) return MemberValue<Member>{};
+    if (auto* value = owner_->template named_value_if<Member>(name)) return MemberValue<Member>{*value};
+    return MemberValue<Member>{};
   }
 
  private:
