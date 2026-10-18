@@ -5,6 +5,7 @@
 #include <flight/any.hpp>
 #include <flight/array.hpp>
 #include <flight/callable.hpp>
+#include <flight/error.hpp>
 #include <flight/record.hpp>
 #include <flight/sequence_view.hpp>
 #include <flight/structural_ref.hpp>
@@ -85,7 +86,7 @@ inline std::optional<flight::Array<std::optional<std::function<double(double)>>>
         double widest = 0.0;
         {
           double v = 0.0;
-          while (((v < values) && (((v + 1.0) * 4.0) <= static_cast<double>(points.value().size())))) {
+          while (((v < values) && (((v + 1.0) * 4.0) <= static_cast<double>(([&](const auto& indexed_member) -> decltype(auto) { if (!indexed_member.has_value()) throw flight::TypeError("Cannot read properties of undefined"); if constexpr (flight::detail::optional_traits<std::remove_cvref_t<decltype(indexed_member.value())>>::optional) { if (!indexed_member.value().has_value()) throw flight::TypeError("Cannot read properties of null"); return (indexed_member.value().value()); } else { return (indexed_member.value()); } }(points)).size())))) {
             {
               const double rise = std::abs((timeline->values.element((((i_capture.read_binding() + 1.0) * values) + v)) - timeline->values.element(((i_capture.read_binding() * values) + v))));
               if ((rise > widest)) {
@@ -102,13 +103,13 @@ inline std::optional<flight::Array<std::optional<std::function<double(double)>>>
   if ((rise == 0.0)) {
     return std::nullopt;
   }
-  return std::optional<flight::Array<double>>{flight::Array<double>{((points.value().element((v * 4.0)) - timeline->times.element(i_capture.read_binding())) / span), ((points.value().element(((v * 4.0) + 1.0)) - from) / rise), ((points.value().element(((v * 4.0) + 2.0)) - timeline->times.element(i_capture.read_binding())) / span), ((points.value().element(((v * 4.0) + 3.0)) - from) / rise)}};
+  return std::optional<flight::Array<double>>{flight::Array<double>{((([&]() -> decltype(auto) { const auto& indexed_member_object = points; const auto indexed_member_key = (v * 4.0); return ([&](const auto& indexed_member) -> decltype(auto) { if (!indexed_member.has_value()) throw flight::TypeError("Cannot read properties of undefined"); if constexpr (flight::detail::optional_traits<std::remove_cvref_t<decltype(indexed_member.value())>>::optional) { if (!indexed_member.value().has_value()) throw flight::TypeError("Cannot read properties of null"); return (indexed_member.value().value()); } else { return (indexed_member.value()); } }(indexed_member_object)).element(indexed_member_key); }()) - timeline->times.element(i_capture.read_binding())) / span), ((([&]() -> decltype(auto) { const auto& indexed_member_object_2 = points; const auto indexed_member_key_2 = ((v * 4.0) + 1.0); return ([&](const auto& indexed_member) -> decltype(auto) { if (!indexed_member.has_value()) throw flight::TypeError("Cannot read properties of undefined"); if constexpr (flight::detail::optional_traits<std::remove_cvref_t<decltype(indexed_member.value())>>::optional) { if (!indexed_member.value().has_value()) throw flight::TypeError("Cannot read properties of null"); return (indexed_member.value().value()); } else { return (indexed_member.value()); } }(indexed_member_object_2)).element(indexed_member_key_2); }()) - from) / rise), ((([&]() -> decltype(auto) { const auto& indexed_member_object_3 = points; const auto indexed_member_key_3 = ((v * 4.0) + 2.0); return ([&](const auto& indexed_member) -> decltype(auto) { if (!indexed_member.has_value()) throw flight::TypeError("Cannot read properties of undefined"); if constexpr (flight::detail::optional_traits<std::remove_cvref_t<decltype(indexed_member.value())>>::optional) { if (!indexed_member.value().has_value()) throw flight::TypeError("Cannot read properties of null"); return (indexed_member.value().value()); } else { return (indexed_member.value()); } }(indexed_member_object_3)).element(indexed_member_key_3); }()) - timeline->times.element(i_capture.read_binding())) / span), ((([&]() -> decltype(auto) { const auto& indexed_member_object_4 = points; const auto indexed_member_key_4 = ((v * 4.0) + 3.0); return ([&](const auto& indexed_member) -> decltype(auto) { if (!indexed_member.has_value()) throw flight::TypeError("Cannot read properties of undefined"); if constexpr (flight::detail::optional_traits<std::remove_cvref_t<decltype(indexed_member.value())>>::optional) { if (!indexed_member.value().has_value()) throw flight::TypeError("Cannot read properties of null"); return (indexed_member.value().value()); } else { return (indexed_member.value()); } }(indexed_member_object_4)).element(indexed_member_key_4); }()) - from) / rise)}};
 }};
         std::optional<flight::Array<double>> won = ((winner < 0.0) ? std::nullopt : rebase(winner));
         if (won.has_value()) {
           {
             double v_2 = 0.0;
-            while (((v_2 < values) && (((v_2 + 1.0) * 4.0) <= static_cast<double>(points.value().size())))) {
+            while (((v_2 < values) && (((v_2 + 1.0) * 4.0) <= static_cast<double>(([&](const auto& indexed_member) -> decltype(auto) { if (!indexed_member.has_value()) throw flight::TypeError("Cannot read properties of undefined"); if constexpr (flight::detail::optional_traits<std::remove_cvref_t<decltype(indexed_member.value())>>::optional) { if (!indexed_member.value().has_value()) throw flight::TypeError("Cannot read properties of null"); return (indexed_member.value().value()); } else { return (indexed_member.value()); } }(points)).size())))) {
               {
                 if ((v_2 == winner)) {
                   (v_2 += 1.0);

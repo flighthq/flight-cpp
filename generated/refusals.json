@@ -8256,7 +8256,7 @@
       "code": "dependency-refused",
       "module": "packages/skeleton2d-formats/src/dragonBonesFull.ts",
       "package": "@flighthq/skeleton2d-formats",
-      "reason": "dependency ./dragonBonesParse.ts was refused for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesParse.ts",
+      "reason": "dependency ./dragonBonesHandlers.ts was refused for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesHandlers.ts",
       "stage": "dependency"
     },
     {
@@ -8265,15 +8265,6 @@
       "package": "@flighthq/skeleton2d-formats",
       "reason": "dependency ./dragonBonesSectionHandlers.ts was refused for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSectionHandlers.ts",
       "stage": "dependency"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 7,
-      "module": "packages/skeleton2d-formats/src/dragonBonesParse.ts",
-      "package": "@flighthq/skeleton2d-formats",
-      "reason": "cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesParse.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
-      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -8327,7 +8318,7 @@
       "code": "dependency-refused",
       "module": "packages/skeleton2d-formats/src/index.ts",
       "package": "@flighthq/skeleton2d-formats",
-      "reason": "dependency ./dragonBonesFull.ts was refused for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesFull.ts",
+      "reason": "dependency ./dragonBonesRequirements.ts was refused for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesRequirements.ts",
       "stage": "dependency"
     },
     {

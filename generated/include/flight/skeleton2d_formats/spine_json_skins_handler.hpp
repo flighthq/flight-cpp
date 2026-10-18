@@ -204,10 +204,10 @@ inline flight::Ref<flight::types::RegionAttachment2D> parse_spine_region_attachm
 inline std::optional<flight::Ref<flight::types::Attachment2D>> parse_spine_attachment(flight::String name, flight::Record<flight::String, flight::Any> raw, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
   const flight::String type = ([&]() -> flight::String { const auto& erased_typeof_carrier = raw.get(flight::String("type")).value_or(flight::Any(flight::undefined)); if (erased_typeof_carrier.type_of() == flight::String("string")) return erased_typeof_carrier.as_string(); return flight::String("region"); }());
   if ((type == flight::String("region"))) {
-    return std::optional<flight::Ref<flight::types::Attachment2D>>{parse_spine_region_attachment(name, raw)};
+    return std::optional<flight::Ref<flight::types::Attachment2D>>{parse_spine_region_attachment(name, flight::named_properties(raw))};
   }
   if ((type == flight::String("mesh"))) {
-    return std::optional<flight::Ref<flight::types::Attachment2D>>{parse_spine_mesh_attachment(name, raw, diagnostics)};
+    return std::optional<flight::Ref<flight::types::Attachment2D>>{parse_spine_mesh_attachment(name, flight::named_properties(raw), diagnostics)};
   }
   flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("spine.") + flight::to_string(type) + flight::String("-attachment-unsupported"), flight::String("parseSpineAttachment"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("name"), std::variant<bool, double, flight::String>{std::in_place_type<double>, 1.0}}});
   return std::nullopt;

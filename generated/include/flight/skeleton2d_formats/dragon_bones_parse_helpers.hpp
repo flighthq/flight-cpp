@@ -57,7 +57,7 @@ inline flight::Ref<rotation_scale_x_scale_y_shear_y_x_y_57c8569645defe0a> parse_
   flight::Record<flight::String, flight::Any> t = ((([&]() { const auto& presence_operand = raw; return !presence_operand.is_null(); }()) && (raw.type_of() == flight::String("object"))) ? flight::named_properties(raw) : flight::Record<flight::String, flight::Any>{});
   double rotation;
   double shear_y;
-  if (((flight::String("rotate") in t) || (flight::String("skew") in t))) {
+  if ((t.has(flight::String("rotate")) || t.has(flight::String("skew")))) {
     (rotation = number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(t.get(flight::String("rotate")).value_or(flight::Any(flight::undefined)), 0.0));
     (shear_y = number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(t.get(flight::String("skew")).value_or(flight::Any(flight::undefined)), 0.0));
   }
@@ -118,10 +118,10 @@ inline std::optional<flight::Array<std::optional<std::function<double(double)>>>
 inline const double dragonbones_no_tween = 100.0;
 
 inline bool is_dragon_bones_frame_stepped(flight::Record<flight::String, flight::Any> frame) {
-  if ((flight::String("curve") in frame)) {
+  if (frame.has(flight::String("curve"))) {
     return false;
   }
-  if (!(flight::String("tweenEasing") in frame)) {
+  if (!frame.has(flight::String("tweenEasing"))) {
     return false;
   }
   auto easing = frame.get(flight::String("tweenEasing")).value_or(flight::Any(flight::undefined));
@@ -139,7 +139,7 @@ inline flight::types::AnimationInterpolation dragon_bones_interpolation(flight::
         if (!is_dragon_bones_frame_stepped(frame)) {
           (stepped = false);
         }
-        if (!(flight::String("curve") in frame)) {
+        if (!frame.has(flight::String("curve"))) {
           auto easing = frame.get(flight::String("tweenEasing")).value_or(flight::Any(flight::undefined));
           if ((((easing.type_of() == flight::String("number")) && (easing.as_number() != 0.0)) && (easing.as_number() != dragonbones_no_tween))) {
             approximated++;

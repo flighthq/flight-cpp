@@ -3666,6 +3666,11 @@
       "source": "packages/skeleton2d/src/slotDeform2D.ts"
     },
     {
+      "name": "DragonBonesParse",
+      "packageName": "@flighthq/skeleton2d-formats",
+      "source": "packages/skeleton2d-formats/src/dragonBonesParse.ts"
+    },
+    {
       "name": "DragonBonesParseHelpers",
       "packageName": "@flighthq/skeleton2d-formats",
       "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts"
@@ -27214,6 +27219,16 @@
           "name": "SlotDeform2D",
           "packageName": "@flighthq/skeleton2d",
           "source": "packages/skeleton2d/src/slotDeform2D.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "DragonBonesParse",
+          "packageName": "@flighthq/skeleton2d-formats",
+          "source": "packages/skeleton2d-formats/src/dragonBonesParse.ts"
         }
       ]
     },
@@ -125890,6 +125905,332 @@
           "path": [
             "declarations",
             1
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:ccdcca3573966df731afc28dd8f60c480f924d7d3672e3719cfe7834c97af20f",
+            "line": 1,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParse.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParse.ts\",9]",
+            "kind": "import",
+            "name": "reportImportDiagnostic",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "reportImportDiagnostic",
+            "kind": "dependency",
+            "module": {
+              "name": "ImportDiagnosticCollector",
+              "packageName": "@flighthq/importdiagnostics",
+              "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:0db281359abc7e593f2e8c24bd8ceacc0c4c6b4b2f62206b048d0e1a100c5e9e",
+            "line": 2,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParse.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParse.ts\",88]",
+            "kind": "import",
+            "name": "createSkeleton2D",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createSkeleton2D",
+            "kind": "dependency",
+            "module": {
+              "name": "Skeleton2d",
+              "packageName": "@flighthq/skeleton2d",
+              "source": "packages/skeleton2d/src/skeleton2d.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:4ed29d9b9c788211ee983240067a7fabe2c29c3555a536a2250a5c90c9f8e21b",
+            "line": 4,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParse.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParse.ts\",268]",
+            "kind": "import",
+            "name": "ImportDiagnosticSeverity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "ImportDiagnosticSeverity",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:2c1b29a406e88c92a71ac4aef6a6d2c4c100bafecd57256ddae9e889edf52f61",
+            "line": 7,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParse.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParse.ts\",411]",
+            "kind": "function",
+            "name": "parseDragonBonesSkeletonWithRegistry",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:d901596f595251a92fe226b0760b73e311c1ce04edc4dc1022978bd6f8e84355",
+            "line": 57,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParse.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParse.ts\",2049]",
+            "kind": "function",
+            "name": "checkDragonBonesVersion",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:3d828f2dc73272d9016968117654d4118e942bc0618720c1acba23c072bc0ae5",
+            "line": 84,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParse.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParse.ts\",2891]",
+            "kind": "function",
+            "name": "buildDragonBonesSlotOrder",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:cb966caa80560c634e48fa986cbdb66763e9b73bc495e7a681d5902f3c7c2a4b",
+            "line": 97,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParse.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParse.ts\",3308]",
+            "kind": "function",
+            "name": "dragonBonesFrameRate",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:8a4071b53e13f7284b49f5c9e3c9ca369f2bf76233bba83e45ec4e986f90abb1",
+            "line": 108,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParse.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParse.ts\",3747]",
+            "kind": "function",
+            "name": "numberOr",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:75c92524e0b2403a4d07d3c140c39edc55869bbd9b791732d16cfec7bba04d6a",
+            "line": 112,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParse.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParse.ts\",3864]",
+            "kind": "variable",
+            "name": "DRAGONBONES_COMPATIBLE_VERSION",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:c620ec8aea6931afb915588a20fb36d484087fe047b131e2d60d49c5a5856ccf",
+            "line": 113,
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParse.ts",
+            "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParse.ts\",3910]",
+            "kind": "variable",
+            "name": "DEFAULT_DRAGONBONES_FRAME_RATE",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 1
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "DragonBonesParse",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParse.ts"
+          },
+          "specifier": "@flighthq/importdiagnostics/contract",
+          "target": {
+            "name": "ImportDiagnosticCollector",
+            "packageName": "@flighthq/importdiagnostics",
+            "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "DragonBonesParse",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParse.ts"
+          },
+          "specifier": "@flighthq/skeleton2d/contract",
+          "target": {
+            "name": "Skeleton2d",
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "DragonBonesParse",
+            "packageName": "@flighthq/skeleton2d-formats",
+            "source": "packages/skeleton2d-formats/src/dragonBonesParse.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "DragonBonesParse",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/dragonBonesParse.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:75c92524e0b2403a4d07d3c140c39edc55869bbd9b791732d16cfec7bba04d6a",
+              "line": 112,
+              "packageName": "@flighthq/skeleton2d-formats",
+              "source": "packages/skeleton2d-formats/src/dragonBonesParse.ts",
+              "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParse.ts\",3864]",
+              "kind": "variable",
+              "name": "DRAGONBONES_COMPATIBLE_VERSION",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            5
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:c620ec8aea6931afb915588a20fb36d484087fe047b131e2d60d49c5a5856ccf",
+              "line": 113,
+              "packageName": "@flighthq/skeleton2d-formats",
+              "source": "packages/skeleton2d-formats/src/dragonBonesParse.ts",
+              "id": "binding:[\"@flighthq/skeleton2d-formats\",\"packages/skeleton2d-formats/src/dragonBonesParse.ts\",3910]",
+              "kind": "variable",
+              "name": "DEFAULT_DRAGONBONES_FRAME_RATE",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            6
           ]
         }
       ]

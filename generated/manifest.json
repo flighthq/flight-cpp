@@ -5223,6 +5223,13 @@
       "package": "@flighthq/skeleton2d-formats"
     },
     {
+      "dependency": "flight-compiler",
+      "digest": "39af02d1a83f3cdca42ab0c843b9660faa08d2223162c9ea8166a3115980b509",
+      "id": "compiler-guarded-indexed-nullable-member",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/skeleton2d-formats"
+    },
+    {
       "dependency": "flight",
       "digest": "740298fad36a994cce0e9cb8684ba55141285ee92cf46db0cd1000dd393bd40c",
       "id": "skeleton2d-formats-diagnostic-detail-number-locals",
@@ -5234,13 +5241,6 @@
       "digest": "ad1a693c823352807701ff91b636e45287a933c44b9f9dbdd42a89dd3992788f",
       "id": "skeleton2d-formats-census-unknown-attachment-exit",
       "module": "packages/skeleton2d-formats/src/spineBinarySectionCounts.ts",
-      "package": "@flighthq/skeleton2d-formats"
-    },
-    {
-      "dependency": "flight",
-      "digest": "728a285175409320c9e9e30c084ca53e398ad3adef1e5fadf7a467a8dbdc9e8b",
-      "id": "skeleton2d-formats-binary-influences-constructor",
-      "module": "packages/skeleton2d-formats/src/spineBinarySkinsHandler.ts",
       "package": "@flighthq/skeleton2d-formats"
     },
     {
@@ -5431,6 +5431,13 @@
       "id": "layout-flex-basis-unknown-comparison",
       "module": "packages/layout/src/flexLayout.ts",
       "package": "@flighthq/layout"
+    },
+    {
+      "dependency": "flight",
+      "digest": "728a285175409320c9e9e30c084ca53e398ad3adef1e5fadf7a467a8dbdc9e8b",
+      "id": "skeleton2d-formats-binary-influences-constructor",
+      "module": "packages/skeleton2d-formats/src/spineBinarySkinsHandler.ts",
+      "package": "@flighthq/skeleton2d-formats"
     },
     {
       "dependency": "flight",
@@ -7348,9 +7355,9 @@
       "bindingProfileSet": "sha256:2602f15df98afbc4055416765f444e85bee83a6c5fad13b420301f8fa344ca71",
       "cppIncludePrefix": "flight/skeleton2d_formats",
       "cppNamespace": "flight::skeleton2d_formats",
-      "emittedModules": 50,
+      "emittedModules": 51,
       "package": "@flighthq/skeleton2d-formats",
-      "refusedModules": 9,
+      "refusedModules": 8,
       "source": {
         "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
@@ -7822,8 +7829,8 @@
   },
   "summary": {
     "packages": 153,
-    "emittedModules": 2580,
-    "refusedModules": 571,
+    "emittedModules": 2581,
+    "refusedModules": 570,
     "sourceModules": 3151
   }
 }

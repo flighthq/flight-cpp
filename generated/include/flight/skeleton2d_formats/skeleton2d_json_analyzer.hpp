@@ -69,13 +69,13 @@ inline void count_array_or_object(flight::Map<flight::String, double> counts, fl
 
 inline flight::Map<flight::String, double> census_spine_json(flight::Record<flight::String, flight::Any> record) {
   auto counts = flight::Map<flight::String, double>();
-  count_array_or_object(counts, record, flight::String("bones"), flight::String("bones"));
-  count_array_or_object(counts, record, flight::String("slots"), flight::String("slots"));
-  count_array_or_object(counts, record, flight::String("skins"), flight::String("skins"));
-  count_array_or_object(counts, record, flight::String("events"), flight::String("events"));
-  count_array_or_object(counts, record, flight::String("ik"), flight::String("ikConstraints"));
-  count_array_or_object(counts, record, flight::String("path"), flight::String("pathConstraints"));
-  count_array_or_object(counts, record, flight::String("transform"), flight::String("transformConstraints"));
+  count_array_or_object(counts, flight::named_properties(record), flight::String("bones"), flight::String("bones"));
+  count_array_or_object(counts, flight::named_properties(record), flight::String("slots"), flight::String("slots"));
+  count_array_or_object(counts, flight::named_properties(record), flight::String("skins"), flight::String("skins"));
+  count_array_or_object(counts, flight::named_properties(record), flight::String("events"), flight::String("events"));
+  count_array_or_object(counts, flight::named_properties(record), flight::String("ik"), flight::String("ikConstraints"));
+  count_array_or_object(counts, flight::named_properties(record), flight::String("path"), flight::String("pathConstraints"));
+  count_array_or_object(counts, flight::named_properties(record), flight::String("transform"), flight::String("transformConstraints"));
   if ((([&]() { const auto& presence_operand = record.get(flight::String("animations")).value_or(flight::Any(flight::undefined)); return !presence_operand.is_null(); }()) && (record.get(flight::String("animations")).value_or(flight::Any(flight::undefined)).type_of() == flight::String("object")))) {
     flight::Array<flight::String> keys = ([&]() { const auto named_view_2 = flight::named_properties(record.get(flight::String("animations")).value_or(flight::Any(flight::undefined))); const auto named_keys_2 = named_view_2.keys(); return flight::Array<flight::String>(named_keys_2.begin(), named_keys_2.end()); }());
     if ((static_cast<double>(keys.size()) > 0.0)) {

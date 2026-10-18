@@ -37494,7 +37494,6 @@
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesBonesHandler.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesFull.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesHandlers.ts",
-        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesParse.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesRequirements.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSectionCounts.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSectionHandlers.ts",
@@ -37599,8 +37598,7 @@
       },
       "path": "flight/skeleton2d_formats/dragon_bones_full.hpp",
       "refusedDependencies": [
-        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesHandlers.ts",
-        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesParse.ts"
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesHandlers.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -37623,20 +37621,10 @@
       "status": "dependency-incomplete"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesFull.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:03a399b4c2cc6d0cc5d63e34dbe82470bd6dd7a205532c2668c7b8df263bbef6",
-        "sha256:1344ee191d95cec388a602913f3bee26d2f6cb909e34136e2a8387f0e8f576d4",
-        "sha256:26edeb77dec0c278827667df824c0c25a756f0eeee11f693674f546f26102b06",
-        "sha256:5be1220da579d82f32de5c9c689c89388576566abcc3a8749dec67c356bace6f",
-        "sha256:87d42aaeabaaa7e78d89e317e6b3136de053072dbc300530ed7488830f422492",
-        "sha256:a4c3f37b6a9b3ff3680b0b80d34118cfd6ea045602daa9b2ab62db7abf18de49",
-        "sha256:c388ff447cfd34cf229fb5dd2825405030d212e7dcb8980c034df81c40f0ecbd"
       ],
       "module": {
         "name": "DragonBonesParse",
@@ -37644,8 +37632,7 @@
         "source": "packages/skeleton2d-formats/src/dragonBonesParse.ts"
       },
       "path": "flight/skeleton2d_formats/dragon_bones_parse.hpp",
-      "rule": "cpp-presence-test-without-absence-storage",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "consumers": [
@@ -37857,7 +37844,6 @@
       "refusedDependencies": [
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesFull.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesHandlers.ts",
-        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesParse.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesRequirements.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSectionCounts.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSectionHandlers.ts",
