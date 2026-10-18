@@ -2221,6 +2221,17 @@ void test_any_equality_and_absence() {
   check(!record.has(flight::String("absent")) && record.has(flight::String("present")),
         "the same distinction is visible through has");
 
+  // `key in record` is own presence or an inherited Object.prototype name, never the value.
+  check(flight::is_object_prototype_property(flight::String("toString")) &&
+            flight::is_object_prototype_property(flight::String("__proto__")) &&
+            flight::is_object_prototype_property(flight::String("propertyIsEnumerable")),
+        "Object.prototype's own names are inherited by every ordinary object");
+  check(!flight::is_object_prototype_property(flight::String("present")) &&
+            !flight::is_object_prototype_property(flight::String("tostring")) &&
+            !flight::is_object_prototype_property(flight::String("prototype")) &&
+            !flight::is_object_prototype_property(flight::String("")),
+        "names Object.prototype does not own, including near spellings, are not inherited");
+
   flight::Map<flight::Any, flight::String> keyed;
   keyed.set(flight::Any(nan), flight::String("nan"));
   keyed.set(flight::Any(flight::String("k")), flight::String("string"));

@@ -211,3 +211,52 @@ binding change supplies no membership lowering and carries no change to that exi
 Only the owned particle 3D row joins this cause; its first diagnostic and line 113 are recorded in
 the product. Historical G1 totals and all unowned rows remain unchanged. The two-header particle
 check is 0 pass, 2 fail; its other row reaches the separately refused 2D draw callee.
+
+## Interim compiler patch: `compiler-membership-test-presence` (code only, not yet generated)
+
+`source-patches/compiler-membership-test-presence.patch` carries the requested lowering through the compiler patch
+stack. It has been measured on the compiler alone; no SDK package has been regenerated with it yet.
+
+**Evidence.** The semantic lowering attaches `IrMembershipTestEvidence` to every `in` expression, computed by the
+checker. It records:
+- the key, either a string literal or a dynamic string;
+- how the receiver's own type declares the key: required, optional, or undeclared;
+- whether the key resolves only through the apparent prototype, as `toString` does on an object literal;
+- whether any analyzed object type assignable to the receiver declares the key optional. A generic container
+  counts as assignable, so it can only make the evidence more conservative.
+
+**Lowering, by the carrier the receiver is held in:**
+
+| receiver | lowering |
+|---|---|
+| `flight::Record`, literal key | `r.has(k)`; `true` for an `Object.prototype` name |
+| `flight::Record`, dynamic string key | `r.has(k) \|\| flight::is_object_prototype_property(k)` (new runtime helper in `record.hpp`) |
+| any recognized carrier, key declared **required** by the receiver | `(receiver, true)`; the value is never read |
+| structural row, key undeclared, every assignable declarer required | `flight::row_has<flight::RowKey<"k">>(row)`: the owner's bound cell, no value read, no getter |
+| key declared optional, or an assignable optional declarer | refused (`cpp-membership-test-unrepresented`) |
+| nominal `Ref<T>` that does not declare the key | refused: the carrier cannot hold the probed owner (render_registry_guards) |
+| `flight::NamedProperties` view | refused: `has` is own-keys only and the view does not know the prototype |
+| closed-union arm, erased `Any`, type parameter, symbol key | unchanged: the existing lowering and its own refusal stand |
+
+**Measured** at flight-compiler `806d257` with the 69-patch stack plus this patch:
+- All 70 patches apply in sequence with plain `git apply`.
+- The new `cppMembershipTest.test.ts` passes 6/6.
+- The full `compiler-backend-cpp` and `compiler-semantic` suites fail on the same 78 tests with and without the
+  patch: 0 new failures and 0 fixed.
+- Emitted Record and row headers were compiled with g++ 15.2 against this runtime and the SDK structural member
+  table, then run. A Mesh viewed through a Node row reports `materials` as present and a plain Node does not.
+  For a Record, an own key is present, an absent key is not, and `toString` is.
+
+**Not yet active.** The patch file is committed, but its `source-patches/manifest.json` entry is deliberately
+left out. Generation applies only listed patches, so no peer's scoped run changes until a regeneration slot adopts
+it. The entry, with this verification text, is added in that commit.
+
+**Owed at the regeneration that adopts it:**
+- `repairs/emission-repairs.json` `effects-membership-test-defaults` will match nothing. The emitter then writes
+  the prototype-aware Record form, which is more faithful than the repair's own-key `.has`. The repair must be
+  removed in that commit.
+- Overrides that copy membership sites must be re-derived (`overrides:check`).
+- Each of the 32 `in-operator-not-lowered-b1eae4af` headers, and the latent sites listed above, must be
+  re-measured. `interaction_manager`, `explain_scene_3d_pipeline_coverage` and `gl_particle_emitter_3d` are
+  expected to lower. `render_registry_guards` is expected to become a named refusal. `wgpu_render_state` (symbol
+  key on a variant) is unchanged. No header result is claimed until measured.

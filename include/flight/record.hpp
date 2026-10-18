@@ -8,6 +8,7 @@
 #include <iterator>
 #include <memory>
 #include <optional>
+#include <string_view>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -323,5 +324,22 @@ class Record {
   std::shared_ptr<SymbolAttachment> attachment_;
   std::shared_ptr<Storage> storage_;
 };
+
+// Whether `key` names an own property of `Object.prototype` (ECMA-262 §20.1.3 and Annex B.2.2), which
+// every ordinary object inherits. A `Record` is storage for an ordinary object, so `key in record` is
+// `record.has(key)` or this: the inherited names answer true whatever the record holds, and the emitted
+// membership test asks both rather than narrowing the source's prototype-chain answer to own keys.
+[[nodiscard]] inline bool is_object_prototype_property(const String& key) {
+  static constexpr std::string_view names[] = {
+      "__defineGetter__", "__defineSetter__", "__lookupGetter__",     "__lookupSetter__",
+      "__proto__",        "constructor",      "hasOwnProperty",       "isPrototypeOf",
+      "propertyIsEnumerable", "toLocaleString", "toString", "valueOf",
+  };
+  const auto text = key.to_utf8();
+  for (const auto name : names) {
+    if (text == name) return true;
+  }
+  return false;
+}
 
 } // namespace flight

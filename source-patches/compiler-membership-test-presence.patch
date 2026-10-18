@@ -1,0 +1,473 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 3919cfc..e6719c5 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -4195,6 +4195,10 @@ function emitExpression(
+       }
+       const inferredPropertyTest = emitCppInferredPropertyUnionMemberTestCpp(expression, context);
+       if (inferredPropertyTest) return inferredPropertyTest;
++      if (expression.operator === 'in' && getCppRuntimeProfile(context.options) === 'flight-cpp') {
++        const membershipTest = emitCppMembershipTestCpp(expression, context);
++        if (membershipTest) return membershipTest;
++      }
+       if (expression.semantics.nullishComparison) {
+         return emitNullishComparisonCpp(expression, context);
+       }
+@@ -22455,6 +22459,106 @@ function getCppNamedTypeBindingModuleCpp(
+   );
+ }
+ 
++// `key in receiver` is a presence question, and each carrier can answer a different part of it. A
++// `flight::Record` is program-owned storage for an ordinary object, so presence is an own entry or one of
++// `Object.prototype`'s names. A structural row answers through its shared owner, which binds a cell for
++// every member its concrete type declares, required or optional; that is exact only when no type that
++// can reach the receiver declares the key optional, since an optional member's cell holds both absence
++// and a stored `undefined`. A key the receiver's own type declares as required is present on every value
++// of that type. Everything else -- an optional key, a nominal owner that cannot hold the probed member,
++// an erased view whose prototype is unknown -- is refused rather than answered from the value, an own-key
++// predicate, or a constant. A receiver held as a bare erased value or a type parameter is not one of these
++// carriers; it is left to the lowering that already owns it, whose own refusal names that carrier.
++function emitCppMembershipTestCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'binary' }>>,
++  context: EmitContext,
++): string | undefined {
++  if (getCppNamedPropertiesViewExpressionCpp(expression.right, context)) {
++    emissionError(
++      context,
++      `\`in\` on an erased object view needs presence through the viewed object's own prototype chain: flight::NamedProperties::has answers own keys only, and the view does not know which prototype the object has, so own-key presence would narrow the source's answer. Keep the value in its declared Record or row carrier before the test`,
++      'cpp-membership-test-unrepresented',
++    );
++  }
++  const receiverType = getIrExpressionTypeEvidenceCpp(expression.right, context);
++  const receiverCarrier = receiverType ? emitType(receiverType, context) : undefined;
++  if (
++    !receiverType ||
++    !receiverCarrier ||
++    (receiverType.kind === 'named' &&
++      receiverType.reference.kind === 'binding' &&
++      receiverType.reference.binding.kind === 'typeParameter') ||
++    receiverCarrier === 'flight::Any' ||
++    (!receiverCarrier.startsWith('flight::Record<') &&
++      !receiverCarrier.startsWith('flight::Ref<') &&
++      !getCppStructuralRowExpressionPlanCpp(expression.right, context))
++  ) {
++    return undefined;
++  }
++  const evidence = expression.semantics.membershipTest;
++  if (!evidence) {
++    emissionError(
++      context,
++      'a membership test needs a string key and checker presence evidence; a symbol or numeric key has no presence lowering on this receiver',
++      'cpp-membership-test-unrepresented',
++    );
++  }
++  const describe = `\`${evidence.key.kind === 'string' ? JSON.stringify(evidence.key.value) : 'key'} in receiver\``;
++  const receiver = emitExpression(expression.right, context);
++  if (receiverCarrier?.startsWith('flight::Record<')) {
++    if (evidence.key.kind === 'string') {
++      if (isCppObjectPrototypePropertyNameCpp(evidence.key.value)) return `(static_cast<void>(${receiver}), true)`;
++      return `${receiver}.has(${emitExpression(expression.left, context)})`;
++    }
++    context.includes.add('flight/record.hpp');
++    const key = emitExpression(expression.left, context);
++    return `([&]() { const auto membership_key = ${key}; const auto& membership_receiver = ${receiver}; return membership_receiver.has(membership_key) || flight::is_object_prototype_property(membership_key); }())`;
++  }
++  if (evidence.key.kind !== 'string') {
++    emissionError(
++      context,
++      `a membership test with a key known only at run time needs a Record receiver; ${receiverCarrier ?? 'this receiver'} has no dynamic presence query`,
++      'cpp-membership-test-unrepresented',
++    );
++  }
++  if (evidence.inherited) {
++    emissionError(
++      context,
++      `${describe} resolves the key through a prototype the receiver does not declare; ${receiverCarrier ?? 'this receiver'} cannot see that prototype`,
++      'cpp-membership-test-unrepresented',
++    );
++  }
++  if (evidence.receiver === 'required') return `(static_cast<void>(${receiver}), true)`;
++  if (evidence.receiver === 'optional') {
++    emissionError(
++      context,
++      `${describe} probes a key the receiver declares optional: absent and present-undefined are both admitted and the stored value cannot tell them apart`,
++      'cpp-membership-test-unrepresented',
++    );
++  }
++  const row = getCppStructuralRowExpressionPlanCpp(expression.right, context);
++  if (!row) {
++    emissionError(
++      context,
++      `${describe} probes a key ${receiverCarrier ?? 'the receiver'} does not declare, and that carrier cannot hold a value that declares it: the receiver must be carried as a structural row over the caller's actual owner before presence can be answered`,
++      'cpp-membership-test-unrepresented',
++    );
++  }
++  if (evidence.subtypes === 'optional') {
++    emissionError(
++      context,
++      `${describe} probes a key that a type assignable to the receiver declares optional: the owner binds a cell for an optional member whether or not the source object has the property`,
++      'cpp-membership-test-unrepresented',
++    );
++  }
++  context.includes.add('flight/structural_ref.hpp');
++  return `flight::row_has<flight::RowKey<${JSON.stringify(evidence.key.value)}>>(${receiver})`;
++}
++
++function isCppObjectPrototypePropertyNameCpp(name: string): boolean {
++  return cppObjectPrototypePropertyNames.has(name);
++}
++
+ function emitCppInferredPropertyUnionMemberTestCpp(
+   expression: Readonly<Extract<IrExpression, { kind: 'binary' }>>,
+   context: EmitContext,
+@@ -35186,3 +35290,20 @@ const cppMathSpreadFoldTargets: Readonly<Record<string, { algorithm: string; ide
+     runtime: 'flight::minimum',
+   },
+ };
++
++// The own properties of `Object.prototype` (ECMA-262 §20.1.3 and Annex B.2.2), which every ordinary
++// object literal inherits. The runtime's `flight::is_object_prototype_property` answers the same set.
++const cppObjectPrototypePropertyNames: ReadonlySet<string> = new Set([
++  '__defineGetter__',
++  '__defineSetter__',
++  '__lookupGetter__',
++  '__lookupSetter__',
++  '__proto__',
++  'constructor',
++  'hasOwnProperty',
++  'isPrototypeOf',
++  'propertyIsEnumerable',
++  'toLocaleString',
++  'toString',
++  'valueOf',
++]);
+diff --git a/packages/compiler-backend-cpp/src/cppMembershipTest.test.ts b/packages/compiler-backend-cpp/src/cppMembershipTest.test.ts
+new file mode 100644
+index 0000000..0512a0d
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppMembershipTest.test.ts
+@@ -0,0 +1,116 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile(
++    '/flight/packages/example/src/membershipTest.ts',
++    source,
++    ts.ScriptTarget.Latest,
++    true,
++  );
++  const result = lowerTypeScriptSource(sourceFile, {
++    packageName: '@flighthq/example',
++    upstreamDirectory: '/flight',
++  });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++function refusal(source: string): string {
++  try {
++    emit(source);
++  } catch (error) {
++    return String(error);
++  }
++  throw new Error('expected the membership test to be refused');
++}
++
++it('asks a Record for an own entry and, for a key known only at run time, the inherited prototype names', () => {
++  const output = emit(`
++    export function hasLiteral(dict: Record<string, number>): boolean { return 'x' in dict; }
++    export function hasKey(dict: Record<string, number>, key: string): boolean { return key in dict; }
++    export function hasInherited(dict: Record<string, number>): boolean { return 'toString' in dict; }
++  `);
++
++  expect(output).toContain('return dict.has(flight::String("x"));');
++  expect(output).toContain(
++    'const auto membership_key = key; const auto& membership_receiver = dict; return membership_receiver.has(membership_key) || flight::is_object_prototype_property(membership_key);',
++  );
++  expect(output).toContain('return (static_cast<void>(dict), true);');
++  expect(output).not.toMatch(/ in dict/);
++});
++
++it('asks a structural row owner for the cell when every type that can reach it declares the key required', () => {
++  const output = emit(`
++    export interface Node2 { kind: string }
++    export interface Mesh2 extends Node2 { materials: number[] }
++    export function hasMaterials(node: Readonly<Node2>): boolean { return 'materials' in node; }
++  `);
++
++  expect(output).toContain('return flight::row_has<flight::RowKey<"materials">>(node);');
++});
++
++it('answers a key the receiver declares required without reading its value', () => {
++  const output = emit(`
++    export interface State { id: number | undefined }
++    export function hasId(state: State): boolean { return 'id' in state; }
++  `);
++
++  expect(output).toContain('return (static_cast<void>(state), true);');
++});
++
++it('refuses an optional key, an assignable optional declarer, a nominal receiver, and an erased view', () => {
++  expect(
++    refusal(`
++      export interface Node3 { kind: string; extra?: number }
++      export function hasExtra(node: Node3): boolean { return 'extra' in node; }
++    `),
++  ).toContain('declares optional: absent and present-undefined are both admitted');
++  expect(
++    refusal(`
++      export interface Node4 { kind: string }
++      export interface Mesh4 extends Node4 { materials?: number[] }
++      export function hasMaterials(node: Readonly<Node4>): boolean { return 'materials' in node; }
++    `),
++  ).toContain('a type assignable to the receiver declares optional');
++  expect(
++    refusal(`
++      export interface RenderState { id: number }
++      export function hasDevice(state: RenderState): boolean { return 'device' in state; }
++    `),
++  ).toContain('cannot hold a value that declares it');
++  expect(
++    refusal(`
++      export function hasRotate(raw: unknown): boolean {
++        if (raw === null || typeof raw !== 'object') return false;
++        const transform = raw as Record<string, unknown>;
++        return 'rotate' in transform;
++      }
++    `),
++  ).toContain('flight::NamedProperties::has answers own keys only');
++});
++
++it('keeps the closed-union arm test for a key exactly one arm declares', () => {
++  const output = emit(`
++    export interface A { worldMatrix: number | null; name: string }
++    export interface B { name: string }
++    export function hasWorldMatrix(value: A | B): boolean { return 'worldMatrix' in value; }
++  `);
++
++  expect(output).toContain('std::variant<flight::Ref<B>, flight::Ref<A>> value');
++  expect(output).toMatch(/return \(?value\.index\(\) == 1\)?;|holds_alternative<flight::Ref<A>>\(value\)/);
++});
++
++it('leaves a symbol key on a closed variant receiver to the existing lowering', () => {
++  const output = emit(`
++    export const RuntimeKey: unique symbol = Symbol('runtime');
++    export interface Entity { [RuntimeKey]: number | undefined; name: string }
++    export interface Runtime { name: string }
++    export function hasRuntimeKey(value: Entity | Runtime): boolean { return RuntimeKey in value; }
++  `);
++
++  expect(output).not.toContain('cpp-membership-test-unrepresented');
++});
+diff --git a/packages/compiler-semantic/src/typeScriptSemanticLowering.ts b/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
+index fab9e4e..8d79b28 100644
+--- a/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
++++ b/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
+@@ -37,6 +37,7 @@ import type {
+   IrBindingScope,
+   IrBinaryOperator,
+   IrBinaryOperatorSemantics,
++  IrMembershipTestEvidence,
+   IrNullishComparisonEvidence,
+   IrClassDeclaration,
+   IrClassField,
+@@ -105,6 +106,8 @@ import {
+ 
+ interface LoweringContext {
+   analysisModuleOptions: ReadonlyMap<string, Readonly<LowerTypeScriptSourceOptions>>;
++  /** Every source file the checker analyzed, which bounds the object types a presence test can meet. */
++  analysisSourceFiles: readonly ts.SourceFile[];
+   /** Type-space names the loaded binding profiles provide, as explicit compiler input. */
+   profileTypeNames: ReadonlySet<string>;
+   bindingTypes: Map<ts.Symbol, IrType>;
+@@ -178,6 +181,7 @@ export function lowerTypeScriptSource(
+     analysis.checker,
+     new Map([[sourceFile.fileName, options]]),
+     analysis.symbolReferenceStatements,
++    analysis.sourceFiles,
+   );
+ }
+ 
+@@ -216,6 +220,7 @@ export function lowerTypeScriptSources(
+       analysis.checker,
+       analysisModuleOptions,
+       analysis.symbolReferenceStatements,
++      analysis.sourceFiles,
+     );
+     if (module) {
+       observeTypeScriptModuleLoweringProgress(options.observeProgress, {
+@@ -254,9 +259,11 @@ function lowerTypeScriptSourceWithAnalysis(
+   checker: ts.TypeChecker,
+   analysisModuleOptions: ReadonlyMap<string, Readonly<LowerTypeScriptSourceOptions>>,
+   symbolReferenceStatements: () => ReadonlyMap<ts.Symbol, ReadonlySet<ts.Statement>>,
++  analysisSourceFiles: readonly ts.SourceFile[],
+ ): TypeScriptLoweringResult {
+   const context: LoweringContext = {
+     analysisModuleOptions,
++    analysisSourceFiles,
+     bindingTypes: new Map(),
+     bindings: new Map(),
+     checker,
+@@ -7315,8 +7322,10 @@ function lowerBinaryOperatorSemantics(node: ts.BinaryExpression, context: Loweri
+   const result = lowerOperatorValueDomain(node, context);
+   const nullishComparison = getTypeScriptNullishComparisonEvidence(node, context);
+   const unionMemberTest = getTypeScriptUnionMemberTestEvidence(node, context);
++  const membershipTest = getTypeScriptMembershipTestEvidence(node, context);
+   return {
+     left,
++    ...(membershipTest ? { membershipTest } : {}),
+     ...(nullishComparison ? { nullishComparison } : {}),
+     // A checker with no library types often cannot type the whole expression even when it typed both
+     // operands, so the operator's own rule stands in rather than reporting an unknown result and
+@@ -7336,6 +7345,103 @@ function lowerBinaryOperatorSemantics(node: ts.BinaryExpression, context: Loweri
+   };
+ }
+ 
++// `key in receiver` asks whether the property exists, which a target can answer exactly only from what
++// its carrier for the receiver can see. The checker knows how the receiver's own type declares the key,
++// and, by visiting every analyzed object type assignable to the receiver, whether any value that can
++// reach it declares the key optional -- the one case where absent and present-undefined are both
++// admitted and no stored-value representation can tell them apart.
++function getTypeScriptMembershipTestEvidence(
++  node: ts.BinaryExpression,
++  context: LoweringContext,
++): IrMembershipTestEvidence | undefined {
++  if (node.operatorToken.kind !== ts.SyntaxKind.InKeyword) return undefined;
++  const keyNode = unwrapTypeScriptParenthesizedExpression(node.left);
++  const keyType = context.checker.getTypeAtLocation(keyNode);
++  const keyValue = ts.isStringLiteralLike(keyNode)
++    ? keyNode.text
++    : keyType.isStringLiteral()
++      ? keyType.value
++      : undefined;
++  if (keyValue === undefined) {
++    if (!(keyType.flags & ts.TypeFlags.String)) return undefined;
++    return { inherited: false, key: { kind: 'dynamicString' }, receiver: 'undeclared', subtypes: 'none' };
++  }
++  const receiverType = context.checker.getTypeAtLocation(node.right);
++  const declared = context.checker.getPropertyOfType(receiverType, keyValue);
++  const inherited =
++    declared === undefined &&
++    context.checker.getPropertyOfType(context.checker.getApparentType(receiverType), keyValue) !== undefined;
++  let subtypes: IrMembershipTestEvidence['subtypes'] = 'none';
++  for (const declaration of getTypeScriptPropertyDeclarationsNamed(keyValue, context)) {
++    const container = getTypeScriptPropertyContainerType(declaration, context);
++    if (!container || !isTypeScriptMembershipContainerAssignable(container, receiverType, context)) continue;
++    if (declaration.questionToken) {
++      subtypes = 'optional';
++      break;
++    }
++    subtypes = 'required';
++  }
++  return {
++    inherited,
++    key: { kind: 'string', value: keyValue },
++    receiver:
++      declared === undefined ? 'undeclared' : declared.flags & ts.SymbolFlags.Optional ? 'optional' : 'required',
++    subtypes,
++  };
++}
++
++function getTypeScriptPropertyContainerType(
++  declaration: ts.PropertyDeclaration | ts.PropertySignature,
++  context: LoweringContext,
++): ts.Type | undefined {
++  const container = declaration.parent;
++  if (ts.isInterfaceDeclaration(container) || ts.isClassDeclaration(container)) {
++    const symbol = container.name ? context.checker.getSymbolAtLocation(container.name) : undefined;
++    return symbol ? context.checker.getDeclaredTypeOfSymbol(symbol) : undefined;
++  }
++  if (ts.isTypeLiteralNode(container) || ts.isClassExpression(container)) return context.checker.getTypeAtLocation(container);
++  return undefined;
++}
++
++// Every property declaration in the analyzed program, by name. Built once per checker: the set of
++// declaring types is a property of the program, not of the module being lowered.
++function getTypeScriptPropertyDeclarationsNamed(
++  name: string,
++  context: LoweringContext,
++): readonly (ts.PropertyDeclaration | ts.PropertySignature)[] {
++  let index = typeScriptPropertyDeclarationIndexes.get(context.checker);
++  if (!index) {
++    const built = new Map<string, (ts.PropertyDeclaration | ts.PropertySignature)[]>();
++    const visit = (node: ts.Node): void => {
++      if ((ts.isPropertySignature(node) || ts.isPropertyDeclaration(node)) && !ts.isComputedPropertyName(node.name)) {
++        const text = ts.isPrivateIdentifier(node.name) ? undefined : node.name.text;
++        if (text !== undefined) {
++          const entries = built.get(text);
++          if (entries) entries.push(node);
++          else built.set(text, [node]);
++        }
++      }
++      ts.forEachChild(node, visit);
++    };
++    for (const sourceFile of context.analysisSourceFiles) visit(sourceFile);
++    index = built;
++    typeScriptPropertyDeclarationIndexes.set(context.checker, index);
++  }
++  return index.get(name) ?? [];
++}
++
++// A generic container is compared through its declared type parameters, which the checker can judge
++// unrelated to a concrete receiver even when an instantiation reaches it. Such a container is counted, so
++// an optional declaration on it can only make the evidence more conservative.
++function isTypeScriptMembershipContainerAssignable(
++  container: ts.Type,
++  receiver: ts.Type,
++  context: LoweringContext,
++): boolean {
++  if (((container as ts.InterfaceType).typeParameters?.length ?? 0) > 0) return true;
++  return context.checker.isTypeAssignableTo(container, receiver);
++}
++
+ function getTypeScriptUnionMemberTestEvidence(
+   node: ts.BinaryExpression,
+   context: LoweringContext,
+@@ -10321,3 +10427,8 @@ const compilerEmptyModuleResolutionPlan: CompilerModuleResolutionPlan = Object.f
+   edges: Object.freeze([]),
+   schema: 'flight-compiler-module-resolution/1',
+ });
++
++const typeScriptPropertyDeclarationIndexes = new WeakMap<
++  ts.TypeChecker,
++  ReadonlyMap<string, readonly (ts.PropertyDeclaration | ts.PropertySignature)[]>
++>();
+diff --git a/packages/compiler-types/src/compilerOperatorSemanticIntermediateRepresentation.ts b/packages/compiler-types/src/compilerOperatorSemanticIntermediateRepresentation.ts
+index 68eeb65..8b4a27f 100644
+--- a/packages/compiler-types/src/compilerOperatorSemanticIntermediateRepresentation.ts
++++ b/packages/compiler-types/src/compilerOperatorSemanticIntermediateRepresentation.ts
+@@ -23,6 +23,22 @@ export interface IrAssignmentOperatorSemantics {
+   readonly right: IrOperatorOperandDomains;
+ }
+ 
++// What the source checker knows about one `key in receiver` presence test, so a target can answer the
++// question its representation can answer exactly and refuse the rest. `receiver` is how the receiver's
++// own declared type declares the key: `required` (the test is true for every value of that type),
++// `optional` (absent and present-undefined are both admitted), or `undeclared`. `subtypes` is the same
++// question over every object type in the analyzed program that is assignable to the receiver type and
++// declares the key: `required` when each one declares it required, `optional` when any one declares it
++// optional, and `none` when no such type exists. `inherited` is true when the receiver's apparent type
++// resolves the key only through a prototype it does not declare, as `Object.prototype.toString` is for an
++// object literal; a target that cannot see that prototype must refuse rather than answer false.
++export interface IrMembershipTestEvidence {
++  readonly inherited: boolean;
++  readonly key: Readonly<{ kind: 'string'; value: string }> | Readonly<{ kind: 'dynamicString' }>;
++  readonly receiver: 'optional' | 'required' | 'undeclared';
++  readonly subtypes: 'none' | 'optional' | 'required';
++}
++
+ // Which absent values the compared operand can hold, when one side of an equality is `null` or
+ // `undefined`. A target with a single absent value can compare directly where the source admits only
+ // one of them, and cannot where the source admits both.
+@@ -43,6 +59,7 @@ export interface IrUnionMemberTestEvidence {
+ 
+ export interface IrBinaryOperatorSemantics {
+   readonly left: IrOperatorOperandDomains;
++  readonly membershipTest?: IrMembershipTestEvidence | undefined;
+   readonly nullishComparison?: IrNullishComparisonEvidence | undefined;
+   readonly result: IrOperatorValueDomain;
+   readonly right: IrOperatorOperandDomains;
