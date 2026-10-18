@@ -74,16 +74,23 @@ animation target; the remaining rows reach it through skeleton2d helpers and Dra
 timeline handlers. It is distinct from array-owner or sampling-easing issues in
 [`animation-readonly-row-array-carriers.md`](animation-readonly-row-array-carriers.md).
 
-## Carried semantic patch
+## Carried semantic patch (bounded to the source's bounds guard)
 
-Source patch `compiler-nullable-element-dual-sentinel` lifts a single-sentinel union (one
-`std::optional`) into a dual-sentinel destination using the SOURCE union's own sentinel: `T | null`
-maps an empty optional to the Null arm, `T | undefined` to the Undefined arm, and an engaged optional
-to the value arm with the same reference. It hooks the assignment RHS (a conditional adapts its own
-branches) and each conditional branch; the destination's other sentinel is never fabricated.
+Source patch `compiler-nullable-element-dual-sentinel` lifts a nullable array element selected in a
+conditional whose own condition proves the index in range -- the same index bounded below that same
+array's `length` and at or above zero, which is exactly the guarded binder above -- into a
+dual-sentinel destination: `T | null` maps an empty optional to the Null arm, `T | undefined` to the
+Undefined arm, and an engaged optional to the value arm with the same reference.
 
-Measured: new `cppNullableElementDualSentinel.test.ts` 3 pass; the patch applies at its stack
-position (all compiler patches in order, stacked build green); a runtime consumer proves a present
-element keeps the same owner, a null element and an out-of-range index select Null, and the if/else
-form matches. Scoped regeneration and the public timeline/slot consumer are pending a generation
-slot.
+It deliberately does not generalize: an UNGUARDED `table[index]` (conditional or bare assignment)
+can be a hole or a past-end index, which JavaScript yields as `undefined`, so its empty state must
+not be lifted to Null from the declared `T | null` alone. Those forms, and the statement-guard
+(if/else) spelling whose guard the emitter does not model, keep their existing emission. The
+counterexample test holds that line.
+
+Measured: new `cppNullableElementDualSentinel.test.ts` 4 pass (guarded lift; undefined-only element
+to the Undefined arm with the explicit null fallback still Null; optional destination stays direct;
+unguarded forms not lifted); the patch applies at its stack position (all compiler patches in order,
+stacked build green); a runtime consumer on the guarded form proves a present element keeps the same
+owner and a null element and the guarded out-of-range fallback select Null. Scoped regeneration and
+the public timeline/slot consumer are pending a generation slot.
