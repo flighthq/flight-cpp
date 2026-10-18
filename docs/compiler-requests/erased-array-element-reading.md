@@ -626,3 +626,47 @@ cluster gain this existing request and the related JSON-read link. The worklist 
 append-only request note accompany those three compact product lines. C++, runtime, source patches,
 repairs, generation inventory and pins are unchanged; unchanged C++ is not rerun. Foreign compact
 products, worklist entries and historical/G1 totals are preserved.
+
+## Runtime follow-up: checked live size and indexed reads
+
+The emitted-header consumability follow-up adds two reusable runtime operations in `flight/any.hpp`:
+
+```cpp
+std::size_t Any::array_size() const;
+std::optional<Any> Any::array_get(double index) const;
+
+if (flight::is_array(raw)) {
+  const double count = static_cast<double>(raw.array_size());
+  const flight::Any first = raw.array_get(0.0).value_or(flight::Any(flight::undefined));
+  // A caller still performs its original typeof/null checks on first.
+}
+```
+
+Each boxed array records size/get function pointers at the point its exact element type is known.
+They read the existing typed handle in its existing std::any holder; no element-type guessing,
+replacement Array<Any>, copied vector, boxing-time length snapshot or named-property fiction is
+introduced. Array<double>, String, bool, Any, reference, optional and represented active variant
+cells all keep their original storage. Reads see subsequent mutations through the same array's
+aliases. Rebinding the original variable leaves the already-boxed array attached to its own storage.
+The `external_if<Array<T>>()` exact-type contract and shared array identity are unchanged.
+
+Index validation delegates to Array<T>::get: negative/fractional/nonfinite/out-of-range indices
+return an empty optional, and negative zero denotes zero. A present undefined or null is an engaged
+Any, distinct from an absent index. Element boxing uses the existing any_from rules, preserving
+object/nested-array reference identity; a present unrepresented cell throws BadAnyAccess rather
+than becoming a missing/undefined value. Size still works for that array, since counting requires
+no element schema. Non-array receivers throw BadAnyAccess; buffer-backed TypedArray values remain
+non-Array under is_array. Neither API adds Any numeric coercion or a blanket subscript operation.
+
+Commit-first scoped runtime build/link passed, followed by **1/1 runtime CTest pass, 0.01 s**
+(0.04 s total). New tests cover exact typed recovery, fractional/signed-zero values, alias mutations,
+length changes/rebinding, invalid bounds, typed heterogeneous variants and live object references,
+string/bool/optional cells, nested-array identity, undefined/null/absence, rejected receivers and
+unrepresented cells, and retention/release after original handles expire.
+
+This supplies the reusable runtime boundary only. Builder2 owns the concrete Spine source/header
+lowering, and builder7 owns its public consumer regression; neither is replaced by this runtime
+suite. No source patch, generated SDK file, header-status row, compiler pin or previous scoped result
+is changed here. Existing recorded failures above remain historical evidence; no parser, easing,
+clampUnit public-header or general emitter/iterator pass follows from this runtime result alone.
+No generation, full sweep or unchanged native header compile was run.

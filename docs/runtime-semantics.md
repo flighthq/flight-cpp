@@ -60,6 +60,18 @@ Named string properties and symbol attachments stay separate spaces. A symbol-ke
 
 `flight::Array` compares by identity. An array is an object, so `a === b` asks whether two names denote the same array and never whether they hold equal elements; copies of a `flight::Array` share one storage and are therefore one array. Deep comparison is deliberately absent, because JavaScript has none for arrays and a container-style `operator==` would silently give every emitted `!==` the wrong answer.
 
+Erased arrays expose checked, live reads through `Any::array_size()` and `Any::array_get(double)`.
+Both consult the existing exact `Array<T>` handle retained by `AnyArray`; neither snapshots length
+nor converts the storage to `Array<Any>`. Later pushes, replacements, splices and clears through
+aliases are visible. Indexed reads use `Array<T>::get` bounds rules: a negative, fractional,
+nonfinite or past-end index is absent, while negative zero is index zero. The result is
+`optional<Any>`: a missing index is empty, and present `undefined` and `null` remain engaged values.
+Elements use the existing checked erased-value boxing, retaining object and nested-array references;
+a present cell with no represented erased reading throws `BadAnyAccess` rather than disappearing.
+Non-array receivers also throw. Exact `external_if<Array<T>>()` recovery and array identity remain
+unchanged; there is no implicit numeric cast, named `length` property or general subscript on `Any`.
+
+
 A callback parameter that is a structural row accepts a reference to that very object. `callable_signature_v1::accepts` is otherwise exact — an `int` still does not satisfy a `double` parameter — but a row parameter over `T` admits a `Ref<T>`, because that is the runtime's own projection of one subject into its row: the same object, no value converted, no second identity, and no widening, since the argument's type must be exactly the row's object type. The compiler emits both halves of that seam (a signal whose listener takes `Readonly<T>`, an emitter holding the `T`), and refusing it would be the runtime declining a projection it defines.
 
 `FontFace` is a portable value handle, not a font system. Flight constructs one in portable code — `new FontFace(family, source)` in `packages/font/src/_fontFaceLoad.ts` — so it cannot be an opaque handle only a host can mint, and it is not an Entity: a face carries no runtime key and no identity-keyed side table, so a `HostFontLoadingCapability` that receives one through `addFontFace` receives that object and nothing else. The gap is that this dependency-free runtime has no font parser and therefore cannot decide whether a source is a usable face. `load()` settles through the loader a profile installs with `set_font_face_loader`; with no loader installed it **rejects**, naming the missing capability, and the face's status becomes `"error"`. It does not resolve, because the next thing the caller does is hand the face to the host as though it had loaded. A rejected load carries the host's own reason unchanged rather than one the runtime invented.
