@@ -1,0 +1,81 @@
+{
+  "schema": "flight-cpp-narrowed-filter-qualification/1",
+  "status": "compiler-preparation-qualified; whole-original-public-native-compile-fails",
+  "checkedCodeCommit": "02ddbe4de2def6cb56ba3d71cbd78cdfad8744c7",
+  "compiler": {
+    "rawPin": "806d257d2f4100de745cc97340e61c2f301b0f24",
+    "compilerPatches": 120,
+    "totalPatches": 322,
+    "patch": "source-patches/compiler-narrowed-filter-and-optional-subset.patch",
+    "patchSha256": "a4396017b29ea09288e5426bf8438d36689edac093b06b44837474b54afccad7",
+    "backendSha256": "ff208706099dac0f6bb21576cbb5597978e437714165fc6a4c0f370692b49a8c",
+    "ambientSha256": "0161ca78d294b48fdd032f3cb56ee001aab6caae97df932eaf65cfdd129ddbd9",
+    "fixtureSha256": "c7b9ee4cc09dea765481fdebff6de19e95b9331e53fb1d8f266bddd7ac5cc2f3",
+    "orderedApplyAndRawClean": true
+  },
+  "verification": {
+    "productionStrict": {
+      "exit": 0
+    },
+    "ownedFixtureStrict": {
+      "exit": 0
+    },
+    "focused": {
+      "files": 9,
+      "tests": 48,
+      "pass": 48,
+      "fail": 0,
+      "skipped": 0,
+      "exit": 0,
+      "newNativeChecks": 13,
+      "existingOwnerNativeChecks": 15
+    },
+    "sourcePatchAutomation": {
+      "pass": 2,
+      "fail": 0,
+      "exit": 0
+    },
+    "guardedPathControls": {
+      "tests": 11,
+      "pass": 8,
+      "fail": 3,
+      "exit": 1,
+      "samePreviouslyRecordedFailures": true,
+      "failures": [
+        "projects a read whose union the analysis cannot state",
+        "reads the same carrier the guard tested, by reference",
+        "does not project the path outside the branch the guard controls"
+      ],
+      "limitation": "This control suite fails. These same failures were recorded on the preceding117 floor and118 composition; no pass is inferred."
+    }
+  },
+  "originalModule": {
+    "module": "packages/scene2d-formats/src/lottieDocument.ts",
+    "moduleSha256": "fb768b9622f2ade7301341f674db8cd64e00d3e39f09cd9aaf7aac1f1780a55b",
+    "originalBodyChanged": false,
+    "freshLoweredGraphModules": 1467,
+    "declaredFlightSourcePatches": 202,
+    "semanticDiagnosticsInLottie": 0,
+    "emissionExit": 0,
+    "missingBodies": []
+  },
+  "publicNativeConsumer": {
+    "caseDenominator": 32,
+    "casesRun": 0,
+    "compileExit": 1,
+    "linked": false,
+    "candidateKind": "whole original module and original callees; normal declared emission repairs plus dependency-checked duplicate-struct aliases on scratch candidate",
+    "firstNativeBoundaries": [
+      "readonly optional Record narrow to wider value-domain forwarding",
+      "default Array.flat runtime operation",
+      "same native Ref incorrectly emitted through structural_ref_cast",
+      "raw literal in expression over original Any"
+    ],
+    "candidateCompileLog": "/tmp/builder5-lottie-body/filter-public-normal-build.log"
+  },
+  "limitations": [
+    "No SDK regenerated or public success claimed.",
+    "Runtime Array.flat support was committed after this compiler proof and is being verified separately.",
+    "Exact21previous0PASS21FAIL remains historical evidence without promotions."
+  ]
+}

@@ -790,3 +790,16 @@ both the preceding 117-patch floor and this 118-patch composition; those results
 failures. Complete original-module emission now retains every body except
 `createLottiePositionSampler`, whose filtered-track callback still lacks nullable-element presence
 evidence. This preparation changes no SDK output and makes no public 32-case or exact 21-header promotion.
+
+
+The guarded filter and optional-subset preparation is qualified in
+[narrowed-filter-qualification.json](../../artifacts/narrowed-filter-qualification.json).
+The compiler retains the standard source filter predicate, proves success excludes the original
+absence sentinels before selecting each original element handle, and reuses stored native handles
+for a strict optional-union subset. Annotation-only or reassigned-parameter predicates do not gain
+a projection. On the ordered 120-patch compiler floor, production and owned strict checks pass,
+as do 48 focused tests with no skips and 28 native fixture checks. The same three previously
+recorded guarded-path controls still fail. Every body of the untouched original Lottie module
+now emits from a freshly lowered 1,467-module dependency graph. The whole public native consumer
+still fails compilation at remaining readonly-record, array and carrier boundaries; zero of its
+32 cases ran. No SDK output or exact 21-header result is promoted by this preparation.
